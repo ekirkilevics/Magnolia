@@ -65,27 +65,33 @@
     </servlet>
     <servlet>
         <description>The main CMS servlet</description>
-        <display-name>magnolia</display-name>
+        <display-name>magnolia EntryServlet</display-name>
         <servlet-name>magnolia</servlet-name>
         <servlet-class>info.magnolia.cms.servlets.EntryServlet</servlet-class>
     </servlet>
     <servlet>
         <description>Request interceptor servlet</description>
-        <display-name>RequestInterceptor</display-name>
+        <display-name>magnolia RequestInterceptor</display-name>
         <servlet-name>RequestInterceptor</servlet-name>
         <servlet-class>info.magnolia.cms.servlets.RequestInterceptor</servlet-class>
     </servlet>
     <servlet>
         <description>The resource dispatcher servlet</description>
-        <display-name>magnolia</display-name>
+        <display-name>magnolia ResourceDispatcher</display-name>
         <servlet-name>ResourceDispatcher</servlet-name>
         <servlet-class>info.magnolia.cms.servlets.ResourceDispatcher</servlet-class>
     </servlet>
     <servlet>
         <description>Activation handler servlet</description>
-        <display-name>magnolia</display-name>
+        <display-name>magnolia ActivationHandler</display-name>
         <servlet-name>ActivationHandler</servlet-name>
         <servlet-class>info.magnolia.cms.servlets.SimpleExchange</servlet-class>
+    </servlet>
+    <servlet>
+        <description>Admin interface tree servlet</description>
+        <display-name>magnolia AdminTreeServlet</display-name>
+        <servlet-name>AdminTreeServlet</servlet-name>
+        <servlet-class>info.magnolia.cms.servlets.AdminTreeServlet</servlet-class>
     </servlet>
     <!--
         Use this servlet to spool static resources from the servlet context
@@ -125,6 +131,14 @@
     <servlet-mapping>
         <servlet-name>Spool</servlet-name>
         <url-pattern>/admindocroot/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminTreeServlet</servlet-name>
+        <url-pattern>/admintemplates/adminCentral/extractTree.jsp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminTreeServlet</servlet-name>
+        <url-pattern>/adminCentral/extractTree</url-pattern>
     </servlet-mapping>
     <jsp-config>
         <taglib>

@@ -1154,23 +1154,22 @@
 		var httpReq=this.getHttpRequest();
 		if (httpReq)
 			{
-			var url=this.url;
-			url+="?treeMode=snippet";
-			url+="&path="+this.path;
-			url+="&repository="+this.repository;
-			url+="&mgnlCK="+mgnlGetCacheKiller();
+			var paramString = "treeMode=snippet";
+			paramString+="&path="+this.path;
+			paramString+="&repository="+this.repository;
+			paramString+="&mgnlCK="+mgnlGetCacheKiller();
 			for (var elem in params)
 				{
 				if (params[elem] || params[elem]=="0") {
-				// ="0": createItemType; MAGNOLIA_NODE_DATA is 0
-					//alert(elem+"="+params[elem]);
-					url+="&"+elem+"="+unescape(params[elem]); //values seems to be passed escaped ...
+				    // ="0": createItemType; MAGNOLIA_NODE_DATA is 0
+					paramString+="&"+encodeURIComponent(elem)+"="+encodeURIComponent(unescape(params[elem])); //values seems to be passed escaped ...
 					}
 				}
-			url=encodeURI(url);
 
-			// new (async call)
-			httpReq.open("GET",url,true);
+            // paramters need to be passed in body to allow utf8 encoding (query string is always ISO-88591)
+			httpReq.open("POST",encodeURI(this.url),true);
+			httpReq.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+
 			httpReq.onreadystatechange=function() {
 			   if (httpReq.readyState==4) {
 			    var returnText=httpReq.responseText;
@@ -1178,7 +1177,7 @@
 			   }
 			}
 
-			httpReq.send(null);
+			httpReq.send(paramString);
 			return;
 			}
 

@@ -188,7 +188,7 @@ public class EntryServlet extends HttpServlet {
      */
     private boolean redirect(HttpServletRequest request, HttpServletResponse response) {
         String uri = this.getURIMap(request);
-        if (!uri.equals("")) {
+        if (StringUtils.isNotEmpty(uri)) {
             try {
                 request.getRequestDispatcher(uri).forward(request, response);
             }
