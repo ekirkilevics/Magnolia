@@ -40,31 +40,10 @@ public class Sources {
         StringBuffer html = new StringBuffer();
         html.append("<script type=\"text/javascript\" src=\"");
         html.append(contextPath);
-        html.append("/admindocroot/js/generic.js\"></script>");
+        html.append("/admintemplates/js/admincentral.jsp\"></script>");
         html.append("<script type=\"text/javascript\" src=\"");
         html.append(contextPath);
-        html.append("/admindocroot/js/general.js\"></script>");
-        html.append("<script type=\"text/javascript\" src=\"");
-        html.append(contextPath);
-        html.append("/admindocroot/js/controls.js\"></script>");
-        html.append("<script type=\"text/javascript\" src=\"");
-        html.append(contextPath);
-        html.append("/admindocroot/js/dialogs/dialogs.js\"></script>");
-        html.append("<script type=\"text/javascript\" src=\"");
-        html.append(contextPath);
-        html.append("/admindocroot/js/dialogs/acl.js\"></script>");
-        html.append("<script type=\"text/javascript\" src=\"");
-        html.append(contextPath);
-        html.append("/admindocroot/js/dialogs/calendar.js\"></script>");
-        html.append("<script type=\"text/javascript\" src=\"");
-        html.append(contextPath);
-        html.append("/admindocroot/js/tree.js\"></script>");
-        html.append("<script type=\"text/javascript\" src=\"");
-        html.append(contextPath);
-        html.append("/admindocroot/js/adminCentral.js\"></script>");
-        html.append("<script type=\"text/javascript\" src=\"");
-        html.append(contextPath);
-        html.append("/admindocroot/js/inline.js\"></script>");
+        html.append("/admintemplates/js/dialogs.jsp\"></script>");
         return html.toString();
     }
 

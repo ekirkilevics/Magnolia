@@ -89,8 +89,6 @@ public class BarNew extends Bar {
             + paragraph
             + "','"
             + repository
-            + "','"
-            + this.getRequest().getContextPath()
             + "');");
         this.setButtonNew(b);
     }

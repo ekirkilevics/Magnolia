@@ -239,8 +239,6 @@ public class DialogRichedit extends DialogBox {
                 String extension = this.getConfigValue("toolboxLinkExtension", "html");
                 String repository = this.getConfigValue("toolboxLinkRepository", ContentRepository.WEBSITE);
                 linkButtonBrowse.setOnclick("mgnlDialogLinkOpenBrowser('"
-                    + this.getRequest().getContextPath()
-                    + "','"
                     + linkEditName
                     + "','"
                     + repository

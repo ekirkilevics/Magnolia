@@ -494,4 +494,12 @@ public class DialogSuper implements DialogInterface {
         }
     }
 
+    public void setSaveInfo(boolean b) {
+        this.setConfig("saveInfo", b);
+    }
+
+    public String getSaveInfo() {
+        return this.getConfigValue("saveInfo");
+    }
+
 }

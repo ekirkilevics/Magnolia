@@ -43,8 +43,6 @@ public class DialogLink extends DialogEditWithButton {
         String repository = this.getConfigValue("repository", ContentRepository.WEBSITE);
         this.getButton().setOnclick(
             "mgnlDialogLinkOpenBrowser('"
-                + this.getRequest().getContextPath()
-                + "','"
                 + this.getName()
                 + "','"
                 + repository

@@ -1,9 +1,9 @@
 package info.magnolia.jackrabbit;
 
+import info.magnolia.cms.util.Path;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
 import info.magnolia.repository.RepositoryNotInitializedException;
-import info.magnolia.cms.util.Path;
 
 import java.util.Hashtable;
 import java.util.Map;
@@ -53,6 +53,10 @@ public class ProviderImpl implements Provider {
         configFile = Path.getAbsoluteFileSystemPath(configFile);
         String repositoryHome = (String) params.get(REPOSITORY_HOME_KEY);
         repositoryHome = Path.getAbsoluteFileSystemPath(repositoryHome);
+
+        if (log.isInfoEnabled()) {
+            log.info("Loading repository at " + repositoryHome + " (config file: " + configFile + ")");
+        }
         String contextFactoryClass = (String) params.get(CONTEXT_FACTORY_CLASS_KEY);
         String providerURL = (String) params.get(PROVIDER_URL_KEY);
         String repositoryID = (String) params.get(REPOSITORY_ID_KEY);

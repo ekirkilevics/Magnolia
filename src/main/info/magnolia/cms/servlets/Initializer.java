@@ -13,7 +13,10 @@
 package info.magnolia.cms.servlets;
 
 import info.magnolia.cms.beans.config.ConfigLoader;
+
 import javax.servlet.http.HttpServlet;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -43,6 +46,11 @@ public class Initializer extends HttpServlet {
      * </p>
      */
     public void init() {
+        System.out.println("context: " + getServletContext().getServletContextName());
+
+        // used in log4j configuration
+        System.setProperty("magnolia.root", getServletContext().getRealPath(StringUtils.EMPTY));
+
         try {
             new ConfigLoader(getServletConfig());
         }
