@@ -110,6 +110,44 @@ public class ContextMessages extends Messages {
     }
 
     /**
+     * Trys to make a new ContextMessages object. if not possible it creates a new Messages object.
+     * @return Messages
+     */
+    public static Messages getInstanceSave(HttpServletRequest req) {
+        if (req != null) {
+            return new ContextMessages(req);
+        }
+        else {
+            log.warn("using i18n-messages without a request inside a control!");
+            return new Messages(Messages.DEFAULT_BASENAME);
+        }
+    }
+    
+    /**
+     * Trys to make a new ContextMessages object. if not possible it creates a new Messages object.
+     * @return Messages
+     */
+    public static Messages getInstanceSave(PageContext pc) {
+        if (pc != null && pc.getRequest() instanceof HttpServletRequest ) {
+            return new ContextMessages((HttpServletRequest) pc.getRequest());
+        }
+        else {
+            log.warn("using i18n-messages without a request inside a control!");
+            return new Messages(Messages.DEFAULT_BASENAME);
+        }
+    }
+
+    public static Messages getMessages(HttpServletRequest req, String basename) {
+        if (req == null) {
+            return new ContextMessages(req, basename);
+        }
+        else {
+            log.warn("using i18n-messages without a request inside a control!");
+            return new Messages(basename);
+        }
+    }
+
+    /**
      * Gets the default I18N localization context.
      * @param req Request in which to look up the default I18N localization context
      */

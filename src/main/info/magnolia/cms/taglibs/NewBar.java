@@ -13,11 +13,13 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.gui.inline.BarNew;
+import info.magnolia.cms.i18n.ContextMessages;
 import info.magnolia.cms.util.Resource;
 
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.jstl.fmt.LocaleSupport;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.commons.lang.StringUtils;
@@ -35,7 +37,7 @@ public class NewBar extends TagSupport {
      */
     private static final long serialVersionUID = 222L;
 
-    private static final String DEFAULT_NEW_LABEL = "New";
+    private static final String DEFAULT_NEW_LABEL = "buttons.new";
 
     /**
      * Logger.
@@ -144,7 +146,9 @@ public class NewBar extends TagSupport {
      * @return String , label for the new bar
      */
     private String getNewLabel() {
-        return StringUtils.defaultString(this.newLabel, DEFAULT_NEW_LABEL);
+        String defStr = ContextMessages.getInstanceSave(this.pageContext).get(DEFAULT_NEW_LABEL);
+        //String defStr = LocaleSupport.getLocalizedMessage(this.pageContext, DEFAULT_NEW_LABEL);
+        return StringUtils.defaultString(this.newLabel, defStr);
     }
 
     /**

@@ -15,6 +15,8 @@ package info.magnolia.cms.gui.control;
 import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.i18n.ContextMessages;
+import info.magnolia.cms.i18n.Messages;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -117,6 +119,11 @@ public class ControlSuper implements ControlInterface {
     private String paragraph;
 
     private HttpServletRequest request;
+    
+    /**
+     * Used for i18n messages
+     */
+    private Messages messages;
 
     ControlSuper() {
     }
@@ -483,4 +490,5 @@ public class ControlSuper implements ControlInterface {
     public int getIsRichEditValue() {
         return this.isRichEditValue;
     }
+
 }

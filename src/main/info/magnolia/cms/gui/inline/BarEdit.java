@@ -15,6 +15,7 @@ package info.magnolia.cms.gui.inline;
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.gui.control.Bar;
 import info.magnolia.cms.gui.control.Button;
+import info.magnolia.cms.i18n.ContextMessages;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
 
@@ -119,7 +120,7 @@ public class BarEdit extends Bar {
      */
     public void setButtonMove(String nodeCollectionName, String nodeName) {
         Button b = new Button();
-        b.setLabel("Move");
+        b.setLabel(ContextMessages.getInstanceSave(getRequest()).get("buttons.move"));
         // sets the id of the bar
         this.setId(nodeCollectionName + "__" + nodeName);
         b.setOnclick("mgnlMoveNodeStart('" + nodeCollectionName + "','" + nodeName + "','" + this.getId() + "');");
@@ -148,7 +149,7 @@ public class BarEdit extends Bar {
      */
     public void setButtonDelete(String path, String nodeCollectionName, String nodeName) {
         Button b = new Button();
-        b.setLabel("Delete");
+        b.setLabel(ContextMessages.getInstanceSave(getRequest()).get("buttons.delete"));
         b.setOnclick("mgnlDeleteNode('" + path + "','" + nodeCollectionName + "','" + nodeName + "');");
         this.setButtonDelete(b);
     }

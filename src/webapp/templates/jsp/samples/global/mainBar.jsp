@@ -52,7 +52,7 @@
 
 	// to overwrite single properties of the default buttons, use getButtonXXX() methods:
 	bar.getButtonProperties().setLabel("*P*R*O*P*S*");
-	bar.getButtonPreview().setLabel("&laquo; #P#R#E#V#I#E#W#");
+	bar.getButtonPreview().setLabel("&laquo; #P#RR#E#V#I#E#W#");
 	bar.getButtonSiteAdmin().setLabel("s i t e a d m i n");
 
 

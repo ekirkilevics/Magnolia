@@ -16,6 +16,7 @@ import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.gui.control.Bar;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.misc.Sources;
+import info.magnolia.cms.i18n.ContextMessages;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
 
@@ -105,7 +106,7 @@ public class BarMain extends Bar {
      */
     public void setButtonProperties(String path, String paragraph) {
         ButtonEdit b = new ButtonEdit(this.getRequest());
-        b.setLabel("Properties");
+        b.setLabel(ContextMessages.getInstanceSave(getRequest()).get("buttons.properties"));
         b.setPath(path);
         b.setParagraph(paragraph);
         b.setDefaultOnclick(this.getRequest());
@@ -127,7 +128,8 @@ public class BarMain extends Bar {
      */
     public void setButtonPreview() {
         Button b = new Button();
-        b.setLabel("&laquo; Preview");
+        String str = ContextMessages.getInstanceSave(this.getRequest()).get("buttons.preview");
+        b.setLabel("&laquo; " + str);
         b.setOnclick("mgnlPreview(true);");
         this.setButtonPreview(b);
     }
@@ -173,7 +175,7 @@ public class BarMain extends Bar {
      */
     public void setButtonSiteAdmin(String path) {
         Button b = new Button();
-        b.setLabel("adminCentral");
+        b.setLabel(ContextMessages.getInstanceSave(getRequest()).get("buttons.admincentral"));
         b.setOnclick("mgnlOpenAdminCentral('" + path + "');");
         this.setButtonSiteAdmin(b);
     }

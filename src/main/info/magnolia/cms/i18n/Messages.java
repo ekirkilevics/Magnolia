@@ -15,8 +15,11 @@ package info.magnolia.cms.i18n;
 
 import java.text.MessageFormat;
 import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.PropertyResourceBundle;
+
+import org.apache.log4j.Logger;
 
 
 /**
@@ -26,6 +29,10 @@ import java.util.PropertyResourceBundle;
  */
 
 public class Messages {
+
+    public static String DEFAULT_BASENAME = "info.magnolia.module.admininterface.messages";
+
+    protected static Logger log = Logger.getLogger(Messages.class);
 
     // never use this directly: subclasses can overrite geter
     private String basename;
@@ -79,11 +86,39 @@ public class Messages {
     }
 
     public String get(String key) {
-        return getBundle().getString(key);
+        try {
+            return "ok: " + getBundle().getString(key);
+        }
+        catch (MissingResourceException e) {
+            return "??" + key + "??";
+        }
     }
 
     public String get(String key, String basename) {
-        return getBundle(basename).getString(key);
+        try {
+            return "ok: " + getBundle(basename).getString(key);
+        }
+        catch (MissingResourceException e) {
+            return "??" + key + "??";
+        }
+    }
+
+    public String getWithDefault(String key, String defaultMsg) {
+        try {
+            return "ok: " + getBundle().getString(key);
+        }
+        catch (MissingResourceException e) {
+            return defaultMsg;
+        }
+    }
+
+    public String getWithDefault(String key, String basename, String defaultMsg) {
+        try {
+            return "ok: " + getBundle(basename).getString(key);
+        }
+        catch (MissingResourceException e) {
+            return defaultMsg;
+        }
     }
 
     /**
