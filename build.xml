@@ -81,8 +81,8 @@
   
   <property name="compiler.args.magnoliabuild2" value="${compiler.args}"/>
   
-  <property name="magnoliabuild2.output.dir" value="${module.magnoliabuild2.basedir}/classes"/>
-  <property name="magnoliabuild2.testoutput.dir" value="${module.magnoliabuild2.basedir}/classes"/>
+  <property name="magnoliabuild2.output.dir" value="${module.magnoliabuild2.basedir}/target/classes"/>
+  <property name="magnoliabuild2.testoutput.dir" value="${module.magnoliabuild2.basedir}/target/classes"/>
   
   <path id="magnoliabuild2.module.bootclasspath">
   </path>
@@ -102,7 +102,7 @@
   
   <path id="magnoliabuild2.module.sourcepath">
     <dirset dir="${module.magnoliabuild2.basedir}">
-      <include name="src"/>
+      <include name="src/main"/>
     </dirset>
   </path>
   
@@ -119,7 +119,7 @@
       <patternset refid="excluded.from.compilation.magnoliabuild2"/>
     </javac>
     <copy todir="${magnoliabuild2.output.dir}">
-      <fileset dir="${module.magnoliabuild2.basedir}/src">
+      <fileset dir="${module.magnoliabuild2.basedir}/src/main">
         <patternset refid="compiler.resources"/>
         <type type="file"/>
         <patternset refid="excluded.from.compilation.magnoliabuild2"/>
