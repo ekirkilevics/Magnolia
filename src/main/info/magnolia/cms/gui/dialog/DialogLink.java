@@ -40,7 +40,15 @@ public class DialogLink extends DialogEditWithButton {
         this.getButton().setSaveInfo(false);
         String repository = this.getConfigValue("repository", ContentRepository.WEBSITE);
         this.getButton().setOnclick(
-            "mgnlDialogLinkOpenBrowser('" + this.getName() + "','" + repository + "','" + extension + "');");
+            "mgnlDialogLinkOpenBrowser('"
+                + this.getRequest().getContextPath()
+                + "','"
+                + this.getName()
+                + "','"
+                + repository
+                + "','"
+                + extension
+                + "');");
     }
 
 }

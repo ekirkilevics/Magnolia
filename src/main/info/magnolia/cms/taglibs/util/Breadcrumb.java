@@ -20,6 +20,8 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.apache.log4j.Logger;
+
 
 /**
  * @author Marcel Salathe
@@ -31,6 +33,11 @@ public class Breadcrumb extends TagSupport {
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
+
+    /**
+     * Logger.
+     */
+    private static Logger log = Logger.getLogger(Breadcrumb.class);
 
     private String delimiter = " > ";
 
@@ -55,6 +62,7 @@ public class Breadcrumb extends TagSupport {
             }
         }
         catch (Exception e) {
+            log.info("Exception caught: " + e.getMessage(), e);
         }
 
         return super.doStartTag();

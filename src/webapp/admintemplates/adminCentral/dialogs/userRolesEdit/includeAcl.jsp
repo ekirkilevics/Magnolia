@@ -18,7 +18,6 @@
 				 info.magnolia.cms.core.HierarchyManager,
 				 info.magnolia.cms.util.Resource,
 				 javax.jcr.Node,
-				 javax.jcr.RepositoryException,
 				 java.util.ArrayList,
                  info.magnolia.cms.gui.control.Select,
                  info.magnolia.cms.gui.control.Edit,
@@ -34,7 +33,7 @@
 	static final long PERMISSION_NO=0;
 
 
-	private static final String getHtmlRowInner() {
+	private static final String getHtmlRowInner(HttpServletRequest request) {
 		boolean small=true;
 
 		Select accessRight=new Select();
@@ -62,7 +61,7 @@
 
 		Button choose=new Button();
 		choose.setLabel("Choose...");
-		choose.setOnclick("mgnlAclChoose('+index+',\\\'"+ContentRepository.WEBSITE+"\\\');");
+		choose.setOnclick("mgnlAclChoose('"+ request.getContextPath() + "','+index+',\\\'"+ContentRepository.WEBSITE+"\\\');");
 		choose.setSmall(small);
 
 		Button delete=new Button();
@@ -119,7 +118,7 @@
 	<script>
 		function mgnlAclGetHtmlRow(index,path,name)
 			{
-			return '<%=getHtmlRowInner()%>';
+			return '<%=getHtmlRowInner(request)%>';
 			}
 
 			<%

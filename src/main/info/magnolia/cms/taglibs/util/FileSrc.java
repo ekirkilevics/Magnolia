@@ -181,6 +181,7 @@ public class FileSrc extends TagSupport {
             out.print(src);
         }
         catch (Exception e) {
+            log.info("Exception caught: " + e.getMessage(), e);
         }
     }
 
@@ -206,6 +207,7 @@ public class FileSrc extends TagSupport {
                     this.nodeDataName + "_properties");
             }
             catch (Exception e) {
+                log.info("Exception caught: " + e.getMessage(), e);
             }
         }
         if (properties != null) {

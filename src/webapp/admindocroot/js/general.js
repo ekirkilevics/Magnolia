@@ -238,7 +238,7 @@ function mgnlOpenDialog(path,nodeCollection,node,paragraph,repository,context,di
 ### open tree browser
 ################################### */
 
-function mgnlOpenTreeBrowser(controlName,pathSelected,pathOpen,repository,extension,width,height)
+function mgnlOpenTreeBrowser(context,controlName,pathSelected,pathOpen,repository,extension,width,height)
 	{
 	if (!width) width=450;
 	if (!height) height=550;

@@ -204,7 +204,7 @@ function mgnlControlFileSetFileName(id,clear)
 ### control link: open link browser
 ################################### */
 
-function mgnlDialogLinkOpenBrowser(controlName,repository,extension)
+function mgnlDialogLinkOpenBrowser(context,controlName,repository,extension)
 	{
 	var pathSelected=document.getElementById(controlName).value;
 
@@ -214,7 +214,7 @@ function mgnlDialogLinkOpenBrowser(controlName,repository,extension)
 
 	if (extension) pathSelected=pathSelected.replace("."+extension,"");
 
-	mgnlOpenTreeBrowser(controlName,pathSelected,pathOpen,repository,extension)
+	mgnlOpenTreeBrowser(context,controlName,pathSelected,pathOpen,repository,extension)
 	}
 
 

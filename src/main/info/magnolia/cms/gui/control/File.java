@@ -15,6 +15,8 @@ package info.magnolia.cms.gui.control;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.misc.FileProperties;
 
+import org.apache.log4j.Logger;
+
 
 /**
  * @author Vinzenz Wyser
@@ -23,6 +25,11 @@ import info.magnolia.cms.gui.misc.FileProperties;
 public class File extends ControlSuper {
 
     public static final String REMOVE = "remove";
+
+    /**
+     * Logger.
+     */
+    private static Logger log = Logger.getLogger(File.class);
 
     private String cssClassFileName = "";
 
@@ -91,6 +98,7 @@ public class File extends ControlSuper {
                 FileProperties.PROPERTY_FILENAME).getString();
         }
         catch (Exception e) {
+            log.info("Exception caught: " + e.getMessage(), e);
         }
         return fileName;
     }
@@ -108,6 +116,7 @@ public class File extends ControlSuper {
                     FileProperties.PROPERTY_TEMPLATE).getString();
             }
             catch (Exception e) {
+                log.info("Exception caught: " + e.getMessage(), e);
             }
         }
         return template;
@@ -123,6 +132,7 @@ public class File extends ControlSuper {
                 .getString();
         }
         catch (Exception e) {
+            log.info("Exception caught: " + e.getMessage(), e);
         }
         return ext;
     }
@@ -160,6 +170,7 @@ public class File extends ControlSuper {
             path = this.getWebsiteNode().getHandle() + "/" + this.getName();
         }
         catch (Exception e) {
+            log.info("Exception caught: " + e.getMessage(), e);
         }
         return path;
     }
@@ -176,6 +187,7 @@ public class File extends ControlSuper {
                 + this.getExtension();
         }
         catch (Exception e) {
+            log.info("Exception caught: " + e.getMessage(), e);
         }
         return path;
     }

@@ -58,7 +58,8 @@ public class DialogButtonSet extends DialogBox {
                 options.add(button);
             }
         }
-        catch (RepositoryException re) {
+        catch (RepositoryException e) {
+            log.info("Exception caught: " + e.getMessage(), e);
         }
         this.setOptions(options);
     }

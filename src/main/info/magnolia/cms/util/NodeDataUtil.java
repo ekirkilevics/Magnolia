@@ -19,6 +19,7 @@ import java.util.Date;
 import javax.jcr.PropertyType;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -26,6 +27,11 @@ import org.apache.commons.lang.StringUtils;
  * @version $Revision: $ ($Author: $)
  */
 public class NodeDataUtil {
+
+    /**
+     * Logger.
+     */
+    private static Logger log = Logger.getLogger(NodeDataUtil.class);
 
     NodeData nodeData;
 
@@ -79,6 +85,7 @@ public class NodeDataUtil {
             }
         }
         catch (Exception e) {
+            log.info("Exception caught: " + e.getMessage(), e);
         }
         return StringUtils.EMPTY;
     }

@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -35,6 +36,11 @@ public class NewBar extends TagSupport {
     private static final long serialVersionUID = 222L;
 
     private static final String DEFAULT_NEW_LABEL = "New";
+
+    /**
+     * Logger.
+     */
+    private static Logger log = Logger.getLogger(NewBar.class);
 
     private String contentNodeCollectionName;
 
@@ -61,6 +67,7 @@ public class NewBar extends TagSupport {
             this.display();
         }
         catch (Exception e) {
+            log.info("Exception caught: " + e.getMessage(), e);
         }
         return EVAL_PAGE;
     }

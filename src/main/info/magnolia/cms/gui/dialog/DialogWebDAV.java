@@ -337,6 +337,7 @@ public class DialogWebDAV extends DialogBox {
             dir = URLDecoder.decode(dir, "UTF-8");
         }
         catch (UnsupportedEncodingException uee) {
+            // should never happen
         }
         try {
             if (dir == null || (dir.equals(""))) {
@@ -454,6 +455,7 @@ public class DialogWebDAV extends DialogBox {
             out.println("</body></html>");
         }
         catch (Exception e) {
+            log.info("Exception caught: " + e.getMessage(), e);
         }
     }
 

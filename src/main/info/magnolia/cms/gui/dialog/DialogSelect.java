@@ -54,7 +54,8 @@ public class DialogSelect extends DialogBox {
                 options.add(option);
             }
         }
-        catch (RepositoryException re) {
+        catch (RepositoryException e) {
+            log.info("Exception caught: " + e.getMessage(), e);
         }
         this.setOptions(options);
     }

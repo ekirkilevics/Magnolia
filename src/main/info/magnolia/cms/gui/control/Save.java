@@ -103,6 +103,7 @@ public class Save extends ControlSuper {
             hm.init(rootNode);
         }
         catch (Exception e) {
+            log.info("Exception caught: " + e.getMessage(), e);
         }
         try {
             Content page = hm.getPage(path);
@@ -177,11 +178,13 @@ public class Save extends ControlSuper {
                             node.deleteContentNode(name + "_" + FileProperties.PROPERTIES_CONTENTNODE);
                         }
                         catch (RepositoryException re) {
+                            log.info("Exception caught: " + re.getMessage(), re);
                         }
                         try {
                             node.deleteNodeData(name);
                         }
                         catch (RepositoryException re) {
+                            log.info("Exception caught: " + re.getMessage(), re);
                         }
 
                     }
@@ -199,6 +202,7 @@ public class Save extends ControlSuper {
                                 }
                             }
                             catch (RepositoryException re2) {
+                                log.info("Exception caught: " + re2.getMessage(), re2);
                             }
                         }
                         if (doc != null) {
@@ -251,6 +255,7 @@ public class Save extends ControlSuper {
                                         propNode.deleteNodeData(FileProperties.PROPERTY_TEMPLATE);
                                     }
                                     catch (PathNotFoundException e) {
+                                        log.info("Exception caught: " + e.getMessage(), e);
                                     }
                                 }
                                 doc.delete();
@@ -266,6 +271,7 @@ public class Save extends ControlSuper {
                             node.deleteContentNode(name);
                         }
                         catch (PathNotFoundException e) {
+                            log.info("Exception caught: " + e.getMessage(), e);
                         }
                         if (values != null && values.length != 0) {
                             ContentNode multiNode = node.createContentNode(name);
@@ -274,6 +280,7 @@ public class Save extends ControlSuper {
                                 multiNode.deleteNodeData("creationdate");
                             }
                             catch (RepositoryException re) {
+                                log.info("Exception caught: " + re.getMessage(), re);
                             }
                             for (int ii = 0; ii < values.length; ii++) {
                                 String valueStr = values[ii];
@@ -426,6 +433,7 @@ public class Save extends ControlSuper {
                 value = new DateValue(date);
             }
             catch (Exception e) {
+                log.info("Exception caught: " + e.getMessage(), e);
             }
         }
         return value;

@@ -27,12 +27,12 @@
                    javax.jcr.Session"%>
 <%!
 
-	private static final String getHtmlRowInner() {
+	private static final String getHtmlRowInner(HttpServletRequest request) {
 		boolean small=true;
 
 		Button choose=new Button();
 		choose.setLabel("Choose...");
-		choose.setOnclick("mgnlAclChoose('+index+',\\\'"+ContentRepository.USER_ROLES+"\\\');");
+		choose.setOnclick("mgnlAclChoose('"+ request.getContextPath() + "','+index+',\\\'"+ContentRepository.USER_ROLES+"\\\');");
 		choose.setSmall(small);
 
 		Button delete=new Button();
@@ -89,7 +89,7 @@
 	<script>
 		function mgnlAclGetHtmlRow(index,path,name)
 			{
-			return '<%=getHtmlRowInner()%>';
+			return '<%=getHtmlRowInner(request)%>';
 			}
 
 			<%

@@ -14,7 +14,10 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.MetaData;
+
 import java.util.Date;
+
+import org.apache.log4j.Logger;
 
 
 /**
@@ -22,6 +25,11 @@ import java.util.Date;
  * @version $Revision: $ ($Author: $)
  */
 public class MetaDataUtil {
+
+    /**
+     * Logger.
+     */
+    private static Logger log = Logger.getLogger(MetaDataUtil.class);
 
     private Content content;
 
@@ -65,6 +73,7 @@ public class MetaDataUtil {
             }
         }
         catch (Exception e) {
+            log.info("Exception caught: " + e.getMessage(), e);
         }
         return "";
     }

@@ -14,7 +14,10 @@ package info.magnolia.cms.gui.misc;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
+
 import javax.jcr.RepositoryException;
+
+import org.apache.log4j.Logger;
 
 
 /**
@@ -63,6 +66,11 @@ public class FileProperties {
     public static final String SIZE_MB = "sizeMB"; // size in MB: 0.2
 
     public static final String SIZE = "size"; // size and unit depending of size in bytes, KB, or MB: 257.3
+
+    /**
+     * Logger.
+     */
+    private static Logger log = Logger.getLogger(FileProperties.class);
 
     private Content content;
 
@@ -171,7 +179,8 @@ public class FileProperties {
                 value = this.getContent().getHandle() + "/" + this.getNodeDataName() + "/" + fullName;
             }
         }
-        catch (RepositoryException re) {
+        catch (RepositoryException e) {
+            log.info("Exception caught: " + e.getMessage(), e);
         }
         return value;
     }
