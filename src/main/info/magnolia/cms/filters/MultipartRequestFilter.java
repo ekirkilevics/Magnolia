@@ -10,7 +10,7 @@
  * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.Filter;
+package info.magnolia.cms.filters;
 
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.util.Path;
@@ -23,6 +23,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.oreilly.servlet.MultipartRequest;
 
 
@@ -32,13 +34,10 @@ import com.oreilly.servlet.MultipartRequest;
  */
 public class MultipartRequestFilter extends BaseFilter {
 
-    private static final int MAX_FILE_SIZE = 200000000; // 200MB
-
     /**
-     * default constructor.
+     * Max file upload size.
      */
-    public MultipartRequestFilter() {
-    }
+    private static final int MAX_FILE_SIZE = 200000000; // 200MB
 
     /**
      *
@@ -67,11 +66,17 @@ public class MultipartRequestFilter extends BaseFilter {
 
     /**
      * Adds all request paramaters as request attributes.
-     * @param req , HttpServletRequest
+     * @param request , HttpServletRequest
      */
-    private static void parseParameters(ServletRequest req) throws IOException {
+    private static void parseParameters(HttpServletRequest request) throws IOException {
         MultipartForm form = new MultipartForm();
-        MultipartRequest multi = new MultipartRequest(req, Path.getTempDirectoryPath(), MAX_FILE_SIZE);
+        String encoding = StringUtils.defaultString(request.getCharacterEncoding(), "UTF-8");
+        MultipartRequest multi = new MultipartRequest(
+            request,
+            Path.getTempDirectoryPath(),
+            MAX_FILE_SIZE,
+            encoding,
+            null);
         Enumeration params = multi.getParameterNames();
         while (params.hasMoreElements()) {
             String name = (String) params.nextElement();
@@ -87,6 +92,6 @@ public class MultipartRequestFilter extends BaseFilter {
             String name = (String) files.nextElement();
             form.addDocument(name, multi.getFilesystemName(name), multi.getContentType(name), multi.getFile(name));
         }
-        req.setAttribute("multipartform", form);
+        request.setAttribute("multipartform", form);
     }
 }

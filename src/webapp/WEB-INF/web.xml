@@ -9,13 +9,13 @@
         <description></description>
         <display-name>ContentTypeFilter</display-name>
         <filter-name>ContentTypeFilter</filter-name>
-        <filter-class>info.magnolia.cms.Filter.ContentTypeFilter</filter-class>
+        <filter-class>info.magnolia.cms.filters.ContentTypeFilter</filter-class>
     </filter>
     <filter>
         <description></description>
         <display-name>MultipartRequestFilter</display-name>
         <filter-name>MultipartRequestFilter</filter-name>
-        <filter-class>info.magnolia.cms.Filter.MultipartRequestFilter</filter-class>
+        <filter-class>info.magnolia.cms.filters.MultipartRequestFilter</filter-class>
         <init-param>
             <param-name>LocalStore</param-name>
             <param-value>false</param-value>

@@ -10,7 +10,7 @@
  * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.Filter;
+package info.magnolia.cms.filters;
 
 import info.magnolia.cms.beans.config.MIMEMapping;
 
@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -37,11 +38,12 @@ public class ContentTypeFilter extends BaseFilter {
      */
     private static Logger log = Logger.getLogger(ContentTypeFilter.class);
 
-    public ContentTypeFilter() {
-    }
-
+    /**
+     * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse,
+     * javax.servlet.FilterChain)
+     */
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain filterChain) throws IOException,
-        javax.servlet.ServletException {
+        ServletException {
         this.setContentType(req, resp);
         filterChain.doFilter(req, resp);
     }

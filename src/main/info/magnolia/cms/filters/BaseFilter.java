@@ -10,7 +10,7 @@
  * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.Filter;
+package info.magnolia.cms.filters;
 
 import java.io.IOException;
 
@@ -29,11 +29,8 @@ public abstract class BaseFilter implements Filter {
 
     private FilterConfig filterConfig;
 
-    protected BaseFilter() {
-    }
-
     /**
-     *
+     * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
      */
     public void init(final FilterConfig filterConfig) {
         setFilterConfig(filterConfig);
