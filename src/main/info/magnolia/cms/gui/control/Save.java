@@ -439,25 +439,30 @@ public class Save extends ControlSuper {
         return value;
     }
 
+    /**
+     * @todo configurable regexp on save?
+     * @param value
+     * @return
+     */
     public String getRichEditValueStr(String value) {
 
         String valueStr = value;
-        valueStr = valueStr.replaceAll("\r\n", " ");
-        valueStr = valueStr.replaceAll("\n", " ");
+        valueStr = StringUtils.replace(valueStr, "\r\n", " ");
+        valueStr = StringUtils.replace(valueStr, "\n", " ");
 
-        valueStr = valueStr.replaceAll("<br>", "\n ");
-        valueStr = valueStr.replaceAll("<BR>", "\n ");
-        valueStr = valueStr.replaceAll("<br/>", "\n ");
+        // ie inserts some strange br...
+        valueStr = StringUtils.replace(valueStr, "</br>", "");
+
+        valueStr = StringUtils.replace(valueStr, "<br>", "\n ");
+        valueStr = StringUtils.replace(valueStr, "<BR>", "\n ");
+        valueStr = StringUtils.replace(valueStr, "<br/>", "\n ");
 
         // replace <a class="...></a> by <span class=""></span>
         valueStr = this.replaceABySpan(valueStr, "a");
+
         // replace <P>
         valueStr = this.replacePByBr(valueStr, "p");
 
-        // what??? strong and em are standard tags and should ALWAYS be used insted of b and i
-        // replace <STRONG>, <EM> (ie)
-        // valueStr = this.replaceTag(valueStr, "em", "i");
-        // valueStr = this.replaceTag(valueStr, "strong", "b");
         return valueStr;
     }
 
@@ -492,16 +497,29 @@ public class Save extends ControlSuper {
         return valueStr2;
     }
 
+    /**
+     * @param value
+     * @param tagName
+     * @return
+     */
     private String replacePByBr(String value, String tagName) {
+
+        if (StringUtils.isBlank(value)) {
+            return value;
+        }
+
         String pre = "<" + tagName + ">";
         String post = "</" + tagName + ">";
+
         // get rid of last </p>
-        if (value.lastIndexOf(post) == value.length() - post.length()) {
-            value = value.substring(0, value.lastIndexOf(post));
+        if (value.endsWith(post)) {
+            value = StringUtils.substringBeforeLast(value, post);
         }
-        value = value.replaceAll(pre + "&nbsp;" + post, "\n");
-        value = value.replaceAll(pre, "");
-        value = value.replaceAll(post, "\n\n");
+
+        value = StringUtils.replace(value, pre + "&nbsp;" + post, "\n ");
+        value = StringUtils.replace(value, pre, StringUtils.EMPTY);
+        value = StringUtils.replace(value, post, "\n\n ");
+
         if (!tagName.equals(tagName.toUpperCase())) {
             value = this.replacePByBr(value, tagName.toUpperCase());
         }
