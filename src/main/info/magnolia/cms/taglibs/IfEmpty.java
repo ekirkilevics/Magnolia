@@ -194,6 +194,23 @@ public class IfEmpty extends BodyTagSupport
     }
 
     /**
+     * @param name , contentNode collection name
+     * @deprecated
+     */
+    public void setContainerListName(String name)
+    {
+        this.setContentNodeCollectionName(name);
+    }
+
+    /**
+     * @param name , contentNodeCollectionName to check
+     */
+    public void setContentNodeCollectionName(String name)
+    {
+        this.contentNodeCollectionName = name;
+    }
+
+    /**
      * <p>
      * set the actpage
      * </p>
@@ -204,6 +221,9 @@ public class IfEmpty extends BodyTagSupport
         this.actpage = set;
     }
 
+    /**
+     * @see javax.servlet.jsp.tagext.Tag#release()
+     */
     public void release()
     {
         nodeDataName = "";
