@@ -14,6 +14,7 @@ package info.magnolia.module.admininterface;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ItemType;
+import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.dialog.DialogSpacer;
@@ -205,7 +206,7 @@ public class AdminInterfaceServlet extends HttpServlet {
                 Template.reload();
             }
             else if (path.startsWith("/modules/templating/Paragraphs/")) {
-                // @todo reload paragraphs
+                Paragraph.reload();
             }
 
             proceed = false;

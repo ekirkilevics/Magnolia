@@ -86,9 +86,10 @@ public class Paragraph {
         }
     }
 
-    protected static void reload() {
+    public static void reload() {
         log.info("Config : re-initializing Paragraph info");
         Paragraph.init();
+        update("modules/templating");
     }
 
     /**
