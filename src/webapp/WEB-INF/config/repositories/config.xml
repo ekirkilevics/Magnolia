@@ -122,7 +122,7 @@
         (e.g. registered namespaces, custom node types, etc.)
     -->
     <FileSystem class="org.apache.jackrabbit.core.fs.local.LocalFileSystem">
-        <param name="path" value="../webapps/magnolia/repositories/config/repository" />
+        <param name="path" value="${rep.home}/repository" />
     </FileSystem>
     <!--
         security configuration
@@ -137,7 +137,7 @@
     <!--
         location of workspaces root directory and name of default workspace
     -->
-    <Workspaces rootPath="../webapps/magnolia/repositories/config/workspaces" defaultWorkspace="default" />
+    <Workspaces rootPath="${rep.home}/workspaces" defaultWorkspace="default" />
     <!--
         workspace configuration template:
         used to create the initial workspace if there's no workspace yet
@@ -148,14 +148,14 @@
             class: FQN of class implementing FileSystem interface
         -->
         <FileSystem class="com.day.jackrabbit.fs.cq.CQFileSystem">
-            <param name="path" value="../webapps/magnolia/repositories/config/workspaces/default.dat" />
+            <param name="path" value="${wsp.home}/default.dat" />
             <param name="autoRepair" value="false" />
             <param name="blockSize" value="128" />
             <param name="autoSync" value="true" />
         </FileSystem>
         <!--
         <FileSystem class="org.apache.jackrabbit.core.fs.local.LocalFileSystem">
-            <param name="path" value="../webapps/magnolia/repositories/config/workspaces/default"/>
+            <param name="path" value="${wsp.home}/default"/>
         </FileSystem>
         -->
         <!--
@@ -176,7 +176,7 @@
             <param name="mergeFactor" value="10" />
             <param name="redoSize" value="1000" />
             <FileSystem class="com.day.jackrabbit.fs.cq.CQFileSystem">
-                <param name="path" value="../webapps/magnolia/repositories/config/workspaces/index.dat" />
+                <param name="path" value="${wsp.home}/index.dat" />
                 <param name="autoRepair" value="false" />
                 <param name="blockSize" value="128" />
                 <param name="autoSync" value="true" />
@@ -186,18 +186,18 @@
     <!--
         Configures the versioning
     -->
-    <Versioning rootPath="../webapps/magnolia/repositories/config/version">
+    <Versioning rootPath="${rep.home}/version">
         <!--
             Configures the filesystem to use for versioning for the respective
             persistence manager
         -->
         <!--
         <FileSystem class="org.apache.jackrabbit.core.fs.local.LocalFileSystem">
-            <param name="path" value="../webapps/magnolia/repositories/config/version"/>
+            <param name="path" value="${rep.home}/version"/>
         </FileSystem>
         -->
         <FileSystem class="com.day.jackrabbit.fs.cq.CQFileSystem">
-            <param name="path" value="../webapps/magnolia/repositories/config/workspaces/version.dat" />
+            <param name="path" value="${rep.home}/workspaces/version.dat" />
             <param name="autoRepair" value="false" />
             <param name="blockSize" value="128" />
             <param name="autoSync" value="true" />
