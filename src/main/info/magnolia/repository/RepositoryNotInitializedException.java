@@ -12,14 +12,10 @@
  */
 package info.magnolia.repository;
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
-
 import javax.jcr.RepositoryException;
 
 
 /**
- * Date: Nov 25, 2004 Time: 5:24:09 PM
  * @author Sameer Charles
  * @version 2.1
  */
@@ -30,71 +26,17 @@ public class RepositoryNotInitializedException extends RepositoryException {
      */
     private static final long serialVersionUID = 222L;
 
-    private Exception root;
-
-    public RepositoryNotInitializedException() {
-        super();
-    }
-
     public RepositoryNotInitializedException(String message) {
         super(message);
     }
 
-    public RepositoryNotInitializedException(String message, Exception root) {
-        super(message);
-        if (root instanceof RepositoryNotInitializedException) {
-            this.root = ((RepositoryNotInitializedException) root).getRootException();
-        }
-        else {
-            this.root = root;
-        }
+    public RepositoryNotInitializedException(String message, Exception cause) {
+        super(message, (cause instanceof RepositoryNotInitializedException)
+            ? ((RepositoryNotInitializedException) cause).getCause()
+            : cause);
     }
 
     public RepositoryNotInitializedException(Exception root) {
-        this(null, root);
-    }
-
-    public Exception getRootException() {
-        return this.root;
-    }
-
-    public String getMessage() {
-        String message = super.getMessage();
-        if (this.root == null) {
-            return message;
-        }
-        String rootCause = this.root.getMessage();
-        if (rootCause == null) {
-            return message;
-        }
-
-        return (message + ":" + rootCause);
-    }
-
-    public void printStackTrace() {
-        synchronized (System.err) {
-            super.printStackTrace();
-            if (this.root != null) {
-                this.root.printStackTrace();
-            }
-        }
-    }
-
-    public void printStackTrace(PrintStream ps) {
-        synchronized (ps) {
-            super.printStackTrace(ps);
-            if (this.root != null) {
-                this.root.printStackTrace(ps);
-            }
-        }
-    }
-
-    public void printStackTrace(PrintWriter pw) {
-        synchronized (pw) {
-            super.printStackTrace(pw);
-            if (this.root != null) {
-                this.root.printStackTrace(pw);
-            }
-        }
+        super(root);
     }
 }
