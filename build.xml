@@ -69,7 +69,6 @@
     <pathelement location="lib/servlet-api.jar"/>
     <pathelement location="lib/standard.jar"/>
     <pathelement location="lib/taglibs-mailer.jar"/>
-    <pathelement location="lib/w3c.jar"/>
     <pathelement location="lib/webdav.jar"/>
     <pathelement location="lib/commons-httpclient.jar"/>
   </path>
