@@ -159,17 +159,17 @@ rootPath CDATA #REQUIRED
             Configures the filesystem to use for versioning for the respective
             persistence manager
         -->
-        <!--
         <FileSystem class="org.apache.jackrabbit.core.fs.local.LocalFileSystem">
-            <param name="path" value="../webapps/magnolia/repositories/website/version"/>
+            <param name="path" value="../webapps/magnolia/repositories/website/workspaces/version"/>
         </FileSystem>
-		-->
+        <!--
         <FileSystem class="com.day.jackrabbit.fs.cq.CQFileSystem">
             <param name="path" value="../webapps/magnolia/repositories/website/workspaces/version.dat"/>
             <param name="autoRepair" value="false"/>
             <param name="blockSize" value="128"/>
             <param name="autoSync" value="true"/>
         </FileSystem>
+		-->
 
         <!--
             Configures the perisistence manager to be used for persisting version state.
