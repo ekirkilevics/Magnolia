@@ -71,13 +71,19 @@ public class ConfigLoader {
         License license = License.getInstance();
         license.init();
         printVersionInfo(license);
+
+        log.info("Init content repository");
         ContentRepository.init();
 
         // todo move to appropriate module classes
+        log.info("Init template");
         Template.init();
+        log.info("Init paragraph");
         Paragraph.init();
+        log.info("Init virtualMap");
         VirtualMap.getInstance().init();
-        // -----
+
+        log.info("Init secureURI");
         SecureURI.init();
         try {
             Server.init();
@@ -91,8 +97,12 @@ public class ConfigLoader {
         Subscriber.init();
         Cache.init();
         MIMEMapping.init();
-
-        log.info("Configuration loaded!");
+        if (isConfigured()) {
+            log.info("Configuration loaded!");
+        }
+        else {
+            log.warn("Server not configured, entering in listening mode for activation.");
+        }
     }
 
     /**
