@@ -177,6 +177,10 @@ public class EntryServlet extends HttpServlet {
             log.error(e.getMessage(), e);
             return false;
         }
+        /**
+         * invalidate previous session
+         * */
+        SessionAccessControl.invalidateUser(req);
         return true;
     }
 
