@@ -110,6 +110,7 @@
             <name>actpage</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
             <description></description>
         </attribute>
         <attribute>
@@ -173,5 +174,19 @@
         <tag-class>info.magnolia.cms.taglibs.util.Xmp</tag-class>
         <body-content>JSP</body-content>
         <description>Simulates the xmp tag (because in html it is deprecated)</description>
+    </tag>
+    <tag>
+        <name>newlines</name>
+        <tag-class>it.raweb.webapp.taglib.ConvertNewLineTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Converts text in the body of the tag adding %lt;br /> tags at new lines or wrapping lines in paragraphs.
+        </description>
+        <attribute>
+            <name>para</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>If true each line will be wrapped in a %lt;p> tag. Default to false (use br's).</description>
+        </attribute>
     </tag>
 </taglib>
