@@ -29,6 +29,7 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -162,7 +163,7 @@ public final class Cache {
     public static boolean isCacheable(HttpServletRequest request) {
         // first check for MIMEMappings, extension must exist otherwise its a fake request
 
-        if (MIMEMapping.getMIMEType((String) request.getAttribute(Aggregator.EXTENSION)) == null) {
+        if (StringUtils.isEmpty(MIMEMapping.getMIMEType(Path.getExtension(request)))) {
             return false;
         }
         Iterator listEnum = cachedCacheableURIMapping.keySet().iterator();

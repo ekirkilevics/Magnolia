@@ -19,6 +19,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * @author Sameer Charles
@@ -27,6 +29,12 @@ import javax.servlet.http.HttpServletRequest;
 public final class Cache {
 
     private static Map cachedURIList = new Hashtable();
+
+    /**
+     * holds all URI's which are being cached by cache process
+     * this list is updated by CacheHandler on start and end of cache process
+     * */
+    private static Map inProcessURIList = new Hashtable();
 
     private long time;
 
@@ -53,6 +61,41 @@ public final class Cache {
      */
     public static boolean isCached(String uri) {
         return (Cache.cachedURIList.get(uri) != null);
+    }
+
+    /**
+     * @return true is the request URI is being cached
+     */
+    public static boolean isInCacheProcess(HttpServletRequest request) {
+        return isInCacheProcess(Path.getURI(request));
+    }
+
+    /**
+     * @return true is the request URI is being cached
+     */
+    public static boolean isInCacheProcess(String uri) {
+        return (Cache.inProcessURIList.get(uri) != null);
+    }
+
+    /**
+     * @param uri
+     */
+    public static void addToInProcessURIList(String uri) {
+        Cache.inProcessURIList.put(uri, StringUtils.EMPTY);
+    }
+
+    /**
+     * @param uri
+     */
+    public static void removeFromInProcessURIList(String uri) {
+        Cache.inProcessURIList.remove(uri);
+    }
+
+    /**
+     *
+     */
+    public static void clearInProcessURIList() {
+        Cache.inProcessURIList.clear();
     }
 
     /**

@@ -16,6 +16,7 @@ import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.Dispatcher;
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.config.VirtualMap;
+import info.magnolia.cms.beans.runtime.Cache;
 import info.magnolia.cms.core.CacheHandler;
 import info.magnolia.cms.core.CacheProcess;
 import info.magnolia.cms.security.Authenticator;
@@ -50,8 +51,10 @@ import org.apache.log4j.Logger;
  * This is the main http servlet which will be called for any resource request this servlet will dispacth or process
  * requests according to their nature -- all resource requests will go to ResourceDispatcher -- all page requests will
  * be handed over to the defined JSP or Servlet (template).
+ *
+ * Updated to allow caching of virtual URI's
  * @author Sameer Charles
- * @version 2.0
+ * @version 2.1
  */
 public class EntryServlet extends HttpServlet {
 
@@ -89,30 +92,27 @@ public class EntryServlet extends HttpServlet {
             /**
              * Try to find out what the preferred language of this user is.
              */
-            // TranslationEngine.findPreferredLanguage(req);
             if (isAllowed(req, res)) {
-                if (redirect(req, res)) {
-                    return;
-                }
-                intercept(req, res);
                 /* try to stream from cache first */
-                if (info.magnolia.cms.beans.runtime.Cache.isCached(req)) {
+                if (Cache.isCached(req)) {
                     if (CacheHandler.streamFromCache(req, res)) {
                         return; /* if success return */
                     }
                 }
+                if (!Cache.isInCacheProcess(req) && info.magnolia.cms.beans.config.Cache.isCacheable()) {
+                    CacheProcess cache = new CacheProcess(new CacheRequest(req));
+                    cache.start();
+                }
+                if (redirect(req, res)) {
+                    return;
+                }
+                intercept(req, res);
                 /* aggregate content */
                 Aggregator aggregator = new Aggregator(req, res);
-                boolean success = aggregator.collect();
+                aggregator.collect();
                 aggregator = null;
                 try {
                     Dispatcher.dispatch(req, res, getServletContext());
-                    if (success) {
-                        if (info.magnolia.cms.beans.config.Cache.isCacheable()) {
-                            CacheProcess cache = new CacheProcess(new CacheRequest(req));
-                            cache.start();
-                        }
-                    }
                 }
                 catch (Exception e) {
                     log.error(e.getMessage(), e);

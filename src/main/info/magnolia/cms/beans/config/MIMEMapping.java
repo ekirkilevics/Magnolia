@@ -97,8 +97,8 @@ public final class MIMEMapping {
      * @return MIME type
      */
     public static String getMIMEType(String key) {
-        if (key == null) {
-            return null;
+        if (StringUtils.isEmpty(key)) {
+            return StringUtils.EMPTY;
         }
         return (String) MIMEMapping.cachedContent.get(key.toLowerCase());
     }

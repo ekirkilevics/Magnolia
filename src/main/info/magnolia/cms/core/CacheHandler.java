@@ -59,6 +59,7 @@ public class CacheHandler extends Thread {
 
         if (Cache.isCached(request))
             return;
+
         // dont cache
         if (CacheHandler.hasRedirect(request)) {
             return;
@@ -66,6 +67,7 @@ public class CacheHandler extends Thread {
 
         String uri = request.getRequestURI();
         String repositoryURI = Path.getURI(request);
+
         FileOutputStream out = null;
         int size = 0;
         int compressedSize = 0;
@@ -102,6 +104,7 @@ public class CacheHandler extends Thread {
             if (out != null) {
                 out.close();
             }
+            Cache.removeFromInProcessURIList(repositoryURI);
         }
     }
 
@@ -310,12 +313,12 @@ public class CacheHandler extends Thread {
             if (file.isDirectory()) {
                 emptyDirectory(file);
                 file.delete();
-                Cache.clearCachedURIList();
             }
             else {
                 log.info("Flushing - " + uri);
                 file.delete();
                 Cache.removeFromCachedURIList(uri);
+                Cache.removeFromInProcessURIList(uri);
             }
         }
         catch (Exception e) {
@@ -340,6 +343,9 @@ public class CacheHandler extends Thread {
             }
             else {
                 log.info("Flushing - " + children[i].getPath());
+                String path = StringUtils.substringAfter(children[i].getPath(),Path.getCacheDirectoryPath());
+                Cache.removeFromCachedURIList(path);
+                Cache.removeFromInProcessURIList(path);
                 children[i].delete();
             }
         }
