@@ -18,6 +18,8 @@ import java.util.Date;
 
 import javax.jcr.PropertyType;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * @author Sameer Charles
@@ -73,12 +75,12 @@ public class NodeDataUtil {
                 case (PropertyType.BINARY):
                 // ???
                 default:
-                    return "";
+                    return StringUtils.EMPTY;
             }
         }
         catch (Exception e) {
         }
-        return "";
+        return StringUtils.EMPTY;
     }
 
     public String getTypeName(int type) {
@@ -97,7 +99,7 @@ public class NodeDataUtil {
             case PropertyType.BINARY:
                 return PropertyType.TYPENAME_BINARY;
             default:
-                return "";
+                return StringUtils.EMPTY;
         }
 
     }

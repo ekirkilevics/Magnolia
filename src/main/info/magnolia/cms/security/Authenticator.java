@@ -20,6 +20,7 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -146,7 +147,7 @@ public final class Authenticator {
     public static char[] getPassword(HttpServletRequest request) {
         Object pswd = request.getSession().getAttribute(ATTRIBUTE_PSWD);
         if (pswd == null) {
-            return "".toCharArray();
+            return StringUtils.EMPTY.toCharArray();
         }
         return ((String) pswd).toCharArray();
     }

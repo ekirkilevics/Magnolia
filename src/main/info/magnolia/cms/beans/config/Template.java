@@ -70,11 +70,11 @@ public class Template {
     /**
      * Optional fields.
      */
-    private String description = "";
+    private String description;
 
-    private String image = "";
+    private String image;
 
-    private String title = "";
+    private String title;
 
     /**
      * Load all temple definitions available as a collection of Content objects.

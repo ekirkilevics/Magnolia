@@ -40,6 +40,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -117,7 +118,7 @@ public class SimpleExchange extends HttpServlet {
         this.host = request.getRemoteHost();
         this.remotePort = this.request.getHeader(Syndicator.REMOTE_PORT);
         this.senderURL = this.request.getHeader(Syndicator.SENDER_URL);
-        if (this.senderURL == null || this.senderURL.equals("")) {
+        if (StringUtils.isEmpty(this.senderURL)) {
             this.senderURL = this.protocol + "://" + this.host + ":" + this.remotePort;
         }
         this.objectType = this.request.getHeader(Syndicator.OBJECT_TYPE);

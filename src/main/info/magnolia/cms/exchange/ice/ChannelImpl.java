@@ -26,6 +26,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * @author Sameer Charles
@@ -74,7 +76,8 @@ public class ChannelImpl implements Channel {
         }
         packet.setChannelID(this.id);
         this.remoteSend(packet);
-        this.queue.put(packet.getID(), ""); /* just a referece for confirmation */
+        // just a reference for confirmation
+        this.queue.put(packet.getID(), StringUtils.EMPTY);
     }
 
     /**

@@ -27,14 +27,15 @@ public class AAttribute extends TagSupport {
      */
     private static final long serialVersionUID = 222L;
 
-    private String value = "";
+    private String value;
 
-    private String name = "";
+    private String name;
 
     /**
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag() throws JspException {
+
         AHref parent = (AHref) findAncestorWithClass(this, AHref.class);
         if (parent == null) {
             throw new JspException("nesting error");

@@ -22,6 +22,8 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * @author Vinzenz Wyser
@@ -61,11 +63,11 @@ public class ButtonEdit extends Button {
     public void setDefaultOnclick() {
         String nodeCollectionName = this.getNodeCollectionName();
         if (nodeCollectionName == null) {
-            nodeCollectionName = "";
+            nodeCollectionName = StringUtils.EMPTY;
         }
         String nodeName = this.getNodeName();
         if (nodeName == null) {
-            nodeName = "";
+            nodeName = StringUtils.EMPTY;
         }
         // todo: dynamic repository
         String repository = ContentRepository.WEBSITE;

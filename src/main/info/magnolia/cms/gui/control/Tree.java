@@ -37,6 +37,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -145,7 +146,7 @@ public class Tree extends ControlSuper {
      * @param s
      */
     public void setPathSelected(String s) {
-        if (s != null && !s.equals("")) {
+        if (StringUtils.isNotEmpty(s)) {
             // this.setPathOpen(s);
             this.setPathOpen(s.substring(0, s.lastIndexOf("/")));
         }

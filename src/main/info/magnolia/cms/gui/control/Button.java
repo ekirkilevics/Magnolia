@@ -14,6 +14,8 @@ package info.magnolia.cms.gui.control;
 
 import info.magnolia.cms.core.Content;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * @author Vinzenz Wyser
@@ -25,7 +27,7 @@ public class Button extends ControlSuper {
 
     private String iconSrc;
 
-    private String onclick = "";
+    private String onclick;
 
     private final String htmlPreDivided = "<table cellpadding=0 cellspacing=0 border=0><tr><td>"; // html before
 
@@ -190,7 +192,7 @@ public class Button extends ControlSuper {
         html.append(" name=\"" + this.getName() + "\"");
         html.append(" value=\"" + this.getValue() + "\"");
         html.append(" id=\"" + this.getId() + "\"");
-        if (!this.getOnclick().equals("")) {
+        if (StringUtils.isNotEmpty(this.getOnclick())) {
             html.append(" onclick=\"" + this.getOnclick() + "\"");
         }
         if (this.getState() == BUTTONSTATE_PUSHED) {
@@ -203,13 +205,12 @@ public class Button extends ControlSuper {
             html.append(this.getHtmlSaveInfo());
         }
         html.append(this.getHtmlInter());
-        html.append("<a href=\"javascript:mgnlShiftDividedButton('"
-            + this.getId()
-            + "');"
-            + this.getOnclick()
-            + "\" "
-            + this.getHtmlCssClass()
-            + ">");
+        html.append("<a href=\"javascript:mgnlShiftDividedButton('" + this.getId() + "');");
+        if (StringUtils.isNotEmpty(this.getOnclick())) {
+            html.append(this.getOnclick());
+        }
+        html.append("\" " + this.getHtmlCssClass() + ">");
+
         // html.append("["+this.getLabel()+"]["+this.getValue()+"]");
         html.append(this.getIconSrc());
         html.append(this.getLabel());
@@ -232,7 +233,13 @@ public class Button extends ControlSuper {
         if (this.getState() == BUTTONSTATE_PUSHED) {
             this.setCssClass(this.getCssClass() + "_PUSHED");
         }
-        html.append(" onclick=\"mgnlShiftPushButtonClick(this);" + this.getOnclick() + "\"");
+        html.append(" onclick=\"mgnlShiftPushButtonClick(this);");
+
+        if (StringUtils.isNotEmpty(this.getOnclick())) {
+            html.append(this.getOnclick());
+        }
+        html.append("\"");
+
         html.append(" onmousedown=\"mgnlShiftPushButtonDown(this);\"");
         html.append(" onmouseout=\"mgnlShiftPushButtonOut(this);\"");
         html.append(this.getHtmlId());

@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -69,16 +70,16 @@ public class AHref extends BodyTagSupport {
      */
     public int doEndTag() {
         req = (HttpServletRequest) pageContext.getRequest();
-        if (this.templateName.equals("")) {
+        if (StringUtils.isEmpty(this.templateName)) {
             if (this.nodeDataName == null) {
-                this.writeLink("");
+                this.writeLink(StringUtils.EMPTY);
                 return EVAL_BODY_BUFFERED;
             }
             this.contentNode = Resource.getLocalContentNode(req);
             if (this.contentNode == null) {
                 this.contentNode = Resource.getGlobalContentNode(req);
                 if (this.contentNode == null) {
-                    this.writeLink("");
+                    this.writeLink(StringUtils.EMPTY);
                     return EVAL_BODY_BUFFERED;
                 }
             }
@@ -86,13 +87,13 @@ public class AHref extends BodyTagSupport {
             this.nodeData = this.contentNode.getNodeData(this.nodeDataName);
 
             if ((this.nodeData == null) || !this.nodeData.isExist()) {
-                this.writeLink("");
+                this.writeLink(StringUtils.EMPTY);
                 return EVAL_BODY_BUFFERED;
             }
             int type = this.nodeData.getType();
             if (type == PropertyType.STRING) {
-                if (this.nodeData.getString().equals("")) {
-                    this.writeLink("");
+                if (StringUtils.isEmpty(this.nodeData.getString())) {
+                    this.writeLink(StringUtils.EMPTY);
                 }
                 else {
                     this.writeLink(this.nodeData.getString());
@@ -110,7 +111,7 @@ public class AHref extends BodyTagSupport {
             }
             catch (Exception e) {
                 log.error(e.getMessage());
-                this.writeLink("");
+                this.writeLink(StringUtils.EMPTY);
             }
         }
         return EVAL_BODY_BUFFERED;
@@ -123,7 +124,7 @@ public class AHref extends BodyTagSupport {
     private void writeLink(String path) {
         JspWriter out = pageContext.getOut();
         try {
-            if (!path.equals("")) {
+            if (StringUtils.isNotEmpty(path)) {
                 if (Resource.getHierarchyManager(req).isPage(path)) {
                     path += "." + Server.getDefaultExtension();
                 }
@@ -140,7 +141,7 @@ public class AHref extends BodyTagSupport {
                 out.print(">");
             }
             out.print(getBodyContent().getString());
-            if (!path.equals("")) {
+            if (StringUtils.isNotEmpty(path)) {
                 out.print("</a>");
             }
         }

@@ -23,6 +23,8 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * @author Vinzenz Wyser
@@ -61,7 +63,8 @@ public class BarNew extends Bar {
     }
 
     public void setButtonNew() {
-        this.setButtonNew(this.getPath(), this.getNodeCollectionName(""), this.getNodeName(""), this.getParagraph());
+        this.setButtonNew(this.getPath(), this.getNodeCollectionName(StringUtils.EMPTY), this
+            .getNodeName(StringUtils.EMPTY), this.getParagraph());
     }
 
     /**

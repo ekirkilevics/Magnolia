@@ -33,6 +33,7 @@ import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -100,7 +101,7 @@ public class ContentWriter {
         String newPageName = serializableContent.getName();
         String parentHandle = parent.getHandle();
         if (parentHandle.equals("/")) {
-            parentHandle = "";
+            parentHandle = StringUtils.EMPTY;
         }
         Content content = null;
         if (serializableContent instanceof SerializableContentNode) {

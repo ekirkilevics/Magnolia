@@ -33,6 +33,7 @@ import java.util.Map;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -295,7 +296,7 @@ public class Syndicator {
         connection.addRequestProperty("context", this.context);
         connection.addRequestProperty("page", this.path);
         HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.request, this.context);
-        if (this.parent == null || this.parent.equals("")) {
+        if (StringUtils.isEmpty(this.parent)) {
             try {
                 Content page = hm.getContent(this.path);
                 this.parent = page.getParent().getHandle();

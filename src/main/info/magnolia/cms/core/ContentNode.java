@@ -19,10 +19,14 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Path;
+
 import java.util.Collection;
+
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -119,6 +123,6 @@ public class ContentNode extends Content {
         catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        return "";
+        return StringUtils.EMPTY;
     }
 }

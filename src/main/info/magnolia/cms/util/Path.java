@@ -17,6 +17,7 @@ import info.magnolia.cms.core.HierarchyManager;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -117,7 +118,7 @@ public final class Path {
         if (lastIndexOfDot > -1) {
             return req.getRequestURI().substring(lastIndexOfDot + 1);
         }
-        return "";
+        return StringUtils.EMPTY;
     }
 
     /**
@@ -202,7 +203,7 @@ public final class Path {
     }
 
     public static String getAbsolutePath(String path, String label) {
-        if (path == null || (path.equals("")) || (path.equals("/"))) {
+        if (StringUtils.isEmpty(path) || (path.equals("/"))) {
             return "/" + label;
         }
 
@@ -217,7 +218,7 @@ public final class Path {
     }
 
     public static String getNodePath(String path, String label) {
-        if (path == null || (path.equals("")) || (path.equals("/"))) {
+        if (StringUtils.isEmpty(path) || (path.equals("/"))) {
             return label;
         }
         return getNodePath(path + "/" + label);
@@ -225,7 +226,7 @@ public final class Path {
 
     public static String getNodePath(String path) {
         if (path.startsWith("/")) {
-            path = path.replaceFirst("/", "");
+            path = path.replaceFirst("/", StringUtils.EMPTY);
         }
         return path;
     }

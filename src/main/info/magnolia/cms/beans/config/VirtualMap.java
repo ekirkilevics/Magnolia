@@ -28,6 +28,7 @@ import java.util.regex.Pattern;
 
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -118,6 +119,6 @@ public class VirtualMap {
                 return (String) VirtualMap.cachedURImapping.get(p);
             }
         }
-        return "";
+        return StringUtils.EMPTY;
     }
 }

@@ -35,6 +35,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -216,7 +217,7 @@ public class Syndicator {
     }
 
     private synchronized void remove(Subscriber subscriber) throws Exception {
-        Packet packet = PacketFactory.getPacket("");
+        Packet packet = PacketFactory.getPacket(StringUtils.EMPTY);
         packet.getHeaders().addHeader(Header.CONTEXT, this.context);
         packet.getHeaders().addHeader(Header.ACTION, Header.ACTION_REMOVE);
         packet.getHeaders().addHeader(Header.PATH, this.path);

@@ -33,6 +33,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -107,7 +108,7 @@ public class CacheHandler extends Thread {
         }
         Content page = (Content) obj;
 
-        if (page.getNodeData("redirectURL").getString().equals("")) {
+        if (StringUtils.isEmpty(page.getNodeData("redirectURL").getString())) {
             return false;
         }
         return true;
@@ -155,7 +156,7 @@ public class CacheHandler extends Thread {
         StringBuffer buffer = new StringBuffer();
         int i = 0;
         for (; i < (items.length - 1); i++) {
-            if (items[i].equals("")) {
+            if (StringUtils.isEmpty(items[i])) {
                 continue;
             }
             buffer.append("/" + items[i]);

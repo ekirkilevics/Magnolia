@@ -47,11 +47,11 @@ public class Breadcrumb extends TagSupport {
                 if (i != this.startLevel) {
                     out.print(this.delimiter);
                 }
-                out.print("<a href=\""
-                    + actpage.getAncestor(i).getHandleWithDefaultExtension()
-                    + "\">"
-                    + actpage.getAncestor(i).getTitle()
-                    + "</a>");
+                out.print("<a href=\"");
+                out.print(actpage.getAncestor(i).getHandleWithDefaultExtension());
+                out.print("\">");
+                out.print(actpage.getAncestor(i).getTitle());
+                out.print("</a>");
             }
         }
         catch (Exception e) {

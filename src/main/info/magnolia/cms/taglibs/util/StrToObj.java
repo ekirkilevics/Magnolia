@@ -15,6 +15,7 @@ package info.magnolia.cms.taglibs.util;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -51,7 +52,7 @@ public class StrToObj extends BodyTagSupport {
      */
     public int doEndTag() {
         String str = getBodyContent().getString();
-        if (!str.equals("")) {
+        if (StringUtils.isNotEmpty(str)) {
             String[] obj = str.split(this.delims);
             try {
                 pageContext.setAttribute(this.var, obj, PageContext.PAGE_SCOPE);
@@ -62,7 +63,7 @@ public class StrToObj extends BodyTagSupport {
         }
         else {
             try {
-                pageContext.setAttribute(this.var, "", PageContext.PAGE_SCOPE);
+                pageContext.setAttribute(this.var, StringUtils.EMPTY, PageContext.PAGE_SCOPE);
             }
             catch (Exception e) {
                 log.error(e.getMessage());

@@ -16,6 +16,8 @@ import info.magnolia.cms.util.regex.RegexWildcardPattern;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * @author Sameer Charles
@@ -26,7 +28,7 @@ public class AccessManagerImpl implements AccessManager {
     private List userPermissions;
 
     public boolean isGranted(String path, long permissions) {
-        if (path.equals("")) {
+        if (StringUtils.isEmpty(path)) {
             path = "/";
         }
         return (getPermissions(path) & permissions) == permissions;

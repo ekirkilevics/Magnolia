@@ -43,6 +43,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -213,7 +214,7 @@ public class Save extends ControlSuper {
                         if (propNode != null) {
                             NodeData propData;
                             String fileName = form.getParameter(name + "_" + FileProperties.PROPERTY_FILENAME);
-                            if (fileName == null || fileName.equals("")) {
+                            if (fileName == null || fileName.equals(StringUtils.EMPTY)) {
                                 fileName = doc.getFileName();
                             }
                             propData = propNode.getNodeData(FileProperties.PROPERTY_FILENAME);
@@ -238,7 +239,7 @@ public class Save extends ControlSuper {
                                 }
                                 propData.setValue(doc.getExtension());
                                 String template = form.getParameter(name + "_" + FileProperties.PROPERTY_TEMPLATE);
-                                if (template != null && !template.equals("")) {
+                                if (StringUtils.isNotEmpty(template)) {
                                     propData = propNode.getNodeData(FileProperties.PROPERTY_TEMPLATE);
                                     if (!propData.isExist()) {
                                         propData = propNode.createNodeData(FileProperties.PROPERTY_TEMPLATE);

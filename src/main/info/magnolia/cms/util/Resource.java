@@ -21,6 +21,7 @@ import info.magnolia.cms.core.HierarchyManager;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -205,7 +206,7 @@ public final class Resource {
             return (String) req.getAttribute(Resource.LOCAL_CONTENT_NODE_COLLECTION_NAME);
         }
         catch (Exception e) {
-            return "";
+            return StringUtils.EMPTY;
         }
     }
 

@@ -32,6 +32,7 @@ import javax.jcr.version.VersionException;
 import javax.jcr.version.VersionHistory;
 import javax.jcr.version.VersionIterator;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -86,7 +87,7 @@ public abstract class ContentHandler {
         catch (RepositoryException e) {
             log.error("Failed to get handle");
             log.error(e.getMessage(), e);
-            return "";
+            return StringUtils.EMPTY;
         }
     }
 

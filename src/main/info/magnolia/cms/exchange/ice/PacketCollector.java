@@ -32,6 +32,7 @@ import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -187,7 +188,7 @@ public class PacketCollector {
                     value = nodeData.getDate().getTime().toString();
                     break;
                 default:
-                    value = "";
+                    value = StringUtils.EMPTY;
             }
             data.setText(value);
         }
@@ -246,7 +247,7 @@ public class PacketCollector {
         try {
             long lastModification = contentNode.getMetaData().getModificationDate().getTime().getTime();
             ReverseFileReader rfr = new ReverseFileReader(exchangeHistoryFilePath, "r");
-            String record = "";
+            String record = StringUtils.EMPTY;
             while (record != null) {
                 record = rfr.getRecord();
                 String pattern = RegexWildcardPattern.getMultipleCharPattern()

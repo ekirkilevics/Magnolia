@@ -26,6 +26,7 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -184,7 +185,7 @@ public class Aggregator {
     private void setRequestReceiver(int type) {
         try {
             String templateName = this.subContentNode.getNodeData("nodeDataTemplate").getString();
-            if (templateName.equals("")) {
+            if (StringUtils.isEmpty(templateName)) {
                 this.setRequestReceiver(true);
                 return;
             }

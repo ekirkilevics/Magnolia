@@ -34,6 +34,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -216,7 +217,7 @@ public final class ContentRepository {
 
     private static void loadHierarchyManager(Repository repository, RepositoryMapping map, Provider provider) {
         try {
-            SimpleCredentials sc = new SimpleCredentials(ContentRepository.SYSTEM_USER, "".toCharArray());
+            SimpleCredentials sc = new SimpleCredentials(ContentRepository.SYSTEM_USER, StringUtils.EMPTY.toCharArray());
             Session session = repository.login(sc, null);
             provider.registerNamespace(NAMESPACE_PREFIX, NAMESPACE_URI, session.getWorkspace());
             List acl = getSystemPermissions();
