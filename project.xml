@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
   <pomVersion>3</pomVersion>
-  <artifactId>magnolia</artifactId>
   <id>magnolia</id>
   <name>magnolia</name>
+  <!--<artifactId>magnolia</artifactId>-->
   <groupId>magnolia</groupId>
   <currentVersion>2.1-SNAPSHOT</currentVersion>
   <organization>
@@ -39,7 +39,7 @@
             <name>2.01</name>
             <tag>magnolia2.01-050124</tag>
         </version>
-  <versions>
+  </versions>
   <mailingLists>
     <mailingList>
       <name>Magnolia developer List</name>
@@ -216,18 +216,9 @@
       </properties>
     </dependency>
     <dependency>
-      <groupId>jcr-ri</groupId>
-      <artifactId>jcr-ri</artifactId>
-      <version>1.0.16</version>
-      <type>jar</type>
-      <properties>
-        <war.bundle>true</war.bundle>
-      </properties>
-    </dependency>
-    <dependency>
-      <groupId>apache_util</groupId>
-      <artifactId>apache_util</artifactId>
-      <version>0</version>
+      <groupId>jackrabbit</groupId>
+      <artifactId>jackrabbit</artifactId>
+      <version>0.15-dev</version>
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>
@@ -253,25 +244,6 @@
         <war.bundle>true</war.bundle>
       </properties>
     </dependency>
-    <!-- httpunit -->
-    <dependency>
-      <groupId>httpunit</groupId>
-      <artifactId>httpunit</artifactId>
-      <version>1.6</version>
-      <type>jar</type>
-      <properties>
-        <comment>Needed to compile and run HttpUnit tests.</comment>
-      </properties>
-    </dependency>
-    <dependency>
-      <groupId>nekohtml</groupId>
-      <artifactId>nekohtml</artifactId>
-      <version>0.9.1</version>
-      <type>jar</type>
-      <properties>
-        <comment>Needed to run HttpUnit tests.</comment>
-      </properties>
-    </dependency>
     <dependency>
       <groupId>geronimo-spec</groupId>
       <artifactId>geronimo-spec-jta</artifactId>
@@ -284,7 +256,7 @@
     <dependency>
       <groupId>jsr170</groupId>
       <artifactId>jcr</artifactId>
-      <version>0.14.1</version>
+      <version>0.15</version>
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>
@@ -337,15 +309,6 @@
       </properties>
     </dependency>
     <dependency>
-      <groupId>slide</groupId>
-      <artifactId>slide-kernel</artifactId>
-      <version>1.0.16</version>
-      <type>jar</type>
-      <properties>
-        <war.bundle>true</war.bundle>
-      </properties>
-    </dependency>
-    <dependency>
       <groupId>servlets.com</groupId>
       <artifactId>cos</artifactId>
       <version>05Nov2002</version>
@@ -366,13 +329,23 @@
         <war.bundle>true</war.bundle>
       </properties>
     </dependency>
+    <!-- build/test dependencies -->
     <dependency>
-      <groupId>maven-plugins</groupId>
-      <artifactId>maven-findbugs-plugin</artifactId>
-      <version>0.8.4</version>
-      <type>plugin</type>
+      <groupId>httpunit</groupId>
+      <artifactId>httpunit</artifactId>
+      <version>1.6</version>
+      <type>jar</type>
       <properties>
-        <comment>maven plugin for the findbug report</comment>
+        <comment>Needed to compile and run HttpUnit tests.</comment>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>nekohtml</groupId>
+      <artifactId>nekohtml</artifactId>
+      <version>0.9.1</version>
+      <type>jar</type>
+      <properties>
+        <comment>Needed to run HttpUnit tests.</comment>
       </properties>
     </dependency>
     <dependency>
@@ -410,9 +383,30 @@
       <url>http://java.sun.com/j2se/1.4.2/download.html</url>
       <properties>
         <comment>
-                    Needed to run HttpUnit tests. This is the tools.jar from sun jdk. Jar in not in maven repository but
-                    is set to JAVA_HOME/../lib/tools.jar in project.properties
-                </comment>
+            Needed to run HttpUnit tests. This is the tools.jar from sun jdk. Jar in not in maven repository but
+            is set to JAVA_HOME/../lib/tools.jar in project.properties
+        </comment>
+      </properties>
+    </dependency>
+    <dependency>
+        <groupId>maven-taglib</groupId>
+        <artifactId>maven-taglib-plugin</artifactId>
+        <version>1.2.2</version>
+        <type>plugin</type>
+        <url>http://maven-taglib.sourceforge.net</url>
+        <properties>
+            <comment>
+                maven plugin needed to generate tag reference documentation page
+            </comment>
+        </properties>
+    </dependency>
+    <dependency>
+      <groupId>maven-plugins</groupId>
+      <artifactId>maven-findbugs-plugin</artifactId>
+      <version>0.8.4</version>
+      <type>plugin</type>
+      <properties>
+        <comment>maven plugin for the findbug report</comment>
       </properties>
     </dependency>
   </dependencies>
