@@ -103,12 +103,13 @@ public final class Path {
 
     /**
      * Gets absolute filesystem path, adds application root if path is not absolute
-     * */
+     */
     public static String getAbsoluteFileSystemPath(String path) {
         if (Path.isAbsolute(path)) {
             return path;
         }
-        return Path.getAppRootDir().getPath()+File.separator+path;
+        // using the file() constructor will allow relative paths in the form ../../apps
+        return new File(Path.getAppRootDir(), path).getAbsolutePath();
     }
 
     /**
