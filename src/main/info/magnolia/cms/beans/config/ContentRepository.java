@@ -34,6 +34,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
@@ -127,7 +128,7 @@ public final class ContentRepository {
 
     /**
      * loads all configured repository using ID as Key, as configured in repositories.xml.
-     * 
+     *
      * <pre>
      * &lt;Repository name="website"
      *                id="website"
@@ -182,7 +183,7 @@ public final class ContentRepository {
             map.setID(id);
             map.setName(name);
             map.setProvider(provider);
-            boolean loadOnStartup = (new Boolean(load)).booleanValue();
+            boolean loadOnStartup = BooleanUtils.toBoolean(load);
             map.setLoadOnStartup(loadOnStartup);
             /* load repository parameters */
             Iterator params = element.getChildren(ELEMENT_PARAM).iterator();

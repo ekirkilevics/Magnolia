@@ -30,8 +30,6 @@ public interface Module {
      * @see ModuleConfig#getInitParameters()
      * @see ModuleConfig#getModuleDescription()
      * @see ModuleConfig#getModuleName()
-     * @see ModuleConfig#getModuleRepository()
-     * @see ModuleConfig#getSharedRepositores()
      */
     void init(ModuleConfig moduleConfig) throws InvalidConfigException;
 

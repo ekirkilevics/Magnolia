@@ -56,8 +56,6 @@ public class ContentWriter {
 
     private HierarchyManager hierarchyManager;
 
-    private SerializableContent backup;
-
     public ContentWriter() {
     }
 
@@ -148,7 +146,7 @@ public class ContentWriter {
 
     private void safeDelete(Content content) {
         log.info("Taking backup for " + content.getHandle());
-        this.backup = new SerializableContent(content);
+        // this.backup = new SerializableContent(content);
         // todo restore? in case of exception
         log.info("Removing existing page " + content.getHandle());
         this.removeNodedataList(content);

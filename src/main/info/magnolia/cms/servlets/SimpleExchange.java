@@ -40,6 +40,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -48,14 +49,14 @@ import org.apache.log4j.Logger;
  * <p>
  * Version .01 implementation Simple implementation of Exchange interface using serialized objects and binary GET
  * </p>
- * 
+ *
  * <pre>
  * todo -
  * 1. implement incremental delivery
  * 2. concurrent activation
  * 3. context locking
  * </pre>
- * 
+ *
  * @author Sameer Charles
  * @version 2.0
  */
@@ -240,7 +241,7 @@ public class SimpleExchange extends HttpServlet {
 
     private void getSerializedObject() throws Exception {
         log.info("Serialized object request for " + this.page);
-        boolean recurse = (new Boolean(this.recursive)).booleanValue();
+        boolean recurse = BooleanUtils.toBoolean(this.recursive);
         Packet packet = PacketCollector.getPacket(this.getHierarchyManager(), this.page, recurse);
         ObjectOutputStream os = new ObjectOutputStream(this.response.getOutputStream());
         os.writeObject(packet.getBody().getObject());

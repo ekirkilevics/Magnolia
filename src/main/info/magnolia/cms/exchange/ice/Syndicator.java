@@ -32,9 +32,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -62,8 +62,6 @@ public class Syndicator {
     private HttpServletRequest request;
 
     private String context;
-
-    private Session contextSession;
 
     private String parent;
 
@@ -179,7 +177,10 @@ public class Syndicator {
 
     private synchronized void send(Subscriber subscriber) throws Exception {
         PacketCollector pc = new PacketCollector(subscriber);
-        pc.collect(this.contextSession, this.path, 1);
+
+        // this.contextSession was never set?
+        // pc.collect(this.contextSession, this.path, 1);
+        pc.collect(null, this.path, 1);
         Map packets = pc.getPackets();
         String urlString = subscriber.getParam("protocol")
             + "://"
@@ -331,7 +332,7 @@ public class Syndicator {
             + "&parent="
             + this.parent
             + "&action=activate&recursive="
-            + (new Boolean(this.recursive)).toString();
+            + BooleanUtils.toStringTrueFalse(this.recursive);
         return handle;
     }
 
@@ -345,8 +346,9 @@ public class Syndicator {
         }
         for (int i = 0; i < list.size(); i++) {
             Map map = (Hashtable) list.get(i);
-            if (this.path.indexOf(((String) map.get("source"))) == 0) { /* match, assign and exit */
-                this.parent.replaceFirst((String) map.get("source"), (String) map.get("destination"));
+            if (this.path.indexOf(((String) map.get("source"))) == 0) {
+                // match, assign and exit
+                this.parent = this.parent.replaceFirst((String) map.get("source"), (String) map.get("destination"));
                 break;
             }
         }

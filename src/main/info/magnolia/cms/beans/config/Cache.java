@@ -28,6 +28,7 @@ import java.util.regex.Pattern;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.log4j.Logger;
 
 
@@ -117,7 +118,7 @@ public final class Cache {
             NodeData uri = container.getNodeData("URI");
             String pattern = RegexWildcardPattern.getEncodedString(uri.getString());
             Pattern p = Pattern.compile(pattern);
-            cachedCacheableURIMapping.put(p, new Boolean(allow));
+            cachedCacheableURIMapping.put(p, BooleanUtils.toBooleanObject(allow));
         }
         try {
             CacheHandler.validatePath(CacheHandler.CACHE_DIRECTORY);

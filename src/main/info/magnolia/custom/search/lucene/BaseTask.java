@@ -55,6 +55,7 @@ public class BaseTask extends TimerTask {
             this.index.closeIndex();
         }
         catch (Exception e) {
+            log.info("Exception caught: " + e.getMessage(), e);
         }
     }
 

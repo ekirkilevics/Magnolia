@@ -56,7 +56,7 @@ public final class Cache {
     }
 
     /**
-     * @param URI
+     * @param uri
      * @param lastModified
      */
     public static void addToCachedURIList(String uri, long lastModified, int size, int compressedSize) {
@@ -68,7 +68,7 @@ public final class Cache {
     }
 
     /**
-     * @param URI
+     * @param uri
      */
     public static void removeFromCachedURIList(String uri) {
         Cache.cachedURIList.remove(uri);

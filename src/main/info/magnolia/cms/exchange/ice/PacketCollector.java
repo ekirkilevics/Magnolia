@@ -32,6 +32,7 @@ import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
@@ -182,7 +183,7 @@ public class PacketCollector {
                     value = (new Double(nodeData.getDouble())).toString();
                     break;
                 case PropertyType.BOOLEAN:
-                    value = (new Boolean(nodeData.getBoolean())).toString();
+                    value = BooleanUtils.toStringTrueFalse(nodeData.getBoolean());
                     break;
                 case PropertyType.DATE:
                     value = nodeData.getDate().getTime().toString();

@@ -343,10 +343,10 @@ public class UUID implements Serializable, Comparable {
      * Returns the variant field of the UUID.
      * </p>
      * @return Returns the variant field of the UUID.
-     * @see UUID#VARIANT_NCS_COMPAT
-     * @see UUID#VARIANT_IETF_DRAFT
-     * @see UUID#VARIANT_MS
-     * @see UUID#VARIANT_FUTURE
+     * @see Constants#VARIANT_NCS_COMPAT
+     * @see Constants#VARIANT_IETF_DRAFT
+     * @see Constants#VARIANT_MS
+     * @see Constants#VARIANT_FUTURE
      */
     public int variant() {
         if (variant == -1) {

@@ -243,11 +243,9 @@
             <property name="tokens" value="INTERFACE_DEF, CLASS_DEF, METHOD_DEF, CTOR_DEF, VARIABLE_DEF"/>
         </module>
         <module name="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocTypeCheck">
-            <property name="authorFormat" value="^[a-zA-Z @\.]*$"/>
             <property name="scope" value="private"/>
             <property name="severity" value="warning"/>
             <property name="tokens" value="CLASS_DEF, INTERFACE_DEF"/>
-            <property name="versionFormat" value="(^\$A_Zevision\:)*(\(\$A-Zuthor: )*(\$\))$"/>
         </module>
         <module name="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocVariableCheck">
             <property name="severity" value="warning"/>
@@ -261,6 +259,7 @@
             <property name="severity" value="ignore"/>
         </module>
         <module name="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck">
+            <property name="format" value="(^[A-Z](_?[A-Z0-9]+)*$)|(^log$)"/>
             <property name="severity" value="warning"/>
         </module>
         <module name="com.puppycrawl.tools.checkstyle.checks.naming.LocalFinalVariableNameCheck">
@@ -268,11 +267,11 @@
             <property name="severity" value="warning"/>
         </module>
         <module name="com.puppycrawl.tools.checkstyle.checks.naming.LocalVariableNameCheck">
-            <property name="format" value="(^[a-z][a-z][a-zA-Z0-9]*$)|(^[a-z]$)"/>
+            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
             <property name="severity" value="info"/>
         </module>
         <module name="com.puppycrawl.tools.checkstyle.checks.naming.MemberNameCheck">
-            <property name="format" value="(^([a-z][a-z])([a-zA-Z0-9]*)$)|(^[a-z]$)"/>
+            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
             <property name="severity" value="info"/>
         </module>
         <module name="com.puppycrawl.tools.checkstyle.checks.naming.MethodNameCheck">
@@ -283,7 +282,7 @@
             <property name="severity" value="warning"/>
         </module>
         <module name="com.puppycrawl.tools.checkstyle.checks.naming.ParameterNameCheck">
-            <property name="format" value="(^[a-z][a-z][a-zA-Z0-9]*$)|(^[a-z]$)"/>
+            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
             <property name="severity" value="info"/>
         </module>
         <module name="com.puppycrawl.tools.checkstyle.checks.naming.StaticVariableNameCheck">

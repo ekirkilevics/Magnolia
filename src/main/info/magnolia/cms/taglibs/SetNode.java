@@ -51,7 +51,7 @@ public class SetNode extends TagSupport {
     /**
      * Logger.
      */
-    protected static Logger log = Logger.getLogger(SetNode.class);
+    protected static final Logger log = Logger.getLogger(SetNode.class);
 
     /**
      * Stable serialVersionUID.

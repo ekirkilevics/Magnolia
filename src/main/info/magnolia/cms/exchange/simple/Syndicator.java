@@ -33,6 +33,7 @@ import java.util.Map;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -317,7 +318,7 @@ public class Syndicator {
             connection.addRequestProperty(Syndicator.OBJECT_TYPE, ItemType.NT_NODEDATA);
         }
         connection.addRequestProperty("action", "activate");
-        connection.addRequestProperty("recursive", (new Boolean(this.recursive)).toString());
+        connection.addRequestProperty("recursive", BooleanUtils.toStringTrueFalse(this.recursive));
         String senderURL = subscriber.getParam(SENDER_URL);
         if (senderURL == null) {
             // todo remove remotePort property once its tested together with apache
@@ -339,8 +340,9 @@ public class Syndicator {
         }
         for (int i = 0; i < list.size(); i++) {
             Map map = (Hashtable) list.get(i);
-            if (this.path.indexOf(((String) map.get("source"))) == 0) { /* match, assign and exit */
-                this.parent.replaceFirst((String) map.get("source"), (String) map.get("destination"));
+            if (this.path.indexOf(((String) map.get("source"))) == 0) {
+                // match, assign and exit
+                this.parent = this.parent.replaceFirst((String) map.get("source"), (String) map.get("destination"));
                 break;
             }
         }

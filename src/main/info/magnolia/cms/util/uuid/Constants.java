@@ -44,9 +44,6 @@ public final class Constants {
     /** Token length of '-' separated tokens. */
     protected static final int TOKENS_IN_UUID = 5;
 
-    /** Array to check tokenized UUID's segment lengths */
-    protected static final int[] TOKEN_LENGTHS = {8, 4, 4, 4, 12};
-
     /** Insertion point 1 for dashes in the string format */
     protected static final int FORMAT_POSITION1 = 8;
 
@@ -138,10 +135,13 @@ public final class Constants {
     /** Byte position of the clock sequence and reserved field */
     protected static final short CLOCK_SEQ_HI_AND_RESERVED_BYTE_8 = 8;
 
+    /** Array to check tokenized UUID's segment lengths */
+    static final int[] TOKEN_LENGTHS = {8, 4, 4, 4, 12};
+
     /**
-     * XXX added by stefan@apache.org: hexdigits for converting numerics to hex
+     * added by stefan@apache.org: hexdigits for converting numerics to hex
      */
-    protected static final char[] HEX_DIGITS = "0123456789abcdef".toCharArray();
+    static final char[] HEX_DIGITS = "0123456789abcdef".toCharArray();
 
     /**
      * Utility class, don't instantiate.
