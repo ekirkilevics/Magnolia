@@ -1,0 +1,37 @@
+Java(TM) Plug-in: Version 1.4.0_03
+Verwendung der JRE-Version 1.4.0_03 Java HotSpot(TM) Client VM
+Home-Verzeichnis des Benutzers = C:\Dokumente und Einstellungen\Administrator
+Proxy-Konfiguration:Kein Proxy
+
+
+----------------------------------------------------
+c:   Konsolenfenster löschen
+f:   Objekte in Finalisierungswarteschlange finalisieren
+g:   Speicherbereinigung
+h:   Diese Hilfemeldung anzeigen
+l:   ClassLoader-Liste ausgeben
+m:   Speicherbelegung drucken
+o:   Protokollieren auslösen
+p:   Proxy-Konfiguration neu laden
+q:   Konsole ausblenden
+r:   Richtlinien-Konfiguration neu laden
+s:   Systemeigenschaften ausgeben
+t:   Threadliste ausgeben
+x:   ClassLoader-Cache löschen
+0-5: Trace-Stufe auf <n> setzen
+----------------------------------------------------
+java.lang.NoClassDefFoundError: com/lotus/sametime/applet/mrc25PF11279
+	at java.lang.ClassLoader.defineClass0(Native Method)
+	at java.lang.ClassLoader.defineClass(Unknown Source)
+	at java.security.SecureClassLoader.defineClass(Unknown Source)
+	at sun.applet.AppletClassLoader.findClass(Unknown Source)
+	at sun.plugin.security.PluginClassLoader.findClass(Unknown Source)
+	at java.lang.ClassLoader.loadClass(Unknown Source)
+	at sun.applet.AppletClassLoader.loadClass(Unknown Source)
+	at java.lang.ClassLoader.loadClass(Unknown Source)
+	at sun.applet.AppletClassLoader.loadCode(Unknown Source)
+	at sun.applet.AppletPanel.createApplet(Unknown Source)
+	at sun.plugin.AppletViewer.createApplet(Unknown Source)
+	at sun.applet.AppletPanel.runLoader(Unknown Source)
+	at sun.applet.AppletPanel.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
