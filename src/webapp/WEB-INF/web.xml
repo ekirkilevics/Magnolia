@@ -91,7 +91,7 @@
         <description>Admin interface tree servlet</description>
         <display-name>magnolia AdminTreeServlet</display-name>
         <servlet-name>AdminTreeServlet</servlet-name>
-        <servlet-class>info.magnolia.module.adminInterface.AdminInterfaceServlet</servlet-class>
+        <servlet-class>info.magnolia.module.admininterface.AdminInterfaceServlet</servlet-class>
     </servlet>
     <!--
         Use this servlet to spool static resources from the servlet context
