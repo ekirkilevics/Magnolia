@@ -13,10 +13,14 @@
 package info.magnolia.cms.gui.control;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ContentNode;
+import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.gui.misc.FileProperties;
 
 import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -61,7 +65,7 @@ public class File extends ControlSuper {
             return " class=\"" + this.getCssClassFileName() + "\"";
         }
 
-        return "";
+        return StringUtils.EMPTY;
     }
 
     public String getHtml() {
@@ -81,7 +85,6 @@ public class File extends ControlSuper {
         html.append(" onchange=\"mgnlControlFileSetFileName('" + this.getName() + "')\"");
         html.append(" onblur=\"mgnlControlFileSetFileName('" + this.getName() + "')\"");
         html.append(this.getHtmlCssClass());
-        // html.append(this.getHtmlCssStyles());
         html.append(" />");
         Hidden control0 = new Hidden(this.getName() + "_" + REMOVE, "");
         control0.setSaveInfo(false);
@@ -93,18 +96,16 @@ public class File extends ControlSuper {
     }
 
     public String getFileName() {
-        String fileName = "";
+        String fileName = StringUtils.EMPTY;
         try {
-            fileName = this.getWebsiteNode().getContentNode(
-                this.getName() + "_" + FileProperties.PROPERTIES_CONTENTNODE).getNodeData(
-                FileProperties.PROPERTY_FILENAME).getString();
+            fileName = getPropertyString(FileProperties.PROPERTY_FILENAME);
         }
         catch (PathNotFoundException e) {
             if (log.isDebugEnabled()) {
                 log.debug("Data not found: " + e.getMessage());
             }
         }
-        catch (Exception e) {
+        catch (RepositoryException e) {
             log.info("Exception caught: " + e.getMessage(), e);
         }
         return fileName;
@@ -118,16 +119,14 @@ public class File extends ControlSuper {
         String template = this.nodeDataTemplate;
         if (template == null) {
             try {
-                template = this.getWebsiteNode().getContentNode(
-                    this.getName() + "_" + FileProperties.PROPERTIES_CONTENTNODE).getNodeData(
-                    FileProperties.PROPERTY_TEMPLATE).getString();
+                template = getPropertyString(FileProperties.PROPERTY_TEMPLATE);
             }
             catch (PathNotFoundException e) {
                 if (log.isDebugEnabled()) {
                     log.debug("Data not found: " + e.getMessage());
                 }
             }
-            catch (Exception e) {
+            catch (RepositoryException e) {
                 log.info("Exception caught: " + e.getMessage(), e);
             }
         }
@@ -135,20 +134,16 @@ public class File extends ControlSuper {
     }
 
     public String getExtension() {
-        String ext = "";
+        String ext = StringUtils.EMPTY;
         try {
-            ext = this
-                .getWebsiteNode()
-                .getContentNode(this.getName() + "_" + FileProperties.PROPERTIES_CONTENTNODE)
-                .getNodeData(FileProperties.PROPERTY_EXTENSION)
-                .getString();
+            ext = getPropertyString(FileProperties.PROPERTY_EXTENSION);
         }
         catch (PathNotFoundException e) {
             if (log.isDebugEnabled()) {
                 log.debug("Data not found: " + e.getMessage());
             }
         }
-        catch (Exception e) {
+        catch (RepositoryException e) {
             log.info("Exception caught: " + e.getMessage(), e);
         }
         return ext;
@@ -158,7 +153,7 @@ public class File extends ControlSuper {
         Edit control = new Edit(this.getName() + "_" + FileProperties.PROPERTY_FILENAME, this.getFileName());
         control.setSaveInfo(false);
         control.setCssClass(this.getCssClassFileName());
-        // control.setCssStyles(this.getCssStyles());
+
         control.setCssStyles("width", "45%");
         return control.getHtml();
     }
@@ -182,30 +177,38 @@ public class File extends ControlSuper {
     }
 
     public String getHandle() {
-        String path = "";
-        try {
-            path = this.getWebsiteNode().getHandle() + "/" + this.getName();
-        }
-        catch (Exception e) {
-            log.info("Exception caught: " + e.getMessage(), e);
-        }
-        return path;
+        return this.getWebsiteNode().getHandle() + "/" + this.getName();
     }
 
     public String getPath() {
-        String path = "";
-        try {
-            path = this.getWebsiteNode().getHandle()
-                + "/"
-                + this.getName()
-                + "/"
-                + this.getFileName()
-                + "."
-                + this.getExtension();
+        return this.getWebsiteNode().getHandle()
+            + "/"
+            + this.getName()
+            + "/"
+            + this.getFileName()
+            + "."
+            + this.getExtension();
+    }
+
+    /**
+     * Read a property from content node, check nulls.
+     * @param propertyName node data name
+     * @return property string, "" if not found
+     * @throws RepositoryException
+     */
+    private String getPropertyString(String propertyName) throws RepositoryException {
+
+        if (this.getWebsiteNode() != null) {
+            ContentNode contentNode = this.getWebsiteNode().getContentNode(
+                this.getName() + "_" + FileProperties.PROPERTIES_CONTENTNODE);
+            if (contentNode != null) {
+                NodeData nodeData = contentNode.getNodeData(propertyName);
+                if (nodeData != null) {
+                    return nodeData.getString();
+                }
+            }
         }
-        catch (Exception e) {
-            log.info("Exception caught: " + e.getMessage(), e);
-        }
-        return path;
+
+        return StringUtils.EMPTY;
     }
 }

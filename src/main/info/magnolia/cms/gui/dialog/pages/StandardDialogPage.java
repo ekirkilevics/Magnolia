@@ -106,46 +106,44 @@ public class StandardDialogPage extends BasePageServlet {
             if (paragraph.indexOf(",") == -1) {
                 Content configNode = null;
                 Content websiteNode = null;
-                try {
-                    configNode = Paragraph.getInfo(paragraph).getDialogContent();
-                    try {
-                        Content websiteContent = hm.getPage(path);
-                        if (nodeName == null || nodeName.equals("")) {
-                            websiteNode = websiteContent;
+                Paragraph para = Paragraph.getInfo(paragraph);
+
+                if (para == null) {
+                    out.println("Paragraph " + paragraph + " is not available");
+                    return;
+                }
+
+                configNode = para.getDialogContent();
+
+                try {                    Content websiteContent = hm.getPage(path);
+                    if (nodeName == null || nodeName.equals("")) {
+                        websiteNode = websiteContent;
+                    }
+                    else {
+                        if (nodeCollectionName == null || nodeCollectionName.equals("")) {
+                            websiteNode = websiteContent.getContentNode(nodeName);
+
                         }
-                        else {
-                            if (nodeCollectionName == null || nodeCollectionName.equals("")) {
-                                websiteNode = websiteContent.getContentNode(nodeName);
-                            }
-                            else {
-                                websiteNode = websiteContent
-                                    .getContentNode(nodeCollectionName)
-                                    .getContentNode(nodeName);
-                            }
+                        else {                            websiteNode = websiteContent.getContentNode(nodeCollectionName).getContentNode(nodeName);
+
                         }
                     }
-                    catch (RepositoryException re) {
-                        // content does not exist yet
-                    }
+                }                catch (RepositoryException re) {
+                    // content does not exist yet
 
-                    DialogDialog dialog = DialogFactory.getDialogDialogInstance(
-                        request,
-                        response,
-                        websiteNode,
-                        configNode);
+                }
+                DialogDialog dialog = DialogFactory.getDialogDialogInstance(request, response, websiteNode, configNode);
 
-                    dialog.setConfig("path", path);
-                    dialog.setConfig("nodeCollection", nodeCollectionName);
-                    dialog.setConfig("node", nodeName);
-                    dialog.setConfig("paragraph", paragraph);
-                    dialog.setConfig("richE", richE);
-                    dialog.setConfig("richEPaste", richEPaste);
-                    dialog.setConfig("repository", repository);
-                    dialog.drawHtml(out);
-                }
-                catch (Exception e) {
-                    log.warn("Lack of configuration - not able to render dialog control", e);
-                }
+                dialog.setConfig("path", path);
+                dialog.setConfig("nodeCollection", nodeCollectionName);
+                dialog.setConfig("node", nodeName);
+                dialog.setConfig("paragraph", paragraph);
+                dialog.setConfig("richE", richE);
+                dialog.setConfig("richEPaste", richEPaste);
+                dialog.setConfig("repository", repository);
+                dialog.drawHtml(out);
+
+
             }
             else {
                 // multiple paragraphs: show selection dialog

@@ -199,7 +199,7 @@ public class Paragraph {
      * </ol>
      * @return TemplateInfo
      */
-    public static Paragraph getInfo(String key) throws Exception {
+    public static Paragraph getInfo(String key) {
         return (Paragraph) Paragraph.cachedContent.get(key);
     }
     /**
