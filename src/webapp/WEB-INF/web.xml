@@ -97,14 +97,12 @@
     this servlet respects SecureURI mapping so if you want to have no authentication on static
     resources deny /docroot/* and /admindocroot/* from /config/server/SecureURI
     -->
-    <!--
     <servlet>
       <servlet-name>Spool</servlet-name>
       <display-name>spool</display-name>
       <description>Spool servlet</description>
       <servlet-class>info.magnolia.cms.servlets.Spool</servlet-class>
     </servlet>
-    -->
     <servlet-mapping>
         <servlet-name>magnolia</servlet-name>
         <url-pattern>/</url-pattern>
@@ -125,7 +123,6 @@
         <servlet-name>ActivationHandler</servlet-name>
         <url-pattern>/ActivationHandler</url-pattern>
     </servlet-mapping>
-    <!--
     <servlet-mapping>
       <servlet-name>Spool</servlet-name>
       <url-pattern>/docroot/*</url-pattern>
@@ -134,7 +131,6 @@
       <servlet-name>Spool</servlet-name>
       <url-pattern>/admindocroot/*</url-pattern>
     </servlet-mapping>
-    -->
     <taglib>
         <taglib-uri>cms-taglib</taglib-uri>
         <taglib-location>/WEB-INF/taglib/cms-taglib.tld</taglib-location>
