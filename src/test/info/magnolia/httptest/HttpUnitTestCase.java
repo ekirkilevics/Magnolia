@@ -15,7 +15,7 @@ import com.meterware.servletunit.ServletRunner;
 /**
  * Base TestCase class for httpunit tests.
  * @author Fabrizio Giustina
- * @version $Revision: 1.11 $ ($Author: fgiust $)
+ * @version $Revision$ ($Author$)
  */
 public abstract class HttpUnitTestCase extends TestCase {
 

@@ -11,7 +11,7 @@ import com.meterware.httpunit.WebResponse;
 /**
  * A simple basic test case to see httpunit working.
  * @author fgiust
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class ButtonTest extends HttpUnitTestCase {
 
