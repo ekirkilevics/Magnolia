@@ -12,14 +12,11 @@
  */
 package info.magnolia.cms.security;
 
-import javax.jcr.RepositoryException;
-
-
 /**
  * @author Sameer Charles
  * @version 2.01
  */
-public class AccessDeniedException extends RepositoryException {
+public class AccessDeniedException extends javax.jcr.AccessDeniedException {
 
     /**
      * Stable serialVersionUID.
