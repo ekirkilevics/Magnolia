@@ -120,7 +120,8 @@ public class HierarchyManager {
      */
     public Content createPage(String path, String label) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
-        Content newPage = (new Content(this.startPage, this.getNodePath(path, label), true, this.accessManager));
+        Content newPage = (new Content(this.startPage, this.getNodePath(path, label),
+        ItemType.getSystemName(ItemType.NT_CONTENT), this.accessManager));
         this.setMetaData(newPage.getMetaData());
         return newPage;
     }
@@ -484,7 +485,7 @@ public class HierarchyManager {
      */
     public void save() throws RepositoryException {
         try {
-            this.startPage.save();
+            this.startPage.getSession().save();
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);

@@ -91,30 +91,6 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
-     * @param rootNode node to start with
-     * @param path absolute (primary) path to this <code>Node</code>
-     * @param isHierarchyNode create a new node as hierarchy node, else node
-     * @throws PathNotFoundException
-     * @throws RepositoryException
-     */
-    public Content(Node rootNode, String path, boolean isHierarchyNode, AccessManager manager)
-        throws PathNotFoundException,
-        RepositoryException,
-        AccessDeniedException {
-        Access.isGranted(manager, Path.getAbsolutePath(rootNode.getPath(), path), Permission.WRITE);
-        this.setPath(path);
-        this.setRootNode(rootNode);
-        if (isHierarchyNode) {
-            this.node = this.rootNode.addNode(this.path, ItemType.getSystemName(ItemType.NT_CONTENT));
-        }
-        else {
-            this.node = this.rootNode.addNode(this.path, ItemType.getSystemName(ItemType.NT_CONTENTNODE));
-        }
-        this.setAccessManager(manager);
-        this.addMixin(ItemType.getSystemName(ItemType.MIX_VERSIONABLE));
-    }
-
-    /**
      * <p>
      * creates contentNode of type <b>contentType </b> contentType must be defined in item type definition of magnolia
      * as well as JCR implementation
@@ -232,7 +208,21 @@ public class Content extends ContentHandler implements Cloneable {
      * @throws RepositoryException
      */
     public Content createContent(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        Content content = (new Content(this.node, name, true, this.accessManager));
+        return this.createContent(name, ItemType.getSystemName(ItemType.NT_CONTENT));
+    }
+
+    /**
+     * <p>
+     * create Content node under the current node with the specified name
+     * </p>
+     * @param name of the node to be created as <code>Content</code>
+     * @return newly created <node>Content </node>
+     * @throws PathNotFoundException
+     * @throws RepositoryException
+     */
+    public Content createContent(String name, String contentType) throws PathNotFoundException, RepositoryException,
+        AccessDeniedException {
+        Content content = (new Content(this.node, name, contentType, this.accessManager));
         MetaData metaData = content.getMetaData();
         metaData.setCreationDate();
         return content;
