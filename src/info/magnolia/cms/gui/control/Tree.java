@@ -16,10 +16,7 @@ import info.magnolia.cms.exchange.simple.Syndicator;
 import javax.jcr.*;
 import javax.jcr.access.Permission;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Iterator;
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.Date;
+import java.util.*;
 
 import org.apache.log4j.Logger;
 
@@ -671,13 +668,39 @@ public class Tree extends ControlSuper {
 	public void activateNode(String path,boolean recursive) {
 		//todo: ??? generic -> RequestInterceptor.java
 		try {
-			HierarchyManager hm=SessionAccessControl.getHierarchyManager(this.getRequest(),this.getRepository());
-			Content c=hm.getPage(path);
-			Syndicator syndicator = new Syndicator(this.getRequest());
-			syndicator.activate(this.getRepository(),"",path,recursive);
+            HierarchyManager hm=SessionAccessControl.getHierarchyManager(this.getRequest(),this.getRepository());
+            Content c = null;
+            if (hm.isPage(path))
+                c = hm.getContent(path);
+            else
+                c = hm.getContentNode(path);
+            Syndicator syndicator = new Syndicator(this.getRequest());
+            if (recursive)
+                deepActivate(syndicator, c, hm);
+            else
+                syndicator.activate(this.getRepository(),"",path,recursive);
 		}
-		catch (Exception e) {}
+		catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
 	}
+
+
+    private void deepActivate(Syndicator syndicator, Content content, HierarchyManager hm) {
+        try {
+            syndicator.activate(this.getRepository(),"",content.getHandle(),false);
+            Collection children = content.getChildren();
+            if (children != null) {
+                Iterator it = children.iterator();
+                while(it.hasNext()) {
+                    deepActivate(syndicator, (Content)it.next(), hm);
+                }
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+
+    }
 
 
 	public void deActivateNode(String path) {
