@@ -16,12 +16,15 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.control.SelectOption;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspWriter;
+
 import org.apache.log4j.Logger;
 
 
@@ -61,7 +64,7 @@ public class DialogSelect extends DialogBox {
         this.setOptions(options);
     }
 
-    public void drawHtml(JspWriter out) {
+    public void drawHtml(JspWriter out) throws IOException {
         Select control = new Select(this.getName(), this.getValue());
         control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING));
         if (this.getConfigValue("saveInfo").equals("false"))
@@ -70,12 +73,7 @@ public class DialogSelect extends DialogBox {
         control.setCssStyles("width", this.getConfigValue("width", "100%"));
         control.setOptions(this.getOptions());
         this.drawHtmlPre(out);
-        try {
-            out.println(control.getHtml());
-        }
-        catch (IOException ioe) {
-            log.error("");
-        }
+        out.println(control.getHtml());
         this.drawHtmlPost(out);
     }
 }

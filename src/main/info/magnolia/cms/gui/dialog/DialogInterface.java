@@ -12,6 +12,8 @@
  */
 package info.magnolia.cms.gui.dialog;
 
+import java.io.IOException;
+
 import javax.servlet.jsp.JspWriter;
 
 
@@ -25,11 +27,11 @@ public interface DialogInterface {
      * 
      *
      */
-    public void drawHtml(JspWriter out);
+    public void drawHtml(JspWriter out) throws IOException;
 
-    public void drawSubs(JspWriter out);
+    public void drawSubs(JspWriter out) throws IOException;
 
-    public void drawHtmlPreSubs(JspWriter out);
+    public void drawHtmlPreSubs(JspWriter out) throws IOException;
 
-    public void drawHtmlPostSubs(JspWriter out);
+    public void drawHtmlPostSubs(JspWriter out) throws IOException;
 }

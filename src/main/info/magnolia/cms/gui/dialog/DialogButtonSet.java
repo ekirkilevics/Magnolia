@@ -18,12 +18,15 @@ import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.ButtonSet;
 import info.magnolia.cms.gui.control.Hidden;
 import info.magnolia.cms.security.AccessDeniedException;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspWriter;
+
 import org.apache.log4j.Logger;
 
 
@@ -90,11 +93,11 @@ public class DialogButtonSet extends DialogBox {
         this.setOptions(options);
     }
 
-    public void drawHtmlPreSubs(JspWriter out) {
+    public void drawHtmlPreSubs(JspWriter out) throws IOException {
         this.drawHtmlPre(out);
     }
 
-    public void drawHtmlPostSubs(JspWriter out) {
+    public void drawHtmlPostSubs(JspWriter out) throws IOException {
         this.drawHtmlPost(out);
     }
 
@@ -106,7 +109,7 @@ public class DialogButtonSet extends DialogBox {
         return this.buttonType;
     }
 
-    public void drawHtml(JspWriter out) {
+    public void drawHtml(JspWriter out) throws IOException {
         this.drawHtmlPre(out);
         ButtonSet control;
         if (this.getConfigValue("valueType").equals("multiple")) {
@@ -161,23 +164,18 @@ public class DialogButtonSet extends DialogBox {
         if (width != null)
             control.setHtmlPre("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"" + width + "\">");
         control.setButtons(this.getOptions());
-        try {
-            out.println(control.getHtml());
-            if (control.getButtonType() == ButtonSet.BUTTONTYPE_CHECKBOX
-                && control.getValueType() != ButtonSet.VALUETYPE_MULTIPLE) {
-                // checkboxSwitch: value is stored in a hidden field (allows default selecting)
-                String value = this.getValue();
-                if (value.equals("")) {
-                    if (this.getConfigValue("selected").equals("true"))
-                        value = "true";
-                    else
-                        value = "false";
-                }
-                out.println(new Hidden(this.getName(), value).getHtml());
+        out.println(control.getHtml());
+        if (control.getButtonType() == ButtonSet.BUTTONTYPE_CHECKBOX
+            && control.getValueType() != ButtonSet.VALUETYPE_MULTIPLE) {
+            // checkboxSwitch: value is stored in a hidden field (allows default selecting)
+            String value = this.getValue();
+            if (value.equals("")) {
+                if (this.getConfigValue("selected").equals("true"))
+                    value = "true";
+                else
+                    value = "false";
             }
-        }
-        catch (IOException ioe) {
-            log.error("");
+            out.println(new Hidden(this.getName(), value).getHtml());
         }
         this.drawHtmlPost(out);
     }

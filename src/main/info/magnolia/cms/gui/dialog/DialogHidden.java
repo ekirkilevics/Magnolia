@@ -15,9 +15,12 @@ package info.magnolia.cms.gui.dialog;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.gui.control.Hidden;
+
 import java.io.IOException;
+
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspWriter;
+
 import org.apache.log4j.Logger;
 
 
@@ -27,6 +30,9 @@ import org.apache.log4j.Logger;
  */
 public class DialogHidden extends DialogBox {
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(DialogHidden.class);
 
     public DialogHidden(ContentNode configNode, Content websiteNode) throws RepositoryException {
@@ -36,17 +42,11 @@ public class DialogHidden extends DialogBox {
     public DialogHidden() {
     }
 
-    // public void drawHtmlPre(JspWriter out,String id) {}
-    // public void drawHtmlPost(JspWriter out,String id) {}
-    public void drawHtml(JspWriter out) {
+    public void drawHtml(JspWriter out) throws IOException {
         Hidden control = new Hidden(this.getName(), this.getValue());
         if (this.getConfigValue("saveInfo").equals("false"))
             control.setSaveInfo(false);
-        try {
-            out.println(control.getHtml());
-        }
-        catch (IOException ioe) {
-            log.error("");
-        }
+
+        out.println(control.getHtml());
     }
 }

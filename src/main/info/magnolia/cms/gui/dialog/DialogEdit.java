@@ -15,10 +15,13 @@ package info.magnolia.cms.gui.dialog;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.gui.control.Edit;
+
 import java.io.IOException;
+
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspWriter;
+
 import org.apache.log4j.Logger;
 
 
@@ -28,6 +31,9 @@ import org.apache.log4j.Logger;
  */
 public class DialogEdit extends DialogBox {
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(DialogEdit.class);
 
     public DialogEdit(ContentNode configNode, Content websiteNode) throws RepositoryException {
@@ -37,7 +43,7 @@ public class DialogEdit extends DialogBox {
     public DialogEdit() {
     }
 
-    public void drawHtml(JspWriter out) {
+    public void drawHtml(JspWriter out) throws IOException {
         Edit control = new Edit(this.getName(), this.getValue());
         control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING));
         if (this.getConfigValue("saveInfo").equals("false"))
@@ -48,12 +54,7 @@ public class DialogEdit extends DialogBox {
         if (this.getConfigValue("onchange", null) != null)
             control.setEvent("onchange", this.getConfigValue("onchange"));
         this.drawHtmlPre(out);
-        try {
-            out.println(control.getHtml());
-        }
-        catch (IOException ioe) {
-            log.error("");
-        }
+        out.println(control.getHtml());
         this.drawHtmlPost(out);
     }
 }

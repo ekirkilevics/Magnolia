@@ -19,15 +19,19 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.gui.control.ButtonSet;
 import info.magnolia.cms.gui.control.Hidden;
 import info.magnolia.cms.security.AccessDeniedException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
+
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
+
 import org.apache.log4j.Logger;
 
 
@@ -159,7 +163,7 @@ public class DialogSuper implements DialogInterface {
         this.setConfig(configNode);
     }
 
-    public void drawHtml(JspWriter out) {
+    public void drawHtml(JspWriter out) throws IOException {
         // System.out.println("START "+this.getId()+" :: "+this.getClass());
         this.drawHtmlPreSubs(out);
         this.drawSubs(out);
@@ -167,7 +171,7 @@ public class DialogSuper implements DialogInterface {
         // System.out.println("END "+this.getId());
     }
 
-    public void drawSubs(JspWriter out) {
+    public void drawSubs(JspWriter out) throws IOException {
         Iterator it = this.getSubs().iterator();
         int i = 0;
         while (it.hasNext()) {
@@ -201,10 +205,10 @@ public class DialogSuper implements DialogInterface {
         return this.topParent;
     }
 
-    public void drawHtmlPreSubs(JspWriter out) {
+    public void drawHtmlPreSubs(JspWriter out) throws IOException {
     }
 
-    public void drawHtmlPostSubs(JspWriter out) {
+    public void drawHtmlPostSubs(JspWriter out) throws IOException {
     }
 
     public void setSubs(ArrayList subs) {
@@ -279,6 +283,13 @@ public class DialogSuper implements DialogInterface {
                 this.addSub(dialogControl);
             }
             else if (controlType.equals("richEdit")) {
+                DialogRichedit dialogControl = new DialogRichedit(configNode, this.getWebsiteNode());
+                dialogControl.setOptionsToolboxLinkTargets(configNode);
+                dialogControl.setOptionsToolboxLinkCssClasses(configNode);
+                dialogControl.setOptionsToolboxStyleCssClasses(configNode);
+                this.addSub(dialogControl);
+            }
+            else if (controlType.equals("fckEdit")) {
                 DialogRichedit dialogControl = new DialogRichedit(configNode, this.getWebsiteNode());
                 dialogControl.setOptionsToolboxLinkTargets(configNode);
                 dialogControl.setOptionsToolboxLinkCssClasses(configNode);

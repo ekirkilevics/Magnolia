@@ -15,9 +15,12 @@ package info.magnolia.cms.gui.dialog;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.gui.control.Button;
+
 import java.io.IOException;
+
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspWriter;
+
 import org.apache.log4j.Logger;
 
 
@@ -27,6 +30,9 @@ import org.apache.log4j.Logger;
  */
 public class DialogButton extends DialogBox {
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(DialogButton.class);
 
     public DialogButton(ContentNode configNode, Content websiteNode) throws RepositoryException {
@@ -36,20 +42,16 @@ public class DialogButton extends DialogBox {
     public DialogButton() {
     }
 
-    public void drawHtml(JspWriter out) {
+    public void drawHtml(JspWriter out) throws IOException {
         Button control = new Button();
         control.setSaveInfo(false);
         control.setLabel(this.getConfigValue("buttonLabel"));
         control.setOnclick(this.getConfigValue("onclick"));
-        if (this.getConfigValue("small").equals("true"))
+        if (this.getConfigValue("small").equals("true")) {
             control.setSmall(true);
+        }
         this.drawHtmlPre(out);
-        try {
-            out.println(control.getHtml());
-        }
-        catch (IOException ioe) {
-            log.error("");
-        }
+        out.println(control.getHtml());
         this.drawHtmlPost(out);
     }
 }

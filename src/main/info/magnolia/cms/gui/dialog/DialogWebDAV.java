@@ -214,7 +214,7 @@ public class DialogWebDAV extends DialogBox {
         this.setDAVConnection(wdr);
     }
 
-    public void drawHtml(JspWriter out) {
+    public void drawHtml(JspWriter out) throws IOException {
         this.drawHtmlPre(out);
         this.setDAVConnection();
         this.setSessionAttribute();
@@ -259,87 +259,82 @@ public class DialogWebDAV extends DialogBox {
             showPath = "<i>No selection</i>";
             showIcon = NULLGIF;
         }
-        try {
-            DialogSpacer spacer = new DialogSpacer();
-            this.setDescription("Connected to: "
-                + this.getProtocol()
-                + "://"
-                + this.getHost()
-                + ":"
-                + this.getPort()
-                + this.getDirectory()
-                + "<br>"
-                + this.getDescription());
-            out.println(spacer.getHtml(2));
-            out.println("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
-            out.println("<tr>");
-            out.println("<td><img id=\""
-                + this.getName()
-                + "_showIcon\" src=\""
-                + showIcon
-                + "\" width=\""
-                + ICONS_WIDTH
-                + "\" height=\""
-                + ICONS_HEIGHT
-                + "\"></td>");
-            out.println("<td id=\"" + this.getName() + "_showName\">" + this.getHtmlDecodeURI(showName) + "</td>");
-            out.println("</tr><tr height=\"4\"><td></td></tr><tr>");
-            out.println("<td><img src=\"" + ICONS_PATH + ICONS_FOLDER + "\"></td>");
-            out.println("<td id=\"" + this.getName() + "_showPath\">" + showPath + "</td>");
-            out.println("</tr></table>");
-            out.println(new Hidden(this.getName(), this.getValue()).getHtml());
-            Hidden size = new Hidden(this.getName() + "_size", this.getSizeValue());
-            size.setType(PropertyType.TYPENAME_LONG);
-            out.println(size.getHtml());
-            Hidden lastMod = new Hidden(this.getName() + "_lastModified", this.getModDateValue());
-            lastMod.setType(PropertyType.TYPENAME_DATE);
-            out.println(lastMod.getHtml());
-            out.println(this.getHtmlSessionAttributeRemoveControl());
-            out.println(spacer.getHtml(12));
-            Button home = new Button();
-            home.setSaveInfo(false);
-            home.setLabel("Home");
-            home.setOnclick("mgnlDialogDAVBrowse('" + this.getName() + "_iFrame','homeDirectory')");
-            out.println(home.getHtml());
-            Button refresh = new Button();
-            refresh.setSaveInfo(false);
-            refresh.setLabel("Refresh");
-            refresh.setOnclick("mgnlDialogDAVBrowse('" + this.getName() + "_iFrame','refreshDirectory')");
-            out.println(refresh.getHtml());
-            Button up = new Button();
-            up.setSaveInfo(false);
-            up.setId(this.getName() + "_upDiv");
-            up.setLabel("Parent directory");
-            up.setOnclick("mgnlDialogDAVBrowse('" + this.getName() + "_iFrame','parentDirectory')");
-            out.println(up.getHtml());
-            out.println(spacer.getHtml(3));
-            // #################
-            // iFrame
-            // #################
-            out.println("<iframe");
-            out.println(" id=\"" + this.getName() + "_iFrame\"");
-            out.println(" class=\"" + CSSCLASS_WEBDAVIFRAME + "\"");
-            if (this.getConfigValue("height", null) != null) {
-                out.println(" style=\"height:" + this.getConfigValue("height") + ";\")");
-            }
-            out.println(" frameborder=\"0\"");
-            out.println(" src=\"/.magnolia/dialogs/webDAVIFrame.html?"
-                + SESSION_ATTRIBUTENAME_DIALOGOBJECT
-                + "="
-                + this.getConfigValue(SESSION_ATTRIBUTENAME_DIALOGOBJECT)
-                + "&mgnlCK="
-                + new Date().getTime()
-                + "\"");
-            out.println(" reloadsrc=\"0\"");
-            out.println(" usecss=\"1\"");
-            out.println(" strict_output=\"1\"");
-            out.println(" content_type=\"application/xhtml+xml\"");
-            out.println(" scrolling=\"auto\"");
-            out.println("></iframe>");
+        DialogSpacer spacer = new DialogSpacer();
+        this.setDescription("Connected to: "
+            + this.getProtocol()
+            + "://"
+            + this.getHost()
+            + ":"
+            + this.getPort()
+            + this.getDirectory()
+            + "<br>"
+            + this.getDescription());
+        out.println(spacer.getHtml(2));
+        out.println("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
+        out.println("<tr>");
+        out.println("<td><img id=\""
+            + this.getName()
+            + "_showIcon\" src=\""
+            + showIcon
+            + "\" width=\""
+            + ICONS_WIDTH
+            + "\" height=\""
+            + ICONS_HEIGHT
+            + "\"></td>");
+        out.println("<td id=\"" + this.getName() + "_showName\">" + this.getHtmlDecodeURI(showName) + "</td>");
+        out.println("</tr><tr height=\"4\"><td></td></tr><tr>");
+        out.println("<td><img src=\"" + ICONS_PATH + ICONS_FOLDER + "\"></td>");
+        out.println("<td id=\"" + this.getName() + "_showPath\">" + showPath + "</td>");
+        out.println("</tr></table>");
+        out.println(new Hidden(this.getName(), this.getValue()).getHtml());
+        Hidden size = new Hidden(this.getName() + "_size", this.getSizeValue());
+        size.setType(PropertyType.TYPENAME_LONG);
+        out.println(size.getHtml());
+        Hidden lastMod = new Hidden(this.getName() + "_lastModified", this.getModDateValue());
+        lastMod.setType(PropertyType.TYPENAME_DATE);
+        out.println(lastMod.getHtml());
+        out.println(this.getHtmlSessionAttributeRemoveControl());
+        out.println(spacer.getHtml(12));
+        Button home = new Button();
+        home.setSaveInfo(false);
+        home.setLabel("Home");
+        home.setOnclick("mgnlDialogDAVBrowse('" + this.getName() + "_iFrame','homeDirectory')");
+        out.println(home.getHtml());
+        Button refresh = new Button();
+        refresh.setSaveInfo(false);
+        refresh.setLabel("Refresh");
+        refresh.setOnclick("mgnlDialogDAVBrowse('" + this.getName() + "_iFrame','refreshDirectory')");
+        out.println(refresh.getHtml());
+        Button up = new Button();
+        up.setSaveInfo(false);
+        up.setId(this.getName() + "_upDiv");
+        up.setLabel("Parent directory");
+        up.setOnclick("mgnlDialogDAVBrowse('" + this.getName() + "_iFrame','parentDirectory')");
+        out.println(up.getHtml());
+        out.println(spacer.getHtml(3));
+        // #################
+        // iFrame
+        // #################
+        out.println("<iframe");
+        out.println(" id=\"" + this.getName() + "_iFrame\"");
+        out.println(" class=\"" + CSSCLASS_WEBDAVIFRAME + "\"");
+        if (this.getConfigValue("height", null) != null) {
+            out.println(" style=\"height:" + this.getConfigValue("height") + ";\")");
         }
-        catch (IOException ioe) {
-            log.error("");
-        }
+        out.println(" frameborder=\"0\"");
+        out.println(" src=\"/.magnolia/dialogs/webDAVIFrame.html?"
+            + SESSION_ATTRIBUTENAME_DIALOGOBJECT
+            + "="
+            + this.getConfigValue(SESSION_ATTRIBUTENAME_DIALOGOBJECT)
+            + "&mgnlCK="
+            + new Date().getTime()
+            + "\"");
+        out.println(" reloadsrc=\"0\"");
+        out.println(" usecss=\"1\"");
+        out.println(" strict_output=\"1\"");
+        out.println(" content_type=\"application/xhtml+xml\"");
+        out.println(" scrolling=\"auto\"");
+        out.println("></iframe>");
         this.drawHtmlPost(out);
     }
 

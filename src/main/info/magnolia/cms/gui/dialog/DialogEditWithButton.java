@@ -16,11 +16,14 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.Edit;
+
 import java.io.IOException;
 import java.util.ArrayList;
+
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspWriter;
+
 import org.apache.log4j.Logger;
 
 
@@ -65,7 +68,7 @@ public class DialogEditWithButton extends DialogBox {
         return this.buttons;
     }
 
-    public void drawHtml(JspWriter out) {
+    public void drawHtml(JspWriter out) throws IOException {
         Edit control = new Edit(this.getName(), this.getValue());
         control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING));
         if (this.getConfigValue("saveInfo").equals("false"))
@@ -76,22 +79,18 @@ public class DialogEditWithButton extends DialogBox {
         if (this.getConfigValue("onchange", null) != null)
             control.setEvent("onchange", this.getConfigValue("onchange"));
         this.drawHtmlPre(out);
-        try {
-            String width = this.getConfigValue("width", "100%");
-            out.println("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"" + width + "\">");
-            out.println("<tr><td width=\"100%\"  class=\"" + CSSCLASS_EDITWITHBUTTON + "\">");
-            out.println(control.getHtml());
-            if (this.getConfigValue("buttonLabel", null) != null)
-                this.getButton().setLabel(this.getConfigValue("buttonLabel"));
-            for (int i = 0; i < this.getButtons().size(); i++) {
-                out.println("</td><td>&nbsp;</td><td class=\"" + CSSCLASS_EDITWITHBUTTON + "\">");
-                out.println(this.getButton(i).getHtml());
-            }
-            out.println("</td></tr></table>");
+        String width = this.getConfigValue("width", "100%");
+        out.println("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"" + width + "\">");
+        out.println("<tr><td width=\"100%\"  class=\"" + CSSCLASS_EDITWITHBUTTON + "\">");
+        out.println(control.getHtml());
+        if (this.getConfigValue("buttonLabel", null) != null)
+            this.getButton().setLabel(this.getConfigValue("buttonLabel"));
+        for (int i = 0; i < this.getButtons().size(); i++) {
+            out.println("</td><td>&nbsp;</td><td class=\"" + CSSCLASS_EDITWITHBUTTON + "\">");
+            out.println(this.getButton(i).getHtml());
         }
-        catch (IOException ioe) {
-            log.error("");
-        }
+        out.println("</td></tr></table>");
+
         this.drawHtmlPost(out);
     }
 }

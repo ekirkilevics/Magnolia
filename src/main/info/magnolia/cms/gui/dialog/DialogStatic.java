@@ -14,9 +14,12 @@ package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
+
 import java.io.IOException;
+
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspWriter;
+
 import org.apache.log4j.Logger;
 
 
@@ -26,6 +29,9 @@ import org.apache.log4j.Logger;
  */
 public class DialogStatic extends DialogBox {
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(DialogStatic.class);
 
     public DialogStatic() {
@@ -35,17 +41,12 @@ public class DialogStatic extends DialogBox {
         super(configNode, websiteNode);
     }
 
-    public void drawHtml(JspWriter out) {
+    public void drawHtml(JspWriter out) throws IOException {
         this.drawHtmlPre(out);
-        try {
-            String value = this.getConfigValue("value", null);
-            if (value == null)
-                value = this.getValue();
-            out.println(value);
-        }
-        catch (IOException ioe) {
-            log.error("");
-        }
+        String value = this.getConfigValue("value", null);
+        if (value == null)
+            value = this.getValue();
+        out.println(value);
         this.drawHtmlPost(out);
     }
 }
