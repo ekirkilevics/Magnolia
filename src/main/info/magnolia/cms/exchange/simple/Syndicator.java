@@ -67,6 +67,7 @@ public class Syndicator {
     public static final String ACTION = "action";
     public static final String RECURSIVE = "recursive";
     public static final String REMOTE_PORT = "remote-port";
+    public static final String SENDER_URL = "senderURL";
     public static final String OBJECT_TYPE = "objectType";
     public static final String GET_TYPE = "gettype";
     public static final String GET_TYPE_BINARY = "binary";
@@ -175,7 +176,7 @@ public class Syndicator {
         URL url = new URL(handle);
         URLConnection urlConnection = url.openConnection();
 
-        this.addActivationHeaders(urlConnection);
+        this.addActivationHeaders(urlConnection, subscriber);
 
         urlConnection.getContent();
         log.info("Exchange : activation request received by "+subscriber.getName());
@@ -257,10 +258,10 @@ public class Syndicator {
         while (en.hasMoreElements()) {
             Subscriber si = (Subscriber)en.nextElement();
             try {
-                log.info("Removing [ "+this.path+" ] from [ "+si.getAddress()+" ]");
+                log.info("Removing [ "+this.path+" ] from [ "+si.getParam("address")+" ]");
                 deActivate(si);
             } catch (Exception e) {
-                log.error("Failed to remove [ "+this.path+" ] from [ "+si.getAddress()+" ]");
+                log.error("Failed to remove [ "+this.path+" ] from [ "+si.getParam("address")+" ]");
                 log.error(e.getMessage(), e);
             }
         }
@@ -290,7 +291,7 @@ public class Syndicator {
      *
      * */
     private String getDeactivationURL(Subscriber subscriberInfo) {
-        String handle = subscriberInfo.getProtocol()+"://"+subscriberInfo.getAddress()
+        String handle = subscriberInfo.getParam("protocol")+"://"+subscriberInfo.getParam("address")
                 + "/"+DEFAULT_HANDLER;
         return handle;
     }
@@ -313,14 +314,14 @@ public class Syndicator {
      * @return activation handle
      */
     private String getActivationURL(Subscriber subscriberInfo) {
-        String handle = subscriberInfo.getProtocol()+"://"+subscriberInfo.getAddress()
+        String handle = subscriberInfo.getParam("protocol")+"://"+subscriberInfo.getParam("address")
                 +"/"+DEFAULT_HANDLER;
         return handle;
     }
 
 
 
-    private void addActivationHeaders(URLConnection connection) {
+    private void addActivationHeaders(URLConnection connection, Subscriber subscriber) {
         connection.setRequestProperty("Authorization",Authenticator.getCredentials(this.request));
         connection.addRequestProperty("context", this.context);
         connection.addRequestProperty("page", this.path);
@@ -345,8 +346,14 @@ public class Syndicator {
 
         connection.addRequestProperty("action", "activate");
         connection.addRequestProperty("recursive", (new Boolean(this.recursive)).toString());
-        String remotePort = (new Integer(this.request.getServerPort())).toString();
-        connection.addRequestProperty("remote-port",remotePort);
+        String senderURL = subscriber.getParam(SENDER_URL);
+        if (senderURL == null) {
+            // todo remove remotePort property once its tested together with apache
+            String remotePort = (new Integer(this.request.getServerPort())).toString();
+            connection.addRequestProperty(REMOTE_PORT,remotePort);
+        } else {
+            connection.addRequestProperty(SENDER_URL, senderURL);
+        }
     }
 
 
