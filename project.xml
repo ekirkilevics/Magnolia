@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
   <pomVersion>3</pomVersion>
-  <artifactId>null</artifactId>
+  <artifactId>magnolia</artifactId>
   <id>magnolia</id>
   <name>magnolia</name>
   <groupId>magnolia</groupId>
