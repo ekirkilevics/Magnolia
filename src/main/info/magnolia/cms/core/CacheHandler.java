@@ -50,7 +50,7 @@ import org.apache.log4j.Logger;
 /**
  * CacheHandle checks if the data is already cached, if yes it spools the data back to the
  * requester either compressed or as is.
- * If not it caching that request in default and optimized (only gzip for now) stores.
+ * If not it caches that request in default and optimized (only gzip for now) stores.
  *
  * */
 
@@ -71,7 +71,7 @@ public class CacheHandler extends Thread  {
      *
      * @param request
      */
-    public static void cacheURI(HttpServletRequest request) throws IOException {
+    public synchronized static void cacheURI(HttpServletRequest request) throws IOException {
         if (CacheHandler.hasRedirect(request)) /* dont cache */
             return;
         String URI = Path.getURI(request);
