@@ -10,6 +10,11 @@
         <menu name="Quick start">
             <item name="Introduction" href="/qs01_introduction.html" />
         </menu>
+        
+        <menu name="Tag libraries">
+            <item name="Cms taglib" href="/tagreference-cms-taglib.html" />
+            <item name="Cms util taglib" href="/tagreference-cms-util-taglib.html" />
+        </menu>
 
         <menu name="Downloadable docs">
             <item name="Quick start" href="magnolia.pdf" />
