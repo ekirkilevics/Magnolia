@@ -13,16 +13,17 @@
 package info.magnolia.cms.servlets;
 
 import info.magnolia.cms.beans.config.ConfigLoader;
+import info.magnolia.logging.Log4jConfigurer;
 
 import javax.servlet.http.HttpServlet;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
 /**
  * @author Sameer Charles
- * @version 2.0
+ * @author Fabrizio Giustina
+ * @version $Id$
  */
 public class Initializer extends HttpServlet {
 
@@ -38,18 +39,16 @@ public class Initializer extends HttpServlet {
 
     /**
      * <p>
-     * load config data to the servlet instance, accessable via config beans
+     * load config data to the servlet instance, accessable via config beans.
      * </p>
-     * <p>
-     * 1. Load all (website / users / admin / config) repositories <br>
-     * 2. Load template config <br>
-     * </p>
+     * <ol>
+     * <li>Initialize Log4j</li>
+     * <li>Load all (website / users / admin / config) repositories</li>
+     * <li>Load template config</li>
+     * </ol>
      */
     public void init() {
-        System.out.println("context: " + getServletContext().getServletContextName());
-
-        // used in log4j configuration
-        System.setProperty("magnolia.root", getServletContext().getRealPath(StringUtils.EMPTY));
+        Log4jConfigurer.initLogging(getServletConfig());
 
         try {
             new ConfigLoader(getServletConfig());
@@ -57,5 +56,13 @@ public class Initializer extends HttpServlet {
         catch (Exception e) {
             log.fatal(e.getMessage(), e);
         }
+    }
+
+    /**
+     * @see javax.servlet.Servlet#destroy()
+     */
+    public void destroy() {
+        Log4jConfigurer.shutdownLogging(getServletConfig());
+        super.destroy();
     }
 }
