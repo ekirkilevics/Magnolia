@@ -13,8 +13,10 @@
 package info.magnolia.cms.gui.control;
 
 import info.magnolia.cms.core.Content;
+
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -23,7 +25,7 @@ import java.util.Iterator;
  */
 public class ButtonSet extends ControlSuper {
 
-    private ArrayList buttons = new ArrayList();
+    private List buttons = new ArrayList();
 
     private int buttonType = BUTTONTYPE_RADIO;
 
@@ -33,11 +35,11 @@ public class ButtonSet extends ControlSuper {
 
     private String htmlPost = "</table>"; // html after buttonSet
 
-    private String buttonHtmlPre = null; // html before each button
+    private String buttonHtmlPre; // html before each button
 
-    private String buttonHtmlInter = null; // html between each button and label (not available for push button)
+    private String buttonHtmlInter; // html between each button and label (not available for push button)
 
-    private String buttonHtmlPost = null; // html after each label
+    private String buttonHtmlPost; // html after each label
 
     // default values for divided button (checkbox, radio)
     private final String htmlPreDivided = "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">";
@@ -72,7 +74,7 @@ public class ButtonSet extends ControlSuper {
         super(name, value);
     }
 
-    public ButtonSet(String name, ArrayList values) {
+    public ButtonSet(String name, List values) {
         super(name, values);
     }
 
@@ -80,7 +82,7 @@ public class ButtonSet extends ControlSuper {
         super(name, websiteNode);
     }
 
-    public void setButtons(ArrayList buttons) {
+    public void setButtons(List buttons) {
         this.buttons = buttons;
     }
 
@@ -88,7 +90,7 @@ public class ButtonSet extends ControlSuper {
         this.getButtons().add(button);
     }
 
-    public ArrayList getButtons() {
+    public List getButtons() {
         return this.buttons;
     }
 
@@ -100,10 +102,12 @@ public class ButtonSet extends ControlSuper {
         if (this.buttonHtmlPre == null) {
             if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON) {
                 return this.buttonHtmlPrePush;
-            } else {
+            }
+            else {
                 return this.buttonHtmlPreDivided;
             }
-        } else {
+        }
+        else {
             return this.buttonHtmlPre;
         }
     }
@@ -116,10 +120,12 @@ public class ButtonSet extends ControlSuper {
         if (this.buttonHtmlInter == null) {
             if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON) {
                 return this.buttonHtmlInterPush;
-            } else {
+            }
+            else {
                 return this.buttonHtmlInterDivided;
             }
-        } else {
+        }
+        else {
             return this.buttonHtmlInter;
         }
     }
@@ -132,10 +138,12 @@ public class ButtonSet extends ControlSuper {
         if (this.buttonHtmlPost == null) {
             if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON) {
                 return this.buttonHtmlPostPush;
-            } else {
+            }
+            else {
                 return this.buttonHtmlPostDivided;
             }
-        } else {
+        }
+        else {
             return this.buttonHtmlPost;
         }
     }
@@ -144,10 +152,12 @@ public class ButtonSet extends ControlSuper {
         if (super.getHtmlPre(null) == null) {
             if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON) {
                 return this.htmlPrePush;
-            } else {
+            }
+            else {
                 return this.htmlPreDivided;
             }
-        } else {
+        }
+        else {
             return super.getHtmlPre();
         }
     }
@@ -156,10 +166,12 @@ public class ButtonSet extends ControlSuper {
         if (super.getHtmlInter(null) == null) {
             if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON) {
                 return this.htmlInterPush;
-            } else {
+            }
+            else {
                 return this.htmlInterDivided;
             }
-        } else {
+        }
+        else {
             return super.getHtmlInter();
         }
     }
@@ -168,10 +180,12 @@ public class ButtonSet extends ControlSuper {
         if (super.getHtmlPost(null) == null) {
             if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON) {
                 return this.htmlPostPush;
-            } else {
+            }
+            else {
                 return this.htmlPostDivided;
             }
-        } else {
+        }
+        else {
             return super.getHtmlPost();
         }
     }
@@ -213,15 +227,18 @@ public class ButtonSet extends ControlSuper {
                 if (this.getValues().size() != 0) {
                     if (this.getValues().contains(b.getValue())) {
                         b.setState(BUTTONSTATE_PUSHED);
-                    } else {
+                    }
+                    else {
                         b.setState(BUTTONSTATE_NORMAL);
                     }
                 }
-            } else {
+            }
+            else {
                 if (!this.getValue().equals("")) {
                     if (this.getValue().equals(b.getValue())) {
                         b.setState(BUTTONSTATE_PUSHED);
-                    } else {
+                    }
+                    else {
                         b.setState(BUTTONSTATE_NORMAL);
                     }
                 }

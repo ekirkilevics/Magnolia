@@ -15,12 +15,16 @@ package info.magnolia.cms.gui.control;
 import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
+
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import javax.jcr.PropertyType;
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 
 
@@ -50,17 +54,11 @@ public class ControlSuper implements ControlInterface {
 
     public static final int VALUETYPE_MULTIPLE = 1;
 
-    private int valueType = VALUETYPE_SINGLE;
-
     public static final int ENCODING_NO = 0;
 
     public static final int ENCODING_BASE64 = 1;
 
     public static final int ENCODING_UNIX = 2;
-
-    private int encoding = ENCODING_NO;
-
-    private int isRichEditValue = 0;
 
     public static final String CSSCLASS_CONTROLBUTTON = "mgnlControlButton";
 
@@ -70,7 +68,16 @@ public class ControlSuper implements ControlInterface {
 
     public static final String CSSCLASS_CONTROLBARSMALL = "mgnlControlBarSmall";
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(ControlSuper.class);
+
+    private int valueType = VALUETYPE_SINGLE;
+
+    private int encoding = ENCODING_NO;
+
+    private int isRichEditValue;
 
     private String label;
 
@@ -78,28 +85,27 @@ public class ControlSuper implements ControlInterface {
 
     private String id;
 
-    private String value = null;
+    private String value;
 
-    private ArrayList values = new ArrayList(); // mulitple values (checkbox)
+    private List values = new ArrayList(); // mulitple values (checkbox)
 
-    private Hashtable events = new Hashtable();
+    private Map events = new Hashtable();
 
-    private Content websiteNode = null;
+    private Content websiteNode;
 
-    private String htmlPre = null;
+    private String htmlPre;
 
-    private String htmlInter = null;
+    private String htmlInter;
 
-    private String htmlPost = null;
+    private String htmlPost;
 
     private int type = PropertyType.STRING;
 
     private boolean saveInfo = true;
 
-    // private ArrayList defaultValues=new ArrayList();
     private String cssClass = "";
 
-    private Hashtable cssStyles = new Hashtable();
+    private Map cssStyles = new Hashtable();
 
     private String path;
 
@@ -119,7 +125,7 @@ public class ControlSuper implements ControlInterface {
         this.setValue(value);
     }
 
-    ControlSuper(String name, ArrayList values) {
+    ControlSuper(String name, List values) {
         this.setName(name);
         this.setValues(values);
     }
@@ -146,10 +152,11 @@ public class ControlSuper implements ControlInterface {
     }
 
     public String getNodeCollectionName(String nullOrEmptyValue) {
-        if (this.getNodeCollectionName() == null || this.getNodeCollectionName().equals(""))
+        if (this.getNodeCollectionName() == null || this.getNodeCollectionName().equals("")) {
             return nullOrEmptyValue;
-        else
-            return this.getNodeCollectionName();
+        }
+
+        return this.getNodeCollectionName();
     }
 
     public void setNodeName(String nodeName) {
@@ -161,10 +168,11 @@ public class ControlSuper implements ControlInterface {
     }
 
     public String getNodeName(String nullOrEmptyValue) {
-        if (this.getNodeName() == null || this.getNodeName().equals(""))
+        if (this.getNodeName() == null || this.getNodeName().equals("")) {
             return nullOrEmptyValue;
-        else
-            return this.getNodeName();
+        }
+
+        return this.getNodeName();
     }
 
     public void setParagraph(String paragraph) {
@@ -200,10 +208,11 @@ public class ControlSuper implements ControlInterface {
     }
 
     public String getHtmlId() {
-        if (this.getId() != null)
+        if (this.getId() != null) {
             return " id=\"" + this.getId() + "\"";
-        else
-            return "";
+        }
+
+        return "";
     }
 
     public void setValue(String value) {
@@ -211,23 +220,24 @@ public class ControlSuper implements ControlInterface {
     }
 
     public String getValue() {
-        if (this.value == null) {
-            try {
-                return this.getWebsiteNode().getNodeData(this.getName()).getString();
-            }
-            catch (Exception e) {
-                return "";
-            }
-        }
-        else
+        if (this.value != null) {
             return this.value;
+        }
+
+        try {
+            return this.getWebsiteNode().getNodeData(this.getName()).getString();
+        }
+        catch (Exception e) {
+            return "";
+        }
+
     }
 
-    public void setValues(ArrayList values) {
+    public void setValues(List values) {
         this.values = values;
     }
 
-    public ArrayList getValues() {
+    public List getValues() {
         if (this.values.size() != 0) {
             return this.values;
         }
@@ -237,7 +247,7 @@ public class ControlSuper implements ControlInterface {
                 .getContentNode(this.getName())
                 .getChildren(ItemType.NT_NODEDATA)
                 .iterator();
-            ArrayList l = new ArrayList();
+            List l = new ArrayList();
             while (it.hasNext()) {
                 NodeData data = (NodeData) it.next();
                 l.add(data.getString());
@@ -274,28 +284,28 @@ public class ControlSuper implements ControlInterface {
         String existing = "";
         if (!removeExisting) {
             existing = (String) this.getEvents().get(event);
-            if (existing == null)
+            if (existing == null) {
                 existing = "";
+            }
         }
         this.getEvents().put(event, existing + action);
     }
 
-    public void setEvents(Hashtable h) {
+    public void setEvents(Map h) {
         this.events = h;
     }
 
-    public Hashtable getEvents() {
+    public Map getEvents() {
         return this.events;
     }
 
     public String getHtmlEvents() {
         StringBuffer html = new StringBuffer();
-        Enumeration en = this.getEvents().keys();
-        while (en.hasMoreElements()) {
-            String key = (String) en.nextElement();
+        Iterator en = this.getEvents().keySet().iterator();
+        while (en.hasNext()) {
+            String key = (String) en.next();
             html.append(" " + key + "=\"" + this.getEvents().get(key) + "\"");
         }
-        // System.out.println(html);
         return html.toString();
     }
 
@@ -313,10 +323,11 @@ public class ControlSuper implements ControlInterface {
     }
 
     public String getHtmlPre(String nullValue) {
-        if (this.htmlPre != null)
+        if (this.htmlPre != null) {
             return this.htmlPre;
-        else
-            return nullValue;
+        }
+
+        return nullValue;
     }
 
     public void setHtmlInter(String s) {
@@ -328,10 +339,11 @@ public class ControlSuper implements ControlInterface {
     }
 
     public String getHtmlInter(String nullValue) {
-        if (this.htmlInter != null)
+        if (this.htmlInter != null) {
             return this.htmlInter;
-        else
-            return nullValue;
+        }
+
+        return nullValue;
     }
 
     public void setHtmlPost(String s) {
@@ -343,10 +355,11 @@ public class ControlSuper implements ControlInterface {
     }
 
     public String getHtmlPost(String nullValue) {
-        if (this.htmlPost != null)
+        if (this.htmlPost != null) {
             return this.htmlPost;
-        else
-            return nullValue;
+        }
+
+        return nullValue;
     }
 
     public void setType(int i) {
@@ -378,10 +391,11 @@ public class ControlSuper implements ControlInterface {
     }
 
     public String getHtmlCssClass() {
-        if (!this.getCssClass().equals(""))
+        if (!this.getCssClass().equals("")) {
             return " class=\"" + this.getCssClass() + "\"";
-        else
-            return "";
+        }
+
+        return "";
     }
 
     public String getHtmlSaveInfo() {
@@ -405,7 +419,7 @@ public class ControlSuper implements ControlInterface {
         return html.toString();
     }
 
-    public void setCssStyles(Hashtable h) {
+    public void setCssStyles(Map h) {
         this.cssStyles = h;
     }
 
@@ -413,15 +427,15 @@ public class ControlSuper implements ControlInterface {
         this.getCssStyles().put(key, value);
     }
 
-    public Hashtable getCssStyles() {
+    public Map getCssStyles() {
         return this.cssStyles;
     }
 
     public String getCssStyles(String key, String nullValue) {
-        if (this.getCssStyles().containsKey(key))
+        if (this.getCssStyles().containsKey(key)) {
             return (String) this.getCssStyles().get(key);
-        else
-            return nullValue;
+        }
+        return nullValue;
     }
 
     public String getCssStyles(String key) {
@@ -430,15 +444,15 @@ public class ControlSuper implements ControlInterface {
 
     public String getHtmlCssStyles() {
         StringBuffer html = new StringBuffer();
-        Enumeration en = this.getCssStyles().keys();
-        while (en.hasMoreElements()) {
-            String key = (String) en.nextElement();
+        Iterator en = this.getCssStyles().keySet().iterator();
+        while (en.hasNext()) {
+            String key = (String) en.next();
             html.append("" + key + ":" + this.getCssStyles().get(key) + ";");
         }
-        if (!html.equals(""))
+        if (!html.equals("")) {
             return " style=\"" + html + "\"";
-        else
-            return "";
+        }
+        return "";
     }
 
     public void setValueType(int i) {

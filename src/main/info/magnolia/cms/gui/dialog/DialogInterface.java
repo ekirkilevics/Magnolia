@@ -18,6 +18,8 @@ import javax.servlet.jsp.JspWriter;
 
 
 /**
+ * Interface for dialogs. A Magnolia Dialog should at least implements the <code>drawHtml</code> method to add html
+ * code to a page.
  * @author Vinzenz Wyser
  * @version 2.0
  */

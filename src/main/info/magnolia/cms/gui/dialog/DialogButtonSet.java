@@ -22,6 +22,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
@@ -50,7 +51,7 @@ public class DialogButtonSet extends DialogBox {
     public void setOptions(ContentNode configNode, boolean setDefaultSelected) {
         // setDefaultSelected: does not work properly (no difference between never stored and removed...)
         // therefor do only use for radio, not for checkbox
-        ArrayList options = new ArrayList();
+        List options = new ArrayList();
         try {
             Iterator it = configNode.getContentNode("options").getChildren().iterator();
             while (it.hasNext()) {
@@ -71,7 +72,7 @@ public class DialogButtonSet extends DialogBox {
 
     public void setOption(ContentNode configNode) {
         // checkboxSwitch -> only one option, value always true/false
-        ArrayList options = new ArrayList();
+        List options = new ArrayList();
         Button button = new Button(this.getName(), "");
         try {
             button.setLabel(configNode.getNodeData("buttonLabel").getString());
@@ -114,7 +115,7 @@ public class DialogButtonSet extends DialogBox {
         ButtonSet control;
         if (this.getConfigValue("valueType").equals("multiple")) {
             // checkbox
-            ArrayList l = this.getValues();
+            List l = this.getValues();
             control = new ButtonSet(this.getName(), this.getValues());
             control.setValueType(ButtonSet.VALUETYPE_MULTIPLE);
         }

@@ -13,8 +13,10 @@
 package info.magnolia.cms.gui.control;
 
 import info.magnolia.cms.core.Content;
+
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -23,7 +25,7 @@ import java.util.Iterator;
  */
 public class Select extends ControlSuper {
 
-    private ArrayList options = new ArrayList();
+    private List options = new ArrayList();
 
     public Select() {
     }
@@ -36,7 +38,7 @@ public class Select extends ControlSuper {
         super(name, websiteNode);
     }
 
-    public void setOptions(ArrayList l) {
+    public void setOptions(List l) {
         this.options = l;
     }
 
@@ -49,7 +51,7 @@ public class Select extends ControlSuper {
         this.getOptions().add(new SelectOption(label, value));
     }
 
-    public ArrayList getOptions() {
+    public List getOptions() {
         return this.options;
     }
 

@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
@@ -40,32 +42,6 @@ import org.apache.log4j.Logger;
  * @version 2.0
  */
 public class DialogSuper implements DialogInterface {
-
-    private static Logger log = Logger.getLogger(DialogSuper.class);
-
-    private HttpServletRequest request = null;
-
-    private PageContext pageContext = null;
-
-    private Content websiteNode; // content data
-
-    private Content configNode; // config structure/data (dialog.xml)
-
-    private Hashtable config = new Hashtable(); // config data (written from dialog.xml to config)
-
-    private ArrayList subs = new ArrayList(); // sub controls (written from dialog.xml to subs)
-
-    private ArrayList options = new ArrayList(); // options (radio, checkbox...)
-
-    private String id = "mgnlControl";
-
-    private String value = null;
-
-    private ArrayList values = new ArrayList(); // multiple values, e.g. checkbox
-
-    private DialogSuper parent = null;
-
-    private DialogSuper topParent = null;
 
     public static final String SESSION_ATTRIBUTENAME_DIALOGOBJECT = "mgnlSessionAttribute";
 
@@ -125,8 +101,6 @@ public class DialogSuper implements DialogInterface {
 
     public static final String NULLGIF = "/admindocroot/0.gif";
 
-    private Hashtable iconExtensions = new Hashtable();
-
     public static final String ICONS_PATH = "/admindocroot/fileIcons/";
 
     public static final String ICONS_GENERAL = "general.gif";
@@ -140,6 +114,55 @@ public class DialogSuper implements DialogInterface {
     public static final int ICONS_WIDTH = 23;
 
     public static final String THUMB_PATH = "/.magnolia/dialogs/fileThumbnail.jpg";
+
+    /**
+     * Logger.
+     */
+    private static Logger log = Logger.getLogger(DialogSuper.class);
+
+    private HttpServletRequest request;
+
+    private PageContext pageContext;
+
+    /**
+     * content data.
+     */
+    private Content websiteNode;
+
+    /**
+     * config structure/data (dialog.xml).
+     */
+    private Content configNode;
+
+    /**
+     * config data (written from dialog.xml to config).
+     */
+    private Map config = new Hashtable();
+
+    /**
+     * Sub controls (written from dialog.xml to subs).
+     */
+    private List subs = new ArrayList();
+
+    /**
+     * options (radio, checkbox...).
+     */
+    private List options = new ArrayList();
+
+    private String id = "mgnlControl";
+
+    private String value;
+
+    /**
+     * multiple values, e.g. checkbox.
+     */
+    private List values = new ArrayList();
+
+    private DialogSuper parent;
+
+    private DialogSuper topParent;
+
+    private Map iconExtensions = new Hashtable();
 
     public DialogSuper() {
     }
@@ -164,11 +187,9 @@ public class DialogSuper implements DialogInterface {
     }
 
     public void drawHtml(JspWriter out) throws IOException {
-        // System.out.println("START "+this.getId()+" :: "+this.getClass());
         this.drawHtmlPreSubs(out);
         this.drawSubs(out);
         this.drawHtmlPostSubs(out);
-        // System.out.println("END "+this.getId());
     }
 
     public void drawSubs(JspWriter out) throws IOException {
@@ -177,14 +198,13 @@ public class DialogSuper implements DialogInterface {
         while (it.hasNext()) {
             String dsId = this.getId() + "_" + i; // use underscore (not divis)! could be used as js variable names
             DialogSuper ds = (DialogSuper) it.next();
-            // System.out.println("SUB START "+dsId+" :: "+ds.getClass());
             ds.setId(dsId);
             ds.setParent(this);
-            if (this.getParent() == null)
+            if (this.getParent() == null) {
                 this.setTopParent(this);
+            }
             ds.setTopParent(this.getTopParent());
             ds.drawHtml(out);
-            // System.out.println("SUB END "+dsId);
             i++;
         }
     }
@@ -211,7 +231,7 @@ public class DialogSuper implements DialogInterface {
     public void drawHtmlPostSubs(JspWriter out) throws IOException {
     }
 
-    public void setSubs(ArrayList subs) {
+    public void setSubs(List subs) {
         this.subs = subs;
     }
 
@@ -219,28 +239,31 @@ public class DialogSuper implements DialogInterface {
         this.getSubs().add(o);
     }
 
-    public ArrayList getSubs() {
+    public List getSubs() {
         return this.subs;
     }
 
-    public Hashtable getConfig() {
+    public Map getConfig() {
         return this.config;
     }
 
-    public void setConfig(Hashtable config) {
+    public void setConfig(Map config) {
         this.config = config;
     }
 
     public void setConfig(String key, String value) {
-        if (value != null)
+        if (value != null) {
             this.getConfig().put(key, value);
+        }
     }
 
     public void setConfig(String key, boolean value) {
-        if (value)
+        if (value) {
             this.getConfig().put(key, "true");
-        else
+        }
+        else {
             this.getConfig().put(key, "false");
+        }
     }
 
     public void setConfig(String key, int value) {
@@ -251,9 +274,8 @@ public class DialogSuper implements DialogInterface {
         if (this.getConfig().containsKey(key)) {
             return (String) this.getConfig().get(key);
         }
-        else {
-            return nullValue;
-        }
+
+        return nullValue;
     }
 
     public String getConfigValue(String key) {
@@ -262,7 +284,7 @@ public class DialogSuper implements DialogInterface {
 
     public void setConfig(Content configNodeParent) throws RepositoryException {
         // create config and subs out of dialog structure (xml)
-        Hashtable config = new Hashtable();
+        Map config = new Hashtable();
         // get properties -> to this.config
         Iterator itProps = configNodeParent.getChildren(ItemType.NT_NODEDATA).iterator();
         while (itProps.hasNext()) {
@@ -270,7 +292,6 @@ public class DialogSuper implements DialogInterface {
             String name = data.getName();
             String value = data.getString();
             config.put(name, value);
-            // System.out.println(name+"::"+value);
         }
         this.setConfig(config);
         // String parentType=configNodeParent.getNodeData("type").getString();
@@ -362,7 +383,7 @@ public class DialogSuper implements DialogInterface {
         }
     }
 
-    public void setOptions(ArrayList options) {
+    public void setOptions(List options) {
         this.options = options;
     }
 
@@ -415,7 +436,7 @@ public class DialogSuper implements DialogInterface {
     }
 
     public String getLabel() {
-        return (String) this.getConfigValue("label", "");
+        return this.getConfigValue("label", "");
     }
 
     public void setDescription(String s) {
@@ -423,14 +444,15 @@ public class DialogSuper implements DialogInterface {
     }
 
     public String getDescription() {
-        return (String) this.getConfigValue("description", "");
+        return this.getConfigValue("description", "");
     }
 
     public String getHtmlDescription() {
         String html = "";
         // use div to force a new line
-        if (!this.getDescription().equals(""))
+        if (!this.getDescription().equals("")) {
             html = "<div class=\"" + CSSCLASS_DESCRIPTION + "\">" + this.getDescription() + "</div>";
+        }
         return html;
     }
 
@@ -438,7 +460,7 @@ public class DialogSuper implements DialogInterface {
         return (String) this.getConfig().get("controlType");
     }
 
-    public ArrayList getOptions() {
+    public List getOptions() {
         return this.options;
     }
 
@@ -447,8 +469,9 @@ public class DialogSuper implements DialogInterface {
     }
 
     public String getValue() {
-        if (this.value != null)
+        if (this.value != null) {
             return this.value;
+        }
         else if (this.getWebsiteNode() != null) {
             try {
                 return this.getWebsiteNode().getNodeData(this.getName()).getString();
@@ -457,13 +480,15 @@ public class DialogSuper implements DialogInterface {
                 return "";
             }
         }
-        else
+        else {
             return "";
+        }
     }
 
     public String getValue(String lineBreak) {
-        if (this.value != null)
+        if (this.value != null) {
             return this.value.replaceAll("\n", "<br>");
+        }
         else if (this.getWebsiteNode() != null) {
             try {
                 return this.getWebsiteNode().getNodeData(this.getName()).getString(lineBreak);
@@ -472,35 +497,37 @@ public class DialogSuper implements DialogInterface {
                 return "";
             }
         }
-        else
+        else {
             return "";
+        }
     }
 
-    public void setValues(ArrayList l) {
+    public void setValues(List l) {
         this.values = l;
     }
 
-    public ArrayList getValues() {
-        if (this.getWebsiteNode() == null)
+    public List getValues() {
+        if (this.getWebsiteNode() == null) {
             return this.values;
-        else {
-            try {
-                Iterator it = this
-                    .getWebsiteNode()
-                    .getContentNode(this.getName())
-                    .getChildren(ItemType.NT_NODEDATA)
-                    .iterator();
-                ArrayList l = new ArrayList();
-                while (it.hasNext()) {
-                    NodeData data = (NodeData) it.next();
-                    l.add(data.getString());
-                }
-                return l;
-            }
-            catch (RepositoryException re) {
-                return this.values;
-            }
         }
+
+        try {
+            Iterator it = this
+                .getWebsiteNode()
+                .getContentNode(this.getName())
+                .getChildren(ItemType.NT_NODEDATA)
+                .iterator();
+            List l = new ArrayList();
+            while (it.hasNext()) {
+                NodeData data = (NodeData) it.next();
+                l.add(data.getString());
+            }
+            return l;
+        }
+        catch (RepositoryException re) {
+            return this.values;
+        }
+
     }
 
     public String getValue(boolean notFromWebsiteNode) {
@@ -527,12 +554,12 @@ public class DialogSuper implements DialogInterface {
         String name = SESSION_ATTRIBUTENAME_DIALOGOBJECT + "_" + this.getName() + "_" + new Date().getTime();
         this.setConfig(SESSION_ATTRIBUTENAME_DIALOGOBJECT, name);
         HttpServletRequest request = this.getRequest();
-        if (request == null)
+        if (request == null) {
             request = this.getTopParent().getRequest();
+        }
         try {
             HttpSession session = request.getSession();
             session.setAttribute(name, this);
-            // System.out.println(name+" add to session");
         }
         catch (Exception e) {
             log.error("setSessionAttribute() for " + name + " failed because this.request is null");
@@ -547,23 +574,23 @@ public class DialogSuper implements DialogInterface {
     public void removeSessionAttribute() {
         String name = this.getConfigValue(SESSION_ATTRIBUTENAME_DIALOGOBJECT);
         HttpServletRequest request = this.getRequest();
-        if (request == null)
+        if (request == null) {
             request = this.getTopParent().getRequest();
+        }
         try {
             HttpSession session = request.getSession();
             session.removeAttribute(name);
-            // System.out.println(name+" removed from session");
         }
         catch (Exception e) {
             log.debug("removeSessionAttribute() for \"+name+\" failed because this.request is null");
         }
     }
 
-    public Hashtable getIconExtensions() {
+    public Map getIconExtensions() {
         return this.iconExtensions;
     }
 
-    public void setIconExtensions(Hashtable t) {
+    public void setIconExtensions(Map t) {
         this.iconExtensions = t;
     }
 
@@ -589,14 +616,17 @@ public class DialogSuper implements DialogInterface {
         // name might be name (e.g. "bla.gif") or extension (e.g. "gif")
         String iconPath = ICONS_PATH + ICONS_GENERAL;
         String ext = "";
-        if (name.indexOf(".") != -1)
+        if (name.indexOf(".") != -1) {
             ext = name.substring(name.lastIndexOf(".") + 1).toLowerCase();
-        else
+        }
+        else {
             ext = name;
+        }
         if (this.getIconExtensions().containsKey(ext)) {
             iconPath = (String) this.getIconExtensions().get(ext);
-            if (iconPath.equals(""))
+            if (iconPath.equals("")) {
                 iconPath = ICONS_PATH + ext + ".gif";
+            }
         }
         return iconPath;
     }
