@@ -11,7 +11,7 @@
  * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  * */
-%><%@ page import="info.magnolia.cms.util.Resource"%>
+%>
 <%@ taglib uri="cms-taglib" prefix="cms" %>
 <%@ taglib uri="cms-util-taglib" prefix="cmsu" %>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
@@ -24,9 +24,9 @@
         <%-- ################################################## --%>
         <%-- links --%>
         <%-- ################################################## --%>
-		<link rel="stylesheet" type="text/css" href="/docroot/samples/css/main.css">
-		<link rel="stylesheet" type="text/css" href="/docroot/samples/css/richEdit.css">
-		<script type="text/javascript" src="/docroot/samples/js/form.js"></script>
+		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/docroot/samples/css/main.css">
+		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/docroot/samples/css/richEdit.css">
+		<script type="text/javascript" src="<%=request.getContextPath()%>/docroot/samples/js/form.js"></script>
 
         <%-- ################################################## --%>
         <%-- meta --%>

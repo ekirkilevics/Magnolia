@@ -16,7 +16,7 @@
 
 
 
-<a href="<cms:out nodeDataName="file"/>" target="_blank">
+<a href="<%=request.getContextPath()%><cms:out nodeDataName="file"/>" target="_blank">
 <cms:out nodeDataName="file" fileProperty="nameWithoutExtension"/> &ndash;
 <cms:out nodeDataName="file" fileProperty="extensionUpperCase"/>-File,
 <cms:out nodeDataName="file" fileProperty="size"/></a><br>

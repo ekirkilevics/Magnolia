@@ -181,6 +181,7 @@
 	String alertText=Resource.getActivePage(request).getNodeData("mandatoryAlert").getString();
 	if (alertText.equals("")) alertText="Please fill in all fields marked with an asterisk.";
 	alertText=alertText.replaceAll("'","&rsquo;");
+	alertText=alertText.replaceAll("\"","&rsquo;");
 	alertText=alertText.replaceAll("\r\n","<br>");
 	%>
 	<form name="samplesForm" action="<%=Resource.getActivePage(request).getHandle()%>.html" method="post" onsubmit="return (checkMandatories(this.name,'<%=alertText%>'));">

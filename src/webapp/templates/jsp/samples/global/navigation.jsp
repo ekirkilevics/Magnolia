@@ -19,7 +19,7 @@
 
 
 <%!
-private void drawChildren(Content page,Content activePage,int indent,JspWriter out) {
+private void drawChildren(Content page,Content activePage,int indent,JspWriter out, HttpServletRequest request) {
 	Iterator it=page.getChildren().iterator();
 	while (it.hasNext()) {
 		try {
@@ -53,7 +53,7 @@ private void drawChildren(Content page,Content activePage,int indent,JspWriter o
 					else {
 						cssClassA="nav";
 					}
-					title="<a href=\""+c.getHandle()+".html\" class=\""+cssClassA+"\">"+title+"</a>";
+					title="<a href=\""+request.getContextPath() + c.getHandle()+".html\" class=\""+cssClassA+"\">"+title+"</a>";
 				}
 
 				if (c.getLevel()==1) {
@@ -68,7 +68,7 @@ private void drawChildren(Content page,Content activePage,int indent,JspWriter o
 				//out.print("</td></tr>");
 				out.print("</div>");
 				if (showChildren) {
-					drawChildren(c,activePage,indent+1,out);
+					drawChildren(c,activePage,indent+1,out, request);
 				}
 			}
 		}
@@ -81,7 +81,7 @@ private void drawChildren(Content page,Content activePage,int indent,JspWriter o
 out.println("<div id=\"navDiv\">");
 Content activePage=Resource.getActivePage(request);
 Content topLevel=activePage.getAncestor(0);
-drawChildren(topLevel,activePage,0,out);
+drawChildren(topLevel,activePage,0,out, request);
 out.println("<div class=\"navLine\"><br></div>");
 out.println("</div>");
 %>

@@ -18,7 +18,7 @@
 
 
 &raquo;
-<a href="<cms:out nodeDataName="document"/>" target="_blank">
+<a href="<%=request.getContextPath()%><cms:out nodeDataName="document"/>" target="_blank">
 <cms:ifEmpty nodeDataName="text">
 	<cms:out nodeDataName="document" fileProperty="nameWithoutExtension"/></a>
 </cms:ifEmpty>

@@ -57,6 +57,6 @@
 	}
 
 	out.println("<div style=\"position:absolute;left:0px;top:0px;\">");
-	out.println("<img src=\""+imagePath+"\" alt=\""+alt+"\"><br>");
+	out.println("<img src=\""+ request.getContextPath() + imagePath+"\" alt=\""+alt+"\"><br>");
 	out.println("</div>");
 %>

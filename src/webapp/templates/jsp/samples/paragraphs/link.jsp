@@ -33,6 +33,7 @@
 			else html.append(link);
 		}
 		else {
+		    html.append(request.getContextPath());
 			html.append(link+".html\">");
 			if (!text.equals("")) html.append(text);
 			else {
