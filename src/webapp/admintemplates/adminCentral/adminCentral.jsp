@@ -22,7 +22,7 @@
 				 info.magnolia.cms.security.SessionAccessControl,
 				 info.magnolia.cms.beans.config.Server,
 				 info.magnolia.cms.gui.misc.Sources,
-				 info.magnolia.module.adminInterface.Store,
+				 info.magnolia.module.admininterface.Store,
 				 java.util.Iterator,
 				 javax.jcr.RepositoryException,
 				 info.magnolia.cms.core.ContentNode,

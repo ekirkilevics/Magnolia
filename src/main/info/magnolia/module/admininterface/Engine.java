@@ -10,7 +10,7 @@
  * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.module.adminInterface;
+package info.magnolia.module.admininterface;
 
 import info.magnolia.cms.module.Module;
 import info.magnolia.cms.module.ModuleConfig;

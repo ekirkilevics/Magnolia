@@ -96,15 +96,17 @@ public final class ModuleLoader {
         Iterator modules = startPage.getChildren().iterator();
         while (modules.hasNext()) {
             Content module = (Content) modules.next();
+
+            String modulename = module.getName();
+
             try {
-                log.info("Initializing module - " + module.getName());
+                log.info("Initializing module - " + modulename);
                 load(module);
-                VirtualMap.getInstance().update(
-                    CONFIG_PAGE + "/" + module.getName() + "/" + CONFIG_NODE_VIRTUAL_MAPPING);
-                log.info("Module : " + module.getName() + " initialized");
+                VirtualMap.getInstance().update(CONFIG_PAGE + "/" + modulename + "/" + CONFIG_NODE_VIRTUAL_MAPPING);
+                log.info("Module : " + modulename + " initialized");
             }
             catch (RepositoryException re) {
-                log.error("Failed to initialize module - " + module.getName());
+                log.error("Failed to initialize module - " + modulename);
                 log.error(re.getMessage(), re);
             }
         }
@@ -128,7 +130,15 @@ public final class ModuleLoader {
         LocalStore store = LocalStore.getInstance(CONFIG_PAGE + "/" + module.getName() + "/" + CONFIG_NODE_LOCAL_STORE);
         thisModule.setLocalStore(store.getStore());
         try {
-            Module moduleClass = (Module) Class.forName(moduleConfig.getNodeData("class").getString()).newInstance();
+
+            // temporary workaround for compatibility with old repositories (the package "adminInterface" has been
+            // renamed to "admininterface" according to java naming standards)
+            String moduleClassName = moduleConfig.getNodeData("class").getString();
+            if ("info.magnolia.module.adminInterface.Engine".equals(moduleClassName)) {
+                moduleClassName = "info.magnolia.module.admininterface.Engine";
+            }
+
+            Module moduleClass = (Module) Class.forName(moduleClassName).newInstance();
             moduleClass.init(thisModule);
         }
         catch (InstantiationException ie) {
