@@ -249,6 +249,7 @@
       <artifactId>geronimo-spec-jta</artifactId>
       <version>1.0-M1</version>
       <type>jar</type>
+      <url>http://www.day.com/maven/jsr170/jars/jcr-0.15.jar</url>
       <properties>
         <war.bundle>true</war.bundle>
       </properties>
