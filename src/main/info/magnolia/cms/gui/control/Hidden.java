@@ -9,48 +9,50 @@
  *
  * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms.gui.control;
 
 import info.magnolia.cms.core.Content;
 
+
 /**
+ * Hidden field.
  * @author Vinzenz Wyser
  * @version 2.0
- */ 
-public class Hidden extends ControlSuper {
+ */
+public class Hidden extends ControlSuper
+{
 
-	public Hidden() {
+    public Hidden()
+    {
+    }
 
-	}
+    public Hidden(String name, String value)
+    {
+        super(name, value);
+    }
 
-	public Hidden(String name,String value) {
-		super(name,value);
-	}
+    public Hidden(String name, String value, boolean saveInfo)
+    {
+        super(name, value);
+        this.setSaveInfo(saveInfo);
+    }
 
+    public Hidden(String name, Content websiteNode)
+    {
+        super(name, websiteNode);
+    }
 
-	public Hidden(String name,String value,boolean saveInfo) {
-		super(name,value);
-		this.setSaveInfo(saveInfo);
-	}
-
-
-	public Hidden(String name,Content websiteNode) {
-		super(name,websiteNode);
-	}
-
-	public String getHtml() {
-		StringBuffer html=new StringBuffer();
-		html.append("<input type=\"hidden\"");
-		html.append(" name=\""+this.getName()+"\"");
-		html.append(" id=\""+this.getName()+"\"");
-		html.append(" value=\""+this.getValue()+"\"");
-		html.append(">");
-		html.append(this.getHtmlSaveInfo());
-		return html.toString();
-	}
+    public String getHtml()
+    {
+        StringBuffer html = new StringBuffer();
+        html.append("<input type=\"hidden\"");
+        html.append(" name=\"" + this.getName() + "\"");
+        html.append(" id=\"" + this.getName() + "\"");
+        html.append(" value=\"" + this.getValue() + "\"");
+        html.append(" />");
+        html.append(this.getHtmlSaveInfo());
+        return html.toString();
+    }
 
 }
