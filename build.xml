@@ -65,7 +65,8 @@
     <pathelement location="lib/lucene-20030909.jar"/>
     <pathelement location="lib/mail.jar"/>
     <pathelement location="lib/saxpath.jar"/>
-    <pathelement location="lib/standard.jar"/>
+    <pathelement location="lib/saxpath.jar"/>
+    <pathelement location="lib/servlet-api.jar"/>
     <pathelement location="lib/taglibs-mailer.jar"/>
     <pathelement location="lib/webdav.jar"/>
     <pathelement location="lib/commons-httpclient.jar"/>
