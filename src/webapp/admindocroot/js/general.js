@@ -219,7 +219,7 @@ function mgnlOpenDialog(path,nodeCollection,node,paragraph,repository,dialogPage
 
 	if (!dialogPage) dialogPage=".magnolia/dialogs/standard.html";
 
-    url="${pageContext.request.contextPath}";
+    url="${pageContext.request.contextPath}/";
     url+=dialogPage;
     url+="?mgnlPath="+path;
     url+="&mgnlNodeCollection="+nodeCollection;
