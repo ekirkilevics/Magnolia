@@ -55,7 +55,7 @@ import org.apache.log4j.Logger;
  * */
 
 
-public class CacheHandler {
+public class CacheHandler extends Thread  {
 
     private static Logger log = Logger.getLogger(CacheHandler.class);
 
@@ -109,7 +109,6 @@ public class CacheHandler {
                 out.close();
         }
     }
-
 
 
 
