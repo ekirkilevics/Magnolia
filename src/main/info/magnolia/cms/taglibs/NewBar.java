@@ -145,7 +145,7 @@ public class NewBar extends TagSupport {
      * @return String , label for the new bar
      */
     private String getNewLabel() {
-        String defStr = ContextMessages.getInstanceSavely(this.pageContext).get(DEFAULT_NEW_LABEL);
+        String defStr = ContextMessages.getInstanceSafely(this.pageContext).get(DEFAULT_NEW_LABEL);
         //String defStr = LocaleSupport.getLocalizedMessage(this.pageContext, DEFAULT_NEW_LABEL);
         return StringUtils.defaultString(this.newLabel, defStr);
     }

@@ -37,7 +37,7 @@ public class UserEditIncludeRolesDialogPage extends BasePageServlet {
 
     private static final String getHtmlRowInner(HttpServletRequest request) {
         boolean small = true;
-        Messages msgs = ContextMessages.getInstanceSavely(request);
+        Messages msgs = ContextMessages.getInstanceSafely(request);
 
         Button choose = new Button();
         choose.setLabel(msgs.get("buttons.choose"));

@@ -36,7 +36,7 @@ public class AdminTreeRoles implements AdminTree {
      */
     public void configureTree(Tree tree, HttpServletRequest request, String path, String pathOpen, String pathSelected,
         boolean create, String createItemType) {
-        Messages msgs = ContextMessages.getInstanceSavely(request);
+        Messages msgs = ContextMessages.getInstanceSafely(request);
         
         tree.setDrawShifter(false);
 

@@ -35,7 +35,7 @@ public class TemplateMessages {
     }
     
     public static String get(HttpServletRequest request, String key) {
-        Messages msgs = ContextMessages.getInstanceSavely(request);
+        Messages msgs = ContextMessages.getInstanceSafely(request);
         String msg = msgs.getWithDefault(key, DEFAULT_BASENAME, key);
         if(!msg.equals(key)){
             return msg;
@@ -45,7 +45,7 @@ public class TemplateMessages {
     }
     
     public static String get(HttpServletRequest request, String key, Object[] args) {
-        Messages msgs = ContextMessages.getInstanceSavely(request);
+        Messages msgs = ContextMessages.getInstanceSafely(request);
         String msg = msgs.getWithDefault(key, DEFAULT_BASENAME, args, key);
         if(!msg.equals(key)){
             return msg;

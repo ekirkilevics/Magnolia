@@ -113,7 +113,7 @@ public class ContextMessages extends Messages {
      * Trys to make a new ContextMessages object. if not possible it creates a new Messages object.
      * @return Messages
      */
-    public static Messages getInstanceSavely(HttpServletRequest req) {
+    public static Messages getInstanceSafely(HttpServletRequest req) {
         if (req != null) {
             return new ContextMessages(req);
         }
@@ -127,7 +127,7 @@ public class ContextMessages extends Messages {
      * Trys to make a new ContextMessages object. if not possible it creates a new Messages object.
      * @return Messages
      */
-    public static Messages getInstanceSavely(PageContext pc) {
+    public static Messages getInstanceSafely(PageContext pc) {
         if (pc != null && pc.getRequest() instanceof HttpServletRequest ) {
             return new ContextMessages((HttpServletRequest) pc.getRequest());
         }
@@ -138,35 +138,35 @@ public class ContextMessages extends Messages {
     }
     
     public static String get(HttpServletRequest req, String key) {
-        return ContextMessages.getInstanceSavely(req).get(key);
+        return ContextMessages.getInstanceSafely(req).get(key);
     }
 
     public static String get(HttpServletRequest req, String key, String basename) {
-        return ContextMessages.getInstanceSavely(req).get(key, basename);
+        return ContextMessages.getInstanceSafely(req).get(key, basename);
     }
     
     public static String get(HttpServletRequest req, String key, Object[] args) {
-        return ContextMessages.getInstanceSavely(req).get(key, args);
+        return ContextMessages.getInstanceSafely(req).get(key, args);
     }
 
     public static String get(HttpServletRequest req, String key, String basename, Object[] args) {
-        return ContextMessages.getInstanceSavely(req).get(key, basename, args);
+        return ContextMessages.getInstanceSafely(req).get(key, basename, args);
     }
 
     public static String getWithDefault(HttpServletRequest req, String key, String defaultMsg) {
-        return ContextMessages.getInstanceSavely(req).getWithDefault(key, defaultMsg);
+        return ContextMessages.getInstanceSafely(req).getWithDefault(key, defaultMsg);
     }
 
     public static String getWithDefault(HttpServletRequest req, String key, String basename, String defaultMsg) {
-        return ContextMessages.getInstanceSavely(req).getWithDefault(key, basename, defaultMsg);
+        return ContextMessages.getInstanceSafely(req).getWithDefault(key, basename, defaultMsg);
     }
 
     public static String getWithDefault(HttpServletRequest req, String key, Object[] args, String defaultMsg) {
-        return ContextMessages.getInstanceSavely(req).getWithDefault(key, args, defaultMsg);
+        return ContextMessages.getInstanceSafely(req).getWithDefault(key, args, defaultMsg);
     }
 
     public static String getWithDefault(HttpServletRequest req, String key, String basename, Object[] args, String defaultMsg) {
-        return ContextMessages.getInstanceSavely(req).getWithDefault(key, basename, args, defaultMsg);
+        return ContextMessages.getInstanceSafely(req).getWithDefault(key, basename, args, defaultMsg);
     }
 
     /**

@@ -172,7 +172,7 @@ public class DialogRichedit extends DialogBox {
      * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(Writer)
      */
     public void drawHtml(Writer out) throws IOException {
-        Messages msgs = ContextMessages.getInstanceSavely(this.getRequest());
+        Messages msgs = ContextMessages.getInstanceSafely(this.getRequest());
         
         this.drawHtmlPre(out);
         if (this.getRichE().equals("true")

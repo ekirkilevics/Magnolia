@@ -106,7 +106,7 @@ public class BarMain extends Bar {
      */
     public void setButtonProperties(String path, String paragraph) {
         ButtonEdit b = new ButtonEdit(this.getRequest());
-        b.setLabel(ContextMessages.getInstanceSavely(getRequest()).get("buttons.properties"));
+        b.setLabel(ContextMessages.getInstanceSafely(getRequest()).get("buttons.properties"));
         b.setPath(path);
         b.setParagraph(paragraph);
         b.setDefaultOnclick(this.getRequest());
@@ -128,7 +128,7 @@ public class BarMain extends Bar {
      */
     public void setButtonPreview() {
         Button b = new Button();
-        String str = ContextMessages.getInstanceSavely(this.getRequest()).get("buttons.preview");
+        String str = ContextMessages.getInstanceSafely(this.getRequest()).get("buttons.preview");
         b.setLabel("&laquo; " + str);
         b.setOnclick("mgnlPreview(true);");
         this.setButtonPreview(b);
@@ -175,7 +175,7 @@ public class BarMain extends Bar {
      */
     public void setButtonSiteAdmin(String path) {
         Button b = new Button();
-        b.setLabel(ContextMessages.getInstanceSavely(getRequest()).get("buttons.admincentral"));
+        b.setLabel(ContextMessages.getInstanceSafely(getRequest()).get("buttons.admincentral"));
         b.setOnclick("mgnlOpenAdminCentral('" + path + "');");
         this.setButtonSiteAdmin(b);
     }

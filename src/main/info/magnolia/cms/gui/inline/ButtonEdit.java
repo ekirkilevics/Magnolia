@@ -32,7 +32,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class ButtonEdit extends Button {
 
-    String label = ContextMessages.getInstanceSavely(getRequest()).get("buttons.edit");
+    String label = ContextMessages.getInstanceSafely(getRequest()).get("buttons.edit");
 
     public ButtonEdit() {
     }

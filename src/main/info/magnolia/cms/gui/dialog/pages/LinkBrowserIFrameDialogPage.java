@@ -35,7 +35,7 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
      */
     public void draw(HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
         PrintWriter out = response.getWriter();
-        Messages msgs = ContextMessages.getInstanceSavely(request);
+        Messages msgs = ContextMessages.getInstanceSafely(request);
         // WARNING: no white spaces tolerated for save nodeData!
 
         int treeHeight = 50;

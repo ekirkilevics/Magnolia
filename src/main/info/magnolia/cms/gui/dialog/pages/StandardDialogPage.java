@@ -52,7 +52,7 @@ public class StandardDialogPage extends BasePageServlet {
      * @see info.magnolia.cms.servlets.BasePageServlet#draw(HttpServletRequest, HttpServletResponse)
      */
     public void draw(HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
-        info.magnolia.cms.i18n.Messages msgs = ContextMessages.getInstanceSavely(request);
+        info.magnolia.cms.i18n.Messages msgs = ContextMessages.getInstanceSafely(request);
 
         PrintWriter out = response.getWriter();
 

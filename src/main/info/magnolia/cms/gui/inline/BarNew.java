@@ -77,7 +77,7 @@ public class BarNew extends Bar {
      */
     public void setButtonNew(String path, String nodeCollectionName, String nodeName, String paragraph) {
         Button b = new Button();
-        b.setLabel(ContextMessages.getInstanceSavely(getRequest()).get("buttons.new"));
+        b.setLabel(ContextMessages.getInstanceSafely(getRequest()).get("buttons.new"));
         // todo: dynamic repository
         String repository = ContentRepository.WEBSITE;
         b.setOnclick("mgnlOpenDialog('"

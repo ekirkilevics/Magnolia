@@ -120,7 +120,7 @@ public class BarEdit extends Bar {
      */
     public void setButtonMove(String nodeCollectionName, String nodeName) {
         Button b = new Button();
-        b.setLabel(ContextMessages.getInstanceSavely(getRequest()).get("buttons.move"));
+        b.setLabel(ContextMessages.getInstanceSafely(getRequest()).get("buttons.move"));
         // sets the id of the bar
         this.setId(nodeCollectionName + "__" + nodeName);
         b.setOnclick("mgnlMoveNodeStart('" + nodeCollectionName + "','" + nodeName + "','" + this.getId() + "');");
@@ -149,7 +149,7 @@ public class BarEdit extends Bar {
      */
     public void setButtonDelete(String path, String nodeCollectionName, String nodeName) {
         Button b = new Button();
-        b.setLabel(ContextMessages.getInstanceSavely(getRequest()).get("buttons.delete"));
+        b.setLabel(ContextMessages.getInstanceSafely(getRequest()).get("buttons.delete"));
         b.setOnclick("mgnlDeleteNode('" + path + "','" + nodeCollectionName + "','" + nodeName + "');");
         this.setButtonDelete(b);
     }
