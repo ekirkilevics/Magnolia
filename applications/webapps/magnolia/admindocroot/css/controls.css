@@ -1,0 +1,82 @@
+
+
+.mgnlControlButton,.mgnlControlButton_PUSHED
+	{
+    font-size:11px;
+	height:15px;
+	padding-top:1px;
+	padding-bottom:1px;
+	}
+
+.mgnlControlButtonSmall,.mgnlControlButtonSmall_PUSHED
+	{
+    font-size:9px;
+	height:5px;
+	padding-top:0px;
+	padding-bottom:0px;
+    }
+
+.mgnlControlButton,.mgnlControlButton_PUSHED,.mgnlControlButtonSmall,.mgnlControlButtonSmall_PUSHED
+	{
+    font-family:Verdana, sans-serif;
+    color:#F0F2E6;
+	cursor:default;
+	}
+
+
+.mgnlControlButton,.mgnlControlButtonSmall,.mgnlControlButtonTransparent,.mgnlControlButtonTransparentSmall,table.mgnlControlBar,table.mgnlControlBarSmall
+	{
+    background-color:#5E9201;
+	border-style:solid;
+	border-width:1px;
+	border-top-color:#ADC97B;
+    border-left-color:#ADC97B;
+	border-bottom-color:#396101;
+	border-right-color:#396101;
+	}
+
+.mgnlControlButtonTransparent,.mgnlControlButtonTransparentSmall
+	{
+	background:transparent;
+	}
+
+
+.mgnlControlButton_PUSHED,.mgnlControlButtonSmall_PUSHED, .mgnlControlBar_PUSHED,  .mgnlControlBarSmall_PUSHED
+	{
+    background-color:#9DB517;
+	border-style:solid;
+	border-width:1px;
+	border-top-color:#B9C950;
+    border-left-color:#B9C950;
+	border-bottom-color:#88AA22;
+	border-right-color:#88AA22;
+	}
+
+.mgnlControlBar_MOUSEOVER, .mgnlControlBarSmall_MOUSEOVER
+	{
+	border-style:solid;
+	border-width:1px;
+    background-color:#88aa33;
+    border-left-color:#aacc66;
+    border-top-color:#aacc66;
+    border-right-color:#668800;
+    border-bottom-color:#668800;
+	}
+
+td.mgnlControlBar, td.mgnlControlBar_PUSHED, td.mgnlControlBar_MOUSEOVER
+	{
+	padding-top:4px;
+	padding-bottom:4px;
+	padding-right:2px;
+	padding-left:2px;
+	}
+
+td.mgnlControlBarSmall, td.mgnlControlBarSmall_PUSHED, td.mgnlControlBarSmall_MOUSEOVER
+	{
+	font-size:4px;
+	padding-top:1px;
+	padding-bottom:1px;
+	padding-right:0px;
+	padding-left:0px;
+	}
+
