@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import javax.jcr.LoginException;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
@@ -198,7 +199,15 @@ public final class SessionAccessControl {
     private static void updateACL(Content userNode, List userACL, String repositoryID) {
         try {
             /* get access rights of this node (user) */
-            ContentNode acl = userNode.getContentNode("acl_" + repositoryID);
+            ContentNode acl = null;
+            try {
+                acl = userNode.getContentNode("acl_" + repositoryID);
+            }
+            catch (PathNotFoundException e) {
+                log.warn("No acl defined for user " + userNode.getHandle() + " on repository \"" + repositoryID + "\"");
+                return;
+            }
+
             Collection aclCollection = acl.getChildren();
             if (aclCollection == null) {
                 return;
@@ -273,7 +282,14 @@ public final class SessionAccessControl {
         try {
             HierarchyManager groupsHierarchy = ContentRepository.getHierarchyManager(ContentRepository.GROUPS);
             /* get access rights of this user */
-            ContentNode acl = userNode.getContentNode("groups");
+            ContentNode acl = null;
+            try {
+                acl = userNode.getContentNode("groups");
+            }
+            catch (PathNotFoundException e) {
+                log.warn("No groups defined for user " + userNode.getHandle());
+                return;
+            }
             Collection aclCollection = acl.getChildren();
             if (aclCollection == null) {
                 return;

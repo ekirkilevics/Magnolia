@@ -668,12 +668,11 @@ public class MetaData {
                 this.node.setProperty(name, value);
             }
             catch (RepositoryException re) {
-                log.error(re);
+                log.error(re.getMessage(), re);
             }
         }
         catch (RepositoryException re) {
-            log.error(re);
-            throw new AccessDeniedException(re.getMessage());
+            throw new AccessDeniedException(re.getMessage(), re);
         }
     }
 
