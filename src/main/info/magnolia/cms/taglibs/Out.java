@@ -83,7 +83,7 @@ public class Out extends TagSupport {
 		//System.out.println("name: "+this.getNodeDataName());
 
 		ContentNode local=Resource.getLocalContentNode((HttpServletRequest) pageContext.getRequest());
-		Content actpage=Resource.getActivePage((HttpServletRequest) pageContext.getRequest());
+		Content actpage=Resource.getCurrentActivePage((HttpServletRequest) pageContext.getRequest());
 
 		String contentNodeName=this.getContentNodeName();
 		String contentNodeCollectionName=this.getContentNodeCollectionName();
