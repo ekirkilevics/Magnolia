@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE Repositories [
+    <!ELEMENT Repositories (Repository+)>
+    <!ELEMENT Repository (param+)>
+    <!ELEMENT param EMPTY>
+    <!ATTLIST Repository
+        name CDATA #REQUIRED
+        id CDATA #REQUIRED
+        provider CDATA #REQUIRED
+        loadOnStartup CDATA #REQUIRED>
+    <!ATTLIST param
+        name CDATA #REQUIRED
+        value CDATA #REQUIRED>
+ ]>
+
+<!--
+
+ @version 2.1
+-->
+
+
+
+<Repositories>
+
+        <!-- magnolia default website repository -->
+        <Repository name="website" id="website" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true" >
+            <param name="configFile" value="../webapps/magnolia/WEB-INF/config/repositories/website.xml"/>
+            <param name="repositoryHome" value="../webapps/magnolia/repositories/website"/>
+            <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory"/>
+            <param name="providerURL" value="localhost"/>
+            <param name="id" value="website"/>
+        </Repository>
+
+        <!-- magnolia default config repository -->
+        <Repository name="config" id="config" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
+            <param name="configFile" value="../webapps/magnolia/WEB-INF/config/repositories/config.xml"/>
+            <param name="repositoryHome" value="../webapps/magnolia/repositories/config"/>
+            <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory"/>
+            <param name="providerURL" value="localhost"/>
+            <param name="id" value="config"/>
+        </Repository>
+
+        <!-- magnolia user repository -->
+        <Repository name="users" id="users" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
+            <param name="configFile" value="../webapps/magnolia/WEB-INF/config/repositories/users.xml"/>
+            <param name="repositoryHome" value="../webapps/magnolia/repositories/users"/>
+            <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory"/>
+            <param name="providerURL" value="localhost"/>
+            <param name="id" value="users"/>
+        </Repository>
+
+        <!-- magnolia default user roles repository -->
+        <Repository name="userroles" id="userroles" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
+            <param name="configFile" value="../webapps/magnolia/WEB-INF/config/repositories/userroles.xml"/>
+            <param name="repositoryHome" value="../webapps/magnolia/repositories/userroles"/>
+            <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory"/>
+            <param name="providerURL" value="localhost"/>
+            <param name="id" value="userroles"/>
+        </Repository>
+
+</Repositories>

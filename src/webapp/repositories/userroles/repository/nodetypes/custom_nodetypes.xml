@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*
+ * Copyright 2004-2005 The Apache Software Foundation or its licensors,
+ *                     as applicable.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+ -->
+<!DOCTYPE nodeTypes [
+	<!ELEMENT nodeTypes (nodeType)*>
+		<!ELEMENT nodeType (supertypes?|propertyDef*|childNodeDef*)>
+
+		<!ATTLIST nodeType
+			name CDATA #REQUIRED
+			mixin (true|false) #REQUIRED
+ 			orderableChildNodes (true|false) #REQUIRED
+		>
+		<!ELEMENT supertypes (supertype+)>
+		<!ELEMENT supertype (CDATA)>
+
+		<!ELEMENT propertyDef (valueConstraints?|defaultValues?)>
+		<!ATTLIST propertyDef
+			name CDATA #REQUIRED
+			type (String|Date|Path|Name|Reference|Binary|Double|Long|Boolean|undefined) #REQUIRED
+			autoCreate (true|false) #REQUIRED
+			mandatory (true|false) #REQUIRED
+			onParentVersion (COPY|VERSION|INITIALIZE|COMPUTE|IGNORE|ABORT) #REQUIRED
+			protected (true|false) #REQUIRED
+			primaryItem (true|false) #REQUIRED
+			multiple  (true|false) #REQUIRED
+		>
+		<!ELEMENT valueConstraints (valueConstraint+)>
+		<!ELEMENT valueConstraint (CDATA)>
+		<!ELEMENT defaultValues (defaultValue+)>
+		<!ELEMENT defaultValue (CDATA)>
+
+		<!ELEMENT childNodeDef (requiredPrimaryTypes)>
+		<!ATTLIST childNodeDef
+			name CDATA #REQUIRED
+			defaultPrimaryType  CDATA #REQUIRED
+			autoCreate (true|false) #REQUIRED
+			mandatory (true|false) #REQUIRED
+			onParentVersion (COPY|VERSION|INITIALIZE|COMPUTE|IGNORE|ABORT) #REQUIRED
+			protected (true|false) #REQUIRED
+			primaryItem (true|false) #REQUIRED
+			sameNameSibs (true|false) #REQUIRED
+		>
+		<!ELEMENT requiredPrimaryTypes (requiredPrimaryType+)>
+		<!ELEMENT requiredPrimaryType (CDATA)>
+]>
+<nodeTypes
+    xmlns:rep="internal"
+    xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+    xmlns:mix="http://www.jcp.org/jcr/mix/1.0"
+    xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
+    xmlns:jcr="http://www.jcp.org/jcr/1.0">
+
+    <!-- custom node types -->
+    <nodeType name="mgnl:content" mixin="false" orderableChildNodes="false">
+        <supertypes>
+            <supertype>nt:hierarchyNode</supertype>
+        </supertypes>
+        <childNodeDef name="*" defaultPrimaryType="" autoCreate="false" mandatory="false" onParentVersion="VERSION" protected="false" primaryItem="false" sameNameSibs="false">
+            <requiredPrimaryTypes>
+                <requiredPrimaryType>nt:hierarchyNode</requiredPrimaryType>
+            </requiredPrimaryTypes>
+        </childNodeDef>
+    </nodeType>
+    <nodeType name="mgnl:contentNode" mixin="false" orderableChildNodes="false">
+        <supertypes>
+            <supertype>nt:hierarchyNode</supertype>
+        </supertypes>
+        <childNodeDef name="*" defaultPrimaryType="" autoCreate="false" mandatory="false" onParentVersion="VERSION" protected="false" primaryItem="false" sameNameSibs="false">
+            <requiredPrimaryTypes>
+                <requiredPrimaryType>nt:hierarchyNode</requiredPrimaryType>
+            </requiredPrimaryTypes>
+        </childNodeDef>
+    </nodeType>
+    <nodeType name="mgnl:nodeData" mixin="false" orderableChildNodes="false">
+        <supertypes>
+            <supertype>nt:hierarchyNode</supertype>
+        </supertypes>
+        <childNodeDef name="jcr:content" defaultPrimaryType="" autoCreate="false" mandatory="true" onParentVersion="COPY" protected="false" primaryItem="true" sameNameSibs="false">
+            <requiredPrimaryTypes>
+                <requiredPrimaryType>nt:base</requiredPrimaryType>
+            </requiredPrimaryTypes>
+        </childNodeDef>
+    </nodeType>
+    
+
+
+
+</nodeTypes>
