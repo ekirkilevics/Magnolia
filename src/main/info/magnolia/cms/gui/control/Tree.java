@@ -1096,9 +1096,6 @@ public class Tree extends ControlSuper {
             + this.getJavascriptTree()
             + "',"
             + this.getHeight()
-            + ", '"
-            + this.getRequest().getContextPath()
-            + "'"
             + ");");
         // html.append(this.getJavascriptTree()+".columns=new Array();"); //->in tree.js
         // add menu to tree object
