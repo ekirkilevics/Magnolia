@@ -368,6 +368,7 @@ public class Syndicator {
         Content page = hm.getPage(this.path);
         updateMetaData(page, Syndicator.DE_ACTIVATE);
         this.updateTree(page, Syndicator.DE_ACTIVATE);
+        page.save();
     }
 
     /**
