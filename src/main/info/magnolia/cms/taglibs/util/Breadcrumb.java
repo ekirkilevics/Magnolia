@@ -9,61 +9,71 @@
  *
  * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
-
+ */
 package info.magnolia.cms.taglibs.util;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.Resource;
 
-import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.tagext.TagSupport;
 
 
 /**
- * Date: Apr 28, 2003
- * Time: 11:20:59 AM
  * @author Marcel Salathe
- * @version 1.1
+ * @version $Revision: $ ($Author: $)
  */
+public class Breadcrumb extends TagSupport
+{
 
-
-public class Breadcrumb extends TagSupport {
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
 
     private String delimiter = " > ";
+
     private int startLevel = 1;
 
-    public int doStartTag() throws JspException {
-        HttpServletRequest request = (HttpServletRequest)pageContext.getRequest();
+    public int doStartTag() throws JspException
+    {
+        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         Content actpage = Resource.getCurrentActivePage(request);
         int currentLevel = 0;
-        try {
+        try
+        {
             currentLevel = actpage.getLevel();
             JspWriter out = pageContext.getOut();
-            for (int i = this.startLevel; i <= currentLevel; i++) {
-                if (i != this.startLevel) out.print(this.delimiter);
-                out.print("<a href=\""+actpage.getAncestor(i).getHandleWithDefaultExtension()+"\">"+actpage.getAncestor(i).getTitle()+"</a>");
+            for (int i = this.startLevel; i <= currentLevel; i++)
+            {
+                if (i != this.startLevel)
+                    out.print(this.delimiter);
+                out.print("<a href=\""
+                    + actpage.getAncestor(i).getHandleWithDefaultExtension()
+                    + "\">"
+                    + actpage.getAncestor(i).getTitle()
+                    + "</a>");
             }
         }
-        catch (Exception e) {};
-
-
+        catch (Exception e)
+        {
+        }
+        ;
 
         return super.doStartTag();
     }
 
-    public void setDelimiter(String delimiter) {
+    public void setDelimiter(String delimiter)
+    {
         this.delimiter = delimiter;
     }
 
-    public void setStartLevel(String startLevel) {
+    public void setStartLevel(String startLevel)
+    {
         this.startLevel = (new Integer(startLevel)).intValue();
-        if (this.startLevel < 1) this.startLevel = 1;
+        if (this.startLevel < 1)
+            this.startLevel = 1;
     }
 }
-

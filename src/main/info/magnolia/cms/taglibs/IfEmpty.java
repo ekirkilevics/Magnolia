@@ -9,110 +9,150 @@
  *
  * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms.taglibs;
 
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.Resource;
 
-import javax.servlet.jsp.tagext.BodyTagSupport;
-import javax.servlet.http.HttpServletRequest;
 import javax.jcr.RepositoryException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.log4j.Logger;
 
 
 /**
- * Date: Apr 28, 2003
- * Time: 11:20:59 AM
  * @author Marcel Salathe
- * @version 1.1
+ * @version $Revision: $ ($Author: $)
  */
+public class IfEmpty extends BodyTagSupport
+{
 
-
-public class IfEmpty extends BodyTagSupport {
-
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
 
     private static Logger log = Logger.getLogger(IfEmpty.class);
 
     private String nodeDataName = "";
+
     private String contentNodeName = "";
+
     private String contentNodeCollectionName = "";
+
     private ContentNode contentNodeCollection;
+
     private Content contentNode;
+
     private NodeData nodeData;
+
     private String actpage = "false";
 
-
-
-        /**
-    * <p>start of tag</p>
-    *
-    * @return int
-    */
-    public int doStartTag() {
-		HttpServletRequest req = (HttpServletRequest)pageContext.getRequest();
+    /**
+     * <p>
+     * start of tag
+     * </p>
+     * @return int
+     */
+    public int doStartTag()
+    {
+        HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
         // in the case where a contentNodeCollectionName is provided
-        if (!this.contentNodeCollectionName.equals("")) {
-            try {
-                this.contentNodeCollection = Resource.getCurrentActivePage(req).getContentNode(this.contentNodeCollectionName);
-                }
-            catch (RepositoryException re) {}
-            if (this.contentNodeCollection == null) return EVAL_BODY_INCLUDE;
-            if (!this.contentNodeCollection.hasChildren()) return EVAL_BODY_INCLUDE;
+        if (!this.contentNodeCollectionName.equals(""))
+        {
+            try
+            {
+                this.contentNodeCollection = Resource.getCurrentActivePage(req).getContentNode(
+                    this.contentNodeCollectionName);
+            }
+            catch (RepositoryException re)
+            {
+            }
+            if (this.contentNodeCollection == null)
+                return EVAL_BODY_INCLUDE;
+            if (!this.contentNodeCollection.hasChildren())
+                return EVAL_BODY_INCLUDE;
             return SKIP_BODY;
         }
-        else {
+        else
+        {
             // if only contentNodeName is provided, it checks if this contentNode exists
-            if (!this.contentNodeName.equals("") && this.nodeDataName.equals("")) {
-                try {
+            if (!this.contentNodeName.equals("") && this.nodeDataName.equals(""))
+            {
+                try
+                {
                     this.contentNode = Resource.getCurrentActivePage(req).getContentNode(this.contentNodeName);
-                } catch (RepositoryException re) {log.error(re.getMessage());}
-                if (this.contentNode == null) {
-                    //contentNode doesn't exist, evaluate body
+                }
+                catch (RepositoryException re)
+                {
+                    log.error(re.getMessage());
+                }
+                if (this.contentNode == null)
+                {
+                    // contentNode doesn't exist, evaluate body
                     return EVAL_BODY_INCLUDE;
                 }
             }
-            //if both contentNodeName and nodeDataName are set, it checks if that nodeData of that contentNode exitsts and is not empty
-            else if (!this.contentNodeName.equals("") && !this.nodeDataName.equals("")) {
-                try {
+            // if both contentNodeName and nodeDataName are set, it checks if that nodeData of that contentNode exitsts
+            // and is not empty
+            else if (!this.contentNodeName.equals("") && !this.nodeDataName.equals(""))
+            {
+                try
+                {
                     this.contentNode = Resource.getCurrentActivePage(req).getContentNode(this.contentNodeName);
-                } catch (RepositoryException re) {log.error(re.getMessage());}
-                if (this.contentNode == null) return EVAL_BODY_INCLUDE;
-                if (this.contentNode != null) {
+                }
+                catch (RepositoryException re)
+                {
+                    log.error(re.getMessage());
+                }
+                if (this.contentNode == null)
+                    return EVAL_BODY_INCLUDE;
+                if (this.contentNode != null)
+                {
                     this.nodeData = this.contentNode.getNodeData(this.nodeDataName);
-                    if (!this.nodeData.isExist() || this.nodeData.getString().equals("")) return EVAL_BODY_INCLUDE;
+                    if (!this.nodeData.isExist() || this.nodeData.getString().equals(""))
+                        return EVAL_BODY_INCLUDE;
                 }
             }
-            // if only nodeDataName is provided, it checks if that nodeData of the current contentNode exists and is not empty
-            else if (this.contentNodeName.equals("") && !this.nodeDataName.equals("")) {
-                if (this.actpage.equals("true")) {
-                    this.contentNode = Resource.getCurrentActivePage((HttpServletRequest)pageContext.getRequest());
+            // if only nodeDataName is provided, it checks if that nodeData of the current contentNode exists and is not
+            // empty
+            else if (this.contentNodeName.equals("") && !this.nodeDataName.equals(""))
+            {
+                if (this.actpage.equals("true"))
+                {
+                    this.contentNode = Resource.getCurrentActivePage((HttpServletRequest) pageContext.getRequest());
                 }
-                else {
-                    this.contentNode = Resource.getLocalContentNode((HttpServletRequest)pageContext.getRequest());
-                    if (this.contentNode == null) {
-                        this.contentNode = Resource.getGlobalContentNode((HttpServletRequest)pageContext.getRequest());
-                        }
+                else
+                {
+                    this.contentNode = Resource.getLocalContentNode((HttpServletRequest) pageContext.getRequest());
+                    if (this.contentNode == null)
+                    {
+                        this.contentNode = Resource.getGlobalContentNode((HttpServletRequest) pageContext.getRequest());
+                    }
                 }
-                if (this.contentNode == null) return EVAL_BODY_INCLUDE;
-                if (this.contentNode != null) {
+                if (this.contentNode == null)
+                    return EVAL_BODY_INCLUDE;
+                if (this.contentNode != null)
+                {
                     this.nodeData = this.contentNode.getNodeData(this.nodeDataName);
-                    if (!this.nodeData.isExist() || this.nodeData.getString().equals("")) return EVAL_BODY_INCLUDE;
+                    if (!this.nodeData.isExist() || this.nodeData.getString().equals(""))
+                        return EVAL_BODY_INCLUDE;
                 }
             }
             // if both contentNodeName and nodeDataName are not provided, it checks if the current contentNode exists
-            else {
-                this.contentNode = Resource.getLocalContentNode((HttpServletRequest)pageContext.getRequest());
-                if (this.contentNode == null) {
-                    this.contentNode = Resource.getGlobalContentNode((HttpServletRequest)pageContext.getRequest());
-                    }
-                if (this.contentNode == null) {
+            else
+            {
+                this.contentNode = Resource.getLocalContentNode((HttpServletRequest) pageContext.getRequest());
+                if (this.contentNode == null)
+                {
+                    this.contentNode = Resource.getGlobalContentNode((HttpServletRequest) pageContext.getRequest());
+                }
+                if (this.contentNode == null)
+                {
                     return EVAL_BODY_INCLUDE;
                 }
             }
@@ -121,49 +161,51 @@ public class IfEmpty extends BodyTagSupport {
 
     }
 
-
-	/**
-	 * @deprecated
-	 */
-	public void setAtomName(String name) {
-		this.setNodeDataName(name);
-	}
-
+    /**
+     * @deprecated
+     */
+    public void setAtomName(String name)
+    {
+        this.setNodeDataName(name);
+    }
 
     /**
      * @param name , antom name to evaluate
      */
-    public void setNodeDataName(String name) {
+    public void setNodeDataName(String name)
+    {
         this.nodeDataName = name;
     }
 
-
-
-	/**
-	 * @deprecated
-	 */
-	public void setContainerName(String name) {
-		this.setContentNodeName(name);
-	}
+    /**
+     * @deprecated
+     */
+    public void setContainerName(String name)
+    {
+        this.setContentNodeName(name);
+    }
 
     /**
      * @param contentNodeName , contentNodeName to check
      */
-    public void setContentNodeName(String contentNodeName) {
+    public void setContentNodeName(String contentNodeName)
+    {
         this.contentNodeName = contentNodeName;
     }
 
-  /**
-     * <p>set the actpage</p>
-     *
+    /**
+     * <p>
+     * set the actpage
+     * </p>
      * @param set
      */
-    public void setActpage(String set) {
+    public void setActpage(String set)
+    {
         this.actpage = set;
     }
 
-
-    public void release() {
+    public void release()
+    {
         nodeDataName = "";
         contentNodeName = "";
         contentNodeCollectionName = "";
@@ -174,4 +216,3 @@ public class IfEmpty extends BodyTagSupport {
     }
 
 }
-

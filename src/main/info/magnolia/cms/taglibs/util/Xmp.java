@@ -9,58 +9,49 @@
  *
  * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
-
+ */
 package info.magnolia.cms.taglibs.util;
 
-import info.magnolia.cms.util.Resource;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.NodeData;
-
-import javax.servlet.jsp.tagext.TagSupport;
-import javax.servlet.jsp.tagext.BodyTagSupport;
 import javax.servlet.jsp.JspWriter;
-import javax.servlet.http.HttpServletRequest;
-import javax.jcr.PropertyType;
-import java.util.Locale;
-import java.text.SimpleDateFormat;
+import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.log4j.Logger;
 
 
 /**
- * Date: Apr 28, 2003
- * Time: 11:20:59 AM
  * @author Marcel Salathe
- * @version 1.1
+ * @version $Revision: $ ($Author: $)
  */
+public class Xmp extends BodyTagSupport
+{
 
-
-public class Xmp extends BodyTagSupport{
-
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
 
     private static Logger log = Logger.getLogger(Xmp.class);
 
-
-    public int doEndTag() {
+    public int doEndTag()
+    {
         JspWriter out = pageContext.getOut();
         String xmpString = getBodyContent().getString();
-        try {
+        try
+        {
             xmpString = changeToXmp(xmpString);
             out.print(xmpString);
         }
-        catch (Exception e) {
+        catch (Exception e)
+        {
             log.error(e.getMessage());
         }
         return EVAL_PAGE;
     }
 
-    private String changeToXmp(String string) {
-        string = string.replaceAll("<","&lt;");
-        string = string.replaceAll(">","&gt;");
+    private String changeToXmp(String string)
+    {
+        string = string.replaceAll("<", "&lt;");
+        string = string.replaceAll(">", "&gt;");
         return string;
     }
 

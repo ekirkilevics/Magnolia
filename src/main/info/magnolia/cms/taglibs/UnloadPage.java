@@ -9,35 +9,34 @@
  *
  * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.util.Resource;
 
-import javax.servlet.jsp.tagext.BodyTagSupport;
-import javax.servlet.jsp.PageContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.tagext.BodyTagSupport;
 
 
 /**
- * Date: Apr 28, 2003
- * Time: 11:20:59 AM
  * @author Marcel Salathe
- * @version 1.1
+ * @version $Revision: $ ($Author: $)
  */
+public class UnloadPage extends BodyTagSupport
+{
 
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
 
-
-public class UnloadPage extends BodyTagSupport {
-
-
-   public int doStartTag() {
-        HttpServletRequest request = (HttpServletRequest)pageContext.getRequest();
-        pageContext.setAttribute(Aggregator.CURRENT_ACTPAGE,Resource.getActivePage(request),PageContext.REQUEST_SCOPE);
+    public int doStartTag()
+    {
+        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+        pageContext
+            .setAttribute(Aggregator.CURRENT_ACTPAGE, Resource.getActivePage(request), PageContext.REQUEST_SCOPE);
         return EVAL_PAGE;
     }
 

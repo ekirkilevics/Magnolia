@@ -9,64 +9,56 @@
  *
  * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
-
+ */
 package info.magnolia.cms.taglibs;
 
-
 import info.magnolia.cms.beans.config.Server;
-import info.magnolia.cms.beans.config.Server;
-import info.magnolia.cms.util.Resource;
 
-import javax.servlet.jsp.tagext.TagSupport;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.tagext.TagSupport;
 
 
 /**
- * Date: Apr 28, 2003
- * Time: 11:20:59 AM
  * @author Sameer Charles
- * @version 1.1
+ * @version $Revision: $ ($Author: $)
  */
-
-
-
-public class AdminOnly extends TagSupport {
-	HttpServletRequest request;
-
+public class AdminOnly extends TagSupport
+{
 
     /**
-     * <p>starts Edit tag</p>
-     *
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
+
+    HttpServletRequest request;
+
+    /**
+     * <p>
+     * starts Edit tag
+     * </p>
      * @return int
      */
-    public int doStartTag() {
+    public int doStartTag()
+    {
 
+        this.request = (HttpServletRequest) pageContext.getRequest();
+        String prev = (String) this.request.getSession().getAttribute("mgnlPreview");
 
-
-		this.request = (HttpServletRequest)pageContext.getRequest();
-		String prev=(String) this.request.getSession().getAttribute("mgnlPreview");
-
-		//if (Server.isAdmin() && !Resource.showPreview((HttpServletRequest)pageContext.getRequest()))
-        if (Server.isAdmin() && prev==null)
+        // if (Server.isAdmin() && !Resource.showPreview((HttpServletRequest)pageContext.getRequest()))
+        if (Server.isAdmin() && prev == null)
             return EVAL_BODY_INCLUDE;
         return SKIP_BODY;
     }
 
-
-
     /**
-     * <p>continue evaluating jsp</p>
-     *
+     * <p>
+     * continue evaluating jsp
+     * </p>
      * @return int
      */
-    public int doEndTag() {
+    public int doEndTag()
+    {
         return EVAL_PAGE;
     }
-
-
 
 }

@@ -43,6 +43,7 @@ import org.apache.log4j.Logger;
  * </pre>
  * 
  * @author Fabrizio Giustina
+ * @version $Revision: $ ($Author: $)
  */
 public class SetNode extends TagSupport
 {

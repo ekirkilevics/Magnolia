@@ -9,123 +9,128 @@
  *
  * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
+ */
 package info.magnolia.cms.taglibs;
 
-
-
-import info.magnolia.cms.util.Resource;
 import info.magnolia.cms.gui.inline.BarEdit;
+import info.magnolia.cms.util.Resource;
 
-import javax.servlet.jsp.tagext.TagSupport;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.tagext.TagSupport;
 
 
 /**
- * Date: Apr 28, 2003
- * Time: 11:20:59 AM
+ * Date: Apr 28, 2003 Time: 11:20:59 AM
  * @author Sameer Charles
  * @author Marcel Salathe
- * @version 1.1
+ * @version $Revision: $ ($Author: $)
  */
-
-
-public class EditBar extends TagSupport {
-
-
-    //private static final String EDIT_DIALOG_HANDLE = "/.CMSadmin/dialogs/standard.html";
-    //private static final String DEFAULT_EDIT_LABEL = "Edit";
-	//private static final String DEFAULT_MOVE_LABEL = "Move";
-    //private static final String DEFAULT_DELETE_LABEL = "Delete";
-
-    private String nodeName;
-    private String nodeCollectionName;
-    private String paragraph;
-    private String editLabel;
-    private String deleteLabel;
-	private String moveLabel;
-	private String displayHandler;
-    private HttpServletRequest request;
-
-
+public class EditBar extends TagSupport
+{
 
     /**
-     * <p>starts Edit tag</p>
-     *
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
+
+    // private static final String EDIT_DIALOG_HANDLE = "/.CMSadmin/dialogs/standard.html";
+    // private static final String DEFAULT_EDIT_LABEL = "Edit";
+    // private static final String DEFAULT_MOVE_LABEL = "Move";
+    // private static final String DEFAULT_DELETE_LABEL = "Delete";
+
+    private String nodeName;
+
+    private String nodeCollectionName;
+
+    private String paragraph;
+
+    private String editLabel;
+
+    private String deleteLabel;
+
+    private String moveLabel;
+
+    private String displayHandler;
+
+    private HttpServletRequest request;
+
+    /**
+     * <p>
+     * starts Edit tag
+     * </p>
      * @return int
      */
-    public int doStartTag() {
+    public int doStartTag()
+    {
         this.displayHandler = "";
-        this.request = (HttpServletRequest)pageContext.getRequest();
+        this.request = (HttpServletRequest) pageContext.getRequest();
         return EVAL_BODY_INCLUDE;
     }
 
-
-
     /**
-     * <p>print out</p>
-     *
+     * <p>
+     * print out
+     * </p>
      * @return int
      */
-    public int doEndTag() {
-		/*
-        if (!ServerInfo.isAdmin() || Resource.showPreview(this.request))
-            return EVAL_PAGE;
-        if (!Resource.getActivePage(this.request).isGranted(Permission.WRITE_PROPERTY))
-            return EVAL_PAGE;
-		*/
-        try {
+    public int doEndTag()
+    {
+        /*
+         * if (!ServerInfo.isAdmin() || Resource.showPreview(this.request)) return EVAL_PAGE; if
+         * (!Resource.getActivePage(this.request).isGranted(Permission.WRITE_PROPERTY)) return EVAL_PAGE;
+         */
+        try
+        {
             this.display();
-        } catch (Exception e) {}
+        }
+        catch (Exception e)
+        {
+        }
         return EVAL_PAGE;
     }
 
-
-
-
     /**
-	 * @see this.setNodeName()
-     * <p>set working contentNode</p>
-     *
+     * <p>
+     * set working contentNode
+     * </p>
      * @param name , comtainer name which will be used to access/write content
      */
-    public void setContentNodeName(String name) {
+    public void setContentNodeName(String name)
+    {
         this.nodeName = name;
     }
 
-	/**
-	 *
-	 */
-	private String getNodeName() {
-		if (this.nodeName == null)
-			return Resource.getLocalContentNode(this.request).getName();
-		else
-			return this.nodeName;
-	}
+    /**
+     *
+     */
+    private String getNodeName()
+    {
+        if (this.nodeName == null)
+            return Resource.getLocalContentNode(this.request).getName();
+        else
+            return this.nodeName;
+    }
 
-
-
-	/**
-	 * @see this.setNodeCollectionName()
-	 * <p>set working contentNode</p>
-	 *
-	 * @param name , comtainer name which will be used to access/write content
-	 */
-	public void setContentNodeCollectionName(String name) {
-		this.nodeCollectionName = name;
-	}
-
-
-
+    /**
+     * <p>
+     * set working contentNode
+     * </p>
+     * @param name , comtainer name which will be used to access/write content
+     */
+    public void setContentNodeCollectionName(String name)
+    {
+        this.nodeCollectionName = name;
+    }
 
     /**
      * @return content node collection name
      */
-    private String getNodeCollectionName() {
-		if (this.nodeCollectionName == null) {
+    private String getNodeCollectionName()
+    {
+        if (this.nodeCollectionName == null)
+        {
             if (Resource.getLocalContentNodeCollectionName(this.request) == null)
                 return "";
             else
@@ -134,164 +139,158 @@ public class EditBar extends TagSupport {
         return this.nodeCollectionName;
     }
 
-
-
-
     /**
-	 * @deprecated
-     * <p>set current content type, could be any developer defined name</p>
-     *
+     * @deprecated
+     * <p>
+     * set current content type, could be any developer defined name
+     * </p>
      * @param type , content type
      */
-    public void setParFile(String type) {
+    public void setParFile(String type)
+    {
         this.setParagraph(type);
     }
 
-	/**
-	 * <p>set current content type, could be any developer defined name</p>
-	 *
-	 * @param type , content type
-	 */
-	public void setParagraph(String type) {
-		this.paragraph = type;
-	}
-
-
-
-	/**
-	 * @return String paragraph (type of par)
-	 */
-	private String getParagraph() {
-		if (this.paragraph==null) return Resource.getLocalContentNode(this.request).getNodeData("paragraph").getString();
-		else return this.paragraph;
-	}
-
-
-
-
+    /**
+     * <p>
+     * set current content type, could be any developer defined name
+     * </p>
+     * @param type , content type
+     */
+    public void setParagraph(String type)
+    {
+        this.paragraph = type;
+    }
 
     /**
-     * <p>set display handler (JSP / Servlet), needs to know the relative path from WEB-INF</p>
-     *
+     * @return String paragraph (type of par)
+     */
+    private String getParagraph()
+    {
+        if (this.paragraph == null)
+            return Resource.getLocalContentNode(this.request).getNodeData("paragraph").getString();
+        else
+            return this.paragraph;
+    }
+
+    /**
+     * <p>
+     * set display handler (JSP / Servlet), needs to know the relative path from WEB-INF
+     * </p>
      * @param path , relative to WEB-INF
      */
-    public void setTemplate(String path) {
+    public void setTemplate(String path)
+    {
         this.displayHandler = path;
     }
 
-
-
     /**
-	 * @deprecated
-     * @return template path
-     */
-    private String getTemplate() {
-        if (this.displayHandler == null) {
-            return Resource.getLocalContentNode(this.request).getTemplate();
-        }
-        return this.displayHandler;
-    }
-
-
-
-    /**
-     * <p>get the content path (Page or Node)</p>
-     *
+     * <p>
+     * get the content path (Page or Node)
+     * </p>
      * @return String path
      */
-    private String getPath() {
-        try {
+    private String getPath()
+    {
+        try
+        {
             return Resource.getCurrentActivePage(this.request).getHandle();
-        } catch (Exception re) {return "";}
+        }
+        catch (Exception re)
+        {
+            return "";
+        }
     }
 
-
-
     /**
-     * <p>set the edit label (else "Edit")</p>
-     *
+     * <p>
+     * set the edit label (else "Edit")
+     * </p>
      * @param label , under which content must be stored
      */
-    public void setEditLabel(String label) {
+    public void setEditLabel(String label)
+    {
         this.editLabel = label;
     }
 
-
-
     /**
-     *
      * @return String , label for the edit bar
      */
-    private String getEditLabel() {
+    private String getEditLabel()
+    {
         return this.editLabel;
     }
 
-
-
     /**
-     * <p>set the delete label (else "Delete")</p>
-     *
+     * <p>
+     * set the delete label (else "Delete")
+     * </p>
      * @param label , under which content must be stored
      */
-    public void setDeleteLabel(String label) {
+    public void setDeleteLabel(String label)
+    {
         this.deleteLabel = label;
     }
 
-
-
     /**
-     *
      * @return String , label for the edit bar
      */
-    private String getDeleteLabel() {
+    private String getDeleteLabel()
+    {
         return this.deleteLabel;
     }
 
-
-	public void setMoveLabel(String label) {
-		this.moveLabel = label;
-	}
-
-
-
-	/**
-	 *
-	 * @return String , label for the edit bar
-	 */
-	private String getMoveLabel() {
-		return this.moveLabel;
-	}
-
-
-
+    public void setMoveLabel(String label)
+    {
+        this.moveLabel = label;
+    }
 
     /**
-     * <p>displays edit bar</p>
-     *
+     * @return String , label for the edit bar
+     */
+    private String getMoveLabel()
+    {
+        return this.moveLabel;
+    }
+
+    /**
+     * <p>
+     * displays edit bar
+     * </p>
      * @throws IOException
      */
-    private void display() throws IOException {
-		BarEdit bar=new BarEdit(this.request);
-		bar.setPath(this.getPath());
-		bar.setParagraph(this.getParagraph());
-		bar.setNodeCollectionName(this.getNodeCollectionName());
-		bar.setNodeName(this.getNodeName());
+    private void display() throws IOException
+    {
+        BarEdit bar = new BarEdit(this.request);
+        bar.setPath(this.getPath());
+        bar.setParagraph(this.getParagraph());
+        bar.setNodeCollectionName(this.getNodeCollectionName());
+        bar.setNodeName(this.getNodeName());
 
-		bar.setDefaultButtons();
-		if (this.getEditLabel()!=null) {
-			if (this.getEditLabel().equals("")) bar.setButtonEdit(null);
-			else bar.getButtonEdit().setLabel(this.getEditLabel());
-		}
-		if (this.getMoveLabel()!=null) {
-			if (this.getMoveLabel().equals("")) bar.setButtonMove(null);
-			else bar.getButtonMove().setLabel(this.getMoveLabel());
-		}
-		if (this.getDeleteLabel()!=null) {
-			if (this.getDeleteLabel().equals("")) bar.setButtonDelete(null);
-			else bar.getButtonDelete().setLabel(this.getDeleteLabel());
-		}
-		bar.placeDefaultButtons();
+        bar.setDefaultButtons();
+        if (this.getEditLabel() != null)
+        {
+            if (this.getEditLabel().equals(""))
+                bar.setButtonEdit(null);
+            else
+                bar.getButtonEdit().setLabel(this.getEditLabel());
+        }
+        if (this.getMoveLabel() != null)
+        {
+            if (this.getMoveLabel().equals(""))
+                bar.setButtonMove(null);
+            else
+                bar.getButtonMove().setLabel(this.getMoveLabel());
+        }
+        if (this.getDeleteLabel() != null)
+        {
+            if (this.getDeleteLabel().equals(""))
+                bar.setButtonDelete(null);
+            else
+                bar.getButtonDelete().setLabel(this.getDeleteLabel());
+        }
+        bar.placeDefaultButtons();
 
-		bar.drawHtml(pageContext.getOut());
+        bar.drawHtml(pageContext.getOut());
     }
 }

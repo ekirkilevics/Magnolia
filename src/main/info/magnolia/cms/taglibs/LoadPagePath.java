@@ -9,9 +9,7 @@
  *
  * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
+ */
 package info.magnolia.cms.taglibs;
 
 import javax.servlet.jsp.JspException;
@@ -19,29 +17,35 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 
 
 /**
- * Date: Apr 28, 2003
- * Time: 11:20:59 AM
  * @author Marcel Salathe
- * @version 1.1
+ * @version $Revision: $ ($Author: $)
  */
+public class LoadPagePath extends BodyTagSupport
+{
 
-public class LoadPagePath extends BodyTagSupport {
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
 
-
-
-        /**
-    * <p>end of tag</p>
-    *
-    * @return int
-    */
-    public int doEndTag() throws JspException {
-        LoadPage parent = (LoadPage)findAncestorWithClass(this, LoadPage.class);
-        if (parent == null) {
+    /**
+     * <p>
+     * end of tag
+     * </p>
+     * @return int
+     */
+    public int doEndTag() throws JspException
+    {
+        LoadPage parent = (LoadPage) findAncestorWithClass(this, LoadPage.class);
+        if (parent == null)
+        {
             throw new JspException("nesting error");
         }
-        else {
+        else
+        {
             String path = getBodyContent().getString();
-            if (path != null) parent.setPath(path.trim());
+            if (path != null)
+                parent.setPath(path.trim());
         }
         return EVAL_PAGE;
 
