@@ -254,7 +254,7 @@ public class EntryServlet extends HttpServlet {
         public CacheRequest(HttpServletRequest originalRequest) {
             this.contextPath = originalRequest.getContextPath();
             // remember URI
-            uri = StringUtils.substringAfter(originalRequest.getRequestURI(), this.contextPath);
+            uri = originalRequest.getRequestURI();
             // copy neccessary attributes
             attributes.put(Aggregator.EXTENSION, originalRequest.getAttribute(Aggregator.EXTENSION));
             attributes.put(Aggregator.ACTPAGE, originalRequest.getAttribute(Aggregator.ACTPAGE));
