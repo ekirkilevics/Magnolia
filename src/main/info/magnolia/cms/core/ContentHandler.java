@@ -460,7 +460,7 @@ public abstract class ContentHandler {
      * as opposed to just having a lock  apply to it due to a deep lock held by a node above.
      * </p>
      * */
-    public boolean holdLock() throws RepositoryException {
+    public boolean holdsLock() throws RepositoryException {
         return this.node.holdsLock();
     }
 }
