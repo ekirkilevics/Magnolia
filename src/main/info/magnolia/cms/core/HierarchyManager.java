@@ -18,14 +18,17 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.Permission;
+
 import java.util.Collection;
 import java.util.Iterator;
+
 import javax.jcr.ItemExistsException;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Workspace;
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 
 
@@ -255,7 +258,12 @@ public class HierarchyManager {
      * @throws javax.jcr.RepositoryException
      */
     public NodeData getNodeData(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        NodeData nodeData = new NodeData(this.startPage, getNodePath(path), this.accessManager);
+        String nodePath = getNodePath(path);
+        if (nodePath == null || "".equals(nodePath)) {
+            return null;
+        }
+
+        NodeData nodeData = new NodeData(this.startPage, nodePath, this.accessManager);
         return nodeData;
     }
 
@@ -329,8 +337,14 @@ public class HierarchyManager {
      */
     public boolean isPage(String path) throws AccessDeniedException {
         Access.isGranted(this.accessManager, path, Permission.READ);
+
+        String nodePath = getNodePath(path);
+        if (nodePath == null || "".equals(nodePath)) {
+            return false;
+        }
+
         try {
-            Node n = this.startPage.getNode(getNodePath(path));
+            Node n = this.startPage.getNode(nodePath);
             return (n.isNodeType(ItemType.getSystemName(ItemType.NT_CONTENT)));
         }
         catch (RepositoryException re) {
@@ -392,8 +406,16 @@ public class HierarchyManager {
      */
     public boolean isNodeData(String path) throws AccessDeniedException {
         Access.isGranted(this.accessManager, path, Permission.READ);
+
+        // org.apache.slide.jcr.core.NodeImpl 01.02.2005 20:22:06 -- ERROR -- failed to resolve path relative to /
+        // org.apache.slide.jcr.core.MalformedPathException: '' is not a relative path
+        String nodePath = getNodePath(path);
+        if (nodePath == null || "".equals(nodePath)) {
+            return false;
+        }
+
         try {
-            Node n = this.startPage.getNode(getNodePath(path));
+            Node n = this.startPage.getNode(nodePath);
             return (n.isNodeType(ItemType.getSystemName(ItemType.NT_NODEDATA)));
         }
         catch (RepositoryException e) {
