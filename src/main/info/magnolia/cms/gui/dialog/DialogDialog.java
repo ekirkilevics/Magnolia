@@ -12,7 +12,6 @@
  */
 package info.magnolia.cms.gui.dialog;
 
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.ButtonSet;
 import info.magnolia.cms.gui.control.ControlSuper;
@@ -24,10 +23,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.jcr.RepositoryException;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
 
 import org.apache.log4j.Logger;
 
@@ -58,14 +54,6 @@ public class DialogDialog extends DialogSuper {
     private List cssSources = new ArrayList();
 
     private String action;
-
-    public DialogDialog(Content configNode, Content websiteNode, HttpServletRequest request, PageContext pageContext)
-        throws RepositoryException {
-        super(configNode, websiteNode, request, pageContext);
-    }
-
-    public DialogDialog() {
-    }
 
     public void setCallbackJavascript(String s) {
         this.callbackJavascript = s;
@@ -110,15 +98,10 @@ public class DialogDialog extends DialogSuper {
         return this.cssSources;
     }
 
-    public void drawCssSources(JspWriter out) {
+    public void drawCssSources(JspWriter out) throws IOException {
         Iterator it = this.getCssSources().iterator();
         while (it.hasNext()) {
-            try {
-                out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + it.next() + "\">");
-            }
-            catch (IOException ioe) {
-                log.error("");
-            }
+            out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + it.next() + "\">");
         }
     }
 

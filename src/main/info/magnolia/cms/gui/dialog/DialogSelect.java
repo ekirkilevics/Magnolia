@@ -12,7 +12,6 @@
  */
 package info.magnolia.cms.gui.dialog;
 
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.control.SelectOption;
@@ -36,13 +35,6 @@ import org.apache.log4j.Logger;
 public class DialogSelect extends DialogBox {
 
     private static Logger log = Logger.getLogger(DialogSelect.class);
-
-    public DialogSelect() {
-    }
-
-    public DialogSelect(ContentNode configNode, Content websiteNode) throws RepositoryException {
-        super(configNode, websiteNode);
-    }
 
     public void setOptions(ContentNode configNode) {
         List options = new ArrayList();

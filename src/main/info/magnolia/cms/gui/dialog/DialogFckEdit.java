@@ -19,14 +19,15 @@ import java.io.IOException;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
 
 import org.apache.log4j.Logger;
 
 
 /**
- * An Magnolia control for the universal usage and configuration of the fckeditor. Credits for FCKEditor:
+ * An Magnolia dialog for the universal usage and configuration of the fckeditor. Credits for FCKEditor:
  * http://www.fckeditor.net/
- * @author bert.schulzki
+ * @author bert schulzki
  * @author Fabrizio Giustina
  * @version 1.0 11.10.2004
  */
@@ -46,13 +47,6 @@ public class DialogFckEdit extends DialogBox {
     private String customConfigurationsPath = "";
 
     private String jsInitFile = "";
-
-    public DialogFckEdit() {
-    }
-
-    public DialogFckEdit(ContentNode configNode, Content websiteNode) throws RepositoryException {
-        super(configNode, websiteNode);
-    }
 
     public String getVarName() {
         String id = getId();
@@ -74,11 +68,38 @@ public class DialogFckEdit extends DialogBox {
         }
     }
 
+    /**
+     * @see DialogBox#init(ContentNode, Content, PageContext)
+     */
+    public void init(ContentNode configNode, Content websiteNode, PageContext pageContext) throws RepositoryException {
+        super.init(configNode, websiteNode, pageContext);
+        String jsInitFile = this.getConfigValue(PARAM_JS_INIT_FILE);
+        String customConfigurationPath = this.getConfigValue(PARAM_CUSTOM_CONFIGURATION_PATH);
+        this.setJSInitFile(jsInitFile);
+        this.setCustomConfigurationPath(customConfigurationPath);
+    }
+
     public void drawHtml(JspWriter out) throws IOException {
+
+        out.println("<tr>");
+        out.println("<td>");
+        // @todo add paste box and links here
+        out.println("</td>");
+        out.println("<td>");
+        if (getRequest().getAttribute("__fcked_loaded") == null) {
+            out.println("<script type=\"text/javascript\" src=\"/admindocroot/fckeditor/fckeditor.js\"></script>");
+            getRequest().setAttribute("__fcked_loaded", "true");
+        }
+
         String id = getId();
         if (id == null) {
             id = getName();
         }
+
+        if (id == null) {
+            log.error("Missing id for fckEditor instance");
+        }
+
         String var = getVarName();
         out.println("<script type=\"text/javascript\">\n");
         out.println("var " + var + " = null;\n");
@@ -96,11 +117,14 @@ public class DialogFckEdit extends DialogBox {
         out.println("fckInstance.Create();\n");
         out.println(var + " = fckInstance;\n");
         out.println("</script>\n");
+
+        out.println("</td>");
+        out.println("</tr>");
     }
 
     /**
      * Replacements:
-     * 
+     *
      * <pre>
      * ' -> \'
      * " -> \"
@@ -108,7 +132,7 @@ public class DialogFckEdit extends DialogBox {
      * \n -> \\n
      * \ -> \\
      * </pre>
-     * 
+     *
      * @param src
      * @return
      */

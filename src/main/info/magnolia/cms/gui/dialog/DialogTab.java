@@ -12,13 +12,10 @@
  */
 package info.magnolia.cms.gui.dialog;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.gui.control.Button;
 
 import java.io.IOException;
 
-import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspWriter;
 
 import org.apache.log4j.Logger;
@@ -34,13 +31,6 @@ public class DialogTab extends DialogSuper {
      * Logger.
      */
     private static Logger log = Logger.getLogger(DialogTab.class);
-
-    public DialogTab(ContentNode configNode, Content websiteNode) throws RepositoryException {
-        super(configNode, websiteNode);
-    }
-
-    public DialogTab() {
-    }
 
     public void drawHtmlPreSubs(JspWriter out) throws IOException {
         String parentId = this.getParent().getId();

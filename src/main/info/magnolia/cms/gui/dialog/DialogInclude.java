@@ -12,12 +12,8 @@
  */
 package info.magnolia.cms.gui.dialog;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
-
 import java.io.IOException;
 
-import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
@@ -32,13 +28,6 @@ import org.apache.log4j.Logger;
 public class DialogInclude extends DialogBox {
 
     private static Logger log = Logger.getLogger(DialogInclude.class);
-
-    public DialogInclude() {
-    }
-
-    public DialogInclude(ContentNode configNode, Content websiteNode) throws RepositoryException {
-        super(configNode, websiteNode);
-    }
 
     public void drawHtml(JspWriter out) throws IOException {
         this.drawHtmlPre(out);

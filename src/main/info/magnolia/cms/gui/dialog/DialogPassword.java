@@ -12,14 +12,11 @@
  */
 package info.magnolia.cms.gui.dialog;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.gui.control.ControlSuper;
 import info.magnolia.cms.gui.control.Password;
 
 import java.io.IOException;
 
-import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspWriter;
 
 import org.apache.log4j.Logger;
@@ -35,13 +32,6 @@ public class DialogPassword extends DialogBox {
      * Logger.
      */
     private static Logger log = Logger.getLogger(DialogPassword.class);
-
-    public DialogPassword(ContentNode configNode, Content websiteNode) throws RepositoryException {
-        super(configNode, websiteNode);
-    }
-
-    public DialogPassword() {
-    }
 
     public void drawHtml(JspWriter out) throws IOException {
         Password control = new Password(this.getName(), this.getValue());

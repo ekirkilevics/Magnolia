@@ -478,8 +478,4 @@ public class ControlSuper implements ControlInterface {
     public int getIsRichEditValue() {
         return this.isRichEditValue;
     }
-    // public void setDefaultValues(ArrayList a) {this.defaultValues=a;}
-    // public ArrayList getDefaultValues() {return this.defaultValues;}
-    // public void setDefaultValue(String s) {this.getDefaultValues().add(0,s);}
-    // public String getDefaultValue() {return (String) this.getDefaultValues().get(0);}
 }

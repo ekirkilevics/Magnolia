@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -34,6 +35,11 @@ public class EditBar extends TagSupport {
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
+
+    /**
+     * Logger.
+     */
+    private static Logger log = Logger.getLogger(EditBar.class);
 
     // private static final String EDIT_DIALOG_HANDLE = "/.CMSadmin/dialogs/standard.html";
     // private static final String DEFAULT_EDIT_LABEL = "Edit";
@@ -76,6 +82,7 @@ public class EditBar extends TagSupport {
             this.display();
         }
         catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
         return EVAL_PAGE;
     }
@@ -236,23 +243,32 @@ public class EditBar extends TagSupport {
         bar.setNodeCollectionName(this.getNodeCollectionName());
         bar.setNodeName(this.getNodeName());
         bar.setDefaultButtons();
-        if (StringUtils.isEmpty(this.getEditLabel())) {
-            bar.setButtonEdit(null);
+
+        if (this.getEditLabel() != null) {
+            if (StringUtils.isEmpty(this.getEditLabel())) {
+                bar.setButtonEdit(null);
+            }
+            else {
+                bar.getButtonEdit().setLabel(this.getEditLabel());
+            }
         }
-        else {
-            bar.getButtonEdit().setLabel(this.getEditLabel());
+
+        if (this.getMoveLabel() != null) {
+            if (StringUtils.isEmpty(this.getMoveLabel())) {
+                bar.setButtonMove(null);
+            }
+            else {
+                bar.getButtonMove().setLabel(this.getMoveLabel());
+            }
         }
-        if (StringUtils.isEmpty(this.getMoveLabel())) {
-            bar.setButtonMove(null);
-        }
-        else {
-            bar.getButtonMove().setLabel(this.getMoveLabel());
-        }
-        if (StringUtils.isEmpty(this.getDeleteLabel())) {
-            bar.setButtonDelete(null);
-        }
-        else {
-            bar.getButtonDelete().setLabel(this.getDeleteLabel());
+
+        if (this.getDeleteLabel() != null) {
+            if (StringUtils.isEmpty(this.getDeleteLabel())) {
+                bar.setButtonDelete(null);
+            }
+            else {
+                bar.getButtonDelete().setLabel(this.getDeleteLabel());
+            }
         }
         bar.placeDefaultButtons();
         bar.drawHtml(pageContext.getOut());

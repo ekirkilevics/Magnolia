@@ -12,7 +12,6 @@
  */
 package info.magnolia.cms.gui.dialog;
 
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.ButtonSet;
@@ -40,13 +39,6 @@ public class DialogButtonSet extends DialogBox {
     private static Logger log = Logger.getLogger(DialogButtonSet.class);
 
     private int buttonType = ControlSuper.BUTTONTYPE_RADIO;
-
-    public DialogButtonSet(ContentNode configNode, Content websiteNode) throws RepositoryException {
-        super(configNode, websiteNode);
-    }
-
-    public DialogButtonSet() {
-    }
 
     public void setOptions(ContentNode configNode, boolean setDefaultSelected) {
         // setDefaultSelected: does not work properly (no difference between never stored and removed...)

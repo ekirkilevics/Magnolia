@@ -24,6 +24,7 @@ import java.util.List;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
 
 import org.apache.log4j.Logger;
 
@@ -43,12 +44,8 @@ public class DialogEditWithButton extends DialogBox {
 
     private List buttons = new ArrayList();
 
-    public DialogEditWithButton(ContentNode configNode, Content websiteNode) throws RepositoryException {
-        super(configNode, websiteNode);
-        buttons.add(new Button());
-    }
-
-    public DialogEditWithButton() {
+    public void init(ContentNode configNode, Content websiteNode, PageContext pageContext) throws RepositoryException {
+        super.init(configNode, websiteNode, pageContext);
         buttons.add(new Button());
     }
 

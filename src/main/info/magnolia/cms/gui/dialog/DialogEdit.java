@@ -12,14 +12,11 @@
  */
 package info.magnolia.cms.gui.dialog;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.gui.control.Edit;
 
 import java.io.IOException;
 
 import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspWriter;
 
 import org.apache.log4j.Logger;
@@ -35,13 +32,6 @@ public class DialogEdit extends DialogBox {
      * Logger.
      */
     private static Logger log = Logger.getLogger(DialogEdit.class);
-
-    public DialogEdit(ContentNode configNode, Content websiteNode) throws RepositoryException {
-        super(configNode, websiteNode);
-    }
-
-    public DialogEdit() {
-    }
 
     public void drawHtml(JspWriter out) throws IOException {
         Edit control = new Edit(this.getName(), this.getValue());

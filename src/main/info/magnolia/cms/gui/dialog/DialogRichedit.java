@@ -13,7 +13,6 @@
 package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.Edit;
@@ -53,13 +52,6 @@ public class DialogRichedit extends DialogBox {
     private List optionsToolboxLinkCssClasses = new ArrayList();
 
     private List optionsToolboxLinkTargets = new ArrayList();
-
-    public DialogRichedit(ContentNode configNode, Content websiteNode) throws RepositoryException {
-        super(configNode, websiteNode);
-    }
-
-    public DialogRichedit() {
-    }
 
     public void setRichE(String s) {
         this.richE = s;
@@ -439,48 +431,44 @@ public class DialogRichedit extends DialogBox {
         this.drawHtmlPost(out);
     }
 
-    public void drawHtmlEditor(JspWriter out) {
-        try {
-            out.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"");
-            out.println("\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
-            out.println("<html><head>");
-            // headers to prevent the browser from caching, these *must* be provided,
-            // either in meta-tag form or as HTTP headers
-            out.println("<meta http-equiv=\"Pragma\" content=\"no-cache\" />");
-            out.println("<meta http-equiv=\"Cache-Control\" content=\"no-cache, must-revalidate\" />");
-            out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>");
-            out.println("<meta name=\"Effective_date\" content=\"None\" />");
-            out.println("<meta name=\"Expiration_date\" content=\"None\" />");
-            out.println("<meta name=\"Type\" content=\"Document\" />");
-            // out.println("<meta name=\"Format\" content=\"text/html\" />");
-            out.println("<meta name=\"Language\" content=\"\" />");
-            out.println("<meta name=\"Rights\" content=\"\" />");
-            out.println("<style type=\"text/css\">");
-            out.println("body {font-family:verdana;font-size:11px;background-color:#ffffff;}");
-            out.println("</style>");
-            if (this.getConfigValue("cssFile", null) != null) {
-                out.println("<link href=\""
-                    + this.getConfigValue("cssFile")
-                    + "\" rel=\"stylesheet\" type=\"text/css\"/>");
-            }
-            out.println("<script>");
-            out.println("document.insertText=function(value)");
-            out.println(" {");
-            out.println(" while (value.indexOf('\\n')!=-1)");
-            out.println(" {");
-            out.println(" value=value.replace('\\n','<br>');");
-            out.println(" }");
-            out.println(" var body=document.getElementsByTagName('body');");
-            out.println(" value=body[0].innerHTML+value;");
-            out.println(" body[0].innerHTML=value;");
-            out.println(" }");
-            out.println("</script>");
-            out.println("</head>");
-            out.println("<body leftmargin=\"1\" marginwidth=\"1\" topmargin=\"3\" marginheight=\"3\">");
-            out.println(this.getValue());
-            out.println("</body></html>");
+    public void drawHtmlEditor(JspWriter out) throws IOException {
+
+        out.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"");
+        out.println("\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
+        out.println("<html><head>");
+        // headers to prevent the browser from caching, these *must* be provided,
+        // either in meta-tag form or as HTTP headers
+        out.println("<meta http-equiv=\"Pragma\" content=\"no-cache\" />");
+        out.println("<meta http-equiv=\"Cache-Control\" content=\"no-cache, must-revalidate\" />");
+        out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>");
+        out.println("<meta name=\"Effective_date\" content=\"None\" />");
+        out.println("<meta name=\"Expiration_date\" content=\"None\" />");
+        out.println("<meta name=\"Type\" content=\"Document\" />");
+        // out.println("<meta name=\"Format\" content=\"text/html\" />");
+        out.println("<meta name=\"Language\" content=\"\" />");
+        out.println("<meta name=\"Rights\" content=\"\" />");
+        out.println("<style type=\"text/css\">");
+        out.println("body {font-family:verdana;font-size:11px;background-color:#ffffff;}");
+        out.println("</style>");
+        if (this.getConfigValue("cssFile", null) != null) {
+            out.println("<link href=\"" + this.getConfigValue("cssFile") + "\" rel=\"stylesheet\" type=\"text/css\"/>");
         }
-        catch (IOException ioe) {
-        }
+        out.println("<script>");
+        out.println("document.insertText=function(value)");
+        out.println(" {");
+        out.println(" while (value.indexOf('\\n')!=-1)");
+        out.println(" {");
+        out.println(" value=value.replace('\\n','<br>');");
+        out.println(" }");
+        out.println(" var body=document.getElementsByTagName('body');");
+        out.println(" value=body[0].innerHTML+value;");
+        out.println(" body[0].innerHTML=value;");
+        out.println(" }");
+        out.println("</script>");
+        out.println("</head>");
+        out.println("<body leftmargin=\"1\" marginwidth=\"1\" topmargin=\"3\" marginheight=\"3\">");
+        out.println(this.getValue());
+        out.println("</body></html>");
+
     }
 }

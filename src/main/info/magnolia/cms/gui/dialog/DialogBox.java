@@ -19,6 +19,7 @@ import java.io.IOException;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
 
 import org.apache.log4j.Logger;
 
@@ -40,11 +41,8 @@ public class DialogBox extends DialogSuper {
 
     private int boxType = BOXTYPE_2COLS;
 
-    public DialogBox() {
-    }
-
-    public DialogBox(ContentNode configNode, Content websiteNode) throws RepositoryException {
-        super(configNode, websiteNode);
+    public void init(ContentNode configNode, Content websiteNode, PageContext pageContext) throws RepositoryException {
+        super.init(configNode, websiteNode, pageContext);
     }
 
     public void setBoxType(int i) {

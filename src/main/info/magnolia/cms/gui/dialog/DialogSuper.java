@@ -33,6 +33,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -129,17 +130,17 @@ public class DialogSuper implements DialogInterface {
     private Content websiteNode;
 
     /**
-     * config structure/data (dialog.xml).
+     * config structure/data.
      */
     private Content configNode;
 
     /**
-     * config data (written from dialog.xml to config).
+     * config data.
      */
     private Map config = new Hashtable();
 
     /**
-     * Sub controls (written from dialog.xml to subs).
+     * Sub controls.
      */
     private List subs = new ArrayList();
 
@@ -163,23 +164,11 @@ public class DialogSuper implements DialogInterface {
 
     private Map iconExtensions = new Hashtable();
 
-    public DialogSuper() {
-    }
-
-    public DialogSuper(ContentNode configNode, Content websiteNode) throws RepositoryException {
-        // constructor for all controls except DialogDialog
-        this.setConfigNode(configNode);
-        this.setWebsiteNode(websiteNode);
-        // following uses values from above -> so set as lasts
-        this.setConfig(configNode);
-    }
-
-    public DialogSuper(Content configNode, Content websiteNode, HttpServletRequest request, PageContext pageContext)
-        throws RepositoryException {
+    public void init(Content configNode, Content websiteNode, PageContext pageContext) throws RepositoryException {
         // constructor for DialogDialog
         this.setConfigNode(configNode);
         this.setWebsiteNode(websiteNode);
-        this.setRequest(request);
+        this.setRequest((HttpServletRequest) pageContext.getRequest());
         this.setPageContext(pageContext);
         // following uses values from above -> set as last
         this.setConfig(configNode);
@@ -225,9 +214,11 @@ public class DialogSuper implements DialogInterface {
     }
 
     public void drawHtmlPreSubs(JspWriter out) throws IOException {
+        // do nothing
     }
 
     public void drawHtmlPostSubs(JspWriter out) throws IOException {
+        // do nothing
     }
 
     public void setSubs(List subs) {
@@ -298,87 +289,94 @@ public class DialogSuper implements DialogInterface {
         while (it.hasNext()) {
             ContentNode configNode = (ContentNode) it.next();
             String controlType = configNode.getNodeData("controlType").getString();
+
+            DialogInterface dialogControl = null;
+
             if (controlType.equals("edit")) {
-                DialogEdit dialogControl = new DialogEdit(configNode, this.getWebsiteNode());
-                this.addSub(dialogControl);
+                dialogControl = new DialogEdit();
             }
             else if (controlType.equals("richEdit")) {
-                DialogRichedit dialogControl = new DialogRichedit(configNode, this.getWebsiteNode());
-                dialogControl.setOptionsToolboxLinkTargets(configNode);
-                dialogControl.setOptionsToolboxLinkCssClasses(configNode);
-                dialogControl.setOptionsToolboxStyleCssClasses(configNode);
-                this.addSub(dialogControl);
+                dialogControl = new DialogRichedit();
             }
             else if (controlType.equals("fckEdit")) {
-                DialogRichedit dialogControl = new DialogRichedit(configNode, this.getWebsiteNode());
-                dialogControl.setOptionsToolboxLinkTargets(configNode);
-                dialogControl.setOptionsToolboxLinkCssClasses(configNode);
-                dialogControl.setOptionsToolboxStyleCssClasses(configNode);
-                this.addSub(dialogControl);
+                dialogControl = new DialogFckEdit();
             }
             else if (controlType.equals("tab")) {
-                DialogTab dialogControl = new DialogTab(configNode, this.getWebsiteNode());
-                this.addSub(dialogControl);
+                dialogControl = new DialogTab();
             }
             else if (controlType.equals("buttonSet")) {
-                DialogButtonSet dialogControl = new DialogButtonSet(configNode, this.getWebsiteNode());
-                this.addSub(dialogControl);
+                dialogControl = new DialogButtonSet();
             }
             else if (controlType.equals("button")) {
-                DialogButton dialogControl = new DialogButton(configNode, this.getWebsiteNode());
-                this.addSub(dialogControl);
+                dialogControl = new DialogButton();
             }
             else if (controlType.equals("static")) {
-                DialogStatic dialogControl = new DialogStatic(configNode, this.getWebsiteNode());
-                this.addSub(dialogControl);
+                dialogControl = new DialogStatic();
             }
             else if (controlType.equals("file")) {
-                DialogFile dialogControl = new DialogFile(configNode, this.getWebsiteNode());
-                this.addSub(dialogControl);
+                dialogControl = new DialogFile();
             }
             else if (controlType.equals("link")) {
-                DialogLink dialogControl = new DialogLink(configNode, this.getWebsiteNode());
-                this.addSub(dialogControl);
+                dialogControl = new DialogLink();
             }
             else if (controlType.equals("date")) {
-                DialogDate dialogControl = new DialogDate(configNode, this.getWebsiteNode());
-                this.addSub(dialogControl);
+                dialogControl = new DialogDate();
             }
             else if (controlType.equals("radio")) {
-                DialogButtonSet dialogControl = new DialogButtonSet(configNode, this.getWebsiteNode());
-                dialogControl.setButtonType(ControlSuper.BUTTONTYPE_RADIO);
-                dialogControl.setOptions(configNode, true);
-                this.addSub(dialogControl);
+                dialogControl = new DialogButtonSet();
             }
-            else if (controlType.equals("checkbox") || controlType.equals("checkboxSwitch")) {
-                DialogButtonSet dialogControl = new DialogButtonSet(configNode, this.getWebsiteNode());
-                dialogControl.setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX);
-                if (controlType.equals("checkbox")) {
-                    dialogControl.setOptions(configNode, false);
-                    dialogControl.setConfig("valueType", "multiple");
-                }
-                else {
-                    dialogControl.setOption(configNode);
-                }
-                this.addSub(dialogControl);
+            else if (controlType.equals("checkbox")) {
+                dialogControl = new DialogButtonSet();
+            }
+            else if (controlType.equals("checkboxSwitch")) {
+                dialogControl = new DialogButtonSet();
             }
             else if (controlType.equals("select")) {
-                DialogSelect dialogControl = new DialogSelect(configNode, this.getWebsiteNode());
-                dialogControl.setOptions(configNode);
-                this.addSub(dialogControl);
+                dialogControl = new DialogSelect();
             }
             else if (controlType.equals("password")) {
-                DialogPassword dialogControl = new DialogPassword(configNode, this.getWebsiteNode());
-                this.addSub(dialogControl);
+                dialogControl = new DialogPassword();
             }
             else if (controlType.equals("include")) {
-                DialogInclude dialogControl = new DialogInclude(configNode, this.getWebsiteNode());
-                this.addSub(dialogControl);
+                dialogControl = new DialogInclude();
             }
             else if (controlType.equals("webDAV")) {
-                DialogWebDAV dialogControl = new DialogWebDAV(configNode, this.getWebsiteNode());
-                this.addSub(dialogControl);
+                dialogControl = new DialogWebDAV();
             }
+            else {
+                // invalid control name
+                log.warn("Invalid control name: \"" + controlType + "\", class " + this.getClass().getName());
+                return;
+            }
+
+            // common
+            dialogControl.init(configNode, this.getWebsiteNode(), this.getPageContext());
+
+            // custom settings
+            if (controlType.equals("richEdit")) {
+                ((DialogRichedit) dialogControl).setOptionsToolboxLinkTargets(configNode);
+                ((DialogRichedit) dialogControl).setOptionsToolboxLinkCssClasses(configNode);
+                ((DialogRichedit) dialogControl).setOptionsToolboxStyleCssClasses(configNode);
+            }
+            else if (controlType.equals("radio")) {
+                ((DialogButtonSet) dialogControl).setButtonType(ControlSuper.BUTTONTYPE_RADIO);
+                ((DialogButtonSet) dialogControl).setOptions(configNode, true);
+            }
+            else if (controlType.equals("checkbox")) {
+                ((DialogButtonSet) dialogControl).setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX);
+                ((DialogButtonSet) dialogControl).setOptions(configNode, false);
+                ((DialogButtonSet) dialogControl).setConfig("valueType", "multiple");
+            }
+            else if (controlType.equals("checkboxSwitch")) {
+                ((DialogButtonSet) dialogControl).setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX);
+                ((DialogButtonSet) dialogControl).setOption(configNode);
+            }
+            else if (controlType.equals("select")) {
+                ((DialogSelect) dialogControl).setOptions(configNode);
+            }
+
+            // common
+            this.addSub(dialogControl);
         }
     }
 
@@ -475,13 +473,13 @@ public class DialogSuper implements DialogInterface {
             return this.getWebsiteNode().getNodeData(this.getName()).getString();
         }
         else {
-            return "";
+            return StringUtils.EMPTY;
         }
     }
 
     public String getValue(String lineBreak) {
         if (this.value != null) {
-            return this.value.replaceAll("\n", "<br>");
+            return this.value.replaceAll("\n", "<br />");
         }
         else if (this.getWebsiteNode() != null) {
             return this.getWebsiteNode().getNodeData(this.getName()).getString(lineBreak);

@@ -29,6 +29,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Workspace;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -324,7 +325,14 @@ public class HierarchyManager {
      * @throws AccessDeniedException
      */
     public void delete(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        this.startPage.getNode(path).remove();
+        this.startPage.getNode(makeRelative(path)).remove();
+    }
+
+    private String makeRelative(String path) {
+        if (path.startsWith("/")) {
+            return StringUtils.stripStart(path, "/");
+        }
+        return path;
     }
 
     /**

@@ -34,6 +34,7 @@ import java.util.Map;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
 
 import org.apache.commons.httpclient.HttpURL;
 import org.apache.log4j.Logger;
@@ -70,12 +71,8 @@ public class DialogWebDAV extends DialogBox {
 
     private WebdavResource davConnection;
 
-    public DialogWebDAV(ContentNode configNode, Content websiteNode) throws RepositoryException {
-        super(configNode, websiteNode);
-        initIconExtensions();
-    }
-
-    public DialogWebDAV() {
+    public void init(ContentNode configNode, Content websiteNode, PageContext pageContext) throws RepositoryException {
+        super.init(configNode, websiteNode, pageContext);
         initIconExtensions();
     }
 
@@ -455,118 +452,117 @@ public class DialogWebDAV extends DialogBox {
         }
     }
 
-    public int drawHtmlList(JspWriter out, List as, int i) {
-        try {
-            boolean alt = (i % 2 == 0);
+    public int drawHtmlList(JspWriter out, List as, int i) throws IOException {
 
-            // todo: better sorting
-            Collections.sort(as, new DialogWebDAVComparator());
-            Iterator it = as.iterator();
-            while (it.hasNext()) {
-                Map properties = (Hashtable) it.next();
-                String displayType = (String) properties.get("displayType");
-                String name = (String) properties.get("name");
-                if (!alt) {
-                    out.println("<tr>");
-                }
-                else {
-                    out.println("<tr class=" + CSSCLASS_BGALT + ">");
-                }
-                alt = !alt;
-                out.println("<td></td>");
-                out.println("<td>");
-                if (properties.get("isParent") == null
-                    && (displayType.indexOf("folder") == -1 || this.getConfigValue("allowDirectorySelection").equals(
-                        "true"))) {
-                    String lastModified = "";
-                    if (properties.get("lastModified") != null) {
-                        lastModified = ((String) properties.get("lastModified")).replaceAll(" ", "%20");
-                    }
-                    out.println("<input type=\"radio\" name=\"" + this.getName() + "_radio\"");
-                    out.println(" onclick=mgnlDialogDAVSelect(\""
-                        + this.getName()
-                        + "\",\""
-                        + name
-                        + "\",\""
-                        + i
-                        + "\",\""
-                        + (String) properties.get("size")
-                        + "\",\""
-                        + lastModified
-                        + "\");");
-                    // if (this.getValue().equals(this.getSubDirectory()+name) ||
-                    // this.getValue().equals(this.getSubDirectory()+name+"/")) out.println(" checked");
-                    boolean checked = false;
-                    if (properties.get("isSelf") != null) {
-                        if (this.getValue().equals(this.getSubDirectory())) {
-                            checked = true;
-                        }
-                    }
-                    else {
-                        if (this.getValue().equals(this.getSubDirectory() + name)
-                            || this.getValue().equals(this.getSubDirectory() + name + "/")) {
-                            checked = true;
-                        }
-                    }
-                    if (checked) {
-                        out.println(" checked");
-                    }
-                    out.println(">");
-                    // if (checked) out.println("X");
-                }
-                out.println("</td>");
-                // out.println("<td>"+this.getValue()+"..."+this.getSubDirectory()+"..."+name+"</td>");
-                String idHidden = this.getName() + "_" + i + "_hidden";
-                String idIcon = this.getName() + "_" + i + "_icon";
-                i++;
-                String iconPath;
-                if (displayType.equals("folder")) {
-                    iconPath = ICONS_PATH + ICONS_FOLDER;
-                }
-                else {
-                    iconPath = this.getIconPath(name);
-                }
-                out.println("<td>");
-                out.print("<img src=\"" + iconPath + "\" border=\"0\" id=\"" + idIcon + "\">");
-                out.println("</td>");
-                out.println("<td width=\"100%\">");
-                if (displayType.indexOf("folder") == 0) {
-                    if (properties.get("isSelf") != null) {
-                        out.println(this.getHtmlDecodeURI("<b><i>.&nbsp;&nbsp;" + name + "</i></b>"));
-                    }
-                    else {
-                        if (properties.get("isParent") != null) {
-                            name = "<b><i>..&nbsp;&nbsp;" + name + "</i></b>";
-                        }
-                        out.print("<a href=\"javascript:mgnlDialogDAVBrowse('','" + idHidden + "');\">");
-                        out.print(this.getHtmlDecodeURI(name));
-                        out.print("</a>");
-                    }
-                }
-                else {
-                    out.println(this.getHtmlDecodeURI(name));
-                    out.println("[<a href=\""
-                        + this.getProtocol()
-                        + "://"
-                        + this.getHost()
-                        + ":"
-                        + this.getPort()
-                        + this.getDirectory()
-                        + (String) properties.get("href")
-                        + "\" target=\"blank\">view</a>]");
-                }
-                out.println(new Hidden(idHidden, (String) properties.get("href"), false).getHtml());
-                out.println("</td>");
-                out.println("<td style=\"text-align:right;\">" + (String) properties.get("sizeStringValue") + "</td>");
-                out.println("<td>" + (String) properties.get("sizeStringUnit") + "</td>");
-                out.println("<td>&nbsp;&nbsp;</td>");
-                out.println("<td><nobr>" + (String) properties.get("lastModifiedString") + "</nobr></td>");
-                out.println("<td>&nbsp;&nbsp;</td>");
-                out.println("</tr>");
+        boolean alt = (i % 2 == 0);
+
+        // todo: better sorting
+        Collections.sort(as, new DialogWebDAVComparator());
+        Iterator it = as.iterator();
+        while (it.hasNext()) {
+            Map properties = (Hashtable) it.next();
+            String displayType = (String) properties.get("displayType");
+            String name = (String) properties.get("name");
+            if (!alt) {
+                out.println("<tr>");
             }
+            else {
+                out.println("<tr class=" + CSSCLASS_BGALT + ">");
+            }
+            alt = !alt;
+            out.println("<td></td>");
+            out.println("<td>");
+            if (properties.get("isParent") == null
+                && (displayType.indexOf("folder") == -1 || this
+                    .getConfigValue("allowDirectorySelection")
+                    .equals("true"))) {
+                String lastModified = "";
+                if (properties.get("lastModified") != null) {
+                    lastModified = ((String) properties.get("lastModified")).replaceAll(" ", "%20");
+                }
+                out.println("<input type=\"radio\" name=\"" + this.getName() + "_radio\"");
+                out.println(" onclick=mgnlDialogDAVSelect(\""
+                    + this.getName()
+                    + "\",\""
+                    + name
+                    + "\",\""
+                    + i
+                    + "\",\""
+                    + (String) properties.get("size")
+                    + "\",\""
+                    + lastModified
+                    + "\");");
+                // if (this.getValue().equals(this.getSubDirectory()+name) ||
+                // this.getValue().equals(this.getSubDirectory()+name+"/")) out.println(" checked");
+                boolean checked = false;
+                if (properties.get("isSelf") != null) {
+                    if (this.getValue().equals(this.getSubDirectory())) {
+                        checked = true;
+                    }
+                }
+                else {
+                    if (this.getValue().equals(this.getSubDirectory() + name)
+                        || this.getValue().equals(this.getSubDirectory() + name + "/")) {
+                        checked = true;
+                    }
+                }
+                if (checked) {
+                    out.println(" checked");
+                }
+                out.println(">");
+                // if (checked) out.println("X");
+            }
+            out.println("</td>");
+            // out.println("<td>"+this.getValue()+"..."+this.getSubDirectory()+"..."+name+"</td>");
+            String idHidden = this.getName() + "_" + i + "_hidden";
+            String idIcon = this.getName() + "_" + i + "_icon";
+            i++;
+            String iconPath;
+            if (displayType.equals("folder")) {
+                iconPath = ICONS_PATH + ICONS_FOLDER;
+            }
+            else {
+                iconPath = this.getIconPath(name);
+            }
+            out.println("<td>");
+            out.print("<img src=\"" + iconPath + "\" border=\"0\" id=\"" + idIcon + "\">");
+            out.println("</td>");
+            out.println("<td width=\"100%\">");
+            if (displayType.indexOf("folder") == 0) {
+                if (properties.get("isSelf") != null) {
+                    out.println(this.getHtmlDecodeURI("<b><i>.&nbsp;&nbsp;" + name + "</i></b>"));
+                }
+                else {
+                    if (properties.get("isParent") != null) {
+                        name = "<b><i>..&nbsp;&nbsp;" + name + "</i></b>";
+                    }
+                    out.print("<a href=\"javascript:mgnlDialogDAVBrowse('','" + idHidden + "');\">");
+                    out.print(this.getHtmlDecodeURI(name));
+                    out.print("</a>");
+                }
+            }
+            else {
+                out.println(this.getHtmlDecodeURI(name));
+                out.println("[<a href=\""
+                    + this.getProtocol()
+                    + "://"
+                    + this.getHost()
+                    + ":"
+                    + this.getPort()
+                    + this.getDirectory()
+                    + (String) properties.get("href")
+                    + "\" target=\"blank\">view</a>]");
+            }
+            out.println(new Hidden(idHidden, (String) properties.get("href"), false).getHtml());
+            out.println("</td>");
+            out.println("<td style=\"text-align:right;\">" + (String) properties.get("sizeStringValue") + "</td>");
+            out.println("<td>" + (String) properties.get("sizeStringUnit") + "</td>");
+            out.println("<td>&nbsp;&nbsp;</td>");
+            out.println("<td><nobr>" + (String) properties.get("lastModifiedString") + "</nobr></td>");
+            out.println("<td>&nbsp;&nbsp;</td>");
+            out.println("</tr>");
         }
-        catch (IOException ioe) {
-        }
+
         return i;
     }
 

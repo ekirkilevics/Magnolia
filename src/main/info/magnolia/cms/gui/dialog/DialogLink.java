@@ -17,6 +17,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 
 import javax.jcr.RepositoryException;
+import javax.servlet.jsp.PageContext;
 
 import org.apache.log4j.Logger;
 
@@ -32,17 +33,8 @@ public class DialogLink extends DialogEditWithButton {
      */
     private static Logger log = Logger.getLogger(DialogLink.class);
 
-    public DialogLink(ContentNode configNode, Content websiteNode) throws RepositoryException {
-        super(configNode, websiteNode);
-        init();
-    }
-
-    public DialogLink(String name) {
-        this.setName(name);
-        init();
-    }
-
-    private void init() {
+    public void init(ContentNode configNode, Content websiteNode, PageContext pageContext) throws RepositoryException {
+        super.init(configNode, websiteNode, pageContext);
         String extension = this.getConfigValue("extension");
         this.getButton().setLabel("Internal link...");
         this.getButton().setSaveInfo(false);
@@ -50,4 +42,5 @@ public class DialogLink extends DialogEditWithButton {
         this.getButton().setOnclick(
             "mgnlDialogLinkOpenBrowser('" + this.getName() + "','" + repository + "','" + extension + "');");
     }
+
 }

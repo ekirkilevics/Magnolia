@@ -23,6 +23,7 @@ import java.util.List;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
 
 import org.apache.log4j.Logger;
 
@@ -37,13 +38,8 @@ public class DialogFile extends DialogBox {
 
     private List imageExtensions = new ArrayList();
 
-    public DialogFile(ContentNode configNode, Content websiteNode) throws RepositoryException {
-        super(configNode, websiteNode);
-        initImageExtensions();
-        initIconExtensions();
-    }
-
-    public DialogFile() {
+    public void init(ContentNode configNode, Content websiteNode, PageContext pageContext) throws RepositoryException {
+        super.init(configNode, websiteNode, pageContext);
         initImageExtensions();
         initIconExtensions();
     }

@@ -21,6 +21,7 @@ import java.util.Date;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+import javax.servlet.jsp.PageContext;
 
 import org.apache.log4j.Logger;
 
@@ -36,16 +37,8 @@ public class DialogDate extends DialogEditWithButton {
      */
     private static Logger log = Logger.getLogger(DialogLink.class);
 
-    public DialogDate(ContentNode configNode, Content websiteNode) throws RepositoryException {
-        super(configNode, websiteNode);
-        init();
-    }
-
-    public DialogDate() {
-        init();
-    }
-
-    private void init() {
+    public void init(ContentNode configNode, Content websiteNode, PageContext pageContext) throws RepositoryException {
+        super.init(configNode, websiteNode, pageContext);
         // set buttonlabel in config
         this.getButton().setLabel("Select date...");
         this.getButton().setSaveInfo(false);
@@ -68,4 +61,5 @@ public class DialogDate extends DialogEditWithButton {
         // check this!
         this.setConfig("type", this.getConfigValue("type", PropertyType.TYPENAME_DATE));
     }
+
 }

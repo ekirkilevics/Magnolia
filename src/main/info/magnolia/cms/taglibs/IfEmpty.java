@@ -92,7 +92,7 @@ public class IfEmpty extends BodyTagSupport {
                 this.contentNode = Resource.getCurrentActivePage(req).getContentNode(this.contentNodeName);
             }
             catch (RepositoryException re) {
-                log.error(re.getMessage());
+                log.debug("Repository exception while reading " + this.contentNodeName + ": " + re.getMessage());
             }
             if (this.contentNode == null) {
                 return EVAL_BODY_INCLUDE;

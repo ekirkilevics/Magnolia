@@ -52,10 +52,7 @@ public class EditButton extends TagSupport {
     private HttpServletRequest request;
 
     /**
-     * <p>
-     * starts Edit tag
-     * </p>
-     * @return int
+     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
     public int doStartTag() {
         this.displayHandler = "";
@@ -64,20 +61,15 @@ public class EditButton extends TagSupport {
     }
 
     /**
-     * <p>
-     * print out
-     * </p>
-     * @return int
+     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag() {
-        /*
-         * if (!ServerInfo.isAdmin() || Resource.showPreview(this.request)) return EVAL_PAGE; if
-         * (!Resource.getActivePage(this.request).isGranted(Permission.WRITE_PROPERTY)) return EVAL_PAGE;
-         */
+
         try {
             this.display();
         }
         catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
         return EVAL_PAGE;
     }
