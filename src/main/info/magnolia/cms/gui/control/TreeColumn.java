@@ -22,6 +22,8 @@ import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 
 
@@ -77,14 +79,14 @@ public class TreeColumn extends ControlSuper {
     private Map keyValue = new Hashtable();
 
     /**
-     * <p>
-     * constructor
-     * </p>
+     * Constructor.
      * @param javascriptTree: name of the js variable
+     * @param request http request, needed for context path
      */
-    public TreeColumn(String javascriptTree) {
+    public TreeColumn(String javascriptTree, HttpServletRequest request) {
         this.setJavascriptTree(javascriptTree);
         this.setCssClass("mgnlTreeText");
+        this.setRequest(request);
     }
 
     public void setIsMeta(boolean b) {

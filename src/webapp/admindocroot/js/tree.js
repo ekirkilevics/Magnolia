@@ -10,12 +10,13 @@
 	//#################
 
 
-	function mgnlTree(repository,path,name,height)
+	function mgnlTree(repository,path,name,height,context)
 		{
 		document.write('<div id="'+name+'_'+path+'_DivSub" style="display:none;"></div>');
 		this.repository=repository;
 		this.path=path;
 		this.name=name;
+		this.context=context;
 		this.divMain=document.getElementById(name+"_"+path+"_DivMain");
 		this.divMenu=document.getElementById(name+"_DivMenu");
 		this.addressBar=document.getElementById(name+"_AddressBar");
@@ -1045,8 +1046,7 @@
 
 	function mgnlTreeMenuItemOpen(tree)
 		{
-		var url=tree.selectedNode.path+".html";
-		//var w=window.open(url,"mgnlInline","width="+width+",height="+height+"scrollbars=no,status=yes,resizable=yes");
+		var url=tree.context + tree.selectedNode.path+".html";
 		var w=window.open(url,"mgnlInline","");
 		if (w) w.focus();
 		//document.location.href=tree.selectedNode.id+".html";

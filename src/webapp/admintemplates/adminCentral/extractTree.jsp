@@ -201,26 +201,26 @@
 			//websiteTree.addItemType(ItemType.NT_CONTENTNODE);
 			//websiteTree.addItemType(ItemType.NT_NODEDATA);
 
-			TreeColumn column0=new TreeColumn(websiteTree.getJavascriptTree());
+			TreeColumn column0=new TreeColumn(websiteTree.getJavascriptTree(), request);
 			column0.setIsLabel(true);
 			column0.setWidth(3);
             if (Server.isAdmin()) column0.setHtmlEdit();
 
 
-			TreeColumn columnIcons=new TreeColumn(websiteTree.getJavascriptTree());
+			TreeColumn columnIcons=new TreeColumn(websiteTree.getJavascriptTree(), request);
 			columnIcons.setCssClass("");
 			columnIcons.setWidth(1);
 			columnIcons.setIsIcons(true);
 			columnIcons.setIconsActivation(true);
 			columnIcons.setIconsPermission(true);
 
-			TreeColumn column1=new TreeColumn(websiteTree.getJavascriptTree());
+			TreeColumn column1=new TreeColumn(websiteTree.getJavascriptTree(), request);
 			column1.setName("title");
 			column1.setTitle("Title");
 			column1.setWidth(2);
 			if (Server.isAdmin()) column1.setHtmlEdit();
 
-			TreeColumn column2=new TreeColumn(websiteTree.getJavascriptTree());
+			TreeColumn column2=new TreeColumn(websiteTree.getJavascriptTree(), request);
 			column2.setName(MetaData.TEMPLATE);
 			column2.setIsMeta(true);
 			column2.setWidth(2);
@@ -241,7 +241,7 @@
 			//todo: preselection (set on createPage)
 
 
-			TreeColumn column3=new TreeColumn(websiteTree.getJavascriptTree());
+			TreeColumn column3=new TreeColumn(websiteTree.getJavascriptTree(), request);
 			column3.setName(MetaData.LAST_MODIFIED);
 			//column3.setName(MetaData.SEQUENCE_POS);
 			column3.setIsMeta(true);
@@ -364,26 +364,26 @@
 
 
 
-			TreeColumn column0=new TreeColumn(usersTree.getJavascriptTree());
+			TreeColumn column0=new TreeColumn(usersTree.getJavascriptTree(), request);
 			column0.setIsLabel(true);
 			if (Server.isAdmin()) column0.setHtmlEdit();
 			column0.setTitle("User name");
 			column0.setWidth(2);
 
-			TreeColumn column1=new TreeColumn(usersTree.getJavascriptTree());
+			TreeColumn column1=new TreeColumn(usersTree.getJavascriptTree(), request);
 			column1.setName("title");
 			if (Server.isAdmin()) column1.setHtmlEdit();
 			column1.setTitle("Full name");
 			column1.setWidth(2);
 
-			TreeColumn columnIcons=new TreeColumn(usersTree.getJavascriptTree());
+			TreeColumn columnIcons=new TreeColumn(usersTree.getJavascriptTree(), request);
 			columnIcons.setCssClass("");
 			columnIcons.setWidth(1);
 			columnIcons.setIsIcons(true);
 			columnIcons.setIconsActivation(true);
 
 
-			TreeColumn column2=new TreeColumn(usersTree.getJavascriptTree());
+			TreeColumn column2=new TreeColumn(usersTree.getJavascriptTree(), request);
 			column2.setName(MetaData.LAST_MODIFIED);
 			column2.setIsMeta(true);
 			column2.setDateFormat("yyyy-MM-dd, HH:mm");
@@ -485,25 +485,25 @@
 			}
 
 
-			TreeColumn column0=new TreeColumn(rolesTree.getJavascriptTree());
+			TreeColumn column0=new TreeColumn(rolesTree.getJavascriptTree(), request);
 			column0.setIsLabel(true);
 			if (Server.isAdmin()) column0.setHtmlEdit();
 			column0.setWidth(2);
 			column0.setTitle("Role name");
 
-			TreeColumn column1=new TreeColumn(rolesTree.getJavascriptTree());
+			TreeColumn column1=new TreeColumn(rolesTree.getJavascriptTree(), request);
 			column1.setName("title");
 			if (Server.isAdmin()) column1.setHtmlEdit();
 			column1.setWidth(2);
 			column1.setTitle("Full role name");
 
-			TreeColumn columnIcons=new TreeColumn(rolesTree.getJavascriptTree());
+			TreeColumn columnIcons=new TreeColumn(rolesTree.getJavascriptTree(), request);
 			columnIcons.setCssClass("");
 			columnIcons.setWidth(1);
 			columnIcons.setIsIcons(true);
 			columnIcons.setIconsActivation(true);
 
-			TreeColumn column2=new TreeColumn(rolesTree.getJavascriptTree());
+			TreeColumn column2=new TreeColumn(rolesTree.getJavascriptTree(), request);
 			column2.setName(MetaData.CREATION_DATE);
 			//column2.setName(MetaData.SEQUENCE_POS);
 			column2.setIsMeta(true);
@@ -612,20 +612,20 @@
 			configTree.addItemType(ItemType.NT_NODEDATA);
 
 
-			TreeColumn column0=new TreeColumn(configTree.getJavascriptTree());
+			TreeColumn column0=new TreeColumn(configTree.getJavascriptTree(), request);
 			column0.setWidth(1);
 			column0.setHtmlEdit();
 			column0.setIsLabel(true);
 			column0.setWidth(3);
 
-			TreeColumn column1=new TreeColumn(configTree.getJavascriptTree());
+			TreeColumn column1=new TreeColumn(configTree.getJavascriptTree(), request);
 			column1.setName("");
 			column1.setTitle("Value");
 			column1.setIsNodeDataValue(true);
 			column1.setWidth(2);
 			column1.setHtmlEdit();
 
-			TreeColumn column2=new TreeColumn(configTree.getJavascriptTree());
+			TreeColumn column2=new TreeColumn(configTree.getJavascriptTree(), request);
 			column2.setName("");
 			column2.setTitle("Type");
 			column2.setIsNodeDataType(true);
@@ -643,14 +643,14 @@
 			column2.setHtmlEdit(typeSelect.getHtml());
 
 
-			TreeColumn columnIcons=new TreeColumn(configTree.getJavascriptTree());
+			TreeColumn columnIcons=new TreeColumn(configTree.getJavascriptTree(), request);
 			columnIcons.setCssClass("");
 			columnIcons.setWidth(1);
 			columnIcons.setIsIcons(true);
 			columnIcons.setIconsActivation(true);
 			columnIcons.setIconsPermission(true);
 
-			TreeColumn column4=new TreeColumn(configTree.getJavascriptTree());
+			TreeColumn column4=new TreeColumn(configTree.getJavascriptTree(), request);
 			column4.setName(MetaData.LAST_MODIFIED);
 			column4.setIsMeta(true);
 			column4.setDateFormat("yy-MM-dd, HH:mm");

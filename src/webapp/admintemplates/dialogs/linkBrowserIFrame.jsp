@@ -101,12 +101,12 @@
 
 		websiteTree.addItemType(ItemType.NT_CONTENT);
 
-		TreeColumn column0=new TreeColumn(websiteTree.getJavascriptTree());
+		TreeColumn column0=new TreeColumn(websiteTree.getJavascriptTree(), request);
 		column0.setIsLabel(true);
 		column0.setWidth(3);
 
 
-		TreeColumn column1=new TreeColumn(websiteTree.getJavascriptTree());
+		TreeColumn column1=new TreeColumn(websiteTree.getJavascriptTree(), request);
 		column1.setName("title");
 		column1.setTitle("Title");
 		column1.setWidth(2);
@@ -152,12 +152,12 @@
 		usersTree.setPathSelected(pathSelected);
 
 
-		TreeColumn column0=new TreeColumn(usersTree.getJavascriptTree());
+		TreeColumn column0=new TreeColumn(usersTree.getJavascriptTree(), request);
 		column0.setIsLabel(true);
 		column0.setTitle("User name");
 		column0.setWidth(2);
 
-		TreeColumn column1=new TreeColumn(usersTree.getJavascriptTree());
+		TreeColumn column1=new TreeColumn(usersTree.getJavascriptTree(), request);
 		column1.setName("title");
 		column1.setTitle("Full name");
 		column1.setWidth(2);
@@ -199,12 +199,12 @@
 		rolesTree.setPathSelected(pathSelected);
 
 
-		TreeColumn column0=new TreeColumn(rolesTree.getJavascriptTree());
+		TreeColumn column0=new TreeColumn(rolesTree.getJavascriptTree(), request);
 		column0.setIsLabel(true);
 		column0.setWidth(2);
 		column0.setTitle("name");
 
-		TreeColumn column1=new TreeColumn(rolesTree.getJavascriptTree());
+		TreeColumn column1=new TreeColumn(rolesTree.getJavascriptTree(), request);
 		column1.setName("title");
 		column1.setWidth(2);
 		column1.setTitle("Full role name");
