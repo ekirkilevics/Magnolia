@@ -119,7 +119,7 @@ public class CacheHandler {
             return false; /* some other resource */
         else {
             Content aPage = (Content)obj;
-            if (aPage.getNodeData("redirectURL").isExist())
+            if (aPage.getNodeData("redirectURL").getString().equals(""))
                 return false;
             else
                 return true;
@@ -341,9 +341,10 @@ public class CacheHandler {
     private static void emptyDirectory(File directory) {
         File[] children = directory.listFiles();
         for (int i=0; i<children.length; i++) {
-            if (children[i].isDirectory())
+            if (children[i].isDirectory()) {
                 emptyDirectory(children[i]);
-            else {
+                children[i].delete();
+            } else {
                 log.info("Flushing - "+children[i].getPath());
                 children[i].delete();
             }
