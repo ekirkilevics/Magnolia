@@ -17,6 +17,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.Resource;
 
 import java.util.ArrayList;
@@ -105,7 +106,7 @@ public class AHref extends BodyTagSupport {
             Content startPage;
             try {
                 startPage = Resource.getCurrentActivePage(req).getAncestor(digree);
-                HierarchyManager hm = Resource.getHierarchyManager(req);
+                HierarchyManager hm = SessionAccessControl.getHierarchyManager(req);
                 Content resultPage = hm.getPage(startPage.getHandle(), this.templateName);
                 this.writeLink(resultPage.getHandle());
             }
@@ -125,7 +126,7 @@ public class AHref extends BodyTagSupport {
         JspWriter out = pageContext.getOut();
         try {
             if (StringUtils.isNotEmpty(path)) {
-                if (Resource.getHierarchyManager(req).isPage(path)) {
+                if (SessionAccessControl.getHierarchyManager(req).isPage(path)) {
                     path += "." + Server.getDefaultExtension();
                 }
                 out.print("<a href=\"");
