@@ -170,7 +170,7 @@
 %>
 <%@ taglib uri="cms-taglib" prefix="cms" %>
 <%@ taglib uri="cms-util-taglib" prefix="cmsu" %>
-<%@ taglib uri="JSTL" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <c:import url="/templates/jsp/samples/global/head.jsp"/>
 
 <body>

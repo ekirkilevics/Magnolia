@@ -14,7 +14,7 @@
 %><%@ page import="info.magnolia.cms.util.Resource"%>
 <%@ taglib uri="cms-taglib" prefix="cms" %>
 <%@ taglib uri="cms-util-taglib" prefix="cmsu" %>
-<%@ taglib uri="JSTL" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 	<head>
