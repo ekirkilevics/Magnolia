@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Handles the tree rendering for the "website" repository.
  * @author Fabrizio Giustina
- * @version $Id$
+ * @version $Id: AdminTreeWebsite.java 378 2005-03-13 16:11:26Z fgiust $
  */
 public class AdminTreeWebsite implements AdminTree {
 
@@ -100,46 +100,62 @@ public class AdminTreeWebsite implements AdminTree {
         }
         tree.addColumn(column2);
         tree.addColumn(column3);
+
         TreeMenuItem menuOpen = new TreeMenuItem();
         menuOpen.setLabel("Open page...");
         menuOpen.setOnclick("mgnlTreeMenuItemOpen(" + tree.getJavascriptTree() + ");");
         menuOpen.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
+
         TreeMenuItem menuNewPage = new TreeMenuItem();
         menuNewPage.setLabel("New page");
         menuNewPage.setOnclick(tree.getJavascriptTree() + ".createNode('" + ItemType.NT_CONTENT + "');");
         menuNewPage.addJavascriptCondition("mgnlTreeMenuItemConditionPermissionWrite");
+
         TreeMenuItem menuDelete = new TreeMenuItem();
         menuDelete.setLabel("Delete");
         menuDelete.setOnclick(tree.getJavascriptTree() + ".deleteNode();");
         menuDelete.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         menuDelete.addJavascriptCondition("mgnlTreeMenuItemConditionPermissionWrite");
+
         TreeMenuItem menuMove = new TreeMenuItem();
         menuMove.setLabel("Move page");
         menuMove.setOnclick(tree.getJavascriptTree() + ".cutNode();");
         menuMove.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         menuMove.addJavascriptCondition("mgnlTreeMenuItemConditionPermissionWrite");
+
         TreeMenuItem menuCopy = new TreeMenuItem();
         menuCopy.setLabel("Copy page");
         menuCopy.setOnclick(tree.getJavascriptTree() + ".copyNode();");
         menuCopy.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
+
         TreeMenuItem menuActivateExcl = new TreeMenuItem();
         menuActivateExcl.setLabel("Activate this page");
         menuActivateExcl.setOnclick(tree.getJavascriptTree() + ".activateNode(" + Tree.ACTION_ACTIVATE + ",false);");
         menuActivateExcl.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         menuActivateExcl.addJavascriptCondition("mgnlTreeMenuItemConditionPermissionWrite");
+
         TreeMenuItem menuActivateIncl = new TreeMenuItem();
         menuActivateIncl.setLabel("Activate incl. sub pages");
         menuActivateIncl.setOnclick(tree.getJavascriptTree() + ".activateNode(" + Tree.ACTION_ACTIVATE + ",true);");
         menuActivateIncl.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         menuActivateIncl.addJavascriptCondition("mgnlTreeMenuItemConditionPermissionWrite");
+
         TreeMenuItem menuDeActivate = new TreeMenuItem();
         menuDeActivate.setLabel("De-activate");
         menuDeActivate.setOnclick(tree.getJavascriptTree() + ".deActivateNode(" + Tree.ACTION_DEACTIVATE + ");");
         menuDeActivate.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         menuDeActivate.addJavascriptCondition("mgnlTreeMenuItemConditionPermissionWrite");
+
         TreeMenuItem menuRefresh = new TreeMenuItem();
         menuRefresh.setLabel("Refresh");
         menuRefresh.setOnclick(tree.getJavascriptTree() + ".refresh();");
+
+        TreeMenuItem menuExport = new TreeMenuItem();
+        menuExport.setLabel("Export tree to xml");
+        menuExport.setOnclick(tree.getJavascriptTree() + ".exportNode();");
+        menuExport.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
+        menuExport.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotNodeData");
+
         tree.addMenuItem(menuOpen);
         tree.addMenuItem(null); // line
         if (Server.isAdmin()) {
@@ -154,6 +170,8 @@ public class AdminTreeWebsite implements AdminTree {
             tree.addMenuItem(menuActivateExcl);
             tree.addMenuItem(menuActivateIncl);
             tree.addMenuItem(menuDeActivate);
+            tree.addMenuItem(null); // line
+            tree.addMenuItem(menuExport);
         }
         tree.addMenuItem(null); // line
         tree.addMenuItem(menuRefresh);

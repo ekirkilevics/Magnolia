@@ -549,6 +549,17 @@
 			}
 		}
 
+    mgnlTree.prototype.exportNode = function()
+		{
+		if (mgnlConfirm("Are you sure to continue?","Exporting "+this.selectedNode.id+" to xml."))
+			{
+
+		    var url="${pageContext.request.contextPath}/export?exportxml=true&repository=" + this.repository + "&basepath=" + this.selectedNode.id;
+
+		    location.href=url;
+			}
+		}
+
 	mgnlTree.prototype.copyNode = function()
 		{
 		mgnlTreeMoveNode=true;

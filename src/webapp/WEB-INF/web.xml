@@ -106,6 +106,12 @@
         <servlet-name>AdminTreeServlet</servlet-name>
         <servlet-class>info.magnolia.module.admininterface.AdminInterfaceServlet</servlet-class>
     </servlet>
+    <servlet>
+        <description>ImportExportServlet</description>
+        <display-name>magnolia ImportExportServlet</display-name>
+        <servlet-name>ImportExportServlet</servlet-name>
+        <servlet-class>info.magnolia.cms.servlets.ImportExportServlet</servlet-class>
+    </servlet>
     <!--
         Use this servlet to spool static resources from the servlet context
         this servlet respects SecureURI mapping so if you want to have no authentication on static
@@ -152,6 +158,14 @@
     <servlet-mapping>
         <servlet-name>AdminTreeServlet</servlet-name>
         <url-pattern>/adminCentral/extractTree</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ImportExportServlet</servlet-name>
+        <url-pattern>/export</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ImportExportServlet</servlet-name>
+        <url-pattern>/import</url-pattern>
     </servlet-mapping>
     <jsp-config>
         <taglib>
