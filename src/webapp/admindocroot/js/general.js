@@ -80,16 +80,18 @@ function getMousePos(evt)
 	if (mgnlMove)
 		{
 		var divShadow=document.getElementById('mgnlMoveDivShadow');
-		divShadow.style.left=x+15;
-		divShadow.style.top=y-20;
+
+		divShadow.style.left=(x+15) + "px";
+		divShadow.style.top=(y-20) + "px";
+
 
 		var divDenied=document.getElementById('mgnlMoveDivDenied');
-		divDenied.style.left=x+5;
-		divDenied.style.top=y-15;
+		divDenied.style.left=(x+5) + "px";
+		divDenied.style.top=(y-15) + "px";
 
 		var divAllowed=document.getElementById('mgnlMoveDivAllowed');
-		divAllowed.style.left=x+20;
-		divAllowed.style.top=y-19;
+		divAllowed.style.left=(x+20) + "px";
+		divAllowed.style.top=(y-19) + "px";
 		}
 
 	// sorting pages in site admin
@@ -97,12 +99,12 @@ function getMousePos(evt)
 	if (mgnlSort)
 		{
 		var divShadow=document.getElementById('mgnlSortDivShadow');
-		divShadow.style.left=x+5;
-		divShadow.style.top=y-20;
+		divShadow.style.left=(x+5) + "px";
+		divShadow.style.top=(y-20) + "px";
 
 		var divDenied=document.getElementById('mgnlSortDivDenied');
-		divDenied.style.left=x+5;
-		divDenied.style.top=y-15;
+		divDenied.style.left=(x+5) + "px";
+		divDenied.style.top=(y-15) + "px";
 		}
 
 	// move/copy pages in tree
@@ -127,18 +129,18 @@ function mgnlResetDown()
 
 		var divShadow=document.getElementById('mgnlMoveDivShadow');
         divShadow.style.visibility='hidden';
-		divShadow.style.left=-50;
-		divShadow.style.top=-50;
+		divShadow.style.left=-50 + "px";;
+		divShadow.style.top=-50 + "px";
 
 		var divDenied=document.getElementById('mgnlMoveDivDenied');
 		divDenied.style.visibility='hidden';
-		divDenied.style.left=-50;
-		divDenied.style.top=-50;
+		divDenied.style.left=-50 + "px";
+		divDenied.style.top=-50 + "px";
 
 		var divAllowed=document.getElementById('mgnlMoveDivAllowed');
 		divAllowed.style.visibility='hidden';
-		divAllowed.style.left=-50;
-		divAllowed.style.top=-50;
+		divAllowed.style.left=-50 + "px";
+		divAllowed.style.top=-50 + "px";
 
 		mgnlMove=false;
 
@@ -157,13 +159,13 @@ function mgnlResetDown()
 
 		var divShadow=document.getElementById('mgnlSortDivShadow');
         divShadow.style.visibility='hidden';
-		divShadow.style.left=-50;
-		divShadow.style.top=-50;
+		divShadow.style.left=-50 + "px";
+		divShadow.style.top=-50 + "px";
 
 		var divDenied=document.getElementById('mgnlSortDivDenied');
 		divDenied.style.visibility='hidden';
-		divDenied.style.left=-50;
-		divDenied.style.top=-50;
+		divDenied.style.left=-50 + "px";
+		divDenied.style.top=-50 + "px";
 
     	mgnlSort=false;
     	}

@@ -106,7 +106,6 @@ function mgnlWhichKey(event)
 	{
 	if (window.event && window.event.keyCode) alert(window.event.keyCode);
 	else if (navigator.appName=="Netscape" && event.which==keyCode) alert(event.which);
-	else alert("bla");
 	}
 
 
