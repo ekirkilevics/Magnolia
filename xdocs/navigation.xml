@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Magnolia">
+    <title>Magnolia</title>
+    <body>
+        <links>
+            <item name="Magnolia community" href="http://www.magnolia.info/en/community.html" />                                    
+            <item name="Magnolia International" href="http://www.magnolia.info/en/international.html" />
+        </links>
+
+        <menu name="Quick start">
+            <item name="Introduction" href="/qs01_introduction.html" />
+        </menu>
+
+        <menu name="Downloadable docs">
+            <item name="Quick start" href="magnolia.pdf" />
+        </menu>
+
+    </body>
+</project>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project >
+<project xmlns:j="jelly:core" xmlns:u="jelly:util" default="rebuild-all">
+    <goal name="rebuild-all" prereqs="pom,clean,war:war,dist:build" />
+    <postGoal name="site">
+        <attainGoal name="pdf" />
+    </postGoal>
+</project>

@@ -10,7 +10,7 @@
         <url>http://www.obinary.com</url>
     </organization>
     <inceptionYear>1993</inceptionYear>
-    <logo>/images/logo.gif</logo>
+    <logo>/images/magnolia-logo.png</logo>
     <description>
         Magnolia is a free enterprise class content management system developed by obinary. Magnolia uses the upcoming
         standard API for java content repositories (JCR) to access its content. It has an easy to use web-browser
@@ -72,6 +72,9 @@
             <artifactId>commons-httpclient</artifactId>
             <version>2.0.2</version>
             <type>jar</type>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
         </dependency>
         <dependency>
             <groupId>commons-collections</groupId>
@@ -179,19 +182,22 @@
             <artifactId>servletapi</artifactId>
             <version>2.3</version>
             <type>jar</type>
-            <properties>
-                <war.bundle>false</war.bundle>
-            </properties>
         </dependency>
         <dependency>
             <groupId>mx4j</groupId>
             <artifactId>mx4j-jmx</artifactId>
             <version>1.1</version>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
         </dependency>
         <dependency>
             <groupId>taglibs</groupId>
             <artifactId>mailer</artifactId>
             <version>1.1</version>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
         </dependency>
         <dependency>
             <groupId>slide</groupId>
@@ -289,6 +295,15 @@
                 <war.bundle>true</war.bundle>
             </properties>
         </dependency>
+                <dependency>
+            <groupId>maven-plugins</groupId>
+            <artifactId>maven-findbugs-plugin</artifactId>
+            <version>0.8.4</version>
+            <type>plugin</type>
+            <properties>
+                <comment>maven plugin for the findbug report</comment>
+            </properties>
+        </dependency>
     </dependencies>
     <build>
         <sourceDirectory>src/main</sourceDirectory>
@@ -299,5 +314,17 @@
             </includes>
         </unitTest>
     </build>
+    
+    <reports>
+        <report>maven-license-plugin</report>
+        <report>maven-javadoc-plugin</report>
+        <report>maven-jdepend-plugin</report>
+        <report>maven-pmd-plugin</report>
+        <report>maven-findbugs-plugin</report>
+        <report>maven-jxr-plugin</report>
+        <report>maven-junit-report-plugin</report>
+        <report>maven-simian-plugin</report>
+        <report>maven-faq-plugin</report>
+    </reports>
 </project>
 

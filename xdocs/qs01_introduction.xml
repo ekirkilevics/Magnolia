@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+    <properties>
+        <title>Introduction</title>
+    </properties>
+    <body>
+        <section name="Introduction">
+            <p>
+                Welcome to Magnolia, and congratulations to the aspiring Magnolia templater! (that would be you).
+                Building templates in Magnolia is very simple once you have acquainted yourself with the basic
+                mechanisms and structures involved. This document will try to make that process as painless as possible,
+                with a focus on speed vs. depth.
+            </p>
+            <p>
+                <strong>
+                    The following examples assume that you have Magnolia installed and up and running inside tomcat,
+                    which is currently our default distribution. If you use a different J2EE server, adjust your
+                    thinking accordingly. For installation, follow the release notes available with the distribution of
+                    Magnolia.
+                </strong>
+            </p>
+            <p>
+                Magnolia per default has installed two applications: authoring and public. The applications are
+                basically identical, but can run on different instances or even different servers. It makes sense to
+                start building templates inside the authoring application folder, so that you can try out your
+                templates. Once your templates work as desired, you will have to copy these to the public application
+                folder to see their output in the published website as well.
+            </p>
+            <p>
+                Inside of the webapps folder of tomcat, you will find the magnolia application
+                (INSTALLDIR/magnolia/author/webapps/magnolia),
+            </p>
+            <p>The folder contents are more or less as follows:</p>
+            <ul>
+                <li>WEB-INF/</li>
+                <li>admindocroot/</li>
+                <li>admintemplates/</li>
+                <li>cache/</li>
+                <li>docroot/</li>
+                <li>logs/</li>
+                <li>repository/</li>
+                <li>templates/</li>
+            </ul>
+            <p>
+                For the course of this tutorial, all we really need to know is: templates go to
+                INSTALLDIR/magnolia/author/webapps/magnolia/templates.
+            </p>
+            <p>
+                admindocroot and admintemplates contain files relevant for Magnolia administration, cache will contain a
+                cache of our website. The docroot folder can be used to put files there that we would like to access via
+                standard web mechanisms (e.g. static links). The repository will contain all content, as well as users,
+                roles and custom configuration, including the information which templates are available. The templates
+                directory contains the JSP templates that define the look (and functionality) of our website.
+            </p>
+            <p>
+                Templates exist on two levels - we create templates for pages, and we create templates for paragraphs.
+                The page template will commonly contain things like the html head, css includes, Javascript and
+                navigation.
+            </p>
+            <p>
+                Paragraph templates will be used to define the look (and functionality) of paragraphs. Examples might be
+                an image paragraph, a text with heading and subtitle or a form designer to collect all those valuable
+                tidbits your marketing department has been demanding for the last twenty-three earlymorning strategy
+                meetings.
+            </p>
+            <p>
+                One way to determine what goes where is that all the things that we only need once per page or have a
+                fixed place on the page (e.g. a logo) could be part of the page template, and all the bits that we might
+                move around on the page or that occur multiple times (e.g. text blocks or images), will probably end up
+                as some kind of paragraph.
+            </p>
+            <p>
+                From a different perspective, one can think of a paragraph definition as a mapping between the view and
+                the model. The view is defined through a JSP template (or a servlet), and the model is defined through a
+                dialog definition. More about that later.
+            </p>
+            <p>We will first look at page templates, then at paragraph templates.</p>
+        </section>
+
+    </body>
+</document>
+
