@@ -33,6 +33,9 @@ public class DialogEdit extends DialogBox {
      */
     private static Logger log = Logger.getLogger(DialogEdit.class);
 
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(JspWriter)
+     */
     public void drawHtml(JspWriter out) throws IOException {
         Edit control = new Edit(this.getName(), this.getValue());
         control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING));

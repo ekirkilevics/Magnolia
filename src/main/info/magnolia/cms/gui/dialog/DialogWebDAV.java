@@ -13,7 +13,6 @@
 package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.Hidden;
 import info.magnolia.cms.gui.misc.Sources;
@@ -71,7 +70,10 @@ public class DialogWebDAV extends DialogBox {
 
     private WebdavResource davConnection;
 
-    public void init(ContentNode configNode, Content websiteNode, PageContext pageContext) throws RepositoryException {
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(Content, Content, PageContext)
+     */
+    public void init(Content configNode, Content websiteNode, PageContext pageContext) throws RepositoryException {
         super.init(configNode, websiteNode, pageContext);
         initIconExtensions();
     }
@@ -204,6 +206,9 @@ public class DialogWebDAV extends DialogBox {
         this.setDAVConnection(wdr);
     }
 
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(JspWriter)
+     */
     public void drawHtml(JspWriter out) throws IOException {
         this.drawHtmlPre(out);
         this.setDAVConnection();
@@ -652,7 +657,7 @@ public class DialogWebDAV extends DialogBox {
         // todo: replace deprecated (new Date(String date))
         Date x = new Date(date);
         try {
-            return sdf.format(x).toString();
+            return sdf.format(x);
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);

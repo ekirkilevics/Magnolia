@@ -13,7 +13,6 @@
 package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 
 import java.io.IOException;
 
@@ -69,9 +68,9 @@ public class DialogFckEdit extends DialogBox {
     }
 
     /**
-     * @see DialogBox#init(ContentNode, Content, PageContext)
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(Content, Content, PageContext)
      */
-    public void init(ContentNode configNode, Content websiteNode, PageContext pageContext) throws RepositoryException {
+    public void init(Content configNode, Content websiteNode, PageContext pageContext) throws RepositoryException {
         super.init(configNode, websiteNode, pageContext);
         String jsInitFile = this.getConfigValue(PARAM_JS_INIT_FILE);
         String customConfigurationPath = this.getConfigValue(PARAM_CUSTOM_CONFIGURATION_PATH);
@@ -79,6 +78,9 @@ public class DialogFckEdit extends DialogBox {
         this.setCustomConfigurationPath(customConfigurationPath);
     }
 
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(JspWriter)
+     */
     public void drawHtml(JspWriter out) throws IOException {
 
         out.println("<tr>");
@@ -142,13 +144,14 @@ public class DialogFckEdit extends DialogBox {
      * @return
      */
     public static String escapeJsValue(String src) {
-        if (src != null) {
-            src = src.replaceAll("\\\\", "\\\\");
-            src = src.replaceAll("'", "\\\\'");
-            src = src.replaceAll("\"", "\\\"");
-            src = src.replaceAll("\\r\\n", "\\\\r\\\\n");
-            src = src.replaceAll("\\n", "\\\\n");
+        if (src == null) {
+            return null;
         }
-        return src;
+        String escapedSrc = src.replaceAll("'", "\\\\'");
+        escapedSrc = escapedSrc.replaceAll("\"", "\\\"");
+        escapedSrc = escapedSrc.replaceAll("\\r\\n", "\\\\r\\\\n");
+        escapedSrc = escapedSrc.replaceAll("\\n", "\\\\n");
+
+        return escapedSrc;
     }
 }

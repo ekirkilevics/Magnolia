@@ -15,6 +15,8 @@ package info.magnolia.cms.gui.control;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.misc.FileProperties;
 
+import javax.jcr.PathNotFoundException;
+
 import org.apache.log4j.Logger;
 
 
@@ -97,6 +99,11 @@ public class File extends ControlSuper {
                 this.getName() + "_" + FileProperties.PROPERTIES_CONTENTNODE).getNodeData(
                 FileProperties.PROPERTY_FILENAME).getString();
         }
+        catch (PathNotFoundException e) {
+            if (log.isDebugEnabled()) {
+                log.debug("Data not found: " + e.getMessage());
+            }
+        }
         catch (Exception e) {
             log.info("Exception caught: " + e.getMessage(), e);
         }
@@ -115,6 +122,11 @@ public class File extends ControlSuper {
                     this.getName() + "_" + FileProperties.PROPERTIES_CONTENTNODE).getNodeData(
                     FileProperties.PROPERTY_TEMPLATE).getString();
             }
+            catch (PathNotFoundException e) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Data not found: " + e.getMessage());
+                }
+            }
             catch (Exception e) {
                 log.info("Exception caught: " + e.getMessage(), e);
             }
@@ -130,6 +142,11 @@ public class File extends ControlSuper {
                 .getContentNode(this.getName() + "_" + FileProperties.PROPERTIES_CONTENTNODE)
                 .getNodeData(FileProperties.PROPERTY_EXTENSION)
                 .getString();
+        }
+        catch (PathNotFoundException e) {
+            if (log.isDebugEnabled()) {
+                log.debug("Data not found: " + e.getMessage());
+            }
         }
         catch (Exception e) {
             log.info("Exception caught: " + e.getMessage(), e);

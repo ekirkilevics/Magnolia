@@ -46,24 +46,4 @@ public interface DialogInterface {
      */
     void drawHtml(JspWriter out) throws IOException;
 
-    /**
-     * ???????
-     * @param out JspWriter
-     * @throws IOException exceptions thrown when writing to the JspWriter can be safely rethrown by the dialog
-     */
-    void drawSubs(JspWriter out) throws IOException;
-
-    /**
-     * ???????
-     * @param out JspWriter
-     * @throws IOException exceptions thrown when writing to the JspWriter can be safely rethrown by the dialog
-     */
-    void drawHtmlPreSubs(JspWriter out) throws IOException;
-
-    /**
-     * ???????
-     * @param out JspWriter
-     * @throws IOException exceptions thrown when writing to the JspWriter can be safely rethrown by the dialog
-     */
-    void drawHtmlPostSubs(JspWriter out) throws IOException;
 }

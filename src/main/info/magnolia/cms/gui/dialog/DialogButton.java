@@ -32,6 +32,9 @@ public class DialogButton extends DialogBox {
      */
     private static Logger log = Logger.getLogger(DialogButton.class);
 
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(JspWriter)
+     */
     public void drawHtml(JspWriter out) throws IOException {
         Button control = new Button();
         control.setSaveInfo(false);

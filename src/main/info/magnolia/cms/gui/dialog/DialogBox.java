@@ -12,14 +12,11 @@
  */
 package info.magnolia.cms.gui.dialog;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
-
 import java.io.IOException;
+import java.util.Hashtable;
+import java.util.Map;
 
-import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
 
 import org.apache.log4j.Logger;
 
@@ -39,11 +36,9 @@ public class DialogBox extends DialogSuper {
      */
     private static Logger log = Logger.getLogger(DialogBox.class);
 
-    private int boxType = BOXTYPE_2COLS;
+    private Map iconExtensions = new Hashtable();
 
-    public void init(ContentNode configNode, Content websiteNode, PageContext pageContext) throws RepositoryException {
-        super.init(configNode, websiteNode, pageContext);
-    }
+    private int boxType = BOXTYPE_2COLS;
 
     public void setBoxType(int i) {
         this.boxType = i;
@@ -102,5 +97,59 @@ public class DialogBox extends DialogSuper {
     public void drawHtmlPost(JspWriter out) throws IOException {
         out.println(this.getHtmlDescription());
         out.println("</td></tr>");
+    }
+
+    public String getHtmlDescription() {
+        String html = "";
+        // use div to force a new line
+        if (!this.getDescription().equals("")) {
+            html = "<div class=\"" + CSSCLASS_DESCRIPTION + "\">" + this.getDescription() + "</div>";
+        }
+        return html;
+    }
+
+    public void initIconExtensions() {
+        this.getIconExtensions().put("doc", "");
+        this.getIconExtensions().put("eps", "");
+        this.getIconExtensions().put("gif", "");
+        this.getIconExtensions().put("jpg", "");
+        this.getIconExtensions().put("jpeg", ICONS_PATH + "jpg.gif");
+        this.getIconExtensions().put("pdf", "");
+        this.getIconExtensions().put("ppt", "");
+        this.getIconExtensions().put("tif", "");
+        this.getIconExtensions().put("tiff", ICONS_PATH + "tif.gif");
+        this.getIconExtensions().put("xls", "");
+        this.getIconExtensions().put("zip", "");
+    }
+
+    public String getIconPath(String name) {
+        // name might be name (e.g. "bla.gif") or extension (e.g. "gif")
+        String iconPath = ICONS_PATH + ICONS_GENERAL;
+        String ext = "";
+        if (name.indexOf(".") != -1) {
+            ext = name.substring(name.lastIndexOf(".") + 1).toLowerCase();
+        }
+        else {
+            ext = name;
+        }
+        if (this.getIconExtensions().containsKey(ext)) {
+            iconPath = (String) this.getIconExtensions().get(ext);
+            if (iconPath.equals("")) {
+                iconPath = ICONS_PATH + ext + ".gif";
+            }
+        }
+        return iconPath;
+    }
+
+    public Map getIconExtensions() {
+        return this.iconExtensions;
+    }
+
+    public void setIconExtensions(Map t) {
+        this.iconExtensions = t;
+    }
+
+    public void setIconExtensions(String extension, String iconPath) {
+        this.iconExtensions.put(extension, iconPath);
     }
 }

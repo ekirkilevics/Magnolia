@@ -12,6 +12,7 @@
  */
 package info.magnolia.cms.gui.dialog;
 
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.control.SelectOption;
@@ -24,6 +25,7 @@ import java.util.List;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
 
 import org.apache.log4j.Logger;
 
@@ -34,9 +36,12 @@ import org.apache.log4j.Logger;
  */
 public class DialogSelect extends DialogBox {
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(DialogSelect.class);
 
-    public void setOptions(ContentNode configNode) {
+    public void setOptions(Content configNode) {
         List options = new ArrayList();
         try {
             Iterator it = configNode.getContentNode("options").getChildren().iterator();
@@ -60,6 +65,18 @@ public class DialogSelect extends DialogBox {
         this.setOptions(options);
     }
 
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(Content, Content, PageContext)
+     */
+    public void init(Content configNode, Content websiteNode, PageContext pageContext) throws RepositoryException {
+
+        super.init(configNode, websiteNode, pageContext);
+        setOptions(configNode);
+    }
+
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(JspWriter)
+     */
     public void drawHtml(JspWriter out) throws IOException {
         Select control = new Select(this.getName(), this.getValue());
         control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING));

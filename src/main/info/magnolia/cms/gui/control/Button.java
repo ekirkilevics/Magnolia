@@ -21,25 +21,38 @@ import org.apache.commons.lang.StringUtils;
  */
 public class Button extends ControlSuper {
 
+    /**
+     * html before.
+     */
+    private static final String HTML_PRE_DIVIDED = "<table cellpadding=0 cellspacing=0 border=0><tr><td>";
+
+    /**
+     * html between button and label.
+     */
+    private static final String HTML_INTER_DIVIDED = "</td><td>";
+
+    /**
+     * html after label (radio, checkbox).
+     */
+    private static final String HTML_POST_DIVIDED = "</td></tr></table>";
+
+    /**
+     * html before button (push button).
+     */
+    private static final String HTML_PRE_PUSH = "";
+
+    private static final String HTML_INTER_PUSH = "";
+
+    /**
+     * html after button.
+     */
+    private static final String HTML_POST_PUSH = "";
+
     private String label;
 
     private String iconSrc;
 
     private String onclick;
-
-    private final String htmlPreDivided = "<table cellpadding=0 cellspacing=0 border=0><tr><td>"; // html before
-
-    // buttton (radio,
-    // checkbox)
-    private final String htmlInterDivided = "</td><td>"; // html between button and label
-
-    private final String htmlPostDivided = "</td></tr></table>"; // html after label (radio, checkbox)
-
-    private final String htmlPrePush = ""; // html before buttton (push button)
-
-    private final String htmlInterPush = "";
-
-    private final String htmlPostPush = ""; // html after button
 
     private int state = BUTTONSTATE_NORMAL;
 
@@ -122,10 +135,10 @@ public class Button extends ControlSuper {
     public void setHtmlPre() {
         if (super.getHtmlPre(null) == null) {
             if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON) {
-                this.setHtmlPre(this.htmlPrePush);
+                this.setHtmlPre(HTML_PRE_PUSH);
             }
             else {
-                this.setHtmlPre(this.htmlPreDivided);
+                this.setHtmlPre(HTML_PRE_DIVIDED);
             }
         }
     }
@@ -133,10 +146,10 @@ public class Button extends ControlSuper {
     public void setHtmlInter() {
         if (super.getHtmlInter(null) == null) {
             if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON) {
-                this.setHtmlInter(this.htmlInterPush);
+                this.setHtmlInter(HTML_INTER_PUSH);
             }
             else {
-                this.setHtmlInter(this.htmlInterDivided);
+                this.setHtmlInter(HTML_INTER_DIVIDED);
             }
         }
     }
@@ -144,10 +157,10 @@ public class Button extends ControlSuper {
     public void setHtmlPost() {
         if (super.getHtmlPost(null) == null) {
             if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON) {
-                this.setHtmlPost(this.htmlPostPush);
+                this.setHtmlPost(HTML_POST_PUSH);
             }
             else {
-                this.setHtmlPost(this.htmlPostDivided);
+                this.setHtmlPost(HTML_POST_DIVIDED);
             }
         }
     }

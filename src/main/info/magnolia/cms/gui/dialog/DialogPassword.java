@@ -33,6 +33,9 @@ public class DialogPassword extends DialogBox {
      */
     private static Logger log = Logger.getLogger(DialogPassword.class);
 
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(JspWriter)
+     */
     public void drawHtml(JspWriter out) throws IOException {
         Password control = new Password(this.getName(), this.getValue());
         if (this.getConfigValue("saveInfo").equals("false")) {

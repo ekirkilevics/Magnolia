@@ -12,6 +12,7 @@
  */
 package info.magnolia.cms.gui.dialog;
 
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.ButtonSet;
@@ -26,6 +27,7 @@ import java.util.List;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
 
 import org.apache.log4j.Logger;
 
@@ -36,11 +38,14 @@ import org.apache.log4j.Logger;
  */
 public class DialogButtonSet extends DialogBox {
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(DialogButtonSet.class);
 
     private int buttonType = ControlSuper.BUTTONTYPE_RADIO;
 
-    public void setOptions(ContentNode configNode, boolean setDefaultSelected) {
+    public void setOptions(Content configNode, boolean setDefaultSelected) {
         // setDefaultSelected: does not work properly (no difference between never stored and removed...)
         // therefor do only use for radio, not for checkbox
         List options = new ArrayList();
@@ -64,7 +69,7 @@ public class DialogButtonSet extends DialogBox {
         this.setOptions(options);
     }
 
-    public void setOption(ContentNode configNode) {
+    public void setOption(Content configNode) {
         // checkboxSwitch -> only one option, value always true/false
         List options = new ArrayList();
         Button button = new Button(this.getName(), "");
@@ -79,6 +84,34 @@ public class DialogButtonSet extends DialogBox {
         button.setOnclick("mgnlDialogShiftCheckboxSwitch('" + this.getName() + "');");
         options.add(button);
         this.setOptions(options);
+    }
+
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(Content, Content, PageContext)
+     */
+    public void init(Content configNode, Content websiteNode, PageContext pageContext) throws RepositoryException {
+        super.init(configNode, websiteNode, pageContext);
+
+        String controlType = configNode.getNodeData("controlType").getString();
+
+        if (log.isDebugEnabled()) {
+            log.debug("Init DialogButtonSet with type=" + controlType);
+        }
+
+        // custom settings
+        if (controlType.equals("radio")) {
+            setButtonType(ControlSuper.BUTTONTYPE_RADIO);
+            setOptions(configNode, true);
+        }
+        else if (controlType.equals("checkbox")) {
+            setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX);
+            setOptions(configNode, false);
+            setConfig("valueType", "multiple");
+        }
+        else if (controlType.equals("checkboxSwitch")) {
+            setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX);
+            setOption(configNode);
+        }
     }
 
     public void drawHtmlPreSubs(JspWriter out) throws IOException {
@@ -97,6 +130,9 @@ public class DialogButtonSet extends DialogBox {
         return this.buttonType;
     }
 
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(JspWriter)
+     */
     public void drawHtml(JspWriter out) throws IOException {
         this.drawHtmlPre(out);
         ButtonSet control;
@@ -148,8 +184,11 @@ public class DialogButtonSet extends DialogBox {
                 }
             }
             // very last button: close table
-            ((Button) this.getOptions().get(this.getOptions().size() - 1)).setHtmlPost(control.getButtonHtmlPost()
-                + "</table>");
+            int lastIndex = this.getOptions().size() - 1;
+            // avoid ArrayIndexOutOfBoundsException, but should not happen
+            if (lastIndex > -1) {
+                ((Button) this.getOptions().get(lastIndex)).setHtmlPost(control.getButtonHtmlPost() + "</table>");
+            }
         }
         if (width != null) {
             control.setHtmlPre("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"" + width + "\">");

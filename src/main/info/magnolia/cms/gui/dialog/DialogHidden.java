@@ -32,6 +32,9 @@ public class DialogHidden extends DialogBox {
      */
     private static Logger log = Logger.getLogger(DialogHidden.class);
 
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(JspWriter)
+     */
     public void drawHtml(JspWriter out) throws IOException {
         Hidden control = new Hidden(this.getName(), this.getValue());
         if (this.getConfigValue("saveInfo").equals("false")) {

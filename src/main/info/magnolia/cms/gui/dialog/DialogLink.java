@@ -14,7 +14,6 @@ package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.PageContext;
@@ -33,7 +32,10 @@ public class DialogLink extends DialogEditWithButton {
      */
     private static Logger log = Logger.getLogger(DialogLink.class);
 
-    public void init(ContentNode configNode, Content websiteNode, PageContext pageContext) throws RepositoryException {
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(Content, Content, PageContext)
+     */
+    public void init(Content configNode, Content websiteNode, PageContext pageContext) throws RepositoryException {
         super.init(configNode, websiteNode, pageContext);
         String extension = this.getConfigValue("extension");
         this.getButton().setLabel("Internal link...");

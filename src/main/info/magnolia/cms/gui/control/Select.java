@@ -46,7 +46,6 @@ public class Select extends ControlSuper {
         this.getOptions().add(option);
     }
 
-    // public void setOptions(Hashtable option) { this.getOptions().add(option);}
     public void setOptions(String label, String value) {
         this.getOptions().add(new SelectOption(label, value));
     }

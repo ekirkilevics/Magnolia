@@ -13,6 +13,7 @@
 package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.Edit;
@@ -25,9 +26,11 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
 
 import org.apache.log4j.Logger;
 
@@ -69,7 +72,7 @@ public class DialogRichedit extends DialogBox {
         return this.richEPaste;
     }
 
-    public void setOptionsToolboxStyleCssClasses(ContentNode configNode) {
+    public void setOptionsToolboxStyleCssClasses(Content configNode) {
         List options = this.setOptionsToolbox(configNode, "optionsToolboxStyleCssClasses");
         this.setOptionsToolboxStyleCssClasses(options);
     }
@@ -82,7 +85,7 @@ public class DialogRichedit extends DialogBox {
         return this.optionsToolboxStyleCssClasses;
     }
 
-    public void setOptionsToolboxLinkCssClasses(ContentNode configNode) {
+    public void setOptionsToolboxLinkCssClasses(Content configNode) {
         List options = this.setOptionsToolbox(configNode, "optionsToolboxLinkCssClasses");
         this.setOptionsToolboxLinkCssClasses(options);
     }
@@ -95,7 +98,7 @@ public class DialogRichedit extends DialogBox {
         return this.optionsToolboxLinkCssClasses;
     }
 
-    public void setOptionsToolboxLinkTargets(ContentNode configNode) {
+    public void setOptionsToolboxLinkTargets(Content configNode) {
         List options = this.setOptionsToolbox(configNode, "optionsToolboxLinkTargets");
         this.setOptionsToolboxLinkTargets(options);
     }
@@ -108,7 +111,7 @@ public class DialogRichedit extends DialogBox {
         return this.optionsToolboxLinkTargets;
     }
 
-    public List setOptionsToolbox(ContentNode configNode, String nodeName) {
+    public List setOptionsToolbox(Content configNode, String nodeName) {
         List options = new ArrayList();
         try {
             Iterator it = configNode.getContentNode(nodeName).getChildren().iterator();
@@ -128,12 +131,30 @@ public class DialogRichedit extends DialogBox {
             lastOption.setSelected(true);
             options.add(lastOption);
         }
+        catch (PathNotFoundException e) {
+            if (log.isDebugEnabled()) {
+                log.debug("Option \"" + nodeName + "\" not found");
+            }
+        }
         catch (RepositoryException e) {
             log.info("Exception caught: " + e.getMessage(), e);
         }
         return options;
     }
 
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(Content, Content, PageContext)
+     */
+    public void init(Content configNode, Content websiteNode, PageContext pageContext) throws RepositoryException {
+        super.init(configNode, websiteNode, pageContext);
+        setOptionsToolboxLinkTargets(configNode);
+        setOptionsToolboxLinkCssClasses(configNode);
+        setOptionsToolboxStyleCssClasses(configNode);
+    }
+
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(JspWriter)
+     */
     public void drawHtml(JspWriter out) throws IOException {
         this.drawHtmlPre(out);
         if (this.getRichE().equals("true")
@@ -476,4 +497,5 @@ public class DialogRichedit extends DialogBox {
         out.println("</body></html>");
 
     }
+
 }

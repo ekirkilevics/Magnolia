@@ -30,6 +30,9 @@ public class DialogStatic extends DialogBox {
      */
     private static Logger log = Logger.getLogger(DialogStatic.class);
 
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(JspWriter)
+     */
     public void drawHtml(JspWriter out) throws IOException {
         this.drawHtmlPre(out);
         String value = this.getConfigValue("value", null);

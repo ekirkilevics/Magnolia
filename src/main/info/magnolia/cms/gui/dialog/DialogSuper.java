@@ -16,7 +16,6 @@ import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.gui.control.ControlSuper;
 import info.magnolia.cms.gui.control.Hidden;
 
 import java.io.IOException;
@@ -120,8 +119,14 @@ public class DialogSuper implements DialogInterface {
      */
     private static Logger log = Logger.getLogger(DialogSuper.class);
 
+    /**
+     * Current request.
+     */
     private HttpServletRequest request;
 
+    /**
+     * Page context.
+     */
     private PageContext pageContext;
 
     /**
@@ -162,10 +167,15 @@ public class DialogSuper implements DialogInterface {
 
     private DialogSuper topParent;
 
-    private Map iconExtensions = new Hashtable();
-
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(Content, Content, PageContext)
+     */
     public void init(Content configNode, Content websiteNode, PageContext pageContext) throws RepositoryException {
-        // constructor for DialogDialog
+
+        if (log.isDebugEnabled()) {
+            log.debug("Init " + getClass().getName());
+        }
+
         this.setConfigNode(configNode);
         this.setWebsiteNode(websiteNode);
         this.setRequest((HttpServletRequest) pageContext.getRequest());
@@ -174,10 +184,17 @@ public class DialogSuper implements DialogInterface {
         this.setConfig(configNode);
     }
 
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(JspWriter)
+     */
     public void drawHtml(JspWriter out) throws IOException {
         this.drawHtmlPreSubs(out);
         this.drawSubs(out);
         this.drawHtmlPostSubs(out);
+    }
+
+    public void drawHtmlPreSubs(JspWriter out) throws IOException {
+        // do nothing
     }
 
     public void drawSubs(JspWriter out) throws IOException {
@@ -197,6 +214,10 @@ public class DialogSuper implements DialogInterface {
         }
     }
 
+    public void drawHtmlPostSubs(JspWriter out) throws IOException {
+        // do nothing
+    }
+
     public void setParent(DialogSuper parent) {
         this.parent = parent;
     }
@@ -211,14 +232,6 @@ public class DialogSuper implements DialogInterface {
 
     public DialogSuper getTopParent() {
         return this.topParent;
-    }
-
-    public void drawHtmlPreSubs(JspWriter out) throws IOException {
-        // do nothing
-    }
-
-    public void drawHtmlPostSubs(JspWriter out) throws IOException {
-        // do nothing
     }
 
     public void setSubs(List subs) {
@@ -273,8 +286,9 @@ public class DialogSuper implements DialogInterface {
     }
 
     public void setConfig(Content configNodeParent) throws RepositoryException {
-        // create config and subs out of dialog structure (xml)
+        // create config and subs out of dialog structure
         Map config = new Hashtable();
+
         // get properties -> to this.config
         Iterator itProps = configNodeParent.getChildren(ItemType.NT_NODEDATA).iterator();
         while (itProps.hasNext()) {
@@ -284,98 +298,22 @@ public class DialogSuper implements DialogInterface {
             config.put(name, value);
         }
         this.setConfig(config);
-        // String parentType=configNodeParent.getNodeData("type").getString();
+
         Iterator it = configNodeParent.getChildren(ItemType.NT_CONTENTNODE).iterator();
         while (it.hasNext()) {
             ContentNode configNode = (ContentNode) it.next();
             String controlType = configNode.getNodeData("controlType").getString();
 
-            DialogInterface dialogControl = null;
-
-            if (controlType.equals("edit")) {
-                dialogControl = new DialogEdit();
-            }
-            else if (controlType.equals("richEdit")) {
-                dialogControl = new DialogRichedit();
-            }
-            else if (controlType.equals("fckEdit")) {
-                dialogControl = new DialogFckEdit();
-            }
-            else if (controlType.equals("tab")) {
-                dialogControl = new DialogTab();
-            }
-            else if (controlType.equals("buttonSet")) {
-                dialogControl = new DialogButtonSet();
-            }
-            else if (controlType.equals("button")) {
-                dialogControl = new DialogButton();
-            }
-            else if (controlType.equals("static")) {
-                dialogControl = new DialogStatic();
-            }
-            else if (controlType.equals("file")) {
-                dialogControl = new DialogFile();
-            }
-            else if (controlType.equals("link")) {
-                dialogControl = new DialogLink();
-            }
-            else if (controlType.equals("date")) {
-                dialogControl = new DialogDate();
-            }
-            else if (controlType.equals("radio")) {
-                dialogControl = new DialogButtonSet();
-            }
-            else if (controlType.equals("checkbox")) {
-                dialogControl = new DialogButtonSet();
-            }
-            else if (controlType.equals("checkboxSwitch")) {
-                dialogControl = new DialogButtonSet();
-            }
-            else if (controlType.equals("select")) {
-                dialogControl = new DialogSelect();
-            }
-            else if (controlType.equals("password")) {
-                dialogControl = new DialogPassword();
-            }
-            else if (controlType.equals("include")) {
-                dialogControl = new DialogInclude();
-            }
-            else if (controlType.equals("webDAV")) {
-                dialogControl = new DialogWebDAV();
-            }
-            else {
-                // invalid control name
-                log.warn("Invalid control name: \"" + controlType + "\", class " + this.getClass().getName());
+            if (StringUtils.isEmpty(controlType)) {
+                log.warn("Missing control type for configNode " + configNode.getHandle());
                 return;
             }
 
-            // common
-            dialogControl.init(configNode, this.getWebsiteNode(), this.getPageContext());
-
-            // custom settings
-            if (controlType.equals("richEdit")) {
-                ((DialogRichedit) dialogControl).setOptionsToolboxLinkTargets(configNode);
-                ((DialogRichedit) dialogControl).setOptionsToolboxLinkCssClasses(configNode);
-                ((DialogRichedit) dialogControl).setOptionsToolboxStyleCssClasses(configNode);
+            if (log.isDebugEnabled()) {
+                log.debug("Loading control \"" + controlType + "\" for " + configNode.getHandle());
             }
-            else if (controlType.equals("radio")) {
-                ((DialogButtonSet) dialogControl).setButtonType(ControlSuper.BUTTONTYPE_RADIO);
-                ((DialogButtonSet) dialogControl).setOptions(configNode, true);
-            }
-            else if (controlType.equals("checkbox")) {
-                ((DialogButtonSet) dialogControl).setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX);
-                ((DialogButtonSet) dialogControl).setOptions(configNode, false);
-                ((DialogButtonSet) dialogControl).setConfig("valueType", "multiple");
-            }
-            else if (controlType.equals("checkboxSwitch")) {
-                ((DialogButtonSet) dialogControl).setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX);
-                ((DialogButtonSet) dialogControl).setOption(configNode);
-            }
-            else if (controlType.equals("select")) {
-                ((DialogSelect) dialogControl).setOptions(configNode);
-            }
-
-            // common
+            DialogInterface dialogControl = DialogFactory.loadDialog(configNode, this.getWebsiteNode(), this
+                .getPageContext());
             this.addSub(dialogControl);
         }
     }
@@ -442,15 +380,6 @@ public class DialogSuper implements DialogInterface {
 
     public String getDescription() {
         return this.getConfigValue("description", "");
-    }
-
-    public String getHtmlDescription() {
-        String html = "";
-        // use div to force a new line
-        if (!this.getDescription().equals("")) {
-            html = "<div class=\"" + CSSCLASS_DESCRIPTION + "\">" + this.getDescription() + "</div>";
-        }
-        return html;
     }
 
     public String getControlType() {
@@ -529,14 +458,6 @@ public class DialogSuper implements DialogInterface {
         return this.getConfigValue("name");
     }
 
-    public void setSaveInfo(boolean b) {
-        this.setConfig("saveInfo", b);
-    }
-
-    public String getSaveInfo() {
-        return this.getConfigValue("saveInfo");
-    }
-
     public void setSessionAttribute() {
         String name = SESSION_ATTRIBUTENAME_DIALOGOBJECT + "_" + this.getName() + "_" + new Date().getTime();
         this.setConfig(SESSION_ATTRIBUTENAME_DIALOGOBJECT, name);
@@ -573,48 +494,4 @@ public class DialogSuper implements DialogInterface {
         }
     }
 
-    public Map getIconExtensions() {
-        return this.iconExtensions;
-    }
-
-    public void setIconExtensions(Map t) {
-        this.iconExtensions = t;
-    }
-
-    public void setIconExtensions(String extension, String iconPath) {
-        this.getIconExtensions().put(extension, iconPath);
-    }
-
-    public void initIconExtensions() {
-        this.getIconExtensions().put("doc", "");
-        this.getIconExtensions().put("eps", "");
-        this.getIconExtensions().put("gif", "");
-        this.getIconExtensions().put("jpg", "");
-        this.getIconExtensions().put("jpeg", ICONS_PATH + "jpg.gif");
-        this.getIconExtensions().put("pdf", "");
-        this.getIconExtensions().put("ppt", "");
-        this.getIconExtensions().put("tif", "");
-        this.getIconExtensions().put("tiff", ICONS_PATH + "tif.gif");
-        this.getIconExtensions().put("xls", "");
-        this.getIconExtensions().put("zip", "");
-    }
-
-    public String getIconPath(String name) {
-        // name might be name (e.g. "bla.gif") or extension (e.g. "gif")
-        String iconPath = ICONS_PATH + ICONS_GENERAL;
-        String ext = "";
-        if (name.indexOf(".") != -1) {
-            ext = name.substring(name.lastIndexOf(".") + 1).toLowerCase();
-        }
-        else {
-            ext = name;
-        }
-        if (this.getIconExtensions().containsKey(ext)) {
-            iconPath = (String) this.getIconExtensions().get(ext);
-            if (iconPath.equals("")) {
-                iconPath = ICONS_PATH + ext + ".gif";
-            }
-        }
-        return iconPath;
-    }
 }

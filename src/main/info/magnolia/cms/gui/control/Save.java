@@ -465,7 +465,7 @@ public class Save extends ControlSuper {
         while (i < strObj.length) {
             String str = strObj[i];
             String tagPre = "";
-            if (i != 0 || valueStart == "<" + tagName) {
+            if (i != 0 || ("<" + tagName).equals(valueStart)) {
                 String openTag = str.substring(0, str.indexOf(">"));
                 if (openTag.indexOf(" href=") == -1) {
                     str = str.replaceAll("</" + tagName + ">", "</span>");

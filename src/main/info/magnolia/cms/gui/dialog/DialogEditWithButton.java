@@ -13,7 +13,6 @@
 package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.Edit;
 
@@ -40,17 +39,14 @@ public class DialogEditWithButton extends DialogBox {
      */
     private static Logger log = Logger.getLogger(DialogEditWithButton.class);
 
-    private Button button = new Button();
-
     private List buttons = new ArrayList();
 
-    public void init(ContentNode configNode, Content websiteNode, PageContext pageContext) throws RepositoryException {
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(Content, Content, PageContext)
+     */
+    public void init(Content configNode, Content websiteNode, PageContext pageContext) throws RepositoryException {
         super.init(configNode, websiteNode, pageContext);
         buttons.add(new Button());
-    }
-
-    public void setButton(Button b) {
-        this.button = b;
     }
 
     public Button getButton() {
@@ -69,6 +65,9 @@ public class DialogEditWithButton extends DialogBox {
         return this.buttons;
     }
 
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(JspWriter)
+     */
     public void drawHtml(JspWriter out) throws IOException {
         Edit control = new Edit(this.getName(), this.getValue());
         control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING));
