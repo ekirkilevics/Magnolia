@@ -1,4 +1,4 @@
-magnolia 2.0
+magnolia 2.x
 
 
 SCharles :
