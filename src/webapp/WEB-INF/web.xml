@@ -4,7 +4,7 @@
 	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" version="2.4"
     id="WebApp">
     <display-name>magnolia</display-name>
-    <description>magnolia 2.0</description>
+    <description>magnolia 2.1</description>
     <filter>
         <description></description>
         <display-name>ContentTypeFilter</display-name>
@@ -177,4 +177,31 @@
             <taglib-location>/WEB-INF/taglib/cms-util-taglib.tld</taglib-location>
         </taglib>
     </jsp-config>
+    
+	<!--    
+		i18n configuration (JSTL). Do not change the fallbackLocale!
+	-->
+	<context-param>
+		<param-name>javax.servlet.jsp.jstl.fmt.fallbackLocale</param-name>
+		<param-value>en</param-value>
+	</context-param>
+
+	<!-- 
+		We will replace this entry by a server configuration facility. 
+	-->
+	<context-param>
+		<param-name>javax.servlet.jsp.jstl.fmt.locale</param-name>
+		<param-value>en</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>javax.servlet.jsp.jstl.fmt.basename</param-name>
+		<param-value>info.magnolia.admin.central</param-value>
+	</context-param>
+	
+	<context-param>
+		<param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
+		<param-value>info.magnolia.admin.central</param-value>
+	</context-param>
+
 </web-app>
