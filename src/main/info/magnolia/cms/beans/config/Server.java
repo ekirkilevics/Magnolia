@@ -19,6 +19,7 @@ import info.magnolia.cms.security.SecureURI;
 
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
@@ -40,11 +41,11 @@ public class Server {
 
     protected static final String CONFIG_PAGE = "server";
 
-    private static Hashtable cachedContent = new Hashtable();
+    private static Map cachedContent = new Hashtable();
 
-    private static Hashtable cachedURImapping = new Hashtable();
+    private static Map cachedURImapping = new Hashtable();
 
-    private static Hashtable cachedCacheableURIMapping = new Hashtable();
+    private static Map cachedCacheableURIMapping = new Hashtable();
 
     /**
      * @throws ConfigurationException if basic config nodes are missing

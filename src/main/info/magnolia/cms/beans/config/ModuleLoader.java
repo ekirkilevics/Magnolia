@@ -24,22 +24,30 @@ import info.magnolia.cms.security.AccessManagerImpl;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
 import info.magnolia.cms.util.regex.RegexWildcardPattern;
+
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
+
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
+
 import org.apache.log4j.Logger;
 
 
 /**
- * Initialise all configured modules
+ * Initialise all configured modules.
  */
 public class ModuleLoader {
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(ModuleLoader.class);
 
     /**
@@ -54,9 +62,16 @@ public class ModuleLoader {
     private static final String CONFIG_NODE_LOCAL_STORE = "Config";
 
     /**
-     * todo fix this with proper JCR implementation
+     * todo fix this with proper JCR implementation.
      */
     private static SimpleCredentials simpleCredentials;
+
+    /**
+     * Utility class, don't instantiate.
+     */
+    private ModuleLoader() {
+        // unused
+    }
 
     protected static void init() throws ConfigurationException {
         log.info("Loading modules");
@@ -129,8 +144,8 @@ public class ModuleLoader {
         init();
     }
 
-    private static Hashtable getInitParameters(ContentNode paramList) {
-        Hashtable initParams = new Hashtable();
+    private static Map getInitParameters(ContentNode paramList) {
+        Map initParams = new Hashtable();
         Iterator initParameters = paramList.getChildren(ItemType.NT_NODEDATA).iterator();
         while (initParameters.hasNext()) {
             NodeData param = (NodeData) initParameters.next();
@@ -143,7 +158,7 @@ public class ModuleLoader {
         if (repositoryName == null || (repositoryName.equals("")))
             return null;
         Session moduleRepositoryTicket = ContentRepository.getRepository(repositoryName).login(simpleCredentials, null);
-        ArrayList acl = new ArrayList();
+        List acl = new ArrayList();
         Pattern p = Pattern.compile(RegexWildcardPattern.getMultipleCharPattern());
         Permission permission = new PermissionImpl();
         permission.setPattern(p);
@@ -156,10 +171,10 @@ public class ModuleLoader {
         return hm;
     }
 
-    private static Hashtable getSharedHierarchyManagers(ContentNode sharedRepositoriesNode) throws RepositoryException {
-        Hashtable sharedHierarchy = new Hashtable();
+    private static Map getSharedHierarchyManagers(ContentNode sharedRepositoriesNode) throws RepositoryException {
+        Map sharedHierarchy = new Hashtable();
         Iterator repositories = sharedRepositoriesNode.getChildren().iterator();
-        ArrayList acl = new ArrayList();
+        List acl = new ArrayList();
         Pattern p = Pattern.compile(RegexWildcardPattern.getMultipleCharPattern());
         while (repositories.hasNext()) {
             ContentNode repositoryConfig = (ContentNode) repositories.next();

@@ -58,7 +58,7 @@ public class ConfigLoader {
     }
 
     /**
-     * constructor
+     * Constructor.
      */
     public ConfigLoader() {
         this.load();

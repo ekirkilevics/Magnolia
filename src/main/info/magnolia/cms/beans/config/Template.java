@@ -15,11 +15,16 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.HierarchyManager;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import javax.jcr.RepositoryException;
+
 import org.apache.log4j.Logger;
 
 
@@ -29,38 +34,41 @@ import org.apache.log4j.Logger;
  */
 public class Template {
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(Template.class);
 
     private static Iterator templates;
 
-    private static ArrayList visibleTemplates = new ArrayList();
+    private static List visibleTemplates = new ArrayList();
 
-    private static Hashtable cachedContent = new Hashtable();
+    private static Map cachedContent = new Hashtable();
 
     /**
-     * Mandataory
+     * Mandatatory.
      */
     private String name;
 
     /**
-     * Mandataory
+     * Mandatatory.
      */
     private String path;
 
-    private Hashtable alternativePaths;
+    private Map alternativePaths;
 
     /**
-     * Mandataory
+     * Mandatatory.
      */
     private String type;
 
     /**
-     * Mandataory
+     * Mandatatory.
      */
     private boolean visible;
 
     /**
-     * Optional fields
+     * Optional fields.
      */
     private String description = "";
 
@@ -69,15 +77,7 @@ public class Template {
     private String title = "";
 
     /**
-     * constructor
-     */
-    public Template() {
-    }
-
-    /**
-     * <p>
-     * load all temple definitions available as a collection of Content objects
-     * </p>
+     * Load all temple definitions available as a collection of Content objects.
      */
     public static void init() {
         log.info("Config : initializing Template info");
@@ -91,8 +91,9 @@ public class Template {
             log.info("Config : loading Template info - " + modulePath);
             Content startPage = configHierarchyManager.getPage(modulePath);
             Collection children = startPage.getContentNode("Templates").getChildren();
-            if ((children != null) && !(children.isEmpty()))
+            if ((children != null) && !(children.isEmpty())) {
                 Template.templates = children.iterator();
+            }
             Template.cacheContent();
             log.info("Config : Template info loaded - " + modulePath);
         }
@@ -108,9 +109,7 @@ public class Template {
     }
 
     /**
-     * <p>
-     * get templates collection
-     * </p>
+     * Get templates collection.
      * @param type , type could be TemplateInfo.CUSTOM_TEMPLATES or TemplateInfo.ADMIN_TEMPLATES
      * @return Collection list containing templates as Content objects
      * @deprecated
@@ -121,9 +120,7 @@ public class Template {
     }
 
     /**
-     * <p>
-     * get templates collection
-     * </p>
+     * Get templates collection.
      * @return Collection list containing templates as Content objects
      */
     public static Iterator getAvailableTemplates() {
@@ -131,10 +128,8 @@ public class Template {
     }
 
     /**
-     * <p>
-     * load content of this template info page in a hash table caching at the system load, this will save lot of time on
-     * every request while matching template info
-     * </p>
+     * Load content of this template info page in a hash table caching at the system load, this will save lot of time on
+     * every request while matching template info.
      */
     private static void cacheContent() {
         if (Template.templates != null) {
@@ -144,13 +139,11 @@ public class Template {
     }
 
     /**
-     * <p>
-     * adds templates definition to TemplatesInfo cache
-     * </p>
+     * Adds templates definition to TemplatesInfo cache.
      * @param templates iterator as read from the repository
-     * @param visibleTemplates ArrayList in with all visible templates will be added
+     * @param visibleTemplates List in with all visible templates will be added
      */
-    private static void addTemplatesToCache(Iterator templates, ArrayList visibleTemplates) {
+    private static void addTemplatesToCache(Iterator templates, List visibleTemplates) {
         while (templates.hasNext()) {
             ContentNode c = (ContentNode) templates.next();
             try {
@@ -164,8 +157,9 @@ public class Template {
                 ti.description = c.getNodeData("description").getString();
                 ti.image = c.getNodeData("image").getString();
                 Template.cachedContent.put(ti.name, ti);
-                if (ti.visible)
+                if (ti.visible) {
                     visibleTemplates.add(ti);
+                }
             }
             catch (RepositoryException re) {
                 log.fatal("Failed to cache TemplateInfo");
@@ -174,9 +168,7 @@ public class Template {
     }
 
     /**
-     * <p>
-     * add alternative extention paths to templates cache
-     * </p>
+     * Add alternative extention paths to templates cache.
      * @param node
      * @param ti TemplateInfo
      */
@@ -244,8 +236,9 @@ public class Template {
     public String getPath(String extension) {
         try {
             String path = (String) this.alternativePaths.get(extension);
-            if (path == null)
+            if (path == null) {
                 return this.getPath();
+            }
             return path;
         }
         catch (Exception e) {

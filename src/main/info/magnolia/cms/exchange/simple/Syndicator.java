@@ -21,14 +21,18 @@ import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.SessionAccessControl;
+
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 
 
@@ -170,7 +174,7 @@ public class Syndicator {
 
     private boolean isSubscribed(Subscriber subscriber) {
         boolean isSubscribed = false;
-        ArrayList subscribedURIList = subscriber.getContext(this.context);
+        List subscribedURIList = subscriber.getContext(this.context);
         for (int i = 0; i < subscribedURIList.size(); i++) {
             String uri = (String) subscribedURIList.get(i);
             if (this.path.equals(uri))
@@ -321,11 +325,11 @@ public class Syndicator {
      * @deprecated
      */
     private void updateDestination(Subscriber subscriberInfo) {
-        ArrayList list = subscriberInfo.getContext(this.context);
+        List list = subscriberInfo.getContext(this.context);
         if (list == null)
             return;
         for (int i = 0; i < list.size(); i++) {
-            Hashtable map = (Hashtable) list.get(i);
+            Map map = (Hashtable) list.get(i);
             if (this.path.indexOf(((String) map.get("source"))) == 0) { /* match, assign and exit */
                 this.parent.replaceFirst((String) map.get("source"), (String) map.get("destination"));
                 break;

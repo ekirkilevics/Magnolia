@@ -18,26 +18,35 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.util.Path;
 import info.magnolia.cms.util.DateComparator;
+import info.magnolia.cms.util.Path;
 import info.magnolia.cms.util.SequenceComparator;
 
-import java.util.Collection;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import javax.jcr.*;
+
+import javax.jcr.Item;
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Value;
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 
 
 /**
- * User: sameercharles Date: May 27, 2004 Time: 04:55:10 PM
  * @author Sameer Charles
  * @version 2.1
  */
 public class Content extends ContentHandler implements Cloneable {
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(Content.class);
 
     private String path;
@@ -336,8 +345,8 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * <p>
-     * delete NodeData with the specified name
-     * todo remove all dependencies of this method, there should be no difference between delete(name) and deleteNodeData(name)
+     * delete NodeData with the specified name todo remove all dependencies of this method, there should be no
+     * difference between delete(name) and deleteNodeData(name)
      * </p>
      * @throws PathNotFoundException
      * @throws RepositoryException
@@ -348,8 +357,8 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * <p>
-     * delete Content node with the specified name from the current node
-     * todo remove all dependencies of this method, there should be no difference between delete(name) and deleteContent(name)
+     * delete Content node with the specified name from the current node todo remove all dependencies of this method,
+     * there should be no difference between delete(name) and deleteContent(name)
      * </p>
      * @param name of the Content to be deleted
      * @throws javax.jcr.PathNotFoundException
@@ -361,8 +370,8 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * <p>
-     * delete ContentNode with the specified name from the current node
-     * todo remove all dependencies of this method, there should be no difference between delete(name) and deleteContentNode(name)
+     * delete ContentNode with the specified name from the current node todo remove all dependencies of this method,
+     * there should be no difference between delete(name) and deleteContentNode(name)
      * </p>
      * @param name of the ContentNode to be deleted
      * @throws javax.jcr.PathNotFoundException
@@ -408,16 +417,16 @@ public class Content extends ContentHandler implements Cloneable {
     public Collection getChildren(int contentType) {
         String type = "";
         switch (contentType) {
-            case ItemType.MAGNOLIA_PAGE :
+            case ItemType.MAGNOLIA_PAGE:
                 type = ItemType.NT_CONTENT;
                 break;
-            case ItemType.MAGNOLIA_CONTENT_NODE :
+            case ItemType.MAGNOLIA_CONTENT_NODE:
                 type = ItemType.NT_CONTENTNODE;
                 break;
-            case ItemType.MAGNOLIA_NODE_DATA :
+            case ItemType.MAGNOLIA_NODE_DATA:
                 type = ItemType.NT_NODEDATA;
                 break;
-            default :
+            default:
                 log.error("Un-Supported content type - " + contentType);
         }
         return this.getChildren(type, ContentHandler.SORT_BY_SEQUENCE);

@@ -22,15 +22,19 @@ import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.exchange.Channel;
 import info.magnolia.exchange.Packet;
+
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 
 
@@ -141,7 +145,7 @@ public class Syndicator {
 
     private boolean isSubscribed(Subscriber subscriber) {
         boolean isSubscribed = false;
-        ArrayList subscribedURIList = subscriber.getContext(this.context);
+        List subscribedURIList = subscriber.getContext(this.context);
         for (int i = 0; i < subscribedURIList.size(); i++) {
             String uri = (String) subscribedURIList.get(i);
             if (this.path.equals(uri))
@@ -172,7 +176,7 @@ public class Syndicator {
     private synchronized void send(Subscriber subscriber) throws Exception {
         PacketCollector pc = new PacketCollector(subscriber);
         pc.collect(this.contextSession, this.path, 1);
-        Hashtable packets = pc.getPackets();
+        Map packets = pc.getPackets();
         String urlString = subscriber.getParam("protocol")
             + "://"
             + subscriber.getParam("address")
@@ -185,9 +189,9 @@ public class Syndicator {
         packet.getHeaders().addHeader(Header.ACTION, Header.ACTION_ADD);
         channel.send(packet);
         packets.remove(PacketCollector.MAIN_PACKET);
-        Enumeration e = packets.keys();
-        while (e.hasMoreElements()) {
-            Packet binaryPacket = (Packet) packets.get((String) e.nextElement());
+        Iterator e = packets.keySet().iterator();
+        while (e.hasNext()) {
+            Packet binaryPacket = (Packet) packets.get(e.next());
             binaryPacket.getHeaders().addHeader(Header.ACTION, Header.ACTION_ADD);
             channel.send(binaryPacket);
         }
@@ -330,11 +334,11 @@ public class Syndicator {
      * @deprecated
      */
     private void updateDestination(Subscriber subscriberInfo) {
-        ArrayList list = subscriberInfo.getContext(this.context);
+        List list = subscriberInfo.getContext(this.context);
         if (list == null)
             return;
         for (int i = 0; i < list.size(); i++) {
-            Hashtable map = (Hashtable) list.get(i);
+            Map map = (Hashtable) list.get(i);
             if (this.path.indexOf(((String) map.get("source"))) == 0) { /* match, assign and exit */
                 this.parent.replaceFirst((String) map.get("source"), (String) map.get("destination"));
                 break;

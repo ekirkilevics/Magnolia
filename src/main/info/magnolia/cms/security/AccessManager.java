@@ -12,41 +12,35 @@
  */
 package info.magnolia.cms.security;
 
-import java.util.ArrayList;
+import java.util.List;
 
 
 /**
- * Date: Dec 29, 2004 Time: 10:55:01 AM
  * @author Sameer Charles
  * @version 2.01
  */
 public interface AccessManager {
 
     /**
-     * <p>
-     * Determines wether the specified permissions are granted to the given path
-     * </p>
-     * @param path
-     * @param permissions
+     * Determines wether the specified permissions are granted to the given path.
+     * @param path path for which permissions are checked
+     * @param permissions permission mask
      * @return true if this accessmanager has permissions to the specified path
      */
-    public boolean isGranted(String path, long permissions);
+    boolean isGranted(String path, long permissions);
 
     /**
-     * <p>
      * Sets the list of permissions this manager will use to determine access, implementation is free to define the
      * structure of this list.
-     * </p>
      * @param permissions
      */
-    public void setPermissionList(ArrayList permissions);
+    void setPermissionList(List permissions);
 
     /**
-     * <p>
-     * Get permissions assigned to the given path <br>
-     * </p>
+     * Get permissions assigned to the given path.
      * @see Permission all possible permissions
      * @param path for which permissions are requested
+     * @return permission mask
      */
-    public long getPermissions(String path);
+    long getPermissions(String path);
 }

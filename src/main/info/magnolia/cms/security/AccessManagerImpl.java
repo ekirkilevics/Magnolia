@@ -13,28 +13,26 @@
 package info.magnolia.cms.security;
 
 import info.magnolia.cms.util.regex.RegexWildcardPattern;
-import java.util.ArrayList;
+
+import java.util.List;
 
 
 /**
- * Date: Dec 29, 2004 Time: 11:27:33 AM
  * @author Sameer Charles
  * @version 2.01
  */
 public class AccessManagerImpl implements AccessManager {
 
-    private ArrayList userPermissions;
-
-    public AccessManagerImpl() {
-    }
+    private List userPermissions;
 
     public boolean isGranted(String path, long permissions) {
-        if (path.equals(""))
+        if (path.equals("")) {
             path = "/";
+        }
         return (getPermissions(path) & permissions) == permissions;
     }
 
-    public void setPermissionList(ArrayList permissions) {
+    public void setPermissionList(List permissions) {
         this.userPermissions = permissions;
     }
 

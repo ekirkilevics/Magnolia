@@ -13,17 +13,22 @@
 package info.magnolia.cms.core;
 
 import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.core.util.Access;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Path;
-import info.magnolia.cms.core.util.Access;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import javax.jcr.*;
-import javax.jcr.version.VersionException;
+import java.util.List;
+
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.version.Version;
+import javax.jcr.version.VersionException;
 import javax.jcr.version.VersionHistory;
 import javax.jcr.version.VersionIterator;
 
@@ -133,7 +138,7 @@ public abstract class ContentHandler {
      * @return Content representing node on level 0
      */
     public Collection getAncestors() throws PathNotFoundException, RepositoryException {
-        ArrayList allAncestors = new ArrayList();
+        List allAncestors = new ArrayList();
         int level = this.getLevel();
         while (level != 0) {
             try {
@@ -198,27 +203,27 @@ public abstract class ContentHandler {
 
     /**
      * <p>
-     * Restores this node to the state defined by the  version with the specified versionName.
+     * Restores this node to the state defined by the version with the specified versionName.
      * </p>
      * @param versionName
      * @param removeExisting
      * @see javax.jcr.Node#restore(String, boolean)
      */
-    public void restore(String versionName, boolean removeExisting)
-            throws VersionException, UnsupportedRepositoryOperationException, RepositoryException {
+    public void restore(String versionName, boolean removeExisting) throws VersionException,
+        UnsupportedRepositoryOperationException, RepositoryException {
         this.node.restore(versionName, removeExisting);
     }
 
     /**
      * <p>
-     * Restores this node to the state defined by the specified  version.
+     * Restores this node to the state defined by the specified version.
      * </p>
      * @param version
      * @param removeExisting
      * @see javax.jcr.Node#restore(javax.jcr.version.Version, boolean)
      */
-    public void restore(Version version, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException,
-        RepositoryException {
+    public void restore(Version version, boolean removeExisting) throws VersionException,
+        UnsupportedRepositoryOperationException, RepositoryException {
         this.node.restore(version, removeExisting);
     }
 
@@ -231,8 +236,8 @@ public abstract class ContentHandler {
      * @param removeExisting
      * @see javax.jcr.Node#restore(javax.jcr.version.Version, String, boolean)
      */
-    public void restore(Version version, String relPath, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException,
-        RepositoryException {
+    public void restore(Version version, String relPath, boolean removeExisting) throws VersionException,
+        UnsupportedRepositoryOperationException, RepositoryException {
         this.node.restore(version, relPath, removeExisting);
     }
 
@@ -244,8 +249,8 @@ public abstract class ContentHandler {
      * @param removeExisting
      * @see javax.jcr.Node#restoreByLabel(String, boolean)
      */
-    public void restoreByLabel(String versionLabel, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException,
-        RepositoryException {
+    public void restoreByLabel(String versionLabel, boolean removeExisting) throws VersionException,
+        UnsupportedRepositoryOperationException, RepositoryException {
         this.node.restoreByLabel(versionLabel, removeExisting);
     }
 

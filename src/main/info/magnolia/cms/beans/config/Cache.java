@@ -20,12 +20,15 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.Path;
 import info.magnolia.cms.util.regex.RegexWildcardPattern;
-import java.util.Enumeration;
+
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.regex.Pattern;
+
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 
 
@@ -49,14 +52,17 @@ public class Cache {
 
     private static final String DOMAIN = "domain";
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(Cache.class);
 
-    private static Hashtable cachedCacheableURIMapping = new Hashtable();
+    private static Map cachedCacheableURIMapping = new Hashtable();
 
     /**
-     * compression wont work for these pre compressed formats
+     * Compression wont work for these pre compressed formats.
      */
-    private static final Hashtable compressionList = new Hashtable();
+    private static final Map compressionList = new Hashtable();
 
     private static boolean isCacheable;
 
@@ -96,8 +102,9 @@ public class Cache {
      * @param nodeList to be added in cache
      */
     private static void cacheCacheableURIMappings(ContentNode nodeList, boolean allow) throws AccessDeniedException {
-        if (nodeList == null)
+        if (nodeList == null) {
             return;
+        }
         Iterator it = nodeList.getChildren().iterator();
         while (it.hasNext()) {
             ContentNode container = (ContentNode) it.next();
@@ -116,8 +123,9 @@ public class Cache {
     }
 
     private static void updateCompressionList(ContentNode list) throws AccessDeniedException {
-        if (list == null)
+        if (list == null) {
             return;
+        }
         Iterator it = list.getChildren().iterator();
         while (it.hasNext()) {
             ContentNode node = (ContentNode) it.next();
@@ -126,13 +134,12 @@ public class Cache {
     }
 
     public static boolean applyCompression(String key) {
-        return (compressionList.get(key.trim().toLowerCase()) != null);
+        return compressionList.containsKey(key.trim().toLowerCase());
     }
 
     /**
-     * <p>
-     * if this instance can be cached todo check for Level1 and Level2 caching
-     * </p>
+     * If this instance can be cached. todo check for Level1 and Level2 caching.
+     * @return <code>true</code> if this instance can be cached
      */
     public static boolean isCacheable() {
         return isCacheable;
@@ -146,18 +153,19 @@ public class Cache {
      * @return true if the requested URI can be added to cache
      */
     public static boolean isCacheable(HttpServletRequest request) {
-        /**
-         * first check for MIMEMappings, extension must exist otherwise its a fake request
-         */
+        // first check for MIMEMappings, extension must exist otherwise its a fake request
+
         if (MIMEMapping.getMIMEType((String) request.getAttribute(Aggregator.EXTENSION)) == null) {
             return false;
         }
-        Enumeration listEnum = cachedCacheableURIMapping.keys();
+        Iterator listEnum = cachedCacheableURIMapping.keySet().iterator();
+
         String uri = Path.getURI(request);
         boolean isAllowed = false;
         int lastMatchedPatternlength = 0;
-        while (listEnum.hasMoreElements()) {
-            Pattern p = (Pattern) listEnum.nextElement();
+
+        while (listEnum.hasNext()) {
+            Pattern p = (Pattern) listEnum.next();
             if (p.matcher(uri).matches()) {
                 // todo this wont work if pattern has more than one windcards
                 int patternLength = getPatternLength(p.pattern());
@@ -172,8 +180,9 @@ public class Cache {
 
     private static int getPatternLength(String pattern) {
         int length = pattern.length();
-        if (pattern.indexOf(RegexWildcardPattern.getMultipleCharPattern()) > -1)
+        if (pattern.indexOf(RegexWildcardPattern.getMultipleCharPattern()) > -1) {
             return length - RegexWildcardPattern.getMultipleCharPattern().length();
+        }
         return length;
     }
 }

@@ -17,29 +17,36 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.StringComparator;
 import info.magnolia.cms.util.regex.RegexWildcardPattern;
+
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
+
 import javax.jcr.RepositoryException;
+
 import org.apache.log4j.Logger;
 
 
 /**
+ * Store for all virtual URI to template/page mapping.
  * @author Sameer Charles
- * @version 2.0 Store for all virtual URI to template/page mapping.
+ * @version 2.0
  */
 public class VirtualMap {
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(VirtualMap.class);
 
     /**
-     * all cached data
+     * all cached data.
      */
-    private static Hashtable cachedURImapping = new Hashtable();
+    private static Map cachedURImapping = new Hashtable();
 
     private static VirtualMap virtualMap = new VirtualMap();
 
@@ -99,18 +106,17 @@ public class VirtualMap {
     }
 
     /**
-     * <p>
      * checks for the requested URI mapping in Server config : Servlet Specification 2.3 Section 10 "Mapping Requests to
-     * Servlets"
-     * </p>
+     * Servlets".
      * @return URI string mapping
      */
     public String getURIMapping(String uri) {
-        Enumeration e = VirtualMap.cachedURImapping.keys();
-        while (e.hasMoreElements()) {
-            Pattern p = (Pattern) e.nextElement();
-            if (p.matcher(uri).matches())
+        Iterator e = VirtualMap.cachedURImapping.keySet().iterator();
+        while (e.hasNext()) {
+            Pattern p = (Pattern) e.next();
+            if (p.matcher(uri).matches()) {
                 return (String) VirtualMap.cachedURImapping.get(p);
+            }
         }
         return "";
     }

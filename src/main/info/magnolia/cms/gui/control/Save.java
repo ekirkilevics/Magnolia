@@ -24,7 +24,10 @@ import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.security.Digester;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.Path;
+
+import java.util.Calendar;
 import java.util.GregorianCalendar;
+
 import javax.jcr.BooleanValue;
 import javax.jcr.DateValue;
 import javax.jcr.DoubleValue;
@@ -38,7 +41,9 @@ import javax.jcr.StringValue;
 import javax.jcr.Value;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import org.apache.log4j.Logger;
+
 import sun.misc.BASE64Encoder;
 
 
@@ -77,22 +82,20 @@ public class Save extends ControlSuper {
 
     public void setRepository(String s) {
         this.repository = s;
-    };
+    }
 
     public String getRepository() {
         return this.repository;
-    };
+    }
 
     public void save() {
         MultipartForm form = this.getForm();
-        String saveInfo[] = form.getParameterValues("mgnlSaveInfo"); // name,type,propertyOrNode
+        String[] saveInfo = form.getParameterValues("mgnlSaveInfo"); // name,type,propertyOrNode
         String nodeCollectionName = this.getNodeCollectionName(null);
         String nodeName = this.getNodeName(null);
         String path = this.getPath();
         HttpServletRequest request = this.getRequest();
-        // System.out.println(path);
-        // System.out.println(nodeCollectionName);
-        // System.out.println(nodeName);
+
         HierarchyManager hm = new HierarchyManager(this.getRequest());
         try {
             Session t = SessionAccessControl.getSession(request, this.getRepository());
@@ -153,14 +156,18 @@ public class Save extends ControlSuper {
                 if (saveInfo[i].indexOf(",") != -1) {
                     String[] info = saveInfo[i].split(",");
                     name = info[0];
-                    if (info.length >= 2)
+                    if (info.length >= 2) {
                         type = PropertyType.valueFromName(info[1]);
-                    if (info.length >= 3)
+                    }
+                    if (info.length >= 3) {
                         valueType = Integer.valueOf(info[2]).intValue();
-                    if (info.length >= 4)
+                    }
+                    if (info.length >= 4) {
                         isRichEditValue = Integer.valueOf(info[3]).intValue();
-                    if (info.length >= 5)
+                    }
+                    if (info.length >= 5) {
                         encoding = Integer.valueOf(info[4]).intValue();
+                    }
                 }
                 else {
                     name = saveInfo[i];
@@ -180,7 +187,7 @@ public class Save extends ControlSuper {
                         }
                         catch (RepositoryException re) {
                         }
-                        // System.out.println(name+" removed!!!");
+
                     }
                     else {
                         ContentNode propNode = null;
@@ -189,10 +196,11 @@ public class Save extends ControlSuper {
                         }
                         catch (RepositoryException re) {
                             try {
-                                if (doc != null)
+                                if (doc != null) {
                                     propNode = node.createContentNode(name
                                         + "_"
                                         + FileProperties.PROPERTIES_CONTENTNODE);
+                                }
                             }
                             catch (RepositoryException re2) {
                             }
@@ -211,32 +219,38 @@ public class Save extends ControlSuper {
                             NodeData propData;
                             String fileName = form.getParameter(name + "_" + FileProperties.PROPERTY_FILENAME);
                             // System.out.println("fileName:"+fileName);
-                            if (fileName == null || fileName.equals(""))
+                            if (fileName == null || fileName.equals("")) {
                                 fileName = doc.getFileName();
+                            }
                             // System.out.println("fileName2:"+fileName);
                             propData = propNode.getNodeData(FileProperties.PROPERTY_FILENAME);
-                            if (!propData.isExist())
+                            if (!propData.isExist()) {
                                 propData = propNode.createNodeData(FileProperties.PROPERTY_FILENAME);
+                            }
                             propData.setValue(fileName);
                             // System.out.println("ok");
                             if (doc != null) {
                                 propData = propNode.getNodeData(FileProperties.PROPERTY_CONTENTTYPE);
-                                if (!propData.isExist())
+                                if (!propData.isExist()) {
                                     propData = propNode.createNodeData(FileProperties.PROPERTY_CONTENTTYPE);
+                                }
                                 propData.setValue(doc.getType());
                                 propData = propNode.getNodeData(FileProperties.PROPERTY_SIZE);
-                                if (!propData.isExist())
+                                if (!propData.isExist()) {
                                     propData = propNode.createNodeData(FileProperties.PROPERTY_SIZE);
+                                }
                                 propData.setValue(doc.getLength());
                                 propData = propNode.getNodeData(FileProperties.PROPERTY_EXTENSION);
-                                if (!propData.isExist())
+                                if (!propData.isExist()) {
                                     propData = propNode.createNodeData(FileProperties.PROPERTY_EXTENSION);
+                                }
                                 propData.setValue(doc.getExtension());
                                 String template = form.getParameter(name + "_" + FileProperties.PROPERTY_TEMPLATE);
                                 if (template != null && !template.equals("")) {
                                     propData = propNode.getNodeData(FileProperties.PROPERTY_TEMPLATE);
-                                    if (!propData.isExist())
+                                    if (!propData.isExist()) {
                                         propData = propNode.createNodeData(FileProperties.PROPERTY_TEMPLATE);
+                                    }
                                     propData.setValue(template);
                                 }
                                 else {
@@ -277,12 +291,14 @@ public class Save extends ControlSuper {
                     }
                     else {
                         String valueStr = "";
-                        if (values != null)
+                        if (values != null) {
                             valueStr = values[0]; // values is null when the expected field would not exis, e.g no
+                        }
                         // checkbox selected
                         NodeData data = node.getNodeData(name);
-                        if (isRichEditValue == 1)
+                        if (isRichEditValue == 1) {
                             valueStr = this.getRichEditValueStr(valueStr);
+                        }
                         // actualy encoding does only work for control password
                         boolean remove = false;
                         boolean write = false;
@@ -303,24 +319,29 @@ public class Save extends ControlSuper {
                         }
                         else {
                             // no encoding
-                            if (values == null || valueStr.equals(""))
+                            if (values == null || valueStr.equals("")) {
                                 remove = true;
-                            else
+                            }
+                            else {
                                 write = true;
+                            }
                         }
                         if (remove) {
                             // remove node if already exists
-                            if (data.isExist())
+                            if (data.isExist()) {
                                 node.deleteNodeData(name);
+                            }
                         }
                         else if (write) {
                             Value value = this.getValue(valueStr, type);
                             // System.out.println("value: "+value);
                             if (value != null) {
-                                if (data.isExist())
+                                if (data.isExist()) {
                                     data.setValue(value);
-                                else
+                                }
+                                else {
                                     node.createNodeData(name, value, type);
+                                }
                             }
                         }
                     }
@@ -361,10 +382,12 @@ public class Save extends ControlSuper {
             value = new StringValue(valueStr);
         }
         else if (type == PropertyType.BOOLEAN) {
-            if (valueStr.equals("true"))
+            if (valueStr.equals("true")) {
                 value = new BooleanValue(true);
-            else
+            }
+            else {
                 value = new BooleanValue(false);
+            }
         }
         else if (type == PropertyType.DOUBLE) {
             try {
@@ -386,7 +409,7 @@ public class Save extends ControlSuper {
         }
         else if (type == PropertyType.DATE) {
             try {
-                GregorianCalendar date = new GregorianCalendar();
+                Calendar date = new GregorianCalendar();
                 try {
                     String newDateAndTime = valueStr;
                     String[] dateAndTimeTokens = newDateAndTime.split("T");
@@ -435,8 +458,9 @@ public class Save extends ControlSuper {
     }
 
     private String replaceABySpan(String value, String tagName) {
-        if (value == null || value.equals(""))
+        if (value == null || value.equals("")) {
             return value;
+        }
         String valueStart = value.substring(0, 1);
         String[] strObj = value.split("<" + tagName);
         StringBuffer valueStr = new StringBuffer();
@@ -450,15 +474,17 @@ public class Save extends ControlSuper {
                     str = str.replaceAll("</" + tagName + ">", "</span>");
                     tagPre = "<span";
                 }
-                else
+                else {
                     tagPre = "<" + tagName;
+                }
             }
             valueStr.append(tagPre + str);
             i++;
         }
         String valueStr2 = valueStr.toString();
-        if (!tagName.equals(tagName.toUpperCase()))
+        if (!tagName.equals(tagName.toUpperCase())) {
             valueStr2 = this.replaceABySpan(valueStr2, tagName.toUpperCase());
+        }
         return valueStr2;
     }
 
@@ -466,21 +492,24 @@ public class Save extends ControlSuper {
         String pre = "<" + tagName + ">";
         String post = "</" + tagName + ">";
         // get rid of last </p>
-        if (value.lastIndexOf(post) == value.length() - post.length())
+        if (value.lastIndexOf(post) == value.length() - post.length()) {
             value = value.substring(0, value.lastIndexOf(post));
+        }
         value = value.replaceAll(pre + "&nbsp;" + post, "\n");
         value = value.replaceAll(pre, "");
         value = value.replaceAll(post, "\n\n");
-        if (!tagName.equals(tagName.toUpperCase()))
+        if (!tagName.equals(tagName.toUpperCase())) {
             value = this.replacePByBr(value, tagName.toUpperCase());
+        }
         return value;
     }
 
     private String replaceTag(String value, String before, String after) {
         value = value.replaceAll("<" + before + ">", "<" + after + ">");
         value = value.replaceAll("</" + before + ">", "</" + after + ">");
-        if (!before.equals(before.toUpperCase()))
+        if (!before.equals(before.toUpperCase())) {
             value = this.replaceTag(value, before.toUpperCase(), after);
+        }
         return value;
     }
 }

@@ -20,16 +20,20 @@ import info.magnolia.cms.util.Path;
 import info.magnolia.cms.util.regex.RegexWildcardPattern;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+
 import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
+
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -40,12 +44,10 @@ import org.jdom.input.SAXBuilder;
  * @author Sameer Charles
  * @version 2.01
  */
-public class ContentRepository {
-
-    private static Logger log = Logger.getLogger(ContentRepository.class);
+public final class ContentRepository {
 
     /**
-     * default repository ID's
+     * default repository ID's.
      */
     public static final String WEBSITE = "website";
 
@@ -58,14 +60,26 @@ public class ContentRepository {
     public static final String CONFIG = "config";
 
     /**
-     * repository element string
+     * magnolia namespace.
+     */
+    public static final String NAMESPACE_PREFIX = "mgnl";
+
+    public static final String NAMESPACE_URI = "http://www.magnolia.info/jcr/mgnl";
+
+    /**
+     * Logger.
+     */
+    private static Logger log = Logger.getLogger(ContentRepository.class);
+
+    /**
+     * repository element string.
      */
     private static final String ELEMENT_REPOSITORY = "Repository";
 
     private static final String ELEMENT_PARAM = "param";
 
     /**
-     * Attribute names
+     * Attribute names.
      */
     private static final String ATTRIBUTE_NAME = "name";
 
@@ -78,37 +92,37 @@ public class ContentRepository {
     private static final String ATTRIBUTE_VALUE = "value";
 
     /**
-     * magnolia namespace
-     */
-    public static final String NAMESPACE_PREFIX = "mgnl";
-
-    public static final String NAMESPACE_URI = "http://www.magnolia.info/jcr/mgnl";
-
-    /**
-     * magnolia system user
+     * Magnolia system user.
      */
     private static final String SYSTEM_USER = "magnolia";
 
     /**
-     * All available repositories store
+     * All available repositories store.
      */
-    private static Hashtable repositories = new Hashtable();
+    private static Map repositories = new Hashtable();
 
     /**
-     * JCR providers as mapped in repositories.xml
+     * JCR providers as mapped in repositories.xml.
      */
-    private static Hashtable repositoryProviders = new Hashtable();
+    private static Map repositoryProviders = new Hashtable();
 
     /**
-     * all server hierarchy managers with full access to specific repositories
+     * All server hierarchy managers with full access to specific repositories.
      */
-    private static Hashtable hierarchyManagers = new Hashtable();
+    private static Map hierarchyManagers = new Hashtable();
 
     /**
-     * repositories configuration as defined in repositories mapping file via attribute <b>magnolia.repositories.config
-     * </b>
+     * Repositories configuration as defined in repositories mapping file via attribute
+     * <code>magnolia.repositories.config</code>.
      */
-    private static Hashtable repositoryMappings = new Hashtable();
+    private static Map repositoryMappings = new Hashtable();
+
+    /**
+     * Utility class, don't instantiate.
+     */
+    private ContentRepository() {
+        // unused constructor
+    }
 
     /**
      * loads all configured repository using ID as Key, as configured in repositories.xml.
@@ -145,9 +159,7 @@ public class ContentRepository {
     }
 
     /**
-     * <p>
-     * Re-load all configured repositories/
-     * </p>
+     * Re-load all configured repositories.
      * @see #init()
      */
     public static void reload() {
@@ -176,8 +188,7 @@ public class ContentRepository {
             Map parameters = new Hashtable();
             while (params.hasNext()) {
                 Element param = (Element) params.next();
-                parameters.put((String) param.getAttributeValue(ATTRIBUTE_NAME), (String) param
-                    .getAttributeValue(ATTRIBUTE_VALUE));
+                parameters.put(param.getAttributeValue(ATTRIBUTE_NAME), param.getAttributeValue(ATTRIBUTE_VALUE));
             }
             map.setParameters(parameters);
             ContentRepository.repositoryMappings.put(id, map);
@@ -193,8 +204,9 @@ public class ContentRepository {
             Repository repository = handlerClass.getUnderlineRepository();
             ContentRepository.repositories.put(map.getID(), repository);
             ContentRepository.repositoryProviders.put(map.getID(), handlerClass);
-            if (map.isLoadOnStartup())
+            if (map.isLoadOnStartup()) {
                 loadHierarchyManager(repository, map, handlerClass);
+            }
         }
         catch (Exception re) {
             log.error("System : Failed to load JCR - " + map.getID());
@@ -207,7 +219,7 @@ public class ContentRepository {
             SimpleCredentials sc = new SimpleCredentials(ContentRepository.SYSTEM_USER, "".toCharArray());
             Session session = repository.login(sc, null);
             provider.registerNamespace(NAMESPACE_PREFIX, NAMESPACE_URI, session.getWorkspace());
-            ArrayList acl = getSystemPermissions();
+            List acl = getSystemPermissions();
             AccessManagerImpl accessManager = new AccessManagerImpl();
             accessManager.setPermissionList(acl);
             HierarchyManager hierarchyManager = new HierarchyManager(ContentRepository.SYSTEM_USER);
@@ -221,8 +233,8 @@ public class ContentRepository {
         }
     }
 
-    private static ArrayList getSystemPermissions() {
-        ArrayList acl = new ArrayList();
+    private static List getSystemPermissions() {
+        List acl = new ArrayList();
         Pattern p = Pattern.compile(RegexWildcardPattern.getMultipleCharPattern());
         Permission permission = new PermissionImpl();
         permission.setPattern(p);
@@ -232,41 +244,34 @@ public class ContentRepository {
     }
 
     /**
-     * <p>
-     * builds JDOM document
-     * </p>
+     * Builds JDOM document.
      */
     private static Document buildDocument() throws Exception {
         File source = new File(Path.getRepositoriesConfigFilePath());
-        if (!source.exists())
+        if (!source.exists()) {
             throw new Exception("Failed to locate magnolia repositories config file");
+        }
         SAXBuilder builder = new SAXBuilder();
         return builder.build(source);
     }
 
     /**
-     * <p>
-     * hierarchy manager as created on startup <br>
-     * Note : this hierarchyManager is created with system rights and has full access on the specified repository
-     * </p>
+     * Hierarchy manager as created on startup. Note: this hierarchyManager is created with system rights and has full
+     * access on the specified repository.
      */
     public static HierarchyManager getHierarchyManager(String repositoryID) {
         return (HierarchyManager) ContentRepository.hierarchyManagers.get(repositoryID);
     }
 
     /**
-     * <p>
-     * returns repository specified by the <b>repositoryID </b> as configured in repository config
-     * </p>
+     * Returns repository specified by the <code>repositoryID</code> as configured in repository config.
      */
     public static Repository getRepository(String repositoryID) {
         return (Repository) ContentRepository.repositories.get(repositoryID);
     }
 
     /**
-     * <p>
-     * returns repository mapping as configured
-     * </p>
+     * returns repository mapping as configured.
      */
     public static RepositoryMapping getRepositoryMapping(String repositoryID) {
         return (RepositoryMapping) ContentRepository.repositoryMappings.get(repositoryID);

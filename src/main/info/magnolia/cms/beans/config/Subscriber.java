@@ -15,12 +15,17 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.NodeData;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import javax.jcr.RepositoryException;
+
 import org.apache.log4j.Logger;
 
 
@@ -40,9 +45,9 @@ public class Subscriber {
 
     private String name;
 
-    private Hashtable context;
+    private Map context;
 
-    private Hashtable params;
+    private Map params;
 
     /**
      * constructor
@@ -101,7 +106,7 @@ public class Subscriber {
             try {
                 addContext(si, c);
             }
-            catch (Exception e) {/* valid */
+            catch (Exception e) { /* valid */
             }
             Subscriber.cachedContent.put(c.getName(), si);
         }
@@ -122,7 +127,7 @@ public class Subscriber {
         while (it.hasNext()) {
             ContentNode context = (ContentNode) it.next();
             Iterator contextDetails = context.getChildren().iterator();
-            ArrayList list = new ArrayList();
+            List list = new ArrayList();
             while (contextDetails.hasNext()) {
                 ContentNode map = (ContentNode) contextDetails.next();
                 list.add(map.getNodeData("subscribedURI").getString());
@@ -165,9 +170,10 @@ public class Subscriber {
     /**
      * @return context details
      */
-    public ArrayList getContext(String name) {
-        if (this.context.get(name) == null)
+    public List getContext(String name) {
+        if (this.context.get(name) == null) {
             return null;
+        }
         return (ArrayList) this.context.get(name);
     }
 }

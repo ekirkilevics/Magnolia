@@ -13,9 +13,13 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
+
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
+
 import javax.jcr.RepositoryException;
+
 import org.apache.log4j.Logger;
 
 
@@ -23,26 +27,28 @@ import org.apache.log4j.Logger;
  * @author Sameer Charles
  * @version 1.1
  */
-public class Listener {
+public final class Listener {
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(Listener.class);
 
     private static final String CONFIG_PAGE = "server";
 
     private static Iterator ipList;
 
-    private static Hashtable cachedContent = new Hashtable();
+    private static Map cachedContent = new Hashtable();
 
     /**
-     * constructor
+     * Utility class, don't instantiate.
      */
-    public Listener() {
+    private Listener() {
+        // unused
     }
 
     /**
-     * <p>
-     * reads listener config from the config repository and caches its content in to the hash table
-     * </p>
+     * Reads listener config from the config repository and caches its content in to the hash table.
      */
     public static void init() {
         try {
@@ -65,15 +71,13 @@ public class Listener {
     }
 
     /**
-     * <p>
-     * Cache listener content from the config repository
-     * </p>
+     * Cache listener content from the config repository.
      */
     private static void cacheContent() {
         while (Listener.ipList.hasNext()) {
             Content c = (Content) Listener.ipList.next();
             try {
-                Hashtable types = new Hashtable();
+                Map types = new Hashtable();
                 Listener.cachedContent.put(c.getNodeData("IP").getString(), types);
                 Iterator it = c.getContentNode("Access").getChildren().iterator();
                 while (it.hasNext()) {
@@ -88,14 +92,12 @@ public class Listener {
     }
 
     /**
-     * <p>
-     * get access info of the requested IP
-     * </p>
+     * Get access info of the requested IP.
      * @param key IP tp be checked
      * @return Hashtable containing Access info
      * @throws Exception
      */
-    public static Hashtable getInfo(String key) throws Exception {
+    public static Map getInfo(String key) throws Exception {
         return (Hashtable) Listener.cachedContent.get(key);
     }
 }

@@ -61,10 +61,10 @@ public class ConfigurationException extends Exception {
         }
         else {
             String rootCause = this.root.getMessage();
-            if (rootCause == null)
+            if (rootCause == null) {
                 return message;
-            else
-                return (message + ":" + rootCause);
+            }
+            return (message + ":" + rootCause);
         }
     }
 

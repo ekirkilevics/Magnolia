@@ -14,10 +14,14 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.core.Content;
+
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
+
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 
 
@@ -25,23 +29,28 @@ import org.apache.log4j.Logger;
  * @author Sameer Charles
  * @version 1.1
  */
-public class MIMEMapping {
+public final class MIMEMapping {
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(MIMEMapping.class);
 
     private static final String START_PAGE = "server";
 
     private static Iterator MIMEList;
 
-    private static Hashtable cachedContent = new Hashtable();
+    private static Map cachedContent = new Hashtable();
 
-    public MIMEMapping() {
+    /**
+     * Utility class, don't instantiate.
+     */
+    private MIMEMapping() {
+        // unused
     }
 
     /**
-     * <p>
-     * reads all configured mime mapping (config/server/MIMEMapping)
-     * </p>
+     * Reads all configured mime mapping (config/server/MIMEMapping).
      */
     public static void init() {
         MIMEMapping.cachedContent.clear();
@@ -64,9 +73,7 @@ public class MIMEMapping {
     }
 
     /**
-     * <p>
-     * Cache all MIME types configured
-     * </p>
+     * Cache all MIME types configured.
      */
     private static void cacheContent() {
         while (MIMEMapping.MIMEList.hasNext()) {
@@ -84,22 +91,19 @@ public class MIMEMapping {
     }
 
     /**
-     * <p>
-     * get MIME type sring
-     * </p>
+     * Get MIME type String.
      * @param key extension for which MIME type is requested
      * @return MIME type
      */
     public static String getMIMEType(String key) {
-        if (key == null)
+        if (key == null) {
             return null;
+        }
         return (String) MIMEMapping.cachedContent.get(key.toLowerCase());
     }
 
     /**
-     * <p>
-     * get MIME type String
-     * </p>
+     * Get MIME type String.
      * @param request
      * @return MIME type
      */
@@ -127,8 +131,9 @@ public class MIMEMapping {
      */
     public static String getContentEncoding(HttpServletRequest request) {
         String contentType = MIMEMapping.getMIMEType(request);
-        if (contentType == null)
+        if (contentType == null) {
             return "";
+        }
         int index = contentType.lastIndexOf(";");
         if (index > -1) {
             String encoding = contentType.substring(index + 1).toLowerCase().trim();

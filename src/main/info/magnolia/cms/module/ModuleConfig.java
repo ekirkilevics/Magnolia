@@ -14,20 +14,20 @@ package info.magnolia.cms.module;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import java.util.Hashtable;
+
+import java.util.Map;
 
 
 /**
- * Date: Mar 30, 2004 Time: 10:59:07 AM
  * @author Sameer Charles
  * @version 2.0
  */
 public class ModuleConfig {
 
     /* module specific */
-    private Hashtable sharedHierarchyManagers; /* id - HierarchyManager map */
+    private Map sharedHierarchyManagers; /* id - HierarchyManager map */
 
-    private Hashtable initParameters;
+    private Map initParameters;
 
     private String moduleName;
 
@@ -46,7 +46,7 @@ public class ModuleConfig {
         return this.moduleDescription;
     }
 
-    public Hashtable getSharedHierarchyManagers() {
+    public Map getSharedHierarchyManagers() {
         return this.sharedHierarchyManagers;
     }
 
@@ -54,7 +54,7 @@ public class ModuleConfig {
         return this.hierarchyManager;
     }
 
-    public Hashtable getInitParameters() {
+    public Map getInitParameters() {
         return this.initParameters;
     }
 
@@ -70,7 +70,7 @@ public class ModuleConfig {
         this.moduleDescription = value;
     }
 
-    public void setInitParameters(Hashtable initParams) {
+    public void setInitParameters(Map initParams) {
         this.initParameters = initParams;
     }
 
@@ -78,7 +78,7 @@ public class ModuleConfig {
         this.hierarchyManager = manager;
     }
 
-    public void setSharedHierarchyManagers(Hashtable shared) {
+    public void setSharedHierarchyManagers(Map shared) {
         this.sharedHierarchyManagers = shared;
     }
 

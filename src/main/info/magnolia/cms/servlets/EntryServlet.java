@@ -24,18 +24,23 @@ import info.magnolia.cms.security.Lock;
 import info.magnolia.cms.security.SecureURI;
 import info.magnolia.cms.security.SessionAccessControl;
 
-import java.io.IOException;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Enumeration;
-import java.util.Locale;
 import java.security.Principal;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.http.*;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
@@ -44,7 +49,6 @@ import org.apache.log4j.Logger;
  * This is the main http servlet which will be called for any resource request this servlet will dispacth or process
  * requests according to their nature -- all resource requests will go to ResourceDispatcher -- all page requests will
  * be handed over to the defined JSP or Servlet (template).
- *
  * @author Sameer Charles
  * @version 2.0
  */
@@ -69,10 +73,8 @@ public class EntryServlet extends HttpServlet {
     private String extension;
 
     /**
-     * <p/>
-     * This makes browser and proxy caches work more effectively, reducing the load on server and network resources.
+     * <p/>This makes browser and proxy caches work more effectively, reducing the load on server and network resources.
      * </p>
-     *
      * @param request
      * @return last modified time in miliseconds since 1st Jan 1970 GMT
      */
@@ -81,10 +83,8 @@ public class EntryServlet extends HttpServlet {
     }
 
     /**
-     * <p/>
-     * All HTTP/s requests are handled here
+     * <p/>All HTTP/s requests are handled here
      * </p>
-     *
      * @param req
      * @param res
      */
@@ -117,20 +117,20 @@ public class EntryServlet extends HttpServlet {
                             cache.start();
                         }
                     }
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     log.error(e.getMessage(), e);
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error(e.getMessage(), e);
         }
     }
 
     /**
-     * <p/>
-     * All requests are handles by get handler
+     * <p/>All requests are handles by get handler
      * </p>
-     *
      * @param req
      * @param res
      */
@@ -139,10 +139,8 @@ public class EntryServlet extends HttpServlet {
     }
 
     /**
-     * <p/>
-     * checks access from Listener / Authenticator / AccessLock
+     * <p/>checks access from Listener / Authenticator / AccessLock
      * </p>
-     *
      * @param req HttpServletRequest as received by the service method
      * @param res HttpServletResponse as received by the service method
      * @return boolean
@@ -151,11 +149,14 @@ public class EntryServlet extends HttpServlet {
         if (Lock.isSystemLocked()) {
             res.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
             return false;
-        } else if (SessionAccessControl.isSecuredSession(req)) {
+        }
+        else if (SessionAccessControl.isSecuredSession(req)) {
             return true;
-        } else if ((SecureURI.isProtected(uri))) {
+        }
+        else if ((SecureURI.isProtected(uri))) {
             return authenticate(req, res);
-        } else if (!Listener.isAllowed(req)) {
+        }
+        else if (!Listener.isAllowed(req)) {
             res.sendError(HttpServletResponse.SC_FORBIDDEN);
             return false;
         }
@@ -163,10 +164,8 @@ public class EntryServlet extends HttpServlet {
     }
 
     /**
-     * <p/>
-     * Authenticate on basic headers
+     * <p/>Authenticate on basic headers
      * </p>
-     *
      * @param req
      * @param res
      */
@@ -177,7 +176,8 @@ public class EntryServlet extends HttpServlet {
                 res.setHeader("WWW-Authenticate", "BASIC realm=\"" + Server.getBasicRealm() + "\"");
                 return false;
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error(e.getMessage(), e);
             return false;
         }
@@ -185,10 +185,8 @@ public class EntryServlet extends HttpServlet {
     }
 
     /**
-     * <p/>
-     * redirect based on the mapping in config/server/.node.xml
+     * <p/>redirect based on the mapping in config/server/.node.xml
      * </p>
-     *
      * @param request
      * @param response
      */
@@ -197,7 +195,8 @@ public class EntryServlet extends HttpServlet {
         if (!URI.equals("")) {
             try {
                 request.getRequestDispatcher(URI).forward(request, response);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 log.error("Failed to forward - " + URI);
                 log.error(e.getMessage(), e);
             }
@@ -207,10 +206,8 @@ public class EntryServlet extends HttpServlet {
     }
 
     /**
-     * <p/>
-     * attach Interceptor servlet if interception needed
+     * <p/>attach Interceptor servlet if interception needed
      * </p>
-     *
      * @param request
      * @param response
      */
@@ -218,7 +215,8 @@ public class EntryServlet extends HttpServlet {
         if (request.getParameter(INTERCEPT) != null) {
             try {
                 request.getRequestDispatcher(REQUEST_INTERCEPTOR).include(request, response);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 log.error("Failed to Intercept");
                 log.error(e.getMessage(), e);
             }
@@ -233,10 +231,8 @@ public class EntryServlet extends HttpServlet {
     }
 
     /**
-     * <p/>
-     * Extracts uri and extension
+     * <p/>Extracts uri and extension
      * </p>
-     *
      * @param request
      */
     private void setURI(HttpServletRequest request) {
@@ -246,36 +242,35 @@ public class EntryServlet extends HttpServlet {
             if (lastIndexOfDot > -1) {
                 extension = request.getRequestURI().substring(lastIndexOfDot + 1);
                 uri = request.getRequestURI().substring(0, lastIndexOfDot);
-            } else {
+            }
+            else {
                 uri = request.getRequestURI();
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-
 
     /**
      * <p>
      * Simply a copy of the original request used by CacheProcess
      * </p>
-     *
-     * */
+     */
     private class CacheRequest implements HttpServletRequest {
 
         Map attributes = new HashMap();
+
         Map headers = new HashMap();
+
         String URI;
 
         public CacheRequest(HttpServletRequest originalRequest) {
             // remember URI
             URI = originalRequest.getRequestURI();
             // copy neccessary attributes
-            attributes.put(Aggregator.EXTENSION, originalRequest
-                    .getAttribute(Aggregator.EXTENSION));
-            attributes.put(Aggregator.ACTPAGE, originalRequest
-                    .getAttribute(Aggregator.ACTPAGE));
+            attributes.put(Aggregator.EXTENSION, originalRequest.getAttribute(Aggregator.EXTENSION));
+            attributes.put(Aggregator.ACTPAGE, originalRequest.getAttribute(Aggregator.ACTPAGE));
 
             // copy headers
             String authHeader = originalRequest.getHeader("Authorization");
@@ -502,7 +497,4 @@ public class EntryServlet extends HttpServlet {
 
     }
 
-
 }
-
-
