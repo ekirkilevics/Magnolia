@@ -61,8 +61,8 @@
 
 
 	Button bOk=new Button();
-	bOk.setLabel("OK"	bOk.setOnclick("mgnlDialogLinkBrowserWriteBack('"+destinationControlName+"','"+destinationExtension+"','" + request.getContextPath() + "');");
-);
+	bOk.setLabel("OK");
+	bOk.setOnclick("mgnlDialogLinkBrowserWriteBack('"+destinationControlName+"','"+destinationExtension+"');");
 
 	Button bCancel=new Button();
 	bCancel.setLabel("Cancel");
@@ -82,3 +82,5 @@
 
 	out.println(html);
 
+
+%>
