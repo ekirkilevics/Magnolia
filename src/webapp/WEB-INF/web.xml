@@ -196,12 +196,12 @@
 
 	<context-param>
 		<param-name>javax.servlet.jsp.jstl.fmt.basename</param-name>
-		<param-value>info.magnolia.admin.central</param-value>
+		<param-value>info.magnolia.module.admininterface.messages</param-value>
 	</context-param>
 	
 	<context-param>
 		<param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
-		<param-value>info.magnolia.admin.central</param-value>
+		<param-value>info.magnolia.module.admininterface.messages</param-value>
 	</context-param>
 
 </web-app>
