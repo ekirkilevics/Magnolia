@@ -60,11 +60,11 @@ var mgnlMoveNodeCollection; //selected container list name
 
 //divs which will be placed onMouseMove
 //shadow: half transparent and scaled down editBar
-document.write('<div id="mgnlMoveDivShadow" style="position:absolute;top:-50;left:-50;z-index:901;visibility:hidden;"><img src="/admindocroot/images/mgnlMoveShadow.gif"></div>');
+document.write('<div id="mgnlMoveDivShadow"></div>');
 //denied: denied sign
-document.write('<div id="mgnlMoveDivDenied" style="position:absolute;top:-50;left:-50;z-index:901;visibility:hidden;"><img src="/admindocroot/images/mgnlMoveDenied.gif"></div>');
+document.write('<div id="mgnlMoveDivDenied"></div>');
 //allowed: text 'Move above here'
-document.write('<div id="mgnlMoveDivAllowed" style="position:absolute;top:-50;left:-50;z-index:901;visibility:hidden;font-family:Verdana;font-size:10px;">Move the paragraph selected above this one</div>');
+document.write('<div id="mgnlMoveDivAllowed">Move the paragraph selected above this one</div>');
 
 var mgnlMoveDont=false;
 //move will not start as long as mgnlMoveDont is true

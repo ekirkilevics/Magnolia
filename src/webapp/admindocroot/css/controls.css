@@ -80,3 +80,24 @@ td.mgnlControlBarSmall, td.mgnlControlBarSmall_PUSHED, td.mgnlControlBarSmall_MO
 	padding-left:0px;
 	}
 
+#mgnlMoveDivShadow, #mgnlMoveDivDenied, #mgnlMoveDivAllowed {
+	position:absolute;
+	top:-50;
+	left:-50;
+	z-index:901;
+	visibility:hidden;
+	font-family:Verdana;
+	font-size:10px;
+	background-repeat: no-repeat;
+	width: 286px;
+	height: 20px;
+	}
+
+#mgnlMoveDivShadow {
+	background-image: url("../images/mgnlMoveShadow.gif");
+	}
+
+#mgnlMoveDivDenied {
+	background-image: url("../images/mgnlMoveDenied.gif");
+	}
+
