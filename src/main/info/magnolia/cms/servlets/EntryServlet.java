@@ -27,6 +27,7 @@ import info.magnolia.cms.beans.runtime.*;
 import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.Dispatcher;
 import info.magnolia.cms.core.CacheHandler;
+import info.magnolia.cms.core.CacheProcess;
 import info.magnolia.cms.security.Listener;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.SessionAccessControl;
@@ -120,7 +121,8 @@ public class EntryServlet extends HttpServlet {
                     Dispatcher.dispatch(req,res,getServletContext());
                     if (success) {
                         if (info.magnolia.cms.beans.config.Cache.isCacheable()) {
-                            CacheHandler.cacheURI(req);
+                            CacheProcess cache = new CacheProcess(req);
+                            cache.start();
                         }
                     }
                 } catch (Exception e) {
