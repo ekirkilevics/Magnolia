@@ -18,12 +18,11 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.PropertyResourceBundle;
 
+
 /**
- * @author Philipp Bracher
- * 
- * Provieds localized strings. You should uses the ContextMessages class if you
- * can provide a request object. Messages will do the job as good as possible
- * without to know the session (user) and all the other contextual things.
+ * @author Philipp Bracher Provieds localized strings. You should uses the ContextMessages class if you can provide a
+ * request object. Messages will do the job as good as possible without to know the session (user) and all the other
+ * contextual things.
  */
 
 public class Messages {
@@ -34,7 +33,6 @@ public class Messages {
     // never use this directly: subclasses can overrite geter
     private Locale locale;
 
-    
     /**
      * Subclasses will overwrite getBundle()
      */
@@ -87,10 +85,9 @@ public class Messages {
     public String get(String key, String basename) {
         return getBundle(basename).getString(key);
     }
-    
+
     /**
      * Replace the parameters in the string: the entered text {0} is not a valid email
-     * 
      * @param key
      * @param args
      * @return
@@ -105,9 +102,7 @@ public class Messages {
 
     /**
      * Adds Variables to a JS witch can be used with the getMessage(key) method
-     * 
      * @return Javascript-Construct of this textes
-     * 
      * @todo implement
      */
     public String generateJavaScript() {
@@ -118,9 +113,8 @@ public class Messages {
      * @return Returns the bundle.
      */
     public ResourceBundle getBundle() {
-        if (bundle == null){
-            bundle = PropertyResourceBundle.getBundle(getBasename(),
-                    getLocale());
+        if (bundle == null) {
+            bundle = PropertyResourceBundle.getBundle(getBasename(), getLocale());
         }
         return bundle;
     }
