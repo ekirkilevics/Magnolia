@@ -46,8 +46,6 @@ public class HierarchyManager {
 
     private Workspace workSpace;
 
-    private HttpServletRequest request;
-
     private String userID;
 
     private AccessManager accessManager;
@@ -67,8 +65,7 @@ public class HierarchyManager {
      * constructor
      */
     public HierarchyManager(HttpServletRequest request) {
-        this.request = request;
-        this.userID = Authenticator.getUserId(this.request);
+        this.userID = Authenticator.getUserId(request);
     }
 
     /**
