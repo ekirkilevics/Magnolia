@@ -69,6 +69,8 @@ public final class ContentRepository {
 
     public static final String[] ALL_REPOSITORIES = new String[]{WEBSITE, USERS, USER_ROLES, CONFIG};
 
+    public static final String DEFAULT_WORKSPACE = "default";
+
     /**
      * magnolia namespace.
      */
@@ -87,6 +89,8 @@ public final class ContentRepository {
     private static final String ELEMENT_REPOSITORY = "Repository";
 
     private static final String ELEMENT_PARAM = "param";
+
+    private static final String ELEMENT_WORKSPACE = "workspace";
 
     /**
      * Attribute names.
@@ -225,6 +229,17 @@ public final class ContentRepository {
                 parameters.put(param.getAttributeValue(ATTRIBUTE_NAME), param.getAttributeValue(ATTRIBUTE_VALUE));
             }
             map.setParameters(parameters);
+            List workspaces = element.getChildren(ELEMENT_WORKSPACE);
+            if (workspaces != null && !workspaces.isEmpty()) {
+                Iterator wspIterator = workspaces.iterator();
+                while (wspIterator.hasNext()) {
+                    Element workspace = (Element) wspIterator.next();
+                    String wspID = workspace.getAttributeValue(ATTRIBUTE_ID);
+                    map.addWorkspace(wspID);
+                }
+            } else {
+                map.addWorkspace(DEFAULT_WORKSPACE);
+            }
             ContentRepository.repositoryMappings.put(id, map);
             try {
                 loadRepository(map);
@@ -237,7 +252,6 @@ public final class ContentRepository {
 
     private static void loadRepository(RepositoryMapping map) throws RepositoryNotInitializedException,
         InstantiationException, IllegalAccessException, ClassNotFoundException {
-
         log.info("System : loading JCR - " + map.getID());
         Provider handlerClass = (Provider) Class.forName(map.getProvider()).newInstance();
         handlerClass.init(map);
@@ -245,15 +259,20 @@ public final class ContentRepository {
         ContentRepository.repositories.put(map.getID(), repository);
         ContentRepository.repositoryProviders.put(map.getID(), handlerClass);
         if (map.isLoadOnStartup()) {
-            loadHierarchyManager(repository, map, handlerClass);
+            /* load hierarchy managers for each workspace */
+            Iterator workspaces = map.getWorkspaces().iterator();
+            while (workspaces.hasNext()) {
+                String wspID = (String) workspaces.next();
+                loadHierarchyManager(repository, wspID, map, handlerClass);
+            }
         }
 
     }
 
-    private static void loadHierarchyManager(Repository repository, RepositoryMapping map, Provider provider) {
+    private static void loadHierarchyManager(Repository repository, String wspID, RepositoryMapping map, Provider provider) {
         try {
             SimpleCredentials sc = new SimpleCredentials(ContentRepository.SYSTEM_USER, StringUtils.EMPTY.toCharArray());
-            Session session = repository.login(sc, null);
+            Session session = repository.login(sc, wspID);
             provider.registerNamespace(NAMESPACE_PREFIX, NAMESPACE_URI, session.getWorkspace());
             List acl = getSystemPermissions();
             AccessManagerImpl accessManager = new AccessManagerImpl();
@@ -261,7 +280,7 @@ public final class ContentRepository {
             HierarchyManager hierarchyManager = new HierarchyManager(ContentRepository.SYSTEM_USER);
             hierarchyManager.init(session.getRootNode());
             hierarchyManager.setAccessManager(accessManager);
-            ContentRepository.hierarchyManagers.put(map.getID(), hierarchyManager);
+            ContentRepository.hierarchyManagers.put(map.getID()+"_"+wspID, hierarchyManager);
         }
         catch (RepositoryException re) {
             log.error("System : Failed to initialize hierarchy manager for JCR - " + map.getID());
@@ -299,7 +318,15 @@ public final class ContentRepository {
      * access on the specified repository.
      */
     public static HierarchyManager getHierarchyManager(String repositoryID) {
-        return (HierarchyManager) ContentRepository.hierarchyManagers.get(repositoryID);
+        return getHierarchyManager(repositoryID,DEFAULT_WORKSPACE);
+    }
+
+    /**
+     * Hierarchy manager as created on startup. Note: this hierarchyManager is created with system rights and has full
+     * access on the specified repository.
+     */
+    public static HierarchyManager getHierarchyManager(String repositoryID, String workspaceID) {
+        return (HierarchyManager) ContentRepository.hierarchyManagers.get(repositoryID+"_"+workspaceID);
     }
 
     /**

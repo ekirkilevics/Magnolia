@@ -51,6 +51,8 @@ public final class SessionAccessControl {
 
     private static final String DEFAULT_REPOSITORY = ContentRepository.WEBSITE;
 
+    private static final String DEFAULT_WORKSPACE = ContentRepository.DEFAULT_WORKSPACE;
+
     /**
      * Utility class, don't instantiate.
      */
@@ -77,7 +79,19 @@ public final class SessionAccessControl {
      */
     public static Session getSession(HttpServletRequest request, String repositoryID) throws LoginException,
         RepositoryException {
-        return getRepositorySession(request, repositoryID);
+        return getSession(request, repositoryID, DEFAULT_WORKSPACE);
+    }
+
+    /**
+     * <p>
+     * gets the ticket creted while login, creates a new ticket if not existing <br>
+     * </p>
+     * @param request
+     * @param repositoryID
+     */
+    public static Session getSession(HttpServletRequest request, String repositoryID, String workspaceID)
+        throws LoginException, RepositoryException {
+        return getRepositorySession(request, repositoryID, workspaceID);
     }
 
     /**
@@ -101,20 +115,36 @@ public final class SessionAccessControl {
      * @param repositoryID
      */
     public static HierarchyManager getHierarchyManager(HttpServletRequest request, String repositoryID) {
-        HierarchyManager hm = (HierarchyManager) request.getSession().getAttribute(ATTRIBUTE_HM_PREFIX + repositoryID);
+        return getHierarchyManager(request, repositoryID, DEFAULT_WORKSPACE);
+    }
+
+    /**
+     * <p>
+     * gets hierarchy manager for the specified repository using session ticket <br>
+     * creates a new ticket and hierarchy manager if not exist
+     * </p>
+     * @param request
+     * @param repositoryID
+     */
+    public static HierarchyManager getHierarchyManager(HttpServletRequest request, String repositoryID, String workspaceID) {
+        HierarchyManager hm = (HierarchyManager) request.getSession().getAttribute(ATTRIBUTE_HM_PREFIX + repositoryID
+        + "_" + workspaceID);
         if (hm == null) {
-            createHierarchyManager(request, repositoryID);
-            return (HierarchyManager) request.getSession().getAttribute(ATTRIBUTE_HM_PREFIX + repositoryID);
+            createHierarchyManager(request, repositoryID, workspaceID);
+            return (HierarchyManager) request.getSession().getAttribute(ATTRIBUTE_HM_PREFIX + repositoryID + "_"
+            + workspaceID);
         }
         return hm;
     }
 
-    private static Session getRepositorySession(HttpServletRequest request, String repositoryID) throws LoginException,
-        RepositoryException {
-        Object ticket = request.getSession().getAttribute(ATTRIBUTE_REPOSITORY_SESSION_PREFIX + repositoryID);
+    private static Session getRepositorySession(HttpServletRequest request, String repositoryID, String workspaceID)
+        throws LoginException, RepositoryException {
+        Object ticket = request.getSession().getAttribute(ATTRIBUTE_REPOSITORY_SESSION_PREFIX + repositoryID + "_"
+        + workspaceID);
         if (ticket == null) {
-            createRepositorySession(request, repositoryID);
-            return (Session) request.getSession().getAttribute(ATTRIBUTE_REPOSITORY_SESSION_PREFIX + repositoryID);
+            createRepositorySession(request, repositoryID, workspaceID);
+            return (Session) request.getSession().getAttribute(ATTRIBUTE_REPOSITORY_SESSION_PREFIX + repositoryID + "_"
+                    + workspaceID);
         }
         return (Session) ticket;
     }
@@ -135,12 +165,23 @@ public final class SessionAccessControl {
      * </p>
      * @param request
      */
-    public static void createRepositorySession(HttpServletRequest request, String repositoryID) throws LoginException,
+    private static void createRepositorySession(HttpServletRequest request, String repositoryID) throws LoginException,
         RepositoryException {
+        createRepositorySession(request, repositoryID, DEFAULT_WORKSPACE);
+    }
+
+    /**
+     * <p>
+     * create user ticket and set ACL (user + group) in the session
+     * </p>
+     * @param request
+     */
+    private static void createRepositorySession(HttpServletRequest request, String repositoryID, String workspaceID)
+        throws LoginException, RepositoryException {
         SimpleCredentials sc = new SimpleCredentials(Authenticator.getUserId(request), Authenticator
             .getPassword(request));
-        Session session = ContentRepository.getRepository(repositoryID).login(sc, null);
-        request.getSession().setAttribute(ATTRIBUTE_REPOSITORY_SESSION_PREFIX + repositoryID, session);
+        Session session = ContentRepository.getRepository(repositoryID).login(sc, workspaceID);
+        request.getSession().setAttribute(ATTRIBUTE_REPOSITORY_SESSION_PREFIX + repositoryID + "_" + workspaceID, session);
         Content userNode = getUserNode(request);
         List acl = new ArrayList();
         updateACL(userNode, acl, repositoryID);
@@ -148,15 +189,16 @@ public final class SessionAccessControl {
         updateGroupsACL(userNode, acl, repositoryID);
         AccessManagerImpl accessManager = new AccessManagerImpl();
         accessManager.setPermissionList(acl);
-        request.getSession().setAttribute(ATTRIBUTE_AM_PREFIX + repositoryID, accessManager);
+        request.getSession().setAttribute(ATTRIBUTE_AM_PREFIX + repositoryID + "_" +workspaceID, accessManager);
     }
 
-    private static void createHierarchyManager(HttpServletRequest request, String repositoryID) {
+    private static void createHierarchyManager(HttpServletRequest request, String repositoryID, String workspaceID) {
         HierarchyManager hm = new HierarchyManager(Authenticator.getUserId(request));
         try {
-            hm.init(getSession(request, repositoryID).getRootNode());
-            hm.setAccessManager((AccessManager) request.getSession().getAttribute(ATTRIBUTE_AM_PREFIX + repositoryID));
-            request.getSession().setAttribute(ATTRIBUTE_HM_PREFIX + repositoryID, hm);
+            hm.init(getSession(request, repositoryID, workspaceID).getRootNode());
+            hm.setAccessManager((AccessManager) request.getSession().getAttribute(ATTRIBUTE_AM_PREFIX + repositoryID
+            + "_" + workspaceID));
+            request.getSession().setAttribute(ATTRIBUTE_HM_PREFIX + repositoryID + "_" + workspaceID, hm);
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
