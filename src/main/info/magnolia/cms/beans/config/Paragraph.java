@@ -33,8 +33,6 @@ import org.apache.log4j.Logger;
  * User: sameercharles
  * Date: Apr 28, 2003
  * Time: 11:20:59 AM
- * @author Sameer Charles
- * @version 1.1
  */
 
 
@@ -86,16 +84,19 @@ public class Paragraph {
 		try {
             log.info("Config : loading Paragraph info - "+modulePath);
             Content startPage = configHierarchyManager.getPage(modulePath);
-            Collection children = startPage.getContentNode("Paragraphs").getChildren();
-            if (children!=null || !(children.isEmpty()))
-                Paragraph.paragraphs = children.iterator();
-            Paragraph.cacheContent(modulePath);
+            //Collection children = startPage.getContentNode("Paragraphs").getChildren();
+            //if (children!=null || !(children.isEmpty()))
+            //    Paragraph.paragraphs = children.iterator();
+            Content paragraphDefinition = startPage.getContent("Paragraphs");
+            Paragraph.cacheContent(paragraphDefinition,modulePath);
             log.info("Config : Paragraph info loaded - "+modulePath);
         } catch (RepositoryException re) {
             log.error("Config : Failed to load Paragraph info - "+modulePath);
             log.error(re.getMessage(), re);
         }
     }
+
+
 
 
 
@@ -114,11 +115,24 @@ public class Paragraph {
      * </p>
      *
      */
-	private static void cacheContent(String modulePath) {
-        if (Paragraph.paragraphs != null)
-    		addParagraphsToCache(Paragraph.paragraphs,modulePath);
-		Paragraph.paragraphs = null;
+	private static void cacheContent(Content content, String modulePath) {
+        //if (Paragraph.paragraphs != null)
+    	//	addParagraphsToCache(Paragraph.paragraphs,modulePath);
+		//Paragraph.paragraphs = null;
+
+        Collection contentNodes = content.getChildren(ItemType.NT_CONTENTNODE);
+        Iterator definitions = contentNodes.iterator();
+        addParagraphsToCache(definitions, modulePath);
+
+        Collection subDefinitions = content.getChildren(ItemType.NT_CONTENT);
+        Iterator it = subDefinitions.iterator();
+        while (it.hasNext()) {
+            Content c = (Content) it.next();
+            cacheContent(c, modulePath);
+        }
 	}
+
+
 
 	 /**
      * <p>adds paragraph definition to ParagraphInfo cache</p>
@@ -136,7 +150,6 @@ public class Paragraph {
 			pi.type = c.getNodeData("type").getString();
 			pi.title = c.getNodeData("title").getString();
 			pi.description = c.getNodeData("description").getString();
-
 
 			// get remaining from dialog definition
 			try {
