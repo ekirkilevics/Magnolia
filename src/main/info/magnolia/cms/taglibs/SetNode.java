@@ -15,6 +15,7 @@ package info.magnolia.cms.taglibs;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.util.Resource;
 
 import java.util.Collection;
@@ -243,6 +244,11 @@ public class SetNode extends TagSupport {
             int type = nodeData.getType();
             if (type == PropertyType.DATE) {
                 value = nodeData.getDate();
+            }
+            else if (type == PropertyType.BINARY) {
+                // only file path is supported
+                FileProperties props = new FileProperties(this.wrappedNode, (String) key);
+                value = props.getProperty(StringUtils.EMPTY);
             }
             else {
                 value = nodeData.getString();
