@@ -142,43 +142,19 @@ public class ContextMessages extends Messages {
         return ContextMessages.getInstance(req).get(key);
     }
 
-    /*
-    public static String get(HttpServletRequest req, String key, String basename) {
-        return ContextMessages.getInstanceSafely(req).get(key, basename);
-    }
-    */
     
     public static String get(HttpServletRequest req, String key, Object[] args) {
         return ContextMessages.getInstance(req).get(key, args);
     }
 
-    /*
-    public static String get(HttpServletRequest req, String key, String basename, Object[] args) {
-        return ContextMessages.getInstanceSafely(req).get(key, basename, args);
-    }
-    */
-
     public static String getWithDefault(HttpServletRequest req, String key, String defaultMsg) {
         return ContextMessages.getInstance(req).getWithDefault(key, defaultMsg);
     }
-
-    /*
-    public static String getWithDefault(HttpServletRequest req, String key, String basename, String defaultMsg) {
-        return ContextMessages.getInstanceSafely(req).getWithDefault(key, basename, defaultMsg);
-    }
-    */
 
     public static String getWithDefault(HttpServletRequest req, String key, Object[] args, String defaultMsg) {
         return ContextMessages.getInstance(req).getWithDefault(key, args, defaultMsg);
     }
     
-    /*
-
-    public static String getWithDefault(HttpServletRequest req, String key, String basename, Object[] args, String defaultMsg) {
-        return ContextMessages.getInstanceSafely(req).getWithDefault(key, basename, args, defaultMsg);
-    }
-    */
-
     /**
      * Gets the default I18N localization context.
      * @param req Request in which to look up the default I18N localization context
