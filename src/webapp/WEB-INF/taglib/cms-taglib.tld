@@ -531,4 +531,44 @@ parFiles="/samples/formTemplate/controlEdit.xml"/>
             have used loadPage to temporarily have access to a different page, e.g. for building a menu.
         </description>
     </tag>
+    <tag>
+        <name>setNode</name>
+        <tag-class>info.magnolia.cms.taglibs.SetNode</tag-class>
+        <body-content>EMPTY</body-content>
+        <description>
+            Exposes a content node to the pagecontext as a Map of nodeData, in order to access the exposed object using
+            JSTL.
+        </description>
+        <attribute>
+            <name>contentNodeName</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>
+                Inside a "contentNodeIterator": if not set the current content node is taken, if set empty
+                (contentNodeName="") the top level content is taken, if specified the named content node is taken.
+                Outside a "contentNodeIterator": if not set or empty: the top level content is taken, if specified, the
+                named content node is taken
+            </description>
+        </attribute>
+        <attribute>
+            <name>contentNodeCollectionName</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Name of the collection holding the content node, e.g. "mainColumnParagraphs"</description>
+        </attribute>
+        <attribute>
+            <name>var</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>The content node will be added to the pagecontext with this name.</description>
+        </attribute>
+        <example>
+            <![CDATA[
+<cms:setNode var="currentNode"/> 
+<c:if test="${!empty currentNode.title}">
+  <c:out value="${currentNode.title}"/>
+</c:if> 
+]]>
+        </example>
+    </tag>
 </taglib>
