@@ -2,6 +2,6 @@
 	<jsp:directive.page language="java"/>
 	<jsp:directive.page import="info.magnolia.cms.i18n.ContextMessages"/>
 	<jsp:expression>
-		ContextMessages.getInstanceSafely(request).generateJavaScript() 
+		ContextMessages.getInstance(request).generateJavaScript() 
 	</jsp:expression>
 </jsp:root>

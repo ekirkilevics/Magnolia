@@ -180,7 +180,7 @@ public class DialogDialog extends DialogSuper {
     }
 
     public void drawHtmlPostSubs(Writer out) throws IOException {
-        Messages msgs = ContextMessages.getInstanceSafely(getRequest());
+        Messages msgs = ContextMessages.getInstance(getRequest());
         
         // TabSet stuff
         String id = this.getId();

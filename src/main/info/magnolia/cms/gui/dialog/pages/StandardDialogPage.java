@@ -52,7 +52,7 @@ public class StandardDialogPage extends BasePageServlet {
      * @see info.magnolia.cms.servlets.BasePageServlet#draw(HttpServletRequest, HttpServletResponse)
      */
     public void draw(HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
-        info.magnolia.cms.i18n.Messages msgs = ContextMessages.getInstanceSafely(request);
+        info.magnolia.cms.i18n.Messages msgs = ContextMessages.getInstance(request);
 
         PrintWriter out = response.getWriter();
 
@@ -113,7 +113,7 @@ public class StandardDialogPage extends BasePageServlet {
                 Paragraph para = Paragraph.getInfo(paragraph);
 
                 if (para == null) {
-                    out.println(msgs.get("dialog.paragraph.paragraphNotAvailable", paragraph));
+                    out.println(msgs.get("dialog.paragraph.paragraphNotAvailable", new String[]{paragraph}));
                     return;
                 }
 

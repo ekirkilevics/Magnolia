@@ -62,7 +62,7 @@ public class UserRolesEditDialogPage extends BasePageServlet {
      */
     public void draw(HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
         PrintWriter out = response.getWriter();
-        Messages msgs = ContextMessages.getInstanceSafely(request);
+        Messages msgs = ContextMessages.getInstance(request);
 
         MultipartForm form = Resource.getPostedForm(request);
         boolean drawDialog = true;

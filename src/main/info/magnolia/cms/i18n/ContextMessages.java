@@ -64,40 +64,20 @@ public class ContextMessages extends Messages {
      * Get the bundle and the local from the context
      * @param request
      */
-    public ContextMessages(HttpServletRequest req) {
+    protected ContextMessages(HttpServletRequest req) {
         this.req = req;
         loc = getLocalizationContext(req);
     }
 
-    public ContextMessages(HttpServletRequest req, String basename) {
+    protected ContextMessages(HttpServletRequest req, String basename) {
         this.req = req;
         this.basename = basename;
         loc = getLocalizationContext(req, basename);
     }
 
-    public ContextMessages(HttpServletRequest req, String basename, Locale locale) {
+    protected ContextMessages(HttpServletRequest req, String basename, Locale locale) {
         this.req = req;
         this.basename = basename;
-        loc = getLocalizationContext(req, basename, locale);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see info.magnolia.cms.i18n.Messages#setBasename(java.lang.String)
-     */
-    public void setBasename(String basename) {
-        this.basename = basename;
-        loc = getLocalizationContext(req, basename, loc.getLocale());
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see info.magnolia.cms.i18n.Messages#setLocale(java.util.Locale)
-     */
-    public void setLocale(Locale locale) {
-        if (basename == null) {
-            throw new IllegalArgumentException("you can use setLocale only with a setted basename");
-        }
         loc = getLocalizationContext(req, basename, locale);
     }
 
@@ -113,21 +93,42 @@ public class ContextMessages extends Messages {
      * Trys to make a new ContextMessages object. if not possible it creates a new Messages object.
      * @return Messages
      */
-    public static Messages getInstanceSafely(HttpServletRequest req) {
+    public static Messages getInstance(HttpServletRequest req) {
         if (req != null) {
             return new ContextMessages(req);
         }
         else {
-            log.debug("using i18n-messages without a request inside a control!");
+            log.debug("using i18n-messages without a request!");
             return new Messages(Messages.DEFAULT_BASENAME);
         }
     }
+    
+    public static Messages getInstance(HttpServletRequest req, String basename) {
+        if (req != null) {
+            return new ContextMessages(req, basename);
+        }
+        else {
+            log.debug("using i18n-messages without a request!");
+            return new Messages(basename);
+        }
+    }
+    
+    public static Messages getInstance(HttpServletRequest req, String basename, Locale locale) {
+        if (req != null) {
+            return new ContextMessages(req, basename, locale);
+        }
+        else {
+            log.debug("using i18n-messages without a request!");
+            return new Messages(basename,locale);
+        }
+    }
+
     
     /**
      * Trys to make a new ContextMessages object. if not possible it creates a new Messages object.
      * @return Messages
      */
-    public static Messages getInstanceSafely(PageContext pc) {
+    public static Messages getInstance(PageContext pc) {
         if (pc != null && pc.getRequest() instanceof HttpServletRequest ) {
             return new ContextMessages((HttpServletRequest) pc.getRequest());
         }
@@ -138,36 +139,45 @@ public class ContextMessages extends Messages {
     }
     
     public static String get(HttpServletRequest req, String key) {
-        return ContextMessages.getInstanceSafely(req).get(key);
+        return ContextMessages.getInstance(req).get(key);
     }
 
+    /*
     public static String get(HttpServletRequest req, String key, String basename) {
         return ContextMessages.getInstanceSafely(req).get(key, basename);
     }
+    */
     
     public static String get(HttpServletRequest req, String key, Object[] args) {
-        return ContextMessages.getInstanceSafely(req).get(key, args);
+        return ContextMessages.getInstance(req).get(key, args);
     }
 
+    /*
     public static String get(HttpServletRequest req, String key, String basename, Object[] args) {
         return ContextMessages.getInstanceSafely(req).get(key, basename, args);
     }
+    */
 
     public static String getWithDefault(HttpServletRequest req, String key, String defaultMsg) {
-        return ContextMessages.getInstanceSafely(req).getWithDefault(key, defaultMsg);
+        return ContextMessages.getInstance(req).getWithDefault(key, defaultMsg);
     }
 
+    /*
     public static String getWithDefault(HttpServletRequest req, String key, String basename, String defaultMsg) {
         return ContextMessages.getInstanceSafely(req).getWithDefault(key, basename, defaultMsg);
     }
+    */
 
     public static String getWithDefault(HttpServletRequest req, String key, Object[] args, String defaultMsg) {
-        return ContextMessages.getInstanceSafely(req).getWithDefault(key, args, defaultMsg);
+        return ContextMessages.getInstance(req).getWithDefault(key, args, defaultMsg);
     }
+    
+    /*
 
     public static String getWithDefault(HttpServletRequest req, String key, String basename, Object[] args, String defaultMsg) {
         return ContextMessages.getInstanceSafely(req).getWithDefault(key, basename, args, defaultMsg);
     }
+    */
 
     /**
      * Gets the default I18N localization context.

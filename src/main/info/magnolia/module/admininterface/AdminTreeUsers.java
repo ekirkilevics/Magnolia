@@ -36,7 +36,7 @@ public class AdminTreeUsers implements AdminTree {
      */
     public void configureTree(Tree tree, HttpServletRequest request, String path, String pathOpen, String pathSelected,
         boolean create, String createItemType) {
-        Messages msgs = ContextMessages.getInstanceSafely(request);
+        Messages msgs = ContextMessages.getInstance(request);
         
         tree.setDrawShifter(false);
         // context path is already added by Tree

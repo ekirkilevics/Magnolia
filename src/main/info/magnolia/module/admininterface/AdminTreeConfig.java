@@ -40,7 +40,7 @@ public class AdminTreeConfig implements AdminTree {
     public void configureTree(Tree tree, HttpServletRequest request, String path, String pathOpen, String pathSelected,
         boolean create, String createItemType) {
         
-        Messages msgs = ContextMessages.getInstanceSafely(request);
+        Messages msgs = ContextMessages.getInstance(request);
         
         tree.setIconPage(Tree.ICONDOCROOT + "folder_cubes.gif");
         tree.setPath(path);

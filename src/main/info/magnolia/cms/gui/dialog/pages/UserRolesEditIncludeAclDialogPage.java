@@ -43,7 +43,7 @@ public class UserRolesEditIncludeAclDialogPage extends BasePageServlet {
 
     private static final String getHtmlRowInner(HttpServletRequest request) {
         boolean small = true;
-        Messages msgs = ContextMessages.getInstanceSafely(request);
+        Messages msgs = ContextMessages.getInstance(request);
 
         Select accessRight = new Select();
         accessRight.setSaveInfo(false);

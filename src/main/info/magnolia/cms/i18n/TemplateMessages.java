@@ -35,22 +35,20 @@ public class TemplateMessages {
     }
     
     public static String get(HttpServletRequest request, String key) {
-        Messages msgs = ContextMessages.getInstanceSafely(request);
-        String msg = msgs.getWithDefault(key, DEFAULT_BASENAME, key);
+        String msg = ContextMessages.getInstance(request, DEFAULT_BASENAME).getWithDefault(key, key);
         if(!msg.equals(key)){
             return msg;
         }
-        return msgs.getWithDefault(key, CUSTOM_BASENAME, key);
+        return ContextMessages.getInstance(request, CUSTOM_BASENAME).getWithDefault(key, key);
         
     }
     
     public static String get(HttpServletRequest request, String key, Object[] args) {
-        Messages msgs = ContextMessages.getInstanceSafely(request);
-        String msg = msgs.getWithDefault(key, DEFAULT_BASENAME, args, key);
+        String msg = ContextMessages.getInstance(request, DEFAULT_BASENAME).getWithDefault(key, args, key);
         if(!msg.equals(key)){
             return msg;
         }
-        return msgs.getWithDefault(key, CUSTOM_BASENAME, args, key);
+        return ContextMessages.getInstance(request, CUSTOM_BASENAME).getWithDefault(key, args, key);
     }
 
 }

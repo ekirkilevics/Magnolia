@@ -56,7 +56,7 @@ public class Messages {
     /**
      * @param basename the name of the bundle
      */
-    public Messages(String basename) {
+    protected Messages(String basename) {
         setLocale(Locale.getDefault());
         setBasename(basename);
     }
@@ -65,7 +65,7 @@ public class Messages {
      * @param basename name of the bundle
      * @param locale
      */
-    public Messages(String basename, Locale locale) {
+    protected Messages(String basename, Locale locale) {
         setLocale(locale);
         setBasename(basename);
     }
@@ -74,7 +74,7 @@ public class Messages {
         return locale;
     }
 
-    public void setLocale(Locale locale) {
+    private void setLocale(Locale locale) {
         this.locale = locale;
     }
 
@@ -84,7 +84,7 @@ public class Messages {
         return basename;
     }
 
-    public void setBasename(String basename) {
+    private void setBasename(String basename) {
         this.basename = basename;
         bundle = null;
     }
@@ -98,6 +98,7 @@ public class Messages {
         }
     }
 
+    /*
     public String get(String key, String basename) {
         try {
             return getBundle(basename).getString(key);
@@ -106,6 +107,7 @@ public class Messages {
             return "???" + key + "???";
         }
     }
+    */
 
     /**
      * Replace the parameters in the string: the entered text {0} is not a valid email
@@ -116,10 +118,12 @@ public class Messages {
     public String get(String key, Object args[]) {
         return MessageFormat.format(get(key), args);
     }
-
+    
+    /*
     public String get(String key, String basename, Object args[]) {
         return MessageFormat.format(get(key, basename), args);
     }
+    */
 
     public String getWithDefault(String key, String defaultMsg) {
         String msg;
@@ -136,6 +140,7 @@ public class Messages {
         return msg;
     }
 
+    /*
     public String getWithDefault(String key, String basename, String defaultMsg) {
         String msg;
         try {
@@ -150,14 +155,17 @@ public class Messages {
         }
         return msg;
     }
+    */
 
     public String getWithDefault(String key,  Object args[], String defaultMsg) {
        return MessageFormat.format(getWithDefault(key, defaultMsg), args);
     }
 
+    /*
     public String getWithDefault(String key, String basename, Object args[], String defaultMsg) {
         return MessageFormat.format(getWithDefault(key, basename, defaultMsg), args);
     }
+    */
 
     
     /**
