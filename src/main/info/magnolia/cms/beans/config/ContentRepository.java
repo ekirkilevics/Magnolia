@@ -12,7 +12,9 @@
  */
 package info.magnolia.cms.beans.config;
 
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManagerImpl;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
@@ -64,6 +66,8 @@ public final class ContentRepository {
     public static final String GROUPS = "groups";
 
     public static final String CONFIG = "config";
+
+    public static final String[] ALL_REPOSITORIES = new String[]{WEBSITE, USERS, USER_ROLES, CONFIG};
 
     /**
      * magnolia namespace.
@@ -139,9 +143,9 @@ public final class ContentRepository {
      *                provider="info.magnolia.jackrabbit.ProviderImpl"
      *                loadOnStartup="true" >
      *   &lt;param name="configFile"
-     *             value="../webapps/magnolia/WEB-INF/config/repositories/website.xml"/>
+     *             value="WEB-INF/config/repositories/website.xml"/>
      *   &lt;param name="repositoryHome"
-     *             value="../webapps/magnolia/repositories/website"/>
+     *             value="repositories/website"/>
      *   &lt;param name="contextFactoryClass"
      *             value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory"/>
      *   &lt;param name="providerURL"
@@ -161,6 +165,31 @@ public final class ContentRepository {
         catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+    }
+
+    /**
+     * Verify the initialization state of all the repositories. This methods returns <code>false</code> only if
+     * <strong>all</strong> the repositories are empty (no node else than the root one).
+     * @return <code>false</code> if all the repositories are empty, <code>true</code> if at least one of them has
+     * content.
+     * @throws AccessDeniedException repository authentication failed
+     * @throws RepositoryException exception while accessing the repository
+     */
+    public static boolean checkIfInitialized() throws AccessDeniedException, RepositoryException {
+        for (int j = 0; j < ALL_REPOSITORIES.length; j++) {
+            String repository = ALL_REPOSITORIES[j];
+            if (log.isDebugEnabled()) {
+                log.debug("Checking [" + repository + "] repository.");
+            }
+            Content startPage = getHierarchyManager(repository).getRootPage();
+            if (startPage.getChildren().size() > 0) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Content found in [" + repository + "].");
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

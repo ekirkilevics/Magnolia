@@ -32,6 +32,8 @@ public final class SystemProperty {
 
     public static final String MAGNOLIA_APP_ROOTDIR = "magnolia.app.rootdir";
 
+    public static final String MAGNOLIA_BOOTSTRAP_ROOTDIR = "magnolia.bootstrap.dir";
+
     private static Map properties = new Hashtable();
 
     /**
