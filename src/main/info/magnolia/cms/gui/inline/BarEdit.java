@@ -93,8 +93,8 @@ public class BarEdit extends Bar {
      * @param paragraph , paragraph type
      */
     public void setButtonEdit(String path, String nodeCollectionName, String nodeName, String paragraph) {
-        ButtonEdit b = new ButtonEdit(path, nodeCollectionName, nodeName, paragraph);
-        b.setDefaultOnclick();
+        ButtonEdit b = new ButtonEdit(this.getRequest(), path, nodeCollectionName, nodeName, paragraph);
+        b.setDefaultOnclick(this.getRequest());
         this.setButtonEdit(b);
     }
 

@@ -40,13 +40,6 @@ public class ButtonEdit extends Button {
         this.setRequest(request);
     }
 
-    public ButtonEdit(String path, String nodeCollectionName, String nodeName, String paragraph) {
-        this.setPath(path);
-        this.setNodeCollectionName(nodeCollectionName);
-        this.setNodeName(nodeName);
-        this.setParagraph(paragraph);
-    }
-
     public ButtonEdit(
         HttpServletRequest request,
         String path,
@@ -60,7 +53,7 @@ public class ButtonEdit extends Button {
         this.setParagraph(paragraph);
     }
 
-    public void setDefaultOnclick() {
+    public void setDefaultOnclick(HttpServletRequest request) {
         String nodeCollectionName = this.getNodeCollectionName();
         if (nodeCollectionName == null) {
             nodeCollectionName = StringUtils.EMPTY;
@@ -82,7 +75,7 @@ public class ButtonEdit extends Button {
             + "','"
             + repository
             + "','"
-            + this.getRequest().getContextPath()
+            + request.getContextPath()
             + "');");
     }
 

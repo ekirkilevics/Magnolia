@@ -14,9 +14,13 @@ package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.gui.inline.BarMain;
 import info.magnolia.cms.util.Resource;
+
 import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.TagSupport;
+
+import org.apache.log4j.Logger;
 
 
 /**
@@ -30,6 +34,11 @@ public class MainBar extends TagSupport {
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
+
+    /**
+     * Logger.
+     */
+    private static Logger log = Logger.getLogger(MainBar.class);
 
     private String paragraph;
 
@@ -52,6 +61,7 @@ public class MainBar extends TagSupport {
             this.display();
         }
         catch (Exception e) {
+            log.warn("Exception caught during display: " + e.getMessage(), e);
         }
         return EVAL_PAGE;
     }

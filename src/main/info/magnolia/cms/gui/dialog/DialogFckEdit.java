@@ -103,25 +103,25 @@ public class DialogFckEdit extends DialogBox {
         }
 
         String var = getVarName();
-        out.println("<script type=\"text/javascript\">\n");
-        out.println("var " + var + " = null;\n");
-        out.println("fckInstance = new FCKeditor( '" + id + "' );\n");
-        out.println("fckInstance.Value = '" + escapeJsValue(getValue()) + "';\n");
-        out.println("fckInstance.BasePath = '" + FCKEDIT_PATH + "';\n");
+        out.println("<script type=\"text/javascript\">");
+        out.println("var " + var + " = null;");
+        out.println("fckInstance = new FCKeditor( '" + id + "' );");
+        out.println("fckInstance.Value = '" + escapeJsValue(getValue()) + "';");
+        out.println("fckInstance.BasePath = '" + this.getRequest().getContextPath() + FCKEDIT_PATH + "';");
         if (customConfigurationsPath.length() > 0) {
             out.println("fckInstance.Config['CustomConfigurationsPath'] = '" + customConfigurationsPath + "';");
         }
         if (jsInitFile.length() > 0) {
-            out.println("</script>\n");
+            out.println("</script>");
             out.println("<script type=\"text/javascript\" src=\""
                 + this.getRequest().getContextPath()
                 + jsInitFile
                 + "\"></script>\n");
-            out.println("<script type=\"text/javascript\">\n");
+            out.println("<script type=\"text/javascript\">");
         }
-        out.println("fckInstance.Create();\n");
-        out.println(var + " = fckInstance;\n");
-        out.println("</script>\n");
+        out.println("fckInstance.Create();");
+        out.println(var + " = fckInstance;");
+        out.println("</script>");
 
         out.println("</td>");
         out.println("</tr>");

@@ -47,7 +47,7 @@
 
 <%
 	/*
-	// sample 3: customise the main bar	
+	// sample 3: customise the main bar
 
 	Content currentPage=Resource.getActivePage(request);
 

@@ -104,11 +104,11 @@ public class BarMain extends Bar {
      * @param paragraph , paragraph type
      */
     public void setButtonProperties(String path, String paragraph) {
-        ButtonEdit b = new ButtonEdit();
+        ButtonEdit b = new ButtonEdit(this.getRequest());
         b.setLabel("Properties");
         b.setPath(path);
         b.setParagraph(paragraph);
-        b.setDefaultOnclick();
+        b.setDefaultOnclick(this.getRequest());
         this.setButtonProperties(b);
     }
 

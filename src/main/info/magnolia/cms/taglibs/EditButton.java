@@ -244,7 +244,7 @@ public class EditButton extends TagSupport {
         button.setParagraph(this.getParagraph());
         button.setNodeCollectionName(this.getNodeCollectionName());
         button.setNodeName(this.getNodeName());
-        button.setDefaultOnclick();
+        button.setDefaultOnclick((HttpServletRequest) this.pageContext.getRequest());
         if (this.getLabel() != null) {
             button.setLabel(this.getLabel());
         }
