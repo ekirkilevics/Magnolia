@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE taglib
+        PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+	"http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+
+<taglib>
+
+  <tlib-version>1.0</tlib-version>
+  <jsp-version>1.2</jsp-version>
+  <short-name>CMS Tag Library</short-name>
+  <uri>http://jakarta.apache.org/magnolia/cms-taglib</uri>
+  <description>
+	core tag library for CMS
+  </description>
+
+
+
+<!-- main bar tag -->
+<tag>
+	<name>mainBar</name>
+	<tag-class>info.magnolia.cms.taglibs.MainBar</tag-class>
+	<body-content>EMPTY</body-content>
+	<description>
+	display main admin bar
+	</description>
+	<attribute>
+		<name>paragraph</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+</tag>
+
+
+<!-- edit bar bar -->
+<tag>
+    <name>editBar</name>
+    <tag-class>info.magnolia.cms.taglibs.EditBar</tag-class>
+    <body-content>EMPTY</body-content>
+    <description>
+		display edit bar
+    </description>
+	<attribute>
+		<name>contentNodeName</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+    <attribute>
+		<name>contentNodeCollectionName</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+		<name>paragraph</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+		<!-- what's that? -->
+		<!-- deprecated? -->
+		<name>template</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+		<name>editLabel</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+		<name>deleteLabel</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+    </attribute>
+	<attribute>
+		<name>moveLabel</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+ </tag>
+
+
+<!-- new bar tag -->
+<tag>
+    <name>newBar</name>
+    <tag-class>info.magnolia.cms.taglibs.NewBar</tag-class>
+    <body-content>EMPTY</body-content>
+    <description>
+	display new bar
+    </description>
+	<attribute>
+		<name>contentNodeCollectionName</name>
+		<!--	<required>true</required> ??? global setting?-->
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+   	</attribute>
+	<attribute>
+		<name>paragraph</name>
+		<required>false</required>
+		<!--	<required>true</required> -->
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+	<attribute>
+		<!-- deprecated -->
+		<name>parFiles</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+	<attribute>
+		<name>newLabel</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+</tag>
+
+
+
+<!-- edit button tag -->
+<tag>
+	<name>editButton</name>
+	<tag-class>info.magnolia.cms.taglibs.EditButton</tag-class>
+	<body-content>EMPTY</body-content>
+	<description>
+	display edit button
+	</description>
+	<attribute>
+		<name>contentNodeName</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+	<attribute>
+		<name>contentNodeCollectionName</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+	<attribute>
+		<name>paragraph</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+	<attribute>
+		<!-- deprecated -->
+		<name>parFile</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+	<attribute>
+		<name>template</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+	<attribute>
+		<name>label</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+	<attribute>
+		<!-- deprecated -->
+		<name>editLabel</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+	<attribute>
+		<name>small</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+</tag>
+
+
+
+
+
+
+
+
+
+<!-- out tag -->
+<tag>
+	<name>out</name>
+	<tag-class>info.magnolia.cms.taglibs.Out</tag-class>
+	<body-content>EMPTY</body-content>
+	<description>
+		display
+	</description>
+	<attribute>
+		<name>nodeDataName</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+	<attribute>
+		<name>contentNodeName</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+	<attribute>
+		<name>contentNodeCollectionName</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+	<attribute>
+		<!-- deprecated -->
+		<!-- no meaning anymore; inside a loop, set contentNodeName="" to use "actpage"  -->
+		<name>actpage</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+	<attribute>
+		<!-- deprecated -->
+		<!-- no meaning anymore; see fileProperty  -->
+		<name>property</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+	<attribute>
+		<name>fileProperty</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+	<attribute>
+		<name>dateLanguage</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+	<attribute>
+		<name>datePattern</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+	<attribute>
+		<name>lineBreak</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+</tag>
+
+
+
+
+  <!-- admin only tag -->
+  <tag>
+    <name>adminOnly</name>
+    <tag-class>info.magnolia.cms.taglibs.AdminOnly</tag-class>
+    <body-content>JSP</body-content>
+    <description>
+	..
+    </description>
+  </tag>
+
+
+  <!-- jsp includeTemplate tag -->
+  <tag>
+    <name>includeTemplate</name>
+    <tag-class>info.magnolia.cms.taglibs.Include</tag-class>
+    <body-content>JSP</body-content>
+    <description>
+	include jsp
+    </description>
+    <attribute>
+     <name>path</name>
+     <required>false</required>
+     <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+     <name>contentNode</name>
+     <required>false</required>
+     <rtexprvalue>true</rtexprvalue>
+     <type>info.magnolia.cms.core.ContentNode</type>
+    </attribute>
+	  <attribute>
+		  <name>container</name>
+		  <required>false</required>
+		  <rtexprvalue>true</rtexprvalue>
+		  <type>info.magnolia.cms.core.ContentNode</type>
+	  </attribute>
+  </tag>
+
+
+
+  <!-- jsp set tag -->
+  <tag>
+    <name>set</name>
+    <tag-class>info.magnolia.cms.taglibs.Set</tag-class>
+    <body-content>EMPTY</body-content>
+    <description>
+	set container in resource
+    </description>
+    <attribute>
+     <name>contentNodeName</name>
+     <required>false</required>
+     <rtexprvalue>true</rtexprvalue>
+    </attribute>
+	  <attribute>
+		  <name>containerName</name>
+		  <required>false</required>
+		  <rtexprvalue>true</rtexprvalue>
+	  </attribute>
+    <attribute>
+     <name>contentNode</name>
+     <required>false</required>
+     <rtexprvalue>true</rtexprvalue>
+     <type>info.magnolia.cms.core.ContentNode</type>
+    </attribute>
+	  <attribute>
+		  <name>container</name>
+		  <required>false</required>
+		  <rtexprvalue>true</rtexprvalue>
+		  <type>info.magnolia.cms.core.ContentNode</type>
+	  </attribute>
+  </tag>
+
+
+  <!-- jsp init tag -->
+  <tag>
+    <name>init</name>
+    <tag-class>info.magnolia.cms.taglibs.Init</tag-class>
+    <body-content>EMPTY</body-content>
+    <description>
+	init resources
+    </description>
+  </tag>
+
+
+	<tag>
+		<name>contentNodeIterator</name>
+		<tag-class>info.magnolia.cms.taglibs.ContentNodeIterator</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			iterate over contentNode collection
+		</description>
+		<attribute>
+			<name>contentNodeCollectionName</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>begin</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>end</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>step</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+
+
+	<tag>
+		<name>ifLastContentNode</name>
+		<tag-class>info.magnolia.cms.taglibs.IfLastContentNode</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			checks if the current container is last in collection
+		</description>
+	</tag>
+
+
+
+	<tag>
+		<name>ifFirstContentNode</name>
+		<tag-class>info.magnolia.cms.taglibs.IfFirstContentNode</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			checks if the current container is first in the collection
+		</description>
+	</tag>
+
+
+ <!--attribute tag -->
+  <tag>
+    <name>attribute</name>
+    <tag-class>info.magnolia.cms.taglibs.Attribute</tag-class>
+    <body-content>EMPTY</body-content>
+    <description>
+	adds an attribute to the request within an includeTemplate tag
+    </description>
+    <attribute>
+     <name>name</name>
+     <required>true</required>
+     <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+     <name>value</name>
+     <required>false</required>
+     <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+
+
+  <!--ifNotEmpty tag -->
+  <tag>
+    <name>ifNotEmpty</name>
+    <tag-class>info.magnolia.cms.taglibs.IfNotEmpty</tag-class>
+    <body-content>JSP</body-content>
+    <description>
+	evaluates the body only if a container exitsts and / or the corresponding atom exists and is not empty
+    </description>
+    <attribute>
+     <name>nodeDataName</name>
+     <required>false</required>
+     <rtexprvalue>true</rtexprvalue>
+    </attribute>
+	  <attribute>
+		  <name>atomName</name>
+		  <required>false</required>
+		  <rtexprvalue>true</rtexprvalue>
+	  </attribute>
+    <attribute>
+     <name>contentNodeName</name>
+     <required>false</required>
+     <rtexprvalue>true</rtexprvalue>
+    </attribute>
+	  <attribute>
+		  <name>containerName</name>
+		  <required>false</required>
+		  <rtexprvalue>true</rtexprvalue>
+	  </attribute>
+    <attribute>
+     <name>contentNodeCollectionName</name>
+     <required>false</required>
+     <rtexprvalue>true</rtexprvalue>
+    </attribute>
+	  <attribute>
+		  <name>containerListName</name>
+		  <required>false</required>
+		  <rtexprvalue>true</rtexprvalue>
+	  </attribute>
+    <attribute>
+     <name>actpage</name>
+     <required>false</required>
+     <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+
+
+  <!--ifEmpty tag -->
+  <tag>
+    <name>ifEmpty</name>
+    <tag-class>info.magnolia.cms.taglibs.IfEmpty</tag-class>
+    <body-content>JSP</body-content>
+    <description>
+	this is exactly the opposite of the ifNotEmpty Tag
+    </description>
+    <attribute>
+     <name>nodeDataName</name>
+     <required>false</required>
+     <rtexprvalue>true</rtexprvalue>
+    </attribute>
+	  <attribute>
+		  <name>atomName</name>
+		  <required>false</required>
+		  <rtexprvalue>true</rtexprvalue>
+	  </attribute>
+    <attribute>
+     <name>contentNodeName</name>
+     <required>false</required>
+     <rtexprvalue>true</rtexprvalue>
+    </attribute>
+	  <attribute>
+		 <name>containerName</name>
+		 <required>false</required>
+	  	<rtexprvalue>true</rtexprvalue>
+ 	 </attribute>
+    <attribute>
+     <name>contentNodeCollectionName</name>
+     <required>false</required>
+     <rtexprvalue>true</rtexprvalue>
+    </attribute>
+	  <attribute>
+		  <name>containerListName</name>
+		  <required>false</required>
+		  <rtexprvalue>true</rtexprvalue>
+	  </attribute>
+    <attribute>
+     <name>actpage</name>
+     <required>false</required>
+     <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+
+
+
+  <!--loadPage tag -->
+  <tag>
+    <name>loadPage</name>
+    <tag-class>info.magnolia.cms.taglibs.LoadPage</tag-class>
+    <body-content>JSP</body-content>
+    <description>
+	loads another page into actpage and removes it after tag closing
+    </description>
+    <attribute>
+     <name>path</name>
+     <required>false</required>
+     <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+     <name>templateName</name>
+     <required>false</required>
+     <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+     <name>level</name>
+     <required>false</required>
+     <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+
+
+<!--loadPagePath tag -->
+<tag>
+  <name>loadPagePath</name>
+  <tag-class>info.magnolia.cms.taglibs.LoadPagePath</tag-class>
+  <body-content>JSP</body-content>
+  <description>
+  sub tag of loadPage, its body contains the path of the page to load
+  </description>
+</tag>
+
+
+<!--unloadPage tag -->
+<tag>
+  <name>unloadPage</name>
+  <tag-class>info.magnolia.cms.taglibs.UnloadPage</tag-class>
+  <body-content>EMPTY</body-content>
+  <description>
+  resets the actpage
+  </description>
+</tag>
+
+
+
+</taglib>
