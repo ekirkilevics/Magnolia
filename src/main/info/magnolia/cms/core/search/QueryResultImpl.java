@@ -6,6 +6,7 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.beans.config.ItemType;
+import info.magnolia.cms.util.Path;
 
 import javax.jcr.NodeIterator;
 import javax.jcr.Node;
@@ -67,7 +68,8 @@ public class QueryResultImpl implements QueryResult {
         while (nodeIterator.hasNext()) {
             Node node = nodeIterator.nextNode();
             try {
-                boolean isAllowed = this.accessManager.isGranted(node.getPath(), Permission.READ);
+                node = node.getParent();
+                boolean isAllowed = this.accessManager.isGranted(Path.getAbsolutePath(node.getPath()), Permission.READ);
                 if (isAllowed) {
                     this.build(node);
                 }
@@ -86,7 +88,7 @@ public class QueryResultImpl implements QueryResult {
             this.nodeDataCollection.add(new NodeData(node, this.accessManager));
         } else if (node.isNodeType(ItemType.NT_CONTENTNODE)) {
             if (this.dirtyHandles.get(node.getPath()) == null) {
-                this.nodeDataCollection.add(new ContentNode(node, this.accessManager));
+                this.contentNodeCollection.add(new ContentNode(node, this.accessManager));
                 this.dirtyHandles.put(node.getPath(), StringUtils.EMPTY);
             }
         } else {
@@ -94,7 +96,7 @@ public class QueryResultImpl implements QueryResult {
              * All custom node types and mgnl:content
              * */
             if (this.dirtyHandles.get(node.getPath()) == null) {
-                this.nodeDataCollection.add(new Content(node, this.accessManager));
+                this.contentCollection.add(new Content(node, this.accessManager));
                 this.dirtyHandles.put(node.getPath(), StringUtils.EMPTY);
             }
             return;

@@ -16,6 +16,8 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.search.QueryManager;
+import info.magnolia.cms.core.search.SearchFactory;
 import info.magnolia.cms.util.regex.RegexWildcardPattern;
 
 import java.util.ArrayList;
@@ -151,6 +153,37 @@ public final class SessionAccessControl {
      * */
     public static AccessManager getAccessManager(HttpServletRequest request, String repositoryID, String workspaceID) {
         return (AccessManager) request.getSession().getAttribute(ATTRIBUTE_AM_PREFIX + repositoryID + "_" + workspaceID);
+    }
+
+    /**
+     * Gets access controlled query manager
+     * @param request
+     * */
+    public static QueryManager getQueryManager(HttpServletRequest request)
+        throws RepositoryException {
+        return getQueryManager(request, DEFAULT_REPOSITORY);
+    }
+
+    /**
+     * Gets access controlled query manager
+     * @param request
+     * @param repositoryID
+     * */
+    public static QueryManager getQueryManager(HttpServletRequest request, String repositoryID)
+        throws RepositoryException {
+        return getQueryManager(request, repositoryID, DEFAULT_WORKSPACE);
+    }
+
+    /**
+     * Gets access controlled query manager
+     * @param request
+     * @param repositoryID
+     * @param workspaceID
+     * */
+    public static QueryManager getQueryManager(HttpServletRequest request, String repositoryID, String workspaceID)
+        throws RepositoryException {
+        javax.jcr.query.QueryManager qm = getSession(request,repositoryID,workspaceID).getWorkspace().getQueryManager();
+        return SearchFactory.getAccessControllableQueryManager(qm, getAccessManager(request,repositoryID,workspaceID));
     }
 
     private static Session getRepositorySession(HttpServletRequest request, String repositoryID, String workspaceID)
