@@ -115,9 +115,8 @@ public class Paragraph {
      * adds paragraph definition to ParagraphInfo cache
      * </p>
      * @param paragraphs iterator as read from the repository
-     * @throws AccessDeniedException will be fatal since System user should have full rights
      */
-    private static void addParagraphsToCache(Iterator paragraphs, String startPage) throws AccessDeniedException {
+    private static void addParagraphsToCache(Iterator paragraphs, String startPage) {
         while (paragraphs.hasNext()) {
             ContentNode c = (ContentNode) paragraphs.next();
             Paragraph pi = new Paragraph();

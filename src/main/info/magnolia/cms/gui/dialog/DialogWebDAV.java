@@ -35,8 +35,8 @@ import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspWriter;
 
+import org.apache.commons.httpclient.HttpURL;
 import org.apache.log4j.Logger;
-import org.apache.util.HttpURL;
 import org.apache.webdav.lib.Property;
 import org.apache.webdav.lib.WebdavResource;
 import org.apache.webdav.lib.methods.XMLResponseMethodBase;

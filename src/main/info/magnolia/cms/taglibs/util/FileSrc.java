@@ -16,7 +16,6 @@ import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.taglibs.ContentNodeIterator;
 import info.magnolia.cms.util.Resource;
 
@@ -133,14 +132,7 @@ public class FileSrc extends TagSupport {
             writeSrc("");
             return SKIP_BODY;
         }
-        try {
-            setFileProperties();
-        }
-        catch (AccessDeniedException e) {
-            log.error(e.getMessage());
-            writeSrc("");
-            return SKIP_BODY;
-        }
+        setFileProperties();
 
         String contentNodeCollectionName = (String) pageContext.getAttribute(
             ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME,
@@ -192,7 +184,7 @@ public class FileSrc extends TagSupport {
         }
     }
 
-    private void setFileProperties() throws AccessDeniedException {
+    private void setFileProperties() {
         this.fileExtension = Server.getDefaultExtension();
         ContentNode properties = null;
         String contentNodeCollectionName = (String) pageContext.getAttribute(

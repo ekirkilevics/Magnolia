@@ -160,9 +160,8 @@ public class Tree extends ControlSuper {
         if (super.getPath() != null) {
             return super.getPath();
         }
-        else {
-            return ("/");
-        }
+
+        return ("/");
     }
 
     private void setPathCurrent(String s) {
@@ -606,9 +605,8 @@ public class Tree extends ControlSuper {
             if (touchedContent == null) {
                 return "";
             }
-            else {
-                return touchedContent.getHandle();
-            }
+            return touchedContent.getHandle();
+
         }
         else if (pasteType == PASTETYPE_LAST) {
             // LAST only available for sorting inside the same directory
@@ -696,9 +694,9 @@ public class Tree extends ControlSuper {
                         }
                         break;
                     }
-                    else {
-                        posAbove = c.getMetaData().getSequencePosition();
-                    }
+
+                    posAbove = c.getMetaData().getSequencePosition();
+
                 }
                 if (touchedType != selectedType) {
                     if (touchedType.equals(ItemType.NT_CONTENTNODE) && selectedType.equals(ItemType.NT_CONTENT)) {
@@ -866,7 +864,6 @@ public class Tree extends ControlSuper {
 
     public void deActivateNode(String path) {
         try {
-            HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
             Syndicator syndicator = new Syndicator(this.getRequest());
             syndicator.deActivate(this.getRepository(), path);
         }
@@ -1020,7 +1017,7 @@ public class Tree extends ControlSuper {
             html.append("<div id=\"" + this.getJavascriptTree() + "_DivMenu\" class=\"mgnlTreeMenu\">");
             int counter = 0;
             for (int i = 0; i < this.getMenuItems().size(); i++) {
-                TreeMenuItem item = (TreeMenuItem) this.getMenuItems(i);
+                TreeMenuItem item = this.getMenuItems(i);
                 if (item == null) {
                     html.append("<div class=\"mgnlTreeMenuLine\">");
                     html.append("<img src=\"/admindocroot/0.gif\" width=\"1\" height=\"1\"></div>");
@@ -1085,7 +1082,7 @@ public class Tree extends ControlSuper {
         html.append(menuJavascript);
         // add columns to tree object
         for (int i = 0; i < this.getColumns().size(); i++) {
-            TreeColumn tc = (TreeColumn) this.getColumns(i);
+            TreeColumn tc = this.getColumns(i);
             html.append(this.getJavascriptTree()
                 + ".columns["
                 + i
@@ -1343,7 +1340,7 @@ public class Tree extends ControlSuper {
                 html.append(new Hidden(idPre + "_IsActivated", Boolean.toString(isActivated), false).getHtml());
                 for (int i = 1; i < this.getColumns().size(); i++) {
                     String str = "";
-                    TreeColumn tc = (TreeColumn) this.getColumns(i);
+                    TreeColumn tc = this.getColumns(i);
                     if (!itemType.equals(ItemType.NT_NODEDATA)) {
                         // content node ItemType.NT_CONTENTNODE and ItemType.NT_CONTENT
                         if (!tc.getIsNodeDataType() && !tc.getIsNodeDataValue()) {

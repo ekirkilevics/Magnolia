@@ -80,7 +80,7 @@ public class VirtualMap {
     /**
      * @param nodeList to be added in cache
      */
-    private void cacheURIMappings(ContentNode nodeList) throws RepositoryException {
+    private void cacheURIMappings(ContentNode nodeList) {
         Collection list = nodeList.getChildren();
         Collections.sort((List) list, new StringComparator("fromURI"));
         Iterator it = list.iterator();

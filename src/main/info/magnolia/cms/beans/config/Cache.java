@@ -17,7 +17,6 @@ import info.magnolia.cms.core.CacheHandler;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.Path;
 import info.magnolia.cms.util.regex.RegexWildcardPattern;
 
@@ -108,7 +107,7 @@ public final class Cache {
     /**
      * @param nodeList to be added in cache
      */
-    private static void cacheCacheableURIMappings(ContentNode nodeList, boolean allow) throws AccessDeniedException {
+    private static void cacheCacheableURIMappings(ContentNode nodeList, boolean allow) {
         if (nodeList == null) {
             return;
         }
@@ -129,7 +128,7 @@ public final class Cache {
         }
     }
 
-    private static void updateCompressionList(ContentNode list) throws AccessDeniedException {
+    private static void updateCompressionList(ContentNode list) {
         if (list == null) {
             return;
         }

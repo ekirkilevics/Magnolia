@@ -17,7 +17,9 @@ import info.magnolia.exchange.Packet;
 import info.magnolia.exchange.PacketBody;
 import info.magnolia.exchange.PacketHeader;
 import info.magnolia.exchange.PacketType;
-import java.util.Enumeration;
+
+import java.util.Iterator;
+
 import org.apache.log4j.Logger;
 
 
@@ -72,9 +74,9 @@ public class PacketImpl implements Packet {
         /**
          * Add key by key to make sure we dont loose any existing keys assigned to this header object.
          */
-        Enumeration keys = header.getKeys();
-        while (keys.hasMoreElements()) {
-            String key = (String) keys.nextElement();
+        Iterator keys = header.getKeys().iterator();
+        while (keys.hasNext()) {
+            String key = (String) keys.next();
             this.header.addHeader(key, header.getValueByName(key));
         }
     }

@@ -14,8 +14,9 @@ package info.magnolia.cms.exchange.ice;
 
 import info.magnolia.exchange.PacketHeader;
 
-import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -23,7 +24,7 @@ import java.util.Hashtable;
  */
 public class PacketHeaderImpl implements PacketHeader {
 
-    private Hashtable header;
+    private Map header;
 
     public PacketHeaderImpl() {
         this.header = new Hashtable();
@@ -40,7 +41,7 @@ public class PacketHeaderImpl implements PacketHeader {
         return (String) this.header.get(name);
     }
 
-    public Enumeration getKeys() {
-        return this.header.keys();
+    public Set getKeys() {
+        return this.header.keySet();
     }
 }

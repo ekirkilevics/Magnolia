@@ -22,8 +22,8 @@ import info.magnolia.exchange.PacketHeader;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Map;
 
 
@@ -118,9 +118,9 @@ public class ChannelImpl implements Channel {
     }
 
     private void setHeader(PacketHeader header, URLConnection urlConnection) {
-        Enumeration keys = header.getKeys();
-        while (keys.hasMoreElements()) {
-            String key = (String) keys.nextElement();
+        Iterator keys = header.getKeys().iterator();
+        while (keys.hasNext()) {
+            String key = (String) keys.next();
             urlConnection.setRequestProperty(key, header.getValueByName(key));
         }
     }

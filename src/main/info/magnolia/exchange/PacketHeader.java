@@ -12,7 +12,7 @@
  */
 package info.magnolia.exchange;
 
-import java.util.Enumeration;
+import java.util.Set;
 
 
 /**
@@ -38,5 +38,5 @@ public interface PacketHeader {
     /**
      * @return Collection of fieldNames as String
      */
-    Enumeration getKeys();
+    Set getKeys();
 }
