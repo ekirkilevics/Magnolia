@@ -45,12 +45,14 @@
 
 
 
-	StringBuffer src=new StringBuffer("/.magnolia/dialogs/linkBrowserIFrame.html");
-	src.append("?&mgnlCK="+new Date().getTime());
-	src.append("&repository="+repository);
-	if (path!=null) src.append("&path="+path);
-	if (pathOpen!=null) src.append("&pathOpen="+pathOpen);
-	if (pathSelected!=null) src.append("&pathSelected="+pathSelected);
+	StringBuffer src=new StringBuffer();
+	src.append(request.getContextPath());
+	src.append("/.magnolia/dialogs/linkBrowserIFrame.html");
+	src.append("?&amp;mgnlCK="+new Date().getTime());
+	src.append("&amp;repository="+repository);
+	if (path!=null) src.append("&amp;path="+path);
+	if (pathOpen!=null) src.append("&amp;pathOpen="+pathOpen);
+	if (pathSelected!=null) src.append("&amp;pathSelected="+pathSelected);
 
 
 	html.append("<div id=\"mgnlTreeDiv\" class=\"mgnlDialogLinkBrowserTreeDiv\">");
