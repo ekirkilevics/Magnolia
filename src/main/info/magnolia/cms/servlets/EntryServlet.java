@@ -249,9 +249,12 @@ public class EntryServlet extends HttpServlet {
 
         String uri;
 
+        String contextPath;
+
         public CacheRequest(HttpServletRequest originalRequest) {
+            this.contextPath = originalRequest.getContextPath();
             // remember URI
-            uri = StringUtils.substringAfter(originalRequest.getRequestURI(), originalRequest.getContextPath());
+            uri = StringUtils.substringAfter(originalRequest.getRequestURI(), this.contextPath);
             // copy neccessary attributes
             attributes.put(Aggregator.EXTENSION, originalRequest.getAttribute(Aggregator.EXTENSION));
             attributes.put(Aggregator.ACTPAGE, originalRequest.getAttribute(Aggregator.ACTPAGE));
@@ -344,7 +347,7 @@ public class EntryServlet extends HttpServlet {
         }
 
         public String getContextPath() {
-            throw new UnsupportedOperationException();
+            return this.contextPath;
         }
 
         public String getQueryString() {
