@@ -60,6 +60,9 @@ public class Syndicator {
     private static final String DEFAULT_HANDLER = "ActivationHandler";
     private static final String EXCHANGE_HANDLER = "Exchange";
 
+    public static final String SENDER_URL = "senderURL";
+
+
     private static final int ACTIVATE = 1;
     private static final int DE_ACTIVATE = 2;
 
@@ -197,10 +200,10 @@ public class Syndicator {
         while (en.hasMoreElements()) {
             Subscriber si = (Subscriber)en.nextElement();
             try {
-                log.info("Syndicating [ "+this.path+" ] to [ "+si.getAddress()+" ]");
-                send(si);
+                log.info("Removing [ "+this.path+" ] from [ "+si.getParam("address")+" ]");
+                deActivate(si);
             } catch (Exception e) {
-                log.error("Failed to syndicated [ "+this.path+" ] to [ "+si.getAddress()+" ]");
+                log.error("Failed to remove [ "+this.path+" ] from [ "+si.getParam("address")+" ]");
                 log.error(e.getMessage(), e);
             }
         }
@@ -213,7 +216,7 @@ public class Syndicator {
         PacketCollector pc = new PacketCollector(subscriber);
         pc.collect(this.contextSession,this.path,1);
         Hashtable packets = pc.getPackets();
-        String urlString = subscriber.getProtocol()+"://"+subscriber.getAddress()+"/"+EXCHANGE_HANDLER;
+        String urlString = subscriber.getParam("protocol")+"://"+subscriber.getParam("address")+"/"+EXCHANGE_HANDLER;
         URL url = new URL(urlString);
         Channel channel
                 = ChannelFactory.getChannel(subscriber.getName(),url,Authenticator.getCredentials(this.request));
@@ -237,10 +240,10 @@ public class Syndicator {
         while (en.hasMoreElements()) {
             Subscriber si = (Subscriber)en.nextElement();
             try {
-                log.info("Removing [ "+this.path+" ] from [ "+si.getAddress()+" ]");
-                remove(si);
-            } catch(Exception e) {
-                log.error("Failed to remove [ "+this.path+" ] from [ "+si.getAddress()+" ]");
+                log.info("Removing [ "+this.path+" ] from [ "+si.getParam("address")+" ]");
+                deActivate(si);
+            } catch (Exception e) {
+                log.error("Failed to remove [ "+this.path+" ] from [ "+si.getParam("address")+" ]");
                 log.error(e.getMessage(), e);
             }
         }
@@ -253,7 +256,7 @@ public class Syndicator {
         packet.getHeaders().addHeader(Header.CONTEXT,this.context);
         packet.getHeaders().addHeader(Header.ACTION,Header.ACTION_REMOVE);
         packet.getHeaders().addHeader(Header.PATH,this.path);
-        String urlString = subscriber.getProtocol()+"://"+subscriber.getAddress()+"/"+EXCHANGE_HANDLER;
+        String urlString = subscriber.getParam("protocol")+"://"+subscriber.getParam("address")+"/"+EXCHANGE_HANDLER;
         URL url = new URL(urlString);
         Channel channel
                 = ChannelFactory.getChannel(subscriber.getName(),url,Authenticator.getCredentials(this.request));
@@ -316,10 +319,10 @@ public class Syndicator {
         while (en.hasMoreElements()) {
             Subscriber si = (Subscriber)en.nextElement();
             try {
-                log.info("Removing [ "+this.path+" ] from [ "+si.getAddress()+" ]");
+                log.info("Removing [ "+this.path+" ] from [ "+si.getParam("address")+" ]");
                 deActivate(si);
             } catch (Exception e) {
-                log.error("Failed to remove [ "+this.path+" ] from [ "+si.getAddress()+" ]");
+                log.error("Failed to remove [ "+this.path+" ] from [ "+si.getParam("address")+" ]");
                 log.error(e.getMessage(), e);
             }
         }
@@ -349,7 +352,7 @@ public class Syndicator {
      *
      * */
     private String getDeactivationURL(Subscriber subscriberInfo) {
-        String handle = subscriberInfo.getProtocol()+"://"+subscriberInfo.getAddress()
+        String handle = subscriberInfo.getParam("protocol")+"://"+subscriberInfo.getParam("address")
                 + "/"+DEFAULT_HANDLER+"?context="+this.context
                 +"&page="+this.path
                 +"&action=deactivate";
@@ -364,7 +367,7 @@ public class Syndicator {
      * @return activation handle
      */
     private String getActivationURL(Subscriber subscriberInfo) {
-        String handle = subscriberInfo.getProtocol()+"://"+subscriberInfo.getAddress()
+        String handle = subscriberInfo.getParam("protocol")+"://"+subscriberInfo.getParam("address")
                 +"/"+DEFAULT_HANDLER+"?context="+this.context
                 +"&page="+this.path
                 +"&parent="+this.parent
