@@ -61,7 +61,8 @@ public class CacheHandler extends Thread {
             return;
         }
 
-        String uri = Path.getURI(request);
+        String uri = request.getRequestURI();
+        String repositoryURI = Path.getURI(request);
         FileOutputStream out = null;
         int size = 0;
         int compressedSize = 0;
@@ -69,7 +70,7 @@ public class CacheHandler extends Thread {
             if (!info.magnolia.cms.beans.config.Cache.isCacheable(request)) {
                 return;
             }
-            File file = getDestinationFile(uri, DEFAULT_STORE);
+            File file = getDestinationFile(repositoryURI, DEFAULT_STORE);
             if (!file.exists()) {
                 file.createNewFile();
                 out = new FileOutputStream(file);
@@ -79,7 +80,7 @@ public class CacheHandler extends Thread {
             }
             size = (new Long(file.length())).intValue();
             if (info.magnolia.cms.beans.config.Cache.applyCompression(Path.getExtension(request))) {
-                File gzipFile = getDestinationFile(uri, COMPRESSED_STORE);
+                File gzipFile = getDestinationFile(repositoryURI, COMPRESSED_STORE);
                 if (!gzipFile.exists()) {
                     gzipFile.createNewFile();
                     out = new FileOutputStream(gzipFile);
@@ -89,7 +90,7 @@ public class CacheHandler extends Thread {
                 }
                 compressedSize = (new Long(gzipFile.length())).intValue();
             }
-            Cache.addToCachedURIList(uri, (new Date()).getTime(), size, compressedSize);
+            Cache.addToCachedURIList(repositoryURI, (new Date()).getTime(), size, compressedSize);
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
