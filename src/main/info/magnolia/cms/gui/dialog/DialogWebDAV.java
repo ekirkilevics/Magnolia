@@ -35,8 +35,8 @@ import org.apache.log4j.Logger;
 import org.apache.webdav.lib.WebdavResource;
 import org.apache.webdav.lib.Property;
 import org.apache.webdav.lib.methods.XMLResponseMethodBase;
-import org.apache.util.HttpsURL;
 import org.apache.util.HttpURL;
+import org.apache.commons.httpclient.HttpsURL;
 
 
 /**
@@ -130,12 +130,13 @@ public class DialogWebDAV extends DialogBox {
 	public void setDAVConnection() {
 		WebdavResource wdr = null;
 		try {
-			if (this.getProtocol().equalsIgnoreCase("https")) {
-				wdr = new WebdavResource(new HttpsURL(this.getUser(),this.getPassword(),this.getHost(),this.getPort(),this.getDirectory()));
-			}
-			else {
+            // todo use latest libraries from apache webDAV
+			//if (this.getProtocol().equalsIgnoreCase("https")) {
+			//	wdr = new WebdavResource(new HttpsURL(this.getUser(),this.getPassword(),this.getHost(),this.getPort(),this.getDirectory()));
+			//}
+			//else {
 				wdr = new WebdavResource(new HttpURL(this.getUser(),this.getPassword(),this.getHost(),this.getPort(),this.getDirectory()));
-			}
+			//}
 			/*
 			//todo: proxy config
 			//proxy not yet supported
