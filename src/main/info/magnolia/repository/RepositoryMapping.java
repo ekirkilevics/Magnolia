@@ -1,6 +1,8 @@
 package info.magnolia.repository;
 
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collection;
 
 
 /**
@@ -19,6 +21,8 @@ public class RepositoryMapping {
     private boolean loadOnStartup;
 
     private Map parameters;
+
+    private Collection workspaces = new ArrayList();
 
     public RepositoryMapping() {
     }
@@ -61,5 +65,17 @@ public class RepositoryMapping {
 
     public void setParameters(Map parameters) {
         this.parameters = parameters;
+    }
+
+    public Collection getWorkspaces() {
+        return workspaces;
+    }
+
+    public void setWorkspaces(Collection workspaces) {
+        this.workspaces = workspaces;
+    }
+
+    public void addWorkspace(String workspaceId) {
+        this.workspaces.add(workspaceId);
     }
 }
