@@ -19,12 +19,20 @@
  -->
 <!DOCTYPE nodeTypes [
 	<!ELEMENT nodeTypes (nodeType)*>
+			<!ATTLIST nodeTypes
+			    xmlns:rep CDATA #REQUIRED
+			    xmlns:nt CDATA #REQUIRED
+			    xmlns:mix CDATA #REQUIRED
+			    xmlns:mgnl CDATA #REQUIRED
+			    xmlns:jcr CDATA #REQUIRED
+		>
 		<!ELEMENT nodeType (supertypes?|propertyDef*|childNodeDef*)>
 
 		<!ATTLIST nodeType
 			name CDATA #REQUIRED
-			mixin (true|false) #REQUIRED
- 			orderableChildNodes (true|false) #REQUIRED
+			isMixin (true|false) #REQUIRED
+ 			hasOrderableChildNodes (true|false) #REQUIRED
+			primaryItemName CDATA #REQUIRED
 		>
 		<!ELEMENT supertypes (supertype+)>
 		<!ELEMENT supertype (CDATA)>
@@ -32,12 +40,11 @@
 		<!ELEMENT propertyDef (valueConstraints?|defaultValues?)>
 		<!ATTLIST propertyDef
 			name CDATA #REQUIRED
-			type (String|Date|Path|Name|Reference|Binary|Double|Long|Boolean|undefined) #REQUIRED
+			requiredType (String|Date|Path|Name|Reference|Binary|Double|Long|Boolean|undefined) #REQUIRED
 			autoCreate (true|false) #REQUIRED
 			mandatory (true|false) #REQUIRED
 			onParentVersion (COPY|VERSION|INITIALIZE|COMPUTE|IGNORE|ABORT) #REQUIRED
 			protected (true|false) #REQUIRED
-			primaryItem (true|false) #REQUIRED
 			multiple  (true|false) #REQUIRED
 		>
 		<!ELEMENT valueConstraints (valueConstraint+)>
@@ -53,7 +60,6 @@
 			mandatory (true|false) #REQUIRED
 			onParentVersion (COPY|VERSION|INITIALIZE|COMPUTE|IGNORE|ABORT) #REQUIRED
 			protected (true|false) #REQUIRED
-			primaryItem (true|false) #REQUIRED
 			sameNameSibs (true|false) #REQUIRED
 		>
 		<!ELEMENT requiredPrimaryTypes (requiredPrimaryType+)>
@@ -67,37 +73,43 @@
     xmlns:jcr="http://www.jcp.org/jcr/1.0">
 
     <!-- custom node types -->
-    <nodeType name="mgnl:content" mixin="false" orderableChildNodes="false">
+    <nodeType name="mgnl:content" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
         <supertypes>
             <supertype>nt:hierarchyNode</supertype>
         </supertypes>
-        <childNodeDef name="*" defaultPrimaryType="" autoCreate="false" mandatory="false" onParentVersion="VERSION" protected="false" primaryItem="false" sameNameSibs="false">
+        <propertyDef name="*" requiredType="undefined" autoCreate="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true"/>
+        <propertyDef name="*" requiredType="undefined" autoCreate="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
+        <childNodeDef name="*" defaultPrimaryType="" autoCreate="false" mandatory="false" onParentVersion="VERSION" protected="false" sameNameSibs="false">
             <requiredPrimaryTypes>
                 <requiredPrimaryType>nt:hierarchyNode</requiredPrimaryType>
             </requiredPrimaryTypes>
         </childNodeDef>
     </nodeType>
-    <nodeType name="mgnl:contentNode" mixin="false" orderableChildNodes="false">
+    <nodeType name="mgnl:contentNode" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
         <supertypes>
             <supertype>nt:hierarchyNode</supertype>
         </supertypes>
-        <childNodeDef name="*" defaultPrimaryType="" autoCreate="false" mandatory="false" onParentVersion="VERSION" protected="false" primaryItem="false" sameNameSibs="false">
+        <propertyDef name="*" requiredType="undefined" autoCreate="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true"/>
+        <propertyDef name="*" requiredType="undefined" autoCreate="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
+        <childNodeDef name="*" defaultPrimaryType="" autoCreate="false" mandatory="false" onParentVersion="VERSION" protected="false" sameNameSibs="false">
             <requiredPrimaryTypes>
                 <requiredPrimaryType>nt:hierarchyNode</requiredPrimaryType>
             </requiredPrimaryTypes>
         </childNodeDef>
     </nodeType>
-    <nodeType name="mgnl:nodeData" mixin="false" orderableChildNodes="false">
+    <nodeType name="mgnl:nodeData" isMixin="false" hasOrderableChildNodes="false" primaryItemName="jcr:content">
         <supertypes>
             <supertype>nt:hierarchyNode</supertype>
         </supertypes>
-        <childNodeDef name="jcr:content" defaultPrimaryType="" autoCreate="false" mandatory="true" onParentVersion="COPY" protected="false" primaryItem="true" sameNameSibs="false">
+        <propertyDef name="*" requiredType="undefined" autoCreate="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true"/>
+        <propertyDef name="*" requiredType="undefined" autoCreate="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
+        <childNodeDef name="jcr:content" defaultPrimaryType="" autoCreate="false" mandatory="true" onParentVersion="COPY" protected="false" sameNameSibs="false">
             <requiredPrimaryTypes>
                 <requiredPrimaryType>nt:base</requiredPrimaryType>
             </requiredPrimaryTypes>
         </childNodeDef>
     </nodeType>
-    
+
 
 
 
