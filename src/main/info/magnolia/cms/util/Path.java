@@ -81,32 +81,12 @@ public final class Path {
 
     /**
      * <p>
-     * Gets jcr.itemtypes file location as set with Java options while startup or in web.xml
-     * </p>
-     * @return supported JCR item types (Node types....) file location
-     */
-    public static String getJCRItemTypesFile() {
-        return SystemProperty.getProperty("jcr.itemtypes");
-    }
-
-    /**
-     * <p>
      * Gets repositories file location as set with Java options while startup or in web.xml
      * </p>
      * @return file location
      */
     public static String getRepositoriesConfigFilePath() {
         return SystemProperty.getProperty("magnolia.repositories.config");
-    }
-
-    /**
-     * <p>
-     * Gets repository factory config file location as set with Java options while startup or in web.xml
-     * </p>
-     * @return file location
-     */
-    public static String getRepositoryFactoryConfigFilePath() {
-        return SystemProperty.getProperty("Repository.factory.config");
     }
 
     /**
