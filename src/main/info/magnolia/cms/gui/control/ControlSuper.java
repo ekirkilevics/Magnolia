@@ -266,10 +266,10 @@ public class ControlSuper implements ControlInterface{
 		Enumeration en=this.getCssStyles().keys();
 		while (en.hasMoreElements()) {
 			String key=(String) en.nextElement();
-			html.append(key+":"+this.getCssStyles().get(key)+";");
+			html.append(""+key+":"+this.getCssStyles().get(key)+";");
 		}
-		if (!html.equals("")) html.append(" style=\""+html+"\"");
-		return html.toString();
+		if (!html.equals("")) return " style=\""+html+"\"";
+		else return "";
 	}
 
 
