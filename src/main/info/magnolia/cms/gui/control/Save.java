@@ -42,9 +42,8 @@ import javax.jcr.Value;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
-
-import sun.misc.BASE64Encoder;
 
 
 /**
@@ -304,10 +303,7 @@ public class Save extends ControlSuper {
                         boolean write = false;
                         if (encoding == ControlSuper.ENCODING_BASE64) {
                             if (!valueStr.replaceAll(" ", "").equals("")) {
-                                // System.out.println("\nSAVE|ENCODE_BASE64\nvalue: "+valueStr);
-                                BASE64Encoder encoder = new BASE64Encoder();
-                                valueStr = new String(encoder.encodeBuffer(valueStr.getBytes()));
-                                // System.out.println("encoded: "+valueStr);
+                                valueStr = new String(Base64.encodeBase64(valueStr.getBytes()));
                                 write = true;
                             }
                         }

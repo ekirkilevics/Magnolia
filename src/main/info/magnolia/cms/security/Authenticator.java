@@ -15,21 +15,25 @@ package info.magnolia.cms.security;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+
 import java.io.IOException;
+
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 
 /**
- * User: sameercharles Date: Sept 22, 2004 Time: 10:09:42 AM
  * @author Sameer Charles
  * @version 2.0
  */
 public class Authenticator {
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(Authenticator.class);
 
     private static final String ATTRIBUTE_USER_ID = "mgnlUserId";
@@ -70,8 +74,7 @@ public class Authenticator {
         HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USERS);
         try {
             Content userPage = hm.getPage(Authenticator.getUserId(request));
-            BASE64Encoder encoder = new BASE64Encoder();
-            String encodedPassword = new String(encoder.encodeBuffer(Authenticator
+            String encodedPassword = new String(Base64.encodeBase64(Authenticator
                 .getPasswordAsString(request)
                 .getBytes()));
             String fromRepositiry = userPage.getNodeData("pswd").getString().trim();
@@ -89,15 +92,11 @@ public class Authenticator {
     }
 
     /**
-     * <p>
-     * uses sun.misc.BASE64Decoder
-     * </p>
      * @param credentials to be decoded
      * @return String decoded credentials <b>name:password </b>
      */
     private static String getDecodedCredentials(String credentials) throws IOException {
-        BASE64Decoder decoder = new BASE64Decoder();
-        return (new String(decoder.decodeBuffer(credentials)));
+        return (new String(Base64.decodeBase64(credentials.getBytes())));
     }
 
     /**

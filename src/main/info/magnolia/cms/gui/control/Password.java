@@ -13,8 +13,8 @@
 package info.magnolia.cms.gui.control;
 
 import info.magnolia.cms.core.Content;
-import java.io.IOException;
-import sun.misc.BASE64Decoder;
+
+import org.apache.commons.codec.binary.Base64;
 
 
 /**
@@ -41,13 +41,8 @@ public class Password extends ControlSuper {
         String value = "";
         if (this.getEncoding() == ENCODING_BASE64) {
             // show number of characters (using spaces)
-            try {
-                BASE64Decoder decoder = new BASE64Decoder();
-                valueDecoded = new String(decoder.decodeBuffer(this.getValue()));
-            }
-            catch (IOException ioe) {
-                ioe.printStackTrace();
-            }
+            valueDecoded = new String(Base64.decodeBase64(this.getValue().getBytes()));
+
             for (int i = 0; i < valueDecoded.length(); i++) {
                 value += " ";
             }
