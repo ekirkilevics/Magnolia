@@ -9,82 +9,89 @@
  *
  * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.Aggregator;
-import info.magnolia.cms.util.Resource;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.util.Resource;
 
-import javax.servlet.jsp.tagext.BodyTagSupport;
-import javax.servlet.jsp.PageContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.log4j.Logger;
 
 
 /**
- * Date: Apr 28, 2003
- * Time: 11:20:59 AM
  * @author Marcel Salathe
- * @version 1.1
+ * @version $Revision: $ ($Author: $)
  */
+public class LoadPage extends BodyTagSupport
+{
 
-
-
-public class LoadPage extends BodyTagSupport {
-
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
 
     private static Logger log = Logger.getLogger(LoadPage.class);
 
     private String path = "";
+
     private String templateName = "";
+
     private int level = 0;
 
-    public int doEndTag() {
-        HttpServletRequest req = (HttpServletRequest)pageContext.getRequest();
+    public int doEndTag()
+    {
+        HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
         Content newActpage = Resource.getCurrentActivePage(req);
-        if (!this.templateName.equals("")) {
+        if (!this.templateName.equals(""))
+        {
             Content startPage;
-            try {
+            try
+            {
                 startPage = Resource.getCurrentActivePage(req).getAncestor(this.level);
                 HierarchyManager hm = Resource.getHierarchyManager(req);
-                newActpage = hm.getPage(startPage.getHandle(),this.templateName);
+                newActpage = hm.getPage(startPage.getHandle(), this.templateName);
 
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 log.error(e.getMessage());
                 return SKIP_BODY;
             }
         }
-        if (!this.path.equals("")) {
-            try {
+        if (!this.path.equals(""))
+        {
+            try
+            {
                 newActpage = Resource.getHierarchyManager(req).getPage(this.path);
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 return SKIP_BODY;
             }
         }
-        pageContext.setAttribute(Aggregator.CURRENT_ACTPAGE,newActpage,PageContext.REQUEST_SCOPE);
+        pageContext.setAttribute(Aggregator.CURRENT_ACTPAGE, newActpage, PageContext.REQUEST_SCOPE);
         return EVAL_BODY_INCLUDE;
     }
 
-
-    public void setPath(String path) {
+    public void setPath(String path)
+    {
         this.path = path;
     }
 
-    public void setTemplateName(String templateName) {
+    public void setTemplateName(String templateName)
+    {
         this.templateName = templateName;
     }
 
-    public void setLevel(String level) {
+    public void setLevel(String level)
+    {
         this.level = (new Integer(level)).intValue();
     }
-
 
 }

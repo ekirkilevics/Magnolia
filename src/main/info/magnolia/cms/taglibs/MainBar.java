@@ -9,12 +9,8 @@
  *
  * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms.taglibs;
-
 
 import info.magnolia.cms.util.Resource;
 import info.magnolia.cms.gui.inline.BarMain;
@@ -25,113 +21,122 @@ import java.io.IOException;
 
 
 /**
- * Date: Apr 28, 2003
- * Time: 11:20:59 AM
  * @author Marcel Salathe
  * @author Sameer Charles
- * @version 1.1
+ * @version $Revision: $ ($Author: $)
  */
-
-
-public class MainBar extends TagSupport {
-
-    private HttpServletRequest request;
-	private String paragraph=null;
-
+public class MainBar extends TagSupport
+{
 
     /**
-     * <p>starts Admin tag</p>
-     *
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
+
+    private HttpServletRequest request;
+
+    private String paragraph = null;
+
+    /**
+     * <p>
+     * starts Admin tag
+     * </p>
      * @return int
      */
-    public int doStartTag() {
-        this.request = (HttpServletRequest)pageContext.getRequest();
+    public int doStartTag()
+    {
+        this.request = (HttpServletRequest) pageContext.getRequest();
         return EVAL_BODY_INCLUDE;
     }
 
-
-
     /**
-     * <p>print out</p>
-     *
+     * <p>
+     * print out
+     * </p>
      * @return int
      */
-    public int doEndTag() {
-		/*
-        if (!ServerInfo.isAdmin())
-            return EVAL_PAGE;
-        if (!Resource.getActivePage(this.request).isGranted(Permission.WRITE_PROPERTY))
-            return EVAL_PAGE;
-		*/
-        try {
+    public int doEndTag()
+    {
+        /*
+         * if (!ServerInfo.isAdmin()) return EVAL_PAGE; if
+         * (!Resource.getActivePage(this.request).isGranted(Permission.WRITE_PROPERTY)) return EVAL_PAGE;
+         */
+        try
+        {
             this.display();
-        } catch (Exception e) {}
+        }
+        catch (Exception e)
+        {
+        }
         return EVAL_PAGE;
     }
 
-
-
-
-        /**
-     * <p>get the content path (Page or Node)</p>
-     *
+    /**
+     * <p>
+     * get the content path (Page or Node)
+     * </p>
      * @return String path
      */
-    private String getPath() {
-        try {
+    private String getPath()
+    {
+        try
+        {
             return Resource.getCurrentActivePage(this.request).getHandle();
-        } catch (Exception re) {return "";}
+        }
+        catch (Exception re)
+        {
+            return "";
+        }
 
     }
 
-
-
     /**
-     * <p>set current content type, could be any developer defined name</p>
-     *
-	 /**
-	  * @deprecated
+     * <p>
+     * set current content type, could be any developer defined name
+     * </p>
+     * /**
+     * @deprecated
      * @param type , paragraph type
      */
-    public void setParFile(String type) {
+    public void setParFile(String type)
+    {
         this.setParagraph(type);
     }
 
-	/**
-	 * <p>set paragarph type</p>
-	 *
-	 /**
-	 *
-	 * @param s , pargarph type
-	 */
-	public void setParagraph(String s) {
-		this.paragraph=s;
-	}
-
-
-
-	/**
-	 * @return pargraph type
-	 */
-	private String getParagraph() {
-		return this.paragraph;
-	}
-
-
-
     /**
-     * <p>displays main admin bar</p>
-     *
-     * @throws java.io.IOException
+     * <p>
+     * set paragarph type
+     * </p>
+     * /**
+     * @param s , pargarph type
      */
-    private void display() throws IOException {
-		BarMain bar=new BarMain(this.request);
-		bar.setPath(this.getPath());
-		bar.setParagraph(this.getParagraph());
-		bar.setDefaultButtons();
-		bar.placeDefaultButtons();
-		bar.drawHtml(pageContext.getOut());
+    public void setParagraph(String s)
+    {
+        this.paragraph = s;
     }
 
+    /**
+     * @return pargraph type
+     */
+    private String getParagraph()
+    {
+        return this.paragraph;
+    }
+
+    /**
+     * <p>
+     * displays main admin bar
+     * </p>
+     * @throws java.io.IOException
+     */
+    private void display() throws IOException
+    {
+        BarMain bar = new BarMain(this.request);
+        bar.setPath(this.getPath());
+        bar.setParagraph(this.getParagraph());
+        bar.setDefaultButtons();
+        bar.placeDefaultButtons();
+        bar.drawHtml(pageContext.getOut());
+    }
 
 }

@@ -9,54 +9,51 @@
  *
  * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms.taglibs;
 
-
-
-import javax.servlet.jsp.tagext.TagSupport;
 import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.tagext.TagSupport;
 
 
 /**
- * Date: Apr 28, 2003
- * Time: 11:20:59 AM
  * @author Marcel Salathe
- * @version 1.1
+ * @version $Revision: $ ($Author: $)
  */
-
-
-public class IfLastContentNode extends TagSupport {
-
-
-
+public class IfLastContentNode extends TagSupport
+{
 
     /**
-     * <p>starts ifLastContentNode tag</p>
-     *
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
+
+    /**
+     * <p>
+     * starts ifLastContentNode tag
+     * </p>
      * @return int
      */
-    public int doStartTag() {
-        int size = ((Integer)pageContext.getAttribute(ContentNodeIterator.SIZE,PageContext.REQUEST_SCOPE)).intValue();
-        int currentIndex = ((Integer)pageContext.getAttribute(ContentNodeIterator.CURRENT_INDEX,PageContext.REQUEST_SCOPE)).intValue();
-        if (currentIndex == (size-1))
+    public int doStartTag()
+    {
+        int size = ((Integer) pageContext.getAttribute(ContentNodeIterator.SIZE, PageContext.REQUEST_SCOPE)).intValue();
+        int currentIndex = ((Integer) pageContext.getAttribute(
+            ContentNodeIterator.CURRENT_INDEX,
+            PageContext.REQUEST_SCOPE)).intValue();
+        if (currentIndex == (size - 1))
             return EVAL_BODY_INCLUDE;
         return SKIP_BODY;
     }
 
-
-
     /**
-     * <p>continue evaluating jsp</p>
-     *
+     * <p>
+     * continue evaluating jsp
+     * </p>
      * @return int
      */
-    public int doEndTag() {
+    public int doEndTag()
+    {
         return EVAL_PAGE;
     }
-
 
 }

@@ -9,12 +9,7 @@
  *
  * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
-
-
+ */
 package info.magnolia.cms.taglibs.util;
 
 import javax.servlet.jsp.JspException;
@@ -22,53 +17,56 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 
 /**
- * Date: Apr 28, 2003
- * Time: 11:20:59 AM
  * @author Marcel Salathe
- * @version 1.1
+ * @version $Revision: $ ($Author: $)
  */
+public class AAttribute extends TagSupport
+{
 
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
 
-public class AAttribute extends TagSupport {
     private String value = "";
+
     private String name = "";
 
-
-
-        /**
-    * <p>end of tag</p>
-    *
-    * @return int
-    */
-    public int doEndTag() throws JspException {
-        AHref parent = (AHref)findAncestorWithClass(this, AHref.class);
-        if (parent == null) {
+    /**
+     * <p>
+     * end of tag
+     * </p>
+     * @return int
+     */
+    public int doEndTag() throws JspException
+    {
+        AHref parent = (AHref) findAncestorWithClass(this, AHref.class);
+        if (parent == null)
+        {
             throw new JspException("nesting error");
         }
-        else {
+        else
+        {
             parent.setAttribute(this.name, this.value);
         }
         return EVAL_PAGE;
 
     }
 
-
-
     /**
      * @param name , name of the attribute
      */
-    public void setName(String name) {
+    public void setName(String name)
+    {
         this.name = name;
     }
-
-
 
     /**
      * @param value , value of the attribute
      */
-    public void setValue(String value) {
+    public void setValue(String value)
+    {
         this.value = value;
     }
-
 
 }

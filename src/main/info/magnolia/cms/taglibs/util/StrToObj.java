@@ -9,63 +9,71 @@
  *
  * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
+ */
 package info.magnolia.cms.taglibs.util;
-
-import org.apache.log4j.Logger;
 
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
+import org.apache.log4j.Logger;
+
 
 /**
- * Date: Oct 7, 2003
- * Time: 9:32:32 AM
  * @author Vinzenz Wyser
- * @version 1.1
+ * @version $Revision: $ ($Author: $)
  */
+public class StrToObj extends BodyTagSupport
+{
 
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
 
-public class StrToObj extends BodyTagSupport{
-
-
-private static Logger log = Logger.getLogger(StrToObj.class);
+    private static Logger log = Logger.getLogger(StrToObj.class);
 
     public String var;
+
     public String delims = "\n";
 
-    public int doEndTag() {
-        //JspWriter out = pageContext.getOut();
+    public int doEndTag()
+    {
+        // JspWriter out = pageContext.getOut();
         String str = getBodyContent().getString();
 
-        if (!str.equals("")) {
+        if (!str.equals(""))
+        {
             String[] obj = str.split(this.delims);
-            try {
-                pageContext.setAttribute(this.var,obj,PageContext.PAGE_SCOPE);
+            try
+            {
+                pageContext.setAttribute(this.var, obj, PageContext.PAGE_SCOPE);
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 log.error(e.getMessage());
             }
         }
-        else {
-            try {
-                pageContext.setAttribute(this.var,"",PageContext.PAGE_SCOPE);
+        else
+        {
+            try
+            {
+                pageContext.setAttribute(this.var, "", PageContext.PAGE_SCOPE);
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 log.error(e.getMessage());
             }
         }
         return EVAL_PAGE;
     }
 
-
-    public void setVar(String var){
+    public void setVar(String var)
+    {
         this.var = var;
     }
 
-    public void setDelims(String delims){
+    public void setDelims(String delims)
+    {
         this.delims = delims;
     }
 
