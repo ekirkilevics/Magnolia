@@ -141,12 +141,17 @@ rootPath CDATA #REQUIRED
             <param name="maxMergeDocs" value="10000"/>
             <param name="mergeFactor" value="10"/>
 
+        <FileSystem class="org.apache.jackrabbit.core.fs.local.LocalFileSystem">
+            <param name="path" value="../webapps/magnolia/repositories/website/workspaces/index"/>
+        </FileSystem>
+        <!--
         <FileSystem class="com.day.jackrabbit.fs.cq.CQFileSystem">
             <param name="path" value="../webapps/magnolia/repositories/website/workspaces/index.dat"/>
             <param name="autoRepair" value="false"/>
             <param name="blockSize" value="128"/>
             <param name="autoSync" value="true"/>
         </FileSystem>
+        -->
 
         </SearchIndex>
     </Workspace>
@@ -159,17 +164,17 @@ rootPath CDATA #REQUIRED
             Configures the filesystem to use for versioning for the respective
             persistence manager
         -->
+        <!--
         <FileSystem class="org.apache.jackrabbit.core.fs.local.LocalFileSystem">
             <param name="path" value="../webapps/magnolia/repositories/website/workspaces/version"/>
         </FileSystem>
-        <!--
+		-->
         <FileSystem class="com.day.jackrabbit.fs.cq.CQFileSystem">
             <param name="path" value="../webapps/magnolia/repositories/website/workspaces/version.dat"/>
             <param name="autoRepair" value="false"/>
             <param name="blockSize" value="128"/>
             <param name="autoSync" value="true"/>
         </FileSystem>
-		-->
 
         <!--
             Configures the perisistence manager to be used for persisting version state.
