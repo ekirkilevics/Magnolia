@@ -22,6 +22,7 @@ import info.magnolia.cms.gui.control.TreeMenuItem;
 import info.magnolia.cms.gui.misc.Icon;
 import info.magnolia.cms.i18n.ContextMessages;
 import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
 
 import javax.jcr.PropertyType;
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +41,7 @@ public class AdminTreeConfig implements AdminTree {
     public void configureTree(Tree tree, HttpServletRequest request, String path, String pathOpen, String pathSelected,
         boolean create, String createItemType) {
         
-        Messages msgs = ContextMessages.getInstance(request);
+        Messages msgs = MessagesManager.getMessages(request);
         
         tree.setIconPage(Tree.ICONDOCROOT + "folder_cubes.gif");
         tree.setPath(path);

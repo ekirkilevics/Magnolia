@@ -15,6 +15,7 @@ package info.magnolia.cms.gui.dialog;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.i18n.ContextMessages;
+import info.magnolia.cms.i18n.MessagesManager;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
@@ -47,7 +48,7 @@ public class DialogLink extends DialogEditWithButton {
         throws RepositoryException {
         super.init(request, response, websiteNode, configNode);
         String extension = this.getConfigValue("extension");
-        String label = ContextMessages.get(this.getRequest(),"dialog.link.internal"); 
+        String label = MessagesManager.get(this.getRequest(),"dialog.link.internal"); 
         this.getButton().setLabel(label);
         this.getButton().setSaveInfo(false);
         String repository = this.getConfigValue("repository", ContentRepository.WEBSITE);

@@ -3,6 +3,7 @@ package info.magnolia.cms.gui.dialog.pages;
 import info.magnolia.cms.gui.dialog.DialogSuper;
 import info.magnolia.cms.gui.dialog.DialogWebDAV;
 import info.magnolia.cms.i18n.ContextMessages;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.servlets.BasePageServlet;
 
 import java.io.IOException;
@@ -42,7 +43,7 @@ public class WebDavIFrameDialogPage extends BasePageServlet {
             dav.drawHtmlList(out);
         }
         else {
-            out.println("<i>" + ContextMessages.get(request, "webdav.error") + "</i>");
+            out.println("<i>" + MessagesManager.get(request, "webdav.error") + "</i>");
         }
 
     }

@@ -10,6 +10,7 @@ import info.magnolia.cms.gui.dialog.DialogSuper;
 import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.i18n.ContextMessages;
 import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.servlets.BasePageServlet;
 
@@ -37,7 +38,7 @@ public class UserEditIncludeRolesDialogPage extends BasePageServlet {
 
     private static final String getHtmlRowInner(HttpServletRequest request) {
         boolean small = true;
-        Messages msgs = ContextMessages.getInstance(request);
+        Messages msgs = MessagesManager.getMessages(request);
 
         Button choose = new Button();
         choose.setLabel(msgs.get("buttons.choose"));

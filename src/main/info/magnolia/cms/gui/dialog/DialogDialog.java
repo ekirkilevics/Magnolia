@@ -20,6 +20,7 @@ import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.ContextMessages;
 import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -144,7 +145,7 @@ public class DialogDialog extends DialogSuper {
             + this.getConfigValue("height", DIALOGSIZE_NORMAL_HEIGHT)
             + ");");
         out.write("</script>");
-        out.write("<title>" + this.getConfigValue("label", ContextMessages.get(getRequest(),"dialog.editTitle")) + "</title>");
+        out.write("<title>" + this.getConfigValue("label", MessagesManager.get(getRequest(),"dialog.editTitle")) + "</title>");
         out.write(new Sources(this.getRequest().getContextPath()).getHtmlJs());
         out.write(new Sources(this.getRequest().getContextPath()).getHtmlCss());
         out.write(new Sources(this.getRequest().getContextPath()).getHtmlRichEdit());
@@ -180,7 +181,7 @@ public class DialogDialog extends DialogSuper {
     }
 
     public void drawHtmlPostSubs(Writer out) throws IOException {
-        Messages msgs = ContextMessages.getInstance(getRequest());
+        Messages msgs = MessagesManager.getMessages(getRequest());
         
         // TabSet stuff
         String id = this.getId();

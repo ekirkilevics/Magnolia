@@ -19,6 +19,7 @@ import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.gui.misc.Spacer;
 import info.magnolia.cms.i18n.ContextMessages;
+import info.magnolia.cms.i18n.MessagesManager;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -266,11 +267,11 @@ public class DialogWebDAV extends DialogBox {
                 + "</a>";
         }
         else {
-            showPath = "<i>" + ContextMessages.get(this.getRequest(), "dialog.webdav.noSelection") + "</i>";
+            showPath = "<i>" + MessagesManager.get(this.getRequest(), "dialog.webdav.noSelection") + "</i>";
             showIcon = NULLGIF;
         }
 
-        this.setDescription(ContextMessages.get(this.getRequest(), "dialog.webdav.connectedTo")
+        this.setDescription(MessagesManager.get(this.getRequest(), "dialog.webdav.connectedTo")
             + this.getProtocol()
             + "://"
             + this.getHost()
@@ -469,7 +470,7 @@ public class DialogWebDAV extends DialogBox {
             i = drawHtmlList(out, dirListAS, i);
             i = drawHtmlList(out, fileListAS, i);
             if (i == 1) {
-                out.write("<tr><td colspan=\"3\"></td><td colspan=\"3\"><em>" + ContextMessages.get(this.getRequest(),"dialog.webdav.directoryIsEmpty") + "</em></td></tr>");
+                out.write("<tr><td colspan=\"3\"></td><td colspan=\"3\"><em>" + MessagesManager.get(this.getRequest(),"dialog.webdav.directoryIsEmpty") + "</em></td></tr>");
             }
             out.write("</table>");
             out.write("</body></html>");
@@ -534,7 +535,7 @@ public class DialogWebDAV extends DialogBox {
                     }
                 }
                 if (checked) {
-                    out.write(ContextMessages.get(this.getRequest(),"dialog.webdav.checked"));
+                    out.write(MessagesManager.get(this.getRequest(),"dialog.webdav.checked"));
                 }
                 out.write(" />");
             }

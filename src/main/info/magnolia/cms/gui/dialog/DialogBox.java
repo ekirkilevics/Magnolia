@@ -13,7 +13,7 @@
 package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.gui.misc.CssConstants;
-import info.magnolia.cms.i18n.TemplateMessages;
+import info.magnolia.cms.i18n.TemplateMessagesUtil;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -80,10 +80,10 @@ public class DialogBox extends DialogSuper {
         if (this.getBoxType() == BOXTYPE_2COLS) {
             out.write("<td width=\"1%\" class=\"" + CssConstants.CSSCLASS_BOXLABEL + "\">");
             // write the label
-            out.write(TemplateMessages.get(this, this.getLabel()));
+            out.write(TemplateMessagesUtil.get(this, this.getLabel()));
             if (!this.getConfigValue("labelDescription").equals("")) {
                 String desc = this.getConfigValue("labelDescription");
-                desc=TemplateMessages.get(this, desc);
+                desc=TemplateMessagesUtil.get(this, desc);
                 out.write("<div class=\""
                     + CssConstants.CSSCLASS_DESCRIPTION
                     + "\">"
@@ -101,14 +101,14 @@ public class DialogBox extends DialogSuper {
         else {
             out.write("<td width=\"100%\" colspan=\"2\" class=\"" + CssConstants.CSSCLASS_BOXLABEL + "\">");
             if (!this.getLabel().equals("")) {
-                out.write("<div class=\"" + CssConstants.CSSCLASS_BOXLABEL + "\">" + TemplateMessages.get(this, this.getLabel()) + "</div>");
+                out.write("<div class=\"" + CssConstants.CSSCLASS_BOXLABEL + "\">" + TemplateMessagesUtil.get(this, this.getLabel()) + "</div>");
             }
             if (!this.getConfigValue("labelDescription").equals("")) {
                 String desc = this.getConfigValue("labelDescription"); 
                 out.write("<div class=\""
                     + CssConstants.CSSCLASS_DESCRIPTION
                     + "\">"
-                    + TemplateMessages.get(this, desc)
+                    + TemplateMessagesUtil.get(this, desc)
                     + "</div>");
             }
         }
@@ -124,7 +124,7 @@ public class DialogBox extends DialogSuper {
         // use div to force a new line
         if (!this.getDescription().equals("")) {
             String desc = this.getDescription();
-            desc = TemplateMessages.get(this, desc);
+            desc = TemplateMessagesUtil.get(this, desc);
             html = "<div class=\"" + CssConstants.CSSCLASS_DESCRIPTION + "\">" + desc + "</div>";
         }
         return html;

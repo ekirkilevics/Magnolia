@@ -16,6 +16,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.gui.control.Bar;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.i18n.ContextMessages;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
 
@@ -77,7 +78,7 @@ public class BarNew extends Bar {
      */
     public void setButtonNew(String path, String nodeCollectionName, String nodeName, String paragraph) {
         Button b = new Button();
-        b.setLabel(ContextMessages.getInstance(getRequest()).get("buttons.new"));
+        b.setLabel(MessagesManager.getMessages(getRequest()).get("buttons.new"));
         // todo: dynamic repository
         String repository = ContentRepository.WEBSITE;
         b.setOnclick("mgnlOpenDialog('"

@@ -17,38 +17,40 @@ import javax.servlet.http.HttpServletRequest;
 
 import info.magnolia.cms.gui.dialog.DialogSuper;
 
+
 /**
- * @author philipp
- *
- * This class helps to get the messages. First it make a lookup in messages_templating_custom and then in messages_templating..
+ * @author philipp This class helps to get the messages used in templates (paragraphs, dialogs, ..). First it make a
+ * lookup in messages_templating_custom and then in messages_templating..
  */
-public class TemplateMessages {
+public class TemplateMessagesUtil {
+
     public static String DEFAULT_BASENAME = "info.magnolia.module.admininterface.messages_templating";
+
     public static String CUSTOM_BASENAME = "info.magnolia.module.admininterface.messages_templating_custom";
-    
+
     public static String get(DialogSuper dialog, String key) {
-        return get(dialog.getRequest(),key);
+        return get(dialog.getRequest(), key);
     }
 
     public static String get(DialogSuper dialog, String key, Object[] args) {
-        return get(dialog.getRequest(),key, args);
+        return get(dialog.getRequest(), key, args);
     }
-    
+
     public static String get(HttpServletRequest request, String key) {
-        String msg = ContextMessages.getInstance(request, DEFAULT_BASENAME).getWithDefault(key, key);
-        if(!msg.equals(key)){
+        String msg = MessagesManager.getMessages(request, DEFAULT_BASENAME).getWithDefault(key, key);
+        if (!msg.equals(key)) {
             return msg;
         }
-        return ContextMessages.getInstance(request, CUSTOM_BASENAME).getWithDefault(key, key);
-        
+        return MessagesManager.getMessages(request, CUSTOM_BASENAME).getWithDefault(key, key);
+
     }
-    
+
     public static String get(HttpServletRequest request, String key, Object[] args) {
-        String msg = ContextMessages.getInstance(request, DEFAULT_BASENAME).getWithDefault(key, args, key);
-        if(!msg.equals(key)){
+        String msg = MessagesManager.getMessages(request, DEFAULT_BASENAME).getWithDefault(key, args, key);
+        if (!msg.equals(key)) {
             return msg;
         }
-        return ContextMessages.getInstance(request, CUSTOM_BASENAME).getWithDefault(key, args, key);
+        return MessagesManager.getMessages(request, CUSTOM_BASENAME).getWithDefault(key, args, key);
     }
 
 }

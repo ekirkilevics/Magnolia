@@ -121,7 +121,7 @@
 		while (it.hasNext()) {
 			ContentNode c=(ContentNode) it.next();
 			Button b=new Button();
-			String label = info.magnolia.cms.i18n.TemplateMessages.get(request, c.getNodeData("label").getString());
+			String label = info.magnolia.cms.i18n.TemplateMessagesUtil.get(request, c.getNodeData("label").getString());
 			b.setLabel(labelPre + label + labelPost);
 			b.setPushButtonTag("div");
 			b.setOnclick(c.getNodeData("onclick").getString());

@@ -17,6 +17,7 @@ import info.magnolia.cms.gui.dialog.DialogTab;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.ContextMessages;
 import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.servlets.BasePageServlet;
@@ -62,7 +63,7 @@ public class UserRolesEditDialogPage extends BasePageServlet {
      */
     public void draw(HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
         PrintWriter out = response.getWriter();
-        Messages msgs = ContextMessages.getInstance(request);
+        Messages msgs = MessagesManager.getMessages(request);
 
         MultipartForm form = Resource.getPostedForm(request);
         boolean drawDialog = true;

@@ -9,6 +9,7 @@ import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.gui.misc.Spacer;
 import info.magnolia.cms.i18n.ContextMessages;
 import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.servlets.BasePageServlet;
 
 import java.io.IOException;
@@ -35,7 +36,7 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
      */
     public void draw(HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
         PrintWriter out = response.getWriter();
-        Messages msgs = ContextMessages.getInstance(request);
+        Messages msgs = MessagesManager.getMessages(request);
         // WARNING: no white spaces tolerated for save nodeData!
 
         int treeHeight = 50;

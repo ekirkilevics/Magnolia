@@ -22,7 +22,8 @@ import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.gui.control.TreeMenuItem;
 import info.magnolia.cms.i18n.ContextMessages;
 import info.magnolia.cms.i18n.Messages;
-import info.magnolia.cms.i18n.TemplateMessages;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.i18n.TemplateMessagesUtil;
 
 import java.util.Iterator;
 
@@ -41,7 +42,7 @@ public class AdminTreeWebsite implements AdminTree {
      */
     public void configureTree(Tree tree, HttpServletRequest request, String path, String pathOpen, String pathSelected,
         boolean create, String createItemType) {
-        Messages msgs = ContextMessages.getInstance(request);
+        Messages msgs = MessagesManager.getMessages(request);
         
         tree.setIconOndblclick("mgnlTreeMenuItemOpen(" + tree.getJavascriptTree() + ");");
         tree.setPath(path);
@@ -55,8 +56,8 @@ public class AdminTreeWebsite implements AdminTree {
         tree.addItemType(ItemType.NT_CONTENT);
 
         // to view all nodes uncomment this lines
-        // tree.addItemType(ItemType.NT_CONTENTNODE);
-        // tree.addItemType(ItemType.NT_NODEDATA);
+        tree.addItemType(ItemType.NT_CONTENTNODE);
+        tree.addItemType(ItemType.NT_NODEDATA);
         
         TreeColumn column0 = new TreeColumn(tree.getJavascriptTree(), request);
         column0.setIsLabel(true);
@@ -100,7 +101,7 @@ public class AdminTreeWebsite implements AdminTree {
         while (templates.hasNext()) {
             Template template = (Template) templates.next();
             String title = template.getTitle();
-            title = TemplateMessages.get(request, title);
+            title = TemplateMessagesUtil.get(request, title);
             title = Messages.javaScriptString(title);
             templateSelect.setOptions(title, template.getName());
         }

@@ -14,6 +14,7 @@ package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.i18n.ContextMessages;
+import info.magnolia.cms.i18n.MessagesManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -51,7 +52,7 @@ public class DialogDate extends DialogEditWithButton {
         throws RepositoryException {
         super.init(request, response, websiteNode, configNode);
         // set buttonlabel in config
-        this.getButton().setLabel(ContextMessages.get(getRequest(), "dialog.date.select"));
+        this.getButton().setLabel(MessagesManager.get(getRequest(), "dialog.date.select"));
         this.getButton().setSaveInfo(false);
         this.getButton().setOnclick(
             "mgnlDialogOpenCalendar('" + this.getName() + "'," + this.getConfigValue("time", "false") + ");");

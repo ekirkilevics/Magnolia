@@ -23,7 +23,8 @@ import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.gui.misc.Spacer;
 import info.magnolia.cms.i18n.ContextMessages;
 import info.magnolia.cms.i18n.Messages;
-import info.magnolia.cms.i18n.TemplateMessages;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.i18n.TemplateMessagesUtil;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -134,7 +135,7 @@ public class DialogRichedit extends DialogBox {
                 SelectOption option = new SelectOption(null, value);
                 if (n.getNodeData("label").isExist()) {
                     String label = n.getNodeData("label").getString();
-                    label = TemplateMessages.get(this, label);
+                    label = TemplateMessagesUtil.get(this, label);
                     option.setLabel(label);
                 }
                 if (n.getNodeData("selected").getBoolean()) {
@@ -172,7 +173,7 @@ public class DialogRichedit extends DialogBox {
      * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(Writer)
      */
     public void drawHtml(Writer out) throws IOException {
-        Messages msgs = ContextMessages.getInstance(this.getRequest());
+        Messages msgs = MessagesManager.getMessages(this.getRequest());
         
         this.drawHtmlPre(out);
         if (this.getRichE().equals("true")

@@ -20,7 +20,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.gui.control.TreeColumnHtmlRenderer;
-import info.magnolia.cms.i18n.TemplateMessages;
+import info.magnolia.cms.i18n.TemplateMessagesUtil;
 
 
 
@@ -38,7 +38,7 @@ public class TemplateTreeColumnHtmlRenderer implements TreeColumnHtmlRenderer {
     public String renderHtml(TreeColumn treeColumn, Content content) {
         String templateName = content.getMetaData().getTemplate();
         String strKey = this.findTemplateKey(templateName);
-        return TemplateMessages.get(treeColumn.getRequest(), strKey);
+        return TemplateMessagesUtil.get(treeColumn.getRequest(), strKey);
     }
     
 	private String findTemplateKey(String templateName) {

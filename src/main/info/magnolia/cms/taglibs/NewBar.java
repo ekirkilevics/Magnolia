@@ -14,6 +14,7 @@ package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.gui.inline.BarNew;
 import info.magnolia.cms.i18n.ContextMessages;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.Resource;
 
 import java.io.IOException;
@@ -145,7 +146,7 @@ public class NewBar extends TagSupport {
      * @return String , label for the new bar
      */
     private String getNewLabel() {
-        String defStr = ContextMessages.getInstance(this.pageContext).get(DEFAULT_NEW_LABEL);
+        String defStr = MessagesManager.getMessages(this.pageContext).get(DEFAULT_NEW_LABEL);
         //String defStr = LocaleSupport.getLocalizedMessage(this.pageContext, DEFAULT_NEW_LABEL);
         return StringUtils.defaultString(this.newLabel, defStr);
     }

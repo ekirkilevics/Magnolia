@@ -19,7 +19,7 @@ import info.magnolia.cms.gui.control.ButtonSet;
 import info.magnolia.cms.gui.control.ControlSuper;
 import info.magnolia.cms.gui.control.Hidden;
 import info.magnolia.cms.gui.misc.CssConstants;
-import info.magnolia.cms.i18n.TemplateMessages;
+import info.magnolia.cms.i18n.TemplateMessagesUtil;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -64,7 +64,7 @@ public class DialogButtonSet extends DialogBox {
                 ContentNode n = ((ContentNode) it.next());
                 String value = n.getNodeData("value").getString();
                 String label = n.getNodeData("label").getString();
-                label = TemplateMessages.get(this, label);
+                label = TemplateMessagesUtil.get(this, label);
                 Button button = new Button(this.getName(), value);
                 // if (n.getNodeData("label").isExist()) button.setLabel(n.getNodeData("label").getString());
                 button.setLabel(label);
@@ -85,7 +85,7 @@ public class DialogButtonSet extends DialogBox {
         List options = new ArrayList();
         Button button = new Button(this.getName(), "");
         String label =configNode.getNodeData("buttonLabel").getString();
-        label = TemplateMessages.get(this, label);
+        label = TemplateMessagesUtil.get(this, label);
         button.setLabel(label);
 
         if (configNode.getNodeData("selected").getBoolean()) {

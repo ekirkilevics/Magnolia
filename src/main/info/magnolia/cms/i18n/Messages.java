@@ -24,9 +24,9 @@ import org.apache.log4j.Logger;
 
 
 /**
- * @author Philipp Bracher Provieds localized strings. You should uses the ContextMessages class if you can provide a
+ * @author Philipp Bracher Provides localized strings. You should uses the ContextMessages class if you can provide a
  * request object. Messages will do the job as good as possible without to know the session (user) and all the other
- * contextual things.
+ * contextual things. Endusers will use the MessageManager to resolve messages.
  */
 
 public class Messages {

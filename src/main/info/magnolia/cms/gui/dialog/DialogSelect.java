@@ -17,7 +17,7 @@ import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.control.SelectOption;
 import info.magnolia.cms.gui.misc.CssConstants;
-import info.magnolia.cms.i18n.TemplateMessages;
+import info.magnolia.cms.i18n.TemplateMessagesUtil;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -60,7 +60,7 @@ public class DialogSelect extends DialogBox {
                 String label = null;
                 if (n.getNodeData("label").isExist()) {
                     label = n.getNodeData("label").getString();
-                    label = TemplateMessages.get(this, label);
+                    label = TemplateMessagesUtil.get(this, label);
                 }
                 SelectOption option = new SelectOption(label, value);
                 if (n.getNodeData("selected").getBoolean()) {

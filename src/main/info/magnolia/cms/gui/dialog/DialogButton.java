@@ -13,7 +13,7 @@
 package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.gui.control.Button;
-import info.magnolia.cms.i18n.TemplateMessages;
+import info.magnolia.cms.i18n.TemplateMessagesUtil;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -44,7 +44,7 @@ public class DialogButton extends DialogBox {
     public void drawHtml(Writer out) throws IOException {
         Button control = new Button();
         String label = getConfigValue("buttonLabel");
-        label = TemplateMessages.get(this, label);
+        label = TemplateMessagesUtil.get(this, label);
         control.setSaveInfo(false);
         control.setLabel(label);
         control.setOnclick(this.getConfigValue("onclick"));

@@ -17,7 +17,8 @@ import info.magnolia.cms.gui.dialog.DialogStatic;
 import info.magnolia.cms.gui.dialog.DialogTab;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.ContextMessages;
-import info.magnolia.cms.i18n.TemplateMessages;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.i18n.TemplateMessagesUtil;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.servlets.BasePageServlet;
 import info.magnolia.cms.util.Resource;
@@ -52,7 +53,7 @@ public class StandardDialogPage extends BasePageServlet {
      * @see info.magnolia.cms.servlets.BasePageServlet#draw(HttpServletRequest, HttpServletResponse)
      */
     public void draw(HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
-        info.magnolia.cms.i18n.Messages msgs = ContextMessages.getInstance(request);
+        info.magnolia.cms.i18n.Messages msgs = MessagesManager.getMessages(request);
 
         PrintWriter out = response.getWriter();
 
@@ -194,8 +195,8 @@ public class StandardDialogPage extends BasePageServlet {
                         Paragraph paragraphInfo = Paragraph.getInfo(pars[i]);
                         Button button = new Button(c1.getName(), paragraphInfo.getName());
                         StringBuffer label = new StringBuffer();
-                        label.append("<strong>" + TemplateMessages.get(request, paragraphInfo.getTitle()) + "</strong><br />");
-                        label.append(TemplateMessages.get(request, paragraphInfo.getDescription()));
+                        label.append("<strong>" + TemplateMessagesUtil.get(request, paragraphInfo.getTitle()) + "</strong><br />");
+                        label.append(TemplateMessagesUtil.get(request, paragraphInfo.getDescription()));
                         label.append("<br /><br />");
                         button.setLabel(label.toString());
                         button.setOnclick("document.mgnlFormMain.submit();");

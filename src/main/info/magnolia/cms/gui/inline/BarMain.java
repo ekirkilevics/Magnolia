@@ -17,6 +17,7 @@ import info.magnolia.cms.gui.control.Bar;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.ContextMessages;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
 
@@ -106,7 +107,7 @@ public class BarMain extends Bar {
      */
     public void setButtonProperties(String path, String paragraph) {
         ButtonEdit b = new ButtonEdit(this.getRequest());
-        b.setLabel(ContextMessages.getInstance(getRequest()).get("buttons.properties"));
+        b.setLabel(MessagesManager.getMessages(getRequest()).get("buttons.properties"));
         b.setPath(path);
         b.setParagraph(paragraph);
         b.setDefaultOnclick(this.getRequest());
@@ -128,7 +129,7 @@ public class BarMain extends Bar {
      */
     public void setButtonPreview() {
         Button b = new Button();
-        String str = ContextMessages.getInstance(this.getRequest()).get("buttons.preview");
+        String str = MessagesManager.getMessages(this.getRequest()).get("buttons.preview");
         b.setLabel("&laquo; " + str);
         b.setOnclick("mgnlPreview(true);");
         this.setButtonPreview(b);
@@ -175,7 +176,7 @@ public class BarMain extends Bar {
      */
     public void setButtonSiteAdmin(String path) {
         Button b = new Button();
-        b.setLabel(ContextMessages.getInstance(getRequest()).get("buttons.admincentral"));
+        b.setLabel(MessagesManager.getMessages(getRequest()).get("buttons.admincentral"));
         b.setOnclick("mgnlOpenAdminCentral('" + path + "');");
         this.setButtonSiteAdmin(b);
     }

@@ -33,7 +33,7 @@ import org.apache.taglibs.standard.resources.Resources;
  * is using the PageContext which is not avaiable in Servlets, but the most classes do know the request-object and can
  * deliver it to this class. With this class you get the string stricly under the same rules as JSTL does. The most of
  * the code is the same as in the jstl classes. If you are able to pass a PageContext you will use
- * javax.servlet.jsp.jastl.fmt.LocalSupport.
+ * javax.servlet.jsp.jastl.fmt.LocalSupport. Endusers will use the MessageManager to resolve messages.
  */
 
 public class ContextMessages extends Messages {
@@ -87,72 +87,6 @@ public class ContextMessages extends Messages {
 
     public ResourceBundle getBundle() {
         return loc.getResourceBundle();
-    }
-    
-    /**
-     * Trys to make a new ContextMessages object. if not possible it creates a new Messages object.
-     * @return Messages
-     */
-    public static Messages getInstance(HttpServletRequest req) {
-        if (req != null) {
-            return new ContextMessages(req);
-        }
-        else {
-            log.debug("using i18n-messages without a request!");
-            return new Messages(Messages.DEFAULT_BASENAME);
-        }
-    }
-    
-    public static Messages getInstance(HttpServletRequest req, String basename) {
-        if (req != null) {
-            return new ContextMessages(req, basename);
-        }
-        else {
-            log.debug("using i18n-messages without a request!");
-            return new Messages(basename);
-        }
-    }
-    
-    public static Messages getInstance(HttpServletRequest req, String basename, Locale locale) {
-        if (req != null) {
-            return new ContextMessages(req, basename, locale);
-        }
-        else {
-            log.debug("using i18n-messages without a request!");
-            return new Messages(basename,locale);
-        }
-    }
-
-    
-    /**
-     * Trys to make a new ContextMessages object. if not possible it creates a new Messages object.
-     * @return Messages
-     */
-    public static Messages getInstance(PageContext pc) {
-        if (pc != null && pc.getRequest() instanceof HttpServletRequest ) {
-            return new ContextMessages((HttpServletRequest) pc.getRequest());
-        }
-        else {
-            log.debug("using i18n-messages without a request inside a control!");
-            return new Messages(Messages.DEFAULT_BASENAME);
-        }
-    }
-    
-    public static String get(HttpServletRequest req, String key) {
-        return ContextMessages.getInstance(req).get(key);
-    }
-
-    
-    public static String get(HttpServletRequest req, String key, Object[] args) {
-        return ContextMessages.getInstance(req).get(key, args);
-    }
-
-    public static String getWithDefault(HttpServletRequest req, String key, String defaultMsg) {
-        return ContextMessages.getInstance(req).getWithDefault(key, defaultMsg);
-    }
-
-    public static String getWithDefault(HttpServletRequest req, String key, Object[] args, String defaultMsg) {
-        return ContextMessages.getInstance(req).getWithDefault(key, args, defaultMsg);
     }
     
     /**

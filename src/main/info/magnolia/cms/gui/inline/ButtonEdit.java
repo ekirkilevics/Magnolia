@@ -15,6 +15,7 @@ package info.magnolia.cms.gui.inline;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.i18n.ContextMessages;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
 
@@ -32,7 +33,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class ButtonEdit extends Button {
 
-    String label = ContextMessages.getInstance(getRequest()).get("buttons.edit");
+    String label = MessagesManager.getMessages(getRequest()).get("buttons.edit");
 
     public ButtonEdit() {
     }
