@@ -17,16 +17,26 @@ import info.magnolia.cms.Dispatcher;
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.config.VirtualMap;
 import info.magnolia.cms.core.CacheHandler;
+import info.magnolia.cms.core.CacheProcess;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.Listener;
 import info.magnolia.cms.security.Lock;
 import info.magnolia.cms.security.SecureURI;
 import info.magnolia.cms.security.SessionAccessControl;
+
 import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Enumeration;
+import java.util.Locale;
+import java.security.Principal;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletInputStream;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.http.*;
+
 import org.apache.log4j.Logger;
 
 
@@ -34,6 +44,7 @@ import org.apache.log4j.Logger;
  * This is the main http servlet which will be called for any resource request this servlet will dispacth or process
  * requests according to their nature -- all resource requests will go to ResourceDispatcher -- all page requests will
  * be handed over to the defined JSP or Servlet (template).
+ *
  * @author Sameer Charles
  * @version 2.0
  */
@@ -58,9 +69,10 @@ public class EntryServlet extends HttpServlet {
     private String extension;
 
     /**
-     * <p>
+     * <p/>
      * This makes browser and proxy caches work more effectively, reducing the load on server and network resources.
      * </p>
+     *
      * @param request
      * @return last modified time in miliseconds since 1st Jan 1970 GMT
      */
@@ -69,9 +81,10 @@ public class EntryServlet extends HttpServlet {
     }
 
     /**
-     * <p>
+     * <p/>
      * All HTTP/s requests are handled here
      * </p>
+     *
      * @param req
      * @param res
      */
@@ -100,26 +113,24 @@ public class EntryServlet extends HttpServlet {
                     if (success) {
                         if (info.magnolia.cms.beans.config.Cache.isCacheable()) {
                             CacheHandler.cacheURI(req);
-                            // todo - Bug : cache only first time after system restart. fails after removed activation
-                            // CacheProcess cache = new CacheProcess(req);
-                            // cache.start();
+                            CacheProcess cache = new CacheProcess(new CacheRequest(req));
+                            cache.start();
                         }
                     }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     log.error(e.getMessage(), e);
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
     }
 
     /**
-     * <p>
+     * <p/>
      * All requests are handles by get handler
      * </p>
+     *
      * @param req
      * @param res
      */
@@ -128,25 +139,23 @@ public class EntryServlet extends HttpServlet {
     }
 
     /**
-     * <p>
+     * <p/>
      * checks access from Listener / Authenticator / AccessLock
      * </p>
-     * @return boolean
+     *
      * @param req HttpServletRequest as received by the service method
      * @param res HttpServletResponse as received by the service method
+     * @return boolean
      */
     private boolean isAllowed(HttpServletRequest req, HttpServletResponse res) throws IOException {
         if (Lock.isSystemLocked()) {
             res.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
             return false;
-        }
-        else if (SessionAccessControl.isSecuredSession(req)) {
+        } else if (SessionAccessControl.isSecuredSession(req)) {
             return true;
-        }
-        else if ((SecureURI.isProtected(uri))) {
+        } else if ((SecureURI.isProtected(uri))) {
             return authenticate(req, res);
-        }
-        else if (!Listener.isAllowed(req)) {
+        } else if (!Listener.isAllowed(req)) {
             res.sendError(HttpServletResponse.SC_FORBIDDEN);
             return false;
         }
@@ -154,9 +163,10 @@ public class EntryServlet extends HttpServlet {
     }
 
     /**
-     * <p>
+     * <p/>
      * Authenticate on basic headers
      * </p>
+     *
      * @param req
      * @param res
      */
@@ -167,8 +177,7 @@ public class EntryServlet extends HttpServlet {
                 res.setHeader("WWW-Authenticate", "BASIC realm=\"" + Server.getBasicRealm() + "\"");
                 return false;
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
             return false;
         }
@@ -176,9 +185,10 @@ public class EntryServlet extends HttpServlet {
     }
 
     /**
-     * <p>
+     * <p/>
      * redirect based on the mapping in config/server/.node.xml
      * </p>
+     *
      * @param request
      * @param response
      */
@@ -187,8 +197,7 @@ public class EntryServlet extends HttpServlet {
         if (!URI.equals("")) {
             try {
                 request.getRequestDispatcher(URI).forward(request, response);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 log.error("Failed to forward - " + URI);
                 log.error(e.getMessage(), e);
             }
@@ -198,9 +207,10 @@ public class EntryServlet extends HttpServlet {
     }
 
     /**
-     * <p>
+     * <p/>
      * attach Interceptor servlet if interception needed
      * </p>
+     *
      * @param request
      * @param response
      */
@@ -208,8 +218,7 @@ public class EntryServlet extends HttpServlet {
         if (request.getParameter(INTERCEPT) != null) {
             try {
                 request.getRequestDispatcher(REQUEST_INTERCEPTOR).include(request, response);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 log.error("Failed to Intercept");
                 log.error(e.getMessage(), e);
             }
@@ -224,9 +233,10 @@ public class EntryServlet extends HttpServlet {
     }
 
     /**
-     * <p>
+     * <p/>
      * Extracts uri and extension
      * </p>
+     *
      * @param request
      */
     private void setURI(HttpServletRequest request) {
@@ -236,13 +246,263 @@ public class EntryServlet extends HttpServlet {
             if (lastIndexOfDot > -1) {
                 extension = request.getRequestURI().substring(lastIndexOfDot + 1);
                 uri = request.getRequestURI().substring(0, lastIndexOfDot);
-            }
-            else {
+            } else {
                 uri = request.getRequestURI();
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+
+
+    /**
+     * <p>
+     * Simply a copy of the original request used by CacheProcess
+     * </p>
+     *
+     * */
+    private class CacheRequest implements HttpServletRequest {
+
+        Map attributes = new HashMap();
+        Map headers = new HashMap();
+        String URI;
+
+        public CacheRequest(HttpServletRequest originalRequest) {
+            // remember URI
+            URI = originalRequest.getRequestURI();
+            // copy neccessary attributes
+            attributes.put(Aggregator.EXTENSION, originalRequest
+                    .getAttribute(Aggregator.EXTENSION));
+            attributes.put(Aggregator.ACTPAGE, originalRequest
+                    .getAttribute(Aggregator.ACTPAGE));
+
+            // copy headers
+            String authHeader = originalRequest.getHeader("Authorization");
+            if (authHeader != null) {
+                headers.put("Authorization", authHeader);
+            }
+        }
+
+        public String getRequestURI() {
+            return URI;
+        }
+
+        public String getHeader(String key) {
+            return (String) this.headers.get(key);
+        }
+
+        public Object getAttribute(String key) {
+            return attributes.get(key);
+        }
+
+        public StringBuffer getRequestURL() {
+            throw new UnsupportedOperationException();
+        }
+
+        public String getServletPath() {
+            throw new UnsupportedOperationException();
+        }
+
+        public HttpSession getSession(boolean b) {
+            throw new UnsupportedOperationException();
+        }
+
+        public HttpSession getSession() {
+            throw new UnsupportedOperationException();
+        }
+
+        public boolean isRequestedSessionIdValid() {
+            throw new UnsupportedOperationException();
+        }
+
+        public boolean isRequestedSessionIdFromCookie() {
+            throw new UnsupportedOperationException();
+        }
+
+        public boolean isRequestedSessionIdFromURL() {
+            throw new UnsupportedOperationException();
+        }
+
+        public boolean isRequestedSessionIdFromUrl() {
+            throw new UnsupportedOperationException();
+        }
+
+        public String getAuthType() {
+            throw new UnsupportedOperationException();
+        }
+
+        public Cookie[] getCookies() {
+            throw new UnsupportedOperationException();
+        }
+
+        public long getDateHeader(String s) {
+            throw new UnsupportedOperationException();
+        }
+
+        public Enumeration getHeaders(String s) {
+            throw new UnsupportedOperationException();
+        }
+
+        public Enumeration getHeaderNames() {
+            throw new UnsupportedOperationException();
+        }
+
+        public int getIntHeader(String s) {
+            throw new UnsupportedOperationException();
+        }
+
+        public String getMethod() {
+            throw new UnsupportedOperationException();
+        }
+
+        public String getPathInfo() {
+            throw new UnsupportedOperationException();
+        }
+
+        public String getPathTranslated() {
+            throw new UnsupportedOperationException();
+        }
+
+        public String getContextPath() {
+            throw new UnsupportedOperationException();
+        }
+
+        public String getQueryString() {
+            throw new UnsupportedOperationException();
+        }
+
+        public String getRemoteUser() {
+            throw new UnsupportedOperationException();
+        }
+
+        public boolean isUserInRole(String s) {
+            throw new UnsupportedOperationException();
+        }
+
+        public Principal getUserPrincipal() {
+            throw new UnsupportedOperationException();
+        }
+
+        public String getRequestedSessionId() {
+            throw new UnsupportedOperationException();
+        }
+
+        public Enumeration getAttributeNames() {
+            throw new UnsupportedOperationException();
+        }
+
+        public String getCharacterEncoding() {
+            throw new UnsupportedOperationException();
+        }
+
+        public void setCharacterEncoding(String s) throws UnsupportedEncodingException {
+            throw new UnsupportedOperationException();
+        }
+
+        public int getContentLength() {
+            throw new UnsupportedOperationException();
+        }
+
+        public String getContentType() {
+            throw new UnsupportedOperationException();
+        }
+
+        public ServletInputStream getInputStream() throws IOException {
+            throw new UnsupportedOperationException();
+        }
+
+        public String getParameter(String s) {
+            throw new UnsupportedOperationException();
+        }
+
+        public Enumeration getParameterNames() {
+            throw new UnsupportedOperationException();
+        }
+
+        public String[] getParameterValues(String s) {
+            throw new UnsupportedOperationException();
+        }
+
+        public Map getParameterMap() {
+            throw new UnsupportedOperationException();
+        }
+
+        public String getProtocol() {
+            throw new UnsupportedOperationException();
+        }
+
+        public String getScheme() {
+            throw new UnsupportedOperationException();
+        }
+
+        public String getServerName() {
+            throw new UnsupportedOperationException();
+        }
+
+        public int getServerPort() {
+            throw new UnsupportedOperationException();
+        }
+
+        public BufferedReader getReader() throws IOException {
+            throw new UnsupportedOperationException();
+        }
+
+        public String getRemoteAddr() {
+            throw new UnsupportedOperationException();
+        }
+
+        public String getRemoteHost() {
+            throw new UnsupportedOperationException();
+        }
+
+        public void setAttribute(String s, Object o) {
+            throw new UnsupportedOperationException();
+        }
+
+        public void removeAttribute(String s) {
+            throw new UnsupportedOperationException();
+        }
+
+        public Locale getLocale() {
+            throw new UnsupportedOperationException();
+        }
+
+        public Enumeration getLocales() {
+            throw new UnsupportedOperationException();
+        }
+
+        public boolean isSecure() {
+            throw new UnsupportedOperationException();
+        }
+
+        public RequestDispatcher getRequestDispatcher(String s) {
+            throw new UnsupportedOperationException();
+        }
+
+        public String getRealPath(String s) {
+            throw new UnsupportedOperationException();
+        }
+
+        public int getRemotePort() {
+            throw new UnsupportedOperationException();
+        }
+
+        public String getLocalName() {
+            throw new UnsupportedOperationException();
+        }
+
+        public String getLocalAddr() {
+            throw new UnsupportedOperationException();
+        }
+
+        public int getLocalPort() {
+            throw new UnsupportedOperationException();
+        }
+
+    }
+
+
 }
+
+
