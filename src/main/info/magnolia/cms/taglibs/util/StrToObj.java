@@ -14,6 +14,7 @@ package info.magnolia.cms.taglibs.util;
 
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyTagSupport;
+
 import org.apache.log4j.Logger;
 
 
@@ -33,9 +34,9 @@ public class StrToObj extends BodyTagSupport {
      */
     private static Logger log = Logger.getLogger(StrToObj.class);
 
-    public String var;
+    private String var;
 
-    public String delims = "\n";
+    private String delims = "\n";
 
     public void setVar(String var) {
         this.var = var;

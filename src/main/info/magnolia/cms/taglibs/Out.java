@@ -17,15 +17,18 @@ import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.util.Resource;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -46,25 +49,25 @@ public class Out extends TagSupport {
      */
     private static Logger log = Logger.getLogger(Out.class);
 
-    private final static String DEFAULT_LINEBREAK = NodeData.HTML_LINEBREAK;
+    private static final String DEFAULT_LINEBREAK = NodeData.HTML_LINEBREAK;
 
-    private final static String DEFAULT_DATEPATTERN = "yyyy-MM-dd";
+    private static final String DEFAULT_DATEPATTERN = "yyyy-MM-dd";
 
-    private String nodeDataName = null;
+    private String nodeDataName;
 
-    private String contentNodeName = null;
+    private String contentNodeName;
 
-    private String contentNodeCollectionName = null;
+    private String contentNodeCollectionName;
 
-    private Content contentNode = null;
+    private Content contentNode;
 
-    private NodeData nodeData = null;
+    private NodeData nodeData;
 
     private String fileProperty = "";
 
     private String datePattern = DEFAULT_DATEPATTERN; // according to ISO 8601
 
-    private String dateLanguage = null;
+    private String dateLanguage;
 
     private String lineBreak = DEFAULT_LINEBREAK;
 
@@ -72,8 +75,7 @@ public class Out extends TagSupport {
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
     public int doStartTag() {
-        // System.out.println("");
-        // System.out.println("name: "+this.getNodeDataName());
+
         ContentNode local = Resource.getLocalContentNode((HttpServletRequest) pageContext.getRequest());
         Content actpage = Resource.getCurrentActivePage((HttpServletRequest) pageContext.getRequest());
         String contentNodeName = this.getContentNodeName();
@@ -134,10 +136,7 @@ public class Out extends TagSupport {
     }
 
     /**
-     * <p>
-     * continue evaluating jsp
-     * </p>
-     * @return int
+     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag() {
         this.display();
@@ -247,7 +246,7 @@ public class Out extends TagSupport {
      * <li><b>extension: </b> extension as is (Png)
      * <li><b>extensionLowerCase: </b> extension lower case (png)
      * <li><b>extensionUpperCase: </b> extension upper case (PNG)
-     * <li><b>nameWithoutExtension: (Alien)
+     * <li><b>nameWithoutExtension: </b> (Alien)
      * <li><b>handle: </b> /dev/mainColumnParagraphs/0/image
      * <li><b>pathWithoutName: </b> (/dev/mainColumnParagraphs/0/image.png)
      * <li><b>size: </b> size in bytes (2827)
@@ -352,12 +351,9 @@ public class Out extends TagSupport {
              * System.out.println("GN:"+data.getName()); //System.out.println("TYPE:"+data.getType()); } } catch
              * (ElementNotFoundException e) {
              */
-            // System.out.println("1 "+this.getNodeDataName());
-            // System.out.println("2 "+this.getContentNode());
             // if (this.property!=null) this.nodeData =
             // this.contentNode.getContentNode(this.nodeDataName+"_properties").getNodeData(this.property);
             // else this.nodeData = this.getContentNode().getNodeData(this.nodeDataName);
-            // System.out.println("3 "+this.getContentNode().getNodeData(this.nodeDataName).getString());
             NodeData nodeData = this.getContentNode().getNodeData(this.getNodeDataName());
             String value = "";
             int type = nodeData.getType();
@@ -368,10 +364,12 @@ public class Out extends TagSupport {
                 value = this.getFilePropertyValue();
             }
             else {
-                if (this.getLineBreak().equals(""))
+                if (this.getLineBreak().equals("")) {
                     value = nodeData.getString();
-                else
+                }
+                else {
                     value = nodeData.getString(this.getLineBreak());
+                }
             }
             JspWriter out = pageContext.getOut();
             try {
@@ -387,14 +385,17 @@ public class Out extends TagSupport {
     // @todo: place in another package to make it availbable globaly -> NodeData?
     public String getDateFormatted(Date date) {
         String value = "";
-        if (date == null || date.equals(""))
+        if (date == null || date.equals("")) {
             return "";
+        }
         SimpleDateFormat formatter;
         String lang = this.getDateLanguage();
-        if (lang == null)
+        if (lang == null) {
             formatter = new SimpleDateFormat(this.getDatePattern());
-        else
+        }
+        else {
             formatter = new SimpleDateFormat(this.getDatePattern(), new Locale(lang));
+        }
         value = formatter.format(date);
         return value;
     }

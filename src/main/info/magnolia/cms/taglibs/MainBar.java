@@ -31,7 +31,7 @@ public class MainBar extends TagSupport {
      */
     private static final long serialVersionUID = 222L;
 
-    private String paragraph = null;
+    private String paragraph;
 
     /**
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()

@@ -47,10 +47,7 @@ public class Include extends BodyTagSupport {
     private ArrayList attributes;
 
     /**
-     * <p>
-     * after the body, this method sets attributes
-     * </p>
-     * @return int
+     * @see javax.servlet.jsp.tagext.IterationTag#doAfterBody()
      */
     public int doAfterBody() {
         HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
@@ -65,10 +62,7 @@ public class Include extends BodyTagSupport {
     }
 
     /**
-     * <p>
-     * end of includeTemplate tag, includes template and removes attributes
-     * </p>
-     * @return int
+     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag() {
         this.include();
@@ -95,10 +89,12 @@ public class Include extends BodyTagSupport {
      *
      */
     private void include() {
-        if (this.contentNode == null)
+        if (this.contentNode == null) {
             this.includeFromResource();
-        else
+        }
+        else {
             this.includeFromParam();
+        }
     }
 
     /**
@@ -110,8 +106,9 @@ public class Include extends BodyTagSupport {
             if (this.path == null) {
                 pageContext.include(Resource.getLocalContentNode(req).getTemplate());
             }
-            else
+            else {
                 pageContext.include(this.path);
+            }
         }
         catch (ServletException se) {
             log.error(se.getMessage());
@@ -172,8 +169,9 @@ public class Include extends BodyTagSupport {
      * @param value , value of attribute to pass with the include
      */
     public void setAttribute(String name, String value) {
-        if (attributes == null)
+        if (attributes == null) {
             attributes = new ArrayList();
+        }
         String[] attributesArray = new String[]{name, value};
         attributes.add(attributesArray);
     }

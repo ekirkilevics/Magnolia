@@ -15,12 +15,15 @@ package info.magnolia.cms.taglibs;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.util.Resource;
+
 import java.util.Collection;
 import java.util.Iterator;
+
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
+
 import org.apache.log4j.Logger;
 
 
@@ -29,6 +32,12 @@ import org.apache.log4j.Logger;
  * @version $Revision: $ ($Author: $)
  */
 public class ContentNodeIterator extends TagSupport {
+
+    public static final String CONTENT_NODE_COLLECTION_NAME = "contentNodeCollectionName";
+
+    protected static final String CURRENT_INDEX = "currentIndex";
+
+    protected static final String SIZE = "size";
 
     /**
      * Stable serialVersionUID.
@@ -39,12 +48,6 @@ public class ContentNodeIterator extends TagSupport {
      * Logger.
      */
     private static Logger log = Logger.getLogger(ContentNodeIterator.class);
-
-    protected static final String CURRENT_INDEX = "currentIndex";
-
-    protected static final String SIZE = "size";
-
-    public static final String CONTENT_NODE_COLLECTION_NAME = "contentNodeCollectionName";
 
     private String contentNodeCollectionName;
 
@@ -63,10 +66,7 @@ public class ContentNodeIterator extends TagSupport {
     private int currentIndex;
 
     /**
-     * <p>
-     * starts loop tag
-     * </p>
-     * @return int
+     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
     public int doStartTag() {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
@@ -74,8 +74,9 @@ public class ContentNodeIterator extends TagSupport {
         try {
             Collection children = this.page.getContentNode(this.contentNodeCollectionName).getChildren();
             this.size = children.size();
-            if (this.size == 0)
+            if (this.size == 0) {
                 return SKIP_BODY;
+            }
             pageContext.setAttribute(ContentNodeIterator.SIZE, new Integer(this.getEnd()), PageContext.REQUEST_SCOPE);
             pageContext.setAttribute(
                 ContentNodeIterator.CURRENT_INDEX,
@@ -87,8 +88,9 @@ public class ContentNodeIterator extends TagSupport {
                 PageContext.REQUEST_SCOPE);
             this.contentNodeIterator = children.iterator();
             Resource.setLocalContentNodeCollectionName(request, this.contentNodeCollectionName);
-            for (; this.beginIndex > -1; --this.beginIndex)
+            for (; this.beginIndex > -1; --this.beginIndex) {
                 Resource.setLocalContentNode(request, (ContentNode) this.contentNodeIterator.next());
+            }
         }
         catch (RepositoryException re) {
             log.debug(re.getMessage());
@@ -109,8 +111,9 @@ public class ContentNodeIterator extends TagSupport {
                 ContentNodeIterator.CURRENT_INDEX,
                 new Integer(this.currentIndex),
                 PageContext.REQUEST_SCOPE);
-            for (int i = 0; i < this.step; i++)
+            for (int i = 0; i < this.step; i++) {
                 Resource.setLocalContentNode(request, (ContentNode) this.contentNodeIterator.next());
+            }
             return EVAL_BODY_AGAIN;
         }
         return SKIP_BODY;

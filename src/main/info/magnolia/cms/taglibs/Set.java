@@ -69,16 +69,14 @@ public class Set extends TagSupport {
     }
 
     /**
-     * <p>
-     * starts Edit tag
-     * </p>
-     * @return int
+     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
     public int doStartTag() {
         HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
         Resource.removeGlobalContentNode(req);
-        if (this.contentNodeName == null)
+        if (this.contentNodeName == null) {
             Resource.setGlobalContentNode(req, this.contentNode);
+        }
         else {
             try {
                 this.contentNode = Resource.getCurrentActivePage(req).getContentNode(this.contentNodeName);

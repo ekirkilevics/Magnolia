@@ -157,8 +157,9 @@ public class EditButton extends TagSupport {
                 return "";
             }
         }
-        else
+        else {
             return this.paragraph;
+        }
     }
 
     /**
@@ -256,10 +257,12 @@ public class EditButton extends TagSupport {
         button.setNodeCollectionName(this.getNodeCollectionName());
         button.setNodeName(this.getNodeName());
         button.setDefaultOnclick();
-        if (this.getLabel() != null)
+        if (this.getLabel() != null) {
             button.setLabel(this.getLabel());
-        if (!this.getSmall().equals("false"))
+        }
+        if (!this.getSmall().equals("false")) {
             button.setSmall(true);
+        }
         button.drawHtml(out);
     }
 }

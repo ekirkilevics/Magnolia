@@ -19,12 +19,15 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.Resource;
+
 import java.util.ArrayList;
 import java.util.Iterator;
+
 import javax.jcr.PropertyType;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyTagSupport;
+
 import org.apache.log4j.Logger;
 
 
@@ -63,10 +66,7 @@ public class AHref extends BodyTagSupport {
     private HttpServletRequest req;
 
     /**
-     * <p>
-     * end of tag
-     * </p>
-     * @return int
+     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag() {
         req = (HttpServletRequest) pageContext.getRequest();
@@ -95,10 +95,12 @@ public class AHref extends BodyTagSupport {
             }
             int type = this.nodeData.getType();
             if (type == PropertyType.STRING) {
-                if (this.nodeData.getString().equals(""))
+                if (this.nodeData.getString().equals("")) {
                     this.writeLink("");
-                else
+                }
+                else {
                     this.writeLink(this.nodeData.getString());
+                }
             }
         }
         else {
@@ -119,8 +121,8 @@ public class AHref extends BodyTagSupport {
     }
 
     /**
-     * <p>
-     * </p>
+     * Write a link.
+     * @param path link path
      */
     private void writeLink(String path) {
         JspWriter out = pageContext.getOut();
@@ -199,8 +201,9 @@ public class AHref extends BodyTagSupport {
      * @param value , value of attribute to add to the a element
      */
     public void setAttribute(String name, String value) {
-        if (attributes == null)
+        if (attributes == null) {
             attributes = new ArrayList();
+        }
         String[] attributeArray = new String[]{name, value};
         attributes.add(attributeArray);
     }

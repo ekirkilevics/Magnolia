@@ -17,9 +17,11 @@ import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.Resource;
+
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.BodyTagSupport;
+
 import org.apache.log4j.Logger;
 
 
@@ -51,10 +53,7 @@ public class IfEmpty extends BodyTagSupport {
     private boolean actpage;
 
     /**
-     * <p>
-     * start of tag
-     * </p>
-     * @return int
+     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
     public int doStartTag() {
         HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
@@ -66,10 +65,12 @@ public class IfEmpty extends BodyTagSupport {
             }
             catch (RepositoryException re) {
             }
-            if (this.contentNodeCollection == null)
+            if (this.contentNodeCollection == null) {
                 return EVAL_BODY_INCLUDE;
-            if (!this.contentNodeCollection.hasChildren())
+            }
+            if (!this.contentNodeCollection.hasChildren()) {
                 return EVAL_BODY_INCLUDE;
+            }
             return SKIP_BODY;
         }
         // if only contentNodeName is provided, it checks if this contentNode exists
@@ -94,8 +95,9 @@ public class IfEmpty extends BodyTagSupport {
             catch (RepositoryException re) {
                 log.error(re.getMessage());
             }
-            if (this.contentNode == null)
+            if (this.contentNode == null) {
                 return EVAL_BODY_INCLUDE;
+            }
             if (this.contentNode != null) {
                 try {
                     this.nodeData = this.contentNode.getNodeData(this.nodeDataName);
@@ -103,8 +105,9 @@ public class IfEmpty extends BodyTagSupport {
                 catch (AccessDeniedException e) {
                     log.error(e.getMessage());
                 }
-                if ((this.nodeData == null) || !this.nodeData.isExist() || this.nodeData.getString().equals(""))
+                if ((this.nodeData == null) || !this.nodeData.isExist() || this.nodeData.getString().equals("")) {
                     return EVAL_BODY_INCLUDE;
+                }
             }
         }
         // if only nodeDataName is provided, it checks if that nodeData of the current contentNode exists and is not
@@ -119,8 +122,9 @@ public class IfEmpty extends BodyTagSupport {
                     this.contentNode = Resource.getGlobalContentNode((HttpServletRequest) pageContext.getRequest());
                 }
             }
-            if (this.contentNode == null)
+            if (this.contentNode == null) {
                 return EVAL_BODY_INCLUDE;
+            }
             if (this.contentNode != null) {
                 try {
                     this.nodeData = this.contentNode.getNodeData(this.nodeDataName);
@@ -128,8 +132,9 @@ public class IfEmpty extends BodyTagSupport {
                 catch (AccessDeniedException e) {
                     log.error(e.getMessage());
                 }
-                if ((this.nodeData == null) || !this.nodeData.isExist() || this.nodeData.getString().equals(""))
+                if ((this.nodeData == null) || !this.nodeData.isExist() || this.nodeData.getString().equals("")) {
                     return EVAL_BODY_INCLUDE;
+                }
             }
         }
         // if both contentNodeName and nodeDataName are not provided, it checks if the current contentNode exists

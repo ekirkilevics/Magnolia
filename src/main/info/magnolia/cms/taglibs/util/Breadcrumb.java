@@ -14,6 +14,7 @@ package info.magnolia.cms.taglibs.util;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.Resource;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
@@ -43,8 +44,9 @@ public class Breadcrumb extends TagSupport {
             currentLevel = actpage.getLevel();
             JspWriter out = pageContext.getOut();
             for (int i = this.startLevel; i <= currentLevel; i++) {
-                if (i != this.startLevel)
+                if (i != this.startLevel) {
                     out.print(this.delimiter);
+                }
                 out.print("<a href=\""
                     + actpage.getAncestor(i).getHandleWithDefaultExtension()
                     + "\">"
@@ -54,7 +56,7 @@ public class Breadcrumb extends TagSupport {
         }
         catch (Exception e) {
         }
-        ;
+
         return super.doStartTag();
     }
 
@@ -64,7 +66,8 @@ public class Breadcrumb extends TagSupport {
 
     public void setStartLevel(String startLevel) {
         this.startLevel = (new Integer(startLevel)).intValue();
-        if (this.startLevel < 1)
+        if (this.startLevel < 1) {
             this.startLevel = 1;
+        }
     }
 }

@@ -16,11 +16,14 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.Resource;
+
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
+
 import org.apache.log4j.Logger;
 
 
@@ -47,10 +50,10 @@ public class Date extends TagSupport {
 
     private NodeData nodeData;
 
-    private String actpage = "false";
+    private boolean actpage;
 
     /**
-     * patterns: http://java.sun.com/j2se/1.4.1/docs/api/java/text/SimpleDateFormat.html
+     * Date pattern. see http://java.sun.com/j2se/1.4.1/docs/api/java/text/SimpleDateFormat.html
      * 
      * <pre>
      *   G  Era designator          Text                AD
@@ -89,7 +92,7 @@ public class Date extends TagSupport {
         this.nodeDataName = nodeDataName;
     }
 
-    public void setActpage(String actpage) {
+    public void setActpage(boolean actpage) {
         this.actpage = actpage;
     }
 
@@ -98,14 +101,13 @@ public class Date extends TagSupport {
     }
 
     public int doStartTag() {
-        if (this.actpage == "true") {
+        if (this.actpage) {
             this.contentNode = Resource.getCurrentActivePage((HttpServletRequest) pageContext.getRequest());
         }
         else {
-            this.contentNode = (Content) Resource.getLocalContentNode((HttpServletRequest) pageContext.getRequest());
+            this.contentNode = Resource.getLocalContentNode((HttpServletRequest) pageContext.getRequest());
             if (this.contentNode == null) {
-                this.contentNode = (Content) Resource.getGlobalContentNode((HttpServletRequest) pageContext
-                    .getRequest());
+                this.contentNode = Resource.getGlobalContentNode((HttpServletRequest) pageContext.getRequest());
             }
         }
         String printDate = getDateString();
@@ -121,8 +123,9 @@ public class Date extends TagSupport {
 
     public String getDateString() {
         String date = "";
-        if (this.contentNode == null)
+        if (this.contentNode == null) {
             return "";
+        }
         try {
             this.nodeData = this.contentNode.getNodeData(this.nodeDataName);
         }
@@ -130,15 +133,19 @@ public class Date extends TagSupport {
             log.error(e.getMessage());
             return "";
         }
-        if (!this.nodeData.isExist())
+        if (!this.nodeData.isExist()) {
             return "";
-        if (this.nodeData.getDate() == null)
+        }
+        if (this.nodeData.getDate() == null) {
             return "";
+        }
         SimpleDateFormat formatter;
-        if (this.language.equals(""))
+        if (this.language.equals("")) {
             formatter = new SimpleDateFormat(this.pattern);
-        else
+        }
+        else {
             formatter = new SimpleDateFormat(this.pattern, new Locale(this.language));
+        }
         date = formatter.format(this.nodeData.getDate().getTime());
         // return this.nodeData.getDate().getTime().toString();
         return date;

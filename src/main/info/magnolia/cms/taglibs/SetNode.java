@@ -16,13 +16,16 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.Resource;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
+
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.TagSupport;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -46,14 +49,14 @@ import org.apache.log4j.Logger;
 public class SetNode extends TagSupport {
 
     /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
-
-    /**
      * Logger.
      */
     protected static Logger log = Logger.getLogger(SetNode.class);
+
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
 
     /**
      * Tag attribute. Name of the content node which will be saved in pagecontext.

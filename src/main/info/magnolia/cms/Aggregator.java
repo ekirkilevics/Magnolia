@@ -20,22 +20,27 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.Path;
+
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.log4j.Logger;
 
 
 /**
- * Class Aggregator is responsible to identify the request and gather content for the requested <b>Content </b> object.
- * its also a responsibilty of this class to place the aggregated object to the proper place in this context its a
- * HttpServletRequest which will hold this Content object for further processing. Date: Apr 28, 2003 Time: 11:20:59 AM
+ * Class Aggregator is responsible to identify the request and gather content for the requested <code>Content </code>
+ * object. its also a responsibilty of this class to place the aggregated object to the proper place in this context its
+ * a HttpServletRequest which will hold this Content object for further processing.
  * @author Sameer Charles
  * @version 2.0
  */
 public class Aggregator {
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(Aggregator.class);
 
     private static final int ATOM = 2;
@@ -58,8 +63,6 @@ public class Aggregator {
 
     private HttpServletRequest request;
 
-    private HttpServletResponse response;
-
     private Content requestedPage;
 
     private Content subContentNode;
@@ -80,13 +83,10 @@ public class Aggregator {
      */
     public Aggregator(HttpServletRequest req, HttpServletResponse response) {
         this.request = req;
-        this.response = response;
     }
 
     /**
-     * <p>
-     * update requested page of the current request
-     * </p>
+     * Update requested page of the current request.
      * @throws PathNotFoundException
      * @throws RepositoryException
      */
@@ -95,9 +95,7 @@ public class Aggregator {
     }
 
     /**
-     * <p>
-     * update requested content of the current request
-     * </p>
+     * Update requested content of the current request.
      * @throws PathNotFoundException
      * @throws RepositoryException
      */
@@ -111,9 +109,7 @@ public class Aggregator {
     }
 
     /**
-     * <p>
-     * parse uri to get exact Content path
-     * </p>
+     * Parse uri to get exact Content path.
      */
     private void parseURI() {
         try {
@@ -128,9 +124,7 @@ public class Aggregator {
     }
 
     /**
-     * <p>
      * Collect content from the pre configured repository and attach it to the HttpServletRequest.
-     * </p>
      * @throws PathNotFoundException
      * @throws RepositoryException
      */
@@ -170,9 +164,7 @@ public class Aggregator {
     }
 
     /**
-     * <p>
-     * set the template responsible to handle this request
-     * </p>
+     * Set the template responsible to handle this request.
      */
     private void setRequestReceiver() {
         try {
@@ -186,9 +178,7 @@ public class Aggregator {
     }
 
     /**
-     * <p>
-     * set the template responsible to handle this request
-     * </p>
+     * Set the template responsible to handle this request.
      * @param type
      */
     private void setRequestReceiver(int type) {
@@ -207,18 +197,14 @@ public class Aggregator {
     }
 
     /**
-     * <p>
-     * set the servlet responsible to handle direct resource request
-     * </p>
+     * Set the servlet responsible to handle direct resource request.
      */
     private void setRequestReceiver(boolean direct) {
         this.requestReceiver = Aggregator.DIRECT_REQUEST_RECEIVER;
     }
 
     /**
-     * <p>
-     * Attach all collected information to the HttpServletRequest
-     * </p>
+     * Attach all collected information to the HttpServletRequest.
      */
     private void updateRequest() {
         if (this.requestedPage != null) {

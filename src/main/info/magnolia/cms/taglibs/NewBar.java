@@ -14,9 +14,12 @@ package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.gui.inline.BarNew;
 import info.magnolia.cms.util.Resource;
+
 import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.TagSupport;
+
 import org.apache.commons.lang.StringUtils;
 
 
@@ -49,10 +52,7 @@ public class NewBar extends TagSupport {
     }
 
     /**
-     * <p>
-     * print out
-     * </p>
-     * @return int
+     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag() {
         /*
@@ -157,10 +157,12 @@ public class NewBar extends TagSupport {
         bar.setNodeName("mgnlNew");
         bar.setDefaultButtons();
         if (this.getNewLabel() != null) {
-            if (this.getNewLabel().equals(""))
+            if (this.getNewLabel().equals("")) {
                 bar.setButtonNew(null);
-            else
+            }
+            else {
                 bar.getButtonNew().setLabel(this.getNewLabel());
+            }
         }
         bar.placeDefaultButtons();
         bar.drawHtml(pageContext.getOut());
