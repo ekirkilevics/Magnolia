@@ -192,14 +192,13 @@ function mgnlResetUp(evt)
 function mgnlOpenDialog(path,nodeCollection,node,paragraph,repository,dialogPage,width,height)
 	{
 
-
 	//dialog window is resized in  dialog itself (window.resize)
     if (!width) width=800;
     if (!height) height=100;
 
 	//magnolia edit window: add browser information (needed for rich editor)
     var agent=navigator.userAgent.toLowerCase();
-	//alert(agent);
+
 	var richE="false";
 	var richEPaste="";
 	var richESupported=false;
