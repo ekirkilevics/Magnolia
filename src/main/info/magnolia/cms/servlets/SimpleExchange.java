@@ -24,6 +24,7 @@ import info.magnolia.cms.security.Listener;
 import info.magnolia.cms.security.Lock;
 import info.magnolia.cms.security.SecureURI;
 import info.magnolia.cms.security.SessionAccessControl;
+import info.magnolia.exchange.ExchangeException;
 import info.magnolia.exchange.Packet;
 
 import java.io.IOException;
@@ -159,6 +160,11 @@ public class SimpleExchange extends HttpServlet implements SingleThreadModel {
         else {
             this.hierarchyManager = ContentRepository.getHierarchyManager(this.context);
         }
+
+        if (this.hierarchyManager == null) {
+            throw new ExchangeException("HierarchyManager is not configured for " + this.context);
+        }
+
         if (this.action.equals(Syndicator.ACTIVATE)) {
             activate();
         }
