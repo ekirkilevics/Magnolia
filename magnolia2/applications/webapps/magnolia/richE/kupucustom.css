@@ -1,0 +1,43 @@
+/*****************************************************************************
+ *
+ * Kupu custom styles for the common layers
+ *
+ * Copyright (c) 2003 Kupu Contributors. See CREDITS.txt
+ *
+ * Customize this file for target platform integration layers. Feel
+ * free to use whole or parts of this for your own designs, but give
+ * credit where credit is due.
+ *
+ *****************************************************************************/
+
+.kupu-tb {
+  background-color: ButtonFace;
+  border-color: ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;
+}
+
+#kupu-tb-buttons button {
+  color: ButtonText;
+  border: 1px solid ButtonFace;
+}
+
+#kupu-tb-buttons button:hover {
+  cursor: default;
+  border: 1px solid;
+  border-color: ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;
+}
+
+#kupu-tb-buttons button:active {
+  border: 1px solid;
+  border-color: ButtonShadow ButtonHighlight ButtonHighlight ButtonShadow;
+}
+
+div.kupu-toolbox button {
+  font-size: 0.9em;
+  border: 1px solid;
+  border-color: ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;
+}
+
+div.kupu-toolbox button:active {
+  border: 1px solid;
+  border-color: ButtonShadow ButtonHighlight ButtonHighlight ButtonShadow;
+}
