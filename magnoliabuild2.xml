@@ -54,24 +54,24 @@
 
   <!-- Project Libraries -->
   <path id="library.magnolia.classpath">
-    <pathelement location="/Users/sam/projects/magnolia/libraries/apache_util.jar"/>
-    <pathelement location="/Users/sam/projects/magnolia/libraries/cos.jar"/>
-    <pathelement location="/Users/sam/projects/magnolia/libraries/jcr-ri.jar"/>
-    <pathelement location="/Users/sam/projects/magnolia/libraries/jcr.jar"/>
-    <pathelement location="/Users/sam/projects/magnolia/libraries/jdom.jar"/>
-    <pathelement location="/Users/sam/projects/magnolia/libraries/jdsl.jar"/>
-    <pathelement location="/Users/sam/projects/magnolia/libraries/jsp-api.jar"/>
-    <pathelement location="/Users/sam/projects/magnolia/libraries/jstl.jar"/>
-    <pathelement location="/Users/sam/projects/magnolia/libraries/log4j.jar"/>
-    <pathelement location="/Users/sam/projects/magnolia/libraries/lucene-20030909.jar"/>
-    <pathelement location="/Users/sam/projects/magnolia/libraries/mail.jar"/>
-    <pathelement location="/Users/sam/projects/magnolia/libraries/saxpath.jar"/>
-    <pathelement location="/Users/sam/projects/magnolia/libraries/servlet-api.jar"/>
-    <pathelement location="/Users/sam/projects/magnolia/libraries/standard.jar"/>
-    <pathelement location="/Users/sam/projects/magnolia/libraries/taglibs-mailer.jar"/>
-    <pathelement location="/Users/sam/projects/magnolia/libraries/w3c.jar"/>
-    <pathelement location="/Users/sam/projects/magnolia/libraries/webdav.jar"/>
-    <pathelement location="/Users/sam/projects/magnolia/libraries/commons-httpclient.jar"/>
+    <pathelement location="lib/apache_util.jar"/>
+    <pathelement location="lib/cos.jar"/>
+    <pathelement location="lib/jcr-ri.jar"/>
+    <pathelement location="lib/jcr.jar"/>
+    <pathelement location="lib/jdom.jar"/>
+    <pathelement location="lib/jdsl.jar"/>
+    <pathelement location="lib/jsp-api.jar"/>
+    <pathelement location="lib/jstl.jar"/>
+    <pathelement location="lib/log4j.jar"/>
+    <pathelement location="lib/lucene-20030909.jar"/>
+    <pathelement location="lib/mail.jar"/>
+    <pathelement location="lib/saxpath.jar"/>
+    <pathelement location="lib/servlet-api.jar"/>
+    <pathelement location="lib/standard.jar"/>
+    <pathelement location="lib/taglibs-mailer.jar"/>
+    <pathelement location="lib/w3c.jar"/>
+    <pathelement location="lib/webdav.jar"/>
+    <pathelement location="lib/commons-httpclient.jar"/>
   </path>
   
   
