@@ -149,7 +149,7 @@
         <dependency>
             <groupId>lucene</groupId>
             <artifactId>lucene</artifactId>
-            <version>1.3</version>
+            <version>1.4.3</version>
             <type>jar</type>
             <properties>
                 <war.bundle>true</war.bundle>
@@ -218,7 +218,7 @@
         <dependency>
             <groupId>jackrabbit</groupId>
             <artifactId>jackrabbit</artifactId>
-            <version>0.15-dev</version>
+            <version>0.16.2-dev</version>
             <type>jar</type>
             <properties>
                 <war.bundle>true</war.bundle>
@@ -249,7 +249,6 @@
             <artifactId>geronimo-spec-jta</artifactId>
             <version>1.0-M1</version>
             <type>jar</type>
-            <url>http://www.day.com/maven/jsr170/jars/jcr-0.15.jar</url>
             <properties>
                 <war.bundle>true</war.bundle>
             </properties>
@@ -257,8 +256,9 @@
         <dependency>
             <groupId>jsr170</groupId>
             <artifactId>jcr</artifactId>
-            <version>0.15</version>
+            <version>0.16.2</version>
             <type>jar</type>
+            <url>http://www.day.com/maven/jsr170/jars/jcr-0.16.2.jar</url>
             <properties>
                 <war.bundle>true</war.bundle>
             </properties>
