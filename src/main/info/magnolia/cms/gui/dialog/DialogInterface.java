@@ -15,10 +15,11 @@ package info.magnolia.cms.gui.dialog;
 import info.magnolia.cms.core.Content;
 
 import java.io.IOException;
+import java.io.Writer;
 
 import javax.jcr.RepositoryException;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -32,18 +33,20 @@ public interface DialogInterface {
 
     /**
      * Initialize a Dialog. This method is guaranteed to be called just after the control instantiation.
-     * @param configNode configuration node for the dialog
+     * @param request current HttpServletRequest
+     * @param response current HttpServletResponse
      * @param websiteNode current website node
-     * @param pageContext jsp page context
+     * @param configNode configuration node for the dialog
      * @throws RepositoryException
      */
-    void init(Content configNode, Content websiteNode, PageContext pageContext) throws RepositoryException;
+    void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
+        throws RepositoryException;
 
     /**
      * Actually draw the dialog content.
-     * @param out JspWriter
-     * @throws IOException exceptions thrown when writing to the JspWriter can be safely rethrown by the dialog
+     * @param out Writer
+     * @throws IOException exceptions thrown when writing to the Writer can be safely rethrown by the dialog
      */
-    void drawHtml(JspWriter out) throws IOException;
+    void drawHtml(Writer out) throws IOException;
 
 }

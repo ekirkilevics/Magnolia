@@ -94,7 +94,8 @@ public class NodeData extends ContentHandler {
                 .getSystemName(ItemType.NT_UNSTRUCTRUED));
             this.property = contentNode.setProperty(DATA_ELEMENT, "");
             this.addMixin(ItemType.getSystemName(ItemType.MIX_VERSIONABLE));
-        } else {
+        }
+        else {
             Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.READ);
             this.node = workingNode.getNode(name);
             this.property = this.node.getNode(ItemType.getSystemName(ItemType.JCR_CONTENT)).getProperty(DATA_ELEMENT);
@@ -184,10 +185,8 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
-     * Returns the <code>String</code> representation of the value: <br>
-     * decodes like breaks with the specified regular expresion
-     * </p>
+     * Returns the <code>String</code> representation of the value: decodes like breaks with the specified regular
+     * expression.
      * @param lineBreak , regular expession
      * @return String
      */
@@ -201,9 +200,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
-     * Returns the <code>String</code> representation of the value:
-     * </p>
+     * Returns the <code>String</code> representation of the value.
      * @return String
      */
     public String getString() {
@@ -342,10 +339,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
-     * Access to property at the JCR level. <br>
-     * <b>available only to be available, should not be used in normal circumstances! </b>
-     * </p>
+     * Access to property at the JCR level. Available only to be available, should not be used in normal circumstances!
      * @return Property
      */
     public Property getJCRProperty() {

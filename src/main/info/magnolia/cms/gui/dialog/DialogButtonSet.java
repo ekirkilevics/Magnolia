@@ -18,16 +18,18 @@ import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.ButtonSet;
 import info.magnolia.cms.gui.control.ControlSuper;
 import info.magnolia.cms.gui.control.Hidden;
+import info.magnolia.cms.gui.misc.CssConstants;
 
 import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
@@ -44,6 +46,12 @@ public class DialogButtonSet extends DialogBox {
     private static Logger log = Logger.getLogger(DialogButtonSet.class);
 
     private int buttonType = ControlSuper.BUTTONTYPE_RADIO;
+
+    /**
+     * Empty constructor should only be used by DialogFactory.
+     */
+    protected DialogButtonSet() {
+    }
 
     public void setOptions(Content configNode, boolean setDefaultSelected) {
         // setDefaultSelected: does not work properly (no difference between never stored and removed...)
@@ -87,38 +95,42 @@ public class DialogButtonSet extends DialogBox {
     }
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(Content, Content, PageContext)
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(HttpServletRequest, HttpServletResponse, Content, Content)
      */
-    public void init(Content configNode, Content websiteNode, PageContext pageContext) throws RepositoryException {
-        super.init(configNode, websiteNode, pageContext);
+    public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
+        throws RepositoryException {
+        super.init(request, response, websiteNode, configNode);
 
-        String controlType = configNode.getNodeData("controlType").getString();
+        // confignode can be null if instantiated directly
+        if (configNode != null) {
+            String controlType = configNode.getNodeData("controlType").getString();
 
-        if (log.isDebugEnabled()) {
-            log.debug("Init DialogButtonSet with type=" + controlType);
-        }
+            if (log.isDebugEnabled()) {
+                log.debug("Init DialogButtonSet with type=" + controlType);
+            }
 
-        // custom settings
-        if (controlType.equals("radio")) {
-            setButtonType(ControlSuper.BUTTONTYPE_RADIO);
-            setOptions(configNode, true);
-        }
-        else if (controlType.equals("checkbox")) {
-            setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX);
-            setOptions(configNode, false);
-            setConfig("valueType", "multiple");
-        }
-        else if (controlType.equals("checkboxSwitch")) {
-            setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX);
-            setOption(configNode);
+            // custom settings
+            if (controlType.equals("radio")) {
+                setButtonType(ControlSuper.BUTTONTYPE_RADIO);
+                setOptions(configNode, true);
+            }
+            else if (controlType.equals("checkbox")) {
+                setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX);
+                setOptions(configNode, false);
+                setConfig("valueType", "multiple");
+            }
+            else if (controlType.equals("checkboxSwitch")) {
+                setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX);
+                setOption(configNode);
+            }
         }
     }
 
-    public void drawHtmlPreSubs(JspWriter out) throws IOException {
+    public void drawHtmlPreSubs(Writer out) throws IOException {
         this.drawHtmlPre(out);
     }
 
-    public void drawHtmlPostSubs(JspWriter out) throws IOException {
+    public void drawHtmlPostSubs(Writer out) throws IOException {
         this.drawHtmlPost(out);
     }
 
@@ -131,9 +143,9 @@ public class DialogButtonSet extends DialogBox {
     }
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(JspWriter)
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(Writer)
      */
-    public void drawHtml(JspWriter out) throws IOException {
+    public void drawHtml(Writer out) throws IOException {
         this.drawHtmlPre(out);
         ButtonSet control;
         if (this.getConfigValue("valueType").equals("multiple")) {
@@ -150,14 +162,14 @@ public class DialogButtonSet extends DialogBox {
             control = new ButtonSet(this.getName(), this.getValue());
         }
         control.setButtonType(this.getButtonType());
-        control.setCssClass(CSSCLASS_BUTTONSETBUTTON);
+        control.setCssClass(CssConstants.CSSCLASS_BUTTONSETBUTTON);
         if (this.getConfigValue("saveInfo").equals("false")) {
             control.setSaveInfo(false);
         }
         control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING));
         String width = this.getConfigValue("width", null);
-        control.setButtonHtmlPre("<tr><td class=\"" + CSSCLASS_BUTTONSETBUTTON + "\">");
-        control.setButtonHtmlInter("</td><td class=\"" + CSSCLASS_BUTTONSETLABEL + "\">");
+        control.setButtonHtmlPre("<tr><td class=\"" + CssConstants.CSSCLASS_BUTTONSETBUTTON + "\">");
+        control.setButtonHtmlInter("</td><td class=\"" + CssConstants.CSSCLASS_BUTTONSETLABEL + "\">");
         control.setButtonHtmlPost("</td></tr>");
         int cols = Integer.valueOf(this.getConfigValue("cols", "1")).intValue();
         if (cols > 1) {
@@ -175,7 +187,7 @@ public class DialogButtonSet extends DialogBox {
                 if (item == itemsPerCol) {
                     b.setHtmlPost(control.getButtonHtmlPost()
                         + "</table></td><td class=\""
-                        + CSSCLASS_BUTTONSETINTERCOL
+                        + CssConstants.CSSCLASS_BUTTONSETINTERCOL
                         + "\"></td>");
                     item = 1;
                 }
@@ -194,7 +206,7 @@ public class DialogButtonSet extends DialogBox {
             control.setHtmlPre("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"" + width + "\">");
         }
         control.setButtons(this.getOptions());
-        out.println(control.getHtml());
+        out.write(control.getHtml());
         if (control.getButtonType() == ControlSuper.BUTTONTYPE_CHECKBOX
             && control.getValueType() != ControlSuper.VALUETYPE_MULTIPLE) {
             // checkboxSwitch: value is stored in a hidden field (allows default selecting)
@@ -207,7 +219,7 @@ public class DialogButtonSet extends DialogBox {
                     value = "false";
                 }
             }
-            out.println(new Hidden(this.getName(), value).getHtml());
+            out.write(new Hidden(this.getName(), value).getHtml());
         }
         this.drawHtmlPost(out);
     }

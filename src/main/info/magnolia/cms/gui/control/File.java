@@ -82,7 +82,7 @@ public class File extends ControlSuper {
         html.append(" onblur=\"mgnlControlFileSetFileName('" + this.getName() + "')\"");
         html.append(this.getHtmlCssClass());
         // html.append(this.getHtmlCssStyles());
-        html.append(">");
+        html.append(" />");
         Hidden control0 = new Hidden(this.getName() + "_" + REMOVE, "");
         control0.setSaveInfo(false);
         html.append(control0.getHtml());

@@ -33,11 +33,8 @@ public final class Digester {
     public static final String MD5 = "MD5";
 
     /**
-     * <p>
      * There are five (5) FIPS-approved* algorithms for generating a condensed representation of a message (message
-     * digest): SHA-1, SHA-224, SHA-256,SHA-384, and SHA-512. <br>
-     * <b>Not supported yet </b>
-     * </p>
+     * digest): SHA-1, SHA-224, SHA-256,SHA-384, and SHA-512. <strong>Not supported yet </strong>
      */
     public static final String SHA256 = "SHA-256";
 
@@ -55,16 +52,17 @@ public final class Digester {
     }
 
     /**
-     * <p>
-     * Supported algorithm: <br>
-     * <i>SHA-1 </1> <br>
-     * <i>MD5 </i> <br>
-     * <br>
-     * Future -<br>
-     * <i>SHA-256 </1> <br>
-     * <i>SHA-384 </1> <br>
-     * <i>SHA-512 </1>
-     * </p>
+     * Supported algorithm:
+     * <ul>
+     * <li>SHA-1 </li>
+     * <li>MD5 </li>
+     * </ul>
+     * Future:
+     * <ul>
+     * <li>SHA-256 </li>
+     * <li>SHA-384 </li>
+     * <li>SHA-512 </li>
+     * </ul>
      */
     public static String getDigest(String data, String algorithm) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance(algorithm);
@@ -73,16 +71,17 @@ public final class Digester {
     }
 
     /**
-     * <p>
-     * Supported algorithm: <br>
-     * <i>SHA-1 </1> <br>
-     * <i>MD5 </i> <br>
-     * <br>
-     * Future -<br>
-     * <i>SHA-256 </1> <br>
-     * <i>SHA-384 </1> <br>
-     * <i>SHA-512 </1>
-     * </p>
+     * Supported algorithm:
+     * <ul>
+     * <li>SHA-1 </li>
+     * <li>MD5 </li>
+     * </ul>
+     * Future:
+     * <ul>
+     * <li>SHA-256 </li>
+     * <li>SHA-384 </li>
+     * <li>SHA-512 </li>
+     * </ul>
      */
     public static byte[] getDigest(byte[] data, String algorithm) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance(algorithm);

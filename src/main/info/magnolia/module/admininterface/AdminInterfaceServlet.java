@@ -14,20 +14,19 @@ package info.magnolia.module.admininterface;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ItemType;
+import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.beans.config.Paragraph;
+import info.magnolia.cms.beans.config.Subscriber;
 import info.magnolia.cms.beans.config.Template;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.gui.control.Tree;
-import info.magnolia.cms.gui.dialog.DialogSpacer;
 import info.magnolia.cms.gui.misc.Sources;
+import info.magnolia.cms.gui.misc.Spacer;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.jcr.Workspace;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -35,13 +34,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.NestableRuntimeException;
 
 
 /**
  * Main admin interface servlet. Generates the content for the main admincentral iframe.
  * @author Fabrizio Giustina
- * @version $Id: AdminInterfaceServlet.java 378 2005-03-13 16:11:26Z fgiust $
+ * @version $Id: AdminInterfaceServlet.java 382 2005-03-15 22:48:26Z fgiust $
  */
 public class AdminInterfaceServlet extends HttpServlet {
 
@@ -114,31 +112,6 @@ public class AdminInterfaceServlet extends HttpServlet {
         String repository = request.getParameter("repository");
         if (StringUtils.isEmpty(repository)) {
             repository = ContentRepository.WEBSITE;
-        }
-
-        if (request.getParameter("exportxml") != null) {
-
-            String basepath = request.getParameter("basepath");
-            if (StringUtils.isEmpty(basepath)) {
-                basepath = "/";
-            }
-
-            HierarchyManager hr = ContentRepository.getHierarchyManager(repository);
-            Workspace ws = hr.getWorkspace();
-            // File file = new File(Path.getAbsoluteFileSystemPath("WEB-INF/logs/export-" + repository + ".xml"));
-            // file.getParentFile().mkdirs();
-            // file.createNewFile();
-            // OutputStream stream = new FileOutputStream(file);
-            OutputStream stream = response.getOutputStream();
-            try {
-                ws.getSession().exportDocView(basepath, stream, false, false);
-            }
-            catch (Exception e) {
-                throw new NestableRuntimeException(e);
-            }
-            stream.flush();
-            stream.close();
-            return;
         }
 
         String path = request.getParameter("path");
@@ -237,6 +210,12 @@ public class AdminInterfaceServlet extends HttpServlet {
             else if (path.startsWith("/modules/templating/Paragraphs/")) {
                 Paragraph.reload();
             }
+            else if (path.startsWith("/subscribers/")) {
+                Subscriber.reload();
+            }
+            else if (path.startsWith("/server/MIMEMapping")) {
+                MIMEMapping.reload();
+            }
 
             proceed = false;
         }
@@ -255,9 +234,10 @@ public class AdminInterfaceServlet extends HttpServlet {
                 html.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>");
                 html.append(new Sources(request.getContextPath()).getHtmlJs());
                 html.append(new Sources(request.getContextPath()).getHtmlCss());
+                html.append("<title>Magnolia</title>");
                 html.append("</head>");
                 html.append("<body class=\"mgnlBgDark\" onload=\"mgnlTree.resizeOnload();\" >");
-                html.append(new DialogSpacer().getHtml(20));
+                html.append(Spacer.getHtml(20, 20));
             }
 
             if (TREE_HANDLERS.containsKey(repository)) {
@@ -277,7 +257,7 @@ public class AdminInterfaceServlet extends HttpServlet {
                     createItemType);
 
                 if (!snippetMode) {
-                    html.append("<div id=" + tree.getJavascriptTree() + "_DivSuper style=\"display:block;\">");
+                    html.append("<div id=\"" + tree.getJavascriptTree() + "_DivSuper\" style=\"display:block;\">");
                 }
                 html.append(tree.getHtml());
                 if (!snippetMode) {

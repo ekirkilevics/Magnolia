@@ -15,8 +15,7 @@ package info.magnolia.cms.gui.dialog;
 import info.magnolia.cms.gui.control.Hidden;
 
 import java.io.IOException;
-
-import javax.servlet.jsp.JspWriter;
+import java.io.Writer;
 
 import org.apache.log4j.Logger;
 
@@ -33,14 +32,20 @@ public class DialogHidden extends DialogBox {
     private static Logger log = Logger.getLogger(DialogHidden.class);
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(JspWriter)
+     * Empty constructor should only be used by DialogFactory.
      */
-    public void drawHtml(JspWriter out) throws IOException {
+    protected DialogHidden() {
+    }
+
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(Writer)
+     */
+    public void drawHtml(Writer out) throws IOException {
         Hidden control = new Hidden(this.getName(), this.getValue());
         if (this.getConfigValue("saveInfo").equals("false")) {
             control.setSaveInfo(false);
         }
 
-        out.println(control.getHtml());
+        out.write(control.getHtml());
     }
 }

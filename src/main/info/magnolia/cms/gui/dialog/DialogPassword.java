@@ -14,10 +14,10 @@ package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.gui.control.ControlSuper;
 import info.magnolia.cms.gui.control.Password;
+import info.magnolia.cms.gui.misc.CssConstants;
 
 import java.io.IOException;
-
-import javax.servlet.jsp.JspWriter;
+import java.io.Writer;
 
 import org.apache.log4j.Logger;
 
@@ -34,32 +34,38 @@ public class DialogPassword extends DialogBox {
     private static Logger log = Logger.getLogger(DialogPassword.class);
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(JspWriter)
+     * Empty constructor should only be used by DialogFactory.
      */
-    public void drawHtml(JspWriter out) throws IOException {
+    protected DialogPassword() {
+    }
+
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(Writer)
+     */
+    public void drawHtml(Writer out) throws IOException {
         Password control = new Password(this.getName(), this.getValue());
         if (this.getConfigValue("saveInfo").equals("false")) {
             control.setSaveInfo(false);
         }
-        control.setCssClass(CSSCLASS_EDIT);
+        control.setCssClass(CssConstants.CSSCLASS_EDIT);
         control.setCssStyles("width", this.getConfigValue("width", "100%"));
         control.setEncoding(ControlSuper.ENCODING_BASE64);
         if (this.getConfigValue("onchange", null) != null) {
             control.setEvent("onchange", this.getConfigValue("onchange"));
         }
         this.drawHtmlPre(out);
-        out.println(control.getHtml());
+        out.write(control.getHtml());
         if (this.getConfigValue("verification", "true").equals("true")) {
             Password control2 = new Password(this.getName() + "_verification", "");
             // Password control2=new Password(this.getName()+"_verifiaction",this.getValue());
             // control2.setEncoding(ControlSuper.ENCODING_UNIX);
             control2.setSaveInfo(false);
-            control2.setCssClass(CSSCLASS_EDIT);
+            control2.setCssClass(CssConstants.CSSCLASS_EDIT);
             control2.setCssStyles("width", this.getConfigValue("width", "100%"));
             control2.setEvent("onchange", "mgnlDialogPasswordVerify('" + this.getName() + "')");
             // todo: verification on submit; think about
-            out.println("<div class=\"" + CSSCLASS_DESCRIPTION + "\">Please verify your entry:</div>");
-            out.println(control2.getHtml());
+            out.write("<div class=\"" + CssConstants.CSSCLASS_DESCRIPTION + "\">Please verify your entry:</div>");
+            out.write(control2.getHtml());
         }
         this.drawHtmlPost(out);
     }

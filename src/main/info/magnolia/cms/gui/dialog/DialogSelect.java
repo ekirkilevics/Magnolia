@@ -16,16 +16,18 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.control.SelectOption;
+import info.magnolia.cms.gui.misc.CssConstants;
 
 import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
@@ -40,6 +42,12 @@ public class DialogSelect extends DialogBox {
      * Logger.
      */
     private static Logger log = Logger.getLogger(DialogSelect.class);
+
+    /**
+     * Empty constructor should only be used by DialogFactory.
+     */
+    protected DialogSelect() {
+    }
 
     public void setOptions(Content configNode) {
         List options = new ArrayList();
@@ -66,28 +74,28 @@ public class DialogSelect extends DialogBox {
     }
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(Content, Content, PageContext)
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(HttpServletRequest, HttpServletResponse, Content, Content)
      */
-    public void init(Content configNode, Content websiteNode, PageContext pageContext) throws RepositoryException {
-
-        super.init(configNode, websiteNode, pageContext);
+    public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
+        throws RepositoryException {
+        super.init(request, response, websiteNode, configNode);
         setOptions(configNode);
     }
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(JspWriter)
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(Writer)
      */
-    public void drawHtml(JspWriter out) throws IOException {
+    public void drawHtml(Writer out) throws IOException {
         Select control = new Select(this.getName(), this.getValue());
         control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING));
         if (this.getConfigValue("saveInfo").equals("false")) {
             control.setSaveInfo(false);
         }
-        control.setCssClass(CSSCLASS_SELECT);
+        control.setCssClass(CssConstants.CSSCLASS_SELECT);
         control.setCssStyles("width", this.getConfigValue("width", "100%"));
         control.setOptions(this.getOptions());
         this.drawHtmlPre(out);
-        out.println(control.getHtml());
+        out.write(control.getHtml());
         this.drawHtmlPost(out);
     }
 }

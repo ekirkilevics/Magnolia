@@ -69,9 +69,9 @@ public class TreeMenuItem extends ControlSuper {
     // todo: icons
     public String getHtml() {
         StringBuffer html = new StringBuffer();
-        html.append("<div id=\""
+        html.append("<div class=\"mgnlTreeMenuItem\" id=\""
             + this.getId()
-            + "\" class=\"mgnlTreeMenuItem\" onclick=\""
+            + "\" onclick=\""
             + this.getJavascriptTree()
             + ".menuHide();"
             + this.getOnclick()

@@ -26,28 +26,6 @@ public class Button extends ControlSuper {
      */
     private static final String HTML_PRE_DIVIDED = "<table cellpadding=0 cellspacing=0 border=0><tr><td>";
 
-    /**
-     * html between button and label.
-     */
-    private static final String HTML_INTER_DIVIDED = "</td><td>";
-
-    /**
-     * html after label (radio, checkbox).
-     */
-    private static final String HTML_POST_DIVIDED = "</td></tr></table>";
-
-    /**
-     * html before button (push button).
-     */
-    private static final String HTML_PRE_PUSH = "";
-
-    private static final String HTML_INTER_PUSH = "";
-
-    /**
-     * html after button.
-     */
-    private static final String HTML_POST_PUSH = "";
-
     private String label;
 
     private String iconSrc;
@@ -135,7 +113,7 @@ public class Button extends ControlSuper {
     public void setHtmlPre() {
         if (super.getHtmlPre(null) == null) {
             if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON) {
-                this.setHtmlPre(HTML_PRE_PUSH);
+                this.setHtmlPre(StringUtils.EMPTY);
             }
             else {
                 this.setHtmlPre(HTML_PRE_DIVIDED);
@@ -146,10 +124,10 @@ public class Button extends ControlSuper {
     public void setHtmlInter() {
         if (super.getHtmlInter(null) == null) {
             if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON) {
-                this.setHtmlInter(HTML_INTER_PUSH);
+                this.setHtmlInter(StringUtils.EMPTY);
             }
             else {
-                this.setHtmlInter(HTML_INTER_DIVIDED);
+                this.setHtmlInter("</td><td>");
             }
         }
     }
@@ -157,10 +135,10 @@ public class Button extends ControlSuper {
     public void setHtmlPost() {
         if (super.getHtmlPost(null) == null) {
             if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON) {
-                this.setHtmlPost(HTML_POST_PUSH);
+                this.setHtmlPost(StringUtils.EMPTY);
             }
             else {
-                this.setHtmlPost(HTML_POST_DIVIDED);
+                this.setHtmlPost("</td></tr></table>");
             }
         }
     }
@@ -218,7 +196,7 @@ public class Button extends ControlSuper {
         }
         html.append(this.getHtmlCssClass());
         html.append(this.getHtmlCssStyles());
-        html.append(">");
+        html.append(" />");
         if (this.getSaveInfo()) {
             html.append(this.getHtmlSaveInfo());
         }

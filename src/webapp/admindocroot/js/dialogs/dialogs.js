@@ -238,7 +238,7 @@ function mgnlDialogLinkBrowserResize()
 function mgnlDialogLinkBrowserWriteBack(controlName,extension)
 	{
 	var iFrameDoc=mgnlGetIFrameDocument('mgnlDialogLinkBrowserIFrame');
-	var addressBar=iFrameDoc.getElementById("mgnlTree_AddressBar");
+	var addressBar=iFrameDoc.getElementById("mgnlTreeAddressBar");
 	var control=opener.document.getElementById(controlName);
 
 	if (extension) extension="."+extension;

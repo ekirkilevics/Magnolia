@@ -45,10 +45,7 @@ public interface Provider {
     Repository getUnderlineRepository() throws RepositoryNotInitializedException;
 
     /**
-     * <p>
-     * register namespace with the repository. <br>
-     * refer JCR-170 specifications
-     * </p>
+     * Register namespace with the repository. Refer JCR-170 specifications.
      * @param prefix namespace prefix
      * @param uri namespace URI
      * @param workspace session workspace instance

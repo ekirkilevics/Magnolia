@@ -35,7 +35,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Sameer Charles
- * @version $Revision$ ($Author$)
+ * @version $Revision: 364 $ ($Author: fgiust $)
  */
 public class Out extends TagSupport {
 
@@ -237,7 +237,7 @@ public class Out extends TagSupport {
      * does only apply for nodeDatas of type=Binary
      * </p>
      * <p>
-     * supported values (sample value): <br>
+     * supported values (sample value):
      * <ul>
      * <li><b>path (default): </b> path inlcuding the filename (/dev/mainColumnParagraphs/0/image/Alien.png)
      * <li><b>name </b>: name and extension (Alien.png)
@@ -270,7 +270,7 @@ public class Out extends TagSupport {
      * does only apply for nodeDatas of type=Date
      * </p>
      * <p>
-     * language according to java.text.SimpleDateFormat: <br>
+     * language according to java.text.SimpleDateFormat:
      * <ul>
      * <li><b>G </b> Era designator Text AD
      * <li><b>y </b> Year Year 1996; 96

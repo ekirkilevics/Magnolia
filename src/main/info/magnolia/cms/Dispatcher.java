@@ -13,11 +13,13 @@
 package info.magnolia.cms;
 
 import java.io.IOException;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.log4j.Logger;
 
 
@@ -54,6 +56,12 @@ public final class Dispatcher {
         }
         log.info("Dispatching request for - " + req.getRequestURL());
         String requestReceiver = (String) req.getAttribute(Aggregator.REQUEST_RECEIVER);
+
+        if (requestReceiver == null) {
+            log.error("null requestReceiver received - aborting request");
+            return;
+        }
+
         RequestDispatcher rd = sc.getRequestDispatcher(requestReceiver);
         log.info("Forward to - " + requestReceiver);
         rd.forward(req, res);

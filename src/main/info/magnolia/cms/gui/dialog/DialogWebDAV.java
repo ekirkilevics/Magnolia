@@ -15,10 +15,13 @@ package info.magnolia.cms.gui.dialog;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.Hidden;
+import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.gui.misc.Sources;
+import info.magnolia.cms.gui.misc.Spacer;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,8 +35,8 @@ import java.util.Map;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.httpclient.HttpURL;
 import org.apache.log4j.Logger;
@@ -47,6 +50,10 @@ import org.apache.webdav.lib.methods.XMLResponseMethodBase;
  * @version 2.0
  */
 public class DialogWebDAV extends DialogBox {
+
+    private static final int ICONS_HEIGHT = 16;
+
+    private static final int ICONS_WIDTH = 23;
 
     /**
      * Logger.
@@ -71,10 +78,17 @@ public class DialogWebDAV extends DialogBox {
     private WebdavResource davConnection;
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(Content, Content, PageContext)
+     * Empty constructor should only be used by DialogFactory.
      */
-    public void init(Content configNode, Content websiteNode, PageContext pageContext) throws RepositoryException {
-        super.init(configNode, websiteNode, pageContext);
+    protected DialogWebDAV() {
+    }
+
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(HttpServletRequest, HttpServletResponse, Content, Content)
+     */
+    public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
+        throws RepositoryException {
+        super.init(request, response, websiteNode, configNode);
         initIconExtensions();
     }
 
@@ -207,9 +221,9 @@ public class DialogWebDAV extends DialogBox {
     }
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(JspWriter)
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(Writer)
      */
-    public void drawHtml(JspWriter out) throws IOException {
+    public void drawHtml(Writer out) throws IOException {
         this.drawHtmlPre(out);
         this.setDAVConnection();
         this.setSessionAttribute();
@@ -254,7 +268,7 @@ public class DialogWebDAV extends DialogBox {
             showPath = "<i>No selection</i>";
             showIcon = NULLGIF;
         }
-        DialogSpacer spacer = new DialogSpacer();
+
         this.setDescription("Connected to: "
             + this.getProtocol()
             + "://"
@@ -262,12 +276,12 @@ public class DialogWebDAV extends DialogBox {
             + ":"
             + this.getPort()
             + this.getDirectory()
-            + "<br>"
+            + "<br />"
             + this.getDescription());
-        out.println(spacer.getHtml(2));
-        out.println("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
-        out.println("<tr>");
-        out.println("<td><img id=\""
+        out.write(Spacer.getHtml(2, 2));
+        out.write("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
+        out.write("<tr>");
+        out.write("<td><img id=\""
             + this.getName()
             + "_showIcon\" src=\""
             + this.getRequest().getContextPath()
@@ -277,64 +291,64 @@ public class DialogWebDAV extends DialogBox {
             + "\" height=\""
             + ICONS_HEIGHT
             + "\"></td>");
-        out.println("<td id=\"" + this.getName() + "_showName\">" + this.getHtmlDecodeURI(showName) + "</td>");
-        out.println("</tr><tr height=\"4\"><td></td></tr><tr>");
-        out.println("<td><img src=\"" + this.getRequest().getContextPath() + ICONS_PATH + ICONS_FOLDER + "\"></td>");
-        out.println("<td id=\"" + this.getName() + "_showPath\">" + showPath + "</td>");
-        out.println("</tr></table>");
-        out.println(new Hidden(this.getName(), this.getValue()).getHtml());
+        out.write("<td id=\"" + this.getName() + "_showName\">" + this.getHtmlDecodeURI(showName) + "</td>");
+        out.write("</tr><tr height=\"4\"><td></td></tr><tr>");
+        out.write("<td><img src=\"" + this.getRequest().getContextPath() + ICONS_PATH + ICONS_FOLDER + "\"></td>");
+        out.write("<td id=\"" + this.getName() + "_showPath\">" + showPath + "</td>");
+        out.write("</tr></table>");
+        out.write(new Hidden(this.getName(), this.getValue()).getHtml());
         Hidden size = new Hidden(this.getName() + "_size", this.getSizeValue());
         size.setType(PropertyType.TYPENAME_LONG);
-        out.println(size.getHtml());
+        out.write(size.getHtml());
         Hidden lastMod = new Hidden(this.getName() + "_lastModified", this.getModDateValue());
         lastMod.setType(PropertyType.TYPENAME_DATE);
-        out.println(lastMod.getHtml());
-        out.println(this.getHtmlSessionAttributeRemoveControl());
-        out.println(spacer.getHtml(12));
+        out.write(lastMod.getHtml());
+        out.write(this.getHtmlSessionAttributeRemoveControl());
+        out.write(Spacer.getHtml(12, 12));
         Button home = new Button();
         home.setSaveInfo(false);
         home.setLabel("Home");
         home.setOnclick("mgnlDialogDAVBrowse('" + this.getName() + "_iFrame','homeDirectory')");
-        out.println(home.getHtml());
+        out.write(home.getHtml());
         Button refresh = new Button();
         refresh.setSaveInfo(false);
         refresh.setLabel("Refresh");
         refresh.setOnclick("mgnlDialogDAVBrowse('" + this.getName() + "_iFrame','refreshDirectory')");
-        out.println(refresh.getHtml());
+        out.write(refresh.getHtml());
         Button up = new Button();
         up.setSaveInfo(false);
         up.setId(this.getName() + "_upDiv");
         up.setLabel("Parent directory");
         up.setOnclick("mgnlDialogDAVBrowse('" + this.getName() + "_iFrame','parentDirectory')");
-        out.println(up.getHtml());
-        out.println(spacer.getHtml(3));
+        out.write(up.getHtml());
+        out.write(Spacer.getHtml(3, 3));
         // #################
         // iFrame
         // #################
-        out.println("<iframe");
-        out.println(" id=\"" + this.getName() + "_iFrame\"");
-        out.println(" class=\"" + CSSCLASS_WEBDAVIFRAME + "\"");
+        out.write("<iframe");
+        out.write(" id=\"" + this.getName() + "_iFrame\"");
+        out.write(" class=\"" + CssConstants.CSSCLASS_WEBDAVIFRAME + "\"");
         if (this.getConfigValue("height", null) != null) {
-            out.println(" style=\"height:" + this.getConfigValue("height") + ";\")");
+            out.write(" style=\"height:" + this.getConfigValue("height") + ";\")");
         }
-        out.println(" frameborder=\"0\"");
-        out.println(" src=\"/.magnolia/dialogs/webDAVIFrame.html?"
+        out.write(" frameborder=\"0\"");
+        out.write(" src=\"/.magnolia/dialogs/webDAVIFrame.html?"
             + SESSION_ATTRIBUTENAME_DIALOGOBJECT
             + "="
             + this.getConfigValue(SESSION_ATTRIBUTENAME_DIALOGOBJECT)
             + "&mgnlCK="
             + new Date().getTime()
             + "\"");
-        out.println(" reloadsrc=\"0\"");
-        out.println(" usecss=\"1\"");
-        out.println(" strict_output=\"1\"");
-        out.println(" content_type=\"application/xhtml+xml\"");
-        out.println(" scrolling=\"auto\"");
-        out.println("></iframe>");
+        out.write(" reloadsrc=\"0\"");
+        out.write(" usecss=\"1\"");
+        out.write(" strict_output=\"1\"");
+        out.write(" content_type=\"application/xhtml+xml\"");
+        out.write(" scrolling=\"auto\"");
+        out.write("></iframe>");
         this.drawHtmlPost(out);
     }
 
-    public void drawHtmlList(JspWriter out) {
+    public void drawHtmlList(Writer out) {
         Enumeration fileList = null;
         String dir = this.getDirectory() + this.getSubDirectory();
         WebdavResource wdr = this.getDAVConnection();
@@ -357,9 +371,9 @@ public class DialogWebDAV extends DialogBox {
                     fileList = wdr.propfindMethod(dir, 1);
                 }
             }
-            out.println("<html><head>");
-            out.println(new Sources(this.getRequest().getContextPath()).getHtmlCss());
-            out.println(new Sources(this.getRequest().getContextPath()).getHtmlJs());
+            out.write("<html><head>");
+            out.write(new Sources(this.getRequest().getContextPath()).getHtmlCss());
+            out.write(new Sources(this.getRequest().getContextPath()).getHtmlJs());
             String parentDirectory = "";
             if (!this.getDirectory().equals(dir)) {
                 parentDirectory = this.getSubDirectory().substring(0, this.getSubDirectory().length() - 1); // get rid
@@ -368,28 +382,28 @@ public class DialogWebDAV extends DialogBox {
                 // ->
                 // /dir/home)
                 parentDirectory = parentDirectory.substring(0, parentDirectory.lastIndexOf("/") + 1);
-                out.println("<script type=\"text/javascript\">mgnlDialogDAVShow('"
+                out.write("<script type=\"text/javascript\">mgnlDialogDAVShow('"
                     + this.getName()
                     + "_upDiv',true);</script>");
             }
             else {
                 // home
-                out.println("<script type=\"text/javascript\">mgnlDialogDAVShow('"
+                out.write("<script type=\"text/javascript\">mgnlDialogDAVShow('"
                     + this.getName()
                     + "_upDiv',false);</script>");
             }
-            out.println("</head>");
-            out.println("<body marginwidth=\"0\" topmargin=\"5\" marginheight=\"5\" leftmargin=\"0\">");
-            out.println("<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" width=\"100%\">");
-            out.println("<form name=\"mgnlDialogDAVBrowseForm\" method=\"post\">");
-            out.println(new Hidden("subDirectory", "", false).getHtml());
-            out.println(new Hidden("parentDirectory", parentDirectory, false).getHtml());
-            out.println(new Hidden("homeDirectory", "", false).getHtml());
-            out.println(new Hidden("refreshDirectory", this.getSubDirectory(), false).getHtml());
-            out.println(new Hidden("selectedValue", this.getValue(), false).getHtml());
-            out.println(new Hidden(SESSION_ATTRIBUTENAME_DIALOGOBJECT, this
+            out.write("</head>");
+            out.write("<body>");
+            out.write("<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" width=\"100%\">");
+            out.write("<form name=\"mgnlDialogDAVBrowseForm\" method=\"post\">");
+            out.write(new Hidden("subDirectory", "", false).getHtml());
+            out.write(new Hidden("parentDirectory", parentDirectory, false).getHtml());
+            out.write(new Hidden("homeDirectory", "", false).getHtml());
+            out.write(new Hidden("refreshDirectory", this.getSubDirectory(), false).getHtml());
+            out.write(new Hidden("selectedValue", this.getValue(), false).getHtml());
+            out.write(new Hidden(SESSION_ATTRIBUTENAME_DIALOGOBJECT, this
                 .getConfigValue(SESSION_ATTRIBUTENAME_DIALOGOBJECT), false).getHtml());
-            out.println("</form>");
+            out.write("</form>");
             List fileListAS = new ArrayList();
             List dirListAS = new ArrayList();
             List selfAS = new ArrayList();
@@ -454,17 +468,17 @@ public class DialogWebDAV extends DialogBox {
             i = drawHtmlList(out, dirListAS, i);
             i = drawHtmlList(out, fileListAS, i);
             if (i == 1) {
-                out.println("<tr><td colspan=\"3\"></td><td colspan=\"3\"><i>Directory is empty</i></td></tr>");
+                out.write("<tr><td colspan=\"3\"></td><td colspan=\"3\"><em>Directory is empty</em></td></tr>");
             }
-            out.println("</table>");
-            out.println("</body></html>");
+            out.write("</table>");
+            out.write("</body></html>");
         }
         catch (Exception e) {
             log.info("Exception caught: " + e.getMessage(), e);
         }
     }
 
-    public int drawHtmlList(JspWriter out, List as, int i) throws IOException {
+    public int drawHtmlList(Writer out, List as, int i) throws IOException {
 
         boolean alt = (i % 2 == 0);
 
@@ -476,14 +490,14 @@ public class DialogWebDAV extends DialogBox {
             String displayType = (String) properties.get("displayType");
             String name = (String) properties.get("name");
             if (!alt) {
-                out.println("<tr>");
+                out.write("<tr>");
             }
             else {
-                out.println("<tr class=" + CSSCLASS_BGALT + ">");
+                out.write("<tr class=" + CssConstants.CSSCLASS_BGALT + ">");
             }
             alt = !alt;
-            out.println("<td></td>");
-            out.println("<td>");
+            out.write("<td></td>");
+            out.write("<td>");
             if (properties.get("isParent") == null
                 && (displayType.indexOf("folder") == -1 || this
                     .getConfigValue("allowDirectorySelection")
@@ -492,8 +506,8 @@ public class DialogWebDAV extends DialogBox {
                 if (properties.get("lastModified") != null) {
                     lastModified = ((String) properties.get("lastModified")).replaceAll(" ", "%20");
                 }
-                out.println("<input type=\"radio\" name=\"" + this.getName() + "_radio\"");
-                out.println(" onclick=mgnlDialogDAVSelect(\""
+                out.write("<input type=\"radio\" name=\"" + this.getName() + "_radio\"");
+                out.write(" onclick=mgnlDialogDAVSelect(\""
                     + this.getName()
                     + "\",\""
                     + name
@@ -505,7 +519,7 @@ public class DialogWebDAV extends DialogBox {
                     + lastModified
                     + "\");");
                 // if (this.getValue().equals(this.getSubDirectory()+name) ||
-                // this.getValue().equals(this.getSubDirectory()+name+"/")) out.println(" checked");
+                // this.getValue().equals(this.getSubDirectory()+name+"/")) out.write(" checked");
                 boolean checked = false;
                 if (properties.get("isSelf") != null) {
                     if (this.getValue().equals(this.getSubDirectory())) {
@@ -519,13 +533,12 @@ public class DialogWebDAV extends DialogBox {
                     }
                 }
                 if (checked) {
-                    out.println(" checked");
+                    out.write(" checked");
                 }
-                out.println(">");
-                // if (checked) out.println("X");
+                out.write(" />");
             }
-            out.println("</td>");
-            // out.println("<td>"+this.getValue()+"..."+this.getSubDirectory()+"..."+name+"</td>");
+            out.write("</td>");
+            // out.write("<td>"+this.getValue()+"..."+this.getSubDirectory()+"..."+name+"</td>");
             String idHidden = this.getName() + "_" + i + "_hidden";
             String idIcon = this.getName() + "_" + i + "_icon";
             i++;
@@ -536,31 +549,31 @@ public class DialogWebDAV extends DialogBox {
             else {
                 iconPath = this.getIconPath(name);
             }
-            out.println("<td>");
-            out.print("<img src=\""
+            out.write("<td>");
+            out.write("<img src=\""
                 + this.getRequest().getContextPath()
                 + iconPath
                 + "\" border=\"0\" id=\""
                 + idIcon
                 + "\">");
-            out.println("</td>");
-            out.println("<td width=\"100%\">");
+            out.write("</td>");
+            out.write("<td width=\"100%\">");
             if (displayType.indexOf("folder") == 0) {
                 if (properties.get("isSelf") != null) {
-                    out.println(this.getHtmlDecodeURI("<b><i>.&nbsp;&nbsp;" + name + "</i></b>"));
+                    out.write(this.getHtmlDecodeURI("<b><i>.&nbsp;&nbsp;" + name + "</i></b>"));
                 }
                 else {
                     if (properties.get("isParent") != null) {
                         name = "<b><i>..&nbsp;&nbsp;" + name + "</i></b>";
                     }
-                    out.print("<a href=\"javascript:mgnlDialogDAVBrowse('','" + idHidden + "');\">");
-                    out.print(this.getHtmlDecodeURI(name));
-                    out.print("</a>");
+                    out.write("<a href=\"javascript:mgnlDialogDAVBrowse('','" + idHidden + "');\">");
+                    out.write(this.getHtmlDecodeURI(name));
+                    out.write("</a>");
                 }
             }
             else {
-                out.println(this.getHtmlDecodeURI(name));
-                out.println("[<a href=\""
+                out.write(this.getHtmlDecodeURI(name));
+                out.write("[<a href=\""
                     + this.getProtocol()
                     + "://"
                     + this.getHost()
@@ -570,14 +583,14 @@ public class DialogWebDAV extends DialogBox {
                     + (String) properties.get("href")
                     + "\" target=\"blank\">view</a>]");
             }
-            out.println(new Hidden(idHidden, (String) properties.get("href"), false).getHtml());
-            out.println("</td>");
-            out.println("<td style=\"text-align:right;\">" + (String) properties.get("sizeStringValue") + "</td>");
-            out.println("<td>" + (String) properties.get("sizeStringUnit") + "</td>");
-            out.println("<td>&nbsp;&nbsp;</td>");
-            out.println("<td><nobr>" + (String) properties.get("lastModifiedString") + "</nobr></td>");
-            out.println("<td>&nbsp;&nbsp;</td>");
-            out.println("</tr>");
+            out.write(new Hidden(idHidden, (String) properties.get("href"), false).getHtml());
+            out.write("</td>");
+            out.write("<td style=\"text-align:right;\">" + (String) properties.get("sizeStringValue") + "</td>");
+            out.write("<td>" + (String) properties.get("sizeStringUnit") + "</td>");
+            out.write("<td>&nbsp;&nbsp;</td>");
+            out.write("<td style='white-space:nowrap;'>" + (String) properties.get("lastModifiedString") + "</td>");
+            out.write("<td>&nbsp;&nbsp;</td>");
+            out.write("</tr>");
         }
 
         return i;
@@ -663,5 +676,10 @@ public class DialogWebDAV extends DialogBox {
             log.error(e.getMessage(), e);
             return date;
         }
+    }
+
+    private String getHtmlSessionAttributeRemoveControl() {
+        return new Hidden(SESSION_ATTRIBUTENAME_DIALOGOBJECT_REMOVE, this
+            .getConfigValue(SESSION_ATTRIBUTENAME_DIALOGOBJECT), false).getHtml();
     }
 }

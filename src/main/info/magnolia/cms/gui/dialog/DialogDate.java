@@ -20,7 +20,8 @@ import java.util.Date;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
-import javax.servlet.jsp.PageContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
@@ -37,10 +38,17 @@ public class DialogDate extends DialogEditWithButton {
     private static Logger log = Logger.getLogger(DialogLink.class);
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(Content, Content, PageContext)
+     * Empty constructor should only be used by DialogFactory.
      */
-    public void init(Content configNode, Content websiteNode, PageContext pageContext) throws RepositoryException {
-        super.init(configNode, websiteNode, pageContext);
+    protected DialogDate() {
+    }
+
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(HttpServletRequest, HttpServletResponse, Content, Content)
+     */
+    public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
+        throws RepositoryException {
+        super.init(request, response, websiteNode, configNode);
         // set buttonlabel in config
         this.getButton().setLabel("Select date...");
         this.getButton().setSaveInfo(false);
@@ -58,7 +66,7 @@ public class DialogDate extends DialogEditWithButton {
             Date valueDate = valueCalendar.getTime();
             SimpleDateFormat sdf = new SimpleDateFormat(format);
             this.setValue(sdf.format(valueDate));
-            this.setWebsiteNode(null); // workaround so the value is taken... hm, pfusch
+            this.clearWebsiteNode(); // workaround so the value is taken... hm, pfusch
         }
         // check this!
         this.setConfig("type", this.getConfigValue("type", PropertyType.TYPENAME_DATE));

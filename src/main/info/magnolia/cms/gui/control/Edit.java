@@ -56,7 +56,7 @@ public class Edit extends ControlSuper {
             html.append(getHtmlEvents());
             html.append(this.getHtmlCssClass());
             html.append(this.getHtmlCssStyles());
-            html.append(">");
+            html.append(" />");
         }
         else {
             html.append("<textarea");

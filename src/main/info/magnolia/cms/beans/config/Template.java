@@ -188,14 +188,13 @@ public class Template {
     }
 
     /**
-     * <p>
-     * returns the cached content of the requested template <br>
-     * TemplateInfo properties :<br>
-     * 1. title - title describing template <br>
-     * 2. type - jsp / servlet <br>
-     * 3. path - jsp / servlet path <br>
-     * 4. description - description of a template
-     * </p>
+     * Returns the cached content of the requested template. TemplateInfo properties:
+     * <ol>
+     * <li> title - title describing template</li>
+     * <li> type - jsp / servlet</li>
+     * <li> path - jsp / servlet path</li>
+     * <li> description - description of a template</li>
+     * </ol>
      * @return TemplateInfo
      */
     public static Template getInfo(String key) throws Exception {

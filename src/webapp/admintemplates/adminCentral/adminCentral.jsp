@@ -5,7 +5,6 @@
     <jsp:directive.page import="java.util.Date" />
     <jsp:directive.page import="info.magnolia.cms.gui.control.ButtonSet" />
     <jsp:directive.page import="info.magnolia.cms.gui.control.Button" />
-    <jsp:directive.page import="info.magnolia.cms.gui.dialog.DialogSpacer" />
     <jsp:directive.page import="info.magnolia.cms.beans.config.Paragraph" />
     <jsp:directive.page import="info.magnolia.cms.gui.misc.Icon" />
     <jsp:directive.page import="info.magnolia.cms.core.Content" />

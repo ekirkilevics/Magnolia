@@ -14,7 +14,7 @@ package info.magnolia.cms.gui.control;
 
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.gui.dialog.DialogSuper;
+import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.util.MetaDataUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 
@@ -33,9 +33,9 @@ import org.apache.log4j.Logger;
  */
 public class TreeColumn extends ControlSuper {
 
-    public static final String EDIT_CSSCLASS_EDIT = DialogSuper.CSSCLASS_EDIT;
+    public static final String EDIT_CSSCLASS_EDIT = CssConstants.CSSCLASS_EDIT;
 
-    public static final String EDIT_CSSCLASS_SELECT = DialogSuper.CSSCLASS_SELECT;
+    public static final String EDIT_CSSCLASS_SELECT = CssConstants.CSSCLASS_SELECT;
 
     public static final String EDIT_NAMEADDITION = "_EditNodeData";
 

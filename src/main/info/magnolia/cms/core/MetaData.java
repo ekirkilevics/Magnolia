@@ -136,10 +136,7 @@ public class MetaData {
     }
 
     /**
-     * <p>
-     * part of metadata, same as name of actual storage node <br>
-     * this value is unique at the hierarchy level context
-     * </p>
+     * Part of metadata, same as name of actual storage node. This value is unique at the hierarchy level context.
      * @return String value of the requested metadata
      */
     public String getLabel() {

@@ -14,15 +14,18 @@ package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.File;
+import info.magnolia.cms.gui.misc.CssConstants;
+import info.magnolia.cms.gui.misc.Spacer;
 
 import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
@@ -38,10 +41,17 @@ public class DialogFile extends DialogBox {
     private List imageExtensions = new ArrayList();
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(Content, Content, PageContext)
+     * Empty constructor should only be used by DialogFactory.
      */
-    public void init(Content configNode, Content websiteNode, PageContext pageContext) throws RepositoryException {
-        super.init(configNode, websiteNode, pageContext);
+    protected DialogFile() {
+    }
+
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(HttpServletRequest, HttpServletResponse, Content, Content)
+     */
+    public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
+        throws RepositoryException {
+        super.init(request, response, websiteNode, configNode);
         initImageExtensions();
         initIconExtensions();
     }
@@ -61,16 +71,16 @@ public class DialogFile extends DialogBox {
     }
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(JspWriter)
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(Writer)
      */
-    public void drawHtml(JspWriter out) throws IOException {
+    public void drawHtml(Writer out) throws IOException {
         File control = new File(this.getName(), this.getWebsiteNode());
         control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING));
         control.setSaveInfo(false); // set manualy below
-        control.setCssClass(CSSCLASS_FILE);
-        control.setCssClassFileName(CSSCLASS_EDIT);
+        control.setCssClass(CssConstants.CSSCLASS_FILE);
+        control.setCssClassFileName(CssConstants.CSSCLASS_EDIT);
         control.setCssStyles("width", this.getConfigValue("width", "100%"));
-        DialogSpacer spacer = new DialogSpacer();
+
         this.drawHtmlPre(out);
 
         String width = this.getConfigValue("width", "100%");
@@ -80,16 +90,16 @@ public class DialogFile extends DialogBox {
         }
         String htmlControlBrowse = control.getHtmlBrowse();
         StringBuffer htmlControlFileName = new StringBuffer();
-        htmlControlFileName.append("<span class=\"" + CSSCLASS_DESCRIPTION + "\">Filename</span>");
-        htmlControlFileName.append(spacer.getHtml(1));
+        htmlControlFileName.append("<span class=\"" + CssConstants.CSSCLASS_DESCRIPTION + "\">Filename</span>");
+        htmlControlFileName.append(Spacer.getHtml(1, 1));
         htmlControlFileName.append(control.getHtmlFileName()
             + "<span id=\""
             + this.getName()
             + "_fileNameExtension\">."
             + control.getExtension()
             + "</span>");
-        String htmlContentEmpty = htmlControlBrowse + spacer.getHtml() + htmlControlFileName;
-        out.println("<div id=\"" + this.getName() + "_contentDiv\" style=\"width:100%;\">");
+        String htmlContentEmpty = htmlControlBrowse + Spacer.getHtml(0, 0) + htmlControlFileName;
+        out.write("<div id=\"" + this.getName() + "_contentDiv\" style=\"width:100%;\">");
         boolean exists = false;
 
         if (this.getWebsiteNode() != null) {
@@ -97,27 +107,27 @@ public class DialogFile extends DialogBox {
         }
 
         if (!exists) {
-            out.println(htmlContentEmpty);
-            out.println("</div>");
+            out.write(htmlContentEmpty);
+            out.write("</div>");
         }
         else {
             if (showImage) {
-                out.println("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"" + width + "\">");
-                out.println("<tr><td class=\"" + CSSCLASS_FILEIMAGE + "\">");
+                out.write("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"" + width + "\">");
+                out.write("<tr><td class=\"" + CssConstants.CSSCLASS_FILEIMAGE + "\">");
                 // todo: image thumbnail template
-                // out.println("<img src=\""+ this.getRequest().getContextPath()
+                // out.write("<img src=\""+ this.getRequest().getContextPath()
                 // +THUMB_PATH+"?src="+control.getHandle()+"\"
                 // class=\""+CSSCLASS_FILEIMAGE+"\">");
                 // tmp workaround: resize in html ...
-                out.println("<img width=\"150\" src=\""
+                out.write("<img width=\"150\" src=\""
                     + this.getRequest().getContextPath()
                     + control.getHandle()
                     + "\" class=\""
-                    + CSSCLASS_FILEIMAGE
+                    + CssConstants.CSSCLASS_FILEIMAGE
                     + "\">");
-                out.println("</td><td>");
+                out.write("</td><td>");
             }
-            out.println(htmlControlFileName);
+            out.write(htmlControlFileName.toString());
             if (!showImage) {
                 String iconPath = this.getIconPath(control.getExtension());
                 /*
@@ -126,32 +136,32 @@ public class DialogFile extends DialogBox {
                  * this.getIconExtensions().get(control.getExtension().toLowerCase()); if (iconPath.equals(""))
                  * iconPath=ICONS_PATH+control.getExtension().toLowerCase()+".gif"; }
                  */
-                out.println(spacer.getHtml());
-                out.print("<a href=" + control.getPath() + " target=\"_blank\">");
-                out.print("<img src=\""
+                out.write(Spacer.getHtml(0, 0));
+                out.write("<a href=" + control.getPath() + " target=\"_blank\">");
+                out.write("<img src=\""
                     + this.getRequest().getContextPath()
                     + iconPath
                     + "\" class=\""
-                    + CSSCLASS_FILEICON
+                    + CssConstants.CSSCLASS_FILEICON
                     + "\" border=\"0\">");
-                out.print(control.getFileName() + "." + control.getExtension() + "</a>");
+                out.write(control.getFileName() + "." + control.getExtension() + "</a>");
             }
-            out.println(spacer.getHtml(12));
-            out.println(control.getHtmlRemove("mgnlDialogFileRemove('" + this.getName() + "');"));
+            out.write(Spacer.getHtml(12, 12));
+            out.write(control.getHtmlRemove("mgnlDialogFileRemove('" + this.getName() + "');"));
             if (showImage) {
-                out.println("</td></tr></table>");
+                out.write("</td></tr></table>");
             }
-            out.println("</div>");
-            out.println("<div style=\"position:absolute;top:-500;left:-500;visibility:hidden;\"><textarea id=\""
+            out.write("</div>");
+            out.write("<div style=\"position:absolute;top:-500;left:-500;visibility:hidden;\"><textarea id=\""
                 + this.getName()
                 + "_contentEmpty\">"
                 + htmlContentEmpty
                 + "</textarea></div>");
         }
         control.setSaveInfo(true);
-        out.println(control.getHtmlSaveInfo());
+        out.write(control.getHtmlSaveInfo());
         control.setNodeDataTemplate(this.getConfigValue("nodeDataTemplate", null));
-        out.println(control.getHtmlNodeDataTemplate());
+        out.write(control.getHtmlNodeDataTemplate());
         this.drawHtmlPost(out);
     }
 }

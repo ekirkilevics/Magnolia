@@ -1,3 +1,8 @@
+.mgnlDialogBody
+	{
+	padding: 0;
+	margin: 0;
+	}
 .mgnlDialogBody td
 	{
 	font-family:Verdana, sans-serif;

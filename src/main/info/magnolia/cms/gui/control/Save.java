@@ -443,9 +443,12 @@ public class Save extends ControlSuper {
 
         String valueStr = value;
         valueStr = valueStr.replaceAll("\r\n", " ");
-        // valueStr=valueStr.replaceAll("\n","");
-        valueStr = valueStr.replaceAll("<br>", "\n");
-        valueStr = valueStr.replaceAll("<BR>", "\n");
+        valueStr = valueStr.replaceAll("\n", " ");
+
+        valueStr = valueStr.replaceAll("<br>", "\n ");
+        valueStr = valueStr.replaceAll("<BR>", "\n ");
+        valueStr = valueStr.replaceAll("<br/>", "\n ");
+
         // replace <a class="...></a> by <span class=""></span>
         valueStr = this.replaceABySpan(valueStr, "a");
         // replace <P>

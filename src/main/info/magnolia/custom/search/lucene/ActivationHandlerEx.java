@@ -1,7 +1,9 @@
 package info.magnolia.custom.search.lucene;
 
 import info.magnolia.cms.servlets.SimpleExchange;
+
 import javax.servlet.ServletConfig;
+import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -16,29 +18,27 @@ public class ActivationHandlerEx extends SimpleExchange {
 
     private ServletConfig config;
 
-    private String handle;
-
     public void init() {
         this.config = getServletConfig();
     }
 
-    public void activate() throws Exception {
-        this.handle = super.getOperatedHandle();
-        super.activate();
+    public void activate(HttpServletRequest request) throws Exception {
+        String handle = getOperatedHandle(request);
+        super.activate(request);
         try {
-            (new BaseTask(this.config)).indexPage(this.handle);
+            (new BaseTask(this.config)).indexPage(handle);
         }
         catch (Exception e) {
         }
     }
 
-    public void deactivate() throws Exception {
-        this.handle = super.getOperatedHandle();
+    public void deactivate(HttpServletRequest request) throws Exception {
+
         try {
-            (new BaseTask(this.config)).deleteFromIndex(this.handle);
+            (new BaseTask(this.config)).deleteFromIndex(getOperatedHandle(request));
         }
         catch (Exception e) {
         }
-        super.deactivate();
+        super.deactivate(request);
     }
 }

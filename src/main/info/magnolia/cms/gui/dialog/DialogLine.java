@@ -12,13 +12,19 @@
  */
 package info.magnolia.cms.gui.dialog;
 
+import info.magnolia.cms.gui.misc.CssConstants;
+
+
 /**
  * @author Vinzenz Wyser
  * @version 2.0
  */
 public class DialogLine {
 
-    public DialogLine() {
+    /**
+     * Empty constructor should only be used by DialogFactory.
+     */
+    protected DialogLine() {
     }
 
     public String getHtml() {
@@ -47,7 +53,7 @@ public class DialogLine {
             + "<td colspan=\""
             + colspanLine
             + "\" class=\""
-            + DialogSuper.CSSCLASS_BOXLINE
+            + CssConstants.CSSCLASS_BOXLINE
             + "\"></td>"
             + post
             + "</tr>";

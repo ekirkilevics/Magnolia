@@ -236,10 +236,8 @@ public class PacketCollector {
     }
 
     /**
-     * <p>
-     * Compares last modification time with the last activation or deactivation time in history logs. <br>
-     * reads history file backward to check for any trace for deactivation/activation for "this" subscriber
-     * </p>
+     * Compares last modification time with the last activation or deactivation time in history logs. reads history file
+     * backward to check for any trace for deactivation/activation for "this" subscriber.
      * @param contentNode
      */
     private boolean isActivated(Content contentNode) {

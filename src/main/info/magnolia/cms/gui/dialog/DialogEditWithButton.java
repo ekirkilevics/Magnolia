@@ -15,15 +15,17 @@ package info.magnolia.cms.gui.dialog;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.Edit;
+import info.magnolia.cms.gui.misc.CssConstants;
 
 import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
@@ -42,10 +44,17 @@ public class DialogEditWithButton extends DialogBox {
     private List buttons = new ArrayList();
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(Content, Content, PageContext)
+     * Empty constructor should only be used by DialogFactory.
      */
-    public void init(Content configNode, Content websiteNode, PageContext pageContext) throws RepositoryException {
-        super.init(configNode, websiteNode, pageContext);
+    protected DialogEditWithButton() {
+    }
+
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(HttpServletRequest, HttpServletResponse, Content, Content)
+     */
+    public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
+        throws RepositoryException {
+        super.init(request, response, websiteNode, configNode);
         buttons.add(new Button());
     }
 
@@ -66,15 +75,15 @@ public class DialogEditWithButton extends DialogBox {
     }
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(JspWriter)
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(Writer)
      */
-    public void drawHtml(JspWriter out) throws IOException {
+    public void drawHtml(Writer out) throws IOException {
         Edit control = new Edit(this.getName(), this.getValue());
         control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING));
         if (this.getConfigValue("saveInfo").equals("false")) {
             control.setSaveInfo(false);
         }
-        control.setCssClass(CSSCLASS_EDIT);
+        control.setCssClass(CssConstants.CSSCLASS_EDIT);
         control.setRows(this.getConfigValue("rows", "1"));
         control.setCssStyles("width", "100%");
         if (this.getConfigValue("onchange", null) != null) {
@@ -82,17 +91,17 @@ public class DialogEditWithButton extends DialogBox {
         }
         this.drawHtmlPre(out);
         String width = this.getConfigValue("width", "100%");
-        out.println("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"" + width + "\">");
-        out.println("<tr><td width=\"100%\"  class=\"" + CSSCLASS_EDITWITHBUTTON + "\">");
-        out.println(control.getHtml());
+        out.write("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"" + width + "\">");
+        out.write("<tr><td width=\"100%\"  class=\"" + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">");
+        out.write(control.getHtml());
         if (this.getConfigValue("buttonLabel", null) != null) {
             this.getButton().setLabel(this.getConfigValue("buttonLabel"));
         }
         for (int i = 0; i < this.getButtons().size(); i++) {
-            out.println("</td><td>&nbsp;</td><td class=\"" + CSSCLASS_EDITWITHBUTTON + "\">");
-            out.println(this.getButton(i).getHtml());
+            out.write("</td><td>&nbsp;</td><td class=\"" + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">");
+            out.write(this.getButton(i).getHtml());
         }
-        out.println("</td></tr></table>");
+        out.write("</td></tr></table>");
 
         this.drawHtmlPost(out);
     }

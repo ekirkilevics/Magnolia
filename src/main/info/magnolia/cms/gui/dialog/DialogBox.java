@@ -12,11 +12,12 @@
  */
 package info.magnolia.cms.gui.dialog;
 
+import info.magnolia.cms.gui.misc.CssConstants;
+
 import java.io.IOException;
+import java.io.Writer;
 import java.util.Hashtable;
 import java.util.Map;
-
-import javax.servlet.jsp.JspWriter;
 
 import org.apache.log4j.Logger;
 
@@ -31,6 +32,14 @@ public class DialogBox extends DialogSuper {
 
     public static final int BOXTYPE_1COL = 1;
 
+    public static final String ICONS_GENERAL = "general.gif";
+
+    public static final String ICONS_FOLDER = "folder.gif";
+
+    public static final String NULLGIF = "/admindocroot/0.gif";
+
+    public static final String ICONS_PATH = "/admindocroot/fileIcons/";
+
     /**
      * Logger.
      */
@@ -39,6 +48,12 @@ public class DialogBox extends DialogSuper {
     private Map iconExtensions = new Hashtable();
 
     private int boxType = BOXTYPE_2COLS;
+
+    /**
+     * Empty constructor should only be used by DialogFactory.
+     */
+    protected DialogBox() {
+    }
 
     public void setBoxType(int i) {
         this.boxType = i;
@@ -53,40 +68,40 @@ public class DialogBox extends DialogSuper {
 
     }
 
-    public void drawHtmlPre(JspWriter out) throws IOException {
+    public void drawHtmlPre(Writer out) throws IOException {
         if (this.getConfigValue("lineSemi", "false").equals("true")) {
-            out.println(new DialogLine().getHtml(1, 1));
+            out.write(new DialogLine().getHtml(1, 1));
         }
         else if (this.getConfigValue("line", "true").equals("true")) {
-            out.println(new DialogLine().getHtml());
+            out.write(new DialogLine().getHtml());
         }
-        out.println("<tr>");
+        out.write("<tr>");
         if (this.getBoxType() == BOXTYPE_2COLS) {
-            out.println("<td width=\"1%\" class=\"" + CSSCLASS_BOXLABEL + "\">");
-            out.println(this.getLabel());
+            out.write("<td width=\"1%\" class=\"" + CssConstants.CSSCLASS_BOXLABEL + "\">");
+            out.write(this.getLabel());
             if (!this.getConfigValue("labelDescription").equals("")) {
-                out.println("<div class=\""
-                    + CSSCLASS_DESCRIPTION
+                out.write("<div class=\""
+                    + CssConstants.CSSCLASS_DESCRIPTION
                     + "\">"
                     + this.getConfigValue("labelDescription")
                     + "</div>");
             }
-            out.println("</td>");
-            String cssClass = CSSCLASS_BOXINPUT;
+            out.write("</td>");
+            String cssClass = CssConstants.CSSCLASS_BOXINPUT;
             if (this.getClass().getName().indexOf("DialogStatic") != -1
                 || this.getClass().getName().indexOf("DialogButton") != -1) {
-                cssClass = CSSCLASS_BOXLABEL;
+                cssClass = CssConstants.CSSCLASS_BOXLABEL;
             }
-            out.println("<td width=\"100%\" class=\"" + cssClass + "\">");
+            out.write("<td width=\"100%\" class=\"" + cssClass + "\">");
         }
         else {
-            out.println("<td width=\"100%\" colspan=\"2\" class=\"" + CSSCLASS_BOXLABEL + "\">");
+            out.write("<td width=\"100%\" colspan=\"2\" class=\"" + CssConstants.CSSCLASS_BOXLABEL + "\">");
             if (!this.getLabel().equals("")) {
-                out.println("<div class=\"" + CSSCLASS_BOXLABEL + "\">" + this.getLabel() + "</div>");
+                out.write("<div class=\"" + CssConstants.CSSCLASS_BOXLABEL + "\">" + this.getLabel() + "</div>");
             }
             if (!this.getConfigValue("labelDescription").equals("")) {
-                out.println("<div class=\""
-                    + CSSCLASS_DESCRIPTION
+                out.write("<div class=\""
+                    + CssConstants.CSSCLASS_DESCRIPTION
                     + "\">"
                     + this.getConfigValue("labelDescription")
                     + "</div>");
@@ -94,16 +109,16 @@ public class DialogBox extends DialogSuper {
         }
     }
 
-    public void drawHtmlPost(JspWriter out) throws IOException {
-        out.println(this.getHtmlDescription());
-        out.println("</td></tr>");
+    public void drawHtmlPost(Writer out) throws IOException {
+        out.write(this.getHtmlDescription());
+        out.write("</td></tr>");
     }
 
     public String getHtmlDescription() {
         String html = "";
         // use div to force a new line
         if (!this.getDescription().equals("")) {
-            html = "<div class=\"" + CSSCLASS_DESCRIPTION + "\">" + this.getDescription() + "</div>";
+            html = "<div class=\"" + CssConstants.CSSCLASS_DESCRIPTION + "\">" + this.getDescription() + "</div>";
         }
         return html;
     }

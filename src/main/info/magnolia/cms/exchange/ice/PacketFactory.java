@@ -78,10 +78,8 @@ public final class PacketFactory {
     }
 
     /**
-     * <p>
-     * creates a packet using JDOM document as body and specified headers <br>
-     * it will keep the existing header defined by the creation of packet itself
-     * </p>
+     * Creates a packet using JDOM document as body and specified headers. It will keep the existing header defined by
+     * the creation of packet itself.
      * @param document
      * @param header
      */
@@ -114,10 +112,8 @@ public final class PacketFactory {
     }
 
     /**
-     * <p>
-     * creates a packet with Input steam as data and headers as specified <br>
-     * it will keep the existing header defined by the creation of packet itself
-     * </p>
+     * Creates a packet with Input steam as data and headers as specified. It will keep the existing header defined by
+     * the creation of packet itself.
      * @param dataStream
      * @param header
      * @return newly created packet

@@ -13,8 +13,7 @@
 package info.magnolia.cms.gui.dialog;
 
 import java.io.IOException;
-
-import javax.servlet.jsp.JspWriter;
+import java.io.Writer;
 
 import org.apache.log4j.Logger;
 
@@ -31,15 +30,21 @@ public class DialogStatic extends DialogBox {
     private static Logger log = Logger.getLogger(DialogStatic.class);
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(JspWriter)
+     * Empty constructor should only be used by DialogFactory.
      */
-    public void drawHtml(JspWriter out) throws IOException {
+    protected DialogStatic() {
+    }
+
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(Writer)
+     */
+    public void drawHtml(Writer out) throws IOException {
         this.drawHtmlPre(out);
         String value = this.getConfigValue("value", null);
         if (value == null) {
             value = this.getValue();
         }
-        out.println(value);
+        out.write(value);
         this.drawHtmlPost(out);
     }
 }

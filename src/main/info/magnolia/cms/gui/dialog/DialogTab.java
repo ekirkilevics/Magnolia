@@ -13,10 +13,10 @@
 package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.gui.control.Button;
+import info.magnolia.cms.gui.misc.CssConstants;
 
 import java.io.IOException;
-
-import javax.servlet.jsp.JspWriter;
+import java.io.Writer;
 
 import org.apache.log4j.Logger;
 
@@ -32,7 +32,13 @@ public class DialogTab extends DialogSuper {
      */
     private static Logger log = Logger.getLogger(DialogTab.class);
 
-    public void drawHtmlPreSubs(JspWriter out) throws IOException {
+    /**
+     * Empty constructor should only be used by DialogFactory.
+     */
+    protected DialogTab() {
+    }
+
+    public void drawHtmlPreSubs(Writer out) throws IOException {
         String parentId = this.getParent().getId();
         String id = this.getId();
         // add tab button to tab set
@@ -43,26 +49,26 @@ public class DialogTab extends DialogSuper {
             this.getParent().addOption(control);
         }
         // add tab to js object
-        out.println("<script type=\"text/javascript\">");
-        out.println("mgnlControlSets['"
+        out.write("<script type=\"text/javascript\">");
+        out.write("mgnlControlSets['"
             + parentId
             + "'].items[mgnlControlSets['"
             + parentId
             + "'].items.length]='"
             + id
             + "';");
-        out.println("</script>");
+        out.write("</script>");
         // tab page
-        out.println("<div id=\"" + id + "_div\" class=\"" + CSSCLASS_TAB + "\">");
-        out.println("<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">");
-        out.println("<tr><td class=\"" + CSSCLASS_TAB + "\">");
+        out.write("<div id=\"" + id + "_div\" class=\"" + CssConstants.CSSCLASS_TAB + "\">");
+        out.write("<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">");
+        out.write("<tr><td class=\"" + CssConstants.CSSCLASS_TAB + "\">");
         out
-            .println("<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"table-layout:fixed\">");
-        out.println("<col width=\"200\"></col><col></col>");
+            .write("<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"table-layout:fixed\">");
+        out.write("<col width=\"200\" /><col />");
     }
 
-    public void drawHtmlPostSubs(JspWriter out) throws IOException {
-        out.println("</td></tr></table>");
-        out.println("</table></div>");
+    public void drawHtmlPostSubs(Writer out) throws IOException {
+        out.write("</table>");
+        out.write("</td></tr></table></div>");
     }
 }

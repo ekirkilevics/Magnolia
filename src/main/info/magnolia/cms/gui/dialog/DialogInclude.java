@@ -13,10 +13,9 @@
 package info.magnolia.cms.gui.dialog;
 
 import java.io.IOException;
+import java.io.Writer;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
 
 import org.apache.log4j.Logger;
 
@@ -33,22 +32,29 @@ public class DialogInclude extends DialogBox {
     private static Logger log = Logger.getLogger(DialogInclude.class);
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(JspWriter)
+     * Empty constructor should only be used by DialogFactory.
      */
-    public void drawHtml(JspWriter out) throws IOException {
+    protected DialogInclude() {
+    }
+
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(Writer)
+     */
+    public void drawHtml(Writer out) throws IOException {
         this.drawHtmlPre(out);
         HttpServletRequest request = this.getRequest();
         if (request == null) {
             request = this.getTopParent().getRequest();
         }
-        PageContext pageContext = this.getPageContext();
-        if (pageContext == null) {
-            pageContext = this.getTopParent().getPageContext();
-        }
+
         try {
-            pageContext.setAttribute("dialogObject", this, PageContext.REQUEST_SCOPE);
-            pageContext.include(this.getConfigValue("file"));
-            pageContext.removeAttribute("dialogObject", PageContext.REQUEST_SCOPE);
+            request.setAttribute("dialogObject", this);
+
+            String file = this.getConfigValue("file");
+
+            request.getRequestDispatcher(file).include(request, this.getResponse());
+
+            request.removeAttribute("dialogObject");
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);

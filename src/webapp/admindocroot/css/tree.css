@@ -123,6 +123,31 @@ div.mgnlTreeMenuItem_DISABLED
 	{
 	width:100%;
 	height:5px;
-	background-position-x:20px;
 	}
 
+.mgnlTreeText {
+    height: 15px;
+    min-width: 20px;
+}
+
+.mgnlTreeColumn {
+	white-space: nowrap;
+    min-width: 20px;
+    height: 15px;
+}
+
+.mgnlTreeMenu div{
+   line-height: 15px;
+   height: 15px;
+   display: block;
+   cursor: pointer;
+   white-space: nowrap;
+}
+
+.mgnlTreeMenuLine {
+	height: 1px !important;
+	padding: 0 !important;
+}
+.mgnlTreeMenuItem{
+	 cursor: pointer;
+}

@@ -16,7 +16,8 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 
 import javax.jcr.RepositoryException;
-import javax.servlet.jsp.PageContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
@@ -33,22 +34,23 @@ public class DialogLink extends DialogEditWithButton {
     private static Logger log = Logger.getLogger(DialogLink.class);
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(Content, Content, PageContext)
+     * Empty constructor should only be used by DialogFactory.
      */
-    public void init(Content configNode, Content websiteNode, PageContext pageContext) throws RepositoryException {
-        super.init(configNode, websiteNode, pageContext);
+    protected DialogLink() {
+    }
+
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(HttpServletRequest, HttpServletResponse, Content, Content)
+     */
+    public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
+        throws RepositoryException {
+        super.init(request, response, websiteNode, configNode);
         String extension = this.getConfigValue("extension");
         this.getButton().setLabel("Internal link...");
         this.getButton().setSaveInfo(false);
         String repository = this.getConfigValue("repository", ContentRepository.WEBSITE);
         this.getButton().setOnclick(
-            "mgnlDialogLinkOpenBrowser('"
-                + this.getName()
-                + "','"
-                + repository
-                + "','"
-                + extension
-                + "');");
+            "mgnlDialogLinkOpenBrowser('" + this.getName() + "','" + repository + "','" + extension + "');");
     }
 
 }

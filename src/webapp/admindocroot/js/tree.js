@@ -18,7 +18,7 @@
 		this.name=name;
 		this.divMain=document.getElementById(name+"_"+path+"_DivMain");
 		this.divMenu=document.getElementById(name+"_DivMenu");
-		this.addressBar=document.getElementById(name+"_AddressBar");
+		this.addressBar=document.getElementById(name+"AddressBar");
 		this.divMoveShadow=document.getElementById(name+"_MoveShadow");
 		this.divMoveDenied=document.getElementById(name+"_MoveDenied");
 
@@ -132,8 +132,6 @@
 		var divMain=document.getElementById(sNode.divMainId);
 
 		var divMainSelected=document.getElementById(this.selectedNode.divMainId);
-
-		//this.addressBar.value=sNode.divMainId+"::"+this.selectedNode.divMainId+"::"+globalCounter++;
 
 		if (divMain && this.selectedNode.divMainId!=sNode.divMainId)
 			{
@@ -1315,9 +1313,7 @@ callback
 
 		if (selectPath)
 			{
-			//tree.selectedNode=tree.getNode(tree.path); //reset selectedNode to root
 			tree.selectNode(tree.path);
-			//tree.addressBar.value=params.pathSelected+"::"+globalCounter++;
 			tree.selectNode(selectPath);
 			}
 

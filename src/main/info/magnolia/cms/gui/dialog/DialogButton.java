@@ -15,8 +15,7 @@ package info.magnolia.cms.gui.dialog;
 import info.magnolia.cms.gui.control.Button;
 
 import java.io.IOException;
-
-import javax.servlet.jsp.JspWriter;
+import java.io.Writer;
 
 import org.apache.log4j.Logger;
 
@@ -33,9 +32,15 @@ public class DialogButton extends DialogBox {
     private static Logger log = Logger.getLogger(DialogButton.class);
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(JspWriter)
+     * Empty constructor should only be used by DialogFactory.
      */
-    public void drawHtml(JspWriter out) throws IOException {
+    protected DialogButton() {
+    }
+
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(Writer)
+     */
+    public void drawHtml(Writer out) throws IOException {
         Button control = new Button();
         control.setSaveInfo(false);
         control.setLabel(this.getConfigValue("buttonLabel"));
@@ -44,7 +49,7 @@ public class DialogButton extends DialogBox {
             control.setSmall(true);
         }
         this.drawHtmlPre(out);
-        out.println(control.getHtml());
+        out.write(control.getHtml());
         this.drawHtmlPost(out);
     }
 }

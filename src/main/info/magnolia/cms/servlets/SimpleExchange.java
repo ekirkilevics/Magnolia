@@ -74,34 +74,6 @@ public class SimpleExchange extends HttpServlet implements SingleThreadModel {
      */
     private static Logger log = Logger.getLogger(SimpleExchange.class);
 
-    private String context;
-
-    private String page;
-
-    private String parent;
-
-    private String action;
-
-    private String type; // only used if action is get
-
-    private String recursive;
-
-    private String protocol;
-
-    private String host;
-
-    private String remotePort;
-
-    private String senderURL;
-
-    private String senderContext;
-
-    private String objectType;
-
-    private HttpServletRequest request;
-
-    private HttpServletResponse response;
-
     private transient HierarchyManager hierarchyManager;
 
     /**
@@ -111,31 +83,76 @@ public class SimpleExchange extends HttpServlet implements SingleThreadModel {
      * @throws IOException
      */
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        this.request = request;
-        this.response = response;
-        this.context = this.request.getHeader(Syndicator.WORKING_CONTEXT);
-        this.page = this.request.getHeader(Syndicator.PAGE);
-        this.parent = this.request.getHeader(Syndicator.PARENT);
-        this.recursive = this.request.getHeader(Syndicator.RECURSIVE);
-        this.action = this.request.getHeader(Syndicator.ACTION);
-        this.type = this.request.getHeader(Syndicator.GET_TYPE);
-        this.protocol = getProtocolName();
-        this.host = request.getRemoteHost();
-        this.remotePort = this.request.getHeader(Syndicator.REMOTE_PORT);
-        this.senderURL = this.request.getHeader(Syndicator.SENDER_URL);
-        this.senderContext = this.request.getHeader(Syndicator.SENDER_CONTEXT);
+        String context = request.getHeader(Syndicator.WORKING_CONTEXT);
 
-        if (StringUtils.isEmpty(this.senderURL)) {
-            this.senderURL = this.protocol + "://" + this.host + ":" + this.remotePort;
-        }
+        log.info("SimpleExchange.doGet()");
 
-        this.objectType = this.request.getHeader(Syndicator.OBJECT_TYPE);
         try {
             response.setContentType("text/plain");
-            this.handleActivationRequest();
+            // this.handleActivationRequest();
+
+            String action = request.getHeader(Syndicator.ACTION);
+            String page = request.getHeader(Syndicator.PAGE);
+            String recursive = request.getHeader(Syndicator.RECURSIVE);
+            boolean recurse = BooleanUtils.toBoolean(recursive);
+
+            if (ConfigLoader.isConfigured() && !Listener.isAllowed(request) || !Authenticator.authenticate(request)) {
+                // ignore security is server is not configured
+                return;
+            }
+
+            if (ConfigLoader.isConfigured()) {
+                this.hierarchyManager = SessionAccessControl.getHierarchyManager(request, context);
+            }
+            else {
+                this.hierarchyManager = ContentRepository.getHierarchyManager(context);
+            }
+
+            // @todo getHierarchyManager() should not return null without throwing an exception
+            if (this.hierarchyManager == null) {
+                throw new ExchangeException("HierarchyManager is not configured for " + context);
+            }
+
+            if (action.equals(Syndicator.ACTIVATE)) {
+                activate(request);
+            }
+            else if (action.equals(Syndicator.DE_ACTIVATE)) {
+                deactivate(request);
+            }
+            else if (action.equals(Syndicator.GET)) {
+                String type = request.getHeader(Syndicator.GET_TYPE);
+                get(page, type, recurse, response);
+            }
+            else {
+                throw new UnsupportedOperationException("Method not supported by Exchange protocol - Simple (.01)");
+            }
+        }
+        catch (OutOfMemoryError e) {
+
+            // @todo find memory leaks!
+            Runtime rt = Runtime.getRuntime();
+
+            log.error("---------\nOutOfMemoryError caught during activation. Total memory = "
+                + rt.totalMemory()
+                + ", free memory = "
+                + rt.freeMemory()
+                + "\n---------");
+
         }
         catch (Throwable e) {
             log.error(e.getMessage(), e);
+        }
+
+        Runtime rt = Runtime.getRuntime();
+
+        if (log.isDebugEnabled()) {
+            log.debug("Before gc(): total memory = " + rt.totalMemory() + ", free memory = " + rt.freeMemory());
+        }
+
+        rt.gc();
+
+        if (log.isDebugEnabled()) {
+            log.debug("After gc(): total memory = " + rt.totalMemory() + ", free memory = " + rt.freeMemory());
         }
     }
 
@@ -152,71 +169,54 @@ public class SimpleExchange extends HttpServlet implements SingleThreadModel {
     /**
      * @throws Exception
      */
-    private void handleActivationRequest() throws Exception {
-        if (ConfigLoader.isConfigured()) { // ignore security is server is not configured
-            if (!Listener.isAllowed(this.request)) {
-                return;
-            }
-            if (!Authenticator.authenticate(this.request)) {
-                return;
-            }
-            this.hierarchyManager = SessionAccessControl.getHierarchyManager(this.request, this.context);
-        }
-        else {
-            this.hierarchyManager = ContentRepository.getHierarchyManager(this.context);
+    public void activate(HttpServletRequest request) throws Exception {
+
+        String page = request.getHeader(Syndicator.PAGE);
+
+        log.info("Exchange : update request received for " + page);
+
+        String parent = request.getHeader(Syndicator.PARENT);
+        String objectType = request.getHeader(Syndicator.OBJECT_TYPE);
+        String recursive = request.getHeader(Syndicator.RECURSIVE);
+        String senderContext = request.getHeader(Syndicator.SENDER_CONTEXT);
+        String context = request.getHeader(Syndicator.WORKING_CONTEXT);
+
+        String protocol = getProtocolName(request);
+        String host = request.getRemoteHost();
+        String remotePort = request.getHeader(Syndicator.REMOTE_PORT);
+        String senderURL = request.getHeader(Syndicator.SENDER_URL);
+
+        if (StringUtils.isEmpty(senderURL)) {
+            senderURL = protocol + "://" + host + ":" + remotePort;
         }
 
-        if (this.hierarchyManager == null) {
-            throw new ExchangeException("HierarchyManager is not configured for " + this.context);
-        }
+        String handle = StringUtils.defaultString(senderContext) + "/" + Syndicator.DEFAULT_HANDLER;
 
-        if (this.action.equals(Syndicator.ACTIVATE)) {
-            activate();
-        }
-        else if (this.action.equals(Syndicator.DE_ACTIVATE)) {
-            deactivate();
-        }
-        else if (this.action.equals(Syndicator.GET)) {
-            get();
-        }
-        else {
-            throw new UnsupportedOperationException("Method not supported by Exchange protocol - Simple (.01)");
-        }
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void activate() throws Exception {
-        log.info("Exchange : update request received for " + this.page);
-
-        String handle = StringUtils.defaultString(this.senderContext) + "/" + Syndicator.DEFAULT_HANDLER;
-
-        URL url = new URL(this.senderURL + handle);
-        String credentials = this.request.getHeader("Authorization");
+        URL url = new URL(senderURL + handle);
+        String credentials = request.getHeader("Authorization");
         URLConnection urlConnection = url.openConnection();
         urlConnection.setRequestProperty("Authorization", credentials);
         urlConnection.addRequestProperty(Syndicator.ACTION, Syndicator.GET);
-        urlConnection.addRequestProperty(Syndicator.WORKING_CONTEXT, this.context);
-        urlConnection.addRequestProperty(Syndicator.PAGE, this.page);
-        urlConnection.addRequestProperty(Syndicator.PARENT, this.parent);
+        urlConnection.addRequestProperty(Syndicator.WORKING_CONTEXT, context);
+        urlConnection.addRequestProperty(Syndicator.PAGE, page);
+        urlConnection.addRequestProperty(Syndicator.PARENT, parent);
         urlConnection.addRequestProperty(Syndicator.GET_TYPE, Syndicator.GET_TYPE_SERIALIZED_OBJECT);
-        urlConnection.addRequestProperty(Syndicator.RECURSIVE, this.recursive);
-        urlConnection.addRequestProperty(Syndicator.OBJECT_TYPE, this.objectType);
-        /* Import activated page */
+        urlConnection.addRequestProperty(Syndicator.RECURSIVE, recursive);
+        urlConnection.addRequestProperty(Syndicator.OBJECT_TYPE, objectType);
+        // Import activated page
         InputStream in = urlConnection.getInputStream();
         try {
             ObjectInputStream objectInputStream = new ObjectInputStream(in);
             Object sc = objectInputStream.readObject();
-            /* deserialize received object */
-            ContentWriter contentWriter = new ContentWriter(this.getHierarchyManager(), this.context, this.senderURL
-                + StringUtils.defaultString(this.senderContext)
+            // deserialize received object
+            ContentWriter contentWriter = new ContentWriter(this.getHierarchyManager(), context, senderURL
+                + StringUtils.defaultString(senderContext)
                 + "/"
-                + Syndicator.DEFAULT_HANDLER, this.request);
-            contentWriter.writeObject(this.parent, sc);
+                + Syndicator.DEFAULT_HANDLER, request);
+            contentWriter.writeObject(parent, sc);
         }
         catch (Exception e) {
-            log.error("Failed to de-serialize - " + this.page);
+            log.error("Failed to de-serialize - " + page);
             log.error(e.getMessage(), e);
         }
         // todo , find a better way to lock only this context->hierarchy
@@ -229,61 +229,51 @@ public class SimpleExchange extends HttpServlet implements SingleThreadModel {
     /**
      * @throws Exception
      */
-    public void deactivate() throws Exception {
-        log.info("Exchange : remove request received for " + this.page);
+    public void deactivate(HttpServletRequest request) throws Exception {
+
+        String page = request.getHeader(Syndicator.PAGE);
+
+        log.info("Exchange : remove request received for " + page);
         HierarchyManager hm = this.getHierarchyManager();
-        hm.delete(this.page);
+        hm.delete(page);
         hm.save();
         CacheHandler.flushCache();
-        SecureURI.delete(this.page);
-        SecureURI.delete(this.page + "/*");
+        SecureURI.delete(page);
+        SecureURI.delete(page + "/*");
     }
 
     /**
      * @throws Exception
      */
-    private void get() throws Exception {
-        if (this.type.equalsIgnoreCase(Syndicator.GET_TYPE_SERIALIZED_OBJECT)) {
-            this.getSerializedObject();
-        }
-        else if (this.type.equalsIgnoreCase(Syndicator.GET_TYPE_BINARY)) {
-            this.getBinary();
+    private void get(String page, String type, boolean recurse, HttpServletResponse response) throws Exception {
+        if (type.equalsIgnoreCase(Syndicator.GET_TYPE_BINARY)) {
+            // this.getBinary();
+            log.info("Binary request for " + page);
+            HierarchyManager hm = this.getHierarchyManager();
+            try {
+                InputStream is = hm.getNodeData(page).getValue().getStream();
+                ServletOutputStream os = response.getOutputStream();
+                byte[] buffer = new byte[8192];
+                int read = 0;
+                while ((read = is.read(buffer)) > 0) {
+                    os.write(buffer, 0, read);
+                }
+                os.flush();
+                os.close();
+            }
+            catch (PathNotFoundException e) {
+                log.error("Unable to spool " + page);
+                throw new PathNotFoundException(e.getMessage());
+            }
         }
         else {
-            this.getSerializedObject(); // default type, supporting magnolia 1.1
-        }
-    }
+            // this.getSerializedObject(); // default type, supporting magnolia 1.1
+            log.info("Serialized object request for " + page);
 
-    private void getSerializedObject() throws Exception {
-        log.info("Serialized object request for " + this.page);
-        boolean recurse = BooleanUtils.toBoolean(this.recursive);
-        Packet packet = PacketCollector.getPacket(this.getHierarchyManager(), this.page, recurse);
-        ObjectOutputStream os = new ObjectOutputStream(this.response.getOutputStream());
-        os.writeObject(packet.getBody().getObject());
-        os.flush();
-    }
-
-    /**
-     *
-     *
-     */
-    private void getBinary() throws Exception {
-        log.info("Binary request for " + this.page);
-        HierarchyManager hm = this.getHierarchyManager();
-        try {
-            InputStream is = hm.getNodeData(this.page).getValue().getStream();
-            ServletOutputStream os = this.response.getOutputStream();
-            byte[] buffer = new byte[8192];
-            int read = 0;
-            while ((read = is.read(buffer)) > 0) {
-                os.write(buffer, 0, read);
-            }
+            Packet packet = PacketCollector.getPacket(this.getHierarchyManager(), page, recurse);
+            ObjectOutputStream os = new ObjectOutputStream(response.getOutputStream());
+            os.writeObject(packet.getBody().getObject());
             os.flush();
-            os.close();
-        }
-        catch (PathNotFoundException e) {
-            log.error("Unable to spool " + this.page);
-            throw new PathNotFoundException(e.getMessage());
         }
     }
 
@@ -291,15 +281,15 @@ public class SimpleExchange extends HttpServlet implements SingleThreadModel {
         return this.hierarchyManager;
     }
 
-    public String getOperatedHandle() {
-        return this.page;
+    protected String getOperatedHandle(HttpServletRequest request) {
+        return request.getHeader(Syndicator.PAGE);
     }
 
     /**
      * Exclude version number.
      */
-    private String getProtocolName() {
-        String protocol = this.request.getProtocol();
+    private String getProtocolName(HttpServletRequest request) {
+        String protocol = request.getProtocol();
         int lastIndexOfSlash = protocol.lastIndexOf("/");
         return protocol.substring(0, lastIndexOfSlash);
     }

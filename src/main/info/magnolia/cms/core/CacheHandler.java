@@ -195,11 +195,8 @@ public class CacheHandler extends Thread {
     }
 
     /**
-     * <p>
-     * spools cached data back to the client.<br>
-     * this only works if specified request is a GET request and does not have any request parameter, else it wont write
-     * anything on the output stream.
-     * </p>
+     * Spools cached data back to the client. This only works if specified request is a GET request and does not have
+     * any request parameter, else it wont write anything on the output stream.
      * @param request
      * @param response
      * @throws IOException
@@ -300,11 +297,8 @@ public class CacheHandler extends Thread {
     }
 
     /**
-     * <p>
-     * empties the cache for the specified resource.<br>
-     * currenty it expects the entire path, including cache location. todo : make it relative, should be able to flush
-     * specified resource from all cache stores
-     * </p>
+     * empties the cache for the specified resource. Currenty it expects the entire path, including cache location. todo :
+     * make it relative, should be able to flush specified resource from all cache stores.
      * @param uri
      */
     public static void flushResource(String uri) throws Exception {
@@ -343,7 +337,7 @@ public class CacheHandler extends Thread {
             }
             else {
                 log.info("Flushing - " + children[i].getPath());
-                String path = StringUtils.substringAfter(children[i].getPath(),Path.getCacheDirectoryPath());
+                String path = StringUtils.substringAfter(children[i].getPath(), Path.getCacheDirectoryPath());
                 Cache.removeFromCachedURIList(path);
                 Cache.removeFromInProcessURIList(path);
                 children[i].delete();

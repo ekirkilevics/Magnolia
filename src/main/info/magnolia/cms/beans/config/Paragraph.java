@@ -93,11 +93,8 @@ public class Paragraph {
     }
 
     /**
-     * <p>
-     * load content of this paragraph info page in a hash table caching at the system load, this will save lot of time
-     * on every request while matching paragraph info <br>
-     * paragraphs of Paragraphs.xml overwrite same named paras of AdminParagraphs.xml
-     * </p>
+     * Load content of this paragraph info page in a hash table caching at the system load, this will save lot of time
+     * on every request while matching paragraph info.
      */
     private static void cacheContent(Content content, String modulePath) throws AccessDeniedException {
         Collection contentNodes = content.getChildren(ItemType.NT_CONTENTNODE);
@@ -112,9 +109,7 @@ public class Paragraph {
     }
 
     /**
-     * <p>
-     * adds paragraph definition to ParagraphInfo cache
-     * </p>
+     * Adds paragraph definition to ParagraphInfo cache.
      * @param paragraphs iterator as read from the repository
      */
     private static void addParagraphsToCache(Iterator paragraphs, String startPage) {
@@ -195,14 +190,13 @@ public class Paragraph {
     }
 
     /**
-     * <p>
-     * returns the cached content of the requested template <br>
-     * TemplateInfo properties :<br>
-     * 1. title - title describing template <br>
-     * 2. type - jsp / servlet <br>
-     * 3. path - jsp / servlet path <br>
-     * 4. description - description of a template
-     * </p>
+     * Returns the cached content of the requested template. TemplateInfo properties :
+     * <ol>
+     * <li> title - title describing template </li>
+     * <li> type - jsp / servlet </li>
+     * <li> path - jsp / servlet path </li>
+     * <li> description - description of a template</li>
+     * </ol>
      * @return TemplateInfo
      */
     public static Paragraph getInfo(String key) throws Exception {

@@ -89,11 +89,8 @@ public class ContentWriter {
     }
 
     /**
-     * <p>
-     * writes the serialized object to the specified location. <br>
-     * If the content already exists in a persistent layer, update values <br>
-     * else, create persistent object
-     * <p>
+     * Writes the serialized object to the specified location. If the content already exists in a persistent layer,
+     * update values else, create persistent object.
      */
     private void writeContent(Content parent, SerializableContent serializableContent) throws RepositoryException {
         String newPageName = serializableContent.getName();

@@ -20,7 +20,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.exchange.simple.Syndicator;
-import info.magnolia.cms.gui.dialog.DialogSpacer;
+import info.magnolia.cms.gui.misc.Spacer;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.MetaDataUtil;
@@ -67,8 +67,6 @@ public class Tree extends ControlSuper {
     public static final int PASTETYPE_SUB = 2;
 
     public static final int PASTETYPE_LAST = 3;
-
-    private static final String LINE_INTERNODE_MASK = DOCROOT + "line_internode_mask.gif";
 
     /**
      * Logger.
@@ -816,7 +814,12 @@ public class Tree extends ControlSuper {
                 newLabel = Path.getUniqueLabel(hm, parentPath, newLabel);
                 dest = parentPath + "/" + newLabel;
             }
+
             this.deActivateNode(this.getPath());
+
+            if (log.isInfoEnabled()) {
+                log.info("Moving node from " + this.getPath() + " to " + dest);
+            }
             hm.moveTo(this.getPath(), dest);
             SessionAccessControl.invalidateUser(this.getRequest());
             Content newPage = hm.getContent(dest);
@@ -894,7 +897,22 @@ public class Tree extends ControlSuper {
     }
 
     public String getHtmlHeader() {
+
         StringBuffer html = new StringBuffer();
+
+        // write css definitions
+        // @todo style is not valid in body!
+        html.append("<style type=\"text/css\">");
+        int numberOfColumns = this.getColumns().size();
+        if (numberOfColumns == 0) {
+            numberOfColumns = 1;
+        }
+        for (int i = 0; i < numberOfColumns; i++) {
+            html.append("." + this.getJavascriptTree() + "CssClassColumn" + i);
+            html.append("\n{position:absolute;left:0px;clip:rect(0 0 100 0);cursor:default;}\n");
+        }
+        html.append("</style>\n\n");
+
         // resizer
         html.append("<div id=\""
             + this.getJavascriptTree()
@@ -918,7 +936,7 @@ public class Tree extends ControlSuper {
             html.append("<img src=\""
                 + this.getRequest().getContextPath()
                 + this.getColumnResizer()
-                + "\" style=\"visibility:hidden;\">");
+                + "\" alt=\"\" style=\"visibility:hidden;\" />");
             html.append("</div>");
         }
         html.append("</div>");
@@ -928,26 +946,16 @@ public class Tree extends ControlSuper {
             + "_ColumnHeader\" style=\"position:absolute;top:-50px;z-index:480;\">");
         for (int i = 0; i < this.getColumns().size(); i++) {
             TreeColumn tc = this.getColumns(i);
-            html.append("<span class=\""
+            html.append("<span class=\"mgnlTreeColumn "
                 + this.getJavascriptTree()
                 + "CssClassColumn"
                 + i
-                + "\"><span class=\"mgnlTreeHeader\"><nobr>"
+                + "\"><span class=\"mgnlTreeHeader\">"
                 + tc.getTitle()
-                + "</nobr></span></span>");
+                + "<!-- ie --></span></span>");
         }
         html.append("</div>");
-        // write css definitions
-        html.append("<style type=text/css>");
-        int numberOfColumns = this.getColumns().size();
-        if (numberOfColumns == 0) {
-            numberOfColumns = 1;
-        }
-        for (int i = 0; i < numberOfColumns; i++) {
-            html.append("." + this.getJavascriptTree() + "CssClassColumn" + i);
-            html.append("{position:absolute;left:0px;clip:rect(0 0 100 0);cursor:default;}");
-        }
-        html.append("</style>");
+
         html.append("<div id=\""
             + this.getJavascriptTree()
             + "_ColumnResizerLine\" style=\"position:absolute;top:0px;left:-100px;visibility:hidden;width:1px;height:"
@@ -964,7 +972,7 @@ public class Tree extends ControlSuper {
             + ".menuShow(event);return false;\" class=\"mgnlTreeDiv\" style=\"height:"
             + this.getHeight()
             + "px;\">");
-        html.append(new DialogSpacer().getHtml(8));
+        html.append(Spacer.getHtml(8, 8));
         // html.append("<div id=\""+this.getJavascriptTree()+"_"+this.getPath()+"_DivSub\" style=\"display:none;\">";
         html.append("<div id=\"" + this.getJavascriptTree() + "_" + this.getPath() + "_DivSub\">");
         return html.toString();
@@ -982,14 +990,12 @@ public class Tree extends ControlSuper {
         catch (RepositoryException e) {
             log.info("Exception caught: " + e.getMessage(), e);
         }
+
+        // lineInter: line between nodes, to allow set cursor between nodes
         // line to place a very last position
         String lineId = this.getJavascriptTree() + "_" + this.getPath() + "_LineInter";
-        html.append("<div id=\""
-            + lineId
-            + "\" class=\"mgnlTreeLineInter\"><img src=\""
-            + this.getRequest().getContextPath()
-            + Tree.LINE_INTERNODE_MASK
-            + "\" width=\"1\" height=\"5\">");
+        html.append("<div id=\"" + lineId + "\" class=\"mgnlTreeLineInter\">");
+
         html.append("<img src=\""
             + this.getRequest().getContextPath()
             + "/admindocroot/0.gif\" width=\"150\" height=\"5\" onmouseover=\""
@@ -1010,7 +1016,8 @@ public class Tree extends ControlSuper {
             + Boolean.toString(permissionWrite)
             + ",'"
             + lineId
-            + "');\">");
+            + "');\" />");
+
         html.append("</div>");
         html.append(new Hidden(this.getJavascriptTree() + "_" + this.getPath() + "_PermissionWrite", Boolean
             .toString(permissionWrite), false).getHtml());
@@ -1020,14 +1027,16 @@ public class Tree extends ControlSuper {
         if (pathOpen == null) {
             pathOpen = "";
         }
-        html.append(new DialogSpacer().getHtml(3));
-        html.append("<input id=\""
+
+        html.append(Spacer.getHtml(3, 3));
+        html.append("\n\n\n\n\n\n\n\n<input id=\""
             + this.getJavascriptTree()
-            + "_AddressBar\" type=\"text\" onkeydown=\"if (mgnlIsKeyEnter(event)) "
+            + "AddressBar\" type=\"text\" onkeydown=\"if (mgnlIsKeyEnter(event)) "
             + this.getJavascriptTree()
             + ".expandNode(this.value);\" class=\"mgnlDialogControlEdit\" style=\"width:100%;\" value=\""
             + pathOpen
-            + "\">");
+            + "\" />\n\n\n\n");
+
         // menu
         StringBuffer menuJavascript = new StringBuffer();
         if (this.getMenuItems().size() != 0) {
@@ -1036,10 +1045,7 @@ public class Tree extends ControlSuper {
             for (int i = 0; i < this.getMenuItems().size(); i++) {
                 TreeMenuItem item = this.getMenuItems(i);
                 if (item == null) {
-                    html.append("<div class=\"mgnlTreeMenuLine\">");
-                    html.append("<img src=\""
-                        + this.getRequest().getContextPath()
-                        + "/admindocroot/0.gif\" width=\"1\" height=\"1\"></div>");
+                    html.append("<div class=\"mgnlTreeMenuLine\"><!-- ie --></div>");
                 }
                 else {
                     item.setJavascriptTree(this.getJavascriptTree());
@@ -1083,7 +1089,7 @@ public class Tree extends ControlSuper {
             + Tree.DOCROOT
             + "move_denied.gif\" id=\""
             + this.getJavascriptTree()
-            + "_MoveDenied\" style=\"position:absolute;top:0px;left:0px;visibility:hidden;\">");
+            + "_MoveDenied\" style=\"position:absolute;top:0px;left:0px;visibility:hidden;\" />");
         // initialize js tree object
         html.append("<script type=\"text/javascript\">");
         html.append("var "
@@ -1247,18 +1253,15 @@ public class Tree extends ControlSuper {
                     + idPre
                     + "_LineInter');";
                 String jsResetLine = this.getJavascriptTree() + ".moveNodeResetLine('" + idPre + "_LineInter');";
-                // lineInter: line between nodes, to allow set cursor between nodes
-                html.append("<div id=\"" + idPre + "_LineInter\" class=\"mgnlTreeLineInter\">");
+
                 int maskWidth = left;
                 if (maskWidth < 1) {
                     maskWidth = 1;
                 }
-                html.append("<img src=\""
-                    + this.getRequest().getContextPath()
-                    + Tree.LINE_INTERNODE_MASK
-                    + "\" width=\""
-                    + maskWidth
-                    + "\" height=\"5\">");
+
+                // lineInter: line between nodes, to allow set cursor between nodes
+                html.append("<div id=\"" + idPre + "_LineInter\" class=\"mgnlTreeLineInter\">");
+
                 if (permissionWriteParent) {
                     html.append("<img src=\""
                         + this.getRequest().getContextPath()
@@ -1272,7 +1275,7 @@ public class Tree extends ControlSuper {
                         + handle
                         + "',"
                         + Tree.PASTETYPE_ABOVE
-                        + ",true);\">");
+                        + ",true);\" />");
                 }
                 html.append("</div>");
                 html.append("<div id=\""
@@ -1283,11 +1286,11 @@ public class Tree extends ControlSuper {
                 if (paddingLeft < 0) {
                     paddingLeft = 0;
                 }
-                html.append("<nobr><span id=\""
+                html.append("<span id=\""
                     + idPre
-                    + "_Column0Outer\" class="
+                    + "_Column0Outer\" class=\"mgnlTreeColumn "
                     + this.getJavascriptTree()
-                    + "CssClassColumn0 style=\"padding-left:"
+                    + "CssClassColumn0\" style=\"padding-left:"
                     + paddingLeft
                     + "px;\">");
                 if (this.getDrawShifter()) {
@@ -1318,10 +1321,10 @@ public class Tree extends ControlSuper {
                             + handle
                             + "');\" onmouseout=\""
                             + this.getJavascriptTree()
-                            + ".shifterOut();\" class=mgnlTreeShifter src=\""
+                            + ".shifterOut();\" class=\"mgnlTreeShifter\" src=\""
                             + this.getRequest().getContextPath()
                             + shifter
-                            + "\">");
+                            + "\" />");
                     }
                 }
                 html.append("<span id="
@@ -1352,7 +1355,7 @@ public class Tree extends ControlSuper {
                     if (this.getIconOndblclick() != null) {
                         html.append(" ondblclick=\"" + this.getIconOndblclick() + "\"");
                     }
-                    html.append(">");
+                    html.append(" />");
                 }
                 String dblclick = "";
                 if (permissionWrite && !this.getColumns(0).getHtmlEdit().equals("")) {
@@ -1364,7 +1367,7 @@ public class Tree extends ControlSuper {
                 }
                 html.append("<span class=\"mgnlTreeText\" id=\"" + idPre + "_Column0Main\"" + dblclick + ">");
                 html.append(name);
-                html.append("</span></span></span></nobr>");
+                html.append("</span></span></span>");
                 html.append(new Hidden(idPre + "_PermissionWrite", Boolean.toString(permissionWrite), false).getHtml());
                 html.append(new Hidden(idPre + "_ItemType", itemType, false).getHtml());
                 html.append(new Hidden(idPre + "_IsActivated", Boolean.toString(isActivated), false).getHtml());
@@ -1395,7 +1398,7 @@ public class Tree extends ControlSuper {
                     tc.setEvent("onmouseover", jsHighlightNode, true);
                     tc.setEvent("onmouseout", jsResetNode, true);
                     tc.setEvent("onmousedown", jsSelectNode, true);
-                    html.append("<nobr><span class=\""
+                    html.append("<span class=\"mgnlTreeColumn "
                         + this.getJavascriptTree()
                         + "CssClassColumn"
                         + i
@@ -1415,7 +1418,7 @@ public class Tree extends ControlSuper {
                             + i
                             + ");\"");
                     }
-                    html.append(">" + str + "</span></span></nobr>");
+                    html.append(">" + str + "</span></span>");
                 }
                 html.append("</div>");
                 String display = "none";

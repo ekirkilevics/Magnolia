@@ -46,27 +46,20 @@ public interface Channel {
     void receive(Packet packet) throws ChannelOverflowException, ChannelException;
 
     /**
-     * <p>
-     * removes any packet reference for the specified ID. <br>
-     * this could be used once packet confirmation is received
-     * </p>
+     * removes any packet reference for the specified ID.This could be used once packet confirmation is received
      * @param id
      * @throws ChannelException
      */
     void removePacketReference(String id) throws ChannelException;
 
     /**
-     * <p>
-     * flush all resources referenced through this channel
-     * </p>
+     * flush all resources referenced through this channel.
      * @throws ChannelException
      */
     void flush() throws ChannelException;
 
     /**
-     * <p>
-     * Closes the channel if nothing left in the que
-     * </p>
+     * Closes the channel if nothing left in the queue.
      */
     void close();
 

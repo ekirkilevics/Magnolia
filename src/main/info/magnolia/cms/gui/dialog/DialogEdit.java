@@ -13,11 +13,12 @@
 package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.gui.control.Edit;
+import info.magnolia.cms.gui.misc.CssConstants;
 
 import java.io.IOException;
+import java.io.Writer;
 
 import javax.jcr.PropertyType;
-import javax.servlet.jsp.JspWriter;
 
 import org.apache.log4j.Logger;
 
@@ -34,22 +35,28 @@ public class DialogEdit extends DialogBox {
     private static Logger log = Logger.getLogger(DialogEdit.class);
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(JspWriter)
+     * Empty constructor should only be used by DialogFactory.
      */
-    public void drawHtml(JspWriter out) throws IOException {
+    protected DialogEdit() {
+    }
+
+    /**
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(Writer)
+     */
+    public void drawHtml(Writer out) throws IOException {
         Edit control = new Edit(this.getName(), this.getValue());
         control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING));
         if (this.getConfigValue("saveInfo").equals("false")) {
             control.setSaveInfo(false);
         }
-        control.setCssClass(CSSCLASS_EDIT);
+        control.setCssClass(CssConstants.CSSCLASS_EDIT);
         control.setRows(this.getConfigValue("rows", "1"));
         control.setCssStyles("width", this.getConfigValue("width", "100%"));
         if (this.getConfigValue("onchange", null) != null) {
             control.setEvent("onchange", this.getConfigValue("onchange"));
         }
         this.drawHtmlPre(out);
-        out.println(control.getHtml());
+        out.write(control.getHtml());
         this.drawHtmlPost(out);
     }
 }

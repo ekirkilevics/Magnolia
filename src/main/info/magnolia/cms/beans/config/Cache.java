@@ -12,7 +12,6 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.core.CacheHandler;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;

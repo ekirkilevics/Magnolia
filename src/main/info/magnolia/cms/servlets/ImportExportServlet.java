@@ -84,7 +84,6 @@ public class ImportExportServlet extends HttpServlet {
         out.println("</head><body>");
 
         out.println("<form method=\"get\" action=\"\">");
-        // out.println("repository: <input name=\"repository\" value=\"" + repository + "\"><br/>");
         out.println("repository: <select name=\"repository\"><br/>");
 
         for (int j = 0; j < repositories.length; j++) {
@@ -99,8 +98,8 @@ public class ImportExportServlet extends HttpServlet {
 
         out.println("</select>");
         out.println("<br/>");
-        out.println("base path: <input name=\"basepath\" value=\"" + basepath + "\"><br/>");
-        out.println("<input type=\"submit\" name=\"exportxml\" value=\"export\">");
+        out.println("base path: <input name=\"basepath\" value=\"" + basepath + "\" /><br/>");
+        out.println("<input type=\"submit\" name=\"exportxml\" value=\"export\" />");
 
         out.println("</form>");
 

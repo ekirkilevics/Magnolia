@@ -5,4 +5,16 @@
     <postGoal name="site">
         <attainGoal name="pdf" />
     </postGoal>
+       
+    <preGoal name="jar:jar">
+        <!-- add tlds to taglib jar -->
+        <j:set var="tld.dir" value="${maven.src.dir}/webapp/WEB-INF/taglib" />
+        <echo message="copying tld files ${tld.dir} to ${maven.build.dest}/META-INF" />
+        <copy todir="${maven.build.dest}/META-INF">
+            <fileset dir="${tld.dir}">
+                <include name="*.tld" />
+            </fileset>
+        </copy>
+    </preGoal>
+
 </project>

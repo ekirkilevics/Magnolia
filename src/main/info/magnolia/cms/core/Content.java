@@ -377,9 +377,7 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
-     * <p>
-     * gets a Collection containing all child nodes at the current level+1 level <br>
-     * </p>
+     * gets a Collection containing all child nodes at the current level+1 level.
      * @return Collection of content nodes
      */
     public Collection getChildren() {
@@ -387,12 +385,11 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
-     * <p>
-     * get collection of specified content type <br>
-     * use: <br>
-     * ItemType.NT_CONTENT to get sub pages ItemType.NT_CONTENTNODE to get sub content nodes (paragraphs)
-     * ItemType.NT_NODEDATA to get node data (properties) <b>else </b> YOUR_CUSTOM_TYPE as registered
-     * </p>
+     * Get collection of specified content type. Use:
+     * <ul>
+     * <li>ItemType.NT_CONTENT to get sub pages ItemType.NT_CONTENTNODE to get sub content nodes (paragraphs)</li>
+     * <li>ItemType.NT_NODEDATA to get node data (properties) <b>else </b> YOUR_CUSTOM_TYPE as registered</li>
+     * <ul>
      * @param contentType
      * @return Collection of content nodes
      * @deprecated instead use getChildren(String)
@@ -416,12 +413,11 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
-     * <p>
-     * get collection of specified content type <br>
-     * use: <br>
-     * ItemType.NT_CONTENT to get sub pages ItemType.NT_CONTENTNODE to get sub content nodes (paragraphs)
-     * ItemType.NT_NODEDATA to get node data (properties) <b>else </b> YOUR_CUSTOM_TYPE as registered
-     * </p>
+     * Get collection of specified content type. Use:
+     * <ul>
+     * <li>ItemType.NT_CONTENT to get sub pages ItemType.NT_CONTENTNODE to get sub content nodes (paragraphs)</li>
+     * <li>ItemType.NT_NODEDATA to get node data (properties) <strong>else</strong> YOUR_CUSTOM_TYPE as registered</li>
+     * </ul>
      * @param contentType
      * @return Collection of content nodes
      */
@@ -430,12 +426,11 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
-     * <p>
-     * get collection of specified content type <br>
-     * use: <br>
-     * ItemType.NT_CONTENT to get sub pages ItemType.NT_CONTENTNODE to get sub content nodes (paragraphs)
-     * ItemType.NT_NODEDATA to get node data (properties) <b>else </b> YOUR_CUSTOM_TYPE as registered
-     * </p>
+     * Get collection of specified content type. Use:
+     * <ul>
+     * <li>ItemType.NT_CONTENT to get sub pages ItemType.NT_CONTENTNODE to get sub content nodes (paragraphs)</li>
+     * <li>ItemType.NT_NODEDATA to get node data (properties) <strong>else</strong> YOUR_CUSTOM_TYPE as registered</li>
+     * </ul>
      * @param contentType
      * @param sortCriteria which can be either ContentHandler.SORT_BY_SEQUENCE , ContentHandler.SORT_BY_DATE or
      * ContentHandler.SORT_BY_NAME

@@ -19,7 +19,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
-import javax.servlet.jsp.PageContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.log4j.Logger;
@@ -29,7 +30,7 @@ import org.apache.log4j.Logger;
  * Factory for dialogs. This class handles the registration of native dialogs mantaing a map of (control name | dialog
  * class).
  * @author Fabrizio Giustina
- * @version $Revision$ ($Author$)
+ * @version $Revision: 364 $ ($Author: fgiust $)
  */
 public final class DialogFactory {
 
@@ -85,14 +86,14 @@ public final class DialogFactory {
 
     /**
      * Load and initialize a dialog.
+     * @param websiteNode current website node
      * @param configNode configuration node for the dialog. The type of the dialog is read from the "controlType"
      * nodeData
-     * @param websiteNode current website node
      * @param pageContext jsp page context
      * @throws RepositoryException for errors during initialization of dialog with repository data
      */
-    public static DialogInterface loadDialog(ContentNode configNode, Content websiteNode, PageContext pageContext)
-        throws RepositoryException {
+    public static DialogInterface loadDialog(HttpServletRequest request, HttpServletResponse response,
+        Content websiteNode, ContentNode configNode) throws RepositoryException {
         String controlType = configNode.getNodeData("controlType").getString();
 
         Class dialogClass = (Class) dialogs.get(controlType);
@@ -124,7 +125,64 @@ public final class DialogFactory {
         if (log.isDebugEnabled()) {
             log.debug("Calling init on " + dialogClass.getName());
         }
-        dialog.init(configNode, websiteNode, pageContext);
+        dialog.init(request, response, websiteNode, configNode);
         return dialog;
     }
+
+    public static DialogDialog getDialogDialogInstance(HttpServletRequest request, HttpServletResponse response,
+        Content websiteNode, Content configNode) throws RepositoryException {
+        DialogDialog dialog = new DialogDialog();
+        dialog.init(request, response, websiteNode, configNode);
+        return dialog;
+    }
+
+    public static DialogStatic getDialogStaticInstance(HttpServletRequest request, HttpServletResponse response,
+        Content websiteNode, Content configNode) throws RepositoryException {
+        DialogStatic dialog = new DialogStatic();
+        dialog.init(request, response, websiteNode, configNode);
+        return dialog;
+    }
+
+    public static DialogHidden getDialogHiddenInstance(HttpServletRequest request, HttpServletResponse response,
+        Content websiteNode, Content configNode) throws RepositoryException {
+        DialogHidden dialog = new DialogHidden();
+        dialog.init(request, response, websiteNode, configNode);
+        return dialog;
+    }
+
+    public static DialogEdit getDialogEditInstance(HttpServletRequest request, HttpServletResponse response,
+        Content websiteNode, Content configNode) throws RepositoryException {
+        DialogEdit dialog = new DialogEdit();
+        dialog.init(request, response, websiteNode, configNode);
+        return dialog;
+    }
+
+    public static DialogButton getDialogButtonInstance(HttpServletRequest request, HttpServletResponse response,
+        Content websiteNode, Content configNode) throws RepositoryException {
+        DialogButton dialog = new DialogButton();
+        dialog.init(request, response, websiteNode, configNode);
+        return dialog;
+    }
+
+    public static DialogPassword getDialogPasswordInstance(HttpServletRequest request, HttpServletResponse response,
+        Content websiteNode, Content configNode) throws RepositoryException {
+        DialogPassword dialog = new DialogPassword();
+        dialog.init(request, response, websiteNode, configNode);
+        return dialog;
+    }
+
+    public static DialogButtonSet getDialogButtonSetInstance(HttpServletRequest request, HttpServletResponse response,
+        Content websiteNode, Content configNode) throws RepositoryException {
+        DialogButtonSet dialog = new DialogButtonSet();
+        dialog.init(request, response, websiteNode, configNode);
+        return dialog;
+    }
+
+    public static DialogInclude getDialogIncludeInstance(HttpServletRequest request, HttpServletResponse response,
+        Content websiteNode, Content configNode) throws RepositoryException {
+        DialogInclude dialog = new DialogInclude();
+        dialog.init(request, response, websiteNode, configNode);
+        return dialog;
+    }
+
 }

@@ -15,10 +15,11 @@ package info.magnolia.cms.gui.dialog;
 import info.magnolia.cms.core.Content;
 
 import java.io.IOException;
+import java.io.Writer;
 
 import javax.jcr.RepositoryException;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
@@ -47,6 +48,12 @@ public class DialogFckEdit extends DialogBox {
 
     private String jsInitFile = "";
 
+    /**
+     * Empty constructor should only be used by DialogFactory.
+     */
+    protected DialogFckEdit() {
+    }
+
     public String getVarName() {
         String id = getId();
         if (id == null) {
@@ -68,10 +75,11 @@ public class DialogFckEdit extends DialogBox {
     }
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(Content, Content, PageContext)
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(HttpServletRequest, HttpServletResponse, Content, Content)
      */
-    public void init(Content configNode, Content websiteNode, PageContext pageContext) throws RepositoryException {
-        super.init(configNode, websiteNode, pageContext);
+    public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
+        throws RepositoryException {
+        super.init(request, response, websiteNode, configNode);
         String jsInitFile = this.getConfigValue(PARAM_JS_INIT_FILE);
         String customConfigurationPath = this.getConfigValue(PARAM_CUSTOM_CONFIGURATION_PATH);
         this.setJSInitFile(jsInitFile);
@@ -79,17 +87,17 @@ public class DialogFckEdit extends DialogBox {
     }
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(JspWriter)
+     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(Writer)
      */
-    public void drawHtml(JspWriter out) throws IOException {
+    public void drawHtml(Writer out) throws IOException {
 
-        out.println("<tr>");
-        out.println("<td>");
+        out.write("<tr>");
+        out.write("<td>");
         // @todo add paste box and links here
-        out.println("</td>");
-        out.println("<td>");
+        out.write("</td>");
+        out.write("<td>");
         if (getRequest().getAttribute("__fcked_loaded") == null) {
-            out.println("<script type=\"text/javascript\" src=\""
+            out.write("<script type=\"text/javascript\" src=\""
                 + this.getRequest().getContextPath()
                 + "/admindocroot/fckeditor/fckeditor.js\"></script>");
             getRequest().setAttribute("__fcked_loaded", "true");
@@ -105,28 +113,28 @@ public class DialogFckEdit extends DialogBox {
         }
 
         String var = getVarName();
-        out.println("<script type=\"text/javascript\">");
-        out.println("var " + var + " = null;");
-        out.println("fckInstance = new FCKeditor( '" + id + "' );");
-        out.println("fckInstance.Value = '" + escapeJsValue(getValue()) + "';");
-        out.println("fckInstance.BasePath = '" + this.getRequest().getContextPath() + FCKEDIT_PATH + "';");
+        out.write("<script type=\"text/javascript\">");
+        out.write("var " + var + " = null;");
+        out.write("fckInstance = new FCKeditor( '" + id + "' );");
+        out.write("fckInstance.Value = '" + escapeJsValue(getValue()) + "';");
+        out.write("fckInstance.BasePath = '" + this.getRequest().getContextPath() + FCKEDIT_PATH + "';");
         if (customConfigurationsPath.length() > 0) {
-            out.println("fckInstance.Config['CustomConfigurationsPath'] = '" + customConfigurationsPath + "';");
+            out.write("fckInstance.Config['CustomConfigurationsPath'] = '" + customConfigurationsPath + "';");
         }
         if (jsInitFile.length() > 0) {
-            out.println("</script>");
-            out.println("<script type=\"text/javascript\" src=\""
+            out.write("</script>");
+            out.write("<script type=\"text/javascript\" src=\""
                 + this.getRequest().getContextPath()
                 + jsInitFile
                 + "\"></script>\n");
-            out.println("<script type=\"text/javascript\">");
+            out.write("<script type=\"text/javascript\">");
         }
-        out.println("fckInstance.Create();");
-        out.println(var + " = fckInstance;");
-        out.println("</script>");
+        out.write("fckInstance.Create();");
+        out.write(var + " = fckInstance;");
+        out.write("</script>");
 
-        out.println("</td>");
-        out.println("</tr>");
+        out.write("</td>");
+        out.write("</tr>");
     }
 
     /**
