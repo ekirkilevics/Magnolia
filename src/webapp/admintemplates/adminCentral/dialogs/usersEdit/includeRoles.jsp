@@ -32,7 +32,7 @@
 
 		Button choose=new Button();
 		choose.setLabel("Choose...");
-		choose.setOnclick("mgnlAclChoose('"+ request.getContextPath() + "','+index+',\\\'"+ContentRepository.USER_ROLES+"\\\');");
+		choose.setOnclick("mgnlAclChoose(\\'"+ request.getContextPath() + "\\','+index+',\\\'"+ContentRepository.USER_ROLES+"\\\');");
 		choose.setSmall(small);
 
 		Button delete=new Button();

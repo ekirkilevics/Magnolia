@@ -242,8 +242,10 @@ function mgnlOpenTreeBrowser(context,controlName,pathSelected,pathOpen,repositor
 	{
 	if (!width) width=450;
 	if (!height) height=550;
+	if (!context) context="";
 	//if (!pathSelected || pathSelected=="") pathSelected="/";
 	var src="";
+	src+=context;
 	src+="/.magnolia/dialogs/linkBrowser.html?mgnlCK="+mgnlGetCacheKiller();
 	src+="&mgnlControlName="+controlName;
 	if (pathSelected) src+="&pathSelected="+pathSelected;

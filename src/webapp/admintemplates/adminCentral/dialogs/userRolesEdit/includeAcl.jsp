@@ -61,7 +61,7 @@
 
 		Button choose=new Button();
 		choose.setLabel("Choose...");
-		choose.setOnclick("mgnlAclChoose('"+ request.getContextPath() + "','+index+',\\\'"+ContentRepository.WEBSITE+"\\\');");
+		choose.setOnclick("mgnlAclChoose(\\'"+ request.getContextPath() + "\\','+index+',\\'"+ContentRepository.WEBSITE+"\\');");
 		choose.setSmall(small);
 
 		Button delete=new Button();

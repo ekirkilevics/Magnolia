@@ -47,6 +47,9 @@ public class Sources {
         html.append("/admindocroot/js/dialogs/dialogs.js\"></script>");
         html.append("<script type=\"text/javascript\" src=\"");
         html.append(contextPath);
+        html.append("/admindocroot/js/dialogs/acl.js\"></script>");
+        html.append("<script type=\"text/javascript\" src=\"");
+        html.append(contextPath);
         html.append("/admindocroot/js/dialogs/calendar.js\"></script>");
         html.append("<script type=\"text/javascript\" src=\"");
         html.append(contextPath);
