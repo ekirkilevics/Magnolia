@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
 	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" version="2.4"
@@ -35,32 +35,45 @@
         <servlet-name>Initializer</servlet-name>
         <servlet-class>info.magnolia.cms.servlets.Initializer</servlet-class>
         <!--
-            WARNING: starting from Magnolia 2.1 paths are relative to the root dir of the magnolia installation (or absolute)
+            WARNING: starting from Magnolia 2.1 paths can be relative to the root dir of the magnolia installation or absolute.
+            Relative paths requires an expanded WAR.
         -->
         <init-param>
+            <!--  cache directory -->
             <param-name>magnolia.cache.startdir</param-name>
             <param-value>cache</param-value>
         </init-param>
         <init-param>
+            <!--  tmp directory for uploaded files -->
             <param-name>magnolia.upload.tmpdir</param-name>
             <param-value>tmp</param-value>
         </init-param>
         <init-param>
+            <!--  history directory used for activation -->
             <param-name>magnolia.exchange.history</param-name>
             <param-value>history</param-value>
         </init-param>
         <init-param>
+            <!--  repositories configuration -->
             <param-name>magnolia.repositories.config</param-name>
             <param-value>WEB-INF/config/repositories.xml</param-value>
         </init-param>
-        <!--
-            You can configure log4j by placing a log4j.properties or log4j.xml file in the classpath. By default you
-            will find it in WEB-INF/classes. Refers to the log4j documentation for other details.
-            <init-param>
-            <param-name>log4j.properties</param-name>
-            <param-value>../webapps/magnolia/WEB-INF/config/log4j.properties</param-value>
-            </init-param>
-        -->
+        <init-param>
+            <!--
+                Name of a log4j config file. Can be a .properties or .xml file.
+                The value can be:
+                - a full path
+                - a path relative to the webapp root
+                - a file name which will be loaded from the classpath
+            -->
+            <param-name>log4j.config</param-name>
+            <param-value>WEB-INF/config/log4j.xml</param-value>
+        </init-param>
+        <init-param>
+            <!--  repositories configuration -->
+            <param-name>magnolia.root.sysproperty</param-name>
+            <param-value>magnolia.root</param-value>
+        </init-param>
         <load-on-startup>0</load-on-startup>
     </servlet>
     <servlet>
