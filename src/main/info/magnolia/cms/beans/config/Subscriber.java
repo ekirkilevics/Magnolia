@@ -20,6 +20,8 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
+import info.magnolia.cms.core.NodeData;
+
 import java.util.*;
 
 import org.apache.log4j.Logger;
@@ -46,11 +48,9 @@ public class Subscriber {
     private static Iterator ipList;
     private static Hashtable cachedContent = new Hashtable();
 
-    private String address;
     private String name;
-    private String protocol;
     private Hashtable context;
-    private boolean requestConfirmation;
+    private Hashtable params;
 
 
 
@@ -107,9 +107,15 @@ public class Subscriber {
         while (Subscriber.ipList.hasNext()) {
             ContentNode c = (ContentNode) Subscriber.ipList.next();
             Subscriber si = new Subscriber();
-            si.address = c.getNodeData("address").getString();
-            si.protocol = c.getNodeData("protocol").getString();
-            si.requestConfirmation = c.getNodeData("requestConfirmation").getBoolean();
+            si.params = new Hashtable();
+            Iterator paramList = c.getChildren(ItemType.NT_NODEDATA).iterator();
+            while (paramList.hasNext()) {
+                NodeData nd = (NodeData) paramList.next();
+                si.params.put(nd.getName(), nd.getString());
+            }
+            //si.address = c.getNodeData("address").getString();
+            //si.protocol = c.getNodeData("protocol").getString();
+            //si.requestConfirmation = c.getNodeData("requestConfirmation").getBoolean();
             si.name = c.getName();
             /* all context info */
             try {
@@ -169,20 +175,12 @@ public class Subscriber {
 
 
     /**
-     * @return address as string
+     * @return param value
      * */
-    public String getAddress() {
-        return this.address;
+    public String getParam(String id) {
+        return (String)this.params.get(id);
     }
 
-
-
-    /**
-     * @return protocol
-     * */
-    public String getProtocol() {
-        return this.protocol;
-    }
 
 
     /**
@@ -192,14 +190,6 @@ public class Subscriber {
         return this.name;
     }
 
-
-
-    /**
-     * @return true is the packet confirmation is requested for this subscriber
-     * */
-    public boolean isConfirmationRequested() {
-        return this.requestConfirmation;
-    }
 
 
 
