@@ -141,7 +141,7 @@ public final class Path {
      * <p>
      * Replace illegal characters by [_] [0-9], [A-Z], [a-z], [-], [_]
      * </p>
-     * @param label: label to validate
+     * @param label label to validate
      * @return validated label
      */
     public static String getValidatedLabel(String label) {

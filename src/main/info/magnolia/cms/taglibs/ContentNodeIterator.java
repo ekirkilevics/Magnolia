@@ -53,7 +53,7 @@ public class ContentNodeIterator extends TagSupport {
 
     private Iterator contentNodeIterator;
 
-    private Content page;
+    private transient Content page;
 
     private int beginIndex;
 

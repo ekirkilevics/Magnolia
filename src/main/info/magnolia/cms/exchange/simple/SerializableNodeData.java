@@ -59,7 +59,7 @@ public class SerializableNodeData implements Serializable {
 
     private int type;
 
-    private NodeData baseNodeData;
+    private transient NodeData baseNodeData;
 
     public SerializableNodeData(NodeData nodeData) throws SerializationException {
         this.baseNodeData = nodeData;

@@ -106,6 +106,9 @@ public class Aggregator {
             this.subContentNode = this.hierarchyManager.getContent(this.uri + "_properties");
         }
         catch (PathNotFoundException e) {
+            if (log.isDebugEnabled()) {
+                log.debug("Path not found: " + e.getMessage());
+            }
         }
     }
 

@@ -542,7 +542,7 @@ public class Tree extends ControlSuper {
                         node.setValue(value.getString());
                         break;
                     case PropertyType.BOOLEAN:
-                        if (value != null && value.equals("true")) {
+                        if (value != null && value.getBoolean()) {
                             node.setValue(true);
                         }
                         else {

@@ -141,7 +141,7 @@ public class DialogFckEdit extends DialogBox {
      * </pre>
      *
      * @param src
-     * @return
+     * @return escaped js String
      */
     public static String escapeJsValue(String src) {
         if (src == null) {

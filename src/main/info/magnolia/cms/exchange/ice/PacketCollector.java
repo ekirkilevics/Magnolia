@@ -249,8 +249,8 @@ public class PacketCollector {
             long lastModification = contentNode.getMetaData().getModificationDate().getTime().getTime();
             ReverseFileReader rfr = new ReverseFileReader(exchangeHistoryFilePath, "r");
             String record = StringUtils.EMPTY;
-            while (record != null) {
-                record = rfr.getRecord();
+            while ((record = rfr.getRecord()) != null) {
+
                 String pattern = RegexWildcardPattern.getMultipleCharPattern()
                     + " --- "
                     + this.subscriber.getName()

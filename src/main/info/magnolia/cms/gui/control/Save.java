@@ -439,7 +439,9 @@ public class Save extends ControlSuper {
         return value;
     }
 
-    public String getRichEditValueStr(String valueStr) {
+    public String getRichEditValueStr(String value) {
+
+        String valueStr = value;
         valueStr = valueStr.replaceAll("\r\n", " ");
         // valueStr=valueStr.replaceAll("\n","");
         valueStr = valueStr.replaceAll("<br>", "\n");
@@ -448,9 +450,11 @@ public class Save extends ControlSuper {
         valueStr = this.replaceABySpan(valueStr, "a");
         // replace <P>
         valueStr = this.replacePByBr(valueStr, "p");
+
+        // what??? strong and em are standard tags and should ALWAYS be used insted of b and i
         // replace <STRONG>, <EM> (ie)
-        valueStr = this.replaceTag(valueStr, "em", "i");
-        valueStr = this.replaceTag(valueStr, "strong", "b");
+        // valueStr = this.replaceTag(valueStr, "em", "i");
+        // valueStr = this.replaceTag(valueStr, "strong", "b");
         return valueStr;
     }
 
@@ -501,12 +505,4 @@ public class Save extends ControlSuper {
         return value;
     }
 
-    private String replaceTag(String value, String before, String after) {
-        value = value.replaceAll("<" + before + ">", "<" + after + ">");
-        value = value.replaceAll("</" + before + ">", "</" + after + ">");
-        if (!before.equals(before.toUpperCase())) {
-            value = this.replaceTag(value, before.toUpperCase(), after);
-        }
-        return value;
-    }
 }

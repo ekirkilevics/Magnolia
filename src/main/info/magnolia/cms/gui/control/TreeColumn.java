@@ -80,7 +80,7 @@ public class TreeColumn extends ControlSuper {
 
     /**
      * Constructor.
-     * @param javascriptTree: name of the js variable
+     * @param javascriptTree name of the js variable
      * @param request http request, needed for context path
      */
     public TreeColumn(String javascriptTree, HttpServletRequest request) {

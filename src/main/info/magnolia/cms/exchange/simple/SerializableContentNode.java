@@ -36,32 +36,26 @@ public class SerializableContentNode extends SerializableContent implements Seri
      */
     private static Logger log = Logger.getLogger(SerializableContentNode.class);
 
-    private ContentNode baseContentNode;
-
     private SerializableMetaData metaData;
 
     private boolean recurse;
 
     public SerializableContentNode(ContentNode baseContentNode) {
-        this.baseContentNode = baseContentNode;
-        this.makeSerializable();
-        this.baseContentNode = null;
+        this.makeSerializable(baseContentNode);
     }
 
     public SerializableContentNode(ContentNode baseContentNode, boolean recurse) {
-        this.baseContentNode = baseContentNode;
         this.recurse = recurse;
-        this.makeSerializable();
-        this.baseContentNode = null;
+        this.makeSerializable(baseContentNode);
     }
 
-    private void makeSerializable() {
-        this.setName(this.baseContentNode.getName());
-        this.metaData = new SerializableMetaData(this.baseContentNode.getMetaData());
+    private void makeSerializable(ContentNode baseContentNode) {
+        this.setName(baseContentNode.getName());
+        this.metaData = new SerializableMetaData(baseContentNode.getMetaData());
         /* add top level node list */
-        this.addNodeDataList(this.baseContentNode);
+        this.addNodeDataList(baseContentNode);
         if (this.recurse) {
-            this.addContentNodeList(this.baseContentNode, true);
+            this.addContentNodeList(baseContentNode, true);
         }
     }
 

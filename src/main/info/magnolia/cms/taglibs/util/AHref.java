@@ -57,9 +57,9 @@ public class AHref extends BodyTagSupport {
 
     private String nodeDataName;
 
-    private ContentNode contentNode;
+    private transient ContentNode contentNode;
 
-    private NodeData nodeData;
+    private transient NodeData nodeData;
 
     private ArrayList attributes;
 

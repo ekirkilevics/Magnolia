@@ -36,7 +36,7 @@ public class Set extends TagSupport {
      */
     private static Logger log = Logger.getLogger(Set.class);
 
-    private ContentNode contentNode;
+    private transient ContentNode contentNode;
 
     private String contentNodeName;
 

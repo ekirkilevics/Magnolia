@@ -43,11 +43,11 @@ public class IfEmpty extends BodyTagSupport {
 
     private String contentNodeCollectionName = "";
 
-    private ContentNode contentNodeCollection;
+    private transient ContentNode contentNodeCollection;
 
-    private Content contentNode;
+    private transient Content contentNode;
 
-    private NodeData nodeData;
+    private transient NodeData nodeData;
 
     private boolean actpage;
 

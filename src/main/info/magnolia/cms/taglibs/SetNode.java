@@ -35,14 +35,14 @@ import org.apache.log4j.Logger;
  * Since JSTL doesn't allow calling a method like <code>Content.getNodeData(String)</code> the <code>Content</code>
  * is wrapped into a <code>NodeMapWrapper</code> which exposes NodeData using a map interface. This tag can be useful
  * in similar situations:
- * 
+ *
  * <pre>
- * &lt;cms:setNode var="currentNode"/> 
+ * &lt;cms:setNode var="currentNode"/>
  * &lt;c:if test="${!empty currentNode.title}">
  *   &lt;c:out value="${currentNode.title}"/>
- * &lt;/c:if> 
+ * &lt;/c:if>
  * </pre>
- * 
+ *
  * @author Fabrizio Giustina
  * @version $Revision: $ ($Author: $)
  */
@@ -76,7 +76,7 @@ public class SetNode extends TagSupport {
     /**
      * Evaluated content node.
      */
-    private Content contentNode;
+    private transient Content contentNode;
 
     /**
      * set the content node name name, e.g. "01"

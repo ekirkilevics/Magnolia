@@ -59,9 +59,9 @@ public class Out extends TagSupport {
 
     private String contentNodeCollectionName;
 
-    private Content contentNode;
+    private transient Content contentNode;
 
-    private NodeData nodeData;
+    private transient NodeData nodeData;
 
     private String fileProperty = "";
 
@@ -380,9 +380,9 @@ public class Out extends TagSupport {
 
     // @todo: place in another package to make it availbable globaly -> NodeData?
     public String getDateFormatted(Date date) {
-        String value = "";
-        if (date == null || date.equals("")) {
-            return "";
+
+        if (date == null) {
+            return StringUtils.EMPTY;
         }
         SimpleDateFormat formatter;
         String lang = this.getDateLanguage();
@@ -392,8 +392,7 @@ public class Out extends TagSupport {
         else {
             formatter = new SimpleDateFormat(this.getDatePattern(), new Locale(lang));
         }
-        value = formatter.format(date);
-        return value;
+        return formatter.format(date);
     }
 
     public String getFilePropertyValue() {

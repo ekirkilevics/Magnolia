@@ -40,19 +40,22 @@ public class FileSrc extends TagSupport {
      */
     private static final long serialVersionUID = 222L;
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(FileSrc.class);
 
-    private NodeData nodeData;
+    private transient NodeData nodeData;
+
+    private transient ContentNode contentNode;
+
+    private transient Content actpage;
 
     private String nodeDataName = "";
-
-    private ContentNode contentNode;
 
     private String contentNodeName = "";
 
     private String fileNameOnly = "";
-
-    private Content actpage;
 
     private HttpServletRequest request;
 

@@ -37,6 +37,9 @@ public class SerializableContent implements Serializable {
      */
     private static final long serialVersionUID = 222L;
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(SerializableContent.class);
 
     /**
@@ -58,33 +61,27 @@ public class SerializableContent implements Serializable {
 
     private String name;
 
-    private Content baseContent;
-
     private boolean recurse;
 
     public SerializableContent() {
     }
 
     public SerializableContent(Content content) {
-        this.baseContent = content;
-        this.makeSerializable();
-        this.baseContent = null;
+        this.makeSerializable(content);
     }
 
     public SerializableContent(Content content, boolean recurse) {
-        this.baseContent = content;
         this.recurse = recurse;
-        this.makeSerializable();
-        this.baseContent = null;
+        this.makeSerializable(content);
     }
 
-    private void makeSerializable() {
-        this.setName(this.baseContent.getName());
-        this.metaData = new SerializableMetaData(this.baseContent.getMetaData());
-        this.addNodeDataList(this.baseContent);
-        this.addContentNodeList(this.baseContent, true);
+    private void makeSerializable(Content content) {
+        this.setName(content.getName());
+        this.metaData = new SerializableMetaData(content.getMetaData());
+        this.addNodeDataList(content);
+        this.addContentNodeList(content, true);
         if (this.recurse) {
-            this.addContentList(this.baseContent, true);
+            this.addContentList(content, true);
         }
     }
 

@@ -1,11 +1,14 @@
 package info.magnolia.custom.search.lucene;
 
 import java.util.Timer;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
 
 
 /**
@@ -18,11 +21,16 @@ public class IndexerServlet extends HttpServlet {
      */
     private static final long serialVersionUID = 222L;
 
+    /**
+     * Logger.
+     */
+    private static Logger log = Logger.getLogger(IndexerServlet.class);
+
     private static final String TIMER_DELAY = "delay";
 
     private static final String TIMER_PERIOD = "period";
 
-    private Timer timer;
+    private transient Timer timer;
 
     private ServletConfig config;
 
@@ -48,6 +56,7 @@ public class IndexerServlet extends HttpServlet {
             timer.schedule(new Task(this.config), getDelay(), getPeriod());
         }
         catch (Exception e) {
+            log.info("Exception caught: " + e.getMessage(), e);
         }
     }
 }

@@ -40,7 +40,7 @@ public class Include extends BodyTagSupport {
      */
     private static Logger log = Logger.getLogger(Include.class);
 
-    private ContentNode contentNode;
+    private transient ContentNode contentNode;
 
     private String path;
 

@@ -187,13 +187,13 @@ public class EntryServlet extends HttpServlet {
      * @param response
      */
     private boolean redirect(HttpServletRequest request, HttpServletResponse response) {
-        String URI = this.getURIMap(request);
-        if (!URI.equals("")) {
+        String uri = this.getURIMap(request);
+        if (!uri.equals("")) {
             try {
-                request.getRequestDispatcher(URI).forward(request, response);
+                request.getRequestDispatcher(uri).forward(request, response);
             }
             catch (Exception e) {
-                log.error("Failed to forward - " + URI);
+                log.error("Failed to forward - " + uri);
                 log.error(e.getMessage(), e);
             }
             return true;
@@ -241,7 +241,7 @@ public class EntryServlet extends HttpServlet {
      * Simply a copy of the original request used by CacheProcess
      * </p>
      */
-    private class CacheRequest implements HttpServletRequest {
+    private static class CacheRequest implements HttpServletRequest {
 
         Map attributes = new HashMap();
 

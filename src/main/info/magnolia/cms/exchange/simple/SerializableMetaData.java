@@ -38,9 +38,10 @@ public class SerializableMetaData implements Serializable {
      */
     private static final long serialVersionUID = 222L;
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(SerializableMetaData.class);
-
-    private MetaData baseMetaData;
 
     /**
      * meta properties.
@@ -48,25 +49,22 @@ public class SerializableMetaData implements Serializable {
     private List metaProperties = new ArrayList();
 
     public SerializableMetaData(MetaData metaData) {
-        this.baseMetaData = metaData;
-        this.makeSerializable();
-        this.baseMetaData = null;
+        this.makeSerializable(metaData);
     }
 
     public List getMetaProperties() {
         return this.metaProperties;
     }
 
-    private void makeSerializable() {
-        PropertyIterator pi = this.baseMetaData.getProperties();
+    private void makeSerializable(MetaData metaData) {
+        PropertyIterator pi = metaData.getProperties();
         if (pi == null) {
             return;
         }
         while (pi.hasNext()) {
             try {
                 Property property = (Property) pi.next();
-                // if (!property.hasValue())
-                // continue;
+
                 int type = property.getValue().getType();
                 MetaDataProperty metaProperty = new MetaDataProperty(property.getName(), type);
                 switch (type) {
