@@ -142,7 +142,7 @@ rootPath CDATA #REQUIRED
             <param name="mergeFactor" value="10"/>
 
         <FileSystem class="com.day.jackrabbit.fs.cq.CQFileSystem">
-            <param name="path" value="../webapps/magnolia/repositories/config/users/index.dat"/>
+            <param name="path" value="../webapps/magnolia/repositories/users/workspaces/index.dat"/>
             <param name="autoRepair" value="false"/>
             <param name="blockSize" value="128"/>
             <param name="autoSync" value="true"/>
@@ -164,7 +164,7 @@ rootPath CDATA #REQUIRED
         </FileSystem>
 		-->
         <FileSystem class="com.day.jackrabbit.fs.cq.CQFileSystem">
-            <param name="path" value="../webapps/magnolia/repositories/config/users/version.dat"/>
+            <param name="path" value="../webapps/magnolia/repositories/users/workspaces/version.dat"/>
             <param name="autoRepair" value="false"/>
             <param name="blockSize" value="128"/>
             <param name="autoSync" value="true"/>
