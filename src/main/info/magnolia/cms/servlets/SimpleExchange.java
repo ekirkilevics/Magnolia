@@ -25,18 +25,21 @@ import info.magnolia.cms.security.Lock;
 import info.magnolia.cms.security.SecureURI;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.exchange.Packet;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+
 import javax.jcr.PathNotFoundException;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.log4j.Logger;
 
 
@@ -62,6 +65,9 @@ public class SimpleExchange extends HttpServlet {
      */
     private static final long serialVersionUID = 222L;
 
+    /**
+     * Logger.
+     */
     private static final Logger log = Logger.getLogger(SimpleExchange.class);
 
     private String context;
@@ -119,7 +125,7 @@ public class SimpleExchange extends HttpServlet {
             response.setContentType("text/plain");
             this.handleActivationRequest();
         }
-        catch (Exception e) {
+        catch (Throwable e) {
             log.error(e.getMessage(), e);
         }
     }
@@ -139,23 +145,29 @@ public class SimpleExchange extends HttpServlet {
      */
     private void handleActivationRequest() throws Exception {
         if (ConfigLoader.isConfigured()) { // ignore security is server is not configured
-            if (!Listener.isAllowed(this.request))
+            if (!Listener.isAllowed(this.request)) {
                 return;
-            if (!Authenticator.authenticate(this.request))
+            }
+            if (!Authenticator.authenticate(this.request)) {
                 return;
+            }
             this.hierarchyManager = SessionAccessControl.getHierarchyManager(this.request, this.context);
         }
         else {
             this.hierarchyManager = ContentRepository.getHierarchyManager(this.context);
         }
-        if (this.action.equals(Syndicator.ACTIVATE))
+        if (this.action.equals(Syndicator.ACTIVATE)) {
             activate();
-        else if (this.action.equals(Syndicator.DE_ACTIVATE))
+        }
+        else if (this.action.equals(Syndicator.DE_ACTIVATE)) {
             deactivate();
-        else if (this.action.equals(Syndicator.GET))
+        }
+        else if (this.action.equals(Syndicator.GET)) {
             get();
-        else
+        }
+        else {
             throw new UnsupportedOperationException("Method not supported by Exchange protocol - Simple (.01)");
+        }
     }
 
     /**
@@ -214,12 +226,15 @@ public class SimpleExchange extends HttpServlet {
      * @throws Exception
      */
     private void get() throws Exception {
-        if (this.type.equalsIgnoreCase(Syndicator.GET_TYPE_SERIALIZED_OBJECT))
+        if (this.type.equalsIgnoreCase(Syndicator.GET_TYPE_SERIALIZED_OBJECT)) {
             this.getSerializedObject();
-        else if (this.type.equalsIgnoreCase(Syndicator.GET_TYPE_BINARY))
+        }
+        else if (this.type.equalsIgnoreCase(Syndicator.GET_TYPE_BINARY)) {
             this.getBinary();
-        else
+        }
+        else {
             this.getSerializedObject(); // default type, supporting magnolia 1.1
+        }
     }
 
     private void getSerializedObject() throws Exception {
@@ -264,7 +279,7 @@ public class SimpleExchange extends HttpServlet {
     }
 
     /**
-     * Exclude version number
+     * Exclude version number.
      */
     private String getProtocolName() {
         String protocol = this.request.getProtocol();
