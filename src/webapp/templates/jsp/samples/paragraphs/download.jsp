@@ -1,30 +1,26 @@
-<%
-/**
- *
- * Magnolia and its source-code is licensed under the LGPL.
- * You may copy, adapt, and redistribute this file for commercial or non-commercial use.
- * When copying, adapting, or redistributing this document in keeping with the guidelines above,
- * you are required to provide proper attribution to obinary.
- * If you reproduce or distribute the document without making any substantive modifications to its content,
- * please use the following attribution line:
- *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
- *
- * */
-%>
-<%@ taglib uri="cms-taglib" prefix="cms" %>
-<%@ taglib uri="cms-util-taglib" prefix="cmsu" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:cms="urn:jsptld:cms-taglib"
+	xmlns:cmsu="urn:jsptld:cms-util-taglib"
+	xmlns:c="urn:jsptld:http://java.sun.com/jsp/jstl/core">
+	<jsp:directive.page contentType="text/html; charset=UTF-8" />
+
+	&amp;raquo;
+
+	<c:set var="document"><cms:out nodeDataName="document" /></c:set>
+
+		<a href="${pageContext.request.contextPath}${document}" target="_blank">
+			<cms:ifEmpty nodeDataName="text">
+				<cms:out nodeDataName="document" fileProperty="nameWithoutExtension" />
+			</cms:ifEmpty>
+			<cms:ifNotEmpty nodeDataName="text">
+				<cms:out nodeDataName="text" />
+			</cms:ifNotEmpty>
+		</a>
+
+	&amp;ndash;
+	<cms:out nodeDataName="document" fileProperty="extensionUpperCase" />-File,
+	<cms:out nodeDataName="document" fileProperty="size" />
+
+</jsp:root>
 
 
-&raquo;
-<a href="<%=request.getContextPath()%><cms:out nodeDataName="document"/>" target="_blank">
-<cms:ifEmpty nodeDataName="text">
-	<cms:out nodeDataName="document" fileProperty="nameWithoutExtension"/></a>
-</cms:ifEmpty>
-<cms:ifNotEmpty nodeDataName="text">
-	<cms:out nodeDataName="text"/></a>
-</cms:ifNotEmpty>
-&ndash;
-<cms:out nodeDataName="document" fileProperty="extensionUpperCase"/>-File,
-<cms:out nodeDataName="document" fileProperty="size"/>
