@@ -15,10 +15,13 @@ package info.magnolia.cms.taglibs;
 import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.Resource;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyTagSupport;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -91,7 +94,7 @@ public class LoadPage extends BodyTagSupport {
             Content startPage;
             try {
                 startPage = Resource.getCurrentActivePage(req).getAncestor(this.level);
-                HierarchyManager hm = Resource.getHierarchyManager(req);
+                HierarchyManager hm = SessionAccessControl.getHierarchyManager(req);
                 newActpage = hm.getPage(startPage.getHandle(), this.templateName);
             }
             catch (Exception e) {
@@ -101,7 +104,7 @@ public class LoadPage extends BodyTagSupport {
         }
         if (StringUtils.isNotEmpty(this.path)) {
             try {
-                newActpage = Resource.getHierarchyManager(req).getPage(this.path);
+                newActpage = SessionAccessControl.getHierarchyManager(req).getPage(this.path);
             }
             catch (Exception e) {
                 return SKIP_BODY;
