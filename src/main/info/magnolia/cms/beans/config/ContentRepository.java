@@ -20,8 +20,11 @@ import info.magnolia.cms.util.Path;
 import info.magnolia.cms.util.regex.RegexWildcardPattern;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
+import info.magnolia.repository.RepositoryNotInitializedException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -39,6 +42,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
 
@@ -155,7 +159,6 @@ public final class ContentRepository {
             log.info("System : JCR loaded");
         }
         catch (Exception e) {
-            log.error("System : Failed to load JCR");
             log.error(e.getMessage(), e);
         }
     }
@@ -194,26 +197,28 @@ public final class ContentRepository {
             }
             map.setParameters(parameters);
             ContentRepository.repositoryMappings.put(id, map);
-            loadRepository(map);
+            try {
+                loadRepository(map);
+            }
+            catch (Exception e) {
+                log.error("System : Failed to load JCR \"" + map.getID() + "\" " + e.getMessage(), e);
+            }
         }
     }
 
-    private static void loadRepository(RepositoryMapping map) {
-        try {
-            log.info("System : loading JCR - " + map.getID());
-            Provider handlerClass = (Provider) Class.forName(map.getProvider()).newInstance();
-            handlerClass.init(map);
-            Repository repository = handlerClass.getUnderlineRepository();
-            ContentRepository.repositories.put(map.getID(), repository);
-            ContentRepository.repositoryProviders.put(map.getID(), handlerClass);
-            if (map.isLoadOnStartup()) {
-                loadHierarchyManager(repository, map, handlerClass);
-            }
+    private static void loadRepository(RepositoryMapping map) throws RepositoryNotInitializedException,
+        InstantiationException, IllegalAccessException, ClassNotFoundException {
+
+        log.info("System : loading JCR - " + map.getID());
+        Provider handlerClass = (Provider) Class.forName(map.getProvider()).newInstance();
+        handlerClass.init(map);
+        Repository repository = handlerClass.getUnderlineRepository();
+        ContentRepository.repositories.put(map.getID(), repository);
+        ContentRepository.repositoryProviders.put(map.getID(), handlerClass);
+        if (map.isLoadOnStartup()) {
+            loadHierarchyManager(repository, map, handlerClass);
         }
-        catch (Exception re) {
-            log.error("System : Failed to load JCR - " + map.getID());
-            log.error(re.getMessage(), re);
-        }
+
     }
 
     private static void loadHierarchyManager(Repository repository, RepositoryMapping map, Provider provider) {
@@ -247,11 +252,14 @@ public final class ContentRepository {
 
     /**
      * Builds JDOM document.
+     * @throws IOException
+     * @throws JDOMException
      */
-    private static Document buildDocument() throws Exception {
-        File source = new File(Path.getRepositoriesConfigFilePath());
+    private static Document buildDocument() throws JDOMException, IOException {
+        File source = Path.getRepositoriesConfigFile();
         if (!source.exists()) {
-            throw new Exception("Failed to locate magnolia repositories config file");
+            throw new FileNotFoundException("Failed to locate magnolia repositories config file at "
+                + source.getAbsolutePath());
         }
         SAXBuilder builder = new SAXBuilder();
         return builder.build(source);
