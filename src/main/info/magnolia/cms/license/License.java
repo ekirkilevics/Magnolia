@@ -14,6 +14,10 @@ package info.magnolia.cms.license;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.jdom.Document;
@@ -48,6 +52,8 @@ public final class License {
 
     private static final String NOT_DEFINED = "Not Defined";
 
+    private static final String OS_NAME = "OSName";
+
     /**
      * Logger.
      */
@@ -55,18 +61,21 @@ public final class License {
 
     private static License license = new License();
 
-    private static Element metaElement;
+    private static Map values;
 
     public static License getInstance() {
         return license;
     }
 
     public String get(String id) {
-        Element e = metaElement.getChild(id);
-        if (e != null) {
-            return e.getText();
+        if (values.containsKey(id)) {
+            return (String) values.get(id);
         }
         return NOT_DEFINED;
+    }
+
+    public Map getEntries() {
+        return values;
     }
 
     public String getOSName() {
@@ -81,7 +90,8 @@ public final class License {
 
     public void init(InputStream in) {
         try {
-            Document document = this.buildDocument(in);
+            SAXBuilder builder = new SAXBuilder();
+            Document document = builder.build(in);
             this.load(document);
         }
         catch (Exception e) {
@@ -94,26 +104,28 @@ public final class License {
                     in.close();
                 }
                 catch (IOException e) {
+                    // ignore
                 }
             }
         }
     }
 
     /**
-     * <p>
-     * builds JDOM document
-     * </p>
-     */
-    private Document buildDocument(InputStream in) throws Exception {
-        SAXBuilder builder = new SAXBuilder();
-        return builder.build(in);
-    }
-
-    /**
      * load meta element
      */
     private void load(Document document) {
-        Element root = document.getRootElement();
-        metaElement = root.getChild(ELEMENT_META);
+        Element metaElement = document.getRootElement().getChild(ELEMENT_META);
+
+        List elements = metaElement.getChildren();
+
+        values = new HashMap(10);
+        Iterator iterator = elements.iterator();
+        while (iterator.hasNext()) {
+            Element element = (Element) iterator.next();
+            values.put(element.getName(), element.getText());
+        }
+
+        String osName = System.getProperty("os.name");
+        values.put(OS_NAME, osName.replaceAll(" ", "-"));
     }
 }

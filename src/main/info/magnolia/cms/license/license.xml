@@ -23,7 +23,7 @@
         <VersionNumber>2.1</VersionNumber>
         <BuildNumber>050310</BuildNumber>
         <Provider>obinary ltd</Provider>
-        <ProviderAddress>obinary ag &lt;br&gt;Binningerstrasse 15 &lt;br&gt;4051 Basel &lt;br&gt;Tel +41 61 228 9000&lt;br&gt;Switzerland</ProviderAddress>
+        <ProviderAddress>obinary ag &lt;br/&gt;Binningerstrasse 15 &lt;br/&gt;4051 Basel &lt;br/&gt;Tel +41 61 228 9000&lt;br/&gt;Switzerland</ProviderAddress>
         <ProviderEmail>support@magnolia.info</ProviderEmail>
         <ProductDomain>www.magnolia.info</ProductDomain>
         <VersionPageHandle>/redirects/version20.html</VersionPageHandle>
