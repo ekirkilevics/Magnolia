@@ -235,15 +235,16 @@ function mgnlDialogLinkBrowserResize()
 		}
 	}
 
-function mgnlDialogLinkBrowserWriteBack(controlName,extension)
+function mgnlDialogLinkBrowserWriteBack(controlName,extension,context)
 	{
 	var iFrameDoc=mgnlGetIFrameDocument('mgnlDialogLinkBrowserIFrame');
 	var addressBar=iFrameDoc.getElementById("mgnlTree_AddressBar");
 	var control=opener.document.getElementById(controlName);
 
 	if (extension) extension="."+extension;
+	if (!context) context = "";
 
-	control.value=addressBar.value+extension;
+	control.value=context + addressBar.value+extension;
 	window.close();
 	}
 
