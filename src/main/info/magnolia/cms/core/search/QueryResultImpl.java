@@ -80,7 +80,6 @@ public class QueryResultImpl implements QueryResult {
         while (nodeIterator.hasNext()) {
             Node node = nodeIterator.nextNode();
             try {
-                node = node.getParent();
                 boolean isAllowed = this.accessManager.isGranted(Path.getAbsolutePath(node.getPath()), Permission.READ);
                 if (isAllowed) {
                     this.build(node);
@@ -96,7 +95,9 @@ public class QueryResultImpl implements QueryResult {
      * Build required result objects
      * */
     private void build(Node node) throws RepositoryException {
-        if (node.isNodeType(ItemType.NT_NODEDATA)) {
+        if (node.isNodeType(ItemType.NT_UNSTRUCTRUED)) {
+            // ignore, parent will be added as NodeData
+        } else if (node.isNodeType(ItemType.NT_NODEDATA)) {
             this.nodeDataCollection.add(new NodeData(node, this.accessManager));
         } else if (node.isNodeType(ItemType.NT_CONTENTNODE)) {
             if (this.dirtyHandles.get(node.getPath()) == null) {

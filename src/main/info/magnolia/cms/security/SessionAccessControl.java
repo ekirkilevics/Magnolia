@@ -34,6 +34,7 @@ import javax.jcr.SimpleCredentials;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.ObjectUtils;
 
 
 /**
@@ -50,6 +51,8 @@ public final class SessionAccessControl {
     private static final String ATTRIBUTE_HM_PREFIX = "mgnlHMgr_";
 
     private static final String ATTRIBUTE_AM_PREFIX = "mgnlAccessMgr_";
+
+    private static final String ATTRIBUTE_QM_PREFIX = "mgnlQueryMgr_";
 
     private static final String DEFAULT_REPOSITORY = ContentRepository.WEBSITE;
 
@@ -182,8 +185,14 @@ public final class SessionAccessControl {
      * */
     public static QueryManager getQueryManager(HttpServletRequest request, String repositoryID, String workspaceID)
         throws RepositoryException {
-        javax.jcr.query.QueryManager qm = getSession(request,repositoryID,workspaceID).getWorkspace().getQueryManager();
-        return SearchFactory.getAccessControllableQueryManager(qm, getAccessManager(request,repositoryID,workspaceID));
+        QueryManager queryManager = (QueryManager) request.getSession().getAttribute(ATTRIBUTE_QM_PREFIX
+        + repositoryID + "_" + workspaceID);
+        if (queryManager == null) {
+            javax.jcr.query.QueryManager qm = getSession(request,repositoryID,workspaceID).getWorkspace().getQueryManager();
+            queryManager = SearchFactory.getAccessControllableQueryManager(qm, getAccessManager(request,repositoryID,workspaceID));
+            request.getSession().setAttribute(ATTRIBUTE_QM_PREFIX + repositoryID + "_" + workspaceID,queryManager);
+        }
+        return queryManager;
     }
 
     private static Session getRepositorySession(HttpServletRequest request, String repositoryID, String workspaceID)
