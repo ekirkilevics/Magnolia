@@ -121,5 +121,10 @@ public class MultipartForm {
     }
 
 
+    public Hashtable getDocuments() {
+        return this.documents;
+    }
+
+
 
 }
