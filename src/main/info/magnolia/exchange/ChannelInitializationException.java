@@ -18,6 +18,11 @@ package info.magnolia.exchange;
  */
 public class ChannelInitializationException extends ChannelException {
 
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
+
     public ChannelInitializationException() {
         super();
     }

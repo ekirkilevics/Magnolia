@@ -30,6 +30,11 @@ import org.apache.log4j.Logger;
  */
 public class SerializableMetaData implements Serializable {
 
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
+
     private static Logger log = Logger.getLogger(SerializableMetaData.class);
 
     private MetaData baseMetaData;
@@ -59,19 +64,19 @@ public class SerializableMetaData implements Serializable {
                 int type = property.getValue().getType();
                 MetaDataProperty metaProperty = new MetaDataProperty(property.getName(), type);
                 switch (type) {
-                    case PropertyType.STRING :
+                    case PropertyType.STRING:
                         metaProperty.setValue(property.getString());
                         break;
-                    case PropertyType.LONG :
+                    case PropertyType.LONG:
                         metaProperty.setValue(property.getLong());
                         break;
-                    case PropertyType.DOUBLE :
+                    case PropertyType.DOUBLE:
                         metaProperty.setValue(property.getDouble());
                         break;
-                    case PropertyType.BOOLEAN :
+                    case PropertyType.BOOLEAN:
                         metaProperty.setValue(property.getBoolean());
                         break;
-                    case PropertyType.DATE :
+                    case PropertyType.DATE:
                         metaProperty.setValue(property.getDate());
                 }
                 this.metaProperties.add(metaProperty);
@@ -86,6 +91,11 @@ public class SerializableMetaData implements Serializable {
 
 
 class MetaDataProperty implements Serializable {
+
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
 
     private String name;
 

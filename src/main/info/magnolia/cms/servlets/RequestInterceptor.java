@@ -28,6 +28,11 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class RequestInterceptor extends HttpServlet {
 
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
+
     private HttpServletRequest request;
 
     private HttpServletResponse response;

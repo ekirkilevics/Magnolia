@@ -28,6 +28,11 @@ import javax.jcr.Value;
  */
 public class SerializableNodeData implements Serializable {
 
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
+
     private String name;
 
     private int type;
@@ -74,29 +79,29 @@ public class SerializableNodeData implements Serializable {
      */
     private void setData() throws SerializationException {
         switch (this.getType()) {
-            case PropertyType.STRING :
+            case PropertyType.STRING:
                 this.setValue(this.baseNodeData.getString());
                 break;
-            case PropertyType.LONG :
+            case PropertyType.LONG:
                 this.setValue(this.baseNodeData.getLong());
                 break;
-            case PropertyType.DOUBLE :
+            case PropertyType.DOUBLE:
                 this.setValue(this.baseNodeData.getDouble());
                 break;
-            case PropertyType.BOOLEAN :
+            case PropertyType.BOOLEAN:
                 this.setValue(this.baseNodeData.getBoolean());
                 break;
-            case PropertyType.DATE :
+            case PropertyType.DATE:
                 this.setValue(this.baseNodeData.getDate());
                 break;
-            case PropertyType.BINARY :
+            case PropertyType.BINARY:
                 this.setBinaryAsLink(this.baseNodeData.getHandle());
                 /*
                  * try { this.setValue(this.baseNodeData.getValue().getStream()); } catch (Exception re) { throw new
                  * SerializationException(re); }
                  */
                 break;
-            default :
+            default:
                 throw new SerializationException("Unsupported property type");
         }
     }

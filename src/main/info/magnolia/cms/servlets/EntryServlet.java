@@ -40,6 +40,11 @@ import org.apache.log4j.Logger;
 public class EntryServlet extends HttpServlet {
 
     /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
+
+    /**
      * Logger.
      */
     private static Logger log = Logger.getLogger(EntryServlet.class);

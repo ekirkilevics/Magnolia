@@ -9,6 +9,11 @@ import javax.servlet.ServletConfig;
  */
 public class ActivationHandlerEx extends SimpleExchange {
 
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
+
     private ServletConfig config;
 
     private String handle;

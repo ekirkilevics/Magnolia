@@ -26,6 +26,11 @@ import javax.servlet.http.HttpServletResponse;
 public class Exchange extends HttpServlet {
 
     /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
+
+    /**
      * <p>
      * receives either XML or binary packet XMLpacket is expected to be the main structure and must be reveived before
      * any "sub" binary packets

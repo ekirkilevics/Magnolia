@@ -30,6 +30,11 @@ import org.apache.log4j.Logger;
  */
 public class SerializableContent implements Serializable {
 
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
+
     private static Logger log = Logger.getLogger(SerializableContent.class);
 
     /* NodeData collection */

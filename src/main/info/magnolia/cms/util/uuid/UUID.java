@@ -44,6 +44,11 @@ import java.util.StringTokenizer;
  */
 public class UUID implements Constants, Serializable, Comparable {
 
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
+
     /** byte array to store 128-bits composing this UUID */
     private byte[] rawBytes = new byte[UUID_BYTE_LENGTH];
 

@@ -17,4 +17,9 @@ package info.magnolia.exchange;
  * @author Sameer Charles
  */
 public class ChannelOverflowException extends ChannelException {
+
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
 }

@@ -57,6 +57,11 @@ import org.apache.log4j.Logger;
  */
 public class SimpleExchange extends HttpServlet {
 
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
+
     private static final Logger log = Logger.getLogger(SimpleExchange.class);
 
     private String context;

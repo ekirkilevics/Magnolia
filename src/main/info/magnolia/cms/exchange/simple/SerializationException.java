@@ -23,6 +23,11 @@ import java.io.PrintWriter;
  */
 public class SerializationException extends Exception {
 
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
+
     private Exception root;
 
     public SerializationException() {

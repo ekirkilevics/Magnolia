@@ -21,6 +21,11 @@ import java.io.PrintWriter;
  */
 public class ConfigurationException extends Exception {
 
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
+
     private Exception root;
 
     public ConfigurationException() {

@@ -24,6 +24,11 @@ import javax.jcr.RepositoryException;
  */
 public class AccessDeniedException extends RepositoryException {
 
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
+
     private Exception root;
 
     public AccessDeniedException() {

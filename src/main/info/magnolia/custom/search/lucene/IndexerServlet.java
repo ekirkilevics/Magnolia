@@ -13,6 +13,11 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class IndexerServlet extends HttpServlet {
 
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
+
     private static final String TIMER_DELAY = "delay";
 
     private static final String TIMER_PERIOD = "period";

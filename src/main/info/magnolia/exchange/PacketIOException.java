@@ -18,6 +18,11 @@ package info.magnolia.exchange;
  */
 public class PacketIOException extends ExchangeException {
 
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
+
     public PacketIOException() {
         super();
     }

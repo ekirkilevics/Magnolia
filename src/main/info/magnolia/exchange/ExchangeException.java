@@ -22,6 +22,11 @@ import java.io.PrintWriter;
  */
 public class ExchangeException extends Exception {
 
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
+
     private Exception root;
 
     public ExchangeException() {
