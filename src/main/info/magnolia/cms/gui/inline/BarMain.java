@@ -240,13 +240,13 @@ public class BarMain extends Bar {
                     // is edit mode
                     this.setSmall(false);
                     if (this.getOverlay()) {
-                        out.println("<div style=\"position:absolute;top:"
+                        out.println("<div class=\"mgnlMainbar\" style=\"top:"
                             + top
                             + "px;left:"
                             + left
                             + "px;width:"
                             + this.getWidth()
-                            + ";z-index:900;\">");
+                            + ";\">");
                     }
                     out.println(this.getHtml());
                     if (this.getOverlay()) {
@@ -257,8 +257,7 @@ public class BarMain extends Bar {
                     // is in preview mode
                     top += 4;
                     left += 4;
-                    out.println("<div style=\"position:absolute;top:" + top + "px;left:" + left + "px;z-index:900;\">");
-                    out.println("&nbsp;");
+                    out.println("<div class=\"mgnlMainbarPreview\" style=\"top:" + top + "px;left:" + left + "px;\">");
                     out.println(this.getButtonEditView().getHtml());
                     out.println("</div>");
                 }

@@ -71,36 +71,52 @@ public class Bar extends ControlSuper {
             cssClass = CSSCLASS_CONTROLBAR;
         }
         html.append("<table");
-        html.append(" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"");
         html.append(this.getHtmlEvents());
         html.append(" class=\"" + cssClass + "\"");
         if (this.getId() != null) {
-            html.append(" id=\"" + this.getId() + "\"");
+            html.append(" id=\"" + this.getId() + "\" cellspacing=\"0\"");
         }
         html.append(">");
-        html.append("<tr><td class=\"" + cssClass + "\">");
-        Iterator itLeft = this.getButtonsLeft().iterator();
-        while (itLeft.hasNext()) {
-            Button b = (Button) itLeft.next();
-            if (this.getSmall()) {
-                b.setSmall(true);
+        html.append("<tr>");
+
+        // left
+        List btnLeft = this.getButtonsLeft();
+        if (!btnLeft.isEmpty()) {
+            html.append("<td class=\"mgnlBtnsLeft\">");
+            Iterator itLeft = btnLeft.iterator();
+            while (itLeft.hasNext()) {
+                Button b = (Button) itLeft.next();
+                if (this.getSmall()) {
+                    b.setSmall(true);
+                }
+                b.setCssStyles("background", "transparent");
+                b.setSaveInfo(false);
+                html.append(b.getHtml());
             }
-            b.setCssStyles("background", "transparent");
-            b.setSaveInfo(false);
-            html.append(b.getHtml() + "\n");
+            html.append("</td>");
         }
-        html.append("</td><td class=\"" + cssClass + "\" align=\"right\">");
-        Iterator itRight = this.getButtonsRight().iterator();
-        while (itRight.hasNext()) {
-            Button b = (Button) itRight.next();
-            if (this.getSmall()) {
-                b.setSmall(true);
+
+        // right
+        List btnRight = this.getButtonsRight();
+        if (!btnRight.isEmpty()) {
+            html.append("<td class=\"mgnlBtnsRight\">");
+
+            Iterator itRight = this.getButtonsRight().iterator();
+            while (itRight.hasNext()) {
+                Button b = (Button) itRight.next();
+                if (this.getSmall()) {
+                    b.setSmall(true);
+                }
+                b.setCssStyles("background", "transparent");
+                b.setSaveInfo(false);
+                html.append(b.getHtml());
             }
-            b.setCssStyles("background", "transparent");
-            b.setSaveInfo(false);
-            html.append(b.getHtml() + "\n");
+            html.append("</td>");
         }
-        html.append("</td></tr></table>");
+
+        html.append("</tr>");
+        html.append("</table>");
         return html.toString();
     }
+
 }

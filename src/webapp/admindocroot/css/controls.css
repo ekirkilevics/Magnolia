@@ -1,5 +1,16 @@
-
-
+.mgnlMainbar, .mgnlMainbarPreview
+    {
+	position:absolute;
+    z-index:900;
+    }
+.mgnlBtnsLeft
+    {
+    text-align: left;
+	}
+.mgnlBtnsRight
+    {
+    text-align: right;
+	}
 .mgnlControlButton,.mgnlControlButton_PUSHED
 	{
     font-size:11px;
@@ -23,7 +34,7 @@
 	}
 
 
-.mgnlControlButton,.mgnlControlButtonSmall,.mgnlControlButtonTransparent,.mgnlControlButtonTransparentSmall,table.mgnlControlBar,table.mgnlControlBarSmall
+.mgnlControlButton,.mgnlControlButtonSmall,.mgnlControlButtonTransparent,.mgnlControlButtonTransparentSmall,.mgnlControlBar,.mgnlControlBarSmall
 	{
     background-color:#5E9201;
 	border-style:solid;
@@ -32,6 +43,11 @@
     border-left-color:#ADC97B;
 	border-bottom-color:#396101;
 	border-right-color:#396101;
+	}
+.mgnlControlBar,.mgnlControlBarSmall
+    {
+	padding: 0 0 0 0;
+	width: 100%;
 	}
 
 .mgnlControlButtonTransparent,.mgnlControlButtonTransparentSmall
