@@ -11,42 +11,22 @@
  *
  * */
 
-
-
 package info.magnolia.cms.servlets;
 
+import info.magnolia.cms.beans.config.ConfigLoader;
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.CacheHandler;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.exchange.simple.ContentWriter;
+import info.magnolia.cms.exchange.simple.PacketCollector;
+import info.magnolia.cms.exchange.simple.Syndicator;
+import info.magnolia.cms.security.Authenticator;
+import info.magnolia.cms.security.Listener;
+import info.magnolia.cms.security.Lock;
+import info.magnolia.cms.security.SecureURI;
+import info.magnolia.cms.security.SessionAccessControl;
+import info.magnolia.exchange.Packet;
 
-
-
-
-/**
- * <p>
- * Version .01 implementation
- * Simple implementation of Exchange interface using serialized objects and
- * binary GET
- * todo -
- * 1. implement incremental delivery
- * 2. concurrent activation
- * 3. context locking
- *
- * </p>
- *
- *
- * User: sameercharles
- * Date: Jul 01, 2003
- * Time: 12:06:22 PM
- * @author Sameer Charles
- * @version 2.0
- * */
-
-
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.jcr.PathNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -54,53 +34,72 @@ import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-import info.magnolia.cms.security.*;
-import info.magnolia.cms.security.SecureURI;
-import info.magnolia.cms.core.CacheHandler;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.exchange.simple.*;
-import info.magnolia.cms.beans.config.ConfigLoader;
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.exchange.Packet;
+import javax.jcr.PathNotFoundException;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.log4j.Logger;
 
 
-
-
-
-
-public class SimpleExchange extends HttpServlet {
-
-
+/**
+ * <p>
+ * Version .01 implementation Simple implementation of Exchange interface using serialized objects and binary GET
+ * </p>
+ * 
+ * <pre>
+ * todo -
+ * 1. implement incremental delivery
+ * 2. concurrent activation
+ * 3. context locking
+ * </pre>
+ * 
+ * @author Sameer Charles
+ * @version 2.0
+ */
+public class SimpleExchange extends HttpServlet
+{
 
     private static final Logger log = Logger.getLogger(SimpleExchange.class);
 
     private String context;
+
     private String page;
+
     private String parent;
+
     private String action;
+
     private String type; // only used if action is get
+
     private String recursive;
+
     private String protocol;
+
     private String host;
+
     private String remotePort;
+
     private String senderURL;
+
     private String objectType;
+
     private HttpServletRequest request;
+
     private HttpServletResponse response;
+
     private HierarchyManager hierarchyManager;
-
-
-
-
 
     /**
      * @param request
      * @param response
      * @throws ServletException
      * @throws IOException
-     * */
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+     */
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
         this.request = request;
         this.response = response;
         this.context = this.request.getHeader(Syndicator.WORKING_CONTEXT);
@@ -113,123 +112,123 @@ public class SimpleExchange extends HttpServlet {
         this.host = request.getRemoteHost();
         this.remotePort = this.request.getHeader(Syndicator.REMOTE_PORT);
         this.senderURL = this.request.getHeader(Syndicator.SENDER_URL);
-        if (this.senderURL == null || this.senderURL.equals("")) {
-            this.senderURL = this.protocol+"://"+this.host+":"+this.remotePort;
+        if (this.senderURL == null || this.senderURL.equals(""))
+        {
+            this.senderURL = this.protocol + "://" + this.host + ":" + this.remotePort;
         }
         this.objectType = this.request.getHeader(Syndicator.OBJECT_TYPE);
-        try {
+        try
+        {
             response.setContentType("text/plain");
             this.handleActivationRequest();
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             log.error(e.getMessage(), e);
         }
     }
-
-
 
     /**
      * @param request
      * @param response
      * @throws ServletException
      * @throws IOException
-     * */
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request,response);
+     */
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        doGet(request, response);
     }
 
-
-
     /**
-     *
      * @throws Exception
      */
-    private void handleActivationRequest() throws Exception {
-        if (ConfigLoader.isConfigured()) { // ignore security is server is not configured
+    private void handleActivationRequest() throws Exception
+    {
+        if (ConfigLoader.isConfigured())
+        { // ignore security is server is not configured
             if (!Listener.isAllowed(this.request))
                 return;
             if (!Authenticator.authenticate(this.request))
                 return;
             this.hierarchyManager = SessionAccessControl.getHierarchyManager(this.request, this.context);
-        } else {
+        }
+        else
+        {
             this.hierarchyManager = ContentRepository.getHierarchyManager(this.context);
         }
         if (this.action.equals(Syndicator.ACTIVATE))
             activate();
-        else if(this.action.equals(Syndicator.DE_ACTIVATE))
+        else if (this.action.equals(Syndicator.DE_ACTIVATE))
             deactivate();
         else if (this.action.equals(Syndicator.GET))
             get();
         else
-            throw new UnsupportedOperationException
-                    ("Method not supported by Exchange protocol - Simple (.01)");
+            throw new UnsupportedOperationException("Method not supported by Exchange protocol - Simple (.01)");
     }
 
-
-
     /**
-     *
      * @throws Exception
-     * */
-    public void activate() throws Exception {
-        log.info("Exchange : update request received for "+this.page);
-        String handle = "/"+Syndicator.DEFAULT_HANDLER;
+     */
+    public void activate() throws Exception
+    {
+        log.info("Exchange : update request received for " + this.page);
+        String handle = "/" + Syndicator.DEFAULT_HANDLER;
 
-        URL url = new URL(this.senderURL+handle);
+        URL url = new URL(this.senderURL + handle);
         String credentials = this.request.getHeader("Authorization");
         URLConnection urlConnection = url.openConnection();
-        urlConnection.setRequestProperty("Authorization",credentials);
-        urlConnection.addRequestProperty(Syndicator.ACTION,Syndicator.GET);
-        urlConnection.addRequestProperty(Syndicator.WORKING_CONTEXT,this.context);
-        urlConnection.addRequestProperty(Syndicator.PAGE,this.page);
-        urlConnection.addRequestProperty(Syndicator.PARENT,this.parent);
-        urlConnection.addRequestProperty(Syndicator.GET_TYPE,Syndicator.GET_TYPE_SERIALIZED_OBJECT);
-        urlConnection.addRequestProperty(Syndicator.RECURSIVE,this.recursive);
-        urlConnection.addRequestProperty(Syndicator.OBJECT_TYPE,this.objectType);
+        urlConnection.setRequestProperty("Authorization", credentials);
+        urlConnection.addRequestProperty(Syndicator.ACTION, Syndicator.GET);
+        urlConnection.addRequestProperty(Syndicator.WORKING_CONTEXT, this.context);
+        urlConnection.addRequestProperty(Syndicator.PAGE, this.page);
+        urlConnection.addRequestProperty(Syndicator.PARENT, this.parent);
+        urlConnection.addRequestProperty(Syndicator.GET_TYPE, Syndicator.GET_TYPE_SERIALIZED_OBJECT);
+        urlConnection.addRequestProperty(Syndicator.RECURSIVE, this.recursive);
+        urlConnection.addRequestProperty(Syndicator.OBJECT_TYPE, this.objectType);
         /* Import activated page */
         InputStream in = urlConnection.getInputStream();
-        try {
+        try
+        {
             ObjectInputStream objectInputStream = new ObjectInputStream(in);
             Object sc = objectInputStream.readObject();
             /* deserialize received object */
-            ContentWriter contentWriter =
-            new ContentWriter(this.getHierarchyManager(), this.context,
-                    this.senderURL+"/"+Syndicator.DEFAULT_HANDLER, this.request);
+            ContentWriter contentWriter = new ContentWriter(this.getHierarchyManager(), this.context, this.senderURL
+                + "/"
+                + Syndicator.DEFAULT_HANDLER, this.request);
             contentWriter.writeObject(this.parent, sc);
 
-        } catch (Exception e) {
-            log.error("Failed to de-serialize - "+this.page);
+        }
+        catch (Exception e)
+        {
+            log.error("Failed to de-serialize - " + this.page);
             log.error(e.getMessage(), e);
         }
         // todo , find a better way to lock only this context->hierarchy
         Lock.setSystemLock();
         CacheHandler.flushCache();
         Lock.resetSystemLock();
-        //SecureURI.add(this.request, this.page);
+        // SecureURI.add(this.request, this.page);
     }
 
-
-
     /**
-     *
      * @throws Exception
      */
-    public void deactivate() throws Exception {
-        log.info("Exchange : remove request received for "+this.page);
+    public void deactivate() throws Exception
+    {
+        log.info("Exchange : remove request received for " + this.page);
         HierarchyManager hm = this.getHierarchyManager();
         hm.delete(this.page);
         hm.save();
         CacheHandler.flushCache();
         SecureURI.delete(this.page);
-        SecureURI.delete(this.page+"/*");
+        SecureURI.delete(this.page + "/*");
     }
 
-
-
     /**
-     *
      * @throws Exception
-     * */
-    private void get() throws Exception {
+     */
+    private void get() throws Exception
+    {
         if (this.type.equalsIgnoreCase(Syndicator.GET_TYPE_SERIALIZED_OBJECT))
             this.getSerializedObject();
         else if (this.type.equalsIgnoreCase(Syndicator.GET_TYPE_BINARY))
@@ -238,10 +237,9 @@ public class SimpleExchange extends HttpServlet {
             this.getSerializedObject(); // default type, supporting magnolia 1.1
     }
 
-
-
-    private void getSerializedObject() throws Exception {
-        log.info("Serialized object request for "+this.page);
+    private void getSerializedObject() throws Exception
+    {
+        log.info("Serialized object request for " + this.page);
         boolean recurse = (new Boolean(this.recursive)).booleanValue();
         Packet packet = PacketCollector.getPacket(this.getHierarchyManager(), this.page, recurse);
         ObjectOutputStream os = new ObjectOutputStream(this.response.getOutputStream());
@@ -249,51 +247,52 @@ public class SimpleExchange extends HttpServlet {
         os.flush();
     }
 
-
     /**
      *
      *
      * */
-    private void getBinary() throws Exception {
-        log.info("Binary request for "+this.page);
+    private void getBinary() throws Exception
+    {
+        log.info("Binary request for " + this.page);
         HierarchyManager hm = this.getHierarchyManager();
-        try {
+        try
+        {
             InputStream is = hm.getNodeData(this.page).getValue().getStream();
             ServletOutputStream os = this.response.getOutputStream();
             byte[] buffer = new byte[8192];
             int read = 0;
-            while ((read = is.read(buffer)) > 0) {
+            while ((read = is.read(buffer)) > 0)
+            {
                 os.write(buffer, 0, read);
             }
             os.flush();
             os.close();
-        } catch (PathNotFoundException e) {
-            log.error("Unable to spool "+this.page);
+        }
+        catch (PathNotFoundException e)
+        {
+            log.error("Unable to spool " + this.page);
             throw new PathNotFoundException(e.getMessage());
         }
     }
 
-
-
-    private HierarchyManager getHierarchyManager() throws Exception {
+    private HierarchyManager getHierarchyManager() throws Exception
+    {
         return this.hierarchyManager;
     }
 
-
-
-    public String getOperatedHandle() {
+    public String getOperatedHandle()
+    {
         return this.page;
     }
 
-
     /**
      * Exclude version number
-     * */
-    private String getProtocolName() {
+     */
+    private String getProtocolName()
+    {
         String protocol = this.request.getProtocol();
         int lastIndexOfSlash = protocol.lastIndexOf("/");
-        return protocol.substring(0,lastIndexOfSlash);
+        return protocol.substring(0, lastIndexOfSlash);
     }
-
 
 }

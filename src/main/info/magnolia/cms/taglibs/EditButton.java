@@ -105,12 +105,15 @@ public class EditButton extends TagSupport
     private String getNodeName()
     {
         if (this.nodeName == null)
+        {
             if (Resource.getLocalContentNode(this.request) == null)
+            {
                 return null;
-            else
-                return Resource.getLocalContentNode(this.request).getName();
-        else
-            return this.nodeName;
+            }
+            return Resource.getLocalContentNode(this.request).getName();
+        }
+
+        return this.nodeName;
     }
 
     /**
@@ -131,10 +134,7 @@ public class EditButton extends TagSupport
     {
         if (this.nodeCollectionName == null)
         {
-            if (Resource.getLocalContentNodeCollectionName(this.request) == null)
-                return null;
-            else
-                return Resource.getLocalContentNodeCollectionName(this.request);
+            return Resource.getLocalContentNodeCollectionName(this.request);
         }
         return this.nodeCollectionName;
     }

@@ -9,99 +9,82 @@
  *
  * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms.util;
 
-import org.apache.log4j.Logger;
-
-import java.io.RandomAccessFile;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.RandomAccessFile;
+
+import org.apache.log4j.Logger;
 
 
 /**
- * Date: May 11, 2004
- * Time: 4:44:13 PM
- *
+ * ReverseFileReader alows backword reading of <code>RandomAccessFile</code>
  * @author Sameer Charles
  */
 
+public class ReverseFileReader extends RandomAccessFile
+{
 
-/**
- * <p>
- * ReverseFileReader alows backword reading of <code>RandomAccessFile</code>
- * @see RandomAccessFile
- *
- * <p>
- *
- *
- *
- * */
-
-
-public class ReverseFileReader extends RandomAccessFile {
-
-
-
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(ReverseFileReader.class);
 
-    private long filelength = 0;
+    private long filelength;
+
     private long pointer = 3;
 
-
-
-
-    public ReverseFileReader(File file, String mode)
-            throws FileNotFoundException {
-        super(file,mode);
+    public ReverseFileReader(File file, String mode) throws FileNotFoundException
+    {
+        super(file, mode);
         this.movePointerToEnd();
     }
 
-
-
-    public ReverseFileReader(String file, String mode)
-            throws FileNotFoundException {
-        super(file,mode);
+    public ReverseFileReader(String file, String mode) throws FileNotFoundException
+    {
+        super(file, mode);
         this.movePointerToEnd();
     }
 
-
-    private void movePointerToEnd() {
-        try {
+    private void movePointerToEnd()
+    {
+        try
+        {
             this.filelength = this.length();
-            this.seek(this.length() - 2); //"-2" line separator.
-        } catch (IOException e) {
+            this.seek(this.length() - 2); // "-2" line separator.
+        }
+        catch (IOException e)
+        {
             log.error(e.getMessage());
         }
     }
 
-
-
-
     /**
-     *
      * @return record after the current file pointer
-     * */
-    public String getRecord() {
+     */
+    public String getRecord()
+    {
         String fileRecord = null;
         byte b = 0;
-        try {
-            while (b != 10) {
-                this.seek(this.filelength-this.pointer);
+        try
+        {
+            while (b != 10)
+            {
+                this.seek(this.filelength - this.pointer);
                 b = this.readByte();
                 this.pointer++;
             }
-            fileRecord=this.readLine();
-        } catch (IOException e) {
+            fileRecord = this.readLine();
+        }
+        catch (IOException e)
+        {
             log.error(e.getMessage());
         }
 
         return fileRecord;
     }
-
 
 }

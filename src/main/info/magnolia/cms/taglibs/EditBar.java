@@ -21,9 +21,10 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
- * Date: Apr 28, 2003 Time: 11:20:59 AM
  * @author Sameer Charles
  * @author Marcel Salathe
  * @version $Revision: $ ($Author: $)
@@ -58,10 +59,7 @@ public class EditBar extends TagSupport
     private HttpServletRequest request;
 
     /**
-     * <p>
-     * starts Edit tag
-     * </p>
-     * @return int
+     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
     public int doStartTag()
     {
@@ -71,10 +69,7 @@ public class EditBar extends TagSupport
     }
 
     /**
-     * <p>
-     * print out
-     * </p>
-     * @return int
+     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag()
     {
@@ -109,9 +104,10 @@ public class EditBar extends TagSupport
     private String getNodeName()
     {
         if (this.nodeName == null)
+        {
             return Resource.getLocalContentNode(this.request).getName();
-        else
-            return this.nodeName;
+        }
+        return this.nodeName;
     }
 
     /**
@@ -132,10 +128,7 @@ public class EditBar extends TagSupport
     {
         if (this.nodeCollectionName == null)
         {
-            if (Resource.getLocalContentNodeCollectionName(this.request) == null)
-                return "";
-            else
-                return Resource.getLocalContentNodeCollectionName(this.request);
+            return StringUtils.defaultString(Resource.getLocalContentNodeCollectionName(this.request));
         }
         return this.nodeCollectionName;
     }
@@ -179,8 +172,7 @@ public class EditBar extends TagSupport
                 return "";
             }
         }
-        else
-            return this.paragraph;
+        return this.paragraph;
     }
 
     /**
@@ -278,29 +270,33 @@ public class EditBar extends TagSupport
         bar.setNodeName(this.getNodeName());
 
         bar.setDefaultButtons();
-        if (this.getEditLabel() != null)
-        {
-            if (this.getEditLabel().equals(""))
-                bar.setButtonEdit(null);
-            else
-                bar.getButtonEdit().setLabel(this.getEditLabel());
-        }
-        if (this.getMoveLabel() != null)
-        {
-            if (this.getMoveLabel().equals(""))
-                bar.setButtonMove(null);
-            else
-                bar.getButtonMove().setLabel(this.getMoveLabel());
-        }
-        if (this.getDeleteLabel() != null)
-        {
-            if (this.getDeleteLabel().equals(""))
-                bar.setButtonDelete(null);
-            else
-                bar.getButtonDelete().setLabel(this.getDeleteLabel());
-        }
-        bar.placeDefaultButtons();
 
+        if (StringUtils.isEmpty(this.getEditLabel()))
+        {
+            bar.setButtonEdit(null);
+        }
+        else
+        {
+            bar.getButtonEdit().setLabel(this.getEditLabel());
+        }
+        if (StringUtils.isEmpty(this.getMoveLabel()))
+        {
+            bar.setButtonMove(null);
+        }
+        else
+        {
+            bar.getButtonMove().setLabel(this.getMoveLabel());
+        }
+        if (StringUtils.isEmpty(this.getDeleteLabel()))
+        {
+            bar.setButtonDelete(null);
+        }
+        else
+        {
+            bar.getButtonDelete().setLabel(this.getDeleteLabel());
+        }
+
+        bar.placeDefaultButtons();
         bar.drawHtml(pageContext.getOut());
     }
 }

@@ -25,16 +25,12 @@ public class IfNotEmpty extends IfEmpty
     private static final long serialVersionUID = 222L;
 
     /**
-     * <p>
-     * start of tag
-     * </p>
-     * @return int
+     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
     public int doStartTag()
     {
         // Just the opposite of IfEmpty
         int ifEmptyResult = super.doStartTag();
-
         return (ifEmptyResult == SKIP_BODY) ? EVAL_BODY_INCLUDE : SKIP_BODY;
     }
 }

@@ -34,11 +34,46 @@ public class Set extends TagSupport
      */
     private static final long serialVersionUID = 222L;
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(Set.class);
 
     private ContentNode contentNode;
 
     private String contentNodeName;
+
+    /**
+     * @param contentNode to be set
+     */
+    public void setContentNode(ContentNode contentNode)
+    {
+        this.contentNode = contentNode;
+    }
+
+    /**
+     * @param name , contentNode name to be set
+     */
+    public void setContentNodeName(String name)
+    {
+        this.contentNodeName = name;
+    }
+
+    /**
+     * @deprecated
+     */
+    public void setContainer(ContentNode contentNode)
+    {
+        this.setContentNode(contentNode);
+    }
+
+    /**
+     * @deprecated
+     */
+    public void setContainerName(String name)
+    {
+        this.setContentNodeName(name);
+    }
 
     /**
      * <p>
@@ -68,10 +103,7 @@ public class Set extends TagSupport
     }
 
     /**
-     * <p>
-     * continue evaluating jsp
-     * </p>
-     * @return int
+     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag()
     {
@@ -79,35 +111,12 @@ public class Set extends TagSupport
     }
 
     /**
-     * @deprecated
+     * @see javax.servlet.jsp.tagext.Tag#release()
      */
-    public void setContainer(ContentNode contentNode)
+    public void release()
     {
-        this.setContentNode(contentNode);
+        super.release();
+        this.contentNode = null;
+        this.contentNodeName = null;
     }
-
-    /**
-     * @param contentNode to be set
-     */
-    public void setContentNode(ContentNode contentNode)
-    {
-        this.contentNode = contentNode;
-    }
-
-    /**
-     * @deprecated
-     */
-    public void setContainerName(String name)
-    {
-        this.setContentNodeName(name);
-    }
-
-    /**
-     * @param name , contentNode name to be set
-     */
-    public void setContentNodeName(String name)
-    {
-        this.contentNodeName = name;
-    }
-
 }

@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -44,6 +45,9 @@ public class Out extends TagSupport
      */
     private static final long serialVersionUID = 222L;
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(Out.class);
 
     private final static String DEFAULT_LINEBREAK = NodeData.HTML_LINEBREAK;
@@ -68,22 +72,8 @@ public class Out extends TagSupport
 
     private String lineBreak = DEFAULT_LINEBREAK;
 
-    private boolean isNullOrEmtpy(String s)
-    {
-        // returns true is s is null or ""
-        if (s == null)
-            return true;
-        else if (s.equals(""))
-            return true;
-        else
-            return false;
-    }
-
     /**
-     * <p>
-     * starts out tag
-     * </p>
-     * @return int
+     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
     public int doStartTag()
     {
@@ -101,7 +91,7 @@ public class Out extends TagSupport
             // contentNodeName is defined
             try
             {
-                if (this.isNullOrEmtpy(contentNodeCollectionName))
+                if (StringUtils.isEmpty(contentNodeCollectionName))
                 {
                     // e.g. <cms:out nodeDataName="title" contentNodeName="footer"/>
                     this.setContentNode(actpage.getContentNode(contentNodeName));

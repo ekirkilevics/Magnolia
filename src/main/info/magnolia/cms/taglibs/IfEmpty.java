@@ -51,7 +51,7 @@ public class IfEmpty extends BodyTagSupport
 
     private NodeData nodeData;
 
-    private String actpage = "false";
+    private boolean actpage;
 
     /**
      * <p>
@@ -79,87 +79,60 @@ public class IfEmpty extends BodyTagSupport
                 return EVAL_BODY_INCLUDE;
             return SKIP_BODY;
         }
-        else
-        {
-            // if only contentNodeName is provided, it checks if this contentNode exists
-            if (!this.contentNodeName.equals("") && this.nodeDataName.equals(""))
-            {
-                try
-                {
-                    this.contentNode = Resource.getCurrentActivePage(req).getContentNode(this.contentNodeName);
-                }
-                catch (RepositoryException re)
-                {
-                    log.error(re.getMessage());
-                }
-                if (this.contentNode == null)
-                {
-                    // contentNode doesn't exist, evaluate body
-                    return EVAL_BODY_INCLUDE;
-                }
-            }
-            // if both contentNodeName and nodeDataName are set, it checks if that nodeData of that contentNode exitsts
-            // and is not empty
-            else if (!this.contentNodeName.equals("") && !this.nodeDataName.equals(""))
-            {
-                try
-                {
-                    this.contentNode = Resource.getCurrentActivePage(req).getContentNode(this.contentNodeName);
-                }
-                catch (RepositoryException re)
-                {
-                    log.error(re.getMessage());
-                }
-                if (this.contentNode == null)
-                    return EVAL_BODY_INCLUDE;
-                if (this.contentNode != null)
-                {
-                    try
-                    {
-                        this.nodeData = this.contentNode.getNodeData(this.nodeDataName);
-                    }
-                    catch (AccessDeniedException e)
-                    {
-                        log.error(e.getMessage());
-                    }
-                    if ((this.nodeData == null) || !this.nodeData.isExist() || this.nodeData.getString().equals(""))
-                        return EVAL_BODY_INCLUDE;
-                }
-            }
-            // if only nodeDataName is provided, it checks if that nodeData of the current contentNode exists and is not
-            // empty
-            else if (this.contentNodeName.equals("") && !this.nodeDataName.equals(""))
-            {
-                if (this.actpage.equals("true"))
-                {
-                    this.contentNode = Resource.getCurrentActivePage((HttpServletRequest) pageContext.getRequest());
-                }
-                else
-                {
-                    this.contentNode = Resource.getLocalContentNode((HttpServletRequest) pageContext.getRequest());
-                    if (this.contentNode == null)
-                    {
-                        this.contentNode = Resource.getGlobalContentNode((HttpServletRequest) pageContext.getRequest());
-                    }
-                }
-                if (this.contentNode == null)
-                    return EVAL_BODY_INCLUDE;
-                if (this.contentNode != null)
-                {
-                    try
-                    {
-                        this.nodeData = this.contentNode.getNodeData(this.nodeDataName);
-                    }
-                    catch (AccessDeniedException e)
-                    {
-                        log.error(e.getMessage());
-                    }
-                    if ((this.nodeData == null) || !this.nodeData.isExist() || this.nodeData.getString().equals(""))
-                        return EVAL_BODY_INCLUDE;
 
-                }
+        // if only contentNodeName is provided, it checks if this contentNode exists
+        if (!this.contentNodeName.equals("") && this.nodeDataName.equals(""))
+        {
+            try
+            {
+                this.contentNode = Resource.getCurrentActivePage(req).getContentNode(this.contentNodeName);
             }
-            // if both contentNodeName and nodeDataName are not provided, it checks if the current contentNode exists
+            catch (RepositoryException re)
+            {
+                log.error(re.getMessage());
+            }
+            if (this.contentNode == null)
+            {
+                // contentNode doesn't exist, evaluate body
+                return EVAL_BODY_INCLUDE;
+            }
+        }
+        // if both contentNodeName and nodeDataName are set, it checks if that nodeData of that contentNode exitsts
+        // and is not empty
+        else if (!this.contentNodeName.equals("") && !this.nodeDataName.equals(""))
+        {
+            try
+            {
+                this.contentNode = Resource.getCurrentActivePage(req).getContentNode(this.contentNodeName);
+            }
+            catch (RepositoryException re)
+            {
+                log.error(re.getMessage());
+            }
+            if (this.contentNode == null)
+                return EVAL_BODY_INCLUDE;
+            if (this.contentNode != null)
+            {
+                try
+                {
+                    this.nodeData = this.contentNode.getNodeData(this.nodeDataName);
+                }
+                catch (AccessDeniedException e)
+                {
+                    log.error(e.getMessage());
+                }
+                if ((this.nodeData == null) || !this.nodeData.isExist() || this.nodeData.getString().equals(""))
+                    return EVAL_BODY_INCLUDE;
+            }
+        }
+        // if only nodeDataName is provided, it checks if that nodeData of the current contentNode exists and is not
+        // empty
+        else if (this.contentNodeName.equals("") && !this.nodeDataName.equals(""))
+        {
+            if (this.actpage)
+            {
+                this.contentNode = Resource.getCurrentActivePage((HttpServletRequest) pageContext.getRequest());
+            }
             else
             {
                 this.contentNode = Resource.getLocalContentNode((HttpServletRequest) pageContext.getRequest());
@@ -167,10 +140,35 @@ public class IfEmpty extends BodyTagSupport
                 {
                     this.contentNode = Resource.getGlobalContentNode((HttpServletRequest) pageContext.getRequest());
                 }
-                if (this.contentNode == null)
+            }
+            if (this.contentNode == null)
+                return EVAL_BODY_INCLUDE;
+            if (this.contentNode != null)
+            {
+                try
                 {
-                    return EVAL_BODY_INCLUDE;
+                    this.nodeData = this.contentNode.getNodeData(this.nodeDataName);
                 }
+                catch (AccessDeniedException e)
+                {
+                    log.error(e.getMessage());
+                }
+                if ((this.nodeData == null) || !this.nodeData.isExist() || this.nodeData.getString().equals(""))
+                    return EVAL_BODY_INCLUDE;
+
+            }
+        }
+        // if both contentNodeName and nodeDataName are not provided, it checks if the current contentNode exists
+        else
+        {
+            this.contentNode = Resource.getLocalContentNode((HttpServletRequest) pageContext.getRequest());
+            if (this.contentNode == null)
+            {
+                this.contentNode = Resource.getGlobalContentNode((HttpServletRequest) pageContext.getRequest());
+            }
+            if (this.contentNode == null)
+            {
+                return EVAL_BODY_INCLUDE;
             }
         }
         return SKIP_BODY;
@@ -232,7 +230,7 @@ public class IfEmpty extends BodyTagSupport
      * </p>
      * @param set
      */
-    public void setActpage(String set)
+    public void setActpage(boolean set)
     {
         this.actpage = set;
     }
@@ -242,13 +240,13 @@ public class IfEmpty extends BodyTagSupport
      */
     public void release()
     {
-        nodeDataName = "";
-        contentNodeName = "";
-        contentNodeCollectionName = "";
-        contentNodeCollection = null;
-        contentNode = null;
-        nodeData = null;
-        actpage = "false";
+        this.nodeDataName = "";
+        this.contentNodeName = "";
+        this.contentNodeCollectionName = "";
+        this.contentNodeCollection = null;
+        this.contentNode = null;
+        this.nodeData = null;
+        this.actpage = false;
     }
 
 }

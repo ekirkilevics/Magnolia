@@ -435,6 +435,7 @@ parFiles="/samples/formTemplate/controlEdit.xml"/>
             <name>actpage</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
             <description></description>
         </attribute>
     </tag>
@@ -483,6 +484,7 @@ parFiles="/samples/formTemplate/controlEdit.xml"/>
             <name>actpage</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
             <description></description>
         </attribute>
     </tag>
@@ -490,24 +492,30 @@ parFiles="/samples/formTemplate/controlEdit.xml"/>
         <name>loadPage</name>
         <tag-class>info.magnolia.cms.taglibs.LoadPage</tag-class>
         <body-content>JSP</body-content>
-        <description>loads another page into actpage and removes it after tag closing</description>
+        <description>
+            Loads another page into actpage. One usage would be within a site-menu structure. loadPage does not nest
+            pages, so the corresponding unloadPage-tag will not revert to the previously loaded page, but restore
+            actpage to the currently displayed page, i.e. the value it held before loadPage was called for the first
+            time.
+        </description>
         <attribute>
             <name>path</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description></description>
+            <description>path of the page to be loaded</description>
         </attribute>
         <attribute>
             <name>templateName</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description></description>
+            <description>???</description>
         </attribute>
         <attribute>
             <name>level</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description></description>
+            <type>int</type>
+            <description>???</description>
         </attribute>
     </tag>
     <tag>

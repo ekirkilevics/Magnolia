@@ -9,163 +9,160 @@
  *
  * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms.servlets;
 
-
-
-
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.io.IOException;
-
-import info.magnolia.cms.beans.config.*;
-import info.magnolia.cms.beans.runtime.*;
 import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.Dispatcher;
-import info.magnolia.cms.core.*;
-import info.magnolia.cms.security.*;
+import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.beans.config.VirtualMap;
+import info.magnolia.cms.core.CacheHandler;
+import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.Listener;
-//import com.quatico.i18n.TranslationEngine;
+import info.magnolia.cms.security.Lock;
+import info.magnolia.cms.security.SecureURI;
+import info.magnolia.cms.security.SessionAccessControl;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.log4j.Logger;
 
 
-
 /**
- *
- * This is the main http servlet which will be called for any resource request
- * this servlet will dispacth or process requests according to their nature
- * -- all resource requests will go to ResourceDispatcher
- * -- all page requests will be handed over to the defined JSP or Servlet (template)
- *
- *
- *
- * Date: June 3, 2004
- * Time: 2:26:12 PM
+ * This is the main http servlet which will be called for any resource request this servlet will dispacth or process
+ * requests according to their nature -- all resource requests will go to ResourceDispatcher -- all page requests will
+ * be handed over to the defined JSP or Servlet (template).
  * @author Sameer Charles
  * @version 2.0
- * */
+ */
+public class EntryServlet extends HttpServlet
+{
 
-
-
-
-public class EntryServlet extends HttpServlet {
-
-
-
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(EntryServlet.class);
 
     private static final String REQUEST_INTERCEPTOR = "/RequestInterceptor";
+
     public static final String INTERCEPT = "mgnlIntercept";
 
-
     private String uri;
+
     private String extension;
-
-
-
 
     /**
      * <p>
-     * This makes browser and proxy caches work more effectively,
-     * reducing the load on server and network resources.
-     *
+     * This makes browser and proxy caches work more effectively, reducing the load on server and network resources.
      * </p>
-     *
      * @param request
      * @return last modified time in miliseconds since 1st Jan 1970 GMT
-     * */
-    public long getLastModified(HttpServletRequest request) {
+     */
+    public long getLastModified(HttpServletRequest request)
+    {
         return info.magnolia.cms.beans.runtime.Cache.getCreationTime(request);
     }
-
-
 
     /**
      * <p>
      * All HTTP/s requests are handled here
      * </p>
-     *
      * @param req
      * @param res
-     * */
-    public void doGet(HttpServletRequest req, HttpServletResponse res)
-            throws ServletException,
-            IOException {
-        try {
+     */
+    public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
+    {
+        try
+        {
 
             /**
              * Try to find out what the preferred language of this user is.
              */
-            //TranslationEngine.findPreferredLanguage(req);
+            // TranslationEngine.findPreferredLanguage(req);
             this.setURI(req);
-            if (isAllowed(req,res)) {
-                if (redirect(req,res))
+            if (isAllowed(req, res))
+            {
+                if (redirect(req, res))
                     return;
-                intercept(req,res);
+                intercept(req, res);
                 /* try to stream from cache first */
-                if (info.magnolia.cms.beans.runtime.Cache.isCached(req)) {
-                    if (CacheHandler.streamFromCache(req,res))
+                if (info.magnolia.cms.beans.runtime.Cache.isCached(req))
+                {
+                    if (CacheHandler.streamFromCache(req, res))
                         return; /* if success return */
                 }
                 /* aggregate content */
-                Aggregator aggregator = new Aggregator(req,res);
+                Aggregator aggregator = new Aggregator(req, res);
                 boolean success = aggregator.collect();
                 aggregator = null;
-                try {
-                    Dispatcher.dispatch(req,res,getServletContext());
-                    if (success) {
-                        if (info.magnolia.cms.beans.config.Cache.isCacheable()) {
+                try
+                {
+                    Dispatcher.dispatch(req, res, getServletContext());
+                    if (success)
+                    {
+                        if (info.magnolia.cms.beans.config.Cache.isCacheable())
+                        {
                             CacheHandler.cacheURI(req);
                             // todo - Bug : cache only first time after system restart. fails after removed activation
-                            //CacheProcess cache = new CacheProcess(req);
-                            //cache.start();
+                            // CacheProcess cache = new CacheProcess(req);
+                            // cache.start();
                         }
                     }
-                } catch (Exception e) {
+                }
+                catch (Exception e)
+                {
                     log.error(e.getMessage(), e);
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             log.error(e.getMessage(), e);
         }
     }
 
-
-
     /**
-     * <p>All requests are handles by get handler</p>
-     *
+     * <p>
+     * All requests are handles by get handler
+     * </p>
      * @param req
      * @param res
-     * */
-    public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        doGet(req,res);
+     */
+    public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
+    {
+        doGet(req, res);
     }
-
-
 
     /**
      * <p>
      * checks access from Listener / Authenticator / AccessLock
      * </p>
-     *
      * @return boolean
      * @param req HttpServletRequest as received by the service method
      * @param res HttpServletResponse as received by the service method
      */
-    private boolean isAllowed (HttpServletRequest req, HttpServletResponse res) throws IOException {
-        if (Lock.isSystemLocked()) {
+    private boolean isAllowed(HttpServletRequest req, HttpServletResponse res) throws IOException
+    {
+        if (Lock.isSystemLocked())
+        {
             res.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
             return false;
-        } else if (SessionAccessControl.isSecuredSession(req)) {
+        }
+        else if (SessionAccessControl.isSecuredSession(req))
+        {
             return true;
-        } else if ((SecureURI.isProtected(uri))) {
-            return authenticate(req,res);
-        } else if (!Listener.isAllowed(req)) {
+        }
+        else if ((SecureURI.isProtected(uri)))
+        {
+            return authenticate(req, res);
+        }
+        else if (!Listener.isAllowed(req))
+        {
             res.sendError(HttpServletResponse.SC_FORBIDDEN);
             return false;
         }
@@ -173,31 +170,31 @@ public class EntryServlet extends HttpServlet {
         return true;
     }
 
-
-
     /**
      * <p>
      * Authenticate on basic headers
      * </p>
-     *
      * @param req
      * @param res
-     * */
-    private boolean authenticate(HttpServletRequest req, HttpServletResponse res) {
-        try {
-            if (!Authenticator.authenticate(req)) {
+     */
+    private boolean authenticate(HttpServletRequest req, HttpServletResponse res)
+    {
+        try
+        {
+            if (!Authenticator.authenticate(req))
+            {
                 res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                res.setHeader("WWW-Authenticate","BASIC realm=\""+Server.getBasicRealm()+"\"");
+                res.setHeader("WWW-Authenticate", "BASIC realm=\"" + Server.getBasicRealm() + "\"");
                 return false;
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             log.error(e.getMessage(), e);
             return false;
         }
         return true;
     }
-
-
 
     /**
      * <p>
@@ -205,14 +202,19 @@ public class EntryServlet extends HttpServlet {
      * </p>
      * @param request
      * @param response
-     * */
-    private boolean redirect(HttpServletRequest request, HttpServletResponse response) {
+     */
+    private boolean redirect(HttpServletRequest request, HttpServletResponse response)
+    {
         String URI = this.getURIMap(request);
-        if (!URI.equals("")) {
-            try {
-                request.getRequestDispatcher(URI).forward(request,response);
-            } catch (Exception e) {
-                log.error("Failed to forward - "+URI);
+        if (!URI.equals(""))
+        {
+            try
+            {
+                request.getRequestDispatcher(URI).forward(request, response);
+            }
+            catch (Exception e)
+            {
+                log.error("Failed to forward - " + URI);
                 log.error(e.getMessage(), e);
             }
             return true;
@@ -220,59 +222,63 @@ public class EntryServlet extends HttpServlet {
         return false;
     }
 
-    
     /**
      * <p>
      * attach Interceptor servlet if interception needed
      * </p>
      * @param request
      * @param response
-     * */
-    private void intercept(HttpServletRequest request, HttpServletResponse response) {
-        if (request.getParameter(INTERCEPT) != null) {
-            try {
-                request.getRequestDispatcher(REQUEST_INTERCEPTOR).include(request,response);
-            } catch (Exception e) {
+     */
+    private void intercept(HttpServletRequest request, HttpServletResponse response)
+    {
+        if (request.getParameter(INTERCEPT) != null)
+        {
+            try
+            {
+                request.getRequestDispatcher(REQUEST_INTERCEPTOR).include(request, response);
+            }
+            catch (Exception e)
+            {
                 log.error("Failed to Intercept");
                 log.error(e.getMessage(), e);
             }
         }
     }
 
-
     /**
-     *
      * @return URI mapping as in ServerInfo
      */
-    private String getURIMap(HttpServletRequest request) {
+    private String getURIMap(HttpServletRequest request)
+    {
         return VirtualMap.getInstance().getURIMapping(request.getRequestURI());
     }
 
-
-
     /**
-     * <p>Extracts uri and extension</p>
+     * <p>
+     * Extracts uri and extension
+     * </p>
      * @param request
-     * */
-    private void setURI(HttpServletRequest request) {
+     */
+    private void setURI(HttpServletRequest request)
+    {
         extension = Server.getDefaultExtension();
-        try {
+        try
+        {
             int lastIndexOfDot = request.getRequestURI().lastIndexOf(".");
-            if (lastIndexOfDot > -1) {
-                extension = request.getRequestURI().substring(lastIndexOfDot+1);
-                uri = request.getRequestURI().substring(0,lastIndexOfDot);
-            } else {
+            if (lastIndexOfDot > -1)
+            {
+                extension = request.getRequestURI().substring(lastIndexOfDot + 1);
+                uri = request.getRequestURI().substring(0, lastIndexOfDot);
+            }
+            else
+            {
                 uri = request.getRequestURI();
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
 
-
 }
-
-
-
-
-

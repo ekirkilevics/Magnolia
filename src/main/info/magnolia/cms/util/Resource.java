@@ -9,242 +9,236 @@
  *
  * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms.util;
 
-
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ContentNode;
-import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.Aggregator;
-import info.magnolia.cms.beans.runtime.MultipartForm;
-import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.MultipartForm;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ContentNode;
+import info.magnolia.cms.core.HierarchyManager;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.PageContext;
-import java.util.Collection;
-import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
 
 /**
- * Date: Apr 28, 2003
- * Time: 11:20:59 AM
  * @author Sameer Charles
  * @version 1.1
  */
-
-
-
-public class Resource {
-
-
-    private static Logger log = Logger.getLogger(Resource.class);
-
-
-    public static final int SCOPE_GLOBAL = 1;
-    public static final int SCOPE_LOCAL = 2;
-
-
-
-    private static final String GLOBAL_CONTENT_NODE = "contentObjGlobal";
-    private static final String LOCAL_CONTENT_NODE = "contentObj";
-    private static final String LOCAL_CONTENT_NODE_COLLECTION_NAME = "localContentNodeCollectionName";
-
-
+public class Resource
+{
 
     /**
-     * <p>get Content object as requested from the URI</p>
-     *
+     * Logger.
+     */
+    private static Logger log = Logger.getLogger(Resource.class);
+
+    public static final int SCOPE_GLOBAL = 1;
+
+    public static final int SCOPE_LOCAL = 2;
+
+    private static final String GLOBAL_CONTENT_NODE = "contentObjGlobal";
+
+    private static final String LOCAL_CONTENT_NODE = "contentObj";
+
+    private static final String LOCAL_CONTENT_NODE_COLLECTION_NAME = "localContentNodeCollectionName";
+
+    /**
+     * <p>
+     * get Content object as requested from the URI
+     * </p>
      * @param req HttpServletRequest as received in JSP or servlet
      * @return currently active page, as requested from the URI
      */
-    public static Content getActivePage(HttpServletRequest req) {
+    public static Content getActivePage(HttpServletRequest req)
+    {
         return (Content) req.getAttribute(Aggregator.ACTPAGE);
     }
 
-
-
     /**
-     * <p>get file object associated with the requested atom</p>
-     *
+     * <p>
+     * get file object associated with the requested atom
+     * </p>
      * @param req HttpServletRequest as received in JSP or servlet
      * @return currently atom
      */
-    public static File getFile(HttpServletRequest req) {
+    public static File getFile(HttpServletRequest req)
+    {
         return (File) req.getAttribute(Aggregator.FILE);
     }
 
-
-
-     /**
-     * <p>get Content object as requested from the URI</p>
-     *
+    /**
+     * <p>
+     * get Content object as requested from the URI
+     * </p>
      * @param req HttpServletRequest as received in JSP or servlet
      * @return currently active page, as requested from the URI
      */
-    public static Content getCurrentActivePage(HttpServletRequest req) {
-         Content currentActpage;
-         currentActpage = (Content) req.getAttribute(Aggregator.CURRENT_ACTPAGE);
-         if (currentActpage == null) currentActpage = (Content) req.getAttribute(Aggregator.ACTPAGE);
-         return currentActpage;
+    public static Content getCurrentActivePage(HttpServletRequest req)
+    {
+        Content currentActpage;
+        currentActpage = (Content) req.getAttribute(Aggregator.CURRENT_ACTPAGE);
+        if (currentActpage == null)
+            currentActpage = (Content) req.getAttribute(Aggregator.ACTPAGE);
+        return currentActpage;
     }
 
-
-
-
-
     /**
-     * <p>get HierarchyManager object from the request OR from the user session
-     * this hierarchy manager points to website repository, in order to swith between user
-     * and website repositories, use method (changeContext) on this object</p>
-     *
+     * <p>
+     * get HierarchyManager object from the request OR from the user session this hierarchy manager points to website
+     * repository, in order to swith between user and website repositories, use method (changeContext) on this object
+     * </p>
      * @param req HttpServletRequest as received in JSP or servlet
      * @return hierarchy manager, for the website repository
      * @deprecated as on magnolia 2.0, use SessionAccessControl instead
      * @see info.magnolia.cms.security.SessionAccessControl#getHierarchyManager(javax.servlet.http.HttpServletRequest)
      */
-    public static HierarchyManager getHierarchyManager(HttpServletRequest req) {
+    public static HierarchyManager getHierarchyManager(HttpServletRequest req)
+    {
         log.info("Deprecated : use SessionAccessControl.getHierarchyManager(HttpServletRequest,String) instead");
-        return (HierarchyManager)req.getAttribute(Aggregator.HIERARCHY_MANAGER);
+        return (HierarchyManager) req.getAttribute(Aggregator.HIERARCHY_MANAGER);
     }
 
-
-
     /**
-     * <p>this only works for forms which uses enctype=multipart/form-data</p>
-     *
+     * <p>
+     * this only works for forms which uses enctype=multipart/form-data
+     * </p>
      * @param req HttpServletRequest as received in JSP or servlet
      * @return initialised multipart form object with the posted data
      */
-    public static MultipartForm getPostedForm(HttpServletRequest req) {
-        return (MultipartForm)req.getAttribute("multipartform");
+    public static MultipartForm getPostedForm(HttpServletRequest req)
+    {
+        return (MultipartForm) req.getAttribute("multipartform");
     }
 
-
-
     /**
-     * <p>get ContentNode object as passed to the include tag</p>
-     *
+     * <p>
+     * get ContentNode object as passed to the include tag
+     * </p>
      * @param req HttpServletRequest as received in JSP or servlet
      * @return ContentNode , local container specific to the current JSP/Servlet paragraph
      */
-    public static ContentNode getLocalContentNode(HttpServletRequest req) {
-        try {
-            return (ContentNode)req.getAttribute(Resource.LOCAL_CONTENT_NODE);
-        } catch (Exception e) {return null;}
+    public static ContentNode getLocalContentNode(HttpServletRequest req)
+    {
+        try
+        {
+            return (ContentNode) req.getAttribute(Resource.LOCAL_CONTENT_NODE);
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
     }
 
-
-
     /**
-     * <p>set ContentNode object in resources , scope:TAG</p>
-     *
+     * <p>
+     * set ContentNode object in resources , scope:TAG
+     * </p>
      * @param req HttpServletRequest as received in JSP or servlet
      * @param node to be set
      */
-    public static void setLocalContentNode(HttpServletRequest req, ContentNode node) {
-        req.setAttribute(Resource.LOCAL_CONTENT_NODE,node);
+    public static void setLocalContentNode(HttpServletRequest req, ContentNode node)
+    {
+        req.setAttribute(Resource.LOCAL_CONTENT_NODE, node);
     }
 
-
-
     /**
-     * <p>removes ContentNode object in resources , scope:TAG</p>
-     *
+     * <p>
+     * removes ContentNode object in resources , scope:TAG
+     * </p>
      * @param req HttpServletRequest as received in JSP or servlet
      */
-    public static void removeLocalContentNode(HttpServletRequest req) {
+    public static void removeLocalContentNode(HttpServletRequest req)
+    {
         req.removeAttribute(Resource.LOCAL_CONTENT_NODE);
     }
 
-
-
     /**
-     * <p>get ContentNode object as set by the "set" tag</p>
-     *
+     * <p>
+     * get ContentNode object as set by the "set" tag
+     * </p>
      * @param req HttpServletRequest as received in JSP or servlet
      * @return ContentNode , global container specific to the current JSP/Servlet page
      */
-    public static ContentNode getGlobalContentNode(HttpServletRequest req) {
-        try {
-            return (ContentNode)req.getAttribute(Resource.GLOBAL_CONTENT_NODE);
-        } catch (Exception e) {return null;}
+    public static ContentNode getGlobalContentNode(HttpServletRequest req)
+    {
+        try
+        {
+            return (ContentNode) req.getAttribute(Resource.GLOBAL_CONTENT_NODE);
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
     }
 
-
-
     /**
-     * <p>set ContentNode object in resources, scope:page</p>
-     *
+     * <p>
+     * set ContentNode object in resources, scope:page
+     * </p>
      * @param req HttpServletRequest as received in JSP or servlet
      * @param node to be set
      */
-    public static void setGlobalContentNode(HttpServletRequest req, ContentNode node) {
-        req.setAttribute(Resource.GLOBAL_CONTENT_NODE,node);
+    public static void setGlobalContentNode(HttpServletRequest req, ContentNode node)
+    {
+        req.setAttribute(Resource.GLOBAL_CONTENT_NODE, node);
     }
 
-
-
     /**
-     * <p>removes ContentNode object in resources , scope:page</p>
-     *
+     * <p>
+     * removes ContentNode object in resources , scope:page
+     * </p>
      * @param req HttpServletRequest as received in JSP or servlet
      */
-    public static void removeGlobalContentNode(HttpServletRequest req) {
+    public static void removeGlobalContentNode(HttpServletRequest req)
+    {
         req.removeAttribute(Resource.GLOBAL_CONTENT_NODE);
     }
 
-
-
     /**
      *
      */
-    public static void setLocalContentNodeCollectionName(HttpServletRequest req, String name) {
-        req.setAttribute(Resource.LOCAL_CONTENT_NODE_COLLECTION_NAME,name);
+    public static void setLocalContentNodeCollectionName(HttpServletRequest req, String name)
+    {
+        req.setAttribute(Resource.LOCAL_CONTENT_NODE_COLLECTION_NAME, name);
     }
 
-
-
     /**
      *
      */
-    public static String getLocalContentNodeCollectionName(HttpServletRequest req) {
-        try {
-            return (String)req.getAttribute(Resource.LOCAL_CONTENT_NODE_COLLECTION_NAME);
-        } catch (Exception e) {return "";}
+    public static String getLocalContentNodeCollectionName(HttpServletRequest req)
+    {
+        try
+        {
+            return (String) req.getAttribute(Resource.LOCAL_CONTENT_NODE_COLLECTION_NAME);
+        }
+        catch (Exception e)
+        {
+            return "";
+        }
     }
 
-
-
     /**
      *
      */
-    public static void removeLocalContentNodeCollectionName(HttpServletRequest req) {
+    public static void removeLocalContentNodeCollectionName(HttpServletRequest req)
+    {
         req.removeAttribute(Resource.LOCAL_CONTENT_NODE_COLLECTION_NAME);
     }
 
-
-
     /**
-     * <p>check for preview mode</p>
-     *
+     * <p>
+     * check for preview mode
+     * </p>
      * @param req HttpServletRequest as received in JSP or servlet
      * @return boolean , true if preview is enabled
      */
-    public static boolean showPreview(HttpServletRequest req) {
+    public static boolean showPreview(HttpServletRequest req)
+    {
         return (req.getParameter("preview") != null);
     }
-
-
-
-
 
 }

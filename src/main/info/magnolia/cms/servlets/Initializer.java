@@ -11,13 +11,9 @@
  *
  * */
 
-
-
 package info.magnolia.cms.servlets;
 
 import info.magnolia.cms.beans.config.ConfigLoader;
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.runtime.SystemProperty;
 
 import javax.servlet.http.HttpServlet;
 
@@ -25,37 +21,37 @@ import org.apache.log4j.Logger;
 
 
 /**
- * Date: Jul 20, 2004
- * Time: 2:53:05 PM
- *
  * @author Sameer Charles
  * @version 2.0
  */
 
-
-
-public class Initializer extends HttpServlet {
-
-
-
-    private static Logger log = Logger.getLogger(Initializer.class);
-
-
+public class Initializer extends HttpServlet
+{
 
     /**
-     * <p>load config data to the servlet instance, accessable via config beans</p>
+     * Logger.
+     */
+    private static Logger log = Logger.getLogger(Initializer.class);
+
+    /**
      * <p>
-     * 1. Load all (website / users / admin / config) repositories<br>
-     * 2. Load template config<br>
+     * load config data to the servlet instance, accessable via config beans
+     * </p>
+     * <p>
+     * 1. Load all (website / users / admin / config) repositories <br>
+     * 2. Load template config <br>
      * </p>
      */
-    public void init() {
-        try {
+    public void init()
+    {
+        try
+        {
             new ConfigLoader(getServletConfig());
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             log.fatal(e.getMessage(), e);
         }
     }
-
 
 }

@@ -9,12 +9,8 @@
  *
  * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms.util;
-
 
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.security.AccessDeniedException;
@@ -25,40 +21,39 @@ import org.apache.log4j.Logger;
 
 
 /**
- * Date: Apr 28, 2003
- * Time: 11:20:59 AM
  * @author Sameer Charles
  * @version 1.1
  */
+public class StringComparator implements Comparator
+{
 
-
-
-public class StringComparator implements Comparator  {
-
-
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(StringComparator.class);
 
     private String nodeDataName;
 
-
-    public StringComparator(String nodeDataName) {
+    public StringComparator(String nodeDataName)
+    {
         this.nodeDataName = nodeDataName;
     }
 
-
-    public int compare(Object o, Object o1) throws ClassCastException {
+    public int compare(Object o, Object o1) throws ClassCastException
+    {
         String URI1;
         String URI2;
-        try {
-            URI1 = ((ContentNode)o).getNodeData(this.nodeDataName).getString();
-            URI2 = ((ContentNode)o1).getNodeData(this.nodeDataName).getString();
-        } catch (AccessDeniedException e) {
+        try
+        {
+            URI1 = ((ContentNode) o).getNodeData(this.nodeDataName).getString();
+            URI2 = ((ContentNode) o1).getNodeData(this.nodeDataName).getString();
+        }
+        catch (AccessDeniedException e)
+        {
             log.error(e.getMessage());
             URI1 = URI2 = "";
         }
         return URI1.compareTo(URI2);
     }
-
-
 
 }

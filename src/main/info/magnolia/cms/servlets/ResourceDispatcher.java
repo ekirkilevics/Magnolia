@@ -9,57 +9,42 @@
  *
  * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms.servlets;
-
-
-
 
 import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.beans.config.Server;
-import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.NodeData;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.jcr.RepositoryException;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.PropertyType;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.GZIPOutputStream;
 
+import javax.jcr.PathNotFoundException;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.log4j.Logger;
 
 
-
-
 /**
- * <p>Class ResourceDispatcher is responsible to gather data from the <b>HttpServletRequest</b>
- * and write back the requested resource on the <b>ServletOutputStream</b></p>
- *
- *
- * Date: May 03, 2003
- * Time: 1:19:22 PM
+ * <p>
+ * Class ResourceDispatcher is responsible to gather data from the <b>HttpServletRequest </b> and write back the
+ * requested resource on the <b>ServletOutputStream </b>
+ * </p>
  * @author Sameer Charles
  * @version 1.0
  */
-
-
-
-public class ResourceDispatcher extends HttpServlet {
-
-
+public class ResourceDispatcher extends HttpServlet
+{
 
     private static Logger log = Logger.getLogger(ResourceDispatcher.class);
-
-
 
     /**
      * @param req HttpServletRequest as given by the servlet container
@@ -67,112 +52,113 @@ public class ResourceDispatcher extends HttpServlet {
      * @throws ServletException
      * @throws IOException
      */
-    public void service (HttpServletRequest req, HttpServletResponse res)
-            throws ServletException, IOException {
-        handleResourceRequest(req,res);
+    public void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
+    {
+        handleResourceRequest(req, res);
     }
-
-
 
     /**
      * <p>
      * get the requested resource and copy it to the ServletOutputStream , bit by bit
      * </p>
-     *
      * @throws IOException
      */
-    private void handleResourceRequest(HttpServletRequest req, HttpServletResponse res)
-            throws IOException {
+    private void handleResourceRequest(HttpServletRequest req, HttpServletResponse res) throws IOException
+    {
         String resourceHandle = (String) req.getAttribute(Aggregator.HANDLE);
-        try {
-            HierarchyManager hm = (HierarchyManager)req.getAttribute(Aggregator.HIERARCHY_MANAGER);
-            InputStream is = getAtomAsStream(resourceHandle,hm,res);
+        try
+        {
+            HierarchyManager hm = (HierarchyManager) req.getAttribute(Aggregator.HIERARCHY_MANAGER);
+            InputStream is = getAtomAsStream(resourceHandle, hm, res);
             // todo always send as is, find better way to dicover if resource could be compressed
-            sendUnCompressed(is,res);
+            sendUnCompressed(is, res);
             is.close();
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             res.sendRedirect(Server.get404URI());
         }
 
     }
 
-
-
     /**
-     * <p>returns true if the request sender accepts GZIP compressed data</p>
-     *
+     * <p>
+     * returns true if the request sender accepts GZIP compressed data
+     * </p>
      * @return boolean
      */
-    private boolean canCompress(HttpServletRequest req) {
-      String encoding = req.getHeader("Accept-Encoding");
-      if (encoding != null)
-        return (encoding.toLowerCase().indexOf("gzip") > -1);
-      return false;
+    private boolean canCompress(HttpServletRequest req)
+    {
+        String encoding = req.getHeader("Accept-Encoding");
+        if (encoding != null)
+            return (encoding.toLowerCase().indexOf("gzip") > -1);
+        return false;
     }
 
-
-
     /**
-     * <p>send data as GZIP output stream ;)</p>
-     *
+     * <p>
+     * send data as GZIP output stream ;)
+     * </p>
      * @param is Input stream for the resource
      * @param res HttpServletResponse as received by the service method
      * @throws Exception
      */
-    private void sendCompressed(InputStream is, HttpServletResponse res)
-            throws Exception {
+    private void sendCompressed(InputStream is, HttpServletResponse res) throws Exception
+    {
         res.setHeader("Content-Encoding", "gzip");
         GZIPOutputStream gzos = new GZIPOutputStream(res.getOutputStream());
         int bit;
-        while ((bit = is.read()) != -1) {
+        while ((bit = is.read()) != -1)
+        {
             gzos.write(bit);
         }
         gzos.flush();
         gzos.close();
     }
 
-
-
     /**
-     * <p>send data as is</p>
-     *
+     * <p>
+     * send data as is
+     * </p>
      * @param is Input stream for the resource
      * @param res HttpServletResponse as received by the service method
      * @throws IOException
      */
-    private void sendUnCompressed(InputStream is, HttpServletResponse res)
-            throws Exception {
+    private void sendUnCompressed(InputStream is, HttpServletResponse res) throws Exception
+    {
         ServletOutputStream os = res.getOutputStream();
         byte[] buffer = new byte[8192];
         int read = 0;
-        while ((read = is.read(buffer)) > 0) {
+        while ((read = is.read(buffer)) > 0)
+        {
             os.write(buffer, 0, read);
         }
         os.flush();
         os.close();
     }
 
-
-
     /**
      *
      */
     private InputStream getAtomAsStream(String path, HierarchyManager hm, HttpServletResponse res)
-            throws RepositoryException {
-        try {
+        throws RepositoryException
+    {
+        try
+        {
             NodeData atom = hm.getNodeData(path);
-            if (atom.getType() == PropertyType.BINARY) {
-                NodeData size = hm.getNodeData(path+"_properties/size");
+            if (atom.getType() == PropertyType.BINARY)
+            {
+                NodeData size = hm.getNodeData(path + "_properties/size");
                 int sizeInBytes = (new Long(size.getLong())).intValue();
                 res.setContentLength(sizeInBytes);
             }
             return atom.getValue().getStream();
-        } catch (PathNotFoundException e ) {log.error("Resource not found - "+path);}
+        }
+        catch (PathNotFoundException e)
+        {
+            log.error("Resource not found - " + path);
+        }
         return null;
     }
-
-
-
-
 
 }

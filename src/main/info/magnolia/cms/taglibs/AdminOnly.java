@@ -30,31 +30,25 @@ public class AdminOnly extends TagSupport
      */
     private static final long serialVersionUID = 222L;
 
-    HttpServletRequest request;
-
     /**
-     * <p>
-     * starts Edit tag
-     * </p>
-     * @return int
+     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
     public int doStartTag()
     {
 
-        this.request = (HttpServletRequest) pageContext.getRequest();
-        String prev = (String) this.request.getSession().getAttribute("mgnlPreview");
+        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+        String prev = (String) request.getSession().getAttribute("mgnlPreview");
 
         // if (Server.isAdmin() && !Resource.showPreview((HttpServletRequest)pageContext.getRequest()))
         if (Server.isAdmin() && prev == null)
+        {
             return EVAL_BODY_INCLUDE;
+        }
         return SKIP_BODY;
     }
 
     /**
-     * <p>
-     * continue evaluating jsp
-     * </p>
-     * @return int
+     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag()
     {

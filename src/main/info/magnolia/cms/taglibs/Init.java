@@ -12,13 +12,14 @@
  */
 package info.magnolia.cms.taglibs;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.TagSupport;
 
 
 /**
+ * No more used in magnolia 2.
  * @author Sameer Charles
  * @version $Revision: $ ($Author: $)
+ * @deprecated
  */
 public class Init extends TagSupport
 {
@@ -28,53 +29,22 @@ public class Init extends TagSupport
      */
     private static final long serialVersionUID = 222L;
 
-    private HttpServletRequest req;
-
     /**
-     * <p>
-     * starts init tag
-     * </p>
-     * @return int
+     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      * @deprecated
      */
     public int doStartTag()
     {
-        /*
-         * this.req = (HttpServletRequest)pageContext.getRequest();
-         * pageContext.setAttribute(Aggregator.CURRENT_ACTPAGE,Resource.getCurrentActivePage(this.req),PageContext.REQUEST_SCOPE);
-         * pageContext.setAttribute(Aggregator.HIERARCHY_MANAGER,Resource.getHierarchyManager(this.req),PageContext.REQUEST_SCOPE);
-         * checkRedirect();
-         */
         return SKIP_BODY;
     }
 
     /**
-     * <p>
-     * end init
-     * </p>
-     * @return int
+     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
+     * @deprecated
      */
     public int doEndTag()
     {
         return EVAL_PAGE;
     }
-
-    // private void checkRedirect()
-    // {
-    // Content actpage = Resource.getCurrentActivePage(this.req);
-    // String redirectURL = "";
-    // try
-    // {
-    // redirectURL = actpage.getNodeData("redirectURL").getString();
-    // if (!redirectURL.equals(""))
-    // {
-    // if (!Server.isAdmin() || Resource.showPreview(this.req))
-    // ((HttpServletResponse) pageContext.getResponse()).sendRedirect(redirectURL);
-    // }
-    // }
-    // catch (Exception e)
-    // {
-    // }
-    // }
 
 }

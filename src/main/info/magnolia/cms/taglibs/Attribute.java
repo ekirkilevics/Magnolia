@@ -28,15 +28,34 @@ public class Attribute extends TagSupport
      */
     private static final long serialVersionUID = 222L;
 
-    private String value = "";
-
-    private String name = "";
+    /**
+     * Value of the attribute
+     */
+    private String value;
 
     /**
-     * <p>
-     * end of tag
-     * </p>
-     * @return int
+     * Name of the attribute.
+     */
+    private String name;
+
+    /**
+     * @param name name of the attribute
+     */
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    /**
+     * @param value value of the attribute
+     */
+    public void setValue(String value)
+    {
+        this.value = value;
+    }
+
+    /**
+     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag() throws JspException
     {
@@ -45,28 +64,9 @@ public class Attribute extends TagSupport
         {
             throw new JspException("nesting error");
         }
-        else
-        {
-            parent.setAttribute(this.name, this.value);
-        }
+
+        parent.setAttribute(this.name, this.value);
         return EVAL_PAGE;
-
-    }
-
-    /**
-     * @param name , name of the attribute
-     */
-    public void setName(String name)
-    {
-        this.name = name;
-    }
-
-    /**
-     * @param value , value of the attribute
-     */
-    public void setValue(String value)
-    {
-        this.value = value;
     }
 
 }

@@ -39,6 +39,9 @@ public class ContentNodeIterator extends TagSupport
      */
     private static final long serialVersionUID = 222L;
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(ContentNodeIterator.class);
 
     protected static final String CURRENT_INDEX = "currentIndex";
@@ -53,17 +56,15 @@ public class ContentNodeIterator extends TagSupport
 
     private Content page;
 
-    private HttpServletRequest request;
+    private int beginIndex;
 
-    private int beginIndex = 0;
-
-    private int endIndex = 0;
+    private int endIndex;
 
     private int step = 1;
 
-    private int size = 0;
+    private int size;
 
-    private int currentIndex = 0;
+    private int currentIndex;
 
     /**
      * <p>
@@ -73,8 +74,8 @@ public class ContentNodeIterator extends TagSupport
      */
     public int doStartTag()
     {
-        this.request = (HttpServletRequest) pageContext.getRequest();
-        this.page = Resource.getCurrentActivePage(this.request);
+        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+        this.page = Resource.getCurrentActivePage(request);
         try
         {
             Collection children = this.page.getContentNode(this.contentNodeCollectionName).getChildren();
@@ -91,9 +92,9 @@ public class ContentNodeIterator extends TagSupport
                 this.contentNodeCollectionName,
                 PageContext.REQUEST_SCOPE);
             this.contentNodeIterator = children.iterator();
-            Resource.setLocalContentNodeCollectionName(this.request, this.contentNodeCollectionName);
+            Resource.setLocalContentNodeCollectionName(request, this.contentNodeCollectionName);
             for (; this.beginIndex > -1; --this.beginIndex)
-                Resource.setLocalContentNode(this.request, (ContentNode) this.contentNodeIterator.next());
+                Resource.setLocalContentNode(request, (ContentNode) this.contentNodeIterator.next());
         }
         catch (RepositoryException re)
         {
@@ -109,6 +110,7 @@ public class ContentNodeIterator extends TagSupport
      */
     public int doAfterBody()
     {
+        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         if (this.contentNodeIterator.hasNext() && (this.currentIndex < this.getEnd()))
         {
             this.currentIndex++;
@@ -117,7 +119,7 @@ public class ContentNodeIterator extends TagSupport
                 new Integer(this.currentIndex),
                 PageContext.REQUEST_SCOPE);
             for (int i = 0; i < this.step; i++)
-                Resource.setLocalContentNode(this.request, (ContentNode) this.contentNodeIterator.next());
+                Resource.setLocalContentNode(request, (ContentNode) this.contentNodeIterator.next());
             return EVAL_BODY_AGAIN;
         }
         return SKIP_BODY;
@@ -130,14 +132,6 @@ public class ContentNodeIterator extends TagSupport
     public void setContainerListName(String name)
     {
         this.setContentNodeCollectionName(name);
-    }
-
-    /**
-     * @deprecated
-     */
-    public String getContainerListName()
-    {
-        return this.getContentNodeCollectionName();
     }
 
     /**
@@ -175,12 +169,14 @@ public class ContentNodeIterator extends TagSupport
     private int getEnd()
     {
         if (this.endIndex == 0)
+        {
             return this.size;
+        }
         return this.endIndex;
     }
 
     /**
-     * @param step , to jump to
+     * @param step to jump to
      */
     public void setStep(String step)
     {
@@ -188,15 +184,13 @@ public class ContentNodeIterator extends TagSupport
     }
 
     /**
-     * <p>
-     * end loop
-     * </p>
-     * @return int
+     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag()
     {
-        Resource.removeLocalContentNode(this.request);
-        Resource.removeLocalContentNodeCollectionName(this.request);
+        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+        Resource.removeLocalContentNode(request);
+        Resource.removeLocalContentNodeCollectionName(request);
         pageContext.removeAttribute(ContentNodeIterator.CURRENT_INDEX);
         pageContext.removeAttribute(ContentNodeIterator.SIZE);
         pageContext.removeAttribute(ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME);

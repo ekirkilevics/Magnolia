@@ -20,6 +20,8 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * @author Sameer Charles
@@ -43,17 +45,11 @@ public class NewBar extends TagSupport
 
     private String newLabel;
 
-    private HttpServletRequest request;
-
     /**
-     * <p>
-     * starts Edit tag
-     * </p>
-     * @return int
+     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
     public int doStartTag()
     {
-        this.request = (HttpServletRequest) pageContext.getRequest();
         return EVAL_BODY_INCLUDE;
     }
 
@@ -103,9 +99,10 @@ public class NewBar extends TagSupport
      */
     private String getPath()
     {
+        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         try
         {
-            return Resource.getCurrentActivePage(this.request).getHandle();
+            return Resource.getCurrentActivePage(request).getHandle();
         }
         catch (Exception re)
         {
@@ -161,9 +158,7 @@ public class NewBar extends TagSupport
      */
     private String getNewLabel()
     {
-        if (this.newLabel == null)
-            return NewBar.DEFAULT_NEW_LABEL;
-        return this.newLabel;
+        return StringUtils.defaultString(this.newLabel, DEFAULT_NEW_LABEL);
     }
 
     /**
@@ -174,7 +169,8 @@ public class NewBar extends TagSupport
      */
     private void display() throws IOException
     {
-        BarNew bar = new BarNew(this.request);
+        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+        BarNew bar = new BarNew(request);
         bar.setPath(this.getPath());
         bar.setParagraph(this.getParagraph());
         bar.setNodeCollectionName(this.getContentNodeCollectionName());

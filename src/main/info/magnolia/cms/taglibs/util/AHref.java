@@ -43,6 +43,9 @@ public class AHref extends BodyTagSupport
      */
     private static final long serialVersionUID = 222L;
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(AHref.class);
 
     private String preHref = "";

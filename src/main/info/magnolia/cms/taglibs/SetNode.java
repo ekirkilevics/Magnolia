@@ -26,6 +26,7 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -116,12 +117,12 @@ public class SetNode extends TagSupport
         String contentNodeName = this.contentNodeName;
         String contentNodeCollectionName = this.contentNodeCollectionName;
 
-        if (contentNodeName != null && !contentNodeName.equals(""))
+        if (StringUtils.isNotEmpty(contentNodeName))
         {
             // contentNodeName is defined
             try
             {
-                if (contentNodeCollectionName == null || "".equals(contentNodeCollectionName))
+                if (StringUtils.isEmpty(contentNodeCollectionName))
                 {
                     // e.g. <cms:setNode contentNodeName="footer"/>
                     this.contentNode = actpage.getContentNode(contentNodeName);
@@ -145,7 +146,7 @@ public class SetNode extends TagSupport
             if (local == null)
             {
                 // outside collection iterator
-                if (contentNodeCollectionName != null && !contentNodeCollectionName.equals(""))
+                if (StringUtils.isNotEmpty(contentNodeCollectionName))
                 {
                     // ERROR: no content node assignable because contentNodeName is empty
                     // e.g. <cms:setNode contentNodeCollectionName="mainPars"/>

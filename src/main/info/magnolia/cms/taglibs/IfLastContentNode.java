@@ -29,10 +29,7 @@ public class IfLastContentNode extends TagSupport
     private static final long serialVersionUID = 222L;
 
     /**
-     * <p>
-     * starts ifLastContentNode tag
-     * </p>
-     * @return int
+     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
     public int doStartTag()
     {
@@ -41,15 +38,14 @@ public class IfLastContentNode extends TagSupport
             ContentNodeIterator.CURRENT_INDEX,
             PageContext.REQUEST_SCOPE)).intValue();
         if (currentIndex == (size - 1))
+        {
             return EVAL_BODY_INCLUDE;
+        }
         return SKIP_BODY;
     }
 
     /**
-     * <p>
-     * continue evaluating jsp
-     * </p>
-     * @return int
+     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag()
     {

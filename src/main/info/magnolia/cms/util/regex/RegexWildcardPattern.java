@@ -9,79 +9,58 @@
  *
  * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms.util.regex;
 
-
-
-
 /**
- * Date: May 25, 2004
- * Time: 4:50:46 PM
- *
- *
  * @author Sameer Charles
  */
 
+public class RegexWildcardPattern
+{
 
+    private static final String MULTIPLE_CHAR_PATTERN = "[a-z[A-Z[0-9[!\"#$%&'()*+,-./:;<=>?@\\^_`{|}~]]]]*";
 
-
-
-public class RegexWildcardPattern {
-
-
-
-
-    private static final String MULTIPLE_CHAR_PATTERN
-            = "[a-z[A-Z[0-9[!\"#$%&'()*+,-./:;<=>?@\\^_`{|}~]]]]*";
-    private static final String SINGLE_CHAR_PATTERN
-            = "[a-z[A-Z[0-9[!\"#$%&'()*+,-./:;<=>?@\\^_`{|}~]]]]?";
-
-
+    private static final String SINGLE_CHAR_PATTERN = "[a-z[A-Z[0-9[!\"#$%&'()*+,-./:;<=>?@\\^_`{|}~]]]]?";
 
     /**
      * <p>
      * wild card pattern including all printable characters
      * </p>
-     *
-     * */
-    public static String getSingleCharPattern() {
+     */
+    public static String getSingleCharPattern()
+    {
         return SINGLE_CHAR_PATTERN;
     }
 
-
-
     /**
      * <p>
      * wild card pattern including all printable characters
      * </p>
-     *
-     * */
-    public static String getMultipleCharPattern() {
+     */
+    public static String getMultipleCharPattern()
+    {
         return MULTIPLE_CHAR_PATTERN;
     }
 
-
-
     /**
      * <p>
-     * replace all "*" with <code>RegexWildcardPattern.MULTIPLE_CHAR_PATTERN</code> 
+     * replace all "*" with <code>RegexWildcardPattern.MULTIPLE_CHAR_PATTERN</code>
      * </p>
-     *
-     * */
-    public static String getEncodedString(String str) {
+     */
+    public static String getEncodedString(String str)
+    {
         StringBuffer stringBuffer = new StringBuffer();
         char[] chars = str.toCharArray();
         int i = 0, last = 0;
-        while (i < chars.length) {
+        while (i < chars.length)
+        {
             char c = chars[i];
-            if (c == '*') {
+            if (c == '*')
+            {
                 stringBuffer.append(chars, last, i - last);
                 stringBuffer.append(RegexWildcardPattern.getMultipleCharPattern());
-                last = i+1;
+                last = i + 1;
             }
             i++;
         }
@@ -89,7 +68,5 @@ public class RegexWildcardPattern {
 
         return stringBuffer.toString();
     }
-
-
 
 }

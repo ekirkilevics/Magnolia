@@ -9,65 +9,48 @@
  *
  * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms.servlets;
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
-import java.io.IOException;
 
 
 /**
- * Date: May 4, 2004
- * Time: 4:58:06 PM
- *
  * @author Sameer Charles
  * @version 2.0
  */
-
-
-
-public class Exchange extends HttpServlet {
-
-
-
+public class Exchange extends HttpServlet
+{
 
     /**
      * <p>
-     * receives either XML or binary packet
-     * XMLpacket is expected to be the main structure and must be
-     * reveived before any "sub" binary packets
-     *
+     * receives either XML or binary packet XMLpacket is expected to be the main structure and must be reveived before
+     * any "sub" binary packets
      * </p>
      * @param request
      * @param response
      * @throws ServletException
      * @throws IOException
-     * */
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+     */
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
 
     }
-
-
-
 
     /**
      * @param request
      * @param response
      * @throws ServletException
      * @throws IOException
-     * */
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doGet(request,response);
+     */
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        doGet(request, response);
     }
-
-
 
 }

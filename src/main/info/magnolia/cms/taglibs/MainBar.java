@@ -12,12 +12,13 @@
  */
 package info.magnolia.cms.taglibs;
 
-import info.magnolia.cms.util.Resource;
 import info.magnolia.cms.gui.inline.BarMain;
+import info.magnolia.cms.util.Resource;
 
-import javax.servlet.jsp.tagext.TagSupport;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.tagext.TagSupport;
 
 
 /**
@@ -33,27 +34,18 @@ public class MainBar extends TagSupport
      */
     private static final long serialVersionUID = 222L;
 
-    private HttpServletRequest request;
-
     private String paragraph = null;
 
     /**
-     * <p>
-     * starts Admin tag
-     * </p>
-     * @return int
+     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
     public int doStartTag()
     {
-        this.request = (HttpServletRequest) pageContext.getRequest();
         return EVAL_BODY_INCLUDE;
     }
 
     /**
-     * <p>
-     * print out
-     * </p>
-     * @return int
+     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag()
     {
@@ -79,9 +71,10 @@ public class MainBar extends TagSupport
      */
     private String getPath()
     {
+        HttpServletRequest request = (HttpServletRequest) this.pageContext.getRequest();
         try
         {
-            return Resource.getCurrentActivePage(this.request).getHandle();
+            return Resource.getCurrentActivePage(request).getHandle();
         }
         catch (Exception re)
         {
@@ -131,12 +124,12 @@ public class MainBar extends TagSupport
      */
     private void display() throws IOException
     {
-        BarMain bar = new BarMain(this.request);
+        HttpServletRequest request = (HttpServletRequest) this.pageContext.getRequest();
+        BarMain bar = new BarMain(request);
         bar.setPath(this.getPath());
         bar.setParagraph(this.getParagraph());
         bar.setDefaultButtons();
         bar.placeDefaultButtons();
         bar.drawHtml(pageContext.getOut());
     }
-
 }

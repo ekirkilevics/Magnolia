@@ -29,10 +29,7 @@ public class LoadPagePath extends BodyTagSupport
     private static final long serialVersionUID = 222L;
 
     /**
-     * <p>
-     * end of tag
-     * </p>
-     * @return int
+     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag() throws JspException
     {
@@ -41,14 +38,12 @@ public class LoadPagePath extends BodyTagSupport
         {
             throw new JspException("nesting error");
         }
-        else
+        String path = getBodyContent().getString();
+        if (path != null)
         {
-            String path = getBodyContent().getString();
-            if (path != null)
-                parent.setPath(path.trim());
+            parent.setPath(path.trim());
         }
         return EVAL_PAGE;
-
     }
 
 }

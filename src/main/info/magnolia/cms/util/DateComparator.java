@@ -9,33 +9,26 @@
  *
  * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
-
-
+ */
 package info.magnolia.cms.util;
-
-import java.util.Date;
-import java.util.Comparator;
 
 import info.magnolia.cms.core.Content;
 
+import java.util.Comparator;
+import java.util.Date;
+
 
 /**
- * Date: Apr 10, 2003
- * Time: 09:00:12 AM
  * @author Marcel Salathe
  * @version 1.1
  */
+public class DateComparator implements Comparator
+{
 
-
-public class DateComparator implements Comparator{
-
-    public int compare(Object o, Object o1) throws ClassCastException {
-        Date date1 = ((Content)o).getMetaData().getCreationDate().getTime();
-        Date date2 = ((Content)o1).getMetaData().getCreationDate().getTime();
+    public int compare(Object o, Object o1) throws ClassCastException
+    {
+        Date date1 = ((Content) o).getMetaData().getCreationDate().getTime();
+        Date date2 = ((Content) o1).getMetaData().getCreationDate().getTime();
         return date1.compareTo(date2);
     }
 

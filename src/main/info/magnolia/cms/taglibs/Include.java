@@ -39,6 +39,9 @@ public class Include extends BodyTagSupport
      */
     private static final long serialVersionUID = 222L;
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(Include.class);
 
     private ContentNode contentNode;

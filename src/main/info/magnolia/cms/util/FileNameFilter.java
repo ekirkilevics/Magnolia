@@ -9,44 +9,32 @@
  *
  * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
-
+ */
 package info.magnolia.cms.util;
 
-
-import java.io.FilenameFilter;
 import java.io.File;
+import java.io.FilenameFilter;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**
- * Date: Apr 28, 2003
- * Time: 11:20:59 AM
  * @author Sameer Charles
  * @version 1.1
  */
-
-
-public class FileNameFilter implements FilenameFilter {
-
+public class FileNameFilter implements FilenameFilter
+{
 
     private String searchString = "";
 
-
-    public void setSearchString(String name) {
+    public void setSearchString(String name)
+    {
         this.searchString = name;
     }
 
-
-
-    public boolean accept(File dir, String name) {
-        if (name.indexOf(this.searchString+".") == 0)
-            return true;
-        return false;
+    public boolean accept(File dir, String name)
+    {
+        return StringUtils.contains(name, this.searchString + ".");
     }
-
-
 
 }

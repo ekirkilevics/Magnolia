@@ -21,10 +21,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
 /**
+ * Loads another page into actpage. One usage would be within a site-menu structure. loadPage does not nest pages, so
+ * the corresponding unloadPage-tag will not revert to the previously loaded page, but restore actpage to the currently
+ * displayed page, i.e. the value it held before loadPage was called for the first time.
  * @author Marcel Salathe
  * @version $Revision: $ ($Author: $)
  */
@@ -36,19 +40,61 @@ public class LoadPage extends BodyTagSupport
      */
     private static final long serialVersionUID = 222L;
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(LoadPage.class);
 
-    private String path = "";
+    /**
+     * Tag attribute: path of the page to be loaded.
+     */
+    private String path;
 
-    private String templateName = "";
+    /**
+     * Tag attribute: template name.
+     */
+    private String templateName;
 
-    private int level = 0;
+    /**
+     * Tag attribute: level.
+     */
+    private int level;
 
+    /**
+     * Setter for the "path" tag attribute.
+     * @param path path of the page to be loaded
+     */
+    public void setPath(String path)
+    {
+        this.path = path;
+    }
+
+    /**
+     * Setter for the "templateName" tag attribute.
+     * @param templateName
+     */
+    public void setTemplateName(String templateName)
+    {
+        this.templateName = templateName;
+    }
+
+    /**
+     * Setter for the "level" tag attribute.
+     * @param level
+     */
+    public void setLevel(int level)
+    {
+        this.level = level;
+    }
+
+    /**
+     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
+     */
     public int doEndTag()
     {
         HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
         Content newActpage = Resource.getCurrentActivePage(req);
-        if (!this.templateName.equals(""))
+        if (StringUtils.isNotEmpty(this.templateName))
         {
             Content startPage;
             try
@@ -64,7 +110,7 @@ public class LoadPage extends BodyTagSupport
                 return SKIP_BODY;
             }
         }
-        if (!this.path.equals(""))
+        if (StringUtils.isNotEmpty(this.path))
         {
             try
             {
@@ -79,19 +125,14 @@ public class LoadPage extends BodyTagSupport
         return EVAL_BODY_INCLUDE;
     }
 
-    public void setPath(String path)
+    /**
+     * @see javax.servlet.jsp.tagext.Tag#release()
+     */
+    public void release()
     {
-        this.path = path;
+        super.release();
+        this.path = null;
+        this.templateName = null;
+        this.level = 0;
     }
-
-    public void setTemplateName(String templateName)
-    {
-        this.templateName = templateName;
-    }
-
-    public void setLevel(String level)
-    {
-        this.level = (new Integer(level)).intValue();
-    }
-
 }

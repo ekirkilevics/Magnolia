@@ -29,26 +29,18 @@ public class IfFirstContentNode extends TagSupport
     private static final long serialVersionUID = 222L;
 
     /**
-     * <p>
-     * starts ifFirstContentNode tag
-     * </p>
-     * @return int
+     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
     public int doStartTag()
     {
         int currentIndex = ((Integer) pageContext.getAttribute(
             ContentNodeIterator.CURRENT_INDEX,
             PageContext.REQUEST_SCOPE)).intValue();
-        if (currentIndex == 0)
-            return EVAL_BODY_INCLUDE;
-        return SKIP_BODY;
+        return (currentIndex == 0) ? EVAL_BODY_INCLUDE : SKIP_BODY;
     }
 
     /**
-     * <p>
-     * continue evaluating jsp
-     * </p>
-     * @return int
+     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag()
     {

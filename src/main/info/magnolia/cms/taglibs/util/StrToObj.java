@@ -30,15 +30,30 @@ public class StrToObj extends BodyTagSupport
      */
     private static final long serialVersionUID = 222L;
 
+    /**
+     * Legger.
+     */
     private static Logger log = Logger.getLogger(StrToObj.class);
 
     public String var;
 
     public String delims = "\n";
 
+    public void setVar(String var)
+    {
+        this.var = var;
+    }
+
+    public void setDelims(String delims)
+    {
+        this.delims = delims;
+    }
+
+    /**
+     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
+     */
     public int doEndTag()
     {
-        // JspWriter out = pageContext.getOut();
         String str = getBodyContent().getString();
 
         if (!str.equals(""))
@@ -65,16 +80,6 @@ public class StrToObj extends BodyTagSupport
             }
         }
         return EVAL_PAGE;
-    }
-
-    public void setVar(String var)
-    {
-        this.var = var;
-    }
-
-    public void setDelims(String delims)
-    {
-        this.delims = delims;
     }
 
 }
