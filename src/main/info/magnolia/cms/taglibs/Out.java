@@ -35,8 +35,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Sameer Charles
- * @version $Revision: 364 $ ($Author: fgiust $)
-hor: fgiust $)
+ * @version $Revision$ ($Author$)
  */
 public class Out extends TagSupport {
 
@@ -393,6 +392,8 @@ public class Out extends TagSupport {
     }
 
     public String getFilePropertyValue() {
-        FileProperties props = new FileProperties(this.getContentNode(), this.        String value = props.getProperty(this.fileProperty);
-leProperty());
-        return 
+        FileProperties props = new FileProperties(this.getContentNode(), this.nodeDataName);
+        String value = props.getProperty(this.fileProperty);
+        return value;
+    }
+}

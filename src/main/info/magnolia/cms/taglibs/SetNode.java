@@ -46,9 +46,7 @@ import org.apache.log4j.Logger;
  * </pre>
  *
  * @author Fabrizio Giustina
- * @version $Revision: 448 $ ($Author: fgiust $)
-hor: fgiust $)
-hor: fgiust $)
+ * @version $Revision$ ($Author$)
  */
 public class SetNode extends TagSupport {
 
@@ -79,8 +77,9 @@ public class SetNode extends TagSupport {
 
     /**
      * Tag attribute. Scope for the declared variable. Can be <code>page</code>, <code>request</code>,
-     * <code>session</code> or <code>application</code><code></    private int scope = PageContext.PAGE_SCOPE;
-ate int scope;
+     * <code>session</code> or <code>application</code><code></code>.
+     */
+    private int scope = PageContext.PAGE_SCOPE;
 
     /**
      * Evaluated content node.
@@ -115,14 +114,18 @@ ate int scope;
      * @param scope Can be <code>page</code>, <code>request</code>, <code>session</code> or
      * <code>application</code><code></code>.
      */
-    public void setScope(S        if ("request".equalsIgnoreCase(scope)) {
-Case(scope)) {
-            this.scope = PageContext.REQUEST_SC        else if ("session".equalsIgnoreCase(scope)) {
-Case(scope)) {
-            this.scope = PageContext.SESSION_SC        else if ("application".equalsIgnoreCase(scope)) {
-Case(scope)) {
-            this.scope = PageContext.APPLICATION_SC            // default
-efault, should we log errors?
+    public void setScope(String scope) {
+        if ("request".equalsIgnoreCase(scope)) {
+            this.scope = PageContext.REQUEST_SCOPE;
+        }
+        else if ("session".equalsIgnoreCase(scope)) {
+            this.scope = PageContext.SESSION_SCOPE;
+        }
+        else if ("application".equalsIgnoreCase(scope)) {
+            this.scope = PageContext.APPLICATION_SCOPE;
+        }
+        else {
+            // default
             this.scope = PageContext.PAGE_SCOPE;
         }
     }
@@ -206,9 +209,9 @@ efault, should we log errors?
     }
 
     /**
-     * Wrapper for a content Node which exposes a Map interface, used to access its content usin     * @version $Revision: 448 $ ($Author: fgiust $)
-on: 448 $ ($Author: fgiust $)
-on: 448 $ ($Author: fgiust $)
+     * Wrapper for a content Node which exposes a Map interface, used to access its content using jstl.
+     * @author fgiust
+     * @version $Revision$ ($Author$)
      */
     public static class NodeMapWrapper implements Map {
 
@@ -332,4 +335,9 @@ on: 448 $ ($Author: fgiust $)
          * @see java.util.Map#entrySet()
          */
         public Set entrySet() {
-            // not implemented, only 
+            // not implemented, only get() is needed
+            return null;
+        }
+    }
+
+}
