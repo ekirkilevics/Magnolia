@@ -350,7 +350,7 @@
 			usersTree.setDrawShifter(false);
 			// context path is already added by Tree
 			usersTree.setIconPage(Tree.ICONDOCROOT+"pawn_glass_yellow.gif");
-			if (Server.isAdmin()) usersTree.setIconOndblclick("mgnlTreeMenuOpenDialog("+usersTree.getJavascriptTree()+",'" + request.getContextPath() + "/.magnolia/adminCentral/users/dialog.html');");
+			if (Server.isAdmin()) usersTree.setIconOndblclick("mgnlTreeMenuOpenDialog("+usersTree.getJavascriptTree()+",'/.magnolia/adminCentral/users/dialog.html');");
 
 			usersTree.addItemType(ItemType.NT_CONTENT);
 
@@ -471,7 +471,7 @@
 			rolesTree.setDrawShifter(false);
 			// context path is already added by Tree
 			rolesTree.setIconPage( Tree.ICONDOCROOT+"hat_white.gif");
-			if (Server.isAdmin()) rolesTree.setIconOndblclick("mgnlTreeMenuOpenDialog("+rolesTree.getJavascriptTree()+",'" + request.getContextPath() + "/.magnolia/adminCentral/userRoles/dialog.html');");
+			if (Server.isAdmin()) rolesTree.setIconOndblclick("mgnlTreeMenuOpenDialog("+rolesTree.getJavascriptTree()+",'/.magnolia/adminCentral/userRoles/dialog.html');");
 
 			rolesTree.addItemType(ItemType.NT_CONTENT);
 
@@ -520,7 +520,7 @@
 
 			TreeMenuItem menuOpen=new TreeMenuItem();
 			menuOpen.setLabel("Edit role...");
-			menuOpen.setOnclick("mgnlTreeMenuOpenDialog("+rolesTree.getJavascriptTree()+",'" + request.getContextPath() + "/.magnolia/adminCentral/userRoles/dialog.html');");
+			menuOpen.setOnclick("mgnlTreeMenuOpenDialog("+rolesTree.getJavascriptTree()+",'/.magnolia/adminCentral/userRoles/dialog.html');");
 			menuOpen.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
 
 			TreeMenuItem menuNewPage=new TreeMenuItem();
