@@ -64,7 +64,7 @@ document.write('<div id="mgnlMoveDivShadow"></div>');
 //denied: denied sign
 document.write('<div id="mgnlMoveDivDenied"></div>');
 //allowed: text 'Move above here'
-document.write('<div id="mgnlMoveDivAllowed">Move the paragraph selected above this one</div>');
+document.write('<div id="mgnlMoveDivAllowed" style="visibility:hidden">Move the paragraph selected above this one</div>');
 
 var mgnlMoveDont=false;
 //move will not start as long as mgnlMoveDont is true
