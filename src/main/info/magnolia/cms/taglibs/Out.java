@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.taglibs;
@@ -17,18 +17,15 @@ import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.util.Resource;
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -37,8 +34,7 @@ import org.apache.log4j.Logger;
  * @author Sameer Charles
  * @version $Revision: $ ($Author: $)
  */
-public class Out extends TagSupport
-{
+public class Out extends TagSupport {
 
     /**
      * Stable serialVersionUID.
@@ -75,82 +71,64 @@ public class Out extends TagSupport
     /**
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
-    public int doStartTag()
-    {
+    public int doStartTag() {
         // System.out.println("");
         // System.out.println("name: "+this.getNodeDataName());
-
         ContentNode local = Resource.getLocalContentNode((HttpServletRequest) pageContext.getRequest());
         Content actpage = Resource.getCurrentActivePage((HttpServletRequest) pageContext.getRequest());
-
         String contentNodeName = this.getContentNodeName();
         String contentNodeCollectionName = this.getContentNodeCollectionName();
-
-        if (contentNodeName != null && !contentNodeName.equals(""))
-        {
+        if (contentNodeName != null && !contentNodeName.equals("")) {
             // contentNodeName is defined
-            try
-            {
-                if (StringUtils.isEmpty(contentNodeCollectionName))
-                {
+            try {
+                if (StringUtils.isEmpty(contentNodeCollectionName)) {
                     // e.g. <cms:out nodeDataName="title" contentNodeName="footer"/>
                     this.setContentNode(actpage.getContentNode(contentNodeName));
                 }
-                else
-                {
+                else {
                     // e.g. <cms:out nodeDataName="title" contentNodeName="01" contentNodeCollectionName="mainPars"/>
                     // e.g. <cms:out nodeDataName="title" contentNodeName="footer" contentNodeCollectionName=""/>
                     this.setContentNode(actpage.getContentNode(contentNodeCollectionName).getContentNode(
                         contentNodeName));
                 }
             }
-            catch (RepositoryException re)
-            {
+            catch (RepositoryException re) {
                 log.debug(re.getMessage());
             }
         }
-        else
-        {
-            if (local == null)
-            {
+        else {
+            if (local == null) {
                 // outside collection iterator
-                if (contentNodeCollectionName != null && !contentNodeCollectionName.equals(""))
-                {
+                if (contentNodeCollectionName != null && !contentNodeCollectionName.equals("")) {
                     // ERROR: no content node assignable because contentNodeName is empty
                     // e.g. <cms:out nodeDataName="title" contentNodeCollectionName="mainPars"/>
                     return SKIP_BODY;
                 }
-                else
-                {
+                else {
                     // e.g. <cms:out nodeDataName="title"/>
                     // e.g. <cms:out nodeDataName="title" contentNodeName=""/>
                     // e.g. <cms:out nodeDataName="title" contentNodeCollectionName=""/>
                     this.setContentNode(actpage);
                 }
             }
-            else
-            {
+            else {
                 // inside collection iterator
-                if (contentNodeName == null && contentNodeCollectionName == null)
-                {
+                if (contentNodeName == null && contentNodeCollectionName == null) {
                     // e.g. <cms:out nodeDataName="title"/>
                     this.setContentNode(local);
                 }
                 else if ((contentNodeName != null && contentNodeName.equals(""))
-                    || (contentNodeCollectionName != null && contentNodeCollectionName.equals("")))
-                {
+                    || (contentNodeCollectionName != null && contentNodeCollectionName.equals(""))) {
                     // empty collection name -> use actpage
                     // e.g. <cms:out nodeDataName="title" contentNodeCollectionName=""/>
                     this.setContentNode(actpage);
                 }
-                else
-                {
+                else {
                     // ERROR: no content node assignable because contentNodeName is empty
                     // e.g. <cms:out nodeDataName="title" contentNodeCollectionName="mainPars"/>
                     return SKIP_BODY;
                 }
             }
-
         }
         return SKIP_BODY;
     }
@@ -161,8 +139,7 @@ public class Out extends TagSupport
      * </p>
      * @return int
      */
-    public int doEndTag()
-    {
+    public int doEndTag() {
         this.display();
         this.setContentNodeCollectionName(null);
         this.setContentNodeName(null);
@@ -181,13 +158,11 @@ public class Out extends TagSupport
      * </p>
      * @param node
      */
-    public void setNodeData(NodeData node)
-    {
+    public void setNodeData(NodeData node) {
         this.nodeData = node;
     }
 
-    public NodeData getNodeData()
-    {
+    public NodeData getNodeData() {
         return this.nodeData;
     }
 
@@ -197,13 +172,11 @@ public class Out extends TagSupport
      * </p>
      * @param name
      */
-    public void setNodeDataName(String name)
-    {
+    public void setNodeDataName(String name) {
         this.nodeDataName = name;
     }
 
-    public String getNodeDataName()
-    {
+    public String getNodeDataName() {
         return this.nodeDataName;
     }
 
@@ -213,8 +186,7 @@ public class Out extends TagSupport
      * </p>
      * @param name
      */
-    public void setContentNodeName(String name)
-    {
+    public void setContentNodeName(String name) {
         this.contentNodeName = name;
     }
 
@@ -224,18 +196,15 @@ public class Out extends TagSupport
      * </p>
      * @param name
      */
-    public void setContentNodeCollectionName(String name)
-    {
+    public void setContentNodeCollectionName(String name) {
         this.contentNodeCollectionName = name;
     }
 
-    public String getContentNodeCollectionName()
-    {
+    public String getContentNodeCollectionName() {
         return this.contentNodeCollectionName;
     }
 
-    public String getContentNodeName()
-    {
+    public String getContentNodeName() {
         return this.contentNodeName;
     }
 
@@ -245,13 +214,11 @@ public class Out extends TagSupport
      * </p>
      * @param c
      */
-    public void setContentNode(Content c)
-    {
+    public void setContentNode(Content c) {
         this.contentNode = c;
     }
 
-    public Content getContentNode()
-    {
+    public Content getContentNode() {
         return this.contentNode;
     }
 
@@ -262,8 +229,7 @@ public class Out extends TagSupport
      * </p>
      * @param set (true/false; false is default)
      */
-    public void setActpage(String set)
-    {
+    public void setActpage(String set) {
     }
 
     /**
@@ -291,13 +257,11 @@ public class Out extends TagSupport
      * </p>
      * @param property
      */
-    public void setFileProperty(String property)
-    {
+    public void setFileProperty(String property) {
         this.fileProperty = property;
     }
 
-    public String getFileProperty()
-    {
+    public String getFileProperty() {
         return this.fileProperty;
     }
 
@@ -334,13 +298,11 @@ public class Out extends TagSupport
      * </p>
      * @param pattern , default is yyyy-MM-dd
      */
-    public void setDatePattern(String pattern)
-    {
+    public void setDatePattern(String pattern) {
         this.datePattern = pattern;
     }
 
-    public String getDatePattern()
-    {
+    public String getDatePattern() {
         return this.datePattern;
     }
 
@@ -356,13 +318,11 @@ public class Out extends TagSupport
      * </p>
      * @param language
      */
-    public void setDateLanguage(String language)
-    {
+    public void setDateLanguage(String language) {
         this.dateLanguage = language;
     }
 
-    public String getDateLanguage()
-    {
+    public String getDateLanguage() {
         return this.dateLanguage;
     }
 
@@ -372,23 +332,19 @@ public class Out extends TagSupport
      * </p>
      * @param lineBreak
      */
-    public void setLineBreak(String lineBreak)
-    {
+    public void setLineBreak(String lineBreak) {
         this.lineBreak = lineBreak;
     }
 
-    public String getLineBreak()
-    {
+    public String getLineBreak() {
         return this.lineBreak;
     }
 
     /**
      *
      */
-    private void display()
-    {
-        try
-        {
+    private void display() {
+        try {
             /*
              * //@todo //check if mutliple values (checkboxes) -> not nodeData but contentNode try { int i=0; Iterator
              * it=this.contentNode.getContentNode(this.nodeDataName).getChildren(ChildrenCollector.PROPERTY).iterator();
@@ -405,42 +361,31 @@ public class Out extends TagSupport
             NodeData nodeData = this.getContentNode().getNodeData(this.getNodeDataName());
             String value = "";
             int type = nodeData.getType();
-
-            if (type == PropertyType.DATE)
-            {
+            if (type == PropertyType.DATE) {
                 value = this.getDateFormatted(nodeData.getDate().getTime());
             }
-            else if (type == PropertyType.BINARY)
-            {
+            else if (type == PropertyType.BINARY) {
                 value = this.getFilePropertyValue();
             }
-            else
-            {
+            else {
                 if (this.getLineBreak().equals(""))
                     value = nodeData.getString();
                 else
                     value = nodeData.getString(this.getLineBreak());
             }
-
             JspWriter out = pageContext.getOut();
-            try
-            {
+            try {
                 out.print(value);
             }
-            catch (IOException e)
-            {
+            catch (IOException e) {
             }
-
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
         }
-
     }
 
     // @todo: place in another package to make it availbable globaly -> NodeData?
-    public String getDateFormatted(Date date)
-    {
+    public String getDateFormatted(Date date) {
         String value = "";
         if (date == null || date.equals(""))
             return "";
@@ -454,11 +399,9 @@ public class Out extends TagSupport
         return value;
     }
 
-    public String getFilePropertyValue()
-    {
+    public String getFilePropertyValue() {
         FileProperties props = new FileProperties(this.getContentNode(), this.nodeDataName);
         String value = props.getProperty(this.getFileProperty());
         return value;
     }
-
 }

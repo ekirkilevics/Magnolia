@@ -4,28 +4,24 @@ import java.util.Map;
 
 
 /**
- * Date: Aug 16, 2004
- * Time: 4:03:23 PM
- *
+ * Date: Aug 16, 2004 Time: 4:03:23 PM
  * @author Sameer Charles
  * @version 2.0
  */
-
-
-
 public class RepositoryMapping {
 
-
     private String name;
+
     private String ID;
+
     private String provider;
+
     private boolean loadOnStartup;
+
     private Map parameters;
 
-
-
-    public RepositoryMapping() {}
-
+    public RepositoryMapping() {
+    }
 
     public String getName() {
         return name;
@@ -66,7 +62,4 @@ public class RepositoryMapping {
     public void setParameters(Map parameters) {
         this.parameters = parameters;
     }
-
 }
-
-

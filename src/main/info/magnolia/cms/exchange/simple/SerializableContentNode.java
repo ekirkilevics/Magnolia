@@ -7,47 +7,30 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
-
+ */
 package info.magnolia.cms.exchange.simple;
 
 import info.magnolia.cms.core.ContentNode;
-import info.magnolia.cms.security.AccessDeniedException;
-
 import java.io.Serializable;
-
 import org.apache.log4j.Logger;
 
 
 /**
- * Date: Jun 21, 2004
- * Time: 2:32:14 PM
- *
+ * Date: Jun 21, 2004 Time: 2:32:14 PM
  * @author Sameer Charles
  * @version 2.0
  */
-
-
-
 public class SerializableContentNode extends SerializableContent implements Serializable {
-
-
 
     private static Logger log = Logger.getLogger(SerializableContentNode.class);
 
-
     private ContentNode baseContentNode;
+
     private SerializableMetaData metaData;
+
     private boolean recurse;
-
-
-
-
 
     public SerializableContentNode(ContentNode baseContentNode) {
         this.baseContentNode = baseContentNode;
@@ -55,16 +38,12 @@ public class SerializableContentNode extends SerializableContent implements Seri
         this.baseContentNode = null;
     }
 
-
-
     public SerializableContentNode(ContentNode baseContentNode, boolean recurse) {
         this.baseContentNode = baseContentNode;
         this.recurse = recurse;
         this.makeSerializable();
         this.baseContentNode = null;
     }
-
-
 
     private void makeSerializable() {
         this.setName(this.baseContentNode.getName());
@@ -75,11 +54,7 @@ public class SerializableContentNode extends SerializableContent implements Seri
             this.addContentNodeList(this.baseContentNode, true);
     }
 
-
     public SerializableMetaData getMetaData() {
         return this.metaData;
     }
-
-
-
 }

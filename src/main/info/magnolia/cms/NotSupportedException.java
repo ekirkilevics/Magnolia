@@ -7,87 +7,60 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms;
-
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
+
 /**
- * Date: Jun 7, 2004
- * Time: 10:52:55 AM
- *
  * @author Sameer Charles
  * @version 2.0
  */
-
-
-
 public class NotSupportedException extends Exception {
 
-
     private Exception root;
-
 
     public NotSupportedException() {
         super();
     }
 
-
-
-
     public NotSupportedException(String message) {
         super(message);
     }
 
-
-
-
     public NotSupportedException(String message, Exception root) {
         super(message);
-
         if (root instanceof NotSupportedException) {
-            this.root = ((NotSupportedException)root).getRootException();
-        } else {
+            this.root = ((NotSupportedException) root).getRootException();
+        }
+        else {
             this.root = root;
         }
     }
 
-
-
-
     public NotSupportedException(Exception root) {
-        this(null,root);
+        this(null, root);
     }
-
-
 
     public Exception getRootException() {
         return this.root;
     }
 
-
-
     public String getMessage() {
         String message = super.getMessage();
         if (this.root == null) {
             return message;
-        } else {
-            String rootCause = this.root.getMessage();
-            if (rootCause == null)
-                return message;
-            else
-                return (message+":"+rootCause);
         }
+        String rootCause = this.root.getMessage();
+        if (rootCause == null)
+            return message;
+        else
+            return (message + ":" + rootCause);
     }
-
-
 
     public void printStackTrace() {
         synchronized (System.err) {
@@ -98,8 +71,6 @@ public class NotSupportedException extends Exception {
         }
     }
 
-
-
     public void printStackTrace(PrintStream ps) {
         synchronized (ps) {
             super.printStackTrace(ps);
@@ -109,8 +80,6 @@ public class NotSupportedException extends Exception {
         }
     }
 
-
-
     public void printStackTrace(PrintWriter pw) {
         synchronized (pw) {
             super.printStackTrace(pw);
@@ -119,7 +88,4 @@ public class NotSupportedException extends Exception {
             }
         }
     }
-
-
-
 }

@@ -7,53 +7,49 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms.gui.dialog;
 
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.gui.control.Button;
-
-import javax.servlet.jsp.JspWriter;
-import javax.jcr.RepositoryException;
 import java.io.IOException;
-
+import javax.jcr.RepositoryException;
+import javax.servlet.jsp.JspWriter;
 import org.apache.log4j.Logger;
+
 
 /**
  * @author Vinzenz Wyser
  * @version 2.0
- */ 
+ */
 public class DialogButton extends DialogBox {
-	private static Logger log = Logger.getLogger(DialogButton.class);
 
+    private static Logger log = Logger.getLogger(DialogButton.class);
 
-	public DialogButton(ContentNode configNode,Content websiteNode) throws RepositoryException {
-		super(configNode,websiteNode);
-	}
+    public DialogButton(ContentNode configNode, Content websiteNode) throws RepositoryException {
+        super(configNode, websiteNode);
+    }
 
-	public DialogButton() {
-		
-	}
+    public DialogButton() {
+    }
 
-	public void drawHtml(JspWriter out) {
-		Button control=new Button();
-		control.setSaveInfo(false);
-		control.setLabel(this.getConfigValue("buttonLabel"));
-		control.setOnclick(this.getConfigValue("onclick"));
-		if (this.getConfigValue("small").equals("true")) control.setSmall(true);
-
-		this.drawHtmlPre(out);
-		try {
-			out.println(control.getHtml());
-		}
-		catch (IOException ioe) {log.error("");}
-		this.drawHtmlPost(out);
-	}
-
+    public void drawHtml(JspWriter out) {
+        Button control = new Button();
+        control.setSaveInfo(false);
+        control.setLabel(this.getConfigValue("buttonLabel"));
+        control.setOnclick(this.getConfigValue("onclick"));
+        if (this.getConfigValue("small").equals("true"))
+            control.setSmall(true);
+        this.drawHtmlPre(out);
+        try {
+            out.println(control.getHtml());
+        }
+        catch (IOException ioe) {
+            log.error("");
+        }
+        this.drawHtmlPost(out);
+    }
 }

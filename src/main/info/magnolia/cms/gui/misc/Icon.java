@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.gui.misc;
@@ -16,8 +16,7 @@ package info.magnolia.cms.gui.misc;
  * @author Vinzenz Wyser
  * @version 2.0
  */
-public class Icon
-{
+public class Icon {
 
     public final static String BASEPATH = "/admindocroot/icons";
 
@@ -41,8 +40,7 @@ public class Icon
 
     public final static String USER = "pawn_glass_yellow";
 
-    public String getSrc(String iconName, int size)
-    {
+    public String getSrc(String iconName, int size) {
         return Icon.BASEPATH + "/" + size + "/" + iconName + ".gif";
     }
 }

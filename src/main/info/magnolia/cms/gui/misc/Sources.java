@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.gui.misc;
@@ -16,11 +16,9 @@ package info.magnolia.cms.gui.misc;
  * @author Vinzenz Wyser
  * @version 2.0
  */
-public class Sources
-{
+public class Sources {
 
-    public String getHtmlJs()
-    {
+    public String getHtmlJs() {
         StringBuffer html = new StringBuffer();
         html.append("<script type=\"text/javascript\" src=\"/admindocroot/js/generic.js\"></script>");
         html.append("<script type=\"text/javascript\" src=\"/admindocroot/js/general.js\"></script>");
@@ -33,8 +31,7 @@ public class Sources
         return html.toString();
     }
 
-    public String getHtmlCss()
-    {
+    public String getHtmlCss() {
         StringBuffer html = new StringBuffer();
         html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"/admindocroot/css/general.css\">");
         html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"/admindocroot/css/controls.css\">");
@@ -44,8 +41,7 @@ public class Sources
         return html.toString();
     }
 
-    public String getHtmlRichEdit()
-    {
+    public String getHtmlRichEdit() {
         StringBuffer html = new StringBuffer();
         html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"/admindocroot/richE/kupustyles.css\">");
         html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"/admindocroot/richE/kupucustom.css\">");
@@ -58,5 +54,4 @@ public class Sources
         html.append("<script type=\"text/javascript\" src=\"/admindocroot/richE/kupuinit.js\"> </script>");
         return html.toString();
     }
-
 }

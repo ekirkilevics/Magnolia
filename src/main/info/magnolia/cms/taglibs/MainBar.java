@@ -7,16 +7,14 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.gui.inline.BarMain;
 import info.magnolia.cms.util.Resource;
-
 import java.io.IOException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.TagSupport;
 
@@ -26,8 +24,7 @@ import javax.servlet.jsp.tagext.TagSupport;
  * @author Sameer Charles
  * @version $Revision: $ ($Author: $)
  */
-public class MainBar extends TagSupport
-{
+public class MainBar extends TagSupport {
 
     /**
      * Stable serialVersionUID.
@@ -39,26 +36,22 @@ public class MainBar extends TagSupport
     /**
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
-    public int doStartTag()
-    {
+    public int doStartTag() {
         return EVAL_BODY_INCLUDE;
     }
 
     /**
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
-    public int doEndTag()
-    {
+    public int doEndTag() {
         /*
          * if (!ServerInfo.isAdmin()) return EVAL_PAGE; if
          * (!Resource.getActivePage(this.request).isGranted(Permission.WRITE_PROPERTY)) return EVAL_PAGE;
          */
-        try
-        {
+        try {
             this.display();
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
         }
         return EVAL_PAGE;
     }
@@ -69,18 +62,14 @@ public class MainBar extends TagSupport
      * </p>
      * @return String path
      */
-    private String getPath()
-    {
+    private String getPath() {
         HttpServletRequest request = (HttpServletRequest) this.pageContext.getRequest();
-        try
-        {
+        try {
             return Resource.getCurrentActivePage(request).getHandle();
         }
-        catch (Exception re)
-        {
+        catch (Exception re) {
             return "";
         }
-
     }
 
     /**
@@ -91,8 +80,7 @@ public class MainBar extends TagSupport
      * @deprecated
      * @param type , paragraph type
      */
-    public void setParFile(String type)
-    {
+    public void setParFile(String type) {
         this.setParagraph(type);
     }
 
@@ -103,16 +91,14 @@ public class MainBar extends TagSupport
      * /**
      * @param s , pargarph type
      */
-    public void setParagraph(String s)
-    {
+    public void setParagraph(String s) {
         this.paragraph = s;
     }
 
     /**
      * @return pargraph type
      */
-    private String getParagraph()
-    {
+    private String getParagraph() {
         return this.paragraph;
     }
 
@@ -122,8 +108,7 @@ public class MainBar extends TagSupport
      * </p>
      * @throws java.io.IOException
      */
-    private void display() throws IOException
-    {
+    private void display() throws IOException {
         HttpServletRequest request = (HttpServletRequest) this.pageContext.getRequest();
         BarMain bar = new BarMain(request);
         bar.setPath(this.getPath());

@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.taglibs.util;
@@ -16,14 +16,11 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.Resource;
-
 import java.text.SimpleDateFormat;
 import java.util.Locale;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
-
 import org.apache.log4j.Logger;
 
 
@@ -31,8 +28,7 @@ import org.apache.log4j.Logger;
  * @author Marcel Salathe
  * @version $Revision: $ ($Author: $)
  */
-public class Date extends TagSupport
-{
+public class Date extends TagSupport {
 
     /**
      * Stable serialVersionUID.
@@ -78,73 +74,59 @@ public class Date extends TagSupport
      *   Z  Time zone               RFC 822 time zone   -0800
      * </pre>
      */
-    public void setPattern(String pattern)
-    {
+    public void setPattern(String pattern) {
         this.pattern = pattern;
     }
 
     /**
      * @deprecated
      */
-    public void setAtomName(String name)
-    {
+    public void setAtomName(String name) {
         this.setNodeDataName(name);
     }
 
-    public void setNodeDataName(String nodeDataName)
-    {
+    public void setNodeDataName(String nodeDataName) {
         this.nodeDataName = nodeDataName;
     }
 
-    public void setActpage(String actpage)
-    {
+    public void setActpage(String actpage) {
         this.actpage = actpage;
     }
 
-    public void setLanguage(String language)
-    {
+    public void setLanguage(String language) {
         this.language = language;
     }
 
-    public int doStartTag()
-    {
-        if (this.actpage == "true")
-        {
+    public int doStartTag() {
+        if (this.actpage == "true") {
             this.contentNode = Resource.getCurrentActivePage((HttpServletRequest) pageContext.getRequest());
         }
-        else
-        {
+        else {
             this.contentNode = (Content) Resource.getLocalContentNode((HttpServletRequest) pageContext.getRequest());
-            if (this.contentNode == null)
-            {
+            if (this.contentNode == null) {
                 this.contentNode = (Content) Resource.getGlobalContentNode((HttpServletRequest) pageContext
                     .getRequest());
             }
         }
         String printDate = getDateString();
         JspWriter out = pageContext.getOut();
-        try
-        {
+        try {
             out.print(printDate);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             log.error(e.getMessage());
         }
         return EVAL_PAGE;
     }
 
-    public String getDateString()
-    {
+    public String getDateString() {
         String date = "";
         if (this.contentNode == null)
             return "";
-        try
-        {
+        try {
             this.nodeData = this.contentNode.getNodeData(this.nodeDataName);
         }
-        catch (AccessDeniedException e)
-        {
+        catch (AccessDeniedException e) {
             log.error(e.getMessage());
             return "";
         }

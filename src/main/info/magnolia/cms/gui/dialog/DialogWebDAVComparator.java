@@ -7,29 +7,24 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms.gui.dialog;
 
-
-import java.util.Hashtable;
 import java.util.Comparator;
+import java.util.Hashtable;
+
 
 /**
  * @author Vinzenz Wyser
  * @version 2.0
- */ 
-public class DialogWebDAVComparator implements Comparator  {
+ */
+public class DialogWebDAVComparator implements Comparator {
 
-	public int compare(Object o, Object o1) throws ClassCastException {
-		String s1 = ((String) ((Hashtable)o).get("name")).toLowerCase();
-		String s2 = ((String) ((Hashtable)o1).get("name")).toLowerCase();
-		return s1.compareTo(s2);
-	}
-
-
+    public int compare(Object o, Object o1) throws ClassCastException {
+        String s1 = ((String) ((Hashtable) o).get("name")).toLowerCase();
+        String s2 = ((String) ((Hashtable) o1).get("name")).toLowerCase();
+        return s1.compareTo(s2);
+    }
 }

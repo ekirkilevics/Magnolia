@@ -7,18 +7,16 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.util.Resource;
-
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.TagSupport;
-
 import org.apache.log4j.Logger;
 
 
@@ -26,8 +24,7 @@ import org.apache.log4j.Logger;
  * @author Sameer Charles
  * @version $Revision: $ ($Author: $)
  */
-public class Set extends TagSupport
-{
+public class Set extends TagSupport {
 
     /**
      * Stable serialVersionUID.
@@ -46,32 +43,28 @@ public class Set extends TagSupport
     /**
      * @param contentNode to be set
      */
-    public void setContentNode(ContentNode contentNode)
-    {
+    public void setContentNode(ContentNode contentNode) {
         this.contentNode = contentNode;
     }
 
     /**
      * @param name , contentNode name to be set
      */
-    public void setContentNodeName(String name)
-    {
+    public void setContentNodeName(String name) {
         this.contentNodeName = name;
     }
 
     /**
      * @deprecated
      */
-    public void setContainer(ContentNode contentNode)
-    {
+    public void setContainer(ContentNode contentNode) {
         this.setContentNode(contentNode);
     }
 
     /**
      * @deprecated
      */
-    public void setContainerName(String name)
-    {
+    public void setContainerName(String name) {
         this.setContentNodeName(name);
     }
 
@@ -81,21 +74,17 @@ public class Set extends TagSupport
      * </p>
      * @return int
      */
-    public int doStartTag()
-    {
+    public int doStartTag() {
         HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
         Resource.removeGlobalContentNode(req);
         if (this.contentNodeName == null)
             Resource.setGlobalContentNode(req, this.contentNode);
-        else
-        {
-            try
-            {
+        else {
+            try {
                 this.contentNode = Resource.getCurrentActivePage(req).getContentNode(this.contentNodeName);
                 Resource.setGlobalContentNode(req, this.contentNode);
             }
-            catch (RepositoryException re)
-            {
+            catch (RepositoryException re) {
                 log.error(re.getMessage());
             }
         }
@@ -105,16 +94,14 @@ public class Set extends TagSupport
     /**
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
-    public int doEndTag()
-    {
+    public int doEndTag() {
         return EVAL_PAGE;
     }
 
     /**
      * @see javax.servlet.jsp.tagext.Tag#release()
      */
-    public void release()
-    {
+    public void release() {
         super.release();
         this.contentNode = null;
         this.contentNodeName = null;

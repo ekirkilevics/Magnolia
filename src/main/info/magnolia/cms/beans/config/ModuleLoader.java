@@ -7,78 +7,56 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
-
+ */
 package info.magnolia.cms.beans.config;
 
-import org.apache.log4j.Logger;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
-import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.module.ModuleConfig;
-import info.magnolia.cms.module.Module;
+import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.module.InvalidConfigException;
-import info.magnolia.cms.util.regex.RegexWildcardPattern;
-import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.security.PermissionImpl;
+import info.magnolia.cms.module.Module;
+import info.magnolia.cms.module.ModuleConfig;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.AccessManagerImpl;
-
-import javax.jcr.*;
-import java.util.Iterator;
-import java.util.Hashtable;
+import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.security.PermissionImpl;
+import info.magnolia.cms.util.regex.RegexWildcardPattern;
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.regex.Pattern;
-
-
-/**
- * User: Sameer Charles
- * Date: Mar 29, 2004
- * Time: 11:39:00 AM
- */
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.SimpleCredentials;
+import org.apache.log4j.Logger;
 
 
 /**
  * Initialise all configured modules
- *
- *
- * */
-
-
-
+ */
 public class ModuleLoader {
-
-
 
     private static Logger log = Logger.getLogger(ModuleLoader.class);
 
-
     /**
      * magnolia module specific keywords
-     * */
+     */
     private static final String CONFIG_PAGE = "modules";
+
     private static final String CONFIG_NODE_REGISTER = "Register";
+
     private static final String CONFIG_NODE_VIRTUAL_MAPPING = "VirtualURIMapping";
+
     private static final String CONFIG_NODE_LOCAL_STORE = "Config";
-
-
-
-
-
 
     /**
      * todo fix this with proper JCR implementation
-     * */
+     */
     private static SimpleCredentials simpleCredentials;
-
-
-
 
     protected static void init() throws ConfigurationException {
         log.info("Loading modules");
@@ -88,76 +66,68 @@ public class ModuleLoader {
             Content startPage = hm.getPage(CONFIG_PAGE);
             init(startPage);
             log.info("Finished loading modules");
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.fatal("Failed to initialize module loader");
             log.fatal(e.getMessage(), e);
             throw new ConfigurationException(e.getMessage());
         }
     }
 
-
-
     /**
-     *
      * @param startPage
-     * */
-    private static void init(Content startPage)
-            throws ClassNotFoundException,
-            InvalidConfigException {
+     */
+    private static void init(Content startPage) throws ClassNotFoundException, InvalidConfigException {
         Iterator modules = startPage.getChildren().iterator();
         while (modules.hasNext()) {
-            Content module = (Content)modules.next();
+            Content module = (Content) modules.next();
             try {
-                log.info("Initializing module - "+module.getName());
+                log.info("Initializing module - " + module.getName());
                 load(module);
-                VirtualMap.getInstance().update(CONFIG_PAGE+"/"+module.getName()+"/"+CONFIG_NODE_VIRTUAL_MAPPING);
-                log.info("Module : "+module.getName() +" initialized");
-            } catch (RepositoryException re) {
-                log.error("Failed to initialize module - "+module.getName());
+                VirtualMap.getInstance().update(
+                    CONFIG_PAGE + "/" + module.getName() + "/" + CONFIG_NODE_VIRTUAL_MAPPING);
+                log.info("Module : " + module.getName() + " initialized");
+            }
+            catch (RepositoryException re) {
+                log.error("Failed to initialize module - " + module.getName());
                 log.error(re.getMessage(), re);
             }
         }
     }
 
-
-
-    private static void load(Content module)
-            throws RepositoryException,
-            ClassNotFoundException,
-            InvalidConfigException {
+    private static void load(Content module) throws RepositoryException, ClassNotFoundException, InvalidConfigException {
         ContentNode moduleConfig = module.getContentNode(CONFIG_NODE_REGISTER);
         ModuleConfig thisModule = new ModuleConfig();
         thisModule.setModuleName(moduleConfig.getNodeData("moduleName").getString());
         thisModule.setModuleDescription(moduleConfig.getNodeData("moduleDescription").getString());
         thisModule.setHierarchyManager(getHierarchyManager(moduleConfig.getNodeData("repository").getString()));
         try {
-            ContentNode sharedRepositories =  moduleConfig.getContentNode("sharedRepositories");
+            ContentNode sharedRepositories = moduleConfig.getContentNode("sharedRepositories");
             thisModule.setSharedHierarchyManagers(getSharedHierarchyManagers(sharedRepositories));
-        } catch (PathNotFoundException e) {
-            log.info("Module : no shared repository definition found for - "+module.getName());
+        }
+        catch (PathNotFoundException e) {
+            log.info("Module : no shared repository definition found for - " + module.getName());
         }
         thisModule.setInitParameters(getInitParameters(moduleConfig.getContentNode("initParams")));
         /* add local store */
-        LocalStore store = LocalStore.getInstance(CONFIG_PAGE+"/"+module.getName()+"/"+CONFIG_NODE_LOCAL_STORE);
+        LocalStore store = LocalStore.getInstance(CONFIG_PAGE + "/" + module.getName() + "/" + CONFIG_NODE_LOCAL_STORE);
         thisModule.setLocalStore(store.getStore());
         try {
             Module moduleClass = (Module) Class.forName(moduleConfig.getNodeData("class").getString()).newInstance();
             moduleClass.init(thisModule);
-        } catch(InstantiationException ie) {
-            log.fatal("Module : [ "+moduleConfig.getNodeData("moduleName").getString()+" ] failed to load");
+        }
+        catch (InstantiationException ie) {
+            log.fatal("Module : [ " + moduleConfig.getNodeData("moduleName").getString() + " ] failed to load");
             log.fatal(ie.getMessage());
-        } catch (IllegalAccessException ae) {
+        }
+        catch (IllegalAccessException ae) {
             log.fatal(ae.getMessage());
         }
     }
 
-
-
     public static void reload() throws ConfigurationException {
         init();
     }
-
-    
 
     private static Hashtable getInitParameters(ContentNode paramList) {
         Hashtable initParams = new Hashtable();
@@ -169,14 +139,10 @@ public class ModuleLoader {
         return initParams;
     }
 
-
-
-    private static HierarchyManager getHierarchyManager(String repositoryName)
-            throws RepositoryException {
-        if (repositoryName==null || (repositoryName.equals("")))
+    private static HierarchyManager getHierarchyManager(String repositoryName) throws RepositoryException {
+        if (repositoryName == null || (repositoryName.equals("")))
             return null;
-        Session moduleRepositoryTicket =
-                ContentRepository.getRepository(repositoryName).login(simpleCredentials,null);
+        Session moduleRepositoryTicket = ContentRepository.getRepository(repositoryName).login(simpleCredentials, null);
         ArrayList acl = new ArrayList();
         Pattern p = Pattern.compile(RegexWildcardPattern.getMultipleCharPattern());
         Permission permission = new PermissionImpl();
@@ -187,15 +153,10 @@ public class ModuleLoader {
         accessManager.setPermissionList(acl);
         HierarchyManager hm = new HierarchyManager();
         hm.init(moduleRepositoryTicket.getRootNode(), accessManager);
-
         return hm;
     }
 
-
-
-
-    private static Hashtable getSharedHierarchyManagers(ContentNode sharedRepositoriesNode)
-            throws RepositoryException {
+    private static Hashtable getSharedHierarchyManagers(ContentNode sharedRepositoriesNode) throws RepositoryException {
         Hashtable sharedHierarchy = new Hashtable();
         Iterator repositories = sharedRepositoriesNode.getChildren().iterator();
         ArrayList acl = new ArrayList();
@@ -204,29 +165,21 @@ public class ModuleLoader {
             ContentNode repositoryConfig = (ContentNode) repositories.next();
             String id = repositoryConfig.getNodeData("id").getString();
             String repositoryName = repositoryConfig.getNodeData("repository").getString();
-            Session ticket =
-                    ContentRepository.getRepository(repositoryName).login(simpleCredentials,null);
-
+            Session ticket = ContentRepository.getRepository(repositoryName).login(simpleCredentials, null);
             Permission permission = new PermissionImpl();
             permission.setPattern(p);
             permission.setPermissions(repositoryConfig.getNodeData("permissions").getLong());
             acl.add(permission);
-
-
             AccessManager accessManager = new AccessManagerImpl();
             accessManager.setPermissionList(acl);
             HierarchyManager hm = new HierarchyManager();
             hm.init(ticket.getRootNode(), accessManager);
-            sharedHierarchy.put(id,hm);
+            sharedHierarchy.put(id, hm);
         }
         return sharedHierarchy;
     }
 
-
-
     private static void setSudoCredentials() {
         simpleCredentials = new SimpleCredentials("ModuleLoader", "".toCharArray());
     }
-
-
 }

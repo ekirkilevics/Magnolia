@@ -7,10 +7,9 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
+ */
 package info.magnolia.cms.servlets;
 
 import info.magnolia.cms.beans.config.ConfigLoader;
@@ -26,21 +25,18 @@ import info.magnolia.cms.security.Lock;
 import info.magnolia.cms.security.SecureURI;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.exchange.Packet;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.net.URLConnection;
-
 import javax.jcr.PathNotFoundException;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.log4j.Logger;
 
 
@@ -59,8 +55,7 @@ import org.apache.log4j.Logger;
  * @author Sameer Charles
  * @version 2.0
  */
-public class SimpleExchange extends HttpServlet
-{
+public class SimpleExchange extends HttpServlet {
 
     private static final Logger log = Logger.getLogger(SimpleExchange.class);
 
@@ -98,8 +93,7 @@ public class SimpleExchange extends HttpServlet
      * @throws ServletException
      * @throws IOException
      */
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         this.request = request;
         this.response = response;
         this.context = this.request.getHeader(Syndicator.WORKING_CONTEXT);
@@ -112,18 +106,15 @@ public class SimpleExchange extends HttpServlet
         this.host = request.getRemoteHost();
         this.remotePort = this.request.getHeader(Syndicator.REMOTE_PORT);
         this.senderURL = this.request.getHeader(Syndicator.SENDER_URL);
-        if (this.senderURL == null || this.senderURL.equals(""))
-        {
+        if (this.senderURL == null || this.senderURL.equals("")) {
             this.senderURL = this.protocol + "://" + this.host + ":" + this.remotePort;
         }
         this.objectType = this.request.getHeader(Syndicator.OBJECT_TYPE);
-        try
-        {
+        try {
             response.setContentType("text/plain");
             this.handleActivationRequest();
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             log.error(e.getMessage(), e);
         }
     }
@@ -134,26 +125,22 @@ public class SimpleExchange extends HttpServlet
      * @throws ServletException
      * @throws IOException
      */
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
     }
 
     /**
      * @throws Exception
      */
-    private void handleActivationRequest() throws Exception
-    {
-        if (ConfigLoader.isConfigured())
-        { // ignore security is server is not configured
+    private void handleActivationRequest() throws Exception {
+        if (ConfigLoader.isConfigured()) { // ignore security is server is not configured
             if (!Listener.isAllowed(this.request))
                 return;
             if (!Authenticator.authenticate(this.request))
                 return;
             this.hierarchyManager = SessionAccessControl.getHierarchyManager(this.request, this.context);
         }
-        else
-        {
+        else {
             this.hierarchyManager = ContentRepository.getHierarchyManager(this.context);
         }
         if (this.action.equals(Syndicator.ACTIVATE))
@@ -169,11 +156,9 @@ public class SimpleExchange extends HttpServlet
     /**
      * @throws Exception
      */
-    public void activate() throws Exception
-    {
+    public void activate() throws Exception {
         log.info("Exchange : update request received for " + this.page);
         String handle = "/" + Syndicator.DEFAULT_HANDLER;
-
         URL url = new URL(this.senderURL + handle);
         String credentials = this.request.getHeader("Authorization");
         URLConnection urlConnection = url.openConnection();
@@ -187,8 +172,7 @@ public class SimpleExchange extends HttpServlet
         urlConnection.addRequestProperty(Syndicator.OBJECT_TYPE, this.objectType);
         /* Import activated page */
         InputStream in = urlConnection.getInputStream();
-        try
-        {
+        try {
             ObjectInputStream objectInputStream = new ObjectInputStream(in);
             Object sc = objectInputStream.readObject();
             /* deserialize received object */
@@ -196,10 +180,8 @@ public class SimpleExchange extends HttpServlet
                 + "/"
                 + Syndicator.DEFAULT_HANDLER, this.request);
             contentWriter.writeObject(this.parent, sc);
-
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             log.error("Failed to de-serialize - " + this.page);
             log.error(e.getMessage(), e);
         }
@@ -213,8 +195,7 @@ public class SimpleExchange extends HttpServlet
     /**
      * @throws Exception
      */
-    public void deactivate() throws Exception
-    {
+    public void deactivate() throws Exception {
         log.info("Exchange : remove request received for " + this.page);
         HierarchyManager hm = this.getHierarchyManager();
         hm.delete(this.page);
@@ -227,8 +208,7 @@ public class SimpleExchange extends HttpServlet
     /**
      * @throws Exception
      */
-    private void get() throws Exception
-    {
+    private void get() throws Exception {
         if (this.type.equalsIgnoreCase(Syndicator.GET_TYPE_SERIALIZED_OBJECT))
             this.getSerializedObject();
         else if (this.type.equalsIgnoreCase(Syndicator.GET_TYPE_BINARY))
@@ -237,8 +217,7 @@ public class SimpleExchange extends HttpServlet
             this.getSerializedObject(); // default type, supporting magnolia 1.1
     }
 
-    private void getSerializedObject() throws Exception
-    {
+    private void getSerializedObject() throws Exception {
         log.info("Serialized object request for " + this.page);
         boolean recurse = (new Boolean(this.recursive)).booleanValue();
         Packet packet = PacketCollector.getPacket(this.getHierarchyManager(), this.page, recurse);
@@ -250,49 +229,41 @@ public class SimpleExchange extends HttpServlet
     /**
      *
      *
-     * */
-    private void getBinary() throws Exception
-    {
+     */
+    private void getBinary() throws Exception {
         log.info("Binary request for " + this.page);
         HierarchyManager hm = this.getHierarchyManager();
-        try
-        {
+        try {
             InputStream is = hm.getNodeData(this.page).getValue().getStream();
             ServletOutputStream os = this.response.getOutputStream();
             byte[] buffer = new byte[8192];
             int read = 0;
-            while ((read = is.read(buffer)) > 0)
-            {
+            while ((read = is.read(buffer)) > 0) {
                 os.write(buffer, 0, read);
             }
             os.flush();
             os.close();
         }
-        catch (PathNotFoundException e)
-        {
+        catch (PathNotFoundException e) {
             log.error("Unable to spool " + this.page);
             throw new PathNotFoundException(e.getMessage());
         }
     }
 
-    private HierarchyManager getHierarchyManager() throws Exception
-    {
+    private HierarchyManager getHierarchyManager() throws Exception {
         return this.hierarchyManager;
     }
 
-    public String getOperatedHandle()
-    {
+    public String getOperatedHandle() {
         return this.page;
     }
 
     /**
      * Exclude version number
      */
-    private String getProtocolName()
-    {
+    private String getProtocolName() {
         String protocol = this.request.getProtocol();
         int lastIndexOfSlash = protocol.lastIndexOf("/");
         return protocol.substring(0, lastIndexOfSlash);
     }
-
 }

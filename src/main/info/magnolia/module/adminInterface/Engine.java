@@ -7,12 +7,9 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.module.adminInterface;
 
 import info.magnolia.cms.module.Module;
@@ -20,29 +17,17 @@ import info.magnolia.cms.module.ModuleConfig;
 
 
 /**
- * Date: Jul 13, 2004
- * Time: 4:25:17 PM
- *
+ * Date: Jul 13, 2004 Time: 4:25:17 PM
  * @author Sameer Charles
  * @version 2.0
  */
-
-
 public class Engine implements Module {
-
-
-
 
     public void init(ModuleConfig config) {
         // set local store to be accessed via admin interface classes or JSP
         Store.getInstance().setStore(config.getLocalStore());
     }
 
-
-
     public void destroy() {
-
     }
-
-
 }

@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.servlets;
@@ -22,14 +22,11 @@ import info.magnolia.cms.security.Listener;
 import info.magnolia.cms.security.Lock;
 import info.magnolia.cms.security.SecureURI;
 import info.magnolia.cms.security.SessionAccessControl;
-
 import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.log4j.Logger;
 
 
@@ -40,8 +37,7 @@ import org.apache.log4j.Logger;
  * @author Sameer Charles
  * @version 2.0
  */
-public class EntryServlet extends HttpServlet
-{
+public class EntryServlet extends HttpServlet {
 
     /**
      * Logger.
@@ -63,8 +59,7 @@ public class EntryServlet extends HttpServlet
      * @param request
      * @return last modified time in miliseconds since 1st Jan 1970 GMT
      */
-    public long getLastModified(HttpServletRequest request)
-    {
+    public long getLastModified(HttpServletRequest request) {
         return info.magnolia.cms.beans.runtime.Cache.getCreationTime(request);
     }
 
@@ -75,24 +70,19 @@ public class EntryServlet extends HttpServlet
      * @param req
      * @param res
      */
-    public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
-    {
-        try
-        {
-
+    public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+        try {
             /**
              * Try to find out what the preferred language of this user is.
              */
             // TranslationEngine.findPreferredLanguage(req);
             this.setURI(req);
-            if (isAllowed(req, res))
-            {
+            if (isAllowed(req, res)) {
                 if (redirect(req, res))
                     return;
                 intercept(req, res);
                 /* try to stream from cache first */
-                if (info.magnolia.cms.beans.runtime.Cache.isCached(req))
-                {
+                if (info.magnolia.cms.beans.runtime.Cache.isCached(req)) {
                     if (CacheHandler.streamFromCache(req, res))
                         return; /* if success return */
                 }
@@ -100,13 +90,10 @@ public class EntryServlet extends HttpServlet
                 Aggregator aggregator = new Aggregator(req, res);
                 boolean success = aggregator.collect();
                 aggregator = null;
-                try
-                {
+                try {
                     Dispatcher.dispatch(req, res, getServletContext());
-                    if (success)
-                    {
-                        if (info.magnolia.cms.beans.config.Cache.isCacheable())
-                        {
+                    if (success) {
+                        if (info.magnolia.cms.beans.config.Cache.isCacheable()) {
                             CacheHandler.cacheURI(req);
                             // todo - Bug : cache only first time after system restart. fails after removed activation
                             // CacheProcess cache = new CacheProcess(req);
@@ -114,14 +101,12 @@ public class EntryServlet extends HttpServlet
                         }
                     }
                 }
-                catch (Exception e)
-                {
+                catch (Exception e) {
                     log.error(e.getMessage(), e);
                 }
             }
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             log.error(e.getMessage(), e);
         }
     }
@@ -133,8 +118,7 @@ public class EntryServlet extends HttpServlet
      * @param req
      * @param res
      */
-    public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
-    {
+    public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         doGet(req, res);
     }
 
@@ -146,27 +130,21 @@ public class EntryServlet extends HttpServlet
      * @param req HttpServletRequest as received by the service method
      * @param res HttpServletResponse as received by the service method
      */
-    private boolean isAllowed(HttpServletRequest req, HttpServletResponse res) throws IOException
-    {
-        if (Lock.isSystemLocked())
-        {
+    private boolean isAllowed(HttpServletRequest req, HttpServletResponse res) throws IOException {
+        if (Lock.isSystemLocked()) {
             res.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
             return false;
         }
-        else if (SessionAccessControl.isSecuredSession(req))
-        {
+        else if (SessionAccessControl.isSecuredSession(req)) {
             return true;
         }
-        else if ((SecureURI.isProtected(uri)))
-        {
+        else if ((SecureURI.isProtected(uri))) {
             return authenticate(req, res);
         }
-        else if (!Listener.isAllowed(req))
-        {
+        else if (!Listener.isAllowed(req)) {
             res.sendError(HttpServletResponse.SC_FORBIDDEN);
             return false;
         }
-
         return true;
     }
 
@@ -177,19 +155,15 @@ public class EntryServlet extends HttpServlet
      * @param req
      * @param res
      */
-    private boolean authenticate(HttpServletRequest req, HttpServletResponse res)
-    {
-        try
-        {
-            if (!Authenticator.authenticate(req))
-            {
+    private boolean authenticate(HttpServletRequest req, HttpServletResponse res) {
+        try {
+            if (!Authenticator.authenticate(req)) {
                 res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 res.setHeader("WWW-Authenticate", "BASIC realm=\"" + Server.getBasicRealm() + "\"");
                 return false;
             }
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             log.error(e.getMessage(), e);
             return false;
         }
@@ -203,17 +177,13 @@ public class EntryServlet extends HttpServlet
      * @param request
      * @param response
      */
-    private boolean redirect(HttpServletRequest request, HttpServletResponse response)
-    {
+    private boolean redirect(HttpServletRequest request, HttpServletResponse response) {
         String URI = this.getURIMap(request);
-        if (!URI.equals(""))
-        {
-            try
-            {
+        if (!URI.equals("")) {
+            try {
                 request.getRequestDispatcher(URI).forward(request, response);
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 log.error("Failed to forward - " + URI);
                 log.error(e.getMessage(), e);
             }
@@ -229,16 +199,12 @@ public class EntryServlet extends HttpServlet
      * @param request
      * @param response
      */
-    private void intercept(HttpServletRequest request, HttpServletResponse response)
-    {
-        if (request.getParameter(INTERCEPT) != null)
-        {
-            try
-            {
+    private void intercept(HttpServletRequest request, HttpServletResponse response) {
+        if (request.getParameter(INTERCEPT) != null) {
+            try {
                 request.getRequestDispatcher(REQUEST_INTERCEPTOR).include(request, response);
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 log.error("Failed to Intercept");
                 log.error(e.getMessage(), e);
             }
@@ -248,8 +214,7 @@ public class EntryServlet extends HttpServlet
     /**
      * @return URI mapping as in ServerInfo
      */
-    private String getURIMap(HttpServletRequest request)
-    {
+    private String getURIMap(HttpServletRequest request) {
         return VirtualMap.getInstance().getURIMapping(request.getRequestURI());
     }
 
@@ -259,26 +224,20 @@ public class EntryServlet extends HttpServlet
      * </p>
      * @param request
      */
-    private void setURI(HttpServletRequest request)
-    {
+    private void setURI(HttpServletRequest request) {
         extension = Server.getDefaultExtension();
-        try
-        {
+        try {
             int lastIndexOfDot = request.getRequestURI().lastIndexOf(".");
-            if (lastIndexOfDot > -1)
-            {
+            if (lastIndexOfDot > -1) {
                 extension = request.getRequestURI().substring(lastIndexOfDot + 1);
                 uri = request.getRequestURI().substring(0, lastIndexOfDot);
             }
-            else
-            {
+            else {
                 uri = request.getRequestURI();
             }
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 }

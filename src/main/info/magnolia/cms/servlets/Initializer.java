@@ -7,16 +7,13 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
+ */
 package info.magnolia.cms.servlets;
 
 import info.magnolia.cms.beans.config.ConfigLoader;
-
 import javax.servlet.http.HttpServlet;
-
 import org.apache.log4j.Logger;
 
 
@@ -24,9 +21,7 @@ import org.apache.log4j.Logger;
  * @author Sameer Charles
  * @version 2.0
  */
-
-public class Initializer extends HttpServlet
-{
+public class Initializer extends HttpServlet {
 
     /**
      * Logger.
@@ -42,16 +37,12 @@ public class Initializer extends HttpServlet
      * 2. Load template config <br>
      * </p>
      */
-    public void init()
-    {
-        try
-        {
+    public void init() {
+        try {
             new ConfigLoader(getServletConfig());
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             log.fatal(e.getMessage(), e);
         }
     }
-
 }

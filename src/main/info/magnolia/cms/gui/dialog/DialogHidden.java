@@ -7,52 +7,46 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms.gui.dialog;
 
-import org.apache.log4j.Logger;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.gui.control.Hidden;
-
-import javax.servlet.jsp.JspWriter;
-import javax.jcr.RepositoryException;
 import java.io.IOException;
+import javax.jcr.RepositoryException;
+import javax.servlet.jsp.JspWriter;
+import org.apache.log4j.Logger;
+
 
 /**
  * @author Vinzenz Wyser
  * @version 2.0
- */ 
-public class DialogHidden  extends DialogBox {
-	private static Logger log = Logger.getLogger(DialogHidden.class);
+ */
+public class DialogHidden extends DialogBox {
 
-	public DialogHidden(ContentNode configNode,Content websiteNode) throws RepositoryException {
-		super(configNode,websiteNode);
-	}
+    private static Logger log = Logger.getLogger(DialogHidden.class);
 
-	public DialogHidden() {
+    public DialogHidden(ContentNode configNode, Content websiteNode) throws RepositoryException {
+        super(configNode, websiteNode);
+    }
 
-	}
+    public DialogHidden() {
+    }
 
-
-	//public void drawHtmlPre(JspWriter out,String id) {}
-	//public void drawHtmlPost(JspWriter out,String id) {}
-
-
-	public void drawHtml(JspWriter out) {
-		Hidden control=new Hidden(this.getName(),this.getValue());
-		if (this.getConfigValue("saveInfo").equals("false")) control.setSaveInfo(false);
-		try {
-			out.println(control.getHtml());
-		}
-		catch (IOException ioe) {log.error("");}
-	}
-
-
-
+    // public void drawHtmlPre(JspWriter out,String id) {}
+    // public void drawHtmlPost(JspWriter out,String id) {}
+    public void drawHtml(JspWriter out) {
+        Hidden control = new Hidden(this.getName(), this.getValue());
+        if (this.getConfigValue("saveInfo").equals("false"))
+            control.setSaveInfo(false);
+        try {
+            out.println(control.getHtml());
+        }
+        catch (IOException ioe) {
+            log.error("");
+        }
+    }
 }

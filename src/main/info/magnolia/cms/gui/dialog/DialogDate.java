@@ -7,68 +7,59 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms.gui.dialog;
 
-import org.apache.log4j.Logger;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.Content;
-
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
+import info.magnolia.cms.core.ContentNode;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.text.SimpleDateFormat;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
+import org.apache.log4j.Logger;
+
 
 /**
  * @author Vinzenz Wyser
  * @version 2.0
- */ 
+ */
 public class DialogDate extends DialogEditWithButton {
-	private static Logger log = Logger.getLogger(DialogLink.class);
 
-	public DialogDate(ContentNode configNode,Content websiteNode) throws RepositoryException {
-		super(configNode,websiteNode);
-		init();
-	}
+    private static Logger log = Logger.getLogger(DialogLink.class);
 
-	public DialogDate() throws RepositoryException {
-		init();
-	}
+    public DialogDate(ContentNode configNode, Content websiteNode) throws RepositoryException {
+        super(configNode, websiteNode);
+        init();
+    }
 
-	private void init() throws RepositoryException {
-		//set buttonlabel in config
-		this.getButton().setLabel("Select date...");
-		this.getButton().setSaveInfo(false);
-		this.getButton().setOnclick("mgnlDialogOpenCalendar('"+this.getName()+"',"+this.getConfigValue("time","false")+");");
+    public DialogDate() throws RepositoryException {
+        init();
+    }
 
-
-		String format="yyyy-MM-dd";
-		String pattern="XXXX-XX-XX";
-
-		if (!this.getConfigValue("time","false").equals("false")) {
-			format+="'T'HH:mm:ss";
-			pattern+="TXX:XX:XX";
-		}
-
-		this.setConfig("onchange","mgnlDialogDatePatternCheck(this,'"+pattern+"');");
-
-
-		if (this.getWebsiteNode()!=null && this.getWebsiteNode().getNodeData(this.getName()).isExist()) {
-			Calendar valueCalendar=this.getWebsiteNode().getNodeData(this.getName()).getDate();
-			Date valueDate = valueCalendar.getTime();
-			SimpleDateFormat sdf = new SimpleDateFormat(format);
-			this.setValue(sdf.format(valueDate));
-			this.setWebsiteNode(null); //workaround so the value is taken... hm, pfusch
-		}
-
-		//check this!
-		this.setConfig("type",this.getConfigValue("type",PropertyType.TYPENAME_DATE));
-	}
-
+    private void init() throws RepositoryException {
+        // set buttonlabel in config
+        this.getButton().setLabel("Select date...");
+        this.getButton().setSaveInfo(false);
+        this.getButton().setOnclick(
+            "mgnlDialogOpenCalendar('" + this.getName() + "'," + this.getConfigValue("time", "false") + ");");
+        String format = "yyyy-MM-dd";
+        String pattern = "XXXX-XX-XX";
+        if (!this.getConfigValue("time", "false").equals("false")) {
+            format += "'T'HH:mm:ss";
+            pattern += "TXX:XX:XX";
+        }
+        this.setConfig("onchange", "mgnlDialogDatePatternCheck(this,'" + pattern + "');");
+        if (this.getWebsiteNode() != null && this.getWebsiteNode().getNodeData(this.getName()).isExist()) {
+            Calendar valueCalendar = this.getWebsiteNode().getNodeData(this.getName()).getDate();
+            Date valueDate = valueCalendar.getTime();
+            SimpleDateFormat sdf = new SimpleDateFormat(format);
+            this.setValue(sdf.format(valueDate));
+            this.setWebsiteNode(null); // workaround so the value is taken... hm, pfusch
+        }
+        // check this!
+        this.setConfig("type", this.getConfigValue("type", PropertyType.TYPENAME_DATE));
+    }
 }

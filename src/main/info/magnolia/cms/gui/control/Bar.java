@@ -7,78 +7,94 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms.gui.control;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
+
 /**
  * @author Vinzenz Wyser
  * @version 2.0
- */ 
+ */
 public class Bar extends ControlSuper {
-	private ArrayList buttonsLeft=new ArrayList();
-	private ArrayList buttonsRight=new ArrayList();
-	private boolean small=true;
 
-	public void setButtonsLeft(ArrayList buttons) {	this.buttonsLeft = buttons;}
-	public void setButtonsLeft(Button button) {	this.getButtonsLeft().add(button);}
-	public ArrayList getButtonsLeft() {return this.buttonsLeft;}
+    private ArrayList buttonsLeft = new ArrayList();
 
-	public void setButtonsRight(ArrayList buttons) {this.buttonsRight = buttons;}
-	public void setButtonsRight(Button button) {this.getButtonsRight().add(button);}
-	public ArrayList getButtonsRight() {return this.buttonsRight;}
+    private ArrayList buttonsRight = new ArrayList();
 
+    private boolean small = true;
 
-	public void setSmall(boolean b) {this.small=b;}
-	public boolean getSmall() {return this.small;}
+    public void setButtonsLeft(ArrayList buttons) {
+        this.buttonsLeft = buttons;
+    }
 
+    public void setButtonsLeft(Button button) {
+        this.getButtonsLeft().add(button);
+    }
 
-	public String getHtml() {
-		StringBuffer html=new StringBuffer();
-		String cssClass;
-		if (this.getSmall()) cssClass=CSSCLASS_CONTROLBARSMALL;
-		else cssClass=CSSCLASS_CONTROLBAR;
-		html.append("<table");
-		html.append(" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"");
-		html.append(this.getHtmlEvents());
-		html.append(" class=\""+cssClass+"\"");
-		if (this.getId()!=null) html.append(" id=\""+this.getId()+"\"");
-		html.append(">");
+    public ArrayList getButtonsLeft() {
+        return this.buttonsLeft;
+    }
 
-		html.append("<tr><td class=\""+cssClass+"\">");
+    public void setButtonsRight(ArrayList buttons) {
+        this.buttonsRight = buttons;
+    }
 
-		Iterator itLeft=this.getButtonsLeft().iterator();
-		while (itLeft.hasNext()) {
-			Button b=(Button) itLeft.next();
-			if (this.getSmall()) b.setSmall(true);
-			b.setCssStyles("background","transparent");
-			b.setSaveInfo(false);
-			html.append(b.getHtml()+"\n");
-		}
+    public void setButtonsRight(Button button) {
+        this.getButtonsRight().add(button);
+    }
 
-		html.append("</td><td class=\""+cssClass+"\" align=\"right\">");
+    public ArrayList getButtonsRight() {
+        return this.buttonsRight;
+    }
 
-		Iterator itRight=this.getButtonsRight().iterator();
-		while (itRight.hasNext()) {
-			Button b=(Button) itRight.next();
-			if (this.getSmall()) b.setSmall(true);
-			b.setCssStyles("background","transparent");
-			b.setSaveInfo(false);
-			html.append(b.getHtml()+"\n");
-		}
+    public void setSmall(boolean b) {
+        this.small = b;
+    }
 
-		html.append("</td></tr></table>");
+    public boolean getSmall() {
+        return this.small;
+    }
 
-		return html.toString();
-	}
-
-
+    public String getHtml() {
+        StringBuffer html = new StringBuffer();
+        String cssClass;
+        if (this.getSmall())
+            cssClass = CSSCLASS_CONTROLBARSMALL;
+        else
+            cssClass = CSSCLASS_CONTROLBAR;
+        html.append("<table");
+        html.append(" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"");
+        html.append(this.getHtmlEvents());
+        html.append(" class=\"" + cssClass + "\"");
+        if (this.getId() != null)
+            html.append(" id=\"" + this.getId() + "\"");
+        html.append(">");
+        html.append("<tr><td class=\"" + cssClass + "\">");
+        Iterator itLeft = this.getButtonsLeft().iterator();
+        while (itLeft.hasNext()) {
+            Button b = (Button) itLeft.next();
+            if (this.getSmall())
+                b.setSmall(true);
+            b.setCssStyles("background", "transparent");
+            b.setSaveInfo(false);
+            html.append(b.getHtml() + "\n");
+        }
+        html.append("</td><td class=\"" + cssClass + "\" align=\"right\">");
+        Iterator itRight = this.getButtonsRight().iterator();
+        while (itRight.hasNext()) {
+            Button b = (Button) itRight.next();
+            if (this.getSmall())
+                b.setSmall(true);
+            b.setCssStyles("background", "transparent");
+            b.setSaveInfo(false);
+            html.append(b.getHtml() + "\n");
+        }
+        html.append("</td></tr></table>");
+        return html.toString();
+    }
 }
-

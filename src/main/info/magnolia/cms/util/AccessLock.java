@@ -7,14 +7,13 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.util;
 
 import java.io.File;
 import java.io.IOException;
-
 import org.apache.log4j.Logger;
 
 
@@ -23,8 +22,7 @@ import org.apache.log4j.Logger;
  * @version 1.1
  * @deprecated as on magnolia 2.0
  */
-public class AccessLock
-{
+public class AccessLock {
 
     /**
      * Logger.
@@ -37,18 +35,14 @@ public class AccessLock
      * page or any resource (images/documents....)
      * </p>
      */
-    public static void set()
-    {
+    public static void set() {
         /* create a tmp file as a lock flag */
         File lockFile = getLockFile();
-        if (!lockFile.exists())
-        {
-            try
-            {
+        if (!lockFile.exists()) {
+            try {
                 lockFile.createNewFile();
             }
-            catch (IOException e)
-            {
+            catch (IOException e) {
                 log.error("Failed to set access lock");
                 log.error(e.getMessage());
             }
@@ -60,8 +54,7 @@ public class AccessLock
      * releases any lock set by the set method (if any)
      * </p>
      */
-    public static void release()
-    {
+    public static void release() {
         File lockFile = getLockFile();
         if ((lockFile != null) && lockFile.exists())
             lockFile.delete();
@@ -72,8 +65,7 @@ public class AccessLock
      * Checks is the access lock has been set
      * </p>
      */
-    public static boolean isSet()
-    {
+    public static boolean isSet() {
         File lockFile = getLockFile();
         if (lockFile.exists())
             return true;
@@ -83,19 +75,15 @@ public class AccessLock
     /**
      * @return lock file instance
      */
-    private static File getLockFile()
-    {
-        try
-        {
+    private static File getLockFile() {
+        try {
             return new File(Path.getTempDirectoryPath() + "/.AccessLock");
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             log.error(e.getMessage(), e);
             log.fatal("Failed to get AccessLock file");
             log.fatal("Check Java -D options for magnolia tmp directory");
         }
         return null;
     }
-
 }

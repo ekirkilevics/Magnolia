@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.taglibs;
@@ -16,8 +16,7 @@ package info.magnolia.cms.taglibs;
  * @author Marcel Salathe
  * @version $Revision: $ ($Author: $)
  */
-public class IfNotEmpty extends IfEmpty
-{
+public class IfNotEmpty extends IfEmpty {
 
     /**
      * Stable serialVersionUID.
@@ -27,8 +26,7 @@ public class IfNotEmpty extends IfEmpty
     /**
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
-    public int doStartTag()
-    {
+    public int doStartTag() {
         // Just the opposite of IfEmpty
         int ifEmptyResult = super.doStartTag();
         return (ifEmptyResult == SKIP_BODY) ? EVAL_BODY_INCLUDE : SKIP_BODY;

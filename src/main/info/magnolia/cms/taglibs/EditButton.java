@@ -7,21 +7,18 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.gui.inline.ButtonEdit;
 import info.magnolia.cms.util.Resource;
-
 import java.io.IOException;
-
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
-
 import org.apache.log4j.Logger;
 
 
@@ -29,8 +26,7 @@ import org.apache.log4j.Logger;
  * @author Marcel Salathe
  * @version $Revision: $ ($Author: $)
  */
-public class EditButton extends TagSupport
-{
+public class EditButton extends TagSupport {
 
     /**
      * Stable serialVersionUID.
@@ -59,8 +55,7 @@ public class EditButton extends TagSupport
      * </p>
      * @return int
      */
-    public int doStartTag()
-    {
+    public int doStartTag() {
         this.displayHandler = "";
         this.request = (HttpServletRequest) pageContext.getRequest();
         return EVAL_BODY_INCLUDE;
@@ -72,18 +67,15 @@ public class EditButton extends TagSupport
      * </p>
      * @return int
      */
-    public int doEndTag()
-    {
+    public int doEndTag() {
         /*
          * if (!ServerInfo.isAdmin() || Resource.showPreview(this.request)) return EVAL_PAGE; if
          * (!Resource.getActivePage(this.request).isGranted(Permission.WRITE_PROPERTY)) return EVAL_PAGE;
          */
-        try
-        {
+        try {
             this.display();
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
         }
         return EVAL_PAGE;
     }
@@ -94,25 +86,20 @@ public class EditButton extends TagSupport
      * </p>
      * @param name , comtainer name which will be used to access/write content
      */
-    public void setContentNodeName(String name)
-    {
+    public void setContentNodeName(String name) {
         this.nodeName = name;
     }
 
     /**
      *
      */
-    private String getNodeName()
-    {
-        if (this.nodeName == null)
-        {
-            if (Resource.getLocalContentNode(this.request) == null)
-            {
+    private String getNodeName() {
+        if (this.nodeName == null) {
+            if (Resource.getLocalContentNode(this.request) == null) {
                 return null;
             }
             return Resource.getLocalContentNode(this.request).getName();
         }
-
         return this.nodeName;
     }
 
@@ -122,18 +109,15 @@ public class EditButton extends TagSupport
      * </p>
      * @param name , comtainer name which will be used to access/write content
      */
-    public void setContentNodeCollectionName(String name)
-    {
+    public void setContentNodeCollectionName(String name) {
         this.nodeCollectionName = name;
     }
 
     /**
      * @return content node collection name
      */
-    private String getNodeCollectionName()
-    {
-        if (this.nodeCollectionName == null)
-        {
+    private String getNodeCollectionName() {
+        if (this.nodeCollectionName == null) {
             return Resource.getLocalContentNodeCollectionName(this.request);
         }
         return this.nodeCollectionName;
@@ -146,8 +130,7 @@ public class EditButton extends TagSupport
      * </p>
      * @param type , content type
      */
-    public void setParFile(String type)
-    {
+    public void setParFile(String type) {
         this.setParagraph(type);
     }
 
@@ -157,24 +140,19 @@ public class EditButton extends TagSupport
      * </p>
      * @param type , content type
      */
-    public void setParagraph(String type)
-    {
+    public void setParagraph(String type) {
         this.paragraph = type;
     }
 
     /**
      * @return String paragraph (type of par)
      */
-    private String getParagraph()
-    {
-        if (this.paragraph == null)
-        {
-            try
-            {
+    private String getParagraph() {
+        if (this.paragraph == null) {
+            try {
                 return Resource.getLocalContentNode(this.request).getNodeData("paragraph").getString();
             }
-            catch (RepositoryException e)
-            {
+            catch (RepositoryException e) {
                 log.error(e.getMessage());
                 return "";
             }
@@ -189,18 +167,15 @@ public class EditButton extends TagSupport
      * </p>
      * @param path , relative to WEB-INF
      */
-    public void setTemplate(String path)
-    {
+    public void setTemplate(String path) {
         this.displayHandler = path;
     }
 
     /**
      * @return template path
      */
-    private String getTemplate()
-    {
-        if (this.displayHandler == null)
-        {
+    private String getTemplate() {
+        if (this.displayHandler == null) {
             return Resource.getLocalContentNode(this.request).getTemplate();
         }
         return this.displayHandler;
@@ -212,14 +187,11 @@ public class EditButton extends TagSupport
      * </p>
      * @return String path
      */
-    private String getPath()
-    {
-        try
-        {
+    private String getPath() {
+        try {
             return Resource.getCurrentActivePage(this.request).getHandle();
         }
-        catch (Exception re)
-        {
+        catch (Exception re) {
             return "";
         }
     }
@@ -231,8 +203,7 @@ public class EditButton extends TagSupport
      * </p>
      * @param label , under which content must be stored
      */
-    public void setEditLabel(String label)
-    {
+    public void setEditLabel(String label) {
         this.setLabel(label);
     }
 
@@ -242,16 +213,14 @@ public class EditButton extends TagSupport
      * </p>
      * @param label , under which content must be stored
      */
-    public void setLabel(String label)
-    {
+    public void setLabel(String label) {
         this.label = label;
     }
 
     /**
      * @return String , label for the edit bar
      */
-    private String getLabel()
-    {
+    private String getLabel() {
         return this.label;
     }
 
@@ -261,13 +230,11 @@ public class EditButton extends TagSupport
      * </p>
      * @param s , true for a small button (default), false for a large
      */
-    public void setSmall(String s)
-    {
+    public void setSmall(String s) {
         this.small = s;
     }
 
-    private String getSmall()
-    {
+    private String getSmall() {
         return this.small;
     }
 
@@ -277,15 +244,11 @@ public class EditButton extends TagSupport
      * </p>
      * @throws IOException
      */
-    private void display() throws IOException
-    {
-
-        if (this.getNodeCollectionName() != null && this.getNodeName() == null)
-        {
+    private void display() throws IOException {
+        if (this.getNodeCollectionName() != null && this.getNodeName() == null) {
             // cannot draw edit button with nodeCllection and without node
             return;
         }
-
         JspWriter out = pageContext.getOut();
         ButtonEdit button = new ButtonEdit(this.request);
         button.setPath(this.getPath());
@@ -293,13 +256,10 @@ public class EditButton extends TagSupport
         button.setNodeCollectionName(this.getNodeCollectionName());
         button.setNodeName(this.getNodeName());
         button.setDefaultOnclick();
-
         if (this.getLabel() != null)
             button.setLabel(this.getLabel());
         if (!this.getSmall().equals("false"))
             button.setSmall(true);
         button.drawHtml(out);
-
     }
-
 }

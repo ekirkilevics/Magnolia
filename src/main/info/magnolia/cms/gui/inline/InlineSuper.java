@@ -7,27 +7,34 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms.gui.inline;
 
 /**
  * @author Vinzenz Wyser
  * @version 2.0
- */ 
+ */
 public class InlineSuper {
-	private String path="";
-	private String paragraph="";
 
+    private String path = "";
 
-	public void setPath(String s) {this.path = s;}
-	public String getPath() {return this.path;}
+    private String paragraph = "";
 
-	public void setParagraph(String s) {this.paragraph=s;}
-	public String getParagraph() {return this.paragraph;}
+    public void setPath(String s) {
+        this.path = s;
+    }
 
+    public String getPath() {
+        return this.path;
+    }
+
+    public void setParagraph(String s) {
+        this.paragraph = s;
+    }
+
+    public String getParagraph() {
+        return this.paragraph;
+    }
 }

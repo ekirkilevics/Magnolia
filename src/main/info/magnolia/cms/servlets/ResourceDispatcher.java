@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.servlets;
@@ -16,11 +16,9 @@ import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.GZIPOutputStream;
-
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
@@ -29,7 +27,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.log4j.Logger;
 
 
@@ -41,8 +38,7 @@ import org.apache.log4j.Logger;
  * @author Sameer Charles
  * @version 1.0
  */
-public class ResourceDispatcher extends HttpServlet
-{
+public class ResourceDispatcher extends HttpServlet {
 
     private static Logger log = Logger.getLogger(ResourceDispatcher.class);
 
@@ -52,8 +48,7 @@ public class ResourceDispatcher extends HttpServlet
      * @throws ServletException
      * @throws IOException
      */
-    public void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
-    {
+    public void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         handleResourceRequest(req, res);
     }
 
@@ -63,22 +58,18 @@ public class ResourceDispatcher extends HttpServlet
      * </p>
      * @throws IOException
      */
-    private void handleResourceRequest(HttpServletRequest req, HttpServletResponse res) throws IOException
-    {
+    private void handleResourceRequest(HttpServletRequest req, HttpServletResponse res) throws IOException {
         String resourceHandle = (String) req.getAttribute(Aggregator.HANDLE);
-        try
-        {
+        try {
             HierarchyManager hm = (HierarchyManager) req.getAttribute(Aggregator.HIERARCHY_MANAGER);
             InputStream is = getAtomAsStream(resourceHandle, hm, res);
             // todo always send as is, find better way to dicover if resource could be compressed
             sendUnCompressed(is, res);
             is.close();
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             res.sendRedirect(Server.get404URI());
         }
-
     }
 
     /**
@@ -87,8 +78,7 @@ public class ResourceDispatcher extends HttpServlet
      * </p>
      * @return boolean
      */
-    private boolean canCompress(HttpServletRequest req)
-    {
+    private boolean canCompress(HttpServletRequest req) {
         String encoding = req.getHeader("Accept-Encoding");
         if (encoding != null)
             return (encoding.toLowerCase().indexOf("gzip") > -1);
@@ -103,13 +93,11 @@ public class ResourceDispatcher extends HttpServlet
      * @param res HttpServletResponse as received by the service method
      * @throws Exception
      */
-    private void sendCompressed(InputStream is, HttpServletResponse res) throws Exception
-    {
+    private void sendCompressed(InputStream is, HttpServletResponse res) throws Exception {
         res.setHeader("Content-Encoding", "gzip");
         GZIPOutputStream gzos = new GZIPOutputStream(res.getOutputStream());
         int bit;
-        while ((bit = is.read()) != -1)
-        {
+        while ((bit = is.read()) != -1) {
             gzos.write(bit);
         }
         gzos.flush();
@@ -124,13 +112,11 @@ public class ResourceDispatcher extends HttpServlet
      * @param res HttpServletResponse as received by the service method
      * @throws IOException
      */
-    private void sendUnCompressed(InputStream is, HttpServletResponse res) throws Exception
-    {
+    private void sendUnCompressed(InputStream is, HttpServletResponse res) throws Exception {
         ServletOutputStream os = res.getOutputStream();
         byte[] buffer = new byte[8192];
         int read = 0;
-        while ((read = is.read(buffer)) > 0)
-        {
+        while ((read = is.read(buffer)) > 0) {
             os.write(buffer, 0, read);
         }
         os.flush();
@@ -141,24 +127,19 @@ public class ResourceDispatcher extends HttpServlet
      *
      */
     private InputStream getAtomAsStream(String path, HierarchyManager hm, HttpServletResponse res)
-        throws RepositoryException
-    {
-        try
-        {
+        throws RepositoryException {
+        try {
             NodeData atom = hm.getNodeData(path);
-            if (atom.getType() == PropertyType.BINARY)
-            {
+            if (atom.getType() == PropertyType.BINARY) {
                 NodeData size = hm.getNodeData(path + "_properties/size");
                 int sizeInBytes = (new Long(size.getLong())).intValue();
                 res.setContentLength(sizeInBytes);
             }
             return atom.getValue().getStream();
         }
-        catch (PathNotFoundException e)
-        {
+        catch (PathNotFoundException e) {
             log.error("Resource not found - " + path);
         }
         return null;
     }
-
 }

@@ -7,100 +7,78 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms.exchange.ice;
 
-import info.magnolia.cms.beans.config.Subscriber;
 import info.magnolia.cms.beans.config.ItemType;
-import info.magnolia.cms.core.*;
-import info.magnolia.cms.util.ReverseFileReader;
+import info.magnolia.cms.beans.config.Subscriber;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.Path;
+import info.magnolia.cms.util.ReverseFileReader;
 import info.magnolia.cms.util.regex.RegexWildcardPattern;
 import info.magnolia.exchange.Packet;
-
-import java.util.Hashtable;
-import java.util.Collection;
-import java.util.Iterator;
 import java.text.SimpleDateFormat;
-
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.Iterator;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 
-import javax.jcr.RepositoryException;
-import javax.jcr.PropertyType;
-import javax.jcr.Session;
-
-
 
 /**
- * Date: May 7, 2004
- * Time: 2:25:24 PM
- *
  * @author Sameer Charles
  */
-
-
-
 public class PacketCollector {
-
-
 
     private static Logger log = Logger.getLogger(PacketFactory.class);
 
     private static final String ROOT_ELEMENT = "Root";
-    private static final String CONTENT_ELEMENT = "Content";
-    private static final String CONTENT_NODE_ELEMENT = "ContentNode";
-    private static final String NODE_DATA_ELEMENT = "NodeData";
 
+    private static final String CONTENT_ELEMENT = "Content";
+
+    private static final String CONTENT_NODE_ELEMENT = "ContentNode";
+
+    private static final String NODE_DATA_ELEMENT = "NodeData";
 
     public static final String MAIN_PACKET = "main";
 
-
-
     private Hashtable packets;
+
     private Subscriber subscriber;
+
     private Document masterPacketData;
+
     private Session contextSession;
+
     private String contextNameString;
-
-
-
-
-
 
     /**
      * <p>
      * Creates a packet collector for the specified subscriber.
-     *
      * </p>
-     *
      * @param subscriber
-     * */
+     */
     public PacketCollector(Subscriber subscriber) {
         this.subscriber = subscriber;
     }
 
-
-
-
     /**
      * <p>
      * Collect data needed to be sent to the current subscriber.
-     *
      * </p>
-     *
      * @param contextSession
      * @param path
      * @param depth
-     * */
-    public void collect(Session contextSession, String path, int depth)
-            throws RepositoryException {
+     */
+    public void collect(Session contextSession, String path, int depth) throws RepositoryException {
         this.contextSession = contextSession;
         this.contextNameString = this.contextSession.getRootNode().getName();
         this.packets = new Hashtable();
@@ -109,42 +87,38 @@ public class PacketCollector {
         if (hm.isPage(path)) {
             this.masterPacketData = new Document();
             this.createXMLPacket(hm.getPage(path));
-        } else if (hm.isContentNode(path)) {
-
-        } else if (hm.isNodeData(path)) {
+        }
+        else if (hm.isContentNode(path)) {
+        }
+        else if (hm.isNodeData(path)) {
             this.createBinaryPacket(hm.getNodeData(path));
-        } else {
+        }
+        else {
             throw new RepositoryException("Invalid path (does not match to any JCR type)");
         }
     }
 
-
-
     /**
-     *
      * @param content
-     * */
+     */
     private void createXMLPacket(Content content) {
         Element root = new Element(PacketCollector.ROOT_ELEMENT);
         this.masterPacketData.setRootElement(root);
         Element page = new Element(PacketCollector.CONTENT_ELEMENT);
-        page.setAttribute(Header.PATH,content.getHandle());
+        page.setAttribute(Header.PATH, content.getHandle());
         root.addContent(page);
-        this.addNodeDataList(root,content);
+        this.addNodeDataList(root, content);
         this.addContentNodeList(root, content);
         Packet packet = PacketFactory.getPacket(this.masterPacketData);
-        packet.getHeaders().addHeader(Header.PATH,content.getHandle());
+        packet.getHeaders().addHeader(Header.PATH, content.getHandle());
         this.setContext(packet);
-        this.packets.put(PacketCollector.MAIN_PACKET,packet);
+        this.packets.put(PacketCollector.MAIN_PACKET, packet);
     }
 
-
-
     /**
-     *
      * @param root , root element of the mail packet
      * @param content
-     * */
+     */
     private void addContentNodeList(Element root, Content content) {
         Collection children = content.getChildren(ItemType.NT_CONTENTNODE);
         if (children == null || (children.isEmpty()))
@@ -155,24 +129,20 @@ public class PacketCollector {
             /* add only if it has been changed since last activation */
             if (this.isActivated(contentNode))
                 continue;
-
             Element contentNodeElement = new Element(PacketCollector.CONTENT_NODE_ELEMENT);
             root.addContent(contentNodeElement);
-            contentNodeElement.setAttribute(Header.PATH,contentNode.getHandle());
+            contentNodeElement.setAttribute(Header.PATH, contentNode.getHandle());
             /* add all non-binary properties to xml */
-            this.addNodeDataList(root,contentNode);
+            this.addNodeDataList(root, contentNode);
             if (contentNode.hasChildren(ItemType.NT_CONTENTNODE))
-                this.addContentNodeList(root,contentNode);
+                this.addContentNodeList(root, contentNode);
         }
     }
 
-
-
     /**
-     *
      * @param root , root element of the mail packet
      * @param content
-     * */
+     */
     private void addNodeDataList(Element root, Content content) {
         Collection properties = content.getChildren(ItemType.MAGNOLIA_NODE_DATA);
         if (properties == null)
@@ -187,131 +157,117 @@ public class PacketCollector {
             }
             Element nodeDataElement = new Element(PacketCollector.NODE_DATA_ELEMENT);
             root.addContent(nodeDataElement);
-            nodeDataElement.setAttribute(Header.PATH,nodeData.getHandle());
-            nodeDataElement.setAttribute(Header.TYPE,(new Integer(nodeDataType).toString()));
+            nodeDataElement.setAttribute(Header.PATH, nodeData.getHandle());
+            nodeDataElement.setAttribute(Header.TYPE, (new Integer(nodeDataType).toString()));
             Element data = new Element(Header.DATA);
             nodeDataElement.addContent(data);
             String value = null;
             switch (nodeDataType) {
-                case PropertyType.STRING:
+                case PropertyType.STRING :
                     value = nodeData.getString();
                     break;
-                case PropertyType.LONG:
+                case PropertyType.LONG :
                     value = (new Long(nodeData.getLong())).toString();
                     break;
-                case PropertyType.DOUBLE:
+                case PropertyType.DOUBLE :
                     value = (new Double(nodeData.getDouble())).toString();
                     break;
-                case PropertyType.BOOLEAN:
+                case PropertyType.BOOLEAN :
                     value = (new Boolean(nodeData.getBoolean())).toString();
                     break;
-                case PropertyType.DATE:
+                case PropertyType.DATE :
                     value = nodeData.getDate().getTime().toString();
                     break;
-                default:
+                default :
                     value = "";
             }
             data.setText(value);
         }
     }
 
-
-
-
     /**
      * <p>
      * only works for binary files, wraps nodeData to info.magnolia.exchange.Packet
      * </p>
-     *
      * @see info.magnolia.exchange.Packet
      * @param nodeData
-     * */
+     */
     private void createBinaryPacket(NodeData nodeData) {
         try {
             Packet packet = PacketFactory.getPacket(nodeData.getValue().getStream());
-            packet.getHeaders().addHeader(Header.PATH,nodeData.getHandle());
+            packet.getHeaders().addHeader(Header.PATH, nodeData.getHandle());
             this.setContext(packet);
-            this.packets.put(packet.getID(),packet);
-        } catch (RepositoryException e) {
-            log.error("Failed to create exchange packet for BINARY file - "+nodeData.getHandle());
+            this.packets.put(packet.getID(), packet);
+        }
+        catch (RepositoryException e) {
+            log.error("Failed to create exchange packet for BINARY file - " + nodeData.getHandle());
             log.error(e.getMessage());
         }
     }
 
-
-
     /**
-     *
      * @return packets collected (XML / Binary)
-     * */
+     */
     protected Hashtable getPackets() {
         return this.packets;
     }
 
-
-
     /**
-     *
      * @param packet
-     * */
+     */
     private void setContext(Packet packet) {
         try {
-            packet.getHeaders().addHeader(Header.CONTEXT,this.contextNameString);
-        } catch (Exception e) {
-            log.error("Failed to set context for packet - "+packet.getID());
+            packet.getHeaders().addHeader(Header.CONTEXT, this.contextNameString);
+        }
+        catch (Exception e) {
+            log.error("Failed to set context for packet - " + packet.getID());
             log.error(e.getMessage());
         }
     }
 
-
-
     /**
      * <p>
-     * Compares last modification time with the last activation or deactivation time
-     * in history logs.<br>
-     * reads history file backward to check for any trace for deactivation/activation for "this"
-     * subscriber
+     * Compares last modification time with the last activation or deactivation time in history logs. <br>
+     * reads history file backward to check for any trace for deactivation/activation for "this" subscriber
      * </p>
-     *
      * @param contentNode
-     * */
+     */
     private boolean isActivated(Content contentNode) {
         String exchangeHistoryFilePath = Path.getHistoryFilePath();
         SimpleDateFormat sdf = new SimpleDateFormat("d.M.y H:m:s");
         try {
             long lastModification = contentNode.getMetaData().getModificationDate().getTime().getTime();
-            ReverseFileReader rfr = new ReverseFileReader(exchangeHistoryFilePath,"r");
+            ReverseFileReader rfr = new ReverseFileReader(exchangeHistoryFilePath, "r");
             String record = "";
             while (record != null) {
                 record = rfr.getRecord();
                 String pattern = RegexWildcardPattern.getMultipleCharPattern()
-                        +" --- "+this.subscriber.getName()
-                        +" --- "+this.contextNameString+" --- "+contentNode.getHandle()
-                        +" --- "+RegexWildcardPattern.getMultipleCharPattern();
+                    + " --- "
+                    + this.subscriber.getName()
+                    + " --- "
+                    + this.contextNameString
+                    + " --- "
+                    + contentNode.getHandle()
+                    + " --- "
+                    + RegexWildcardPattern.getMultipleCharPattern();
                 if (record.matches(pattern)) {
                     if (record.indexOf(" --- REMOVED --- ") > -1)
                         return false; /* URI deactivated */
                     /**
                      * check if the time of last SENT event is after the node modification
-                     * */
-                    long lastActivation = sdf.parse(record.substring(0,19)).getTime();
+                     */
+                    long lastActivation = sdf.parse(record.substring(0, 19)).getTime();
                     if (lastActivation > lastModification)
                         return true;
                     break;
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error(e.getMessage());
             return false;
         }
-
-        log.info("URI - "+contentNode.getHandle()
-                +" needs to activated for [ "+this.subscriber.getName()+" ]");
+        log.info("URI - " + contentNode.getHandle() + " needs to activated for [ " + this.subscriber.getName() + " ]");
         return false;
     }
-
-
-
-
-
 }

@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.core;
@@ -18,17 +18,14 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Path;
-
 import java.io.InputStream;
 import java.util.Calendar;
-
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
-
 import org.apache.log4j.Logger;
 
 
@@ -36,9 +33,7 @@ import org.apache.log4j.Logger;
  * @author Sameer Charles
  * @version 2.0
  */
-
-public class NodeData
-{
+public class NodeData {
 
     /**
      * Logger.
@@ -58,8 +53,7 @@ public class NodeData
     /**
      * package private constructor
      */
-    NodeData()
-    {
+    NodeData() {
         this.property = null;
     }
 
@@ -73,8 +67,7 @@ public class NodeData
     public NodeData(Node workingNode, String name, AccessManager manager)
         throws PathNotFoundException,
         RepositoryException,
-        AccessDeniedException
-    {
+        AccessDeniedException {
         Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.READ);
         this.dataFile = workingNode.getNode(name);
         this.property = this.dataFile.getNode(ItemType.getSystemName(ItemType.JCR_CONTENT)).getProperty(DATA_ELEMENT);
@@ -93,22 +86,18 @@ public class NodeData
     public NodeData(Node workingNode, String name, boolean createNew, AccessManager manager)
         throws PathNotFoundException,
         RepositoryException,
-        AccessDeniedException
-    {
-        if (createNew)
-        {
+        AccessDeniedException {
+        if (createNew) {
             Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
             this.dataFile = workingNode.addNode(name, ItemType.getSystemName(ItemType.NT_NODEDATA));
             Node contentNode = this.dataFile.addNode(ItemType.getSystemName(ItemType.JCR_CONTENT), ItemType
                 .getSystemName(ItemType.NT_UNSTRUCTRUED));
             this.property = contentNode.setProperty(DATA_ELEMENT, "");
-            if (this.dataFile.canAddMixin(ItemType.getSystemName(ItemType.MIX_Versionable)))
-            {
+            if (this.dataFile.canAddMixin(ItemType.getSystemName(ItemType.MIX_Versionable))) {
                 this.dataFile.addMixin(ItemType.getSystemName(ItemType.MIX_Versionable));
             }
         }
-        else
-        {
+        else {
             Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.READ);
             this.dataFile = workingNode.getNode(name);
             this.property = this.dataFile.getNode(ItemType.getSystemName(ItemType.JCR_CONTENT)).getProperty(
@@ -132,8 +121,7 @@ public class NodeData
     public NodeData(Node workingNode, String name, Value value, int type, AccessManager manager)
         throws PathNotFoundException,
         RepositoryException,
-        AccessDeniedException
-    {
+        AccessDeniedException {
         this(workingNode, name, value, manager);
     }
 
@@ -150,15 +138,13 @@ public class NodeData
     public NodeData(Node workingNode, String name, Value value, AccessManager manager)
         throws PathNotFoundException,
         RepositoryException,
-        AccessDeniedException
-    {
+        AccessDeniedException {
         Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
         this.dataFile = workingNode.addNode(name, ItemType.getSystemName(ItemType.NT_NODEDATA));
         Node contentNode = this.dataFile.addNode(ItemType.getSystemName(ItemType.JCR_CONTENT), ItemType
             .getSystemName(ItemType.NT_UNSTRUCTRUED));
         this.property = contentNode.setProperty(DATA_ELEMENT, value);
-        if (this.dataFile.canAddMixin(ItemType.getSystemName(ItemType.MIX_Versionable)))
-        {
+        if (this.dataFile.canAddMixin(ItemType.getSystemName(ItemType.MIX_Versionable))) {
             this.dataFile.addMixin(ItemType.getSystemName(ItemType.MIX_Versionable));
         }
         this.setAccessManager(manager);
@@ -173,16 +159,14 @@ public class NodeData
     public NodeData(Node dataFile, AccessManager manager)
         throws PathNotFoundException,
         RepositoryException,
-        AccessDeniedException
-    {
+        AccessDeniedException {
         Access.isGranted(manager, Path.getAbsolutePath(dataFile.getPath()), Permission.READ);
         this.dataFile = dataFile;
         this.property = this.dataFile.getNode(ItemType.getSystemName(ItemType.JCR_CONTENT)).getProperty(DATA_ELEMENT);
         this.setAccessManager(manager);
     }
 
-    public void setAccessManager(AccessManager manager)
-    {
+    public void setAccessManager(AccessManager manager) {
         this.accessManager = manager;
     }
 
@@ -201,14 +185,11 @@ public class NodeData
      * </p>
      * @return Value
      */
-    public Value getValue()
-    {
-        try
-        {
+    public Value getValue() {
+        try {
             return this.property.getValue();
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             return null;
         }
     }
@@ -221,14 +202,11 @@ public class NodeData
      * @param lineBreak , regular expession
      * @return String
      */
-    public String getString(String lineBreak)
-    {
-        try
-        {
+    public String getString(String lineBreak) {
+        try {
             return this.getString().replaceAll("\n", lineBreak);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             return "";
         }
     }
@@ -239,14 +217,11 @@ public class NodeData
      * </p>
      * @return String
      */
-    public String getString()
-    {
-        try
-        {
+    public String getString() {
+        try {
             return this.property.getString();
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             return "";
         }
     }
@@ -257,14 +232,11 @@ public class NodeData
      * </p>
      * @return long
      */
-    public long getLong()
-    {
-        try
-        {
+    public long getLong() {
+        try {
             return this.property.getLong();
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             return 0;
         }
     }
@@ -275,14 +247,11 @@ public class NodeData
      * </p>
      * @return double
      */
-    public double getDouble()
-    {
-        try
-        {
+    public double getDouble() {
+        try {
             return this.property.getDouble();
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             return 0;
         }
     }
@@ -293,14 +262,11 @@ public class NodeData
      * </p>
      * @return Calendar
      */
-    public Calendar getDate()
-    {
-        try
-        {
+    public Calendar getDate() {
+        try {
             return this.property.getDate();
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             return null;
         }
     }
@@ -311,14 +277,11 @@ public class NodeData
      * </p>
      * @return boolean
      */
-    public boolean getBoolean()
-    {
-        try
-        {
+    public boolean getBoolean() {
+        try {
             return this.property.getBoolean();
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             return false;
         }
     }
@@ -338,14 +301,11 @@ public class NodeData
      * </p>
      * @return PropertyType
      */
-    public int getType()
-    {
-        try
-        {
+    public int getType() {
+        try {
             return this.property.getValue().getType();
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             return PropertyType.UNDEFINED;
         }
     }
@@ -353,14 +313,11 @@ public class NodeData
     /**
      * @return atom name
      */
-    public String getName()
-    {
-        try
-        {
+    public String getName() {
+        try {
             return this.dataFile.getName();
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             return "";
         }
     }
@@ -371,14 +328,11 @@ public class NodeData
      * </p>
      * @return content length
      */
-    public long getContentLength()
-    {
-        try
-        {
+    public long getContentLength() {
+        try {
             return this.property.getLength();
         }
-        catch (RepositoryException re)
-        {
+        catch (RepositoryException re) {
             return 0;
         }
     }
@@ -390,8 +344,7 @@ public class NodeData
      * </p>
      * @return Property
      */
-    public Property getJCRProperty()
-    {
+    public Property getJCRProperty() {
         return this.property;
     }
 
@@ -402,8 +355,7 @@ public class NodeData
      * @throws RepositoryException
      * @param value , string to be set
      */
-    public void setValue(String value) throws RepositoryException, AccessDeniedException
-    {
+    public void setValue(String value) throws RepositoryException, AccessDeniedException {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
         this.property.setValue(value);
     }
@@ -415,8 +367,7 @@ public class NodeData
      * @throws RepositoryException
      * @param value , int value to be set
      */
-    public void setValue(int value) throws RepositoryException, AccessDeniedException
-    {
+    public void setValue(int value) throws RepositoryException, AccessDeniedException {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
         this.property.setValue(value);
     }
@@ -428,8 +379,7 @@ public class NodeData
      * @throws RepositoryException
      * @param value , long value to be set
      */
-    public void setValue(long value) throws RepositoryException, AccessDeniedException
-    {
+    public void setValue(long value) throws RepositoryException, AccessDeniedException {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
         this.property.setValue(value);
     }
@@ -441,8 +391,7 @@ public class NodeData
      * @throws RepositoryException
      * @param value , InputStream to be set
      */
-    public void setValue(InputStream value) throws RepositoryException, AccessDeniedException
-    {
+    public void setValue(InputStream value) throws RepositoryException, AccessDeniedException {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
         this.property.setValue(value);
     }
@@ -454,8 +403,7 @@ public class NodeData
      * @throws RepositoryException
      * @param value , double value to be set
      */
-    public void setValue(double value) throws RepositoryException, AccessDeniedException
-    {
+    public void setValue(double value) throws RepositoryException, AccessDeniedException {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
         this.property.setValue(value);
     }
@@ -467,8 +415,7 @@ public class NodeData
      * @throws RepositoryException
      * @param value , boolean value to be set
      */
-    public void setValue(boolean value) throws RepositoryException, AccessDeniedException
-    {
+    public void setValue(boolean value) throws RepositoryException, AccessDeniedException {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
         this.property.setValue(value);
     }
@@ -480,8 +427,7 @@ public class NodeData
      * @throws RepositoryException
      * @param value , Calendar value to be set
      */
-    public void setValue(Calendar value) throws RepositoryException, AccessDeniedException
-    {
+    public void setValue(Calendar value) throws RepositoryException, AccessDeniedException {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
         this.property.setValue(value);
     }
@@ -493,8 +439,7 @@ public class NodeData
      * @throws RepositoryException
      * @param value
      */
-    public void setValue(Value value) throws RepositoryException, AccessDeniedException
-    {
+    public void setValue(Value value) throws RepositoryException, AccessDeniedException {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
         this.property.setValue(value);
     }
@@ -505,8 +450,7 @@ public class NodeData
      * </p>
      * @return boolean
      */
-    public boolean isExist()
-    {
+    public boolean isExist() {
         return (this.property != null);
     }
 
@@ -516,14 +460,11 @@ public class NodeData
      * </p>
      * @return NodeData path relative to the repository
      */
-    public String getHandle()
-    {
-        try
-        {
+    public String getHandle() {
+        try {
             return this.dataFile.getPath();
         }
-        catch (RepositoryException e)
-        {
+        catch (RepositoryException e) {
             log.error(e.getMessage(), e);
         }
         return "";
@@ -536,18 +477,14 @@ public class NodeData
      * @param permissions as defined in javax.jcr.Permission
      * @return true is the current user has specified access on this node.
      */
-    public boolean isGranted(long permissions)
-    {
-        try
-        {
+    public boolean isGranted(long permissions) {
+        try {
             Access.isGranted(this.accessManager, Path.getAbsolutePath(this.dataFile.getPath()), permissions);
             return true;
         }
-        catch (RepositoryException re)
-        {
+        catch (RepositoryException re) {
             log.error(re.getMessage(), re);
         }
         return false;
     }
-
 }

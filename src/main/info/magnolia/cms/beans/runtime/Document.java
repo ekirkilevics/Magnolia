@@ -7,51 +7,41 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
-
-
+ */
 package info.magnolia.cms.beans.runtime;
 
-
-import info.magnolia.cms.core.NodeData;
-
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
 
 /**
- * User: sameercharles
- * Date: Apr 28, 2003
- * Time: 11:20:59 AM
+ * User: sameercharles Date: Apr 28, 2003 Time: 11:20:59 AM
  * @author Sameer Charles
  * @version 1.1
  */
-
-
 public class Document {
 
-
     private String atomName;
+
     private String fileName;
+
     private String extension;
+
     private String type;
+
     private java.io.File file;
+
     private FileInputStream inputStream;
-
-
-
-
 
     /**
      * package private constructor
      */
-    Document () {}
-
-
+    Document() {
+    }
 
     /**
      *
@@ -60,16 +50,12 @@ public class Document {
         this.atomName = name;
     }
 
-
-
     /**
      *
      */
     public String getAtomName() {
         return this.atomName;
     }
-
-
 
     /**
      *
@@ -78,16 +64,12 @@ public class Document {
         this.fileName = name;
     }
 
-
-
     /**
      *
      */
     public String getFileName() {
         return this.fileName;
     }
-
-
 
     /**
      *
@@ -96,16 +78,12 @@ public class Document {
         this.type = type;
     }
 
-
-
     /**
      *
      */
     public String getType() {
         return this.type;
     }
-
-
 
     /**
      *
@@ -114,16 +92,12 @@ public class Document {
         this.file = in;
     }
 
-
-
     /**
      *
      */
     public void setExtention(String ext) {
         this.extension = ext;
     }
-
-
 
     /**
      *
@@ -132,30 +106,25 @@ public class Document {
         return this.extension;
     }
 
-
-
     public long getLength() {
         return this.file.length();
     }
 
-
-
     public InputStream getStream() {
         try {
             return (this.inputStream = (new FileInputStream(this.file)));
-        } catch (FileNotFoundException e) {return null;}
+        }
+        catch (FileNotFoundException e) {
+            return null;
+        }
     }
-
-
 
     public void delete() {
         try {
             this.inputStream.close();
-        } catch (IOException e) {}
+        }
+        catch (IOException e) {
+        }
         this.file.delete();
     }
-
-
-
-
 }

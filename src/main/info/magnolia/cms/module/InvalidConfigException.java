@@ -7,14 +7,9 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
-
-
+ */
 package info.magnolia.cms.module;
 
 import java.io.PrintStream;
@@ -22,74 +17,53 @@ import java.io.PrintWriter;
 
 
 /**
- * Date: Mar 30, 2004
- * Time: 3:30:41 PM
- *
+ * Date: Mar 30, 2004 Time: 3:30:41 PM
  * @author Sameer Charles
  * @version 2.0
  */
-
-
 public class InvalidConfigException extends Exception {
 
-
-
     private Exception root;
-
 
     public InvalidConfigException() {
         super();
     }
 
-
-
-
     public InvalidConfigException(String message) {
         super(message);
     }
 
-
-
-
     public InvalidConfigException(String message, Exception root) {
         super(message);
-
         if (root instanceof InvalidConfigException) {
-            this.root = ((InvalidConfigException)root).getRootException();
-        } else {
+            this.root = ((InvalidConfigException) root).getRootException();
+        }
+        else {
             this.root = root;
         }
     }
 
-
-
-
     public InvalidConfigException(Exception root) {
-        this(null,root);
+        this(null, root);
     }
-
-
 
     public Exception getRootException() {
         return this.root;
     }
 
-
-
     public String getMessage() {
         String message = super.getMessage();
         if (this.root == null) {
             return message;
-        } else {
+        }
+        else {
             String rootCause = this.root.getMessage();
             if (rootCause == null)
                 return message;
             else
-                return (message+":"+rootCause);
+                return (message + ":" + rootCause);
         }
     }
-
-
 
     public void printStackTrace() {
         synchronized (System.err) {
@@ -100,8 +74,6 @@ public class InvalidConfigException extends Exception {
         }
     }
 
-
-
     public void printStackTrace(PrintStream ps) {
         synchronized (ps) {
             super.printStackTrace(ps);
@@ -111,8 +83,6 @@ public class InvalidConfigException extends Exception {
         }
     }
 
-
-
     public void printStackTrace(PrintWriter pw) {
         synchronized (pw) {
             super.printStackTrace(pw);
@@ -121,7 +91,4 @@ public class InvalidConfigException extends Exception {
             }
         }
     }
-
-
-
 }

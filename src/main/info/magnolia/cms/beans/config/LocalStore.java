@@ -7,46 +7,29 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
-
-
+ */
 package info.magnolia.cms.beans.config;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
 import org.apache.log4j.Logger;
 
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.Content;
-
-import javax.jcr.RepositoryException;
-import javax.jcr.PathNotFoundException;
 
 /**
- * Date: Jul 12, 2004
- * Time: 10:47:14 AM
- *
  * @author Sameer Charles
  * @version 2.0
  */
-
-
-
 public class LocalStore {
-
-
 
     private static Logger log = Logger.getLogger(LocalStore.class);
 
-
     private Content localStore;
+
     private String configPath;
-
-
-
 
     protected static LocalStore getInstance(String path) {
         LocalStore store = new LocalStore();
@@ -55,29 +38,23 @@ public class LocalStore {
         return store;
     }
 
-
-
     private void init() {
-        log.info("Config : Initializing LocalStore for - "+configPath);
-        HierarchyManager configHierarchyManager
-                = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
+        log.info("Config : Initializing LocalStore for - " + configPath);
+        HierarchyManager configHierarchyManager = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
         try {
             localStore = configHierarchyManager.getContent(configPath);
-            log.info("Config : LocalStore initialized for -"+configPath);
-        } catch (PathNotFoundException e) {
-            log.error("Config : No LocalStore defined for - "+configPath);
-        } catch (RepositoryException re) {
-            log.error("Config : Failed to initialize LocalStore for - "+configPath);
+            log.info("Config : LocalStore initialized for -" + configPath);
+        }
+        catch (PathNotFoundException e) {
+            log.error("Config : No LocalStore defined for - " + configPath);
+        }
+        catch (RepositoryException re) {
+            log.error("Config : Failed to initialize LocalStore for - " + configPath);
             log.error(re.getMessage(), re);
         }
     }
 
-
-
-
     protected Content getStore() {
         return localStore;
     }
-
-
 }

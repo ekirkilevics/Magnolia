@@ -7,95 +7,108 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms.gui.inline;
 
-
-import info.magnolia.cms.util.Resource;
-import info.magnolia.cms.gui.control.Button;
-import info.magnolia.cms.gui.control.Bar;
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.gui.control.Bar;
+import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.security.Permission;
-
+import info.magnolia.cms.util.Resource;
+import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
-import java.io.IOException;
+
 
 /**
  * @author Vinzenz Wyser
  * @version 2.0
- */ 
+ */
 public class BarNew extends Bar {
-	private Button buttonNew=new Button();
 
+    private Button buttonNew = new Button();
 
-	public BarNew(HttpServletRequest request) {
-		this.setRequest(request);
-	}
+    public BarNew(HttpServletRequest request) {
+        this.setRequest(request);
+    }
 
+    /**
+     * <p>
+     * sets the default buttons
+     * </p>
+     */
+    public void setDefaultButtons() {
+        this.setButtonNew();
+    }
 
-	/**
-	* <p>sets the default buttons</p>
-	*
-	* */
-	public void setDefaultButtons() {
-		this.setButtonNew();
-	}
+    /**
+     * <p>
+     * places the default buttons to the very right/left position
+     * </p>
+     */
+    public void placeDefaultButtons() {
+        if (this.getButtonNew() != null)
+            this.getButtonsLeft().add(0, this.getButtonNew());
+    }
 
-	/**
-	* <p>places the default buttons to the very right/left position</p>
-	*
-	* */
-	public void placeDefaultButtons() {
-		if (this.getButtonNew()!=null) this.getButtonsLeft().add(0,this.getButtonNew());
-	}
+    public Button getButtonNew() {
+        return this.buttonNew;
+    }
 
+    public void setButtonNew(Button b) {
+        this.buttonNew = b;
+    }
 
-	public Button getButtonNew() { return this.buttonNew;}
-	public void setButtonNew(Button b) {this.buttonNew=b;}
-	public void setButtonNew() {
-		this.setButtonNew(this.getPath(),this.getNodeCollectionName(""),this.getNodeName(""),this.getParagraph());
-	}
-	/**
-	* <p>sets the default edit button</p>
-	* @param path , path of the current page
-	 * @param nodeCollectionName , i.e. 'MainParagarphs'
-	 * @param nodeName , i.e. '01'
-	 * @param paragraph , paragraph type
-	* */
-	public void setButtonNew(String path,String nodeCollectionName, String nodeName, String paragraph) {
-		Button b=new Button();
-		b.setLabel("New");
+    public void setButtonNew() {
+        this.setButtonNew(this.getPath(), this.getNodeCollectionName(""), this.getNodeName(""), this.getParagraph());
+    }
 
-		//todo: dynamic repository
-		String repository=ContentRepository.WEBSITE;
+    /**
+     * <p>
+     * sets the default edit button
+     * </p>
+     * @param path , path of the current page
+     * @param nodeCollectionName , i.e. 'MainParagarphs'
+     * @param nodeName , i.e. '01'
+     * @param paragraph , paragraph type
+     */
+    public void setButtonNew(String path, String nodeCollectionName, String nodeName, String paragraph) {
+        Button b = new Button();
+        b.setLabel("New");
+        // todo: dynamic repository
+        String repository = ContentRepository.WEBSITE;
+        b.setOnclick("mgnlOpenDialog('"
+            + path
+            + "','"
+            + nodeCollectionName
+            + "','"
+            + nodeName
+            + "','"
+            + paragraph
+            + "','"
+            + repository
+            + "');");
+        this.setButtonNew(b);
+    }
 
-		b.setOnclick("mgnlOpenDialog('"+path+"','"+nodeCollectionName+"','"+nodeName+"','"+paragraph+"','"+repository+"');");
-		this.setButtonNew(b);
-	}
-
-	/**
-	* <p>draws the main bar (incl. all magnolia specific js and css sources)</p>
-	* */
-	public void drawHtml(JspWriter out) throws IOException {
-		//todo: attribute for preview name not static!
-		//todo: a method to get preview?
-		String prev=(String) this.getRequest().getSession().getAttribute("mgnlPreview");
-		boolean isGranted=Resource.getActivePage(this.getRequest()).isGranted(Permission.SET);
-		if (prev==null && isGranted) {
- 			this.setEvent("onmousedown","mgnlMoveNodeEnd(this,'"+this.getPath()+"');");
-			this.setEvent("onmouseover","mgnlMoveNodeHigh(this);");
-			this.setEvent("onmouseout","mgnlMoveNodeReset(this);");
-			this.setId(this.getNodeCollectionName()+"__"+this.getNodeName());
-			out.println(this.getHtml());
-		}
-	}
-
-
-
+    /**
+     * <p>
+     * draws the main bar (incl. all magnolia specific js and css sources)
+     * </p>
+     */
+    public void drawHtml(JspWriter out) throws IOException {
+        // todo: attribute for preview name not static!
+        // todo: a method to get preview?
+        String prev = (String) this.getRequest().getSession().getAttribute("mgnlPreview");
+        boolean isGranted = Resource.getActivePage(this.getRequest()).isGranted(Permission.SET);
+        if (prev == null && isGranted) {
+            this.setEvent("onmousedown", "mgnlMoveNodeEnd(this,'" + this.getPath() + "');");
+            this.setEvent("onmouseover", "mgnlMoveNodeHigh(this);");
+            this.setEvent("onmouseout", "mgnlMoveNodeReset(this);");
+            this.setId(this.getNodeCollectionName() + "__" + this.getNodeName());
+            out.println(this.getHtml());
+        }
+    }
 }

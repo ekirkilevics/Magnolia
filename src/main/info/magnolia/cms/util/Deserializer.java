@@ -7,30 +7,14 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms.util;
 
-
-
 /**
- * Date: May 7, 2004
- * Time: 10:59:07 AM
- *
- *
+ * Date: May 7, 2004 Time: 10:59:07 AM
  * @author Sameer Charles
  */
-
-
-
 public class Deserializer {
-
-
-    
-
-
 }

@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.taglibs.util;
@@ -19,13 +19,11 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.taglibs.ContentNodeIterator;
 import info.magnolia.cms.util.Resource;
-
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
-
 import org.apache.log4j.Logger;
 
 
@@ -33,8 +31,7 @@ import org.apache.log4j.Logger;
  * @author Marcel Salathe
  * @version $Revision: $ ($Author: $)
  */
-public class FileSrc extends TagSupport
-{
+public class FileSrc extends TagSupport {
 
     /**
      * Stable serialVersionUID.
@@ -68,152 +65,120 @@ public class FileSrc extends TagSupport
     /**
      * @deprecated
      */
-    public void setAtomName(String name)
-    {
+    public void setAtomName(String name) {
         this.setNodeDataName(name);
     }
 
-    public void setNodeDataName(String nodeDataName)
-    {
+    public void setNodeDataName(String nodeDataName) {
         this.nodeDataName = nodeDataName;
     }
 
     /**
      * @deprecated
      */
-    public void setContainerName(String name)
-    {
+    public void setContainerName(String name) {
         this.setContentNodeName(name);
     }
 
-    public void setContentNodeName(String contentNodeName)
-    {
+    public void setContentNodeName(String contentNodeName) {
         this.contentNodeName = contentNodeName;
     }
 
-    public void setFileNameOnly(String value)
-    {
+    public void setFileNameOnly(String value) {
         this.fileNameOnly = "true";
     }
 
-    public int doStartTag()
-    {
+    public int doStartTag() {
         this.request = (HttpServletRequest) pageContext.getRequest();
         this.actpage = Resource.getCurrentActivePage(request);
-        if (!this.contentNodeName.equals(""))
-        {
-            try
-            {
+        if (!this.contentNodeName.equals("")) {
+            try {
                 this.contentNode = this.actpage.getContentNode(this.contentNodeName);
             }
-            catch (RepositoryException re)
-            {
+            catch (RepositoryException re) {
                 writeSrc("");
             }
-            if (this.contentNode == null)
-            {
+            if (this.contentNode == null) {
                 writeSrc("");
                 return SKIP_BODY;
             }
         }
-        else
-        {
+        else {
             this.contentNode = Resource.getLocalContentNode(request);
-            if (this.contentNode == null)
-            {
+            if (this.contentNode == null) {
                 this.contentNode = Resource.getGlobalContentNode(request);
             }
             if (this.contentNode != null)
                 this.contentNodeName = this.contentNode.getName();
-            else
-            {
+            else {
                 writeSrc("");
                 return SKIP_BODY;
             }
         }
-
-        if (this.nodeDataName.equals(""))
-        {
+        if (this.nodeDataName.equals("")) {
             writeSrc("");
             return SKIP_BODY;
         }
-        try
-        {
+        try {
             this.nodeData = this.contentNode.getNodeData(this.contentNodeName);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             writeSrc("");
             return SKIP_BODY;
         }
-        if (this.nodeData == null)
-        {
+        if (this.nodeData == null) {
             writeSrc("");
             return SKIP_BODY;
         }
-        try
-        {
+        try {
             setFileProperties();
         }
-        catch (AccessDeniedException e)
-        {
+        catch (AccessDeniedException e) {
             log.error(e.getMessage());
             writeSrc("");
             return SKIP_BODY;
         }
         String actHandle = "";
-        try
-        {
+        try {
             actHandle = this.actpage.getHandle();
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
         }
         ;
         String contentNodeCollectionName = (String) pageContext.getAttribute(
             ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME,
             PageContext.REQUEST_SCOPE);
-        if (this.fileNameOnly.equals("true"))
-        {
-            try
-            {
+        if (this.fileNameOnly.equals("true")) {
+            try {
                 writeSrc(this.fileExtendedName);
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 log.debug(e.getMessage());
             }
         }
-        else
-        {
-            if (contentNodeCollectionName == null)
-            {
+        else {
+            if (contentNodeCollectionName == null) {
                 // we are not in a loop
-                try
-                {
+                try {
                     writeSrc(this.contentNode.getHandle()
                         + "/"
                         + this.nodeDataName
                         + this.slash
                         + this.fileExtendedName);
                 }
-                catch (Exception e)
-                {
+                catch (Exception e) {
                     log.debug(e.getMessage());
                 }
             }
-            else
-            {
-                try
-                {
+            else {
+                try {
                     writeSrc(Resource.getLocalContentNode(request).getHandle()
                         + "/"
                         + this.nodeDataName
                         + this.slash
                         + this.fileExtendedName);
                 }
-                catch (Exception e)
-                {
+                catch (Exception e) {
                     log.debug(e.getMessage());
                 }
             }
@@ -221,69 +186,54 @@ public class FileSrc extends TagSupport
         return EVAL_PAGE;
     }
 
-    private void writeSrc(String src)
-    {
+    private void writeSrc(String src) {
         JspWriter out = pageContext.getOut();
-        try
-        {
+        try {
             out.print(src);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
         }
     }
 
-    private void setFileProperties() throws AccessDeniedException
-    {
+    private void setFileProperties() throws AccessDeniedException {
         this.fileExtension = Server.getDefaultExtension();
         ContentNode properties = null;
         String contentNodeCollectionName = (String) pageContext.getAttribute(
             ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME,
             PageContext.REQUEST_SCOPE);
-        if (contentNodeCollectionName == null)
-        {
+        if (contentNodeCollectionName == null) {
             // we are not in a loop
-            try
-            {
+            try {
                 properties = Resource.getGlobalContentNode(this.request).getContentNode(
                     this.nodeDataName + "_properties");
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 log.debug(e.getMessage());
             }
         }
-        else
-        {
-            try
-            {
+        else {
+            try {
                 properties = Resource.getLocalContentNode(this.request).getContentNode(
                     this.nodeDataName + "_properties");
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
             }
         }
-        if (properties != null)
-        {
+        if (properties != null) {
             this.fileName = properties.getNodeData("fileName").getString();
             this.fileExtension = properties.getNodeData("extension").getString();
-            if (this.fileName.equals(""))
-            {
+            if (this.fileName.equals("")) {
                 this.fileExtendedName = "." + this.fileExtension;
             }
-            else
-            {
+            else {
                 this.slash = "/";
                 this.fileExtendedName = this.fileName;
                 int posLastDot = this.fileName.lastIndexOf(".");
                 int posExt = this.fileName.lastIndexOf("." + this.fileExtension);
-                if (posExt == -1 || (posExt != -1 && posExt != posLastDot))
-                {
+                if (posExt == -1 || (posExt != -1 && posExt != posLastDot)) {
                     this.fileExtendedName += "." + this.fileExtension; // magnolia v 1.0: fileName saved with extension
                 }
             }
         }
     }
-
 }

@@ -7,48 +7,29 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
-
+ */
 package info.magnolia.cms.exchange.simple;
 
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.exchange.Packet;
 import info.magnolia.exchange.PacketIOException;
-
 import javax.jcr.RepositoryException;
-
 import org.apache.log4j.Logger;
 
 
 /**
- * Date: Jun 21, 2004
- * Time: 11:43:10 AM
- *
+ * Date: Jun 21, 2004 Time: 11:43:10 AM
  * @author Sameer Charles
  * @version 2.0
  */
-
-
-
 public class PacketCollector {
 
-
-
-
     private static Logger log = Logger.getLogger(PacketCollector.class);
-
-
-    
-
 
     public static Packet getPacket(HierarchyManager hm, String path, boolean recurse) {
         Packet packet = new PacketImpl();
@@ -57,30 +38,32 @@ public class PacketCollector {
             if (hm.isPage(path)) {
                 Content page = hm.getPage(path);
                 content = new SerializableContent(page, recurse);
-            } else if (hm.isContentNode(path)) {
+            }
+            else if (hm.isContentNode(path)) {
                 ContentNode contentNode = hm.getContentNode(path);
                 content = new SerializableContentNode(contentNode, recurse);
-            } else if (hm.isNodeData(path)) {
+            }
+            else if (hm.isNodeData(path)) {
                 NodeData nodeData = hm.getNodeData(path);
                 try {
                     content = new SerializableNodeData(nodeData);
-                } catch (SerializationException se) {
+                }
+                catch (SerializationException se) {
                     log.error(se.getMessage(), se);
                 }
-            } else {
-                log.error("Unknown object type OR path does not exist for - "+path);
+            }
+            else {
+                log.error("Unknown object type OR path does not exist for - " + path);
                 return packet;
             }
             packet.getBody().setBody(content);
-        } catch(RepositoryException re) {
+        }
+        catch (RepositoryException re) {
             log.error(re.getMessage(), re);
-        } catch (PacketIOException pe) {
+        }
+        catch (PacketIOException pe) {
             log.error(pe.getMessage(), pe);
         }
-
-
         return packet;
     }
-
-
 }

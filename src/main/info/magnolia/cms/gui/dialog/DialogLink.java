@@ -7,44 +7,42 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms.gui.dialog;
 
-import org.apache.log4j.Logger;
-import info.magnolia.cms.core.ContentNode;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.beans.config.ContentRepository;
-
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ContentNode;
 import javax.jcr.RepositoryException;
+import org.apache.log4j.Logger;
+
 
 /**
  * @author Vinzenz Wyser
  * @version 2.0
- */ 
+ */
 public class DialogLink extends DialogEditWithButton {
-	private static Logger log = Logger.getLogger(DialogLink.class);
 
-	public DialogLink(ContentNode configNode,Content websiteNode) throws RepositoryException {
-		super(configNode,websiteNode);
-		init();
-	}
+    private static Logger log = Logger.getLogger(DialogLink.class);
 
-	public DialogLink(String name) {
-		this.setName(name);
-		init();
-	}
+    public DialogLink(ContentNode configNode, Content websiteNode) throws RepositoryException {
+        super(configNode, websiteNode);
+        init();
+    }
 
-	private void init() {
-		String extension=this.getConfigValue("extension");
-		this.getButton().setLabel("Internal link...");
-		this.getButton().setSaveInfo(false);
-		String repository=this.getConfigValue("repository",ContentRepository.WEBSITE);
-		this.getButton().setOnclick("mgnlDialogLinkOpenBrowser('"+this.getName()+"','"+repository+"','"+extension+"');");
-	}
+    public DialogLink(String name) {
+        this.setName(name);
+        init();
+    }
 
+    private void init() {
+        String extension = this.getConfigValue("extension");
+        this.getButton().setLabel("Internal link...");
+        this.getButton().setSaveInfo(false);
+        String repository = this.getConfigValue("repository", ContentRepository.WEBSITE);
+        this.getButton().setOnclick(
+            "mgnlDialogLinkOpenBrowser('" + this.getName() + "','" + repository + "','" + extension + "');");
+    }
 }

@@ -7,118 +7,82 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
+ */
 package info.magnolia.cms.module;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-
 import java.util.Hashtable;
 
 
-
-
 /**
- * Date: Mar 30, 2004
- * Time: 10:59:07 AM
- *
+ * Date: Mar 30, 2004 Time: 10:59:07 AM
  * @author Sameer Charles
  * @version 2.0
  */
-
-
-
 public class ModuleConfig {
-
-
 
     /* module specific */
     private Hashtable sharedHierarchyManagers; /* id - HierarchyManager map */
-    private Hashtable initParameters;
-    private String moduleName;
-    private String moduleDescription;
-    private HierarchyManager hierarchyManager;
 
+    private Hashtable initParameters;
+
+    private String moduleName;
+
+    private String moduleDescription;
+
+    private HierarchyManager hierarchyManager;
 
     /* local store */
     private Content localStore;
-
-
-
 
     public String getModuleName() {
         return this.moduleName;
     }
 
-
-
     public String getModuleDescription() {
         return this.moduleDescription;
     }
-
-
 
     public Hashtable getSharedHierarchyManagers() {
         return this.sharedHierarchyManagers;
     }
 
-
     public HierarchyManager getHierarchyManager() {
         return this.hierarchyManager;
     }
-
 
     public Hashtable getInitParameters() {
         return this.initParameters;
     }
 
-
-
     public Content getLocalStore() {
         return this.localStore;
     }
-
 
     public void setModuleName(String value) {
         this.moduleName = value;
     }
 
-
-
     public void setModuleDescription(String value) {
         this.moduleDescription = value;
     }
-
-
 
     public void setInitParameters(Hashtable initParams) {
         this.initParameters = initParams;
     }
 
-
-
     public void setHierarchyManager(HierarchyManager manager) {
         this.hierarchyManager = manager;
     }
 
-
-
-    public void setSharedHierarchyManagers(Hashtable shared){
+    public void setSharedHierarchyManagers(Hashtable shared) {
         this.sharedHierarchyManagers = shared;
     }
-
-
 
     public void setLocalStore(Content localStore) {
         this.localStore = localStore;
     }
-
-
-
-
-
 }

@@ -7,14 +7,13 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.taglibs.util;
 
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyTagSupport;
-
 import org.apache.log4j.Logger;
 
 
@@ -22,8 +21,7 @@ import org.apache.log4j.Logger;
  * @author Vinzenz Wyser
  * @version $Revision: $ ($Author: $)
  */
-public class StrToObj extends BodyTagSupport
-{
+public class StrToObj extends BodyTagSupport {
 
     /**
      * Stable serialVersionUID.
@@ -39,47 +37,36 @@ public class StrToObj extends BodyTagSupport
 
     public String delims = "\n";
 
-    public void setVar(String var)
-    {
+    public void setVar(String var) {
         this.var = var;
     }
 
-    public void setDelims(String delims)
-    {
+    public void setDelims(String delims) {
         this.delims = delims;
     }
 
     /**
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
-    public int doEndTag()
-    {
+    public int doEndTag() {
         String str = getBodyContent().getString();
-
-        if (!str.equals(""))
-        {
+        if (!str.equals("")) {
             String[] obj = str.split(this.delims);
-            try
-            {
+            try {
                 pageContext.setAttribute(this.var, obj, PageContext.PAGE_SCOPE);
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 log.error(e.getMessage());
             }
         }
-        else
-        {
-            try
-            {
+        else {
+            try {
                 pageContext.setAttribute(this.var, "", PageContext.PAGE_SCOPE);
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 log.error(e.getMessage());
             }
         }
         return EVAL_PAGE;
     }
-
 }

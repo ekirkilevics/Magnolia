@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.util;
@@ -20,29 +20,23 @@ import java.util.Date;
  * @author Sameer Charles
  * @version $Revision: $ ($Author: $)
  */
-public class DateUtil
-{
+public class DateUtil {
 
     /**
      * Default date format.
      */
     public static final String FORMAT_DEFAULTPATTERN = "yyyy-MM-dd'T'HH:mm:ss.SZ";
 
-    public String getFormattedDate(Date date)
-    {
+    public String getFormattedDate(Date date) {
         return this.getFormattedDate(date, FORMAT_DEFAULTPATTERN);
     }
 
-    public String getFormattedDate(Date date, String formatPattern)
-    {
-
-        if (formatPattern == null)
-        {
+    public String getFormattedDate(Date date, String formatPattern) {
+        if (formatPattern == null) {
             formatPattern = FORMAT_DEFAULTPATTERN;
         }
         SimpleDateFormat sdf = new SimpleDateFormat(formatPattern);
         String fd = sdf.format(date);
         return fd;
     }
-
 }

@@ -7,68 +7,52 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
-
+ */
 package info.magnolia.cms.security;
 
-
-import java.util.regex.Pattern;
 import java.util.Hashtable;
+import java.util.regex.Pattern;
 
 
 /**
- * Date: Jan 4, 2005
- * Time: 11:35:22 AM
- *
+ * Date: Jan 4, 2005 Time: 11:35:22 AM
  * @author Sameer Charles
  */
-
-
-
-public class PermissionImpl implements Permission{
-
+public class PermissionImpl implements Permission {
 
     private Pattern pattern;
+
     private long permissions;
 
     private static Hashtable nameStrings = new Hashtable();
-
     static {
-        nameStrings.put(new Long(Permission.ADD),Permission.PERMISSION_NAME_ADD);
-        nameStrings.put(new Long(Permission.SET),Permission.PERMISSION_NAME_SET);
-        nameStrings.put(new Long(Permission.REMOVE),Permission.PERMISSION_NAME_REMOVE);
-        nameStrings.put(new Long(Permission.READ),Permission.PERMISSION_NAME_READ);
-        nameStrings.put(new Long(Permission.EXECUTE),Permission.PERMISSION_NAME_EXECUTE);
-        nameStrings.put(new Long(Permission.SYNDICATE),Permission.PERMISSION_NAME_SYNDICATE);
-        nameStrings.put(new Long(Permission.ALL),Permission.PERMISSION_NAME_ALL);
-        nameStrings.put(new Long(Permission.WRITE),Permission.PERMISSION_NAME_WRITE);
+        nameStrings.put(new Long(Permission.ADD), Permission.PERMISSION_NAME_ADD);
+        nameStrings.put(new Long(Permission.SET), Permission.PERMISSION_NAME_SET);
+        nameStrings.put(new Long(Permission.REMOVE), Permission.PERMISSION_NAME_REMOVE);
+        nameStrings.put(new Long(Permission.READ), Permission.PERMISSION_NAME_READ);
+        nameStrings.put(new Long(Permission.EXECUTE), Permission.PERMISSION_NAME_EXECUTE);
+        nameStrings.put(new Long(Permission.SYNDICATE), Permission.PERMISSION_NAME_SYNDICATE);
+        nameStrings.put(new Long(Permission.ALL), Permission.PERMISSION_NAME_ALL);
+        nameStrings.put(new Long(Permission.WRITE), Permission.PERMISSION_NAME_WRITE);
     }
-
 
     public void setPattern(Pattern value) {
         this.pattern = value;
     }
 
-
     public Pattern getPattern() {
         return this.pattern;
     }
-
 
     public void setPermissions(long value) {
         this.permissions = value;
     }
 
-
     public long getPermissions() {
         return this.permissions;
     }
-
 
     public boolean match(String path) {
         return this.pattern.matcher(path).matches();
@@ -77,9 +61,4 @@ public class PermissionImpl implements Permission{
     public static String getPermissionAsName(long permission) {
         return (String) nameStrings.get(new Long(permission));
     }
-
-
-
-
-
 }

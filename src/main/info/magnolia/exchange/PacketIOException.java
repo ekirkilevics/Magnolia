@@ -7,48 +7,30 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.exchange;
 
-
-
 /**
- * Date: May 6, 2004
- * Time: 6:17:12 PM
- *
+ * Date: May 6, 2004 Time: 6:17:12 PM
  * @author Sameer Charles
  */
-
-
 public class PacketIOException extends ExchangeException {
 
-
-
     public PacketIOException() {
-          super();
+        super();
     }
-
 
     public PacketIOException(String message) {
         super(message);
     }
 
-
-
     public PacketIOException(String message, Exception root) {
-        super(message,root);
+        super(message, root);
     }
-
-
 
     public PacketIOException(Exception root) {
-        this(null,root);
+        this(null, root);
     }
-
-
 }

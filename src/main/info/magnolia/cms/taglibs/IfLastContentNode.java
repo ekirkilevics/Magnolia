@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.taglibs;
@@ -20,8 +20,7 @@ import javax.servlet.jsp.tagext.TagSupport;
  * @author Marcel Salathe
  * @version $Revision: $ ($Author: $)
  */
-public class IfLastContentNode extends TagSupport
-{
+public class IfLastContentNode extends TagSupport {
 
     /**
      * Stable serialVersionUID.
@@ -31,14 +30,12 @@ public class IfLastContentNode extends TagSupport
     /**
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
-    public int doStartTag()
-    {
+    public int doStartTag() {
         int size = ((Integer) pageContext.getAttribute(ContentNodeIterator.SIZE, PageContext.REQUEST_SCOPE)).intValue();
         int currentIndex = ((Integer) pageContext.getAttribute(
             ContentNodeIterator.CURRENT_INDEX,
             PageContext.REQUEST_SCOPE)).intValue();
-        if (currentIndex == (size - 1))
-        {
+        if (currentIndex == (size - 1)) {
             return EVAL_BODY_INCLUDE;
         }
         return SKIP_BODY;
@@ -47,9 +44,7 @@ public class IfLastContentNode extends TagSupport
     /**
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
-    public int doEndTag()
-    {
+    public int doEndTag() {
         return EVAL_PAGE;
     }
-
 }

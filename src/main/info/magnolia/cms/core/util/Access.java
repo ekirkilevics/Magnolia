@@ -7,38 +7,28 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms.core.util;
 
-import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.PermissionImpl;
 
+
 /**
- * Date: Dec 30, 2004
- * Time: 10:16:57 AM
- *
  * @author Sameer Charles
  * @version 2.01
  */
-
-
-
 public class Access {
 
-
-    public static void isGranted(AccessManager manager, String path, long permissions)
-            throws AccessDeniedException {
-        if (manager!=null && !manager.isGranted(path,permissions)) {
+    public static void isGranted(AccessManager manager, String path, long permissions) throws AccessDeniedException {
+        if (manager != null && !manager.isGranted(path, permissions)) {
             throw new AccessDeniedException("not allowed to "
-                    +PermissionImpl.getPermissionAsName(permissions)+" - "+path);
+                + PermissionImpl.getPermissionAsName(permissions)
+                + " - "
+                + path);
         }
     }
-
-
 }

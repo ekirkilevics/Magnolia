@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.gui.control;
@@ -20,31 +20,25 @@ import info.magnolia.cms.core.Content;
  * @author Vinzenz Wyser
  * @version 2.0
  */
-public class Hidden extends ControlSuper
-{
+public class Hidden extends ControlSuper {
 
-    public Hidden()
-    {
+    public Hidden() {
     }
 
-    public Hidden(String name, String value)
-    {
+    public Hidden(String name, String value) {
         super(name, value);
     }
 
-    public Hidden(String name, String value, boolean saveInfo)
-    {
+    public Hidden(String name, String value, boolean saveInfo) {
         super(name, value);
         this.setSaveInfo(saveInfo);
     }
 
-    public Hidden(String name, Content websiteNode)
-    {
+    public Hidden(String name, Content websiteNode) {
         super(name, websiteNode);
     }
 
-    public String getHtml()
-    {
+    public String getHtml() {
         StringBuffer html = new StringBuffer();
         html.append("<input type=\"hidden\"");
         html.append(" name=\"" + this.getName() + "\"");
@@ -54,5 +48,4 @@ public class Hidden extends ControlSuper
         html.append(this.getHtmlSaveInfo());
         return html.toString();
     }
-
 }

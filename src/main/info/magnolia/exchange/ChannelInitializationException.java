@@ -7,47 +7,30 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.exchange;
 
-
-
 /**
- * Date: May 4, 2004
- * Time: 5:40:21 PM
- *
+ * Date: May 4, 2004 Time: 5:40:21 PM
  * @author Sameer Charles
  */
-
-
 public class ChannelInitializationException extends ChannelException {
 
-
-
-   public ChannelInitializationException() {
+    public ChannelInitializationException() {
         super();
     }
-
 
     public ChannelInitializationException(String message) {
         super(message);
     }
 
-
     public ChannelInitializationException(String message, Exception root) {
-        super(message,root);
+        super(message, root);
     }
-
-
 
     public ChannelInitializationException(Exception root) {
-        this(null,root);
+        this(null, root);
     }
-
-
 }

@@ -7,41 +7,36 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms.exchange.ice;
 
-import info.magnolia.exchange.*;
-
+import info.magnolia.exchange.Channel;
+import info.magnolia.exchange.ChannelException;
+import info.magnolia.exchange.ChannelInitializationException;
+import info.magnolia.exchange.ChannelOverflowException;
+import info.magnolia.exchange.Packet;
+import info.magnolia.exchange.PacketHeader;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Hashtable;
 import java.util.Enumeration;
-import java.io.PrintWriter;
+import java.util.Hashtable;
+
 
 /**
- * Date: May 4, 2004
- * Time: 5:08:36 PM
- *
  * @author Sameer Charles
  */
-
-
-
 public class ChannelImpl implements Channel {
 
-
-
     private String id;
+
     private URL destination;
+
     private String authString;
+
     private Hashtable queue;
-
-
 
     public ChannelImpl(String id, URL destination, String authString) {
         this.id = id;
@@ -50,48 +45,40 @@ public class ChannelImpl implements Channel {
         queue = new Hashtable();
     }
 
-
     public String getID() {
         return this.id;
     }
 
-
     /**
      * here we only check if the connection can be open
-     * */
+     */
     public void open() throws ChannelInitializationException {
         try {
             URLConnection urlConnection = destination.openConnection();
-            urlConnection.setRequestProperty("Authorization",this.authString);
+            urlConnection.setRequestProperty("Authorization", this.authString);
             urlConnection.connect();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new ChannelInitializationException(e.getMessage());
         }
     }
 
-
-
     /**
-     *
      * @param packet
-     * */
-    public void send(Packet packet)
-            throws ChannelOverflowException, ChannelException {
-        if (packet.getID() == null)
+     */
+    public void send(Packet packet) throws ChannelOverflowException, ChannelException {
+        if (packet.getID() == null) {
             packet.assignID();
+        }
         packet.setChannelID(this.id);
         this.remoteSend(packet);
-        this.queue.put(packet.getID(),""); /* just a referece for confirmation */
+        this.queue.put(packet.getID(), ""); /* just a referece for confirmation */
     }
 
-
-
     /**
-     *
      * @param packet
-     * */
-    public void receive(Packet packet)
-            throws ChannelOverflowException, ChannelException {
+     */
+    public void receive(Packet packet) throws ChannelOverflowException, ChannelException {
         if (this.queue.get(packet.getID()) != null) { /* its a confirmation packet */
             this.removePacketReference(packet.getID());
             return;
@@ -99,30 +86,22 @@ public class ChannelImpl implements Channel {
         /* deserialize packet data */
     }
 
-
-
     public void removePacketReference(String id) {
         this.queue.remove(id);
     }
-
-
 
     public void flush() {
         this.queue.clear(); // fake flush
     }
 
-
-
     public void close() {
     }
-
-
 
     private void remoteSend(Packet packet) throws ChannelException {
         try {
             URLConnection urlConnection = destination.openConnection();
-            urlConnection.setRequestProperty("Authorization",this.authString);
-            this.setHeader(packet.getHeaders(),urlConnection);
+            urlConnection.setRequestProperty("Authorization", this.authString);
+            this.setHeader(packet.getHeaders(), urlConnection);
             urlConnection.setDoOutput(true);
             urlConnection.setUseCaches(false);
             PrintWriter writer = new PrintWriter(urlConnection.getOutputStream());
@@ -130,20 +109,17 @@ public class ChannelImpl implements Channel {
             writer.flush();
             writer.close();
             urlConnection.getContent();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw (new ChannelException(e.getMessage()));
         }
     }
-
-
 
     private void setHeader(PacketHeader header, URLConnection urlConnection) {
         Enumeration keys = header.getKeys();
         while (keys.hasMoreElements()) {
             String key = (String) keys.nextElement();
-            urlConnection.setRequestProperty(key,header.getValueByName(key));
+            urlConnection.setRequestProperty(key, header.getValueByName(key));
         }
     }
-
-
 }

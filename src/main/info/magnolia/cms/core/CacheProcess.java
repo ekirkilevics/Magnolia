@@ -7,50 +7,35 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms.core;
 
-import org.apache.log4j.Logger;
-
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
+import org.apache.log4j.Logger;
 
 
 /**
- * Date: Dec 6, 2004
- * Time: 11:37:17 AM
- *
  * @version 2.0
  */
-
-
-
 public class CacheProcess extends Thread {
 
-
-
     private static Logger log = Logger.getLogger(CacheProcess.class);
+
     private HttpServletRequest request;
-
-
 
     public CacheProcess(HttpServletRequest request) {
         this.request = request;
     }
 
-
     public void run() {
         try {
             CacheHandler.cacheURI(this.request);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             log.error(e.getMessage(), e);
         }
     }
-
-
 }

@@ -7,22 +7,21 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms.gui.control;
 
 /**
+ * Simple interface for html controls.
  * @author Vinzenz Wyser
  * @version 2.0
- */ 
+ */
 public interface ControlInterface {
 
-	public String getHtml();
-
-
-
+    /**
+     * Returns the html code for the control.
+     * @return html
+     */
+    public String getHtml();
 }

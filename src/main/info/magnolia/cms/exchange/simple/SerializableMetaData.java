@@ -7,36 +7,28 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
-
+ */
 package info.magnolia.cms.exchange.simple;
 
 import info.magnolia.cms.core.MetaData;
-
-import javax.jcr.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.io.Serializable;
-
+import javax.jcr.Property;
+import javax.jcr.PropertyIterator;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
 import org.apache.log4j.Logger;
 
+
 /**
- * Date: Aug 5, 2004
- * Time: 4:57:42 PM
- *
+ * Date: Aug 5, 2004 Time: 4:57:42 PM
  * @author Sameer Charles
  * @version 2.0
  */
-
-
 public class SerializableMetaData implements Serializable {
-
-
 
     private static Logger log = Logger.getLogger(SerializableMetaData.class);
 
@@ -45,84 +37,77 @@ public class SerializableMetaData implements Serializable {
     /* meta properties */
     private ArrayList metaProperties = new ArrayList();
 
-
     public SerializableMetaData(MetaData metaData) {
         this.baseMetaData = metaData;
         this.makeSerializable();
         this.baseMetaData = null;
     }
 
-
-
     public ArrayList getMetaProperties() {
         return this.metaProperties;
     }
-
-
 
     private void makeSerializable() {
         PropertyIterator pi = this.baseMetaData.getProperties();
         if (pi == null)
             return;
-        while(pi.hasNext()) {
+        while (pi.hasNext()) {
             try {
                 Property property = (Property) pi.next();
-                //if (!property.hasValue())
-                //    continue;
+                // if (!property.hasValue())
+                // continue;
                 int type = property.getValue().getType();
-                MetaDataProperty metaProperty = new MetaDataProperty(property.getName(),type);
+                MetaDataProperty metaProperty = new MetaDataProperty(property.getName(), type);
                 switch (type) {
-                    case PropertyType.STRING:
+                    case PropertyType.STRING :
                         metaProperty.setValue(property.getString());
                         break;
-                    case PropertyType.LONG:
+                    case PropertyType.LONG :
                         metaProperty.setValue(property.getLong());
                         break;
-                    case PropertyType.DOUBLE:
+                    case PropertyType.DOUBLE :
                         metaProperty.setValue(property.getDouble());
                         break;
-                    case PropertyType.BOOLEAN:
+                    case PropertyType.BOOLEAN :
                         metaProperty.setValue(property.getBoolean());
                         break;
-                    case PropertyType.DATE:
+                    case PropertyType.DATE :
                         metaProperty.setValue(property.getDate());
                 }
                 this.metaProperties.add(metaProperty);
                 property = null;
-            } catch (RepositoryException re) {
+            }
+            catch (RepositoryException re) {
                 log.error(re.getMessage(), re);
             }
         }
     }
-
-
 }
 
 
 class MetaDataProperty implements Serializable {
 
-
     private String name;
+
     private Object value;
 
     /* JCR property type */
     private int type;
 
-
-
     private String stringValue;
-    private long longValue;
-    private double doubleValue;
-    private boolean booleanValue;
-    private Calendar dateValue;
 
+    private long longValue;
+
+    private double doubleValue;
+
+    private boolean booleanValue;
+
+    private Calendar dateValue;
 
     MetaDataProperty(String name, int type) {
         this.name = name;
         this.type = type;
     }
-
-
 
     MetaDataProperty(String name, int type, Object value) {
         this.name = name;
@@ -130,71 +115,55 @@ class MetaDataProperty implements Serializable {
         this.value = value;
     }
 
-
     public String getName() {
         return this.name;
     }
-
 
     public int getType() {
         return this.type;
     }
 
-
     Object getValue() {
         return this.value;
     }
-
 
     public void setValue(String value) {
         this.stringValue = value;
     }
 
-
     public void setValue(long value) {
         this.longValue = value;
     }
-
 
     public void setValue(double value) {
         this.doubleValue = value;
     }
 
-
     public void setValue(boolean value) {
         this.booleanValue = value;
     }
-
 
     public void setValue(Calendar value) {
         this.dateValue = value;
     }
 
-
     public String getString() {
         return this.stringValue;
     }
-
 
     public long getLong() {
         return this.longValue;
     }
 
-
     public double getDouble() {
         return this.doubleValue;
     }
-
 
     public boolean getBoolean() {
         return this.booleanValue;
     }
 
-
     public Calendar getDate() {
         return this.dateValue;
     }
-
-
-
 }

@@ -43,10 +43,6 @@
             <param-value>../webapps/magnolia/tmp</param-value>
         </init-param>
         <init-param>
-            <param-name>log4j.properties</param-name>
-            <param-value>../webapps/magnolia/WEB-INF/config/log4j.properties</param-value>
-        </init-param>
-        <init-param>
             <param-name>magnolia.exchange.history</param-name>
             <param-value>../webapps/magnolia/history</param-value>
         </init-param>
@@ -62,6 +58,14 @@
             <param-name>Repository.factory.config</param-name>
             <param-value>../webapps/magnolia/WEB-INF/config/config.xml</param-value>
         </init-param>
+        <!--
+            You can configure log4j by placing a log4j.properties or log4j.xml file in the classpath. By default you
+            will find it in WEB-INF/classes. Refers to the log4j documentation for other details.
+            <init-param>
+            <param-name>log4j.properties</param-name>
+            <param-value>../webapps/magnolia/WEB-INF/config/log4j.properties</param-value>
+            </init-param>
+        -->
         <load-on-startup>0</load-on-startup>
     </servlet>
     <servlet>

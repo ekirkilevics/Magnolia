@@ -7,14 +7,13 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.taglibs.util;
 
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyTagSupport;
-
 import org.apache.log4j.Logger;
 
 
@@ -22,8 +21,7 @@ import org.apache.log4j.Logger;
  * @author Marcel Salathe
  * @version $Revision: $ ($Author: $)
  */
-public class Xmp extends BodyTagSupport
-{
+public class Xmp extends BodyTagSupport {
 
     /**
      * Stable serialVersionUID.
@@ -32,27 +30,22 @@ public class Xmp extends BodyTagSupport
 
     private static Logger log = Logger.getLogger(Xmp.class);
 
-    public int doEndTag()
-    {
+    public int doEndTag() {
         JspWriter out = pageContext.getOut();
         String xmpString = getBodyContent().getString();
-        try
-        {
+        try {
             xmpString = changeToXmp(xmpString);
             out.print(xmpString);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             log.error(e.getMessage());
         }
         return EVAL_PAGE;
     }
 
-    private String changeToXmp(String string)
-    {
+    private String changeToXmp(String string) {
         string = string.replaceAll("<", "&lt;");
         string = string.replaceAll(">", "&gt;");
         return string;
     }
-
 }

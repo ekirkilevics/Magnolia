@@ -7,16 +7,13 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
+ */
 package info.magnolia.cms.gui.control;
 
 import info.magnolia.cms.core.Content;
-
 import java.io.IOException;
-
 import sun.misc.BASE64Decoder;
 
 
@@ -25,57 +22,42 @@ import sun.misc.BASE64Decoder;
  * @author Vinzenz Wyser
  * @version 2.0
  */
-public class Password extends ControlSuper
-{
+public class Password extends ControlSuper {
 
-    public Password()
-    {
-
+    public Password() {
     }
 
-    public Password(String name, String value)
-    {
+    public Password(String name, String value) {
         super(name, value);
     }
 
-    public Password(String name, Content websiteNode)
-    {
+    public Password(String name, Content websiteNode) {
         super(name, websiteNode);
     }
 
-    public String getHtml()
-    {
+    public String getHtml() {
         StringBuffer html = new StringBuffer();
-
         String valueDecoded = "";
         String value = "";
-
-        if (this.getEncoding() == ENCODING_BASE64)
-        {
+        if (this.getEncoding() == ENCODING_BASE64) {
             // show number of characters (using spaces)
-            try
-            {
+            try {
                 BASE64Decoder decoder = new BASE64Decoder();
                 valueDecoded = new String(decoder.decodeBuffer(this.getValue()));
             }
-            catch (IOException ioe)
-            {
+            catch (IOException ioe) {
                 ioe.printStackTrace();
             }
-            for (int i = 0; i < valueDecoded.length(); i++)
-            {
+            for (int i = 0; i < valueDecoded.length(); i++) {
                 value += " ";
             }
         }
-        else if (this.getEncoding() == ENCODING_UNIX)
-        {
+        else if (this.getEncoding() == ENCODING_UNIX) {
             value = "";
         }
-        else
-        {
+        else {
             value = this.getValue();
         }
-
         html.append("<input type=\"password\"");
         html.append(" name=\"" + this.getName() + "\"");
         html.append(" id=\"" + this.getName() + "\"");
@@ -84,11 +66,9 @@ public class Password extends ControlSuper
         html.append(this.getHtmlCssClass());
         html.append(this.getHtmlCssStyles());
         html.append(" />");
-        if (this.getSaveInfo())
-        {
+        if (this.getSaveInfo()) {
             html.append(this.getHtmlSaveInfo());
         }
         return html.toString();
     }
-
 }

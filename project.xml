@@ -433,6 +433,10 @@
         </excludes>
         <filtering>false</filtering>
       </resource>
+      <resource>
+        <directory>src/resources</directory>
+        <filtering>false</filtering>
+      </resource>
     </resources>
   </build>
   <reports>

@@ -7,66 +7,41 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
-
+ */
 package info.magnolia.cms.beans.runtime;
 
 import java.util.Hashtable;
 
 
 /**
- * Date: May 21, 2004
- * Time: 3:11:51 PM
- *
- *
  * @author Sameer charles
  * @version 2.0
  */
-
-
-
 public class SystemProperty {
 
-
-
-
     private static Hashtable properties = new Hashtable();
-
-
-
 
     /**
      * @param name
      * @param value
-     * */
+     */
     public static void setProperty(String name, String value) {
-        SystemProperty.properties.put(name,value);
+        SystemProperty.properties.put(name, value);
     }
-
-
 
     /**
      * @param name
-     * */
+     */
     public static String getProperty(String name) {
         return (String) SystemProperty.properties.get(name);
     }
 
-
-
     /**
      * 
-     * */
+     */
     public static Hashtable getPropertyList() {
         return SystemProperty.properties;
     }
-
-
-
-
 }

@@ -7,56 +7,36 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.exchange;
-
 
 import java.util.Enumeration;
 
 
 /**
- * Date: May 4, 2004
- * Time: 11:14:00 AM
- *
+ * Date: May 4, 2004 Time: 11:14:00 AM
  * @author Sameer Charles
  */
-
-
 public interface PacketHeader {
-
-
 
     /**
      * <p>
      * add new header field, overwrite is header exist with the same name
      * </p>
-     *
      * @param name
      * @param value
-     * */
+     */
     public void addHeader(String name, String value);
 
-
-
     /**
-     *
      * @return header field value
-     * */
+     */
     public String getValueByName(String name);
 
-
-
     /**
-     *
      * @return Collection of fieldNames as String
-     * */
+     */
     public Enumeration getKeys();
-
-
-
 }

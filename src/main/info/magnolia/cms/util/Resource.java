@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.util;
@@ -18,9 +18,7 @@ import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.HierarchyManager;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.apache.log4j.Logger;
 
 
@@ -28,8 +26,7 @@ import org.apache.log4j.Logger;
  * @author Sameer Charles
  * @version 1.1
  */
-public class Resource
-{
+public class Resource {
 
     /**
      * Logger.
@@ -53,8 +50,7 @@ public class Resource
      * @param req HttpServletRequest as received in JSP or servlet
      * @return currently active page, as requested from the URI
      */
-    public static Content getActivePage(HttpServletRequest req)
-    {
+    public static Content getActivePage(HttpServletRequest req) {
         return (Content) req.getAttribute(Aggregator.ACTPAGE);
     }
 
@@ -65,8 +61,7 @@ public class Resource
      * @param req HttpServletRequest as received in JSP or servlet
      * @return currently atom
      */
-    public static File getFile(HttpServletRequest req)
-    {
+    public static File getFile(HttpServletRequest req) {
         return (File) req.getAttribute(Aggregator.FILE);
     }
 
@@ -77,8 +72,7 @@ public class Resource
      * @param req HttpServletRequest as received in JSP or servlet
      * @return currently active page, as requested from the URI
      */
-    public static Content getCurrentActivePage(HttpServletRequest req)
-    {
+    public static Content getCurrentActivePage(HttpServletRequest req) {
         Content currentActpage;
         currentActpage = (Content) req.getAttribute(Aggregator.CURRENT_ACTPAGE);
         if (currentActpage == null)
@@ -96,8 +90,7 @@ public class Resource
      * @deprecated as on magnolia 2.0, use SessionAccessControl instead
      * @see info.magnolia.cms.security.SessionAccessControl#getHierarchyManager(javax.servlet.http.HttpServletRequest)
      */
-    public static HierarchyManager getHierarchyManager(HttpServletRequest req)
-    {
+    public static HierarchyManager getHierarchyManager(HttpServletRequest req) {
         log.info("Deprecated : use SessionAccessControl.getHierarchyManager(HttpServletRequest,String) instead");
         return (HierarchyManager) req.getAttribute(Aggregator.HIERARCHY_MANAGER);
     }
@@ -109,8 +102,7 @@ public class Resource
      * @param req HttpServletRequest as received in JSP or servlet
      * @return initialised multipart form object with the posted data
      */
-    public static MultipartForm getPostedForm(HttpServletRequest req)
-    {
+    public static MultipartForm getPostedForm(HttpServletRequest req) {
         return (MultipartForm) req.getAttribute("multipartform");
     }
 
@@ -121,14 +113,11 @@ public class Resource
      * @param req HttpServletRequest as received in JSP or servlet
      * @return ContentNode , local container specific to the current JSP/Servlet paragraph
      */
-    public static ContentNode getLocalContentNode(HttpServletRequest req)
-    {
-        try
-        {
+    public static ContentNode getLocalContentNode(HttpServletRequest req) {
+        try {
             return (ContentNode) req.getAttribute(Resource.LOCAL_CONTENT_NODE);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             return null;
         }
     }
@@ -140,8 +129,7 @@ public class Resource
      * @param req HttpServletRequest as received in JSP or servlet
      * @param node to be set
      */
-    public static void setLocalContentNode(HttpServletRequest req, ContentNode node)
-    {
+    public static void setLocalContentNode(HttpServletRequest req, ContentNode node) {
         req.setAttribute(Resource.LOCAL_CONTENT_NODE, node);
     }
 
@@ -151,8 +139,7 @@ public class Resource
      * </p>
      * @param req HttpServletRequest as received in JSP or servlet
      */
-    public static void removeLocalContentNode(HttpServletRequest req)
-    {
+    public static void removeLocalContentNode(HttpServletRequest req) {
         req.removeAttribute(Resource.LOCAL_CONTENT_NODE);
     }
 
@@ -163,14 +150,11 @@ public class Resource
      * @param req HttpServletRequest as received in JSP or servlet
      * @return ContentNode , global container specific to the current JSP/Servlet page
      */
-    public static ContentNode getGlobalContentNode(HttpServletRequest req)
-    {
-        try
-        {
+    public static ContentNode getGlobalContentNode(HttpServletRequest req) {
+        try {
             return (ContentNode) req.getAttribute(Resource.GLOBAL_CONTENT_NODE);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             return null;
         }
     }
@@ -182,8 +166,7 @@ public class Resource
      * @param req HttpServletRequest as received in JSP or servlet
      * @param node to be set
      */
-    public static void setGlobalContentNode(HttpServletRequest req, ContentNode node)
-    {
+    public static void setGlobalContentNode(HttpServletRequest req, ContentNode node) {
         req.setAttribute(Resource.GLOBAL_CONTENT_NODE, node);
     }
 
@@ -193,30 +176,25 @@ public class Resource
      * </p>
      * @param req HttpServletRequest as received in JSP or servlet
      */
-    public static void removeGlobalContentNode(HttpServletRequest req)
-    {
+    public static void removeGlobalContentNode(HttpServletRequest req) {
         req.removeAttribute(Resource.GLOBAL_CONTENT_NODE);
     }
 
     /**
      *
      */
-    public static void setLocalContentNodeCollectionName(HttpServletRequest req, String name)
-    {
+    public static void setLocalContentNodeCollectionName(HttpServletRequest req, String name) {
         req.setAttribute(Resource.LOCAL_CONTENT_NODE_COLLECTION_NAME, name);
     }
 
     /**
      *
      */
-    public static String getLocalContentNodeCollectionName(HttpServletRequest req)
-    {
-        try
-        {
+    public static String getLocalContentNodeCollectionName(HttpServletRequest req) {
+        try {
             return (String) req.getAttribute(Resource.LOCAL_CONTENT_NODE_COLLECTION_NAME);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             return "";
         }
     }
@@ -224,8 +202,7 @@ public class Resource
     /**
      *
      */
-    public static void removeLocalContentNodeCollectionName(HttpServletRequest req)
-    {
+    public static void removeLocalContentNodeCollectionName(HttpServletRequest req) {
         req.removeAttribute(Resource.LOCAL_CONTENT_NODE_COLLECTION_NAME);
     }
 
@@ -236,9 +213,7 @@ public class Resource
      * @param req HttpServletRequest as received in JSP or servlet
      * @return boolean , true if preview is enabled
      */
-    public static boolean showPreview(HttpServletRequest req)
-    {
+    public static boolean showPreview(HttpServletRequest req) {
         return (req.getParameter("preview") != null);
     }
-
 }

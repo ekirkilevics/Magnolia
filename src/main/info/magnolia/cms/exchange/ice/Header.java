@@ -7,35 +7,27 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms.exchange.ice;
 
-
-
 /**
- * Date: May 18, 2004
- * Time: 3:46:24 PM
- *
  * @author Sameer Charles
  */
-
-
 public class Header {
 
     public static final String TYPE = "Type";
+
     public static final String DATA = "Data";
+
     public static final String PATH = "Path";
+
     public static final String CONTEXT = "Context";
+
     public static final String ACTION = "Action";
 
     public static final String ACTION_ADD = "Add";
+
     public static final String ACTION_REMOVE = "Remove";
-
-
-
 }

@@ -7,12 +7,9 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.cms.gui.control;
 
 import info.magnolia.cms.core.Content;
@@ -21,50 +18,57 @@ import info.magnolia.cms.core.Content;
 /**
  * @author Vinzenz Wyser
  * @version 2.0
- */ 
+ */
 public class SelectOption extends ControlSuper {
-	private String label=null;
-	private boolean selected=false;
 
+    private String label = null;
 
-	public SelectOption(){
-	}
+    private boolean selected = false;
 
-	public SelectOption(String label,String value) {
-		this.setLabel(label);
-		this.setValue(value);
-	}
+    public SelectOption() {
+    }
 
-	public SelectOption(String label,Content websiteNode) {
-		this.setLabel(label);
-		this.setWebsiteNode(websiteNode);
-	}
+    public SelectOption(String label, String value) {
+        this.setLabel(label);
+        this.setValue(value);
+    }
 
-	public void setSelected(boolean b) {this.selected=b;}
-	public boolean getSelected() {return this.selected;}
+    public SelectOption(String label, Content websiteNode) {
+        this.setLabel(label);
+        this.setWebsiteNode(websiteNode);
+    }
 
+    public void setSelected(boolean b) {
+        this.selected = b;
+    }
 
-	public void setLabel(String s) {this.label=s;}
-	public String getLabel() {
-		if (this.label!=null) return this.label;
-		else return this.getValue();
-	}
+    public boolean getSelected() {
+        return this.selected;
+    }
 
+    public void setLabel(String s) {
+        this.label = s;
+    }
 
-	public String getHtml() {
-		StringBuffer html=new StringBuffer();
+    public String getLabel() {
+        if (this.label != null)
+            return this.label;
+        else
+            return this.getValue();
+    }
 
-		html.append("<option value=\""+this.getValue()+"\"");
-		html.append(this.getHtmlCssClass());
-		html.append(this.getHtmlCssStyles());
-		if (this.getSelected()) html.append(" selected");
-		html.append(this.getHtmlId()); //id e.g. needed in rich editor
-		html.append(">");
-		//html.append("["+this.getLabel()+"]["+this.getValue()+"]");
-		html.append(this.getLabel());
-		html.append("</option>");
-		return html.toString();
-	}
-
-
+    public String getHtml() {
+        StringBuffer html = new StringBuffer();
+        html.append("<option value=\"" + this.getValue() + "\"");
+        html.append(this.getHtmlCssClass());
+        html.append(this.getHtmlCssStyles());
+        if (this.getSelected())
+            html.append(" selected");
+        html.append(this.getHtmlId()); // id e.g. needed in rich editor
+        html.append(">");
+        // html.append("["+this.getLabel()+"]["+this.getValue()+"]");
+        html.append(this.getLabel());
+        html.append("</option>");
+        return html.toString();
+    }
 }

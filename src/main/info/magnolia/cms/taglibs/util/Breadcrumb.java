@@ -7,14 +7,13 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.taglibs.util;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.Resource;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
@@ -25,8 +24,7 @@ import javax.servlet.jsp.tagext.TagSupport;
  * @author Marcel Salathe
  * @version $Revision: $ ($Author: $)
  */
-public class Breadcrumb extends TagSupport
-{
+public class Breadcrumb extends TagSupport {
 
     /**
      * Stable serialVersionUID.
@@ -37,17 +35,14 @@ public class Breadcrumb extends TagSupport
 
     private int startLevel = 1;
 
-    public int doStartTag() throws JspException
-    {
+    public int doStartTag() throws JspException {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         Content actpage = Resource.getCurrentActivePage(request);
         int currentLevel = 0;
-        try
-        {
+        try {
             currentLevel = actpage.getLevel();
             JspWriter out = pageContext.getOut();
-            for (int i = this.startLevel; i <= currentLevel; i++)
-            {
+            for (int i = this.startLevel; i <= currentLevel; i++) {
                 if (i != this.startLevel)
                     out.print(this.delimiter);
                 out.print("<a href=\""
@@ -57,21 +52,17 @@ public class Breadcrumb extends TagSupport
                     + "</a>");
             }
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
         }
         ;
-
         return super.doStartTag();
     }
 
-    public void setDelimiter(String delimiter)
-    {
+    public void setDelimiter(String delimiter) {
         this.delimiter = delimiter;
     }
 
-    public void setStartLevel(String startLevel)
-    {
+    public void setStartLevel(String startLevel) {
         this.startLevel = (new Integer(startLevel)).intValue();
         if (this.startLevel < 1)
             this.startLevel = 1;

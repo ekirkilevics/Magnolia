@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.taglibs;
@@ -20,8 +20,7 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
  * @author Marcel Salathe
  * @version $Revision: $ ($Author: $)
  */
-public class LoadPagePath extends BodyTagSupport
-{
+public class LoadPagePath extends BodyTagSupport {
 
     /**
      * Stable serialVersionUID.
@@ -31,19 +30,15 @@ public class LoadPagePath extends BodyTagSupport
     /**
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
-    public int doEndTag() throws JspException
-    {
+    public int doEndTag() throws JspException {
         LoadPage parent = (LoadPage) findAncestorWithClass(this, LoadPage.class);
-        if (parent == null)
-        {
+        if (parent == null) {
             throw new JspException("nesting error");
         }
         String path = getBodyContent().getString();
-        if (path != null)
-        {
+        if (path != null) {
             parent.setPath(path.trim());
         }
         return EVAL_PAGE;
     }
-
 }

@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.taglibs.util;
@@ -20,8 +20,7 @@ import javax.servlet.jsp.tagext.TagSupport;
  * @author Marcel Salathe
  * @version $Revision: $ ($Author: $)
  */
-public class AAttribute extends TagSupport
-{
+public class AAttribute extends TagSupport {
 
     /**
      * Stable serialVersionUID.
@@ -38,35 +37,28 @@ public class AAttribute extends TagSupport
      * </p>
      * @return int
      */
-    public int doEndTag() throws JspException
-    {
+    public int doEndTag() throws JspException {
         AHref parent = (AHref) findAncestorWithClass(this, AHref.class);
-        if (parent == null)
-        {
+        if (parent == null) {
             throw new JspException("nesting error");
         }
-        else
-        {
+        else {
             parent.setAttribute(this.name, this.value);
         }
         return EVAL_PAGE;
-
     }
 
     /**
      * @param name , name of the attribute
      */
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
     /**
      * @param value , value of the attribute
      */
-    public void setValue(String value)
-    {
+    public void setValue(String value) {
         this.value = value;
     }
-
 }

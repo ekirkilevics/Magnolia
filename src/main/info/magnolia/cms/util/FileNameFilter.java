@@ -7,14 +7,13 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.util;
 
 import java.io.File;
 import java.io.FilenameFilter;
-
 import org.apache.commons.lang.StringUtils;
 
 
@@ -22,19 +21,15 @@ import org.apache.commons.lang.StringUtils;
  * @author Sameer Charles
  * @version 1.1
  */
-public class FileNameFilter implements FilenameFilter
-{
+public class FileNameFilter implements FilenameFilter {
 
     private String searchString = "";
 
-    public void setSearchString(String name)
-    {
+    public void setSearchString(String name) {
         this.searchString = name;
     }
 
-    public boolean accept(File dir, String name)
-    {
+    public boolean accept(File dir, String name) {
         return StringUtils.contains(name, this.searchString + ".");
     }
-
 }

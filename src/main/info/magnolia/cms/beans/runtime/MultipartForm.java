@@ -7,45 +7,29 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
-
-
+ */
 package info.magnolia.cms.beans.runtime;
 
-
-import org.apache.log4j.Logger;
-
-import java.util.Hashtable;
 import java.io.File;
-
+import java.util.Hashtable;
+import org.apache.log4j.Logger;
 
 
 /**
- * User: sameercharles
- * Date: Apr 28, 2003
- * Time: 11:20:59 AM
  * @author Sameer Charles
  * @version 1.1
  */
-
-
 public class MultipartForm {
-
-
 
     private static Logger log = Logger.getLogger(MultipartForm.class);
 
     private Hashtable parameters;
+
     private Hashtable documents;
+
     private Hashtable parameterList;
-
-
-
 
     public MultipartForm() {
         this.parameters = new Hashtable();
@@ -53,48 +37,41 @@ public class MultipartForm {
         this.parameterList = new Hashtable();
     }
 
-
-
     public void addParameter(String name, Object value) {
-        this.parameters.put(name,value);
+        this.parameters.put(name, value);
     }
-
-
 
     public void removeParameter(String name) {
         this.parameters.remove(name);
     }
 
-
-
     public Hashtable getParameters() {
         return this.parameters;
     }
 
-
-
     public String getParameter(String name) {
         try {
-            return (String)this.parameters.get(name);
-        } catch (Exception e) {return null;}
+            return (String) this.parameters.get(name);
+        }
+        catch (Exception e) {
+            return null;
+        }
     }
-
-
 
     public String[] getParameterValues(String name) {
         try {
-            return ((String[])this.parameterList.get(name));
-        } catch (Exception e) {return null;}
+            return ((String[]) this.parameterList.get(name));
+        }
+        catch (Exception e) {
+            return null;
+        }
     }
-
-
 
     public void addparameterValues(String name, String[] values) {
         this.parameterList.put(name, values);
     }
 
-
-    public void addDocument(String atomName,String fileName,String type,File file) {
+    public void addDocument(String atomName, String fileName, String type, File file) {
         if ((fileName == null) || (fileName.equals("")))
             return;
         Document document = new Document();
@@ -104,26 +81,20 @@ public class MultipartForm {
         int lastIndexOfDot = fileName.lastIndexOf(".");
         if (lastIndexOfDot == -1) {
             document.setExtention("");
-			document.setFileName(fileName);
-		}
+            document.setFileName(fileName);
+        }
         else {
-            document.setExtention(fileName.substring(lastIndexOfDot+1));
-			document.setFileName(fileName.substring(0,lastIndexOfDot));
-		}
-        this.documents.put(atomName,document);
+            document.setExtention(fileName.substring(lastIndexOfDot + 1));
+            document.setFileName(fileName.substring(0, lastIndexOfDot));
+        }
+        this.documents.put(atomName, document);
     }
-
-
 
     public Document getDocument(String name) {
-        return (Document)this.documents.get(name);
+        return (Document) this.documents.get(name);
     }
-
 
     public Hashtable getDocuments() {
         return this.documents;
     }
-
-
-
 }

@@ -7,18 +7,16 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.servlets;
 
 import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.log4j.Logger;
 
 
@@ -30,22 +28,16 @@ import org.apache.log4j.Logger;
  * @author Sameer Charles
  * @version 2.0
  */
-
-public class DAVServlet extends HttpServlet
-{
+public class DAVServlet extends HttpServlet {
 
     /**
      * Logger.
      */
     private static Logger log = Logger.getLogger(DAVServlet.class);
 
-    protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
-    {
+    protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
     }
 
-    protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
-    {
-
+    protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
     }
-
 }

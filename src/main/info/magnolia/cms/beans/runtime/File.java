@@ -7,50 +7,41 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
-
-
+ */
 package info.magnolia.cms.beans.runtime;
 
-
-import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.AccessDeniedException;
-
-import javax.jcr.RepositoryException;
 import java.io.InputStream;
-
+import javax.jcr.RepositoryException;
 import org.apache.log4j.Logger;
 
 
 /**
- * User: sameercharles
- * Date: Apr 28, 2003
- * Time: 11:20:59 AM
+ * User: sameercharles Date: Apr 28, 2003 Time: 11:20:59 AM
  * @author Sameer Charles
  * @version 1.1
  */
-
-
 public class File {
-
 
     private static Logger log = Logger.getLogger(File.class);
 
     private NodeData data;
+
     private Content properties;
+
     private String extension;
+
     private String fileName;
+
     private String contentType;
-	private String nodeDataTemplate;
+
+    private String nodeDataTemplate;
+
     private int size;
-
-
 
     public Content getProperties() {
         return properties;
@@ -65,8 +56,9 @@ public class File {
             this.setContentType(this.properties.getNodeData("contentType").getString());
             Integer size = new Integer(this.properties.getNodeData("size").getString());
             this.setSize(size.intValue());
-        } catch (AccessDeniedException e) {
-            log.error("Failed to set file properties for - "+this.properties.getHandle());
+        }
+        catch (AccessDeniedException e) {
+            log.error("Failed to set file properties for - " + this.properties.getHandle());
             log.error(e.getMessage(), e);
         }
     }
@@ -111,7 +103,6 @@ public class File {
         this.size = size;
     }
 
-
     public NodeData getNodeData() {
         return this.data;
     }
@@ -120,13 +111,12 @@ public class File {
         this.data = data;
     }
 
-
     public InputStream getStream() {
         try {
             return this.data.getValue().getStream();
-        } catch (RepositoryException re) {return null;}
+        }
+        catch (RepositoryException re) {
+            return null;
+        }
     }
-
-
-
 }

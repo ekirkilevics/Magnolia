@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.taglibs;
@@ -21,8 +21,7 @@ import javax.servlet.jsp.tagext.TagSupport;
  * @version $Revision: $ ($Author: $)
  * @deprecated
  */
-public class Init extends TagSupport
-{
+public class Init extends TagSupport {
 
     /**
      * Stable serialVersionUID.
@@ -33,8 +32,7 @@ public class Init extends TagSupport
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      * @deprecated
      */
-    public int doStartTag()
-    {
+    public int doStartTag() {
         return SKIP_BODY;
     }
 
@@ -42,9 +40,7 @@ public class Init extends TagSupport
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      * @deprecated
      */
-    public int doEndTag()
-    {
+    public int doEndTag() {
         return EVAL_PAGE;
     }
-
 }

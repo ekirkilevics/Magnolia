@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.taglibs;
@@ -15,15 +15,12 @@ package info.magnolia.cms.taglibs;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.util.Resource;
-
 import java.util.Collection;
 import java.util.Iterator;
-
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
-
 import org.apache.log4j.Logger;
 
 
@@ -31,8 +28,7 @@ import org.apache.log4j.Logger;
  * @author Sameer Charles
  * @version $Revision: $ ($Author: $)
  */
-public class ContentNodeIterator extends TagSupport
-{
+public class ContentNodeIterator extends TagSupport {
 
     /**
      * Stable serialVersionUID.
@@ -72,12 +68,10 @@ public class ContentNodeIterator extends TagSupport
      * </p>
      * @return int
      */
-    public int doStartTag()
-    {
+    public int doStartTag() {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         this.page = Resource.getCurrentActivePage(request);
-        try
-        {
+        try {
             Collection children = this.page.getContentNode(this.contentNodeCollectionName).getChildren();
             this.size = children.size();
             if (this.size == 0)
@@ -96,8 +90,7 @@ public class ContentNodeIterator extends TagSupport
             for (; this.beginIndex > -1; --this.beginIndex)
                 Resource.setLocalContentNode(request, (ContentNode) this.contentNodeIterator.next());
         }
-        catch (RepositoryException re)
-        {
+        catch (RepositoryException re) {
             log.debug(re.getMessage());
             return SKIP_BODY;
         }
@@ -108,11 +101,9 @@ public class ContentNodeIterator extends TagSupport
     /**
      * @return int
      */
-    public int doAfterBody()
-    {
+    public int doAfterBody() {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-        if (this.contentNodeIterator.hasNext() && (this.currentIndex < this.getEnd()))
-        {
+        if (this.contentNodeIterator.hasNext() && (this.currentIndex < this.getEnd())) {
             this.currentIndex++;
             pageContext.setAttribute(
                 ContentNodeIterator.CURRENT_INDEX,
@@ -129,47 +120,40 @@ public class ContentNodeIterator extends TagSupport
      * @param name , container list name on which this tag will iterate
      * @deprecated
      */
-    public void setContainerListName(String name)
-    {
+    public void setContainerListName(String name) {
         this.setContentNodeCollectionName(name);
     }
 
     /**
      * @param name , content node name on which this tag will iterate
      */
-    public void setContentNodeCollectionName(String name)
-    {
+    public void setContentNodeCollectionName(String name) {
         this.contentNodeCollectionName = name;
     }
 
-    public String getContentNodeCollectionName()
-    {
+    public String getContentNodeCollectionName() {
         return this.contentNodeCollectionName;
     }
 
     /**
      * @param index , to begin with
      */
-    public void setBegin(String index)
-    {
+    public void setBegin(String index) {
         this.beginIndex = (new Integer(index)).intValue();
     }
 
     /**
      * @param index , to end at
      */
-    public void setEnd(String index)
-    {
+    public void setEnd(String index) {
         this.endIndex = (new Integer(index)).intValue();
     }
 
     /**
      * @return end index
      */
-    private int getEnd()
-    {
-        if (this.endIndex == 0)
-        {
+    private int getEnd() {
+        if (this.endIndex == 0) {
             return this.size;
         }
         return this.endIndex;
@@ -178,16 +162,14 @@ public class ContentNodeIterator extends TagSupport
     /**
      * @param step to jump to
      */
-    public void setStep(String step)
-    {
+    public void setStep(String step) {
         this.step = (new Integer(step)).intValue();
     }
 
     /**
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
-    public int doEndTag()
-    {
+    public int doEndTag() {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         Resource.removeLocalContentNode(request);
         Resource.removeLocalContentNodeCollectionName(request);
@@ -201,5 +183,4 @@ public class ContentNodeIterator extends TagSupport
         this.currentIndex = 0;
         return EVAL_PAGE;
     }
-
 }

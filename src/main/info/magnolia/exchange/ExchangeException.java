@@ -7,12 +7,9 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
+ */
 package info.magnolia.exchange;
 
 import java.io.PrintStream;
@@ -20,73 +17,52 @@ import java.io.PrintWriter;
 
 
 /**
- * Date: May 6, 2004
- * Time: 6:18:19 PM
- *
+ * Date: May 6, 2004 Time: 6:18:19 PM
  * @author Sameer Charles
  */
-
-
 public class ExchangeException extends Exception {
 
-
-
     private Exception root;
-
 
     public ExchangeException() {
         super();
     }
 
-
-
-
     public ExchangeException(String message) {
         super(message);
     }
 
-
-
-
     public ExchangeException(String message, Exception root) {
         super(message);
-
         if (root instanceof ChannelException) {
-            this.root = ((ChannelException)root).getRootException();
-        } else {
+            this.root = ((ChannelException) root).getRootException();
+        }
+        else {
             this.root = root;
         }
     }
 
-
-
-
     public ExchangeException(Exception root) {
-        this(null,root);
+        this(null, root);
     }
-
-
 
     public Exception getRootException() {
         return this.root;
     }
 
-
-
     public String getMessage() {
         String message = super.getMessage();
         if (this.root == null) {
             return message;
-        } else {
+        }
+        else {
             String rootCause = this.root.getMessage();
             if (rootCause == null)
                 return message;
             else
-                return (message+":"+rootCause);
+                return (message + ":" + rootCause);
         }
     }
-
-
 
     public void printStackTrace() {
         synchronized (System.err) {
@@ -97,8 +73,6 @@ public class ExchangeException extends Exception {
         }
     }
 
-
-
     public void printStackTrace(PrintStream ps) {
         synchronized (ps) {
             super.printStackTrace(ps);
@@ -108,8 +82,6 @@ public class ExchangeException extends Exception {
         }
     }
 
-
-
     public void printStackTrace(PrintWriter pw) {
         synchronized (pw) {
             super.printStackTrace(pw);
@@ -118,10 +90,4 @@ public class ExchangeException extends Exception {
             }
         }
     }
-
-
-
-
-
-
 }
