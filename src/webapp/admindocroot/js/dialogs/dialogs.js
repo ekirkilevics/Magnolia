@@ -204,7 +204,7 @@ function mgnlControlFileSetFileName(id,clear)
 ### control link: open link browser
 ################################### */
 
-function mgnlDialogLinkOpenBrowser(context,controlName,repository,extension)
+function mgnlDialogLinkOpenBrowser(controlName,repository,extension)
 	{
 	var pathSelected=document.getElementById(controlName).value;
 
@@ -214,7 +214,7 @@ function mgnlDialogLinkOpenBrowser(context,controlName,repository,extension)
 
 	if (extension) pathSelected=pathSelected.replace("."+extension,"");
 
-	mgnlOpenTreeBrowser(context,controlName,pathSelected,pathOpen,repository,extension)
+	mgnlOpenTreeBrowser(controlName,pathSelected,pathOpen,repository,extension)
 	}
 
 
@@ -235,16 +235,15 @@ function mgnlDialogLinkBrowserResize()
 		}
 	}
 
-function mgnlDialogLinkBrowserWriteBack(controlName,extension,context)
+function mgnlDialogLinkBrowserWriteBack(controlName,extension)
 	{
 	var iFrameDoc=mgnlGetIFrameDocument('mgnlDialogLinkBrowserIFrame');
 	var addressBar=iFrameDoc.getElementById("mgnlTree_AddressBar");
 	var control=opener.document.getElementById(controlName);
 
 	if (extension) extension="."+extension;
-	if (!context) context = "";
 
-	control.value=context + addressBar.value+extension;
+	control.value="${pageContext.request.contextPath}" + addressBar.value+extension;
 	window.close();
 	}
 

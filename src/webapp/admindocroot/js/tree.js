@@ -10,13 +10,12 @@
 	//#################
 
 
-	function mgnlTree(repository,path,name,height,context)
+	function mgnlTree(repository,path,name,height)
 		{
 		document.write('<div id="'+name+'_'+path+'_DivSub" style="display:none;"></div>');
 		this.repository=repository;
 		this.path=path;
 		this.name=name;
-		this.context=context;
 		this.divMain=document.getElementById(name+"_"+path+"_DivMain");
 		this.divMenu=document.getElementById(name+"_DivMenu");
 		this.addressBar=document.getElementById(name+"_AddressBar");
@@ -1047,16 +1046,15 @@
 
 	function mgnlTreeMenuItemOpen(tree)
 		{
-		var url=tree.context + tree.selectedNode.path+".html";
+		var url="${pageContext.request.contextPath}" + tree.selectedNode.path+".html";
 		var w=window.open(url,"mgnlInline","");
 		if (w) w.focus();
-		//document.location.href=tree.selectedNode.id+".html";
 		}
 
 	function mgnlTreeMenuOpenDialog(tree,dialogPath)
 		{
 		var path=tree.selectedNode.id;
-		mgnlOpenDialog(path,'','','',tree.repository,'',dialogPath);
+		mgnlOpenDialog(path,'','','',tree.repository,dialogPath);
 		}
 
 
@@ -1325,8 +1323,4 @@ callback
 
 		//tree.selectedNodeReset();
 }
-
-
-
-
 

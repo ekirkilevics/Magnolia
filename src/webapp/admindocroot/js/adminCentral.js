@@ -2,8 +2,6 @@
 ### adminCentral.js
 ################################### */
 
-
-
 function mgnlAdminCentralResize()
 	{
 	var divExtractTree=document.getElementById("mgnlAdminCentral_ExtractTreeDiv");
@@ -65,7 +63,7 @@ function mgnlAdminCentralSwitchExtractTree(repository,href)
 
 	href=mgnlAddParameter(href,"mgnlCK",mgnlGetCacheKiller());
 	href=mgnlAddParameter(href,"repository",repository);
-	iFrameDoc.location.href=href;
+	iFrameDoc.location.href="${pageContext.request.contextPath}" + href;
 
 	divExtractTree.style.visibility="visible";
 	}
@@ -92,7 +90,7 @@ function mgnlAdminCentralSwitchExtractNonTree(href)
 	divExtractNonTree.style.visibility="visible";
 
 	href=mgnlAddParameter(href,"mgnlCK",mgnlGetCacheKiller());
-	iFrameDoc.location.href=href;
+	iFrameDoc.location.href="${pageContext.request.contextPath}" + href;
 	}
 
 

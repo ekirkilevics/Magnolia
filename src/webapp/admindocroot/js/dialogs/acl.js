@@ -5,9 +5,9 @@
 
 var globalIndex=0;
 
-function mgnlAclChoose(context,index,repository)
+function mgnlAclChoose(index,repository)
 	{
-	mgnlOpenTreeBrowser(context,'acl'+index+'Path',document.getElementById('acl'+index+'Path').value,'',repository);
+	mgnlOpenTreeBrowser('acl'+index+'Path',document.getElementById('acl'+index+'Path').value,'',repository);
 	}
 
 function mgnlAclAdd(contextUsers,rowIndex,path,name,accessRight,accessType)

@@ -189,9 +189,9 @@ function mgnlResetUp(evt)
 ################################### */
 
 
-function mgnlOpenDialog(path,nodeCollection,node,paragraph,repository,context,dialogPage,width,height)
+function mgnlOpenDialog(path,nodeCollection,node,paragraph,repository,dialogPage,width,height)
 	{
-    if (!context) context="";
+
 
 	//dialog window is resized in  dialog itself (window.resize)
     if (!width) width=800;
@@ -217,9 +217,9 @@ function mgnlOpenDialog(path,nodeCollection,node,paragraph,repository,context,di
 		else richEPaste="textarea";
 		}
 
-	if (!dialogPage) dialogPage="/.magnolia/dialogs/standard.html";
+	if (!dialogPage) dialogPage=".magnolia/dialogs/standard.html";
 
-    url=context;
+    url="${pageContext.request.contextPath}";
     url+=dialogPage;
     url+="?mgnlPath="+path;
     url+="&mgnlNodeCollection="+nodeCollection;
@@ -227,7 +227,6 @@ function mgnlOpenDialog(path,nodeCollection,node,paragraph,repository,context,di
 	url+="&mgnlParagraph="+paragraph;
 	url+="&mgnlRichE="+richE;
 	url+="&mgnlRichEPaste="+richEPaste;
-	//url+="&mgnlContext="+context;
 	url+="&mgnlRepository="+repository;
 	url+="&mgnlCK="+mgnlGetCacheKiller();
 
@@ -240,15 +239,11 @@ function mgnlOpenDialog(path,nodeCollection,node,paragraph,repository,context,di
 ### open tree browser
 ################################### */
 
-function mgnlOpenTreeBrowser(context,controlName,pathSelected,pathOpen,repository,extension,width,height)
+function mgnlOpenTreeBrowser(controlName,pathSelected,pathOpen,repository,extension,width,height)
 	{
 	if (!width) width=450;
 	if (!height) height=550;
-	if (!context) context="";
-	//if (!pathSelected || pathSelected=="") pathSelected="/";
-	var src="";
-	src+=context;
-	src+="/.magnolia/dialogs/linkBrowser.html?mgnlCK="+mgnlGetCacheKiller();
+	var src="${pageContext.request.contextPath}/.magnolia/dialogs/linkBrowser.html?mgnlCK="+mgnlGetCacheKiller();
 	src+="&mgnlControlName="+controlName;
 	if (pathSelected) src+="&pathSelected="+pathSelected;
 	if (pathOpen) src+="&pathOpen="+pathOpen;
@@ -267,7 +262,7 @@ function mgnlOpenTreeBrowser(context,controlName,pathSelected,pathOpen,repositor
 function mgnlOpenAdminCentral(path,repository)
 	{
 	var src="";
-	src+="/.magnolia/adminCentral.html?mgnlCK="+mgnlGetCacheKiller();
+	src+="${pageContext.request.contextPath}/.magnolia/adminCentral.html?mgnlCK="+mgnlGetCacheKiller();
 	src+="&pathSelected="+path;
 	if (repository) src+="&repository="+repository;
     var w=window.open(src,"mgnlAdminCentral","");
