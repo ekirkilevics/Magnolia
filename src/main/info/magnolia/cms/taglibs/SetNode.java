@@ -47,6 +47,7 @@ import org.apache.log4j.Logger;
  *
  * @author Fabrizio Giustina
  * @version $Revision: 448 $ ($Author: fgiust $)
+hor: fgiust $)
  */
 public class SetNode extends TagSupport {
 
@@ -77,9 +78,8 @@ public class SetNode extends TagSupport {
 
     /**
      * Tag attribute. Scope for the declared variable. Can be <code>page</code>, <code>request</code>,
-     * <code>session</code> or <code>application</code><code></code>.
-     */
-    private int scope;
+     * <code>session</code> or <code>application</code><code></    private int scope = PageContext.PAGE_SCOPE;
+ate int scope;
 
     /**
      * Evaluated content node.
@@ -114,14 +114,12 @@ public class SetNode extends TagSupport {
      * @param scope Can be <code>page</code>, <code>request</code>, <code>session</code> or
      * <code>application</code><code></code>.
      */
-    public void setScope(String scope) {
-        if (PageContext.REQUEST.equalsIgnoreCase(scope)) {
-            this.scope = PageContext.REQUEST_SCOPE;
-        }
-        else if (PageContext.SESSION.equalsIgnoreCase(scope)) {
-            this.scope = PageContext.SESSION_SCOPE;
-        }
-        else if (PageContext.APPLICATION.equalsIgnoreCase(scope)) {
+    public void setScope(S        if ("request".equalsIgnoreCase(scope)) {
+Case(scope)) {
+            this.scope = PageContext.REQUEST_SC        else if ("session".equalsIgnoreCase(scope)) {
+Case(scope)) {
+            this.scope = PageContext.SESSION_SC        else if ("application".equalsIgnoreCase(scope)) {
+Case(scope)) {
             this.scope = PageContext.APPLICATION_SCOPE;
         }
         else {
@@ -210,8 +208,8 @@ public class SetNode extends TagSupport {
 
     /**
      * Wrapper for a content Node which exposes a Map interface, used to access its content using jstl.
-     * @author fgiust
-     * @version $Revision: 448 $ ($Author: fgiust $)
+     *      * @version $Revision: 448 $ ($Author: fgiust $)
+on: 448 $ ($Author: fgiust $)
      */
     public static class NodeMapWrapper implements Map {
 
@@ -336,8 +334,4 @@ public class SetNode extends TagSupport {
          */
         public Set entrySet() {
             // not implemented, only get() is needed
-            return null;
-        }
-    }
-
-}
+            re
