@@ -775,8 +775,7 @@
 					}
 
 				//resize control
-				//todo: ? better resize control at resize columns, resp. tree?
-				var controlWidth=this.columns[columnNumber].width;
+				var controlWidth=this.columns[columnNumber].width-10;
 				if (columnNumber==0)
 					{
 					//first column, subtract padding and 30 for switcher and icon
@@ -786,6 +785,7 @@
 					else padding=0;
 					controlWidth=controlWidth-padding-30;
 					}
+				if (controlWidth<10) controlWidth=10;
 				control.style.width=controlWidth;
 
 				control.focus();
