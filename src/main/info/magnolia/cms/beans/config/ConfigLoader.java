@@ -15,28 +15,38 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.beans.runtime.SystemProperty;
 import info.magnolia.cms.license.License;
 import info.magnolia.cms.security.SecureURI;
+
 import java.util.Enumeration;
+
 import javax.jcr.RepositoryException;
 import javax.servlet.ServletConfig;
+
 import org.apache.log4j.Logger;
 
 
 /**
- * User: sameercharles Date: Apr 28, 2003 Time: 11:20:59 AM
+ * This class is an entry point to all config.
  * @author Sameer Charles
  * @version 1.1
  */
-/**
- * <p>
- * This class is an entry point to all config
- * </p>
- */
 public class ConfigLoader {
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(ConfigLoader.class);
 
-    private static boolean isConfigured = false;
+    /**
+     * Is this magnolia istance configured?
+     */
+    private static boolean isConfigured;
 
+    /**
+     * Initialize a ConfigLoader instance. All the supplied parameters will be set in
+     * <code>info.magnolia.cms.beans.runtime.SystemProperty</code>
+     * @param config ServletConfig
+     * @see SystemProperty
+     */
     public ConfigLoader(ServletConfig config) {
         Enumeration e = config.getInitParameterNames();
         while (e.hasMoreElements()) {
@@ -54,12 +64,16 @@ public class ConfigLoader {
         this.load();
     }
 
+    /**
+     * Load magnolia configuration from repositories.
+     */
     private void load() {
-        /* first check for the license information, will fail if this class does not exist */
+        // first check for the license information, will fail if this class does not exist
         License license = License.getInstance();
         license.init();
         printVersionInfo(license);
         ContentRepository.init();
+
         // todo move to appropriate module classes
         Template.init();
         Paragraph.init();
@@ -78,9 +92,14 @@ public class ConfigLoader {
         Subscriber.init();
         Cache.init();
         MIMEMapping.init();
+
         log.info("Configuration loaded!");
     }
 
+    /**
+     * Print version info to console.
+     * @param license loaded License
+     */
     private void printVersionInfo(License license) {
         System.out.println("---------------------------------------------");
         System.out.println("MAGNOLIA LICENSE");
@@ -95,9 +114,7 @@ public class ConfigLoader {
     }
 
     /**
-     * <p>
-     * reload all config info in the same objects created on the startup
-     * </p>
+     * Reload all config info in the same objects created on the startup.
      * @throws RepositoryException
      */
     public static void reload() throws RepositoryException {
@@ -120,14 +137,16 @@ public class ConfigLoader {
     }
 
     /**
-     * returns true is magnolia is running with all basic configuration
+     * Returns true is magnolia is running with all basic configuration.
+     * @return <code>true</code> if Magnolia is configured
      */
     public static boolean isConfigured() {
         return ConfigLoader.isConfigured;
     }
 
     /**
-     * @param configured
+     * Set the current state of Magnolia.
+     * @param configured <code>true</code> if Magnolia is configured
      */
     protected static void setConfigured(boolean configured) {
         ConfigLoader.isConfigured = configured;
