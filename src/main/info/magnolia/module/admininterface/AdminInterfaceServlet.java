@@ -37,7 +37,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * Main admin interface servlet. Generates the content for the main admincentral iframe.
  * @author Fabrizio Giustina
- * @version $Id: $
+ * @version $Id$
  */
 public class AdminInterfaceServlet extends HttpServlet {
 

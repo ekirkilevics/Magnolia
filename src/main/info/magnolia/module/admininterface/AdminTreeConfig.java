@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Handles the tree rendering for the "config" repository.
  * @author Fabrizio Giustina
- * @version $Id: $
+ * @version $Id$
  */
 public class AdminTreeConfig implements AdminTree {
 

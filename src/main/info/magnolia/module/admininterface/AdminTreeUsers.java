@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Handles the tree rendering for the "users" repository.
  * @author Fabrizio Giustina
- * @version $Id: $
+ * @version $Id$
  */
 public class AdminTreeUsers implements AdminTree {
 

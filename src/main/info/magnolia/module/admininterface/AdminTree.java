@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
  * Admin interface tree handler. Each repository in the main admin interface is handled in a separate class which
  * implements AdminTree.
  * @author Fabrizio Giustina
- * @version $Id: $
+ * @version $Id$
  */
 public interface AdminTree {
 
