@@ -177,7 +177,7 @@
     </tag>
     <tag>
         <name>newlines</name>
-        <tag-class>it.raweb.webapp.taglib.ConvertNewLineTag</tag-class>
+        <tag-class>info.magnolia.cms.taglibs.util.ConvertNewLineTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Converts text in the body of the tag adding %lt;br /> tags at new lines or wrapping lines in paragraphs.
