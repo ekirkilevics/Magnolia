@@ -87,7 +87,9 @@ public class DialogFckEdit extends DialogBox {
         out.println("</td>");
         out.println("<td>");
         if (getRequest().getAttribute("__fcked_loaded") == null) {
-            out.println("<script type=\"text/javascript\" src=\"/admindocroot/fckeditor/fckeditor.js\"></script>");
+            out.println("<script type=\"text/javascript\" src=\""
+                + this.getRequest().getContextPath()
+                + "/admindocroot/fckeditor/fckeditor.js\"></script>");
             getRequest().setAttribute("__fcked_loaded", "true");
         }
 
@@ -111,7 +113,10 @@ public class DialogFckEdit extends DialogBox {
         }
         if (jsInitFile.length() > 0) {
             out.println("</script>\n");
-            out.println("<script type=\"text/javascript\" src=\"" + jsInitFile + "\"></script>\n");
+            out.println("<script type=\"text/javascript\" src=\""
+                + this.getRequest().getContextPath()
+                + jsInitFile
+                + "\"></script>\n");
             out.println("<script type=\"text/javascript\">\n");
         }
         out.println("fckInstance.Create();\n");

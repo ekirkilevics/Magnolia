@@ -58,8 +58,12 @@ public class DialogTab extends DialogSuper {
         out.println("<tr><td class=\"" + CSSCLASS_TAB + "\">");
         out.println("<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">");
         out.println("<tr>");
-        out.println("<td width=\"1%\"><img src=\"/admindocroot/0.gif\" height=\"1\" width=\"200\"></td>");
-        out.println("<td width=\"100%\"><img src=\"/admindocroot/0.gif\" height=\"1\" width=\"200\"></td>");
+        out.println("<td width=\"1%\"><img src=\""
+            + this.getRequest().getContextPath()
+            + "/admindocroot/0.gif\" height=\"1\" width=\"200\"></td>");
+        out.println("<td width=\"100%\"><img src=\""
+            + this.getRequest().getContextPath()
+            + "/admindocroot/0.gif\" height=\"1\" width=\"200\"></td>");
         out.println("</tr>");
 
     }

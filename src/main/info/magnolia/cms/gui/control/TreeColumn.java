@@ -287,11 +287,14 @@ public class TreeColumn extends ControlSuper {
                 // never activated or deactivated
                 imgSrc = Tree.ICONDOCROOT + "indicator_red.gif";
             }
-            html.append("<img src=\"" + imgSrc + "\">");
+            html.append("<img src=\"" + this.getRequest().getContextPath() + imgSrc + "\">");
         }
         if (this.getIconsPermission()) {
             if (!this.getWebsiteNode().isGranted(info.magnolia.cms.security.Permission.WRITE)) {
-                html.append("<img src=\"" + Tree.ICONDOCROOT + "pen_blue_canceled.gif\">");
+                html.append("<img src=\""
+                    + this.getRequest().getContextPath()
+                    + Tree.ICONDOCROOT
+                    + "pen_blue_canceled.gif\">");
             }
         }
         return html.toString();

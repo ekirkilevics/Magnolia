@@ -397,7 +397,7 @@ public class DialogRichedit extends DialogBox {
             out.println(" content_type=\"application/xhtml+xml\"");
             out.println(" scrolling=\"auto\"");
             out.println("></iframe>");
-            out.println("<script>");
+            out.println("<script type=\"text/javascript\">");
             out.println("mgnlRichEditors[mgnlRichEditors.length]='" + this.getName() + "';");
             out.println("</script>");
             // #################
@@ -453,7 +453,7 @@ public class DialogRichedit extends DialogBox {
         if (this.getConfigValue("cssFile", null) != null) {
             out.println("<link href=\"" + this.getConfigValue("cssFile") + "\" rel=\"stylesheet\" type=\"text/css\"/>");
         }
-        out.println("<script>");
+        out.println("<script type=\"text/javascript\">");
         out.println("document.insertText=function(value)");
         out.println(" {");
         out.println(" while (value.indexOf('\\n')!=-1)");

@@ -348,7 +348,8 @@
 			usersTree.setSnippetMode(snippetMode);
 			usersTree.setHeight(treeHeight);
 			usersTree.setDrawShifter(false);
-			usersTree.setIconPage(request.getContextPath() + Tree.ICONDOCROOT+"pawn_glass_yellow.gif");
+			// context path is already added by Tree
+			usersTree.setIconPage(Tree.ICONDOCROOT+"pawn_glass_yellow.gif");
 			if (Server.isAdmin()) usersTree.setIconOndblclick("mgnlTreeMenuOpenDialog("+usersTree.getJavascriptTree()+",'" + request.getContextPath() + "/.magnolia/adminCentral/users/dialog.html');");
 
 			usersTree.addItemType(ItemType.NT_CONTENT);
@@ -468,7 +469,8 @@
 			rolesTree.setSnippetMode(snippetMode);
 			rolesTree.setHeight(treeHeight);
 			rolesTree.setDrawShifter(false);
-			rolesTree.setIconPage(request.getContextPath() + Tree.ICONDOCROOT+"hat_white.gif");
+			// context path is already added by Tree
+			rolesTree.setIconPage( Tree.ICONDOCROOT+"hat_white.gif");
 			if (Server.isAdmin()) rolesTree.setIconOndblclick("mgnlTreeMenuOpenDialog("+rolesTree.getJavascriptTree()+",'" + request.getContextPath() + "/.magnolia/adminCentral/userRoles/dialog.html');");
 
 			rolesTree.addItemType(ItemType.NT_CONTENT);
@@ -591,7 +593,8 @@
 			configTree.setJavascriptTree("mgnlTree");
 			configTree.setSnippetMode(snippetMode);
 			configTree.setHeight(treeHeight);
-			configTree.setIconPage(request.getContextPath() + Tree.ICONDOCROOT+"folder_cubes.gif");
+			// context path is already added by Tree
+			configTree.setIconPage( Tree.ICONDOCROOT+"folder_cubes.gif");
 
 			configTree.setPath(path);
 

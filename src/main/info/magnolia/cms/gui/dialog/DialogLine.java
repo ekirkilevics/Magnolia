@@ -48,9 +48,7 @@ public class DialogLine {
             + colspanLine
             + "\" class=\""
             + DialogSuper.CSSCLASS_BOXLINE
-            + "\"><img src=\""
-            + DialogSuper.NULLGIF
-            + "\" width=\"1\" height=\"1\"></td>"
+            + "\"></td>"
             + post
             + "</tr>";
     }

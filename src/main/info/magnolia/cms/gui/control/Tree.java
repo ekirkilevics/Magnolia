@@ -903,10 +903,14 @@ public class Tree extends ControlSuper {
                 + "ColumnResizer"
                 + i
                 + "\" style=\"position:relative;left:-1000px;background-image:url("
+                + this.getRequest().getContextPath()
                 + this.getColumnResizer()
                 + ");display:inline;\">");
             // use resizer gif to get exact size
-            html.append("<img src=\"" + this.getColumnResizer() + "\" style=\"visibility:hidden;\">");
+            html.append("<img src=\""
+                + this.getRequest().getContextPath()
+                + this.getColumnResizer()
+                + "\" style=\"visibility:hidden;\">");
             html.append("</div>");
         }
         html.append("</div>");
@@ -974,9 +978,12 @@ public class Tree extends ControlSuper {
         html.append("<div id=\""
             + lineId
             + "\" class=\"mgnlTreeLineInter\"><img src=\""
+            + this.getRequest().getContextPath()
             + Tree.LINE_INTERNODE_MASK
             + "\" width=\"1\" height=\"5\">");
-        html.append("<img src=\"/admindocroot/0.gif\" width=\"150\" height=\"5\" onmouseover=\""
+        html.append("<img src=\""
+            + this.getRequest().getContextPath()
+            + "/admindocroot/0.gif\" width=\"150\" height=\"5\" onmouseover=\""
             + this.getJavascriptTree()
             + ".moveNodeHighlightLine('"
             + lineId
@@ -1021,7 +1028,9 @@ public class Tree extends ControlSuper {
                 TreeMenuItem item = this.getMenuItems(i);
                 if (item == null) {
                     html.append("<div class=\"mgnlTreeMenuLine\">");
-                    html.append("<img src=\"/admindocroot/0.gif\" width=\"1\" height=\"1\"></div>");
+                    html.append("<img src=\""
+                        + this.getRequest().getContextPath()
+                        + "/admindocroot/0.gif\" width=\"1\" height=\"1\"></div>");
                 }
                 else {
                     item.setJavascriptTree(this.getJavascriptTree());
@@ -1061,12 +1070,13 @@ public class Tree extends ControlSuper {
 
         // "move denied"
         html.append("<img src=\""
+            + this.getRequest().getContextPath()
             + Tree.DOCROOT
             + "move_denied.gif\" id=\""
             + this.getJavascriptTree()
             + "_MoveDenied\" style=\"position:absolute;top:0px;left:0px;visibility:hidden;\">");
         // initialize js tree object
-        html.append("<script>");
+        html.append("<script type=\"text/javascript\">");
         html.append("var "
             + this.getJavascriptTree()
             + "=new mgnlTree('"
@@ -1233,9 +1243,16 @@ public class Tree extends ControlSuper {
                 if (maskWidth < 1) {
                     maskWidth = 1;
                 }
-                html.append("<img src=\"" + Tree.LINE_INTERNODE_MASK + "\" width=\"" + maskWidth + "\" height=\"5\">");
+                html.append("<img src=\""
+                    + this.getRequest().getContextPath()
+                    + Tree.LINE_INTERNODE_MASK
+                    + "\" width=\""
+                    + maskWidth
+                    + "\" height=\"5\">");
                 if (permissionWriteParent) {
-                    html.append("<img src=\"/admindocroot/0.gif\" height=\"5\" width=\"150\" onmouseover=\""
+                    html.append("<img src=\""
+                        + this.getRequest().getContextPath()
+                        + "/admindocroot/0.gif\" height=\"5\" width=\"150\" onmouseover=\""
                         + jsHighlightLine
                         + "\" onmouseout=\""
                         + jsResetLine
@@ -1292,6 +1309,7 @@ public class Tree extends ControlSuper {
                             + "');\" onmouseout=\""
                             + this.getJavascriptTree()
                             + ".shifterOut();\" class=mgnlTreeShifter src=\""
+                            + this.getRequest().getContextPath()
                             + shifter
                             + "\">");
                     }
@@ -1316,6 +1334,7 @@ public class Tree extends ControlSuper {
                     html.append("<img id=\""
                         + idPre
                         + "_Icon\" class=\"mgnlTreeIcon\" src=\""
+                        + this.getRequest().getContextPath()
                         + icon
                         + "\" onmousedown=\""
                         + jsExpandNode

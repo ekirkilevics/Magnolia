@@ -146,7 +146,7 @@ public class DialogWebDAV extends DialogBox {
     }
 
     public String getHtmlDecodeURI(String s) {
-        return "<script>document.write(decodeURI(\"" + s + "\"));</script>";
+        return "<script type=\"text/javascript\">document.write(decodeURI(\"" + s + "\"));</script>";
     }
 
     public void setDAVConnection(WebdavResource w) {
@@ -265,6 +265,7 @@ public class DialogWebDAV extends DialogBox {
         out.println("<td><img id=\""
             + this.getName()
             + "_showIcon\" src=\""
+            + this.getRequest().getContextPath()
             + showIcon
             + "\" width=\""
             + ICONS_WIDTH
@@ -273,7 +274,7 @@ public class DialogWebDAV extends DialogBox {
             + "\"></td>");
         out.println("<td id=\"" + this.getName() + "_showName\">" + this.getHtmlDecodeURI(showName) + "</td>");
         out.println("</tr><tr height=\"4\"><td></td></tr><tr>");
-        out.println("<td><img src=\"" + ICONS_PATH + ICONS_FOLDER + "\"></td>");
+        out.println("<td><img src=\"" + this.getRequest().getContextPath() + ICONS_PATH + ICONS_FOLDER + "\"></td>");
         out.println("<td id=\"" + this.getName() + "_showPath\">" + showPath + "</td>");
         out.println("</tr></table>");
         out.println(new Hidden(this.getName(), this.getValue()).getHtml());
@@ -361,11 +362,15 @@ public class DialogWebDAV extends DialogBox {
                 // ->
                 // /dir/home)
                 parentDirectory = parentDirectory.substring(0, parentDirectory.lastIndexOf("/") + 1);
-                out.println("<script>mgnlDialogDAVShow('" + this.getName() + "_upDiv',true);</script>");
+                out.println("<script type=\"text/javascript\">mgnlDialogDAVShow('"
+                    + this.getName()
+                    + "_upDiv',true);</script>");
             }
             else {
                 // home
-                out.println("<script>mgnlDialogDAVShow('" + this.getName() + "_upDiv',false);</script>");
+                out.println("<script type=\"text/javascript\">mgnlDialogDAVShow('"
+                    + this.getName()
+                    + "_upDiv',false);</script>");
             }
             out.println("</head>");
             out.println("<body marginwidth=\"0\" topmargin=\"5\" marginheight=\"5\" leftmargin=\"0\">");
@@ -525,7 +530,12 @@ public class DialogWebDAV extends DialogBox {
                 iconPath = this.getIconPath(name);
             }
             out.println("<td>");
-            out.print("<img src=\"" + iconPath + "\" border=\"0\" id=\"" + idIcon + "\">");
+            out.print("<img src=\""
+                + this.getRequest().getContextPath()
+                + iconPath
+                + "\" border=\"0\" id=\""
+                + idIcon
+                + "\">");
             out.println("</td>");
             out.println("<td width=\"100%\">");
             if (displayType.indexOf("folder") == 0) {

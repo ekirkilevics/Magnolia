@@ -100,10 +100,12 @@ public class DialogFile extends DialogBox {
                 out.println("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"" + width + "\">");
                 out.println("<tr><td class=\"" + CSSCLASS_FILEIMAGE + "\">");
                 // todo: image thumbnail template
-                // out.println("<img src=\""+THUMB_PATH+"?src="+control.getHandle()+"\"
+                // out.println("<img src=\""+ this.getRequest().getContextPath()
+                // +THUMB_PATH+"?src="+control.getHandle()+"\"
                 // class=\""+CSSCLASS_FILEIMAGE+"\">");
                 // tmp workaround: resize in html ...
                 out.println("<img width=\"150\" src=\""
+                    + this.getRequest().getContextPath()
                     + control.getHandle()
                     + "\" class=\""
                     + CSSCLASS_FILEIMAGE
@@ -121,7 +123,12 @@ public class DialogFile extends DialogBox {
                  */
                 out.println(spacer.getHtml());
                 out.print("<a href=" + control.getPath() + " target=\"_blank\">");
-                out.print("<img src=\"" + iconPath + "\" class=\"" + CSSCLASS_FILEICON + "\" border=\"0\">");
+                out.print("<img src=\""
+                    + this.getRequest().getContextPath()
+                    + iconPath
+                    + "\" class=\""
+                    + CSSCLASS_FILEICON
+                    + "\" border=\"0\">");
                 out.print(control.getFileName() + "." + control.getExtension() + "</a>");
             }
             out.println(spacer.getHtml(12));

@@ -12,8 +12,6 @@
  */
 package info.magnolia.cms.gui.control;
 
-import info.magnolia.cms.core.Content;
-
 import org.apache.commons.lang.StringUtils;
 
 
@@ -60,10 +58,6 @@ public class Button extends ControlSuper {
         super(name, value);
     }
 
-    public Button(String name, Content websiteNode) {
-        super(name, websiteNode);
-    }
-
     // why padding with &nbsp;s ?
     // css padding causes problems in td of width=1 (td width equals to text width, not entire button)
     public void setLabelNbspPadding(int i) {
@@ -100,6 +94,10 @@ public class Button extends ControlSuper {
         return this.getValue();
     }
 
+    /**
+     * Sets the source path for the image. URI must contain the context path.
+     * @param s image source, with context path
+     */
     public void setIconSrc(String s) {
         this.iconSrc = s;
     }
@@ -109,6 +107,7 @@ public class Button extends ControlSuper {
             return "";
         }
 
+        // iconSrc already has context path
         return "<img src=\"" + this.iconSrc + "\" />";
     }
 
@@ -217,7 +216,6 @@ public class Button extends ControlSuper {
         }
         html.append("\" " + this.getHtmlCssClass() + ">");
 
-        // html.append("["+this.getLabel()+"]["+this.getValue()+"]");
         html.append(this.getIconSrc());
         html.append(this.getLabel());
         html.append("</a>");
@@ -253,6 +251,7 @@ public class Button extends ControlSuper {
         html.append(this.getHtmlCssStyles());
         html.append(">");
         html.append(this.getHtmlLabelNbspPadding());
+
         html.append(this.getIconSrc());
         html.append(this.getLabel());
         html.append(this.getHtmlLabelNbspPadding());
