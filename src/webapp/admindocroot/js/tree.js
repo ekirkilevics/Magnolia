@@ -1171,13 +1171,6 @@
 				}
 			url=encodeURI(url);
 
-			// original (sync)
-			/*
-			httpReq.open("GET",url,false);
-			httpReq.send(null);
-			return(httpReq.responseText);
-			*/
-
 			// new (async call)
 			httpReq.open("GET",url,true);
 			httpReq.onreadystatechange=function() {
@@ -1190,7 +1183,7 @@
 			httpReq.send(null);
 			return;
 			}
-		//else return "";
+
 		else return;
 		}
 
