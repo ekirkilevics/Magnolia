@@ -25,13 +25,9 @@ import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.config.ItemType;
 
 import javax.jcr.*;
-import java.util.Collection;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 
-import jdsl.core.ref.ArraySequence;
-import jdsl.core.algo.sorts.HeapSort;
-import jdsl.core.api.ObjectIterator;
+
 import org.apache.log4j.Logger;
 
 
@@ -541,6 +537,7 @@ public class ContentHandler {
 
 
 
+
     /**
      * <p>gets a Collection containing all clild nodes at the current level+1 level</p>
      * @return Collection of content nodes
@@ -548,25 +545,12 @@ public class ContentHandler {
     public Collection sortByDate(Collection c) {
         try {
             if (c==null) return c;
-            ArraySequence as = new ArraySequence();
-            Iterator it = c.iterator();
-            while (it.hasNext()) {
-                Content content = (Content)it.next();
-                as.insertLast(content);
-            }
-            HeapSort hs = new HeapSort();
-            hs.sort(as,new DateComparator());
-            Collection sortedCollection = new ArrayList();
-            ObjectIterator oi = as.elements();
-            while (oi.hasNext()) {
-                sortedCollection.add((Content)oi.nextObject());
-            }
-            return sortedCollection;
+            Collections.sort((List)c, new DateComparator());
         }
         catch (Exception e) {
             log.error(e.getMessage());
-            return c;
         }
+        return c;
     }
 
 
@@ -577,26 +561,12 @@ public class ContentHandler {
 	public Collection sortBySequence(Collection c) {
 		try {
 			if (c==null) return c;
-			ArraySequence as = new ArraySequence();
-			Iterator it = c.iterator();
-			while (it.hasNext()) {
-				Content content = (Content)it.next();
-				as.insertLast(content);
-			}
-			HeapSort hs = new HeapSort();
-			hs.sort(as,new SequenceComparator());
-			Collection sortedCollection = new ArrayList();
-			ObjectIterator oi = as.elements();
-			while (oi.hasNext()) {
-				sortedCollection.add(oi.nextObject());
-			}
-			return sortedCollection;
+			Collections.sort((List)c,new SequenceComparator());
 		}
 		catch (Exception e) {
-            e.printStackTrace();
-            log.error(e.getMessage());
-			return c;
+            log.error(e.getMessage(), e);
 		}
+        return c;
 	}
 
 
