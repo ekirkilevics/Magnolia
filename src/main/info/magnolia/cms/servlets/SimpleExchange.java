@@ -85,6 +85,7 @@ public class SimpleExchange extends HttpServlet {
     private String protocol;
     private String host;
     private String remotePort;
+    private String senderURL;
     private String objectType;
     private HttpServletRequest request;
     private HttpServletResponse response;
@@ -111,6 +112,10 @@ public class SimpleExchange extends HttpServlet {
         this.protocol = getProtocolName();
         this.host = request.getRemoteHost();
         this.remotePort = this.request.getHeader(Syndicator.REMOTE_PORT);
+        this.senderURL = this.request.getHeader(Syndicator.SENDER_URL);
+        if (this.senderURL == null || this.senderURL.equals("")) {
+            this.senderURL = this.protocol+"://"+this.host+":"+this.remotePort;
+        }
         this.objectType = this.request.getHeader(Syndicator.OBJECT_TYPE);
         try {
             response.setContentType("text/plain");
@@ -164,7 +169,7 @@ public class SimpleExchange extends HttpServlet {
         log.info("Exchange : update request received for "+this.page);
         String handle = "/"+Syndicator.DEFAULT_HANDLER;
 
-        URL url = new URL(this.protocol+"://"+this.host+":"+this.remotePort+handle);
+        URL url = new URL(this.senderURL+handle);
         String credentials = this.request.getHeader("Authorization");
         URLConnection urlConnection = url.openConnection();
         urlConnection.setRequestProperty("Authorization",credentials);
@@ -183,7 +188,7 @@ public class SimpleExchange extends HttpServlet {
             /* deserialize received object */
             ContentWriter contentWriter =
             new ContentWriter(this.getHierarchyManager(), this.context,
-                    this.protocol+"://"+this.host+":"+this.remotePort+"/"+Syndicator.DEFAULT_HANDLER, this.request);
+                    this.senderURL+"/"+Syndicator.DEFAULT_HANDLER, this.request);
             contentWriter.writeObject(this.parent, sc);
 
         } catch (Exception e) {
