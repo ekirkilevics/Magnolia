@@ -16,8 +16,9 @@
 package info.magnolia.cms.util;
 
 
-import jdsl.core.ref.ComparableComparator;
 import info.magnolia.cms.core.ContentNode;
+
+import java.util.Comparator;
 
 
 /**
@@ -29,7 +30,7 @@ import info.magnolia.cms.core.ContentNode;
 
 
 
-public class StringComparator extends ComparableComparator  {
+public class StringComparator implements Comparator  {
 
 
 
@@ -44,12 +45,9 @@ public class StringComparator extends ComparableComparator  {
     public int compare(Object o, Object o1) throws ClassCastException {
         String URI1 = ((ContentNode)o).getNodeData(this.nodeDataName).getString();
         String URI2 = ((ContentNode)o1).getNodeData(this.nodeDataName).getString();
-        return super.compare(URI1, URI2);
+        return URI1.compareTo(URI2);
     }
 
 
-    public boolean isComparable(Object o) {
-        return true;
-    }
 
 }

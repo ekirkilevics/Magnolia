@@ -17,9 +17,8 @@
 
 package info.magnolia.cms.util;
 
-import jdsl.core.ref.ComparableComparator;
-
 import java.util.Date;
+import java.util.Comparator;
 
 import info.magnolia.cms.core.Content;
 
@@ -32,14 +31,12 @@ import info.magnolia.cms.core.Content;
  */
 
 
-public class DateComparator extends ComparableComparator{
+public class DateComparator implements Comparator{
+
     public int compare(Object o, Object o1) throws ClassCastException {
         Date date1 = ((Content)o).getMetaData().getCreationDate().getTime();
         Date date2 = ((Content)o1).getMetaData().getCreationDate().getTime();
-		return super.compare(date1, date2);
+        return date1.compareTo(date2);
     }
 
-    public boolean isComparable(Object o) {
-        return true;
-    }
 }

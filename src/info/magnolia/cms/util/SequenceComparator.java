@@ -17,9 +17,10 @@
 
 package info.magnolia.cms.util;
 
-import jdsl.core.ref.ComparableComparator;
 
 import info.magnolia.cms.core.Content;
+
+import java.util.Comparator;
 
 
 /**
@@ -30,7 +31,8 @@ import info.magnolia.cms.core.Content;
  */
 
 
-public class SequenceComparator extends ComparableComparator{
+public class SequenceComparator implements Comparator{
+
 	public int compare(Object o0, Object o1) throws ClassCastException {
 		try {
 			long pos0=(((Content)o0).getMetaData().getSequencePosition());
@@ -42,7 +44,7 @@ public class SequenceComparator extends ComparableComparator{
 			if (pos0>pos1) s0="1";
 			else if (pos0<pos1) s1="1";
 
-			return super.compare(s0,s1);
+			return s0.compareTo(s1);
 
 	    }
 	    catch (Exception e) {
@@ -51,9 +53,5 @@ public class SequenceComparator extends ComparableComparator{
 
 	}
 
-
-	public boolean isComparable(Object o) {
-		return true;
-	}
 
 }
