@@ -50,7 +50,7 @@ public class ContentNode extends Content {
      * @throws PathNotFoundException
      * @throws RepositoryException
      */
-    ContentNode(Node workingNode, String name, AccessManager manager)
+    public ContentNode(Node workingNode, String name, AccessManager manager)
         throws PathNotFoundException,
         RepositoryException,
         AccessDeniedException {
@@ -64,7 +64,7 @@ public class ContentNode extends Content {
      * constructor use to typecast node to ContentNode
      * @param node current <code>Node</code>
      */
-    ContentNode(Node node, AccessManager manager) throws RepositoryException, AccessDeniedException {
+    public ContentNode(Node node, AccessManager manager) throws RepositoryException, AccessDeniedException {
         Access.isGranted(manager, Path.getAbsolutePath(node.getPath()), Permission.READ);
         this.node = node;
         this.setAccessManager(manager);
@@ -78,7 +78,7 @@ public class ContentNode extends Content {
      * @throws PathNotFoundException
      * @throws RepositoryException
      */
-    ContentNode(Node workingNode, String name, boolean createNew, AccessManager manager)
+    public ContentNode(Node workingNode, String name, boolean createNew, AccessManager manager)
         throws PathNotFoundException,
         RepositoryException,
         AccessDeniedException {
