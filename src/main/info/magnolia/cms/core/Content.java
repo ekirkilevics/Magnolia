@@ -19,18 +19,14 @@ import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Path;
-import java.io.IOException;
-import java.io.OutputStream;
-import javax.jcr.Item;
-import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import javax.jcr.UnsupportedRepositoryOperationException;
-import javax.jcr.Value;
-import javax.jcr.version.Version;
-import javax.jcr.version.VersionException;
-import javax.jcr.version.VersionHistory;
-import javax.jcr.version.VersionIterator;
+import info.magnolia.cms.util.DateComparator;
+import info.magnolia.cms.util.SequenceComparator;
+
+import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import javax.jcr.*;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 
@@ -38,7 +34,7 @@ import org.apache.log4j.Logger;
 /**
  * User: sameercharles Date: May 27, 2004 Time: 04:55:10 PM
  * @author Sameer Charles
- * @version 2.0
+ * @version 2.1
  */
 public class Content extends ContentHandler implements Cloneable {
 
@@ -341,6 +337,7 @@ public class Content extends ContentHandler implements Cloneable {
     /**
      * <p>
      * delete NodeData with the specified name
+     * todo remove all dependencies of this method, there should be no difference between delete(name) and deleteNodeData(name)
      * </p>
      * @throws PathNotFoundException
      * @throws RepositoryException
@@ -352,6 +349,7 @@ public class Content extends ContentHandler implements Cloneable {
     /**
      * <p>
      * delete Content node with the specified name from the current node
+     * todo remove all dependencies of this method, there should be no difference between delete(name) and deleteContent(name)
      * </p>
      * @param name of the Content to be deleted
      * @throws javax.jcr.PathNotFoundException
@@ -364,6 +362,7 @@ public class Content extends ContentHandler implements Cloneable {
     /**
      * <p>
      * delete ContentNode with the specified name from the current node
+     * todo remove all dependencies of this method, there should be no difference between delete(name) and deleteContentNode(name)
      * </p>
      * @param name of the ContentNode to be deleted
      * @throws javax.jcr.PathNotFoundException
@@ -371,81 +370,6 @@ public class Content extends ContentHandler implements Cloneable {
      */
     public void deleteContentNode(String name) throws PathNotFoundException, RepositoryException {
         this.delete(name);
-    }
-
-    /**
-     * <p>
-     * Remove specified path
-     * </p>
-     * @throws RepositoryException
-     */
-    public void delete(String path) throws RepositoryException {
-        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.node.getPath(), path), Permission.REMOVE);
-        this.node.getNode(path).remove();
-    }
-
-    /**
-     * <p>
-     * Remove this Content object
-     * </p>
-     * @throws RepositoryException
-     */
-    public void delete() throws RepositoryException {
-        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.node.getPath()), Permission.REMOVE);
-        this.node.remove();
-    }
-
-    /**
-     * <p>
-     * move content to the specified location
-     * </p>
-     * @param path where current node has to be moved
-     * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
-     * @deprecated as on magnolia 2.0
-     */
-    public void moveTo(String path) throws PathNotFoundException, RepositoryException {
-        log.error("Not supported - use [ HierarchyManager.moveTo ]");
-    }
-
-    /**
-     * <p>
-     * copy content to the specified location
-     * </p>
-     * @param path where current node has to be copied
-     * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
-     * @deprecated as on magnolia 2.0
-     */
-    public void copyTo(String path) throws PathNotFoundException, RepositoryException {
-        log.error("Not supported - use [ HierarchyManager.copyTo ]");
-    }
-
-    /**
-     * <p>
-     * move current node to the specified location above the named <code>beforename</code>
-     * </p>
-     * @param srcName where current node has to be moved
-     * @param beforeName name of the node before the current node has to be placed
-     * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
-     */
-    public void orderBefore(String srcName, String beforeName) throws PathNotFoundException, RepositoryException {
-        this.node.orderBefore(srcName, beforeName);
-    }
-
-    /**
-     * <p>
-     * get xml data as bite stream <br>
-     * </p>
-     * @param out OutputStream to which xml bite stream will be written
-     * @param onlyThis boolean saying weather to stream only current node or the entire sub tree.
-     * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
-     * @deprecated as on magnolia 2.0
-     */
-    public void toStream(OutputStream out, boolean onlyThis) throws IOException, RepositoryException {
-        log.error("moved to HierarchyManager-Workspace");
     }
 
     /**
@@ -462,129 +386,230 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * <p>
-     * Restores this node to the state defined by the  version with the specified versionName.
+     * gets a Collection containing all child nodes at the current level+1 level <br>
      * </p>
-     * @param versionName
-     * @param removeExisting
-     * @see javax.jcr.Node#restore(String, boolean)
+     * @return Collection of content nodes
      */
-    public void restore(String versionName, boolean removeExisting)
-            throws VersionException, UnsupportedRepositoryOperationException, RepositoryException {
-        this.node.restore(versionName, removeExisting);
+    public Collection getChildren() {
+        return this.getChildren(ItemType.NT_CONTENT);
     }
 
     /**
      * <p>
-     * Restores this node to the state defined by the specified  version.
+     * get collection of specified content type <br>
+     * use: <br>
+     * ItemType.NT_CONTENT to get sub pages ItemType.NT_CONTENTNODE to get sub content nodes (paragraphs)
+     * ItemType.NT_NODEDATA to get node data (properties) <b>else </b> YOUR_CUSTOM_TYPE as registered
      * </p>
-     * @param version
-     * @param removeExisting
-     * @see javax.jcr.Node#restore(javax.jcr.version.Version, boolean)
+     * @param contentType
+     * @return Collection of content nodes
+     * @deprecated instead use getChildren(String)
      */
-    public void restore(Version version, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException,
-        RepositoryException {
-        this.node.restore(version, removeExisting);
+    public Collection getChildren(int contentType) {
+        String type = "";
+        switch (contentType) {
+            case ItemType.MAGNOLIA_PAGE :
+                type = ItemType.NT_CONTENT;
+                break;
+            case ItemType.MAGNOLIA_CONTENT_NODE :
+                type = ItemType.NT_CONTENTNODE;
+                break;
+            case ItemType.MAGNOLIA_NODE_DATA :
+                type = ItemType.NT_NODEDATA;
+                break;
+            default :
+                log.error("Un-Supported content type - " + contentType);
+        }
+        return this.getChildren(type, ContentHandler.SORT_BY_SEQUENCE);
     }
 
     /**
      * <p>
-     * Restores the specified version to relPath, relative to this node.
+     * get collection of specified content type <br>
+     * use: <br>
+     * ItemType.NT_CONTENT to get sub pages ItemType.NT_CONTENTNODE to get sub content nodes (paragraphs)
+     * ItemType.NT_NODEDATA to get node data (properties) <b>else </b> YOUR_CUSTOM_TYPE as registered
      * </p>
-     * @param version
-     * @param relPath
-     * @param removeExisting
-     * @see javax.jcr.Node#restore(javax.jcr.version.Version, String, boolean)
+     * @param contentType
+     * @return Collection of content nodes
      */
-    public void restore(Version version, String relPath, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException,
-        RepositoryException {
-        this.node.restore(version, relPath, removeExisting);
+    public Collection getChildren(String contentType) {
+        return this.getChildren(contentType, ContentHandler.SORT_BY_SEQUENCE);
     }
 
     /**
      * <p>
-     * Restores this node to the state recorded in the version specified by versionLabel.
+     * get collection of specified content type <br>
+     * use: <br>
+     * ItemType.NT_CONTENT to get sub pages ItemType.NT_CONTENTNODE to get sub content nodes (paragraphs)
+     * ItemType.NT_NODEDATA to get node data (properties) <b>else </b> YOUR_CUSTOM_TYPE as registered
      * </p>
-     * @param versionLabel
-     * @param removeExisting
-     * @see javax.jcr.Node#restoreByLabel(String, boolean)
+     * @param contentType
+     * @param sortCriteria which can be either ContentHandler.SORT_BY_SEQUENCE , ContentHandler.SORT_BY_DATE or
+     * ContentHandler.SORT_BY_NAME
+     * @return Collection of content nodes
      */
-    public void restoreByLabel(String versionLabel, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException,
-        RepositoryException {
-        this.node.restoreByLabel(versionLabel, removeExisting);
-    }
-
-    /**
-     * add version leaving the node checked out
-     */
-    public Version addVersion() throws UnsupportedRepositoryOperationException, RepositoryException {
-        Version version = this.checkIn();
-        this.checkOut();
-        return version;
-    }
-
-    /**
-     * @return checked in version
-     */
-    public Version checkIn() throws UnsupportedRepositoryOperationException, RepositoryException {
-        return this.node.checkin();
-    }
-
-    /**
-     * check out for further write operations
-     */
-    public void checkOut() throws UnsupportedRepositoryOperationException, RepositoryException {
-        this.node.checkout();
-    }
-
-    /**
-     * @return version history
-     */
-    public VersionHistory getVersionHistory() throws UnsupportedRepositoryOperationException, RepositoryException {
-        return this.node.getVersionHistory();
-    }
-
-    /**
-     * @return Version iterator retreived from version history
-     */
-    public VersionIterator getAllVersions() throws UnsupportedRepositoryOperationException, RepositoryException {
-        return this.getVersionHistory().getAllVersions();
-    }
-
-    /**
-     * <p>
-     * Persists all changes to the repository if valiation succeds
-     * </p>
-     * @throws RepositoryException
-     */
-    public void save() throws RepositoryException {
-        this.node.save();
-    }
-
-    /**
-     * <p>
-     * Refreses current node keeping all changes
-     * </p>
-     * @throws RepositoryException
-     */
-    public void refresh(boolean keepChanges) throws RepositoryException {
-        this.node.refresh(keepChanges);
-    }
-
-    /**
-     * <p>
-     * checks for the allowed access rights
-     * </p>
-     * @param permissions as defined in javax.jcr.Permission
-     * @return true is the current user has specified access on this node.
-     */
-    public boolean isGranted(long permissions) {
+    public Collection getChildren(String contentType, String sortCriteria) {
+        Collection children = new ArrayList();
         try {
-            Access.isGranted(this.accessManager, Path.getAbsolutePath(node.getPath()), permissions);
-            return true;
+            if (contentType.equalsIgnoreCase(ItemType.NT_CONTENT)) {
+                children = this.getChildPages();
+                children = sort(children, sortCriteria);
+            }
+            else if (contentType.equalsIgnoreCase(ItemType.NT_CONTENTNODE)) {
+                children = this.getChildContentNodes();
+                children = sort(children, sortCriteria);
+            }
+            else if (contentType.equalsIgnoreCase(ItemType.NT_NODEDATA)) {
+                children = this.getProperties();
+            }
+            else {
+                children = this.getChildContent(contentType);
+                children = sort(children, sortCriteria);
+            }
         }
-        catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
+        catch (RepositoryException e) {
+            log.error(e.getMessage(), e);
         }
-        return false;
+        return children;
     }
+
+    private Collection sort(Collection collection, String sortCriteria) {
+        if (sortCriteria == null)
+            return collection;
+        if (sortCriteria.equals(ContentHandler.SORT_BY_DATE))
+            return sortByDate(collection);
+        else if (sortCriteria.equals(ContentHandler.SORT_BY_SEQUENCE))
+            return sortBySequence(collection);
+        return collection;
+    }
+
+    private Collection getChildPages() throws RepositoryException {
+        return this.getChildContent(ItemType.NT_CONTENT);
+    }
+
+    private Collection getChildContent(String contentType) throws RepositoryException {
+        Collection children = new ArrayList();
+        NodeIterator nodeIterator = this.node.getNodes();
+        if (nodeIterator == null)
+            return children;
+        while (nodeIterator.hasNext()) {
+            Node subNode = (Node) nodeIterator.next();
+            try {
+                if (subNode.isNodeType(ItemType.getSystemName(contentType)))
+                    children.add(new Content(subNode, this.accessManager));
+            }
+            catch (PathNotFoundException e) {
+                log.error(e);
+            }
+            catch (AccessDeniedException e) {
+                // ignore, simply wont add content in a list
+            }
+        }
+        return children;
+    }
+
+    /**
+     * @throws RepositoryException
+     */
+    private Collection getChildContentNodes() throws RepositoryException {
+        Collection children = new ArrayList();
+        NodeIterator nodeIterator = this.node.getNodes();
+        if (nodeIterator == null)
+            return children;
+        while (nodeIterator.hasNext()) {
+            Node subNode = (Node) nodeIterator.next();
+            try {
+                if (subNode.isNodeType(ItemType.getSystemName(ItemType.NT_CONTENTNODE)))
+                    children.add(new ContentNode(subNode, this.accessManager));
+            }
+            catch (PathNotFoundException e) {
+                log.error(e);
+            }
+            catch (AccessDeniedException e) {
+                // ignore, simply wont add content in a list
+            }
+        }
+        return children;
+    }
+
+    private Collection getProperties() throws RepositoryException {
+        Collection children = new ArrayList();
+        NodeIterator nodeIterator = this.node.getNodes();
+        if (nodeIterator == null)
+            return children;
+        while (nodeIterator.hasNext()) {
+            Node subNode = (Node) nodeIterator.next();
+            try {
+                if (subNode.isNodeType(ItemType.getSystemName(ItemType.NT_NODEDATA)))
+                    children.add(new NodeData(subNode, this.accessManager));
+            }
+            catch (PathNotFoundException e) {
+                log.error(e);
+            }
+            catch (AccessDeniedException e) {
+                // ignore, simply wont add content in a list
+            }
+        }
+        return children;
+    }
+
+    /**
+     * @return Boolean, if sub node(s) exists
+     */
+    public boolean hasChildren() {
+        return (this.getChildren(ItemType.NT_CONTENT).size() > 0);
+    }
+
+    /**
+     * @return Boolean, if sub <code>collectionType</code> exists
+     * @deprecated use hasChildren(String) instead
+     */
+    public boolean hasChildren(int collectionType) {
+        return (this.getChildren(collectionType).size() > 0);
+    }
+
+    /**
+     * @return Boolean, if sub <code>collectionType</code> exists
+     */
+    public boolean hasChildren(String contentType) {
+        return (this.getChildren(contentType).size() > 0);
+    }
+
+    /**
+     * <p>
+     * gets a Collection containing all clild nodes at the current level+1 level
+     * </p>
+     * @return Collection of content nodes
+     */
+    public Collection sortByDate(Collection c) {
+        try {
+            if (c == null)
+                return c;
+            Collections.sort((List) c, new DateComparator());
+        }
+        catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        return c;
+    }
+
+    /**
+     * <p>
+     * gets a Collection containing all clild nodes at the current level+1 level
+     * </p>
+     * @return Collection of content nodes
+     */
+    public Collection sortBySequence(Collection c) {
+        try {
+            if (c == null)
+                return c;
+            Collections.sort((List) c, new SequenceComparator());
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        return c;
+    }
+
 }

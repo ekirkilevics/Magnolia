@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Sameer Charles
- * @version 1.1
+ * @version 2.1
  */
 public class ContentNode extends Content {
 

@@ -33,7 +33,7 @@ import org.apache.log4j.Logger;
  * @author Sameer Charles
  * @version 2.0
  */
-public class NodeData {
+public class NodeData extends ContentHandler {
 
     /**
      * Logger.
@@ -45,10 +45,6 @@ public class NodeData {
     private static final String DATA_ELEMENT = "Data";
 
     private Property property;
-
-    private Node dataFile;
-
-    private AccessManager accessManager;
 
     /**
      * package private constructor
@@ -69,8 +65,8 @@ public class NodeData {
         RepositoryException,
         AccessDeniedException {
         Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.READ);
-        this.dataFile = workingNode.getNode(name);
-        this.property = this.dataFile.getNode(ItemType.getSystemName(ItemType.JCR_CONTENT)).getProperty(DATA_ELEMENT);
+        this.node = workingNode.getNode(name);
+        this.property = this.node.getNode(ItemType.getSystemName(ItemType.JCR_CONTENT)).getProperty(DATA_ELEMENT);
         this.setAccessManager(manager);
     }
 
@@ -89,18 +85,18 @@ public class NodeData {
         AccessDeniedException {
         if (createNew) {
             Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
-            this.dataFile = workingNode.addNode(name, ItemType.getSystemName(ItemType.NT_NODEDATA));
-            Node contentNode = this.dataFile.addNode(ItemType.getSystemName(ItemType.JCR_CONTENT), ItemType
+            this.node = workingNode.addNode(name, ItemType.getSystemName(ItemType.NT_NODEDATA));
+            Node contentNode = this.node.addNode(ItemType.getSystemName(ItemType.JCR_CONTENT), ItemType
                 .getSystemName(ItemType.NT_UNSTRUCTRUED));
             this.property = contentNode.setProperty(DATA_ELEMENT, "");
-            if (this.dataFile.canAddMixin(ItemType.getSystemName(ItemType.MIX_Versionable))) {
-                this.dataFile.addMixin(ItemType.getSystemName(ItemType.MIX_Versionable));
+            if (this.node.canAddMixin(ItemType.getSystemName(ItemType.MIX_Versionable))) {
+                this.node.addMixin(ItemType.getSystemName(ItemType.MIX_Versionable));
             }
         }
         else {
             Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.READ);
-            this.dataFile = workingNode.getNode(name);
-            this.property = this.dataFile.getNode(ItemType.getSystemName(ItemType.JCR_CONTENT)).getProperty(
+            this.node = workingNode.getNode(name);
+            this.property = this.node.getNode(ItemType.getSystemName(ItemType.JCR_CONTENT)).getProperty(
                 DATA_ELEMENT);
         }
         this.setAccessManager(manager);
@@ -140,12 +136,12 @@ public class NodeData {
         RepositoryException,
         AccessDeniedException {
         Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
-        this.dataFile = workingNode.addNode(name, ItemType.getSystemName(ItemType.NT_NODEDATA));
-        Node contentNode = this.dataFile.addNode(ItemType.getSystemName(ItemType.JCR_CONTENT), ItemType
+        this.node = workingNode.addNode(name, ItemType.getSystemName(ItemType.NT_NODEDATA));
+        Node contentNode = this.node.addNode(ItemType.getSystemName(ItemType.JCR_CONTENT), ItemType
             .getSystemName(ItemType.NT_UNSTRUCTRUED));
         this.property = contentNode.setProperty(DATA_ELEMENT, value);
-        if (this.dataFile.canAddMixin(ItemType.getSystemName(ItemType.MIX_Versionable))) {
-            this.dataFile.addMixin(ItemType.getSystemName(ItemType.MIX_Versionable));
+        if (this.node.canAddMixin(ItemType.getSystemName(ItemType.MIX_Versionable))) {
+            this.node.addMixin(ItemType.getSystemName(ItemType.MIX_Versionable));
         }
         this.setAccessManager(manager);
     }
@@ -154,20 +150,16 @@ public class NodeData {
      * <p>
      * constructor | creates a new initialized NodeData
      * </p>
-     * @param dataFile <code>Node</code> holding this property
+     * @param node <code>Node</code> holding this property
      */
-    public NodeData(Node dataFile, AccessManager manager)
+    public NodeData(Node node, AccessManager manager)
         throws PathNotFoundException,
         RepositoryException,
         AccessDeniedException {
-        Access.isGranted(manager, Path.getAbsolutePath(dataFile.getPath()), Permission.READ);
-        this.dataFile = dataFile;
-        this.property = this.dataFile.getNode(ItemType.getSystemName(ItemType.JCR_CONTENT)).getProperty(DATA_ELEMENT);
+        Access.isGranted(manager, Path.getAbsolutePath(node.getPath()), Permission.READ);
+        this.node = node;
+        this.property = this.node.getNode(ItemType.getSystemName(ItemType.JCR_CONTENT)).getProperty(DATA_ELEMENT);
         this.setAccessManager(manager);
-    }
-
-    public void setAccessManager(AccessManager manager) {
-        this.accessManager = manager;
     }
 
     /**
@@ -315,7 +307,7 @@ public class NodeData {
      */
     public String getName() {
         try {
-            return this.dataFile.getName();
+            return this.node.getName();
         }
         catch (Exception e) {
             return "";
@@ -452,39 +444,5 @@ public class NodeData {
      */
     public boolean isExist() {
         return (this.property != null);
-    }
-
-    /**
-     * <p>
-     * path as specified by JCR
-     * </p>
-     * @return NodeData path relative to the repository
-     */
-    public String getHandle() {
-        try {
-            return this.dataFile.getPath();
-        }
-        catch (RepositoryException e) {
-            log.error(e.getMessage(), e);
-        }
-        return "";
-    }
-
-    /**
-     * <p>
-     * checks for the allowed access rights
-     * </p>
-     * @param permissions as defined in javax.jcr.Permission
-     * @return true is the current user has specified access on this node.
-     */
-    public boolean isGranted(long permissions) {
-        try {
-            Access.isGranted(this.accessManager, Path.getAbsolutePath(this.dataFile.getPath()), permissions);
-            return true;
-        }
-        catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        }
-        return false;
     }
 }

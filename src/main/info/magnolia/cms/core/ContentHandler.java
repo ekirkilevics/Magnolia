@@ -12,27 +12,28 @@
  */
 package info.magnolia.cms.core;
 
-import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.util.DateComparator;
-import info.magnolia.cms.util.SequenceComparator;
+import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.util.Path;
+import info.magnolia.cms.core.util.Access;
+
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
+import javax.jcr.*;
+import javax.jcr.version.VersionException;
+import javax.jcr.version.Version;
+import javax.jcr.version.VersionHistory;
+import javax.jcr.version.VersionIterator;
+
 import org.apache.log4j.Logger;
 
 
 /**
  * @version 2.01
  */
-public class ContentHandler {
+public abstract class ContentHandler {
 
     private static Logger log = Logger.getLogger(ContentHandler.class);
 
@@ -110,176 +111,6 @@ public class ContentHandler {
 
     /**
      * <p>
-     * gets a Collection containing all child nodes at the current level+1 level <br>
-     * </p>
-     * @return Collection of content nodes
-     */
-    public Collection getChildren() {
-        return this.getChildren(ItemType.NT_CONTENT);
-    }
-
-    /**
-     * <p>
-     * get collection of specified content type <br>
-     * use: <br>
-     * ItemType.NT_CONTENT to get sub pages ItemType.NT_CONTENTNODE to get sub content nodes (paragraphs)
-     * ItemType.NT_NODEDATA to get node data (properties) <b>else </b> YOUR_CUSTOM_TYPE as registered
-     * </p>
-     * @param contentType
-     * @return Collection of content nodes
-     * @deprecated instead use getChildren(String)
-     */
-    public Collection getChildren(int contentType) {
-        String type = "";
-        switch (contentType) {
-            case ItemType.MAGNOLIA_PAGE :
-                type = ItemType.NT_CONTENT;
-                break;
-            case ItemType.MAGNOLIA_CONTENT_NODE :
-                type = ItemType.NT_CONTENTNODE;
-                break;
-            case ItemType.MAGNOLIA_NODE_DATA :
-                type = ItemType.NT_NODEDATA;
-                break;
-            default :
-                log.error("Un-Supported content type - " + contentType);
-        }
-        return this.getChildren(type, ContentHandler.SORT_BY_SEQUENCE);
-    }
-
-    /**
-     * <p>
-     * get collection of specified content type <br>
-     * use: <br>
-     * ItemType.NT_CONTENT to get sub pages ItemType.NT_CONTENTNODE to get sub content nodes (paragraphs)
-     * ItemType.NT_NODEDATA to get node data (properties) <b>else </b> YOUR_CUSTOM_TYPE as registered
-     * </p>
-     * @param contentType
-     * @return Collection of content nodes
-     */
-    public Collection getChildren(String contentType) {
-        return this.getChildren(contentType, ContentHandler.SORT_BY_SEQUENCE);
-    }
-
-    /**
-     * <p>
-     * get collection of specified content type <br>
-     * use: <br>
-     * ItemType.NT_CONTENT to get sub pages ItemType.NT_CONTENTNODE to get sub content nodes (paragraphs)
-     * ItemType.NT_NODEDATA to get node data (properties) <b>else </b> YOUR_CUSTOM_TYPE as registered
-     * </p>
-     * @param contentType
-     * @param sortCriteria which can be either ContentHandler.SORT_BY_SEQUENCE , ContentHandler.SORT_BY_DATE or
-     * ContentHandler.SORT_BY_NAME
-     * @return Collection of content nodes
-     */
-    public Collection getChildren(String contentType, String sortCriteria) {
-        Collection children = new ArrayList();
-        try {
-            if (contentType.equalsIgnoreCase(ItemType.NT_CONTENT)) {
-                children = this.getChildPages();
-                children = sort(children, sortCriteria);
-            }
-            else if (contentType.equalsIgnoreCase(ItemType.NT_CONTENTNODE)) {
-                children = this.getChildContentNodes();
-                children = sort(children, sortCriteria);
-            }
-            else if (contentType.equalsIgnoreCase(ItemType.NT_NODEDATA)) {
-                children = this.getProperties();
-            }
-            else {
-                children = this.getChildContent(contentType);
-                children = sort(children, sortCriteria);
-            }
-        }
-        catch (RepositoryException e) {
-            log.error(e.getMessage(), e);
-        }
-        return children;
-    }
-
-    private Collection sort(Collection collection, String sortCriteria) {
-        if (sortCriteria == null)
-            return collection;
-        if (sortCriteria.equals(ContentHandler.SORT_BY_DATE))
-            return sortByDate(collection);
-        else if (sortCriteria.equals(ContentHandler.SORT_BY_SEQUENCE))
-            return sortBySequence(collection);
-        return collection;
-    }
-
-    private Collection getChildPages() throws RepositoryException {
-        return this.getChildContent(ItemType.NT_CONTENT);
-    }
-
-    private Collection getChildContent(String contentType) throws RepositoryException {
-        Collection children = new ArrayList();
-        NodeIterator nodeIterator = this.node.getNodes();
-        if (nodeIterator == null)
-            return children;
-        while (nodeIterator.hasNext()) {
-            Node subNode = (Node) nodeIterator.next();
-            try {
-                if (subNode.isNodeType(ItemType.getSystemName(contentType)))
-                    children.add(new Content(subNode, this.accessManager));
-            }
-            catch (PathNotFoundException e) {
-                log.error(e);
-            }
-            catch (AccessDeniedException e) {
-                // ignore, simply wont add content in a list
-            }
-        }
-        return children;
-    }
-
-    /**
-     * @throws RepositoryException
-     */
-    private Collection getChildContentNodes() throws RepositoryException {
-        Collection children = new ArrayList();
-        NodeIterator nodeIterator = this.node.getNodes();
-        if (nodeIterator == null)
-            return children;
-        while (nodeIterator.hasNext()) {
-            Node subNode = (Node) nodeIterator.next();
-            try {
-                if (subNode.isNodeType(ItemType.getSystemName(ItemType.NT_CONTENTNODE)))
-                    children.add(new ContentNode(subNode, this.accessManager));
-            }
-            catch (PathNotFoundException e) {
-                log.error(e);
-            }
-            catch (AccessDeniedException e) {
-                // ignore, simply wont add content in a list
-            }
-        }
-        return children;
-    }
-
-    private Collection getProperties() throws RepositoryException {
-        Collection children = new ArrayList();
-        NodeIterator nodeIterator = this.node.getNodes();
-        if (nodeIterator == null)
-            return children;
-        while (nodeIterator.hasNext()) {
-            Node subNode = (Node) nodeIterator.next();
-            try {
-                if (subNode.isNodeType(ItemType.getSystemName(ItemType.NT_NODEDATA)))
-                    children.add(new NodeData(subNode, this.accessManager));
-            }
-            catch (PathNotFoundException e) {
-                log.error(e);
-            }
-            catch (AccessDeniedException e) {
-                // ignore, simply wont add content in a list
-            }
-        }
-        return children;
-    }
-
-    /**
-     * <p>
      * get absolute parent object starting from the root node
      * </p>
      * @param digree level at which the requested node exist, relative to the ROOT node
@@ -317,136 +148,6 @@ public class ContentHandler {
 
     /**
      * <p>
-     * Convenience method for taglib
-     * </p>
-     * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
-     * @return Content representing node on level 0
-     * @deprecated as on magnolia 2.01
-     */
-    public Content getAncestor0() throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return (new Content(this.node.getAncestor(0), this.accessManager));
-    }
-
-    /**
-     * <p>
-     * Convenience method for taglib
-     * </p>
-     * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
-     * @return Content representing node on level 1
-     * @deprecated as on magnolia 2.01
-     */
-    public Content getAncestor1() throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return (new Content(this.node.getAncestor(1), this.accessManager));
-    }
-
-    /**
-     * <p>
-     * Convenience method for taglib
-     * </p>
-     * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
-     * @return Content representing node on level 2
-     * @deprecated as on magnolia 2.01
-     */
-    public Content getAncestor2() throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return (new Content(this.node.getAncestor(2), this.accessManager));
-    }
-
-    /**
-     * <p>
-     * Convenience method for taglib
-     * </p>
-     * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
-     * @return Content representing node on level 3
-     * @deprecated as on magnolia 2.01
-     */
-    public Content getAncestor3() throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return (new Content(this.node.getAncestor(3), this.accessManager));
-    }
-
-    /**
-     * <p>
-     * Convenience method for taglib
-     * </p>
-     * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
-     * @return Content representing node on level 4
-     * @deprecated as on magnolia 2.01
-     */
-    public Content getAncestor4() throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return (new Content(this.node.getAncestor(4), this.accessManager));
-    }
-
-    /**
-     * <p>
-     * Convenience method for taglib
-     * </p>
-     * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
-     * @return Content representing node on level 5
-     * @deprecated as on magnolia 2.01
-     */
-    public Content getAncestor5() throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return (new Content(this.node.getAncestor(5), this.accessManager));
-    }
-
-    /**
-     * <p>
-     * Convenience method for taglib
-     * </p>
-     * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
-     * @return Content representing node on level 6
-     * @deprecated as on magnolia 2.01
-     */
-    public Content getAncestor6() throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return (new Content(this.node.getAncestor(6), this.accessManager));
-    }
-
-    /**
-     * <p>
-     * Convenience method for taglib
-     * </p>
-     * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
-     * @return Content representing node on level 7
-     * @deprecated as on magnolia 2.01
-     */
-    public Content getAncestor7() throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return (new Content(this.node.getAncestor(7), this.accessManager));
-    }
-
-    /**
-     * <p>
-     * Convenience method for taglib
-     * </p>
-     * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
-     * @return Content representing node on level 8
-     * @deprecated as on magnolia 2.01
-     */
-    public Content getAncestor8() throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return (new Content(this.node.getAncestor(8), this.accessManager));
-    }
-
-    /**
-     * <p>
-     * Convenience method for taglib
-     * </p>
-     * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
-     * @return Content representing node on level 9
-     * @deprecated as on magnolia 2.01
-     */
-    public Content getAncestor9() throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return (new Content(this.node.getAncestor(9), this.accessManager));
-    }
-
-    /**
-     * <p>
      * get node level from the ROOT node : FIXME implement getDepth in javax.jcr
      * </p>
      * @throws javax.jcr.PathNotFoundException
@@ -458,71 +159,16 @@ public class ContentHandler {
     }
 
     /**
-     * @return Boolean, if sub node(s) exists
-     */
-    public boolean hasChildren() {
-        // todo reimplement this
-        return (this.getChildren(ItemType.NT_CONTENT).size() > 0);
-    }
-
-    /**
-     * @return Boolean, if sub <code>collectionType</code> exists
-     * @deprecated
-     */
-    public boolean hasChildren(int collectionType) {
-        // todo reimplement this
-        return (this.getChildren(collectionType).size() > 0);
-    }
-
-    /**
-     * @return Boolean, if sub <code>collectionType</code> exists
-     */
-    public boolean hasChildren(String contentType) {
-        return (this.getChildren(contentType).size() > 0);
-    }
-
-    /**
-     * Convenicence method to access from JSTL
-     * @return Boolean, if sub node(s) exists
-     */
-    public boolean isHasChildren() {
-        return hasChildren();
-    }
-
-    /**
      * <p>
-     * gets a Collection containing all clild nodes at the current level+1 level
+     * move current node to the specified location above the named <code>beforename</code>
      * </p>
-     * @return Collection of content nodes
+     * @param srcName where current node has to be moved
+     * @param beforeName name of the node before the current node has to be placed
+     * @throws javax.jcr.PathNotFoundException
+     * @throws javax.jcr.RepositoryException
      */
-    public Collection sortByDate(Collection c) {
-        try {
-            if (c == null)
-                return c;
-            Collections.sort((List) c, new DateComparator());
-        }
-        catch (Exception e) {
-            log.error(e.getMessage());
-        }
-        return c;
-    }
-
-    /**
-     * <p>
-     * gets a Collection containing all clild nodes at the current level+1 level
-     * </p>
-     * @return Collection of content nodes
-     */
-    public Collection sortBySequence(Collection c) {
-        try {
-            if (c == null)
-                return c;
-            Collections.sort((List) c, new SequenceComparator());
-        }
-        catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-        return c;
+    public void orderBefore(String srcName, String beforeName) throws PathNotFoundException, RepositoryException {
+        this.node.orderBefore(srcName, beforeName);
     }
 
     /**
@@ -542,11 +188,163 @@ public class ContentHandler {
      */
     public boolean isContentType(String type) {
         try {
-            return this.node.isNodeType(ItemType.getSystemName(type));
+            return this.node.isNodeType(type);
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
         }
         return false;
     }
+
+    /**
+     * <p>
+     * Restores this node to the state defined by the  version with the specified versionName.
+     * </p>
+     * @param versionName
+     * @param removeExisting
+     * @see javax.jcr.Node#restore(String, boolean)
+     */
+    public void restore(String versionName, boolean removeExisting)
+            throws VersionException, UnsupportedRepositoryOperationException, RepositoryException {
+        this.node.restore(versionName, removeExisting);
+    }
+
+    /**
+     * <p>
+     * Restores this node to the state defined by the specified  version.
+     * </p>
+     * @param version
+     * @param removeExisting
+     * @see javax.jcr.Node#restore(javax.jcr.version.Version, boolean)
+     */
+    public void restore(Version version, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException,
+        RepositoryException {
+        this.node.restore(version, removeExisting);
+    }
+
+    /**
+     * <p>
+     * Restores the specified version to relPath, relative to this node.
+     * </p>
+     * @param version
+     * @param relPath
+     * @param removeExisting
+     * @see javax.jcr.Node#restore(javax.jcr.version.Version, String, boolean)
+     */
+    public void restore(Version version, String relPath, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException,
+        RepositoryException {
+        this.node.restore(version, relPath, removeExisting);
+    }
+
+    /**
+     * <p>
+     * Restores this node to the state recorded in the version specified by versionLabel.
+     * </p>
+     * @param versionLabel
+     * @param removeExisting
+     * @see javax.jcr.Node#restoreByLabel(String, boolean)
+     */
+    public void restoreByLabel(String versionLabel, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException,
+        RepositoryException {
+        this.node.restoreByLabel(versionLabel, removeExisting);
+    }
+
+    /**
+     * add version leaving the node checked out
+     */
+    public Version addVersion() throws UnsupportedRepositoryOperationException, RepositoryException {
+        Version version = this.checkIn();
+        this.checkOut();
+        return version;
+    }
+
+    /**
+     * @return checked in version
+     */
+    public Version checkIn() throws UnsupportedRepositoryOperationException, RepositoryException {
+        return this.node.checkin();
+    }
+
+    /**
+     * check out for further write operations
+     */
+    public void checkOut() throws UnsupportedRepositoryOperationException, RepositoryException {
+        this.node.checkout();
+    }
+
+    /**
+     * @return version history
+     */
+    public VersionHistory getVersionHistory() throws UnsupportedRepositoryOperationException, RepositoryException {
+        return this.node.getVersionHistory();
+    }
+
+    /**
+     * @return Version iterator retreived from version history
+     */
+    public VersionIterator getAllVersions() throws UnsupportedRepositoryOperationException, RepositoryException {
+        return this.getVersionHistory().getAllVersions();
+    }
+
+    /**
+     * <p>
+     * Persists all changes to the repository if valiation succeds
+     * </p>
+     * @throws RepositoryException
+     */
+    public void save() throws RepositoryException {
+        this.node.save();
+    }
+
+    /**
+     * <p>
+     * checks for the allowed access rights
+     * </p>
+     * @param permissions as defined in javax.jcr.Permission
+     * @return true is the current user has specified access on this node.
+     */
+    public boolean isGranted(long permissions) {
+        try {
+            Access.isGranted(this.accessManager, Path.getAbsolutePath(node.getPath()), permissions);
+            return true;
+        }
+        catch (RepositoryException re) {
+            log.error(re.getMessage(), re);
+        }
+        return false;
+    }
+
+    /**
+     * <p>
+     * Remove this path
+     * </p>
+     * @throws RepositoryException
+     */
+    public void delete() throws RepositoryException {
+        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.node.getPath()), Permission.REMOVE);
+        this.node.remove();
+    }
+
+    /**
+     * <p>
+     * Remove specified path
+     * </p>
+     * @throws RepositoryException
+     */
+    public void delete(String path) throws RepositoryException {
+        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.node.getPath(), path), Permission.REMOVE);
+        this.node.getNode(path).remove();
+    }
+
+    /**
+     * <p>
+     * Refreses current node keeping all changes
+     * </p>
+     * @see javax.jcr.Node#refresh(boolean)
+     * @throws RepositoryException
+     */
+    public void refresh(boolean keepChanges) throws RepositoryException {
+        this.node.refresh(keepChanges);
+    }
+
 }
