@@ -606,7 +606,6 @@ public class Tree extends ControlSuper {
 				this.deActivateNode(source);
 				try {
 					hm.moveTo(source,destination);
-					SessionAccessControl.invalidateUser(this.getRequest());
 				}
 				catch (Exception e) {
 					//try to move below node data
@@ -617,6 +616,7 @@ public class Tree extends ControlSuper {
 				//copy
 				hm.copyTo(source,destination);
 			}
+            SessionAccessControl.invalidateUser(this.getRequest());
 			Content newContent=hm.getContent(destination);
 			try {
 				newContent.updateMetaData(this.getRequest());
