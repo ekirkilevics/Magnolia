@@ -16,6 +16,8 @@ import info.magnolia.cms.beans.runtime.SystemProperty;
 import info.magnolia.cms.core.HierarchyManager;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -28,6 +30,10 @@ import org.apache.log4j.Logger;
  * @version 2.0
  */
 public final class Path {
+
+    private static final String ENCODING_DEFAULT = "UTF-8";
+
+    private static final String ATTRIBUTE_URI = "mgnl_decodedURI";
 
     /**
      * Logger.
@@ -118,19 +124,33 @@ public final class Path {
      * @return request URI without servlet context
      */
     public static String getURI(HttpServletRequest req) {
-        return StringUtils.substringAfter(req.getRequestURI(), req.getContextPath());
+        String uri = (String) req.getAttribute(ATTRIBUTE_URI);
+        if (StringUtils.isEmpty(uri)) {
+            // add to request avoiding unnecessary decoding
+            uri = getDecodedURI(req);
+            req.setAttribute(ATTRIBUTE_URI,uri);
+        }
+        return uri;
+    }
+
+    /**
+     * Returns the decoded URI of the current request, without the context path.
+     * @param req request
+     * @return request URI without servlet context
+     */
+    private static String getDecodedURI(HttpServletRequest req) {
+        String encoding = StringUtils.defaultString(req.getCharacterEncoding(), ENCODING_DEFAULT);
+        String decodedURL = "";
+        try {
+            decodedURL = URLDecoder.decode(req.getRequestURI(), encoding);
+        } catch(UnsupportedEncodingException e) {
+            decodedURL = req.getRequestURI();
+        }
+        return StringUtils.substringAfter(decodedURL, req.getContextPath());
     }
 
     public static String getExtension(HttpServletRequest req) {
         return StringUtils.substringAfterLast(req.getRequestURI(), ".");
-    }
-
-    /**
-     * @deprecated
-     */
-    public static String getUniqueLabel(String parent, String label) {
-        log.error("Deprecated - use getUniqueLabel(Content parent, String label) instead");
-        return label;
     }
 
     public static String getUniqueLabel(HierarchyManager hierarchyManager, String parent, String label) {
