@@ -1,0 +1,1041 @@
+package info.magnolia.cms.gui.control;
+
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.config.ItemType;
+import info.magnolia.cms.beans.config.Template;
+import info.magnolia.cms.core.*;
+import info.magnolia.cms.security.SessionAccessControl;
+import info.magnolia.cms.security.Authenticator;
+import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.cms.util.DateUtil;
+import info.magnolia.cms.util.Path;
+import info.magnolia.cms.util.MetaDataUtil;
+import info.magnolia.cms.gui.dialog.DialogSpacer;
+import info.magnolia.cms.exchange.simple.Syndicator;
+
+import javax.jcr.*;
+import javax.jcr.access.Permission;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.Date;
+
+import org.apache.log4j.Logger;
+
+/**
+ * Created by IntelliJ IDEA.
+ * User: enz
+ * Date: Sep 6, 2004
+ * Time: 9:21:44 AM
+ * To change this template use File | Settings | File Templates.
+ */
+public class Tree extends ControlSuper {
+	private String repository;
+	private String pathOpen;
+	private String pathCurrent;
+	private String pathSelected;
+	private int indentionWidth=15;
+	private ArrayList itemTypes=new ArrayList();
+
+	public static final String DOCROOT="/admindocroot/controls/tree/";
+
+	private int height=400;
+
+	//todo: global; where?
+	public static final String ICONDOCROOT="/admindocroot/icons/16/";
+
+	private String iconPage=ICONDOCROOT+"document_plain_earth.gif";
+	private String iconContentNode=ICONDOCROOT+"cubes.gif";
+	private String iconNodeData=ICONDOCROOT+"cube_green.gif";
+
+	private String shifterExpand=DOCROOT+"shifter_EXPAND.gif";
+	private String shifterCollaspe=DOCROOT+"shifter_COLLAPSE.gif";
+	private String shifterEmpty=DOCROOT+"shifter_EMPTY.gif";
+
+	private static final String LINE_INTERNODE_MASK=DOCROOT+"line_internode_mask.gif";
+
+	public static final int ACTION_MOVE=0;
+	public static final int ACTION_COPY=1;
+	public static final int ACTION_ACTIVATE=2;
+	public static final int ACTION_DEACTIVATE=3;
+
+	public static final int PASTETYPE_ABOVE=0;
+	public static final int PASTETYPE_BELOW=1;
+	public static final int PASTETYPE_SUB=2;
+	public static final int PASTETYPE_LAST=3;
+
+
+
+	private boolean drawShifter=true;
+
+	private String javascriptTree="mgnlTreeControl";
+
+	private ArrayList columns=new ArrayList();
+	private ArrayList menuItems=new ArrayList();
+
+	boolean snippetMode=true;
+
+	private String  columnResizer=DOCROOT+"columnResizer.gif";
+
+	private static Logger log = Logger.getLogger(Tree.class);
+
+
+	/**
+	 * <p>constructor</p>
+	 *
+	 * @param repository: name of the repository (i.e. "website", "users")
+	 * @param request
+	 */
+	public Tree(String repository,HttpServletRequest request) {
+		this.setRepository(repository);
+		this.setRequest(request);
+	}
+
+	public void setRepository(String s) {this.repository=s;}
+	public String getRepository() {return this.repository;}
+
+	public void setPathOpen(String s) {this.pathOpen=s;}
+	public String getPathOpen() {return this.pathOpen;}
+
+	/**
+	 * <p>sets which path will be selected (and opened - overwrites pathOpen)</p>
+	 *
+	 * @param s
+	 */
+	public void setPathSelected(String s) {
+		if (s!=null && !s.equals("")) {
+			//this.setPathOpen(s);
+			this.setPathOpen(s.substring(0,s.lastIndexOf("/")));
+		}
+		this.pathSelected=s;
+	}
+	public String getPathSelected() {return this.pathSelected;}
+
+	public String getPath() {
+		if (super.getPath()!=null) return super.getPath();
+		else return ("/");
+	}
+
+	private void setPathCurrent(String s) {this.pathCurrent=s;}
+	private String getPathCurrent() {return this.pathCurrent;}
+
+	public void setIndentionWidth(int i) {this.indentionWidth=i;}
+	public int getIndentionWidth() {return this.indentionWidth;}
+
+	public void setItemTypes(ArrayList al) {this.itemTypes=al;}
+	public ArrayList getItemTypes() {return this.itemTypes;}
+	/**
+	 * <p>add a itemType to the itemTypes that will be shown in this branch</p>
+	 *
+	 * @param i itemType (one of: ItemType.MAGNOLOIA_PAGE, ItemType.MAGNOLIA_CONTENT_NODE, ItemType.MAGNOLIA_NODE_DATA)
+	 */
+	public void addItemType(int i) {this.getItemTypes().add(new Integer(i));}
+
+
+	/**
+	 * <p>set the icon of pages</p>
+	 * @param src: source of the image
+	 */
+	public void setIconPage(String src) {this.iconPage=src;}
+	public String getIconPage() {return this.iconPage;}
+
+	/**
+	 * <p>set the icon of content nodes</p>
+	 * @param src: source of the image
+	 */
+	public void setIconContentNode(String src) {this.iconContentNode=src;}
+	public String getIconContentNode() {return this.iconContentNode;}
+
+	/**
+	 * <p>set the icon of node data</p>
+	 * @param src: source of the image
+	 */
+	public void setIconNodeData(String src) {this.iconNodeData=src;}
+	public String getIconNodeData() {return this.iconNodeData;}
+
+
+	/**
+	 * <p>set the shifter image (expand branch)</p>
+	 * <p>"_EXPAND" in file name will be replaced by "_COLLAPSE" after expanding</p>
+	 * <p>e.g. myShifterIcon_EXPAND.gif</p>
+	 * @param src: source of the image
+	 */
+	public void setShifterExpand(String src) {this.shifterExpand=src;}
+	public String getShifterExpand() {return this.shifterExpand;}
+
+	/**
+	 * <p>set the shifter image (collapse branch)</p>
+	 * <p>"_COLLAPSE" in file name will be replaced by "_EXPAND" after collapsing</p>
+	 * <p>e.g. myShifterIcon_COLLAPSE.gif</p>
+	 * @param src: source of the image
+	 */
+	public void setShifterCollapse(String src) {this.shifterCollaspe=src;}
+	public String getShifterCollapse() {return this.shifterCollaspe;}
+
+	/**
+	 * <p>set the shifter image when no children are available (not expandable)</p>
+	 * <p>"_EMPTY" in the file name will be replaced when children are available</p>
+	 * <p>e.g. myShifterIcon_EMPTY.gif</p>
+	 * @param src: source of the image
+	 */
+	public void setShifterEmpty(String src) {this.shifterEmpty=src;}
+	public String getShifterEmpty() {return this.shifterEmpty;}
+
+
+	public void setDrawShifter(boolean b) {this.drawShifter = b;}
+	public boolean getDrawShifter() {return this.drawShifter;}
+
+
+	public void setHeight(int i) {this.height=i;}
+	public int getHeight() {return this.height;}
+
+	/**
+	 * <p>set the columns (for pages and content nodes only)</p>
+	 * @param al: list of TreeColumns
+	 */
+	public void setColums(ArrayList al) {this.columns = al;}
+	public ArrayList getColumns() {return this.columns;}
+	public TreeColumn getColumns(int col) {return (TreeColumn) this.getColumns().get(col);}
+	public void addColumn(TreeColumn tc) {this.getColumns().add(tc);}
+
+
+	/**
+	 * <p>set the context menu</p>
+	 * @param al: list of menu items
+	 */
+	public void setMenuItems(ArrayList al) {this.menuItems = al;}
+	public ArrayList getMenuItems() {return this.menuItems;}
+	public TreeMenuItem getMenuItems(int col) {return (TreeMenuItem) this.getMenuItems().get(col);}
+	public void addMenuItem(TreeMenuItem tmi) {this.getMenuItems().add(tmi);}
+
+
+
+
+	/**
+	 * <p>set the name of the javascript tree object</p>
+	 * @param variableName
+	 */
+	public void setJavascriptTree(String variableName) {this.javascriptTree=variableName;}
+	public String getJavascriptTree() {return this.javascriptTree;}
+
+	/**
+	 * <p>sets if only a snippet (requested branch) shall be returnde or including the surounding html (tree header, js/css links etc)</p>
+	 * @param b: true: snippet only
+	 */
+	public void setSnippetMode(boolean b) {this.snippetMode=b;}
+	public boolean getSnippetMode() {return this.snippetMode;}
+
+
+	//@todo: set size of column resizer gif and pass it to js object
+	public void setColumnResizer(String src) {this.columnResizer=src;}
+	public String getColumnResizer() {return this.columnResizer;}
+
+
+	public void deleteNode(String parentPath,String label) {
+		try {
+			HierarchyManager hm=SessionAccessControl.getHierarchyManager(this.getRequest(),this.getRepository());
+			Content parentNode=hm.getContent(parentPath);
+
+			String path;
+			if (!parentPath.equals("/")) path=parentPath+"/"+label;
+			else path="/"+label;
+			this.deActivateNode(path);
+
+			parentNode.deleteContent(label);
+			parentNode.save();
+		}
+		catch (Exception e) {}
+	}
+
+	public void deleteNode(String path) {
+		try {
+			String parentPath=path.substring(0,path.lastIndexOf("/"));
+			String label=path.substring(path.lastIndexOf("/")+1);
+
+			deleteNode(parentPath,label);
+		}
+		catch (Exception e) {}
+	}
+
+
+
+
+	public void createNode(int itemType) {
+		this.createNode("untitled",itemType);
+	}
+
+	public void createNode(String label,int itemType) {
+		try {
+			HierarchyManager hm=SessionAccessControl.getHierarchyManager(this.getRequest(),this.getRepository());
+			Content parentNode=hm.getContent(this.getPath());
+
+			String slash="/";
+			boolean isRoot=false;
+			if (this.getPath().equals("/")) {
+				isRoot=true;
+				slash="";
+			}
+
+			if (hm.isExist(this.getPath()+slash+label)) {
+				//todo: bugfix getUniqueLabel???
+				if (!isRoot) label=Path.getUniqueLabel(hm,this.getPath(),label);
+				else label=Path.getUniqueLabel(hm,"",label);
+			}
+
+			if (itemType==ItemType.MAGNOLIA_NODE_DATA) {
+				NodeData d=parentNode.createNodeData(label);
+			}
+			else {
+				Content newNode;
+				if (itemType==ItemType.MAGNOLIA_PAGE) {
+					newNode=parentNode.createContent(label);
+				}
+				else {
+					newNode=parentNode.createContentNode(label);
+				}
+
+				newNode.getMetaData().setAuthorId(Authenticator.getUserId(this.getRequest()));
+				newNode.getMetaData().setCreationDate();
+				newNode.getMetaData().setModificationDate();
+				newNode.getMetaData().setSequencePosition();
+				//todo: default template
+				//now tmp: 'first' template is taken...
+
+				if (itemType==ItemType.MAGNOLIA_PAGE) {
+					Iterator templates=Template.getAvailableTemplates();
+					while (templates.hasNext()) {
+						Template template=(Template)templates.next();
+						newNode.getMetaData().setTemplate(template.getName());
+						break;
+					}
+				}
+
+
+			}
+			parentNode.save();
+		}
+		catch (Exception e) { e.printStackTrace();
+		}
+	}
+
+
+	public String saveNodeData(String nodeDataName,String value,boolean isMeta) {
+		String returnValue="";
+		try {
+			HierarchyManager hm=SessionAccessControl.getHierarchyManager(this.getRequest(),this.getRepository());
+			Content page=hm.getContent(this.getPath());
+			if (!isMeta) {
+				NodeData node;
+				int type=PropertyType.STRING;
+				if (!page.getNodeData(nodeDataName).isExist()) {
+					node=page.createNodeData(nodeDataName);
+				}
+				else {
+					node=page.getNodeData(nodeDataName);
+					type=node.getType();
+				}
+
+				//todo: share with Contorol.Save
+				switch (type) {
+					case PropertyType.STRING:
+						node.setValue(value);
+						break;
+					case PropertyType.BOOLEAN:
+						if (value.equals("true")) node.setValue(true);
+						else node.setValue(false);
+						break;
+					case PropertyType.DOUBLE:
+						try {node.setValue(Double.valueOf(value).doubleValue());}
+						catch (Exception e) {node.setValue(0);}
+						break;
+					case PropertyType.LONG:
+						try {node.setValue(Long.valueOf(value).longValue());}
+						catch (Exception e) {node.setValue(0);}
+						break;
+					case PropertyType.DATE:
+						//todo
+						break;
+				}
+
+				page.updateMetaData(this.getRequest());
+				page.save();
+				returnValue=new NodeDataUtil(node).getValueString();
+			}
+			else {
+				page.getMetaData().setProperty(nodeDataName,value);
+				page.updateMetaData(this.getRequest());
+				page.save();
+				returnValue=new MetaDataUtil(page).getPropertyValueString(nodeDataName);
+			}
+		}
+		catch (Exception e) {
+		}
+		return returnValue;
+	}
+
+
+	public String saveNodeDataType(String nodeDataName,int type) {
+		try {
+			HierarchyManager hm=SessionAccessControl.getHierarchyManager(this.getRequest(),this.getRepository());
+			Content page=hm.getContent(this.getPath());
+			Value value=null;
+			if (page.getNodeData(nodeDataName).isExist()) {
+				value=page.getNodeData(nodeDataName).getValue();
+				page.deleteNodeData(nodeDataName);
+			}
+
+			NodeData node=page.createNodeData(nodeDataName);
+
+			if (value!=null) {
+				switch (type) {
+					case PropertyType.STRING:
+						node.setValue(value.getString());
+						break;
+					case PropertyType.BOOLEAN:
+						if (value!=null && value.equals("true")) node.setValue(true);
+						else node.setValue(false);
+						break;
+					case PropertyType.DOUBLE:
+						try {node.setValue(value.getDouble());}
+						catch (Exception e) {node.setValue(0);}
+						break;
+					case PropertyType.LONG:
+						try {node.setValue(value.getLong());}
+						catch (Exception e) {node.setValue(0);}
+						break;
+					case PropertyType.DATE:
+						//todo
+						break;
+				}
+			}
+
+			page.updateMetaData(this.getRequest());
+			page.save();
+
+			return PropertyType.nameFromValue(page.getNodeData(nodeDataName).getType());
+			//return PropertyType.nameFromValue(node.getType());
+		}
+		catch (Exception e) {
+		}
+		return "";
+	}
+
+
+
+
+	public String pasteNode(String pathOrigin,String pathSelected,int pasteType,int action) {
+		//todo: proper doc
+		//todo: ??? generic -> RequestInterceptor.java
+		// move and copy of nodes works as copy/cut - paste (remaining of the very first prototype)
+		// "Copy node" copies a node to the "clipboard" (clipboard object of the js tree object)
+		// "Move node" copies a node to the "clipboard", setting clipboardMethod "cut"
+		// select a node after copy or cut triggers Tree.pasteNode
+		// action: clipboardMethod (copy or move)
+		// pasteType: above, below, last position, as sub node
+
+		boolean move=false;
+		if (action==ACTION_MOVE) move=true;
+		String label=pathOrigin.substring(pathOrigin.lastIndexOf("/")+1);
+		String slash="/";
+		if (pathSelected.equals("/")) slash="";
+
+
+		String destination=pathSelected+slash+label;
+		if (pasteType==PASTETYPE_SUB && action!=ACTION_COPY && destination.equals(pathOrigin)) {
+			//drag node to parent node: move to last position
+			pasteType=PASTETYPE_LAST;
+		}
+
+		if (pasteType==PASTETYPE_SUB) {
+			destination=pathSelected+slash+label;
+			Content touchedContent=this.copyMoveNode(pathOrigin,destination,move);
+			if (touchedContent==null) return "";
+			else return touchedContent.getHandle();
+		}
+		else if (pasteType==PASTETYPE_LAST) {
+			//LAST only available for sorting inside the same directory
+			try {
+				HierarchyManager hm=SessionAccessControl.getHierarchyManager(this.getRequest(),this.getRepository());
+				Content touchedContent=hm.getContent(pathOrigin);
+				touchedContent.getMetaData().setSequencePosition();
+				return touchedContent.getHandle();
+			}
+			catch (RepositoryException re) {return "";}
+		}
+		else {
+			try {
+				HierarchyManager hm=SessionAccessControl.getHierarchyManager(this.getRequest(),this.getRepository());
+
+				// PASTETYPE_ABOVE | PASTETYPE_BELOW
+				String pathSelectedParent=pathSelected.substring(0,pathSelected.lastIndexOf("/"));
+				String pathOriginParent=pathOrigin.substring(0,pathOrigin.lastIndexOf("/"));
+
+				if (pathSelectedParent.equals("")) {
+					slash="";
+					pathSelectedParent="/";
+				}
+				if (pathOriginParent.equals("")) pathOriginParent="/";
+
+				Content touchedContent=null;
+
+				// *
+				// (copy node) or (move node if source and destination differ in parent directory)
+				if (action==ACTION_COPY || !pathSelectedParent.equals(pathOriginParent)) {
+					destination=pathSelectedParent+slash+label;
+					touchedContent=this.copyMoveNode(pathOrigin,destination,move);
+				}
+				else {
+					//sort only (move inside the same directory)
+					touchedContent=hm.getContent(pathOrigin);
+
+				}
+
+				Content parentContent=hm.getContent(pathSelectedParent);
+				Content selectedContent=hm.getContent(pathSelected);
+
+				// *
+				// set sequence position (average of selected and above resp. below)
+				//todo: !!!!!!!!
+				//how to find out type of node?
+				int selectedType=ItemType.MAGNOLIA_NODE_DATA;
+				int touchedType=ItemType.MAGNOLIA_NODE_DATA;
+				Iterator it1=parentContent.getChildren(ItemType.MAGNOLIA_PAGE).iterator();
+				while (it1.hasNext()) {
+					Content c=(Content) it1.next();
+					if (c.getHandle().equals(selectedContent.getHandle())) {
+						selectedType=ItemType.MAGNOLIA_PAGE;
+					}
+					if (c.getHandle().equals(touchedContent.getHandle())) {
+						touchedType=ItemType.MAGNOLIA_PAGE;
+					}
+				}
+				Iterator it2=parentContent.getChildren(ItemType.MAGNOLIA_CONTENT_NODE).iterator();
+				while (it2.hasNext()) {
+					Content c=(Content) it2.next();
+					if (c.getHandle().equals(selectedContent.getHandle())) selectedType=ItemType.MAGNOLIA_CONTENT_NODE;
+					if (c.getHandle().equals(touchedContent.getHandle())) touchedType=ItemType.MAGNOLIA_CONTENT_NODE;
+				}
+				if (touchedType==ItemType.MAGNOLIA_NODE_DATA) return ""; //sorting not possible
+
+				long posSelected=selectedContent.getMetaData().getSequencePosition();
+				long posAbove=0;
+				long posBelow=0;
+				long posFirst=0;
+
+				Iterator it=parentContent.getChildren(touchedType).iterator();
+				boolean first=true;
+				while (it.hasNext()) {
+					Content c=(Content) it.next();
+					if (first) {
+						posFirst=c.getMetaData().getSequencePosition();
+						first=false;
+					}
+					if (c.getHandle().equals(selectedContent.getHandle())) {
+						if (it.hasNext()) {
+							Content nextC=(Content) it.next();
+							posBelow=nextC.getMetaData().getSequencePosition();
+						}
+						break;
+					}
+					else {
+						posAbove=c.getMetaData().getSequencePosition();
+					}
+				}
+
+				if (touchedType!=selectedType) {
+					if (touchedType==ItemType.MAGNOLIA_CONTENT_NODE && selectedType==ItemType.MAGNOLIA_PAGE) {
+						// move at first position
+						// (tried to move a content node around a page)
+						pasteType=PASTETYPE_ABOVE;
+						posAbove=posFirst;
+					}
+					else {
+						// move to last position
+						// (tried to move a page around a content node or node data
+						// tried to move a content around a node data
+						pasteType=PASTETYPE_BELOW;
+						posBelow=0;
+					}
+				}
+
+				long posTouched;
+				if (pasteType==PASTETYPE_ABOVE) {
+					if (posAbove==0) posTouched=posSelected-(MetaData.SEQUENCE_POS_COEFFICIENT*1000); //first position in directory -> 1000*coefficient above first
+					else posTouched=(posAbove+posSelected)/2;
+				}
+				else {
+					if (posBelow==0) posTouched=0; //last position in directory -> timestamp (passing 0)
+					else posTouched=(posBelow+posSelected)/2;
+				}
+
+				touchedContent.getMetaData().setSequencePosition(posTouched);
+				touchedContent.updateMetaData(this.getRequest());
+				touchedContent.save();
+				return touchedContent.getHandle();
+
+			}
+			catch (RepositoryException re) {return "";}
+		}
+	}
+
+
+	public Content copyMoveNode(String source,String destination,boolean move) {
+		//todo: ??? generic -> RequestInterceptor.java
+		try {
+			HierarchyManager hm=SessionAccessControl.getHierarchyManager(this.getRequest(),this.getRepository());
+			if (hm.isExist(destination)) {
+				String parentPath=destination.substring(0,destination.lastIndexOf("/"));
+				String label=destination.substring(destination.lastIndexOf("/")+1);
+				label=Path.getUniqueLabel(hm,parentPath,label);
+				destination=parentPath+"/"+label;
+			}
+			if (move) {
+				if (destination.indexOf(source+"/")==0) {
+					//todo: disable this possibility in javascript
+					//move source into destinatin not possible
+					return null;
+				}
+				this.deActivateNode(source);
+				try {
+					hm.moveTo(source,destination);
+				}
+				catch (Exception e) {
+					//try to move below node data
+					return null;
+				}
+			}
+			else {
+				//copy
+				hm.copyTo(source,destination);
+			}
+			SessionAccessControl.invalidateUser(this.getRequest());
+			Content newContent=hm.getContent(destination);
+			try {
+				newContent.updateMetaData(this.getRequest());
+				newContent.getMetaData().setSequencePosition();
+				newContent.getMetaData(MetaData.ACTIVATION_INFO).setUnActivated();
+			}
+			catch (Exception e) {}
+			newContent.save();
+			return newContent;
+		}
+		catch (Exception e) {}
+		return null;
+	}
+
+	public void moveNode(String source,String destination) {
+		this.copyMoveNode(source,destination,true);
+	}
+
+	public void copyNode(String source,String destination) {
+		this.copyMoveNode(source,destination,false);
+	}
+
+
+
+	public String renameNode(String newLabel) {
+		String returnValue="";
+		try {
+			HierarchyManager hm=SessionAccessControl.getHierarchyManager(this.getRequest(),this.getRepository());
+			String parentPath=this.getPath().substring(0,this.getPath().lastIndexOf("/"));
+			newLabel=Path.getValidatedLabel(newLabel);
+
+			String dest=parentPath+"/"+newLabel;
+			if (hm.isExist(dest)) {
+				newLabel=Path.getUniqueLabel(hm,parentPath,newLabel);
+				dest=parentPath+"/"+newLabel;
+			}
+			hm.moveTo(this.getPath(),dest);
+			SessionAccessControl.invalidateUser(this.getRequest());
+
+			Content newPage=hm.getContent(dest);
+			returnValue=newLabel;
+			newPage.updateMetaData(this.getRequest());
+		}
+		catch (Exception e) {}
+		return returnValue;
+	}
+
+
+
+	public void activateNode(String path,boolean recursive) {
+		//todo: ??? generic -> RequestInterceptor.java
+		try {
+			Syndicator syndicator = new Syndicator(this.getRequest());
+			syndicator.activate(this.getRepository(),"",path,recursive);
+		}
+		catch (Exception e) {}
+	}
+
+
+	public void deActivateNode(String path) {
+		try {
+			Syndicator syndicator = new Syndicator(this.getRequest());
+			syndicator.deActivate(this.getRepository(),path);
+		}
+		catch (Exception e) {}
+	}
+
+
+
+
+
+	public String getHtml() {
+		//todo: String -> StringBuffer!
+		String html="";
+
+		if (!this.getSnippetMode()) html+=this.getHtmlHeader();
+
+		this.setPathCurrent(this.getPath());
+		html+=this.getHtmlChildren();
+
+		if (!this.getSnippetMode()) html+=this.getHtmlFooter();
+
+		return html;
+
+	}
+
+
+	public String getHtmlHeader() {
+		String html="";
+
+		//resizer
+		html+="<div id=\""+this.getJavascriptTree()+"_ColumnResizerDiv\" style=\"position:absolute;top:-50px;z-index:500;\">";
+		for (int i=1;i<this.getColumns().size();i++) {
+			//div around image: ie and safari do not allow drag of images
+			//todo: fix bad behaviour in mozilla: resizer "turns blue" when selecting
+			html+="<div onmousedown=\""+this.getJavascriptTree()+".dragColumnStart(this,"+i+");\" id=\""+this.getJavascriptTree()+"ColumnResizer"+i+"\" style=\"position:relative;left:-1000px;background-image:url("+this.getColumnResizer()+");display:inline;\">";
+			//use resizer gif to get exact size
+			html+="<img src=\""+this.getColumnResizer()+"\" style=\"visibility:hidden;\">";
+			html+="</div>";
+		}
+		html+="</div>";
+
+
+		//column header
+		html+="<div id=\""+this.getJavascriptTree()+"_ColumnHeader\" style=\"position:absolute;top:-50px;z-index:480;\">";
+		for (int i=0;i<this.getColumns().size();i++) {
+			TreeColumn tc=this.getColumns(i);
+			html+="<span class=\""+this.getJavascriptTree()+"CssClassColumn"+i+"\"><span class=\"mgnlTreeHeader\"><nobr>"+tc.getTitle()+"</nobr></span></span>";
+		}
+		html+="</div>";
+
+
+		//write css definitions
+		html+="<style type=text/css>";
+		int numberOfColumns=this.getColumns().size();
+		if (numberOfColumns==0) numberOfColumns=1;
+		for (int i=0;i<numberOfColumns;i++) {
+			html+="."+this.getJavascriptTree()+"CssClassColumn"+i;
+			html+="{position:absolute;left:0px;clip:rect(0 0 100 0);cursor:default;}";
+		}
+		html+="</style>";
+
+		html+="<div id=\""+this.getJavascriptTree()+"_ColumnResizerLine\" style=\"position:absolute;top:0px;left:-100px;visibility:hidden;width:1px;height:"+this.getHeight()+"px;background-color:#333333;z-index:490;\"></div>";
+
+		html+="<div id=\""+this.getJavascriptTree()+"_"+this.getPath()+"_DivMain\" onclick=\""+this.getJavascriptTree()+".mainDivReset();\" oncontextmenu=\""+this.getJavascriptTree()+".menuShow(event);return false;\" class=\"mgnlTreeDiv\" style=\"height:"+this.getHeight()+"px;\">";
+		html+=new DialogSpacer().getHtml(8);
+		//html+="<div id=\""+this.getJavascriptTree()+"_"+this.getPath()+"_DivSub\" style=\"display:none;\">";
+		html+="<div id=\""+this.getJavascriptTree()+"_"+this.getPath()+"_DivSub\">";
+
+		return html;
+	}
+
+	public String getHtmlFooter() {
+		String html="";
+		html+="</div>";
+
+		html+="<div id=\""+this.getJavascriptTree()+"_"+this.getPath()+"_LineInter\" class=\"mgnlTreeLineInter\" onmouseover=\""+this.getJavascriptTree()+".moveNodeHighlightLine(this);\" onmouseout=\""+this.getJavascriptTree()+".moveNodeResetLine(this);\" onmousedown=\""+this.getJavascriptTree()+".pasteNode('"+this.getPath()+"',"+Tree.PASTETYPE_SUB+",this);\"><img src=\""+Tree.LINE_INTERNODE_MASK+"\" width=\"0\" height=\"5\"></div>";
+
+		html+="</div>";
+
+		//address bar
+		String pathOpen=this.getPathOpen();
+		if (pathOpen==null) pathOpen="";
+		html+=new DialogSpacer().getHtml(3);
+		html+="<input id=\""+this.getJavascriptTree()+"_AddressBar\" type=\"text\" onkeydown=\"if (mgnlIsKeyEnter(event)) "+this.getJavascriptTree()+".expandNode(this.value);\" class=\"mgnlDialogControlEdit\" style=\"width:100%;\" value=\""+pathOpen+"\">";
+
+		//menu
+		String menuJavascript="";
+		if (this.getMenuItems().size()!=0) {
+			html+="<div id=\""+this.getJavascriptTree()+"_DivMenu\" class=\"mgnlTreeMenu\">";
+			int counter=0;
+			for (int i=0;i<this.getMenuItems().size();i++) {
+				TreeMenuItem item=(TreeMenuItem) this.getMenuItems(i);
+				if (item==null) {
+					html+="<div class=\"mgnlTreeMenuLine\"><img src=\"/admindocroot/0.gif\" width=\"1\" height=\"1\"></div>";
+				}
+				else {
+					item.setJavascriptTree(this.getJavascriptTree());
+					String id=this.getJavascriptTree()+"_MenuItem"+i;
+					item.setId(id);
+					menuJavascript+=this.getJavascriptTree()+".menuItems["+counter+"]=new mgnlTreeMenuItem('"+id+"');\n";
+					if (item.getJavascriptCondition()!=null) {
+						menuJavascript+=this.getJavascriptTree()+".menuItems["+counter+"].condition="+item.getJavascriptCondition()+";";
+					}
+					html+=item.getHtml();
+					counter++;
+				}
+			}
+			html+="</div>";
+		}
+
+
+		//shadow for moving pages
+		html+="<div id=\""+this.getJavascriptTree()+"_MoveShadow\" style=\"position:absolute;top:0px;left:0px;visibility:hidden;background-color:#ffffff;\"></div>";
+
+		//"move denied"
+		//disabled
+		//html+="<img src=\""+Tree.DOCROOT+"move_denied.gif\" id=\""+this.getJavascriptTree()+"_MoveDenied\" style=\"position:absolute;top:0px;left:0px;visibility:hidden;\">";
+
+		//initialize js tree object
+		html+="<script>";
+		html+="var "+this.getJavascriptTree()+"=new mgnlTree('"+this.getRepository()+"','"+this.getPath()+"','"+this.getJavascriptTree()+"',"+this.getHeight()+");";
+		//html+=this.getJavascriptTree()+".columns=new Array();"; //->in tree.js
+
+		//add menu to tree object
+		html+=menuJavascript;
+
+		//add columns to tree object
+		for (int i=0;i<this.getColumns().size();i++) {
+			TreeColumn tc=(TreeColumn) this.getColumns(i);
+			html+=this.getJavascriptTree()+".columns["+i+"]=new mgnlTreeColumn("+tc.getWidth()+",'"+tc.getHtmlEdit()+"','"+tc.getName()+"',"+tc.getIsMeta()+","+tc.getIsLabel()+","+tc.getIsNodeDataValue()+","+tc.getIsNodeDataType()+");";
+		}
+		html+="mgnlTreeControls['"+this.getJavascriptTree()+"']="+this.getJavascriptTree()+";";
+
+		//js is not run on remote request
+		html+=this.getJavascriptTree()+".selectNode('"+this.getPathSelected()+"');";
+
+		html+="</script>";
+
+		return html;
+	}
+
+	public String getHtmlBranch() {
+		String html="";
+		return html;
+	}
+
+
+	public String getHtmlChildren() {
+		String html="";
+		HierarchyManager hm=SessionAccessControl.getHierarchyManager(this.getRequest(),this.getRepository());
+
+		Content parentNode=null;
+		try {
+			parentNode = hm.getPage(this.getPathCurrent());
+
+			//loop the children of the different item types
+			for (int i=0;i<this.getItemTypes().size();i++) {
+				int type=Integer.parseInt(this.getItemTypes().get(i).toString());
+				html+=this.getHtmlChildrenOfOneType(parentNode,type);
+			}
+		}
+		catch (RepositoryException re) {}
+
+		return html;
+	}
+
+
+	public String getHtmlChildrenOfOneType(Content parentNode,int itemType) {
+		String html="";
+
+		String icon="";
+		switch (itemType) {
+			case ItemType.MAGNOLIA_PAGE:
+				icon=this.getIconPage();
+				break;
+			case ItemType.MAGNOLIA_CONTENT_NODE:
+				icon=this.getIconContentNode();
+				break;
+			case ItemType.MAGNOLIA_NODE_DATA:
+				icon=this.getIconNodeData();
+				break;
+		}
+
+
+		try {
+			//todo: parentNode - level of this.getPath
+			int left=(parentNode.getLevel())*this.getIndentionWidth();
+
+
+			Iterator it=parentNode.getChildren(itemType).iterator();
+			while (it.hasNext()) {
+				Object o=it.next();
+
+				Content c=null;
+				NodeData d=null;
+				String handle="";
+				String name="";
+				boolean hasSub=false;
+				boolean showSub=false;
+
+				boolean permissionWrite=false;
+
+				switch (itemType) {
+
+					case ItemType.MAGNOLIA_NODE_DATA:
+						d=(NodeData) o;
+						handle=d.getHandle();
+						name=d.getName();
+						if (d.isGranted(info.magnolia.cms.beans.runtime.Permission.ALL_PERMISSIONS)) permissionWrite=true;
+						break;
+
+					default:
+						c=(Content) o;
+						handle=c.getHandle();
+						if (this.getColumns().size()==0) name=c.getName();
+						else {
+							this.getColumns(0).setWebsiteNode(c);
+							name=this.getColumns(0).getHtml();
+						}
+
+						if (c.isGranted(info.magnolia.cms.beans.runtime.Permission.ALL_PERMISSIONS)) permissionWrite=true;
+
+						for (int i=0;i<this.getItemTypes().size();i++) {
+							int type=Integer.parseInt(this.getItemTypes().get(i).toString());
+							if (c.getChildren(type).size()>0) {
+								hasSub=true;
+								if (this.getPathOpen()!=null && (this.getPathOpen().indexOf(handle+"/")==0 || this.getPathOpen().equals(handle))) showSub=true;
+								break;
+							}
+						}
+				}
+
+				String idPre=this.getJavascriptTree()+"_"+handle;
+
+				String jsHighlightNode=this.getJavascriptTree()+".nodeHighlight('"+handle+"');";
+				String jsResetNode=this.getJavascriptTree()+".nodeReset('"+handle+"');";
+				String jsSelectNode=this.getJavascriptTree()+".selectNode('"+handle+"',"+itemType+");";
+				String jsExpandNode;
+				if (this.getDrawShifter()) jsExpandNode=this.getJavascriptTree()+".expandNode('"+handle+"');";
+				else jsExpandNode=jsSelectNode;
+
+				String jsHighlightLine=this.getJavascriptTree()+".moveNodeHighlightLine(this);";
+				String jsResetLine=this.getJavascriptTree()+".moveNodeResetLine(this);";
+
+
+				//lineInter: line between nodes, to allow set cursor between nodes
+				html+="<div id=\""+idPre+"_LineInter\" class=\"mgnlTreeLineInter\" onmouseover=\""+jsHighlightLine+"\" onmouseout=\""+jsResetLine+"\" onmousedown=\""+this.getJavascriptTree()+".pasteNode('"+handle+"',"+Tree.PASTETYPE_ABOVE+");\"><img src=\""+Tree.LINE_INTERNODE_MASK+"\" width=\""+left+"\" height=\"5\"></div>";
+
+
+				html+="<div id=\""+idPre+"_DivMain\" style=\"position:relative;top:0;left:0;width:100%;height:18px;\">";
+				html+="&nbsp;"; //do not remove!
+
+				html+="<nobr><span id=\""+idPre+"_Column0Outer\" class="+this.getJavascriptTree()+"CssClassColumn0 style=\"padding-left:"+left+"px;\">";
+
+				if (this.getDrawShifter()) {
+					String shifter="";
+					if (hasSub) {
+						if (showSub) {
+							if (this.getShifterCollapse()!=null) shifter=this.getShifterCollapse();
+						}
+						else {
+							if (this.getShifterExpand()!=null) shifter=this.getShifterExpand();
+						}
+					}
+					else {
+						if (this.getShifterEmpty()!=null) shifter=this.getShifterEmpty();
+					}
+					if (!shifter.equals("")) html+="<img id=\""+idPre+"_Shifter\" onmousedown=\""+this.getJavascriptTree()+".shifterDown('"+handle+"');\" onmouseout=\""+this.getJavascriptTree()+".shifterOut();\" class=mgnlTreeShifter src=\""+shifter+"\">";
+				}
+
+				html+="<span id="+idPre+"_Name onmouseover=\""+jsHighlightNode+"\" onmouseout=\""+jsResetNode+"\" onmousedown=\""+jsSelectNode+this.getJavascriptTree()+".pasteNode('"+handle+"',"+Tree.PASTETYPE_SUB+");\">";
+
+				if (!icon.equals("")) {
+					html+="<img id=\""+idPre+"_Icon\" class=\"mgnlTreeIcon\" src=\""+icon+"\" onmousedown=\""+jsExpandNode+"\">";
+				}
+
+				//if (!this.getWebsiteNode().isGranted(info.magnolia.cms.beans.runtime.Permission.ALL_PERMISSIONS)) {
+
+				//}
+
+
+				String dblclick="";
+				if (permissionWrite && !this.getColumns(0).getHtmlEdit().equals("")) {
+					 dblclick=" ondblclick=\""+this.getJavascriptTree()+".editNodeData(this,'"+handle+"',0);\"";
+				}
+				html+="<span class=\"mgnlTreeText\" id=\""+idPre+"_Column0Main\""+dblclick+">";
+				html+=name;
+				html+="</span></span></span></nobr>";
+				html+=new Hidden(idPre+"_PermissionWrite",Boolean.toString(permissionWrite),false).getHtml();
+
+
+				for (int i=1;i<this.getColumns().size();i++) {
+					String str="";
+					TreeColumn tc=(TreeColumn) this.getColumns(i);
+
+					if (itemType!=ItemType.MAGNOLIA_NODE_DATA) {
+						//content node ItemType.MAGNOLIA_CONTENT_NODE and ItemType.MAGNOLIA_PAGE
+						if (!tc.getIsNodeDataType() && !tc.getIsNodeDataValue()) {
+							tc.setWebsiteNode(c);
+							tc.setId(handle);
+							str=tc.getHtml();
+						}
+					}
+					else {
+						NodeDataUtil util=new NodeDataUtil(d);
+						if (tc.getIsNodeDataType()) {
+							str=util.getTypeName(d.getType());
+						}
+						else if (tc.getIsNodeDataValue()) {
+							str=util.getValueString();
+						}
+						if (str.equals("")) str=TreeColumn.EMPTY;
+						tc.setName(name); //workaround, will be passed to js TreeColumn object
+					}
+
+					tc.setEvent("onmouseover",jsHighlightNode,true);
+					tc.setEvent("onmouseout",jsResetNode,true);
+					tc.setEvent("onmousedown",jsSelectNode,true);
+
+					if (permissionWrite && !tc.getHtmlEdit().equals("")) {
+						tc.setEvent("ondblclick",this.getJavascriptTree()+".editNodeData(this,'"+handle+"',"+i+");",true);
+					}
+
+					html+="<nobr><span class=\""+this.getJavascriptTree()+"CssClassColumn"+i+"\"><span id=\""+idPre+"_Column"+i+"Main\""+tc.getHtmlCssClass()+tc.getHtmlEvents()+">"+str+"</span></span></nobr>";
+				}
+
+
+				html+="</div>";
+
+				String display="none";
+				if (showSub) display="block";
+				html+="<div id=\""+idPre+"_DivSub\" style=\"display:"+display+";\">";
+				if (hasSub) {
+					if (showSub) {
+						String pathRemaining=this.getPathOpen().substring(this.getPathCurrent().length());
+						if (pathRemaining.length()>0) {
+							//get rid of first slash (/people/franz -> people/franz)
+							String slash="/";
+							if (this.getPathCurrent().equals("/")) {
+								//first slash already removed
+								slash=""; //no slash needed between pathCurrent and nextChunk
+							}
+							else {
+								pathRemaining=pathRemaining.substring(1);
+							}
+
+							String nextChunk;
+							if (pathRemaining.indexOf("/")!=-1) nextChunk=pathRemaining.substring(0,pathRemaining.indexOf("/"));
+							else nextChunk=pathRemaining; //last chunk
+
+							String pathNext=this.getPathCurrent()+slash+nextChunk;
+
+							this.setPathCurrent(pathNext);
+							html+=this.getHtmlChildren();
+						}
+					}
+				}
+				html+="</div>\n";
+
+			}
+
+		}
+		catch (RepositoryException re) {}
+		return html;
+	}
+
+
+}
