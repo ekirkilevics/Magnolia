@@ -39,7 +39,7 @@
 	}
 	else {
 		for (int i=0;i<values.length;i++) {
-			out.println("<input name=\""+name+"\" type=\""+type+"\" class=\""+type+"\"value=\""+values[i]+"\">"+values[i]+"<br>");
+			out.println("<input name=\""+name+"\" type=\""+type+"\" class=\""+type+"\"value=\""+values[i]+"\">"+values[i]+"<br/>");
 		}
 	}
 

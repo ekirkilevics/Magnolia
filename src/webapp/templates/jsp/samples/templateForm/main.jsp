@@ -170,7 +170,7 @@
 %>
 <%@ taglib uri="cms-taglib" prefix="cms" %>
 <%@ taglib uri="cms-util-taglib" prefix="cmsu" %>
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:import url="/templates/jsp/samples/global/head.jsp"/>
 
 <body>
@@ -182,7 +182,7 @@
 	if (alertText.equals("")) alertText="Please fill in all fields marked with an asterisk.";
 	alertText=alertText.replaceAll("'","&rsquo;");
 	alertText=alertText.replaceAll("\"","&rsquo;");
-	alertText=alertText.replaceAll("\r\n","<br>");
+	alertText=alertText.replaceAll("\r\n","<br/>");
 	%>
 	<form name="samplesForm" action="<%=Resource.getActivePage(request).getHandle()%>.html" method="post" onsubmit="return (checkMandatories(this.name,'<%=alertText%>'));">
 		<input type="hidden" name="sendMail" value="true">

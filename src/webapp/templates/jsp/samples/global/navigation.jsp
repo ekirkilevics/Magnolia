@@ -29,7 +29,7 @@ private void drawChildren(Content page,Content activePage,int indent,JspWriter o
 
 				StringBuffer cssClassDiv=new StringBuffer("nav");
 
-				String title=c.getNodeData("navTitle").getString("<br>");
+				String title=c.getNodeData("navTitle").getString("<br/>");
 				//if nav title is not set, the main title is taken:
 				if (title.equals("")) title=c.getTitle();
 				//if main title is not set, the name of the page is taken:
@@ -59,7 +59,7 @@ private void drawChildren(Content page,Content activePage,int indent,JspWriter o
 				if (c.getLevel()==1) {
 					cssClassDiv.append("TopLevel");
 					//out.println("<tr><td class=line></td></tr>");
-					out.println("<div class=\"navLine\"><br></div>");
+					out.println("<div class=\"navLine\"><br/></div>");
 				}
 				int indentPixel=indent*10;
 				//out.print("<tr><td class="+cssClassDiv+" style=padding-left:"+indentPixel+";>");
@@ -82,7 +82,7 @@ out.println("<div id=\"navDiv\">");
 Content activePage=Resource.getActivePage(request);
 Content topLevel=activePage.getAncestor(0);
 drawChildren(topLevel,activePage,0,out, request);
-out.println("<div class=\"navLine\"><br></div>");
+out.println("<div class=\"navLine\"><br/></div>");
 out.println("</div>");
 %>
 

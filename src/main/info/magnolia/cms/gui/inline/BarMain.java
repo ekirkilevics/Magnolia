@@ -222,7 +222,13 @@ public class BarMain extends Bar {
      */
     public void drawHtml(JspWriter out) throws IOException {
         if (Server.isAdmin()) {
-            this.drawHtmlLinks(out);
+
+            // check if links have already been added.
+            if (this.getRequest().getAttribute(Sources.REQUEST_LINKS_DRAWN) == null) {
+                this.drawHtmlLinks(out);
+                this.getRequest().setAttribute(Sources.REQUEST_LINKS_DRAWN, Boolean.TRUE);
+            }
+
             int top = this.getTop();
             int left = this.getLeft();
             // todo: attribute for preview name not static!

@@ -29,7 +29,7 @@
 	long rows=Resource.getLocalContentNode(request).getNodeData("rows").getLong();
 
 	if (rows==1) {
-		out.println("<input type=\"text\" name=\""+name+"\" class=\"text\"><br>");
+		out.println("<input type=\"text\" name=\""+name+"\" class=\"text\"><br/>");
 	}
 	else {
 		out.println("<textarea name=\""+name+"\" rows=\""+rows+"\" cols=\"300\"></textarea>");

@@ -19,6 +19,11 @@ package info.magnolia.cms.gui.misc;
 public class Sources {
 
     /**
+     * Attribute set in request when links are drawn by custom tags.
+     */
+    public static final String REQUEST_LINKS_DRAWN = "mgnl_links_drawn";
+
+    /**
      * Context path for the current request.
      */
     private String contextPath;

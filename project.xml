@@ -193,18 +193,43 @@
         <dependency>
             <groupId>jstl</groupId>
             <artifactId>jstl</artifactId>
-            <version>1.0.2</version>
+            <version>1.1.2</version>
             <type>jar</type>
-            <url>http://jakarta.apache.org/taglibs/doc/standard-1.0-doc/</url>
+            <url>http://jakarta.apache.org/taglibs/</url>
             <properties>
                 <war.bundle>true</war.bundle>
             </properties>
         </dependency>
         <dependency>
-            <groupId>servletapi</groupId>
-            <artifactId>servletapi</artifactId>
-            <version>2.3</version>
+            <groupId>taglibs</groupId>
+            <artifactId>standard</artifactId>
+            <version>1.1.2</version>
             <type>jar</type>
+            <url>http://jakarta.apache.org/taglibs/</url>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
+        </dependency>
+        <dependency>
+            <groupId>geronimo-spec</groupId>
+            <artifactId>geronimo-spec-servlet</artifactId>
+            <version>2.4-rc4</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>geronimo-spec</groupId>
+            <artifactId>geronimo-spec-jsp</artifactId>
+            <version>2.0-rc4</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>geronimo-spec</groupId>
+            <artifactId>geronimo-spec-jta</artifactId>
+            <version>1.0.1B-rc4</version>
+            <type>jar</type>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
         </dependency>
         <dependency>
             <groupId>saxpath</groupId>
@@ -256,15 +281,6 @@
             </properties>
         </dependency>
         <dependency>
-            <groupId>geronimo-spec</groupId>
-            <artifactId>geronimo-spec-jta</artifactId>
-            <version>1.0.1B-rc2</version>
-            <type>jar</type>
-            <properties>
-                <war.bundle>true</war.bundle>
-            </properties>
-        </dependency>
-        <dependency>
             <groupId>jsr170</groupId>
             <artifactId>jcr</artifactId>
             <version>0.16.2</version>
@@ -279,16 +295,6 @@
             <artifactId>xercesImpl</artifactId>
             <version>2.6.2</version>
             <type>jar</type>
-            <properties>
-                <war.bundle>true</war.bundle>
-            </properties>
-        </dependency>
-        <dependency>
-            <groupId>taglibs</groupId>
-            <artifactId>standard</artifactId>
-            <version>1.0.4</version>
-            <type>jar</type>
-            <url>http://jakarta.apache.org/taglibs/</url>
             <properties>
                 <war.bundle>true</war.bundle>
             </properties>
@@ -342,7 +348,7 @@
             </properties>
         </dependency>
         <!--
-             cqfs-jackrabbit and cqfs are optional runtime dependencies (an alternative FileSystem implementation); 
+             cqfs-jackrabbit and cqfs are optional runtime dependencies (an alternative FileSystem implementation);
              commons-logging is a dependency of cqfs
         -->
         <dependency>

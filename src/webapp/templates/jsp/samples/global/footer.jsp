@@ -1,29 +1,19 @@
-<%
-/**
- *
- * Magnolia and its source-code is licensed under the LGPL.
- * You may copy, adapt, and redistribute this file for commercial or non-commercial use.
- * When copying, adapting, or redistributing this document in keeping with the guidelines above,
- * you are required to provide proper attribution to obinary.
- * If you reproduce or distribute the document without making any substantive modifications to its content,
- * please use the following attribution line:
- *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
- *
- * */
-%><%@ taglib uri="cms-taglib" prefix="cms" %>
-<%@ taglib uri="cms-util-taglib" prefix="cmsu" %>
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
-
-<br><br><br>
-<div class="line"><br></div>
-
-<cms:adminOnly>
-	<cms:editButton label="Edit footer" paragraph="samplesPageFooter" contentNodeName="footerPar"/><br>
-</cms:adminOnly>
-<cms:ifNotEmpty nodeDataName="footerText" contentNodeName="footerPar">
-	<cms:out nodeDataName="footerText" contentNodeName="footerPar"/>&nbsp;<br><br>
-</cms:ifNotEmpty>
-Powered by magnolia &ndash; <a href="http://www.magnolia.info" target="_blank">www.magnolia.info</a><br>
-J2EE Content management system based on JSR-170<br>
-<br>
+<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:cms="urn:jsptld:cms-taglib"
+    xmlns:cmsu="urn:jsptld:cms-util-taglib" xmlns:c="urn:jsptld:http://java.sun.com/jsp/jstl/core">
+    <br />
+    <br />
+    <br />
+    <div class="line"><br />
+    </div>
+    <cms:adminOnly>
+        <cms:editButton label="Edit footer" paragraph="samplesPageFooter" contentNodeName="footerPar" />
+        <br />
+    </cms:adminOnly>
+    <cms:ifNotEmpty nodeDataName="footerText" contentNodeName="footerPar">
+        <cms:out nodeDataName="footerText" contentNodeName="footerPar" />
+        <br />
+        <br />
+    </cms:ifNotEmpty> Powered by magnolia &amp;ndash; <a href="http://www.magnolia.info" target="_blank">www.magnolia.info</a>
+    <br /> J2EE Content management system based on JSR-170<br />
+    <br />
+</jsp:root>

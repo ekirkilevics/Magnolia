@@ -14,7 +14,7 @@
 %>
 <%@ taglib uri="cms-taglib" prefix="cms" %>
 <%@ taglib uri="cms-util-taglib" prefix="cmsu" %>
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <input class="submit" type="submit" <cms:ifNotEmpty nodeDataName="buttonText">value="<cms:out nodeDataName="buttonText"/>"</cms:ifNotEmpty>>
 

@@ -20,7 +20,7 @@
 				   info.magnolia.cms.beans.config.ContentRepository"%>
 <%@ taglib uri="cms-taglib" prefix="cms" %>
 <%@ taglib uri="cms-util-taglib" prefix="cmsu" %>
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%-- ################################################## --%>
 <%-- main bar of form template --%>

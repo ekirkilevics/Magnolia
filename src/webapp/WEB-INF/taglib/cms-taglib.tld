@@ -15,6 +15,9 @@
         <display-name>mainBar</display-name>
         <description>
             Displays the mainBar, i.e. the bar that allows you to change the page properties and switch to preview mode.
+            This tag also add the css and js links if not previously defined, but it's recommended to add the cms:links
+            tag to the header of the page (also if some browser support it, css links are not valid inside the html body
+            tag.
         </description>
         <attribute>
             <name>paragraph</name>
@@ -22,6 +25,15 @@
             <rtexprvalue>true</rtexprvalue>
             <description>Name of the paragraph for the page properties (as defined in config)</description>
         </attribute>
+    </tag>
+    <tag>
+        <name>links</name>
+        <tag-class>info.magnolia.cms.taglibs.LinksTag</tag-class>
+        <body-content>EMPTY</body-content>
+        <display-name>links</display-name>
+        <description>
+            Add the needed css and js links for magnolia edit controls. This tag should always bee added to html head.
+        </description>
     </tag>
     <tag>
         <name>editBar</name>

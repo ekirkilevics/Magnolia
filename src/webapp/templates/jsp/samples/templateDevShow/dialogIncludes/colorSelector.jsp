@@ -40,13 +40,13 @@
 				" onclick=\"document.getElementById('"+control.getName()+"').value='"+color+"'\">" +
 				"&nbsp;</td>");
 	}
-	out.println("</tr></table><br>");
+	out.println("</tr></table><br/>");
 
 
 
 	//for form elements use the magnolia control package
 	//toggle alt to get two different outputs
-	out.println("Selected value:<br>");
+	out.println("Selected value:<br/>");
 	Edit editControl=new Edit(control.getName(),control.getWebsiteNode());
 	editControl.setCssClass(DialogSuper.CSSCLASS_EDIT);
 	editControl.setCssStyles("width","60");
