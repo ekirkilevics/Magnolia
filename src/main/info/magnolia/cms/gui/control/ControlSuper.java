@@ -419,7 +419,7 @@ public class ControlSuper implements ControlInterface {
                 + ","
                 + this.getEncoding()
                 + "\"");
-            html.append(">");
+            html.append(" />");
         }
         return html.toString();
     }

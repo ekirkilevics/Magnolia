@@ -22,6 +22,7 @@ import java.util.Map;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -109,12 +110,9 @@ public final class MIMEMapping {
      */
     public static String getMIMEType(HttpServletRequest request) {
         String extension = (String) request.getAttribute(Aggregator.EXTENSION);
-        if (extension == null || extension.equals("")) {
-            int lastIndexOfDot = request.getRequestURI().lastIndexOf(".");
-            if (lastIndexOfDot > -1) {
-                extension = request.getRequestURI().substring(lastIndexOfDot + 1);
-            }
-            else {
+        if (StringUtils.isEmpty(extension)) {
+            extension = StringUtils.substringAfterLast(request.getRequestURI(), ".");
+            if (StringUtils.isEmpty(extension)) {
                 extension = Server.getDefaultExtension();
             }
         }

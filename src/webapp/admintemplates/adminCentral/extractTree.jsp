@@ -74,7 +74,7 @@
 			//System.out.println("newPath: "+newPath);
 			//pass new path to tree.js for selecting the newly created node
 			//NOTE: tree.js checks for this pattern; adapt it there, if any changes are made here
-			out.println("<input type=\"hidden\" id=\"mgnlSelectNode\" value=\""+newPath+"\">");
+			out.println("<input type=\"hidden\" id=\"mgnlSelectNode\" value=\""+newPath+"\" />");
 
 			if (pasteType==Tree.PASTETYPE_SUB) pathOpen=pathSelected;
 			else pathOpen=pathSelected.substring(0,pathSelected.lastIndexOf("/")); //open parent path of destination path
@@ -163,8 +163,8 @@
 		if (!snippetMode) {
 			html.append("<html><head>");
 			html.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>");
-			html.append(new Sources().getHtmlJs());
-			html.append(new Sources().getHtmlCss());
+			html.append(new Sources(request.getContextPath()).getHtmlJs());
+			html.append(new Sources(request.getContextPath()).getHtmlCss());
 			html.append("</head>");
 
 			html.append("<body class=\"mgnlBgDark\" onload=\"mgnlTree.resizeOnload();\" marginwidth=\"0\" marginheight=\"0\" leftmargin=\"0\" topmargin=\"0\">");
@@ -348,8 +348,8 @@
 			usersTree.setSnippetMode(snippetMode);
 			usersTree.setHeight(treeHeight);
 			usersTree.setDrawShifter(false);
-			usersTree.setIconPage(Tree.ICONDOCROOT+"pawn_glass_yellow.gif");
-			if (Server.isAdmin()) usersTree.setIconOndblclick("mgnlTreeMenuOpenDialog("+usersTree.getJavascriptTree()+",'/.magnolia/adminCentral/users/dialog.html');");
+			usersTree.setIconPage(request.getContextPath() + Tree.ICONDOCROOT+"pawn_glass_yellow.gif");
+			if (Server.isAdmin()) usersTree.setIconOndblclick("mgnlTreeMenuOpenDialog("+usersTree.getJavascriptTree()+",'" + request.getContextPath() + "/.magnolia/adminCentral/users/dialog.html');");
 
 			usersTree.addItemType(ItemType.NT_CONTENT);
 
@@ -399,7 +399,7 @@
 
 			TreeMenuItem menuOpen=new TreeMenuItem();
 			menuOpen.setLabel("Edit user...");
-			menuOpen.setOnclick("mgnlTreeMenuOpenDialog("+usersTree.getJavascriptTree()+",'/.magnolia/adminCentral/users/dialog.html');");
+			menuOpen.setOnclick("mgnlTreeMenuOpenDialog("+usersTree.getJavascriptTree()+",'/" + request.getContextPath() + ".magnolia/adminCentral/users/dialog.html');");
 			menuOpen.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
 
 			TreeMenuItem menuNewPage=new TreeMenuItem();
@@ -468,8 +468,8 @@
 			rolesTree.setSnippetMode(snippetMode);
 			rolesTree.setHeight(treeHeight);
 			rolesTree.setDrawShifter(false);
-			rolesTree.setIconPage(Tree.ICONDOCROOT+"hat_white.gif");
-			if (Server.isAdmin()) rolesTree.setIconOndblclick("mgnlTreeMenuOpenDialog("+rolesTree.getJavascriptTree()+",'/.magnolia/adminCentral/userRoles/dialog.html');");
+			rolesTree.setIconPage(request.getContextPath() + Tree.ICONDOCROOT+"hat_white.gif");
+			if (Server.isAdmin()) rolesTree.setIconOndblclick("mgnlTreeMenuOpenDialog("+rolesTree.getJavascriptTree()+",'" + request.getContextPath() + "/.magnolia/adminCentral/userRoles/dialog.html');");
 
 			rolesTree.addItemType(ItemType.NT_CONTENT);
 
@@ -518,7 +518,7 @@
 
 			TreeMenuItem menuOpen=new TreeMenuItem();
 			menuOpen.setLabel("Edit role...");
-			menuOpen.setOnclick("mgnlTreeMenuOpenDialog("+rolesTree.getJavascriptTree()+",'/.magnolia/adminCentral/userRoles/dialog.html');");
+			menuOpen.setOnclick("mgnlTreeMenuOpenDialog("+rolesTree.getJavascriptTree()+",'" + request.getContextPath() + "/.magnolia/adminCentral/userRoles/dialog.html');");
 			menuOpen.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
 
 			TreeMenuItem menuNewPage=new TreeMenuItem();
@@ -591,7 +591,7 @@
 			configTree.setJavascriptTree("mgnlTree");
 			configTree.setSnippetMode(snippetMode);
 			configTree.setHeight(treeHeight);
-			configTree.setIconPage(Tree.ICONDOCROOT+"folder_cubes.gif");
+			configTree.setIconPage(request.getContextPath() + Tree.ICONDOCROOT+"folder_cubes.gif");
 
 			configTree.setPath(path);
 
@@ -677,18 +677,18 @@
 
 
 			TreeMenuItem menuNewPage=new TreeMenuItem();
-			menuNewPage.setLabel("<img src=\""+new Icon().getSrc(Icon.PAGE,Icon.SIZE_SMALL)+"\"> <span style=\"position:relative;top:-3px;\">New folder</span>");
+			menuNewPage.setLabel("<img src=\"" + request.getContextPath() + new Icon().getSrc(Icon.PAGE,Icon.SIZE_SMALL)+"\"> <span style=\"position:relative;top:-3px;\">New folder</span>");
 			menuNewPage.setOnclick(configTree.getJavascriptTree()+".createNode('"+ItemType.NT_CONTENT+"');");
 			menuNewPage.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotNodeData");
 			menuNewPage.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotContentNode");
 
 			TreeMenuItem menuNewContentNode=new TreeMenuItem();
-			menuNewContentNode.setLabel("<img src=\""+new Icon().getSrc(Icon.CONTENTNODE,Icon.SIZE_SMALL)+"\"> <span style=\"position:relative;top:-3px\">New content node</span>");
+			menuNewContentNode.setLabel("<img src=\""+ request.getContextPath() + new Icon().getSrc(Icon.CONTENTNODE,Icon.SIZE_SMALL)+"\"> <span style=\"position:relative;top:-3px\">New content node</span>");
 			menuNewContentNode.setOnclick(configTree.getJavascriptTree()+".createNode('"+ItemType.NT_CONTENTNODE+"');");
 			menuNewContentNode.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotNodeData");
 
 			TreeMenuItem menuNewNodeData=new TreeMenuItem();
-			menuNewNodeData.setLabel("<img src=\""+new Icon().getSrc(Icon.NODEDATA,Icon.SIZE_SMALL)+"\"> <span style=\"position:relative;top:-3px;\">New node data</span>");
+			menuNewNodeData.setLabel("<img src=\""+ request.getContextPath() + new Icon().getSrc(Icon.NODEDATA,Icon.SIZE_SMALL)+"\"> <span style=\"position:relative;top:-3px;\">New node data</span>");
 			menuNewNodeData.setOnclick(configTree.getJavascriptTree()+".createNode('"+ItemType.NT_NODEDATA+"');");
 			menuNewNodeData.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotNodeData");
 

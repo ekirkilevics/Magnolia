@@ -2,7 +2,11 @@
 	{
 	background-color:#F0F2E6;
 	}
-
+.mgnlBgDark
+  {
+  margin:0;
+  padding:0;
+  }
 .mgnlBgLight,div.mgnlDialogTab,div.mgnlTreeDiv,.mgnlTreeMenu,.mgnlAdminCentralButtonsDiv
 	{
 	background-color:#FAFBF4;

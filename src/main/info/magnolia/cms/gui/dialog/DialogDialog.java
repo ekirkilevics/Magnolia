@@ -133,9 +133,9 @@ public class DialogDialog extends DialogSuper {
             + ");");
         out.println("</script>");
         out.println("<title>" + this.getConfigValue("label", "Magnolia Edit Dialog") + "</title>");
-        out.println(new Sources().getHtmlJs());
-        out.println(new Sources().getHtmlCss());
-        out.println(new Sources().getHtmlRichEdit());
+        out.println(new Sources(this.getRequest().getContextPath()).getHtmlJs());
+        out.println(new Sources(this.getRequest().getContextPath()).getHtmlCss());
+        out.println(new Sources(this.getRequest().getContextPath()).getHtmlRichEdit());
         out.println("<script type=\"text/javascript\">");
         out.println("var mgnlRichEditors=new Array();"); // will be extended at each richEdit control
         out.println("var kupu = null;");

@@ -71,8 +71,8 @@
 	if (!snippetMode) {
 		html.append("<html><head>");
 		html.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>");
-		html.append(new Sources().getHtmlJs());
-		html.append(new Sources().getHtmlCss());
+		html.append(new Sources(request.getContextPath()).getHtmlJs());
+		html.append(new Sources(request.getContextPath()).getHtmlCss());
 		html.append("</head>");
 
 		html.append("<body class=\"mgnlBgDark\" onload=\"mgnlTree.resize();\" marginwidth=\"0\" marginheight=\"0\" leftmargin=\"0\" topmargin=\"0\">");

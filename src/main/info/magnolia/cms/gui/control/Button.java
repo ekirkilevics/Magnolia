@@ -109,7 +109,7 @@ public class Button extends ControlSuper {
             return "";
         }
 
-        return "<img src=\"" + this.iconSrc + "\">";
+        return "<img src=\"" + this.iconSrc + "\" />";
     }
 
     public void setOnclick(String s) {

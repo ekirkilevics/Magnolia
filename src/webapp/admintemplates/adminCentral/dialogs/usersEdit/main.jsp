@@ -278,7 +278,7 @@
 
 		//out.println("<html><script>opener.document.location.reload();window.close();</script></html>");
 		out.println("<html>");
-		out.println(new Sources().getHtmlJs());
+		out.println(new Sources(request.getContextPath()).getHtmlJs());
 		out.println("<script>");
 		//out.println("opener.mgnlUsersTree.refresh();");
 		out.println("opener.mgnlTree.refresh();");

@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -67,17 +68,30 @@ public class ResourceDispatcher extends HttpServlet {
      * @throws IOException
      */
     private void handleResourceRequest(HttpServletRequest req, HttpServletResponse res) throws IOException {
+
         String resourceHandle = (String) req.getAttribute(Aggregator.HANDLE);
-        try {
-            HierarchyManager hm = (HierarchyManager) req.getAttribute(Aggregator.HIERARCHY_MANAGER);
-            InputStream is = getAtomAsStream(resourceHandle, hm, res);
-            // todo always send as is, find better way to dicover if resource could be compressed
-            sendUnCompressed(is, res);
-            is.close();
+        if (log.isDebugEnabled()) {
+            log.debug("handleResourceRequest, resourceHandle=\"" + resourceHandle + "\"");
         }
-        catch (Exception e) {
-            res.sendRedirect(Server.get404URI());
+        if (StringUtils.isNotEmpty(resourceHandle)) {
+            try {
+                HierarchyManager hm = (HierarchyManager) req.getAttribute(Aggregator.HIERARCHY_MANAGER);
+                InputStream is = getAtomAsStream(resourceHandle, hm, res);
+                if (is != null) {
+                    // todo always send as is, find better way to dicover if resource could be compressed
+                    sendUnCompressed(is, res);
+                    is.close();
+                    return;
+                }
+            }
+            catch (Exception e) {
+                log.info("Exception while dispatching resource  " + e.getClass().getName() + ": " + e.getMessage(), e);
+            }
         }
+        if (log.isDebugEnabled()) {
+            log.debug("Redirecting to 404 page \"" + Server.get404URI() + "\"");
+        }
+        res.sendRedirect(req.getContextPath() + Server.get404URI());
     }
 
     /**
@@ -137,6 +151,9 @@ public class ResourceDispatcher extends HttpServlet {
      */
     private InputStream getAtomAsStream(String path, HierarchyManager hm, HttpServletResponse res)
         throws RepositoryException {
+        if (log.isDebugEnabled()) {
+            log.debug("getAtomAsStream for path \"" + path + "\"");
+        }
         try {
             NodeData atom = hm.getNodeData(path);
             if (atom.getType() == PropertyType.BINARY) {

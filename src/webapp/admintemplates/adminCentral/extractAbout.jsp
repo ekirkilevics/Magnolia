@@ -20,8 +20,8 @@
 
  	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<%
-	out.println(new Sources().getHtmlJs());
-	out.println(new Sources().getHtmlCss());
+	out.println(new Sources(request.getContextPath()).getHtmlJs());
+	out.println(new Sources(request.getContextPath()).getHtmlCss());
 	%>
 
 </head>

@@ -133,6 +133,9 @@ public final class Server {
         if (uri.equals("")) {
             return "/";
         }
+        if (log.isDebugEnabled()) {
+            log.debug("404URI is \"" + uri + "\"");
+        }
         return uri;
     }
 

@@ -351,8 +351,8 @@ public class DialogWebDAV extends DialogBox {
                 }
             }
             out.println("<html><head>");
-            out.println(new Sources().getHtmlCss());
-            out.println(new Sources().getHtmlJs());
+            out.println(new Sources(this.getRequest().getContextPath()).getHtmlCss());
+            out.println(new Sources(this.getRequest().getContextPath()).getHtmlJs());
             String parentDirectory = "";
             if (!this.getDirectory().equals(dir)) {
                 parentDirectory = this.getSubDirectory().substring(0, this.getSubDirectory().length() - 1); // get rid

@@ -42,6 +42,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -68,13 +69,6 @@ public class EntryServlet extends HttpServlet {
 
     private static final String REQUEST_INTERCEPTOR = "/RequestInterceptor";
 
-    private String uri;
-
-    /**
-     * unused?
-     */
-    private String extension;
-
     /**
      * <p/>This makes browser and proxy caches work more effectively, reducing the load on server and network resources.
      * </p>
@@ -86,8 +80,7 @@ public class EntryServlet extends HttpServlet {
     }
 
     /**
-     * <p/>All HTTP/s requests are handled here
-     * </p>
+     * All HTTP/s requests are handled here.
      * @param req
      * @param res
      */
@@ -97,7 +90,6 @@ public class EntryServlet extends HttpServlet {
              * Try to find out what the preferred language of this user is.
              */
             // TranslationEngine.findPreferredLanguage(req);
-            this.setURI(req);
             if (isAllowed(req, res)) {
                 if (redirect(req, res)) {
                     return;
@@ -157,7 +149,7 @@ public class EntryServlet extends HttpServlet {
         else if (SessionAccessControl.isSecuredSession(req)) {
             return true;
         }
-        else if ((SecureURI.isProtected(uri))) {
+        else if ((SecureURI.isProtected(getURI(req)))) {
             return authenticate(req, res);
         }
         else if (!Listener.isAllowed(req)) {
@@ -231,29 +223,17 @@ public class EntryServlet extends HttpServlet {
      * @return URI mapping as in ServerInfo
      */
     private String getURIMap(HttpServletRequest request) {
-        return VirtualMap.getInstance().getURIMapping(request.getRequestURI());
+        return VirtualMap.getInstance().getURIMapping(
+            StringUtils.substringAfter(request.getRequestURI(), request.getContextPath()));
     }
 
     /**
-     * <p/>Extracts uri and extension
-     * </p>
+     * Extracts uri and extension.
      * @param request
      */
-    private void setURI(HttpServletRequest request) {
-        extension = Server.getDefaultExtension();
-        try {
-            int lastIndexOfDot = request.getRequestURI().lastIndexOf(".");
-            if (lastIndexOfDot > -1) {
-                extension = request.getRequestURI().substring(lastIndexOfDot + 1);
-                uri = request.getRequestURI().substring(0, lastIndexOfDot);
-            }
-            else {
-                uri = request.getRequestURI();
-            }
-        }
-        catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
+    private String getURI(HttpServletRequest request) {
+        return StringUtils.substringBeforeLast(StringUtils.substringAfter(request.getRequestURI(), request
+            .getContextPath()), ".");
     }
 
     /**
@@ -267,11 +247,11 @@ public class EntryServlet extends HttpServlet {
 
         Map headers = new HashMap();
 
-        String URI;
+        String uri;
 
         public CacheRequest(HttpServletRequest originalRequest) {
             // remember URI
-            URI = originalRequest.getRequestURI();
+            uri = StringUtils.substringAfter(originalRequest.getRequestURI(), originalRequest.getContextPath());
             // copy neccessary attributes
             attributes.put(Aggregator.EXTENSION, originalRequest.getAttribute(Aggregator.EXTENSION));
             attributes.put(Aggregator.ACTPAGE, originalRequest.getAttribute(Aggregator.ACTPAGE));
@@ -284,7 +264,7 @@ public class EntryServlet extends HttpServlet {
         }
 
         public String getRequestURI() {
-            return URI;
+            return uri;
         }
 
         public String getHeader(String key) {

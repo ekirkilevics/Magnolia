@@ -264,7 +264,7 @@ public class HierarchyManager {
      */
     public NodeData getNodeData(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         String nodePath = getNodePath(path);
-        if (nodePath == null || "".equals(nodePath)) {
+        if (StringUtils.isEmpty(nodePath)) {
             return null;
         }
 

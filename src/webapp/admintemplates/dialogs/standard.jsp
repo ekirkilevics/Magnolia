@@ -59,7 +59,7 @@ MultipartForm form = Resource.getPostedForm(request);
                 Save control = new Save(form, request);
                 control.save();
                 out.println("<html>");
-                out.println(new Sources().getHtmlJs());
+                out.println(new Sources(request.getContextPath()).getHtmlJs());
                 out.println("<script>");
                 out.println("mgnlDialogReloadOpener();");
                 out.println("window.close();");

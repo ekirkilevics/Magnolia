@@ -109,16 +109,17 @@ public final class Path {
         return SystemProperty.getProperty("Repository.factory.config");
     }
 
+    /**
+     * Returns the URI of the current request, without the context path.
+     * @param req request
+     * @return request URI without servlet context
+     */
     public static String getURI(HttpServletRequest req) {
-        return req.getRequestURI();
+        return StringUtils.substringAfter(req.getRequestURI(), req.getContextPath());
     }
 
     public static String getExtension(HttpServletRequest req) {
-        int lastIndexOfDot = Path.getURI(req).lastIndexOf(".");
-        if (lastIndexOfDot > -1) {
-            return req.getRequestURI().substring(lastIndexOfDot + 1);
-        }
-        return StringUtils.EMPTY;
+        return StringUtils.substringAfterLast(req.getRequestURI(), ".");
     }
 
     /**

@@ -159,7 +159,7 @@
 
 
 		out.println("<html>");
-		out.println(new Sources().getHtmlJs());
+		out.println(new Sources(request.getContextPath()).getHtmlJs());
 		out.println("<script>");
 		out.println("opener.mgnlTree.refresh();");
 		out.println("window.close();");

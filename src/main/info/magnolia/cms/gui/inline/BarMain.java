@@ -266,7 +266,7 @@ public class BarMain extends Bar {
      * </p>
      */
     public void drawHtmlLinks(JspWriter out) throws IOException {
-        out.println(new Sources().getHtmlCss());
-        out.println(new Sources().getHtmlJs());
+        out.println(new Sources(this.getRequest().getContextPath()).getHtmlCss());
+        out.println(new Sources(this.getRequest().getContextPath()).getHtmlJs());
     }
 }
