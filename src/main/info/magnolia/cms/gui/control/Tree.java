@@ -1,3 +1,15 @@
+/**
+ *
+ * Magnolia and its source-code is licensed under the LGPL.
+ * You may copy, adapt, and redistribute this file for commercial or non-commercial use.
+ * When copying, adapting, or redistributing this document in keeping with the guidelines above,
+ * you are required to provide proper attribution to obinary.
+ * If you reproduce or distribute the document without making any substantive modifications to its content,
+ * please use the following attribution line:
+ *
+ * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ *
+ */
 package info.magnolia.cms.gui.control;
 
 import info.magnolia.cms.beans.config.ContentRepository;
@@ -103,7 +115,7 @@ public class Tree extends ControlSuper
      * <p>
      * constructor
      * </p>
-     * @param repository: name of the repository (i.e. "website", "users")
+     * @param repository name of the repository (i.e. "website", "users")
      * @param request
      */
     public Tree(String repository, HttpServletRequest request)
@@ -869,9 +881,9 @@ public class Tree extends ControlSuper
                 {
                     if (posAbove == 0)
                         posTouched = posSelected - (MetaData.SEQUENCE_POS_COEFFICIENT * 1000); // first position in
-                                                                                                // directory ->
-                                                                                                // 1000*coefficient
-                                                                                                // above first
+                    // directory ->
+                    // 1000*coefficient
+                    // above first
                     else
                         posTouched = (posAbove + posSelected) / 2;
                 }

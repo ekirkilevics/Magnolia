@@ -9,21 +9,12 @@
  *
  * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
- * */
-
-
-
-
-
+ */
 package info.magnolia.cms.util;
 
-import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.runtime.SystemProperty;
-import info.magnolia.cms.beans.runtime.SystemProperty;
-import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.HierarchyManager;
 
-import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,215 +22,201 @@ import org.apache.log4j.Logger;
 
 
 /**
- * Date: June 1, 2003
- * Time: 09:12:00 AM
+ * Date: June 1, 2003 Time: 09:12:00 AM
  * @author Sameer Charles
  * @version 2.0
  */
-
-
-public class Path {
-
-
+public class Path
+{
 
     private static Logger log = Logger.getLogger(Path.class);
 
-
-
     /**
      * <p>
-     * Gets the cache directory path (cms.cache.startdir)
-     * as set with Java options while startup or in web.xml
+     * Gets the cache directory path (cms.cache.startdir) as set with Java options while startup or in web.xml
      * </p>
      * @return Cache directory path
-     * */
-    public static String getCacheDirectoryPath() {
+     */
+    public static String getCacheDirectoryPath()
+    {
         return SystemProperty.getProperty("magnolia.cache.startdir");
     }
 
-
-
     /**
      * <p>
-     * Gets the temporary directory path (cms.upload.tmpdir)
-     * as set with Java options while startup or in web.xml
+     * Gets the temporary directory path (cms.upload.tmpdir) as set with Java options while startup or in web.xml
      * </p>
      * @return Temporary directory path
-     * */
-    public static String getTempDirectoryPath() {
+     */
+    public static String getTempDirectoryPath()
+    {
         return SystemProperty.getProperty("magnolia.upload.tmpdir");
     }
 
-
-
     /**
      * <p>
-     * Gets log4j.properties file location
-     * as set with Java options while startup or in web.xml
+     * Gets log4j.properties file location as set with Java options while startup or in web.xml
      * </p>
      * @return log4j property file location
-     * */
-    public static String getLogPropertiesFilePath() {
+     */
+    public static String getLogPropertiesFilePath()
+    {
         return SystemProperty.getProperty("log4j.properties");
     }
 
-
-
     /**
      * <p>
-     * Gets cms.exchange.history file location
-     * as set with Java options while startup or in web.xml
+     * Gets cms.exchange.history file location as set with Java options while startup or in web.xml
      * </p>
-     *
      * @return exchange history file location
-     * */
-    public static String getHistoryFilePath() {
+     */
+    public static String getHistoryFilePath()
+    {
         return SystemProperty.getProperty("magnolia.exchange.history");
     }
 
-
-
     /**
      * <p>
-     * Gets jcr.itemtypes file location
-     * as set with Java options while startup or in web.xml
+     * Gets jcr.itemtypes file location as set with Java options while startup or in web.xml
      * </p>
-     *
      * @return supported JCR item types (Node types....) file location
-     * */
-    public static String getJCRItemTypesFile() {
+     */
+    public static String getJCRItemTypesFile()
+    {
         return SystemProperty.getProperty("jcr.itemtypes");
     }
 
-
-
     /**
      * <p>
-     * Gets repositories file location
-     * as set with Java options while startup or in web.xml
+     * Gets repositories file location as set with Java options while startup or in web.xml
      * </p>
-     *
      * @return file location
-     * */
-    public static String getRepositoriesConfigFilePath() {
+     */
+    public static String getRepositoriesConfigFilePath()
+    {
         return SystemProperty.getProperty("magnolia.repositories.config");
     }
 
-
-
     /**
      * <p>
-     * Gets repository factory config file location
-     * as set with Java options while startup or in web.xml
+     * Gets repository factory config file location as set with Java options while startup or in web.xml
      * </p>
-     *
      * @return file location
-     * */
-    public static String getRepositoryFactoryConfigFilePath() {
+     */
+    public static String getRepositoryFactoryConfigFilePath()
+    {
         return SystemProperty.getProperty("Repository.factory.config");
     }
 
-
-
-    public static String getURI(HttpServletRequest req) {
+    public static String getURI(HttpServletRequest req)
+    {
         return req.getRequestURI();
     }
 
-
-
-    public static String getExtension(HttpServletRequest req) {
+    public static String getExtension(HttpServletRequest req)
+    {
         int lastIndexOfDot = Path.getURI(req).lastIndexOf(".");
-        if (lastIndexOfDot > -1) {
-            return req.getRequestURI().substring(lastIndexOfDot+1);
+        if (lastIndexOfDot > -1)
+        {
+            return req.getRequestURI().substring(lastIndexOfDot + 1);
         }
         return "";
     }
 
-
     /**
      * @deprecated
-     * */
-    public static String getUniqueLabel(String parent,String label) throws RepositoryException {
+     */
+    public static String getUniqueLabel(String parent, String label) throws RepositoryException
+    {
         log.error("Deprecated - use getUniqueLabel(Content parent, String label) instead");
         return label;
     }
 
-
-
-    public static String getUniqueLabel(HierarchyManager hierarchyManager, String parent,String label) {
-        while (hierarchyManager.isExist(parent+"/"+label)) {
+    public static String getUniqueLabel(HierarchyManager hierarchyManager, String parent, String label)
+    {
+        while (hierarchyManager.isExist(parent + "/" + label))
+        {
             label = createUniqueName(label);
         }
         return label;
     }
 
-
-	/**
-	 * <p>
-	 * Replace illegal characters by [_]
-	 * [0-9], [A-Z], [a-z], [-], [_]
-	 * </p>
-	 *
-	 * @param label: label to validate
-	 * @return validated label
-	 * */
-	public static String getValidatedLabel(String label) {
-		StringBuffer s=new StringBuffer(label);
-		StringBuffer newLabel=new StringBuffer();
-		for (int i=0;i<s.length();i++) {
-			int charCode=s.charAt(i);
-			// charCodes: 48-57: [0-9]; 65-90: [A-Z]; 97-122: [a-z]; 45: [-]; 95:[_]
-			if (((charCode >= 48) && (charCode <= 57)) || ((charCode >= 65) && (charCode <= 90)) || ((charCode >= 97) && (charCode <= 122)) || charCode==45 || charCode==95) {
-				newLabel.append(s.charAt(i));
-			}
-			else {
-				newLabel.append("-");
-			}
-		}
-		if (newLabel.length()==0) newLabel.append("untitled");
-		return newLabel.toString();
-	}
-
-
+    /**
+     * <p>
+     * Replace illegal characters by [_] [0-9], [A-Z], [a-z], [-], [_]
+     * </p>
+     * @param label label to validate
+     * @return validated label
+     */
+    public static String getValidatedLabel(String label)
+    {
+        StringBuffer s = new StringBuffer(label);
+        StringBuffer newLabel = new StringBuffer();
+        for (int i = 0; i < s.length(); i++)
+        {
+            int charCode = s.charAt(i);
+            // charCodes: 48-57: [0-9]; 65-90: [A-Z]; 97-122: [a-z]; 45: [-]; 95:[_]
+            if (((charCode >= 48) && (charCode <= 57))
+                || ((charCode >= 65) && (charCode <= 90))
+                || ((charCode >= 97) && (charCode <= 122))
+                || charCode == 45
+                || charCode == 95)
+            {
+                newLabel.append(s.charAt(i));
+            }
+            else
+            {
+                newLabel.append("-");
+            }
+        }
+        if (newLabel.length() == 0)
+            newLabel.append("untitled");
+        return newLabel.toString();
+    }
 
     /**
-     *
      * @param baseName
      * @return
      */
-    private static String createUniqueName(String baseName) {
+    private static String createUniqueName(String baseName)
+    {
         int pos;
-        for (pos = baseName.length() - 1; pos >= 0; pos--) {
+        for (pos = baseName.length() - 1; pos >= 0; pos--)
+        {
             char c = baseName.charAt(pos);
-            if (c < '0' || c > '9') {
+            if (c < '0' || c > '9')
+            {
                 break;
             }
         }
         String base;
         int cnt;
-        if (pos == -1) {
-            if (baseName.length() > 1) {
-                pos = baseName.length()-2;
+        if (pos == -1)
+        {
+            if (baseName.length() > 1)
+            {
+                pos = baseName.length() - 2;
             }
         }
-        if (pos == -1) {
+        if (pos == -1)
+        {
             base = baseName;
             cnt = -1;
-        } else {
+        }
+        else
+        {
             pos++;
             base = baseName.substring(0, pos);
-            if (pos == baseName.length()) {
+            if (pos == baseName.length())
+            {
                 cnt = -1;
-            } else {
+            }
+            else
+            {
                 cnt = new Integer(baseName.substring(pos)).intValue();
             }
         }
         return (base + ++cnt);
     }
-
-
-
-
-
 
 }
