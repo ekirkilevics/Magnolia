@@ -55,7 +55,7 @@ public final class Authenticator {
      */
     public static boolean authenticate(HttpServletRequest req) {
         String credentials = req.getHeader("Authorization");
-        if (credentials == null) {
+        if (StringUtils.isEmpty(credentials) || credentials.length() <= 6) {
             return false;
         }
         credentials = getDecodedCredentials(credentials.substring(6).trim());
@@ -107,16 +107,14 @@ public final class Authenticator {
      * @param decodedCredentials , BASE64Decoded credentials from the request
      */
     private static void setUserId(String decodedCredentials, HttpServletRequest request) {
-        int indexOfSeperator = decodedCredentials.indexOf(":");
-        request.getSession().setAttribute(ATTRIBUTE_USER_ID, decodedCredentials.substring(0, indexOfSeperator));
+        request.getSession().setAttribute(ATTRIBUTE_USER_ID, StringUtils.substringBefore(decodedCredentials, ":"));
     }
 
     /**
      * @param decodedCredentials , BASE64Decoded credentials from the request
      */
     private static void setPassword(String decodedCredentials, HttpServletRequest request) {
-        int indexOfSeperator = decodedCredentials.indexOf(":");
-        request.getSession().setAttribute(ATTRIBUTE_PSWD, decodedCredentials.substring(indexOfSeperator + 1).trim());
+        request.getSession().setAttribute(ATTRIBUTE_PSWD, StringUtils.substringAfter(decodedCredentials, ":"));
     }
 
     /**
