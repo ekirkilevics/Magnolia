@@ -255,7 +255,7 @@ public class DialogRichedit extends DialogBox {
                     + repository
                     + "','"
                     + extension
-                    + "');");
+                    + "',true);");
                 linkButtonBrowse.setSmall(true);
                 linkButtonBrowse.setLabel("Internal link...");
                 out.write(linkButtonBrowse.getHtml());

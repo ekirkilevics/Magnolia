@@ -238,7 +238,7 @@ function mgnlOpenDialog(path,nodeCollection,node,paragraph,repository,dialogPage
 ### open tree browser
 ################################### */
 
-function mgnlOpenTreeBrowser(controlName,pathSelected,pathOpen,repository,extension,width,height)
+function mgnlOpenTreeBrowser(controlName,pathSelected,pathOpen,repository,extension,width,height,addcontext)
 	{
 	if (!width) width=450;
 	if (!height) height=550;
@@ -248,6 +248,7 @@ function mgnlOpenTreeBrowser(controlName,pathSelected,pathOpen,repository,extens
 	if (pathOpen) src+="&pathOpen="+pathOpen;
 	if (repository) src+="&repository="+repository;
 	if (extension) src+="&mgnlExtension="+extension;
+	if (addcontext) src+="&addcontext="+addcontext;
 	var w=window.open(src,"mgnlTreeBrowser","width="+width+",height="+height+",resizable=yes,status=yes,scrollbars=no");
 	if (w) w.focus();
 	}

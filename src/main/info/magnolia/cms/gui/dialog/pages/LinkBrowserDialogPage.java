@@ -14,6 +14,8 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.BooleanUtils;
+
 
 /**
  * @author Fabrizio Giustina
@@ -41,8 +43,11 @@ public class LinkBrowserDialogPage extends BasePageServlet {
         String pathSelected = request.getParameter("pathSelected");
         String destinationControlName = request.getParameter("mgnlControlName");
         String destinationExtension = request.getParameter("mgnlExtension");
-        if (destinationExtension == null)
+        boolean addcontext = BooleanUtils.toBoolean(request.getParameter("addcontext"));
+
+        if (destinationExtension == null) {
             destinationExtension = "";
+        }
 
         StringBuffer html = new StringBuffer();
         html.append("<html><head>");
@@ -57,12 +62,15 @@ public class LinkBrowserDialogPage extends BasePageServlet {
         src.append("/.magnolia/dialogs/linkBrowserIFrame.html");
         src.append("?&amp;mgnlCK=" + new Date().getTime());
         src.append("&amp;repository=" + repository);
-        if (path != null)
+        if (path != null) {
             src.append("&amp;path=" + path);
-        if (pathOpen != null)
+        }
+        if (pathOpen != null) {
             src.append("&amp;pathOpen=" + pathOpen);
-        if (pathSelected != null)
+        }
+        if (pathSelected != null) {
             src.append("&amp;pathSelected=" + pathSelected);
+        }
 
         html.append("<div id=\"mgnlTreeDiv\" class=\"mgnlDialogLinkBrowserTreeDiv\">");
         html.append("<iframe id=\"mgnlDialogLinkBrowserIFrame\" name=\"mgnlDialogLinkBrowserIFrame\" src=\""
@@ -76,7 +84,9 @@ public class LinkBrowserDialogPage extends BasePageServlet {
             + destinationControlName
             + "','"
             + destinationExtension
-            + "');");
+            + "', "
+            + addcontext
+            + ");");
 
         Button bCancel = new Button();
         bCancel.setLabel("Cancel");
