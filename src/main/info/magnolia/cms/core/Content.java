@@ -462,24 +462,42 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * <p>
-     * Restores this node to the state recorded in the specified versionName
+     * Restores this node to the state defined by the  version with the specified versionName.
      * </p>
      * @param versionName
+     * @param removeExisting
+     * @see javax.jcr.Node#restore(String, boolean)
      */
-    public void restore(String versionName) throws VersionException, UnsupportedRepositoryOperationException,
-        RepositoryException {
-        this.node.restore(versionName);
+    public void restore(String versionName, boolean removeExisting)
+            throws VersionException, UnsupportedRepositoryOperationException, RepositoryException {
+        this.node.restore(versionName, removeExisting);
     }
 
     /**
      * <p>
-     * Restores this node to the state recorded in the specified version
+     * Restores this node to the state defined by the specified  version.
      * </p>
      * @param version
+     * @param removeExisting
+     * @see javax.jcr.Node#restore(javax.jcr.version.Version, boolean)
      */
-    public void restore(Version version) throws VersionException, UnsupportedRepositoryOperationException,
+    public void restore(Version version, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException,
         RepositoryException {
-        this.node.restore(version);
+        this.node.restore(version, removeExisting);
+    }
+
+    /**
+     * <p>
+     * Restores the specified version to relPath, relative to this node.
+     * </p>
+     * @param version
+     * @param relPath
+     * @param removeExisting
+     * @see javax.jcr.Node#restore(javax.jcr.version.Version, String, boolean)
+     */
+    public void restore(Version version, String relPath, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException,
+        RepositoryException {
+        this.node.restore(version, relPath, removeExisting);
     }
 
     /**
@@ -487,10 +505,12 @@ public class Content extends ContentHandler implements Cloneable {
      * Restores this node to the state recorded in the version specified by versionLabel.
      * </p>
      * @param versionLabel
+     * @param removeExisting
+     * @see javax.jcr.Node#restoreByLabel(String, boolean)
      */
-    public void restoreByLabel(String versionLabel) throws VersionException, UnsupportedRepositoryOperationException,
+    public void restoreByLabel(String versionLabel, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException,
         RepositoryException {
-        this.node.restoreByLabel(versionLabel);
+        this.node.restoreByLabel(versionLabel, removeExisting);
     }
 
     /**
