@@ -418,9 +418,7 @@ public class Save extends ControlSuper {
 	}
 
 	public String getRichEditValueStr(String valueStr) {
-
-		valueStr=valueStr.replaceAll("\r\n"," ");
-		//valueStr=valueStr.replaceAll("\n","");
+		valueStr=valueStr.replaceAll("\r\n","");
 		valueStr=valueStr.replaceAll("<br>","\n");
 		valueStr=valueStr.replaceAll("<BR>","\n");
 
@@ -434,6 +432,9 @@ public class Save extends ControlSuper {
 		valueStr=this.replaceTag(valueStr,"em","i");
 		valueStr=this.replaceTag(valueStr,"strong","b");
 
+		if (valueStr.indexOf("\n")!=-1 && valueStr.lastIndexOf("\n")==valueStr.length()-1) {
+			valueStr=valueStr.substring(0,valueStr.length()-1);
+		}
 		return valueStr;
 	}
 
@@ -470,10 +471,12 @@ public class Save extends ControlSuper {
 		String pre="<"+tagName+">";
 		String post="</"+tagName+">";
 
-		//get rid of last </p>
-		if (value.lastIndexOf(post)==value.length()-post.length()) value=value.substring(0,value.lastIndexOf(post));
 
 		value=value.replaceAll(pre+"&nbsp;"+post,"\n");
+
+		//get rid of last </p>
+		if (value.indexOf(post)!=-1 && value.lastIndexOf(post)==value.length()-post.length()) value=value.substring(0,value.lastIndexOf(post));
+
         value=value.replaceAll(pre,"");
         value=value.replaceAll(post,"\n\n");
 
