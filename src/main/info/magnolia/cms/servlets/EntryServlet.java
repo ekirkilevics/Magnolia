@@ -112,7 +112,6 @@ public class EntryServlet extends HttpServlet {
                     Dispatcher.dispatch(req, res, getServletContext());
                     if (success) {
                         if (info.magnolia.cms.beans.config.Cache.isCacheable()) {
-                            CacheHandler.cacheURI(req);
                             CacheProcess cache = new CacheProcess(new CacheRequest(req));
                             cache.start();
                         }
