@@ -177,5 +177,16 @@ public class IfNotEmpty extends BodyTagSupport {
 
 
 
+    public void release() {
+        nodeDataName = "";
+        contentNodeName = "";
+        contentNodeCollectionName = "";
+        contentNodeCollection = null;
+        contentNode = null;
+        nodeData = null;
+        actpage = "false";
+    }
+
+
 }
 
