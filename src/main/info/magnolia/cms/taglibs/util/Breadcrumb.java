@@ -25,7 +25,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Marcel Salathe
- * @version $Revision$ ($Author$)
+ * @version $Revision: 364 $ ($Author: fgiust $)
  */
 public class Breadcrumb extends TagSupport {
 
@@ -55,6 +55,7 @@ public class Breadcrumb extends TagSupport {
                     out.print(this.delimiter);
                 }
                 out.print("<a href=\"");
+                out.print(request.getContextPath());
                 out.print(actpage.getAncestor(i).getHandleWithDefaultExtension());
                 out.print("\">");
                 out.print(actpage.getAncestor(i).getTitle());
