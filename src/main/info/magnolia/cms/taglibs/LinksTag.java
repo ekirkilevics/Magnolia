@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
  * Draw css and js links for admin controls. Separated from mainbar since css links must be inside html head.
  * @author Fabrizio Giustina
  * @version $Revision: $ ($Author: $)
- * @sice 2.1
+ * @since 2.1
  */
 public class LinksTag extends TagSupport {
 
