@@ -913,6 +913,7 @@
 		callBackParams.id = id;
 		callBackParams.treeName = treeName;
 		callBackParams.lastEditedHtmlObjectId = lastEditedHtmlObjectId;
+		callBackParams.isLabel = isLabel;
 
 		// async
 		tree.nodes[id].httpRequest(params, callBackParams, mgnlTreeSaveNodeDataCallback);
