@@ -126,6 +126,33 @@ public final class SessionAccessControl {
         return hm;
     }
 
+    /**
+     * gets AccessManager for the current user session for the default repository and workspace
+     * @param request
+     * */
+    public static AccessManager getAccessManager(HttpServletRequest request) {
+        return getAccessManager(request, DEFAULT_REPOSITORY, DEFAULT_WORKSPACE);
+    }
+
+    /**
+     * gets AccessManager for the current user session for the specified repository default workspace
+     * @param request
+     * @param repositoryID
+     * */
+    public static AccessManager getAccessManager(HttpServletRequest request, String repositoryID) {
+        return getAccessManager(request, repositoryID, DEFAULT_WORKSPACE);
+    }
+
+    /**
+     * gets AccessManager for the current user session for the specified repository and workspace
+     * @param request
+     * @param repositoryID
+     * @param workspaceID
+     * */
+    public static AccessManager getAccessManager(HttpServletRequest request, String repositoryID, String workspaceID) {
+        return (AccessManager) request.getSession().getAttribute(ATTRIBUTE_AM_PREFIX + repositoryID + "_" + workspaceID);
+    }
+
     private static Session getRepositorySession(HttpServletRequest request, String repositoryID, String workspaceID)
         throws LoginException, RepositoryException {
         Object ticket = request.getSession().getAttribute(
