@@ -41,7 +41,7 @@ public class AdminTreeWebsite implements AdminTree {
      */
     public void configureTree(Tree tree, HttpServletRequest request, String path, String pathOpen, String pathSelected,
         boolean create, String createItemType) {
-        Messages msgs = ContextMessages.getInstanceSavely(request);
+        Messages msgs = ContextMessages.getInstanceSafely(request);
         
         tree.setIconOndblclick("mgnlTreeMenuItemOpen(" + tree.getJavascriptTree() + ");");
         tree.setPath(path);
@@ -53,6 +53,11 @@ public class AdminTreeWebsite implements AdminTree {
             tree.setPathSelected(pathSelected);
         }
         tree.addItemType(ItemType.NT_CONTENT);
+
+        // to view all nodes uncomment this lines
+        // tree.addItemType(ItemType.NT_CONTENTNODE);
+        // tree.addItemType(ItemType.NT_NODEDATA);
+        
         TreeColumn column0 = new TreeColumn(tree.getJavascriptTree(), request);
         column0.setIsLabel(true);
         column0.setWidth(3);
@@ -82,8 +87,15 @@ public class AdminTreeWebsite implements AdminTree {
         templateSelect.setName(tree.getJavascriptTree() + TreeColumn.EDIT_NAMEADDITION);
         templateSelect.setSaveInfo(false);
         templateSelect.setCssClass(TreeColumn.EDIT_CSSCLASS_SELECT);
-        templateSelect.setEvent("onblur", tree.getJavascriptTree() + TreeColumn.EDIT_JSSAVE);
-        templateSelect.setEvent("onchange", tree.getJavascriptTree() + TreeColumn.EDIT_JSSAVE);
+        
+         
+        
+        // we must pass the displayValue to this function 
+        // templateSelect.setEvent("onblur", tree.getJavascriptTree() + TreeColumn.EDIT_JSSAVE);
+        // templateSelect.setEvent("onchange", tree.getJavascriptTree() + TreeColumn.EDIT_JSSAVE);
+        templateSelect.setEvent("onblur", tree.getJavascriptTree() + ".saveNodeData(this.value,this.options[this.selectedIndex].text)");
+        templateSelect.setEvent("onchange", tree.getJavascriptTree() + ".saveNodeData(this.value,this.options[this.selectedIndex].text)");
+        
         Iterator templates = Template.getAvailableTemplates();
         while (templates.hasNext()) {
             Template template = (Template) templates.next();

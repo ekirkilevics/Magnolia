@@ -845,7 +845,10 @@
 		}
 
 
-	mgnlTree.prototype.saveNodeData = function(value)
+	// display is optional. use it if the column display is not the same as the saved value
+	// this is not a good solution, because the system should return the label instead of passing it
+
+	mgnlTree.prototype.saveNodeData = function(value, displayValue)
 		{
 		var exit=false;
 		if (value==this.lastEditedOriginalValue || (value=="" && this.lastEditedOriginalValue==this.strings.empty))
@@ -877,6 +880,8 @@
 			var isLabel=this.lastEditedIsLabel;
 			var isNodeDataValue=this.lastEditedIsNodeDataValue;
 			var isNodeDataType=this.lastEditedIsNodeDataType;
+			if(displayValue==null)
+				displayValue="";
 
 			this.lastEditedHtmlObject=null;
 			this.lastEditedOriginalValue="";
@@ -888,7 +893,7 @@
 			this.lastEditedNode=null;
 
 			htmlObject.innerHTML=this.strings.saving;
-			setTimeout("mgnlTreeSaveNodeData('"+htmlObject.id+"','"+node.id+"','"+this.name+"','"+name+"','"+escape(value)+"',"+isMeta+","+isLabel+","+isNodeDataValue+","+isNodeDataType+");",10);
+			setTimeout("mgnlTreeSaveNodeData('"+htmlObject.id+"','"+node.id+"','"+this.name+"','"+name+"','"+escape(value)+"',"+isMeta+","+isLabel+","+isNodeDataValue+","+isNodeDataType+",'" + escape(displayValue)+"');",10);
 			}
 		}
 
@@ -909,7 +914,7 @@
 		rootNode.expand(params);
 		}
 
-	mgnlTreeSaveNodeData = function (lastEditedHtmlObjectId,id,treeName,saveName,saveValue,isMeta,isLabel,isNodeDataValue,isNodeDataType)
+	mgnlTreeSaveNodeData = function (lastEditedHtmlObjectId,id,treeName,saveName,saveValue,isMeta,isLabel,isNodeDataValue,isNodeDataType, displayValue)
 		{
 		var tree=eval(treeName);
 
@@ -922,6 +927,7 @@
 		params.isNodeDataType=isNodeDataType;
 		params.pathSelected='';
 		params.pathOpen='';
+		params.displayValue=displayValue;
 
 		var callBackParams=new Object();
 		callBackParams.id = id;

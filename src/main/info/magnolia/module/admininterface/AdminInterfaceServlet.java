@@ -39,7 +39,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * Main admin interface servlet. Generates the content for the main admincentral iframe.
  * @author Fabrizio Giustina
- * @version $Id: AdminInterfaceServlet.java 382 2005-03-15 22:48:26Z fgiust $
+ * @version $Id$
  */
 public class AdminInterfaceServlet extends HttpServlet {
 
@@ -177,7 +177,8 @@ public class AdminInterfaceServlet extends HttpServlet {
         if (saveName != null || isNodeDataValue || isNodeDataType) {
 
             String value = StringUtils.defaultString(request.getParameter("saveValue"));
-
+            String displayValue="";
+            
             // value to save is a content's meta information
             boolean isMeta = "true".equals(request.getParameter("isMeta"));
             // value to save is a label (name of page, content node or node data)
@@ -192,16 +193,21 @@ public class AdminInterfaceServlet extends HttpServlet {
                 // "/modules/templating/Templates/x"
                 tree.setPath(path);
             }
+            
             if (isLabel) {
-                html.append(tree.renameNode(value));
+                displayValue = tree.renameNode(value);
             }
             else if (isNodeDataType) {
                 int type = Integer.valueOf(value).intValue();
-                html.append(tree.saveNodeDataType(saveName, type));
+                displayValue = tree.saveNodeDataType(saveName, type);
             }
             else {
-                html.append(tree.saveNodeData(saveName, value, isMeta));
+                displayValue = tree.saveNodeData(saveName, value, isMeta);
             }
+
+            // if there was a displayValue passed show it instead of the written value
+            displayValue = StringUtils.defaultString(request.getParameter("displayValue"), value);
+            html.append(displayValue);
 
             // @todo should be handled in a better way but, at the moment, this is better than nothing
             if (path.startsWith("/modules/templating/Templates/")) {
