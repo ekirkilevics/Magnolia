@@ -106,6 +106,7 @@ public class Template {
     public static void reload() {
         log.info("Config : re-initializing Template info");
         Template.init();
+        update("modules/templating");
     }
 
     /**

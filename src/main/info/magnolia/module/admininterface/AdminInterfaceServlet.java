@@ -14,6 +14,7 @@ package info.magnolia.module.admininterface;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ItemType;
+import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.dialog.DialogSpacer;
 import info.magnolia.cms.gui.misc.Sources;
@@ -181,13 +182,13 @@ public class AdminInterfaceServlet extends HttpServlet {
 
             Tree tree = new Tree(repository, request);
             if (isNodeDataValue || isNodeDataType) {
-                tree.setPath(StringUtils.substringAfterLast(path, "/"));
+                tree.setPath(StringUtils.substringBeforeLast(path, "/"));
                 saveName = StringUtils.substringAfterLast(path, "/");
             }
             else {
+                // "/modules/templating/Templates/x"
                 tree.setPath(path);
             }
-
             if (isLabel) {
                 html.append(tree.renameNode(value));
             }
@@ -198,6 +199,15 @@ public class AdminInterfaceServlet extends HttpServlet {
             else {
                 html.append(tree.saveNodeData(saveName, value, isMeta));
             }
+
+            // @todo should be handled in a better way but, at the moment, this is better than nothing
+            if (path.startsWith("/modules/templating/Templates/")) {
+                Template.reload();
+            }
+            else if (path.startsWith("/modules/templating/Paragraphs/")) {
+                // @todo reload paragraphs
+            }
+
             proceed = false;
         }
 
