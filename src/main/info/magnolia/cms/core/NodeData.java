@@ -277,6 +277,21 @@ public class NodeData extends ContentHandler {
 
     /**
      * <p>
+     * Returns the <code>InputStream</code> representation of the value:
+     * </p>
+     * @return boolean
+     */
+    public InputStream getStream() {
+        try {
+            return this.property.getStream();
+        }
+        catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * <p>
      * Returns the <code>type</code> of this <code>NodeData</code>. One of:
      * <ul>
      * <li><code>PropertyType.STRING</code></li>
@@ -329,7 +344,7 @@ public class NodeData extends ContentHandler {
     /**
      * <p>
      * Access to property at the JCR level. <br>
-     * <b>available only to be available, should not be used in normal circunstances! </b>
+     * <b>available only to be available, should not be used in normal circumstances! </b>
      * </p>
      * @return Property
      */

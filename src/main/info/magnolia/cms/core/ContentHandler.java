@@ -183,6 +183,20 @@ public abstract class ContentHandler {
 
     /**
      * <p>
+     * This method returns the index of this node within the ordered set of its same-name  sibling nodes.
+     * This index is the one used to address same-name siblings using the  square-bracket notation,
+     * e.g., /a[3]/b[4]. Note that the index always starts  at 1 (not 0), for compatibility with XPath.
+     * As a result, for nodes that do not have  same-name-siblings, this method will always return 1.
+     * </p>
+     *
+     * @return The index of this node within the ordered set of its same-name sibling nodes.
+     * */
+    public int getIndex() throws RepositoryException {
+        return this.node.getIndex();
+    }
+
+    /**
+     * <p>
      * utility method to get Node object used to create current content object
      * </p>
      * @return Node
@@ -393,6 +407,7 @@ public abstract class ContentHandler {
      * @param type , mixin type to be removed
      * */
     public void removeMixin(String type) throws RepositoryException {
+        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.node.getPath()), Permission.SET);
         this.node.removeMixin(type);
     }
 
