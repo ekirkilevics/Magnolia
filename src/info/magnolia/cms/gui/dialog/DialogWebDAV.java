@@ -35,9 +35,7 @@ import org.apache.webdav.lib.Property;
 import org.apache.webdav.lib.methods.XMLResponseMethodBase;
 import org.apache.util.HttpsURL;
 import org.apache.util.HttpURL;
-import jdsl.core.ref.ArraySequence;
-import jdsl.core.algo.sorts.HeapSort;
-import jdsl.core.api.ObjectIterator;
+
 
 /**
  * @author Vinzenz Wyser
@@ -322,9 +320,9 @@ public class DialogWebDAV extends DialogBox {
 			out.println("</form>");
 
 
-			ArraySequence fileListAS = new ArraySequence();
-			ArraySequence dirListAS = new ArraySequence();
-			ArraySequence selfAS=new ArraySequence();
+			ArrayList fileListAS = new ArrayList();
+			ArrayList dirListAS = new ArrayList();
+			ArrayList selfAS=new ArrayList();
 
 			while (fileList.hasMoreElements()) {
 				XMLResponseMethodBase.Response response = (XMLResponseMethodBase.Response) fileList.nextElement();
@@ -356,14 +354,14 @@ public class DialogWebDAV extends DialogBox {
 				properties.put("name",name);
 
 				String displayType = (String)properties.get("displayType");
-				if (properties.get("isSelf")!=null) selfAS.insertLast(properties);
-				else if (displayType.equals("folder")) dirListAS.insertLast(properties);
-				else fileListAS.insertLast(properties);
+				if (properties.get("isSelf")!=null) selfAS.add(properties);
+				else if (displayType.equals("folder")) dirListAS.add(properties);
+				else fileListAS.add(properties);
 			}
 
 
 			int i=0;
-			ArraySequence parentAS=new ArraySequence();
+			ArrayList parentAS=new ArrayList();
 			if (!this.getDirectory().equals(dir)) {
 				Hashtable parentProp=new Hashtable();
 				String name="";
@@ -379,7 +377,7 @@ public class DialogWebDAV extends DialogBox {
 				parentProp.put("sizeStringValue","");
 				parentProp.put("sizeStringUnit","");
 				parentProp.put("lastModifiedString","");
-				parentAS.insertLast(parentProp);
+				parentAS.add(parentProp);
 				i=drawHtmlList(out,parentAS,i);
 			}
 
@@ -395,17 +393,16 @@ public class DialogWebDAV extends DialogBox {
 		catch (Exception e) {}
 	}
 
-	public int drawHtmlList(JspWriter out, ArraySequence as,int i) {
+	public int drawHtmlList(JspWriter out, List as,int i) {
 		try {
 			boolean alt=false;
 			if (i % 2 == 0) alt=true;
 
 			//todo: better sorting
-			HeapSort hs = new HeapSort();
-			hs.sort(as,new DialogWebDAVComparator());
-			ObjectIterator oi = as.elements();
-			while (oi.hasNext()) {
-				Hashtable properties=(Hashtable) oi.nextObject();
+			Collections.sort(as,new DialogWebDAVComparator());
+			Iterator it = as.iterator();
+			while (it.hasNext()) {
+				Hashtable properties=(Hashtable) it.next();
 
 				String displayType = (String)properties.get("displayType");
 				String name=(String)properties.get("name");

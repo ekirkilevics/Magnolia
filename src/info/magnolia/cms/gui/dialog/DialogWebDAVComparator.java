@@ -15,24 +15,21 @@
 
 package info.magnolia.cms.gui.dialog;
 
-import jdsl.core.ref.ComparableComparator;
 
 import java.util.Hashtable;
+import java.util.Comparator;
 
 /**
  * @author Vinzenz Wyser
  * @version 2.0
  */ 
-public class DialogWebDAVComparator  extends ComparableComparator  {
+public class DialogWebDAVComparator implements Comparator  {
 
 	public int compare(Object o, Object o1) throws ClassCastException {
 		String s1 = ((String) ((Hashtable)o).get("name")).toLowerCase();
 		String s2 = ((String) ((Hashtable)o1).get("name")).toLowerCase();
-		return super.compare(s1, s2);
+		return s1.compareTo(s2);
 	}
 
-	public boolean isComparable(Object o) {
-		return true;
-	}
 
 }
