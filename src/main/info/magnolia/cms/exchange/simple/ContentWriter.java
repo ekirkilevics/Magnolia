@@ -20,16 +20,19 @@ import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Authenticator;
+
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 
 
@@ -221,22 +224,26 @@ public class ContentWriter {
         for (int index = 0; index < propertyList.size(); index++) {
             MetaDataProperty property = (MetaDataProperty) propertyList.get(index);
             switch (property.getType()) {
-                case PropertyType.STRING :
+                case PropertyType.STRING:
                     metaData.setProperty(property.getName(), property.getString());
                     break;
-                case PropertyType.LONG :
+                case PropertyType.LONG:
                     metaData.setProperty(property.getName(), property.getLong());
                     break;
-                case PropertyType.DOUBLE :
+                case PropertyType.DOUBLE:
                     metaData.setProperty(property.getName(), property.getDouble());
                     break;
-                case PropertyType.BOOLEAN :
+                case PropertyType.BOOLEAN:
                     metaData.setProperty(property.getName(), property.getBoolean());
                     break;
-                case PropertyType.DATE :
+                case PropertyType.DATE:
                     metaData.setProperty(property.getName(), property.getDate());
                     break;
-                default :
+                case PropertyType.NAME:
+                    // can't be set
+                    log.info("Ignoring NAME property");
+                    break;
+                default:
                     log.error("Unknown property type - " + property.getType());
             }
         }
@@ -259,22 +266,22 @@ public class ContentWriter {
             try {
                 NodeData nodeData = content.createNodeData(sNodeData.getName());
                 switch (sNodeData.getType()) {
-                    case PropertyType.STRING :
+                    case PropertyType.STRING:
                         nodeData.setValue(sNodeData.getString());
                         break;
-                    case PropertyType.LONG :
+                    case PropertyType.LONG:
                         nodeData.setValue(sNodeData.getLong());
                         break;
-                    case PropertyType.DOUBLE :
+                    case PropertyType.DOUBLE:
                         nodeData.setValue(sNodeData.getDouble());
                         break;
-                    case PropertyType.BOOLEAN :
+                    case PropertyType.BOOLEAN:
                         nodeData.setValue(sNodeData.getBoolean());
                         break;
-                    case PropertyType.DATE :
+                    case PropertyType.DATE:
                         nodeData.setValue(sNodeData.getDate());
                         break;
-                    case PropertyType.BINARY :
+                    case PropertyType.BINARY:
                         String binaryResourceHandle = sNodeData.getBinaryAsLink();
                         URL url = new URL(this.baseURL);
                         URLConnection urlConnection = url.openConnection();
