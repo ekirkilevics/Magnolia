@@ -29,7 +29,7 @@ import org.apache.log4j.Logger;
  * Factory for dialogs. This class handles the registration of native dialogs mantaing a map of (control name | dialog
  * class).
  * @author Fabrizio Giustina
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public final class DialogFactory {
 

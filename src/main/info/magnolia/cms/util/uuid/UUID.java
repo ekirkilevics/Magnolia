@@ -40,7 +40,7 @@ import java.util.StringTokenizer;
  * </p>
  * <p/>
  * @author Commons-Id Team
- * @version $Revision: 1.3 $ $Date: 2004/07/30 06:51:47 $
+ * @version $Revision$ $Date: 2004/07/30 06:51:47 $
  */
 public class UUID implements Serializable, Comparable {
 

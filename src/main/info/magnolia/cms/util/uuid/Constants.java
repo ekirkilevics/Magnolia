@@ -24,7 +24,7 @@ package info.magnolia.cms.util.uuid;
  * </p>
  * <p/>
  * @author Commons-Id Team
- * @version $Revision: 1.3 $ $Date: 2004/07/30 06:51:47 $
+ * @version $Revision$ $Date: 2004/07/30 06:51:47 $
  */
 public final class Constants {
 

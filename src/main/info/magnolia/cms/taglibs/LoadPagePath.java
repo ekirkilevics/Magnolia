@@ -18,7 +18,7 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 
 /**
  * @author Marcel Salathe
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class LoadPagePath extends BodyTagSupport {
 

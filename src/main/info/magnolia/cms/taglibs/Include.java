@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
 /**
  * @author marcel Salathe
  * @author Sameer Charles
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class Include extends BodyTagSupport {
 

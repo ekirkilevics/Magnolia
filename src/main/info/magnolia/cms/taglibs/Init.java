@@ -18,7 +18,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 /**
  * No more used in magnolia 2.
  * @author Sameer Charles
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  * @deprecated
  */
 public class Init extends TagSupport {

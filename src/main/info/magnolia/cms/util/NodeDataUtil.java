@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Sameer Charles
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class NodeDataUtil {
 

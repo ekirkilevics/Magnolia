@@ -19,7 +19,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 /**
  * @author Sameer Charles
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class AdminOnly extends TagSupport {
 

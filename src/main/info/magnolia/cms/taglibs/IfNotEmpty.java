@@ -14,7 +14,7 @@ package info.magnolia.cms.taglibs;
 
 /**
  * @author Marcel Salathe
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class IfNotEmpty extends IfEmpty {
 

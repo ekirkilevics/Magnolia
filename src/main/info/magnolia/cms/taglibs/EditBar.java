@@ -27,7 +27,7 @@ import org.apache.log4j.Logger;
 /**
  * @author Sameer Charles
  * @author Marcel Salathe
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class EditBar extends TagSupport {
 

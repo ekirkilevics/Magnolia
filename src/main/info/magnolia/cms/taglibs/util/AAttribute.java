@@ -18,7 +18,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 /**
  * @author Marcel Salathe
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class AAttribute extends TagSupport {
 

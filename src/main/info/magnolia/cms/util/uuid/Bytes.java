@@ -10,7 +10,7 @@ package info.magnolia.cms.util.uuid;
  * </p>
  * <p/>todo remove and use official commons-id release as soon as it is available
  * @author Commons-Id Team
- * @version $Id: Bytes.java,v 1.3 2004/07/30 06:51:46 ozeigermann Exp $
+ * @version $Id$
  * @link http://jakarta.apache.org/turbine/turbine-2.3/
  */
 public final class Bytes {

@@ -44,7 +44,7 @@ import org.apache.log4j.Logger;
  * </pre>
  *
  * @author Fabrizio Giustina
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class SetNode extends TagSupport {
 
@@ -181,7 +181,7 @@ public class SetNode extends TagSupport {
     /**
      * Wrapper for a content Node which exposes a Map interface, used to access its content using jstl.
      * @author fgiust
-     * @version $Revision: $ ($Author: $)
+     * @version $Revision$ ($Author$)
      */
     public static class NodeMapWrapper implements Map {
 

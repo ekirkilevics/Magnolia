@@ -34,7 +34,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Marcel Salathe
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class AHref extends BodyTagSupport {
 

@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
  * the corresponding unloadPage-tag will not revert to the previously loaded page, but restore actpage to the currently
  * displayed page, i.e. the value it held before loadPage was called for the first time.
  * @author Marcel Salathe
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class LoadPage extends BodyTagSupport {
 

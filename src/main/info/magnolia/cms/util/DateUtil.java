@@ -18,7 +18,7 @@ import java.util.Date;
 
 /**
  * @author Sameer Charles
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class DateUtil {
 

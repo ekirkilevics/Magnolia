@@ -21,7 +21,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Vinzenz Wyser
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class StrToObj extends BodyTagSupport {
 

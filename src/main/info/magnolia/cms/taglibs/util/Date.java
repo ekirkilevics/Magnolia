@@ -29,7 +29,7 @@ import org.apache.log4j.Logger;
 /**
  * @author Marcel Salathe
  * @deprecated
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class Date extends TagSupport {
 
