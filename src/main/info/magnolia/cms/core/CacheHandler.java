@@ -55,7 +55,10 @@ public class CacheHandler extends Thread {
     /**
      * @param request
      */
-    public static void cacheURI(HttpServletRequest request) throws IOException {
+    public static synchronized void cacheURI(HttpServletRequest request) throws IOException {
+
+        if (Cache.isCached(request))
+            return;
         // dont cache
         if (CacheHandler.hasRedirect(request)) {
             return;
