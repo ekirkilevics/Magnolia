@@ -187,9 +187,9 @@ function mgnlResetUp(evt)
 ################################### */
 
 
-function mgnlOpenDialog(path,nodeCollection,node,paragraph,repository,dialogPage,width,height)
+function mgnlOpenDialog(path,nodeCollection,node,paragraph,repository,context,dialogPage,width,height)
 	{
-    //if (!context) context=0;
+    if (!context) context="";
 
 	//dialog window is resized in  dialog itself (window.resize)
     if (!width) width=800;
@@ -217,7 +217,8 @@ function mgnlOpenDialog(path,nodeCollection,node,paragraph,repository,dialogPage
 
 	if (!dialogPage) dialogPage="/.magnolia/dialogs/standard.html";
 
-    url=dialogPage;
+    url=context;
+    url+=dialogPage;
     url+="?mgnlPath="+path;
     url+="&mgnlNodeCollection="+nodeCollection;
 	url+="&mgnlNode="+node;

@@ -52,7 +52,7 @@
 	//add customized buttons to the main bar
 	Button fProps=new Button();
 	fProps.setLabel("Form properties");
-	fProps.setOnclick("mgnlOpenDialog('"+Resource.getActivePage(request).getHandle()+"','','','samplesFormProperties','"+ContentRepository.WEBSITE+"');");
+	fProps.setOnclick("mgnlOpenDialog('"+Resource.getActivePage(request).getHandle()+"','','','samplesFormProperties','"+ContentRepository.WEBSITE+"','"+ request.getContextPath() + "');");
 	bar.setButtonsRight(fProps);
 
 

@@ -81,6 +81,8 @@ public class ButtonEdit extends Button {
             + this.getParagraph()
             + "','"
             + repository
+            + "','"
+            + this.getRequest().getContextPath()
             + "');");
     }
 

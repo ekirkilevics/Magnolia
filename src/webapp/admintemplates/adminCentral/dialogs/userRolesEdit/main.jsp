@@ -17,7 +17,6 @@
 				 info.magnolia.cms.core.Content,
 				 java.util.*,
 				 org.apache.webdav.lib.WebdavResource,
-				 org.apache.util.HttpURL,
 				 sun.security.provider.MD5,
 				 javax.jcr.*,
 				 java.lang.reflect.Array,

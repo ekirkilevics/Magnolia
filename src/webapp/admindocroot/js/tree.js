@@ -1055,7 +1055,7 @@
 	function mgnlTreeMenuOpenDialog(tree,dialogPath)
 		{
 		var path=tree.selectedNode.id;
-		mgnlOpenDialog(path,'','','',tree.repository,dialogPath);
+		mgnlOpenDialog(path,'','','',tree.repository,'',dialogPath);
 		}
 
 

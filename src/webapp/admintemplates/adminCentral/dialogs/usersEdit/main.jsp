@@ -17,7 +17,6 @@
 				 info.magnolia.cms.core.Content,
 				 java.util.*,
 				 org.apache.webdav.lib.WebdavResource,
-				 org.apache.util.HttpURL,
 				 javax.jcr.*,
 				 java.lang.reflect.Array,
 				 info.magnolia.cms.core.MetaData,
