@@ -908,9 +908,31 @@
 		params.pathSelected='';
 		params.pathOpen='';
 
-		var html=tree.nodes[id].httpRequest(params);
+		var callBackParams=new Object();
+		callBackParams.id = id;
+		callBackParams.treeName = treeName;
+		callBackParams.lastEditedHtmlObjectId = lastEditedHtmlObjectId;
+
+		// async
+		tree.nodes[id].httpRequest(params, callBackParams, mgnlTreeSaveNodeDataCallback);
+		}
+
+	/**
+	callback for mgnlTreeSaveNodeData
+	**/
+	mgnlTreeSaveNodeDataCallback = function (params, html)
+		{
+
+		var id = params.id;
+		var treeName = params.treeName;
+		var lastEditedHtmlObjectId = params.lastEditedHtmlObjectId;
+
+		var tree=eval(treeName);
+		var isLabel=params.isLabel;
+
 		if (html=="") html=tree.strings.empty;
 		document.getElementById(lastEditedHtmlObjectId).innerHTML=html;
+
 		if (isLabel)
 			{
 			//reload parent
@@ -923,11 +945,11 @@
 
 			var parent=tree.getNode(parentPath);
 
-			var params=new Object();
-			params.forceReload=true;
-			params.pathSelected=selectedPath;
+			var nodeParams=new Object();
+			nodeParams.forceReload=true;
+			nodeParams.pathSelected=selectedPath;
 
-			parent.expand(params);
+			parent.expand(nodeParams);
 
 			//reset tree nodes
 			tree.nodes=new Object();
@@ -1088,13 +1110,13 @@
 
 	mgnlTreeNode.prototype.getHttpRequest = function()
 		{
-		var httpRequest;
-		if (window.XMLHttpRequest) httpRequest = new XMLHttpRequest();
-		else if (window.ActiveXObject) httpRequest = new ActiveXObject("Microsoft.XMLHTTP"); //IE/Windows ActiveX
-		return httpRequest;
+		var httpReq;
+		if (window.XMLHttpRequest) httpReq = new XMLHttpRequest();
+		else if (window.ActiveXObject) httpReq = new ActiveXObject("Microsoft.XMLHTTP"); //IE/Windows ActiveX
+		return httpReq;
 		}
 
-	mgnlTreeNode.prototype.httpRequest = function(params)
+	mgnlTreeNode.prototype.httpRequest = function(params, callBackParams, callback)
 		{
 		/*
 		//todo: clean up ... (e.g. isMeta, isLabel etc. to treeAction)
@@ -1130,8 +1152,8 @@
 
 		*/
 
-		var httpRequest=this.getHttpRequest();
-		if (httpRequest)
+		var httpReq=this.getHttpRequest();
+		if (httpReq)
 			{
 			var url=this.url;
 			url+="?treeMode=snippet";
@@ -1148,11 +1170,27 @@
 				}
 			url=encodeURI(url);
 
-			httpRequest.open("GET",url,false);
-			httpRequest.send(null);
-			return(httpRequest.responseText);
+			// original (sync)
+			/*
+			httpReq.open("GET",url,false);
+			httpReq.send(null);
+			return(httpReq.responseText);
+			*/
+
+			// new (async call)
+			httpReq.open("GET",url,true);
+			httpReq.onreadystatechange=function() {
+			   if (httpReq.readyState==4) {
+			    var returnText=httpReq.responseText;
+			    callback(callBackParams, returnText);
+			   }
 			}
-		else return "";
+
+			httpReq.send(null);
+			return;
+			}
+		//else return "";
+		else return;
 		}
 
 
@@ -1234,10 +1272,26 @@
 		var params=node.params;
 		if (!params) params=new Object();
 
-		var html=node.httpRequest(params);
+		var callBackParams=new Object();
+		callBackParams.id = id;
+		callBackParams.treeName = treeName;
 
-		if (div) div.innerHTML=html;
+		node.httpRequest(params, callBackParams, mgnlTreeDrawNodesCallback);
 
+		}
+
+/**
+callback
+**/
+    mgnlTreeDrawNodesCallback = function (params, html) {
+
+        var id = params.id;
+        var treeName = params.treeName;
+
+		var div=document.getElementById(treeName+"_"+id+"_DivSub");
+		var tree=eval(treeName);
+
+        if (div) div.innerHTML=html;
 
 		if (id==tree.path)
 			{
@@ -1276,9 +1330,7 @@
 
 
 		//tree.selectedNodeReset();
-		}
-
-
+}
 
 
 
