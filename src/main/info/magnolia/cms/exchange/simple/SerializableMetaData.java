@@ -86,11 +86,8 @@ public class SerializableMetaData implements Serializable {
                         break;
                     case PropertyType.DATE:
                         metaProperty.setValue(property.getDate());
-                    default:
-                        // name is not sent as property type, but as an ID of this object
                 }
-                if (!(metaProperty.getValue() == null))
-                    this.metaProperties.add(metaProperty);
+                this.metaProperties.add(metaProperty);
                 property = null;
             } catch (RepositoryException re) {
                 log.error(re.getMessage(), re);
