@@ -185,6 +185,10 @@ public class Messages {
        return str.toString();
     }
     
+    public static String javaScriptString(String str){
+        return str.replaceAll("'", "\\\\'").replaceAll("\n","\\\\n");
+    }
+    
     /**
      * @return Returns the bundle.
      */

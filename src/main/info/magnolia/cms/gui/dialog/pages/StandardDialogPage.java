@@ -17,6 +17,7 @@ import info.magnolia.cms.gui.dialog.DialogStatic;
 import info.magnolia.cms.gui.dialog.DialogTab;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.ContextMessages;
+import info.magnolia.cms.i18n.TemplateMessages;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.servlets.BasePageServlet;
 import info.magnolia.cms.util.Resource;
@@ -193,8 +194,8 @@ public class StandardDialogPage extends BasePageServlet {
                         Paragraph paragraphInfo = Paragraph.getInfo(pars[i]);
                         Button button = new Button(c1.getName(), paragraphInfo.getName());
                         StringBuffer label = new StringBuffer();
-                        label.append("<strong>" + msgs.getWithDefault(paragraphInfo.getTitle(),paragraphInfo.getTitle()) + "</strong><br />");
-                        label.append(msgs.getWithDefault(paragraphInfo.getDescription(),paragraphInfo.getDescription()));
+                        label.append("<strong>" + TemplateMessages.get(request, paragraphInfo.getTitle()) + "</strong><br />");
+                        label.append(TemplateMessages.get(request, paragraphInfo.getDescription()));
                         label.append("<br /><br />");
                         button.setLabel(label.toString());
                         button.setOnclick("document.mgnlFormMain.submit();");

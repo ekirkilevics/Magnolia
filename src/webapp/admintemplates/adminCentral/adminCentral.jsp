@@ -121,7 +121,8 @@
 		while (it.hasNext()) {
 			ContentNode c=(ContentNode) it.next();
 			Button b=new Button();
-			b.setLabel(labelPre + c.getNodeData("label").getString() + labelPost);
+			String label = info.magnolia.cms.i18n.TemplateMessages.get(request, c.getNodeData("label").getString());
+			b.setLabel(labelPre + label + labelPost);
 			b.setPushButtonTag("div");
 			b.setOnclick(c.getNodeData("onclick").getString());
 			if (c.getNodeData("iconSrc").getString().equals("")) b.setIconSrc(request.getContextPath() + new Icon().getSrc("pens",Icon.SIZE_MEDIUM));

@@ -13,6 +13,8 @@
  */
 package info.magnolia.cms.i18n;
 
+import javax.servlet.http.HttpServletRequest;
+
 import info.magnolia.cms.gui.dialog.DialogSuper;
 
 /**
@@ -21,24 +23,34 @@ import info.magnolia.cms.gui.dialog.DialogSuper;
  * This class helps to get the messages. First it make a lookup in messages_templating_custom and then in messages_templating..
  */
 public class TemplateMessages {
-    public static String DEFAULT_BASENAME = "info.magnolia.modules.admininterface.messages_templating";
-    public static String CUSTOM_BASENAME = "info.magnolia.modules.admininterface.messages_templating_custom";
+    public static String DEFAULT_BASENAME = "info.magnolia.module.admininterface.messages_templating";
+    public static String CUSTOM_BASENAME = "info.magnolia.module.admininterface.messages_templating_custom";
     
     public static String get(DialogSuper dialog, String key) {
-        Messages msgs = ContextMessages.getInstanceSavely(dialog.getRequest());
+        return get(dialog.getRequest(),key);
+    }
+
+    public static String get(DialogSuper dialog, String key, Object[] args) {
+        return get(dialog.getRequest(),key, args);
+    }
+    
+    public static String get(HttpServletRequest request, String key) {
+        Messages msgs = ContextMessages.getInstanceSavely(request);
         String msg = msgs.getWithDefault(key, DEFAULT_BASENAME, key);
         if(!msg.equals(key)){
             return msg;
         }
         return msgs.getWithDefault(key, CUSTOM_BASENAME, key);
+        
     }
-
-    public static String get(DialogSuper dialog, String key, Object[] args) {
-        Messages msgs = ContextMessages.getInstanceSavely(dialog.getRequest());
+    
+    public static String get(HttpServletRequest request, String key, Object[] args) {
+        Messages msgs = ContextMessages.getInstanceSavely(request);
         String msg = msgs.getWithDefault(key, DEFAULT_BASENAME, args, key);
         if(!msg.equals(key)){
             return msg;
         }
         return msgs.getWithDefault(key, CUSTOM_BASENAME, args, key);
     }
+
 }

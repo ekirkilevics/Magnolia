@@ -242,7 +242,7 @@ public class DialogRichedit extends DialogBox {
             // toolbox link
             if (this.getConfigValue("toolboxLink", "true").equals("true")) {
                 out.write(line.getHtml("100%"));
-                out.write("<div class=\"" + CssConstants.CSSCLASS_RICHETOOLBOXLABEL + "\">Link</div>");
+                out.write("<div class=\"" + CssConstants.CSSCLASS_RICHETOOLBOXLABEL + "\">" + msgs.get("dialog.richedit.link")+ "</div>");
                 // link: edit control (href)
                 String linkEditName = "kupu-link-input";
                 Edit linkEdit = new Edit(linkEditName, "");

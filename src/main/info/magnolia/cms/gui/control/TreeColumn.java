@@ -15,6 +15,7 @@ package info.magnolia.cms.gui.control;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.gui.misc.CssConstants;
+import info.magnolia.cms.i18n.TemplateMessages;
 import info.magnolia.cms.util.MetaDataUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 
@@ -61,7 +62,7 @@ public class TreeColumn extends ControlSuper {
     boolean isNodeDataValue;
 
     boolean isNodeDataType;
-
+    
     String dateFormat;
 
     String title = "";
@@ -69,6 +70,8 @@ public class TreeColumn extends ControlSuper {
     boolean permissionWrite;
 
     String htmlEdit = "";
+    
+    TreeColumnHtmlRenderer htmlRenderer;
 
     private String javascriptTree = "";
 
@@ -87,6 +90,8 @@ public class TreeColumn extends ControlSuper {
         this.setJavascriptTree(javascriptTree);
         this.setCssClass("mgnlTreeText");
         this.setRequest(request);
+        // default delegate
+        this.setHtmlRenderer(new TreeColumnHtmlRendererImpl());
     }
 
     public void setIsMeta(boolean b) {
@@ -234,27 +239,7 @@ public class TreeColumn extends ControlSuper {
     public String getHtml() {
         String html = "";
         try {
-            if (this.getIsMeta()) {
-                html = new MetaDataUtil(this.getWebsiteNode()).getPropertyValueString(this.getName(), this
-                    .getDateFormat());
-            }
-            else if (this.getIsLabel()) {
-                html = this.getWebsiteNode().getName();
-            }
-            else if (this.getIsIcons()) {
-                html = this.getHtmlIcons();
-            }
-            else {
-                NodeData data = this.getWebsiteNode().getNodeData(this.getName());
-                html = new NodeDataUtil(data).getValueString(this.getDateFormat());
-            }
-            // todo: (value is not shown after saving ...)
-            if (this.getKeyValue().size() != 0) {
-                String value = (String) this.getKeyValue().get(html);
-                if (value != null) {
-                    html = value;
-                }
-            }
+            html = htmlRenderer.renderHtml(this, this.getWebsiteNode());
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -266,39 +251,17 @@ public class TreeColumn extends ControlSuper {
         return html;
     }
 
-    public String getHtmlIcons() {
-        StringBuffer html = new StringBuffer();
-        if (this.getIconsActivation()) {
-            MetaData activationMetaData = this.getWebsiteNode().getMetaData(MetaData.ACTIVATION_INFO);
-            MetaData generalMetaData = this.getWebsiteNode().getMetaData();
-            boolean isActivated = activationMetaData.getIsActivated();
-            Calendar actionDate = activationMetaData.getLastActionDate();
-            Calendar lastModifiedDate = generalMetaData.getModificationDate();
-            String imgSrc;
-            if (isActivated) {
-                if (lastModifiedDate.after(actionDate)) {
-                    // node has been modified after last activation
-                    imgSrc = Tree.ICONDOCROOT + "indicator_yellow.gif";
-                }
-                else {
-                    // activated and not modified ever since
-                    imgSrc = Tree.ICONDOCROOT + "indicator_green.gif";
-                }
-            }
-            else {
-                // never activated or deactivated
-                imgSrc = Tree.ICONDOCROOT + "indicator_red.gif";
-            }
-            html.append("<img src=\"" + this.getRequest().getContextPath() + imgSrc + "\">");
-        }
-        if (this.getIconsPermission()) {
-            if (!this.getWebsiteNode().isGranted(info.magnolia.cms.security.Permission.WRITE)) {
-                html.append("<img src=\""
-                    + this.getRequest().getContextPath()
-                    + Tree.ICONDOCROOT
-                    + "pen_blue_canceled.gif\">");
-            }
-        }
-        return html.toString();
+
+    /**
+     * @return Returns the htmlRenderer.
+     */
+    public TreeColumnHtmlRenderer getHtmlRenderer() {
+        return htmlRenderer;
+    }
+    /**
+     * @param htmlRenderer Set the delecate Object which will render the html column for each row
+     */
+    public void setHtmlRenderer(TreeColumnHtmlRenderer htmlRenderer) {
+        this.htmlRenderer = htmlRenderer;
     }
 }

@@ -22,6 +22,7 @@ import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.gui.control.TreeMenuItem;
 import info.magnolia.cms.i18n.ContextMessages;
 import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.TemplateMessages;
 
 import java.util.Iterator;
 
@@ -74,6 +75,9 @@ public class AdminTreeWebsite implements AdminTree {
         column2.setIsMeta(true);
         column2.setWidth(2);
         column2.setTitle(msgs.get("tree.web.template"));
+        // must render this column specially
+        column2.setHtmlRenderer(new TemplateTreeColumnHtmlRenderer());
+        
         Select templateSelect = new Select();
         templateSelect.setName(tree.getJavascriptTree() + TreeColumn.EDIT_NAMEADDITION);
         templateSelect.setSaveInfo(false);
@@ -83,7 +87,10 @@ public class AdminTreeWebsite implements AdminTree {
         Iterator templates = Template.getAvailableTemplates();
         while (templates.hasNext()) {
             Template template = (Template) templates.next();
-            templateSelect.setOptions(template.getName(), template.getName());
+            String title = template.getTitle();
+            title = TemplateMessages.get(request, title);
+            title = Messages.javaScriptString(title);
+            templateSelect.setOptions(title, template.getName());
         }
         if (Server.isAdmin())
             column2.setHtmlEdit(templateSelect.getHtml());
