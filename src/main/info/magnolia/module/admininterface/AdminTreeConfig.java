@@ -20,6 +20,8 @@ import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.gui.control.TreeMenuItem;
 import info.magnolia.cms.gui.misc.Icon;
+import info.magnolia.cms.i18n.ContextMessages;
+import info.magnolia.cms.i18n.Messages;
 
 import javax.jcr.PropertyType;
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Handles the tree rendering for the "config" repository.
  * @author Fabrizio Giustina
- * @version $Id: AdminTreeConfig.java 378 2005-03-13 16:11:26Z fgiust $
+ * @version $Id$
  */
 public class AdminTreeConfig implements AdminTree {
 
@@ -37,7 +39,9 @@ public class AdminTreeConfig implements AdminTree {
      */
     public void configureTree(Tree tree, HttpServletRequest request, String path, String pathOpen, String pathSelected,
         boolean create, String createItemType) {
-
+        
+        Messages msgs = ContextMessages.getInstanceSavely(request);
+        
         tree.setIconPage(Tree.ICONDOCROOT + "folder_cubes.gif");
         tree.setPath(path);
         if (create) {
@@ -57,13 +61,13 @@ public class AdminTreeConfig implements AdminTree {
         column0.setWidth(3);
         TreeColumn column1 = new TreeColumn(tree.getJavascriptTree(), request);
         column1.setName("");
-        column1.setTitle("Value");
+        column1.setTitle(msgs.get("tree.config.value"));
         column1.setIsNodeDataValue(true);
         column1.setWidth(2);
         column1.setHtmlEdit();
         TreeColumn column2 = new TreeColumn(tree.getJavascriptTree(), request);
         column2.setName("");
-        column2.setTitle("Type");
+        column2.setTitle(msgs.get("tree.config.type"));
         column2.setIsNodeDataType(true);
         column2.setWidth(2);
         Select typeSelect = new Select();
@@ -88,7 +92,7 @@ public class AdminTreeConfig implements AdminTree {
         column4.setIsMeta(true);
         column4.setDateFormat("yy-MM-dd, HH:mm");
         column4.setWidth(2);
-        column4.setTitle("Mod. date");
+        column4.setTitle(msgs.get("tree.config.date"));
         tree.addColumn(column0);
         tree.addColumn(column1);
         tree.addColumn(column2);
@@ -101,7 +105,7 @@ public class AdminTreeConfig implements AdminTree {
         menuNewPage.setLabel("<img src=\""
             + request.getContextPath()
             + new Icon().getSrc(Icon.PAGE, Icon.SIZE_SMALL)
-            + "\"> <span style=\"position:relative;top:-3px;\">New folder</span>");
+            + "\"> <span style=\"position:relative;top:-3px;\">"+msgs.get("tree.config.menu.newFolder")+"</span>");
         menuNewPage.setOnclick(tree.getJavascriptTree() + ".createNode('" + ItemType.NT_CONTENT + "');");
         menuNewPage.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotNodeData");
         menuNewPage.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotContentNode");
@@ -110,7 +114,7 @@ public class AdminTreeConfig implements AdminTree {
         menuNewContentNode.setLabel("<img src=\""
             + request.getContextPath()
             + new Icon().getSrc(Icon.CONTENTNODE, Icon.SIZE_SMALL)
-            + "\"> <span style=\"position:relative;top:-3px\">New content node</span>");
+            + "\"> <span style=\"position:relative;top:-3px\">"+msgs.get("tree.config.menu.newNode")+"</span>");
         menuNewContentNode.setOnclick(tree.getJavascriptTree() + ".createNode('" + ItemType.NT_CONTENTNODE + "');");
         menuNewContentNode.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotNodeData");
 
@@ -118,50 +122,50 @@ public class AdminTreeConfig implements AdminTree {
         menuNewNodeData.setLabel("<img src=\""
             + request.getContextPath()
             + new Icon().getSrc(Icon.NODEDATA, Icon.SIZE_SMALL)
-            + "\"> <span style=\"position:relative;top:-3px;\">New node data</span>");
+            + "\"> <span style=\"position:relative;top:-3px;\">"+msgs.get("tree.config.menu.newNodeData")+"</span>");
         menuNewNodeData.setOnclick(tree.getJavascriptTree() + ".createNode('" + ItemType.NT_NODEDATA + "');");
         menuNewNodeData.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotNodeData");
 
         TreeMenuItem menuDelete = new TreeMenuItem();
-        menuDelete.setLabel("Delete");
+        menuDelete.setLabel(msgs.get("tree.config.menu.delete"));
         // menuDelete.addJavascriptCondition("mgnlTreeMenuItemConditionPermissionWrite");
         menuDelete.setOnclick(tree.getJavascriptTree() + ".deleteNode();");
         menuDelete.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
 
         TreeMenuItem menuCopy = new TreeMenuItem();
-        menuCopy.setLabel("Copy");
+        menuCopy.setLabel(msgs.get("tree.config.menu.copy"));
         menuCopy.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         menuCopy.setOnclick(tree.getJavascriptTree() + ".copyNode();");
 
         TreeMenuItem menuCut = new TreeMenuItem();
-        menuCut.setLabel("Move");
+        menuCut.setLabel(msgs.get("tree.config.menu.move"));
         menuCut.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         menuCut.setOnclick(tree.getJavascriptTree() + ".cutNode();");
 
         TreeMenuItem menuActivateExcl = new TreeMenuItem();
-        menuActivateExcl.setLabel("Activate this node");
+        menuActivateExcl.setLabel(msgs.get("tree.config.menu.activate"));
         menuActivateExcl.setOnclick(tree.getJavascriptTree() + ".activateNode(" + Tree.ACTION_ACTIVATE + ",false);");
         menuActivateExcl.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         menuActivateExcl.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotNodeData");
 
         TreeMenuItem menuActivateIncl = new TreeMenuItem();
-        menuActivateIncl.setLabel("Activate incl. sub nodes");
+        menuActivateIncl.setLabel(msgs.get("tree.config.menu.activateInclSubs"));
         menuActivateIncl.setOnclick(tree.getJavascriptTree() + ".activateNode(" + Tree.ACTION_ACTIVATE + ",true);");
         menuActivateIncl.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         menuActivateIncl.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotNodeData");
 
         TreeMenuItem menuDeActivate = new TreeMenuItem();
-        menuDeActivate.setLabel("De-activate");
+        menuDeActivate.setLabel(msgs.get("tree.config.menu.deactivate"));
         menuDeActivate.setOnclick(tree.getJavascriptTree() + ".deActivateNode(" + Tree.ACTION_DEACTIVATE + ");");
         menuDeActivate.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         menuDeActivate.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotNodeData");
 
         TreeMenuItem menuRefresh = new TreeMenuItem();
-        menuRefresh.setLabel("Refresh");
+        menuRefresh.setLabel(msgs.get("tree.menu.refresh"));
         menuRefresh.setOnclick(tree.getJavascriptTree() + ".refresh();");
 
         TreeMenuItem menuExport = new TreeMenuItem();
-        menuExport.setLabel("Export tree to xml");
+        menuExport.setLabel(msgs.get("tree.menu.export"));
         menuExport.setOnclick(tree.getJavascriptTree() + ".exportNode();");
         menuExport.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         menuExport.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotNodeData");

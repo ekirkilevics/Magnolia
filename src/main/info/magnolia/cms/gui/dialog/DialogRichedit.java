@@ -21,6 +21,9 @@ import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.control.SelectOption;
 import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.gui.misc.Spacer;
+import info.magnolia.cms.i18n.ContextMessages;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.TemplateMessages;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -130,7 +133,9 @@ public class DialogRichedit extends DialogBox {
                 String value = n.getNodeData("value").getString();
                 SelectOption option = new SelectOption(null, value);
                 if (n.getNodeData("label").isExist()) {
-                    option.setLabel(n.getNodeData("label").getString());
+                    String label = n.getNodeData("label").getString();
+                    label = TemplateMessages.get(this, label);
+                    option.setLabel(label);
                 }
                 if (n.getNodeData("selected").getBoolean()) {
                     option.setId("default");
@@ -167,6 +172,8 @@ public class DialogRichedit extends DialogBox {
      * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(Writer)
      */
     public void drawHtml(Writer out) throws IOException {
+        Messages msgs = ContextMessages.getInstanceSavely(this.getRequest());
+        
         this.drawHtmlPre(out);
         if (this.getRichE().equals("true")
             || (this.getRichE().equals("") && this.getTopParent().getConfigValue("richE", "").equals("true"))) {
@@ -191,16 +198,16 @@ public class DialogRichedit extends DialogBox {
             if (this.getConfigValue("toolboxPaste", "true").equals("true") && !toolboxPasteType.equals("false")) {
                 // win only; clipboard on mac is clean already
                 out.write(line.getHtml("100%"));
-                out.write("<div class=\"" + CssConstants.CSSCLASS_RICHETOOLBOXLABEL + "\">Clean copy/paste</div>");
+                out.write("<div class=\"" + CssConstants.CSSCLASS_RICHETOOLBOXLABEL + "\">" + msgs.get("dialog.richedit.cleancopypast") + "</div>");
                 if (toolboxPasteType.equals("button")) {
                     // ie/win
                     out.write("<div class=\"" + CssConstants.CSSCLASS_RICHETOOLBOXSUBLABEL + "\">");
-                    out
-                        .write("Paste text by using this button!<br /><a href=javascript:mgnlDialogRichEPasteCleanHelp();>info</a>");
+                    out.write(msgs.get("dialog.richedit.pasteUsingThisButton"));
+                    out.write("<br/><a href=javascript:mgnlDialogRichEPasteCleanHelp();>" + msgs.get("dialog.richedit.info") + "</a>");
                     out.write("</div>");
                     out.write(Spacer.getHtml(6, 6));
                     Button pastePaste = new Button();
-                    pastePaste.setLabel("Clean paste");
+                    pastePaste.setLabel(msgs.get("dialog.richedit.cleanpaste"));
                     pastePaste.setSmall(true);
                     pastePaste.setOnclick("mgnlDialogRichEPasteClean('" + this.getName() + "',true);");
                     out.write(pastePaste.getHtml());
@@ -208,8 +215,8 @@ public class DialogRichedit extends DialogBox {
                 else {
                     // mozilla/win
                     out.write("<div class=\"" + CssConstants.CSSCLASS_RICHETOOLBOXSUBLABEL + "\">");
-                    out
-                        .write("Paste (Ctrl-V) text into the text field below, then use the buttons to add or insert it to the editor frame.<br /><a href=javascript:mgnlDialogRichEPasteCleanHelp();>info</a>");
+                    out.write(msgs.get("dialog.richedit.pastetext"));
+                    out.write("<br/><a href=javascript:mgnlDialogRichEPasteCleanHelp();>" + msgs.get("dialog.richedit.info") + "</a>");
                     out.write("</div>");
                     out.write(Spacer.getHtml(3, 3));
                     out.write("<textarea class=\""
@@ -219,12 +226,12 @@ public class DialogRichedit extends DialogBox {
                         + "-paste\" rows=\"2\" style=\"width:100%;\"></textarea>");
                     out.write(Spacer.getHtml(3, 3));
                     Button pasteAppend = new Button();
-                    pasteAppend.setLabel("Append text");
+                    pasteAppend.setLabel(msgs.get("dialog.richedit.append"));
                     pasteAppend.setSmall(true);
                     pasteAppend.setOnclick("mgnlDialogRichEPasteTextarea('" + this.getName() + "',true);");
                     out.write(pasteAppend.getHtml());
                     Button pasteInsert = new Button();
-                    pasteInsert.setLabel("Insert text");
+                    pasteInsert.setLabel(msgs.get("dialog.richedit.insert"));
                     pasteInsert.setSmall(true);
                     pasteInsert.setOnclick("mgnlDialogRichEPasteTextarea('" + this.getName() + "',false);");
                     out.write(pasteInsert.getHtml());
@@ -257,11 +264,11 @@ public class DialogRichedit extends DialogBox {
                     + extension
                     + "',true);");
                 linkButtonBrowse.setSmall(true);
-                linkButtonBrowse.setLabel("Internal link...");
+                linkButtonBrowse.setLabel(msgs.get("dialog.richedit.internallink"));
                 out.write(linkButtonBrowse.getHtml());
                 // link: target
                 if (this.getOptionsToolboxLinkTargets().size() > 1) {
-                    out.write("<div class=\"" + CssConstants.CSSCLASS_RICHETOOLBOXSUBLABEL + "\">Target</div>");
+                    out.write("<div class=\"" + CssConstants.CSSCLASS_RICHETOOLBOXSUBLABEL + "\">"+msgs.get("dialog.richedit.target")+"</div>");
                     Select control = new Select();
                     control.setName("kupu-link-input-target");
                     control.setSaveInfo(false);
@@ -272,7 +279,7 @@ public class DialogRichedit extends DialogBox {
                 }
                 // link: css class
                 if (this.getOptionsToolboxLinkCssClasses().size() > 1) {
-                    out.write("<div class=\"" + CssConstants.CSSCLASS_RICHETOOLBOXSUBLABEL + "\">Style</div>");
+                    out.write("<div class=\"" + CssConstants.CSSCLASS_RICHETOOLBOXSUBLABEL + "\">"+msgs.get("dialog.richedit.style")+"</div>");
                     Select control = new Select();
                     control.setName("kupu-link-input-css");
                     control.setSaveInfo(false);
@@ -285,13 +292,13 @@ public class DialogRichedit extends DialogBox {
                 // link: apply button
                 Button linkButtonApply = new Button();
                 linkButtonApply.setId("kupu-link-button");
-                linkButtonApply.setLabel("Apply link");
+                linkButtonApply.setLabel(msgs.get("dialog.richedit.applaylink"));
                 linkButtonApply.setSmall(true);
                 out.write(linkButtonApply.getHtml());
                 // link: remove button
                 Button linkButtonRemove = new Button();
                 linkButtonRemove.setId("kupu-link-button-remove");
-                linkButtonRemove.setLabel("Remove link");
+                linkButtonRemove.setLabel(msgs.get("dialog.richedit.removelink"));
                 linkButtonRemove.setSmall(true);
                 out.write(linkButtonRemove.getHtml());
                 out.write(Spacer.getHtml(36, 36));
@@ -300,7 +307,7 @@ public class DialogRichedit extends DialogBox {
             // toolbox css
             if (this.getConfigValue("toolboxStyle", "false").equals("true")) {
                 out.write(line.getHtml("100%"));
-                out.write("<div class=\"" + CssConstants.CSSCLASS_RICHETOOLBOXLABEL + "\">Text style</div>");
+                out.write("<div class=\"" + CssConstants.CSSCLASS_RICHETOOLBOXLABEL + "\">"+msgs.get("dialog.richedit.textstyle")+"</div>");
                 if (this.getOptionsToolboxStyleCssClasses().size() > 1) {
                     Select control = new Select();
                     control.setName(this.getName() + "-css-input-css");
@@ -314,13 +321,13 @@ public class DialogRichedit extends DialogBox {
                 // css: apply button
                 Button cssButtonApply = new Button();
                 cssButtonApply.setId(this.getName() + "-css-button");
-                cssButtonApply.setLabel("Apply style");
+                cssButtonApply.setLabel(msgs.get("dialog.richedit.applaystyle"));
                 cssButtonApply.setSmall(true);
                 out.write(cssButtonApply.getHtml());
                 // css: remove button
                 Button cssButtonRemove = new Button();
                 cssButtonRemove.setId(this.getName() + "-css-button-remove");
-                cssButtonRemove.setLabel("Remove style");
+                cssButtonRemove.setLabel(msgs.get("dialog.richedit.removestyle"));
                 cssButtonRemove.setSmall(true);
                 out.write(cssButtonRemove.getHtml());
             }
@@ -338,25 +345,25 @@ public class DialogRichedit extends DialogBox {
             out.write("<span class=\"kupu-tb-buttongroup\">");
             if (this.getConfigValue("toolbarBold", "true").equals("true")) {
                 out
-                    .write("<button type=\"button\" class=\"kupu-bold\" title=\"Bold\" onclick=\"kupuui.basicButtonHandler('bold');\">&nbsp;</button>");
+                    .write("<button type=\"button\" class=\"kupu-bold\" title=\""+msgs.get("dialog.richedit.bold")+"\" onclick=\"kupuui.basicButtonHandler('bold');\">&nbsp;</button>");
             }
             if (this.getConfigValue("toolbarItalic", "true").equals("true")) {
                 out
-                    .write("<button type=\"button\" class=\"kupu-italic\" title=\"Italic\" onclick=\"kupuui.basicButtonHandler('italic');\">&nbsp;</button>");
+                    .write("<button type=\"button\" class=\"kupu-italic\" title=\""+msgs.get("dialog.richedit.italic")+"\" onclick=\"kupuui.basicButtonHandler('italic');\">&nbsp;</button>");
             }
             if (this.getConfigValue("toolbarUnderline", "false").equals("true")) {
                 out
-                    .write("<button type=\"button\" class=\"kupu-underline\" title=\"Underline\" onclick=\"kupuui.basicButtonHandler('underline');\">&nbsp;</button>");
+                    .write("<button type=\"button\" class=\"kupu-underline\" title=\""+msgs.get("dialog.richedit.underline")+"\" onclick=\"kupuui.basicButtonHandler('underline');\">&nbsp;</button>");
             }
             out.write("</span>");
             out.write("<span class=\"kupu-tb-buttongroup\">");
             if (this.getConfigValue("toolbarSubscript", "false").equals("true")) {
                 out
-                    .write("<button type=\"button\" class=\"kupu-subscript\" title=\"Subscript\" onclick=\"kupuui.basicButtonHandler('subscript');\">&nbsp;</button>");
+                    .write("<button type=\"button\" class=\"kupu-subscript\" title=\""+msgs.get("dialog.richedit.subscript")+"\" onclick=\"kupuui.basicButtonHandler('subscript');\">&nbsp;</button>");
             }
             if (this.getConfigValue("toolbarSuperscript", "false").equals("true")) {
                 out
-                    .write("<button type=\"button\" class=\"kupu-superscript\" title=\"Superscript\" onclick=\"kupuui.basicButtonHandler('superscript');\">&nbsp;</button>");
+                    .write("<button type=\"button\" class=\"kupu-superscript\" title=\""+msgs.get("dialog.richedit.superscript")+"\" onclick=\"kupuui.basicButtonHandler('superscript');\">&nbsp;</button>");
             }
             out.write("</span>");
             if (this.getConfigValue("toolbarColors", "false").equals("true")) {
@@ -364,26 +371,26 @@ public class DialogRichedit extends DialogBox {
                 // mozilla (1.5) does not support font background color yet!
                 out.write("<span class=\"kupu-tb-buttongroup\">");
                 out
-                    .write("<button type=\"button\" class=\"kupu-forecolor\" id=\"kupu-forecolor\" title=\"Text Color\">&nbsp;</button>");
+                    .write("<button type=\"button\" class=\"kupu-forecolor\" id=\"kupu-forecolor\" title=\""+msgs.get("dialog.richedit.textcolor")+"\">&nbsp;</button>");
                 out
-                    .write("<button type=\"button\" class=\"kupu-hilitecolor\" id=\"kupu-hilitecolor\" title=\"Background Color\">&nbsp;</button>");
+                    .write("<button type=\"button\" class=\"kupu-hilitecolor\" id=\"kupu-hilitecolor\" title=\""+msgs.get("dialog.richedit.backgroundcolor")+"\">&nbsp;</button>");
                 out.write("</span>");
             }
             if (this.getConfigValue("toolbarUndo", "true").equals("true")) {
                 out.write(" <span class=\"kupu-tb-buttongroup\">");
                 out
-                    .write("<button type=\"button\" class=\"kupu-undo\" title=\"Undo\" onclick=\"kupuui.basicButtonHandler('undo');\">&nbsp;</button>");
+                    .write("<button type=\"button\" class=\"kupu-undo\" title=\""+msgs.get("dialog.richedit.undo")+"\" onclick=\"kupuui.basicButtonHandler('undo');\">&nbsp;</button>");
                 out
-                    .write("<button type=\"button\" class=\"kupu-redo\" title=\"Redo\" onclick=\"kupuui.basicButtonHandler('redo');\">&nbsp;</button>");
+                    .write("<button type=\"button\" class=\"kupu-redo\" title=\""+msgs.get("dialog.richedit.redo")+"\" onclick=\"kupuui.basicButtonHandler('redo');\">&nbsp;</button>");
                 out.write(" </span>");
             }
             if (this.getConfigValue("toolbarLists", "true").equals("true")) {
                 out.write("<span class=\"kupu-tb-buttongroup\">");
                 // kupu note: list button events are set on the list tool
                 out
-                    .write("<button type=\"button\" class=\"kupu-insertorderedlist\" title=\"Numbered List\" id=\"kupu-list-ol-addbutton\">&nbsp;</button>");
+                    .write("<button type=\"button\" class=\"kupu-insertorderedlist\" title=\""+msgs.get("dialog.richedit.numberedlist")+"\" id=\"kupu-list-ol-addbutton\">&nbsp;</button>");
                 out
-                    .write("<button type=\"button\" class=\"kupu-insertunorderedlist\" title=\"Unordered List\" id=\"kupu-list-ul-addbutton\">&nbsp;</button>");
+                    .write("<button type=\"button\" class=\"kupu-insertunorderedlist\" title=\""+msgs.get("dialog.richedit.unorderedlist")+"\" id=\"kupu-list-ul-addbutton\">&nbsp;</button>");
                 out.write("</span>");
                 out.write("<select id=\"kupu-ulstyles\" class=\"" + CssConstants.CSSCLASS_SELECT + "\">");
                 out.write("  <option value=\"disc\">Disc</option>");

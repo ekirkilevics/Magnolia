@@ -18,7 +18,7 @@ function mgnlAclAdd(contextUsers,rowIndex,path,name,accessRight,accessType)
 	if (!path)
 		{
 		path="";
-		name="<i>Please choose a role</i>";
+		name="<i>" + mgnlMessages.get('js.dialog.acl.choose') + "</i>";
 		}
 	else if (!name || name=="") name=path;
 	var tr = aclTable.insertRow(rowIndex);

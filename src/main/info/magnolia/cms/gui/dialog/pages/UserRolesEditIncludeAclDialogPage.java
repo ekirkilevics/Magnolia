@@ -9,6 +9,8 @@ import info.magnolia.cms.gui.control.Hidden;
 import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.dialog.DialogSuper;
 import info.magnolia.cms.gui.misc.CssConstants;
+import info.magnolia.cms.i18n.ContextMessages;
+import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.servlets.BasePageServlet;
 
@@ -41,21 +43,22 @@ public class UserRolesEditIncludeAclDialogPage extends BasePageServlet {
 
     private static final String getHtmlRowInner(HttpServletRequest request) {
         boolean small = true;
+        Messages msgs = ContextMessages.getInstanceSavely(request);
 
         Select accessRight = new Select();
         accessRight.setSaveInfo(false);
         accessRight.setName("acl'+index+'AccessRight");
         accessRight.setCssClass("mgnlDialogControlSelect");
-        accessRight.setOptions("Read/Write", Long.toString(PERMISSION_ALL));
-        accessRight.setOptions("Read only", Long.toString(PERMISSION_READ));
-        accessRight.setOptions("Deny access", Long.toString(PERMISSION_NO));
+        accessRight.setOptions(msgs.get("roles.permission.readWrite"), Long.toString(PERMISSION_ALL));
+        accessRight.setOptions(msgs.get("roles.permission.readOnly"), Long.toString(PERMISSION_READ));
+        accessRight.setOptions(msgs.get("roles.permission.deny"), Long.toString(PERMISSION_NO));
 
         Select accessType = new Select();
         accessType.setSaveInfo(false);
         accessType.setName("acl'+index+'AccessType");
         accessType.setCssClass("mgnlDialogControlSelect");
-        accessType.setOptions("Selected and sub pages", "self");
-        accessType.setOptions("Sub pages", "sub");
+        accessType.setOptions(msgs.get("roles.edit.thisAndSubPages"), "self");
+        accessType.setOptions(msgs.get("roles.edit.subPages"), "sub");
 
         Edit path = new Edit();
         path.setSaveInfo(false);
@@ -65,12 +68,12 @@ public class UserRolesEditIncludeAclDialogPage extends BasePageServlet {
         path.setCssStyles("width", "100%");
 
         Button choose = new Button();
-        choose.setLabel("Choose...");
+        choose.setLabel(msgs.get("buttons.choose"));
         choose.setOnclick("mgnlAclChoose('+index+',\\'" + ContentRepository.WEBSITE + "\\');");
         choose.setSmall(small);
 
         Button delete = new Button();
-        delete.setLabel("Del");
+        delete.setLabel(msgs.get("buttons.delete"));
         delete.setOnclick("mgnlAclDelete('+index+');");
         delete.setSmall(small);
 

@@ -2,6 +2,7 @@ package info.magnolia.cms.gui.dialog.pages;
 
 import info.magnolia.cms.gui.dialog.DialogSuper;
 import info.magnolia.cms.gui.dialog.DialogWebDAV;
+import info.magnolia.cms.i18n.ContextMessages;
 import info.magnolia.cms.servlets.BasePageServlet;
 
 import java.io.IOException;
@@ -41,7 +42,7 @@ public class WebDavIFrameDialogPage extends BasePageServlet {
             dav.drawHtmlList(out);
         }
         else {
-            out.println("<i>An error occured. Unable to connect to WebDAV Server</i>");
+            out.println("<i>" + ContextMessages.get(request, "webdav.error") + "</i>");
         }
 
     }

@@ -8,6 +8,8 @@ import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.Hidden;
 import info.magnolia.cms.gui.dialog.DialogSuper;
 import info.magnolia.cms.gui.misc.CssConstants;
+import info.magnolia.cms.i18n.ContextMessages;
+import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.servlets.BasePageServlet;
 
@@ -35,15 +37,16 @@ public class UserEditIncludeRolesDialogPage extends BasePageServlet {
 
     private static final String getHtmlRowInner(HttpServletRequest request) {
         boolean small = true;
+        Messages msgs = ContextMessages.getInstanceSavely(request);
 
         Button choose = new Button();
-        choose.setLabel("Choose...");
+        choose.setLabel(msgs.get("buttons.choose"));
         choose.setOnclick("mgnlAclChoose('+index+',\\\'" + ContentRepository.USER_ROLES + "\\\');");
 
         choose.setSmall(small);
 
         Button delete = new Button();
-        delete.setLabel("Del");
+        delete.setLabel(msgs.get("buttons.delete"));
         delete.setOnclick("mgnlAclDelete('+index+');");
         delete.setSmall(small);
 
@@ -82,7 +85,7 @@ public class UserEditIncludeRolesDialogPage extends BasePageServlet {
      */
     public void draw(HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
         PrintWriter out = response.getWriter();
-
+        
         DialogSuper dialogControl = (DialogSuper) request.getAttribute("dialogObject");
         Content user = dialogControl.getWebsiteNode();
 

@@ -1,5 +1,6 @@
 <jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:c="urn:jsptld:http://java.sun.com/jsp/jstl/core"
-    xmlns:cms="urn:jsptld:cms-taglib">
+    xmlns:cms="urn:jsptld:cms-taglib"
+    xmlns:fmt="urn:jsptld:http://java.sun.com/jsp/jstl/fmt">
 
     <jsp:directive.page import="info.magnolia.cms.beans.config.ContentRepository" />
     <jsp:directive.page import="java.util.Date" />
@@ -26,7 +27,7 @@
     <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Magnolia: AdminCentral</title>
+    <title><fmt:message key="central.title"/></title>
     <cms:links />
     </head>
 
@@ -54,12 +55,16 @@
 	boolean permissionConfig=userPage.getNodeData("permissionConfig").getBoolean();
 
 </jsp:scriptlet>
-    <div style="position:absolute;top:3px;right:20px;" class="mgnlText">You are logged in as ${username}</div>
+    <div style="position:absolute;top:3px;right:20px;" class="mgnlText">
+    	<fmt:message key="central.loggedInAs">
+    		<fmt:param value="${username}"/>
+    	</fmt:message>
+    </div>
 
     <jsp:scriptlet>
 	if (!Server.isAdmin()) {
 </jsp:scriptlet>
-    <div style="position:absolute;top:20px;right:20px;" class="mgnlText"><strong>*** Public instance ***</strong></div>
+    <div style="position:absolute;top:20px;right:20px;" class="mgnlText"><strong>*** <fmt:message>central.publicInstance</fmt:message> ***</strong></div>
     <jsp:scriptlet>
 	}
 </jsp:scriptlet>

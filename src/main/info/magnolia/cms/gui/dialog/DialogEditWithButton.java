@@ -16,6 +16,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.Edit;
 import info.magnolia.cms.gui.misc.CssConstants;
+import info.magnolia.cms.i18n.TemplateMessages;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -95,7 +96,9 @@ public class DialogEditWithButton extends DialogBox {
         out.write("<tr><td width=\"100%\"  class=\"" + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">");
         out.write(control.getHtml());
         if (this.getConfigValue("buttonLabel", null) != null) {
-            this.getButton().setLabel(this.getConfigValue("buttonLabel"));
+            String label = this.getConfigValue("buttonLabel");
+            label = TemplateMessages.get(this, label);
+            this.getButton().setLabel(label);
         }
         for (int i = 0; i < this.getButtons().size(); i++) {
             out.write("</td><td>&nbsp;</td><td class=\"" + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">");

@@ -16,6 +16,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.File;
 import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.gui.misc.Spacer;
+import info.magnolia.cms.i18n.ContextMessages;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -90,7 +91,7 @@ public class DialogFile extends DialogBox {
         }
         String htmlControlBrowse = control.getHtmlBrowse();
         StringBuffer htmlControlFileName = new StringBuffer();
-        htmlControlFileName.append("<span class=\"" + CssConstants.CSSCLASS_DESCRIPTION + "\">Filename</span>");
+        htmlControlFileName.append("<span class=\"" + CssConstants.CSSCLASS_DESCRIPTION + "\">" + ContextMessages.get(this.getRequest(),"dialog.file.filename") + "</span>");
         htmlControlFileName.append(Spacer.getHtml(1, 1));
         htmlControlFileName.append(control.getHtmlFileName()
             + "<span id=\""

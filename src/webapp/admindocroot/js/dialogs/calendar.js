@@ -15,8 +15,10 @@ var ggWinCal;
 isNav = (navigator.appName.indexOf("Netscape") != -1) ? true : false;
 isIE = (navigator.appName.indexOf("Microsoft") != -1) ? true : false;
 
-Calendar.Months = ["January", "February", "March", "April", "May", "June",
-"July", "August", "September", "October", "November", "December"];
+Calendar.Months = new Array()
+for(i=1;i<=12;i++){
+	Calendar.Months[i-1] = mgnlMessages.get('js.dialog.calendar.month' + i);
+}
 
 // Non-Leap year Month days..
 Calendar.DOMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -442,13 +444,13 @@ Calendar.prototype.wwriteA = function(wtext) {
 Calendar.prototype.cal_header = function() {
 	var vCode = "";
 	vCode = vCode + "<tr bgcolor=ffffff>";
-	vCode = vCode + "<td width='14%' class=mgnlCalendarHeader align=center bgcolor="+weekendColor+">Sun</td>";
-	vCode = vCode + "<td width='14%' class=mgnlCalendarHeader align=center>Mon</td>";
-	vCode = vCode + "<td width='14%' class=mgnlCalendarHeader align=center>Tue</td>";
-	vCode = vCode + "<td width='14%' class=mgnlCalendarHeader align=center>Wed</td>";
-	vCode = vCode + "<td width='14%' class=mgnlCalendarHeader align=center>Thu</td>";
-	vCode = vCode + "<td width='14%' class=mgnlCalendarHeader align=center>Fri</td>";
-	vCode = vCode + "<td width='16%' class=mgnlCalendarHeader align=center bgcolor="+weekendColor+">Sat</td>";
+	vCode = vCode + "<td width='14%' class=mgnlCalendarHeader align=center bgcolor="+weekendColor+">" + mgnlMessages.get('js.dialog.calendar.sun') + "</td>";
+	vCode = vCode + "<td width='14%' class=mgnlCalendarHeader align=center>" + mgnlMessages.get('js.dialog.calendar.mon') + "</td>";
+	vCode = vCode + "<td width='14%' class=mgnlCalendarHeader align=center>" + mgnlMessages.get('js.dialog.calendar.tue') + "</td>";
+	vCode = vCode + "<td width='14%' class=mgnlCalendarHeader align=center>" + mgnlMessages.get('js.dialog.calendar.wed') + "</td>";
+	vCode = vCode + "<td width='14%' class=mgnlCalendarHeader align=center>" + mgnlMessages.get('js.dialog.calendar.thu') + "</td>";
+	vCode = vCode + "<td width='14%' class=mgnlCalendarHeader align=center>" + mgnlMessages.get('js.dialog.calendar.fri') + "</td>";
+	vCode = vCode + "<td width='16%' class=mgnlCalendarHeader align=center bgcolor="+weekendColor+">" + mgnlMessages.get('js.dialog.calendar.sat') + "</td>";
 	vCode = vCode + "</tr>";
 
 	return vCode;
@@ -483,21 +485,7 @@ Calendar.prototype.cal_data = function() {
 			"onmouseover=dayOver(this); "+
 			"onmouseout=dayOut(this); "+
 			">"+
-				//"[[<a href='javascript:void(0)' " +
-				//enz
-				//"onClick=\"self.opener.document." + this.gReturnItem + ".value='" +
-				//this.format_data(vDay) +
-				//", '+document.forms.mgnlFormMain.hour.value+':'+document.forms.mgnlFormMain.minute.value+':'+document.forms.mgnlFormMain.second.value\">" +
-
-				//writing year and month on choosing the date
-				//"onClick=\";var form=document.forms.mgnlFormMain;form.selectedyyyy.value='"+this.gYear+"';form.selectedmm.value='"+(this.gMonth+1)+"';form.selecteddd.value='"+this.formatNumber(vDay)+"';selectedDateShow();\">" +
-				//writing year and month on choosing them
-				//"onClick=\";document.forms.mgnlFormMain.selecteddd.value='"+this.formatNumber(vDay)+"';selectedDateShow();highlight("+vDay+");\" " +
-				//" id=date"+vDay+
-				//">"+
-				//this.format_day(vDay) +
 				vDay +
-			//"</a>" +
 			"</td>";
 		vDay=vDay + 1;
 	}
@@ -514,18 +502,7 @@ Calendar.prototype.cal_data = function() {
 				"onmouseover=dayOver(this); "+
 				"onmouseout=dayOut(this); "+
 				">"+
-				//"<a href='javascript:void(0)' " +
-				 //"onClick=\"document.forms.mgnlFormMain.selectedDate.value='"+this.format_data(vDay)+"';self.opener.document." + this.gReturnItem + ".value=document.forms.mgnlFormMain.selectedDate.value+', '+document.forms.mgnlFormMain.hour.value+':'+document.forms.mgnlFormMain.minute.value+':'+document.forms.mgnlFormMain.second.value\">" +
-				  //"onClick=\"var form=document.forms.mgnlFormMain;form.selectedyyyy.value='"+this.gYear+"';form.selectedmm.value='"+(this.gMonth+1)+"';form.selecteddd.value='"+this.formatNumber(vDay)+"';selectedDateShow();\">" +
-				//"onClick=\";document.forms.mgnlFormMain.selecteddd.value='"+this.formatNumber(vDay)+"';selectedDateShow();highlight("+vDay+");\" " +
-				//this.set_class(vDay) +
-				//" id=date"+vDay+
-				//">"+
-
-				//this.format_day(vDay + "</a>" +
 				vDay +
-				//vDay + "</a>" +
-
 				"</td>";
 			vDay=vDay + 1;
 

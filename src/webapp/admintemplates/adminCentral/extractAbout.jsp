@@ -1,13 +1,21 @@
-<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:c="urn:jsptld:http://java.sun.com/jsp/jstl/core"
+<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page" 
+	xmlns:c="urn:jsptld:http://java.sun.com/jsp/jstl/core"
+	xmlns:fmt="urn:jsptld:http://java.sun.com/jsp/jstl/fmt"
     xmlns:cms="urn:jsptld:cms-taglib">
     <jsp:directive.page contentType="text/html; charset=UTF-8" />
+    
+    <jsp:scriptlet>pageContext.setAttribute("license", info.magnolia.cms.license.License.getInstance().getEntries());</jsp:scriptlet>
+    <jsp:scriptlet>pageContext.setAttribute("isadmin", new Boolean(info.magnolia.cms.beans.config.Server.isAdmin()));</jsp:scriptlet>
+	<fmt:message var="version" key="about.version"/>
+	<fmt:message var="build" key="about.build"/>
+	
     <jsp:text>
         <![CDATA[<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> ]]>
     </jsp:text>
     <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
-    <title>About Magnolia</title>
+    <title><fmt:message>about.title</fmt:message></title>
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
@@ -41,15 +49,12 @@
 
     <body class="mgnlBgLight">
 
-    <jsp:scriptlet>pageContext.setAttribute("license", info.magnolia.cms.license.License.getInstance().getEntries());</jsp:scriptlet>
-    <jsp:scriptlet>pageContext.setAttribute("isadmin", new Boolean(info.magnolia.cms.beans.config.Server.isAdmin()));</jsp:scriptlet>
-
     <div class="mgnlText">
     <h1>Magnolia ${license.VersionNumber}</h1>
 
     <pre><![CDATA[
-Version: ${license.VersionNumber}
-Build: ${license.BuildNumber}
+${version}: ${license.VersionNumber}
+${build}: ${license.BuildNumber}
 
 ${license.ProviderAddress}
 

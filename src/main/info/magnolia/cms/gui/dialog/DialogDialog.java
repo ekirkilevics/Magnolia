@@ -18,6 +18,8 @@ import info.magnolia.cms.gui.control.ControlSuper;
 import info.magnolia.cms.gui.control.Hidden;
 import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.gui.misc.Sources;
+import info.magnolia.cms.i18n.ContextMessages;
+import info.magnolia.cms.i18n.Messages;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -127,7 +129,7 @@ public class DialogDialog extends DialogSuper {
     }
 
     public void drawHtmlPreSubs(Writer out) throws IOException {
-
+        
         // @todo fix html and add a good doctype. At the moment dialogs don't work in standard compliant mode
         // out.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" ");
         // out.write(" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">");
@@ -142,7 +144,7 @@ public class DialogDialog extends DialogSuper {
             + this.getConfigValue("height", DIALOGSIZE_NORMAL_HEIGHT)
             + ");");
         out.write("</script>");
-        out.write("<title>" + this.getConfigValue("label", "Magnolia Edit Dialog") + "</title>");
+        out.write("<title>" + this.getConfigValue("label", ContextMessages.get(getRequest(),"dialog.editTitle")) + "</title>");
         out.write(new Sources(this.getRequest().getContextPath()).getHtmlJs());
         out.write(new Sources(this.getRequest().getContextPath()).getHtmlCss());
         out.write(new Sources(this.getRequest().getContextPath()).getHtmlRichEdit());
@@ -178,6 +180,8 @@ public class DialogDialog extends DialogSuper {
     }
 
     public void drawHtmlPostSubs(Writer out) throws IOException {
+        Messages msgs = ContextMessages.getInstanceSavely(getRequest());
+        
         // TabSet stuff
         String id = this.getId();
         out.write("<div class=\"" + CssConstants.CSSCLASS_TABSETBUTTONBAR + "\">");
@@ -203,11 +207,11 @@ public class DialogDialog extends DialogSuper {
 
         Button save = new Button();
         save.setOnclick(this.getConfigValue("saveOnclick", "mgnlDialogFormSubmit();"));
-        save.setLabel(this.getConfigValue("saveLabel", "Save"));
+        save.setLabel(this.getConfigValue("saveLabel", msgs.get("buttons.save")));
         out.write(save.getHtml());
         Button cancel = new Button();
         cancel.setOnclick(this.getConfigValue("cancelOnclick", "window.close();"));
-        cancel.setLabel(this.getConfigValue("cancelLabel", "Cancel"));
+        cancel.setLabel(this.getConfigValue("cancelLabel", msgs.get("buttons.cancel")));
         out.write(cancel.getHtml());
 
         out.write("</div>");

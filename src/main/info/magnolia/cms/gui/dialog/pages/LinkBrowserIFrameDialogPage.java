@@ -7,6 +7,8 @@ import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.gui.control.TreeMenuItem;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.gui.misc.Spacer;
+import info.magnolia.cms.i18n.ContextMessages;
+import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.servlets.BasePageServlet;
 
 import java.io.IOException;
@@ -33,6 +35,7 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
      */
     public void draw(HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
         PrintWriter out = response.getWriter();
+        Messages msgs = ContextMessages.getInstanceSavely(request);
         // WARNING: no white spaces tolerated for save nodeData!
 
         int treeHeight = 50;
@@ -98,14 +101,14 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
 
             TreeColumn column1 = new TreeColumn(websiteTree.getJavascriptTree(), request);
             column1.setName("title");
-            column1.setTitle("Title");
+            column1.setTitle(msgs.get("linkbrowser.web.title"));
             column1.setWidth(2);
 
             websiteTree.addColumn(column0);
             websiteTree.addColumn(column1);
 
             TreeMenuItem menuRefresh = new TreeMenuItem();
-            menuRefresh.setLabel("Refresh");
+            menuRefresh.setLabel(msgs.get("linkbrowser.refresh"));
             menuRefresh.setOnclick(websiteTree.getJavascriptTree() + ".refresh();");
 
             websiteTree.addMenuItem(menuRefresh);
@@ -143,19 +146,19 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
 
             TreeColumn column0 = new TreeColumn(usersTree.getJavascriptTree(), request);
             column0.setIsLabel(true);
-            column0.setTitle("User name");
+            column0.setTitle(msgs.get("linkbrowser.user.username"));
             column0.setWidth(2);
 
             TreeColumn column1 = new TreeColumn(usersTree.getJavascriptTree(), request);
             column1.setName("title");
-            column1.setTitle("Full name");
+            column1.setTitle(msgs.get("linkbrowser.user.fullname"));
             column1.setWidth(2);
 
             usersTree.addColumn(column0);
             usersTree.addColumn(column1);
 
             TreeMenuItem menuRefresh = new TreeMenuItem();
-            menuRefresh.setLabel("Refresh");
+            menuRefresh.setLabel(msgs.get("linkbrowser.refresh"));
             menuRefresh.setOnclick(usersTree.getJavascriptTree() + ".refresh();");
 
             usersTree.addMenuItem(menuRefresh);
@@ -198,13 +201,13 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
             TreeColumn column1 = new TreeColumn(rolesTree.getJavascriptTree(), request);
             column1.setName("title");
             column1.setWidth(2);
-            column1.setTitle("Full role name");
+            column1.setTitle(msgs.get("linkbrowser.role.fullrolename"));
 
             rolesTree.addColumn(column0);
             rolesTree.addColumn(column1);
 
             TreeMenuItem menuRefresh = new TreeMenuItem();
-            menuRefresh.setLabel("Refresh");
+            menuRefresh.setLabel(msgs.get("linkbrowser.refresh"));
             menuRefresh.setOnclick(rolesTree.getJavascriptTree() + ".refresh();");
 
             rolesTree.addMenuItem(menuRefresh);

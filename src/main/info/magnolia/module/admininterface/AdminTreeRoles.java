@@ -18,6 +18,8 @@ import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.gui.control.TreeMenuItem;
+import info.magnolia.cms.i18n.ContextMessages;
+import info.magnolia.cms.i18n.Messages;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -34,7 +36,8 @@ public class AdminTreeRoles implements AdminTree {
      */
     public void configureTree(Tree tree, HttpServletRequest request, String path, String pathOpen, String pathSelected,
         boolean create, String createItemType) {
-
+        Messages msgs = ContextMessages.getInstanceSavely(request);
+        
         tree.setDrawShifter(false);
 
         tree.setIconPage(Tree.ICONDOCROOT + "hat_white.gif");
@@ -56,13 +59,13 @@ public class AdminTreeRoles implements AdminTree {
         if (Server.isAdmin())
             column0.setHtmlEdit();
         column0.setWidth(2);
-        column0.setTitle("Role name");
+        column0.setTitle(msgs.get("tree.roles.name"));
         TreeColumn column1 = new TreeColumn(tree.getJavascriptTree(), request);
         column1.setName("title");
         if (Server.isAdmin())
             column1.setHtmlEdit();
         column1.setWidth(2);
-        column1.setTitle("Full role name");
+        column1.setTitle(msgs.get("tree.roles.fullname"));
         TreeColumn columnIcons = new TreeColumn(tree.getJavascriptTree(), request);
         columnIcons.setCssClass("");
         columnIcons.setWidth(1);
@@ -73,7 +76,7 @@ public class AdminTreeRoles implements AdminTree {
         // column2.setName(MetaData.SEQUENCE_POS);
         column2.setIsMeta(true);
         column2.setDateFormat("yyyy-MM-dd, HH:mm");
-        column2.setTitle("Mod. date");
+        column2.setTitle(msgs.get("tree.roles.date"));
         column2.setWidth(2);
         tree.addColumn(column0);
         tree.addColumn(column1);
@@ -82,35 +85,35 @@ public class AdminTreeRoles implements AdminTree {
         }
         tree.addColumn(column2);
         TreeMenuItem menuOpen = new TreeMenuItem();
-        menuOpen.setLabel("Edit role...");
+        menuOpen.setLabel(msgs.get("tree.roles.menu.edit"));
         menuOpen.setOnclick("mgnlTreeMenuOpenDialog("
             + tree.getJavascriptTree()
             + ",'.magnolia/adminCentral/userRoles/dialog.html');");
         menuOpen.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         TreeMenuItem menuNewPage = new TreeMenuItem();
-        menuNewPage.setLabel("New role");
+        menuNewPage.setLabel(msgs.get("tree.roles.menu.new"));
         menuNewPage.setOnclick(tree.getJavascriptTree() + ".createRootNode('" + ItemType.NT_CONTENT + "');");
         TreeMenuItem menuDelete = new TreeMenuItem();
-        menuDelete.setLabel("Delete");
+        menuDelete.setLabel(msgs.get("tree.roles.menu.delete"));
         menuDelete.setOnclick(tree.getJavascriptTree() + ".deleteNode();");
         menuDelete.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         TreeMenuItem menuMove = new TreeMenuItem();
-        menuMove.setLabel("Move role");
+        menuMove.setLabel(msgs.get("tree.roles.menu.move"));
         menuMove.setOnclick(tree.getJavascriptTree() + ".cutNode();");
         menuMove.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         TreeMenuItem menuCopy = new TreeMenuItem();
-        menuCopy.setLabel("Copy role");
+        menuCopy.setLabel(msgs.get("tree.roles.menu.copy"));
         menuCopy.setOnclick(tree.getJavascriptTree() + ".copyNode();");
         menuCopy.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         TreeMenuItem menuRefresh = new TreeMenuItem();
-        menuRefresh.setLabel("Refresh");
+        menuRefresh.setLabel(msgs.get("tree.menu.refresh"));
         menuRefresh.setOnclick(tree.getJavascriptTree() + ".refresh();");
         TreeMenuItem menuActivateExcl = new TreeMenuItem();
-        menuActivateExcl.setLabel("Activate role");
+        menuActivateExcl.setLabel(msgs.get("tree.roles.menu.activate"));
         menuActivateExcl.setOnclick(tree.getJavascriptTree() + ".activateNode(" + Tree.ACTION_ACTIVATE + ",false);");
         menuActivateExcl.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         TreeMenuItem menuDeActivate = new TreeMenuItem();
-        menuDeActivate.setLabel("De-activate role");
+        menuDeActivate.setLabel(msgs.get("tree.roles.menu.deactivate"));
         menuDeActivate.setOnclick(tree.getJavascriptTree() + ".deActivateNode(" + Tree.ACTION_DEACTIVATE + ");");
         menuDeActivate.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         if (Server.isAdmin()) {

@@ -19,6 +19,7 @@ import info.magnolia.cms.gui.control.ButtonSet;
 import info.magnolia.cms.gui.control.ControlSuper;
 import info.magnolia.cms.gui.control.Hidden;
 import info.magnolia.cms.gui.misc.CssConstants;
+import info.magnolia.cms.i18n.TemplateMessages;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -62,9 +63,11 @@ public class DialogButtonSet extends DialogBox {
             while (it.hasNext()) {
                 ContentNode n = ((ContentNode) it.next());
                 String value = n.getNodeData("value").getString();
+                String label = n.getNodeData("label").getString();
+                label = TemplateMessages.get(this, label);
                 Button button = new Button(this.getName(), value);
                 // if (n.getNodeData("label").isExist()) button.setLabel(n.getNodeData("label").getString());
-                button.setLabel(n.getNodeData("label").getString());
+                button.setLabel(label);
                 if (setDefaultSelected && n.getNodeData("selected").getBoolean()) {
                     button.setState(ControlSuper.BUTTONSTATE_PUSHED);
                 }
@@ -81,8 +84,9 @@ public class DialogButtonSet extends DialogBox {
         // checkboxSwitch -> only one option, value always true/false
         List options = new ArrayList();
         Button button = new Button(this.getName(), "");
-
-        button.setLabel(configNode.getNodeData("buttonLabel").getString());
+        String label =configNode.getNodeData("buttonLabel").getString();
+        label = TemplateMessages.get(this, label);
+        button.setLabel(label);
 
         if (configNode.getNodeData("selected").getBoolean()) {
             button.setState(ControlSuper.BUTTONSTATE_PUSHED);

@@ -19,7 +19,6 @@ import info.magnolia.cms.util.Resource;
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.jstl.fmt.LocaleSupport;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.commons.lang.StringUtils;
@@ -146,7 +145,7 @@ public class NewBar extends TagSupport {
      * @return String , label for the new bar
      */
     private String getNewLabel() {
-        String defStr = ContextMessages.getInstanceSave(this.pageContext).get(DEFAULT_NEW_LABEL);
+        String defStr = ContextMessages.getInstanceSavely(this.pageContext).get(DEFAULT_NEW_LABEL);
         //String defStr = LocaleSupport.getLocalizedMessage(this.pageContext, DEFAULT_NEW_LABEL);
         return StringUtils.defaultString(this.newLabel, defStr);
     }

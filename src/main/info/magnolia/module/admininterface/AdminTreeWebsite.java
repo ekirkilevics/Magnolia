@@ -20,6 +20,8 @@ import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.gui.control.TreeMenuItem;
+import info.magnolia.cms.i18n.ContextMessages;
+import info.magnolia.cms.i18n.Messages;
 
 import java.util.Iterator;
 
@@ -29,7 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Handles the tree rendering for the "website" repository.
  * @author Fabrizio Giustina
- * @version $Id: AdminTreeWebsite.java 378 2005-03-13 16:11:26Z fgiust $
+ * @version $Id$
  */
 public class AdminTreeWebsite implements AdminTree {
 
@@ -38,7 +40,8 @@ public class AdminTreeWebsite implements AdminTree {
      */
     public void configureTree(Tree tree, HttpServletRequest request, String path, String pathOpen, String pathSelected,
         boolean create, String createItemType) {
-
+        Messages msgs = ContextMessages.getInstanceSavely(request);
+        
         tree.setIconOndblclick("mgnlTreeMenuItemOpen(" + tree.getJavascriptTree() + ");");
         tree.setPath(path);
         if (create) {
@@ -62,7 +65,7 @@ public class AdminTreeWebsite implements AdminTree {
         columnIcons.setIconsPermission(true);
         TreeColumn column1 = new TreeColumn(tree.getJavascriptTree(), request);
         column1.setName("title");
-        column1.setTitle("Title");
+        column1.setTitle(msgs.get("tree.web.title"));
         column1.setWidth(2);
         if (Server.isAdmin())
             column1.setHtmlEdit();
@@ -70,7 +73,7 @@ public class AdminTreeWebsite implements AdminTree {
         column2.setName(MetaData.TEMPLATE);
         column2.setIsMeta(true);
         column2.setWidth(2);
-        column2.setTitle("Template");
+        column2.setTitle(msgs.get("tree.web.template"));
         Select templateSelect = new Select();
         templateSelect.setName(tree.getJavascriptTree() + TreeColumn.EDIT_NAMEADDITION);
         templateSelect.setSaveInfo(false);
@@ -92,7 +95,7 @@ public class AdminTreeWebsite implements AdminTree {
         column3.setIsMeta(true);
         column3.setDateFormat("yy-MM-dd, HH:mm");
         column3.setWidth(2);
-        column3.setTitle("Mod. date");
+        column3.setTitle(msgs.get("tree.web.date"));
         tree.addColumn(column0);
         tree.addColumn(column1);
         if (Server.isAdmin()) {
@@ -102,56 +105,56 @@ public class AdminTreeWebsite implements AdminTree {
         tree.addColumn(column3);
 
         TreeMenuItem menuOpen = new TreeMenuItem();
-        menuOpen.setLabel("Open page...");
+        menuOpen.setLabel(msgs.get("tree.web.menu.open"));
         menuOpen.setOnclick("mgnlTreeMenuItemOpen(" + tree.getJavascriptTree() + ");");
         menuOpen.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
 
         TreeMenuItem menuNewPage = new TreeMenuItem();
-        menuNewPage.setLabel("New page");
+        menuNewPage.setLabel(msgs.get("tree.web.menu.new"));
         menuNewPage.setOnclick(tree.getJavascriptTree() + ".createNode('" + ItemType.NT_CONTENT + "');");
         menuNewPage.addJavascriptCondition("mgnlTreeMenuItemConditionPermissionWrite");
 
         TreeMenuItem menuDelete = new TreeMenuItem();
-        menuDelete.setLabel("Delete");
+        menuDelete.setLabel(msgs.get("tree.web.menu.delete"));
         menuDelete.setOnclick(tree.getJavascriptTree() + ".deleteNode();");
         menuDelete.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         menuDelete.addJavascriptCondition("mgnlTreeMenuItemConditionPermissionWrite");
 
         TreeMenuItem menuMove = new TreeMenuItem();
-        menuMove.setLabel("Move page");
+        menuMove.setLabel(msgs.get("tree.web.menu.move"));
         menuMove.setOnclick(tree.getJavascriptTree() + ".cutNode();");
         menuMove.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         menuMove.addJavascriptCondition("mgnlTreeMenuItemConditionPermissionWrite");
 
         TreeMenuItem menuCopy = new TreeMenuItem();
-        menuCopy.setLabel("Copy page");
+        menuCopy.setLabel(msgs.get("tree.web.menu.copy"));
         menuCopy.setOnclick(tree.getJavascriptTree() + ".copyNode();");
         menuCopy.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
 
         TreeMenuItem menuActivateExcl = new TreeMenuItem();
-        menuActivateExcl.setLabel("Activate this page");
+        menuActivateExcl.setLabel(msgs.get("tree.web.menu.activate"));
         menuActivateExcl.setOnclick(tree.getJavascriptTree() + ".activateNode(" + Tree.ACTION_ACTIVATE + ",false);");
         menuActivateExcl.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         menuActivateExcl.addJavascriptCondition("mgnlTreeMenuItemConditionPermissionWrite");
 
         TreeMenuItem menuActivateIncl = new TreeMenuItem();
-        menuActivateIncl.setLabel("Activate incl. sub pages");
+        menuActivateIncl.setLabel(msgs.get("tree.web.menu.activateInclSubs"));
         menuActivateIncl.setOnclick(tree.getJavascriptTree() + ".activateNode(" + Tree.ACTION_ACTIVATE + ",true);");
         menuActivateIncl.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         menuActivateIncl.addJavascriptCondition("mgnlTreeMenuItemConditionPermissionWrite");
 
         TreeMenuItem menuDeActivate = new TreeMenuItem();
-        menuDeActivate.setLabel("De-activate");
+        menuDeActivate.setLabel(msgs.get("tree.web.menu.deactivate"));
         menuDeActivate.setOnclick(tree.getJavascriptTree() + ".deActivateNode(" + Tree.ACTION_DEACTIVATE + ");");
         menuDeActivate.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         menuDeActivate.addJavascriptCondition("mgnlTreeMenuItemConditionPermissionWrite");
 
         TreeMenuItem menuRefresh = new TreeMenuItem();
-        menuRefresh.setLabel("Refresh");
+        menuRefresh.setLabel(msgs.get("tree.menu.refresh"));
         menuRefresh.setOnclick(tree.getJavascriptTree() + ".refresh();");
 
         TreeMenuItem menuExport = new TreeMenuItem();
-        menuExport.setLabel("Export tree to xml");
+        menuExport.setLabel(msgs.get("tree.menu.export"));
         menuExport.setOnclick(tree.getJavascriptTree() + ".exportNode();");
         menuExport.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         menuExport.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotNodeData");

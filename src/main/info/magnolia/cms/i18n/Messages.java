@@ -14,6 +14,7 @@
 package info.magnolia.cms.i18n;
 
 import java.text.MessageFormat;
+import java.util.Enumeration;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -31,6 +32,7 @@ import org.apache.log4j.Logger;
 public class Messages {
 
     public static String DEFAULT_BASENAME = "info.magnolia.module.admininterface.messages";
+    public static String JS_OBJECTNAME = "mgnlMessages";
 
     protected static Logger log = Logger.getLogger(Messages.class);
 
@@ -77,6 +79,8 @@ public class Messages {
     }
 
     public String getBasename() {
+        if(basename==null)
+            return DEFAULT_BASENAME;
         return basename;
     }
 
@@ -87,37 +91,19 @@ public class Messages {
 
     public String get(String key) {
         try {
-            return "ok: " + getBundle().getString(key);
+            return getBundle().getString(key);
         }
         catch (MissingResourceException e) {
-            return "??" + key + "??";
+            return "???" + key + "???";
         }
     }
 
     public String get(String key, String basename) {
         try {
-            return "ok: " + getBundle(basename).getString(key);
+            return getBundle(basename).getString(key);
         }
         catch (MissingResourceException e) {
-            return "??" + key + "??";
-        }
-    }
-
-    public String getWithDefault(String key, String defaultMsg) {
-        try {
-            return "ok: " + getBundle().getString(key);
-        }
-        catch (MissingResourceException e) {
-            return defaultMsg;
-        }
-    }
-
-    public String getWithDefault(String key, String basename, String defaultMsg) {
-        try {
-            return "ok: " + getBundle(basename).getString(key);
-        }
-        catch (MissingResourceException e) {
-            return defaultMsg;
+            return "???" + key + "???";
         }
     }
 
@@ -131,19 +117,74 @@ public class Messages {
         return MessageFormat.format(get(key), args);
     }
 
-    public String get(String key, Object args[], String basename) {
+    public String get(String key, String basename, Object args[]) {
         return MessageFormat.format(get(key, basename), args);
     }
 
+    public String getWithDefault(String key, String defaultMsg) {
+        String msg;
+        try {
+            msg = getBundle().getString(key);
+            if(msg.startsWith("???")){
+                msg = defaultMsg;
+            }
+            
+        }
+        catch (MissingResourceException e) {
+            msg = defaultMsg;
+        }
+        return msg;
+    }
+
+    public String getWithDefault(String key, String basename, String defaultMsg) {
+        String msg;
+        try {
+            msg = getBundle(basename).getString(key);
+            if(msg.startsWith("???")){
+                msg = defaultMsg;
+            }
+            
+        }
+        catch (MissingResourceException e) {
+            msg = defaultMsg;
+        }
+        return msg;
+    }
+
+    public String getWithDefault(String key,  Object args[], String defaultMsg) {
+       return MessageFormat.format(getWithDefault(key, defaultMsg), args);
+    }
+
+    public String getWithDefault(String key, String basename, Object args[], String defaultMsg) {
+        return MessageFormat.format(getWithDefault(key, basename, defaultMsg), args);
+    }
+
+    
     /**
      * Adds Variables to a JS witch can be used with the getMessage(key) method
      * @return Javascript-Construct of this textes
-     * @todo implement
      */
-    public String generateJavaScript() {
-        return null;
+    public String generateJavaScript(){
+       StringBuffer str = new StringBuffer();
+       ResourceBundle bundle = getBundle();
+       
+       str.append("/* ###################################\n");
+       str.append("### Generated Messages\n");
+       str.append("################################### */\n\n");
+       
+       Enumeration en = bundle.getKeys();
+       while(en.hasMoreElements()){
+           String key = (String) en.nextElement();
+           
+           if(key.startsWith("js.")){
+               String msg = ((String)bundle.getObject(key)).replaceAll("'", "\\\\'").replaceAll("\n","\\\\n");
+               str.append(JS_OBJECTNAME + ".add('"+ key +"','" + msg + "','" + getBasename() + "');");
+               str.append("\n");
+           }
+       }
+       return str.toString();
     }
-
+    
     /**
      * @return Returns the bundle.
      */

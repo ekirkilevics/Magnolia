@@ -62,8 +62,8 @@
 		this.colors.nodeSelected="#e0e0e0";
 
 		this.strings=new Object();
-		this.strings.saving="Saving...";
-		this.strings.loading="Loading...";
+		this.strings.saving=mgnlMessages.get('js.tree.saving');
+		this.strings.loading=mgnlMessages.get('js.tree.loading');
 		this.strings.empty="-";
 
 		this.moveDontReset=false;
@@ -529,7 +529,9 @@
 
 	mgnlTree.prototype.deleteNode = function()
 		{
-		if (mgnlConfirm("The node\n"+this.selectedNode.id+"\nwill be de-activated and deleted immediately.\n\nAre you sure to continue?","Delete node?"))
+		var text=mgnlMessages.get('js.tree.deletenode.confirm.text', null, [this.selectedNode.id]);
+		var title=mgnlMessages.get('js.tree.deletenode.confirm.title');
+		if (mgnlConfirm(text,title))
 			{
 			var parentNode=this.getNode(this.selectedNode.parentId);
 			var deleteNode=this.selectedNode.label;
@@ -549,7 +551,10 @@
 
     mgnlTree.prototype.exportNode = function()
 		{
-		if (mgnlConfirm("Are you sure to continue?","Exporting "+this.selectedNode.id+" to xml."))
+		var text=mgnlMessages.get('js.tree.exportnode.confirm.text');
+		var title=mgnlMessages.get('js.tree.exportnode.confirm.title', null, [this.selectedNode.id]);
+		
+		if (mgnlConfirm(text,title))
 			{
 
 		    var url="${pageContext.request.contextPath}/export?exportxml=true&repository=" + this.repository + "&basepath=" + this.selectedNode.id;
@@ -584,7 +589,7 @@
 			if (this.clipboardMethod==0 && id.indexOf(this.clipboardNode.id)==0 && pasteType!=0)
 				{
 				//move into itself is not possible
-				mgnlAlert("It's not possible to move a node into itself.");
+				mgnlAlert(mgnlMessages.get('js.tree.pastenode.itself'));
 				}
 			else
 				{
@@ -849,7 +854,8 @@
 			}
 		else if (this.lastEditedIsLabel && this.lastEditedNode.isActivated)
 			{
-			if (!mgnlConfirm("Save will de-activate the node.\nContinue?","De-activation warning"))
+			if (!mgnlConfirm(mgnlMessages.get('js.tree.savenode.confirmDeactivation.text'),
+								mgnlMessages.get('js.tree.savenode.confirmDeactivation.title')))
 				{
 				exit=true;
 				}

@@ -16,6 +16,7 @@ import info.magnolia.cms.gui.dialog.DialogHidden;
 import info.magnolia.cms.gui.dialog.DialogStatic;
 import info.magnolia.cms.gui.dialog.DialogTab;
 import info.magnolia.cms.gui.misc.Sources;
+import info.magnolia.cms.i18n.ContextMessages;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.servlets.BasePageServlet;
 import info.magnolia.cms.util.Resource;
@@ -50,6 +51,8 @@ public class StandardDialogPage extends BasePageServlet {
      * @see info.magnolia.cms.servlets.BasePageServlet#draw(HttpServletRequest, HttpServletResponse)
      */
     public void draw(HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
+        info.magnolia.cms.i18n.Messages msgs = ContextMessages.getInstanceSavely(request);
+
         PrintWriter out = response.getWriter();
 
         MultipartForm form = Resource.getPostedForm(request);
@@ -109,13 +112,14 @@ public class StandardDialogPage extends BasePageServlet {
                 Paragraph para = Paragraph.getInfo(paragraph);
 
                 if (para == null) {
-                    out.println("Paragraph " + paragraph + " is not available");
+                    out.println(msgs.get("dialog.paragraph.paragraphNotAvailable", paragraph));
                     return;
                 }
 
                 configNode = para.getDialogContent();
 
-                try {                    Content websiteContent = hm.getPage(path);
+                try {
+                    Content websiteContent = hm.getPage(path);
                     if (nodeName == null || nodeName.equals("")) {
                         websiteNode = websiteContent;
                     }
@@ -124,11 +128,13 @@ public class StandardDialogPage extends BasePageServlet {
                             websiteNode = websiteContent.getContentNode(nodeName);
 
                         }
-                        else {                            websiteNode = websiteContent.getContentNode(nodeCollectionName).getContentNode(nodeName);
+                        else {
+                            websiteNode = websiteContent.getContentNode(nodeCollectionName).getContentNode(nodeName);
 
                         }
                     }
-                }                catch (RepositoryException re) {
+                }
+                catch (RepositoryException re) {
                     // content does not exist yet
 
                 }
@@ -143,7 +149,6 @@ public class StandardDialogPage extends BasePageServlet {
                 dialog.setConfig("repository", repository);
                 dialog.drawHtml(out);
 
-
             }
             else {
                 // multiple paragraphs: show selection dialog
@@ -157,8 +162,8 @@ public class StandardDialogPage extends BasePageServlet {
                 dialog.setConfig("richEPaste", richEPaste);
                 dialog.setConfig("repository", repository);
 
-                dialog.setLabel("Create new paragraph");
-                dialog.setConfig("saveLabel", "OK");
+                dialog.setLabel(msgs.get("dialog.paragraph.createNew"));
+                dialog.setConfig("saveLabel", msgs.get("buttons.ok"));
 
                 DialogHidden h1 = DialogFactory.getDialogHiddenInstance(request, response, null, null);
                 h1.setName("mgnlParagraphSelected");
@@ -171,7 +176,7 @@ public class StandardDialogPage extends BasePageServlet {
                 DialogStatic c0 = DialogFactory.getDialogStaticInstance(request, response, null, null);
 
                 c0.setConfig("line", "false");
-                c0.setValue("Select a type for the new paragraph");
+                c0.setValue(msgs.get("dialog.paragraph.select"));
                 c0.setBoxType((DialogBox.BOXTYPE_1COL));
                 tab.addSub(c0);
 
@@ -188,8 +193,8 @@ public class StandardDialogPage extends BasePageServlet {
                         Paragraph paragraphInfo = Paragraph.getInfo(pars[i]);
                         Button button = new Button(c1.getName(), paragraphInfo.getName());
                         StringBuffer label = new StringBuffer();
-                        label.append("<strong>" + paragraphInfo.getTitle() + "</strong><br />");
-                        label.append(paragraphInfo.getDescription());
+                        label.append("<strong>" + msgs.getWithDefault(paragraphInfo.getTitle(),paragraphInfo.getTitle()) + "</strong><br />");
+                        label.append(msgs.getWithDefault(paragraphInfo.getDescription(),paragraphInfo.getDescription()));
                         label.append("<br /><br />");
                         button.setLabel(label.toString());
                         button.setOnclick("document.mgnlFormMain.submit();");

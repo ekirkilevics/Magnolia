@@ -4,6 +4,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.gui.misc.Sources;
+import info.magnolia.cms.i18n.ContextMessages;
 import info.magnolia.cms.servlets.BasePageServlet;
 
 import java.io.IOException;
@@ -79,7 +80,7 @@ public class LinkBrowserDialogPage extends BasePageServlet {
         html.append("</div>");
 
         Button bOk = new Button();
-        bOk.setLabel("OK");
+        bOk.setLabel(ContextMessages.get(request, "buttons.ok"));
         bOk.setOnclick("mgnlDialogLinkBrowserWriteBack('"
             + destinationControlName
             + "','"
@@ -89,7 +90,7 @@ public class LinkBrowserDialogPage extends BasePageServlet {
             + ");");
 
         Button bCancel = new Button();
-        bCancel.setLabel("Cancel");
+        bCancel.setLabel(ContextMessages.get(request, "buttons.cancel"));
         bCancel.setOnclick("window.close();");
 
         html.append("<div class=\"" + CssConstants.CSSCLASS_TABSETSAVEBAR + "\">");

@@ -18,6 +18,8 @@ import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.gui.control.TreeMenuItem;
+import info.magnolia.cms.i18n.ContextMessages;
+import info.magnolia.cms.i18n.Messages;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -34,7 +36,8 @@ public class AdminTreeUsers implements AdminTree {
      */
     public void configureTree(Tree tree, HttpServletRequest request, String path, String pathOpen, String pathSelected,
         boolean create, String createItemType) {
-
+        Messages msgs = ContextMessages.getInstanceSavely(request);
+        
         tree.setDrawShifter(false);
         // context path is already added by Tree
         tree.setIconPage(Tree.ICONDOCROOT + "pawn_glass_yellow.gif");
@@ -54,13 +57,13 @@ public class AdminTreeUsers implements AdminTree {
         column0.setIsLabel(true);
         if (Server.isAdmin())
             column0.setHtmlEdit();
-        column0.setTitle("User name");
+        column0.setTitle(msgs.get("tree.users.name"));
         column0.setWidth(2);
         TreeColumn column1 = new TreeColumn(tree.getJavascriptTree(), request);
         column1.setName("title");
         if (Server.isAdmin())
             column1.setHtmlEdit();
-        column1.setTitle("Full name");
+        column1.setTitle(msgs.get("tree.users.fullname"));
         column1.setWidth(2);
         TreeColumn columnIcons = new TreeColumn(tree.getJavascriptTree(), request);
         columnIcons.setCssClass("");
@@ -71,7 +74,7 @@ public class AdminTreeUsers implements AdminTree {
         column2.setName(MetaData.LAST_MODIFIED);
         column2.setIsMeta(true);
         column2.setDateFormat("yyyy-MM-dd, HH:mm");
-        column2.setTitle("Mod. date");
+        column2.setTitle(msgs.get("tree.users.date"));
         column2.setWidth(2);
         tree.addColumn(column0);
         tree.addColumn(column1);
@@ -80,36 +83,36 @@ public class AdminTreeUsers implements AdminTree {
         }
         tree.addColumn(column2);
         TreeMenuItem menuOpen = new TreeMenuItem();
-        menuOpen.setLabel("Edit user...");
+        menuOpen.setLabel(msgs.get("tree.users.menu.edit"));
         menuOpen.setOnclick("mgnlTreeMenuOpenDialog("
             + tree.getJavascriptTree()
             + ",'.magnolia/adminCentral/users/dialog.html');");
         menuOpen.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         TreeMenuItem menuNewPage = new TreeMenuItem();
-        menuNewPage.setLabel("New user");
+        menuNewPage.setLabel(msgs.get("tree.users.menu.new"));
         menuNewPage.setOnclick(tree.getJavascriptTree() + ".createRootNode('" + ItemType.NT_CONTENT + "');");
         TreeMenuItem menuDelete = new TreeMenuItem();
-        menuDelete.setLabel("Delete");
+        menuDelete.setLabel(msgs.get("tree.users.menu.delete"));
         menuDelete.setOnclick(tree.getJavascriptTree() + ".deleteNode();");
         menuDelete.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         TreeMenuItem menuMove = new TreeMenuItem();
-        menuMove.setLabel("Move user");
+        menuMove.setLabel(msgs.get("tree.users.menu.move"));
         menuMove.setOnclick(tree.getJavascriptTree() + ".cutNode();");
         menuMove.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         TreeMenuItem menuCopy = new TreeMenuItem();
-        menuCopy.setLabel("Copy user");
+        menuCopy.setLabel(msgs.get("tree.users.menu.copy"));
         menuCopy.setOnclick(tree.getJavascriptTree() + ".copyNode();");
         menuCopy.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         TreeMenuItem menuActivateExcl = new TreeMenuItem();
-        menuActivateExcl.setLabel("Activate user");
+        menuActivateExcl.setLabel(msgs.get("tree.users.menu.activate"));
         menuActivateExcl.setOnclick(tree.getJavascriptTree() + ".activateNode(" + Tree.ACTION_ACTIVATE + ",false);");
         menuActivateExcl.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         TreeMenuItem menuDeActivate = new TreeMenuItem();
-        menuDeActivate.setLabel("De-activate user");
+        menuDeActivate.setLabel(msgs.get("tree.users.menu.deactivate"));
         menuDeActivate.setOnclick(tree.getJavascriptTree() + ".deActivateNode(" + Tree.ACTION_DEACTIVATE + ");");
         menuDeActivate.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         TreeMenuItem menuRefresh = new TreeMenuItem();
-        menuRefresh.setLabel("Refresh");
+        menuRefresh.setLabel(msgs.get("tree.menu.refresh"));
         menuRefresh.setOnclick(tree.getJavascriptTree() + ".refresh();");
         if (Server.isAdmin()) {
             tree.addMenuItem(menuOpen);

@@ -209,6 +209,10 @@ public abstract class DialogSuper implements DialogInterface {
             log.debug("removeSessionAttribute() for " + name + " failed because this.request is null");
         }
     }
+    
+    public HttpServletRequest getRequest() {
+        return this.request;
+    }
 
     protected void setOptions(List options) {
         this.options = options;
@@ -253,10 +257,6 @@ public abstract class DialogSuper implements DialogInterface {
 
     protected List getSubs() {
         return this.subs;
-    }
-
-    protected HttpServletRequest getRequest() {
-        return this.request;
     }
 
     protected HttpServletResponse getResponse() {

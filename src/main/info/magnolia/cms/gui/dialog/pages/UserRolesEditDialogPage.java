@@ -15,6 +15,8 @@ import info.magnolia.cms.gui.dialog.DialogInclude;
 import info.magnolia.cms.gui.dialog.DialogStatic;
 import info.magnolia.cms.gui.dialog.DialogTab;
 import info.magnolia.cms.gui.misc.Sources;
+import info.magnolia.cms.i18n.ContextMessages;
+import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.servlets.BasePageServlet;
@@ -60,6 +62,7 @@ public class UserRolesEditDialogPage extends BasePageServlet {
      */
     public void draw(HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
         PrintWriter out = response.getWriter();
+        Messages msgs = ContextMessages.getInstanceSavely(request);
 
         MultipartForm form = Resource.getPostedForm(request);
         boolean drawDialog = true;
@@ -211,15 +214,14 @@ public class UserRolesEditDialogPage extends BasePageServlet {
             dialog.setConfig("height", 400);
 
             if (create)
-                dialog.setLabel("Create new role");
+                dialog.setLabel(msgs.get("roles.edit.create"));
             else
-                dialog.setLabel("Edit role");
-            // dialog.setConfig("saveLabel","OK");
+                dialog.setLabel(msgs.get("roles.edit.edit"));
 
             DialogTab tab0 = dialog.addTab();
-            tab0.setLabel("Properties");
+            tab0.setLabel(msgs.get("roles.edit.properties"));
 
-            DialogTab tab1 = dialog.addTab("Access control list");
+            DialogTab tab1 = dialog.addTab(msgs.get("roles.edit.accessControlList"));
 
             DialogStatic spacer = DialogFactory.getDialogStaticInstance(request, response, null, null);
             spacer.setConfig("line", false);
@@ -227,14 +229,14 @@ public class UserRolesEditDialogPage extends BasePageServlet {
             if (!create) {
                 DialogStatic name = DialogFactory.getDialogStaticInstance(request, response, null, null);
                 // name.setConfig("line",false);
-                name.setLabel("<strong>Role name</strong>");
+                name.setLabel("<strong>"+msgs.get("roles.edit.rolename")+"</strong>");
                 name.setValue("<strong>" + role.getName() + "</strong>");
                 tab0.addSub(name);
             }
             else {
                 DialogEdit name = DialogFactory.getDialogEditInstance(request, response, null, null);
                 name.setName("name");
-                name.setLabel("<strong>Role name</strong>");
+                name.setLabel("<strong>"+msgs.get("roles.edit.rolename")+"</strong>");
                 name.setSaveInfo(false);
                 name.setDescription("Legal characters: a-z, 0-9, _ (underscore), - (divis)");
                 tab0.addSub(name);
@@ -244,7 +246,7 @@ public class UserRolesEditDialogPage extends BasePageServlet {
 
             DialogEdit title = DialogFactory.getDialogEditInstance(request, response, role, null);
             title.setName("title");
-            title.setLabel("Full name");
+            title.setLabel(msgs.get("roles.edit.fullname"));
             if (create) {
                 title.setConfig("onchange", "mgnlAclSetName(this.value);");
             }
@@ -254,7 +256,7 @@ public class UserRolesEditDialogPage extends BasePageServlet {
 
             DialogEdit desc = DialogFactory.getDialogEditInstance(request, response, role, null);
             desc.setName("description");
-            desc.setLabel("Description");
+            desc.setLabel(msgs.get("roles.edit.description"));
             desc.setConfig("rows", 6);
             tab0.addSub(desc);
 
@@ -266,7 +268,7 @@ public class UserRolesEditDialogPage extends BasePageServlet {
 
             DialogButton add = DialogFactory.getDialogButtonInstance(request, response, null, null);
             add.setBoxType(DialogBox.BOXTYPE_1COL);
-            add.setConfig("buttonLabel", "Add");
+            add.setConfig("buttonLabel", msgs.get("buttons.add"));
             add.setConfig("onclick", "mgnlAclAdd(false,-1);");
             tab1.addSub(add);
 

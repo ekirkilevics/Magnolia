@@ -18,6 +18,8 @@ import info.magnolia.cms.gui.dialog.DialogPassword;
 import info.magnolia.cms.gui.dialog.DialogStatic;
 import info.magnolia.cms.gui.dialog.DialogTab;
 import info.magnolia.cms.gui.misc.Sources;
+import info.magnolia.cms.i18n.ContextMessages;
+import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.servlets.BasePageServlet;
@@ -77,6 +79,7 @@ public class UserEditDialogPage extends BasePageServlet {
      */
     public void draw(HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
         PrintWriter out = response.getWriter();
+        Messages msgs = ContextMessages.getInstanceSavely(request);
 
         MultipartForm form = Resource.getPostedForm(request);
         boolean drawDialog = true;
@@ -311,9 +314,9 @@ public class UserEditDialogPage extends BasePageServlet {
             dialog.setConfig("height", DialogDialog.DIALOGSIZE_SLIM_HEIGHT);
 
             if (create)
-                dialog.setLabel("Create new user");
+                dialog.setLabel(msgs.get("users.edit.create"));
             else
-                dialog.setLabel("Edit user");
+                dialog.setLabel(msgs.get("users.edit.edit"));
 
             DialogTab tab = dialog.addTab();
 
@@ -326,7 +329,7 @@ public class UserEditDialogPage extends BasePageServlet {
             if (!create) {
                 DialogStatic name = DialogFactory.getDialogStaticInstance(request, response, null, null);
                 // name.setConfig("line",false);
-                name.setLabel("<strong>User name</strong>");
+                name.setLabel("<strong>"+msgs.get("users.edit.username")+"</strong>");
                 name.setValue("<strong>" + user.getName() + "</strong>");
                 tab.addSub(name);
             }
@@ -335,7 +338,7 @@ public class UserEditDialogPage extends BasePageServlet {
                 name.setName("name");
                 name.setConfig("onchange", "mgnlDialogVerifyName(this.id);");
                 name.setSaveInfo(false);
-                name.setLabel("<strong>User name</strong>");
+                name.setLabel("<strong>"+msgs.get("users.edit.username")+"</strong>");
                 name.setDescription("Legal characters: a-z, 0-9, _ (underscore), - (divis)");
                 tab.addSub(name);
             }
@@ -344,7 +347,7 @@ public class UserEditDialogPage extends BasePageServlet {
 
             DialogEdit title = DialogFactory.getDialogEditInstance(request, response, user, null);
             title.setName("title");
-            title.setLabel("Full name");
+            title.setLabel(msgs.get("users.edit.fullname"));
 
             if (create) {
                 title.setConfig("onchange", "mgnlAclSetName(this.value);");
@@ -353,9 +356,9 @@ public class UserEditDialogPage extends BasePageServlet {
 
             DialogPassword pswd = DialogFactory.getDialogPasswordInstance(request, response, user, null);
             pswd.setName("pswd");
-            pswd.setLabel("Password");
+            pswd.setLabel(msgs.get("users.edit.password"));
             if (!create) {
-                pswd.setConfig("labelDescription", "Leave emtpy to keep existing");
+                pswd.setConfig("labelDescription",msgs.get("users.edit.leaveEmpty"));
             }
             tab.addSub(pswd);
 
@@ -367,7 +370,7 @@ public class UserEditDialogPage extends BasePageServlet {
             isUserAdmin.setConfig("lineSemi", true);
             isUserAdmin.setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX);
             Button isUserAdminButton = new Button();
-            isUserAdminButton.setLabel("Users administrator");
+            isUserAdminButton.setLabel(msgs.get("users.edit.usersAdministrator"));
             isUserAdminButton.setValue("true");
             isUserAdminButton.setOnclick("mgnlDialogShiftCheckboxSwitch('" + isUserAdmin.getName() + "');");
             isUserAdmin.addOption(isUserAdminButton);
@@ -379,7 +382,7 @@ public class UserEditDialogPage extends BasePageServlet {
             isRoleAdmin.setConfig("lineSemi", true);
             isRoleAdmin.setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX);
             Button isRolesAdminButton = new Button();
-            isRolesAdminButton.setLabel("Roles administrator");
+            isRolesAdminButton.setLabel(msgs.get("users.edit.rolesAdministrator"));
             isRolesAdminButton.setValue("true");
             isRolesAdminButton.setOnclick("mgnlDialogShiftCheckboxSwitch('" + isRoleAdmin.getName() + "');");
             isRoleAdmin.addOption(isRolesAdminButton);
@@ -391,7 +394,7 @@ public class UserEditDialogPage extends BasePageServlet {
             isConfigAdmin.setConfig("lineSemi", true);
             isConfigAdmin.setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX);
             Button isConfigAdminButton = new Button();
-            isConfigAdminButton.setLabel("Config administrator");
+            isConfigAdminButton.setLabel(msgs.get("users.edit.configAdministrator"));
             isConfigAdminButton.setValue("true");
             isConfigAdminButton.setOnclick("mgnlDialogShiftCheckboxSwitch('" + isConfigAdmin.getName() + "');");
             isConfigAdmin.addOption(isConfigAdminButton);
@@ -400,13 +403,13 @@ public class UserEditDialogPage extends BasePageServlet {
             tab.addSub(spacer);
 
             DialogInclude roles = DialogFactory.getDialogIncludeInstance(request, response, user, null);
-            roles.setLabel("Roles");
+            roles.setLabel(msgs.get("users.edit.roles"));
             roles.setName("aclRolesRepository");
             roles.setConfig("file", "/admintemplates/adminCentral/dialogs/usersEdit/includeRoles.jsp");
             tab.addSub(roles);
 
             DialogButton add = DialogFactory.getDialogButtonInstance(request, response, null, null);
-            add.setConfig("buttonLabel", "Add");
+            add.setConfig("buttonLabel", msgs.get("buttons.add"));
             add.setConfig("lineSemi", true);
             add.setConfig("onclick", "mgnlAclAdd(true,-1);");
             tab.addSub(add);
