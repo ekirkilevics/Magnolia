@@ -583,4 +583,20 @@ public class ContentHandler {
 
 
 
+    /**
+     * <p>
+     * evaluate primary node type of the associated Node of this Content object
+     * </p>
+     *
+     * */
+    public boolean isContentType(String type) {
+        try {
+            return this.node.isNodeType(ItemType.getSystemName(type));
+        } catch (RepositoryException re) {
+            log.error(re.getMessage(), re);
+        }
+        return false;
+    }
+
+
 }
