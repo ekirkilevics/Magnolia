@@ -15,6 +15,7 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.beans.runtime.SystemProperty;
 import info.magnolia.cms.license.License;
 import info.magnolia.cms.security.SecureURI;
+import info.magnolia.cms.util.Path;
 
 import java.util.Enumeration;
 
@@ -61,6 +62,9 @@ public class ConfigLoader {
             String value = config.getInitParameter(param);
             SystemProperty.setProperty(param, value);
         }
+
+        System.setProperty("java.security.auth.login.config", Path
+            .getAbsoluteFileSystemPath("WEB-INF/config/jaas.config"));
 
         this.load();
     }
