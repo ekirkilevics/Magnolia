@@ -128,7 +128,7 @@ public final class Path {
         if (StringUtils.isEmpty(uri)) {
             // add to request avoiding unnecessary decoding
             uri = getDecodedURI(req);
-            req.setAttribute(ATTRIBUTE_URI,uri);
+            req.setAttribute(ATTRIBUTE_URI, uri);
         }
         return uri;
     }
@@ -140,10 +140,11 @@ public final class Path {
      */
     private static String getDecodedURI(HttpServletRequest req) {
         String encoding = StringUtils.defaultString(req.getCharacterEncoding(), ENCODING_DEFAULT);
-        String decodedURL = "";
+        String decodedURL = null;
         try {
             decodedURL = URLDecoder.decode(req.getRequestURI(), encoding);
-        } catch(UnsupportedEncodingException e) {
+        }
+        catch (UnsupportedEncodingException e) {
             decodedURL = req.getRequestURI();
         }
         return StringUtils.substringAfter(decodedURL, req.getContextPath());
