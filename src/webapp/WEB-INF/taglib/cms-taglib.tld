@@ -335,11 +335,12 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
             <name>contentNodeCollectionName</name>
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
-            <description> contentNodeIterator is used whenever you want to loop over content, typically paragraphs. A
-                parameter contentNodeCollectionName will contain the name of the contentNode you are looping over.
-                contentNodeCollectionName is created by providing a newBar with the corresponding name. This will
-                result in elements being created within that contentNode, and thus allow you to loop over
-                these.</description>
+            <description>
+                contentNodeIterator is used whenever you want to loop over content, typically paragraphs. A parameter
+                contentNodeCollectionName will contain the name of the contentNode you are looping over.
+                contentNodeCollectionName is created by providing a newBar with the corresponding name. This will result
+                in elements being created within that contentNode, and thus allow you to loop over these.
+            </description>
         </attribute>
         <attribute>
             <name>begin</name>
@@ -359,14 +360,16 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
             <rtexprvalue>true</rtexprvalue>
             <description></description>
         </attribute>
-        <example> <![CDATA[
+        <example>
+            <![CDATA[
 <cms:contentNodeIterator contentNodeCollectionName="mainColumnParagraphs">
     <cms:adminOnly>
         <cms:editBar/>
     </cms:adminOnly>
     <cms:includeTemplate/>
 </cms:contentNodeIterator>
-]]> </example>
+]]>
+        </example>
     </tag>
     <tag>
         <name>ifLastContentNode</name>
@@ -573,6 +576,14 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
             <description>The content node will be added to the pagecontext with this name.</description>
+        </attribute>
+        <attribute>
+            <name>scope</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>
+                Scope for the variable. Can be "page" (default), "request", "session", "application"
+            </description>
         </attribute>
         <example>
             <![CDATA[

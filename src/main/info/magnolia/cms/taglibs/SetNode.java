@@ -25,6 +25,7 @@ import java.util.Set;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.commons.lang.StringUtils;
@@ -45,7 +46,7 @@ import org.apache.log4j.Logger;
  * </pre>
  *
  * @author Fabrizio Giustina
- * @version $Revision$ ($Author$)
+ * @version $Revision: 448 $ ($Author: fgiust $)
  */
 public class SetNode extends TagSupport {
 
@@ -75,6 +76,12 @@ public class SetNode extends TagSupport {
     private String var;
 
     /**
+     * Tag attribute. Scope for the declared variable. Can be <code>page</code>, <code>request</code>,
+     * <code>session</code> or <code>application</code><code></code>.
+     */
+    private int scope;
+
+    /**
      * Evaluated content node.
      */
     private transient Content contentNode;
@@ -100,6 +107,27 @@ public class SetNode extends TagSupport {
      */
     public void setVar(String var) {
         this.var = var;
+    }
+
+    /**
+     * Scope for the declared variable.
+     * @param scope Can be <code>page</code>, <code>request</code>, <code>session</code> or
+     * <code>application</code><code></code>.
+     */
+    public void setScope(String scope) {
+        if (PageContext.REQUEST.equalsIgnoreCase(scope)) {
+            this.scope = PageContext.REQUEST_SCOPE;
+        }
+        else if (PageContext.SESSION.equalsIgnoreCase(scope)) {
+            this.scope = PageContext.SESSION_SCOPE;
+        }
+        else if (PageContext.APPLICATION.equalsIgnoreCase(scope)) {
+            this.scope = PageContext.APPLICATION_SCOPE;
+        }
+        else {
+            // default, should we log errors?
+            this.scope = PageContext.PAGE_SCOPE;
+        }
     }
 
     /**
@@ -164,7 +192,7 @@ public class SetNode extends TagSupport {
      * @return int
      */
     public int doEndTag() {
-        pageContext.setAttribute(this.var, new NodeMapWrapper(this.contentNode));
+        pageContext.setAttribute(this.var, new NodeMapWrapper(this.contentNode), this.scope);
         this.contentNode = null;
         return EVAL_PAGE;
     }
@@ -176,13 +204,14 @@ public class SetNode extends TagSupport {
         this.contentNodeCollectionName = null;
         this.contentNodeName = null;
         this.var = null;
+        this.scope = PageContext.PAGE_SCOPE;
         super.release();
     }
 
     /**
      * Wrapper for a content Node which exposes a Map interface, used to access its content using jstl.
      * @author fgiust
-     * @version $Revision$ ($Author$)
+     * @version $Revision: 448 $ ($Author: fgiust $)
      */
     public static class NodeMapWrapper implements Map {
 
@@ -310,4 +339,5 @@ public class SetNode extends TagSupport {
             return null;
         }
     }
+
 }
