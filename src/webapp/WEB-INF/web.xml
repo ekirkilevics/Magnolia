@@ -2,7 +2,7 @@
 <web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
 	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" version="2.4"
-    id="WebApp" >
+    id="WebApp">
     <display-name>magnolia</display-name>
     <description>magnolia 2.0</description>
     <filter>
@@ -34,21 +34,24 @@
         <display-name>magnolia initializer</display-name>
         <servlet-name>Initializer</servlet-name>
         <servlet-class>info.magnolia.cms.servlets.Initializer</servlet-class>
+        <!--
+            WARNING: starting from Magnolia 2.1 paths are relative to the root dir of the magnolia installation (or absolute)
+        -->
         <init-param>
             <param-name>magnolia.cache.startdir</param-name>
-            <param-value>../webapps/magnolia/cache</param-value>
+            <param-value>cache</param-value>
         </init-param>
         <init-param>
             <param-name>magnolia.upload.tmpdir</param-name>
-            <param-value>../webapps/magnolia/tmp</param-value>
+            <param-value>tmp</param-value>
         </init-param>
         <init-param>
             <param-name>magnolia.exchange.history</param-name>
-            <param-value>../webapps/magnolia/history</param-value>
+            <param-value>history</param-value>
         </init-param>
         <init-param>
             <param-name>magnolia.repositories.config</param-name>
-            <param-value>../webapps/magnolia/WEB-INF/config/repositories.xml</param-value>
+            <param-value>WEB-INF\config\repositories.xml</param-value>
         </init-param>
         <!--
             You can configure log4j by placing a log4j.properties or log4j.xml file in the classpath. By default you
@@ -85,9 +88,9 @@
         <servlet-class>info.magnolia.cms.servlets.SimpleExchange</servlet-class>
     </servlet>
     <!--
-    Use this servlet to spool static resources from the servlet context
-    this servlet respects SecureURI mapping so if you want to have no authentication on static
-    resources deny /docroot/* and /admindocroot/* from /config/server/SecureURI
+        Use this servlet to spool static resources from the servlet context
+        this servlet respects SecureURI mapping so if you want to have no authentication on static
+        resources deny /docroot/* and /admindocroot/* from /config/server/SecureURI
     -->
     <servlet>
         <description>Spool servlet</description>

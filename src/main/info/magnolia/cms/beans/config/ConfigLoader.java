@@ -20,6 +20,7 @@ import java.util.Enumeration;
 
 import javax.servlet.ServletConfig;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -47,19 +48,20 @@ public class ConfigLoader {
      * @see SystemProperty
      */
     public ConfigLoader(ServletConfig config) {
+
+        String rootDir = config.getServletContext().getRealPath(StringUtils.EMPTY);
+        if (log.isInfoEnabled()) {
+            log.info("Assuming paths relative to " + rootDir);
+        }
+        SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, rootDir);
+
         Enumeration e = config.getInitParameterNames();
         while (e.hasMoreElements()) {
             String param = (String) e.nextElement();
             String value = config.getInitParameter(param);
             SystemProperty.setProperty(param, value);
         }
-        this.load();
-    }
 
-    /**
-     * Constructor.
-     */
-    public ConfigLoader() {
         this.load();
     }
 
@@ -72,7 +74,7 @@ public class ConfigLoader {
         license.init();
         printVersionInfo(license);
 
-        log.info("Init content repository");
+        log.info("Init content repositories");
         ContentRepository.init();
 
         // todo move to appropriate module classes

@@ -22,6 +22,16 @@ import java.util.Map;
  */
 public final class SystemProperty {
 
+    public static final String MAGNOLIA_REPOSITORIES_CONFIG = "magnolia.repositories.config";
+
+    public static final String MAGNOLIA_EXCHANGE_HISTORY = "magnolia.exchange.history";
+
+    public static final String MAGNOLIA_UPLOAD_TMPDIR = "magnolia.upload.tmpdir";
+
+    public static final String MAGNOLIA_CACHE_STARTDIR = "magnolia.cache.startdir";
+
+    public static final String MAGNOLIA_APP_ROOTDIR = "magnolia.app.rootdir";
+
     private static Map properties = new Hashtable();
 
     /**
@@ -47,7 +57,7 @@ public final class SystemProperty {
     }
 
     /**
-     * 
+     *
      */
     public static Map getPropertyList() {
         return SystemProperty.properties;

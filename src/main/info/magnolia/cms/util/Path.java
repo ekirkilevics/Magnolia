@@ -15,6 +15,8 @@ package info.magnolia.cms.util;
 import info.magnolia.cms.beans.runtime.SystemProperty;
 import info.magnolia.cms.core.HierarchyManager;
 
+import java.io.File;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -40,53 +42,63 @@ public final class Path {
     }
 
     /**
-     * <p>
-     * Gets the cache directory path (cms.cache.startdir) as set with Java options while startup or in web.xml
-     * </p>
+     * Gets the cache directory path (cms.cache.startdir) as set with Java options while startup or in web.xml.
      * @return Cache directory path
      */
     public static String getCacheDirectoryPath() {
-        return SystemProperty.getProperty("magnolia.cache.startdir");
+        return getCacheDirectory().getAbsolutePath();
+    }
+
+    public static File getCacheDirectory() {
+        String path = SystemProperty.getProperty(SystemProperty.MAGNOLIA_CACHE_STARTDIR);
+        return isAbsolute(path) ? new File(path) : new File(Path.getAppRootDir(), path);
     }
 
     /**
-     * <p>
-     * Gets the temporary directory path (cms.upload.tmpdir) as set with Java options while startup or in web.xml
-     * </p>
+     * Gets the temporary directory path (cms.upload.tmpdir) as set with Java options while startup or in web.xml.
      * @return Temporary directory path
      */
     public static String getTempDirectoryPath() {
-        return SystemProperty.getProperty("magnolia.upload.tmpdir");
+        return getTempDirectory().getAbsolutePath();
+    }
+
+    public static File getTempDirectory() {
+        String path = SystemProperty.getProperty(SystemProperty.MAGNOLIA_UPLOAD_TMPDIR);
+        return isAbsolute(path) ? new File(path) : new File(Path.getAppRootDir(), path);
     }
 
     /**
-     * <p>
-     * Gets log4j.properties file location as set with Java options while startup or in web.xml
-     * </p>
-     * @return log4j property file location
-     */
-    public static String getLogPropertiesFilePath() {
-        return SystemProperty.getProperty("log4j.properties");
-    }
-
-    /**
-     * <p>
-     * Gets cms.exchange.history file location as set with Java options while startup or in web.xml
-     * </p>
+     * Gets cms.exchange.history file location as set with Java options while startup or in web.xml.
      * @return exchange history file location
      */
     public static String getHistoryFilePath() {
-        return SystemProperty.getProperty("magnolia.exchange.history");
+        return getHistoryFile().getAbsolutePath();
+    }
+
+    public static File getHistoryFile() {
+        String path = SystemProperty.getProperty(SystemProperty.MAGNOLIA_EXCHANGE_HISTORY);
+        return isAbsolute(path) ? new File(path) : new File(Path.getAppRootDir(), path);
     }
 
     /**
-     * <p>
-     * Gets repositories file location as set with Java options while startup or in web.xml
-     * </p>
+     * Gets repositories file location as set with Java options while startup or in web.xml.
      * @return file location
      */
     public static String getRepositoriesConfigFilePath() {
-        return SystemProperty.getProperty("magnolia.repositories.config");
+        return getRepositoriesConfigFile().getAbsolutePath();
+    }
+
+    public static File getRepositoriesConfigFile() {
+        String path = SystemProperty.getProperty(SystemProperty.MAGNOLIA_REPOSITORIES_CONFIG);
+        return isAbsolute(path) ? new File(path) : new File(Path.getAppRootDir(), path);
+    }
+
+    /**
+     * Gets the root directory for the magnolia web application.
+     * @return magnolia root dir
+     */
+    public static File getAppRootDir() {
+        return new File(SystemProperty.getProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR));
     }
 
     /**
@@ -115,6 +127,23 @@ public final class Path {
             label = createUniqueName(label);
         }
         return label;
+    }
+
+    private static boolean isAbsolute(String path) {
+        if (path == null) {
+            return false;
+        }
+
+        if (path.startsWith("/") || path.startsWith(File.separator)) {
+            return true;
+        }
+
+        // windows c:
+        if (path.length() >= 3 && Character.isLetter(path.charAt(0)) && path.charAt(1) == ':') {
+            return true;
+        }
+
+        return false;
     }
 
     /**
