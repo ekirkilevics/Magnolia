@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-    <package>info.magnolia</package>
     <pomVersion>3</pomVersion>
     <id>magnolia</id>
     <name>magnolia</name>
@@ -11,6 +10,7 @@
         <url>http://www.obinary.com</url>
     </organization>
     <inceptionYear>1993</inceptionYear>
+    <package>info.magnolia</package>
     <logo>/images/magnolia-logo.png</logo>
     <description>
         Magnolia is a free enterprise class content management system developed by obinary. Magnolia uses the upcoming
@@ -314,6 +314,14 @@
                 <include>**/*Test.java</include>
             </includes>
         </unitTest>
+        <resources>
+	         <resource>
+	           <directory>src/main</directory>
+	           <excludes>
+	             <exclude>**/*.java</exclude>
+	           </excludes>
+	         </resource>
+	    </resources>
     </build>
     
     <reports>
