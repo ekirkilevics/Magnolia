@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 
 /**
  * @version 2.0
@@ -35,55 +37,31 @@ public class RequestInterceptor extends HttpServlet {
      */
     private static final long serialVersionUID = 222L;
 
-    private HttpServletRequest request;
-
-    private HttpServletResponse response;
+    /**
+     * Logger.
+     */
+    private static Logger log = Logger.getLogger(RequestInterceptor.class);
 
     /**
      * <p>
-     * Request and Response here is same as receivced by the original page so it includes all post/get data
+     * Request and Response here is same as receivced by the original page so it includes all post/get data. Sub action
+     * could be called from here once this action finishes, it will continue loading the requested page
      * </p>
      */
     public void doGet(HttpServletRequest request, HttpServletResponse response) {
-        this.request = request;
-        this.response = response;
-        this.action();
-    }
 
-    public void setRequest(HttpServletRequest request) {
-        this.request = request;
-    }
-
-    public HttpServletRequest getRequest() {
-        return this.request;
-    }
-
-    public void setResponse(HttpServletResponse response) {
-        this.response = response;
-    }
-
-    public HttpServletResponse getResponse() {
-        return this.response;
-    }
-
-    /**
-     * <p>
-     * Sub action could be called from here once this action finishes, it will continue loading the requested page
-     * </p>
-     */
-    private void action() {
-        String action = this.getRequest().getParameter(EntryServlet.INTERCEPT);
-        String repository = this.getRequest().getParameter("mgnlRepository");
+        String action = request.getParameter(EntryServlet.INTERCEPT);
+        String repository = request.getParameter("mgnlRepository");
         if (repository == null) {
             repository = ContentRepository.WEBSITE;
         }
-        HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), repository);
+        HierarchyManager hm = SessionAccessControl.getHierarchyManager(request, repository);
         if (action.equals("PREVIEW")) {
             // preview mode (button in main bar)
-            String preview = this.getRequest().getParameter("mgnlPreview");
+            String preview = request.getParameter("mgnlPreview");
             if (preview != null) {
                 if (preview.equals("true")) {
-                    this.getRequest().getSession().setAttribute("mgnlPreview", "true");
+                    request.getSession().setAttribute("mgnlPreview", "true");
                 }
                 else {
                     request.getSession().removeAttribute("mgnlPreview");
@@ -93,17 +71,18 @@ public class RequestInterceptor extends HttpServlet {
         else if (action.equals("NODE_DELETE")) {
             // delete paragraph
             try {
-                String path = this.getRequest().getParameter("mgnlPath");
+                String path = request.getParameter("mgnlPath");
                 hm.delete(path);
             }
             catch (Exception e) {
+                log.info("Exception caught: " + e.getMessage(), e);
             }
         }
         else if (action.equals("NODE_SORT")) {
             // sort paragrpahs
             try {
-                String pathSelected = this.getRequest().getParameter("mgnlPathSelected");
-                String pathSortAbove = this.getRequest().getParameter("mgnlPathSortAbove");
+                String pathSelected = request.getParameter("mgnlPathSelected");
+                String pathSortAbove = request.getParameter("mgnlPathSortAbove");
                 String pathParent = pathSelected.substring(0, pathSelected.lastIndexOf("/"));
                 Iterator it = hm.getContentNode(pathParent).getChildren().iterator();
                 long seqPos0 = 0;
@@ -134,6 +113,7 @@ public class RequestInterceptor extends HttpServlet {
                 nodeSelected.save();
             }
             catch (Exception e) {
+                log.info("Exception caught: " + e.getMessage(), e);
             }
         }
     }
