@@ -21,6 +21,7 @@ import info.magnolia.cms.util.Path;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
@@ -213,59 +214,98 @@ public class ConfigLoader {
 
     /**
      * Repositories appears to be empty and the <code>"magnolia.bootstrap.dir</code> directory is configured in
-     * web.xml. Loops over all the repositories and try to load an xml file with the same name in the specified
-     * directory.
+     * web.xml. Loops over all the repositories and try to load any xml file found in a subdirectory with the same name
+     * of the repository. For example the <code>config</code> repository will be initialized using all the
+     * <code>*.xml</code> files found in <code>"magnolia.bootstrap.dir</code><strong>/config</strong> directory.
      */
     private void bootstrapRepositories() {
 
         String bootdir = Path.getAbsoluteFileSystemPath(SystemProperty
             .getProperty(SystemProperty.MAGNOLIA_BOOTSTRAP_ROOTDIR));
 
+        System.out.println("\n-----------------------------------------------------------------\n");
+        System.out.println("Trying to initialize repositories from [" + bootdir + "]");
+        System.out.println("\n-----------------------------------------------------------------\n");
+
         log.info("Trying to initialize repositories from [" + bootdir + "]");
 
         for (int j = 0; j < ContentRepository.ALL_REPOSITORIES.length; j++) {
             String repository = ContentRepository.ALL_REPOSITORIES[j];
 
-            File xmlfile = new File(bootdir, repository + ".xml");
+            File xmldir = new File(bootdir, repository);
 
-            if (!xmlfile.exists()) {
-                log.info("File [" + repository + ".xml] not found for repository [" + repository + "], skipping...");
+            if (!xmldir.exists() || !xmldir.isDirectory()) {
+                log.info("Directory [" + repository + "] not found for repository [" + repository + "], skipping...");
                 continue;
             }
 
-            log.info("Trying to import content from ["
-                + repository
-                + ".xml] into the ["
-                + repository
-                + "] repository...");
+            File[] files = xmldir.listFiles(new FilenameFilter() {
+
+                public boolean accept(File dir, String name) {
+                    return name.endsWith(".xml");
+                }
+            });
+
+            if (files.length == 0) {
+                log.info("No xml files found in directory [" + repository + "], skipping...");
+                continue;
+            }
+
+            log.info("Trying to import content from " + files.length + " files...");
 
             HierarchyManager hr = ContentRepository.getHierarchyManager(repository);
             Session session = hr.getWorkspace().getSession();
 
-            InputStream stream;
-            try {
-                stream = new FileInputStream(xmlfile);
+            for (int k = 0; k < files.length; k++) {
+                File xmlfile = files[k];
+
+                InputStream stream;
+                try {
+                    stream = new FileInputStream(xmlfile);
+                }
+                catch (FileNotFoundException e) {
+                    // should never happen
+                    throw new NestableRuntimeException(e);
+                }
+                try {
+
+                    log.info("Importing content from " + xmlfile.getName());
+                    session.importXML("/", stream);
+                }
+                catch (Exception e) {
+                    log.error("Unable to load content from "
+                        + xmlfile.getName()
+                        + " due to a "
+                        + e.getClass().getName()
+                        + " Exception: "
+                        + e.getMessage()
+                        + ". Will try to continue.", e);
+                }
+                finally {
+                    try {
+                        stream.close();
+                    }
+                    catch (IOException e) {
+                        // ignore
+                    }
+                }
+
             }
-            catch (FileNotFoundException e) {
-                // should never happen
-                throw new NestableRuntimeException(e);
-            }
+
+            log.info("Saving changes to [" + repository + "]");
+
             try {
-                session.importXML("/", stream);
-                log.info("Saving changes to [" + repository + "]");
                 session.save();
             }
-            catch (Exception e) {
-                // @todo handle exception... this is still experimental
-                throw new NestableRuntimeException(e);
-            }
-            finally {
-                try {
-                    stream.close();
-                }
-                catch (IOException e) {
-                    // ignore
-                }
+            catch (RepositoryException e) {
+                log.error("Unable to save changes to the ["
+                    + repository
+                    + "] repository due to a "
+                    + e.getClass().getName()
+                    + " Exception: "
+                    + e.getMessage()
+                    + ". Will try to continue.", e);
+                continue;
             }
 
             log.info("Repository [" + repository + "] has been initialized.");

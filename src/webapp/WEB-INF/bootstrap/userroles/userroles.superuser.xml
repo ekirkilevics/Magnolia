@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<superuser jcr:primaryType="mgnl:content"
+    jcr:mixinTypes="mix:versionable"
+    jcr:uuid="ae7fa261-218e-41ea-a271-17adedeabaac"
+    jcr:created="2005-03-19T23:26:23.871+01:00" jcr:isCheckedOut="true"
+    xmlns:jcr="http://www.jcp.org/jcr/1.0"
+    xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
+    xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:rep="internal"
+    xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:fn="http://www.w3.org/2004/10/xpath-functions"
+    xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns="" xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0">
+    <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:26:23.871+01:00">
+        <jcr:content jcr:primaryType="nt:unstructured" Data="MetaData"
+            creationdate="2005-03-19T23:26:23.871+01:00"
+            lastmodified="2005-03-19T23:26:23.871+01:00"
+            authorid="magnolia" title="" sequenceposition="1111271183871000"/>
+    </MetaData>
+    <acl_website jcr:primaryType="mgnl:contentNode"
+        jcr:mixinTypes="mix:versionable"
+        jcr:uuid="08b9fae0-3404-4870-8e17-e3d6cbfee785"
+        jcr:created="2005-03-19T23:26:23.871+01:00"
+        jcr:isCheckedOut="true">
+        <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:26:23.871+01:00">
+            <jcr:content jcr:primaryType="nt:unstructured"
+                Data="MetaData" creationdate="2004-10-27T17:14:16.680+01:00"/>
+        </MetaData>
+        <_x0030_ jcr:primaryType="mgnl:contentNode"
+            jcr:mixinTypes="mix:versionable"
+            jcr:uuid="0bf6421d-751c-4870-9e70-e968362723b6"
+            jcr:created="2005-03-19T23:26:23.871+01:00"
+            jcr:isCheckedOut="true">
+            <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:26:23.881+01:00">
+                <jcr:content jcr:primaryType="nt:unstructured"
+                    Data="MetaData" creationdate="2004-10-27T17:14:16.712+01:00"/>
+            </MetaData>
+            <path jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="e0b4dfe6-205f-4bb9-9d49-ac9380063af4"
+                jcr:created="2005-03-19T23:26:23.881+01:00"
+                jcr:isCheckedOut="true">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="/*"/>
+            </path>
+            <permissions jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="954379ea-3fd6-4a2a-9b77-298b06b08ff3"
+                jcr:created="2005-03-19T23:26:23.881+01:00"
+                jcr:isCheckedOut="true">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="15"/>
+            </permissions>
+        </_x0030_>
+        <_x0030_0 jcr:primaryType="mgnl:contentNode"
+            jcr:mixinTypes="mix:versionable"
+            jcr:uuid="1745d535-2577-4033-b11b-03b43a28aa93"
+            jcr:created="2005-03-19T23:26:23.881+01:00"
+            jcr:isCheckedOut="true">
+            <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:26:23.881+01:00">
+                <jcr:content jcr:primaryType="nt:unstructured"
+                    Data="MetaData" creationdate="2004-10-27T17:14:16.799+01:00"/>
+            </MetaData>
+            <path jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="54e0e638-0812-499a-ab28-3fd49ec3f8c5"
+                jcr:created="2005-03-19T23:26:23.881+01:00"
+                jcr:isCheckedOut="true">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="/*/*"/>
+            </path>
+            <permissions jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="46dd1693-7aeb-4fd9-a53f-b8621c0ef15d"
+                jcr:created="2005-03-19T23:26:23.881+01:00"
+                jcr:isCheckedOut="true">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="15"/>
+            </permissions>
+        </_x0030_0>
+    </acl_website>
+</superuser>

@@ -1,0 +1,1273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<server jcr:primaryType="mgnl:content" jcr:mixinTypes="mix:versionable"
+    jcr:uuid="28bbc834-4b94-4744-8828-076db5b26a63"
+    jcr:created="2005-03-19T23:23:16.021+01:00" jcr:isCheckedOut="true"
+    jcr:versionHistory="fc221f69-fcec-4df2-a539-c6c40cff099d"
+    jcr:baseVersion="5e444ad9-4fd4-48ea-bda1-1f08b24be79c"
+    jcr:predecessors="5e444ad9-4fd4-48ea-bda1-1f08b24be79c"
+    xmlns:jcr="http://www.jcp.org/jcr/1.0"
+    xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
+    xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:rep="internal"
+    xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:fn="http://www.w3.org/2004/10/xpath-functions"
+    xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns="" xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0">
+    <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.021+01:00">
+        <jcr:content jcr:primaryType="nt:unstructured" Data="MetaData"
+            creationdate="2004-11-02T15:34:12.353+01:00"
+            lastmodified="2005-03-19T23:21:24.621+01:00"
+            authorid="superuser" title="" sequenceposition="1099406052439000"/>
+    </MetaData>
+    <admin jcr:primaryType="mgnl:nodeData"
+        jcr:mixinTypes="mix:versionable"
+        jcr:uuid="8876e44f-5258-4ff7-a89f-91db6d8d0924"
+        jcr:created="2005-03-19T23:23:16.021+01:00"
+        jcr:isCheckedOut="true"
+        jcr:versionHistory="8946416b-5fcb-4d10-87f6-766dc7a7bfaa"
+        jcr:baseVersion="cef3e667-3850-4f68-8017-5927558640f0" jcr:predecessors="cef3e667-3850-4f68-8017-5927558640f0">
+        <jcr:content jcr:primaryType="nt:unstructured" Data="true"/>
+    </admin>
+    <defaultMailServer jcr:primaryType="mgnl:nodeData"
+        jcr:mixinTypes="mix:versionable"
+        jcr:uuid="4684497e-6050-4893-b5a2-33713b4d822c"
+        jcr:created="2005-03-19T23:23:16.031+01:00"
+        jcr:isCheckedOut="true"
+        jcr:versionHistory="961d4e1c-1ded-4d3a-a9a1-5cd6c4c3c0be"
+        jcr:baseVersion="ff3bde2a-c2e4-4344-a76c-4ec17c1e1f14" jcr:predecessors="ff3bde2a-c2e4-4344-a76c-4ec17c1e1f14">
+        <jcr:content jcr:primaryType="nt:unstructured" Data=""/>
+    </defaultMailServer>
+    <defaultExtension jcr:primaryType="mgnl:nodeData"
+        jcr:mixinTypes="mix:versionable"
+        jcr:uuid="89cfac32-5baf-4b2e-9f72-2f9065680c78"
+        jcr:created="2005-03-19T23:23:16.031+01:00"
+        jcr:isCheckedOut="true"
+        jcr:versionHistory="abf93752-961c-4723-9fde-f119330b918a"
+        jcr:baseVersion="3ea1f9b9-bb3a-4f86-9026-7daa7ff14e20" jcr:predecessors="3ea1f9b9-bb3a-4f86-9026-7daa7ff14e20">
+        <jcr:content jcr:primaryType="nt:unstructured" Data="html"/>
+    </defaultExtension>
+    <basicRealm jcr:primaryType="mgnl:nodeData"
+        jcr:mixinTypes="mix:versionable"
+        jcr:uuid="a542f80d-d54f-470b-a874-a961e7345c26"
+        jcr:created="2005-03-19T23:23:16.031+01:00"
+        jcr:isCheckedOut="true"
+        jcr:versionHistory="3c479fcd-38ec-48e6-a156-a1d6c2490d7f"
+        jcr:baseVersion="1b711b5a-03ce-48c8-b04b-237f077a0db3" jcr:predecessors="1b711b5a-03ce-48c8-b04b-237f077a0db3">
+        <jcr:content jcr:primaryType="nt:unstructured" Data="magnolia 2.1"/>
+    </basicRealm>
+    <ResourceNotAvailableURIMapping jcr:primaryType="mgnl:nodeData"
+        jcr:mixinTypes="mix:versionable"
+        jcr:uuid="53f2e534-f4f0-4064-9559-4f766f91b065"
+        jcr:created="2005-03-19T23:23:16.031+01:00"
+        jcr:isCheckedOut="true"
+        jcr:versionHistory="c62a4d77-2892-4a1a-80a8-1563cc0f664c"
+        jcr:baseVersion="c9c612d4-ddb7-42e3-b318-bcfe168dffc4" jcr:predecessors="c9c612d4-ddb7-42e3-b318-bcfe168dffc4">
+        <jcr:content jcr:primaryType="nt:unstructured" Data="/.magnolia/adminCentral.html"/>
+    </ResourceNotAvailableURIMapping>
+    <secureURIList jcr:primaryType="mgnl:contentNode"
+        jcr:mixinTypes="mix:versionable"
+        jcr:uuid="2d86cd50-f0b4-4e9a-aefa-ac50dfc70fdd"
+        jcr:created="2005-03-19T23:23:16.031+01:00"
+        jcr:isCheckedOut="true"
+        jcr:versionHistory="b2059497-f2f8-4e83-b362-aeb7a884c538"
+        jcr:baseVersion="10b28f35-4afe-490a-86e4-138e154084c3" jcr:predecessors="10b28f35-4afe-490a-86e4-138e154084c3">
+        <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.031+01:00">
+            <jcr:content jcr:primaryType="nt:unstructured"
+                Data="MetaData"
+                creationdate="2004-11-02T15:34:12.575+01:00"
+                sequenceposition="1099406052596000"
+                lastmodified="2004-11-02T15:34:12.591+01:00" authorid="superuser"/>
+        </MetaData>
+        <_x0030_001 jcr:primaryType="mgnl:contentNode"
+            jcr:mixinTypes="mix:versionable"
+            jcr:uuid="db4f6fca-898c-4c3c-b2bc-ea3f2ea51401"
+            jcr:created="2005-03-19T23:23:16.031+01:00"
+            jcr:isCheckedOut="true"
+            jcr:versionHistory="b95b9c88-0eab-40d4-817d-289ea87c3de4"
+            jcr:baseVersion="609617f6-da24-427f-b4d4-787ea304a8ae" jcr:predecessors="609617f6-da24-427f-b4d4-787ea304a8ae">
+            <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.041+01:00">
+                <jcr:content jcr:primaryType="nt:unstructured"
+                    Data="MetaData"
+                    creationdate="2004-11-02T15:34:12.661+01:00"
+                    sequenceposition="1099406052697000"
+                    lastmodified="2004-11-02T15:34:12.692+01:00" authorid="superuser"/>
+            </MetaData>
+            <URI jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="c21471b6-0617-4b48-a0da-fad80a06fe38"
+                jcr:created="2005-03-19T23:23:16.041+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="1165a8e2-a13c-4d3b-99b0-278afefd9429"
+                jcr:baseVersion="909a2c6a-b6c9-45e4-87c7-6813b831b115" jcr:predecessors="909a2c6a-b6c9-45e4-87c7-6813b831b115">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="/*"/>
+            </URI>
+        </_x0030_001>
+    </secureURIList>
+    <cache jcr:primaryType="mgnl:contentNode"
+        jcr:mixinTypes="mix:versionable"
+        jcr:uuid="ba08c99a-cb45-49b7-9997-e636875e6c02"
+        jcr:created="2005-03-19T23:23:16.041+01:00"
+        jcr:isCheckedOut="true"
+        jcr:versionHistory="d57ade1e-91f0-4ce7-b705-c0758db52ee5"
+        jcr:baseVersion="209be153-20ff-4921-90b7-c4ed57414d6f" jcr:predecessors="209be153-20ff-4921-90b7-c4ed57414d6f">
+        <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.041+01:00">
+            <jcr:content jcr:primaryType="nt:unstructured"
+                Data="MetaData"
+                creationdate="2004-11-02T15:34:12.747+01:00"
+                sequenceposition="1099406052793000"
+                lastmodified="2004-11-02T15:34:12.789+01:00" authorid="superuser"/>
+        </MetaData>
+        <level1 jcr:primaryType="mgnl:contentNode"
+            jcr:mixinTypes="mix:versionable"
+            jcr:uuid="836b589b-13aa-4606-ba6f-bd952e069e95"
+            jcr:created="2005-03-19T23:23:16.041+01:00"
+            jcr:isCheckedOut="true"
+            jcr:versionHistory="99672e01-dcef-447e-bbfa-ecb1524a1ed8"
+            jcr:baseVersion="fa5ad2aa-57ee-4b39-b37c-c31b85c16725" jcr:predecessors="fa5ad2aa-57ee-4b39-b37c-c31b85c16725">
+            <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.041+01:00">
+                <jcr:content jcr:primaryType="nt:unstructured"
+                    Data="MetaData"
+                    creationdate="2004-11-02T15:34:12.850+01:00"
+                    sequenceposition="1099406052872000"
+                    lastmodified="2004-11-02T15:34:12.867+01:00" authorid="superuser"/>
+            </MetaData>
+            <domain jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="5d5b575a-726d-487d-92ef-67c867cc7bee"
+                jcr:created="2005-03-19T23:23:16.051+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="1af21035-36dc-458b-a0c2-dad5f0019689"
+                jcr:baseVersion="b963deed-44f5-465f-b309-7c2aa3570681" jcr:predecessors="b963deed-44f5-465f-b309-7c2aa3570681">
+                <jcr:content jcr:primaryType="nt:unstructured" Data=""/>
+            </domain>
+            <active jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="76b2dc55-da1a-4dfe-bc18-46e05aeffd03"
+                jcr:created="2005-03-19T23:23:16.051+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="aa4bf309-e27b-4a81-ad6e-4d3e06b99f75"
+                jcr:baseVersion="d98aaf74-4066-49b5-b67c-52c81b130966" jcr:predecessors="d98aaf74-4066-49b5-b67c-52c81b130966">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="false"/>
+            </active>
+            <URI jcr:primaryType="mgnl:contentNode"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="ce6e7a23-2ac2-4160-9998-5511d28938b2"
+                jcr:created="2005-03-19T23:23:16.051+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="a793a67b-11ee-449b-9d59-d17bf14c07d2"
+                jcr:baseVersion="ab6d0ee9-bfbe-4a54-822c-6cde1eefc416" jcr:predecessors="ab6d0ee9-bfbe-4a54-822c-6cde1eefc416">
+                <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.061+01:00">
+                    <jcr:content jcr:primaryType="nt:unstructured"
+                        Data="MetaData"
+                        creationdate="2004-11-02T15:34:12.951+01:00"
+                        sequenceposition="1099406052972000"
+                        lastmodified="2004-11-02T15:34:12.967+01:00" authorid="superuser"/>
+                </MetaData>
+                <deny jcr:primaryType="mgnl:contentNode"
+                    jcr:mixinTypes="mix:versionable"
+                    jcr:uuid="0c064bf4-9ec0-4d7b-bf57-09dd67af82a8"
+                    jcr:created="2005-03-19T23:23:16.061+01:00"
+                    jcr:isCheckedOut="true"
+                    jcr:versionHistory="3f1496d7-0047-4a5e-8df9-0ad9396a23d2"
+                    jcr:baseVersion="755ba306-1eaa-4ff5-beb0-64bc029c1aeb" jcr:predecessors="755ba306-1eaa-4ff5-beb0-64bc029c1aeb">
+                    <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.061+01:00">
+                        <jcr:content jcr:primaryType="nt:unstructured"
+                            Data="MetaData"
+                            creationdate="2004-11-02T15:34:13.083+01:00"
+                            sequenceposition="1099406053093000"
+                            lastmodified="2004-11-02T15:34:13.088+01:00" authorid="superuser"/>
+                    </MetaData>
+                    <_x0030_001 jcr:primaryType="mgnl:contentNode"
+                        jcr:mixinTypes="mix:versionable"
+                        jcr:uuid="e90de754-0460-41ce-a19f-7b0e828c7c2c"
+                        jcr:created="2005-03-19T23:23:16.071+01:00"
+                        jcr:isCheckedOut="true"
+                        jcr:versionHistory="16659919-aff0-433a-b5d9-daad2d6f35d3"
+                        jcr:baseVersion="b29d4f69-380a-474a-9d73-4230fc571379" jcr:predecessors="b29d4f69-380a-474a-9d73-4230fc571379">
+                        <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.071+01:00">
+                            <jcr:content
+                                jcr:primaryType="nt:unstructured"
+                                Data="MetaData"
+                                creationdate="2004-11-02T15:34:13.190+01:00"
+                                sequenceposition="1099406053201000"
+                                lastmodified="2004-11-11T16:54:36.891+01:00" authorid="superuser"/>
+                        </MetaData>
+                        <URI jcr:primaryType="mgnl:nodeData"
+                            jcr:mixinTypes="mix:versionable"
+                            jcr:uuid="972580cd-0789-4270-9525-132100b4e314"
+                            jcr:created="2005-03-19T23:23:16.161+01:00"
+                            jcr:isCheckedOut="true"
+                            jcr:versionHistory="e7207707-fb9c-459c-81f9-d772351a173c"
+                            jcr:baseVersion="6b068c10-cd96-4430-8eb8-6c4fb389df30" jcr:predecessors="6b068c10-cd96-4430-8eb8-6c4fb389df30">
+                            <jcr:content
+                                jcr:primaryType="nt:unstructured" Data="/.magnolia*"/>
+                        </URI>
+                    </_x0030_001>
+                </deny>
+                <allow jcr:primaryType="mgnl:contentNode"
+                    jcr:mixinTypes="mix:versionable"
+                    jcr:uuid="64f68a6a-84ed-43df-aeae-e1f3726fe3cd"
+                    jcr:created="2005-03-19T23:23:16.161+01:00"
+                    jcr:isCheckedOut="true"
+                    jcr:versionHistory="3f7d9c69-34bc-4c1b-97e9-c023b298c7ae"
+                    jcr:baseVersion="ad72a6be-4d0f-419e-ab50-82143edd53b4" jcr:predecessors="ad72a6be-4d0f-419e-ab50-82143edd53b4">
+                    <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.161+01:00">
+                        <jcr:content jcr:primaryType="nt:unstructured"
+                            Data="MetaData"
+                            creationdate="2004-11-02T15:34:13.247+01:00"
+                            sequenceposition="1099406053293000"
+                            lastmodified="2004-11-02T15:34:13.288+01:00" authorid="superuser"/>
+                    </MetaData>
+                    <_x0030_001 jcr:primaryType="mgnl:contentNode"
+                        jcr:mixinTypes="mix:versionable"
+                        jcr:uuid="9a89c6cc-3155-4956-8ed1-1334257c1ce3"
+                        jcr:created="2005-03-19T23:23:16.161+01:00"
+                        jcr:isCheckedOut="true"
+                        jcr:versionHistory="77e8ad66-38a0-48ec-8d4e-25b2101298a3"
+                        jcr:baseVersion="92013685-591a-4d7b-81d9-48cb73e1882d" jcr:predecessors="92013685-591a-4d7b-81d9-48cb73e1882d">
+                        <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.181+01:00">
+                            <jcr:content
+                                jcr:primaryType="nt:unstructured"
+                                Data="MetaData"
+                                creationdate="2004-11-02T15:34:13.331+01:00"
+                                sequenceposition="1099406053342000"
+                                lastmodified="2004-11-02T15:34:13.336+01:00" authorid="superuser"/>
+                        </MetaData>
+                        <URI jcr:primaryType="mgnl:nodeData"
+                            jcr:mixinTypes="mix:versionable"
+                            jcr:uuid="1470c72f-40ed-4bca-b85c-dddf21e81de7"
+                            jcr:created="2005-03-19T23:23:16.181+01:00"
+                            jcr:isCheckedOut="true"
+                            jcr:versionHistory="11f4f929-549f-4cfa-a8cd-d6a1309376b7"
+                            jcr:baseVersion="ce5d83ef-8771-4ef0-9f02-6d20ff60adc5" jcr:predecessors="ce5d83ef-8771-4ef0-9f02-6d20ff60adc5">
+                            <jcr:content
+                                jcr:primaryType="nt:unstructured" Data="/*"/>
+                        </URI>
+                    </_x0030_001>
+                </allow>
+            </URI>
+            <compression jcr:primaryType="mgnl:contentNode"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="58574516-0690-4090-8c48-ee5dba877040"
+                jcr:created="2005-03-19T23:23:16.191+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="046c30fe-abf7-453f-ad8c-bcb93cb32276"
+                jcr:baseVersion="a5bc1eb5-c564-4539-8ea7-d4899055d81b" jcr:predecessors="a5bc1eb5-c564-4539-8ea7-d4899055d81b">
+                <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.191+01:00">
+                    <jcr:content jcr:primaryType="nt:unstructured"
+                        Data="MetaData"
+                        creationdate="2004-11-02T15:34:13.447+01:00"
+                        sequenceposition="1099406053457000"
+                        lastmodified="2004-11-02T15:34:13.452+01:00" authorid="superuser"/>
+                </MetaData>
+                <html jcr:primaryType="mgnl:contentNode"
+                    jcr:mixinTypes="mix:versionable"
+                    jcr:uuid="11781b66-4a4e-4e72-8dd8-09516c38b8c1"
+                    jcr:created="2005-03-19T23:23:16.191+01:00"
+                    jcr:isCheckedOut="true"
+                    jcr:versionHistory="4b055a6f-5454-4a6a-9ced-27e20df2429c"
+                    jcr:baseVersion="11daa99d-5ba4-45cf-907c-a5cbc9605a71" jcr:predecessors="11daa99d-5ba4-45cf-907c-a5cbc9605a71">
+                    <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.191+01:00">
+                        <jcr:content jcr:primaryType="nt:unstructured"
+                            Data="MetaData"
+                            creationdate="2004-11-02T15:34:13.676+01:00"
+                            sequenceposition="1099406053688000"
+                            lastmodified="2004-11-02T15:34:13.682+01:00" authorid="superuser"/>
+                    </MetaData>
+                    <extension jcr:primaryType="mgnl:nodeData"
+                        jcr:mixinTypes="mix:versionable"
+                        jcr:uuid="9287bab1-84c2-4b23-a0b8-f64b9de02450"
+                        jcr:created="2005-03-19T23:23:16.191+01:00"
+                        jcr:isCheckedOut="true"
+                        jcr:versionHistory="61a39daa-d488-447f-b417-34f0810533e1"
+                        jcr:baseVersion="f419e560-edb4-4393-91c0-21ecc62896d6" jcr:predecessors="f419e560-edb4-4393-91c0-21ecc62896d6">
+                        <jcr:content jcr:primaryType="nt:unstructured" Data="html"/>
+                    </extension>
+                    <type jcr:primaryType="mgnl:nodeData"
+                        jcr:mixinTypes="mix:versionable"
+                        jcr:uuid="f0ed22a5-8cbc-44b2-a046-1a70e766a799"
+                        jcr:created="2005-03-19T23:23:16.191+01:00"
+                        jcr:isCheckedOut="true"
+                        jcr:versionHistory="683c960f-e775-468d-b20a-ea2d5d0d0735"
+                        jcr:baseVersion="bc08c7d1-99ae-43f1-a831-82e5bf1779e9" jcr:predecessors="bc08c7d1-99ae-43f1-a831-82e5bf1779e9">
+                        <jcr:content jcr:primaryType="nt:unstructured" Data="gzip"/>
+                    </type>
+                </html>
+                <css jcr:primaryType="mgnl:contentNode"
+                    jcr:mixinTypes="mix:versionable"
+                    jcr:uuid="cc6a9906-52ca-4625-ac56-1f3ab94fd606"
+                    jcr:created="2005-03-19T23:23:16.201+01:00"
+                    jcr:isCheckedOut="true"
+                    jcr:versionHistory="2ab3b112-5a26-4094-992b-81d888cab359"
+                    jcr:baseVersion="d309d2df-93fa-4e5b-9bed-2168f63a3ca4" jcr:predecessors="d309d2df-93fa-4e5b-9bed-2168f63a3ca4">
+                    <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.201+01:00">
+                        <jcr:content jcr:primaryType="nt:unstructured"
+                            Data="MetaData"
+                            creationdate="2004-11-02T15:34:13.733+01:00"
+                            sequenceposition="1099406053744000"
+                            lastmodified="2004-11-02T15:34:13.738+01:00" authorid="superuser"/>
+                    </MetaData>
+                    <extension jcr:primaryType="mgnl:nodeData"
+                        jcr:mixinTypes="mix:versionable"
+                        jcr:uuid="e7b17022-0ed5-43a1-ab45-de6e009f9b3e"
+                        jcr:created="2005-03-19T23:23:16.201+01:00"
+                        jcr:isCheckedOut="true"
+                        jcr:versionHistory="3c162a32-da6c-4e59-8e1b-b01c33e35cc4"
+                        jcr:baseVersion="5db89b97-b69b-4a93-8723-1eab736bfba1" jcr:predecessors="5db89b97-b69b-4a93-8723-1eab736bfba1">
+                        <jcr:content jcr:primaryType="nt:unstructured" Data="css"/>
+                    </extension>
+                    <type jcr:primaryType="mgnl:nodeData"
+                        jcr:mixinTypes="mix:versionable"
+                        jcr:uuid="9bdadb2b-0b6a-4f49-8830-88b1b953188e"
+                        jcr:created="2005-03-19T23:23:16.211+01:00"
+                        jcr:isCheckedOut="true"
+                        jcr:versionHistory="709f02c4-6880-4ba7-b1cf-951cc4a29b82"
+                        jcr:baseVersion="1ca65f60-f3d8-4318-b3cc-dcbb9eb8c9dd" jcr:predecessors="1ca65f60-f3d8-4318-b3cc-dcbb9eb8c9dd">
+                        <jcr:content jcr:primaryType="nt:unstructured" Data="gzip"/>
+                    </type>
+                </css>
+                <js jcr:primaryType="mgnl:contentNode"
+                    jcr:mixinTypes="mix:versionable"
+                    jcr:uuid="9b5c5b53-82b0-4921-b11a-9b990b771a24"
+                    jcr:created="2005-03-19T23:23:16.211+01:00"
+                    jcr:isCheckedOut="true"
+                    jcr:versionHistory="d845c291-eda2-48d5-88c1-def49945e8f7"
+                    jcr:baseVersion="9d94a49f-e494-4168-97c9-4905b00fd2b6" jcr:predecessors="9d94a49f-e494-4168-97c9-4905b00fd2b6">
+                    <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.221+01:00">
+                        <jcr:content jcr:primaryType="nt:unstructured"
+                            Data="MetaData"
+                            creationdate="2004-11-02T15:34:13.851+01:00"
+                            sequenceposition="1099406053863000"
+                            lastmodified="2004-11-02T15:34:13.857+01:00" authorid="superuser"/>
+                    </MetaData>
+                    <extension jcr:primaryType="mgnl:nodeData"
+                        jcr:mixinTypes="mix:versionable"
+                        jcr:uuid="0064e976-79af-43f6-8982-21d61f98eb1b"
+                        jcr:created="2005-03-19T23:23:16.251+01:00"
+                        jcr:isCheckedOut="true"
+                        jcr:versionHistory="ce308df5-a271-4ec7-9b64-0d7e2e294c38"
+                        jcr:baseVersion="8f3a245d-9029-40c9-b7e5-3dd5d8eb1ec5" jcr:predecessors="8f3a245d-9029-40c9-b7e5-3dd5d8eb1ec5">
+                        <jcr:content jcr:primaryType="nt:unstructured" Data="js"/>
+                    </extension>
+                    <type jcr:primaryType="mgnl:nodeData"
+                        jcr:mixinTypes="mix:versionable"
+                        jcr:uuid="b38138fd-ca21-4237-9b31-dd6845696c7d"
+                        jcr:created="2005-03-19T23:23:16.251+01:00"
+                        jcr:isCheckedOut="true"
+                        jcr:versionHistory="bfe8f109-0a4a-4fec-8a88-22231ce93525"
+                        jcr:baseVersion="601cb5e2-c029-4729-b5b9-9341dc8dcee9" jcr:predecessors="601cb5e2-c029-4729-b5b9-9341dc8dcee9">
+                        <jcr:content jcr:primaryType="nt:unstructured" Data="gzip"/>
+                    </type>
+                </js>
+                <htm jcr:primaryType="mgnl:contentNode"
+                    jcr:mixinTypes="mix:versionable"
+                    jcr:uuid="2a8438ea-46a9-457e-8ac2-63288f78c8d5"
+                    jcr:created="2005-03-19T23:23:16.251+01:00"
+                    jcr:isCheckedOut="true"
+                    jcr:versionHistory="965b0884-5113-40e2-b3ee-26ae3d8b9eb4"
+                    jcr:baseVersion="79df0452-10f0-4d40-9726-0954929fe77b" jcr:predecessors="79df0452-10f0-4d40-9726-0954929fe77b">
+                    <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.251+01:00">
+                        <jcr:content jcr:primaryType="nt:unstructured"
+                            Data="MetaData"
+                            creationdate="2004-11-02T15:34:13.935+01:00"
+                            sequenceposition="1099406053946000"
+                            lastmodified="2004-11-02T15:34:13.941+01:00" authorid="superuser"/>
+                    </MetaData>
+                    <extension jcr:primaryType="mgnl:nodeData"
+                        jcr:mixinTypes="mix:versionable"
+                        jcr:uuid="708964ca-27c4-453f-bf49-6231a80a2a45"
+                        jcr:created="2005-03-19T23:23:16.261+01:00"
+                        jcr:isCheckedOut="true"
+                        jcr:versionHistory="400bf4ef-d12d-4b05-8e91-ad06c2783e7a"
+                        jcr:baseVersion="cfab64a8-cc04-4c6e-8603-ab3aa63f2420" jcr:predecessors="cfab64a8-cc04-4c6e-8603-ab3aa63f2420">
+                        <jcr:content jcr:primaryType="nt:unstructured" Data="htm"/>
+                    </extension>
+                    <type jcr:primaryType="mgnl:nodeData"
+                        jcr:mixinTypes="mix:versionable"
+                        jcr:uuid="e78fbf5e-e043-408b-a769-9b20a97c2bad"
+                        jcr:created="2005-03-19T23:23:16.261+01:00"
+                        jcr:isCheckedOut="true"
+                        jcr:versionHistory="e9ca19bc-4872-4754-b534-e68f4aba8fa4"
+                        jcr:baseVersion="b808f097-2554-47af-9374-227270939bb7" jcr:predecessors="b808f097-2554-47af-9374-227270939bb7">
+                        <jcr:content jcr:primaryType="nt:unstructured" Data="gzip"/>
+                    </type>
+                </htm>
+            </compression>
+        </level1>
+    </cache>
+    <IPConfig jcr:primaryType="mgnl:contentNode"
+        jcr:mixinTypes="mix:versionable"
+        jcr:uuid="33074073-9af3-43e9-be88-ffa9888c85c0"
+        jcr:created="2005-03-19T23:23:16.261+01:00"
+        jcr:isCheckedOut="true"
+        jcr:versionHistory="312f5a2e-443d-43bf-947c-16da21005226"
+        jcr:baseVersion="b47a7b52-3d31-4fbd-9738-61e33dc8e126" jcr:predecessors="b47a7b52-3d31-4fbd-9738-61e33dc8e126">
+        <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.261+01:00">
+            <jcr:content jcr:primaryType="nt:unstructured"
+                Data="MetaData"
+                creationdate="2004-11-02T15:34:13.992+01:00"
+                sequenceposition="1099406054051000"
+                lastmodified="2004-11-02T15:34:13.998+01:00" authorid="superuser"/>
+        </MetaData>
+        <_x0030_001 jcr:primaryType="mgnl:contentNode"
+            jcr:mixinTypes="mix:versionable"
+            jcr:uuid="83633008-475b-47dc-bae4-5430fbeab705"
+            jcr:created="2005-03-19T23:23:16.261+01:00"
+            jcr:isCheckedOut="true"
+            jcr:versionHistory="879975ae-32fb-492e-b625-4c5c9efd8b05"
+            jcr:baseVersion="30232e86-2a73-4b7b-a5a1-71af139fbcee" jcr:predecessors="30232e86-2a73-4b7b-a5a1-71af139fbcee">
+            <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.261+01:00">
+                <jcr:content jcr:primaryType="nt:unstructured"
+                    Data="MetaData"
+                    creationdate="2004-11-02T15:34:14.081+01:00"
+                    sequenceposition="1099406054123000"
+                    lastmodified="2004-11-02T15:34:14.085+01:00" authorid="superuser"/>
+            </MetaData>
+            <IP jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="df10fc20-4dd4-43e0-8513-034ecf154c34"
+                jcr:created="2005-03-19T23:23:16.271+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="5cf36c4d-e671-4be6-a324-6105eda4bd8d"
+                jcr:baseVersion="841e9843-91c9-402b-87b8-39433e317bce" jcr:predecessors="841e9843-91c9-402b-87b8-39433e317bce">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="*"/>
+            </IP>
+            <Access jcr:primaryType="mgnl:contentNode"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="bb34f2ba-ed00-432b-9412-7e35a0d764b6"
+                jcr:created="2005-03-19T23:23:16.271+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="992d6d88-c619-4946-9dc4-c1ac1a98afcd"
+                jcr:baseVersion="8eb6d8ad-b503-4b84-9aaf-bf606b58f80f" jcr:predecessors="8eb6d8ad-b503-4b84-9aaf-bf606b58f80f">
+                <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.271+01:00">
+                    <jcr:content jcr:primaryType="nt:unstructured"
+                        Data="MetaData"
+                        creationdate="2004-11-02T15:34:14.227+01:00"
+                        sequenceposition="1099406054307000"
+                        lastmodified="2004-11-02T15:34:14.244+01:00" authorid="superuser"/>
+                </MetaData>
+                <_x0030_001 jcr:primaryType="mgnl:contentNode"
+                    jcr:mixinTypes="mix:versionable"
+                    jcr:uuid="abbb97f6-20dc-4e0c-af6a-0670ce19ffec"
+                    jcr:created="2005-03-19T23:23:16.271+01:00"
+                    jcr:isCheckedOut="true"
+                    jcr:versionHistory="411d5d65-3e95-403d-9d5b-1af06cbb6547"
+                    jcr:baseVersion="c8ab7806-bb0d-43e0-aaff-06fcbc3fb0ad" jcr:predecessors="c8ab7806-bb0d-43e0-aaff-06fcbc3fb0ad">
+                    <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.271+01:00">
+                        <jcr:content jcr:primaryType="nt:unstructured"
+                            Data="MetaData"
+                            creationdate="2004-11-02T15:34:14.349+01:00"
+                            sequenceposition="1099406054359000"
+                            lastmodified="2004-11-02T15:34:14.354+01:00" authorid="superuser"/>
+                    </MetaData>
+                    <Method jcr:primaryType="mgnl:nodeData"
+                        jcr:mixinTypes="mix:versionable"
+                        jcr:uuid="89e60327-47d5-45c0-af5e-95220a5e3c80"
+                        jcr:created="2005-03-19T23:23:16.271+01:00"
+                        jcr:isCheckedOut="true"
+                        jcr:versionHistory="9c302094-1ae3-4319-8909-0310ab8ea074"
+                        jcr:baseVersion="1aa83205-5ded-44db-86a2-e36dbe539cac" jcr:predecessors="1aa83205-5ded-44db-86a2-e36dbe539cac">
+                        <jcr:content jcr:primaryType="nt:unstructured" Data="GET"/>
+                    </Method>
+                </_x0030_001>
+                <_x0030_002 jcr:primaryType="mgnl:contentNode"
+                    jcr:mixinTypes="mix:versionable"
+                    jcr:uuid="76c66870-26e5-42a3-88af-a992b7501f63"
+                    jcr:created="2005-03-19T23:23:16.271+01:00"
+                    jcr:isCheckedOut="true"
+                    jcr:versionHistory="04f6b189-1962-48d0-b3c1-58392d64c762"
+                    jcr:baseVersion="a07ef925-dd35-4864-a41c-4045fc3b7b8e" jcr:predecessors="a07ef925-dd35-4864-a41c-4045fc3b7b8e">
+                    <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.271+01:00">
+                        <jcr:content jcr:primaryType="nt:unstructured"
+                            Data="MetaData"
+                            creationdate="2004-11-02T15:34:14.416+01:00"
+                            sequenceposition="1099406054427000"
+                            lastmodified="2004-11-02T15:34:14.421+01:00" authorid="superuser"/>
+                    </MetaData>
+                    <Method jcr:primaryType="mgnl:nodeData"
+                        jcr:mixinTypes="mix:versionable"
+                        jcr:uuid="81d68e33-3ff0-44a3-b491-9f90986f0faf"
+                        jcr:created="2005-03-19T23:23:16.331+01:00"
+                        jcr:isCheckedOut="true"
+                        jcr:versionHistory="b8a3e6fe-3e4d-46b9-8e7b-dcc282de7be8"
+                        jcr:baseVersion="4e8db063-2927-4a8b-afbb-486d699399bc" jcr:predecessors="4e8db063-2927-4a8b-afbb-486d699399bc">
+                        <jcr:content jcr:primaryType="nt:unstructured" Data="POST"/>
+                    </Method>
+                </_x0030_002>
+            </Access>
+        </_x0030_001>
+    </IPConfig>
+    <MIMEMapping jcr:primaryType="mgnl:contentNode"
+        jcr:mixinTypes="mix:versionable"
+        jcr:uuid="6cc0cf1d-1cef-480a-add3-b678037c0ce6"
+        jcr:created="2005-03-19T23:23:16.331+01:00"
+        jcr:isCheckedOut="true"
+        jcr:versionHistory="876963da-9bdb-45c3-be53-6045fdb9b6d8"
+        jcr:baseVersion="506c72aa-1dc7-4aad-a6b7-40f18fc05930" jcr:predecessors="506c72aa-1dc7-4aad-a6b7-40f18fc05930">
+        <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.331+01:00">
+            <jcr:content jcr:primaryType="nt:unstructured"
+                Data="MetaData"
+                creationdate="2004-11-02T15:34:14.491+01:00"
+                sequenceposition="1099406054563000"
+                lastmodified="2004-11-02T15:34:14.556+01:00" authorid="superuser"/>
+        </MetaData>
+        <html jcr:primaryType="mgnl:contentNode"
+            jcr:mixinTypes="mix:versionable"
+            jcr:uuid="eb1819d6-2f36-4e4b-a0a1-42ecf683d7a3"
+            jcr:created="2005-03-19T23:23:16.361+01:00"
+            jcr:isCheckedOut="true"
+            jcr:versionHistory="571a9b8a-96a4-4a4a-8234-cc85d095b772"
+            jcr:baseVersion="cbe94a64-33a5-4efc-8841-38766aaf152b" jcr:predecessors="cbe94a64-33a5-4efc-8841-38766aaf152b">
+            <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.361+01:00">
+                <jcr:content jcr:primaryType="nt:unstructured"
+                    Data="MetaData"
+                    creationdate="2004-11-02T15:34:15.499+01:00"
+                    sequenceposition="1099406055610000"
+                    lastmodified="2005-03-04T11:10:45.332+01:00" authorid="superuser"/>
+            </MetaData>
+            <extension jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="0cea7ad0-0dc9-4cb7-91d2-bf8b0140261a"
+                jcr:created="2005-03-19T23:23:16.371+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="584bd516-572d-4c19-998e-57ef848868da"
+                jcr:baseVersion="2b7f4169-95d4-4648-8f33-29d4b3fe98c7" jcr:predecessors="2b7f4169-95d4-4648-8f33-29d4b3fe98c7">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="html"/>
+            </extension>
+            <mime-type jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="8ec810a5-6573-4389-bcc8-0a067ef86d2f"
+                jcr:created="2005-03-19T23:23:16.371+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="d56ac7f7-1276-40d6-8c07-96b4416f7d7d"
+                jcr:baseVersion="cba2d8a0-073c-4b0b-b483-8470aa6e83ac" jcr:predecessors="cba2d8a0-073c-4b0b-b483-8470aa6e83ac">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="text/html"/>
+            </mime-type>
+        </html>
+        <js jcr:primaryType="mgnl:contentNode"
+            jcr:mixinTypes="mix:versionable"
+            jcr:uuid="d012f676-9eea-4d1c-87da-8fb70e59bbb1"
+            jcr:created="2005-03-19T23:23:16.371+01:00"
+            jcr:isCheckedOut="true"
+            jcr:versionHistory="25855255-773a-47bd-afff-77bb62403944"
+            jcr:baseVersion="3d457dfb-f226-435c-87d3-d5a32fb2de40" jcr:predecessors="3d457dfb-f226-435c-87d3-d5a32fb2de40">
+            <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.371+01:00">
+                <jcr:content jcr:primaryType="nt:unstructured"
+                    Data="MetaData"
+                    creationdate="2004-11-02T15:34:15.694+01:00"
+                    sequenceposition="1099406055704000"
+                    lastmodified="2004-11-02T15:34:15.699+01:00" authorid="superuser"/>
+            </MetaData>
+            <extension jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="79f96de0-4d4e-41c7-bf62-b04c0cc53c32"
+                jcr:created="2005-03-19T23:23:16.371+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="03a03d5f-998b-490e-ba3f-a551b90d8c19"
+                jcr:baseVersion="455a576c-fa04-443b-9518-26bb1cff532c" jcr:predecessors="455a576c-fa04-443b-9518-26bb1cff532c">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="js"/>
+            </extension>
+            <mime-type jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="7ba78d6c-e5c0-4f90-a8c4-cd276e2c97b4"
+                jcr:created="2005-03-19T23:23:16.381+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="f88cdd2e-f35a-4b1f-ac19-eb0ded3f3349"
+                jcr:baseVersion="b3f6598e-3834-4ee9-945a-298bb23643ce" jcr:predecessors="b3f6598e-3834-4ee9-945a-298bb23643ce">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="text/javascript"/>
+            </mime-type>
+        </js>
+        <mov jcr:primaryType="mgnl:contentNode"
+            jcr:mixinTypes="mix:versionable"
+            jcr:uuid="f8dad1f0-9528-41e0-be1c-6885cfecd2a8"
+            jcr:created="2005-03-19T23:23:16.381+01:00"
+            jcr:isCheckedOut="true"
+            jcr:versionHistory="d81e8494-64af-4255-b9f4-5ea034fab205"
+            jcr:baseVersion="fa4117e2-b86a-4055-b446-70a0f138b555" jcr:predecessors="fa4117e2-b86a-4055-b446-70a0f138b555">
+            <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.381+01:00">
+                <jcr:content jcr:primaryType="nt:unstructured"
+                    Data="MetaData"
+                    creationdate="2004-11-02T15:34:15.744+01:00"
+                    sequenceposition="1099406055789000"
+                    lastmodified="2004-11-02T15:34:15.749+01:00" authorid="superuser"/>
+            </MetaData>
+            <extension jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="6ef1bf43-1b62-43a4-9904-f6e03abf1372"
+                jcr:created="2005-03-19T23:23:16.391+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="c9e40da5-6f92-47b2-bd23-880ec5ac2b6a"
+                jcr:baseVersion="c680ee14-05d2-4e36-945b-d1103e820943" jcr:predecessors="c680ee14-05d2-4e36-945b-d1103e820943">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="mov"/>
+            </extension>
+            <mime-type jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="630793bb-53b2-485b-b3db-dc8850638d1b"
+                jcr:created="2005-03-19T23:23:16.391+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="94d52aeb-4a0a-4e43-bae8-33e55e0db62e"
+                jcr:baseVersion="7bfa8339-e2c4-421c-b721-0f491d29332b" jcr:predecessors="7bfa8339-e2c4-421c-b721-0f491d29332b">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="video/quicktime"/>
+            </mime-type>
+        </mov>
+        <pdf jcr:primaryType="mgnl:contentNode"
+            jcr:mixinTypes="mix:versionable"
+            jcr:uuid="78346d8b-1184-4318-96cc-18c30e3d32b2"
+            jcr:created="2005-03-19T23:23:16.391+01:00"
+            jcr:isCheckedOut="true"
+            jcr:versionHistory="e47f02c4-c477-4f0c-9473-4ea1e6e6324b"
+            jcr:baseVersion="e81c5119-798d-4b1e-b37e-b4865fd9fe44" jcr:predecessors="e81c5119-798d-4b1e-b37e-b4865fd9fe44">
+            <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.391+01:00">
+                <jcr:content jcr:primaryType="nt:unstructured"
+                    Data="MetaData"
+                    creationdate="2004-11-02T15:34:15.818+01:00"
+                    sequenceposition="1099406055830000"
+                    lastmodified="2004-11-02T15:34:15.825+01:00" authorid="superuser"/>
+            </MetaData>
+            <extension jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="fa8de37c-36bd-42df-98e0-4ef231001a09"
+                jcr:created="2005-03-19T23:23:16.401+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="e53eb348-cd45-45df-a7f9-5b2f81b74398"
+                jcr:baseVersion="760b6318-1194-44f2-9b9a-7839fc45b7b5" jcr:predecessors="760b6318-1194-44f2-9b9a-7839fc45b7b5">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="pdf"/>
+            </extension>
+            <mime-type jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="d2d9773b-06bb-4ff8-bdfa-f6941ccd5e10"
+                jcr:created="2005-03-19T23:23:16.401+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="a2b7eeed-cc5f-4dc2-8455-f4831edf9255"
+                jcr:baseVersion="d1867b0b-1e89-425a-99ed-bd03e899c931" jcr:predecessors="d1867b0b-1e89-425a-99ed-bd03e899c931">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="application/pdf"/>
+            </mime-type>
+        </pdf>
+        <jpe jcr:primaryType="mgnl:contentNode"
+            jcr:mixinTypes="mix:versionable"
+            jcr:uuid="462a1b20-2dd8-4de9-8a78-1582c4c04ec6"
+            jcr:created="2005-03-19T23:23:16.401+01:00"
+            jcr:isCheckedOut="true"
+            jcr:versionHistory="71957891-5edd-40ab-b362-ac4024f5b2c9"
+            jcr:baseVersion="2dca7e34-9f1b-4e63-b042-a9c1573896b9" jcr:predecessors="2dca7e34-9f1b-4e63-b042-a9c1573896b9">
+            <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.401+01:00">
+                <jcr:content jcr:primaryType="nt:unstructured"
+                    Data="MetaData"
+                    creationdate="2004-11-02T15:34:15.918+01:00"
+                    sequenceposition="1099406055929000"
+                    lastmodified="2004-11-02T15:34:15.924+01:00" authorid="superuser"/>
+            </MetaData>
+            <extension jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="b5e04d1c-bfb9-4a18-ab9e-9d49552d8940"
+                jcr:created="2005-03-19T23:23:16.401+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="ea507bc5-657a-467c-932e-6afa6cec8ff1"
+                jcr:baseVersion="845d05bd-3373-48cf-a810-7e6369fac2ee" jcr:predecessors="845d05bd-3373-48cf-a810-7e6369fac2ee">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="jpe"/>
+            </extension>
+            <mime-type jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="e234bc11-1946-4918-a4c6-00cc2fee26ef"
+                jcr:created="2005-03-19T23:23:16.401+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="3f5b0f77-1fed-4cc1-8175-875b070521c2"
+                jcr:baseVersion="3fb648f8-5208-43e8-b12d-377e33e0d3db" jcr:predecessors="3fb648f8-5208-43e8-b12d-377e33e0d3db">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="image/jpeg"/>
+            </mime-type>
+        </jpe>
+        <ppt jcr:primaryType="mgnl:contentNode"
+            jcr:mixinTypes="mix:versionable"
+            jcr:uuid="f1931636-33b3-4066-95a0-ba64fa306e2a"
+            jcr:created="2005-03-19T23:23:16.401+01:00"
+            jcr:isCheckedOut="true"
+            jcr:versionHistory="3616f917-7e8e-41ee-847c-5bd5ad7b4171"
+            jcr:baseVersion="55e69ef6-f74d-4838-9a44-5e4385acceff" jcr:predecessors="55e69ef6-f74d-4838-9a44-5e4385acceff">
+            <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.401+01:00">
+                <jcr:content jcr:primaryType="nt:unstructured"
+                    Data="MetaData"
+                    creationdate="2004-11-02T15:34:16.025+01:00"
+                    sequenceposition="1099406056035000"
+                    lastmodified="2004-11-02T15:34:16.030+01:00" authorid="superuser"/>
+            </MetaData>
+            <extension jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="bc78cdd1-7cc1-4a13-90a1-b881f8f47914"
+                jcr:created="2005-03-19T23:23:16.421+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="7bfc71ca-a575-4212-801a-8ecc41d1c0c6"
+                jcr:baseVersion="b3bb7371-7eec-42b8-ae5f-0823a903d643" jcr:predecessors="b3bb7371-7eec-42b8-ae5f-0823a903d643">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="ppt"/>
+            </extension>
+            <mime-type jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="bcfe8689-3a22-40b6-9fc7-c2adfdcd0b10"
+                jcr:created="2005-03-19T23:23:16.421+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="be160d00-194b-4782-b233-58bff5b38b7e"
+                jcr:baseVersion="4351cab7-1f73-4303-a2c9-2da493132eef" jcr:predecessors="4351cab7-1f73-4303-a2c9-2da493132eef">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="application/vnd.ms-powerpoint"/>
+            </mime-type>
+        </ppt>
+        <xlw jcr:primaryType="mgnl:contentNode"
+            jcr:mixinTypes="mix:versionable"
+            jcr:uuid="9d3423b6-e4ef-44ea-9741-1965f260220f"
+            jcr:created="2005-03-19T23:23:16.421+01:00"
+            jcr:isCheckedOut="true"
+            jcr:versionHistory="0970033e-8977-4f0c-b49e-2257d72d5213"
+            jcr:baseVersion="b8dc477f-36b8-4115-ae42-262adcb8472a" jcr:predecessors="b8dc477f-36b8-4115-ae42-262adcb8472a">
+            <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.421+01:00">
+                <jcr:content jcr:primaryType="nt:unstructured"
+                    Data="MetaData"
+                    creationdate="2004-11-02T15:34:16.112+01:00"
+                    sequenceposition="1099406056175000"
+                    lastmodified="2004-11-02T15:34:16.117+01:00" authorid="superuser"/>
+            </MetaData>
+            <extension jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="f110ae9e-6965-41c5-b2d3-5a83c12edc12"
+                jcr:created="2005-03-19T23:23:16.421+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="fc875d06-3861-46ed-8ec0-a4f085449422"
+                jcr:baseVersion="cdd49661-1721-443b-b8e5-ff2672db3e0f" jcr:predecessors="cdd49661-1721-443b-b8e5-ff2672db3e0f">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="xlw"/>
+            </extension>
+            <mime-type jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="55a72226-b37e-4f51-98f0-d204f638f964"
+                jcr:created="2005-03-19T23:23:16.431+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="6b294b24-7765-41e7-818b-d4c61936ea9a"
+                jcr:baseVersion="c0ca25d1-7957-4e86-b135-fa076f081147" jcr:predecessors="c0ca25d1-7957-4e86-b135-fa076f081147">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="application/vnd.ms-excel"/>
+            </mime-type>
+        </xlw>
+        <xls jcr:primaryType="mgnl:contentNode"
+            jcr:mixinTypes="mix:versionable"
+            jcr:uuid="43702960-09c8-4b25-a787-684d97517a4e"
+            jcr:created="2005-03-19T23:23:16.431+01:00"
+            jcr:isCheckedOut="true"
+            jcr:versionHistory="db3a366b-1df8-4509-b993-40cd7f6dc54d"
+            jcr:baseVersion="edd0127b-ee02-4023-b4cc-187eb9152de7" jcr:predecessors="edd0127b-ee02-4023-b4cc-187eb9152de7">
+            <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.431+01:00">
+                <jcr:content jcr:primaryType="nt:unstructured"
+                    Data="MetaData"
+                    creationdate="2004-11-02T15:34:16.205+01:00"
+                    sequenceposition="1099406056222000"
+                    lastmodified="2004-11-02T15:34:16.209+01:00" authorid="superuser"/>
+            </MetaData>
+            <extension jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="7100e7a0-86aa-41cd-84a2-140a5b534382"
+                jcr:created="2005-03-19T23:23:16.431+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="631d37a5-0a20-4750-8d21-99e87b03475c"
+                jcr:baseVersion="82232e96-61bb-4639-a389-aad8e8da5df8" jcr:predecessors="82232e96-61bb-4639-a389-aad8e8da5df8">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="xls"/>
+            </extension>
+            <mime-type jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="67acc2f1-b885-4017-8999-3f9bb6012c98"
+                jcr:created="2005-03-19T23:23:16.431+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="2f3a505e-b435-4cd7-9fb5-31bc16f35923"
+                jcr:baseVersion="77ad554a-1ea8-4e3f-ab45-82c191851394" jcr:predecessors="77ad554a-1ea8-4e3f-ab45-82c191851394">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="application/vnd.ms-excel"/>
+            </mime-type>
+        </xls>
+        <dot jcr:primaryType="mgnl:contentNode"
+            jcr:mixinTypes="mix:versionable"
+            jcr:uuid="28d31137-3bec-40b9-ba35-db8628eccb98"
+            jcr:created="2005-03-19T23:23:16.431+01:00"
+            jcr:isCheckedOut="true"
+            jcr:versionHistory="596abc5c-6b57-42a0-abb0-0489401046d9"
+            jcr:baseVersion="73c78929-d56a-451f-b916-6fcd636f8545" jcr:predecessors="73c78929-d56a-451f-b916-6fcd636f8545">
+            <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.431+01:00">
+                <jcr:content jcr:primaryType="nt:unstructured"
+                    Data="MetaData"
+                    creationdate="2004-11-02T15:34:16.273+01:00"
+                    sequenceposition="1099406056285000"
+                    lastmodified="2004-11-02T15:34:16.279+01:00" authorid="superuser"/>
+            </MetaData>
+            <extension jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="57e954d9-dd57-4fc7-9d06-48e960f7ce51"
+                jcr:created="2005-03-19T23:23:16.442+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="396ffeac-cc9c-4bbe-853d-981224bca46c"
+                jcr:baseVersion="4772c82d-b917-4ae4-8a04-4f9cdd695ee8" jcr:predecessors="4772c82d-b917-4ae4-8a04-4f9cdd695ee8">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="dot"/>
+            </extension>
+            <mime-type jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="afe3a5e3-f0df-45aa-9948-067c726d9eb5"
+                jcr:created="2005-03-19T23:23:16.442+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="dc4dff0b-d69f-44e3-8745-5e46dd4b8c53"
+                jcr:baseVersion="5dedc067-b536-4053-be6e-018de7a44fdb" jcr:predecessors="5dedc067-b536-4053-be6e-018de7a44fdb">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="application/vnd.ms-word"/>
+            </mime-type>
+        </dot>
+        <doc jcr:primaryType="mgnl:contentNode"
+            jcr:mixinTypes="mix:versionable"
+            jcr:uuid="9ce7f7f5-f16c-46d7-b5a5-527e2110a162"
+            jcr:created="2005-03-19T23:23:16.442+01:00"
+            jcr:isCheckedOut="true"
+            jcr:versionHistory="97ba24f9-1b6a-4b0f-add7-6ae18563248c"
+            jcr:baseVersion="6079a88d-690b-4f06-bc7e-487ea4e3aee0" jcr:predecessors="6079a88d-690b-4f06-bc7e-487ea4e3aee0">
+            <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.442+01:00">
+                <jcr:content jcr:primaryType="nt:unstructured"
+                    Data="MetaData"
+                    creationdate="2004-11-02T15:34:16.339+01:00"
+                    sequenceposition="1099406056348000"
+                    lastmodified="2004-11-02T15:34:16.344+01:00" authorid="superuser"/>
+            </MetaData>
+            <extension jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="b1613dc9-d351-40fb-96a2-425a85357aea"
+                jcr:created="2005-03-19T23:23:16.442+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="5cf6b24c-1cf4-4fcf-8c81-7cc53c9252bf"
+                jcr:baseVersion="246b31f3-5a86-4a11-ad7e-839dc21c79ad" jcr:predecessors="246b31f3-5a86-4a11-ad7e-839dc21c79ad">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="doc"/>
+            </extension>
+            <mime-type jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="67c76fe4-47ad-4841-b8ec-3017a0379225"
+                jcr:created="2005-03-19T23:23:16.452+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="f3d3e238-c3be-4393-b6b0-e07b280043d8"
+                jcr:baseVersion="75c27c04-7afe-47f1-a512-c02cd2cbd6dc" jcr:predecessors="75c27c04-7afe-47f1-a512-c02cd2cbd6dc">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="application/vnd.ms-word"/>
+            </mime-type>
+        </doc>
+        <swf jcr:primaryType="mgnl:contentNode"
+            jcr:mixinTypes="mix:versionable"
+            jcr:uuid="f5151a28-c980-43ff-8e80-01036be0a544"
+            jcr:created="2005-03-19T23:23:16.452+01:00"
+            jcr:isCheckedOut="true"
+            jcr:versionHistory="4ad91b97-cf2a-4704-96a2-f66ca4dcb7c7"
+            jcr:baseVersion="c0307e67-7a88-45ad-aa4c-5b3b7c69d023" jcr:predecessors="c0307e67-7a88-45ad-aa4c-5b3b7c69d023">
+            <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.452+01:00">
+                <jcr:content jcr:primaryType="nt:unstructured"
+                    Data="MetaData"
+                    creationdate="2004-11-02T15:34:16.410+01:00"
+                    sequenceposition="1099406056446000"
+                    lastmodified="2004-11-02T15:34:16.437+01:00" authorid="superuser"/>
+            </MetaData>
+            <extension jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="c092550c-b24e-4eb6-a272-ad5108340cac"
+                jcr:created="2005-03-19T23:23:16.452+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="f8e63eaa-062e-4c4c-bec0-c815241c167e"
+                jcr:baseVersion="843b4ad5-2d9d-45a8-8a60-8d4e1acf4278" jcr:predecessors="843b4ad5-2d9d-45a8-8a60-8d4e1acf4278">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="swf"/>
+            </extension>
+            <mime-type jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="0441950d-f4be-4f54-b957-e0bbe6d80b87"
+                jcr:created="2005-03-19T23:23:16.452+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="7dcd88ae-59b0-4d64-8caf-e9799a2aadf4"
+                jcr:baseVersion="db79aff1-194b-4bd9-9e74-8ab91c845482" jcr:predecessors="db79aff1-194b-4bd9-9e74-8ab91c845482">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="application/x-shockwave-flash"/>
+            </mime-type>
+        </swf>
+        <xsl jcr:primaryType="mgnl:contentNode"
+            jcr:mixinTypes="mix:versionable"
+            jcr:uuid="cb8af6f8-1874-4cd6-a987-c449c67bb58a"
+            jcr:created="2005-03-19T23:23:16.452+01:00"
+            jcr:isCheckedOut="true"
+            jcr:versionHistory="1800125c-3498-4b59-bb82-f9d0d8305614"
+            jcr:baseVersion="681ee008-ddf4-45ba-927d-5340e48ed71a" jcr:predecessors="681ee008-ddf4-45ba-927d-5340e48ed71a">
+            <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.452+01:00">
+                <jcr:content jcr:primaryType="nt:unstructured"
+                    Data="MetaData"
+                    creationdate="2004-11-02T15:34:16.489+01:00"
+                    sequenceposition="1099406056539000"
+                    lastmodified="2004-11-02T15:34:16.494+01:00" authorid="superuser"/>
+            </MetaData>
+            <extension jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="750a7b26-7470-4d95-ac89-09d75831ff9b"
+                jcr:created="2005-03-19T23:23:16.452+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="dca8ec08-b44a-4c8e-a0a3-a746a28acb9d"
+                jcr:baseVersion="aca1a775-3d2a-4d6c-ae25-6ce7ed2497e2" jcr:predecessors="aca1a775-3d2a-4d6c-ae25-6ce7ed2497e2">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="xsl"/>
+            </extension>
+            <mime-type jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="32ae3743-c61e-4b03-ae25-d34f46fd5565"
+                jcr:created="2005-03-19T23:23:16.462+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="ee8558b1-10f8-4a10-ae66-bc88f79e3cb5"
+                jcr:baseVersion="ff0f2981-7f5f-40b8-b614-764d6c16fda5" jcr:predecessors="ff0f2981-7f5f-40b8-b614-764d6c16fda5">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="text/xml"/>
+            </mime-type>
+        </xsl>
+        <pot jcr:primaryType="mgnl:contentNode"
+            jcr:mixinTypes="mix:versionable"
+            jcr:uuid="775f0b4e-b54d-439c-b000-085d738c8da8"
+            jcr:created="2005-03-19T23:23:16.462+01:00"
+            jcr:isCheckedOut="true"
+            jcr:versionHistory="cba36f39-139c-4251-b16a-2c47e4286d6e"
+            jcr:baseVersion="23cec5aa-1d46-4870-8375-b49d6d8b17ae" jcr:predecessors="23cec5aa-1d46-4870-8375-b49d6d8b17ae">
+            <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.462+01:00">
+                <jcr:content jcr:primaryType="nt:unstructured"
+                    Data="MetaData"
+                    creationdate="2004-11-02T15:34:16.614+01:00"
+                    sequenceposition="1099406056690000"
+                    lastmodified="2004-11-02T15:34:16.686+01:00" authorid="superuser"/>
+            </MetaData>
+            <extension jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="293b808d-d28f-4135-b7d3-0d1d04c43aae"
+                jcr:created="2005-03-19T23:23:16.462+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="7ed41900-e54d-4b73-b02d-0a33adb06d6c"
+                jcr:baseVersion="5564ec5a-33e9-4e06-938d-7f995d76eeba" jcr:predecessors="5564ec5a-33e9-4e06-938d-7f995d76eeba">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="pot"/>
+            </extension>
+            <mime-type jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="0d1c03b5-b52f-4b41-8a5d-5c3f8855d316"
+                jcr:created="2005-03-19T23:23:16.462+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="c84bd259-a38b-4b79-8a58-6e072d5eb9dd"
+                jcr:baseVersion="1cfbe81b-260a-434a-b93b-10df401d147f" jcr:predecessors="1cfbe81b-260a-434a-b93b-10df401d147f">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="application/vnd.ms-powerpoint"/>
+            </mime-type>
+        </pot>
+        <txt jcr:primaryType="mgnl:contentNode"
+            jcr:mixinTypes="mix:versionable"
+            jcr:uuid="c780f23d-03f5-45b3-b4b8-bcc4275b889c"
+            jcr:created="2005-03-19T23:23:16.462+01:00"
+            jcr:isCheckedOut="true"
+            jcr:versionHistory="23d96bae-91a8-4d46-a143-807578bd514d"
+            jcr:baseVersion="060c58ad-876b-4dad-9cd1-bc4246f4072b" jcr:predecessors="060c58ad-876b-4dad-9cd1-bc4246f4072b">
+            <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.462+01:00">
+                <jcr:content jcr:primaryType="nt:unstructured"
+                    Data="MetaData"
+                    creationdate="2004-11-02T15:34:16.719+01:00"
+                    sequenceposition="1099406056808000"
+                    lastmodified="2004-11-02T15:34:16.803+01:00" authorid="superuser"/>
+            </MetaData>
+            <extension jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="9d651cba-8f44-4d32-b1e2-b1c1e639b19d"
+                jcr:created="2005-03-19T23:23:16.472+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="a91c31fc-f909-42c0-8113-518788046c8b"
+                jcr:baseVersion="7b05e3f8-f11c-4d0b-933d-12366f038e83" jcr:predecessors="7b05e3f8-f11c-4d0b-933d-12366f038e83">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="txt"/>
+            </extension>
+            <mime-type jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="a2f4da64-a6f3-43cb-b274-7db7e92fc07c"
+                jcr:created="2005-03-19T23:23:16.472+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="0b6e014c-bc4c-44ab-a0a1-5fdddbee96b5"
+                jcr:baseVersion="0e1a5576-f994-42ac-bb86-faa91e3a30f8" jcr:predecessors="0e1a5576-f994-42ac-bb86-faa91e3a30f8">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="text/plain"/>
+            </mime-type>
+        </txt>
+        <jpg jcr:primaryType="mgnl:contentNode"
+            jcr:mixinTypes="mix:versionable"
+            jcr:uuid="051050c3-3fe5-4fe8-839d-67c82e5140ca"
+            jcr:created="2005-03-19T23:23:16.472+01:00"
+            jcr:isCheckedOut="true"
+            jcr:versionHistory="140302ed-adcb-4868-8760-026646fd966f"
+            jcr:baseVersion="5d27b92a-5f0b-4fcf-b086-59f18fc59c02" jcr:predecessors="5d27b92a-5f0b-4fcf-b086-59f18fc59c02">
+            <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.472+01:00">
+                <jcr:content jcr:primaryType="nt:unstructured"
+                    Data="MetaData"
+                    creationdate="2004-11-02T15:34:16.834+01:00"
+                    sequenceposition="1099406056854000"
+                    lastmodified="2004-11-02T15:34:16.839+01:00" authorid="superuser"/>
+            </MetaData>
+            <extension jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="33e9786d-fff6-42b7-982c-c62092420fb9"
+                jcr:created="2005-03-19T23:23:16.472+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="cf6df870-d56f-406c-9cae-94555e2d4552"
+                jcr:baseVersion="7033948c-07b9-4f1b-b262-51be75206232" jcr:predecessors="7033948c-07b9-4f1b-b262-51be75206232">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="jpg"/>
+            </extension>
+            <mime-type jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="a79a92bf-7f42-429d-a483-331603844c36"
+                jcr:created="2005-03-19T23:23:16.472+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="74ed3347-7bab-4ff3-a9cb-e593c11f6197"
+                jcr:baseVersion="8fad5743-7071-4974-a7fe-1b5525cab906" jcr:predecessors="8fad5743-7071-4974-a7fe-1b5525cab906">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="image/jpeg"/>
+            </mime-type>
+        </jpg>
+        <jpeg jcr:primaryType="mgnl:contentNode"
+            jcr:mixinTypes="mix:versionable"
+            jcr:uuid="283a845b-09ba-4241-8a60-fb5edc156f0b"
+            jcr:created="2005-03-19T23:23:16.472+01:00"
+            jcr:isCheckedOut="true"
+            jcr:versionHistory="0db5b09c-8ab9-4fd0-9084-068b8d5897e6"
+            jcr:baseVersion="16625075-9a35-4f30-bc08-97a9eb4af101" jcr:predecessors="16625075-9a35-4f30-bc08-97a9eb4af101">
+            <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.472+01:00">
+                <jcr:content jcr:primaryType="nt:unstructured"
+                    Data="MetaData"
+                    creationdate="2004-11-02T15:34:16.929+01:00"
+                    sequenceposition="1099406056957000"
+                    lastmodified="2004-11-02T15:34:16.952+01:00" authorid="superuser"/>
+            </MetaData>
+            <extension jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="6c363cc5-dc86-49f4-915f-6a18fa50f874"
+                jcr:created="2005-03-19T23:23:16.482+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="2d8551bd-e62c-4668-95da-dde5d50b7661"
+                jcr:baseVersion="07ade888-ead6-4003-be99-80a2081f8706" jcr:predecessors="07ade888-ead6-4003-be99-80a2081f8706">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="jpeg"/>
+            </extension>
+            <mime-type jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="78afdd0e-6dfe-4965-8cd2-3f77fe5deaec"
+                jcr:created="2005-03-19T23:23:16.502+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="bc48c8a2-b2cd-4dec-a1d4-097cf63e3af1"
+                jcr:baseVersion="4ad11277-61b9-4249-a910-dbab42b456c4" jcr:predecessors="4ad11277-61b9-4249-a910-dbab42b456c4">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="image/jpeg"/>
+            </mime-type>
+        </jpeg>
+        <gif jcr:primaryType="mgnl:contentNode"
+            jcr:mixinTypes="mix:versionable"
+            jcr:uuid="5ac18793-3621-4260-acb0-2b513ab3f50b"
+            jcr:created="2005-03-19T23:23:16.502+01:00"
+            jcr:isCheckedOut="true"
+            jcr:versionHistory="cfbb2c07-b88e-42bd-b4ae-8d3fb186fa41"
+            jcr:baseVersion="60c59247-994e-4c7a-b5b4-15d46781084a" jcr:predecessors="60c59247-994e-4c7a-b5b4-15d46781084a">
+            <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.502+01:00">
+                <jcr:content jcr:primaryType="nt:unstructured"
+                    Data="MetaData"
+                    creationdate="2004-11-02T15:34:17.065+01:00"
+                    sequenceposition="1099406057076000"
+                    lastmodified="2004-11-02T15:34:17.070+01:00" authorid="superuser"/>
+            </MetaData>
+            <extension jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="a2df9494-4a53-4b69-858f-be736460014d"
+                jcr:created="2005-03-19T23:23:16.502+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="dde8ec9b-e224-4c19-8fff-0d9327a3b45a"
+                jcr:baseVersion="3a19f868-73ab-4828-94b4-376a85c7fa82" jcr:predecessors="3a19f868-73ab-4828-94b4-376a85c7fa82">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="gif"/>
+            </extension>
+            <mime-type jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="53ff4d02-7291-41c6-a417-0896f6d40b1f"
+                jcr:created="2005-03-19T23:23:16.502+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="0faf83f5-011b-4fe6-9b15-5826063712cb"
+                jcr:baseVersion="17cacca3-93ce-44b1-bd76-821ba796af07" jcr:predecessors="17cacca3-93ce-44b1-bd76-821ba796af07">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="image/gif"/>
+            </mime-type>
+        </gif>
+        <css jcr:primaryType="mgnl:contentNode"
+            jcr:mixinTypes="mix:versionable"
+            jcr:uuid="abb40ccf-d5fd-441b-a2f1-8543ee6d021a"
+            jcr:created="2005-03-19T23:23:16.502+01:00"
+            jcr:isCheckedOut="true"
+            jcr:versionHistory="ae82f80b-8e16-41d3-897c-7172a6f54082"
+            jcr:baseVersion="7d4e9b42-347d-410d-8375-0704d0a9e480" jcr:predecessors="7d4e9b42-347d-410d-8375-0704d0a9e480">
+            <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.502+01:00">
+                <jcr:content jcr:primaryType="nt:unstructured"
+                    Data="MetaData"
+                    creationdate="2004-11-02T15:34:17.102+01:00"
+                    sequenceposition="1099406057111000"
+                    lastmodified="2004-11-02T15:34:17.106+01:00" authorid="superuser"/>
+            </MetaData>
+            <extension jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="0884e567-29b0-4717-bf74-14728f08ff35"
+                jcr:created="2005-03-19T23:23:16.512+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="9b3d8c1d-9326-411e-9f58-176a11c8da3c"
+                jcr:baseVersion="48b577df-bf6b-4436-ae3a-4fa924b5fa0f" jcr:predecessors="48b577df-bf6b-4436-ae3a-4fa924b5fa0f">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="css"/>
+            </extension>
+            <mime-type jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="d54fdb69-3340-48ac-8c01-db3bacf81699"
+                jcr:created="2005-03-19T23:23:16.512+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="aadb8e45-e39e-427d-8436-d9dbf4c68e74"
+                jcr:baseVersion="4a71c2fe-bba6-4d3f-baa3-fdf4230c765f" jcr:predecessors="4a71c2fe-bba6-4d3f-baa3-fdf4230c765f">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="text/css"/>
+            </mime-type>
+        </css>
+        <htm jcr:primaryType="mgnl:contentNode"
+            jcr:mixinTypes="mix:versionable"
+            jcr:uuid="15122b89-81c8-4ef9-9480-13ea6c3cfc6b"
+            jcr:created="2005-03-19T23:23:16.512+01:00"
+            jcr:isCheckedOut="true"
+            jcr:versionHistory="b2c2fbbe-0597-49d4-9ad1-fae355279c1d"
+            jcr:baseVersion="63ab19d6-87de-483c-94de-f6d5755570d7" jcr:predecessors="63ab19d6-87de-483c-94de-f6d5755570d7">
+            <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.512+01:00">
+                <jcr:content jcr:primaryType="nt:unstructured"
+                    Data="MetaData"
+                    creationdate="2004-11-02T15:34:17.212+01:00"
+                    sequenceposition="1099406057222000"
+                    lastmodified="2004-11-02T15:34:17.217+01:00" authorid="superuser"/>
+            </MetaData>
+            <extension jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="e0908cb8-9c14-4c2d-8302-ea77210d8b02"
+                jcr:created="2005-03-19T23:23:16.512+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="50e213e4-1d9c-47d4-91c7-c3205b987f1a"
+                jcr:baseVersion="c6b2a362-1f17-4d91-bb5e-162ad5a1436b" jcr:predecessors="c6b2a362-1f17-4d91-bb5e-162ad5a1436b">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="htm"/>
+            </extension>
+            <mime-type jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="b58c5325-011e-4a4b-a9e2-31cd71624d2d"
+                jcr:created="2005-03-19T23:23:16.512+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="b40630dc-b87a-44f4-81f2-8bc4a0ddd44c"
+                jcr:baseVersion="b148590b-029c-466e-adb6-bbd257764336" jcr:predecessors="b148590b-029c-466e-adb6-bbd257764336">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="text/html"/>
+            </mime-type>
+        </htm>
+        <xml jcr:primaryType="mgnl:contentNode"
+            jcr:mixinTypes="mix:versionable"
+            jcr:uuid="b14ecb18-e778-412e-b9ec-dd075d097b2e"
+            jcr:created="2005-03-19T23:23:16.512+01:00"
+            jcr:isCheckedOut="true"
+            jcr:versionHistory="1fcbefe9-0560-4155-aa96-a4167d53f193"
+            jcr:baseVersion="bc73e702-131f-4a0f-90c9-bf2a80779745" jcr:predecessors="bc73e702-131f-4a0f-90c9-bf2a80779745">
+            <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.522+01:00">
+                <jcr:content jcr:primaryType="nt:unstructured"
+                    Data="MetaData"
+                    creationdate="2004-11-02T15:34:17.335+01:00"
+                    sequenceposition="1099406057346000"
+                    lastmodified="2004-11-02T15:34:17.340+01:00" authorid="superuser"/>
+            </MetaData>
+            <extension jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="fd141901-d88e-4397-b0fe-56e755d420ed"
+                jcr:created="2005-03-19T23:23:16.522+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="305e0dfc-3347-4e19-8ccd-8e9b6a3be76d"
+                jcr:baseVersion="e1132ad9-ce95-4325-9357-25d1783aa294" jcr:predecessors="e1132ad9-ce95-4325-9357-25d1783aa294">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="xml"/>
+            </extension>
+            <mime-type jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="c10e7023-27ae-45d1-82ab-b08c5155082a"
+                jcr:created="2005-03-19T23:23:16.522+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="174b1cea-8938-4156-bb89-bd9b48d1e94d"
+                jcr:baseVersion="82f01210-87d8-4586-b299-a99764db515d" jcr:predecessors="82f01210-87d8-4586-b299-a99764db515d">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="text/xml"/>
+            </mime-type>
+        </xml>
+        <jsp jcr:primaryType="mgnl:contentNode"
+            jcr:mixinTypes="mix:versionable"
+            jcr:uuid="3901e78f-9884-416f-abbf-9da54d2d5f14"
+            jcr:created="2005-03-19T23:23:16.522+01:00"
+            jcr:isCheckedOut="true"
+            jcr:versionHistory="305d00fb-d199-4a88-a845-9a2367e6b3c2"
+            jcr:baseVersion="d1fe03b8-9b4a-48b9-862a-f6daf92d1bbf" jcr:predecessors="d1fe03b8-9b4a-48b9-862a-f6daf92d1bbf">
+            <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.522+01:00">
+                <jcr:content jcr:primaryType="nt:unstructured"
+                    Data="MetaData"
+                    creationdate="2005-03-04T11:11:01.315+01:00"
+                    lastmodified="2005-03-04T11:11:15.135+01:00"
+                    authorid="superuser" sequenceposition="1109931061776000"/>
+            </MetaData>
+            <extension jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="7922506e-2f49-4056-996d-93c7e470177d"
+                jcr:created="2005-03-19T23:23:16.522+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="1714651c-c5de-41a0-9258-4df3cb57e7a4"
+                jcr:baseVersion="2a61cc69-52bb-4aab-b0cd-c53036f902d2" jcr:predecessors="2a61cc69-52bb-4aab-b0cd-c53036f902d2">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="jsp"/>
+            </extension>
+            <mime-type jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="17f9666f-747e-44c1-987e-e9ff7d99392d"
+                jcr:created="2005-03-19T23:23:16.532+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="55d74ab7-9bd5-4f94-8c73-832e0322f8a0"
+                jcr:baseVersion="894613e4-cc46-4131-93ed-c0bdf1db20a1" jcr:predecessors="894613e4-cc46-4131-93ed-c0bdf1db20a1">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="text/html"/>
+            </mime-type>
+        </jsp>
+        <ico jcr:primaryType="mgnl:contentNode"
+            jcr:mixinTypes="mix:versionable"
+            jcr:uuid="be2ada81-11bf-4a82-8ea8-680c9acb516d"
+            jcr:created="2005-03-19T23:23:16.532+01:00"
+            jcr:isCheckedOut="true"
+            jcr:versionHistory="e78352e3-447b-47c8-af3a-645f1fd0a19e"
+            jcr:baseVersion="e75ccfa8-a95e-4bd4-a9df-160705fd8085" jcr:predecessors="e75ccfa8-a95e-4bd4-a9df-160705fd8085">
+            <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.532+01:00">
+                <jcr:content jcr:primaryType="nt:unstructured"
+                    Data="MetaData"
+                    creationdate="2005-03-04T11:11:25.690+01:00"
+                    lastmodified="2005-03-04T11:11:42.043+01:00"
+                    authorid="superuser" sequenceposition="1109931086111000"/>
+            </MetaData>
+            <extension jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="b97af4e8-5e2c-4421-9ff6-1443312b5314"
+                jcr:created="2005-03-19T23:23:16.542+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="eba74c79-ad62-423a-94d5-5c59759c0702"
+                jcr:baseVersion="f9539caf-d9a0-4226-a35d-2b33bc8ab953" jcr:predecessors="f9539caf-d9a0-4226-a35d-2b33bc8ab953">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="ico"/>
+            </extension>
+            <mime-type jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="a6e8e5d6-0947-412a-8583-89ccfc7edcd3"
+                jcr:created="2005-03-19T23:23:16.552+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="7a1e57f8-4beb-452b-8f43-9275da2097a5"
+                jcr:baseVersion="bdfc452f-36b8-4489-952c-178405cc6aed" jcr:predecessors="bdfc452f-36b8-4489-952c-178405cc6aed">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="image/x-icon"/>
+            </mime-type>
+        </ico>
+        <png jcr:primaryType="mgnl:contentNode"
+            jcr:mixinTypes="mix:versionable"
+            jcr:uuid="acd99d7c-0a27-4656-a12c-9c179afeda2a"
+            jcr:created="2005-03-19T23:23:16.552+01:00"
+            jcr:isCheckedOut="true"
+            jcr:versionHistory="503487b5-38d4-487f-983d-3c5e8ee18d6b"
+            jcr:baseVersion="254cdffe-af7c-4ac2-b578-611f0e28e93e" jcr:predecessors="254cdffe-af7c-4ac2-b578-611f0e28e93e">
+            <MetaData jcr:primaryType="nt:file" jcr:created="2005-03-19T23:23:16.552+01:00">
+                <jcr:content jcr:primaryType="nt:unstructured"
+                    Data="MetaData"
+                    creationdate="2005-03-04T11:12:03.114+01:00"
+                    lastmodified="2005-03-04T11:12:21.410+01:00"
+                    authorid="superuser" sequenceposition="1109931123604000"/>
+            </MetaData>
+            <extension jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="9f808cb5-14eb-4a9d-9398-b5f1bab50736"
+                jcr:created="2005-03-19T23:23:16.562+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="43674586-bb59-453f-bc22-6722a02dad89"
+                jcr:baseVersion="16902aa0-8a2c-48c7-97db-d4980d7e21ce" jcr:predecessors="16902aa0-8a2c-48c7-97db-d4980d7e21ce">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="png"/>
+            </extension>
+            <mime-type jcr:primaryType="mgnl:nodeData"
+                jcr:mixinTypes="mix:versionable"
+                jcr:uuid="e571b5ba-655b-4b4e-97cf-d00493b3291f"
+                jcr:created="2005-03-19T23:23:16.562+01:00"
+                jcr:isCheckedOut="true"
+                jcr:versionHistory="6637b68c-409a-4dd7-8caf-83d7cd3b2b34"
+                jcr:baseVersion="1d574efc-5404-478d-a551-ce6bca0f4e10" jcr:predecessors="1d574efc-5404-478d-a551-ce6bca0f4e10">
+                <jcr:content jcr:primaryType="nt:unstructured" Data="image/png"/>
+            </mime-type>
+        </png>
+    </MIMEMapping>
+</server>
