@@ -16,20 +16,26 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.SecureURI;
+
 import java.util.Hashtable;
 import java.util.Iterator;
+
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.log4j.Logger;
 
 
 /**
- * User: sameercharles Date: Jun 2, 2003 Time: 3:06:43 PM
  * @author Sameer Charles
  * @version 1.1
  */
 public class Server {
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(Server.class);
 
     protected static final String CONFIG_PAGE = "server";
@@ -39,12 +45,6 @@ public class Server {
     private static Hashtable cachedURImapping = new Hashtable();
 
     private static Hashtable cachedCacheableURIMapping = new Hashtable();
-
-    /**
-     * constructor
-     */
-    public Server() {
-    }
 
     /**
      * @throws ConfigurationException if basic config nodes are missing
@@ -82,30 +82,34 @@ public class Server {
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
         }
+
         try {
-            boolean isAdmin = page.getNodeData("admin").getValue().getBoolean();
-            Server.cachedContent.put("admin", new Boolean(isAdmin));
+            boolean isAdmin = page.getNodeData("admin").getBoolean();
+            Server.cachedContent.put("admin", BooleanUtils.toBooleanObject(isAdmin));
         }
         catch (RepositoryException re) {
             log.error(re.getMessage());
-            Server.cachedContent.put("admin", new Boolean(false));
+            Server.cachedContent.put("admin", Boolean.FALSE);
         }
+
         try {
-            String ext = page.getNodeData("defaultExtension").getValue().getString();
+            String ext = page.getNodeData("defaultExtension").getString();
             Server.cachedContent.put("defaultExtension", ext);
         }
         catch (RepositoryException re) {
             log.error(re.getMessage());
             Server.cachedContent.put("defaultExtension", "");
         }
+
         try {
-            String basicRealm = page.getNodeData("basicRealm").getValue().getString();
+            String basicRealm = page.getNodeData("basicRealm").getString();
             Server.cachedContent.put("basicRealm", basicRealm);
         }
         catch (RepositoryException re) {
             log.error(re.getMessage());
             Server.cachedContent.put("basicRealm", "");
         }
+
         try {
             String mailServer = page.getNodeData("defaultMailServer").getString();
             Server.cachedContent.put("defaultMailServer", mailServer);
@@ -114,6 +118,7 @@ public class Server {
             log.error(e.getMessage());
             Server.cachedContent.put("defaultMailServer", "");
         }
+
         try {
             Server.cachedContent.put("404URI", page.getNodeData("ResourceNotAvailableURIMapping").getString());
         }
@@ -121,13 +126,14 @@ public class Server {
             log.error(e.getMessage());
             Server.cachedContent.put("404URI", "");
         }
+
         try {
             boolean visibleToObinary = page.getNodeData("visibleToObinary").getBoolean();
-            Server.cachedContent.put("visibleToObinary", new Boolean(visibleToObinary));
+            Server.cachedContent.put("visibleToObinary", BooleanUtils.toBooleanObject(visibleToObinary));
         }
-        catch (Exception e) {
+        catch (RepositoryException e) {
             log.error(e.getMessage());
-            Server.cachedContent.put("visibleToObinary", new Boolean(false));
+            Server.cachedContent.put("visibleToObinary", Boolean.FALSE);
         }
     }
 
