@@ -37,12 +37,12 @@ public class StringComparator implements Comparator {
     }
 
     public int compare(Object o, Object o1) throws ClassCastException {
-        String URI1;
-        String URI2;
+        String uri1;
+        String uri2;
 
-        URI1 = ((ContentNode) o).getNodeData(this.nodeDataName).getString();
-        URI2 = ((ContentNode) o1).getNodeData(this.nodeDataName).getString();
+        uri1 = ((ContentNode) o).getNodeData(this.nodeDataName).getString();
+        uri2 = ((ContentNode) o1).getNodeData(this.nodeDataName).getString();
 
-        return URI1.compareTo(URI2);
+        return uri1.compareTo(uri2);
     }
 }
