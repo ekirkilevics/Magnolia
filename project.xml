@@ -180,7 +180,7 @@
             <version>2.3</version>
             <type>jar</type>
             <properties>
-                <war.bundle>true</war.bundle>
+                <war.bundle>false</war.bundle>
             </properties>
         </dependency>
         <dependency>
