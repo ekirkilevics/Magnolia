@@ -25,6 +25,7 @@ import java.util.Map;
 import javax.jcr.PropertyType;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -208,11 +209,11 @@ public class ControlSuper implements ControlInterface {
     }
 
     public String getHtmlId() {
-        if (this.getId() != null) {
+        if (StringUtils.isNotEmpty(this.getId())) {
             return " id=\"" + this.getId() + "\"";
         }
 
-        return "";
+        return StringUtils.EMPTY;
     }
 
     public void setValue(String value) {
@@ -228,7 +229,7 @@ public class ControlSuper implements ControlInterface {
             return this.getWebsiteNode().getNodeData(this.getName()).getString();
         }
         catch (Exception e) {
-            return "";
+            return StringUtils.EMPTY;
         }
 
     }
@@ -280,15 +281,16 @@ public class ControlSuper implements ControlInterface {
     }
 
     public void setEvent(String event, String action, boolean removeExisting) {
-        event = event.toLowerCase();
-        String existing = "";
+        String eventLower = event.toLowerCase();
+        String existing = null;
         if (!removeExisting) {
-            existing = (String) this.getEvents().get(event);
-            if (existing == null) {
-                existing = "";
-            }
+            existing = (String) this.getEvents().get(eventLower);
         }
-        this.getEvents().put(event, existing + action);
+        if (existing == null) {
+            existing = StringUtils.EMPTY;
+        }
+
+        this.getEvents().put(eventLower, existing + action);
     }
 
     public void setEvents(Map h) {
@@ -309,9 +311,12 @@ public class ControlSuper implements ControlInterface {
         return html.toString();
     }
 
+    /**
+     * Returns an empty string.
+     * @see info.magnolia.cms.gui.control.ControlInterface#getHtml()
+     */
     public String getHtml() {
-        String html = "";
-        return html;
+        return StringUtils.EMPTY;
     }
 
     public void setHtmlPre(String s) {
@@ -319,7 +324,7 @@ public class ControlSuper implements ControlInterface {
     }
 
     public String getHtmlPre() {
-        return this.getHtmlPre("");
+        return this.getHtmlPre(StringUtils.EMPTY);
     }
 
     public String getHtmlPre(String nullValue) {
@@ -335,7 +340,7 @@ public class ControlSuper implements ControlInterface {
     }
 
     public String getHtmlInter() {
-        return this.getHtmlInter("");
+        return this.getHtmlInter(StringUtils.EMPTY);
     }
 
     public String getHtmlInter(String nullValue) {
@@ -351,7 +356,7 @@ public class ControlSuper implements ControlInterface {
     }
 
     public String getHtmlPost() {
-        return this.getHtmlPost("");
+        return this.getHtmlPost(StringUtils.EMPTY);
     }
 
     public String getHtmlPost(String nullValue) {
@@ -391,11 +396,11 @@ public class ControlSuper implements ControlInterface {
     }
 
     public String getHtmlCssClass() {
-        if (!this.getCssClass().equals("")) {
+        if (StringUtils.isNotEmpty(this.getCssClass())) {
             return " class=\"" + this.getCssClass() + "\"";
         }
 
-        return "";
+        return StringUtils.EMPTY;
     }
 
     public String getHtmlSaveInfo() {
@@ -449,10 +454,10 @@ public class ControlSuper implements ControlInterface {
             String key = (String) en.next();
             html.append("" + key + ":" + this.getCssStyles().get(key) + ";");
         }
-        if (!html.equals("")) {
+        if (html.length() > 0) {
             return " style=\"" + html + "\"";
         }
-        return "";
+        return StringUtils.EMPTY;
     }
 
     public void setValueType(int i) {

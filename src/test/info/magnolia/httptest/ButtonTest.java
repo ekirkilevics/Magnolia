@@ -42,8 +42,11 @@ public class ButtonTest extends HttpUnitTestCase {
         assertEquals("Bad or missing button label.", "value", container.getText());
 
         // and check nobr and nbsp using text
-        assertFalse("We really should remove those nobr tags", StringUtils.contains(textContent, "nobr"));
-        assertFalse("We really should remove those non breaking spaces", StringUtils.contains(textContent, "&nbsp;"));
+        assertFalse("nobr tag is not a standard html tag", StringUtils.contains(textContent, "nobr"));
+        assertFalse("If a style is not set, the style attribute should not be written", StringUtils.contains(
+            textContent,
+            "style=\"\""));
+        assertFalse("nbsp should not be used for padding", StringUtils.contains(textContent, "&nbsp;"));
 
     }
 }

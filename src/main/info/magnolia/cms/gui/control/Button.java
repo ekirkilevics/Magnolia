@@ -74,12 +74,18 @@ public class Button extends ControlSuper {
         return this.labelNbspPadding;
     }
 
+    /**
+     * @todo this method is now "disabled", returning an empty string. Will be removed if the css-only padding work
+     * everywhere. Testing.
+     * @return ""
+     */
     public String getHtmlLabelNbspPadding() {
-        StringBuffer html = new StringBuffer();
-        for (int i = 0; i < this.getLabelNbspPadding(); i++) {
-            html.append("&nbsp;");
-        }
-        return html.toString();
+        return "";
+        // StringBuffer html = new StringBuffer();
+        // for (int i = 0; i < this.getLabelNbspPadding(); i++) {
+        // html.append("&nbsp;");
+        // }
+        // return html.toString();
     }
 
     public void setLabel(String s) {
@@ -246,12 +252,10 @@ public class Button extends ControlSuper {
         html.append(this.getHtmlCssClass());
         html.append(this.getHtmlCssStyles());
         html.append(">");
-        html.append("<nobr>");
         html.append(this.getHtmlLabelNbspPadding());
         html.append(this.getIconSrc());
         html.append(this.getLabel());
         html.append(this.getHtmlLabelNbspPadding());
-        html.append("</nobr>");
         html.append("</" + this.getPushButtonTag() + ">");
         return html.toString();
     }

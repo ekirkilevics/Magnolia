@@ -4,16 +4,14 @@
 	{
     font-size:11px;
 	height:15px;
-	padding-top:1px;
-	padding-bottom:1px;
+	padding:1px 8px 1px 10px;
 	}
 
 .mgnlControlButtonSmall,.mgnlControlButtonSmall_PUSHED
 	{
     font-size:9px;
 	height:5px;
-	padding-top:0px;
-	padding-bottom:0px;
+	padding:0 3px 0 3px;
     }
 
 .mgnlControlButton,.mgnlControlButton_PUSHED,.mgnlControlButtonSmall,.mgnlControlButtonSmall_PUSHED
@@ -21,6 +19,7 @@
     font-family:Verdana, sans-serif;
     color:#F0F2E6;
 	cursor:default;
+	white-space: nowrap;
 	}
 
 
@@ -38,6 +37,7 @@
 .mgnlControlButtonTransparent,.mgnlControlButtonTransparentSmall
 	{
 	background:transparent;
+	white-space: nowrap;
 	}
 
 
