@@ -7,11 +7,11 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: Sep 6, 2004
  * Time: 8:40:55 AM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class NodeDataUtil {
 	NodeData nodeData=null;

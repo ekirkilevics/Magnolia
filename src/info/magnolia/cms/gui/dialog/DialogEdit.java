@@ -25,11 +25,11 @@ import javax.jcr.PropertyType;
 import java.io.IOException;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: May 18, 2004
  * Time: 11:42:34 AM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class DialogEdit extends DialogBox {
 	private static Logger log = Logger.getLogger(DialogEdit.class);
@@ -39,7 +39,7 @@ public class DialogEdit extends DialogBox {
 	}
 
 	public DialogEdit() {
-		
+
 	}
 
 

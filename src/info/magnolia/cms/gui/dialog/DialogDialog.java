@@ -32,11 +32,11 @@ import java.util.Iterator;
 import org.apache.log4j.Logger;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: May 13, 2004
  * Time: 3:35:04 PM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class DialogDialog extends DialogSuper {
 	private static Logger log = Logger.getLogger(DialogDialog.class);

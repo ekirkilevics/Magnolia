@@ -20,11 +20,11 @@ import info.magnolia.cms.core.Content;
 import java.util.ArrayList;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: Jun 9, 2004
  * Time: 1:37:54 PM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class SelectOption extends ControlSuper {
 	private ArrayList options=new ArrayList();

@@ -27,11 +27,11 @@ import javax.jcr.access.Permission;
 import java.io.IOException;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: Jul 22, 2004
  * Time: 5:29:08 PM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class BarNew extends Bar {
 	private Button buttonNew=new Button();

@@ -16,11 +16,11 @@
 package info.magnolia.cms.gui.dialog;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: Jun 9, 2004
  * Time: 9:59:16 AM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class DialogSpacer {
 

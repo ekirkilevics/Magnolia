@@ -16,11 +16,11 @@
 package info.magnolia.cms.gui.inline;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: Jul 20, 2004
  * Time: 8:29:14 AM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class InlineSuper {
 	private String path="";

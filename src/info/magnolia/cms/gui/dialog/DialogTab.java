@@ -26,11 +26,11 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: May 17, 2004
  * Time: 11:17:19 AM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class DialogTab extends DialogSuper {
 	private static Logger log = Logger.getLogger(DialogTab.class);
@@ -40,7 +40,7 @@ public class DialogTab extends DialogSuper {
 	}
 
 	public DialogTab() {
-		
+
 	}
 
 

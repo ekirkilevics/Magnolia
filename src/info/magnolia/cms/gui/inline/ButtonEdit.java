@@ -25,11 +25,11 @@ import javax.jcr.access.Permission;
 import java.io.IOException;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: Jul 26, 2004
  * Time: 11:10:04 AM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class ButtonEdit extends Button {
 	String label="Edit";

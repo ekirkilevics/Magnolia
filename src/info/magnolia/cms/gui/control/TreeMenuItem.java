@@ -1,11 +1,11 @@
 package info.magnolia.cms.gui.control;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: Sep 20, 2004
  * Time: 1:36:19 PM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class TreeMenuItem extends ControlSuper {
 	private String onclick="";

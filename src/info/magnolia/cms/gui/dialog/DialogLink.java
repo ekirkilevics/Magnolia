@@ -24,11 +24,11 @@ import javax.jcr.PropertyType;
 import java.io.IOException;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: Jun 9, 2004
  * Time: 2:53:43 PM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class DialogLink extends DialogEditWithButton {
 	private static Logger log = Logger.getLogger(DialogLink.class);

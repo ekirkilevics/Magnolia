@@ -16,11 +16,11 @@
 package info.magnolia.cms.gui.dialog;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: Jun 4, 2004
  * Time: 8:24:26 AM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class DialogLine {
 

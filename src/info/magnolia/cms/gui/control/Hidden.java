@@ -19,11 +19,11 @@ import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.Content;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: May 27, 2004
  * Time: 4:06:51 PM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class Hidden extends ControlSuper {
 

@@ -24,11 +24,11 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: Jun 4, 2004
  * Time: 9:17:39 AM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class DialogStatic extends DialogBox {
 	private static Logger log = Logger.getLogger(DialogStatic.class);

@@ -16,11 +16,11 @@
 package info.magnolia.cms.gui.control;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: May 18, 2004
  * Time: 9:39:55 AM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public interface ControlInterface {
 

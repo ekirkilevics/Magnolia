@@ -24,11 +24,11 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: Jul 6, 2004
  * Time: 2:26:36 PM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class DialogInclude  extends DialogBox {
 	private static Logger log = Logger.getLogger(DialogInclude.class);

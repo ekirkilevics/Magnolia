@@ -19,11 +19,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: Jul 19, 2004
  * Time: 3:50:59 PM
- * To change this template use File | Settings | File Templates.
+ * 
  */
 public class Bar extends ControlSuper {
 	private ArrayList buttonsLeft=new ArrayList();

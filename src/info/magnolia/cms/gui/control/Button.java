@@ -23,11 +23,11 @@ import java.util.Collection;
 import java.util.Hashtable;
 
 /**
- * Created by IntelliJ IDEA.
+ * 
  * User: enz
  * Date: May 18, 2004
  * Time: 9:41:41 AM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class Button extends ControlSuper {
 	private String label=null;

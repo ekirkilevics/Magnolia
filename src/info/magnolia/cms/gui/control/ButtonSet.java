@@ -23,11 +23,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: May 18, 2004
  * Time: 10:10:47 AM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class ButtonSet extends ControlSuper {
 	private ArrayList buttons=new ArrayList();

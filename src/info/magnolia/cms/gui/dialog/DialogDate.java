@@ -25,11 +25,11 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: Jun 9, 2004
  * Time: 2:53:43 PM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class DialogDate extends DialogEditWithButton {
 	private static Logger log = Logger.getLogger(DialogLink.class);

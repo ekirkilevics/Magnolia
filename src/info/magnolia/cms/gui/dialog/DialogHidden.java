@@ -24,11 +24,11 @@ import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: May 27, 2004
  * Time: 4:05:46 PM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class DialogHidden  extends DialogBox {
 	private static Logger log = Logger.getLogger(DialogHidden.class);

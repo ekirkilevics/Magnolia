@@ -4,17 +4,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: Sep 6, 2004
  * Time: 8:39:06 AM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class DateUtil {
 	public static final String FORMAT_DEFAULTPATTERN="yyyy-MM-dd'T'HH:mm:ss.SZ";
 
 	public DateUtil() {
-		
+
 	}
 
 

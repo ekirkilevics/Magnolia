@@ -27,11 +27,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: Jun 9, 2004
  * Time: 4:00:54 PM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class DialogEditWithButton extends DialogBox {
 	private static Logger log = Logger.getLogger(DialogEditWithButton.class);
@@ -69,7 +69,7 @@ public class DialogEditWithButton extends DialogBox {
 		control.setCssStyles("width","100%");
 
 		if (this.getConfigValue("onchange",null)!=null) control.setEvent("onchange",this.getConfigValue("onchange"));
-		
+
 
 		this.drawHtmlPre(out);
 		try {

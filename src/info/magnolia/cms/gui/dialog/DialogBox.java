@@ -23,11 +23,11 @@ import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: May 18, 2004
  * Time: 11:49:16 AM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class DialogBox extends DialogSuper {
 	private static Logger log = Logger.getLogger(DialogBox.class);

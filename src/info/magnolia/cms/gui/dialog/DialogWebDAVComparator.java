@@ -20,11 +20,11 @@ import jdsl.core.ref.ComparableComparator;
 import java.util.Hashtable;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: Jul 15, 2004
  * Time: 11:53:33 AM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class DialogWebDAVComparator  extends ComparableComparator  {
 

@@ -1,11 +1,11 @@
 package info.magnolia.cms.gui.misc;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: Oct 12, 2004
  * Time: 5:00:20 PM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class Icon {
 	public final static String BASEPATH="/admindocroot/icons";

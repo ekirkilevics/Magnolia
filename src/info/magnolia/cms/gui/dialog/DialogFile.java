@@ -27,11 +27,11 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: Jun 7, 2004
  * Time: 2:06:55 PM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class DialogFile extends DialogBox {
 	private static Logger log = Logger.getLogger(DialogFile.class);

@@ -32,11 +32,11 @@ import info.magnolia.cms.gui.control.Edit;
 import info.magnolia.cms.gui.control.Hidden;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: May 18, 2004
  * Time: 10:34:11 AM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class DialogButtonSet extends DialogBox {
 	private static Logger log = Logger.getLogger(DialogButtonSet.class);
@@ -123,7 +123,7 @@ public class DialogButtonSet extends DialogBox {
 		if (this.getConfigValue("saveInfo").equals("false")) control.setSaveInfo(false);
 
 		control.setType(this.getConfigValue("type",PropertyType.TYPENAME_STRING));
-				
+
 
 		String width=this.getConfigValue("width",null);
 

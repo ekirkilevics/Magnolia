@@ -25,11 +25,11 @@ import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: Jul 1, 2004
  * Time: 2:04:16 PM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class DialogPassword extends DialogBox {
 	private static Logger log = Logger.getLogger(DialogPassword.class);

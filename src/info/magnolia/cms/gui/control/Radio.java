@@ -19,11 +19,11 @@ import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.Content;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: May 25, 2004
  * Time: 2:23:51 PM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class Radio  extends ControlSuper {
 

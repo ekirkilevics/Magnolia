@@ -29,11 +29,11 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.beans.config.ItemType;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: May 18, 2004
  * Time: 9:38:20 AM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class ControlSuper implements ControlInterface{
 	public static final int BUTTONTYPE_PUSHBUTTON=0;

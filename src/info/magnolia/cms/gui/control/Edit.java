@@ -19,11 +19,11 @@ import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.Content;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: May 18, 2004
  * Time: 2:20:49 PM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class Edit extends ControlSuper {
 	String rows="1";

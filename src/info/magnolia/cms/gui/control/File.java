@@ -18,11 +18,11 @@ package info.magnolia.cms.gui.control;
 import info.magnolia.cms.core.Content;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: Jun 7, 2004
  * Time: 2:18:26 PM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class File extends ControlSuper {
 	public static final String FILEPROPNAME_PROPERTIES="properties";

@@ -34,11 +34,11 @@ import org.apache.log4j.Logger;
 
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: May 18, 2004
  * Time: 3:28:13 PM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class Save extends ControlSuper {
 

@@ -22,11 +22,11 @@ import java.util.Hashtable;
 import java.util.Iterator;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: Jun 9, 2004
  * Time: 10:54:57 AM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class Select  extends ControlSuper {
 	private ArrayList options=new ArrayList();

@@ -18,16 +18,16 @@ package info.magnolia.cms.gui.dialog;
 import javax.servlet.jsp.JspWriter;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: May 13, 2004
  * Time: 3:32:50 PM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public interface DialogInterface {
 
 	/**
-	 * 
+	 *
 	 *
 	 * */
 

@@ -11,11 +11,11 @@ import java.util.Hashtable;
 import java.util.Calendar;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: Sep 6, 2004
  * Time: 2:35:47 PM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class TreeColumn extends ControlSuper {
 	private int width=1;

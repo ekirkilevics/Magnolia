@@ -39,11 +39,11 @@ import jdsl.core.algo.sorts.HeapSort;
 import jdsl.core.api.ObjectIterator;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: Jun 21, 2004
  * Time: 9:36:17 AM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class DialogWebDAV extends DialogBox {
 	private static Logger log = Logger.getLogger(DialogWebDAV.class);

@@ -25,11 +25,11 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: May 18, 2004
  * Time: 10:48:13 AM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class DialogButton extends DialogBox {
 	private static Logger log = Logger.getLogger(DialogButton.class);
@@ -40,7 +40,7 @@ public class DialogButton extends DialogBox {
 	}
 
 	public DialogButton() {
-		
+
 	}
 
 	public void drawHtml(JspWriter out) {

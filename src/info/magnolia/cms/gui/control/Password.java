@@ -21,11 +21,11 @@ import sun.misc.BASE64Decoder;
 import java.io.IOException;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: Jul 1, 2004
  * Time: 2:05:08 PM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class Password  extends ControlSuper {
 	public Password() {

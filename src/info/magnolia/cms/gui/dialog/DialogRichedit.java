@@ -32,11 +32,11 @@ import java.util.Iterator;
 import java.util.Date;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: Jun 14, 2004
  * Time: 1:58:03 PM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class DialogRichedit extends DialogBox {
 	private static Logger log = Logger.getLogger(DialogRichedit.class);

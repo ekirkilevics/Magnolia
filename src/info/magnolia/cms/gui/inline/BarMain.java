@@ -27,11 +27,11 @@ import java.util.ArrayList;
 import java.io.IOException;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: Jul 19, 2004
  * Time: 5:05:22 PM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class BarMain extends Bar {
 	private Button buttonEditView=new Button();

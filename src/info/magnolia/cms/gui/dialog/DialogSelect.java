@@ -30,11 +30,11 @@ import java.util.Iterator;
 import org.apache.log4j.Logger;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: Jun 9, 2004
  * Time: 10:45:29 AM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class DialogSelect extends DialogBox {
 	private static Logger log = Logger.getLogger(DialogSelect.class);

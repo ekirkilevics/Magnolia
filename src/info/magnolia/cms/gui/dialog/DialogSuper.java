@@ -37,11 +37,11 @@ import javax.servlet.http.HttpSession;
 import javax.jcr.RepositoryException;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: May 17, 2004
  * Time: 10:38:33 AM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class DialogSuper implements DialogInterface {
 	private static Logger log = Logger.getLogger(DialogSuper.class);

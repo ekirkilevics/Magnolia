@@ -24,11 +24,11 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 
 /**
- * Created by IntelliJ IDEA.
+ *
  * User: enz
  * Date: Sep 6, 2004
  * Time: 9:21:44 AM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class Tree extends ControlSuper {
 	private String repository;
