@@ -20,7 +20,7 @@ import info.magnolia.exchange.Packet;
 import info.magnolia.exchange.PacketHeader;
 import info.magnolia.exchange.PacketBody;
 import info.magnolia.exchange.PacketType;
-import org.w3c.util.UUID;
+import org.apache.slide.jcr.util.uuid.UUID;
 
 import java.util.Enumeration;
 
