@@ -162,6 +162,10 @@ public class CacheHandler extends Thread {
     }
 
     /**
+     * <p>
+     * create a directory specified by the path
+     *
+     * </p>
      * @param path to the directory
      */
     public static void validatePath(String path) throws Exception {
@@ -179,9 +183,16 @@ public class CacheHandler extends Thread {
     }
 
     /**
+     * <p>
+     * spools cached data back to the client.<br>
+     * this only works if specified request is a GET request and does not have any request parameter, else
+     * it wont write anything on the output stream.
+     * </p>
+     *
      * @param request
      * @param response
      * @throws IOException
+     * @return true is successful
      */
     public static boolean streamFromCache(HttpServletRequest request, HttpServletResponse response) throws IOException {
         /* make sure not to stream anything from cache if its a POST request or has ? in URL */
@@ -270,6 +281,12 @@ public class CacheHandler extends Thread {
     }
 
     /**
+     * <p>
+     * empties the cache for the specified resource.<br>
+     * currenty it expects the entire path, including cache location.
+     * todo : make it relative, should be able to flush specified resource from all cache stores
+     * </p>
+     *
      * @param URI
      */
     public static void flushResource(String URI) throws Exception {
