@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Marcel Salathe
+ * @deprecated
  * @version $Revision: $ ($Author: $)
  */
 public class Date extends TagSupport {
@@ -53,7 +54,7 @@ public class Date extends TagSupport {
 
     /**
      * Date pattern. see http://java.sun.com/j2se/1.4.1/docs/api/java/text/SimpleDateFormat.html
-     * 
+     *
      * <pre>
      *   G  Era designator          Text                AD
      *   y  Year                    Year                1996; 96
@@ -75,6 +76,8 @@ public class Date extends TagSupport {
      *   z  Time zone               General time zone   Pacific Standard Time; PST; GMT-08:00
      *   Z  Time zone               RFC 822 time zone   -0800
      * </pre>
+     *
+     * @deprecated
      */
     public void setPattern(String pattern) {
         this.pattern = pattern;
@@ -87,14 +90,26 @@ public class Date extends TagSupport {
         this.setNodeDataName(name);
     }
 
+    /**
+     * @deprecated
+     * @param nodeDataName
+     */
     public void setNodeDataName(String nodeDataName) {
         this.nodeDataName = nodeDataName;
     }
 
+    /**
+     * @deprecated
+     * @param actpage
+     */
     public void setActpage(boolean actpage) {
         this.actpage = actpage;
     }
 
+    /**
+     * @deprecated
+     * @param language
+     */
     public void setLanguage(String language) {
         this.language = language;
     }

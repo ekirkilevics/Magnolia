@@ -80,13 +80,13 @@
             <name>name</name>
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
-            <description></description>
+            <description>the name of the attribute</description>
         </attribute>
         <attribute>
             <name>value</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description></description>
+            <description>the value of the attribute</description>
         </attribute>
     </tag>
     <tag>
@@ -98,32 +98,32 @@
             <name>nodeDataName</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description></description>
+            <description>@deprecated where the date comes from</description>
         </attribute>
         <attribute>
             <name>atomName</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description></description>
+            <description>@deprecated </description>
         </attribute>
         <attribute>
             <name>actpage</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
             <type>boolean</type>
-            <description></description>
+            <description>@deprecated if "true" atom is taken from the currently active page</description>
         </attribute>
         <attribute>
             <name>pattern</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description></description>
+            <description>@deprecated (see java.text.SimpleDateFormat) - defaults "yyyy.MM.dd - HH:mm:ss"</description>
         </attribute>
         <attribute>
             <name>language</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description></description>
+            <description>@deprecated Locale string (see java.util.Locale)</description>
         </attribute>
     </tag>
     <!-- breadcrumb tag -->
@@ -136,13 +136,14 @@
             <name>startLevel</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description></description>
+            <description>at which level to start. Often you will want to omit top levels, e.g. if you split your site
+                into multiple languages</description>
         </attribute>
         <attribute>
             <name>delimiter</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description></description>
+            <description>displayed between the page names, e.g. ">"</description>
         </attribute>
     </tag>
     <tag>
@@ -154,20 +155,30 @@
             <name>nodeDataName</name>
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
-            <description></description>
+            <description>@deprecated </description>
         </attribute>
         <attribute>
             <name>contentNodeName</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description></description>
+            <description>@deprecated if left empty, local contentNode is used as set by contentNodeIterator, otherwise
+                the global contentNode is used</description>
         </attribute>
         <attribute>
             <name>fileNameOnly</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description></description>
+            <description>@deprecated if "true", the file name without the path will be generated</description>
         </attribute>
+        <example>
+            <![CDATA[
+<a href="<cmsu:fileSrc nodeDataName="document">">
+	Download: <cmsu:fileSrc nodeDataName="document" fileNameOnly="true">
+</a>
+
+<img src="<cmsu:fileSrc nodeDataName="image">">
+]]>
+        </example>
     </tag>
     <tag>
         <name>xmp</name>
@@ -179,14 +190,13 @@
         <name>newlines</name>
         <tag-class>info.magnolia.cms.taglibs.util.ConvertNewLineTag</tag-class>
         <body-content>JSP</body-content>
-        <description>
-            Converts text in the body of the tag adding %lt;br /> tags at new lines or wrapping lines in paragraphs.
-        </description>
+        <description> Converts text in the body of the tag adding &lt;br /> tags at new lines or wrapping lines in
+            paragraphs. </description>
         <attribute>
             <name>para</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description>If true each line will be wrapped in a %lt;p> tag. Default to false (use br's).</description>
+            <description>If true each line will be wrapped in a &lt;p> tag. Default to false (use br's).</description>
         </attribute>
     </tag>
 </taglib>

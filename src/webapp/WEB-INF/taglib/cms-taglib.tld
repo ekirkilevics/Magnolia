@@ -49,16 +49,8 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
             <description>
-                name of paragraph (as defined in config). Does not have to be set inside "contentNodeItaretor"
+                name of paragraph (as defined in config). Does not have to be set inside "contentNodeIterator"
             </description>
-        </attribute>
-        <attribute>
-            <!-- what's that? -->
-            <!-- deprecated? -->
-            <name>template</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>@deprecated</description>
         </attribute>
         <attribute>
             <name>editLabel</name>
@@ -97,13 +89,7 @@
             <name>paragraph</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-        <attribute>
-            <name>parFiles</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>@deprecated list of paragraph definition XML file</description>
+            <description>comma separated list of paragraph types</description>
         </attribute>
         <attribute>
             <name>newLabel</name>
@@ -115,7 +101,7 @@
             <![CDATA[
 <cms:newBar
 contentNodeCollectionName="mainColumnParagraphs"
-parFiles="/samples/formTemplate/controlEdit.xml"/>
+paragraph="samplesTextImage,samplesDownload,samplesLink"/>
 ]]>
         </example>
     </tag>
@@ -337,19 +323,23 @@ parFiles="/samples/formTemplate/controlEdit.xml"/>
             <name>contentNodeCollectionName</name>
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
-            <description></description>
+            <description> contentNodeIterator is used whenever you want to loop over content, typically paragraphs. A
+                parameter contentNodeCollectionName will contain the name of the contentNode you are looping over.
+                contentNodeCollectionName is created by providing a newBar with the corresponding name. This will
+                result in elements being created within that contentNode, and thus allow you to loop over
+                these.</description>
         </attribute>
         <attribute>
             <name>begin</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description></description>
+            <description>number; defines the starting point of the loop (0 based)</description>
         </attribute>
         <attribute>
             <name>end</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description></description>
+            <description>number; defines after which contentNode the loop breaks (0 based)</description>
         </attribute>
         <attribute>
             <name>step</name>
@@ -357,6 +347,14 @@ parFiles="/samples/formTemplate/controlEdit.xml"/>
             <rtexprvalue>true</rtexprvalue>
             <description></description>
         </attribute>
+        <example> <![CDATA[
+<cms:contentNodeIterator contentNodeCollectionName="mainColumnParagraphs">
+    <cms:adminOnly>
+        <cms:editBar/>
+    </cms:adminOnly>
+    <cms:includeTemplate/>
+</cms:contentNodeIterator>
+]]> </example>
     </tag>
     <tag>
         <name>ifLastContentNode</name>
@@ -566,10 +564,10 @@ parFiles="/samples/formTemplate/controlEdit.xml"/>
         </attribute>
         <example>
             <![CDATA[
-<cms:setNode var="currentNode"/> 
+<cms:setNode var="currentNode"/>
 <c:if test="${!empty currentNode.title}">
   <c:out value="${currentNode.title}"/>
-</c:if> 
+</c:if>
 ]]>
         </example>
     </tag>

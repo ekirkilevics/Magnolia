@@ -31,6 +31,7 @@ import org.apache.log4j.Logger;
 /**
  * @author Marcel Salathe
  * @version $Revision: $ ($Author: $)
+ * @deprecated
  */
 public class FileSrc extends TagSupport {
 
@@ -70,6 +71,10 @@ public class FileSrc extends TagSupport {
         this.setNodeDataName(name);
     }
 
+    /**
+     * @deprecated
+     * @param nodeDataName
+     */
     public void setNodeDataName(String nodeDataName) {
         this.nodeDataName = nodeDataName;
     }
@@ -81,10 +86,18 @@ public class FileSrc extends TagSupport {
         this.setContentNodeName(name);
     }
 
+    /**
+     * @deprecated
+     * @param contentNodeName
+     */
     public void setContentNodeName(String contentNodeName) {
         this.contentNodeName = contentNodeName;
     }
 
+    /**
+     * @deprecated
+     * @param value
+     */
     public void setFileNameOnly(String value) {
         this.fileNameOnly = "true";
     }
@@ -185,6 +198,9 @@ public class FileSrc extends TagSupport {
         }
     }
 
+    /**
+     * @deprecated
+     */
     private void setFileProperties() {
         this.fileExtension = Server.getDefaultExtension();
         ContentNode properties = null;

@@ -57,15 +57,12 @@ public class EditBar extends TagSupport {
 
     private String moveLabel;
 
-    private String displayHandler;
-
     private HttpServletRequest request;
 
     /**
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
     public int doStartTag() {
-        this.displayHandler = "";
         this.request = (HttpServletRequest) pageContext.getRequest();
         return EVAL_BODY_INCLUDE;
     }
@@ -128,17 +125,6 @@ public class EditBar extends TagSupport {
     }
 
     /**
-     * @deprecated
-     * <p>
-     * set current content type, could be any developer defined name
-     * </p>
-     * @param type , content type
-     */
-    public void setParFile(String type) {
-        this.setParagraph(type);
-    }
-
-    /**
      * <p>
      * set current content type, could be any developer defined name
      * </p>
@@ -158,16 +144,6 @@ public class EditBar extends TagSupport {
 
         }
         return this.paragraph;
-    }
-
-    /**
-     * <p>
-     * set display handler (JSP / Servlet), needs to know the relative path from WEB-INF
-     * </p>
-     * @param path , relative to WEB-INF
-     */
-    public void setTemplate(String path) {
-        this.displayHandler = path;
     }
 
     /**
