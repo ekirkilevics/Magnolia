@@ -24,14 +24,9 @@ import info.magnolia.cms.util.StringComparator;
 import info.magnolia.cms.util.regex.RegexWildcardPattern;
 
 import javax.jcr.RepositoryException;
-import java.util.Iterator;
-import java.util.Hashtable;
-import java.util.Enumeration;
+import java.util.*;
 import java.util.regex.Pattern;
 
-import jdsl.core.ref.ArraySequence;
-import jdsl.core.algo.sorts.HeapSort;
-import jdsl.core.api.ObjectIterator;
 
 /**
  * Date: Jul 7, 2004
@@ -108,16 +103,11 @@ public class VirtualMap {
      * @param nodeList to be added in cache
      */
     private void cacheURIMappings(ContentNode nodeList) {
-        Iterator it = nodeList.getChildren().iterator();
-        ArraySequence as = new ArraySequence();
+        Collection list = nodeList.getChildren();
+        Collections.sort((List)list,new StringComparator("fromURI"));
+        Iterator it = list.iterator();
         while (it.hasNext()) {
-            as.insertLast(it.next());
-        }
-        HeapSort hs = new HeapSort();
-        hs.sort(as,new StringComparator("fromURI"));
-        ObjectIterator oi = as.elements();
-        while (oi.hasNext()) {
-            ContentNode container = (ContentNode)oi.nextObject();
+            ContentNode container = (ContentNode)it.next();
             NodeData fromURI = container.getNodeData("fromURI");
             StringBuffer fromURIStringBuffer = new StringBuffer();
             char[] chars = fromURI.getString().toCharArray();
