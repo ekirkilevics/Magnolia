@@ -26,10 +26,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 import java.io.IOException;
 
-import com.obinary.webdav.DAVRequest;
-import com.obinary.webdav.DAVResponse;
-import com.obinary.webdav.Exception.InvalidDAVRequest;
-
 
 
 
@@ -59,15 +55,6 @@ public class DAVServlet extends HttpServlet {
 
     protected void service(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
-
-        DAVRequest davRequest = new DAVRequest(req,res);
-        try {
-            davRequest.executeMethod();
-            DAVResponse davResponse = davRequest.getDAVResponse();
-
-        } catch (InvalidDAVRequest e) {log.error(e.getMessage());}
-
-
     }
 
 
