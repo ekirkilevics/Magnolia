@@ -119,7 +119,7 @@ printSize("size is " + foo + "\n");
 ]]>
                 </source>
             </subsection>
-            <subsection name="7. Class variables">
+            <subsection name="6. Class variables">
                 <p>
                     Class variables should not have any prefix and
                     <strong>must</strong>
@@ -139,7 +139,7 @@ public class SomeClass {
 ]]>
                 </source>
             </subsection>
-            <subsection name="8. Parameter names">
+            <subsection name="7. Parameter names">
                 <p>Method parameters should not have any prefix. For example :</p>
                 <source>
                     <![CDATA[
@@ -148,14 +148,14 @@ public void someMethod(String className) {
 ]]>
                 </source>
             </subsection>
-            <subsection name="9. Line length">
+            <subsection name="8. Line length">
                 <p>
                     Avoid lines longer than
                     <strong>120</strong>
                     characters for Code, comments, ...
                 </p>
             </subsection>
-            <subsection name="10. Versioning">
+            <subsection name="9. Versioning">
                 <p>
                     All .java files should have a
                     <code>@version</code>
@@ -167,7 +167,7 @@ public void someMethod(String className) {
 ]]>
                 </source>
             </subsection>
-            <subsection name="11. Qualified imports">
+            <subsection name="10. Qualified imports">
                 <p>
                     All
                     <code>import</code>
