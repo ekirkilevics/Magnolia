@@ -59,7 +59,6 @@
     <pathelement location="lib/jcr-ri.jar"/>
     <pathelement location="lib/jcr.jar"/>
     <pathelement location="lib/jdom.jar"/>
-    <pathelement location="lib/jdsl.jar"/>
     <pathelement location="lib/jsp-api.jar"/>
     <pathelement location="lib/jstl.jar"/>
     <pathelement location="lib/log4j.jar"/>
