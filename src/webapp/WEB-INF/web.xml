@@ -85,10 +85,10 @@
             in any of the repository, they are initialized importing xml files found in this folder.
             If you don't want to let magnolia automatically initialize repositories simply remove this parameter.
         -->
-        <!--<init-param>
+        <init-param>
             <param-name>magnolia.bootstrap.dir</param-name>
             <param-value>WEB-INF/bootstrap</param-value>
-        </init-param>-->
+        </init-param>
         <load-on-startup>0</load-on-startup>
     </servlet>
     <servlet>
