@@ -52,7 +52,7 @@ public class CacheHandler extends Thread {
     /**
      * @param request
      */
-    public static void cacheURI(HttpServletRequest request) throws IOException {
+    public static synchronized void cacheURI(HttpServletRequest request) throws IOException {
         if (CacheHandler.hasRedirect(request)) /* dont cache */
             return;
         String URI = Path.getURI(request);
