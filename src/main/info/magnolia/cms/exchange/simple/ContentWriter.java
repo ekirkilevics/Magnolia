@@ -289,6 +289,9 @@ public class ContentWriter {
                     case PropertyType.BOOLEAN:
                         nodeData.setValue(sNodeData.getBoolean());
                         break;
+                    case PropertyType.DATE:
+                        nodeData.setValue(sNodeData.getDate());
+                        break;
                     case PropertyType.BINARY:
                         String binaryResourceHandle = sNodeData.getBinaryAsLink();
                         URL url = new URL(this.baseURL);

@@ -22,6 +22,7 @@ import javax.jcr.PropertyType;
 import java.io.Serializable;
 import java.io.InputStream;
 import java.io.IOException;
+import java.util.Calendar;
 
 
 /**
@@ -45,6 +46,7 @@ public class SerializableNodeData implements Serializable {
     long longValue;
     double doubleValue;
     boolean booleanValue;
+    Calendar dateValue;
 
     /* binary value will be serialized in a byte array */
     byte[] byteArrayValue;
@@ -95,6 +97,9 @@ public class SerializableNodeData implements Serializable {
                 break;
             case PropertyType.BOOLEAN:
                 this.setValue(this.baseNodeData.getBoolean());
+                break;
+            case PropertyType.DATE:
+                this.setValue(this.baseNodeData.getDate());
                 break;
             case PropertyType.BINARY:
                 this.setBinaryAsLink(this.baseNodeData.getHandle());
@@ -187,6 +192,17 @@ public class SerializableNodeData implements Serializable {
     public boolean getBoolean() {
         return this.booleanValue;
     }
+
+
+    public void setValue(Calendar value) {
+        this.dateValue = value;
+    }
+
+
+    public Calendar getDate() {
+        return this.dateValue;
+    }
+
 
 
     public void setValue(InputStream value, int size) throws IOException {
