@@ -97,6 +97,7 @@
             <artifactId>log4j</artifactId>
             <version>1.2.8</version>
             <type>jar</type>
+			<url>http://logging.apache.org/log4j/docs/</url>
             <properties>
                 <war.bundle>true</war.bundle>
             </properties>
@@ -115,6 +116,7 @@
             <artifactId>junit</artifactId>
             <version>3.8.1</version>
             <type>jar</type>
+			<url>http://www.junit.org</url>
             <properties>
                 <war.bundle>true</war.bundle>
             </properties>
@@ -124,6 +126,7 @@
             <artifactId>commons-httpclient</artifactId>
             <version>2.0.2</version>
             <type>jar</type>
+			<url>http://jakarta.apache.org/commons/httpclient/</url>
             <properties>
                 <war.bundle>true</war.bundle>
             </properties>
@@ -133,6 +136,7 @@
             <artifactId>commons-collections</artifactId>
             <version>2.1</version>
             <type>jar</type>
+			<url>http://jakarta.apache.org/commons/collections/</url>
             <properties>
                 <war.bundle>true</war.bundle>
             </properties>
@@ -152,6 +156,7 @@
             <artifactId>jdom</artifactId>
             <version>1.0</version>
             <type>jar</type>
+			<url>http://www.jdom.org/</url>
             <properties>
                 <war.bundle>true</war.bundle>
             </properties>
@@ -161,6 +166,7 @@
             <artifactId>lucene</artifactId>
             <version>1.4.3</version>
             <type>jar</type>
+			<url>http://jakarta.apache.org/lucene/docs/index.html</url>
             <properties>
                 <war.bundle>true</war.bundle>
             </properties>
@@ -179,6 +185,7 @@
             <artifactId>oro</artifactId>
             <version>2.0.6</version>
             <type>jar</type>
+			<url>http://jakarta.apache.org/oro/</url>
             <properties>
                 <war.bundle>true</war.bundle>
             </properties>
@@ -207,12 +214,6 @@
             <properties>
                 <war.bundle>true</war.bundle>
             </properties>
-        </dependency>
-        <dependency>
-            <groupId>ant</groupId>
-            <artifactId>ant</artifactId>
-            <version>1.5.1</version>
-            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>javamail</groupId>
@@ -257,7 +258,7 @@
         <dependency>
             <groupId>geronimo-spec</groupId>
             <artifactId>geronimo-spec-jta</artifactId>
-            <version>1.0-M1</version>
+            <version>1.0.1B-rc2</version>
             <type>jar</type>
             <properties>
                 <war.bundle>true</war.bundle>
@@ -368,6 +369,7 @@
             <artifactId>httpunit</artifactId>
             <version>1.6</version>
             <type>jar</type>
+            <url>http://httpunit.sourceforge.net/</url>
             <properties>
                 <comment>Needed to compile and run HttpUnit tests.</comment>
             </properties>
@@ -472,6 +474,9 @@
         </resources>
     </build>
     <reports>
+        <report>maven-changelog-plugin</report>
+        <report>maven-developer-activity-plugin</report>
+        <report>maven-file-activity-plugin</report>
         <report>maven-license-plugin</report>
         <report>maven-checkstyle-plugin</report>
         <report>maven-javadoc-plugin</report>
