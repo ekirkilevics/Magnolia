@@ -13,15 +13,23 @@
 package info.magnolia.cms.beans.runtime;
 
 import java.util.Hashtable;
+import java.util.Map;
 
 
 /**
  * @author Sameer charles
  * @version 2.0
  */
-public class SystemProperty {
+public final class SystemProperty {
 
-    private static Hashtable properties = new Hashtable();
+    private static Map properties = new Hashtable();
+
+    /**
+     * Utility class, don't instantiate.
+     */
+    private SystemProperty() {
+        // unused
+    }
 
     /**
      * @param name
@@ -41,7 +49,7 @@ public class SystemProperty {
     /**
      * 
      */
-    public static Hashtable getPropertyList() {
+    public static Map getPropertyList() {
         return SystemProperty.properties;
     }
 }

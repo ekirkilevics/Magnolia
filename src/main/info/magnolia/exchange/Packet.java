@@ -20,47 +20,47 @@ public interface Packet {
     /**
      * Implementor must make sure this ID is unique over the process.
      */
-    public String getID();
+    String getID();
 
     /**
      * Implementing class have to make sure this ID has not been assigned to any parallel packet in the same process
      */
-    public void assignID();
+    void assignID();
 
     /**
      * Sets current packet ID as specified
      */
-    public void assignID(String id);
+    void assignID(String id);
 
     /**
      * Channel through which this packet is being initiated.
      */
-    public void setChannelID(String id);
+    void setChannelID(String id);
 
     /**
      * Channel through which this packet is being initiated.
      */
-    public String getChannelID();
+    String getChannelID();
 
     /**
      * hash (key - Header String , value - Value)
      * @return empty initialized header if none exist.
      */
-    public PacketHeader getHeaders();
+    PacketHeader getHeaders();
 
     /**
      * initialize empty PacketHeader if none specified
      * @param header
      */
-    public void setHeaders(PacketHeader header);
+    void setHeaders(PacketHeader header);
 
     /**
      * @param body , packet data
      */
-    public void setBody(PacketBody body);
+    void setBody(PacketBody body);
 
     /**
      * @return packet body if any
      */
-    public PacketBody getBody();
+    PacketBody getBody();
 }

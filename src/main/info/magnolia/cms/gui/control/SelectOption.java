@@ -21,9 +21,9 @@ import info.magnolia.cms.core.Content;
  */
 public class SelectOption extends ControlSuper {
 
-    private String label = null;
+    private String label;
 
-    private boolean selected = false;
+    private boolean selected;
 
     public SelectOption() {
     }
@@ -51,10 +51,11 @@ public class SelectOption extends ControlSuper {
     }
 
     public String getLabel() {
-        if (this.label != null)
+        if (this.label != null) {
             return this.label;
-        else
-            return this.getValue();
+        }
+
+        return this.getValue();
     }
 
     public String getHtml() {
@@ -62,8 +63,9 @@ public class SelectOption extends ControlSuper {
         html.append("<option value=\"" + this.getValue() + "\"");
         html.append(this.getHtmlCssClass());
         html.append(this.getHtmlCssStyles());
-        if (this.getSelected())
+        if (this.getSelected()) {
             html.append(" selected");
+        }
         html.append(this.getHtmlId()); // id e.g. needed in rich editor
         html.append(">");
         // html.append("["+this.getLabel()+"]["+this.getValue()+"]");

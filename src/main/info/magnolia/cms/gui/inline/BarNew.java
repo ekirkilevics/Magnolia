@@ -17,7 +17,9 @@ import info.magnolia.cms.gui.control.Bar;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
+
 import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 
@@ -35,22 +37,19 @@ public class BarNew extends Bar {
     }
 
     /**
-     * <p>
-     * sets the default buttons
-     * </p>
+     * Sets the default buttons.
      */
     public void setDefaultButtons() {
         this.setButtonNew();
     }
 
     /**
-     * <p>
-     * places the default buttons to the very right/left position
-     * </p>
+     * Places the default buttons to the very right/left position.
      */
     public void placeDefaultButtons() {
-        if (this.getButtonNew() != null)
+        if (this.getButtonNew() != null) {
             this.getButtonsLeft().add(0, this.getButtonNew());
+        }
     }
 
     public Button getButtonNew() {
@@ -66,9 +65,7 @@ public class BarNew extends Bar {
     }
 
     /**
-     * <p>
-     * sets the default edit button
-     * </p>
+     * Sets the default edit button.
      * @param path , path of the current page
      * @param nodeCollectionName , i.e. 'MainParagarphs'
      * @param nodeName , i.e. '01'

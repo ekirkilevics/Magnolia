@@ -18,7 +18,9 @@ import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.HierarchyManager;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 
 
@@ -26,22 +28,29 @@ import org.apache.log4j.Logger;
  * @author Sameer Charles
  * @version 1.1
  */
-public class Resource {
+public final class Resource {
+
+    public static final int SCOPE_GLOBAL = 1;
+
+    public static final int SCOPE_LOCAL = 2;
 
     /**
      * Logger.
      */
     private static Logger log = Logger.getLogger(Resource.class);
 
-    public static final int SCOPE_GLOBAL = 1;
-
-    public static final int SCOPE_LOCAL = 2;
-
     private static final String GLOBAL_CONTENT_NODE = "contentObjGlobal";
 
     private static final String LOCAL_CONTENT_NODE = "contentObj";
 
     private static final String LOCAL_CONTENT_NODE_COLLECTION_NAME = "localContentNodeCollectionName";
+
+    /**
+     * Utility class, don't instantiate.
+     */
+    private Resource() {
+        // unused
+    }
 
     /**
      * <p>
@@ -75,8 +84,9 @@ public class Resource {
     public static Content getCurrentActivePage(HttpServletRequest req) {
         Content currentActpage;
         currentActpage = (Content) req.getAttribute(Aggregator.CURRENT_ACTPAGE);
-        if (currentActpage == null)
+        if (currentActpage == null) {
             currentActpage = (Content) req.getAttribute(Aggregator.ACTPAGE);
+        }
         return currentActpage;
     }
 

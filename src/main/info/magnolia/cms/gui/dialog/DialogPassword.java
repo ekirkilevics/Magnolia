@@ -45,13 +45,15 @@ public class DialogPassword extends DialogBox {
 
     public void drawHtml(JspWriter out) throws IOException {
         Password control = new Password(this.getName(), this.getValue());
-        if (this.getConfigValue("saveInfo").equals("false"))
+        if (this.getConfigValue("saveInfo").equals("false")) {
             control.setSaveInfo(false);
+        }
         control.setCssClass(CSSCLASS_EDIT);
         control.setCssStyles("width", this.getConfigValue("width", "100%"));
         control.setEncoding(ControlSuper.ENCODING_BASE64);
-        if (this.getConfigValue("onchange", null) != null)
+        if (this.getConfigValue("onchange", null) != null) {
             control.setEvent("onchange", this.getConfigValue("onchange"));
+        }
         this.drawHtmlPre(out);
         out.println(control.getHtml());
         if (this.getConfigValue("verification", "true").equals("true")) {

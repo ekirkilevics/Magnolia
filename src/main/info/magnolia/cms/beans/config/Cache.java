@@ -36,7 +36,7 @@ import org.apache.log4j.Logger;
  * @author Sameer Charles
  * @version 2.0
  */
-public class Cache {
+public final class Cache {
 
     private static final String CONFIG_PATH = "server/cache/level1";
 
@@ -62,15 +62,22 @@ public class Cache {
     /**
      * Compression wont work for these pre compressed formats.
      */
-    private static final Map compressionList = new Hashtable();
+    private static final Map COMPRESSION_LIST = new Hashtable();
 
     private static boolean isCacheable;
 
     private static String domain;
 
+    /**
+     * Utility class, don't instantiate.
+     */
+    private Cache() {
+        // unused
+    }
+
     protected static void init() {
         cachedCacheableURIMapping.clear();
-        compressionList.clear();
+        COMPRESSION_LIST.clear();
         log.info("Config : loading cache mapping");
         try {
             Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getPage(CONFIG_PATH);
@@ -108,8 +115,8 @@ public class Cache {
         Iterator it = nodeList.getChildren().iterator();
         while (it.hasNext()) {
             ContentNode container = (ContentNode) it.next();
-            NodeData URI = container.getNodeData("URI");
-            String pattern = RegexWildcardPattern.getEncodedString(URI.getString());
+            NodeData uri = container.getNodeData("URI");
+            String pattern = RegexWildcardPattern.getEncodedString(uri.getString());
             Pattern p = Pattern.compile(pattern);
             cachedCacheableURIMapping.put(p, new Boolean(allow));
         }
@@ -129,12 +136,12 @@ public class Cache {
         Iterator it = list.getChildren().iterator();
         while (it.hasNext()) {
             ContentNode node = (ContentNode) it.next();
-            compressionList.put(node.getNodeData("extension").getString(), node.getNodeData("type").getString());
+            COMPRESSION_LIST.put(node.getNodeData("extension").getString(), node.getNodeData("type").getString());
         }
     }
 
     public static boolean applyCompression(String key) {
-        return compressionList.containsKey(key.trim().toLowerCase());
+        return COMPRESSION_LIST.containsKey(key.trim().toLowerCase());
     }
 
     /**

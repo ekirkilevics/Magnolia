@@ -2,6 +2,8 @@ package info.magnolia.custom.search.lucene;
 
 import java.io.IOException;
 import java.io.Reader;
+
+import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.document.Document;
@@ -17,17 +19,27 @@ import org.apache.lucene.store.FSDirectory;
  */
 public class Index {
 
+    /**
+     * Logger.
+     */
+    private static Logger log = Logger.getLogger(Index.class);
+
+    private static String indexDirectory;
+
     private Document document;
 
     private IndexWriter writer;
 
-    private static String indexDirectory;
-
     Index(String path) {
-        System.out.println("Setting index directory to - " + path);
+        if (log.isDebugEnabled()) {
+            log.debug("Setting index directory to - " + path);
+        }
+
         indexDirectory = path;
         String indexDir = getIndexDirectory();
-        System.out.println("Unlock writer");
+        if (log.isDebugEnabled()) {
+            log.debug("Unlock writer");
+        }
         unlock();
         Analyzer analyzer = new WhitespaceAnalyzer();
         try {
@@ -40,7 +52,7 @@ public class Index {
             }
         }
         catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -54,8 +66,9 @@ public class Index {
 
     protected void closeDocument() {
         try {
-            if (this.document != null)
+            if (this.document != null) {
                 this.writer.addDocument(this.document);
+            }
         }
         catch (IOException e) {
         }
@@ -68,7 +81,7 @@ public class Index {
             indexReader.close();
         }
         catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -96,7 +109,7 @@ public class Index {
             this.writer.close();
         }
         catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 }

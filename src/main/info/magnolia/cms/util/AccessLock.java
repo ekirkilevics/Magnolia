@@ -14,6 +14,7 @@ package info.magnolia.cms.util;
 
 import java.io.File;
 import java.io.IOException;
+
 import org.apache.log4j.Logger;
 
 
@@ -22,12 +23,19 @@ import org.apache.log4j.Logger;
  * @version 1.1
  * @deprecated as on magnolia 2.0
  */
-public class AccessLock {
+public final class AccessLock {
 
     /**
      * Logger.
      */
     private static Logger log = Logger.getLogger(AccessLock.class);
+
+    /**
+     * Utility class, don't instantiate.
+     */
+    private AccessLock() {
+        // unused
+    }
 
     /**
      * <p>
@@ -56,8 +64,9 @@ public class AccessLock {
      */
     public static void release() {
         File lockFile = getLockFile();
-        if ((lockFile != null) && lockFile.exists())
+        if ((lockFile != null) && lockFile.exists()) {
             lockFile.delete();
+        }
     }
 
     /**
@@ -67,8 +76,9 @@ public class AccessLock {
      */
     public static boolean isSet() {
         File lockFile = getLockFile();
-        if (lockFile.exists())
+        if (lockFile.exists()) {
             return true;
+        }
         return false;
     }
 

@@ -19,11 +19,13 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.taglibs.ContentNodeIterator;
 import info.magnolia.cms.util.Resource;
+
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
+
 import org.apache.log4j.Logger;
 
 
@@ -108,8 +110,9 @@ public class FileSrc extends TagSupport {
             if (this.contentNode == null) {
                 this.contentNode = Resource.getGlobalContentNode(request);
             }
-            if (this.contentNode != null)
+            if (this.contentNode != null) {
                 this.contentNodeName = this.contentNode.getName();
+            }
             else {
                 writeSrc("");
                 return SKIP_BODY;
@@ -138,13 +141,7 @@ public class FileSrc extends TagSupport {
             writeSrc("");
             return SKIP_BODY;
         }
-        String actHandle = "";
-        try {
-            actHandle = this.actpage.getHandle();
-        }
-        catch (Exception e) {
-        }
-        ;
+
         String contentNodeCollectionName = (String) pageContext.getAttribute(
             ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME,
             PageContext.REQUEST_SCOPE);

@@ -15,7 +15,9 @@ package info.magnolia.cms.gui.dialog;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
+
 import javax.jcr.RepositoryException;
+
 import org.apache.log4j.Logger;
 
 
@@ -25,6 +27,9 @@ import org.apache.log4j.Logger;
  */
 public class DialogLink extends DialogEditWithButton {
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(DialogLink.class);
 
     public DialogLink(ContentNode configNode, Content websiteNode) throws RepositoryException {

@@ -45,8 +45,9 @@ public class Edit extends ControlSuper {
     public String getHtml() {
         StringBuffer html = new StringBuffer();
         String id = this.getId();
-        if (id == null)
+        if (id == null) {
             id = this.getName();
+        }
         if (this.getRows().equals("1")) {
             html.append("<input type=\"text\"");
             html.append(" name=\"" + this.getName() + "\"");
@@ -69,8 +70,9 @@ public class Edit extends ControlSuper {
             html.append(this.getValue());
             html.append("</textarea>");
         }
-        if (this.getSaveInfo())
+        if (this.getSaveInfo()) {
             html.append(this.getHtmlSaveInfo());
+        }
         return html.toString();
     }
 }

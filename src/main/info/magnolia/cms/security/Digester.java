@@ -14,6 +14,7 @@ package info.magnolia.cms.security;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
 import org.apache.log4j.Logger;
 
 
@@ -22,7 +23,7 @@ import org.apache.log4j.Logger;
  * @author Sameer Charles
  * @version 2.0
  */
-public class Digester {
+public final class Digester {
 
     /**
      * supported algorithms
@@ -45,6 +46,13 @@ public class Digester {
     public static final String SHA512 = "SHA-512";
 
     private static Logger log = Logger.getLogger(Digester.class);
+
+    /**
+     * Utility class, don't instantiate.
+     */
+    private Digester() {
+        // unused
+    }
 
     /**
      * <p>

@@ -14,6 +14,8 @@ package info.magnolia.cms.beans.runtime;
 
 import java.io.File;
 import java.util.Hashtable;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 
 
@@ -23,13 +25,16 @@ import org.apache.log4j.Logger;
  */
 public class MultipartForm {
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(MultipartForm.class);
 
-    private Hashtable parameters;
+    private Map parameters;
 
-    private Hashtable documents;
+    private Map documents;
 
-    private Hashtable parameterList;
+    private Map parameterList;
 
     public MultipartForm() {
         this.parameters = new Hashtable();
@@ -45,7 +50,7 @@ public class MultipartForm {
         this.parameters.remove(name);
     }
 
-    public Hashtable getParameters() {
+    public Map getParameters() {
         return this.parameters;
     }
 
@@ -72,8 +77,9 @@ public class MultipartForm {
     }
 
     public void addDocument(String atomName, String fileName, String type, File file) {
-        if ((fileName == null) || (fileName.equals("")))
+        if ((fileName == null) || (fileName.equals(""))) {
             return;
+        }
         Document document = new Document();
         document.setAtomName(atomName);
         document.setType(type);
@@ -94,7 +100,7 @@ public class MultipartForm {
         return (Document) this.documents.get(name);
     }
 
-    public Hashtable getDocuments() {
+    public Map getDocuments() {
         return this.documents;
     }
 }

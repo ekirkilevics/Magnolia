@@ -13,7 +13,10 @@
 package info.magnolia.cms.beans.runtime;
 
 import info.magnolia.cms.util.Path;
+
 import java.util.Hashtable;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 
@@ -21,15 +24,22 @@ import javax.servlet.http.HttpServletRequest;
  * @author Sameer Charles
  * @version 1.5
  */
-public class Cache {
+public final class Cache {
 
-    public static Hashtable cachedURIList = new Hashtable();
+    private static Map cachedURIList = new Hashtable();
 
     private long time;
 
     private int size;
 
     private int compressedSize;
+
+    /**
+     * Utility class, don't instantiate.
+     */
+    private Cache() {
+        // unused
+    }
 
     /**
      * @return true is the request is cached
@@ -41,27 +51,27 @@ public class Cache {
     /**
      * @return true is the request URI is cached
      */
-    public static boolean isCached(String URI) {
-        return (Cache.cachedURIList.get(URI) != null);
+    public static boolean isCached(String uri) {
+        return (Cache.cachedURIList.get(uri) != null);
     }
 
     /**
      * @param URI
      * @param lastModified
      */
-    public static void addToCachedURIList(String URI, long lastModified, int size, int compressedSize) {
+    public static void addToCachedURIList(String uri, long lastModified, int size, int compressedSize) {
         Cache cacheMap = new Cache();
         cacheMap.time = lastModified;
         cacheMap.size = size;
         cacheMap.compressedSize = compressedSize;
-        Cache.cachedURIList.put(URI, cacheMap);
+        Cache.cachedURIList.put(uri, cacheMap);
     }
 
     /**
      * @param URI
      */
-    public static void removeFromCachedURIList(String URI) {
-        Cache.cachedURIList.remove(URI);
+    public static void removeFromCachedURIList(String uri) {
+        Cache.cachedURIList.remove(uri);
     }
 
     /**
@@ -81,10 +91,11 @@ public class Cache {
     /**
      * @return creation time in miliseconds
      */
-    public static long getCreationTime(String URI) {
-        Cache cacheMap = (Cache) cachedURIList.get(URI);
-        if (cacheMap == null)
+    public static long getCreationTime(String uri) {
+        Cache cacheMap = (Cache) cachedURIList.get(uri);
+        if (cacheMap == null) {
             return -1;
+        }
         return cacheMap.time;
     }
 
@@ -98,8 +109,8 @@ public class Cache {
     /**
      * @return size as on disk
      */
-    public static int getSize(String URI) {
-        Cache cacheMap = (Cache) cachedURIList.get(URI);
+    public static int getSize(String uri) {
+        Cache cacheMap = (Cache) cachedURIList.get(uri);
         return cacheMap.size;
     }
 
@@ -113,8 +124,8 @@ public class Cache {
     /**
      * @return size as on disk
      */
-    public static int getCompressedSize(String URI) {
-        Cache cacheMap = (Cache) cachedURIList.get(URI);
+    public static int getCompressedSize(String uri) {
+        Cache cacheMap = (Cache) cachedURIList.get(uri);
         return cacheMap.compressedSize;
     }
 }

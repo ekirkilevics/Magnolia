@@ -13,22 +13,27 @@
 package info.magnolia.cms.Filter;
 
 import info.magnolia.cms.beans.config.MIMEMapping;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 
 
 /**
- * User: sameercharles Date: Jan 30, 2004 Time: 5:16:23 PM
  * @author Sameer Charles
  * @version 1.1
  */
 public class ContentTypeFilter extends BaseFilter {
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(ContentTypeFilter.class);
 
     public ContentTypeFilter() {

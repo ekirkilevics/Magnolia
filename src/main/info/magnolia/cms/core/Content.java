@@ -104,13 +104,15 @@ public class Content extends ContentHandler implements Cloneable {
         Access.isGranted(manager, Path.getAbsolutePath(rootNode.getPath(), path), Permission.WRITE);
         this.setPath(path);
         this.setRootNode(rootNode);
-        if (isHierarchyNode)
+        if (isHierarchyNode) {
             this.node = this.rootNode.addNode(this.path, ItemType.getSystemName(ItemType.NT_CONTENT));
-        else
+        }
+        else {
             this.node = this.rootNode.addNode(this.path, ItemType.getSystemName(ItemType.NT_CONTENTNODE));
+        }
         this.setAccessManager(manager);
-        if (this.node.canAddMixin(ItemType.getSystemName(ItemType.MIX_Versionable))) {
-            this.node.addMixin(ItemType.getSystemName(ItemType.MIX_Versionable));
+        if (this.node.canAddMixin(ItemType.getSystemName(ItemType.MIX_VERSIONABLE))) {
+            this.node.addMixin(ItemType.getSystemName(ItemType.MIX_VERSIONABLE));
         }
     }
 
@@ -134,8 +136,8 @@ public class Content extends ContentHandler implements Cloneable {
         this.setRootNode(rootNode);
         this.node = this.rootNode.addNode(this.path, ItemType.getSystemName(contentType));
         this.setAccessManager(manager);
-        if (this.node.canAddMixin(ItemType.getSystemName(ItemType.MIX_Versionable))) {
-            this.node.addMixin(ItemType.getSystemName(ItemType.MIX_Versionable));
+        if (this.node.canAddMixin(ItemType.getSystemName(ItemType.MIX_VERSIONABLE))) {
+            this.node.addMixin(ItemType.getSystemName(ItemType.MIX_VERSIONABLE));
         }
     }
 
@@ -251,13 +253,7 @@ public class Content extends ContentHandler implements Cloneable {
      * @return String, title
      */
     public String getTitle() {
-        try {
-            return this.getNodeData("title").getString();
-        }
-        catch (AccessDeniedException e) {
-            log.error(e.getMessage(), e);
-            return "";
-        }
+        return this.getNodeData("title").getString();
     }
 
     /**
@@ -267,8 +263,9 @@ public class Content extends ContentHandler implements Cloneable {
      * @return MetaData meta information of the content <code>Node</code>
      */
     public MetaData getMetaData() {
-        if (this.metaData == null)
+        if (this.metaData == null) {
             this.metaData = new MetaData(this.node, this.accessManager);
+        }
         return this.metaData;
     }
 
@@ -288,7 +285,7 @@ public class Content extends ContentHandler implements Cloneable {
      * </p>
      * @return NodeData requested <code>NodeData</code> object
      */
-    public NodeData getNodeData(String name) throws AccessDeniedException {
+    public NodeData getNodeData(String name) {
         try {
             return (new NodeData(this.node, name, this.accessManager));
         }
@@ -484,12 +481,15 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     private Collection sort(Collection collection, String sortCriteria) {
-        if (sortCriteria == null)
+        if (sortCriteria == null) {
             return collection;
-        if (sortCriteria.equals(ContentHandler.SORT_BY_DATE))
+        }
+        if (sortCriteria.equals(ContentHandler.SORT_BY_DATE)) {
             return sortByDate(collection);
-        else if (sortCriteria.equals(ContentHandler.SORT_BY_SEQUENCE))
+        }
+        else if (sortCriteria.equals(ContentHandler.SORT_BY_SEQUENCE)) {
             return sortBySequence(collection);
+        }
         return collection;
     }
 
@@ -500,13 +500,15 @@ public class Content extends ContentHandler implements Cloneable {
     private Collection getChildContent(String contentType) throws RepositoryException {
         Collection children = new ArrayList();
         NodeIterator nodeIterator = this.node.getNodes();
-        if (nodeIterator == null)
+        if (nodeIterator == null) {
             return children;
+        }
         while (nodeIterator.hasNext()) {
             Node subNode = (Node) nodeIterator.next();
             try {
-                if (subNode.isNodeType(ItemType.getSystemName(contentType)))
+                if (subNode.isNodeType(ItemType.getSystemName(contentType))) {
                     children.add(new Content(subNode, this.accessManager));
+                }
             }
             catch (PathNotFoundException e) {
                 log.error(e);
@@ -524,13 +526,15 @@ public class Content extends ContentHandler implements Cloneable {
     private Collection getChildContentNodes() throws RepositoryException {
         Collection children = new ArrayList();
         NodeIterator nodeIterator = this.node.getNodes();
-        if (nodeIterator == null)
+        if (nodeIterator == null) {
             return children;
+        }
         while (nodeIterator.hasNext()) {
             Node subNode = (Node) nodeIterator.next();
             try {
-                if (subNode.isNodeType(ItemType.getSystemName(ItemType.NT_CONTENTNODE)))
+                if (subNode.isNodeType(ItemType.getSystemName(ItemType.NT_CONTENTNODE))) {
                     children.add(new ContentNode(subNode, this.accessManager));
+                }
             }
             catch (PathNotFoundException e) {
                 log.error(e);
@@ -545,13 +549,15 @@ public class Content extends ContentHandler implements Cloneable {
     private Collection getProperties() throws RepositoryException {
         Collection children = new ArrayList();
         NodeIterator nodeIterator = this.node.getNodes();
-        if (nodeIterator == null)
+        if (nodeIterator == null) {
             return children;
+        }
         while (nodeIterator.hasNext()) {
             Node subNode = (Node) nodeIterator.next();
             try {
-                if (subNode.isNodeType(ItemType.getSystemName(ItemType.NT_NODEDATA)))
+                if (subNode.isNodeType(ItemType.getSystemName(ItemType.NT_NODEDATA))) {
                     children.add(new NodeData(subNode, this.accessManager));
+                }
             }
             catch (PathNotFoundException e) {
                 log.error(e);
@@ -593,8 +599,9 @@ public class Content extends ContentHandler implements Cloneable {
      */
     public Collection sortByDate(Collection c) {
         try {
-            if (c == null)
+            if (c == null) {
                 return c;
+            }
             Collections.sort((List) c, new DateComparator());
         }
         catch (Exception e) {
@@ -611,8 +618,9 @@ public class Content extends ContentHandler implements Cloneable {
      */
     public Collection sortBySequence(Collection c) {
         try {
-            if (c == null)
+            if (c == null) {
                 return c;
+            }
             Collections.sort((List) c, new SequenceComparator());
         }
         catch (Exception e) {

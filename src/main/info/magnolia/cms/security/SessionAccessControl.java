@@ -17,15 +17,19 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.regex.RegexWildcardPattern;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.regex.Pattern;
+
 import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 
 
@@ -34,7 +38,7 @@ import org.apache.log4j.Logger;
  * @author Sameer Charles
  * @version 2.0
  */
-public class SessionAccessControl {
+public final class SessionAccessControl {
 
     private static Logger log = Logger.getLogger(SessionAccessControl.class);
 
@@ -45,6 +49,13 @@ public class SessionAccessControl {
     private static final String ATTRIBUTE_AM_PREFIX = "mgnlAccessMgr_";
 
     private static final String DEFAULT_REPOSITORY = ContentRepository.WEBSITE;
+
+    /**
+     * Utility class, don't instantiate.
+     */
+    private SessionAccessControl() {
+        // unused
+    }
 
     /**
      * <p>
@@ -130,7 +141,7 @@ public class SessionAccessControl {
         Session session = ContentRepository.getRepository(repositoryID).login(sc, null);
         request.getSession().setAttribute(ATTRIBUTE_REPOSITORY_SESSION_PREFIX + repositoryID, session);
         Content userNode = getUserNode(request);
-        ArrayList acl = new ArrayList();
+        List acl = new ArrayList();
         updateACL(userNode, acl, repositoryID);
         updateRolesACL(userNode, acl, repositoryID);
         updateGroupsACL(userNode, acl, repositoryID);
@@ -158,9 +169,10 @@ public class SessionAccessControl {
     public static Content getUserNode(HttpServletRequest request) {
         Content userPage = Authenticator.getUserPage(request);
         try {
-            if (userPage == null)
+            if (userPage == null) {
                 userPage = ContentRepository.getHierarchyManager(ContentRepository.USERS).getPage(
                     Authenticator.getUserId(request));
+            }
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -183,30 +195,31 @@ public class SessionAccessControl {
      * @param userNode
      * @param userACL
      */
-    private static void updateACL(Content userNode, ArrayList userACL, String repositoryID) {
+    private static void updateACL(Content userNode, List userACL, String repositoryID) {
         try {
             /* get access rights of this node (user) */
             ContentNode acl = userNode.getContentNode("acl_" + repositoryID);
             Collection aclCollection = acl.getChildren();
-            if (aclCollection == null)
+            if (aclCollection == null) {
                 return;
+            }
             Iterator children = aclCollection.iterator();
             while (children.hasNext()) {
                 ContentNode map = (ContentNode) children.next();
-                StringBuffer URIStringBuffer = new StringBuffer();
+                StringBuffer uriStringBuffer = new StringBuffer();
                 char[] chars = map.getNodeData("path").getString().toCharArray();
                 int i = 0, last = 0;
                 while (i < chars.length) {
                     char c = chars[i];
                     if (c == '*') {
-                        URIStringBuffer.append(chars, last, i - last);
-                        URIStringBuffer.append(RegexWildcardPattern.getMultipleCharPattern());
+                        uriStringBuffer.append(chars, last, i - last);
+                        uriStringBuffer.append(RegexWildcardPattern.getMultipleCharPattern());
                         last = i + 1;
                     }
                     i++;
                 }
-                URIStringBuffer.append(chars, last, i - last);
-                Pattern p = Pattern.compile(URIStringBuffer.toString());
+                uriStringBuffer.append(chars, last, i - last);
+                Pattern p = Pattern.compile(uriStringBuffer.toString());
                 Permission permission = new PermissionImpl();
                 permission.setPattern(p);
                 permission.setPermissions(map.getNodeData("permissions").getLong());
@@ -225,14 +238,15 @@ public class SessionAccessControl {
      * @param userNode
      * @param groupACL
      */
-    private static void updateRolesACL(Content userNode, ArrayList groupACL, String repositoryID) {
+    private static void updateRolesACL(Content userNode, List groupACL, String repositoryID) {
         try {
             HierarchyManager rolesHierarchy = ContentRepository.getHierarchyManager(ContentRepository.USER_ROLES);
             /* get access rights of this user */
             ContentNode acl = userNode.getContentNode("roles");
             Collection aclCollection = acl.getChildren();
-            if (aclCollection == null)
+            if (aclCollection == null) {
                 return;
+            }
             Iterator children = aclCollection.iterator();
             /* find the exact match for the current url and acl for it */
             while (children.hasNext()) {
@@ -255,14 +269,15 @@ public class SessionAccessControl {
      * @param userNode
      * @param groupACL
      */
-    private static void updateGroupsACL(Content userNode, ArrayList groupACL, String repositoryID) {
+    private static void updateGroupsACL(Content userNode, List groupACL, String repositoryID) {
         try {
             HierarchyManager groupsHierarchy = ContentRepository.getHierarchyManager(ContentRepository.GROUPS);
             /* get access rights of this user */
             ContentNode acl = userNode.getContentNode("groups");
             Collection aclCollection = acl.getChildren();
-            if (aclCollection == null)
+            if (aclCollection == null) {
                 return;
+            }
             Iterator children = aclCollection.iterator();
             while (children.hasNext()) {
                 ContentNode map = (ContentNode) children.next();

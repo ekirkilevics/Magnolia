@@ -16,7 +16,9 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
+
 import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 
@@ -58,11 +60,13 @@ public class ButtonEdit extends Button {
 
     public void setDefaultOnclick() {
         String nodeCollectionName = this.getNodeCollectionName();
-        if (nodeCollectionName == null)
+        if (nodeCollectionName == null) {
             nodeCollectionName = "";
+        }
         String nodeName = this.getNodeName();
-        if (nodeName == null)
+        if (nodeName == null) {
             nodeName = "";
+        }
         // todo: dynamic repository
         String repository = ContentRepository.WEBSITE;
         this.setOnclick("mgnlOpenDialog('"

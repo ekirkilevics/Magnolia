@@ -18,14 +18,17 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Path;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
+
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
+
 import org.apache.log4j.Logger;
 
 
@@ -33,8 +36,6 @@ import org.apache.log4j.Logger;
  *
  */
 public class MetaData {
-
-    private static Logger log = Logger.getLogger(MetaData.class);
 
     /**
      * Top level atoms viewed as metadata of the specified content these must be set by the authoring system itself, but
@@ -70,7 +71,14 @@ public class MetaData {
 
     public static final long SEQUENCE_POS_COEFFICIENT = 1000;
 
-    /* meta data node */
+    /**
+     * Logger.
+     */
+    private static Logger log = Logger.getLogger(MetaData.class);
+
+    /**
+     * meta data node
+     */
     private Node node;
 
     private AccessManager accessManager;
@@ -193,7 +201,7 @@ public class MetaData {
      */
     public void setCreationDate() throws AccessDeniedException {
         allowUpdate();
-        GregorianCalendar creationDate = new GregorianCalendar(TimeZone.getDefault());
+        Calendar creationDate = new GregorianCalendar(TimeZone.getDefault());
         try {
             this.node.getProperty(CREATION_DATE).setValue(creationDate);
         }
@@ -353,7 +361,7 @@ public class MetaData {
      */
     public void setLastActivationActionDate() throws AccessDeniedException {
         allowUpdate();
-        GregorianCalendar currentDate = new GregorianCalendar(TimeZone.getDefault());
+        Calendar currentDate = new GregorianCalendar(TimeZone.getDefault());
         try {
             this.node.getProperty(LAST_ACTION).setValue(currentDate);
         }
@@ -393,7 +401,7 @@ public class MetaData {
      */
     public void setModificationDate() throws AccessDeniedException {
         allowUpdate();
-        GregorianCalendar currentDate = new GregorianCalendar(TimeZone.getDefault());
+        Calendar currentDate = new GregorianCalendar(TimeZone.getDefault());
         try {
             this.node.getProperty(LAST_MODIFIED).setValue(currentDate);
         }
@@ -810,7 +818,7 @@ public class MetaData {
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
         }
-        return 0l;
+        return 0L;
     }
 
     /**

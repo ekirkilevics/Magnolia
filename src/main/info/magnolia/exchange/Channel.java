@@ -13,7 +13,6 @@
 package info.magnolia.exchange;
 
 /**
- * Date: May 4, 2004 Time: 9:47:32 AM
  * @author Sameer Charles
  */
 public interface Channel {
@@ -24,7 +23,7 @@ public interface Channel {
      * </p>
      * @throws ChannelInitializationException
      */
-    public void open() throws ChannelInitializationException;
+    void open() throws ChannelInitializationException;
 
     /**
      * <p>
@@ -34,7 +33,7 @@ public interface Channel {
      * @throws ChannelOverflowException
      * @throws ChannelException
      */
-    public void send(Packet packet) throws ChannelOverflowException, ChannelException;
+    void send(Packet packet) throws ChannelOverflowException, ChannelException;
 
     /**
      * <p>
@@ -44,7 +43,7 @@ public interface Channel {
      * @throws ChannelOverflowException
      * @throws ChannelException
      */
-    public void receive(Packet packet) throws ChannelOverflowException, ChannelException;
+    void receive(Packet packet) throws ChannelOverflowException, ChannelException;
 
     /**
      * <p>
@@ -54,7 +53,7 @@ public interface Channel {
      * @param id
      * @throws ChannelException
      */
-    public void removePacketReference(String id) throws ChannelException;
+    void removePacketReference(String id) throws ChannelException;
 
     /**
      * <p>
@@ -62,17 +61,17 @@ public interface Channel {
      * </p>
      * @throws ChannelException
      */
-    public void flush() throws ChannelException;
+    void flush() throws ChannelException;
 
     /**
      * <p>
      * Closes the channel if nothing left in the que
      * </p>
      */
-    public void close();
+    void close();
 
     /**
      * @return channel ID as specified on challen creation
      */
-    public String getID();
+    String getID();
 }

@@ -38,13 +38,6 @@ import org.apache.log4j.Logger;
  */
 public class Aggregator {
 
-    /**
-     * Logger.
-     */
-    private static Logger log = Logger.getLogger(Aggregator.class);
-
-    private static final int ATOM = 2;
-
     public static final String ACTPAGE = "static_actpage";
 
     public static final String CURRENT_ACTPAGE = "actpage";
@@ -61,6 +54,13 @@ public class Aggregator {
 
     public static final String DIRECT_REQUEST_RECEIVER = "/ResourceDispatcher";
 
+    /**
+     * Logger.
+     */
+    private static Logger log = Logger.getLogger(Aggregator.class);
+
+    private static final int ATOM = 2;
+
     private HttpServletRequest request;
 
     private Content requestedPage;
@@ -71,7 +71,7 @@ public class Aggregator {
 
     private HierarchyManager hierarchyManager;
 
-    private String URI;
+    private String uri;
 
     private String extension;
 
@@ -91,7 +91,7 @@ public class Aggregator {
      * @throws RepositoryException
      */
     private void getRequestedContent() throws PathNotFoundException, RepositoryException {
-        this.requestedPage = this.hierarchyManager.getPage(this.URI);
+        this.requestedPage = this.hierarchyManager.getPage(this.uri);
     }
 
     /**
@@ -100,9 +100,9 @@ public class Aggregator {
      * @throws RepositoryException
      */
     private void getRequestedContent(int type) throws PathNotFoundException, RepositoryException {
-        this.requestedData = this.hierarchyManager.getNodeData(this.URI);
+        this.requestedData = this.hierarchyManager.getNodeData(this.uri);
         try {
-            this.subContentNode = this.hierarchyManager.getContent(this.URI + "_properties");
+            this.subContentNode = this.hierarchyManager.getContent(this.uri + "_properties");
         }
         catch (PathNotFoundException e) {
         }
@@ -114,11 +114,11 @@ public class Aggregator {
     private void parseURI() {
         try {
             int lastIndexOfDot = Path.getURI(this.request).lastIndexOf(".");
-            this.URI = Path.getURI(this.request).substring(0, lastIndexOfDot);
+            this.uri = Path.getURI(this.request).substring(0, lastIndexOfDot);
             this.extension = Path.getURI(this.request).substring(lastIndexOfDot + 1);
         }
         catch (Exception e) {
-            this.URI = Path.getURI(this.request);
+            this.uri = Path.getURI(this.request);
             this.extension = Server.getDefaultExtension();
         }
     }
@@ -132,19 +132,19 @@ public class Aggregator {
         boolean success = true;
         this.hierarchyManager = SessionAccessControl.getHierarchyManager(this.request);
         this.parseURI();
-        if (this.hierarchyManager.isNodeData(this.URI)) {
+        if (this.hierarchyManager.isNodeData(this.uri)) {
             this.getRequestedContent(Aggregator.ATOM);
             this.setRequestReceiver(Aggregator.ATOM);
         }
-        else if (this.hierarchyManager.isPage(this.URI)) {
+        else if (this.hierarchyManager.isPage(this.uri)) {
             this.getRequestedContent();
             this.setRequestReceiver();
         }
         else {
             /* check again, resource might have different name */
-            int lastIndexOfSlash = this.URI.lastIndexOf("/");
+            int lastIndexOfSlash = this.uri.lastIndexOf("/");
             if (lastIndexOfSlash > -1) {
-                this.URI = this.URI.substring(0, lastIndexOfSlash);
+                this.uri = this.uri.substring(0, lastIndexOfSlash);
                 try {
                     this.getRequestedContent(Aggregator.ATOM);
                     this.setRequestReceiver(Aggregator.ATOM);
@@ -217,7 +217,7 @@ public class Aggregator {
             file.setNodeData(this.requestedData);
             this.request.setAttribute(Aggregator.FILE, file);
         }
-        this.request.setAttribute(Aggregator.HANDLE, this.URI);
+        this.request.setAttribute(Aggregator.HANDLE, this.uri);
         this.request.setAttribute(Aggregator.EXTENSION, this.extension);
         this.request.setAttribute(Aggregator.HIERARCHY_MANAGER, this.hierarchyManager);
         this.request.setAttribute(Aggregator.REQUEST_RECEIVER, this.requestReceiver);

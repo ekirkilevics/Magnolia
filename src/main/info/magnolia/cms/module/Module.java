@@ -33,10 +33,10 @@ public interface Module {
      * @see ModuleConfig#getModuleRepository()
      * @see ModuleConfig#getSharedRepositores()
      */
-    public void init(ModuleConfig moduleConfig) throws InvalidConfigException;
+    void init(ModuleConfig moduleConfig) throws InvalidConfigException;
 
     /**
      * At this point module is responsible to release all resources
      */
-    public void destroy();
+    void destroy();
 }

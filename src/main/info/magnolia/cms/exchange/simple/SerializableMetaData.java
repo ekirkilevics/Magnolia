@@ -13,18 +13,21 @@
 package info.magnolia.cms.exchange.simple;
 
 import info.magnolia.cms.core.MetaData;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+
 import org.apache.log4j.Logger;
 
 
 /**
- * Date: Aug 5, 2004 Time: 4:57:42 PM
  * @author Sameer Charles
  * @version 2.0
  */
@@ -39,8 +42,10 @@ public class SerializableMetaData implements Serializable {
 
     private MetaData baseMetaData;
 
-    /* meta properties */
-    private ArrayList metaProperties = new ArrayList();
+    /**
+     * meta properties.
+     */
+    private List metaProperties = new ArrayList();
 
     public SerializableMetaData(MetaData metaData) {
         this.baseMetaData = metaData;
@@ -48,14 +53,15 @@ public class SerializableMetaData implements Serializable {
         this.baseMetaData = null;
     }
 
-    public ArrayList getMetaProperties() {
+    public List getMetaProperties() {
         return this.metaProperties;
     }
 
     private void makeSerializable() {
         PropertyIterator pi = this.baseMetaData.getProperties();
-        if (pi == null)
+        if (pi == null) {
             return;
+        }
         while (pi.hasNext()) {
             try {
                 Property property = (Property) pi.next();

@@ -13,6 +13,7 @@
 package info.magnolia.cms.exchange.simple;
 
 import info.magnolia.exchange.PacketHeader;
+
 import java.util.Enumeration;
 import java.util.Hashtable;
 
@@ -30,8 +31,9 @@ public class PacketHeaderImpl implements PacketHeader {
     }
 
     public void addHeader(String name, String value) throws IllegalArgumentException {
-        if (value == null)
+        if (value == null) {
             throw (new IllegalArgumentException("Null value not allowed"));
+        }
         this.header.put(name, value);
     }
 

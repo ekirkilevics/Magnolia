@@ -14,6 +14,7 @@ package info.magnolia.cms.license;
 
 import java.io.IOException;
 import java.io.InputStream;
+
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -26,10 +27,6 @@ import org.jdom.input.SAXBuilder;
  * @version 1.1
  */
 public final class License {
-
-    private static Logger log = Logger.getLogger(License.class);
-
-    private static final String LICENSE_FILE_PATH = "info/magnolia/cms/license/license.xml";
 
     public static final String VERSION_NUMBER = "VersionNumber";
 
@@ -45,9 +42,16 @@ public final class License {
 
     public static final String VERSION_PAGE_HANDLE = "VersionPageHandle";
 
+    private static final String LICENSE_FILE_PATH = "info/magnolia/cms/license/license.xml";
+
     private static final String ELEMENT_META = "Meta";
 
     private static final String NOT_DEFINED = "Not Defined";
+
+    /**
+     * Logger.
+     */
+    private static Logger log = Logger.getLogger(License.class);
 
     private static License license = new License();
 

@@ -18,11 +18,13 @@ import info.magnolia.exchange.ChannelInitializationException;
 import info.magnolia.exchange.ChannelOverflowException;
 import info.magnolia.exchange.Packet;
 import info.magnolia.exchange.PacketHeader;
+
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Map;
 
 
 /**
@@ -36,7 +38,7 @@ public class ChannelImpl implements Channel {
 
     private String authString;
 
-    private Hashtable queue;
+    private Map queue;
 
     public ChannelImpl(String id, URL destination, String authString) {
         this.id = id;

@@ -15,8 +15,10 @@ package info.magnolia.cms.exchange.ice;
 import info.magnolia.exchange.Channel;
 import info.magnolia.exchange.ChannelException;
 import info.magnolia.exchange.ChannelInitializationException;
+
 import java.net.URL;
 import java.util.Hashtable;
+import java.util.Map;
 
 
 /**
@@ -24,13 +26,11 @@ import java.util.Hashtable;
  */
 public class ChannelFactory {
 
-    private static Hashtable channels = new Hashtable();
+    private static Map channels = new Hashtable();
 
     /**
-     * <p>
-     * Returns an already open channel associated with this ID. <br>
-     * Initailizes and opens a new channel if none exist in the factory with the specified ID.
-     * </p>
+     * Returns an already open channel associated with this ID. Initializes and opens a new channel if none exist in the
+     * factory with the specified ID.
      * @param id
      * @param destination , destination URL to with this chgannel is connected
      * @param authString , authorization header for the destination URL
@@ -68,8 +68,9 @@ public class ChannelFactory {
      */
     public boolean closeChannel(String id) {
         Channel channel = (Channel) channels.get(id);
-        if (channel == null)
+        if (channel == null) {
             return true;
+        }
         try {
             channel.flush();
             channel.close();

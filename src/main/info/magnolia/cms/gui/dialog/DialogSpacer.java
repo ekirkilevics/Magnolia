@@ -32,10 +32,12 @@ public class DialogSpacer {
     public String getHtml(int height, int width) {
         String h = "";
         String w = "";
-        if (height != 0)
+        if (height != 0) {
             h = "height:" + height + ";";
-        if (width != 0)
+        }
+        if (width != 0) {
             w = "width:" + width + ";";
+        }
         return ("<div class=\"" + DialogSuper.CSSCLASS_TINYVSPACE + "\" style=\"" + w + "" + h + "\"></div>");
     }
 }

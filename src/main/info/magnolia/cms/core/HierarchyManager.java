@@ -157,14 +157,16 @@ public class HierarchyManager {
     }
 
     private String getNodePath(String path, String label) {
-        if (path == null || (path.equals("")) || (path.equals("/")))
+        if (path == null || (path.equals("")) || (path.equals("/"))) {
             return label;
+        }
         return getNodePath(path + "/" + label);
     }
 
     private String getNodePath(String path) {
-        if (path.startsWith("/"))
+        if (path.startsWith("/")) {
             path = path.replaceFirst("/", "");
+        }
         return path;
     }
 
@@ -227,8 +229,10 @@ public class HierarchyManager {
      * @throws javax.jcr.RepositoryException
      */
     public Content getContent(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        if (path.equals("/")) // todo remove this.. caller should take care of this
+        // todo remove this.. caller should take care of this
+        if (path.equals("/")) {
             return this.getRootPage();
+        }
         Content content = (new Content(this.startPage, getNodePath(path), this.accessManager));
         return content;
     }
@@ -281,8 +285,9 @@ public class HierarchyManager {
     public Content getPage(String path, String templateName) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
         Content page = getPage(path);
-        if (page.getTemplate().equals(templateName))
+        if (page.getTemplate().equals(templateName)) {
             return page;
+        }
         Content pageToBeFound = null;
         try {
             if (page.hasChildren()) {
@@ -293,10 +298,12 @@ public class HierarchyManager {
                     if (child.getTemplate().equals(templateName)) {
                         return child;
                     }
-                    if (child.hasChildren())
+                    if (child.hasChildren()) {
                         pageToBeFound = getPage(child.getHandle(), templateName);
-                    if (pageToBeFound != null)
+                    }
+                    if (pageToBeFound != null) {
                         return pageToBeFound;
+                    }
                 }
             }
         }

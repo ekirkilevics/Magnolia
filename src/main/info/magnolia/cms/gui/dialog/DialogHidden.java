@@ -44,8 +44,9 @@ public class DialogHidden extends DialogBox {
 
     public void drawHtml(JspWriter out) throws IOException {
         Hidden control = new Hidden(this.getName(), this.getValue());
-        if (this.getConfigValue("saveInfo").equals("false"))
+        if (this.getConfigValue("saveInfo").equals("false")) {
             control.setSaveInfo(false);
+        }
 
         out.println(control.getHtml());
     }

@@ -38,7 +38,7 @@ public final class MIMEMapping {
 
     private static final String START_PAGE = "server";
 
-    private static Iterator MIMEList;
+    private static Iterator mimeList;
 
     private static Map cachedContent = new Hashtable();
 
@@ -57,7 +57,7 @@ public final class MIMEMapping {
         try {
             log.info("Config : loading MIMEMapping");
             Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getPage(START_PAGE);
-            MIMEMapping.MIMEList = startPage.getContentNode("MIMEMapping").getChildren().iterator();
+            MIMEMapping.mimeList = startPage.getContentNode("MIMEMapping").getChildren().iterator();
             MIMEMapping.cacheContent();
             log.info("Config : MIMEMapping loaded");
         }
@@ -76,8 +76,8 @@ public final class MIMEMapping {
      * Cache all MIME types configured.
      */
     private static void cacheContent() {
-        while (MIMEMapping.MIMEList.hasNext()) {
-            Content c = (Content) MIMEMapping.MIMEList.next();
+        while (MIMEMapping.mimeList.hasNext()) {
+            Content c = (Content) MIMEMapping.mimeList.next();
             try {
                 MIMEMapping.cachedContent.put(c.getNodeData("extension").getString(), c
                     .getNodeData("mime-type")
@@ -87,7 +87,7 @@ public final class MIMEMapping {
                 log.error("Failed to cache MIMEMapping");
             }
         }
-        MIMEMapping.MIMEList = null;
+        MIMEMapping.mimeList = null;
     }
 
     /**

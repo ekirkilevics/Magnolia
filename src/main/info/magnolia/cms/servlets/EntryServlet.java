@@ -54,6 +54,8 @@ import org.apache.log4j.Logger;
  */
 public class EntryServlet extends HttpServlet {
 
+    public static final String INTERCEPT = "mgnlIntercept";
+
     /**
      * Stable serialVersionUID.
      */
@@ -66,10 +68,11 @@ public class EntryServlet extends HttpServlet {
 
     private static final String REQUEST_INTERCEPTOR = "/RequestInterceptor";
 
-    public static final String INTERCEPT = "mgnlIntercept";
-
     private String uri;
 
+    /**
+     * unused?
+     */
     private String extension;
 
     /**
@@ -96,13 +99,15 @@ public class EntryServlet extends HttpServlet {
             // TranslationEngine.findPreferredLanguage(req);
             this.setURI(req);
             if (isAllowed(req, res)) {
-                if (redirect(req, res))
+                if (redirect(req, res)) {
                     return;
+                }
                 intercept(req, res);
                 /* try to stream from cache first */
                 if (info.magnolia.cms.beans.runtime.Cache.isCached(req)) {
-                    if (CacheHandler.streamFromCache(req, res))
+                    if (CacheHandler.streamFromCache(req, res)) {
                         return; /* if success return */
+                    }
                 }
                 /* aggregate content */
                 Aggregator aggregator = new Aggregator(req, res);
@@ -247,7 +252,7 @@ public class EntryServlet extends HttpServlet {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 

@@ -17,7 +17,9 @@ import info.magnolia.cms.gui.control.Bar;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
+
 import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 
@@ -55,12 +57,15 @@ public class BarEdit extends Bar {
      * </p>
      */
     public void placeDefaultButtons() {
-        if (this.getButtonMove() != null)
+        if (this.getButtonMove() != null) {
             this.getButtonsLeft().add(0, this.getButtonMove());
-        if (this.getButtonEdit() != null)
+        }
+        if (this.getButtonEdit() != null) {
             this.getButtonsLeft().add(0, this.getButtonEdit());
-        if (this.getButtonDelete() != null)
+        }
+        if (this.getButtonDelete() != null) {
             this.getButtonsRight().add(this.getButtonsRight().size(), this.getButtonDelete());
+        }
     }
 
     public Button getButtonEdit() {

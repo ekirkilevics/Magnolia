@@ -16,8 +16,6 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 
-import java.io.IOException;
-
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,7 +27,7 @@ import org.apache.log4j.Logger;
  * @author Sameer Charles
  * @version 2.0
  */
-public class Authenticator {
+public final class Authenticator {
 
     /**
      * Logger.
@@ -43,17 +41,22 @@ public class Authenticator {
     private static final String ATTRIBUTE_USER_NODE = "mgnlUserNode";
 
     /**
-     * <p>
-     * Authenticate authorization request with the usersRepository
-     * </p>
+     * Utility class, don't instantiate.
+     */
+    private Authenticator() {
+        // unused
+    }
+
+    /**
+     * Authenticate authorization request with the usersRepository.
      * @param req as received by the servlet engine
      * @return boolean
-     * @throws IOException
      */
-    public static boolean authenticate(HttpServletRequest req) throws IOException {
+    public static boolean authenticate(HttpServletRequest req) {
         String credentials = req.getHeader("Authorization");
-        if (credentials == null)
+        if (credentials == null) {
             return false;
+        }
         credentials = getDecodedCredentials(credentials.substring(6).trim());
         Authenticator.setUserId(credentials, req);
         Authenticator.setPassword(credentials, req);
@@ -95,7 +98,7 @@ public class Authenticator {
      * @param credentials to be decoded
      * @return String decoded credentials <b>name:password </b>
      */
-    private static String getDecodedCredentials(String credentials) throws IOException {
+    private static String getDecodedCredentials(String credentials) {
         return (new String(Base64.decodeBase64(credentials.getBytes())));
     }
 
@@ -142,8 +145,9 @@ public class Authenticator {
      */
     public static char[] getPassword(HttpServletRequest request) {
         Object pswd = request.getSession().getAttribute(ATTRIBUTE_PSWD);
-        if (pswd == null)
+        if (pswd == null) {
             return "".toCharArray();
+        }
         return ((String) pswd).toCharArray();
     }
 

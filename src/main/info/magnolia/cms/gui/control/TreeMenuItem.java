@@ -39,9 +39,7 @@ public class TreeMenuItem extends ControlSuper {
     }
 
     /**
-     * <p>
-     * set the name of the javascript tree object
-     * </p>
+     * Set the name of the javascript tree object.
      * @param variableName
      */
     public void setJavascriptTree(String variableName) {
@@ -53,9 +51,7 @@ public class TreeMenuItem extends ControlSuper {
     }
 
     /**
-     * <p>
-     * to enable/disable menu items; the tree object will be passed to the method
-     * </p>
+     * To enable/disable menu items; the tree object will be passed to the method.
      * @param methodName (without brackets! e.g "checkIfWriteAccess" not "checkIfWriteAccess();"
      */
     public void addJavascriptCondition(String methodName) {

@@ -43,7 +43,7 @@ import org.apache.log4j.Logger;
 /**
  * Initialise all configured modules.
  */
-public class ModuleLoader {
+public final class ModuleLoader {
 
     /**
      * Logger.
@@ -155,8 +155,9 @@ public class ModuleLoader {
     }
 
     private static HierarchyManager getHierarchyManager(String repositoryName) throws RepositoryException {
-        if (repositoryName == null || (repositoryName.equals("")))
+        if (repositoryName == null || (repositoryName.equals(""))) {
             return null;
+        }
         Session moduleRepositoryTicket = ContentRepository.getRepository(repositoryName).login(simpleCredentials, null);
         List acl = new ArrayList();
         Pattern p = Pattern.compile(RegexWildcardPattern.getMultipleCharPattern());

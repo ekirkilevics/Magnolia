@@ -16,9 +16,11 @@ import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.GZIPOutputStream;
+
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
@@ -27,6 +29,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.log4j.Logger;
 
 
@@ -85,8 +88,9 @@ public class ResourceDispatcher extends HttpServlet {
      */
     private boolean canCompress(HttpServletRequest req) {
         String encoding = req.getHeader("Accept-Encoding");
-        if (encoding != null)
+        if (encoding != null) {
             return (encoding.toLowerCase().indexOf("gzip") > -1);
+        }
         return false;
     }
 

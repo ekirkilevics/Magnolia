@@ -18,7 +18,9 @@ import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
+
 import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 
@@ -37,13 +39,13 @@ public class BarMain extends Bar {
 
     private Button buttonSiteAdmin = new Button();
 
-    private int top = 0;
+    private int top;
 
-    private int left = 0;
+    private int left;
 
     private String width = "100%";
 
-    boolean overlay = true;
+    private boolean overlay = true;
 
     public BarMain(HttpServletRequest request) {
         this.setRequest(request);
@@ -77,8 +79,9 @@ public class BarMain extends Bar {
     public void placeDefaultButtons() {
         this.getButtonsLeft().add(0, this.getButtonSiteAdmin());
         this.getButtonsLeft().add(0, this.getButtonPreview());
-        if (this.getParagraph() != null)
+        if (this.getParagraph() != null) {
             this.getButtonsRight().add(this.getButtonsRight().size(), this.getButtonProperties());
+        }
     }
 
     public Button getButtonProperties() {
@@ -230,7 +233,7 @@ public class BarMain extends Bar {
                 if (prev == null) {
                     // is edit mode
                     this.setSmall(false);
-                    if (this.getOverlay())
+                    if (this.getOverlay()) {
                         out.println("<div style=\"position:absolute;top:"
                             + top
                             + "px;left:"
@@ -238,9 +241,11 @@ public class BarMain extends Bar {
                             + "px;width:"
                             + this.getWidth()
                             + ";z-index:900;\">");
+                    }
                     out.println(this.getHtml());
-                    if (this.getOverlay())
+                    if (this.getOverlay()) {
                         out.println("</div>");
+                    }
                 }
                 else {
                     // is in preview mode

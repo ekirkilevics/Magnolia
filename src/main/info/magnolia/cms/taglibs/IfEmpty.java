@@ -15,7 +15,6 @@ package info.magnolia.cms.taglibs;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.Resource;
 
 import javax.jcr.RepositoryException;
@@ -99,12 +98,9 @@ public class IfEmpty extends BodyTagSupport {
                 return EVAL_BODY_INCLUDE;
             }
             if (this.contentNode != null) {
-                try {
-                    this.nodeData = this.contentNode.getNodeData(this.nodeDataName);
-                }
-                catch (AccessDeniedException e) {
-                    log.error(e.getMessage());
-                }
+
+                this.nodeData = this.contentNode.getNodeData(this.nodeDataName);
+
                 if ((this.nodeData == null) || !this.nodeData.isExist() || this.nodeData.getString().equals("")) {
                     return EVAL_BODY_INCLUDE;
                 }
@@ -126,12 +122,9 @@ public class IfEmpty extends BodyTagSupport {
                 return EVAL_BODY_INCLUDE;
             }
             if (this.contentNode != null) {
-                try {
-                    this.nodeData = this.contentNode.getNodeData(this.nodeDataName);
-                }
-                catch (AccessDeniedException e) {
-                    log.error(e.getMessage());
-                }
+
+                this.nodeData = this.contentNode.getNodeData(this.nodeDataName);
+
                 if ((this.nodeData == null) || !this.nodeData.isExist() || this.nodeData.getString().equals("")) {
                     return EVAL_BODY_INCLUDE;
                 }

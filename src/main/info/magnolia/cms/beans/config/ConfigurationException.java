@@ -59,13 +59,11 @@ public class ConfigurationException extends Exception {
         if (this.root == null) {
             return message;
         }
-        else {
-            String rootCause = this.root.getMessage();
-            if (rootCause == null) {
-                return message;
-            }
-            return (message + ":" + rootCause);
+        String rootCause = this.root.getMessage();
+        if (rootCause == null) {
+            return message;
         }
+        return (message + ":" + rootCause);
     }
 
     public void printStackTrace() {

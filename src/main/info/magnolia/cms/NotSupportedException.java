@@ -61,10 +61,11 @@ public class NotSupportedException extends Exception {
             return message;
         }
         String rootCause = this.root.getMessage();
-        if (rootCause == null)
+        if (rootCause == null) {
             return message;
-        else
-            return (message + ":" + rootCause);
+        }
+
+        return (message + ":" + rootCause);
     }
 
     public void printStackTrace() {

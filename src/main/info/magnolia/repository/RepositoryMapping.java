@@ -12,7 +12,7 @@ public class RepositoryMapping {
 
     private String name;
 
-    private String ID;
+    private String id;
 
     private String provider;
 
@@ -32,11 +32,11 @@ public class RepositoryMapping {
     }
 
     public String getID() {
-        return ID;
+        return id;
     }
 
-    public void setID(String ID) {
-        this.ID = ID;
+    public void setID(String id) {
+        this.id = id;
     }
 
     public String getProvider() {

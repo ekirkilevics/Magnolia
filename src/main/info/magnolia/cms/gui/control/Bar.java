@@ -14,6 +14,7 @@ package info.magnolia.cms.gui.control;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -22,13 +23,13 @@ import java.util.Iterator;
  */
 public class Bar extends ControlSuper {
 
-    private ArrayList buttonsLeft = new ArrayList();
+    private List buttonsLeft = new ArrayList();
 
-    private ArrayList buttonsRight = new ArrayList();
+    private List buttonsRight = new ArrayList();
 
     private boolean small = true;
 
-    public void setButtonsLeft(ArrayList buttons) {
+    public void setButtonsLeft(List buttons) {
         this.buttonsLeft = buttons;
     }
 
@@ -36,11 +37,11 @@ public class Bar extends ControlSuper {
         this.getButtonsLeft().add(button);
     }
 
-    public ArrayList getButtonsLeft() {
+    public List getButtonsLeft() {
         return this.buttonsLeft;
     }
 
-    public void setButtonsRight(ArrayList buttons) {
+    public void setButtonsRight(List buttons) {
         this.buttonsRight = buttons;
     }
 
@@ -48,7 +49,7 @@ public class Bar extends ControlSuper {
         this.getButtonsRight().add(button);
     }
 
-    public ArrayList getButtonsRight() {
+    public List getButtonsRight() {
         return this.buttonsRight;
     }
 
@@ -63,23 +64,27 @@ public class Bar extends ControlSuper {
     public String getHtml() {
         StringBuffer html = new StringBuffer();
         String cssClass;
-        if (this.getSmall())
+        if (this.getSmall()) {
             cssClass = CSSCLASS_CONTROLBARSMALL;
-        else
+        }
+        else {
             cssClass = CSSCLASS_CONTROLBAR;
+        }
         html.append("<table");
         html.append(" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"");
         html.append(this.getHtmlEvents());
         html.append(" class=\"" + cssClass + "\"");
-        if (this.getId() != null)
+        if (this.getId() != null) {
             html.append(" id=\"" + this.getId() + "\"");
+        }
         html.append(">");
         html.append("<tr><td class=\"" + cssClass + "\">");
         Iterator itLeft = this.getButtonsLeft().iterator();
         while (itLeft.hasNext()) {
             Button b = (Button) itLeft.next();
-            if (this.getSmall())
+            if (this.getSmall()) {
                 b.setSmall(true);
+            }
             b.setCssStyles("background", "transparent");
             b.setSaveInfo(false);
             html.append(b.getHtml() + "\n");
@@ -88,8 +93,9 @@ public class Bar extends ControlSuper {
         Iterator itRight = this.getButtonsRight().iterator();
         while (itRight.hasNext()) {
             Button b = (Button) itRight.next();
-            if (this.getSmall())
+            if (this.getSmall()) {
                 b.setSmall(true);
+            }
             b.setCssStyles("background", "transparent");
             b.setSaveInfo(false);
             html.append(b.getHtml() + "\n");

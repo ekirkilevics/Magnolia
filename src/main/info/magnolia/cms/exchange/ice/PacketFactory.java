@@ -16,7 +16,9 @@ import info.magnolia.exchange.Packet;
 import info.magnolia.exchange.PacketBody;
 import info.magnolia.exchange.PacketHeader;
 import info.magnolia.exchange.PacketIOException;
+
 import java.io.InputStream;
+
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 
@@ -24,14 +26,19 @@ import org.jdom.Document;
 /**
  * @author Sameer Charles
  */
-public class PacketFactory {
+public final class PacketFactory {
 
     private static Logger log = Logger.getLogger(PacketFactory.class);
 
     /**
-     * <p>
-     * create Packet using JDOM Document
-     * </p>
+     * Utility class, don't instantiate.
+     */
+    private PacketFactory() {
+        // unused
+    }
+
+    /**
+     * Create Packet using JDOM Document.
      * @param document
      */
     public static Packet getPacket(Document document) {

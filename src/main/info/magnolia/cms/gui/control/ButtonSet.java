@@ -29,12 +29,6 @@ public class ButtonSet extends ControlSuper {
 
     private int buttonType = BUTTONTYPE_RADIO;
 
-    private String htmlPre = "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">"; // html before buttonSet
-
-    private String htmlInter = "";
-
-    private String htmlPost = "</table>"; // html after buttonSet
-
     private String buttonHtmlPre; // html before each button
 
     private String buttonHtmlInter; // html between each button and label (not available for push button)
@@ -167,13 +161,9 @@ public class ButtonSet extends ControlSuper {
             if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON) {
                 return this.htmlInterPush;
             }
-            else {
-                return this.htmlInterDivided;
-            }
+            return this.htmlInterDivided;
         }
-        else {
-            return super.getHtmlInter();
-        }
+        return super.getHtmlInter();
     }
 
     public String getHtmlPost() {
@@ -181,13 +171,10 @@ public class ButtonSet extends ControlSuper {
             if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON) {
                 return this.htmlPostPush;
             }
-            else {
-                return this.htmlPostDivided;
-            }
+            return this.htmlPostDivided;
         }
-        else {
-            return super.getHtmlPost();
-        }
+        return super.getHtmlPost();
+
     }
 
     public void setButtonType(int i) {

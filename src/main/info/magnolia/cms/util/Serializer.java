@@ -13,13 +13,21 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
+
 import java.io.OutputStream;
 
 
 /**
  * @author Sameer Charles
  */
-public class Serializer {
+public final class Serializer {
+
+    /**
+     * Utility class, don't instantiate.
+     */
+    private Serializer() {
+        // unused
+    }
 
     public static void serialize(String path, int depth, OutputStream output) {
     }

@@ -36,10 +36,12 @@ public class DialogLine {
     public String getHtml(int colspanBeforeLine, int colspanLine, int colspanAfterLine) {
         String pre = "";
         String post = "";
-        if (colspanBeforeLine != 0)
+        if (colspanBeforeLine != 0) {
             pre = "<td colspan=\"" + colspanBeforeLine + "\"></td>";
-        if (colspanAfterLine != 0)
+        }
+        if (colspanAfterLine != 0) {
             pre = "<td colspan=\"" + colspanAfterLine + "\"></td>";
+        }
         return "<tr>"
             + pre
             + "<td colspan=\""

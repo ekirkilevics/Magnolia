@@ -44,8 +44,9 @@ public class DialogStatic extends DialogBox {
     public void drawHtml(JspWriter out) throws IOException {
         this.drawHtmlPre(out);
         String value = this.getConfigValue("value", null);
-        if (value == null)
+        if (value == null) {
             value = this.getValue();
+        }
         out.println(value);
         this.drawHtmlPost(out);
     }

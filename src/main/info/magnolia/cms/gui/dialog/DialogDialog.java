@@ -15,12 +15,14 @@ package info.magnolia.cms.gui.dialog;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.ButtonSet;
+import info.magnolia.cms.gui.control.ControlSuper;
 import info.magnolia.cms.gui.control.Hidden;
 import info.magnolia.cms.gui.misc.Sources;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
@@ -36,25 +38,26 @@ import org.apache.log4j.Logger;
  */
 public class DialogDialog extends DialogSuper {
 
+    public static final String DIALOGSIZE_NORMAL_WIDTH = "800";
+
+    public static final String DIALOGSIZE_NORMAL_HEIGHT = "650";
+
+    public static final String DIALOGSIZE_SLIM_WIDTH = "500";
+
+    public static final String DIALOGSIZE_SLIM_HEIGHT = "600";
+
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(DialogDialog.class);
 
-    public String callbackJavascript = "opener.document.location.reload();window.close();";
+    private String callbackJavascript = "opener.document.location.reload();window.close();";
 
-    public String action;
+    private List javascriptSources = new ArrayList();
 
-    public boolean doSave = true; // todo: leftover?
+    private List cssSources = new ArrayList();
 
-    public String DIALOGSIZE_NORMAL_WIDTH = "800";
-
-    public String DIALOGSIZE_NORMAL_HEIGHT = "650";
-
-    public String DIALOGSIZE_SLIM_WIDTH = "500";
-
-    public String DIALOGSIZE_SLIM_HEIGHT = "600";
-
-    public ArrayList javascriptSources = new ArrayList();
-
-    public ArrayList cssSources = new ArrayList();
+    private String action;
 
     public DialogDialog(Content configNode, Content websiteNode, HttpServletRequest request, PageContext pageContext)
         throws RepositoryException {
@@ -77,17 +80,18 @@ public class DialogDialog extends DialogSuper {
     }
 
     public String getAction() {
-        if (this.action == null)
+        if (this.action == null) {
             return this.getRequest().getRequestURI();
-        else
-            return this.action;
+        }
+
+        return this.action;
     }
 
     public void setJavascriptSources(String s) {
         this.getJavascriptSources().add(s);
     }
 
-    public ArrayList getJavascriptSources() {
+    public List getJavascriptSources() {
         return this.javascriptSources;
     }
 
@@ -102,7 +106,7 @@ public class DialogDialog extends DialogSuper {
         this.getCssSources().add(s);
     }
 
-    public ArrayList getCssSources() {
+    public List getCssSources() {
         return this.cssSources;
     }
 
@@ -140,9 +144,9 @@ public class DialogDialog extends DialogSuper {
         out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>"); // kupu
         out.println("<script type=\"text/javascript\">");
         out.println("window.resizeTo("
-            + this.getConfigValue("width", this.DIALOGSIZE_NORMAL_WIDTH)
+            + this.getConfigValue("width", DIALOGSIZE_NORMAL_WIDTH)
             + ","
-            + this.getConfigValue("height", this.DIALOGSIZE_NORMAL_HEIGHT)
+            + this.getConfigValue("height", DIALOGSIZE_NORMAL_HEIGHT)
             + ");");
         out.println("</script>");
         out.println("<title>" + this.getConfigValue("label", "Magnolia Edit Dialog") + "</title>");
@@ -190,11 +194,11 @@ public class DialogDialog extends DialogSuper {
             + "\">");
         if (this.getOptions().size() != 0) {
             ButtonSet control = new ButtonSet();
-            ((Button) this.getOptions().get(0)).setState(Button.BUTTONSTATE_PUSHED);
+            ((Button) this.getOptions().get(0)).setState(ControlSuper.BUTTONSTATE_PUSHED);
             control.setButtons(this.getOptions());
             control.setName(this.getId());
             control.setSaveInfo(false);
-            control.setButtonType(ButtonSet.BUTTONTYPE_PUSHBUTTON);
+            control.setButtonType(ControlSuper.BUTTONTYPE_PUSHBUTTON);
             out.println(control.getHtml());
         }
         out.println("</td></tr></table></div>");

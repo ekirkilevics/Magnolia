@@ -13,11 +13,13 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.gui.inline.BarEdit;
-import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.Resource;
+
 import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.TagSupport;
+
 import org.apache.commons.lang.StringUtils;
 
 
@@ -144,12 +146,9 @@ public class EditBar extends TagSupport {
      */
     private String getParagraph() {
         if (this.paragraph == null) {
-            try {
-                return Resource.getLocalContentNode(this.request).getNodeData("paragraph").getString();
-            }
-            catch (AccessDeniedException e) {
-                return "";
-            }
+
+            return Resource.getLocalContentNode(this.request).getNodeData("paragraph").getString();
+
         }
         return this.paragraph;
     }

@@ -106,12 +106,10 @@ public class Out extends TagSupport {
                     // e.g. <cms:out nodeDataName="title" contentNodeCollectionName="mainPars"/>
                     return SKIP_BODY;
                 }
-                else {
-                    // e.g. <cms:out nodeDataName="title"/>
-                    // e.g. <cms:out nodeDataName="title" contentNodeName=""/>
-                    // e.g. <cms:out nodeDataName="title" contentNodeCollectionName=""/>
-                    this.setContentNode(actpage);
-                }
+                // e.g. <cms:out nodeDataName="title"/>
+                // e.g. <cms:out nodeDataName="title" contentNodeName=""/>
+                // e.g. <cms:out nodeDataName="title" contentNodeCollectionName=""/>
+                this.setContentNode(actpage);
             }
             else {
                 // inside collection iterator
@@ -344,13 +342,9 @@ public class Out extends TagSupport {
      */
     private void display() {
         try {
-            /*
-             * //@todo //check if mutliple values (checkboxes) -> not nodeData but contentNode try { int i=0; Iterator
-             * it=this.contentNode.getContentNode(this.nodeDataName).getChildren(ChildrenCollector.PROPERTY).iterator();
-             * while (it.hasNext()) { System.out.println(i++); NodeData data=(NodeData) it.next();
-             * System.out.println("GN:"+data.getName()); //System.out.println("TYPE:"+data.getType()); } } catch
-             * (ElementNotFoundException e) {
-             */
+
+            // @todo //check if mutliple values (checkboxes) -> not nodeData but contentNode
+
             // if (this.property!=null) this.nodeData =
             // this.contentNode.getContentNode(this.nodeDataName+"_properties").getNodeData(this.property);
             // else this.nodeData = this.getContentNode().getNodeData(this.nodeDataName);

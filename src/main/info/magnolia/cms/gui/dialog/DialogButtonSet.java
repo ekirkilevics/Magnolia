@@ -16,8 +16,8 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.ButtonSet;
+import info.magnolia.cms.gui.control.ControlSuper;
 import info.magnolia.cms.gui.control.Hidden;
-import info.magnolia.cms.security.AccessDeniedException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class DialogButtonSet extends DialogBox {
 
     private static Logger log = Logger.getLogger(DialogButtonSet.class);
 
-    private int buttonType = ButtonSet.BUTTONTYPE_RADIO;
+    private int buttonType = ControlSuper.BUTTONTYPE_RADIO;
 
     public DialogButtonSet(ContentNode configNode, Content websiteNode) throws RepositoryException {
         super(configNode, websiteNode);
@@ -60,8 +60,9 @@ public class DialogButtonSet extends DialogBox {
                 Button button = new Button(this.getName(), value);
                 // if (n.getNodeData("label").isExist()) button.setLabel(n.getNodeData("label").getString());
                 button.setLabel(n.getNodeData("label").getString());
-                if (setDefaultSelected && n.getNodeData("selected").getBoolean() == true)
-                    button.setState(Button.BUTTONSTATE_PUSHED);
+                if (setDefaultSelected && n.getNodeData("selected").getBoolean()) {
+                    button.setState(ControlSuper.BUTTONSTATE_PUSHED);
+                }
                 options.add(button);
             }
         }
@@ -74,20 +75,13 @@ public class DialogButtonSet extends DialogBox {
         // checkboxSwitch -> only one option, value always true/false
         List options = new ArrayList();
         Button button = new Button(this.getName(), "");
-        try {
-            button.setLabel(configNode.getNodeData("buttonLabel").getString());
+
+        button.setLabel(configNode.getNodeData("buttonLabel").getString());
+
+        if (configNode.getNodeData("selected").getBoolean()) {
+            button.setState(ControlSuper.BUTTONSTATE_PUSHED);
         }
-        catch (AccessDeniedException e) {
-            log.error(e.getMessage());
-            button.setLabel("");
-        }
-        try {
-            if (configNode.getNodeData("selected").getBoolean() == true)
-                button.setState(Button.BUTTONSTATE_PUSHED);
-        }
-        catch (AccessDeniedException e) {
-            log.error(e.getMessage());
-        }
+
         button.setValue("true");
         button.setOnclick("mgnlDialogShiftCheckboxSwitch('" + this.getName() + "');");
         options.add(button);
@@ -115,11 +109,10 @@ public class DialogButtonSet extends DialogBox {
         ButtonSet control;
         if (this.getConfigValue("valueType").equals("multiple")) {
             // checkbox
-            List l = this.getValues();
             control = new ButtonSet(this.getName(), this.getValues());
-            control.setValueType(ButtonSet.VALUETYPE_MULTIPLE);
+            control.setValueType(ControlSuper.VALUETYPE_MULTIPLE);
         }
-        else if (this.getButtonType() == ButtonSet.BUTTONTYPE_CHECKBOX) {
+        else if (this.getButtonType() == ControlSuper.BUTTONTYPE_CHECKBOX) {
             // checkboxSwitch
             control = new ButtonSet(this.getName() + "_SWITCH", this.getValue());
         }
@@ -129,8 +122,9 @@ public class DialogButtonSet extends DialogBox {
         }
         control.setButtonType(this.getButtonType());
         control.setCssClass(CSSCLASS_BUTTONSETBUTTON);
-        if (this.getConfigValue("saveInfo").equals("false"))
+        if (this.getConfigValue("saveInfo").equals("false")) {
             control.setSaveInfo(false);
+        }
         control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING));
         String width = this.getConfigValue("width", null);
         control.setButtonHtmlPre("<tr><td class=\"" + CSSCLASS_BUTTONSETBUTTON + "\">");
@@ -145,9 +139,10 @@ public class DialogButtonSet extends DialogBox {
             int itemsPerCol = (int) Math.ceil(this.getOptions().size() / ((double) cols));
             for (int i = 0; i < this.getOptions().size(); i++) {
                 Button b = (Button) this.getOptions().get(i);
-                if (item == 1)
+                if (item == 1) {
                     b.setHtmlPre("<td><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">"
                         + control.getButtonHtmlPre());
+                }
                 if (item == itemsPerCol) {
                     b.setHtmlPost(control.getButtonHtmlPost()
                         + "</table></td><td class=\""
@@ -155,26 +150,30 @@ public class DialogButtonSet extends DialogBox {
                         + "\"></td>");
                     item = 1;
                 }
-                else
+                else {
                     item++;
+                }
             }
             // very last button: close table
             ((Button) this.getOptions().get(this.getOptions().size() - 1)).setHtmlPost(control.getButtonHtmlPost()
                 + "</table>");
         }
-        if (width != null)
+        if (width != null) {
             control.setHtmlPre("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"" + width + "\">");
+        }
         control.setButtons(this.getOptions());
         out.println(control.getHtml());
-        if (control.getButtonType() == ButtonSet.BUTTONTYPE_CHECKBOX
-            && control.getValueType() != ButtonSet.VALUETYPE_MULTIPLE) {
+        if (control.getButtonType() == ControlSuper.BUTTONTYPE_CHECKBOX
+            && control.getValueType() != ControlSuper.VALUETYPE_MULTIPLE) {
             // checkboxSwitch: value is stored in a hidden field (allows default selecting)
             String value = this.getValue();
             if (value.equals("")) {
-                if (this.getConfigValue("selected").equals("true"))
+                if (this.getConfigValue("selected").equals("true")) {
                     value = "true";
-                else
+                }
+                else {
                     value = "false";
+                }
             }
             out.println(new Hidden(this.getName(), value).getHtml());
         }

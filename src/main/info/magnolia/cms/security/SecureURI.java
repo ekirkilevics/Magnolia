@@ -16,14 +16,17 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.regex.RegexWildcardPattern;
+
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.regex.Pattern;
+
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 
 
@@ -31,17 +34,21 @@ import org.apache.log4j.Logger;
  * User: Sameer Charles Date: Mar 22, 2004 Time: 10:55:12 AM
  * @author Sameer Charles
  */
-public class SecureURI {
+public final class SecureURI {
 
     private static final String RESTRICTED_ACCESS_NODE = "magnoliaRestrictedAccess";
 
     private static Logger log = Logger.getLogger(SecureURI.class);
 
-    private static Hashtable cachedContent;
+    private static Map cachedContent;
 
     private static HierarchyManager hierarchyManager;
 
-    public SecureURI() {
+    /**
+     * Utility class, don't instantiate.
+     */
+    private SecureURI() {
+        // unused
     }
 
     public static void init() {
@@ -57,7 +64,7 @@ public class SecureURI {
         }
     }
 
-    public static void reload() throws PathNotFoundException, RepositoryException {
+    public static void reload() {
         init();
     }
 
@@ -86,7 +93,7 @@ public class SecureURI {
     /**
      * @param handle
      */
-    private synchronized static void addToList(String handle) {
+    private static synchronized void addToList(String handle) {
         String stringPattern = RegexWildcardPattern.getEncodedString(handle);
         Pattern pattern1 = Pattern.compile(stringPattern);
         SecureURI.cachedContent.put(handle, pattern1);
@@ -95,7 +102,7 @@ public class SecureURI {
     /**
      * @param handle
      */
-    private synchronized static void deleteFromList(String handle) {
+    private static synchronized void deleteFromList(String handle) {
         SecureURI.cachedContent.remove(handle);
     }
 
@@ -113,8 +120,9 @@ public class SecureURI {
         try {
             HierarchyManager hm = SessionAccessControl.getHierarchyManager(request);
             Content page = hm.getPage(handle);
-            if (page == null)
+            if (page == null) {
                 return;
+            }
             if (page.getNodeData(RESTRICTED_ACCESS_NODE).getBoolean()) {
                 SecureURI.addToList(handle);
                 SecureURI.addToList(handle + "/*");
@@ -136,11 +144,12 @@ public class SecureURI {
      * @param uri
      */
     public static boolean isProtected(String uri) {
-        Enumeration e = SecureURI.cachedContent.keys();
-        while (e.hasMoreElements()) {
-            Pattern p = (Pattern) SecureURI.cachedContent.get((String) e.nextElement());
-            if (p.matcher(uri).matches())
+        Iterator e = SecureURI.cachedContent.keySet().iterator();
+        while (e.hasNext()) {
+            Pattern p = (Pattern) SecureURI.cachedContent.get(e.next());
+            if (p.matcher(uri).matches()) {
                 return true;
+            }
         }
         return false;
     }

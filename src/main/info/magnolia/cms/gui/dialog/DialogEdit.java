@@ -46,13 +46,15 @@ public class DialogEdit extends DialogBox {
     public void drawHtml(JspWriter out) throws IOException {
         Edit control = new Edit(this.getName(), this.getValue());
         control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING));
-        if (this.getConfigValue("saveInfo").equals("false"))
+        if (this.getConfigValue("saveInfo").equals("false")) {
             control.setSaveInfo(false);
+        }
         control.setCssClass(CSSCLASS_EDIT);
         control.setRows(this.getConfigValue("rows", "1"));
         control.setCssStyles("width", this.getConfigValue("width", "100%"));
-        if (this.getConfigValue("onchange", null) != null)
+        if (this.getConfigValue("onchange", null) != null) {
             control.setEvent("onchange", this.getConfigValue("onchange"));
+        }
         this.drawHtmlPre(out);
         out.println(control.getHtml());
         this.drawHtmlPost(out);

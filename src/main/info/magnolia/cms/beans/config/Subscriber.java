@@ -35,6 +35,9 @@ import org.apache.log4j.Logger;
  */
 public class Subscriber {
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(Subscriber.class);
 
     private static final String START_PAGE = "subscribers";

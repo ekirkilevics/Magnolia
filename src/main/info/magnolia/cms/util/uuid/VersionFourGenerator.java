@@ -41,13 +41,11 @@ import java.util.Random;
  * @author Commons-Id team
  * @version $Revision: 1.3 $ $Date: 2004/07/30 06:51:47 $
  */
-/** XXX begin modification by stefan@apache.org */
-// public final class VersionFourGenerator implements IdentifierGenerator, Constants {
-public final class VersionFourGenerator implements Constants {
+public final class VersionFourGenerator {
 
     /** XXX end modification by stefan@apache.org */
     /** Random used to generate UUID's */
-    private static final Random regularRandom = new Random();
+    private static final Random REGULAR_RANDOM = new Random();
 
     /** SecureRandom used to generate UUID's */
     private static Random secureRandom;
@@ -97,24 +95,13 @@ public final class VersionFourGenerator implements Constants {
 
     /**
      * <p>
-     * Returns a new version four UUID.
-     * </p>
-     * @return Object a new version 4 UUID.
-     */
-    private UUID nextUUID() {
-        // Call nextUUID with secure = false
-        return nextUUID(false);
-    }
-
-    /**
-     * <p>
      * Returns a new version four UUID using either <code>SecureRandom</code> or <code>Random</code>.
      * </p>
      * @param secure boolean flag indicating whether to use <code>SecureRandom</code> or <code>Random</code>.
      * @return a new version four UUID using either <code>SecureRandom</code> or <code>Random</code>.
      */
     private UUID nextUUID(boolean secure) {
-        byte[] raw = new byte[UUID_BYTE_LENGTH];
+        byte[] raw = new byte[Constants.UUID_BYTE_LENGTH];
         if (secure) {
             // Initialize the secure random if null.
             if (secureRandom == null) {
@@ -136,12 +123,12 @@ public final class VersionFourGenerator implements Constants {
             }
         }
         if (!secure) {
-            regularRandom.nextBytes(raw);
+            REGULAR_RANDOM.nextBytes(raw);
         }
-        raw[TIME_HI_AND_VERSION_BYTE_6] &= 0x0F;
-        raw[TIME_HI_AND_VERSION_BYTE_6] |= (UUID.VERSION_FOUR << 4);
-        raw[CLOCK_SEQ_HI_AND_RESERVED_BYTE_8] &= 0x3F; // 0011 1111
-        raw[CLOCK_SEQ_HI_AND_RESERVED_BYTE_8] |= 0x80; // 1000 0000
+        raw[Constants.TIME_HI_AND_VERSION_BYTE_6] &= 0x0F;
+        raw[Constants.TIME_HI_AND_VERSION_BYTE_6] |= (Constants.VERSION_FOUR << 4);
+        raw[Constants.CLOCK_SEQ_HI_AND_RESERVED_BYTE_8] &= 0x3F; // 0011 1111
+        raw[Constants.CLOCK_SEQ_HI_AND_RESERVED_BYTE_8] |= 0x80; // 1000 0000
         return new UUID(raw);
     }
 

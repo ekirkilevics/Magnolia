@@ -29,13 +29,14 @@ import org.apache.log4j.Logger;
  */
 public class DialogBox extends DialogSuper {
 
+    public static final int BOXTYPE_2COLS = 0;
+
+    public static final int BOXTYPE_1COL = 1;
+
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(DialogBox.class);
-
-    // private String title;
-    // private String description;
-    public final static int BOXTYPE_2COLS = 0;
-
-    public final static int BOXTYPE_1COL = 1;
 
     private int boxType = BOXTYPE_2COLS;
 
@@ -55,43 +56,48 @@ public class DialogBox extends DialogSuper {
         if (configBoxType.equals("1Col")) {
             return BOXTYPE_1COL;
         }
-        else {
-            return this.boxType;
-        }
+        return this.boxType;
+
     }
 
     public void drawHtmlPre(JspWriter out) throws IOException {
-        if (this.getConfigValue("lineSemi", "false").equals("true"))
+        if (this.getConfigValue("lineSemi", "false").equals("true")) {
             out.println(new DialogLine().getHtml(1, 1));
-        else if (this.getConfigValue("line", "true").equals("true"))
+        }
+        else if (this.getConfigValue("line", "true").equals("true")) {
             out.println(new DialogLine().getHtml());
+        }
         out.println("<tr>");
         if (this.getBoxType() == BOXTYPE_2COLS) {
             out.println("<td width=\"1%\" class=\"" + CSSCLASS_BOXLABEL + "\">");
             out.println(this.getLabel());
-            if (!this.getConfigValue("labelDescription").equals(""))
+            if (!this.getConfigValue("labelDescription").equals("")) {
                 out.println("<div class=\""
                     + CSSCLASS_DESCRIPTION
                     + "\">"
                     + this.getConfigValue("labelDescription")
                     + "</div>");
+            }
             out.println("</td>");
             String cssClass = CSSCLASS_BOXINPUT;
             if (this.getClass().getName().indexOf("DialogStatic") != -1
-                || this.getClass().getName().indexOf("DialogButton") != -1)
+                || this.getClass().getName().indexOf("DialogButton") != -1) {
                 cssClass = CSSCLASS_BOXLABEL;
+            }
             out.println("<td width=\"100%\" class=\"" + cssClass + "\">");
         }
         else {
             out.println("<td width=\"100%\" colspan=\"2\" class=\"" + CSSCLASS_BOXLABEL + "\">");
-            if (!this.getLabel().equals(""))
+            if (!this.getLabel().equals("")) {
                 out.println("<div class=\"" + CSSCLASS_BOXLABEL + "\">" + this.getLabel() + "</div>");
-            if (!this.getConfigValue("labelDescription").equals(""))
+            }
+            if (!this.getConfigValue("labelDescription").equals("")) {
                 out.println("<div class=\""
                     + CSSCLASS_DESCRIPTION
                     + "\">"
                     + this.getConfigValue("labelDescription")
                     + "</div>");
+            }
         }
     }
 

@@ -16,10 +16,12 @@ import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.NodeData;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+
 import org.apache.log4j.Logger;
 
 
@@ -37,13 +39,19 @@ public class SerializableContent implements Serializable {
 
     private static Logger log = Logger.getLogger(SerializableContent.class);
 
-    /* NodeData collection */
+    /**
+     * NodeData collection.
+     */
     protected ArrayList nodeDataCollection = new ArrayList();
 
-    /* sub ContentNode collection */
+    /**
+     * Sub ContentNode collection.
+     */
     protected ArrayList contentNodeCollection = new ArrayList();
 
-    /* sub Content collection */
+    /**
+     * Sub Content collection.
+     */
     protected ArrayList contentCollection = new ArrayList();
 
     protected SerializableMetaData metaData;
@@ -75,8 +83,9 @@ public class SerializableContent implements Serializable {
         this.metaData = new SerializableMetaData(this.baseContent.getMetaData());
         this.addNodeDataList(this.baseContent);
         this.addContentNodeList(this.baseContent, true);
-        if (this.recurse)
+        if (this.recurse) {
             this.addContentList(this.baseContent, true);
+        }
     }
 
     public ArrayList getContentNodeCollection() {
@@ -105,8 +114,9 @@ public class SerializableContent implements Serializable {
 
     protected void addNodeDataList(Content content) {
         Collection children = content.getChildren(ItemType.NT_NODEDATA);
-        if (children == null)
+        if (children == null) {
             return;
+        }
         Iterator childIterator = children.iterator();
         while (childIterator.hasNext()) {
             try {
@@ -120,8 +130,9 @@ public class SerializableContent implements Serializable {
 
     protected void addContentNodeList(Content content, boolean recurse) {
         Collection children = content.getChildren(ItemType.NT_CONTENTNODE);
-        if (children == null)
+        if (children == null) {
             return;
+        }
         Iterator childIterator = children.iterator();
         while (childIterator.hasNext()) {
             this.contentNodeCollection.add(new SerializableContentNode((ContentNode) childIterator.next(), recurse));
@@ -130,8 +141,9 @@ public class SerializableContent implements Serializable {
 
     protected void addContentList(Content content, boolean recurse) {
         Collection children = content.getChildren(ItemType.NT_CONTENT);
-        if (children == null)
+        if (children == null) {
             return;
+        }
         Iterator childIterator = children.iterator();
         while (childIterator.hasNext()) {
             this.contentCollection.add(new SerializableContent((Content) childIterator.next(), recurse));

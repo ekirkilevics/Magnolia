@@ -21,9 +21,9 @@ import info.magnolia.cms.core.Content;
  */
 public class Button extends ControlSuper {
 
-    private String label = null;
+    private String label;
 
-    private String iconSrc = null;
+    private String iconSrc;
 
     private String onclick = "";
 
@@ -49,7 +49,7 @@ public class Button extends ControlSuper {
 
     private String pushButtonTag = "span";
 
-    private boolean small = false;
+    private boolean small;
 
     public Button() {
     }
@@ -85,10 +85,11 @@ public class Button extends ControlSuper {
     }
 
     public String getLabel() {
-        if (this.label != null)
+        if (this.label != null) {
             return this.label;
-        else
-            return this.getValue();
+        }
+
+        return this.getValue();
     }
 
     public void setIconSrc(String s) {
@@ -96,10 +97,11 @@ public class Button extends ControlSuper {
     }
 
     public String getIconSrc() {
-        if (iconSrc == null)
+        if (iconSrc == null) {
             return "";
-        else
-            return "<img src=\"" + this.iconSrc + "\">";
+        }
+
+        return "<img src=\"" + this.iconSrc + "\">";
     }
 
     public void setOnclick(String s) {
@@ -112,28 +114,34 @@ public class Button extends ControlSuper {
 
     public void setHtmlPre() {
         if (super.getHtmlPre(null) == null) {
-            if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON)
+            if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON) {
                 this.setHtmlPre(this.htmlPrePush);
-            else
+            }
+            else {
                 this.setHtmlPre(this.htmlPreDivided);
+            }
         }
     }
 
     public void setHtmlInter() {
         if (super.getHtmlInter(null) == null) {
-            if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON)
+            if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON) {
                 this.setHtmlInter(this.htmlInterPush);
-            else
+            }
+            else {
                 this.setHtmlInter(this.htmlInterDivided);
+            }
         }
     }
 
     public void setHtmlPost() {
         if (super.getHtmlPost(null) == null) {
-            if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON)
+            if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON) {
                 this.setHtmlPost(this.htmlPostPush);
-            else
+            }
+            else {
                 this.setHtmlPost(this.htmlPostDivided);
+            }
         }
     }
 
@@ -159,10 +167,12 @@ public class Button extends ControlSuper {
         this.setHtmlInter();
         this.setHtmlPost();
         html.append(this.getHtmlPre());
-        if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON)
+        if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON) {
             html.append(this.getHtmlPushbutton());
-        else
+        }
+        else {
             html.append(this.getHtmlDividedbutton());
+        }
         html.append(this.getHtmlPost());
         return html.toString();
     }
@@ -170,23 +180,28 @@ public class Button extends ControlSuper {
     public String getHtmlDividedbutton() {
         StringBuffer html = new StringBuffer();
         String buttonType;
-        if (this.getButtonType() == BUTTONTYPE_RADIO)
+        if (this.getButtonType() == BUTTONTYPE_RADIO) {
             buttonType = "radio";
-        else
+        }
+        else {
             buttonType = "checkbox";
+        }
         html.append("<input type=\"" + buttonType + "\"");
         html.append(" name=\"" + this.getName() + "\"");
         html.append(" value=\"" + this.getValue() + "\"");
         html.append(" id=\"" + this.getId() + "\"");
-        if (!this.getOnclick().equals(""))
+        if (!this.getOnclick().equals("")) {
             html.append(" onclick=\"" + this.getOnclick() + "\"");
-        if (this.getState() == BUTTONSTATE_PUSHED)
+        }
+        if (this.getState() == BUTTONSTATE_PUSHED) {
             html.append(" checked");
+        }
         html.append(this.getHtmlCssClass());
         html.append(this.getHtmlCssStyles());
         html.append(">");
-        if (this.getSaveInfo())
+        if (this.getSaveInfo()) {
             html.append(this.getHtmlSaveInfo());
+        }
         html.append(this.getHtmlInter());
         html.append("<a href=\"javascript:mgnlShiftDividedButton('"
             + this.getId()
@@ -210,11 +225,13 @@ public class Button extends ControlSuper {
                 this.setCssClass(CSSCLASS_CONTROLBUTTONSMALL);
                 this.setLabelNbspPadding(1);
             }
-            else
+            else {
                 this.setCssClass(CSSCLASS_CONTROLBUTTON);
+            }
         }
-        if (this.getState() == BUTTONSTATE_PUSHED)
+        if (this.getState() == BUTTONSTATE_PUSHED) {
             this.setCssClass(this.getCssClass() + "_PUSHED");
+        }
         html.append(" onclick=\"mgnlShiftPushButtonClick(this);" + this.getOnclick() + "\"");
         html.append(" onmousedown=\"mgnlShiftPushButtonDown(this);\"");
         html.append(" onmouseout=\"mgnlShiftPushButtonOut(this);\"");

@@ -14,9 +14,11 @@ package info.magnolia.cms.beans.runtime;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.security.AccessDeniedException;
+
 import java.io.InputStream;
+
 import javax.jcr.RepositoryException;
+
 import org.apache.log4j.Logger;
 
 
@@ -49,18 +51,14 @@ public class File {
 
     public void setProperties(Content properties) {
         this.properties = properties;
-        try {
-            this.setNodeDataTemplate(this.properties.getNodeData("nodeDataTemplate").getString());
-            this.setExtension(this.properties.getNodeData("extension").getString());
-            this.setFileName(this.properties.getNodeData("fileName").getString());
-            this.setContentType(this.properties.getNodeData("contentType").getString());
-            Integer size = new Integer(this.properties.getNodeData("size").getString());
-            this.setSize(size.intValue());
-        }
-        catch (AccessDeniedException e) {
-            log.error("Failed to set file properties for - " + this.properties.getHandle());
-            log.error(e.getMessage(), e);
-        }
+
+        this.setNodeDataTemplate(this.properties.getNodeData("nodeDataTemplate").getString());
+        this.setExtension(this.properties.getNodeData("extension").getString());
+        this.setFileName(this.properties.getNodeData("fileName").getString());
+        this.setContentType(this.properties.getNodeData("contentType").getString());
+        Integer size = new Integer(this.properties.getNodeData("size").getString());
+        this.setSize(size.intValue());
+
     }
 
     public String getExtension() {

@@ -13,6 +13,7 @@
 package info.magnolia.logging.level;
 
 import org.apache.log4j.Level;
+import org.apache.log4j.Priority;
 
 
 /**
@@ -28,7 +29,7 @@ public final class XLevel extends Level {
     /**
      * TRACE
      */
-    static public final int TRACE_INT = Level.FATAL_INT + 1;
+    public static final int TRACE_INT = Priority.FATAL_INT + 1;
 
     private static String TRACE_STR = "TRACE";
 
@@ -37,7 +38,7 @@ public final class XLevel extends Level {
     /**
      * EXCHANGE
      */
-    static public final int EXCHANGE_INT = TRACE_INT + 1;
+    public static final int EXCHANGE_INT = TRACE_INT + 1;
 
     private static String EXCHANGE_STR = "EXCHANGE";
 
@@ -49,29 +50,34 @@ public final class XLevel extends Level {
 
     public static Level toLevel(String sArg) {
         String stringVal = sArg.toUpperCase();
-        if (stringVal.equals(TRACE_STR))
-            return (Level) toLevel(sArg, XLevel.TRACE);
-        if (stringVal.equals(EXCHANGE_STR))
-            return (Level) toLevel(sArg, XLevel.EXCHANGE);
-        return (Level) toLevel(sArg, XLevel.TRACE);
+        if (stringVal.equals(TRACE_STR)) {
+            return toLevel(sArg, XLevel.TRACE);
+        }
+        if (stringVal.equals(EXCHANGE_STR)) {
+            return toLevel(sArg, XLevel.EXCHANGE);
+        }
+        return toLevel(sArg, XLevel.TRACE);
     }
 
     public static Level toLevel(String sArg, Level defaultValue) {
-        if (sArg == null)
+        if (sArg == null) {
             return defaultValue;
+        }
         String stringVal = sArg.toUpperCase();
-        if (stringVal.equals(TRACE_STR))
+        if (stringVal.equals(TRACE_STR)) {
             return XLevel.TRACE;
-        if (stringVal.equals(EXCHANGE_STR))
+        }
+        if (stringVal.equals(EXCHANGE_STR)) {
             return XLevel.EXCHANGE;
-        return Level.toLevel(sArg, (Level) defaultValue);
+        }
+        return Level.toLevel(sArg, defaultValue);
     }
 
     public static Level toLevel(int i) throws IllegalArgumentException {
         switch (i) {
-            case TRACE_INT :
+            case TRACE_INT:
                 return XLevel.TRACE;
-            case EXCHANGE_INT :
+            case EXCHANGE_INT:
                 return XLevel.EXCHANGE;
         }
         return Level.toLevel(i);

@@ -40,13 +40,13 @@ import org.apache.log4j.Logger;
  */
 public abstract class ContentHandler {
 
-    private static Logger log = Logger.getLogger(ContentHandler.class);
-
     public static final String SORT_BY_DATE = "date";
 
     public static final String SORT_BY_NAME = "name";
 
     public static final String SORT_BY_SEQUENCE = "sequence";
+
+    private static Logger log = Logger.getLogger(ContentHandler.class);
 
     protected Node node;
 
@@ -124,8 +124,9 @@ public abstract class ContentHandler {
      * @return Content representing parent node
      */
     public Content getAncestor(int digree) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        if (digree > this.getLevel())
+        if (digree > this.getLevel()) {
             throw new PathNotFoundException();
+        }
         return (new Content(this.node.getAncestor(digree), this.accessManager));
     }
 

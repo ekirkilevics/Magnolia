@@ -3,14 +3,17 @@ package info.magnolia.jackrabbit;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
 import info.magnolia.repository.RepositoryNotInitializedException;
+
 import java.util.Hashtable;
 import java.util.Map;
+
 import javax.jcr.NamespaceException;
 import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
 import javax.jcr.Workspace;
 import javax.naming.Context;
 import javax.naming.InitialContext;
+
 import org.apache.jackrabbit.core.jndi.RegistryHelper;
 import org.apache.log4j.Logger;
 
@@ -64,8 +67,9 @@ public class ProviderImpl implements Provider {
     }
 
     public Repository getUnderlineRepository() throws RepositoryNotInitializedException {
-        if (this.repository == null)
+        if (this.repository == null) {
             throw new RepositoryNotInitializedException("Null repository");
+        }
         return this.repository;
     }
 

@@ -1,17 +1,18 @@
 package info.magnolia.custom.search.lucene;
 
 import java.io.IOException;
+
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 
 
 /**
- * User: Sameer Charles Date: Mar 1, 2004 Time: 2:09:46 PM
+ * @author Sameer Charles
  */
 public class Search {
 
-    private IndexSearcher searcher = null;
+    private IndexSearcher searcher;
 
     public Hits query(Query query) {
         Hits hits = null;
@@ -22,9 +23,7 @@ public class Search {
         }
         catch (IOException e) {
         }
-        finally {
-            return hits;
-        }
+        return hits;
     }
 
     public void close() {

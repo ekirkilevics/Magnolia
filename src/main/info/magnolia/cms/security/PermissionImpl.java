@@ -13,6 +13,7 @@
 package info.magnolia.cms.security;
 
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 
@@ -22,11 +23,7 @@ import java.util.regex.Pattern;
  */
 public class PermissionImpl implements Permission {
 
-    private Pattern pattern;
-
-    private long permissions;
-
-    private static Hashtable nameStrings = new Hashtable();
+    private static Map nameStrings = new Hashtable();
     static {
         nameStrings.put(new Long(Permission.ADD), Permission.PERMISSION_NAME_ADD);
         nameStrings.put(new Long(Permission.SET), Permission.PERMISSION_NAME_SET);
@@ -37,6 +34,10 @@ public class PermissionImpl implements Permission {
         nameStrings.put(new Long(Permission.ALL), Permission.PERMISSION_NAME_ALL);
         nameStrings.put(new Long(Permission.WRITE), Permission.PERMISSION_NAME_WRITE);
     }
+
+    private Pattern pattern;
+
+    private long permissions;
 
     public void setPattern(Pattern value) {
         this.pattern = value;

@@ -44,6 +44,8 @@ import org.apache.log4j.Logger;
  */
 public class Syndicator {
 
+    public static final String SENDER_URL = "senderURL";
+
     private static Logger log = Logger.getLogger(Syndicator.class);
 
     private static final String DEFAULT_CONTEXT = ContentRepository.WEBSITE;
@@ -51,8 +53,6 @@ public class Syndicator {
     private static final String DEFAULT_HANDLER = "ActivationHandler";
 
     private static final String EXCHANGE_HANDLER = "Exchange";
-
-    public static final String SENDER_URL = "senderURL";
 
     private static final int ACTIVATE = 1;
 
@@ -148,12 +148,15 @@ public class Syndicator {
         List subscribedURIList = subscriber.getContext(this.context);
         for (int i = 0; i < subscribedURIList.size(); i++) {
             String uri = (String) subscribedURIList.get(i);
-            if (this.path.equals(uri))
+            if (this.path.equals(uri)) {
                 isSubscribed = true;
-            else if (this.path.startsWith(uri + "/"))
+            }
+            else if (this.path.startsWith(uri + "/")) {
                 isSubscribed = true;
-            else if (uri.endsWith("/") && (this.path.startsWith(uri)))
+            }
+            else if (uri.endsWith("/") && (this.path.startsWith(uri))) {
                 isSubscribed = true;
+            }
         }
         return isSubscribed;
     }
@@ -283,8 +286,9 @@ public class Syndicator {
      * @throws Exception
      */
     private synchronized void deActivate(Subscriber subscriber) throws Exception {
-        if (!isSubscribed(subscriber))
+        if (!isSubscribed(subscriber)) {
             return;
+        }
         String handle = getDeactivationURL(subscriber);
         URL url = new URL(handle);
         URLConnection urlConnection = url.openConnection();
@@ -335,8 +339,9 @@ public class Syndicator {
      */
     private void updateDestination(Subscriber subscriberInfo) {
         List list = subscriberInfo.getContext(this.context);
-        if (list == null)
+        if (list == null) {
             return;
+        }
         for (int i = 0; i < list.size(); i++) {
             Map map = (Hashtable) list.get(i);
             if (this.path.indexOf(((String) map.get("source"))) == 0) { /* match, assign and exit */
@@ -354,8 +359,9 @@ public class Syndicator {
         hm.init(SessionAccessControl.getSession(this.request).getRootNode());
         Content page = hm.getPage(this.path);
         updateMetaData(page, Syndicator.ACTIVATE);
-        if (this.recursive)
+        if (this.recursive) {
             this.updateTree(page, Syndicator.ACTIVATE);
+        }
     }
 
     /**
@@ -374,15 +380,16 @@ public class Syndicator {
     private void updateTree(Content startPage, int type) {
         Iterator children = startPage.getChildren().iterator();
         while (children.hasNext()) {
-            Content aPage = (Content) children.next();
+            Content page = (Content) children.next();
             try {
-                updateMetaData(aPage, type);
+                updateMetaData(page, type);
             }
             catch (AccessDeniedException e) {
                 log.error(e.getMessage(), e);
             }
-            if (aPage.hasChildren())
-                updateTree(aPage, type);
+            if (page.hasChildren()) {
+                updateTree(page, type);
+            }
         }
     }
 
@@ -391,10 +398,12 @@ public class Syndicator {
      */
     private void updateMetaData(Content page, int type) throws AccessDeniedException {
         MetaData md = page.getMetaData(MetaData.ACTIVATION_INFO);
-        if (type == Syndicator.ACTIVATE)
+        if (type == Syndicator.ACTIVATE) {
             md.setActivated();
-        else
+        }
+        else {
             md.setUnActivated();
+        }
         md.setActivatorId(Authenticator.getUserId(this.request));
         md.setLastActivationActionDate();
         md = null;

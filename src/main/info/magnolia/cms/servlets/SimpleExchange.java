@@ -68,7 +68,7 @@ public class SimpleExchange extends HttpServlet {
     /**
      * Logger.
      */
-    private static final Logger log = Logger.getLogger(SimpleExchange.class);
+    private static Logger log = Logger.getLogger(SimpleExchange.class);
 
     private String context;
 

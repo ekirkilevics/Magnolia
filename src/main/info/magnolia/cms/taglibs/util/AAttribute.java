@@ -32,19 +32,15 @@ public class AAttribute extends TagSupport {
     private String name = "";
 
     /**
-     * <p>
-     * end of tag
-     * </p>
-     * @return int
+     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag() throws JspException {
         AHref parent = (AHref) findAncestorWithClass(this, AHref.class);
         if (parent == null) {
             throw new JspException("nesting error");
         }
-        else {
-            parent.setAttribute(this.name, this.value);
-        }
+        parent.setAttribute(this.name, this.value);
+
         return EVAL_PAGE;
     }
 

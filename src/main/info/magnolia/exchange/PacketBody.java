@@ -17,7 +17,6 @@ import java.util.Calendar;
 
 
 /**
- * Date: May 4, 2004 Time: 11:13:06 AM
  * @author Sameer Charles
  */
 public interface PacketBody {
@@ -36,7 +35,7 @@ public interface PacketBody {
      * </p>
      * @param type
      */
-    public void setType(int type);
+    void setType(int type);
 
     /**
      * <p>
@@ -51,17 +50,17 @@ public interface PacketBody {
      * </ul>
      * </p>
      */
-    public int getType();
+    int getType();
 
     /**
      * @param size
      */
-    public void setLength(long size);
+    void setLength(long size);
 
     /**
      * @return lenth of the packet body
      */
-    public long getLength();
+    long getLength();
 
     /**
      * <p>
@@ -69,7 +68,7 @@ public interface PacketBody {
      * </p>
      * @param data
      */
-    public void setBody(String data) throws PacketIOException;
+    void setBody(String data) throws PacketIOException;
 
     /**
      * <p>
@@ -77,7 +76,7 @@ public interface PacketBody {
      * </p>
      * @param data
      */
-    public void setBody(InputStream data) throws PacketIOException;
+    void setBody(InputStream data) throws PacketIOException;
 
     /**
      * <p>
@@ -85,7 +84,7 @@ public interface PacketBody {
      * </p>
      * @param data
      */
-    public void setBody(Long data) throws PacketIOException;
+    void setBody(Long data) throws PacketIOException;
 
     /**
      * <p>
@@ -93,7 +92,7 @@ public interface PacketBody {
      * </p>
      * @param data
      */
-    public void setBody(Double data) throws PacketIOException;
+    void setBody(Double data) throws PacketIOException;
 
     /**
      * <p>
@@ -101,7 +100,7 @@ public interface PacketBody {
      * </p>
      * @param data
      */
-    public void setBody(Calendar data) throws PacketIOException;
+    void setBody(Calendar data) throws PacketIOException;
 
     /**
      * <p>
@@ -109,7 +108,7 @@ public interface PacketBody {
      * </p>
      * @param data
      */
-    public void setBody(Boolean data) throws PacketIOException;
+    void setBody(Boolean data) throws PacketIOException;
 
     /**
      * <p>
@@ -117,19 +116,19 @@ public interface PacketBody {
      * </p>
      * @param data
      */
-    public void setBody(Object data) throws PacketIOException;
+    void setBody(Object data) throws PacketIOException;
 
     /**
      * <p>
      * returns string representation of the data set by any data type
      * </p>
      */
-    public String toString();
+    String toString();
 
     /**
      * <p>
      * gets data as object
      * </p>
      */
-    public Object getObject();
+    Object getObject();
 }

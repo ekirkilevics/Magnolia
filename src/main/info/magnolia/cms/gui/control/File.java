@@ -24,9 +24,9 @@ public class File extends ControlSuper {
 
     public static final String REMOVE = "remove";
 
-    public String cssClassFileName = "";
+    private String cssClassFileName = "";
 
-    private String nodeDataTemplate = null;
+    private String nodeDataTemplate;
 
     public File() {
     }
@@ -48,10 +48,11 @@ public class File extends ControlSuper {
     }
 
     public String getHtmlCssClassFileName() {
-        if (!this.getCssClassFileName().equals(""))
+        if (!this.getCssClassFileName().equals("")) {
             return " class=\"" + this.getCssClassFileName() + "\"";
-        else
-            return "";
+        }
+
+        return "";
     }
 
     public String getHtml() {
@@ -76,8 +77,9 @@ public class File extends ControlSuper {
         Hidden control0 = new Hidden(this.getName() + "_" + REMOVE, "");
         control0.setSaveInfo(false);
         html.append(control0.getHtml());
-        if (this.getSaveInfo())
+        if (this.getSaveInfo()) {
             html.append(this.getHtmlSaveInfo());
+        }
         return html.toString();
     }
 

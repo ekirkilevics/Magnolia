@@ -13,10 +13,12 @@
 package info.magnolia.cms.exchange.simple;
 
 import info.magnolia.cms.core.NodeData;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Calendar;
+
 import javax.jcr.PropertyType;
 import javax.jcr.Value;
 
@@ -33,11 +35,9 @@ public class SerializableNodeData implements Serializable {
      */
     private static final long serialVersionUID = 222L;
 
-    private String name;
-
-    private int type;
-
-    /* all possible storage */
+    /**
+     * all possible storage.
+     */
     Value value;
 
     String stringValue;
@@ -50,8 +50,14 @@ public class SerializableNodeData implements Serializable {
 
     Calendar dateValue;
 
-    /* binary value will be serialized in a byte array */
+    /**
+     * binary value will be serialized in a byte array
+     */
     byte[] byteArrayValue;
+
+    private String name;
+
+    private int type;
 
     private NodeData baseNodeData;
 

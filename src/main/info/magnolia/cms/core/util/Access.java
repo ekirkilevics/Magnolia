@@ -21,7 +21,14 @@ import info.magnolia.cms.security.PermissionImpl;
  * @author Sameer Charles
  * @version 2.01
  */
-public class Access {
+public final class Access {
+
+    /**
+     * Utility class, don't instantiate.
+     */
+    private Access() {
+        // unused
+    }
 
     public static void isGranted(AccessManager manager, String path, long permissions) throws AccessDeniedException {
         if (manager != null && !manager.isGranted(path, permissions)) {

@@ -14,18 +14,20 @@ package info.magnolia.cms.security;
 
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 
 
 /**
- * Date: Jun 25, 2004 Time: 10:03:05 AM
  * @author Sameer Charles
  * @version 2.0
  */
-public class Lock {
+public final class Lock {
 
-    private static String SESSION_LOCK = "magnolia:sessionLock";
+    private static final String SESSION_LOCK = "magnolia:sessionLock";
 
     private static Logger log = Logger.getLogger(Lock.class);
 
@@ -33,7 +35,14 @@ public class Lock {
 
     private static Date lockSetDate;
 
-    private static Hashtable lockedHierarchyList = new Hashtable();
+    private static Map lockedHierarchyList = new Hashtable();
+
+    /**
+     * Utility class, don't instantiate.
+     */
+    private Lock() {
+        // unused
+    }
 
     public static void setSessionLock(HttpServletRequest request) {
         log.info("Session lock enabled for user ( "
@@ -44,8 +53,9 @@ public class Lock {
     }
 
     public static boolean isSessionLocked(HttpServletRequest request) {
-        if (request.getSession().getAttribute(Lock.SESSION_LOCK) != null)
+        if (request.getSession().getAttribute(Lock.SESSION_LOCK) != null) {
             return true;
+        }
         return false;
     }
 

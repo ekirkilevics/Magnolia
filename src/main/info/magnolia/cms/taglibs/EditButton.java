@@ -14,11 +14,13 @@ package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.gui.inline.ButtonEdit;
 import info.magnolia.cms.util.Resource;
+
 import java.io.IOException;
-import javax.jcr.RepositoryException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
+
 import org.apache.log4j.Logger;
 
 
@@ -149,17 +151,11 @@ public class EditButton extends TagSupport {
      */
     private String getParagraph() {
         if (this.paragraph == null) {
-            try {
-                return Resource.getLocalContentNode(this.request).getNodeData("paragraph").getString();
-            }
-            catch (RepositoryException e) {
-                log.error(e.getMessage());
-                return "";
-            }
+
+            return Resource.getLocalContentNode(this.request).getNodeData("paragraph").getString();
+
         }
-        else {
-            return this.paragraph;
-        }
+        return this.paragraph;
     }
 
     /**

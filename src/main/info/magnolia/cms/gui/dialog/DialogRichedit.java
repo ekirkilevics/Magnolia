@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
@@ -47,11 +48,11 @@ public class DialogRichedit extends DialogBox {
 
     private String richEPaste = "";
 
-    private ArrayList optionsToolboxStyleCssClasses = new ArrayList();
+    private List optionsToolboxStyleCssClasses = new ArrayList();
 
-    private ArrayList optionsToolboxLinkCssClasses = new ArrayList();
+    private List optionsToolboxLinkCssClasses = new ArrayList();
 
-    private ArrayList optionsToolboxLinkTargets = new ArrayList();
+    private List optionsToolboxLinkTargets = new ArrayList();
 
     public DialogRichedit(ContentNode configNode, Content websiteNode) throws RepositoryException {
         super(configNode, websiteNode);
@@ -77,56 +78,58 @@ public class DialogRichedit extends DialogBox {
     }
 
     public void setOptionsToolboxStyleCssClasses(ContentNode configNode) {
-        ArrayList options = this.setOptionsToolbox(configNode, "optionsToolboxStyleCssClasses");
+        List options = this.setOptionsToolbox(configNode, "optionsToolboxStyleCssClasses");
         this.setOptionsToolboxStyleCssClasses(options);
     }
 
-    public void setOptionsToolboxStyleCssClasses(ArrayList l) {
+    public void setOptionsToolboxStyleCssClasses(List l) {
         this.optionsToolboxStyleCssClasses = l;
     }
 
-    public ArrayList getOptionsToolboxStyleCssClasses() {
+    public List getOptionsToolboxStyleCssClasses() {
         return this.optionsToolboxStyleCssClasses;
     }
 
     public void setOptionsToolboxLinkCssClasses(ContentNode configNode) {
-        ArrayList options = this.setOptionsToolbox(configNode, "optionsToolboxLinkCssClasses");
+        List options = this.setOptionsToolbox(configNode, "optionsToolboxLinkCssClasses");
         this.setOptionsToolboxLinkCssClasses(options);
     }
 
-    public void setOptionsToolboxLinkCssClasses(ArrayList l) {
+    public void setOptionsToolboxLinkCssClasses(List l) {
         this.optionsToolboxLinkCssClasses = l;
     }
 
-    public ArrayList getOptionsToolboxLinkCssClasses() {
+    public List getOptionsToolboxLinkCssClasses() {
         return this.optionsToolboxLinkCssClasses;
     }
 
     public void setOptionsToolboxLinkTargets(ContentNode configNode) {
-        ArrayList options = this.setOptionsToolbox(configNode, "optionsToolboxLinkTargets");
+        List options = this.setOptionsToolbox(configNode, "optionsToolboxLinkTargets");
         this.setOptionsToolboxLinkTargets(options);
     }
 
-    public void setOptionsToolboxLinkTargets(ArrayList l) {
+    public void setOptionsToolboxLinkTargets(List l) {
         this.optionsToolboxLinkTargets = l;
     }
 
-    public ArrayList getOptionsToolboxLinkTargets() {
+    public List getOptionsToolboxLinkTargets() {
         return this.optionsToolboxLinkTargets;
     }
 
-    public ArrayList setOptionsToolbox(ContentNode configNode, String nodeName) {
-        ArrayList options = new ArrayList();
+    public List setOptionsToolbox(ContentNode configNode, String nodeName) {
+        List options = new ArrayList();
         try {
             Iterator it = configNode.getContentNode(nodeName).getChildren().iterator();
             while (it.hasNext()) {
                 ContentNode n = (ContentNode) it.next();
                 String value = n.getNodeData("value").getString();
                 SelectOption option = new SelectOption(null, value);
-                if (n.getNodeData("label").isExist())
+                if (n.getNodeData("label").isExist()) {
                     option.setLabel(n.getNodeData("label").getString());
-                if (n.getNodeData("selected").getBoolean() == true)
+                }
+                if (n.getNodeData("selected").getBoolean()) {
                     option.setId("default");
+                }
                 options.add(option);
             }
             SelectOption lastOption = new SelectOption("", "");
@@ -157,8 +160,9 @@ public class DialogRichedit extends DialogBox {
             // #################
             // toolbox paste
             String toolboxPasteType = this.getRichEPaste();
-            if (toolboxPasteType.equals(""))
+            if (toolboxPasteType.equals("")) {
                 toolboxPasteType = this.getTopParent().getConfigValue("richEPaste", "false");
+            }
             if (this.getConfigValue("toolboxPaste", "true").equals("true") && !toolboxPasteType.equals("false")) {
                 // win only; clipboard on mac is clean already
                 out.println(line.getHtml("100%"));
@@ -307,23 +311,28 @@ public class DialogRichedit extends DialogBox {
             out.println("<div class=\"kupu-tb\" id=\"toolbar\">");
             out.println("<span id=\"kupu-tb-buttons\">");
             out.println("<span class=\"kupu-tb-buttongroup\">");
-            if (this.getConfigValue("toolbarBold", "true").equals("true"))
+            if (this.getConfigValue("toolbarBold", "true").equals("true")) {
                 out
                     .println("<button type=\"button\" class=\"kupu-bold\" title=\"Bold\" onclick=\"kupuui.basicButtonHandler('bold');\">&nbsp;</button>");
-            if (this.getConfigValue("toolbarItalic", "true").equals("true"))
+            }
+            if (this.getConfigValue("toolbarItalic", "true").equals("true")) {
                 out
                     .println("<button type=\"button\" class=\"kupu-italic\" title=\"Italic\" onclick=\"kupuui.basicButtonHandler('italic');\">&nbsp;</button>");
-            if (this.getConfigValue("toolbarUnderline", "false").equals("true"))
+            }
+            if (this.getConfigValue("toolbarUnderline", "false").equals("true")) {
                 out
                     .println("<button type=\"button\" class=\"kupu-underline\" title=\"Underline\" onclick=\"kupuui.basicButtonHandler('underline');\">&nbsp;</button>");
+            }
             out.println("</span>");
             out.println("<span class=\"kupu-tb-buttongroup\">");
-            if (this.getConfigValue("toolbarSubscript", "false").equals("true"))
+            if (this.getConfigValue("toolbarSubscript", "false").equals("true")) {
                 out
                     .println("<button type=\"button\" class=\"kupu-subscript\" title=\"Subscript\" onclick=\"kupuui.basicButtonHandler('subscript');\">&nbsp;</button>");
-            if (this.getConfigValue("toolbarSuperscript", "false").equals("true"))
+            }
+            if (this.getConfigValue("toolbarSuperscript", "false").equals("true")) {
                 out
                     .println("<button type=\"button\" class=\"kupu-superscript\" title=\"Superscript\" onclick=\"kupuui.basicButtonHandler('superscript');\">&nbsp;</button>");
+            }
             out.println("</span>");
             if (this.getConfigValue("toolbarColors", "false").equals("true")) {
                 // kupu note: the event handlers are attached to these buttons dynamically, like for tools
@@ -336,12 +345,12 @@ public class DialogRichedit extends DialogBox {
                 out.println("</span>");
             }
             if (this.getConfigValue("toolbarUndo", "true").equals("true")) {
-                out.println("	  <span class=\"kupu-tb-buttongroup\">");
+                out.println(" <span class=\"kupu-tb-buttongroup\">");
                 out
                     .println("<button type=\"button\" class=\"kupu-undo\" title=\"Undo\" onclick=\"kupuui.basicButtonHandler('undo');\">&nbsp;</button>");
                 out
                     .println("<button type=\"button\" class=\"kupu-redo\" title=\"Redo\" onclick=\"kupuui.basicButtonHandler('redo');\">&nbsp;</button>");
-                out.println("	  </span>");
+                out.println(" </span>");
             }
             if (this.getConfigValue("toolbarLists", "true").equals("true")) {
                 out.println("<span class=\"kupu-tb-buttongroup\">");
@@ -379,8 +388,9 @@ public class DialogRichedit extends DialogBox {
             out.println("<iframe");
             out.println("id=\"" + this.getName() + "-kupu-editor\"");
             out.println(" class=\"" + CSSCLASS_RICHEIFRAME + "\"");
-            if (this.getConfigValue("height", null) != null)
+            if (this.getConfigValue("height", null) != null) {
                 out.println(" style=\"height:" + this.getConfigValue("height") + ";\")");
+            }
             out.println(" frameborder=\"0\"");
             out.println(" src=\"/.magnolia/dialogs/richEIFrame.html?"
                 + SESSION_ATTRIBUTENAME_DIALOGOBJECT
@@ -416,8 +426,9 @@ public class DialogRichedit extends DialogBox {
             // rich edit not supported: draw textarea
             Edit control = new Edit(this.getName(), this.getValue());
             control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING));
-            if (this.getConfigValue("saveInfo").equals("false"))
+            if (this.getConfigValue("saveInfo").equals("false")) {
                 control.setSaveInfo(false);
+            }
             control.setCssClass(CSSCLASS_EDIT);
             control.setRows(this.getConfigValue("rows", "18"));
             control.setCssStyles("width", this.getConfigValue("width", "100%"));
@@ -454,15 +465,15 @@ public class DialogRichedit extends DialogBox {
             }
             out.println("<script>");
             out.println("document.insertText=function(value)");
-            out.println("	{");
-            out.println("	while (value.indexOf('\\n')!=-1)");
-            out.println("		{");
-            out.println("		value=value.replace('\\n','<br>');");
-            out.println("		}");
-            out.println("	var body=document.getElementsByTagName('body');");
-            out.println("	value=body[0].innerHTML+value;");
-            out.println("	body[0].innerHTML=value;");
-            out.println("	}");
+            out.println(" {");
+            out.println(" while (value.indexOf('\\n')!=-1)");
+            out.println(" {");
+            out.println(" value=value.replace('\\n','<br>');");
+            out.println(" }");
+            out.println(" var body=document.getElementsByTagName('body');");
+            out.println(" value=body[0].innerHTML+value;");
+            out.println(" body[0].innerHTML=value;");
+            out.println(" }");
             out.println("</script>");
             out.println("</head>");
             out.println("<body leftmargin=\"1\" marginwidth=\"1\" topmargin=\"3\" marginheight=\"3\">");

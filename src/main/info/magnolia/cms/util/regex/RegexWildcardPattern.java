@@ -15,11 +15,18 @@ package info.magnolia.cms.util.regex;
 /**
  * @author Sameer Charles
  */
-public class RegexWildcardPattern {
+public final class RegexWildcardPattern {
 
     private static final String MULTIPLE_CHAR_PATTERN = "[a-z[A-Z[0-9[!\"#$%&'()*+,-./:;<=>?@\\^_`{|}~]]]]*";
 
     private static final String SINGLE_CHAR_PATTERN = "[a-z[A-Z[0-9[!\"#$%&'()*+,-./:;<=>?@\\^_`{|}~]]]]?";
+
+    /**
+     * Utility class, don't instantiate.
+     */
+    private RegexWildcardPattern() {
+        // unused
+    }
 
     /**
      * <p>

@@ -25,15 +25,11 @@ import javax.servlet.jsp.JspWriter;
  */
 public interface DialogInterface {
 
-    /**
-     * 
-     *
-     */
-    public void drawHtml(JspWriter out) throws IOException;
+    void drawHtml(JspWriter out) throws IOException;
 
-    public void drawSubs(JspWriter out) throws IOException;
+    void drawSubs(JspWriter out) throws IOException;
 
-    public void drawHtmlPreSubs(JspWriter out) throws IOException;
+    void drawHtmlPreSubs(JspWriter out) throws IOException;
 
-    public void drawHtmlPostSubs(JspWriter out) throws IOException;
+    void drawHtmlPostSubs(JspWriter out) throws IOException;
 }

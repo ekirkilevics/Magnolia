@@ -14,7 +14,6 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
-import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.SecureURI;
 
 import java.util.Hashtable;
@@ -32,20 +31,27 @@ import org.apache.log4j.Logger;
  * @author Sameer Charles
  * @version 1.1
  */
-public class Server {
+public final class Server {
+
+    protected static final String CONFIG_PAGE = "server";
 
     /**
      * Logger.
      */
     private static Logger log = Logger.getLogger(Server.class);
 
-    protected static final String CONFIG_PAGE = "server";
-
     private static Map cachedContent = new Hashtable();
 
     private static Map cachedURImapping = new Hashtable();
 
     private static Map cachedCacheableURIMapping = new Hashtable();
+
+    /**
+     * Utility class, don't instantiate.
+     */
+    private Server() {
+        // unused
+    }
 
     /**
      * @throws ConfigurationException if basic config nodes are missing
@@ -72,9 +78,7 @@ public class Server {
     }
 
     /**
-     * <p>
-     * Cache server content from the config repository
-     * </p>
+     * Cache server content from the config repository.
      */
     private static void cacheContent(Content page) {
         try {
@@ -84,32 +88,14 @@ public class Server {
             log.error(re.getMessage(), re);
         }
 
-        try {
-            boolean isAdmin = page.getNodeData("admin").getBoolean();
-            Server.cachedContent.put("admin", BooleanUtils.toBooleanObject(isAdmin));
-        }
-        catch (RepositoryException re) {
-            log.error(re.getMessage());
-            Server.cachedContent.put("admin", Boolean.FALSE);
-        }
+        boolean isAdmin = page.getNodeData("admin").getBoolean();
+        Server.cachedContent.put("admin", BooleanUtils.toBooleanObject(isAdmin));
 
-        try {
-            String ext = page.getNodeData("defaultExtension").getString();
-            Server.cachedContent.put("defaultExtension", ext);
-        }
-        catch (RepositoryException re) {
-            log.error(re.getMessage());
-            Server.cachedContent.put("defaultExtension", "");
-        }
+        String ext = page.getNodeData("defaultExtension").getString();
+        Server.cachedContent.put("defaultExtension", ext);
 
-        try {
-            String basicRealm = page.getNodeData("basicRealm").getString();
-            Server.cachedContent.put("basicRealm", basicRealm);
-        }
-        catch (RepositoryException re) {
-            log.error(re.getMessage());
-            Server.cachedContent.put("basicRealm", "");
-        }
+        String basicRealm = page.getNodeData("basicRealm").getString();
+        Server.cachedContent.put("basicRealm", basicRealm);
 
         try {
             String mailServer = page.getNodeData("defaultMailServer").getString();
@@ -120,27 +106,17 @@ public class Server {
             Server.cachedContent.put("defaultMailServer", "");
         }
 
-        try {
-            Server.cachedContent.put("404URI", page.getNodeData("ResourceNotAvailableURIMapping").getString());
-        }
-        catch (AccessDeniedException e) {
-            log.error(e.getMessage());
-            Server.cachedContent.put("404URI", "");
-        }
+        Server.cachedContent.put("404URI", page.getNodeData("ResourceNotAvailableURIMapping").getString());
 
-        try {
-            boolean visibleToObinary = page.getNodeData("visibleToObinary").getBoolean();
-            Server.cachedContent.put("visibleToObinary", BooleanUtils.toBooleanObject(visibleToObinary));
-        }
-        catch (RepositoryException e) {
-            log.error(e.getMessage());
-            Server.cachedContent.put("visibleToObinary", Boolean.FALSE);
-        }
+        boolean visibleToObinary = page.getNodeData("visibleToObinary").getBoolean();
+        Server.cachedContent.put("visibleToObinary", BooleanUtils.toBooleanObject(visibleToObinary));
+
     }
 
-    private static void addToSecureList(ContentNode node) throws AccessDeniedException {
-        if (node == null)
+    private static void addToSecureList(ContentNode node) {
+        if (node == null) {
             return;
+        }
         Iterator childIterator = node.getChildren().iterator();
         while (childIterator.hasNext()) {
             ContentNode sub = (ContentNode) childIterator.next();
@@ -153,10 +129,11 @@ public class Server {
      * @return resource not available URI mapping as specifies in serverInfo, else /
      */
     public static String get404URI() {
-        String URI = (String) Server.cachedContent.get("404URI");
-        if (URI.equals(""))
+        String uri = (String) Server.cachedContent.get("404URI");
+        if (uri.equals("")) {
             return "/";
-        return URI;
+        }
+        return uri;
     }
 
     /**
@@ -164,8 +141,9 @@ public class Server {
      */
     public static String getDefaultExtension() {
         String defaultExtension = (String) Server.cachedContent.get("defaultExtension");
-        if (defaultExtension == null)
+        if (defaultExtension == null) {
             return "";
+        }
         return defaultExtension;
     }
 

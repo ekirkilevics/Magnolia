@@ -105,7 +105,6 @@ public class Save extends ControlSuper {
         }
         try {
             Content page = hm.getPage(path);
-            // System.out.println("nodeCollectionName - "+nodeCollectionName);
             // get or create nodeCollection
             Content nodeCollection = null;
             if (nodeCollectionName != null) {
@@ -145,7 +144,6 @@ public class Save extends ControlSuper {
             page.updateMetaData(request);
             // loop all saveInfo controls; saveInfo format: name, type, valueType(single|multiple, )
             for (int i = 0; i < saveInfo.length; i++) {
-                // System.out.println("### saveInfo["+i+"]: "+saveInfo[i]);
                 String name;
                 int type = type = PropertyType.STRING;
                 int valueType = ControlSuper.VALUETYPE_SINGLE;
@@ -173,9 +171,7 @@ public class Save extends ControlSuper {
                 }
                 if (type == PropertyType.BINARY) {
                     Document doc = form.getDocument(name);
-                    // System.out.println("doc:"+doc);
                     if (doc == null && form.getParameter(name + "_" + File.REMOVE) != null) {
-                        // System.out.println("remove");
                         try {
                             node.deleteContentNode(name + "_" + FileProperties.PROPERTIES_CONTENTNODE);
                         }
@@ -217,17 +213,14 @@ public class Save extends ControlSuper {
                         if (propNode != null) {
                             NodeData propData;
                             String fileName = form.getParameter(name + "_" + FileProperties.PROPERTY_FILENAME);
-                            // System.out.println("fileName:"+fileName);
                             if (fileName == null || fileName.equals("")) {
                                 fileName = doc.getFileName();
                             }
-                            // System.out.println("fileName2:"+fileName);
                             propData = propNode.getNodeData(FileProperties.PROPERTY_FILENAME);
                             if (!propData.isExist()) {
                                 propData = propNode.createNodeData(FileProperties.PROPERTY_FILENAME);
                             }
                             propData.setValue(fileName);
-                            // System.out.println("ok");
                             if (doc != null) {
                                 propData = propNode.getNodeData(FileProperties.PROPERTY_CONTENTTYPE);
                                 if (!propData.isExist()) {
@@ -330,7 +323,6 @@ public class Save extends ControlSuper {
                         }
                         else if (write) {
                             Value value = this.getValue(valueStr, type);
-                            // System.out.println("value: "+value);
                             if (value != null) {
                                 if (data.isExist()) {
                                     data.setValue(value);

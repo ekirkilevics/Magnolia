@@ -68,16 +68,19 @@ public class Select extends ControlSuper {
         while (it.hasNext()) {
             SelectOption o = (SelectOption) it.next();
             if (!this.getValue().equals("")) {
-                if (this.getValue().equals(o.getValue()))
+                if (this.getValue().equals(o.getValue())) {
                     o.setSelected(true);
-                else
+                }
+                else {
                     o.setSelected(false);
+                }
             }
             html.append(o.getHtml());
         }
         html.append("</select>");
-        if (this.getSaveInfo())
+        if (this.getSaveInfo()) {
             html.append(this.getHtmlSaveInfo());
+        }
         return html.toString();
     }
 }

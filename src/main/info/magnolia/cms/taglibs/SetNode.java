@@ -236,13 +236,9 @@ public class SetNode extends TagSupport {
          */
         public Object get(Object key) {
             NodeData nodeData;
-            try {
-                nodeData = this.wrappedNode.getNodeData((String) key);
-            }
-            catch (RepositoryException e) {
-                log.warn(e.getMessage(), e);
-                return null;
-            }
+
+            nodeData = this.wrappedNode.getNodeData((String) key);
+
             Object value;
             int type = nodeData.getType();
             if (type == PropertyType.DATE) {

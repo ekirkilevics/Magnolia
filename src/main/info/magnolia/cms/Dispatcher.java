@@ -25,17 +25,29 @@ import org.apache.log4j.Logger;
  * @author Sameer Charles
  * @version 2.0
  */
-public class Dispatcher {
+public final class Dispatcher {
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(Dispatcher.class);
 
     /**
-     * <p> dispatches the current requested to the handler JSP / Servlet </p>
+     * Utility class, don't instantiate.
+     */
+    private Dispatcher() {
+        // unused
+    }
+
+    /**
+     * <p>
+     * dispatches the current requested to the handler JSP / Servlet
+     * </p>
      * @throws ServletException
      * @throws IOException
      */
     public static void dispatch(HttpServletRequest req, HttpServletResponse res, ServletContext sc)
-            throws ServletException, IOException {
+        throws ServletException, IOException {
         if (sc == null) {
             log.error("null ServletContext received - aborting request");
             return;

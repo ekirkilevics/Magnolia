@@ -21,13 +21,17 @@ import info.magnolia.cms.util.Path;
 import info.magnolia.cms.util.ReverseFileReader;
 import info.magnolia.cms.util.regex.RegexWildcardPattern;
 import info.magnolia.exchange.Packet;
+
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
+
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -37,6 +41,8 @@ import org.jdom.Element;
  * @author Sameer Charles
  */
 public class PacketCollector {
+
+    public static final String MAIN_PACKET = "main";
 
     private static Logger log = Logger.getLogger(PacketFactory.class);
 
@@ -48,9 +54,7 @@ public class PacketCollector {
 
     private static final String NODE_DATA_ELEMENT = "NodeData";
 
-    public static final String MAIN_PACKET = "main";
-
-    private Hashtable packets;
+    private Map packets;
 
     private Subscriber subscriber;
 
@@ -121,21 +125,24 @@ public class PacketCollector {
      */
     private void addContentNodeList(Element root, Content content) {
         Collection children = content.getChildren(ItemType.NT_CONTENTNODE);
-        if (children == null || (children.isEmpty()))
+        if (children == null || (children.isEmpty())) {
             return;
+        }
         Iterator childIterator = children.iterator();
         while (childIterator.hasNext()) {
             Content contentNode = (Content) childIterator.next();
             /* add only if it has been changed since last activation */
-            if (this.isActivated(contentNode))
+            if (this.isActivated(contentNode)) {
                 continue;
+            }
             Element contentNodeElement = new Element(PacketCollector.CONTENT_NODE_ELEMENT);
             root.addContent(contentNodeElement);
             contentNodeElement.setAttribute(Header.PATH, contentNode.getHandle());
             /* add all non-binary properties to xml */
             this.addNodeDataList(root, contentNode);
-            if (contentNode.hasChildren(ItemType.NT_CONTENTNODE))
+            if (contentNode.hasChildren(ItemType.NT_CONTENTNODE)) {
                 this.addContentNodeList(root, contentNode);
+            }
         }
     }
 
@@ -145,8 +152,9 @@ public class PacketCollector {
      */
     private void addNodeDataList(Element root, Content content) {
         Collection properties = content.getChildren(ItemType.MAGNOLIA_NODE_DATA);
-        if (properties == null)
+        if (properties == null) {
             return;
+        }
         Iterator propertyListIterator = properties.iterator();
         while (propertyListIterator.hasNext()) {
             NodeData nodeData = (NodeData) propertyListIterator.next();
@@ -163,22 +171,22 @@ public class PacketCollector {
             nodeDataElement.addContent(data);
             String value = null;
             switch (nodeDataType) {
-                case PropertyType.STRING :
+                case PropertyType.STRING:
                     value = nodeData.getString();
                     break;
-                case PropertyType.LONG :
+                case PropertyType.LONG:
                     value = (new Long(nodeData.getLong())).toString();
                     break;
-                case PropertyType.DOUBLE :
+                case PropertyType.DOUBLE:
                     value = (new Double(nodeData.getDouble())).toString();
                     break;
-                case PropertyType.BOOLEAN :
+                case PropertyType.BOOLEAN:
                     value = (new Boolean(nodeData.getBoolean())).toString();
                     break;
-                case PropertyType.DATE :
+                case PropertyType.DATE:
                     value = nodeData.getDate().getTime().toString();
                     break;
-                default :
+                default:
                     value = "";
             }
             data.setText(value);
@@ -208,7 +216,7 @@ public class PacketCollector {
     /**
      * @return packets collected (XML / Binary)
      */
-    protected Hashtable getPackets() {
+    protected Map getPackets() {
         return this.packets;
     }
 
@@ -251,14 +259,16 @@ public class PacketCollector {
                     + " --- "
                     + RegexWildcardPattern.getMultipleCharPattern();
                 if (record.matches(pattern)) {
-                    if (record.indexOf(" --- REMOVED --- ") > -1)
+                    if (record.indexOf(" --- REMOVED --- ") > -1) {
                         return false; /* URI deactivated */
+                    }
                     /**
                      * check if the time of last SENT event is after the node modification
                      */
                     long lastActivation = sdf.parse(record.substring(0, 19)).getTime();
-                    if (lastActivation > lastModification)
+                    if (lastActivation > lastModification) {
                         return true;
+                    }
                     break;
                 }
             }

@@ -17,7 +17,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.Resource;
 
 import java.util.ArrayList;
@@ -83,12 +82,9 @@ public class AHref extends BodyTagSupport {
                     return EVAL_BODY_BUFFERED;
                 }
             }
-            try {
-                this.nodeData = this.contentNode.getNodeData(this.nodeDataName);
-            }
-            catch (AccessDeniedException e) {
-                log.error(e.getMessage(), e);
-            }
+
+            this.nodeData = this.contentNode.getNodeData(this.nodeDataName);
+
             if ((this.nodeData == null) || !this.nodeData.isExist()) {
                 this.writeLink("");
                 return EVAL_BODY_BUFFERED;

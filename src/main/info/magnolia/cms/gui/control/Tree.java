@@ -26,13 +26,17 @@ import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.MetaDataUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.Path;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 
 
@@ -42,40 +46,10 @@ import org.apache.log4j.Logger;
  */
 public class Tree extends ControlSuper {
 
-    private String repository;
-
-    private String pathOpen;
-
-    private String pathCurrent;
-
-    private String pathSelected;
-
-    private int indentionWidth = 15;
-
-    private ArrayList itemTypes = new ArrayList();
-
     public static final String DOCROOT = "/admindocroot/controls/tree/";
-
-    private int height = 400;
 
     // todo: global; where?
     public static final String ICONDOCROOT = "/admindocroot/icons/16/";
-
-    private String iconPage = ICONDOCROOT + "document_plain_earth.gif";
-
-    private String iconContentNode = ICONDOCROOT + "cubes.gif";
-
-    private String iconNodeData = ICONDOCROOT + "cube_green.gif";
-
-    private String iconOndblclick = null;
-
-    private String shifterExpand = DOCROOT + "shifter_EXPAND.gif";
-
-    private String shifterCollaspe = DOCROOT + "shifter_COLLAPSE.gif";
-
-    private String shifterEmpty = DOCROOT + "shifter_EMPTY.gif";
-
-    private static final String LINE_INTERNODE_MASK = DOCROOT + "line_internode_mask.gif";
 
     public static final int ACTION_MOVE = 0;
 
@@ -93,19 +67,52 @@ public class Tree extends ControlSuper {
 
     public static final int PASTETYPE_LAST = 3;
 
+    private static final String LINE_INTERNODE_MASK = DOCROOT + "line_internode_mask.gif";
+
+    /**
+     * Logger.
+     */
+    private static Logger log = Logger.getLogger(Tree.class);
+
+    private String repository;
+
+    private String pathOpen;
+
+    private String pathCurrent;
+
+    private String pathSelected;
+
+    private int indentionWidth = 15;
+
+    private List itemTypes = new ArrayList();
+
+    private int height = 400;
+
+    private String iconPage = ICONDOCROOT + "document_plain_earth.gif";
+
+    private String iconContentNode = ICONDOCROOT + "cubes.gif";
+
+    private String iconNodeData = ICONDOCROOT + "cube_green.gif";
+
+    private String iconOndblclick;
+
+    private String shifterExpand = DOCROOT + "shifter_EXPAND.gif";
+
+    private String shifterCollaspe = DOCROOT + "shifter_COLLAPSE.gif";
+
+    private String shifterEmpty = DOCROOT + "shifter_EMPTY.gif";
+
     private boolean drawShifter = true;
 
     private String javascriptTree = "mgnlTreeControl";
 
-    private ArrayList columns = new ArrayList();
+    private List columns = new ArrayList();
 
-    private ArrayList menuItems = new ArrayList();
+    private List menuItems = new ArrayList();
 
-    boolean snippetMode = true;
+    private boolean snippetMode = true;
 
     private String columnResizer = DOCROOT + "columnResizer.gif";
-
-    private static Logger log = Logger.getLogger(Tree.class);
 
     /**
      * Constructor.
@@ -174,11 +181,11 @@ public class Tree extends ControlSuper {
         return this.indentionWidth;
     }
 
-    public void setItemTypes(ArrayList al) {
+    public void setItemTypes(List al) {
         this.itemTypes = al;
     }
 
-    public ArrayList getItemTypes() {
+    public List getItemTypes() {
         return this.itemTypes;
     }
 
@@ -297,11 +304,11 @@ public class Tree extends ControlSuper {
      * Set the columns (for pages and content nodes only).
      * @param al list of TreeColumns
      */
-    public void setColums(ArrayList al) {
+    public void setColums(List al) {
         this.columns = al;
     }
 
-    public ArrayList getColumns() {
+    public List getColumns() {
         return this.columns;
     }
 
@@ -317,11 +324,11 @@ public class Tree extends ControlSuper {
      * Set the context menu.
      * @param al list of menu items
      */
-    public void setMenuItems(ArrayList al) {
+    public void setMenuItems(List al) {
         this.menuItems = al;
     }
 
-    public ArrayList getMenuItems() {
+    public List getMenuItems() {
         return this.menuItems;
     }
 
@@ -448,7 +455,7 @@ public class Tree extends ControlSuper {
             parentNode.save();
         }
         catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 

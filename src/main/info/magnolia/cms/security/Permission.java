@@ -24,48 +24,48 @@ public interface Permission {
     /**
      * All possible permissions
      */
-    public static final long ADD = 1;
+    long ADD = 1;
 
-    public static final long SET = 2;
+    long SET = 2;
 
-    public static final long REMOVE = 4;
+    long REMOVE = 4;
 
-    public static final long READ = 8;
+    long READ = 8;
 
-    public static final long EXECUTE = 16;
+    long EXECUTE = 16;
 
-    public static final long SYNDICATE = 32;
+    long SYNDICATE = 32;
 
-    public static final String PERMISSION_NAME_ADD = "Add";
+    String PERMISSION_NAME_ADD = "Add";
 
-    public static final String PERMISSION_NAME_SET = "Set";
+    String PERMISSION_NAME_SET = "Set";
 
-    public static final String PERMISSION_NAME_REMOVE = "Remove";
+    String PERMISSION_NAME_REMOVE = "Remove";
 
-    public static final String PERMISSION_NAME_READ = "Read";
+    String PERMISSION_NAME_READ = "Read";
 
-    public static final String PERMISSION_NAME_EXECUTE = "Execute";
+    String PERMISSION_NAME_EXECUTE = "Execute";
 
-    public static final String PERMISSION_NAME_SYNDICATE = "Syndicate";
+    String PERMISSION_NAME_SYNDICATE = "Syndicate";
 
-    public static final String PERMISSION_NAME_ALL = "(Add, Set, Read, Execute, Syndicate)";
+    String PERMISSION_NAME_ALL = "(Add, Set, Read, Execute, Syndicate)";
 
-    public static final String PERMISSION_NAME_WRITE = "(Add, Set, Read)";
+    String PERMISSION_NAME_WRITE = "(Add, Set, Read)";
 
     /**
      * permissions used via admin central module
      */
-    public static final long ALL = ADD | REMOVE | SET | READ | EXECUTE | SYNDICATE;
+    long ALL = ADD | REMOVE | SET | READ | EXECUTE | SYNDICATE;
 
-    public static final long WRITE = ADD | SET | READ;
+    long WRITE = ADD | SET | READ;
 
-    public void setPattern(Pattern value);
+    void setPattern(Pattern value);
 
-    public Pattern getPattern();
+    Pattern getPattern();
 
-    public void setPermissions(long value);
+    void setPermissions(long value);
 
-    public long getPermissions();
+    long getPermissions();
 
-    public boolean match(String path);
+    boolean match(String path);
 }

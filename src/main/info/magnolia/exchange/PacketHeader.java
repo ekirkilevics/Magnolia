@@ -28,15 +28,15 @@ public interface PacketHeader {
      * @param name
      * @param value
      */
-    public void addHeader(String name, String value);
+    void addHeader(String name, String value);
 
     /**
      * @return header field value
      */
-    public String getValueByName(String name);
+    String getValueByName(String name);
 
     /**
      * @return Collection of fieldNames as String
      */
-    public Enumeration getKeys();
+    Enumeration getKeys();
 }

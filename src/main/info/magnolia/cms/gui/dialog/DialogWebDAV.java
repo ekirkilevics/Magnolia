@@ -17,7 +17,6 @@ import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.Hidden;
 import info.magnolia.cms.gui.misc.Sources;
-import info.magnolia.cms.security.AccessDeniedException;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -30,6 +29,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
@@ -48,6 +48,9 @@ import org.apache.webdav.lib.methods.XMLResponseMethodBase;
  */
 public class DialogWebDAV extends DialogBox {
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(DialogWebDAV.class);
 
     // dev; remove values later (""; not null!)
@@ -65,7 +68,7 @@ public class DialogWebDAV extends DialogBox {
 
     private String protocol = "http";
 
-    private WebdavResource DAVConnection;
+    private WebdavResource davConnection;
 
     public DialogWebDAV(ContentNode configNode, Content websiteNode) throws RepositoryException {
         super(configNode, websiteNode);
@@ -150,21 +153,16 @@ public class DialogWebDAV extends DialogBox {
     }
 
     public void setDAVConnection(WebdavResource w) {
-        this.DAVConnection = w;
+        this.davConnection = w;
     }
 
     public WebdavResource getDAVConnection() {
-        return this.DAVConnection;
+        return this.davConnection;
     }
 
     private String getSizeValue() {
         if (this.getWebsiteNode() != null) {
-            try {
-                return this.getWebsiteNode().getNodeData(this.getName() + "_size").getString();
-            }
-            catch (AccessDeniedException e) {
-                log.error(e.getMessage());
-            }
+            return this.getWebsiteNode().getNodeData(this.getName() + "_size").getString();
         }
 
         return "";
@@ -172,12 +170,7 @@ public class DialogWebDAV extends DialogBox {
 
     private String getModDateValue() {
         if (this.getWebsiteNode() != null) {
-            try {
-                return this.getWebsiteNode().getNodeData(this.getName() + "_lastModified").getString();
-            }
-            catch (AccessDeniedException e) {
-                log.error(e.getMessage());
-            }
+            return this.getWebsiteNode().getNodeData(this.getName() + "_lastModified").getString();
         }
 
         return "";
@@ -209,7 +202,7 @@ public class DialogWebDAV extends DialogBox {
              */
         }
         catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         this.setDAVConnection(wdr);
     }
@@ -342,13 +335,11 @@ public class DialogWebDAV extends DialogBox {
         Enumeration fileList = null;
         String dir = this.getDirectory() + this.getSubDirectory();
         WebdavResource wdr = this.getDAVConnection();
-        // System.out.println("dir:"+dir);
         try {
             dir = URLDecoder.decode(dir, "UTF-8");
         }
         catch (UnsupportedEncodingException uee) {
         }
-        // System.out.println("URLDecoder.decode(dir,\"UTF-8\"): "+dir);
         try {
             if (dir == null || (dir.equals(""))) {
                 fileList = wdr.propfindMethod(1);
@@ -358,13 +349,9 @@ public class DialogWebDAV extends DialogBox {
                     fileList = wdr.propfindMethod(dir, 1);
                 }
                 catch (Exception e) {
-                    // System.out.println("path ["+path+"] not found; use defaultPath ["+defaultPath+"]");
                     dir = this.getDirectory();
                     fileList = wdr.propfindMethod(dir, 1);
                 }
-            }
-            if (wdr == null) {
-                // System.out.println(" WEBDAV RESOURCE - NULL ");
             }
             out.println("<html><head>");
             out.println(new Sources().getHtmlCss());
@@ -395,13 +382,12 @@ public class DialogWebDAV extends DialogBox {
             out.println(new Hidden(SESSION_ATTRIBUTENAME_DIALOGOBJECT, this
                 .getConfigValue(SESSION_ATTRIBUTENAME_DIALOGOBJECT), false).getHtml());
             out.println("</form>");
-            ArrayList fileListAS = new ArrayList();
-            ArrayList dirListAS = new ArrayList();
-            ArrayList selfAS = new ArrayList();
+            List fileListAS = new ArrayList();
+            List dirListAS = new ArrayList();
+            List selfAS = new ArrayList();
             while (fileList.hasMoreElements()) {
                 XMLResponseMethodBase.Response response = (XMLResponseMethodBase.Response) fileList.nextElement();
-                Hashtable properties = this.getDAVProperties(response);
-                // System.out.println("\nnext element (name):"+properties.get("name"));
+                Map properties = this.getDAVProperties(response);
                 if (properties.get("name") == null || properties.get("name").equals("")) {
                     continue;
                 }
@@ -433,9 +419,9 @@ public class DialogWebDAV extends DialogBox {
                 }
             }
             int i = 0;
-            ArrayList parentAS = new ArrayList();
+            List parentAS = new ArrayList();
             if (!this.getDirectory().equals(dir)) {
-                Hashtable parentProp = new Hashtable();
+                Map parentProp = new Hashtable();
                 String name = "";
                 if (parentDirectory.equals("")) {
                     name = "/";
@@ -477,7 +463,7 @@ public class DialogWebDAV extends DialogBox {
             Collections.sort(as, new DialogWebDAVComparator());
             Iterator it = as.iterator();
             while (it.hasNext()) {
-                Hashtable properties = (Hashtable) it.next();
+                Map properties = (Hashtable) it.next();
                 String displayType = (String) properties.get("displayType");
                 String name = (String) properties.get("name");
                 if (!alt) {
@@ -584,8 +570,8 @@ public class DialogWebDAV extends DialogBox {
         return i;
     }
 
-    public Hashtable getDAVProperties(XMLResponseMethodBase.Response response) {
-        Hashtable properties = new Hashtable();
+    public Map getDAVProperties(XMLResponseMethodBase.Response response) {
+        Map properties = new Hashtable();
         /* get the short name */
         Enumeration props = response.getProperties();
         String href = response.getHref();
@@ -634,7 +620,7 @@ public class DialogWebDAV extends DialogBox {
             properties.put("sizeStringUnit", "");
         }
         else {
-            String size[] = this.getFileSizeString((String) properties.get("size")).split(" ");
+            String[] size = this.getFileSizeString((String) properties.get("size")).split(" ");
             properties.put("sizeStringValue", size[0]);
             properties.put("sizeStringUnit", size[1]);
         }
@@ -661,7 +647,7 @@ public class DialogWebDAV extends DialogBox {
             return sdf.format(x).toString();
         }
         catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return date;
         }
     }

@@ -13,8 +13,9 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.ContentNode;
-import info.magnolia.cms.security.AccessDeniedException;
+
 import java.util.Comparator;
+
 import org.apache.log4j.Logger;
 
 
@@ -38,14 +39,10 @@ public class StringComparator implements Comparator {
     public int compare(Object o, Object o1) throws ClassCastException {
         String URI1;
         String URI2;
-        try {
-            URI1 = ((ContentNode) o).getNodeData(this.nodeDataName).getString();
-            URI2 = ((ContentNode) o1).getNodeData(this.nodeDataName).getString();
-        }
-        catch (AccessDeniedException e) {
-            log.error(e.getMessage());
-            URI1 = URI2 = "";
-        }
+
+        URI1 = ((ContentNode) o).getNodeData(this.nodeDataName).getString();
+        URI2 = ((ContentNode) o1).getNodeData(this.nodeDataName).getString();
+
         return URI1.compareTo(URI2);
     }
 }

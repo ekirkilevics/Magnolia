@@ -42,24 +42,27 @@ import java.util.StringTokenizer;
  * @author Commons-Id Team
  * @version $Revision: 1.3 $ $Date: 2004/07/30 06:51:47 $
  */
-public class UUID implements Constants, Serializable, Comparable {
+public class UUID implements Serializable, Comparable {
 
     /**
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
 
+    /** XXX begin modification by stefan@apache.org */
+    private static VersionFourGenerator versionFourGenereator = new VersionFourGenerator();
+
     /** byte array to store 128-bits composing this UUID */
-    private byte[] rawBytes = new byte[UUID_BYTE_LENGTH];
+    private byte[] rawBytes = new byte[Constants.UUID_BYTE_LENGTH];
 
     /** Holds node identifier for this UUID */
-    private Long node = null;
+    private Long node;
 
     /** Holds timestamp for this UUID */
     private long timestamp = -1;
 
     /** Holds the clock sequence field */
-    private Short clockSq = null;
+    private Short clockSq;
 
     /** Holds the version field of this UUID */
     private int version = -1;
@@ -68,12 +71,8 @@ public class UUID implements Constants, Serializable, Comparable {
     private int variant = -1;
 
     /** Holds the internal string value of the UUID */
-    private String stringValue = null;
+    private String stringValue;
 
-    /** XXX begin modification by stefan@apache.org */
-    private static VersionFourGenerator versionFourGenereator = new VersionFourGenerator();
-
-    /** XXX end modification by stefan@apache.org */
     /** Constructs a nil UUID */
     public UUID() {
         super();
@@ -115,11 +114,11 @@ public class UUID implements Constants, Serializable, Comparable {
      */
     public UUID(byte[] byteArray) throws IllegalArgumentException {
         super();
-        if (byteArray.length != UUID_BYTE_LENGTH) {
+        if (byteArray.length != Constants.UUID_BYTE_LENGTH) {
             throw new IllegalArgumentException("UUID must be contructed using a 16 byte array.");
         }
         // UUID must be immutable so a copy is used.
-        System.arraycopy(byteArray, 0, rawBytes, 0, UUID_BYTE_LENGTH);
+        System.arraycopy(byteArray, 0, rawBytes, 0, Constants.UUID_BYTE_LENGTH);
     }
 
     /**
@@ -131,7 +130,7 @@ public class UUID implements Constants, Serializable, Comparable {
      */
     public UUID(DataInput input) throws IOException {
         super();
-        input.readFully(rawBytes, 0, UUID_BYTE_LENGTH);
+        input.readFully(rawBytes, 0, Constants.UUID_BYTE_LENGTH);
     }
 
     /**
@@ -179,23 +178,23 @@ public class UUID implements Constants, Serializable, Comparable {
             leanString = uuidString.substring(++pos, uuidString.length());
         }
         // Check for 36 char length
-        if (leanString.length() != UUID_FORMATTED_LENGTH) {
+        if (leanString.length() != Constants.UUID_FORMATTED_LENGTH) {
             // throw new UUIDFormatException();
             throw new IllegalArgumentException();
         }
         // Check for 5 fields
         StringTokenizer tok = new StringTokenizer(leanString, "-");
-        if (tok.countTokens() != TOKENS_IN_UUID) {
+        if (tok.countTokens() != Constants.TOKENS_IN_UUID) {
             // throw new UUIDFormatException();
             throw new IllegalArgumentException();
         }
         // Remove the "-" from the formatted string and test token sizes
-        StringBuffer buf = new StringBuffer(UUID_UNFORMATTED_LENGTH);
+        StringBuffer buf = new StringBuffer(Constants.UUID_UNFORMATTED_LENGTH);
         String token = null;
         int count = 0;
         while (tok.hasMoreTokens()) {
             token = tok.nextToken();
-            if (token.length() != TOKEN_LENGTHS[count++]) {
+            if (token.length() != Constants.TOKEN_LENGTHS[count++]) {
                 // throw new UUIDFormatException();
                 throw new IllegalArgumentException();
             }
@@ -208,8 +207,8 @@ public class UUID implements Constants, Serializable, Comparable {
          * (DecoderException de) { throw new UUIDFormatException(de.getMessage()); }
          */
         String s = buf.toString();
-        byte[] bytes = new byte[UUID_BYTE_LENGTH];
-        for (int i = 0, j = 0; i < (UUID_BYTE_LENGTH * 2); i += 2) {
+        byte[] bytes = new byte[Constants.UUID_BYTE_LENGTH];
+        for (int i = 0, j = 0; i < (Constants.UUID_BYTE_LENGTH * 2); i += 2) {
             bytes[j++] = (byte) Integer.parseInt(s.substring(i, i + 2), 16);
         }
         tmpUUID = new UUID(bytes);
@@ -234,10 +233,10 @@ public class UUID implements Constants, Serializable, Comparable {
              * buf.insert(FORMAT_POSITION1, '-'); buf.insert(FORMAT_POSITION2, '-'); buf.insert(FORMAT_POSITION3, '-');
              * buf.insert(FORMAT_POSITION4, '-'); stringValue = buf.toString();
              */
-            char[] chars = new char[UUID_FORMATTED_LENGTH];
+            char[] chars = new char[Constants.UUID_FORMATTED_LENGTH];
             for (int i = 0, j = 0; i < 16; i++) {
-                chars[j++] = hexDigits[(rawBytes[i] >> 4) & 0x0f];
-                chars[j++] = hexDigits[rawBytes[i] & 0x0f];
+                chars[j++] = Constants.HEX_DIGITS[(rawBytes[i] >> 4) & 0x0f];
+                chars[j++] = Constants.HEX_DIGITS[rawBytes[i] & 0x0f];
                 if (i == 3 || i == 5 || i == 7 || i == 9) {
                     chars[j++] = '-';
                 }
@@ -256,7 +255,7 @@ public class UUID implements Constants, Serializable, Comparable {
      * @return Returns the urn string representation of the UUID
      */
     public String toUrn() {
-        return URN_PREFIX + this.toString();
+        return Constants.URN_PREFIX + this.toString();
     }
 
     /**
@@ -310,8 +309,8 @@ public class UUID implements Constants, Serializable, Comparable {
      */
     public int clockSequence() throws UnsupportedOperationException {
         // if variant is not mealling leach salz throw unsupported operation exception
-        if (variant() != VARIANT_IETF_DRAFT || version() != VERSION_ONE) {
-            throw new UnsupportedOperationException(WRONG_VAR_VER_MSG);
+        if (variant() != Constants.VARIANT_IETF_DRAFT || version() != Constants.VERSION_ONE) {
+            throw new UnsupportedOperationException(Constants.WRONG_VAR_VER_MSG);
         }
         if (clockSq == null) {
             byte[] b = {((byte) (rawBytes[8] & 0x3F)), rawBytes[9]};
@@ -352,16 +351,16 @@ public class UUID implements Constants, Serializable, Comparable {
     public int variant() {
         if (variant == -1) {
             if ((rawBytes[8] & 0x80) == 0x0) {
-                variant = VARIANT_NCS_COMPAT;
+                variant = Constants.VARIANT_NCS_COMPAT;
             }
             else if ((rawBytes[8] & 0x40) == 0x0) {
-                variant = VARIANT_IETF_DRAFT;
+                variant = Constants.VARIANT_IETF_DRAFT;
             }
             else if ((rawBytes[8] & 0x20) == 0x0) {
-                variant = VARIANT_MS;
+                variant = Constants.VARIANT_MS;
             }
             else {
-                variant = VARIANT_FUTURE;
+                variant = Constants.VARIANT_FUTURE;
             }
         }
         return variant;
@@ -377,8 +376,8 @@ public class UUID implements Constants, Serializable, Comparable {
      */
     public long node() throws UnsupportedOperationException {
         // if variant is not mealling leach salz throw unsupported operation exception
-        if (variant() != VARIANT_IETF_DRAFT || version() != VERSION_ONE) {
-            throw new UnsupportedOperationException(WRONG_VAR_VER_MSG);
+        if (variant() != Constants.VARIANT_IETF_DRAFT || version() != Constants.VERSION_ONE) {
+            throw new UnsupportedOperationException(Constants.WRONG_VAR_VER_MSG);
         }
         if (node == null) {
             byte[] b = new byte[8];
@@ -398,15 +397,30 @@ public class UUID implements Constants, Serializable, Comparable {
      */
     public long timestamp() throws UnsupportedOperationException {
         // if variant is not mealling leach salz throw unsupported operation exception
-        if (variant() != VARIANT_IETF_DRAFT || version() != VERSION_ONE) {
-            throw new UnsupportedOperationException(WRONG_VAR_VER_MSG);
+        if (variant() != Constants.VARIANT_IETF_DRAFT || version() != Constants.VERSION_ONE) {
+            throw new UnsupportedOperationException(Constants.WRONG_VAR_VER_MSG);
         }
         if (timestamp == -1) {
             byte[] longVal = new byte[8];
-            System.arraycopy(rawBytes, TIME_HI_START_POS, longVal, TIME_HI_TS_POS, TIME_HI_BYTE_LEN);
-            System.arraycopy(rawBytes, TIME_MID_START_POS, longVal, TIME_MID_TS_POS, TIME_MID_BYTE_LEN);
-            System.arraycopy(rawBytes, TIME_LOW_START_POS, longVal, TIME_LOW_TS_POS, TIME_LOW_BYTE_LEN);
-            longVal[TIME_HI_TS_POS] &= 0x0F;
+            System.arraycopy(
+                rawBytes,
+                Constants.TIME_HI_START_POS,
+                longVal,
+                Constants.TIME_HI_TS_POS,
+                Constants.TIME_HI_BYTE_LEN);
+            System.arraycopy(
+                rawBytes,
+                Constants.TIME_MID_START_POS,
+                longVal,
+                Constants.TIME_MID_TS_POS,
+                Constants.TIME_MID_BYTE_LEN);
+            System.arraycopy(
+                rawBytes,
+                Constants.TIME_LOW_START_POS,
+                longVal,
+                Constants.TIME_LOW_TS_POS,
+                Constants.TIME_LOW_BYTE_LEN);
+            longVal[Constants.TIME_HI_TS_POS] &= 0x0F;
             timestamp = Bytes.toLong(longVal);
         }
         return timestamp;
@@ -442,8 +456,8 @@ public class UUID implements Constants, Serializable, Comparable {
      * @return a copy of the byte values contained in this UUID.
      */
     public byte[] getRawBytes() {
-        byte[] ret = new byte[UUID_BYTE_LENGTH];
-        System.arraycopy(rawBytes, 0, ret, 0, UUID_BYTE_LENGTH);
+        byte[] ret = new byte[Constants.UUID_BYTE_LENGTH];
+        System.arraycopy(rawBytes, 0, ret, 0, Constants.UUID_BYTE_LENGTH);
         return ret;
     }
 

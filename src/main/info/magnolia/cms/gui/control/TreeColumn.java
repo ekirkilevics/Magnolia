@@ -17,9 +17,11 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.gui.dialog.DialogSuper;
 import info.magnolia.cms.util.MetaDataUtil;
 import info.magnolia.cms.util.NodeDataUtil;
+
 import java.util.Calendar;
 import java.util.Hashtable;
-import javax.jcr.RepositoryException;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 
 
@@ -28,34 +30,6 @@ import org.apache.log4j.Logger;
  * @version 2.0
  */
 public class TreeColumn extends ControlSuper {
-
-    private int width = 1;
-
-    boolean isMeta = false;
-
-    boolean isLabel = false;
-
-    boolean isIcons = false;
-
-    boolean iconsActivation = false;
-
-    boolean iconsPermission = false;
-
-    boolean isNodeDataValue = false;
-
-    boolean isNodeDataType = false;
-
-    String dateFormat = null;
-
-    private String javascriptTree = "";
-
-    String title = "";
-
-    boolean permissionWrite = false;
-
-    String htmlEdit = "";
-
-    private static Logger log = Logger.getLogger(TreeColumn.class);
 
     public static final String EDIT_CSSCLASS_EDIT = DialogSuper.CSSCLASS_EDIT;
 
@@ -67,9 +41,40 @@ public class TreeColumn extends ControlSuper {
 
     public static final String EMPTY = "-";
 
+    /**
+     * Logger.
+     */
+    private static Logger log = Logger.getLogger(TreeColumn.class);
+
+    boolean isMeta;
+
+    boolean isLabel;
+
+    boolean isIcons;
+
+    boolean iconsActivation;
+
+    boolean iconsPermission;
+
+    boolean isNodeDataValue;
+
+    boolean isNodeDataType;
+
+    String dateFormat;
+
+    String title = "";
+
+    boolean permissionWrite;
+
+    String htmlEdit = "";
+
+    private String javascriptTree = "";
+
+    private int width = 1;
+
     // if EMPTY changes, it has to be updated also in tree.js; note: if you use html tags, use upper-case letters (and
     // test it well ;)
-    private Hashtable keyValue = new Hashtable();
+    private Map keyValue = new Hashtable();
 
     /**
      * <p>
@@ -189,11 +194,11 @@ public class TreeColumn extends ControlSuper {
         return this.javascriptTree;
     }
 
-    public void setKeyValue(Hashtable h) {
+    public void setKeyValue(Map h) {
         this.keyValue = h;
     }
 
-    public Hashtable getKeyValue() {
+    public Map getKeyValue() {
         return this.keyValue;
     }
 
@@ -244,20 +249,22 @@ public class TreeColumn extends ControlSuper {
             // todo: (value is not shown after saving ...)
             if (this.getKeyValue().size() != 0) {
                 String value = (String) this.getKeyValue().get(html);
-                if (value != null)
+                if (value != null) {
                     html = value;
+                }
             }
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
         }
         // "" not clickable!
-        if (html.equals(""))
+        if (html.equals("")) {
             html = TreeColumn.EMPTY;
+        }
         return html;
     }
 
-    public String getHtmlIcons() throws RepositoryException {
+    public String getHtmlIcons() {
         StringBuffer html = new StringBuffer();
         if (this.getIconsActivation()) {
             MetaData activationMetaData = this.getWebsiteNode().getMetaData(MetaData.ACTIVATION_INFO);

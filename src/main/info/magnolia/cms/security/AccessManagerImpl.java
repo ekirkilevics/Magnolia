@@ -37,8 +37,9 @@ public class AccessManagerImpl implements AccessManager {
     }
 
     public long getPermissions(String path) {
-        if (userPermissions == null)
+        if (userPermissions == null) {
             return Permission.ALL;
+        }
         long permission = 0;
         int patternLength = 0;
         for (int i = 0; i < userPermissions.size(); i++) {

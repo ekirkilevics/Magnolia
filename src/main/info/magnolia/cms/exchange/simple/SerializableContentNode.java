@@ -13,7 +13,9 @@
 package info.magnolia.cms.exchange.simple;
 
 import info.magnolia.cms.core.ContentNode;
+
 import java.io.Serializable;
+
 import org.apache.log4j.Logger;
 
 
@@ -29,6 +31,9 @@ public class SerializableContentNode extends SerializableContent implements Seri
      */
     private static final long serialVersionUID = 222L;
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(SerializableContentNode.class);
 
     private ContentNode baseContentNode;
@@ -55,8 +60,9 @@ public class SerializableContentNode extends SerializableContent implements Seri
         this.metaData = new SerializableMetaData(this.baseContentNode.getMetaData());
         /* add top level node list */
         this.addNodeDataList(this.baseContentNode);
-        if (this.recurse)
+        if (this.recurse) {
             this.addContentNodeList(this.baseContentNode, true);
+        }
     }
 
     public SerializableMetaData getMetaData() {

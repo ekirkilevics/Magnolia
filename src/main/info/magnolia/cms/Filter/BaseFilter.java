@@ -13,6 +13,7 @@
 package info.magnolia.cms.Filter;
 
 import java.io.IOException;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -21,7 +22,6 @@ import javax.servlet.ServletResponse;
 
 
 /**
- * User: sameercharles Date: June 15, 2003 Time: 10:00:14 PM
  * @author Sameer Charles
  * @version 1.1
  */
@@ -47,9 +47,7 @@ public abstract class BaseFilter implements Filter {
     }
 
     /**
-     * <p>
-     * All filtering tasks which are common to filters extending BaseFilter
-     * </p>
+     * All filtering tasks which are common to filters extending BaseFilter.
      * @param req , Servlet request as given by servlet container
      * @param res , Servlet response as given by servlet container
      * @param filterChain , FilterChain object available to the developer

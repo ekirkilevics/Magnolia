@@ -15,10 +15,10 @@ package info.magnolia.cms.gui.dialog;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.gui.control.File;
-import info.magnolia.cms.security.AccessDeniedException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
@@ -35,7 +35,7 @@ public class DialogFile extends DialogBox {
 
     private static Logger log = Logger.getLogger(DialogFile.class);
 
-    private ArrayList imageExtensions = new ArrayList();
+    private List imageExtensions = new ArrayList();
 
     public DialogFile(ContentNode configNode, Content websiteNode) throws RepositoryException {
         super(configNode, websiteNode);
@@ -48,11 +48,11 @@ public class DialogFile extends DialogBox {
         initIconExtensions();
     }
 
-    public ArrayList getImageExtensions() {
+    public List getImageExtensions() {
         return this.imageExtensions;
     }
 
-    public void setImageExtensions(ArrayList l) {
+    public void setImageExtensions(List l) {
         this.imageExtensions = l;
     }
 
@@ -74,8 +74,9 @@ public class DialogFile extends DialogBox {
 
         String width = this.getConfigValue("width", "100%");
         boolean showImage = false;
-        if (this.getImageExtensions().contains(control.getExtension().toLowerCase()))
+        if (this.getImageExtensions().contains(control.getExtension().toLowerCase())) {
             showImage = true;
+        }
         String htmlControlBrowse = control.getHtmlBrowse();
         StringBuffer htmlControlFileName = new StringBuffer();
         htmlControlFileName.append("<span class=\"" + CSSCLASS_DESCRIPTION + "\">Filename</span>");
@@ -89,13 +90,11 @@ public class DialogFile extends DialogBox {
         String htmlContentEmpty = htmlControlBrowse + spacer.getHtml() + htmlControlFileName;
         out.println("<div id=\"" + this.getName() + "_contentDiv\" style=\"width:100%;\">");
         boolean exists = false;
-        try {
-            if (this.getWebsiteNode() != null)
-                exists = this.getWebsiteNode().getNodeData(this.getName()).isExist();
+
+        if (this.getWebsiteNode() != null) {
+            exists = this.getWebsiteNode().getNodeData(this.getName()).isExist();
         }
-        catch (AccessDeniedException e) {
-            log.error(e.getMessage());
-        }
+
         if (!exists) {
             out.println(htmlContentEmpty);
             out.println("</div>");

@@ -16,6 +16,7 @@ import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.beans.runtime.Cache;
 import info.magnolia.cms.security.SecureURI;
 import info.magnolia.cms.util.Path;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -27,10 +28,11 @@ import java.net.URLConnection;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.zip.GZIPOutputStream;
-import javax.jcr.RepositoryException;
+
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.log4j.Logger;
 
 
@@ -41,21 +43,24 @@ import org.apache.log4j.Logger;
  */
 public class CacheHandler extends Thread {
 
-    private static Logger log = Logger.getLogger(CacheHandler.class);
-
     public static final String CACHE_DIRECTORY = Path.getCacheDirectoryPath();
 
     private static final String DEFAULT_STORE = "/default";
 
     private static final String COMPRESSED_STORE = "/optimized";
 
+    private static Logger log = Logger.getLogger(CacheHandler.class);
+
     /**
      * @param request
      */
     public static void cacheURI(HttpServletRequest request) throws IOException {
-        if (CacheHandler.hasRedirect(request)) /* dont cache */
+        // dont cache
+        if (CacheHandler.hasRedirect(request)) {
             return;
-        String URI = Path.getURI(request);
+        }
+
+        String uri = Path.getURI(request);
         FileOutputStream out = null;
         int size = 0;
         int compressedSize = 0;
@@ -63,67 +68,64 @@ public class CacheHandler extends Thread {
             if (!info.magnolia.cms.beans.config.Cache.isCacheable(request)) {
                 return;
             }
-            File file = getDestinationFile(URI, DEFAULT_STORE);
+            File file = getDestinationFile(uri, DEFAULT_STORE);
             if (!file.exists()) {
                 file.createNewFile();
                 out = new FileOutputStream(file);
-                streamURI(URI, out, request);
+                streamURI(uri, out, request);
                 out.flush();
                 out.close();
             }
             size = (new Long(file.length())).intValue();
             if (info.magnolia.cms.beans.config.Cache.applyCompression(Path.getExtension(request))) {
-                File gzipFile = getDestinationFile(URI, COMPRESSED_STORE);
+                File gzipFile = getDestinationFile(uri, COMPRESSED_STORE);
                 if (!gzipFile.exists()) {
                     gzipFile.createNewFile();
                     out = new FileOutputStream(gzipFile);
-                    GZIPOutputStream gOut = new GZIPOutputStream(out);
-                    streamURI(URI, gOut, request);
-                    gOut.close();
+                    GZIPOutputStream gzipOut = new GZIPOutputStream(out);
+                    streamURI(uri, gzipOut, request);
+                    gzipOut.close();
                 }
                 compressedSize = (new Long(gzipFile.length())).intValue();
             }
-            Cache.addToCachedURIList(URI, (new Date()).getTime(), size, compressedSize);
+            Cache.addToCachedURIList(uri, (new Date()).getTime(), size, compressedSize);
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
         }
         finally {
-            if (out != null)
+            if (out != null) {
                 out.close();
+            }
         }
     }
 
     private static boolean hasRedirect(HttpServletRequest request) {
         Object obj = request.getAttribute(Aggregator.ACTPAGE);
-        if (obj == null)
+        if (obj == null) {
             return false; /* some other resource */
-        else {
-            Content aPage = (Content) obj;
-            try {
-                if (aPage.getNodeData("redirectURL").getString().equals(""))
-                    return false;
-                else
-                    return true;
-            }
-            catch (RepositoryException e) {
-                log.error(e.getMessage(), e);
-                return false;
-            }
         }
+        Content page = (Content) obj;
+
+        if (page.getNodeData("redirectURL").getString().equals("")) {
+            return false;
+        }
+        return true;
+
     }
 
     /**
-     * @param URI
+     * @param uri
      * @param out
      */
-    private static void streamURI(String URI, OutputStream out, HttpServletRequest request) throws IOException {
+    private static void streamURI(String uri, OutputStream out, HttpServletRequest request) throws IOException {
         InputStream in = null;
         try {
-            URL url = new URL(info.magnolia.cms.beans.config.Cache.getDomain() + URI);
+            URL url = new URL(info.magnolia.cms.beans.config.Cache.getDomain() + uri);
             URLConnection urlConnection = url.openConnection();
-            if (SecureURI.isProtected(URI))
+            if (SecureURI.isProtected(uri)) {
                 urlConnection.setRequestProperty("Authorization", request.getHeader("Authorization"));
+            }
             byte[] buffer = new byte[8192];
             int read = 0;
             in = urlConnection.getInputStream();
@@ -133,27 +135,29 @@ public class CacheHandler extends Thread {
             out.close();
         }
         catch (Exception e) {
-            log.error("Failed to stream - " + URI);
+            log.error("Failed to stream - " + uri);
             log.error(e.getMessage());
         }
         finally {
-            if (in != null)
+            if (in != null) {
                 in.close();
+            }
         }
     }
 
     /**
-     * @param URI
+     * @param uri
      */
-    private static File getDestinationFile(String URI, String type) throws Exception {
+    private static File getDestinationFile(String uri, String type) throws Exception {
         validatePath(CACHE_DIRECTORY);
         validatePath(CACHE_DIRECTORY + type);
-        String[] items = URI.split("/");
+        String[] items = uri.split("/");
         StringBuffer buffer = new StringBuffer();
         int i = 0;
         for (; i < (items.length - 1); i++) {
-            if (items[i].equals(""))
+            if (items[i].equals("")) {
                 continue;
+            }
             buffer.append("/" + items[i]);
             validatePath(CACHE_DIRECTORY + type + buffer.toString());
         }
@@ -164,7 +168,6 @@ public class CacheHandler extends Thread {
     /**
      * <p>
      * create a directory specified by the path
-     *
      * </p>
      * @param path to the directory
      */
@@ -172,8 +175,9 @@ public class CacheHandler extends Thread {
         try {
             File file = new File(path);
             if (!file.isDirectory()) {
-                if (!file.mkdir())
+                if (!file.mkdir()) {
                     log.error("Can not create directory - " + path);
+                }
             }
         }
         catch (Exception e) {
@@ -185,10 +189,9 @@ public class CacheHandler extends Thread {
     /**
      * <p>
      * spools cached data back to the client.<br>
-     * this only works if specified request is a GET request and does not have any request parameter, else
-     * it wont write anything on the output stream.
+     * this only works if specified request is a GET request and does not have any request parameter, else it wont write
+     * anything on the output stream.
      * </p>
-     *
      * @param request
      * @param response
      * @throws IOException
@@ -196,23 +199,29 @@ public class CacheHandler extends Thread {
      */
     public static boolean streamFromCache(HttpServletRequest request, HttpServletResponse response) throws IOException {
         /* make sure not to stream anything from cache if its a POST request or has ? in URL */
-        if (request.getMethod().toLowerCase().equals("post"))
+        if (request.getMethod().toLowerCase().equals("post")) {
             return false;
+        }
         Enumeration paramList = request.getParameterNames();
-        if (paramList.hasMoreElements())
+        if (paramList.hasMoreElements()) {
             return false;
+        }
         boolean compress = canCompress(request);
         FileInputStream fin = null;
         try {
             File file;
-            if (compress)
+            if (compress) {
                 file = new File(CACHE_DIRECTORY + COMPRESSED_STORE + Path.getURI(request));
-            else
+            }
+            else {
                 file = new File(CACHE_DIRECTORY + DEFAULT_STORE + Path.getURI(request));
-            if (!file.exists())
+            }
+            if (!file.exists()) {
                 return false;
-            if (file.length() < 4)
+            }
+            if (file.length() < 4) {
                 return false;
+            }
             fin = new FileInputStream(file);
             if (compress) {
                 response.setContentLength(Cache.getCompressedSize(request));
@@ -226,8 +235,9 @@ public class CacheHandler extends Thread {
         catch (Exception e) {
         }
         finally {
-            if (fin != null)
+            if (fin != null) {
                 fin.close();
+            }
         }
         return true;
     }
@@ -271,8 +281,9 @@ public class CacheHandler extends Thread {
      * @return boolean
      */
     private static boolean canCompress(HttpServletRequest req) {
-        if (!info.magnolia.cms.beans.config.Cache.applyCompression(Path.getExtension(req)))
+        if (!info.magnolia.cms.beans.config.Cache.applyCompression(Path.getExtension(req))) {
             return false;
+        }
         String encoding = req.getHeader("Accept-Encoding");
         if (encoding != null) {
             return (encoding.toLowerCase().indexOf("gzip") > -1);
@@ -283,14 +294,13 @@ public class CacheHandler extends Thread {
     /**
      * <p>
      * empties the cache for the specified resource.<br>
-     * currenty it expects the entire path, including cache location.
-     * todo : make it relative, should be able to flush specified resource from all cache stores
+     * currenty it expects the entire path, including cache location. todo : make it relative, should be able to flush
+     * specified resource from all cache stores
      * </p>
-     *
-     * @param URI
+     * @param uri
      */
-    public static void flushResource(String URI) throws Exception {
-        File file = new File(URI);
+    public static void flushResource(String uri) throws Exception {
+        File file = new File(uri);
         try {
             if (file.isDirectory()) {
                 emptyDirectory(file);
@@ -298,13 +308,13 @@ public class CacheHandler extends Thread {
                 Cache.clearCachedURIList();
             }
             else {
-                log.info("Flushing - " + URI);
+                log.info("Flushing - " + uri);
                 file.delete();
-                Cache.removeFromCachedURIList(URI);
+                Cache.removeFromCachedURIList(uri);
             }
         }
         catch (Exception e) {
-            log.error("Failed to flush - " + URI);
+            log.error("Failed to flush - " + uri);
             log.error(e.getMessage(), e);
             throw new Exception(e);
         }

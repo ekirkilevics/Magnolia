@@ -14,8 +14,9 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.beans.runtime.SystemProperty;
 import info.magnolia.cms.core.HierarchyManager;
-import javax.jcr.RepositoryException;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 
 
@@ -23,12 +24,19 @@ import org.apache.log4j.Logger;
  * @author Sameer Charles
  * @version 2.0
  */
-public class Path {
+public final class Path {
 
     /**
      * Logger.
      */
     private static Logger log = Logger.getLogger(Path.class);
+
+    /**
+     * Utility class, don't instantiate.
+     */
+    private Path() {
+        // unused
+    }
 
     /**
      * <p>
@@ -115,7 +123,7 @@ public class Path {
     /**
      * @deprecated
      */
-    public static String getUniqueLabel(String parent, String label) throws RepositoryException {
+    public static String getUniqueLabel(String parent, String label) {
         log.error("Deprecated - use getUniqueLabel(Content parent, String label) instead");
         return label;
     }
@@ -151,8 +159,9 @@ public class Path {
                 newLabel.append("-");
             }
         }
-        if (newLabel.length() == 0)
+        if (newLabel.length() == 0) {
             newLabel.append("untitled");
+        }
         return newLabel.toString();
     }
 
@@ -193,27 +202,31 @@ public class Path {
     }
 
     public static String getAbsolutePath(String path, String label) {
-        if (path == null || (path.equals("")) || (path.equals("/")))
+        if (path == null || (path.equals("")) || (path.equals("/"))) {
             return "/" + label;
-        else
-            return path + "/" + label;
+        }
+
+        return path + "/" + label;
     }
 
     public static String getAbsolutePath(String path) {
-        if (!path.startsWith("/"))
+        if (!path.startsWith("/")) {
             return "/" + path;
+        }
         return path;
     }
 
     public static String getNodePath(String path, String label) {
-        if (path == null || (path.equals("")) || (path.equals("/")))
+        if (path == null || (path.equals("")) || (path.equals("/"))) {
             return label;
+        }
         return getNodePath(path + "/" + label);
     }
 
     public static String getNodePath(String path) {
-        if (path.startsWith("/"))
+        if (path.startsWith("/")) {
             path = path.replaceFirst("/", "");
+        }
         return path;
     }
 

@@ -13,7 +13,9 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.NodeData;
+
 import java.util.Date;
+
 import javax.jcr.PropertyType;
 
 
@@ -57,19 +59,21 @@ public class NodeDataUtil {
         try {
             NodeData nodeData = this.getNodeData();
             switch (nodeData.getType()) {
-                case (PropertyType.STRING) :
+                case (PropertyType.STRING):
                     return nodeData.getString();
-                case (PropertyType.DOUBLE) :
+                case (PropertyType.DOUBLE):
                     return Double.toString(nodeData.getDouble());
-                case (PropertyType.LONG) :
+                case (PropertyType.LONG):
                     return Long.toString(nodeData.getLong());
-                case (PropertyType.BOOLEAN) :
+                case (PropertyType.BOOLEAN):
                     return Boolean.toString(nodeData.getBoolean());
-                case (PropertyType.DATE) :
+                case (PropertyType.DATE):
                     Date valueDate = nodeData.getDate().getTime();
                     return new DateUtil().getFormattedDate(valueDate, dateFormat);
-                case (PropertyType.BINARY) :
-            // ???
+                case (PropertyType.BINARY):
+                // ???
+                default:
+                    return "";
             }
         }
         catch (Exception e) {
@@ -78,18 +82,23 @@ public class NodeDataUtil {
     }
 
     public String getTypeName(int type) {
-        if (type == PropertyType.STRING)
-            return PropertyType.TYPENAME_STRING;
-        else if (type == PropertyType.BOOLEAN)
-            return PropertyType.TYPENAME_BOOLEAN;
-        else if (type == PropertyType.DATE)
-            return PropertyType.TYPENAME_DATE;
-        else if (type == PropertyType.LONG)
-            return PropertyType.TYPENAME_LONG;
-        else if (type == PropertyType.DOUBLE)
-            return PropertyType.TYPENAME_DOUBLE;
-        else if (type == PropertyType.BINARY)
-            return PropertyType.TYPENAME_BINARY;
-        return "";
+
+        switch (type) {
+            case PropertyType.STRING:
+                return PropertyType.TYPENAME_STRING;
+            case PropertyType.BOOLEAN:
+                return PropertyType.TYPENAME_BOOLEAN;
+            case PropertyType.DATE:
+                return PropertyType.TYPENAME_DATE;
+            case PropertyType.LONG:
+                return PropertyType.TYPENAME_LONG;
+            case PropertyType.DOUBLE:
+                return PropertyType.TYPENAME_DOUBLE;
+            case PropertyType.BINARY:
+                return PropertyType.TYPENAME_BINARY;
+            default:
+                return "";
+        }
+
     }
 }

@@ -17,7 +17,9 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.security.SessionAccessControl;
+
 import java.util.Iterator;
+
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -72,17 +74,20 @@ public class RequestInterceptor extends HttpServlet {
     private void action() {
         String action = this.getRequest().getParameter(EntryServlet.INTERCEPT);
         String repository = this.getRequest().getParameter("mgnlRepository");
-        if (repository == null)
+        if (repository == null) {
             repository = ContentRepository.WEBSITE;
+        }
         HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), repository);
         if (action.equals("PREVIEW")) {
             // preview mode (button in main bar)
             String preview = this.getRequest().getParameter("mgnlPreview");
             if (preview != null) {
-                if (preview.equals("true"))
+                if (preview.equals("true")) {
                     this.getRequest().getSession().setAttribute("mgnlPreview", "true");
-                else
+                }
+                else {
                     request.getSession().removeAttribute("mgnlPreview");
+                }
             }
         }
         else if (action.equals("NODE_DELETE")) {

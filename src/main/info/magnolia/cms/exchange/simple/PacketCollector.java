@@ -18,7 +18,9 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.exchange.Packet;
 import info.magnolia.exchange.PacketIOException;
+
 import javax.jcr.RepositoryException;
+
 import org.apache.log4j.Logger;
 
 
@@ -27,9 +29,19 @@ import org.apache.log4j.Logger;
  * @author Sameer Charles
  * @version 2.0
  */
-public class PacketCollector {
+public final class PacketCollector {
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(PacketCollector.class);
+
+    /**
+     * Utility class, don't instantiate.
+     */
+    private PacketCollector() {
+        // unused
+    }
 
     public static Packet getPacket(HierarchyManager hm, String path, boolean recurse) {
         Packet packet = new PacketImpl();

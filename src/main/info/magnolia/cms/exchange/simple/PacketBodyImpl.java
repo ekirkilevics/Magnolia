@@ -15,8 +15,10 @@ package info.magnolia.cms.exchange.simple;
 import info.magnolia.exchange.PacketBody;
 import info.magnolia.exchange.PacketIOException;
 import info.magnolia.exchange.PacketType;
+
 import java.io.InputStream;
 import java.util.Calendar;
+
 import org.apache.log4j.Logger;
 
 
@@ -77,8 +79,9 @@ public class PacketBodyImpl implements PacketBody {
     }
 
     public void setBody(Object data) throws PacketIOException {
-        if (data == null)
+        if (data == null) {
             throw (new IllegalArgumentException());
+        }
         this.setType(PacketType.OBJECT);
         this.data = data;
     }

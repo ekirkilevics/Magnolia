@@ -13,6 +13,7 @@
 package info.magnolia.repository;
 
 import java.util.Map;
+
 import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
 import javax.jcr.Workspace;
@@ -33,7 +34,7 @@ public interface Provider {
      * @param repositoryMapping key value pars as define in repository.xml
      * @throws RepositoryNotInitializedException
      */
-    public void init(RepositoryMapping repositoryMapping) throws RepositoryNotInitializedException;
+    void init(RepositoryMapping repositoryMapping) throws RepositoryNotInitializedException;
 
     /**
      * <p>
@@ -41,7 +42,7 @@ public interface Provider {
      * </p>
      * @throws RepositoryNotInitializedException if init failed to get repository
      */
-    public Repository getUnderlineRepository() throws RepositoryNotInitializedException;
+    Repository getUnderlineRepository() throws RepositoryNotInitializedException;
 
     /**
      * <p>
@@ -53,7 +54,7 @@ public interface Provider {
      * @param workspace session workspace instance
      * @throws RepositoryException
      */
-    public void registerNamespace(String prefix, String uri, Workspace workspace) throws RepositoryException;
+    void registerNamespace(String prefix, String uri, Workspace workspace) throws RepositoryException;
 
     /**
      * <p>
@@ -63,7 +64,7 @@ public interface Provider {
      * @param workspace session workspace instance
      * @throws RepositoryException
      */
-    public void unregisterNamespace(String prefix, Workspace workspace) throws RepositoryException;
+    void unregisterNamespace(String prefix, Workspace workspace) throws RepositoryException;
 
     /**
      * <p>
@@ -73,5 +74,5 @@ public interface Provider {
      * methods
      * @throws RepositoryException
      */
-    public void registerNodeType(Map definition) throws RepositoryException;
+    void registerNodeType(Map definition) throws RepositoryException;
 }

@@ -24,9 +24,9 @@ import info.magnolia.cms.security.Authenticator;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
@@ -99,8 +99,9 @@ public class ContentWriter {
     private void writeContent(Content parent, SerializableContent serializableContent) throws RepositoryException {
         String newPageName = serializableContent.getName();
         String parentHandle = parent.getHandle();
-        if (parentHandle.equals("/"))
+        if (parentHandle.equals("/")) {
             parentHandle = "";
+        }
         Content content = null;
         if (serializableContent instanceof SerializableContentNode) {
             try {
@@ -207,8 +208,9 @@ public class ContentWriter {
                     log.error(e.getMessage(), e);
                 }
                 /* check for sub content Nodes */
-                if (sContentNode.getContentNodeCollection().size() > 0)
+                if (sContentNode.getContentNodeCollection().size() > 0) {
                     this.writeContentNode(newContentNode, sContentNode);
+                }
             }
             catch (RepositoryException re) {
                 log.error(re.getMessage(), re);
@@ -217,10 +219,11 @@ public class ContentWriter {
     }
 
     private void writeMetaData(Content content, SerializableMetaData serializableMetaData) throws AccessDeniedException {
-        if (serializableMetaData == null)
+        if (serializableMetaData == null) {
             return;
+        }
         MetaData metaData = content.getMetaData();
-        ArrayList propertyList = serializableMetaData.getMetaProperties();
+        List propertyList = serializableMetaData.getMetaProperties();
         for (int index = 0; index < propertyList.size(); index++) {
             MetaDataProperty property = (MetaDataProperty) propertyList.get(index);
             switch (property.getType()) {
@@ -241,7 +244,7 @@ public class ContentWriter {
                     break;
                 case PropertyType.NAME:
                     // can't be set
-                    log.info("Ignoring NAME property");
+                    log.debug("Ignoring NAME property");
                     break;
                 default:
                     log.error("Unknown property type - " + property.getType());

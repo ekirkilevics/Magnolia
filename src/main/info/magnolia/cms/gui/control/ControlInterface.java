@@ -23,5 +23,5 @@ public interface ControlInterface {
      * Returns the html code for the control.
      * @return html
      */
-    public String getHtml();
+    String getHtml();
 }

@@ -14,17 +14,19 @@ package info.magnolia.cms.Filter;
 
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.util.Path;
+
 import java.io.IOException;
 import java.util.Enumeration;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+
 import com.oreilly.servlet.MultipartRequest;
 
 
 /**
- * User: sameercharles Date: Apr 28, 2003 Time: 11:20:59 AM
  * @author Sameer Charles
  * @version 1.1
  */
@@ -33,7 +35,7 @@ public class MultipartRequestFilter extends BaseFilter {
     private static final int MAX_FILE_SIZE = 200000000; // 200MB
 
     /**
-     * default constructor
+     * default constructor.
      */
     public MultipartRequestFilter() {
     }
@@ -64,9 +66,7 @@ public class MultipartRequestFilter extends BaseFilter {
     }
 
     /**
-     * <p>
-     * adds all request paramaters as request attribultes
-     * </p>
+     * Adds all request paramaters as request attributes.
      * @param req , HttpServletRequest
      */
     private static void parseParameters(ServletRequest req) throws IOException {

@@ -18,14 +18,17 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Path;
+
 import java.io.InputStream;
 import java.util.Calendar;
+
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
+
 import org.apache.log4j.Logger;
 
 
@@ -35,14 +38,14 @@ import org.apache.log4j.Logger;
  */
 public class NodeData extends ContentHandler {
 
+    public static final String HTML_LINEBREAK = "<br />";
+
+    private static final String DATA_ELEMENT = "Data";
+
     /**
      * Logger.
      */
     private static Logger log = Logger.getLogger(NodeData.class);
-
-    public static final String HTML_LINEBREAK = "<br />";
-
-    private static final String DATA_ELEMENT = "Data";
 
     private Property property;
 
@@ -89,15 +92,14 @@ public class NodeData extends ContentHandler {
             Node contentNode = this.node.addNode(ItemType.getSystemName(ItemType.JCR_CONTENT), ItemType
                 .getSystemName(ItemType.NT_UNSTRUCTRUED));
             this.property = contentNode.setProperty(DATA_ELEMENT, "");
-            if (this.node.canAddMixin(ItemType.getSystemName(ItemType.MIX_Versionable))) {
-                this.node.addMixin(ItemType.getSystemName(ItemType.MIX_Versionable));
+            if (this.node.canAddMixin(ItemType.getSystemName(ItemType.MIX_VERSIONABLE))) {
+                this.node.addMixin(ItemType.getSystemName(ItemType.MIX_VERSIONABLE));
             }
         }
         else {
             Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.READ);
             this.node = workingNode.getNode(name);
-            this.property = this.node.getNode(ItemType.getSystemName(ItemType.JCR_CONTENT)).getProperty(
-                DATA_ELEMENT);
+            this.property = this.node.getNode(ItemType.getSystemName(ItemType.JCR_CONTENT)).getProperty(DATA_ELEMENT);
         }
         this.setAccessManager(manager);
     }
@@ -140,8 +142,8 @@ public class NodeData extends ContentHandler {
         Node contentNode = this.node.addNode(ItemType.getSystemName(ItemType.JCR_CONTENT), ItemType
             .getSystemName(ItemType.NT_UNSTRUCTRUED));
         this.property = contentNode.setProperty(DATA_ELEMENT, value);
-        if (this.node.canAddMixin(ItemType.getSystemName(ItemType.MIX_Versionable))) {
-            this.node.addMixin(ItemType.getSystemName(ItemType.MIX_Versionable));
+        if (this.node.canAddMixin(ItemType.getSystemName(ItemType.MIX_VERSIONABLE))) {
+            this.node.addMixin(ItemType.getSystemName(ItemType.MIX_VERSIONABLE));
         }
         this.setAccessManager(manager);
     }

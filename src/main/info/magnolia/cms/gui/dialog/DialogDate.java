@@ -14,11 +14,14 @@ package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+
 import org.apache.log4j.Logger;
 
 
@@ -28,6 +31,9 @@ import org.apache.log4j.Logger;
  */
 public class DialogDate extends DialogEditWithButton {
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(DialogLink.class);
 
     public DialogDate(ContentNode configNode, Content websiteNode) throws RepositoryException {
@@ -35,11 +41,11 @@ public class DialogDate extends DialogEditWithButton {
         init();
     }
 
-    public DialogDate() throws RepositoryException {
+    public DialogDate() {
         init();
     }
 
-    private void init() throws RepositoryException {
+    private void init() {
         // set buttonlabel in config
         this.getButton().setLabel("Select date...");
         this.getButton().setSaveInfo(false);

@@ -16,9 +16,8 @@ import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.gui.control.ButtonSet;
+import info.magnolia.cms.gui.control.ControlSuper;
 import info.magnolia.cms.gui.control.Hidden;
-import info.magnolia.cms.security.AccessDeniedException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -347,13 +346,13 @@ public class DialogSuper implements DialogInterface {
             }
             else if (controlType.equals("radio")) {
                 DialogButtonSet dialogControl = new DialogButtonSet(configNode, this.getWebsiteNode());
-                dialogControl.setButtonType(ButtonSet.BUTTONTYPE_RADIO);
+                dialogControl.setButtonType(ControlSuper.BUTTONTYPE_RADIO);
                 dialogControl.setOptions(configNode, true);
                 this.addSub(dialogControl);
             }
             else if (controlType.equals("checkbox") || controlType.equals("checkboxSwitch")) {
                 DialogButtonSet dialogControl = new DialogButtonSet(configNode, this.getWebsiteNode());
-                dialogControl.setButtonType(ButtonSet.BUTTONTYPE_CHECKBOX);
+                dialogControl.setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX);
                 if (controlType.equals("checkbox")) {
                     dialogControl.setOptions(configNode, false);
                     dialogControl.setConfig("valueType", "multiple");
@@ -473,12 +472,7 @@ public class DialogSuper implements DialogInterface {
             return this.value;
         }
         else if (this.getWebsiteNode() != null) {
-            try {
-                return this.getWebsiteNode().getNodeData(this.getName()).getString();
-            }
-            catch (AccessDeniedException e) {
-                return "";
-            }
+            return this.getWebsiteNode().getNodeData(this.getName()).getString();
         }
         else {
             return "";
@@ -490,12 +484,7 @@ public class DialogSuper implements DialogInterface {
             return this.value.replaceAll("\n", "<br>");
         }
         else if (this.getWebsiteNode() != null) {
-            try {
-                return this.getWebsiteNode().getNodeData(this.getName()).getString(lineBreak);
-            }
-            catch (AccessDeniedException e) {
-                return "";
-            }
+            return this.getWebsiteNode().getNodeData(this.getName()).getString(lineBreak);
         }
         else {
             return "";

@@ -14,7 +14,6 @@ package info.magnolia.cms.taglibs.util;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.Resource;
 
 import java.text.SimpleDateFormat;
@@ -126,13 +125,9 @@ public class Date extends TagSupport {
         if (this.contentNode == null) {
             return "";
         }
-        try {
-            this.nodeData = this.contentNode.getNodeData(this.nodeDataName);
-        }
-        catch (AccessDeniedException e) {
-            log.error(e.getMessage());
-            return "";
-        }
+
+        this.nodeData = this.contentNode.getNodeData(this.nodeDataName);
+
         if (!this.nodeData.isExist()) {
             return "";
         }

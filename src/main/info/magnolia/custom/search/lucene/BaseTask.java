@@ -3,19 +3,28 @@ package info.magnolia.custom.search.lucene;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.TimerTask;
+
 import javax.servlet.ServletConfig;
+
+import org.apache.log4j.Logger;
 
 
 /**
  * User: Sameer Charles Date: Mar 5, 2004 Time: 11:00:11 AM
  */
 public class BaseTask extends TimerTask {
+
+    /**
+     * logger
+     */
+    private static Logger log = Logger.getLogger(BaseTask.class);
 
     private static final String INDEX_DIRECTORY = "lucene.index.directory";
 
@@ -29,7 +38,7 @@ public class BaseTask extends TimerTask {
 
     private HierarchyManager hierachyManager;
 
-    private Index index = null;
+    private Index index;
 
     BaseTask(ServletConfig config) throws Exception {
         this.servletConfig = config;
@@ -54,9 +63,9 @@ public class BaseTask extends TimerTask {
         URLConnection urlConnection = url.openConnection();
         StringBuffer sb = new StringBuffer();
         byte[] buffer = new byte[8192];
-        int read = 0;
+
         InputStream in = urlConnection.getInputStream();
-        while ((read = in.read(buffer)) > 0) {
+        while (in.read(buffer) > 0) {
             sb.append(new String(buffer));
         }
         in.close();
@@ -80,13 +89,13 @@ public class BaseTask extends TimerTask {
             this.index.closeIndex();
         }
         catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
     private void recursiveDelete(Content startPage) {
         try {
-            this.index.deleteDocument("handle", startPage.getHandle());
+            Index.deleteDocument("handle", startPage.getHandle());
             Collection c = startPage.getChildren();
             if (c.size() > 0) {
                 Iterator it = c.iterator();
@@ -96,7 +105,7 @@ public class BaseTask extends TimerTask {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -112,7 +121,7 @@ public class BaseTask extends TimerTask {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 

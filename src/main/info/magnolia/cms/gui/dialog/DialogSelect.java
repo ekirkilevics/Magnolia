@@ -20,6 +20,7 @@ import info.magnolia.cms.gui.control.SelectOption;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
@@ -44,18 +45,20 @@ public class DialogSelect extends DialogBox {
     }
 
     public void setOptions(ContentNode configNode) {
-        ArrayList options = new ArrayList();
+        List options = new ArrayList();
         try {
             Iterator it = configNode.getContentNode("options").getChildren().iterator();
             while (it.hasNext()) {
                 ContentNode n = (ContentNode) it.next();
                 String value = n.getNodeData("value").getString();
                 String label = null;
-                if (n.getNodeData("label").isExist())
+                if (n.getNodeData("label").isExist()) {
                     label = n.getNodeData("label").getString();
+                }
                 SelectOption option = new SelectOption(label, value);
-                if (n.getNodeData("selected").getBoolean() == true)
+                if (n.getNodeData("selected").getBoolean()) {
                     option.setSelected(true);
+                }
                 options.add(option);
             }
         }
@@ -67,8 +70,9 @@ public class DialogSelect extends DialogBox {
     public void drawHtml(JspWriter out) throws IOException {
         Select control = new Select(this.getName(), this.getValue());
         control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING));
-        if (this.getConfigValue("saveInfo").equals("false"))
+        if (this.getConfigValue("saveInfo").equals("false")) {
             control.setSaveInfo(false);
+        }
         control.setCssClass(CSSCLASS_SELECT);
         control.setCssStyles("width", this.getConfigValue("width", "100%"));
         control.setOptions(this.getOptions());

@@ -18,7 +18,6 @@ import info.magnolia.cms.security.SecureURI;
 
 import java.util.Enumeration;
 
-import javax.jcr.RepositoryException;
 import javax.servlet.ServletConfig;
 
 import org.apache.log4j.Logger;
@@ -115,9 +114,8 @@ public class ConfigLoader {
 
     /**
      * Reload all config info in the same objects created on the startup.
-     * @throws RepositoryException
      */
-    public static void reload() throws RepositoryException {
+    public static void reload() {
         ContentRepository.reload();
         Template.reload();
         Paragraph.reload();

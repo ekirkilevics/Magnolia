@@ -34,8 +34,6 @@ public class NewBar extends TagSupport {
      */
     private static final long serialVersionUID = 222L;
 
-    private static final String SELECT_DIALOG_HANDLE = "/.CMSadmin/dialogs/newbox.html";
-
     private static final String DEFAULT_NEW_LABEL = "New";
 
     private String contentNodeCollectionName;

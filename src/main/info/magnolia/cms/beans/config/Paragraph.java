@@ -20,6 +20,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.jcr.RepositoryException;
 
@@ -38,7 +39,7 @@ public class Paragraph {
 
     private static final String DIALOGS_DIR = "/dialogs/";
 
-    private static Hashtable cachedContent = new Hashtable();
+    private static Map cachedContent = new Hashtable();
 
     private String name;
 
@@ -129,10 +130,12 @@ public class Paragraph {
             // get remaining from dialog definition
             try {
                 String dialog = pi.dialogPath;
-                if (dialog.lastIndexOf(".") != -1)
+                if (dialog.lastIndexOf(".") != -1) {
                     dialog = dialog.substring(0, dialog.lastIndexOf("."));
-                if (dialog.indexOf("/") != 0)
+                }
+                if (dialog.indexOf("/") != 0) {
                     dialog = startPage + DIALOGS_DIR + dialog; // dialog: pars/text.xml -> /info/dialogs/pars/text.xml
+                }
                 Content dialogPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getPage(dialog);
                 pi.dialogContent = dialogPage;
             }

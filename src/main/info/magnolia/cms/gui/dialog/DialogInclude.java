@@ -43,18 +43,20 @@ public class DialogInclude extends DialogBox {
     public void drawHtml(JspWriter out) throws IOException {
         this.drawHtmlPre(out);
         HttpServletRequest request = this.getRequest();
-        if (request == null)
+        if (request == null) {
             request = this.getTopParent().getRequest();
+        }
         PageContext pageContext = this.getPageContext();
-        if (pageContext == null)
+        if (pageContext == null) {
             pageContext = this.getTopParent().getPageContext();
+        }
         try {
             pageContext.setAttribute("dialogObject", this, PageContext.REQUEST_SCOPE);
             pageContext.include(this.getConfigValue("file"));
             pageContext.removeAttribute("dialogObject", PageContext.REQUEST_SCOPE);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         this.drawHtmlPost(out);
     }

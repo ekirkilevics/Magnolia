@@ -53,26 +53,33 @@ public final class PacketType {
     public static final String TYPENAME_OBJECT = "Object";
 
     /**
+     * Utility class, don't instantiate.
+     */
+    private PacketType() {
+        // unused
+    }
+
+    /**
      * @param type
      * @return String representation of the type specified
      */
     public static String getNameByType(int type) {
         switch (type) {
-            case STRING :
+            case STRING:
                 return TYPENAME_STRING;
-            case BINARY :
+            case BINARY:
                 return TYPENAME_BINARY;
-            case BOOLEAN :
+            case BOOLEAN:
                 return TYPENAME_BOOLEAN;
-            case LONG :
+            case LONG:
                 return TYPENAME_LONG;
-            case DOUBLE :
+            case DOUBLE:
                 return TYPENAME_DOUBLE;
-            case DATE :
+            case DATE:
                 return TYPENAME_DATE;
-            case OBJECT :
+            case OBJECT:
                 return TYPENAME_OBJECT;
-            default :
+            default:
                 throw new IllegalArgumentException("unknown type: " + type);
         }
     }

@@ -15,10 +15,10 @@ package info.magnolia.cms.beans.config;
 /**
  * @author Sameer Charles
  */
-public class ItemType {
+public final class ItemType {
 
     /**
-     * Basic node types
+     * Basic node types.
      */
     public static final String NT_BASE = "nt:base";
 
@@ -31,16 +31,16 @@ public class ItemType {
     public static final String NT_FILE = "nt:file";
 
     /**
-     * Basic mixin types
+     * Basic mixin types.
      */
-    public static final String MIX_AccessControllable = "mix:accessControllable";
+    public static final String MIX_ACCESSCONTROLLABLE = "mix:accessControllable";
 
-    public static final String MIX_Referenceable = "mix:referenceable";
+    public static final String MIX_REFERENCEABLE = "mix:referenceable";
 
-    public static final String MIX_Versionable = "mix:versionable";
+    public static final String MIX_VERSIONABLE = "mix:versionable";
 
     /**
-     * magnolia specific basic node types
+     * magnolia specific basic node types.
      */
     public static final String NT_CONTENT = "mgnl:content";
 
@@ -49,7 +49,7 @@ public class ItemType {
     public static final String NT_NODEDATA = "mgnl:nodeData";
 
     /**
-     * internal magnolia item type values
+     * internal magnolia item type values.
      */
     public static final int MAGNOLIA_NODE_DATA = 0;
 
@@ -58,16 +58,23 @@ public class ItemType {
     public static final int MAGNOLIA_PAGE = 2;
 
     /**
-     * magnolia item types
+     * magnolia item types.
      */
     public static final String MAGNOLIA_SYSTEM_DETAILS = "magnoliaSystem";
 
     public static final String MAGNOLIA_INTERNAL_TYPE = "internalType";
 
     /**
-     * Basic child node types
+     * Basic child node types.
      */
-    public static String JCR_CONTENT = "jcr:content";
+    public static final String JCR_CONTENT = "jcr:content";
+
+    /**
+     * Utility class, don't instantiate.
+     */
+    private ItemType() {
+        // unused
+    }
 
     /**
      * @param id (id is a use defined name for the JCR Item type)
