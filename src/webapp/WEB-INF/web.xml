@@ -51,7 +51,7 @@
         </init-param>
         <init-param>
             <param-name>magnolia.repositories.config</param-name>
-            <param-value>WEB-INF\config\repositories.xml</param-value>
+            <param-value>WEB-INF/config/repositories.xml</param-value>
         </init-param>
         <!--
             You can configure log4j by placing a log4j.properties or log4j.xml file in the classpath. By default you

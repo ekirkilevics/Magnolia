@@ -102,6 +102,16 @@ public final class Path {
     }
 
     /**
+     * Gets absolute filesystem path, adds application root if path is not absolute
+     * */
+    public static String getAbsoluteFileSystemPath(String path) {
+        if (Path.isAbsolute(path)) {
+            return path;
+        }
+        return Path.getAppRootDir().getPath()+File.separator+path;
+    }
+
+    /**
      * Returns the URI of the current request, without the context path.
      * @param req request
      * @return request URI without servlet context
