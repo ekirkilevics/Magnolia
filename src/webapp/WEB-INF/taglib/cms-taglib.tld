@@ -6,7 +6,7 @@
     <tlib-version>1.0</tlib-version>
     <jsp-version>1.2</jsp-version>
     <short-name>CMS Tag Library</short-name>
-    <uri>http://jakarta.apache.org/magnolia/cms-taglib</uri>
+    <uri>cms-taglib</uri>
     <description>Core tag library for CMS</description>
     <tag>
         <name>mainBar</name>

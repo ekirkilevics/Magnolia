@@ -6,7 +6,7 @@
     <tlib-version>1.0</tlib-version>
     <jsp-version>1.2</jsp-version>
     <short-name>CMS Utility Tag Library</short-name>
-    <uri>http://jakarta.apache.org/magnolia/cms-util-taglib</uri>
+    <uri>cms-util-taglib</uri>
     <description>util tag library for CMS</description>
     <tag>
         <name>strToObj</name>
