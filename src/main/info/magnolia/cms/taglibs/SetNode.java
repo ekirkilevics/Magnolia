@@ -48,6 +48,7 @@ import org.apache.log4j.Logger;
  * @author Fabrizio Giustina
  * @version $Revision: 448 $ ($Author: fgiust $)
 hor: fgiust $)
+hor: fgiust $)
  */
 public class SetNode extends TagSupport {
 
@@ -120,10 +121,8 @@ Case(scope)) {
 Case(scope)) {
             this.scope = PageContext.SESSION_SC        else if ("application".equalsIgnoreCase(scope)) {
 Case(scope)) {
-            this.scope = PageContext.APPLICATION_SCOPE;
-        }
-        else {
-            // default, should we log errors?
+            this.scope = PageContext.APPLICATION_SC            // default
+efault, should we log errors?
             this.scope = PageContext.PAGE_SCOPE;
         }
     }
@@ -207,8 +206,8 @@ Case(scope)) {
     }
 
     /**
-     * Wrapper for a content Node which exposes a Map interface, used to access its content using jstl.
-     *      * @version $Revision: 448 $ ($Author: fgiust $)
+     * Wrapper for a content Node which exposes a Map interface, used to access its content usin     * @version $Revision: 448 $ ($Author: fgiust $)
+on: 448 $ ($Author: fgiust $)
 on: 448 $ ($Author: fgiust $)
      */
     public static class NodeMapWrapper implements Map {
@@ -333,5 +332,4 @@ on: 448 $ ($Author: fgiust $)
          * @see java.util.Map#entrySet()
          */
         public Set entrySet() {
-            // not implemented, only get() is needed
-            re
+            // not implemented, only 
