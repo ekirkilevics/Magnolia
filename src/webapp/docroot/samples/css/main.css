@@ -1,0 +1,191 @@
+body
+	{
+	background-color:#ffffff;
+	}
+
+div, h1, h2, td
+	{
+	font-family:Verdana,sans-serif;
+	color:#000000;
+	font-size:11px;
+	vertical-align:top;
+	}
+
+h1
+	{
+	font-size:13px;
+	font-weight:bold;
+	}
+
+h2
+	{
+	font-weight:bold;
+	margin-top:0px;
+	margin-bottom:6px;
+	}
+
+
+a
+	{
+	color:#000000;
+	}
+
+#navDiv
+	{
+	 position:absolute;
+	 left:15px;
+	 top:95px;
+	 width:175px;
+	 }
+
+a.nav
+	{
+	color:#333333;
+	text-decoration:none;
+	}
+
+a.navPath,.navSelf,.navSelfTopLevel
+	{
+	color:#538307;
+	text-decoration:none;
+	}
+
+.nav,.navSelf
+	{
+	padding-bottom:2px;
+	padding-top:2px;
+	}
+
+.navSelf,.navSelfTopLevel
+	{
+	background-color:#E5F973;
+	}
+
+.navTopLevel,.navSelfTopLevel
+	{
+	padding-top:3px;
+	padding-bottom:3px;
+	font-weight:bold;
+	}
+
+.navLine,.line
+	{
+	background-color:#999999;
+	font-size:1px;
+	line-height:1px;
+	height:1px;
+	}
+.line
+	{
+	margin-top:2px;
+	margin-bottom:3px;
+	}
+.contentImage_left
+	{
+	float:left;
+	padding-right:20px;
+	padding-bottom:10px;
+	}
+.contentImage_right
+	{
+	float:right;
+	padding-left:5px;
+	padding-bottom:10px;
+	}
+
+
+#contentDivMainColumnTotalWidth
+	{
+	position:absolute;
+	left:217px;
+	top:88px;
+	width:710px;
+	}
+
+#contentDivMainColumn
+	{
+	position:absolute;
+	left:217px;
+	top:88px;
+	width:450px;
+	}
+
+#contentDivRightColumn
+	{
+	position:absolute;
+	left:702px;
+	top:96px;
+	width:225px;
+	}
+
+
+.rightColumnTitle
+	{
+	background-color:#999999;
+	color:#ffffff;
+	font-weight:bold;
+	padding-top:2px;
+	padding-bottom:3px;
+	padding-left:2px;
+	margin-bottom:4px;
+	margin-top:25px;
+	}
+
+td.table, td.tableHead
+	{
+	padding-top:2px;
+	padding-bottom:3px;
+	padding-left:2px;
+	padding-right:2px;
+	margin-bottom:4px;
+	border-style:solid;
+	border-width:0px;
+	border-color:#aaaaaa;
+	}
+
+td.tableHead
+	{
+	background-color:#999999;
+	color:#ffffff;
+	font-weight:bold;
+	}
+
+tr.tableAlt
+	{
+	background-color:#eeeeee;
+	}
+
+.devShowBox
+	{
+	background-color:#cccccc;
+	padding:4px;
+	}
+
+.code
+	{
+	font-family:Courier New,monospace;
+	font-size:12px;
+	}
+
+
+textarea, input.text, select
+	{
+	width:100%;
+	font-family:Verdana,sans-serif;
+	font-size:11px;
+	}
+
+input.submit
+	{
+	font-family:Verdana,sans-serif;
+	font-size:11px;
+	}
+
+input.checkbox, input.radio
+	{
+	position:relative;
+	top:3px;
+	margin-right:6px;
+	}
+
+
