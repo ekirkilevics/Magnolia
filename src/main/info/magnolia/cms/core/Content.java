@@ -111,9 +111,7 @@ public class Content extends ContentHandler implements Cloneable {
             this.node = this.rootNode.addNode(this.path, ItemType.getSystemName(ItemType.NT_CONTENTNODE));
         }
         this.setAccessManager(manager);
-        if (this.node.canAddMixin(ItemType.getSystemName(ItemType.MIX_VERSIONABLE))) {
-            this.node.addMixin(ItemType.getSystemName(ItemType.MIX_VERSIONABLE));
-        }
+        this.addMixin(ItemType.getSystemName(ItemType.MIX_VERSIONABLE));
     }
 
     /**
@@ -136,9 +134,7 @@ public class Content extends ContentHandler implements Cloneable {
         this.setRootNode(rootNode);
         this.node = this.rootNode.addNode(this.path, ItemType.getSystemName(contentType));
         this.setAccessManager(manager);
-        if (this.node.canAddMixin(ItemType.getSystemName(ItemType.MIX_VERSIONABLE))) {
-            this.node.addMixin(ItemType.getSystemName(ItemType.MIX_VERSIONABLE));
-        }
+        this.addMixin(ItemType.getSystemName(ItemType.MIX_VERSIONABLE));
     }
 
     /**

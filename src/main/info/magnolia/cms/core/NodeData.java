@@ -86,22 +86,19 @@ public class NodeData extends ContentHandler {
         throws PathNotFoundException,
         RepositoryException,
         AccessDeniedException {
+        this.setAccessManager(manager);
         if (createNew) {
             Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
             this.node = workingNode.addNode(name, ItemType.getSystemName(ItemType.NT_NODEDATA));
             Node contentNode = this.node.addNode(ItemType.getSystemName(ItemType.JCR_CONTENT), ItemType
                 .getSystemName(ItemType.NT_UNSTRUCTRUED));
             this.property = contentNode.setProperty(DATA_ELEMENT, "");
-            if (this.node.canAddMixin(ItemType.getSystemName(ItemType.MIX_VERSIONABLE))) {
-                this.node.addMixin(ItemType.getSystemName(ItemType.MIX_VERSIONABLE));
-            }
-        }
-        else {
+            this.addMixin(ItemType.getSystemName(ItemType.MIX_VERSIONABLE));
+        } else {
             Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.READ);
             this.node = workingNode.getNode(name);
             this.property = this.node.getNode(ItemType.getSystemName(ItemType.JCR_CONTENT)).getProperty(DATA_ELEMENT);
         }
-        this.setAccessManager(manager);
     }
 
     /**
@@ -142,10 +139,8 @@ public class NodeData extends ContentHandler {
         Node contentNode = this.node.addNode(ItemType.getSystemName(ItemType.JCR_CONTENT), ItemType
             .getSystemName(ItemType.NT_UNSTRUCTRUED));
         this.property = contentNode.setProperty(DATA_ELEMENT, value);
-        if (this.node.canAddMixin(ItemType.getSystemName(ItemType.MIX_VERSIONABLE))) {
-            this.node.addMixin(ItemType.getSystemName(ItemType.MIX_VERSIONABLE));
-        }
         this.setAccessManager(manager);
+        this.addMixin(ItemType.getSystemName(ItemType.MIX_VERSIONABLE));
     }
 
     /**

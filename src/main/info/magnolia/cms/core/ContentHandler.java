@@ -27,6 +27,9 @@ import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.UnsupportedRepositoryOperationException;
+import javax.jcr.nodetype.NodeType;
+import javax.jcr.lock.Lock;
+import javax.jcr.lock.LockException;
 import javax.jcr.version.Version;
 import javax.jcr.version.VersionException;
 import javax.jcr.version.VersionHistory;
@@ -354,4 +357,110 @@ public abstract class ContentHandler {
         this.node.refresh(keepChanges);
     }
 
+    /**
+     * <p>
+     * UUID of the node refrenced by this object
+     * </p>
+     * @throws RepositoryException
+     * */
+    public String getUUID() throws RepositoryException {
+        return this.node.getUUID();
+    }
+
+    /**
+     * <p>
+     * add specified mixin type if allowed
+     * </p>
+     *
+     * @param type , mixin type to be added
+     * */
+    public void addMixin(String type) throws RepositoryException {
+        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.node.getPath()), Permission.SET);
+        if (this.node.canAddMixin(type)) {
+            this.node.addMixin(type);
+        } else {
+            log.error("Node - "+this.node.getPath()+" does not allow mixin type - "+type);
+        }
+    }
+
+    /**
+     * <p>
+     * Removes the specified mixin node type from this node.
+     * Also removes mixinName from this node's jcr:mixinTypes property.
+     * <b>The mixin node type removal  takes effect on save</b>.
+     * </p>
+     *
+     * @param type , mixin type to be removed
+     * */
+    public void removeMixin(String type) throws RepositoryException {
+        this.node.removeMixin(type);
+    }
+
+    /**
+     * <p>
+     * Returns an array of NodeType objects representing the mixin node types  assigned to this node.
+     * This includes only those mixin types explicitly  assigned to this node,
+     * and therefore listed in the property jcr:mixinTypes. It does not include mixin types inherited
+     * through the additon of supertypes to the primary type hierarchy.
+     * </p>
+     *
+     * @return an array of mixin NodeType objects.
+     * */
+    public NodeType[] getMixinNodeTypes() throws RepositoryException {
+        return this.node.getMixinNodeTypes();
+    }
+
+    /**
+     * <p>
+     * places a lock on this object
+     * </p>
+     *
+     * @param isDeep if true this lock will apply to this node and all its descendants; if  false,
+     * it applies only to this node.
+     * @param isSessionScoped if true, this lock expires with the current session; if false it  expires when
+     * explicitly or automatically unlocked for some other reason.
+     * @return A Lock object containing a lock token.
+     * @see javax.jcr.Node#lock(boolean, boolean)
+     * */
+    public Lock lock(boolean isDeep, boolean isSessionScoped) throws LockException, RepositoryException {
+        return this.node.lock(isDeep, isSessionScoped);
+    }
+
+    /**
+     * <p>
+     * Returns the Lock object that applies to this node.
+     * This may be either a lock on this node itself  or a deep lock on a node above this node.
+     * </p>
+     *
+     * @throws LockException If no lock applies to this node, a LockException is thrown.
+     * @throws RepositoryException
+     * */
+    public Lock getLock() throws LockException, RepositoryException {
+        return this.node.getLock();
+    }
+
+    /**
+     * <p>
+     * Removes the lock on this node. Also removes the properties jcr:lockOwner and  jcr:lockIsDeep from this node.
+     * These changes are persisted automatically; <b>there is no need to call  save</b>.
+     * </p>
+     *
+     * @throws LockException if either does not currently hold a lock,
+     * or holds a lock for which this Session does not have the correct lock token
+     * @throws RepositoryException
+     * */
+    public void unlock() throws LockException, RepositoryException {
+        this.node.unlock();
+    }
+
+    /**
+     * <p>
+     * Returns true if this node holds a lock; otherwise returns false.
+     * To hold a  lock means that this node has actually had a lock placed on it specifically,
+     * as opposed to just having a lock  apply to it due to a deep lock held by a node above.
+     * </p>
+     * */
+    public boolean holdLock() throws RepositoryException {
+        return this.node.holdsLock();
+    }
 }
