@@ -221,9 +221,9 @@ public class Syndicator {
         packet.getHeaders().addHeader(Header.ACTION,Header.ACTION_ADD);
         channel.send(packet);
         packets.remove(PacketCollector.MAIN_PACKET);
-        Enumeration enum = packets.keys();
-        while (enum.hasMoreElements()) {
-            Packet binaryPacket = (Packet) packets.get((String)enum.nextElement());
+        Enumeration e = packets.keys();
+        while (e.hasMoreElements()) {
+            Packet binaryPacket = (Packet) packets.get((String)e.nextElement());
             binaryPacket.getHeaders().addHeader(Header.ACTION,Header.ACTION_ADD);
             channel.send(binaryPacket);
         }
