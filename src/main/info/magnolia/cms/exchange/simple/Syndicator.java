@@ -70,6 +70,8 @@ public class Syndicator {
 
     public static final String SENDER_URL = "senderURL";
 
+    public static final String SENDER_CONTEXT = "senderContext";
+
     public static final String OBJECT_TYPE = "objectType";
 
     public static final String GET_TYPE = "gettype";
@@ -319,11 +321,14 @@ public class Syndicator {
         }
         connection.addRequestProperty("action", "activate");
         connection.addRequestProperty("recursive", BooleanUtils.toStringTrueFalse(this.recursive));
+
         String senderURL = subscriber.getParam(SENDER_URL);
+
         if (senderURL == null) {
             // todo remove remotePort property once its tested together with apache
             String remotePort = (new Integer(this.request.getServerPort())).toString();
             connection.addRequestProperty(REMOTE_PORT, remotePort);
+            connection.addRequestProperty(SENDER_CONTEXT, this.request.getContextPath());
         }
         else {
             connection.addRequestProperty(SENDER_URL, senderURL);

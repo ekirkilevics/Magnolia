@@ -117,8 +117,9 @@ public final class MIMEMapping {
             }
         }
         String mimeType = (String) MIMEMapping.cachedContent.get(extension.toLowerCase());
-        if (mimeType == null) {
-            log.info("Cannot find MIME type for extension - " + extension);
+
+        if (mimeType == null && StringUtils.isNotEmpty(extension)) {
+            log.info("Cannot find MIME type for extension \"" + extension + "\"");
             mimeType = (String) MIMEMapping.cachedContent.get(Server.getDefaultExtension());
         }
         return mimeType;

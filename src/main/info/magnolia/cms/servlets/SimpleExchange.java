@@ -94,6 +94,8 @@ public class SimpleExchange extends HttpServlet implements SingleThreadModel {
 
     private String senderURL;
 
+    private String senderContext;
+
     private String objectType;
 
     private HttpServletRequest request;
@@ -121,9 +123,12 @@ public class SimpleExchange extends HttpServlet implements SingleThreadModel {
         this.host = request.getRemoteHost();
         this.remotePort = this.request.getHeader(Syndicator.REMOTE_PORT);
         this.senderURL = this.request.getHeader(Syndicator.SENDER_URL);
+        this.senderContext = this.request.getHeader(Syndicator.SENDER_CONTEXT);
+
         if (StringUtils.isEmpty(this.senderURL)) {
             this.senderURL = this.protocol + "://" + this.host + ":" + this.remotePort;
         }
+
         this.objectType = this.request.getHeader(Syndicator.OBJECT_TYPE);
         try {
             response.setContentType("text/plain");
@@ -184,7 +189,9 @@ public class SimpleExchange extends HttpServlet implements SingleThreadModel {
      */
     public void activate() throws Exception {
         log.info("Exchange : update request received for " + this.page);
-        String handle = "/" + Syndicator.DEFAULT_HANDLER;
+
+        String handle = StringUtils.defaultString(this.senderContext) + "/" + Syndicator.DEFAULT_HANDLER;
+
         URL url = new URL(this.senderURL + handle);
         String credentials = this.request.getHeader("Authorization");
         URLConnection urlConnection = url.openConnection();
@@ -203,6 +210,7 @@ public class SimpleExchange extends HttpServlet implements SingleThreadModel {
             Object sc = objectInputStream.readObject();
             /* deserialize received object */
             ContentWriter contentWriter = new ContentWriter(this.getHierarchyManager(), this.context, this.senderURL
+                + StringUtils.defaultString(this.senderContext)
                 + "/"
                 + Syndicator.DEFAULT_HANDLER, this.request);
             contentWriter.writeObject(this.parent, sc);
