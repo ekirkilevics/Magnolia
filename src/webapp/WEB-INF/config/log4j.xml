@@ -57,7 +57,7 @@
     <category name="info.magnolia">
         <priority value="INFO" />
     </category>
-    <category name="org.apache.jackrabbi">
+    <category name="org.apache.jackrabbit">
         <priority value="INFO" />
     </category>
     <category name="info.magnolia.cms.Filter.MultipartRequestFilter">
