@@ -138,6 +138,46 @@
         <servlet-name>Spool</servlet-name>
         <servlet-class>info.magnolia.cms.servlets.Spool</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>fileThumbnail</servlet-name>
+        <servlet-class>info.magnolia.cms.gui.dialog.pages.FileThumbnailDialogPage</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>linkBrowser</servlet-name>
+        <servlet-class>info.magnolia.cms.gui.dialog.pages.LinkBrowserDialogPage</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>linkBrowserIFrame</servlet-name>
+        <servlet-class>info.magnolia.cms.gui.dialog.pages.LinkBrowserIFrameDialogPage</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>richEIFrame</servlet-name>
+        <servlet-class>info.magnolia.cms.gui.dialog.pages.RichEditorIFrameDialogPage</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>standard</servlet-name>
+        <servlet-class>info.magnolia.cms.gui.dialog.pages.StandardDialogPage</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>webDAVIFrame</servlet-name>
+        <servlet-class>info.magnolia.cms.gui.dialog.pages.WebDavIFrameDialogPage</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>userRoles</servlet-name>
+        <servlet-class>info.magnolia.cms.gui.dialog.pages.UserRolesEditDialogPage</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>user</servlet-name>
+        <servlet-class>info.magnolia.cms.gui.dialog.pages.UserEditDialogPage</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>includeRoles</servlet-name>
+        <servlet-class>info.magnolia.cms.gui.dialog.pages.UserEditIncludeRolesDialogPage</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>includeAcl</servlet-name>
+        <servlet-class>info.magnolia.cms.gui.dialog.pages.UserRolesEditIncludeAclDialogPage</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>magnolia</servlet-name>
         <url-pattern>/</url-pattern>
@@ -182,6 +222,49 @@
         <servlet-name>ImportExportServlet</servlet-name>
         <url-pattern>/import</url-pattern>
     </servlet-mapping>
+    <!--
+        dialogs -->
+    <servlet-mapping>
+        <servlet-name>fileThumbnail</servlet-name>
+        <url-pattern>/admintemplates/dialogs/fileThumbnail.jsp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>linkBrowser</servlet-name>
+        <url-pattern>/admintemplates/dialogs/linkBrowser.jsp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>linkBrowserIFrame</servlet-name>
+        <url-pattern>/admintemplates/dialogs/linkBrowserIFrame.jsp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>richEIFrame</servlet-name>
+        <url-pattern>/admintemplates/dialogs/richEIFrame.jsp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>standard</servlet-name>
+        <url-pattern>/admintemplates/dialogs/standard.jsp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>webDAVIFrame</servlet-name>
+        <url-pattern>/admintemplates/dialogs/webDAVIFrame.jsp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>userRoles</servlet-name>
+        <url-pattern>/admintemplates/adminCentral/dialogs/userRolesEdit/main.jsp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>user</servlet-name>
+        <url-pattern>/admintemplates/adminCentral/dialogs/usersEdit/main.jsp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>includeAcl</servlet-name>
+        <url-pattern>/admintemplates/adminCentral/dialogs/userRolesEdit/includeAcl.jsp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>includeRoles</servlet-name>
+        <url-pattern>/admintemplates/adminCentral/dialogs/usersEdit/includeRoles.jsp</url-pattern>
+    </servlet-mapping>
+    <!-- end dialogs -->
     <jsp-config>
         <taglib>
             <taglib-uri>cms-taglib</taglib-uri>
@@ -193,7 +276,7 @@
         </taglib>
     </jsp-config>
     <!--
-		i18n configuration (JSTL). Do not change the fallbackLocale!
+        i18n configuration (JSTL). Do not change the fallbackLocale!
     -->
     <context-param>
         <param-name>javax.servlet.jsp.jstl.fmt.fallbackLocale</param-name>
