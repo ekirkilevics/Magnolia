@@ -28,6 +28,7 @@
 				 info.magnolia.cms.core.ContentNode,
 				 info.magnolia.cms.beans.config.ItemType"
 %>
+<%@ page import="javax.servlet.jsp.jstl.fmt.LocaleSupport" %>
 <%--
 page layout only works in quirk mode at the moment
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -86,7 +87,7 @@ page layout only works in quirk mode at the moment
 	bs.setCssClass("mgnlAdminCentralButton");
 
 	Button b0=new Button();
-	b0.setLabel(labelPre+"Website"+labelPost);
+	b0.setLabel(labelPre+LocaleSupport.getLocalizedMessage(pageContext, "menu.website")+labelPost);
 	b0.setOnclick("mgnlAdminCentralSwitchExtractTree('"+ContentRepository.WEBSITE+"');");
 	b0.setPushButtonTag("div");
 	b0.setIconSrc(request.getContextPath() + new Icon().getSrc("earth",Icon.SIZE_MEDIUM));
@@ -95,7 +96,7 @@ page layout only works in quirk mode at the moment
 
 	if (permissionUsers) {
 		Button b1=new Button();
-		b1.setLabel(labelPre+"Users"+labelPost);
+		b1.setLabel(labelPre+LocaleSupport.getLocalizedMessage(pageContext, "menu.users")+labelPost);
 		b1.setOnclick("mgnlAdminCentralSwitchExtractTree('"+ContentRepository.USERS+"');");
 		b1.setPushButtonTag("div");
 		b1.setIconSrc(request.getContextPath() + new Icon().getSrc(Icon.USER,Icon.SIZE_MEDIUM));
@@ -105,7 +106,7 @@ page layout only works in quirk mode at the moment
 
 	if (permissionRoles) {
 		Button b2=new Button();
-		b2.setLabel(labelPre+"Roles"+labelPost);
+		b2.setLabel(labelPre+LocaleSupport.getLocalizedMessage(pageContext, "menu.roles")+labelPost);
 		b2.setOnclick("mgnlAdminCentralSwitchExtractTree('"+ContentRepository.USER_ROLES+"');");
 		b2.setPushButtonTag("div");
 		b2.setIconSrc(request.getContextPath() + new Icon().getSrc(Icon.ROLE,Icon.SIZE_MEDIUM));
@@ -115,7 +116,7 @@ page layout only works in quirk mode at the moment
 
 	if (permissionConfig) {
 		Button b3=new Button();
-		b3.setLabel(labelPre+"Config"+labelPost);
+		b3.setLabel(labelPre+LocaleSupport.getLocalizedMessage(pageContext, "menu.config")+labelPost);
 		b3.setOnclick("mgnlAdminCentralSwitchExtractTree('"+ContentRepository.CONFIG+"');");
 		b3.setPushButtonTag("div");
 		b3.setIconSrc(request.getContextPath() + new Icon().getSrc("gears",Icon.SIZE_MEDIUM));
@@ -129,7 +130,7 @@ page layout only works in quirk mode at the moment
 		while (it.hasNext()) {
 			ContentNode c=(ContentNode) it.next();
 			Button b=new Button();
-			b.setLabel(labelPre+c.getNodeData("label").getString()+labelPost);
+			b.setLabel(labelPre + c.getNodeData("label").getString() + labelPost);
 			b.setPushButtonTag("div");
 			b.setOnclick(c.getNodeData("onclick").getString());
 			if (c.getNodeData("iconSrc").getString().equals("")) b.setIconSrc(request.getContextPath() + new Icon().getSrc("pens",Icon.SIZE_MEDIUM));
@@ -142,7 +143,7 @@ page layout only works in quirk mode at the moment
 
 	Button b4=new Button();
 	b4.setCssClass(bs.getCssClass());
-	b4.setLabel(labelPre+"About Magnolia"+labelPost);
+	b4.setLabel(labelPre+LocaleSupport.getLocalizedMessage(pageContext, "menu.about")+labelPost);
 	b4.setOnclick("mgnlAdminCentralSwitchExtractNonTree('/.magnolia/adminCentral/extractAbout.html');");
 	b4.setLabelNbspPadding(0);
 	b4.setPushButtonTag("div");
