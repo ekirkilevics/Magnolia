@@ -54,7 +54,7 @@
                 jcr:isCheckedOut="true"
                 jcr:versionHistory="f807d5b9-9fb0-4a61-b3fd-21fdbecd9d06"
                 jcr:baseVersion="d32625a8-0a08-414d-b786-23813b61ca9e" jcr:predecessors="d32625a8-0a08-414d-b786-23813b61ca9e">
-                <jcr:content jcr:primaryType="nt:unstructured" Data="localhost:8080/magnolia"/>
+                <jcr:content jcr:primaryType="nt:unstructured" Data="localhost:8086/magnolia"/>
             </address>
             <protocol jcr:primaryType="mgnl:nodeData"
                 jcr:mixinTypes="mix:versionable"
