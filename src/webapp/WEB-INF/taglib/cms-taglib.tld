@@ -212,12 +212,6 @@ parFiles="/samples/formTemplate/controlEdit.xml"/>
             </description>
         </attribute>
         <attribute>
-            <name>property</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>@deprecated no meaning anymore; see fileProperty</description>
-        </attribute>
-        <attribute>
             <name>fileProperty</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
