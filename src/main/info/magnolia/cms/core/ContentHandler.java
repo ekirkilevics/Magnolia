@@ -317,7 +317,7 @@ public abstract class ContentHandler {
      * @throws RepositoryException
      */
     public void save() throws RepositoryException {
-        this.node.save();
+        this.node.getSession().save();
     }
 
     /**
