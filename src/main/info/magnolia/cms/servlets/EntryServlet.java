@@ -136,7 +136,6 @@ public class EntryServlet extends HttpServlet {
      * @return boolean
      */
     private boolean isAllowed(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        System.out.println("CHECK IS ALLOWED");
         if (Lock.isSystemLocked()) {
             res.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
             return false;
