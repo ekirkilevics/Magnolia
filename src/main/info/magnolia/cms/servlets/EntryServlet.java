@@ -14,25 +14,19 @@ package info.magnolia.cms.servlets;
 
 import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.Dispatcher;
+import info.magnolia.cms.util.Path;
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.config.VirtualMap;
 import info.magnolia.cms.beans.runtime.Cache;
 import info.magnolia.cms.core.CacheHandler;
 import info.magnolia.cms.core.CacheProcess;
-import info.magnolia.cms.security.Authenticator;
-import info.magnolia.cms.security.Listener;
-import info.magnolia.cms.security.Lock;
-import info.magnolia.cms.security.SecureURI;
-import info.magnolia.cms.security.SessionAccessControl;
+import info.magnolia.cms.security.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -142,12 +136,13 @@ public class EntryServlet extends HttpServlet {
      * @return boolean
      */
     private boolean isAllowed(HttpServletRequest req, HttpServletResponse res) throws IOException {
+        System.out.println("CHECK IS ALLOWED");
         if (Lock.isSystemLocked()) {
             res.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
             return false;
         }
         else if (SessionAccessControl.isSecuredSession(req)) {
-            return true;
+            return SessionAccessControl.getAccessManager(req).isGranted(Path.getURI(req), Permission.READ);
         }
         else if ((SecureURI.isProtected(getURI(req)))) {
             return authenticate(req, res);
@@ -170,6 +165,10 @@ public class EntryServlet extends HttpServlet {
             if (!Authenticator.authenticate(req)) {
                 res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 res.setHeader("WWW-Authenticate", "BASIC realm=\"" + Server.getBasicRealm() + "\"");
+                /**
+                 * invalidate previous session
+                 * */
+                SessionAccessControl.invalidateUser(req);
                 return false;
             }
         }
@@ -177,10 +176,6 @@ public class EntryServlet extends HttpServlet {
             log.error(e.getMessage(), e);
             return false;
         }
-        /**
-         * invalidate previous session
-         * */
-        SessionAccessControl.invalidateUser(req);
         return true;
     }
 
