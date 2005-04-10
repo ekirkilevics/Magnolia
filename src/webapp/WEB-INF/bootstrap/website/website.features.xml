@@ -1363,7 +1363,7 @@
                     jcr:isCheckedOut="true"
                     
                      >
-                    <jcr:content jcr:primaryType="nt:unstructured" Data="You are looking for a reliable hosting partner for your Magnolia-CMS-based website? Obinary provides modern infrastructure, excellent know-how and expertise to meet your hosting needs.&#xa;  &#xa;  Package contents&#xa;  &#xa;  - Magnolia running on tomcat application server&#xa;  - ftp, sftp and ssh access (full access)&#xa;  - detailed statistics (sawmill)&#xa;  - 25 mail accounts (communigate pro)&#xa;  - webmail&#xa;  â?¢ daily backup&#xa;  - 3 support incidents per year included (email or phone) &#xa;  &#xa;  Price: 750.00 € (per site and year)&#xa;  &#xa;   "/>
+                    <jcr:content jcr:primaryType="nt:unstructured" Data="You are looking for a reliable hosting partner for your Magnolia-CMS-based website? Obinary provides modern infrastructure, excellent know-how and expertise to meet your hosting needs.&#xa;  &#xa;  Package contents&#xa;  &#xa;  - Magnolia running on tomcat application server&#xa;  - ftp, sftp and ssh access (full access)&#xa;  - detailed statistics (sawmill)&#xa;  - 25 mail accounts (communigate pro)&#xa;  - webmail&#xa;  - daily backup&#xa;  - 3 support incidents per year included (email or phone) &#xa;  &#xa;  Price: 750.00 € (per site and year)&#xa;  &#xa;   "/>
                 </text>
             </_x0030_0>
         </rightColumnParagraphs>
