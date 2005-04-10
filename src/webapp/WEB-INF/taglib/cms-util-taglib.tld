@@ -5,9 +5,9 @@
 <taglib>
     <tlib-version>1.0</tlib-version>
     <jsp-version>1.2</jsp-version>
-    <short-name>CMS Utility Tag Library</short-name>
+    <short-name>cmsu</short-name>
     <uri>cms-util-taglib</uri>
-    <description>util tag library for CMS</description>
+    <description>CMS Utility Tag Library</description>
     <tag>
         <name>strToObj</name>
         <tag-class>info.magnolia.cms.taglibs.util.StrToObj</tag-class>
@@ -104,7 +104,7 @@
             <name>atomName</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description>@deprecated </description>
+            <description>@deprecated</description>
         </attribute>
         <attribute>
             <name>actpage</name>
@@ -136,8 +136,10 @@
             <name>startLevel</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description>at which level to start. Often you will want to omit top levels, e.g. if you split your site
-                into multiple languages</description>
+            <description>
+                at which level to start. Often you will want to omit top levels, e.g. if you split your site into
+                multiple languages
+            </description>
         </attribute>
         <attribute>
             <name>delimiter</name>
@@ -155,14 +157,16 @@
             <name>nodeDataName</name>
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
-            <description>@deprecated </description>
+            <description>@deprecated</description>
         </attribute>
         <attribute>
             <name>contentNodeName</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description>@deprecated if left empty, local contentNode is used as set by contentNodeIterator, otherwise
-                the global contentNode is used</description>
+            <description>
+                @deprecated if left empty, local contentNode is used as set by contentNodeIterator, otherwise the global
+                contentNode is used
+            </description>
         </attribute>
         <attribute>
             <name>fileNameOnly</name>
@@ -190,13 +194,69 @@
         <name>newlines</name>
         <tag-class>info.magnolia.cms.taglibs.util.ConvertNewLineTag</tag-class>
         <body-content>JSP</body-content>
-        <description> Converts text in the body of the tag adding &lt;br /> tags at new lines or wrapping lines in
-            paragraphs. </description>
+        <description>
+            Converts text in the body of the tag adding &lt;br /> tags at new lines or wrapping lines in paragraphs.
+        </description>
         <attribute>
             <name>para</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
             <description>If true each line will be wrapped in a &lt;p> tag. Default to false (use br's).</description>
         </attribute>
+    </tag>
+    <tag>
+        <name>simpleNavigation</name>
+        <tag-class>info.magnolia.cms.taglibs.util.SimpleNavigationTag</tag-class>
+        <body-content>EMPTY</body-content>
+        <description>
+            Draws a simple, css based, navigation menu. The menu layout can then be customized using css, and the
+            default menu should be enough for most uses.
+        </description>
+        <attribute>
+            <name>startLevel</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>int</type>
+            <description>The start level for navigation, defaults to 0.</description>
+        </attribute>
+        <attribute>
+            <name>hideInNav</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>
+                Name for the "hide in nav" nodeData. If a page contains a boolean property with this name and it is set
+                to true, the page is not shown in navigation. Defaults to "hideInNav"
+            </description>
+        </attribute>
+        <attribute>
+            <name>openMenu</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>
+                Name for the "open menu" nodeData. If a page contains a boolean property with this name and it is set to
+                true, subpages are always shown also if the page is not selected. Defaults to "openMenu"
+            </description>
+        </attribute>
+        <example>
+            <![CDATA[
+ <cmsu:simpleNavigation startLevel="3" />
+
+ Will output the following:
+
+   <ul class="level3">
+     <li><a href="...">page 1 name </a></li>
+     <li><a href="...">page 2 name </a></li>
+     <li><strong><a href="...">selected page name </a></strong>
+       <ul class="level3">
+         <li><a href="...">subpage 1 name </a></li>
+         <li><a href="...">subpage 2 name </a></li>
+         <li><a href="...">subpage 3 name </a></li>
+       </ul>
+     </li>
+     <li><a href="...">page 4 name </a></li>
+   </ul>
+]]>
+        </example>
     </tag>
 </taglib>

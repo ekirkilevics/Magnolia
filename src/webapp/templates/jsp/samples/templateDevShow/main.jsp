@@ -14,7 +14,7 @@
                 <c:import url="/templates/jsp/samples/global/footer.jsp"/>
             </div>
             <c:import url="/templates/jsp/samples/global/headerImage.jsp" />
-            <c:import url="/templates/jsp/samples/global/navigation.jsp" />
+            <cmsu:simpleNavigation />
         </body>
     </html>
 </jsp:root>
