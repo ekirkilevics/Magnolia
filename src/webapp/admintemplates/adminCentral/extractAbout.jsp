@@ -1,14 +1,14 @@
-<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page" 
+<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:c="urn:jsptld:http://java.sun.com/jsp/jstl/core"
 	xmlns:fmt="urn:jsptld:http://java.sun.com/jsp/jstl/fmt"
     xmlns:cms="urn:jsptld:cms-taglib">
     <jsp:directive.page contentType="text/html; charset=UTF-8" />
-    
+
     <jsp:scriptlet>pageContext.setAttribute("license", info.magnolia.cms.license.License.getInstance().getEntries());</jsp:scriptlet>
     <jsp:scriptlet>pageContext.setAttribute("isadmin", new Boolean(info.magnolia.cms.beans.config.Server.isAdmin()));</jsp:scriptlet>
 	<fmt:message var="version" key="about.version"/>
 	<fmt:message var="build" key="about.build"/>
-	
+
     <jsp:text>
         <![CDATA[<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> ]]>
@@ -20,7 +20,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
     <!--  add magnolia css and js links -->
-    <cms:links />
+    <cms:links adminOnly="false" />
 
     <style type="text/css">
     <![CDATA[

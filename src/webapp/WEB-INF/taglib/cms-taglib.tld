@@ -5,7 +5,7 @@
 <taglib>
     <tlib-version>1.0</tlib-version>
     <jsp-version>1.2</jsp-version>
-    <short-name>CMS Tag Library</short-name>
+    <short-name>cms</short-name>
     <uri>cms-taglib</uri>
     <description>Core tag library for CMS</description>
     <tag>
@@ -34,6 +34,16 @@
         <description>
             Add the needed css and js links for magnolia edit controls. This tag should always bee added to html head.
         </description>
+        <attribute>
+            <name>adminOnly</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
+            <description>
+                Show links only in admin instance, default to true. You can set it to false if you want magnolia css and
+                js files added also for a public instance.
+            </description>
+        </attribute>
     </tag>
     <tag>
         <name>editBar</name>

@@ -28,7 +28,7 @@
     <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title><fmt:message key="central.title"/></title>
-    <cms:links />
+    <cms:links adminOnly="false" />
     </head>
 
     <body class="mgnlBgDark" onload="mgnlAdminCentralResize();">
