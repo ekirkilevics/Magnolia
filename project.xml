@@ -90,6 +90,13 @@
             <organization>openmind</organization>
             <timezone>+1</timezone>
         </developer>
+        <developer>
+            <name>Philipp Bracher</name>
+            <id>philipp</id>
+            <email>philipp.bracher(at)obinary.com</email>
+            <organization>obinary</organization>
+            <timezone>+1</timezone>
+        </developer>
     </developers>
     <dependencies>
         <dependency>
