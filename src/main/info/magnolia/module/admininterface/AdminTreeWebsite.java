@@ -56,8 +56,8 @@ public class AdminTreeWebsite implements AdminTree {
         tree.addItemType(ItemType.NT_CONTENT);
 
         // to view all nodes uncomment this lines
-        tree.addItemType(ItemType.NT_CONTENTNODE);
-        tree.addItemType(ItemType.NT_NODEDATA);
+        //tree.addItemType(ItemType.NT_CONTENTNODE);
+        //tree.addItemType(ItemType.NT_NODEDATA);
         
         TreeColumn column0 = new TreeColumn(tree.getJavascriptTree(), request);
         column0.setIsLabel(true);
