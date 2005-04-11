@@ -86,7 +86,7 @@ public class EntryServlet extends HttpServlet {
             /**
              * Try to find out what the preferred language of this user is.
              */
-            if (isAllowed(req, res)) {
+            if (isAllowed(req, res) && isAuthorized(req, res)) {
                 /* try to stream from cache first */
                 if (Cache.isCached(req)) {
                     if (CacheHandler.streamFromCache(req, res)) {
@@ -141,7 +141,7 @@ public class EntryServlet extends HttpServlet {
             return false;
         }
         else if (SessionAccessControl.isSecuredSession(req)) {
-            return SessionAccessControl.getAccessManager(req).isGranted(Path.getURI(req), Permission.READ);
+            return true;
         }
         else if ((SecureURI.isProtected(getURI(req)))) {
             return authenticate(req, res);
@@ -151,6 +151,25 @@ public class EntryServlet extends HttpServlet {
             return false;
         }
         return true;
+    }
+
+    /**
+     * <p/>Uses access manager to authorise this request
+     * </p>
+     * @param req HttpServletRequest as received by the service method
+     * @param res HttpServletResponse as received by the service method
+     * @return boolean true if read access is granted
+     */
+    private boolean isAuthorized(HttpServletRequest req, HttpServletResponse res) throws IOException {
+        boolean authorized = true;
+        if (SessionAccessControl.getAccessManager(req) != null) {
+            String path = StringUtils.substringBefore(Path.getURI(req), ".");
+            authorized = SessionAccessControl.getAccessManager(req).isGranted(path, Permission.READ);
+        }
+        if (!authorized) {
+            res.sendError(HttpServletResponse.SC_FORBIDDEN);
+        }
+        return authorized;
     }
 
     /**
@@ -175,6 +194,11 @@ public class EntryServlet extends HttpServlet {
             log.error(e.getMessage(), e);
             return false;
         }
+        /**
+         * initialize website access manager, its a temporary fix
+         * todo : should SessionAccessControl initialize access managers for all workspaces on login ?
+         * */
+        SessionAccessControl.getHierarchyManager(req);
         return true;
     }
 
