@@ -36,7 +36,7 @@ public class ProviderImpl implements Provider {
 
     private static final String PROVIDER_URL_KEY = "providerURL";
 
-    private static final String REPOSITORY_ID_KEY = "id";
+    private static final String BIND_NAME_KEY = "bindName";
 
     private RepositoryMapping repositoryMapping;
 
@@ -59,14 +59,14 @@ public class ProviderImpl implements Provider {
         }
         String contextFactoryClass = (String) params.get(CONTEXT_FACTORY_CLASS_KEY);
         String providerURL = (String) params.get(PROVIDER_URL_KEY);
-        String repositoryID = (String) params.get(REPOSITORY_ID_KEY);
+        String bindName = (String) params.get(BIND_NAME_KEY);
         Hashtable env = new Hashtable();
         env.put(Context.INITIAL_CONTEXT_FACTORY, contextFactoryClass);
         env.put(Context.PROVIDER_URL, providerURL);
         try {
             InitialContext ctx = new InitialContext(env);
-            RegistryHelper.registerRepository(ctx, repositoryID, configFile, repositoryHome, true);
-            this.repository = (Repository) ctx.lookup(repositoryID);
+            RegistryHelper.registerRepository(ctx, bindName, configFile, repositoryHome, true);
+            this.repository = (Repository) ctx.lookup(bindName);
         }
         catch (Exception e) {
             throw new RepositoryNotInitializedException(e);

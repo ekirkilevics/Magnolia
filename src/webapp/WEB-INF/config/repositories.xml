@@ -17,6 +17,7 @@
 
 <!--
 
+
  @version 2.1
 -->
 
@@ -30,7 +31,7 @@
             <param name="repositoryHome" value="repositories/website"/>
             <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory"/>
             <param name="providerURL" value="localhost"/>
-            <param name="id" value="website"/>
+            <param name="bindName" value="websiteAuthor"/>
             <!--
             You can define workspaces for this repository, attribute "id" is used to to login to the specified
             workspace, check provider specific configuration file to configure workspaces.
@@ -48,7 +49,7 @@
             <param name="repositoryHome" value="repositories/config"/>
             <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory"/>
             <param name="providerURL" value="localhost"/>
-            <param name="id" value="config"/>
+            <param name="bindName" value="configAuthor"/>
         </Repository>
 
         <!-- magnolia user repository -->
@@ -57,7 +58,7 @@
             <param name="repositoryHome" value="repositories/users"/>
             <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory"/>
             <param name="providerURL" value="localhost"/>
-            <param name="id" value="users"/>
+            <param name="bindName" value="usersAuthor"/>
         </Repository>
 
         <!-- magnolia default user roles repository -->
@@ -66,7 +67,7 @@
             <param name="repositoryHome" value="repositories/userroles"/>
             <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory"/>
             <param name="providerURL" value="localhost"/>
-            <param name="id" value="userroles"/>
+            <param name="bindName" value="userrolesAuthor"/>
         </Repository>
 
 </Repositories>
