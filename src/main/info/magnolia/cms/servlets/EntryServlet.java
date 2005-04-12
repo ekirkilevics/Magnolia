@@ -273,18 +273,21 @@ public class EntryServlet extends HttpServlet {
 
         String contextPath;
 
+        String characterEncoding;
+
         public CacheRequest(HttpServletRequest originalRequest) {
             this.contextPath = originalRequest.getContextPath();
             // remember URI
-            uri = originalRequest.getRequestURI();
+            this.uri = originalRequest.getRequestURI();
+            this.characterEncoding = originalRequest.getCharacterEncoding();
             // copy neccessary attributes
-            attributes.put(Aggregator.EXTENSION, originalRequest.getAttribute(Aggregator.EXTENSION));
-            attributes.put(Aggregator.ACTPAGE, originalRequest.getAttribute(Aggregator.ACTPAGE));
+            this.attributes.put(Aggregator.EXTENSION, originalRequest.getAttribute(Aggregator.EXTENSION));
+            this.attributes.put(Aggregator.ACTPAGE, originalRequest.getAttribute(Aggregator.ACTPAGE));
 
             // copy headers
             String authHeader = originalRequest.getHeader("Authorization");
             if (authHeader != null) {
-                headers.put("Authorization", authHeader);
+                this.headers.put("Authorization", authHeader);
             }
         }
 
@@ -397,7 +400,7 @@ public class EntryServlet extends HttpServlet {
         }
 
         public String getCharacterEncoding() {
-            throw new UnsupportedOperationException();
+            return this.characterEncoding;
         }
 
         public void setCharacterEncoding(String s) throws UnsupportedEncodingException {
@@ -461,11 +464,11 @@ public class EntryServlet extends HttpServlet {
         }
 
         public void setAttribute(String s, Object o) {
-            throw new UnsupportedOperationException();
+            this.attributes.put(s,o);
         }
 
         public void removeAttribute(String s) {
-            throw new UnsupportedOperationException();
+            this.attributes.remove(s);
         }
 
         public Locale getLocale() {
