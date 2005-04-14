@@ -3,8 +3,8 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
 	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" version="2.4"
     id="WebApp">
-    <display-name>magnolia</display-name>
     <description>magnolia 2.1</description>
+    <display-name>magnolia</display-name>
     <filter>
         <description></description>
         <display-name>ContentTypeFilter</display-name>
