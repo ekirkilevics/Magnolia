@@ -13,6 +13,7 @@
 package info.magnolia.cms.core;
 
 import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.core.util.Access;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
@@ -207,17 +208,27 @@ public abstract class ContentHandler {
 
     /**
      * <p>
-     * evaluate primary node type of the associated Node of this Content object
+     * evaluate primary node type of the associated Node of this object
      * </p>
      */
-    public boolean isContentType(String type) {
+    public boolean isNodeType(String type) {
         try {
             return this.node.isNodeType(type);
         }
         catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
+            log.error(re.getMessage());
+            log.debug(re);
         }
         return false;
+    }
+
+    /**
+     * <p>
+     * returns primary node type definition of the associated Node of this object
+     * </p>
+     */
+    public NodeType getNodeType() throws RepositoryException {
+        return this.node.getPrimaryNodeType();
     }
 
     /**

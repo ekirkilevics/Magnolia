@@ -115,23 +115,6 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * <p>
-     * checks if the requested resource is an NodeData (Property)
-     * </p>
-     * @param contentType of the requested NodeData
-     * @return boolean true is the requested content is an NodeData
-     */
-    public boolean isType(String contentType) {
-        try {
-            return (this.node.isNodeType(ItemType.getSystemName(contentType)));
-        }
-        catch (RepositoryException e) {
-            log.error(e);
-        }
-        return false;
-    }
-
-    /**
-     * <p>
      * bit by bit copy of the current object
      * </p>
      * @return Object cloned object
@@ -377,11 +360,24 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
-     * gets a Collection containing all child nodes at the current level+1 level.
+     * gets a Collection containing all child nodes of the same node type as "this" object.
      * @return Collection of content nodes
      */
     public Collection getChildren() {
-        return this.getChildren(ItemType.NT_CONTENT);
+        String type = "";
+        try {
+            type = this.getNodeType().getName();
+        } catch (RepositoryException re) {
+            log.error(re.getMessage());
+            log.debug(re);
+        }
+        // todo workaround
+        // fix all getChildren calls from the root node
+        if (type.equalsIgnoreCase("rep:root")) {
+            type = ItemType.NT_CONTENT;
+        }
+        //--------------------------------------------------
+        return this.getChildren(type);
     }
 
     /**
@@ -554,15 +550,7 @@ public class Content extends ContentHandler implements Cloneable {
      * @return Boolean, if sub node(s) exists
      */
     public boolean hasChildren() {
-        return (this.getChildren(ItemType.NT_CONTENT).size() > 0);
-    }
-
-    /**
-     * @return Boolean, if sub <code>collectionType</code> exists
-     * @deprecated use hasChildren(String) instead
-     */
-    public boolean hasChildren(int collectionType) {
-        return (this.getChildren(collectionType).size() > 0);
+        return (this.getChildren().size() > 0);
     }
 
     /**

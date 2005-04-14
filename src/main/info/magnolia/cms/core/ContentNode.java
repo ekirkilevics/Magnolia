@@ -89,29 +89,6 @@ public class ContentNode extends Content {
     }
 
     /**
-     * <p>
-     * gets a Collection containing all clild Atoms at the current level
-     * </p>
-     * @return Collection of Atoms
-     */
-    public Collection getChildren() {
-        Collection children = getChildren(ItemType.NT_CONTENTNODE);
-        return children;
-    }
-
-    /**
-     * @return Boolean, if sub node(s) exists
-     */
-    public boolean hasChildren() {
-        try {
-            return (this.getChildren().size() > 0);
-        }
-        catch (Exception e) {
-            return false;
-        }
-    }
-
-    /**
      * todo this should be a part of meta data, if we change what happens to the existing content where this is stored
      * as NodeData
      */

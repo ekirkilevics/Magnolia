@@ -230,7 +230,7 @@ public class HierarchyManager {
     public Content getContent(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         // todo remove this.. caller should take care of this
         if (path.equals("/")) {
-            return this.getRootPage();
+            return this.getRoot();
         }
         Content content = (new Content(this.startPage, getNodePath(path), this.accessManager));
         return content;
@@ -336,7 +336,7 @@ public class HierarchyManager {
     /**
      * @return startPage of the current working repository-workspace
      */
-    public Content getRootPage() throws RepositoryException, AccessDeniedException {
+    public Content getRoot() throws RepositoryException, AccessDeniedException {
         Content content = (new Content(this.startPage, this.accessManager));
         return content;
     }

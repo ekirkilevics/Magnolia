@@ -185,8 +185,8 @@ public final class ContentRepository {
             if (log.isDebugEnabled()) {
                 log.debug("Checking [" + repository + "] repository.");
             }
-            Content startPage = getHierarchyManager(repository).getRootPage();
-            if (startPage.getChildren().size() > 0) {
+            Content startPage = getHierarchyManager(repository).getRoot();
+            if (startPage.getChildren(ItemType.NT_CONTENT).size() > 0) {
                 if (log.isDebugEnabled()) {
                     log.debug("Content found in [" + repository + "].");
                 }

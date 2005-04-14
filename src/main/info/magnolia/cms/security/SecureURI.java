@@ -12,22 +12,13 @@
  */
 package info.magnolia.cms.security;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.regex.RegexWildcardPattern;
 
-import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.log4j.Logger;
 
 
 /**
@@ -36,13 +27,7 @@ import org.apache.log4j.Logger;
  */
 public final class SecureURI {
 
-    private static final String RESTRICTED_ACCESS_NODE = "magnoliaRestrictedAccess";
-
-    private static Logger log = Logger.getLogger(SecureURI.class);
-
     private static Map cachedContent;
-
-    private static HierarchyManager hierarchyManager;
 
     /**
      * Utility class, don't instantiate.
@@ -54,40 +39,10 @@ public final class SecureURI {
     public static void init() {
         SecureURI.cachedContent = new Hashtable();
         SecureURI.cachedContent.clear();
-        hierarchyManager = ContentRepository.getHierarchyManager(ContentRepository.WEBSITE);
-        try {
-            createList(hierarchyManager.getRootPage());
-        }
-        catch (RepositoryException re) {
-            log.error("failed to load secure URI list");
-            log.error(re.getMessage(), re);
-        }
     }
 
     public static void reload() {
         init();
-    }
-
-    /**
-     * <p>
-     * Recursively create a list of all protected pages
-     * </p>
-     * @param startPage
-     */
-    private static void createList(Content startPage) throws PathNotFoundException, RepositoryException {
-        boolean isSecured = startPage.getNodeData(RESTRICTED_ACCESS_NODE).getBoolean();
-        if (isSecured) {
-            addToList(startPage.getHandle());
-            addToList(startPage.getHandle() + "/*");
-            return;
-        }
-        Collection children = startPage.getChildren();
-        if (children.size() > 0) {
-            Iterator it = children.iterator();
-            while (it.hasNext()) {
-                createList((Content) it.next());
-            }
-        }
     }
 
     /**
@@ -111,26 +66,6 @@ public final class SecureURI {
      */
     public static void add(String handle) {
         SecureURI.addToList(handle);
-    }
-
-    /**
-     * @param request
-     */
-    public static void add(HttpServletRequest request, String handle) {
-        try {
-            HierarchyManager hm = SessionAccessControl.getHierarchyManager(request);
-            Content page = hm.getPage(handle);
-            if (page == null) {
-                return;
-            }
-            if (page.getNodeData(RESTRICTED_ACCESS_NODE).getBoolean()) {
-                SecureURI.addToList(handle);
-                SecureURI.addToList(handle + "/*");
-            }
-        }
-        catch (RepositoryException e) {
-            log.error(e.getMessage(), e);
-        }
     }
 
     /**
