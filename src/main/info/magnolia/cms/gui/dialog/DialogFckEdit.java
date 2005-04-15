@@ -103,10 +103,12 @@ public class DialogFckEdit extends DialogBox {
             getRequest().setAttribute("__fcked_loaded", "true");
         }
 
-        String id = getId();
-        if (id == null) {
-            id = getName();
-        }
+        //String id = getId();
+        //if (id == null) {
+        //    id = getName();
+        //}
+        
+        String id = getName();
 
         if (id == null) {
             log.error("Missing id for fckEditor instance");
@@ -132,6 +134,9 @@ public class DialogFckEdit extends DialogBox {
         out.write("fckInstance.Create();");
         out.write(var + " = fckInstance;");
         out.write("</script>");
+        
+        // write the saveInfo for the writting back to repository
+        out.write("<input type='hidden' name='mgnlSaveInfo' value='" + id + ",String,0,0,0'>");
 
         out.write("</td>");
         out.write("</tr>");
