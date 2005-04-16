@@ -14,23 +14,26 @@ package info.magnolia.cms.core.search;
 
 import info.magnolia.cms.security.AccessManager;
 
+import javax.jcr.ItemExistsException;
+import javax.jcr.ItemNotFoundException;
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.lock.LockException;
 import javax.jcr.nodetype.ConstraintViolationException;
 import javax.jcr.version.VersionException;
-import javax.jcr.*;
+
 
 /**
- * Date: Mar 29, 2005
- * Time: 2:57:55 PM
- *
+ * Date: Mar 29, 2005 Time: 2:57:55 PM
  * @author Sameer Charles
  */
 
-
 public class QueryImpl implements Query {
 
-
     private javax.jcr.query.Query query;
+
     private AccessManager accessManager;
 
     protected QueryImpl(javax.jcr.query.Query query, AccessManager accessManager) {
@@ -52,12 +55,12 @@ public class QueryImpl implements Query {
         return this.query.getLanguage();
     }
 
-    public String getPersistentQueryPath() throws ItemNotFoundException, RepositoryException {
-        return this.query.getPersistentQueryPath();
+    public String getStoredQueryPath() throws ItemNotFoundException, RepositoryException {
+        return this.query.getStoredQueryPath();
     }
 
-    public void save(String s) throws ItemExistsException, PathNotFoundException, VersionException,
-    ConstraintViolationException, LockException, UnsupportedRepositoryOperationException, RepositoryException {
-        this.query.save(s);
+    public Node storeAsNode(String s) throws ItemExistsException, PathNotFoundException, VersionException,
+        ConstraintViolationException, LockException, UnsupportedRepositoryOperationException, RepositoryException {
+        return this.query.storeAsNode(s);
     }
 }

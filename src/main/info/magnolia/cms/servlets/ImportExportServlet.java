@@ -21,7 +21,6 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
  * Simple servlet used to import/export data from jcr.
  * @author Fabrizio Giustina
  * @version $Id: $
-
  */
 public class ImportExportServlet extends HttpServlet {
 
@@ -51,16 +50,16 @@ public class ImportExportServlet extends HttpServlet {
             Workspace ws = hr.getWorkspace();
             OutputStream stream = response.getOutputStream();
             response.setContentType("text/xml");
-            response.setCharacterEncoding("UTF-8");            String pathName = StringUtils.replace(basepath, "/", ".");
+            response.setCharacterEncoding("UTF-8");
+            String pathName = StringUtils.replace(basepath, "/", ".");
             if (".".equals(pathName)) {
                 // root node
                 pathName = StringUtils.EMPTY;
             }
             response.setHeader("content-disposition", "attachment; filename=" + repository + pathName + ".xml");
 
-
             try {
-                ws.getSession().exportDocView(basepath, stream, false, false);
+                ws.getSession().exportDocumentView(basepath, stream, false, false);
             }
             catch (Exception e) {
                 throw new NestableRuntimeException(e);

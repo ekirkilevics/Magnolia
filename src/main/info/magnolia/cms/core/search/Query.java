@@ -12,21 +12,26 @@
  */
 package info.magnolia.cms.core.search;
 
+import javax.jcr.ItemExistsException;
+import javax.jcr.ItemNotFoundException;
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.lock.LockException;
 import javax.jcr.nodetype.ConstraintViolationException;
 import javax.jcr.version.VersionException;
-import javax.jcr.*;
+
 
 /**
- * Date: Apr 4, 2005
- * Time: 11:02:35 AM
- *
+ * Date: Apr 4, 2005 Time: 11:02:35 AM
  * @author Sameer Charles
  */
 
 public interface Query {
 
     String XPATH = "xpath";
+
     String SQL = "sql";
 
     QueryResult execute() throws RepositoryException;
@@ -35,9 +40,9 @@ public interface Query {
 
     String getLanguage();
 
-    String getPersistentQueryPath() throws ItemNotFoundException, RepositoryException;
+    String getStoredQueryPath() throws ItemNotFoundException, RepositoryException;
 
-    void save(String s) throws ItemExistsException, PathNotFoundException, VersionException,
-    ConstraintViolationException, LockException, UnsupportedRepositoryOperationException, RepositoryException;
+    Node storeAsNode(String s) throws ItemExistsException, PathNotFoundException, VersionException,
+        ConstraintViolationException, LockException, UnsupportedRepositoryOperationException, RepositoryException;
 
 }

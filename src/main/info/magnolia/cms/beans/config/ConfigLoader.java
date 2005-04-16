@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
 
+import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.servlet.ServletConfig;
@@ -270,7 +271,7 @@ public class ConfigLoader {
                 try {
 
                     log.info("Importing content from " + xmlfile.getName());
-                    session.importXML("/", stream);
+                    session.importXML("/", stream, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
                 }
                 catch (Exception e) {
                     log.error("Unable to load content from "

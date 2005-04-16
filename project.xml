@@ -261,7 +261,7 @@
         <dependency>
             <groupId>jackrabbit</groupId>
             <artifactId>jackrabbit</artifactId>
-            <version>0.16.2-dev</version>
+            <version>0.16.4-dev</version>
             <type>jar</type>
             <properties>
                 <war.bundle>true</war.bundle>
@@ -290,7 +290,7 @@
         <dependency>
             <groupId>jsr170</groupId>
             <artifactId>jcr</artifactId>
-            <version>0.16.2</version>
+            <version>0.16.4</version>
             <type>jar</type>
             <url>http://www.day.com/maven/jsr170/jars/jcr-0.16.2.jar</url>
             <properties>

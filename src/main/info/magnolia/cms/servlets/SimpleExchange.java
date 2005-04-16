@@ -96,7 +96,7 @@ public class SimpleExchange extends HttpServlet implements SingleThreadModel {
             String recursive = request.getHeader(Syndicator.RECURSIVE);
             boolean recurse = BooleanUtils.toBoolean(recursive);
 
-            if (ConfigLoader.isConfigured() && !Listener.isAllowed(request) || !Authenticator.authenticate(request)) {
+            if (ConfigLoader.isConfigured() && (!Listener.isAllowed(request) || !Authenticator.authenticate(request))) {
                 // ignore security is server is not configured
                 return;
             }
