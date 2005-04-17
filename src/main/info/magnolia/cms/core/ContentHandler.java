@@ -13,7 +13,6 @@
 package info.magnolia.cms.core;
 
 import info.magnolia.cms.beans.config.Server;
-import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.core.util.Access;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
@@ -27,9 +26,9 @@ import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.UnsupportedRepositoryOperationException;
-import javax.jcr.nodetype.NodeType;
 import javax.jcr.lock.Lock;
 import javax.jcr.lock.LockException;
+import javax.jcr.nodetype.NodeType;
 import javax.jcr.version.Version;
 import javax.jcr.version.VersionException;
 import javax.jcr.version.VersionHistory;
@@ -183,14 +182,13 @@ public abstract class ContentHandler {
 
     /**
      * <p>
-     * This method returns the index of this node within the ordered set of its same-name  sibling nodes.
-     * This index is the one used to address same-name siblings using the  square-bracket notation,
-     * e.g., /a[3]/b[4]. Note that the index always starts  at 1 (not 0), for compatibility with XPath.
-     * As a result, for nodes that do not have  same-name-siblings, this method will always return 1.
+     * This method returns the index of this node within the ordered set of its same-name sibling nodes. This index is
+     * the one used to address same-name siblings using the square-bracket notation, e.g., /a[3]/b[4]. Note that the
+     * index always starts at 1 (not 0), for compatibility with XPath. As a result, for nodes that do not have
+     * same-name-siblings, this method will always return 1.
      * </p>
-     *
      * @return The index of this node within the ordered set of its same-name sibling nodes.
-     * */
+     */
     public int getIndex() throws RepositoryException {
         return this.node.getIndex();
     }
@@ -386,7 +384,7 @@ public abstract class ContentHandler {
      * UUID of the node refrenced by this object
      * </p>
      * @throws RepositoryException
-     * */
+     */
     public String getUUID() throws RepositoryException {
         return this.node.getUUID();
     }
@@ -395,27 +393,25 @@ public abstract class ContentHandler {
      * <p>
      * add specified mixin type if allowed
      * </p>
-     *
      * @param type , mixin type to be added
-     * */
+     */
     public void addMixin(String type) throws RepositoryException {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.node.getPath()), Permission.SET);
         if (this.node.canAddMixin(type)) {
             this.node.addMixin(type);
-        } else {
-            log.error("Node - "+this.node.getPath()+" does not allow mixin type - "+type);
+        }
+        else {
+            log.error("Node - " + this.node.getPath() + " does not allow mixin type - " + type);
         }
     }
 
     /**
      * <p>
-     * Removes the specified mixin node type from this node.
-     * Also removes mixinName from this node's jcr:mixinTypes property.
-     * <b>The mixin node type removal  takes effect on save</b>.
+     * Removes the specified mixin node type from this node. Also removes mixinName from this node's jcr:mixinTypes
+     * property. <b>The mixin node type removal takes effect on save</b>.
      * </p>
-     *
      * @param type , mixin type to be removed
-     * */
+     */
     public void removeMixin(String type) throws RepositoryException {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.node.getPath()), Permission.SET);
         this.node.removeMixin(type);
@@ -423,14 +419,12 @@ public abstract class ContentHandler {
 
     /**
      * <p>
-     * Returns an array of NodeType objects representing the mixin node types  assigned to this node.
-     * This includes only those mixin types explicitly  assigned to this node,
-     * and therefore listed in the property jcr:mixinTypes. It does not include mixin types inherited
-     * through the additon of supertypes to the primary type hierarchy.
+     * Returns an array of NodeType objects representing the mixin node types assigned to this node. This includes only
+     * those mixin types explicitly assigned to this node, and therefore listed in the property jcr:mixinTypes. It does
+     * not include mixin types inherited through the additon of supertypes to the primary type hierarchy.
      * </p>
-     *
      * @return an array of mixin NodeType objects.
-     * */
+     */
     public NodeType[] getMixinNodeTypes() throws RepositoryException {
         return this.node.getMixinNodeTypes();
     }
@@ -439,52 +433,49 @@ public abstract class ContentHandler {
      * <p>
      * places a lock on this object
      * </p>
-     *
-     * @param isDeep if true this lock will apply to this node and all its descendants; if  false,
-     * it applies only to this node.
-     * @param isSessionScoped if true, this lock expires with the current session; if false it  expires when
-     * explicitly or automatically unlocked for some other reason.
+     * @param isDeep if true this lock will apply to this node and all its descendants; if false, it applies only to
+     * this node.
+     * @param isSessionScoped if true, this lock expires with the current session; if false it expires when explicitly
+     * or automatically unlocked for some other reason.
      * @return A Lock object containing a lock token.
      * @see javax.jcr.Node#lock(boolean, boolean)
-     * */
+     */
     public Lock lock(boolean isDeep, boolean isSessionScoped) throws LockException, RepositoryException {
         return this.node.lock(isDeep, isSessionScoped);
     }
 
     /**
      * <p>
-     * Returns the Lock object that applies to this node.
-     * This may be either a lock on this node itself  or a deep lock on a node above this node.
+     * Returns the Lock object that applies to this node. This may be either a lock on this node itself or a deep lock
+     * on a node above this node.
      * </p>
-     *
      * @throws LockException If no lock applies to this node, a LockException is thrown.
      * @throws RepositoryException
-     * */
+     */
     public Lock getLock() throws LockException, RepositoryException {
         return this.node.getLock();
     }
 
     /**
      * <p>
-     * Removes the lock on this node. Also removes the properties jcr:lockOwner and  jcr:lockIsDeep from this node.
-     * These changes are persisted automatically; <b>there is no need to call  save</b>.
+     * Removes the lock on this node. Also removes the properties jcr:lockOwner and jcr:lockIsDeep from this node. These
+     * changes are persisted automatically; <b>there is no need to call save</b>.
      * </p>
-     *
-     * @throws LockException if either does not currently hold a lock,
-     * or holds a lock for which this Session does not have the correct lock token
+     * @throws LockException if either does not currently hold a lock, or holds a lock for which this Session does not
+     * have the correct lock token
      * @throws RepositoryException
-     * */
+     */
     public void unlock() throws LockException, RepositoryException {
         this.node.unlock();
     }
 
     /**
      * <p>
-     * Returns true if this node holds a lock; otherwise returns false.
-     * To hold a  lock means that this node has actually had a lock placed on it specifically,
-     * as opposed to just having a lock  apply to it due to a deep lock held by a node above.
+     * Returns true if this node holds a lock; otherwise returns false. To hold a lock means that this node has actually
+     * had a lock placed on it specifically, as opposed to just having a lock apply to it due to a deep lock held by a
+     * node above.
      * </p>
-     * */
+     */
     public boolean holdsLock() throws RepositoryException {
         return this.node.holdsLock();
     }
