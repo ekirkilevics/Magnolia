@@ -12,11 +12,11 @@
  */
 package info.magnolia.cms.servlets;
 
-import info.magnolia.cms.util.Path;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.security.SecureURI;
 import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.core.Path;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

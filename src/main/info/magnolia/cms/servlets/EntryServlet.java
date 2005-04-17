@@ -14,12 +14,12 @@ package info.magnolia.cms.servlets;
 
 import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.Dispatcher;
-import info.magnolia.cms.util.Path;
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.config.VirtualMap;
 import info.magnolia.cms.beans.runtime.Cache;
 import info.magnolia.cms.core.CacheHandler;
 import info.magnolia.cms.core.CacheProcess;
+import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.*;
 
 import java.io.BufferedReader;

@@ -18,8 +18,8 @@ import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.SessionAccessControl;
-import info.magnolia.cms.util.Path;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;

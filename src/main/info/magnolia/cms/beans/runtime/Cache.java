@@ -12,7 +12,7 @@
  */
 package info.magnolia.cms.beans.runtime;
 
-import info.magnolia.cms.util.Path;
+import info.magnolia.cms.core.Path;
 
 import java.util.Hashtable;
 import java.util.Map;

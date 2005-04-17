@@ -18,7 +18,6 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.util.Path;
 
 import java.util.ArrayList;
 import java.util.Collection;

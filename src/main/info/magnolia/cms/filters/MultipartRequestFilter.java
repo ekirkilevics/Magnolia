@@ -13,7 +13,7 @@
 package info.magnolia.cms.filters;
 
 import info.magnolia.cms.beans.runtime.MultipartForm;
-import info.magnolia.cms.util.Path;
+import info.magnolia.cms.core.Path;
 
 import java.io.IOException;
 import java.util.Enumeration;

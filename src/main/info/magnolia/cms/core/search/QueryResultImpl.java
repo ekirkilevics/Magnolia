@@ -17,8 +17,8 @@ import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.Path;
 import info.magnolia.cms.beans.config.ItemType;
-import info.magnolia.cms.util.Path;
 
 import javax.jcr.NodeIterator;
 import javax.jcr.Node;

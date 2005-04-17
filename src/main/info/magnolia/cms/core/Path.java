@@ -10,10 +10,9 @@
  * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.util;
+package info.magnolia.cms.core;
 
 import info.magnolia.cms.beans.runtime.SystemProperty;
-import info.magnolia.cms.core.HierarchyManager;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;

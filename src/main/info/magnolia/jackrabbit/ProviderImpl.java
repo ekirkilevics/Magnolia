@@ -1,6 +1,6 @@
 package info.magnolia.jackrabbit;
 
-import info.magnolia.cms.util.Path;
+import info.magnolia.cms.core.Path;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
 import info.magnolia.repository.RepositoryNotInitializedException;

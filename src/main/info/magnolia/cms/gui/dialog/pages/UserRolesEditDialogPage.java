@@ -5,6 +5,7 @@ import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.Path;
 import info.magnolia.cms.gui.control.Save;
 import info.magnolia.cms.gui.dialog.DialogBox;
 import info.magnolia.cms.gui.dialog.DialogButton;
@@ -21,7 +22,6 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.servlets.BasePageServlet;
-import info.magnolia.cms.util.Path;
 import info.magnolia.cms.util.Resource;
 
 import java.io.IOException;

@@ -15,7 +15,6 @@ package info.magnolia.cms.core;
 import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.beans.runtime.Cache;
 import info.magnolia.cms.security.SecureURI;
-import info.magnolia.cms.util.Path;
 
 import java.io.File;
 import java.io.FileInputStream;

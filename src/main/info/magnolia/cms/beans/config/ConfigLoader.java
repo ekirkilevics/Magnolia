@@ -14,9 +14,9 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.beans.runtime.SystemProperty;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.Path;
 import info.magnolia.cms.license.License;
 import info.magnolia.cms.security.SecureURI;
-import info.magnolia.cms.util.Path;
 
 import java.io.File;
 import java.io.FileInputStream;

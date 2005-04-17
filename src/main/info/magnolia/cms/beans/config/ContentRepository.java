@@ -14,11 +14,11 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManagerImpl;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
-import info.magnolia.cms.util.Path;
 import info.magnolia.cms.util.regex.RegexWildcardPattern;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
