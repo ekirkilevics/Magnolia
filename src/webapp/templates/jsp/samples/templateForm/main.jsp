@@ -1,18 +1,29 @@
-<%
-/**
- *
- * Magnolia and its source-code is licensed under the LGPL.
- * You may copy, adapt, and redistribute this file for commercial or non-commercial use.
- * When copying, adapting, or redistributing this document in keeping with the guidelines above,
- * you are required to provide proper attribution to obinary.
- * If you reproduce or distribute the document without making any substantive modifications to its content,
- * please use the following attribution line:
- *
- * Copyright 1993-2004 obinary Ltd. (http://www.obinary.com) All rights reserved.
- *
- * */
-%><%!
+<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:cms="urn:jsptld:cms-taglib"
+    xmlns:cmsu="urn:jsptld:cms-util-taglib" xmlns:c="urn:jsptld:http://java.sun.com/jsp/jstl/core">
 
+<jsp:directive.page import="info.magnolia.cms.core.Content" />
+<jsp:directive.page import="org.apache.log4j.Logger" />
+<jsp:directive.page import="info.magnolia.cms.util.Resource" />
+<jsp:directive.page import="info.magnolia.cms.beans.runtime.MultipartForm" />
+<jsp:directive.page import="java.util.Enumeration" />
+<jsp:directive.page import="java.util.Collection" />
+<jsp:directive.page import="java.util.Iterator" />
+<jsp:directive.page import="info.magnolia.cms.core.ContentNode" />
+<jsp:directive.page import="javax.mail.internet.InternetAddress" />
+<jsp:directive.page import="javax.mail.internet.AddressException" />
+<jsp:directive.page import="javax.mail.Message" />
+<jsp:directive.page import="javax.mail.Session" />
+<jsp:directive.page import="java.util.Properties" />
+<jsp:directive.page import="javax.mail.internet.MimeMessage" />
+<jsp:directive.page import="javax.mail.Transport" />
+<jsp:directive.page import="info.magnolia.cms.core.Content" />
+<jsp:directive.page import="info.magnolia.cms.beans.config.Server" />
+<jsp:directive.page import="java.net.URLEncoder" />
+<jsp:directive.page import="java.io.UnsupportedEncodingException" />
+
+
+<jsp:declaration>
+<![CDATA[
 	public class MailHandler {
 
 		private String body;
@@ -96,25 +107,10 @@
 
 
 	}
-
-%><%@ page import="org.apache.log4j.Logger,
-				   info.magnolia.cms.util.Resource,
-				   info.magnolia.cms.beans.runtime.MultipartForm,
-				   java.util.Enumeration,
-				   java.util.Collection,
-				   java.util.Iterator,
-				   info.magnolia.cms.core.ContentNode,
-				   javax.mail.internet.InternetAddress,
-				   javax.mail.internet.AddressException,
-				   javax.mail.Message,
-				   javax.mail.Session,
-				   java.util.Properties,
-				   javax.mail.internet.MimeMessage,
-				   javax.mail.Transport,
-				   info.magnolia.cms.core.Content,
-				   info.magnolia.cms.beans.config.Server,
-				   java.net.URLEncoder,
-				   java.io.UnsupportedEncodingException"%><%
+]]>
+</jsp:declaration>
+<jsp:scriptlet>
+<![CDATA[
 
 
     if (request.getParameter("sendMail")!=null) {
@@ -167,24 +163,25 @@
 			response.sendRedirect(redirect);
 		}
 	}
-%>
-<%@ taglib uri="cms-taglib" prefix="cms" %>
-<%@ taglib uri="cms-util-taglib" prefix="cmsu" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+]]>
+</jsp:scriptlet>
 <c:import url="/templates/jsp/samples/global/head.jsp"/>
 
 <body>
 <c:import url="/templates/jsp/samples/templateForm/mainBar.jsp"/>
 
 <div id="contentDivMainColumn">
-	<%
+<jsp:scriptlet>
+<![CDATA[
 	String alertText=Resource.getActivePage(request).getNodeData("mandatoryAlert").getString();
 	if (alertText.equals("")) alertText="Please fill in all fields marked with an asterisk.";
 	alertText=alertText.replaceAll("'","&rsquo;");
 	alertText=alertText.replaceAll("\"","&rsquo;");
 	alertText=alertText.replaceAll("\r\n","<br/>");
-	%>
-	<form name="samplesForm" action="<%=Resource.getActivePage(request).getHandle()%>.html" method="post" onsubmit="return (checkMandatories(this.name,'<%=alertText%>'));">
+	pageContext.setAttribute("alertText", alertText);
+	]]>
+</jsp:scriptlet>
+	<form name="samplesForm" action="${actpage.handle}.html" method="post" onsubmit="return (checkMandatories(this.name,'${alertText}'));">
 		<input type="hidden" name="sendMail" value="true">
 		<c:import url="/templates/jsp/samples/global/columnMain.jsp"/>
 		<c:import url="/templates/jsp/samples/templateForm/columnMainNewBar.jsp"/>
