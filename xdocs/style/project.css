@@ -168,15 +168,9 @@ h3 {
 }
 
 #breadcrumbs div.xright,#breadcrumbs div.xleft {
-	background-color: #fff;
-	padding: 4px;
-	margin-right: 10px;
-	display: inline;
-}
-
-#breadcrumbs div.xleft {
-	font-size: 7pt !important;
 	color: #fff;
+	display: inline;
+	font-size: 7pt !important;
 }
 
 #banner a#projectLogo img {
