@@ -19,6 +19,7 @@ import info.magnolia.cms.util.Resource;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.log4j.Logger;
@@ -26,7 +27,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Marcel Salathe
- * @version $Revision$ ($Author$)
+ * @version $Revision: 364 $ ($Author: fgiust $)
  */
 public class IfEmpty extends BodyTagSupport {
 
@@ -188,13 +189,21 @@ public class IfEmpty extends BodyTagSupport {
     }
 
     /**
-     * <p>
-     * set the actpage
-     * </p>
+     * Set the actpage.
      * @param set
      */
     public void setActpage(boolean set) {
         this.actpage = set;
+    }
+
+    /**
+     * @see javax.servlet.jsp.tagext.BodyTagSupport#doEndTag()
+     */
+    public int doEndTag() throws JspException {
+        this.contentNodeCollection = null;
+        this.contentNode = null;
+        this.nodeData = null;
+        return super.doEndTag();
     }
 
     /**
@@ -204,9 +213,7 @@ public class IfEmpty extends BodyTagSupport {
         this.nodeDataName = "";
         this.contentNodeName = "";
         this.contentNodeCollectionName = "";
-        this.contentNodeCollection = null;
-        this.contentNode = null;
-        this.nodeData = null;
         this.actpage = false;
     }
+
 }
