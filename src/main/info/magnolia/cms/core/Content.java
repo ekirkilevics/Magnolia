@@ -18,13 +18,13 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.util.DateComparator;
 import info.magnolia.cms.util.Path;
-import info.magnolia.cms.util.SequenceComparator;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import javax.jcr.Item;
@@ -367,7 +367,8 @@ public class Content extends ContentHandler implements Cloneable {
         String type = "";
         try {
             type = this.getNodeType().getName();
-        } catch (RepositoryException re) {
+        }
+        catch (RepositoryException re) {
             log.error(re.getMessage());
             log.debug(re);
         }
@@ -376,7 +377,7 @@ public class Content extends ContentHandler implements Cloneable {
         if (type.equalsIgnoreCase("rep:root")) {
             type = ItemType.NT_CONTENT;
         }
-        //--------------------------------------------------
+        // --------------------------------------------------
         return this.getChildren(type);
     }
 
@@ -571,7 +572,14 @@ public class Content extends ContentHandler implements Cloneable {
             if (c == null) {
                 return c;
             }
-            Collections.sort((List) c, new DateComparator());
+            Collections.sort((List) c, new Comparator() {
+
+                public int compare(Object o1, Object o2) {
+                    Date date1 = ((Content) o1).getMetaData().getCreationDate().getTime();
+                    Date date2 = ((Content) o2).getMetaData().getCreationDate().getTime();
+                    return date1.compareTo(date2);
+                }
+            });
         }
         catch (Exception e) {
             log.error(e.getMessage());
@@ -590,7 +598,28 @@ public class Content extends ContentHandler implements Cloneable {
             if (c == null) {
                 return c;
             }
-            Collections.sort((List) c, new SequenceComparator());
+            Collections.sort((List) c, new Comparator() {
+
+                public int compare(Object o0, Object o1) {
+                    try {
+                        long pos0 = (((Content) o0).getMetaData().getSequencePosition());
+                        long pos1 = (((Content) o1).getMetaData().getSequencePosition());
+                        String s0 = "0";
+                        String s1 = "0";
+                        if (pos0 > pos1) {
+                            s0 = "1";
+                        }
+                        else if (pos0 < pos1) {
+                            s1 = "1";
+                        }
+                        return s0.compareTo(s1);
+                    }
+                    catch (Exception e) {
+                        return 0;
+                    }
+                }
+
+            });
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
