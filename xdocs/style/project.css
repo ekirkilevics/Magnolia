@@ -167,14 +167,14 @@ h3 {
 	padding-bottom: 2px;
 }
 
-#breadcrumbs .xright,#breadcrumbs .xleft {
+#breadcrumbs div.xright,#breadcrumbs div.xleft {
 	background-color: #fff;
 	padding: 4px;
 	margin-right: 10px;
 	display: inline;
 }
 
-#breadcrumbs .xleft {
+#breadcrumbs div.xleft {
 	font-size: 7pt !important;
 	color: #fff;
 }
@@ -239,22 +239,18 @@ a.externalLink,a.newWindow {
 	background-image: none !important; /*ie5*/
 }
 
-a.externalLink /* */ {
-	background-image: url(../images/magnolia_external.png) !important;
-}
+a.externalLink/* */{
+    background-image: url(../images/magnolia_external.png) !important;
 
-a.newWindow /* */ {
-	background-image: url(../images/magnolia_newwindow.png) !important;
 }
-
+a.newWindow/* */{
+    background-image: url(../images/magnolia_newwindow.png) !important;
+}
 table {
-	width: 68%;
+  width: 68%;
 }
-
-i {
-	content: "\"/*"
-}
-
+i {content: "\"/*" }
 table {
-	width: 100%;
+  width: 100%;
 }
+
