@@ -295,7 +295,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
             <type>info.magnolia.cms.core.ContentNode</type>
-            <description></description>
+            <description>@deprecated use contentNode</description>
         </attribute>
     </tag>
     <tag>
@@ -313,7 +313,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
             <name>containerName</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description></description>
+            <description>@deprecated use contentNodeName</description>
         </attribute>
         <attribute>
             <name>contentNode</name>
@@ -327,14 +327,14 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
             <type>info.magnolia.cms.core.ContentNode</type>
-            <description></description>
+            <description>@deprecated use contentNode</description>
         </attribute>
     </tag>
     <tag>
         <name>init</name>
         <tag-class>info.magnolia.cms.taglibs.Init</tag-class>
         <body-content>EMPTY</body-content>
-        <description>@deprecated</description>
+        <description>@deprecated this tag does nothing in magnolia 2.x</description>
     </tag>
     <tag>
         <name>contentNodeIterator</name>
@@ -440,7 +440,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
             <name>containerName</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description></description>
+            <description>@deprecated use contentNode</description>
         </attribute>
         <attribute>
             <name>contentNodeCollectionName</name>
@@ -452,7 +452,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
             <name>containerListName</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description></description>
+            <description>@deprecated use contentNodeCollectionName</description>
         </attribute>
         <attribute>
             <name>actpage</name>
@@ -489,7 +489,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
             <name>containerName</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description></description>
+            <description>@deprecated use contentNode</description>
         </attribute>
         <attribute>
             <name>contentNodeCollectionName</name>
@@ -501,7 +501,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
             <name>containerListName</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description></description>
+            <description>@deprecated use contentNodeCollectionName</description>
         </attribute>
         <attribute>
             <name>actpage</name>
