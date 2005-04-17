@@ -10,15 +10,12 @@
  * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.servlets;
+package info.magnolia.cms.exchange.simple;
 
 import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.CacheHandler;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.exchange.simple.ContentWriter;
-import info.magnolia.cms.exchange.simple.PacketCollector;
-import info.magnolia.cms.exchange.simple.Syndicator;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.Listener;
 import info.magnolia.cms.security.Lock;
@@ -62,7 +59,7 @@ import org.apache.log4j.Logger;
  * @author Sameer Charles
  * @version 2.0
  */
-public class SimpleExchange extends HttpServlet implements SingleThreadModel {
+public class SimpleExchangeServlet extends HttpServlet implements SingleThreadModel {
 
     /**
      * Stable serialVersionUID.
@@ -72,7 +69,7 @@ public class SimpleExchange extends HttpServlet implements SingleThreadModel {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(SimpleExchange.class);
+    private static Logger log = Logger.getLogger(SimpleExchangeServlet.class);
 
     private transient HierarchyManager hierarchyManager;
 

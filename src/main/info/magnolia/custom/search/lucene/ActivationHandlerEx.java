@@ -1,6 +1,6 @@
 package info.magnolia.custom.search.lucene;
 
-import info.magnolia.cms.servlets.SimpleExchange;
+import info.magnolia.cms.exchange.simple.SimpleExchangeServlet;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * User: Sameer Charles Date: Mar 5, 2004 Time: 11:19:42 AM
  */
-public class ActivationHandlerEx extends SimpleExchange {
+public class ActivationHandlerEx extends SimpleExchangeServlet {
 
     /**
      * Stable serialVersionUID.

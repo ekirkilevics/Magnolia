@@ -113,7 +113,7 @@
         <description>Activation handler servlet</description>
         <display-name>magnolia ActivationHandler</display-name>
         <servlet-name>ActivationHandler</servlet-name>
-        <servlet-class>info.magnolia.cms.servlets.SimpleExchange</servlet-class>
+        <servlet-class>info.magnolia.cms.exchange.simple.SimpleExchangeServlet</servlet-class>
     </servlet>
     <servlet>
         <description>Admin interface tree servlet</description>
