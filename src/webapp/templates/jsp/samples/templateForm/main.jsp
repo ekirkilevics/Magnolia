@@ -182,7 +182,7 @@
 	]]>
 </jsp:scriptlet>
 	<form name="samplesForm" action="${actpage.handle}.html" method="post" onsubmit="return (checkMandatories(this.name,'${alertText}'));">
-		<input type="hidden" name="sendMail" value="true">
+		<input type="hidden" name="sendMail" value="true"/>
 		<c:import url="/templates/jsp/samples/global/columnMain.jsp"/>
 		<c:import url="/templates/jsp/samples/templateForm/columnMainNewBar.jsp"/>
 		<c:import url="/templates/jsp/samples/global/footer.jsp"/>
@@ -198,5 +198,4 @@
 
 </body>
 
-</html>
-
+</jsp:root>
