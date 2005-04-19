@@ -116,7 +116,8 @@ public class ConfigLoader {
             }
 
             // a bootstrap directory is configured, trying to initialize repositories
-            bootstrapRepositories();
+
+            bootstrapRepositories(bootdir);
         }
 
         // todo move to appropriate module classes
@@ -218,11 +219,9 @@ public class ConfigLoader {
      * web.xml. Loops over all the repositories and try to load any xml file found in a subdirectory with the same name
      * of the repository. For example the <code>config</code> repository will be initialized using all the
      * <code>*.xml</code> files found in <code>"magnolia.bootstrap.dir</code><strong>/config</strong> directory.
+     * @param bootdir bootstrap dir
      */
-    private void bootstrapRepositories() {
-
-        String bootdir = Path.getAbsoluteFileSystemPath(SystemProperty
-            .getProperty(SystemProperty.MAGNOLIA_BOOTSTRAP_ROOTDIR));
+    protected void bootstrapRepositories(String bootdir) {
 
         System.out.println("\n-----------------------------------------------------------------\n");
         System.out.println("Trying to initialize repositories from [" + bootdir + "]");
