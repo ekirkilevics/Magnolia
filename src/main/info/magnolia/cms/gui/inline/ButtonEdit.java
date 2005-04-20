@@ -14,7 +14,6 @@ package info.magnolia.cms.gui.inline;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.gui.control.Button;
-import info.magnolia.cms.i18n.ContextMessages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
@@ -33,7 +32,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class ButtonEdit extends Button {
 
-    String label = MessagesManager.getMessages(getRequest()).get("buttons.edit");
+    String label = "buttons.edit";
 
     public ButtonEdit() {
     }
@@ -80,7 +79,7 @@ public class ButtonEdit extends Button {
     }
 
     public String getLabel() {
-        return this.label;
+        return MessagesManager.getWithDefault(getRequest(),label, label);
     }
 
     public void setLabel(String s) {
