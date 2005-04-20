@@ -490,5 +490,9 @@ public class ControlSuper implements ControlInterface {
     public int getIsRichEditValue() {
         return this.isRichEditValue;
     }
+    
+    public static String escapeHTML(String str){
+    	return str.replaceAll("\"", "&ldquo;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+    }
 
 }

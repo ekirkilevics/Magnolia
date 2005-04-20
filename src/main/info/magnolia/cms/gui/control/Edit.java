@@ -52,7 +52,7 @@ public class Edit extends ControlSuper {
             html.append("<input type=\"text\"");
             html.append(" name=\"" + this.getName() + "\"");
             html.append(" id=\"" + id + "\"");
-            html.append(" value=\"" + this.getValue() + "\"");
+            html.append(" value=\"" + ControlSuper.escapeHTML(this.getValue()) + "\"");
             html.append(getHtmlEvents());
             html.append(this.getHtmlCssClass());
             html.append(this.getHtmlCssStyles());
