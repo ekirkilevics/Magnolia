@@ -15,6 +15,7 @@ package info.magnolia.module.admininterface;
 import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.config.Template;
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.control.Tree;
@@ -24,6 +25,7 @@ import info.magnolia.cms.i18n.ContextMessages;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.TemplateMessagesUtil;
+import info.magnolia.cms.security.SessionAccessControl;
 
 import java.util.Iterator;
 
@@ -37,11 +39,14 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class AdminTreeWebsite implements AdminTree {
 
+    private HttpServletRequest request;
+
     /**
      * @see AdminTree#configureTree(Tree, HttpServletRequest, String, String, String, boolean, String)
      */
     public void configureTree(Tree tree, HttpServletRequest request, String path, String pathOpen, String pathSelected,
         boolean create, String createItemType) {
+        this.request = request;
         Messages msgs = MessagesManager.getMessages(request);
         
         tree.setIconOndblclick("mgnlTreeMenuItemOpen(" + tree.getJavascriptTree() + ");");
@@ -97,7 +102,8 @@ public class AdminTreeWebsite implements AdminTree {
         templateSelect.setEvent("onblur", tree.getJavascriptTree() + ".saveNodeData(this.value,this.options[this.selectedIndex].text)");
         templateSelect.setEvent("onchange", tree.getJavascriptTree() + ".saveNodeData(this.value,this.options[this.selectedIndex].text)");
         
-        Iterator templates = Template.getAvailableTemplates();
+        Iterator templates = Template.getAvailableTemplates(SessionAccessControl.getAccessManager(this.request,
+        ContentRepository.CONFIG));
         while (templates.hasNext()) {
             Template template = (Template) templates.next();
             String title = template.getTitle();

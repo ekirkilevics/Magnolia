@@ -15,6 +15,8 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.security.AccessManager;
+import info.magnolia.cms.security.Permission;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -76,6 +78,8 @@ public class Template {
 
     private String title;
 
+    private String location;
+
     /**
      * Load all temple definitions available as a collection of Content objects.
      */
@@ -111,21 +115,26 @@ public class Template {
 
     /**
      * Get templates collection.
-     * @param type , type could be TemplateInfo.CUSTOM_TEMPLATES or TemplateInfo.ADMIN_TEMPLATES
-     * @return Collection list containing templates as Content objects
-     * @deprecated
-     * @see Template#getAvailableTemplates()
-     */
-    public static Iterator getAvailableTemplates(int type) {
-        return getAvailableTemplates();
-    }
-
-    /**
-     * Get templates collection.
-     * @return Collection list containing templates as Content objects
+     * @return Collection list containing templates as Template objects
      */
     public static Iterator getAvailableTemplates() {
         return Template.visibleTemplates.iterator();
+    }
+
+    /**
+     * Get templates collection after access control filter applied using specified AccessManager
+     * @return Collection list containing templates as Template objects
+     */
+    public static Iterator getAvailableTemplates(AccessManager accessManager) {
+        List templateList = new ArrayList();
+        Iterator it = Template.visibleTemplates.iterator();
+        while (it.hasNext()) {
+            Template template = (Template) it.next();
+            if (accessManager.isGranted(template.getLocation(),Permission.READ)) {
+                templateList.add(template);
+            }
+        }
+        return templateList.iterator();
     }
 
     /**
@@ -158,6 +167,7 @@ public class Template {
                 ti.description = c.getNodeData("description").getString();
                 ti.image = c.getNodeData("image").getString();
                 Template.cachedContent.put(ti.name, ti);
+                ti.setLocation(c.getHandle());
                 if (ti.visible) {
                     visibleTemplates.add(ti);
                 }
@@ -266,4 +276,13 @@ public class Template {
     public boolean isVisible() {
         return this.visible;
     }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
 }

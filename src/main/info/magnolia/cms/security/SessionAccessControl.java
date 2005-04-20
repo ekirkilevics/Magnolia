@@ -34,7 +34,6 @@ import javax.jcr.SimpleCredentials;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
-import org.apache.commons.lang.ObjectUtils;
 
 
 /**
@@ -136,7 +135,7 @@ public final class SessionAccessControl {
      * @param request
      * */
     public static AccessManager getAccessManager(HttpServletRequest request) {
-        return getAccessManager(request, DEFAULT_REPOSITORY, DEFAULT_WORKSPACE);
+        return getAccessManager(request, DEFAULT_REPOSITORY);
     }
 
     /**
@@ -155,7 +154,16 @@ public final class SessionAccessControl {
      * @param workspaceID
      * */
     public static AccessManager getAccessManager(HttpServletRequest request, String repositoryID, String workspaceID) {
-        return (AccessManager) request.getSession().getAttribute(ATTRIBUTE_AM_PREFIX + repositoryID + "_" + workspaceID);
+        AccessManager accessManager = (AccessManager) request.getSession().getAttribute(ATTRIBUTE_AM_PREFIX
+        + repositoryID + "_" + workspaceID);
+        if (accessManager == null) {
+            // initialize appropriate repository/workspace session, which will create access manager for it
+            getHierarchyManager(request,repositoryID,workspaceID);
+            // now session value for access manager must be set
+            accessManager = getAccessManager(request,repositoryID,workspaceID);
+        }
+
+        return accessManager;
     }
 
     /**

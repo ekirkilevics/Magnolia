@@ -444,7 +444,8 @@ public class Tree extends ControlSuper {
                 // todo: default template
                 // now tmp: first template of list is taken...
                 if (this.getRepository().equals(ContentRepository.WEBSITE) && itemType.equals(ItemType.NT_CONTENT)) {
-                    Iterator templates = Template.getAvailableTemplates();
+                    Iterator templates = Template.getAvailableTemplates(SessionAccessControl.getAccessManager(
+                    this.getRequest(), ContentRepository.CONFIG));
                     while (templates.hasNext()) {
                         Template template = (Template) templates.next();
                         newNode.getMetaData().setTemplate(template.getName());
