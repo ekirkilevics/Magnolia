@@ -269,6 +269,23 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
 ]]>
         </example>
     </tag>
+
+    <tag>
+        <name>publicOnly</name>
+        <tag-class>info.magnolia.cms.taglibs.PublicOnly</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Everything between publicOnly tags will only be shown on the public instance.
+        </description>
+        <example>
+            <![CDATA[
+<cms:publicOnly>
+    Public now!
+</cms:publicOnly>
+]]>
+        </example>
+    </tag>
+
     <tag>
         <name>includeTemplate</name>
         <tag-class>info.magnolia.cms.taglibs.Include</tag-class>
