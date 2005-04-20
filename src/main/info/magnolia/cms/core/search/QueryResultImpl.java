@@ -15,7 +15,6 @@ package info.magnolia.cms.core.search;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.beans.config.ItemType;
@@ -54,8 +53,6 @@ public class QueryResultImpl implements QueryResult {
      * Resultant iterators
      * */
     private Collection nodeDataCollection = new ArrayList();
-
-    private Collection contentNodeCollection = new ArrayList();
 
     private Collection contentCollection = new ArrayList();
 
@@ -99,11 +96,6 @@ public class QueryResultImpl implements QueryResult {
             // ignore, parent will be added as NodeData
         } else if (node.isNodeType(ItemType.NT_NODEDATA)) {
             this.nodeDataCollection.add(new NodeData(node, this.accessManager));
-        } else if (node.isNodeType(ItemType.NT_CONTENTNODE)) {
-            if (this.dirtyHandles.get(node.getPath()) == null) {
-                this.contentNodeCollection.add(new ContentNode(node, this.accessManager));
-                this.dirtyHandles.put(node.getPath(), StringUtils.EMPTY);
-            }
         } else {
             /**
              * All custom node types and mgnl:content
@@ -123,10 +115,6 @@ public class QueryResultImpl implements QueryResult {
 
     public Iterator getContentIterator() {
         return this.contentCollection.iterator();
-    }
-
-    public Iterator getContentNodeIterator() {
-        return this.contentNodeCollection.iterator();
     }
 
 }

@@ -34,9 +34,5 @@ public interface QueryResult {
      * */
     public Iterator getContentIterator();
 
-    /**
-     * Gets iterator of ContentNode objects
-     * */
-    public Iterator getContentNodeIterator();
 
 }
