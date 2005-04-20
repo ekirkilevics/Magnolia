@@ -27,6 +27,8 @@ public class AdminOnly extends TagSupport {
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
+    
+    private boolean showInPreview = false;
 
     /**
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
@@ -34,8 +36,8 @@ public class AdminOnly extends TagSupport {
     public int doStartTag() {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         String prev = (String) request.getSession().getAttribute("mgnlPreview");
-        // if (Server.isAdmin() && !Resource.showPreview((HttpServletRequest)pageContext.getRequest()))
-        if (Server.isAdmin() && prev == null) {
+        
+        if (Server.isAdmin() && (prev == null || showInPreview)) {
             return EVAL_BODY_INCLUDE;
         }
         return SKIP_BODY;
@@ -47,4 +49,10 @@ public class AdminOnly extends TagSupport {
     public int doEndTag() {
         return EVAL_PAGE;
     }
+	/**
+	 * @param trueForPreview The trueForPreview to set.
+	 */
+	public void setShowInPreview(boolean showInPreview) {
+		this.showInPreview = showInPreview;
+	}
 }

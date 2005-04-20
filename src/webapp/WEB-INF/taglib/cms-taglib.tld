@@ -261,6 +261,15 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
             This allows you to provide functionality that is only available to page authors but not to the general
             public.
         </description>
+        <attribute>
+            <name>showInPreview</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
+            <description>
+                Show content in the Preview. Default is false.
+            </description>
+        </attribute>
         <example>
             <![CDATA[
 <cms:adminOnly>
@@ -277,6 +286,17 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
         <description>
             Everything between publicOnly tags will only be shown on the public instance.
         </description>
+
+        <attribute>
+            <name>showInPreview</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
+            <description>
+                Show content in the Preview. Default is true.
+            </description>
+        </attribute>
+
         <example>
             <![CDATA[
 <cms:publicOnly>
@@ -284,6 +304,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
 </cms:publicOnly>
 ]]>
         </example>
+        
     </tag>
 
     <tag>
