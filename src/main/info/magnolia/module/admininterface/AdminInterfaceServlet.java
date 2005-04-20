@@ -109,6 +109,9 @@ public class AdminInterfaceServlet extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
 
+        // why do i have to change it if request was setted? But i have to!
+        response.setCharacterEncoding("UTF-8");
+        
         String repository = request.getParameter("repository");
         if (StringUtils.isEmpty(repository)) {
             repository = ContentRepository.WEBSITE;
