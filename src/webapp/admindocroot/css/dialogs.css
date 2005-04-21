@@ -3,7 +3,7 @@
 	padding: 0;
 	margin: 0;
 	}
-.mgnlDialogBody, td
+.mgnlDialogBody, .mgnlDialogBody td
 	{
 	font-family:Verdana, sans-serif;
 	font-size:11px;
