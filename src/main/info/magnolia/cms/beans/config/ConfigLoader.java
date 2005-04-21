@@ -117,7 +117,7 @@ public class ConfigLoader {
 
             // a bootstrap directory is configured, trying to initialize repositories
 
-            bootstrapRepositories(bootdir);
+            bootstrapRepositories(Path.getAbsoluteFileSystemPath(bootdir));
         }
 
         // todo move to appropriate module classes
