@@ -3,27 +3,36 @@
     <title>Magnolia</title>
     <body>
         <links>
-            <item name="Magnolia community" href="http://www.magnolia.info/en/community.html" />                                    
+            <item name="Magnolia community" href="http://www.magnolia.info/en/community.html" />
             <item name="Magnolia International" href="http://www.magnolia.info/en/international.html" />
+            <item name="Wiki" href="http://wiki.magnolia.info" />
         </links>
 
         <menu name="Quick start">
             <item name="Introduction" href="/qs01_introduction.html" />
         </menu>
-        
+
+
         <menu name="Tag libraries">
             <item name="Cms taglib" href="/tagreference-cms-taglib.html" />
             <item name="Cms util taglib" href="/tagreference-cms-util-taglib.html" />
         </menu>
-        
+
+
+        <menu name="Download">
+            <item name="Nightly builds" href="/nightly" />
+        </menu>
+
+        <!--
         <menu name="Downloadable docs">
             <item name="Quick start" href="magnolia.pdf" />
         </menu>
+        -->
 
         <menu name="Developers">
             <item name="Coding conventions" href="/coding_conventions.html" />
         </menu>
-        
+
 
     </body>
 </project>
