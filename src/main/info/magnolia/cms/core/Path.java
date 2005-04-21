@@ -133,6 +133,13 @@ public final class Path {
     }
 
     /**
+     * Resets the existing URI request attribute
+     * */
+    public static void resetURI(HttpServletRequest req) {
+        req.removeAttribute(ATTRIBUTE_URI);
+    }
+
+    /**
      * Returns the decoded URI of the current request, without the context path.
      * @param req request
      * @return request URI without servlet context

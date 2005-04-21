@@ -94,7 +94,7 @@ public class EntryServlet extends HttpServlet {
                     }
                 }
                 if (!Cache.isInCacheProcess(req) && info.magnolia.cms.beans.config.Cache.isCacheable()) {
-                    CacheProcess cache = new CacheProcess(new CacheRequest(req));
+                    CacheProcess cache = new CacheProcess(new ClonedRequest(req));
                     cache.start();
                 }
                 if (redirect(req, res)) {
@@ -212,6 +212,8 @@ public class EntryServlet extends HttpServlet {
         String uri = this.getURIMap(request);
         if (StringUtils.isNotEmpty(uri)) {
             try {
+                /* first reset the existing URI attribute */
+                Path.resetURI(request);
                 request.getRequestDispatcher(uri).forward(request, response);
             }
             catch (Exception e) {
@@ -263,7 +265,7 @@ public class EntryServlet extends HttpServlet {
      * Simply a copy of the original request used by CacheProcess
      * </p>
      */
-    private static class CacheRequest implements HttpServletRequest {
+    private static class ClonedRequest implements HttpServletRequest {
 
         Map attributes = new HashMap();
 
@@ -275,7 +277,7 @@ public class EntryServlet extends HttpServlet {
 
         String characterEncoding;
 
-        public CacheRequest(HttpServletRequest originalRequest) {
+        public ClonedRequest(HttpServletRequest originalRequest) {
             this.contextPath = originalRequest.getContextPath();
             // remember URI
             this.uri = originalRequest.getRequestURI();
