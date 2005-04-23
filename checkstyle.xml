@@ -236,7 +236,7 @@
             <property name="tokens" value="METHOD_DEF, CTOR_DEF"/>
         </module>
         <module name="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocStyleCheck">
-            <property name="checkFirstSentence" value="true"/>
+            <property name="checkFirstSentence" value="false"/>
             <property name="checkHtml" value="true"/>
             <property name="scope" value="private"/>
             <property name="severity" value="info"/>
