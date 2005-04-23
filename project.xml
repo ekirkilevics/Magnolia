@@ -20,7 +20,8 @@
     </description>
     <shortDescription>Magnolia content-management-system</shortDescription>
     <url>http://magnolia.sourceforge.net</url>
-    <issueTrackingUrl>http://jira.magnolia.info/browse/MAGNOLIA</issueTrackingUrl>
+    <!-- <issueTrackingUrl>http://jira.magnolia.info/browse/MAGNOLIA</issueTrackingUrl> -->
+    <issueTrackingUrl>http://jira.magnolia.info/secure/BrowseProject.jspa?id=10000</issueTrackingUrl>
     <siteAddress>shell.sourceforge.net</siteAddress>
     <siteDirectory>/home/groups/m/ma/magnolia/htdocs/</siteDirectory>
     <repository>
@@ -496,6 +497,7 @@
         </resources>
     </build>
     <reports>
+        <report>maven-jira-plugin</report>
         <report>maven-changelog-plugin</report>
         <report>maven-developer-activity-plugin</report>
         <report>maven-file-activity-plugin</report>
