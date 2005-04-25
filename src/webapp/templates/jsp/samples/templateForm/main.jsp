@@ -165,37 +165,44 @@
 	}
 ]]>
 </jsp:scriptlet>
-<c:import url="/templates/jsp/samples/global/head.jsp"/>
 
-<body>
-<c:import url="/templates/jsp/samples/templateForm/mainBar.jsp"/>
+<jsp:text>
+        <![CDATA[<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> ]]>
+</jsp:text>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <c:import url="/templates/jsp/samples/global/head.jsp" />
+    </head>
+	<body>
+	<c:import url="/templates/jsp/samples/templateForm/mainBar.jsp"/>
 
-<div id="contentDivMainColumn">
-<jsp:scriptlet>
-<![CDATA[
-	String alertText=Resource.getActivePage(request).getNodeData("mandatoryAlert").getString();
-	if (alertText.equals("")) alertText="Please fill in all fields marked with an asterisk.";
-	alertText=alertText.replaceAll("'","&rsquo;");
-	alertText=alertText.replaceAll("\"","&rsquo;");
-	alertText=alertText.replaceAll("\r\n","<br/>");
-	pageContext.setAttribute("alertText", alertText);
-	]]>
-</jsp:scriptlet>
-	<form name="samplesForm" action="${actpage.handle}.html" method="post" onsubmit="return (checkMandatories(this.name,'${alertText}'));">
-		<input type="hidden" name="sendMail" value="true"/>
-		<c:import url="/templates/jsp/samples/global/columnMain.jsp"/>
-		<c:import url="/templates/jsp/samples/templateForm/columnMainNewBar.jsp"/>
-		<c:import url="/templates/jsp/samples/global/footer.jsp"/>
-	</form>
-</div>
+	<div id="contentDivMainColumn">
+	<jsp:scriptlet>
+	<![CDATA[
+		String alertText=Resource.getActivePage(request).getNodeData("mandatoryAlert").getString();
+		if (alertText.equals("")) alertText="Please fill in all fields marked with an asterisk.";
+		alertText=alertText.replaceAll("'","&rsquo;");
+		alertText=alertText.replaceAll("\"","&rsquo;");
+		alertText=alertText.replaceAll("\r\n","<br/>");
+		pageContext.setAttribute("alertText", alertText);
+		]]>
+	</jsp:scriptlet>
+		<form name="samplesForm" action="${actpage.handle}.html" method="post" onsubmit="return (checkMandatories(this.name,'${alertText}'));">
+			<input type="hidden" name="sendMail" value="true"/>
+			<c:import url="/templates/jsp/samples/global/columnMain.jsp"/>
+			<c:import url="/templates/jsp/samples/templateForm/columnMainNewBar.jsp"/>
+			<c:import url="/templates/jsp/samples/global/footer.jsp"/>
+		</form>
+	</div>
 
-<div id="contentDivRightColumn">
-	<c:import url="/templates/jsp/samples/global/columnRight.jsp"/>
-</div>
+	<div id="contentDivRightColumn">
+		<c:import url="/templates/jsp/samples/global/columnRight.jsp"/>
+	</div>
 
-<c:import url="/templates/jsp/samples/global/headerImage.jsp"/>
-            <cmsu:simpleNavigation />
+	<c:import url="/templates/jsp/samples/global/headerImage.jsp"/>
+	            <cmsu:simpleNavigation />
 
-</body>
-
+	</body>
+</html>
 </jsp:root>
