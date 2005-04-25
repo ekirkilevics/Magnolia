@@ -14,7 +14,6 @@ package info.magnolia.cms.core.search;
 
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.beans.config.ItemType;
@@ -47,40 +46,30 @@ public class QueryResultImpl implements QueryResult {
      * */
     private javax.jcr.query.QueryResult result;
 
-    private AccessManager accessManager;
-
     /**
-     * Resultant iterators
+     * caches all previously queried objects
      * */
-    private Collection nodeDataCollection = new ArrayList();
+    private Map objectStore = new Hashtable();
 
-    private Collection contentCollection = new ArrayList();
+    private AccessManager accessManager;
 
     private Map dirtyHandles = new Hashtable();
 
     protected QueryResultImpl(javax.jcr.query.QueryResult result, AccessManager accessManager) {
         this.result = result;
         this.accessManager = accessManager;
-        try {
-            this.doFilter();
-        } catch (RepositoryException re) {
-            log.error("Failed to filter results " + re.getMessage());
-            log.debug(re);
-        }
     }
 
     /**
-     * Filters the original result object using specified access manager
+     * Build required result objects
      * */
-    private void doFilter() throws RepositoryException {
+    private void build(String nodeType, Collection collection) throws RepositoryException {
+        this.objectStore.put(nodeType,collection);
         NodeIterator nodeIterator = this.result.getNodes();
         while (nodeIterator.hasNext()) {
             Node node = nodeIterator.nextNode();
             try {
-                boolean isAllowed = this.accessManager.isGranted(Path.getAbsolutePath(node.getPath()), Permission.READ);
-                if (isAllowed) {
-                    this.build(node);
-                }
+                build(node, nodeType, collection);
             } catch (RepositoryException re) {
                 log.error(re.getMessage());
                 log.debug(re);
@@ -91,30 +80,40 @@ public class QueryResultImpl implements QueryResult {
     /**
      * Build required result objects
      * */
-    private void build(Node node) throws RepositoryException {
-        if (node.isNodeType(ItemType.NT_UNSTRUCTRUED)) {
-            // ignore, parent will be added as NodeData
-        } else if (node.isNodeType(ItemType.NT_NODEDATA)) {
-            this.nodeDataCollection.add(new NodeData(node, this.accessManager));
-        } else {
-            /**
-             * All custom node types and mgnl:content
-             * */
+    private void build(Node node, String nodeType, Collection collection) throws RepositoryException {
+        /**
+         * All custom node types
+         * */
+        if (node.isNodeType(nodeType)) {
             if (this.dirtyHandles.get(node.getPath()) == null) {
-                this.contentCollection.add(new Content(node, this.accessManager));
-                this.dirtyHandles.put(node.getPath(), StringUtils.EMPTY);
+                boolean isAllowed = this.accessManager.isGranted(Path.getAbsolutePath(node.getPath()), Permission.READ);
+                if (isAllowed) {
+                    collection.add(new Content(node, this.accessManager));
+                    this.dirtyHandles.put(node.getPath(), StringUtils.EMPTY);
+                }
             }
             return;
         }
-        this.build(node.getParent());
-    }
-
-    public Iterator getNodeDataIterator() {
-        return this.nodeDataCollection.iterator();
+        if (node.getDepth() > 0)
+            this.build(node.getParent(), nodeType, collection);
     }
 
     public Iterator getContentIterator() {
-        return this.contentCollection.iterator();
+        return this.getContentIterator(ItemType.NT_CONTENT);
+    }
+
+    public Iterator getContentIterator(String nodeType) {
+        Collection resultSet = (Collection) this.objectStore.get(nodeType);
+        if (resultSet == null) {
+            /* build it first time */
+            resultSet = new ArrayList();
+            try {
+                this.build(nodeType, resultSet);
+            } catch (RepositoryException re) {
+                log.error(re.getMessage());
+            }
+        }
+        return resultSet.iterator();
     }
 
 }

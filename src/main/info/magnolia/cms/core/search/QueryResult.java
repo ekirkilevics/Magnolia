@@ -25,14 +25,13 @@ import java.util.Iterator;
 public interface QueryResult {
 
     /**
-     * Gets iterator of resultant NodeData objects
-     * */
-    public Iterator getNodeDataIterator();
-
-    /**
-     * Gets iterator of Content objects
+     * Gets iterator of Content objects for mgnl:content NodeType
      * */
     public Iterator getContentIterator();
 
+    /**
+     * Gets iterator of Content objects for specified NodeType
+     * */
+    public Iterator getContentIterator(String nodeType);
 
 }
