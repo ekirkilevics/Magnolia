@@ -79,7 +79,7 @@ public class ButtonEdit extends Button {
     }
 
     public String getLabel() {
-        return MessagesManager.getWithDefault(getRequest(),label, label);
+        return MessagesManager.getWithDefault(getRequest(), label, label);
     }
 
     public void setLabel(String s) {
@@ -95,12 +95,9 @@ public class ButtonEdit extends Button {
      * </p>
      */
     public void drawHtml(JspWriter out) throws IOException {
-        // todo: attribute for preview name not static!
-        // todo: a method to get preview?
         if (this.getRequest() != null) {
-            String prev = (String) this.getRequest().getSession().getAttribute("mgnlPreview");
             boolean isGranted = Resource.getActivePage(this.getRequest()).isGranted(Permission.SET);
-            if (prev == null && isGranted) {
+            if (!Resource.showPreview(this.getRequest()) && isGranted) {
                 out.println(this.getHtml());
             }
         }

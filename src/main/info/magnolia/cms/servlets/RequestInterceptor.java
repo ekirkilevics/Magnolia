@@ -17,6 +17,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.security.SessionAccessControl;
+import info.magnolia.cms.util.Resource;
 
 import java.util.Iterator;
 
@@ -58,13 +59,13 @@ public class RequestInterceptor extends HttpServlet {
         HierarchyManager hm = SessionAccessControl.getHierarchyManager(request, repository);
         if (action.equals("PREVIEW")) {
             // preview mode (button in main bar)
-            String preview = request.getParameter("mgnlPreview");
+            String preview = request.getParameter(Resource.MGNL_PREVIEW_ATTRIBUTE);
             if (preview != null) {
-                if (preview.equals("true")) {
-                    request.getSession().setAttribute("mgnlPreview", "true");
+                if (Boolean.TRUE.equals(preview)) {
+                    request.getSession().setAttribute(Resource.MGNL_PREVIEW_ATTRIBUTE, Boolean.TRUE);
                 }
                 else {
-                    request.getSession().removeAttribute("mgnlPreview");
+                    request.getSession().removeAttribute(Resource.MGNL_PREVIEW_ATTRIBUTE);
                 }
             }
         }

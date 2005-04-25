@@ -13,6 +13,8 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.util.Resource;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.TagSupport;
 
@@ -27,7 +29,7 @@ public class AdminOnly extends TagSupport {
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
-    
+
     private boolean showInPreview = false;
 
     /**
@@ -35,9 +37,7 @@ public class AdminOnly extends TagSupport {
      */
     public int doStartTag() {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-        String prev = (String) request.getSession().getAttribute("mgnlPreview");
-        
-        if (Server.isAdmin() && (prev == null || showInPreview)) {
+        if (Server.isAdmin() && (!Resource.showPreview(request) || showInPreview)) {
             return EVAL_BODY_INCLUDE;
         }
         return SKIP_BODY;
@@ -49,10 +49,11 @@ public class AdminOnly extends TagSupport {
     public int doEndTag() {
         return EVAL_PAGE;
     }
-	/**
-	 * @param trueForPreview The trueForPreview to set.
-	 */
-	public void setShowInPreview(boolean showInPreview) {
-		this.showInPreview = showInPreview;
-	}
+
+    /**
+     * @param trueForPreview The trueForPreview to set.
+     */
+    public void setShowInPreview(boolean showInPreview) {
+        this.showInPreview = showInPreview;
+    }
 }

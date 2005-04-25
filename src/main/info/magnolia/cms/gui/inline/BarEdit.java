@@ -161,11 +161,8 @@ public class BarEdit extends Bar {
      * </p>
      */
     public void drawHtml(JspWriter out) throws IOException {
-        // todo: attribute for preview name not static!
-        // todo: a method to get preview?
-        String prev = (String) this.getRequest().getSession().getAttribute("mgnlPreview");
         boolean isGranted = Resource.getActivePage(this.getRequest()).isGranted(Permission.SET);
-        if (prev == null && isGranted && Server.isAdmin()) {
+        if (!Resource.showPreview(this.getRequest()) && isGranted && Server.isAdmin()) {
             this.setEvent("onmousedown", "mgnlMoveNodeEnd(this,'" + this.getPath() + "');");
             this.setEvent("onmouseover", "mgnlMoveNodeHigh(this);");
             this.setEvent("onmouseout", "mgnlMoveNodeReset(this);");

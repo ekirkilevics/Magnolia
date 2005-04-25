@@ -234,12 +234,10 @@ public class BarMain extends Bar {
 
             int top = this.getTop();
             int left = this.getLeft();
-            // todo: attribute for preview name not static!
-            // todo: a method to get preview?
-            String prev = (String) this.getRequest().getSession().getAttribute("mgnlPreview");
+
             boolean isGranted = Resource.getActivePage(this.getRequest()).isGranted(Permission.SET);
             if (isGranted) {
-                if (prev == null) {
+                if (!Resource.showPreview(this.getRequest())) {
                     // is edit mode
                     this.setSmall(false);
                     if (this.getOverlay()) {

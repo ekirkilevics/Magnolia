@@ -15,7 +15,6 @@ package info.magnolia.cms.gui.inline;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.gui.control.Bar;
 import info.magnolia.cms.gui.control.Button;
-import info.magnolia.cms.i18n.ContextMessages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
@@ -101,11 +100,8 @@ public class BarNew extends Bar {
      * </p>
      */
     public void drawHtml(JspWriter out) throws IOException {
-        // todo: attribute for preview name not static!
-        // todo: a method to get preview?
-        String prev = (String) this.getRequest().getSession().getAttribute("mgnlPreview");
         boolean isGranted = Resource.getActivePage(this.getRequest()).isGranted(Permission.SET);
-        if (prev == null && isGranted) {
+        if (!Resource.showPreview(this.getRequest()) && isGranted) {
             this.setEvent("onmousedown", "mgnlMoveNodeEnd(this,'" + this.getPath() + "');");
             this.setEvent("onmouseover", "mgnlMoveNodeHigh(this);");
             this.setEvent("onmouseout", "mgnlMoveNodeReset(this);");

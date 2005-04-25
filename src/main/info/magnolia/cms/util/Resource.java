@@ -31,9 +31,10 @@ import org.apache.log4j.Logger;
  */
 public final class Resource {
 
-    public static final int SCOPE_GLOBAL = 1;
-
-    public static final int SCOPE_LOCAL = 2;
+    /**
+     * Attribute used for enabling the preview mode.
+     */
+    public static final String MGNL_PREVIEW_ATTRIBUTE = "mgnlPreview";
 
     /**
      * Logger.
@@ -218,13 +219,11 @@ public final class Resource {
     }
 
     /**
-     * <p>
-     * check for preview mode
-     * </p>
+     * Check for preview mode.
      * @param req HttpServletRequest as received in JSP or servlet
      * @return boolean , true if preview is enabled
      */
     public static boolean showPreview(HttpServletRequest req) {
-        return Boolean.valueOf((String) req.getSession().getAttribute("mgnlPreview")).booleanValue();
+        return Boolean.valueOf((String) req.getSession().getAttribute(MGNL_PREVIEW_ATTRIBUTE)).booleanValue();
     }
 }
