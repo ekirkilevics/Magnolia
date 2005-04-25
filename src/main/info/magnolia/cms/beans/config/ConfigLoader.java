@@ -310,9 +310,6 @@ public class ConfigLoader {
 
             log.info("Repository [" + repository + "] has been initialized.");
 
-            // importing big repositories can increase memory usage
-            System.gc();
-
         }
     }
 }
