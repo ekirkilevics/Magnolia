@@ -12,7 +12,7 @@
 		out.print("<h2>"+title);
 		if (Resource.getLocalContentNode(request).getNodeData("mandatory").getBoolean()) {
 			out.println("*");
-			out.println("<input type=\"hidden\" name=\"mgnlMandatory\" value=\""+name+"\">");
+			out.println("<input type=\"hidden\" name=\"mgnlMandatory\" value=\""+name+"\" />");
 		}
 		out.println("</h2>");
 	}
@@ -30,7 +30,7 @@
 	}
 	else {
 		for (int i=0;i<values.length;i++) {
-			out.println("<input name=\""+name+"\" type=\""+type+"\" class=\""+type+"\"value=\""+values[i]+"\">"+values[i]+"<br/>");
+			out.println("<input name=\""+name+"\" type=\""+type+"\" class=\""+type+"\" value=\""+values[i]+"\" />"+values[i]+"<br/>");
 		}
 	}
 

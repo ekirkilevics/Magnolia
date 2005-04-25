@@ -11,7 +11,7 @@
 		out.print("<h2>"+title);
 		if (Resource.getLocalContentNode(request).getNodeData("mandatory").getBoolean()) {
 			out.println("*");
-			out.println("<input type=\"hidden\" name=\"mgnlMandatory\" value=\""+name+"\">");
+			out.println("<input type=\"hidden\" name=\"mgnlMandatory\" value=\""+name+"\" />");
 		}
 		out.println("</h2>");
 	}
@@ -20,7 +20,7 @@
 	long rows=Resource.getLocalContentNode(request).getNodeData("rows").getLong();
 
 	if (rows==1) {
-		out.println("<input type=\"text\" name=\""+name+"\" class=\"text\"><br/>");
+		out.println("<input type=\"text\" name=\""+name+"\" class=\"text\" /><br/>");
 	}
 	else {
 		out.println("<textarea name=\""+name+"\" rows=\""+rows+"\" cols=\"300\"></textarea>");
