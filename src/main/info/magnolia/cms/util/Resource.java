@@ -225,6 +225,6 @@ public final class Resource {
      * @return boolean , true if preview is enabled
      */
     public static boolean showPreview(HttpServletRequest req) {
-        return (req.getParameter("preview") != null);
+        return Boolean.valueOf((String) req.getSession().getAttribute("mgnlPreview")).booleanValue();
     }
 }
