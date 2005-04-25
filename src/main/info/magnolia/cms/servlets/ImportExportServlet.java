@@ -12,6 +12,8 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 
 import javax.jcr.ImportUUIDBehavior;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.Workspace;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -162,8 +164,9 @@ public class ImportExportServlet extends HttpServlet {
 
         log.info("About to import file into the [" + repository + "] repository");
         InputStream stream = xmlFile.getStream();
+        Session session = ws.getSession();
         try {
-            ws.getSession().importXML("/", stream, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
+            session.importXML("/", stream, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
         }
         catch (Exception e) {
             throw new NestableRuntimeException(e);
@@ -175,6 +178,18 @@ public class ImportExportServlet extends HttpServlet {
             // ignore
         }
 
+        try {
+            session.save();
+        }
+        catch (RepositoryException e) {
+            log.error("Unable to save changes to the ["
+                + repository
+                + "] repository due to a "
+                + e.getClass().getName()
+                + " Exception: "
+                + e.getMessage()
+                + ".", e);
+        }
         log.info("Import done");
 
         doGet(request, response);
