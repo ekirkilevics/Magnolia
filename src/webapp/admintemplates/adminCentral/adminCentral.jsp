@@ -164,12 +164,12 @@
 
     <div id="mgnlAdminCentral_ExtractTreeDiv" class="mgnlAdminCentralExtractTreeDiv"><iframe
         id="mgnlAdminCentral_ExtractTreeIFrame" src="${framesrc}" scrolling="no"
-        style="border: none; width:100%; height:100%" frameborder="0"><!-- a comment here is needed for the correct rendering of the iframe tag --></iframe>
+        style="border: none; width:100%; height:100%" frameborder="0"><![CDATA[ <!-- a comment here is needed for the correct rendering of the iframe tag -->]]></iframe>
     </div>
 
     <div id="mgnlAdminCentral_ExtractNonTreeDiv" class="mgnlAdminCentralExtractNonTreeDiv"><iframe
         id="mgnlAdminCentral_ExtractNonTreeIFrame" src="" scrolling="auto" style="border: none; width:100%; height:100%"
-        frameborder="0"> <!-- a comment here is needed for the correct rendering of the iframe tag --></iframe></div>
+        frameborder="0"><![CDATA[ <!-- a comment here is needed for the correct rendering of the iframe tag -->]]></iframe></div>
     </body>
     </html>
 </jsp:root>
