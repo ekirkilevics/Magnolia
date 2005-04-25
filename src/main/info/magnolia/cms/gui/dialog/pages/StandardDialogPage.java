@@ -16,7 +16,6 @@ import info.magnolia.cms.gui.dialog.DialogHidden;
 import info.magnolia.cms.gui.dialog.DialogStatic;
 import info.magnolia.cms.gui.dialog.DialogTab;
 import info.magnolia.cms.gui.misc.Sources;
-import info.magnolia.cms.i18n.ContextMessages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.TemplateMessagesUtil;
 import info.magnolia.cms.security.SessionAccessControl;

@@ -8,7 +8,6 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.gui.control.Save;
 import info.magnolia.cms.gui.dialog.DialogBox;
-import info.magnolia.cms.gui.dialog.DialogButton;
 import info.magnolia.cms.gui.dialog.DialogDialog;
 import info.magnolia.cms.gui.dialog.DialogEdit;
 import info.magnolia.cms.gui.dialog.DialogFactory;
@@ -16,7 +15,6 @@ import info.magnolia.cms.gui.dialog.DialogInclude;
 import info.magnolia.cms.gui.dialog.DialogStatic;
 import info.magnolia.cms.gui.dialog.DialogTab;
 import info.magnolia.cms.gui.misc.Sources;
-import info.magnolia.cms.i18n.ContextMessages;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
@@ -35,248 +33,324 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-
 /**
  * @author Fabrizio Giustina
  * @version $Id: $
+ * 
  */
 public class UserRolesEditDialogPage extends BasePageServlet {
 
-    /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
+	/**
+	 * Stable serialVersionUID.
+	 */
+	private static final long serialVersionUID = 222L;
 
-    static Logger log = Logger.getLogger("roles dialog");
+	static Logger log = Logger.getLogger("roles dialog");
 
-    // todo: permission global available somewhere
-    static final long PERMISSION_ALL = Permission.ALL;
+	// todo: permission global available somewhere
+	static final long PERMISSION_ALL = Permission.ALL;
 
-    static final long PERMISSION_READ = Permission.READ;
+	static final long PERMISSION_READ = Permission.READ;
 
-    static final long PERMISSION_NO = 0;
+	static final long PERMISSION_NO = 0;
 
-    static final String NODE_ACL = "acl_website";
+	// this is not longer true
+	// static final String NODE_ACL = "acl_website";
 
-    /**
-     * @see info.magnolia.cms.servlets.BasePageServlet#draw(HttpServletRequest, HttpServletResponse)
-     */
-    public void draw(HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
-        PrintWriter out = response.getWriter();
-        Messages msgs = MessagesManager.getMessages(request);
+	private class MyDialog {
+		private String path = "";
+		private String nodeCollectionName = "";
+		private String nodeName = "";
+		private String paragraph="";
+		private String richE = "";
+		private String richEPaste = "";
+		private PrintWriter out;
+		private Messages msgs;
+		private MultipartForm form;
+		private HierarchyManager hm;
+		private boolean drawDialog = true;
+		private boolean create = false;
+		HttpServletRequest request;
+		HttpServletResponse response;
+		Content role;
 
-        MultipartForm form = Resource.getPostedForm(request);
-        boolean drawDialog = true;
+		MyDialog(HttpServletRequest request, HttpServletResponse response) throws IOException {
+			init(request, response);
 
-        String path = "";
-        String nodeCollectionName = "";
-        String nodeName = "";
-        String paragraph = "";
-        String richE = "";
-        String richEPaste = "";
-        String repository = ContentRepository.WEBSITE;
+		}
 
-        if (form != null) {
-            path = form.getParameter("mgnlPath");
-            repository = form.getParameter("mgnlRepository");
-        }
-        else {
-            path = request.getParameter("mgnlPath");
-            repository = request.getParameter("mgnlRepository");
-        }
+		/**
+		 * @param request
+		 * @param response
+		 * @throws IOException
+		 */
+		private void init(HttpServletRequest request, HttpServletResponse response) throws IOException {
+			this.request = request;
+			this.response = response;
+			out = response.getWriter();
+			msgs = MessagesManager.getMessages(request);
+			form = Resource.getPostedForm(request);
+			hm = new HierarchyManager(request);
+			
+			if (form != null) {
+				path = form.getParameter("mgnlPath");
+			} else {
+				path = request.getParameter("mgnlPath");
+			}
 
-        HierarchyManager hm = new HierarchyManager(request);
-        boolean create = false;
-        if (path.equals(""))
-            create = true;
+			if (path.equals(""))
+				create = true;
 
-        try {
-            Session t = SessionAccessControl.getSession(request, repository);
-            Node rootNode = t.getRootNode();
-            hm.init(rootNode);
-        }
-        catch (Exception e) {
-        }
+			try {
+				Session t = SessionAccessControl
+						.getSession(request, ContentRepository.USER_ROLES);
+				Node rootNode = t.getRootNode();
+				hm.init(rootNode);
+			} catch (Exception e) {
+			}
 
-        Content role = null;
-        if (!create) {
-            try {
-                role = hm.getPage(path);
-            }
-            catch (RepositoryException re) {
-                re.printStackTrace();
-            }
-        }
+			
+			if (!create) {
+				try {
+					role = hm.getPage(path);
+				} catch (RepositoryException re) {
+					re.printStackTrace();
+				}
+			}
+		}
 
-        if (form != null) {
-            // save
-            // create new role
-            if (create) {
-                String name = form.getParameter("name");
-                path = "/" + name;
-                try {
-                    role = hm.createPage("/", name);
-                }
-                catch (RepositoryException re) {
-                    re.printStackTrace();
-                }
-            }
+		public void draw() throws IOException,
+				RepositoryException {
 
-            // ######################
-            // # write (controls with saveInfo (full name, password))
-            // ######################
-            Save nodeXml = new Save(form, request);
-            nodeXml.setPath(path);
-            nodeXml.save();
+			if (form != null) {
+				
+				save();
 
-            // ######################
-            // # acl
-            // ######################
-            // remove existing
-            try {
-                role.deleteContentNode(NODE_ACL);
-            }
-            catch (RepositoryException re) {
-            }
-            // rewrite
-            try {
-                ContentNode acl = role.createContentNode(NODE_ACL);
-                String aclValueStr = form.getParameter("aclList");
-                if (aclValueStr != null && !aclValueStr.equals("")) {
-                    String[] aclValue = aclValueStr.split(";");
-                    for (int i = 0; i < aclValue.length; i++) {
-                        String[] currentAclValue = aclValue[i].split(",");
-                        String currentPath = currentAclValue[0];
-                        long currentAccessRight = Long.parseLong(currentAclValue[1]);
-                        String currentAccessType = currentAclValue[2];
+				out.println("<html>");
+				out.println(new Sources(request.getContextPath()).getHtmlJs());
+				out.println("<script type=\"text/javascript\">");
+				out.println("opener.mgnlTree.refresh();");
+				out.println("window.close();");
+				out.println("</script></html>");
+				drawDialog = false;
+			} else {
+				nodeCollectionName = request.getParameter("mgnlNodeCollection");
+				nodeName = request.getParameter("mgnlNode");
+				paragraph = request.getParameter("mgnlParagraph");
+				richE = request.getParameter("mgnlRichE");
+				richEPaste = request.getParameter("mgnlRichEPaste");
+			}
 
-                        if (currentPath.equals("/")) {
-                            // needs only one entry: "/*"
-                            currentAccessType = "sub";
-                            currentPath = "";
-                        }
+			if (drawDialog) {
 
-                        if (currentAccessType.equals("self")) {
-                            try {
-                                String newLabel = Path.getUniqueLabel(hm, acl.getHandle(), "0");
-                                ContentNode r = acl.createContentNode(newLabel);
-                                r.createNodeData("path").setValue(currentPath);
-                                r.createNodeData("permissions").setValue(currentAccessRight);
-                            }
-                            catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        try {
-                            String newLabel = Path.getUniqueLabel(hm, acl.getHandle(), "0");
-                            ContentNode r = acl.createContentNode(newLabel);
-                            r.createNodeData("path").setValue(currentPath + "/*");
-                            r.createNodeData("permissions").setValue(currentAccessRight);
-                        }
-                        catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                hm.save();
-            }
-            catch (RepositoryException re) {
-                log.error(re.getMessage(), re);
-            }
+				DialogDialog dialog = createDialog();
 
-            out.println("<html>");
-            out.println(new Sources(request.getContextPath()).getHtmlJs());
-            out.println("<script type=\"text/javascript\">");
-            out.println("opener.mgnlTree.refresh();");
-            out.println("window.close();");
-            out.println("</script></html>");
-            drawDialog = false;
-        }
-        else {
-            nodeCollectionName = request.getParameter("mgnlNodeCollection");
-            nodeName = request.getParameter("mgnlNode");
-            paragraph = request.getParameter("mgnlParagraph");
-            richE = request.getParameter("mgnlRichE");
-            richEPaste = request.getParameter("mgnlRichEPaste");
-        }
+				dialog.drawHtml(out);
+			}
+		}
 
-        if (drawDialog) {
+		/**
+		 * @return
+		 * @throws RepositoryException
+		 */
+		private DialogDialog createDialog() throws RepositoryException {
+			DialogDialog dialog = DialogFactory.getDialogDialogInstance(
+					request, response, role, null);
+			dialog.setConfig("path", path);
+			dialog.setConfig("nodeCollection", nodeCollectionName);
+			dialog.setConfig("node", nodeName);
+			dialog.setConfig("paragraph", paragraph);
+			dialog.setConfig("richE", richE);
+			dialog.setConfig("richEPaste", richEPaste);
+			dialog.setConfig("repository", ContentRepository.USER_ROLES);
+			dialog
+					.setJavascriptSources(request.getContextPath()+"/admindocroot/js/dialogs/DynamicTable.js");
+			dialog
+					.setJavascriptSources(request.getContextPath()+"/admindocroot/js/dialogs/pages/userRolesEditDialogPage.js");
+			dialog.setCssSources(request.getContextPath()+"/admindocroot/css/dialogs/pages/userRolesEditDialogPage.css"); 
+			dialog.setConfig("height", 600);
 
-            DialogDialog dialog = DialogFactory.getDialogDialogInstance(request, response, role, null);
-            dialog.setConfig("path", path);
-            dialog.setConfig("nodeCollection", nodeCollectionName);
-            dialog.setConfig("node", nodeName);
-            dialog.setConfig("paragraph", paragraph);
-            dialog.setConfig("richE", richE);
-            dialog.setConfig("richEPaste", richEPaste);
-            dialog.setConfig("repository", repository);
-            dialog.setJavascriptSources("/admindocroot/js/dialogs/acl.js");
+			if (create)
+				dialog.setLabel(msgs.get("roles.edit.create"));
+			else
+				dialog.setLabel(msgs.get("roles.edit.edit"));
 
-            dialog.setConfig("height", 400);
+			DialogTab tab0 = dialog.addTab(msgs
+					.get("roles.edit.properties"));
 
-            if (create)
-                dialog.setLabel(msgs.get("roles.edit.create"));
-            else
-                dialog.setLabel(msgs.get("roles.edit.edit"));
+			DialogTab tab1 = dialog.addTab(msgs
+					.get("roles.edit.accessControlList"));
 
-            DialogTab tab0 = dialog.addTab();
-            tab0.setLabel(msgs.get("roles.edit.properties"));
+			DialogStatic spacer = DialogFactory.getDialogStaticInstance(
+					request, response, null, null);
+			spacer.setConfig("line", false);
 
-            DialogTab tab1 = dialog.addTab(msgs.get("roles.edit.accessControlList"));
+			if (!create) {
+				DialogStatic name = DialogFactory.getDialogStaticInstance(
+						request, response, null, null);
+				// name.setConfig("line",false);
+				name.setLabel("<strong>" + msgs.get("roles.edit.rolename")
+						+ "</strong>");
+				name.setValue("<strong>" + role.getName() + "</strong>");
+				tab0.addSub(name);
+			} else {
+				DialogEdit name = DialogFactory.getDialogEditInstance(
+						request, response, null, null);
+				name.setName("name");
+				name.setLabel("<strong>" + msgs.get("roles.edit.rolename")
+						+ "</strong>");
+				name.setSaveInfo(false);
+				name
+						.setDescription("Legal characters: a-z, 0-9, _ (underscore), - (divis)");
+				tab0.addSub(name);
+			}
 
-            DialogStatic spacer = DialogFactory.getDialogStaticInstance(request, response, null, null);
-            spacer.setConfig("line", false);
+			tab0.addSub(spacer);
 
-            if (!create) {
-                DialogStatic name = DialogFactory.getDialogStaticInstance(request, response, null, null);
-                // name.setConfig("line",false);
-                name.setLabel("<strong>"+msgs.get("roles.edit.rolename")+"</strong>");
-                name.setValue("<strong>" + role.getName() + "</strong>");
-                tab0.addSub(name);
-            }
-            else {
-                DialogEdit name = DialogFactory.getDialogEditInstance(request, response, null, null);
-                name.setName("name");
-                name.setLabel("<strong>"+msgs.get("roles.edit.rolename")+"</strong>");
-                name.setSaveInfo(false);
-                name.setDescription("Legal characters: a-z, 0-9, _ (underscore), - (divis)");
-                tab0.addSub(name);
-            }
+			DialogEdit title = DialogFactory.getDialogEditInstance(request,
+					response, role, null);
+			title.setName("title");
+			title.setLabel(msgs.get("roles.edit.fullname"));
+			if (create) {
+				title.setConfig("onchange", "mgnlAclSetName(this.value);");
+			}
+			tab0.addSub(title);
 
-            tab0.addSub(spacer);
+			tab0.addSub(spacer);
 
-            DialogEdit title = DialogFactory.getDialogEditInstance(request, response, role, null);
-            title.setName("title");
-            title.setLabel(msgs.get("roles.edit.fullname"));
-            if (create) {
-                title.setConfig("onchange", "mgnlAclSetName(this.value);");
-            }
-            tab0.addSub(title);
+			DialogEdit desc = DialogFactory.getDialogEditInstance(request,
+					response, role, null);
+			desc.setName("description");
+			desc.setLabel(msgs.get("roles.edit.description"));
+			desc.setConfig("rows", 6);
+			tab0.addSub(desc);
 
-            tab0.addSub(spacer);
+			DialogInclude acl = DialogFactory.getDialogIncludeInstance(
+					request, response, role, null);
+			acl.setBoxType(DialogBox.BOXTYPE_1COL);
+			acl.setName("aclRolesRepository");
+			acl
+					.setConfig("file",
+							"/admintemplates/adminCentral/dialogs/userRolesEdit/includeAcl.jsp");
+			tab1.addSub(acl);
 
-            DialogEdit desc = DialogFactory.getDialogEditInstance(request, response, role, null);
-            desc.setName("description");
-            desc.setLabel(msgs.get("roles.edit.description"));
-            desc.setConfig("rows", 6);
-            tab0.addSub(desc);
+			dialog.setConfig("saveOnclick", "aclFormSubmit();");
+			return dialog;
+		}
 
-            DialogInclude acl = DialogFactory.getDialogIncludeInstance(request, response, role, null);
-            acl.setBoxType(DialogBox.BOXTYPE_1COL);
-            acl.setName("aclRolesRepository");
-            acl.setConfig("file", "/admintemplates/adminCentral/dialogs/userRolesEdit/includeAcl.jsp");
-            tab1.addSub(acl);
+		/**
+		 * 
+		 */
+		private void save() {
+			// save
+			// create new role
+			if (create) {
+				String name = form.getParameter("name");
+				path = "/" + name;
+				try {
+					role = hm.createPage("/", name);
+				} catch (RepositoryException re) {
+					re.printStackTrace();
+				}
+			}
 
-            DialogButton add = DialogFactory.getDialogButtonInstance(request, response, null, null);
-            add.setBoxType(DialogBox.BOXTYPE_1COL);
-            add.setConfig("buttonLabel", msgs.get("buttons.add"));
-            add.setConfig("onclick", "mgnlAclAdd(false,-1);");
-            tab1.addSub(add);
+			// ######################
+			// # write (controls with saveInfo (full name, password))
+			// ######################
+			Save nodeXml = new Save(form, request);
+			nodeXml.setPath(path);
+			nodeXml.save();
 
-            dialog.setConfig("saveOnclick", "mgnlAclFormSubmit(false);");
+			// for each repository
+			
+			for (int x = 0; x < ContentRepository.ALL_REPOSITORIES.length; x++) {
+				String repository = ContentRepository.ALL_REPOSITORIES[x];
+				
+				// ######################
+				// # acl
+				// ######################
+				// remove existing
+				try {
+					role.deleteContentNode("acl_" + repository);
+				} catch (RepositoryException re) {
+				}
+				// rewrite
+				try {
+					ContentNode acl = role.createContentNode("acl_" + repository);
+					String aclValueStr = form.getParameter("acl" + repository + "List");
+					if (aclValueStr != null && !aclValueStr.equals("")) {
+						String[] aclEntries = aclValueStr.split(";");
+						for (int i = 0; i < aclEntries.length; i++) {
+							String path="";
+							long accessRight = 0;
+							String accessType="";
+							
+							String[] aclValuePairs = aclEntries[i].split(",");
+							for (int j = 0; j < aclValuePairs.length; j++) {
+								String[] aclValuePair = aclValuePairs[j].split(":");
+								String aclName = aclValuePair[0].trim();
+								String aclValue="";
+								if(aclValuePair.length>1)
+									aclValue = aclValuePair[1].trim();
+								
+								if(aclName.equals("path")) {
+									path = aclValue;
+								} 
+								else if (aclName.equals("accessType")) {
+									accessType = aclValue;
+								} 
+								else if(aclName.equals("accessRight")) {
+									accessRight = Long.parseLong(aclValue);									
+								}
+							}
 
-            dialog.drawHtml(out);
-        }
+							if (path.equals("/")) {
+								// needs only one entry: "/*"
+								accessType = "sub";
+								path = "";
+							}
+	
+							if (accessType.equals("self")) {
+								try {
+									String newLabel = Path.getUniqueLabel(hm,
+											acl.getHandle(), "0");
+									ContentNode r = acl
+											.createContentNode(newLabel);
+									r.createNodeData("path").setValue(
+											path);
+									r.createNodeData("permissions").setValue(
+											accessRight);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+							try {
+								String newLabel = Path.getUniqueLabel(hm, acl
+										.getHandle(), "0");
+								ContentNode r = acl.createContentNode(newLabel);
+								r.createNodeData("path").setValue(
+										path + "/*");
+								r.createNodeData("permissions").setValue(
+										accessRight);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					}
+					hm.save();
+				} catch (RepositoryException re) {
+					log.error(re.getMessage(), re);
+				}
+			}
+		}
+	}
 
-    }
+	/* (non-Javadoc)
+	 * @see info.magnolia.cms.servlets.BasePageServlet#draw(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 */
+	protected void draw(HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
+		// TODO Auto-generated method stub
+		MyDialog innerDialog = new MyDialog(request, response);
+		innerDialog.draw();
+	}
 }

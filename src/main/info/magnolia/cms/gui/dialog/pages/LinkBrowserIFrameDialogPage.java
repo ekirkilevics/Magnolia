@@ -7,7 +7,6 @@ import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.gui.control.TreeMenuItem;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.gui.misc.Spacer;
-import info.magnolia.cms.i18n.ContextMessages;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.servlets.BasePageServlet;
@@ -228,6 +227,57 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
                 out.println("</div>");
         }
 
+        if (repository.equals(ContentRepository.CONFIG)) {
+            Tree websiteTree = new Tree(ContentRepository.CONFIG, request);
+            // websiteTree.setJavascriptTree("mgnlWebsiteTree");
+            websiteTree.setIconPage(Tree.ICONDOCROOT + "folder_cubes.gif");
+            websiteTree.setJavascriptTree("mgnlTree");
+            websiteTree.setSnippetMode(snippetMode);
+            websiteTree.setHeight(treeHeight);
+
+            websiteTree.setPath(path);
+
+            websiteTree.setPathOpen(pathOpen);
+            websiteTree.setPathSelected(pathSelected);
+
+            websiteTree.addItemType(ItemType.NT_CONTENT);
+            websiteTree.addItemType(ItemType.NT_CONTENTNODE);
+            websiteTree.addItemType(ItemType.NT_NODEDATA);
+            
+            TreeColumn column0 = new TreeColumn(websiteTree.getJavascriptTree(), request);
+            column0.setIsLabel(true);
+            column0.setWidth(3);
+
+            //TreeColumn column1 = new TreeColumn(websiteTree.getJavascriptTree(), request);
+            //column1.setName("title");
+            //column1.setTitle(msgs.get("linkbrowser.web.title"));
+            //column1.setWidth(2);
+
+            websiteTree.addColumn(column0);
+            //websiteTree.addColumn(column1);
+
+            TreeMenuItem menuRefresh = new TreeMenuItem();
+            menuRefresh.setLabel(msgs.get("linkbrowser.refresh"));
+            menuRefresh.setOnclick(websiteTree.getJavascriptTree() + ".refresh();");
+
+            websiteTree.addMenuItem(menuRefresh);
+
+            String display = "none";
+            if (repository.equals(ContentRepository.CONFIG))
+                display = "block";
+
+            if (!snippetMode)
+                out.println("<div id="
+                    + websiteTree.getJavascriptTree()
+                    + "_DivSuper style=\"display:"
+                    + display
+                    + ";\">");
+            out.print(websiteTree.getHtml()); // print, not println! because of snippet mode!
+            if (!snippetMode)
+                out.println("</div>");
+        }
+ 
+        
         if (!snippetMode) {
             out.println("</body></html>");
         }

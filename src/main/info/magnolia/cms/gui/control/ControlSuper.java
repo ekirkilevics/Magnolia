@@ -15,7 +15,6 @@ package info.magnolia.cms.gui.control;
 import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.i18n.ContextMessages;
 import info.magnolia.cms.i18n.Messages;
 
 import java.util.ArrayList;
@@ -492,7 +491,7 @@ public class ControlSuper implements ControlInterface {
     }
     
     public static String escapeHTML(String str){
-    	return str.replaceAll("\"", "&ldquo;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+    	return str.replaceAll("\"", "&quot;").replaceAll("<","&lt;").replaceAll(">","&gt;");
     }
 
 }

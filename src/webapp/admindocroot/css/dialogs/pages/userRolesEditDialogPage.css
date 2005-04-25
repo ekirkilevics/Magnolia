@@ -1,0 +1,8 @@
+div.aclDynamicTable
+	{
+	position:absolute;
+	top:80px;
+	width:95%;
+	overflow:visible;
+	visibility:hidden;
+	}

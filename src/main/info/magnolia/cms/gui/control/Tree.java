@@ -1193,6 +1193,10 @@ public class Tree extends ControlSuper {
                     d = (NodeData) o;
                     handle = d.getHandle();
                     name = d.getName();
+                    // do not show jcr properties
+                    if(name.startsWith("jcr:"))
+                    	continue;
+                    
                     if (d.isGranted(info.magnolia.cms.security.Permission.WRITE)) {
                         permissionWrite = true;
                     }

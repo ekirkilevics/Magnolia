@@ -19,7 +19,6 @@ import info.magnolia.cms.gui.dialog.DialogPassword;
 import info.magnolia.cms.gui.dialog.DialogStatic;
 import info.magnolia.cms.gui.dialog.DialogTab;
 import info.magnolia.cms.gui.misc.Sources;
-import info.magnolia.cms.i18n.ContextMessages;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
@@ -154,6 +153,7 @@ public class UserEditDialogPage extends BasePageServlet {
             // # write users and roles acl
             // ######################
 
+            
             // remove existing
             try {
                 user.deleteContentNode(NODE_ACLUSERS);

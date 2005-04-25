@@ -18,7 +18,6 @@ import info.magnolia.cms.gui.control.ControlSuper;
 import info.magnolia.cms.gui.control.Hidden;
 import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.gui.misc.Sources;
-import info.magnolia.cms.i18n.ContextMessages;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 
@@ -155,6 +154,7 @@ public class DialogDialog extends DialogSuper {
         out.write("var kupuui = null;");
         out.write("</script>");
         this.drawJavascriptSources(out);
+        this.drawCssSources(out);
         out.write("</head>");
         out.write("<body class=\"mgnlDialogBody\" onload=\"mgnlDialogInit();\">");
         out.write("<form action=\""
