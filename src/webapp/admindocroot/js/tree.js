@@ -553,7 +553,7 @@
 		{
 		var text=mgnlMessages.get('js.tree.exportnode.confirm.text');
 		var title=mgnlMessages.get('js.tree.exportnode.confirm.title', null, [this.selectedNode.id]);
-		
+
 		if (mgnlConfirm(text,title))
 			{
 
@@ -591,6 +591,11 @@
 				//move into itself is not possible
 				mgnlAlert(mgnlMessages.get('js.tree.pastenode.itself'));
 				}
+		    else if (this.clipboardMethod==1 && id.indexOf(this.clipboardNode.id)==0 && pasteType!=0)
+                {
+                //move into itself is not possible
+                mgnlAlert(mgnlMessages.get('js.tree.pastenode.itself'));
+                }
 			else
 				{
 				if (lineDivId)
