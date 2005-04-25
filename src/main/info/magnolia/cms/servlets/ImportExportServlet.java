@@ -1,12 +1,17 @@
 package info.magnolia.cms.servlets;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.runtime.Document;
+import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.util.Resource;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 
+import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.Workspace;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -28,6 +34,11 @@ public class ImportExportServlet extends HttpServlet {
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
+
+    /**
+     * Logger.
+     */
+    private static Logger log = Logger.getLogger(ImportExportServlet.class);
 
     /**
      * @see javax.servlet.http.HttpServlet#doGet(HttpServletRequest, HttpServletResponse)
@@ -82,6 +93,7 @@ public class ImportExportServlet extends HttpServlet {
         out.println("<title>Magnolia Export servlet</title>");
         out.println("</head><body>");
 
+        out.println("<h2>Export</h2>");
         out.println("<form method=\"get\" action=\"\">");
         out.println("repository: <select name=\"repository\"><br/>");
 
@@ -99,7 +111,26 @@ public class ImportExportServlet extends HttpServlet {
         out.println("<br/>");
         out.println("base path: <input name=\"basepath\" value=\"" + basepath + "\" /><br/>");
         out.println("<input type=\"submit\" name=\"exportxml\" value=\"export\" />");
+        out.println("</form>");
 
+        out.println("<h2>Import</h2>");
+        out.println("<form method=\"post\" action=\"\" enctype=\"multipart/form-data\">");
+        out.println("repository: <select name=\"repository\"><br/>");
+
+        for (int j = 0; j < repositories.length; j++) {
+            out.print("<option");
+            if (repository.equals(repositories[j])) {
+                out.print(" selected=\"selected\"");
+            }
+            out.print(">");
+            out.print(repositories[j]);
+            out.print("</option>");
+        }
+
+        out.println("</select>");
+        out.println("<br/>");
+        out.println("file: <input type=\"file\" name=\"file\" /><br/>");
+        out.println("<input type=\"submit\" name=\"importxml\" value=\"import\" />");
         out.println("</form>");
 
         out.println("</body></html>");
@@ -112,8 +143,42 @@ public class ImportExportServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
         IOException {
 
-        // @todo handle import?
-        super.doPost(request, response);
+        log.debug("Import request received.");
+
+        MultipartForm form = Resource.getPostedForm(request);
+        if (form == null) {
+            log.error("Missing form.");
+            return;
+        }
+
+        String repository = form.getParameter("repository");
+        Document xmlFile = form.getDocument("file");
+        if (StringUtils.isEmpty(repository) || xmlFile == null) {
+            throw new RuntimeException("Wrong parameters");
+        }
+
+        HierarchyManager hr = ContentRepository.getHierarchyManager(repository);
+        Workspace ws = hr.getWorkspace();
+
+        log.info("About to import file into the [" + repository + "] repository");
+        InputStream stream = xmlFile.getStream();
+        try {
+            ws.getSession().importXML("/", stream, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
+        }
+        catch (Exception e) {
+            throw new NestableRuntimeException(e);
+        }
+        try {
+            stream.close();
+        }
+        catch (IOException e) {
+            // ignore
+        }
+
+        log.info("Import done");
+
+        doGet(request, response);
+
     }
 
 }
