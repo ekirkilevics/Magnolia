@@ -266,7 +266,6 @@ public final class ContentRepository {
                 loadHierarchyManager(repository, wspID, map, handlerClass);
             }
         }
-
     }
 
     private static void loadHierarchyManager(Repository repository, String wspID, RepositoryMapping map, Provider provider) {

@@ -428,8 +428,7 @@ public class HierarchyManager {
         }
 
         try {
-            Node n = this.startPage.getNode(nodePath);
-            return (n.isNodeType(ItemType.getSystemName(ItemType.NT_NODEDATA)));
+            return this.startPage.hasProperty(nodePath);
         }
         catch (RepositoryException e) {
         }

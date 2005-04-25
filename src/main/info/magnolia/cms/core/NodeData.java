@@ -12,23 +12,22 @@
  */
 package info.magnolia.cms.core;
 
-import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.core.util.Access;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.beans.config.Server;
 
 import java.io.InputStream;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
+import java.util.ArrayList;
 
-import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.Property;
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
-import javax.jcr.Value;
+import javax.jcr.*;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -38,8 +37,6 @@ import org.apache.log4j.Logger;
 public class NodeData extends ContentHandler {
 
     public static final String HTML_LINEBREAK = "<br />";
-
-    private static final String DATA_ELEMENT = "Data";
 
     /**
      * Logger.
@@ -67,8 +64,7 @@ public class NodeData extends ContentHandler {
         RepositoryException,
         AccessDeniedException {
         Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.READ);
-        this.node = workingNode.getNode(name);
-        this.property = this.node.getNode(ItemType.getSystemName(ItemType.JCR_CONTENT)).getProperty(DATA_ELEMENT);
+        this.property = workingNode.getProperty(name);
         this.setAccessManager(manager);
     }
 
@@ -88,16 +84,11 @@ public class NodeData extends ContentHandler {
         this.setAccessManager(manager);
         if (createNew) {
             Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
-            this.node = workingNode.addNode(name, ItemType.getSystemName(ItemType.NT_NODEDATA));
-            Node contentNode = this.node.addNode(ItemType.getSystemName(ItemType.JCR_CONTENT), ItemType
-                .getSystemName(ItemType.NT_UNSTRUCTRUED));
-            this.property = contentNode.setProperty(DATA_ELEMENT, "");
-            this.addMixin(ItemType.getSystemName(ItemType.MIX_VERSIONABLE));
+            this.property = workingNode.setProperty(name,"");
         }
         else {
             Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.READ);
-            this.node = workingNode.getNode(name);
-            this.property = this.node.getNode(ItemType.getSystemName(ItemType.JCR_CONTENT)).getProperty(DATA_ELEMENT);
+            this.property = workingNode.getProperty(name);
         }
     }
 
@@ -135,12 +126,8 @@ public class NodeData extends ContentHandler {
         RepositoryException,
         AccessDeniedException {
         Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
-        this.node = workingNode.addNode(name, ItemType.getSystemName(ItemType.NT_NODEDATA));
-        Node contentNode = this.node.addNode(ItemType.getSystemName(ItemType.JCR_CONTENT), ItemType
-            .getSystemName(ItemType.NT_UNSTRUCTRUED));
-        this.property = contentNode.setProperty(DATA_ELEMENT, value);
+        this.property = workingNode.setProperty(name,value);
         this.setAccessManager(manager);
-        this.addMixin(ItemType.getSystemName(ItemType.MIX_VERSIONABLE));
     }
 
     /**
@@ -148,14 +135,28 @@ public class NodeData extends ContentHandler {
      * constructor | creates a new initialized NodeData
      * </p>
      * @param node <code>Node</code> holding this property
+     * @deprecated
      */
     public NodeData(Node node, AccessManager manager)
         throws PathNotFoundException,
         RepositoryException,
         AccessDeniedException {
         Access.isGranted(manager, Path.getAbsolutePath(node.getPath()), Permission.READ);
-        this.node = node;
-        this.property = this.node.getNode(ItemType.getSystemName(ItemType.JCR_CONTENT)).getProperty(DATA_ELEMENT);
+        this.setAccessManager(manager);
+    }
+
+    /**
+     * <p>
+     * constructor | creates a new initialized NodeData
+     * </p>
+     * @param property
+     */
+    public NodeData(Property property, AccessManager manager)
+        throws PathNotFoundException,
+        RepositoryException,
+        AccessDeniedException {
+        this.property = property;
+        Access.isGranted(manager, Path.getAbsolutePath(this.property.getPath()), Permission.READ);
         this.setAccessManager(manager);
     }
 
@@ -315,7 +316,7 @@ public class NodeData extends ContentHandler {
      */
     public String getName() {
         try {
-            return this.node.getName();
+            return this.property.getName();
         }
         catch (Exception e) {
             return "";
@@ -450,4 +451,146 @@ public class NodeData extends ContentHandler {
     public boolean isExist() {
         return (this.property != null);
     }
+
+    /**
+     * <p>
+     * get a handle representing path relative to the content repository
+     * </p>
+     * @return String representing path (handle) of the content
+     */
+    public String getHandle() {
+        try {
+            return this.property.getPath();
+        }
+        catch (RepositoryException e) {
+            log.error("Failed to get handle");
+            log.error(e.getMessage(), e);
+            return StringUtils.EMPTY;
+        }
+    }
+
+    /**
+     * <p>
+     * get a handle representing path relative to the content repository with the default extension
+     * </p>
+     * @throws javax.jcr.PathNotFoundException
+     * @throws javax.jcr.RepositoryException
+     * @return String representing path (handle) of the content
+     */
+    public String getHandleWithDefaultExtension() throws PathNotFoundException, RepositoryException {
+        return (this.property.getPath() + "." + Server.getDefaultExtension());
+    }
+
+    /**
+     * <p>
+     * get parent content object
+     * </p>
+     * @throws javax.jcr.PathNotFoundException
+     * @throws javax.jcr.RepositoryException
+     * @return Content representing parent node
+     */
+    public Content getParent() throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        return (new Content(this.property.getParent(), this.accessManager));
+    }
+
+    /**
+     * <p>
+     * get absolute parent object starting from the root node
+     * </p>
+     * @param digree level at which the requested node exist, relative to the ROOT node
+     * @throws javax.jcr.PathNotFoundException
+     * @throws javax.jcr.RepositoryException
+     * @return Content representing parent node
+     */
+    public Content getAncestor(int digree) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        if (digree > this.getLevel()) {
+            throw new PathNotFoundException();
+        }
+        return (new Content(this.property.getAncestor(digree), this.accessManager));
+    }
+
+    /**
+     * <p>
+     * Convenience method for taglib
+     * </p>
+     * @throws javax.jcr.PathNotFoundException
+     * @throws javax.jcr.RepositoryException
+     * @return Content representing node on level 0
+     */
+    public Collection getAncestors() throws PathNotFoundException, RepositoryException {
+        List allAncestors = new ArrayList();
+        int level = this.getLevel();
+        while (level != 0) {
+            try {
+                allAncestors.add(new Content(this.property.getAncestor(--level), this.accessManager));
+            }
+            catch (AccessDeniedException e) {
+                log.info(e.getMessage());
+            }
+        }
+        return allAncestors;
+    }
+
+    /**
+     * <p>
+     * get node level from the ROOT node : FIXME implement getDepth in javax.jcr
+     * </p>
+     * @throws javax.jcr.PathNotFoundException
+     * @throws javax.jcr.RepositoryException
+     * @return level at which current node exist, relative to the ROOT node
+     */
+    public int getLevel() throws PathNotFoundException, RepositoryException {
+        return this.property.getPath().split("/").length - 1;
+    }
+
+    /**
+     * <p>
+     * Persists all changes to the repository if valiation succeds
+     * </p>
+     * @throws RepositoryException
+     */
+    public void save() throws RepositoryException {
+        this.property.getSession().save();
+    }
+
+    /**
+     * <p>
+     * checks for the allowed access rights
+     * </p>
+     * @param permissions as defined in javax.jcr.Permission
+     * @return true is the current user has specified access on this node.
+     */
+    public boolean isGranted(long permissions) {
+        try {
+            Access.isGranted(this.accessManager, Path.getAbsolutePath(property.getPath()), permissions);
+            return true;
+        }
+        catch (RepositoryException re) {
+            log.error(re.getMessage(), re);
+        }
+        return false;
+    }
+
+    /**
+     * <p>
+     * Remove this path
+     * </p>
+     * @throws RepositoryException
+     */
+    public void delete() throws RepositoryException {
+        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.property.getPath()), Permission.REMOVE);
+        this.property.remove();
+    }
+
+    /**
+     * <p>
+     * Refreses current node keeping all changes
+     * </p>
+     * @see javax.jcr.Node#refresh(boolean)
+     * @throws RepositoryException
+     */
+    public void refresh(boolean keepChanges) throws RepositoryException {
+        this.property.refresh(keepChanges);
+    }
+
 }
