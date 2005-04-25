@@ -185,7 +185,13 @@ public final class ContentRepository {
             if (log.isDebugEnabled()) {
                 log.debug("Checking [" + repository + "] repository.");
             }
-            Content startPage = getHierarchyManager(repository).getRoot();
+            HierarchyManager hm = getHierarchyManager(repository);
+
+            if (hm == null) {
+                throw new RuntimeException("Repository [" + repository + "] not loaded");
+            }
+
+            Content startPage = hm.getRoot();
             if (startPage.getChildren(ItemType.NT_CONTENT).size() > 0) {
                 if (log.isDebugEnabled()) {
                     log.debug("Content found in [" + repository + "].");
@@ -237,7 +243,8 @@ public final class ContentRepository {
                     String wspID = workspace.getAttributeValue(ATTRIBUTE_ID);
                     map.addWorkspace(wspID);
                 }
-            } else {
+            }
+            else {
                 map.addWorkspace(DEFAULT_WORKSPACE);
             }
             ContentRepository.repositoryMappings.put(id, map);
@@ -268,7 +275,8 @@ public final class ContentRepository {
         }
     }
 
-    private static void loadHierarchyManager(Repository repository, String wspID, RepositoryMapping map, Provider provider) {
+    private static void loadHierarchyManager(Repository repository, String wspID, RepositoryMapping map,
+        Provider provider) {
         try {
             SimpleCredentials sc = new SimpleCredentials(ContentRepository.SYSTEM_USER, StringUtils.EMPTY.toCharArray());
             Session session = repository.login(sc, wspID);
@@ -279,7 +287,7 @@ public final class ContentRepository {
             HierarchyManager hierarchyManager = new HierarchyManager(ContentRepository.SYSTEM_USER);
             hierarchyManager.init(session.getRootNode());
             hierarchyManager.setAccessManager(accessManager);
-            ContentRepository.hierarchyManagers.put(map.getID()+"_"+wspID, hierarchyManager);
+            ContentRepository.hierarchyManagers.put(map.getID() + "_" + wspID, hierarchyManager);
         }
         catch (RepositoryException re) {
             log.error("System : Failed to initialize hierarchy manager for JCR - " + map.getID());
@@ -317,7 +325,7 @@ public final class ContentRepository {
      * access on the specified repository.
      */
     public static HierarchyManager getHierarchyManager(String repositoryID) {
-        return getHierarchyManager(repositoryID,DEFAULT_WORKSPACE);
+        return getHierarchyManager(repositoryID, DEFAULT_WORKSPACE);
     }
 
     /**
@@ -325,7 +333,7 @@ public final class ContentRepository {
      * access on the specified repository.
      */
     public static HierarchyManager getHierarchyManager(String repositoryID, String workspaceID) {
-        return (HierarchyManager) ContentRepository.hierarchyManagers.get(repositoryID+"_"+workspaceID);
+        return (HierarchyManager) ContentRepository.hierarchyManagers.get(repositoryID + "_" + workspaceID);
     }
 
     /**
