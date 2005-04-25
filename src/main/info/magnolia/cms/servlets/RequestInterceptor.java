@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.log4j.Logger;
 
 
@@ -61,7 +62,7 @@ public class RequestInterceptor extends HttpServlet {
             // preview mode (button in main bar)
             String preview = request.getParameter(Resource.MGNL_PREVIEW_ATTRIBUTE);
             if (preview != null) {
-                if (Boolean.TRUE.equals(preview)) {
+                if (BooleanUtils.toBoolean(preview)) {
                     request.getSession().setAttribute(Resource.MGNL_PREVIEW_ATTRIBUTE, Boolean.TRUE);
                 }
                 else {
