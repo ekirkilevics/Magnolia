@@ -27,18 +27,26 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import javax.jcr.*;
+import javax.jcr.Item;
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.Property;
+import javax.jcr.PropertyIterator;
+import javax.jcr.RepositoryException;
+import javax.jcr.UnsupportedRepositoryOperationException;
+import javax.jcr.Value;
 import javax.jcr.lock.Lock;
 import javax.jcr.lock.LockException;
-import javax.jcr.version.VersionException;
+import javax.jcr.nodetype.NodeType;
 import javax.jcr.version.Version;
+import javax.jcr.version.VersionException;
 import javax.jcr.version.VersionHistory;
 import javax.jcr.version.VersionIterator;
-import javax.jcr.nodetype.NodeType;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -263,7 +271,31 @@ public class Content extends ContentHandler implements Cloneable {
         try {
             return (new NodeData(this.node, name, this.accessManager));
         }
+        catch (PathNotFoundException e) {
+
+            if (log.isDebugEnabled()) {
+                String nodepath = null;
+                try {
+                    nodepath = this.node.getPath();
+                }
+                catch (RepositoryException e1) {
+                    // ignore, debug only
+                }
+                log.debug("Path not found for property [" + name + "] in node " + nodepath);
+            }
+
+            // @todo should return null?
+            return (new NodeData());
+        }
         catch (RepositoryException re) {
+            String nodepath = null;
+            try {
+                nodepath = this.node.getPath();
+            }
+            catch (RepositoryException e1) {
+                // ignore, debug only
+            }
+            log.warn("Repository exception while trying to read property [" + name + "] for node " + nodepath, re);
             return (new NodeData());
         }
     }
@@ -281,7 +313,7 @@ public class Content extends ContentHandler implements Cloneable {
         catch (RepositoryException e) {
             log.error(e.getMessage(), e);
         }
-        return "";
+        return StringUtils.EMPTY;
     }
 
     /**
@@ -621,7 +653,7 @@ public class Content extends ContentHandler implements Cloneable {
         return c;
     }
 
-       /**
+    /**
      * <p>
      * get a handle representing path relative to the content repository
      * </p>

@@ -12,22 +12,27 @@
  */
 package info.magnolia.cms.core;
 
+import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.util.Access;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.beans.config.Server;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
-import java.util.ArrayList;
 
-import javax.jcr.*;
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.Property;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
+import javax.jcr.Value;
 
-import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -35,8 +40,6 @@ import org.apache.commons.lang.StringUtils;
  * @version 2.0
  */
 public class NodeData extends ContentHandler {
-
-    public static final String HTML_LINEBREAK = "<br />";
 
     /**
      * Logger.
@@ -84,7 +87,7 @@ public class NodeData extends ContentHandler {
         this.setAccessManager(manager);
         if (createNew) {
             Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
-            this.property = workingNode.setProperty(name,"");
+            this.property = workingNode.setProperty(name, "");
         }
         else {
             Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.READ);
@@ -126,7 +129,7 @@ public class NodeData extends ContentHandler {
         RepositoryException,
         AccessDeniedException {
         Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
-        this.property = workingNode.setProperty(name,value);
+        this.property = workingNode.setProperty(name, value);
         this.setAccessManager(manager);
     }
 
@@ -307,6 +310,7 @@ public class NodeData extends ContentHandler {
             return this.property.getValue().getType();
         }
         catch (Exception e) {
+            log.warn("Unable to read property type for " + this.property);
             return PropertyType.UNDEFINED;
         }
     }
@@ -319,7 +323,8 @@ public class NodeData extends ContentHandler {
             return this.property.getName();
         }
         catch (Exception e) {
-            return "";
+            log.warn("Unable to read property name for " + this.property);
+            return StringUtils.EMPTY;
         }
     }
 
@@ -334,6 +339,7 @@ public class NodeData extends ContentHandler {
             return this.property.getLength();
         }
         catch (RepositoryException re) {
+            log.warn("Unable to read content length for " + this.property);
             return 0;
         }
     }
@@ -584,7 +590,7 @@ public class NodeData extends ContentHandler {
 
     /**
      * <p>
-     * Refreses current node keeping all changes
+     * Refreshes current node keeping all changes
      * </p>
      * @see javax.jcr.Node#refresh(boolean)
      * @throws RepositoryException

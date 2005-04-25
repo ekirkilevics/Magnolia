@@ -49,7 +49,7 @@ public class Out extends TagSupport {
      */
     private static Logger log = Logger.getLogger(Out.class);
 
-    private static final String DEFAULT_LINEBREAK = NodeData.HTML_LINEBREAK;
+    private static final String DEFAULT_LINEBREAK = "<br />";
 
     private static final String DEFAULT_DATEPATTERN = "yyyy-MM-dd";
 
@@ -80,7 +80,7 @@ public class Out extends TagSupport {
         Content actpage = Resource.getCurrentActivePage((HttpServletRequest) pageContext.getRequest());
         String contentNodeName = this.getContentNodeName();
         String contentNodeCollectionName = this.getContentNodeCollectionName();
-        if (contentNodeName != null && !contentNodeName.equals("")) {
+        if (StringUtils.isNotEmpty(contentNodeName)) {
             // contentNodeName is defined
             try {
                 if (StringUtils.isEmpty(contentNodeCollectionName)) {
@@ -339,13 +339,10 @@ public class Out extends TagSupport {
     private void display() {
         try {
 
-            // @todo //check if mutliple values (checkboxes) -> not nodeData but contentNode
+            // @todo //check if multiple values (checkboxes) -> not nodeData but contentNode
 
-            // if (this.property!=null) this.nodeData =
-            // this.contentNode.getContentNode(this.nodeDataName+"_properties").getNodeData(this.property);
-            // else this.nodeData = this.getContentNode().getNodeData(this.nodeDataName);
             NodeData nodeData = this.getContentNode().getNodeData(this.getNodeDataName());
-            String value = "";
+            String value = StringUtils.EMPTY;
             int type = nodeData.getType();
             if (type == PropertyType.DATE) {
                 value = this.getDateFormatted(nodeData.getDate().getTime());
