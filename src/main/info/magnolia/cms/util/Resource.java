@@ -21,6 +21,7 @@ import info.magnolia.cms.core.HierarchyManager;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -224,6 +225,6 @@ public final class Resource {
      * @return boolean , true if preview is enabled
      */
     public static boolean showPreview(HttpServletRequest req) {
-        return Boolean.valueOf((String) req.getSession().getAttribute(MGNL_PREVIEW_ATTRIBUTE)).booleanValue();
+        return BooleanUtils.toBoolean((Boolean) req.getSession().getAttribute(MGNL_PREVIEW_ATTRIBUTE));
     }
 }
