@@ -66,37 +66,26 @@
     xmlns:jcr="http://www.jcp.org/jcr/1.0">
 
     <!-- custom node types -->
-    <nodeType name="mgnl:content" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+    <nodeType name="mgnl:content" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
         <supertypes>
             <supertype>nt:hierarchyNode</supertype>
         </supertypes>
-        <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="VERSION"
-            protected="false" sameNameSiblings="false">
+        <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="VERSION" protected="false" sameNameSiblings="true">
             <requiredPrimaryTypes>
                 <requiredPrimaryType>nt:hierarchyNode</requiredPrimaryType>
             </requiredPrimaryTypes>
         </childNodeDefinition>
+        <propertyDefinition name="*" requiredType="undefined" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
     </nodeType>
-    <nodeType name="mgnl:contentNode" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+    <nodeType name="mgnl:contentNode" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
         <supertypes>
             <supertype>nt:hierarchyNode</supertype>
         </supertypes>
-        <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="VERSION"
-            protected="false" sameNameSiblings="false">
+        <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="VERSION" protected="false" sameNameSiblings="true">
             <requiredPrimaryTypes>
                 <requiredPrimaryType>nt:hierarchyNode</requiredPrimaryType>
             </requiredPrimaryTypes>
         </childNodeDefinition>
-    </nodeType>
-    <nodeType name="mgnl:nodeData" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
-        <supertypes>
-            <supertype>nt:hierarchyNode</supertype>
-        </supertypes>
-        <childNodeDefinition name="jcr:content" defaultPrimaryType="" autoCreated="false" mandatory="true"
-            onParentVersion="COPY" protected="false" sameNameSiblings="false">
-            <requiredPrimaryTypes>
-                <requiredPrimaryType>nt:base</requiredPrimaryType>
-            </requiredPrimaryTypes>
-        </childNodeDefinition>
+        <propertyDefinition name="*" requiredType="undefined" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
     </nodeType>
 </nodeTypes>

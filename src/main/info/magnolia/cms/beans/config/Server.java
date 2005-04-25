@@ -33,7 +33,7 @@ import org.apache.log4j.Logger;
  */
 public final class Server {
 
-    protected static final String CONFIG_PAGE = "server";
+    public static final String CONFIG_PAGE = "server";
 
     /**
      * Logger.
