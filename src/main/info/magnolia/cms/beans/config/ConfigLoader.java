@@ -15,6 +15,7 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.beans.runtime.SystemProperty;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.license.License;
 import info.magnolia.cms.security.SecureURI;
 
@@ -77,13 +78,13 @@ public class ConfigLoader {
         System.setProperty("java.security.auth.login.config", Path
             .getAbsoluteFileSystemPath("WEB-INF/config/jaas.config"));
 
-        this.load();
+        this.load(config);
     }
 
     /**
      * Load magnolia configuration from repositories.
      */
-    private void load() {
+    private void load(ServletConfig config) {
         // first check for the license information, will fail if this class does not exist
         License license = License.getInstance();
         license.init();
@@ -127,6 +128,8 @@ public class ConfigLoader {
         Paragraph.init();
         log.info("Init virtualMap");
         VirtualMap.getInstance().init();
+        log.info("Init i18n");
+        MessagesManager.init(config);
 
         log.info("Init secureURI");
         SecureURI.init();
