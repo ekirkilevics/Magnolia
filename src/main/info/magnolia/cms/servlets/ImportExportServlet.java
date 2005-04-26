@@ -71,15 +71,23 @@ public class ImportExportServlet extends HttpServlet {
             }
             response.setHeader("content-disposition", "attachment; filename=" + repository + pathName + ".xml");
 
+            Session session = ws.getSession();
+
             try {
-                // use exportSystemView till the bug in property type handling is fixed in jackrabbit
-                // http://issues.apache.org/jira/browse/JCR-115
-                // ws.getSession().exportDocumentView(basepath, stream, false, false);
-                ws.getSession().exportSystemView(basepath, stream, false, false);
+                if (ContentRepository.WEBSITE.equals(repository)) {
+                    // use exportSystemView in order to preserve property types
+                    // http://issues.apache.org/jira/browse/JCR-115
+                    session.exportSystemView(basepath, stream, false, false);
+                }
+                else {
+                    // for other repositories use document view
+                    session.exportDocumentView(basepath, stream, false, false);
+                }
             }
             catch (Exception e) {
                 throw new NestableRuntimeException(e);
             }
+
             stream.flush();
             stream.close();
             return;
@@ -193,6 +201,7 @@ public class ImportExportServlet extends HttpServlet {
                 + e.getMessage()
                 + ".", e);
         }
+
         log.info("Import done");
 
         doGet(request, response);
