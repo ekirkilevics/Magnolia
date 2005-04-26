@@ -31,7 +31,6 @@ import org.apache.log4j.Logger;
 
 public class Messages {
 
-    public static String DEFAULT_BASENAME = "info.magnolia.module.admininterface.messages";
     public static String JS_OBJECTNAME = "mgnlMessages";
 
     protected static Logger log = Logger.getLogger(Messages.class);
@@ -76,7 +75,7 @@ public class Messages {
 
     public String getBasename() {
         if(basename==null)
-            return DEFAULT_BASENAME;
+            return MessagesManager.DEFAULT_BASENAME;
         return basename;
     }
 

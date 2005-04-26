@@ -276,25 +276,6 @@
         </taglib>
     </jsp-config>
     <!--
-        i18n configuration (JSTL). Do not change the fallbackLocale!
+        i18n configuration moved to the repository config:/server/i18n
     -->
-    <context-param>
-        <param-name>javax.servlet.jsp.jstl.fmt.fallbackLocale</param-name>
-        <param-value>en</param-value>
-    </context-param>
-    <!--
-        We will replace this entry by a server configuration facility.
-    -->
-    <context-param>
-        <param-name>javax.servlet.jsp.jstl.fmt.locale</param-name>
-        <param-value>en</param-value>
-    </context-param>
-    <context-param>
-        <param-name>javax.servlet.jsp.jstl.fmt.basename</param-name>
-        <param-value>info.magnolia.module.admininterface.messages</param-value>
-    </context-param>
-    <context-param>
-        <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
-        <param-value>info.magnolia.module.admininterface.messages</param-value>
-    </context-param>
 </web-app>
