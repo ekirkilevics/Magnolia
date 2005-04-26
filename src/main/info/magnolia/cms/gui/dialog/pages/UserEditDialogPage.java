@@ -1,9 +1,9 @@
 package info.magnolia.cms.gui.dialog.pages;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.gui.control.Button;
@@ -120,7 +120,7 @@ public class UserEditDialogPage extends BasePageServlet {
         Content user = null;
         if (!create) {
             try {
-                user = hm.getPage(path);
+                user = hm.getContent(path);
             }
             catch (RepositoryException re) {
                 re.printStackTrace();
@@ -156,18 +156,18 @@ public class UserEditDialogPage extends BasePageServlet {
             
             // remove existing
             try {
-                user.deleteContentNode(NODE_ACLUSERS);
+                user.delete(NODE_ACLUSERS);
             }
             catch (RepositoryException re) {
             }
             try {
-                user.deleteContentNode(NODE_ACLROLES);
+                user.delete(NODE_ACLROLES);
             }
             catch (RepositoryException re) {
             }
 
             try {
-                user.deleteContentNode(NODE_ACLCONFIG);
+                user.delete(NODE_ACLCONFIG);
             }
             catch (RepositoryException re) {
             }
@@ -175,45 +175,45 @@ public class UserEditDialogPage extends BasePageServlet {
             // rewrite
             try {
 
-                ContentNode aclUsers;
+                Content aclUsers;
 
-                aclUsers = user.createContentNode(NODE_ACLUSERS);
+                aclUsers = user.createContent(NODE_ACLUSERS, ItemType.NT_CONTENTNODE);
 
-                ContentNode aclRoles = user.createContentNode(NODE_ACLROLES);
-                ContentNode aclConfig = user.createContentNode(NODE_ACLCONFIG);
+                Content aclRoles = user.createContent(NODE_ACLROLES, ItemType.NT_CONTENTNODE);
+                Content aclConfig = user.createContent(NODE_ACLCONFIG, ItemType.NT_CONTENTNODE);
                 Save save = new Save();
 
                 if (form.getParameter(CONTROLNAME_ISADMIN_USERS).equals("true")) {
                     // System.out.println("IS user admin");
                     // is user admin
                     // full access to all users
-                    ContentNode u0 = aclUsers.createContentNode("0");
+                    Content u0 = aclUsers.createContent("0", ItemType.NT_CONTENTNODE);
                     u0.createNodeData("path", save.getValue("/*"), PropertyType.STRING);
                     u0.createNodeData("permissions", save.getValue(PERMISSION_ALL), PropertyType.LONG);
                 }
                 else {
                     // not users admin
                     // allow access to own user
-                    ContentNode u0 = aclUsers.createContentNode("00");
+                    Content u0 = aclUsers.createContent("00", ItemType.NT_CONTENTNODE);
                     u0.createNodeData("path", save.getValue(user.getHandle() + "/" + NODE_ROLES), PropertyType.STRING);
                     u0.createNodeData("permissions", save.getValue(PERMISSION_READ), PropertyType.LONG);
 
-                    ContentNode u1 = aclUsers.createContentNode("01");
+                    Content u1 = aclUsers.createContent("01", ItemType.NT_CONTENTNODE);
                     u1.createNodeData(
                         "path",
                         save.getValue(user.getHandle() + "/" + NODE_ROLES + "/*"),
                         PropertyType.STRING);
                     u1.createNodeData("permissions", save.getValue(PERMISSION_READ), PropertyType.LONG);
 
-                    ContentNode u2 = aclUsers.createContentNode("02");
+                    Content u2 = aclUsers.createContent("02", ItemType.NT_CONTENTNODE);
                     u2.createNodeData("path", save.getValue(user.getHandle()), PropertyType.STRING);
                     u2.createNodeData("permissions", save.getValue(PERMISSION_ALL), PropertyType.LONG);
 
-                    ContentNode u3 = aclUsers.createContentNode("03");
+                    Content u3 = aclUsers.createContent("03", ItemType.NT_CONTENTNODE);
                     u3.createNodeData("path", save.getValue(user.getHandle() + "/*"), PropertyType.STRING);
                     u3.createNodeData("permissions", save.getValue(PERMISSION_READ), PropertyType.LONG);
 
-                    ContentNode u4 = aclUsers.createContentNode("04");
+                    Content u4 = aclUsers.createContent("04", ItemType.NT_CONTENTNODE);
                     u4.createNodeData("path", save.getValue("/*"), PropertyType.STRING);
                     u4.createNodeData("permissions", save.getValue(PERMISSION_NO), PropertyType.LONG);
                 }
@@ -221,14 +221,14 @@ public class UserEditDialogPage extends BasePageServlet {
                 if (form.getParameter(CONTROLNAME_ISADMIN_ROLES) != null) {
                     // is roles admin:
                     // full access to all roles
-                    ContentNode r0 = aclRoles.createContentNode("0");
+                    Content r0 = aclRoles.createContent("0", ItemType.NT_CONTENTNODE);
                     r0.createNodeData("path", save.getValue("/*"), PropertyType.STRING);
                     r0.createNodeData("permissions", save.getValue(PERMISSION_ALL), PropertyType.LONG);
                 }
                 else {
                     // not roles admin:
                     // read access to all roles
-                    ContentNode r0 = aclRoles.createContentNode("0");
+                    Content r0 = aclRoles.createContent("0", ItemType.NT_CONTENTNODE);
                     r0.createNodeData("path", save.getValue("/*"), PropertyType.STRING);
                     r0.createNodeData("permissions", save.getValue(PERMISSION_READ), PropertyType.LONG);
                 }
@@ -236,14 +236,14 @@ public class UserEditDialogPage extends BasePageServlet {
                 if (form.getParameter(CONTROLNAME_ISADMIN_CONFIG) != null) {
                     // is config admin:
                     // full access to entire config repository
-                    ContentNode c0 = aclConfig.createContentNode("0");
+                    Content c0 = aclConfig.createContent("0", ItemType.NT_CONTENTNODE);
                     c0.createNodeData("path", save.getValue("/*"), PropertyType.STRING);
                     c0.createNodeData("permissions", save.getValue(PERMISSION_ALL), PropertyType.LONG);
                 }
                 else {
                     // not config admin:
                     // read access to config repository
-                    ContentNode c0 = aclConfig.createContentNode("0");
+                    Content c0 = aclConfig.createContent("0", ItemType.NT_CONTENTNODE);
                     c0.createNodeData("path", save.getValue("/*"), PropertyType.STRING);
                     c0.createNodeData("permissions", save.getValue(PERMISSION_READ), PropertyType.LONG);
                 }
@@ -253,20 +253,20 @@ public class UserEditDialogPage extends BasePageServlet {
                 // ######################
                 // remove existing
                 try {
-                    user.deleteContentNode(NODE_ROLES);
+                    user.delete(NODE_ROLES);
                 }
                 catch (RepositoryException re) {
                 }
 
                 // rewrite
-                ContentNode roles = user.createContentNode(NODE_ROLES);
+                Content roles = user.createContent(NODE_ROLES, ItemType.NT_CONTENTNODE);
 
                 String[] rolesValue = form.getParameter("aclList").split(";");
                 // System.out.println(form.getParameter("aclList"));
                 for (int i = 0; i < rolesValue.length; i++) {
                     try {
                         String newLabel = Path.getUniqueLabel(hm, roles.getHandle(), "0");
-                        ContentNode r = roles.createContentNode(newLabel);
+                        Content r = roles.createContent(newLabel, ItemType.NT_CONTENTNODE);
                         r.createNodeData("path").setValue(rolesValue[i]);
                     }
                     catch (Exception e) {

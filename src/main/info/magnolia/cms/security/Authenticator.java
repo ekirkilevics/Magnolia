@@ -77,7 +77,7 @@ public final class Authenticator {
     private static boolean isValidUser(HttpServletRequest request) {
         HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USERS);
         try {
-            Content userPage = hm.getPage(Authenticator.getUserId(request));
+            Content userPage = hm.getContent(Authenticator.getUserId(request));
             String encodedPassword = new String(Base64.encodeBase64(Authenticator
                 .getPasswordAsString(request)
                 .getBytes()));

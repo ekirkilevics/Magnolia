@@ -16,16 +16,13 @@ package info.magnolia.cms.i18n;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.ServletConfig;
@@ -85,14 +82,14 @@ public class MessagesManager {
 			log.info("Config : loading i18n configuration - "
 					+ I18N_CONFIG_NAME);
 			
-			Content serverNode = configHierarchyManager.getContentNode("/server");
+			Content serverNode = configHierarchyManager.getContent("/server");
 			
-			ContentNode configNode;
+			Content configNode;
 			try{
-				configNode = serverNode.getContentNode(I18N_CONFIG_NAME);
+				configNode = serverNode.getContent(I18N_CONFIG_NAME);
 			}
 			catch(javax.jcr.PathNotFoundException  e) {
-				configNode = serverNode.createContentNode(I18N_CONFIG_NAME);
+				configNode = serverNode.createContent(I18N_CONFIG_NAME, ItemType.NT_CONTENTNODE);
 				configHierarchyManager.save();
 			}
 			
@@ -107,15 +104,15 @@ public class MessagesManager {
 			MessagesManager.setDefaultLocale(languageNodeData.getString());
 
 			// get the available languages
-			ContentNode availableLanguagesContentNode;
+			Content availableLanguagesContentNode;
 
 			NodeData availableLanguage;
 			
 			try{
-				availableLanguagesContentNode = configNode.getContentNode(AVAILABLE_LOCALES_CONFIG_NAME);
+				availableLanguagesContentNode = configNode.getContent(AVAILABLE_LOCALES_CONFIG_NAME);
 			}
 			catch(javax.jcr.PathNotFoundException  e) {
-				availableLanguagesContentNode = configNode.createContentNode(AVAILABLE_LOCALES_CONFIG_NAME);
+				availableLanguagesContentNode = configNode.createContent(AVAILABLE_LOCALES_CONFIG_NAME, ItemType.NT_CONTENTNODE);
 				availableLanguage = availableLanguagesContentNode.createNodeData(MessagesManager.FALLBACK_LOCALE);
 				availableLanguage.setValue(MessagesManager.FALLBACK_LOCALE);
 				configHierarchyManager.save();

@@ -13,7 +13,6 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.security.SecureURI;
 
 import java.util.Hashtable;
@@ -62,7 +61,7 @@ public final class Server {
         Server.cachedCacheableURIMapping.clear();
         try {
             log.info("Config : loading Server");
-            Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getPage(CONFIG_PAGE);
+            Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(CONFIG_PAGE);
             Server.cacheContent(startPage);
             log.info("Config : Server config loaded");
         }
@@ -82,7 +81,7 @@ public final class Server {
      */
     private static void cacheContent(Content page) {
         try {
-            addToSecureList(page.getContentNode("secureURIList"));
+            addToSecureList(page.getContent("secureURIList"));
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
@@ -113,13 +112,13 @@ public final class Server {
 
     }
 
-    private static void addToSecureList(ContentNode node) {
+    private static void addToSecureList(Content node) {
         if (node == null) {
             return;
         }
         Iterator childIterator = node.getChildren().iterator();
         while (childIterator.hasNext()) {
-            ContentNode sub = (ContentNode) childIterator.next();
+            Content sub = (Content) childIterator.next();
             String uri = sub.getNodeData("URI").getString();
             SecureURI.add(uri);
         }

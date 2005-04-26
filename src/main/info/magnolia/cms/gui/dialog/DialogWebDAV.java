@@ -18,7 +18,6 @@ import info.magnolia.cms.gui.control.Hidden;
 import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.gui.misc.Spacer;
-import info.magnolia.cms.i18n.ContextMessages;
 import info.magnolia.cms.i18n.MessagesManager;
 
 import java.io.IOException;

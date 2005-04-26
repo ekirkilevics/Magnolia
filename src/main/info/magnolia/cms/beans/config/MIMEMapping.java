@@ -57,8 +57,8 @@ public final class MIMEMapping {
         MIMEMapping.cachedContent.clear();
         try {
             log.info("Config : loading MIMEMapping");
-            Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getPage(START_PAGE);
-            MIMEMapping.mimeList = startPage.getContentNode("MIMEMapping").getChildren().iterator();
+            Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(START_PAGE);
+            MIMEMapping.mimeList = startPage.getContent("MIMEMapping").getChildren().iterator();
             MIMEMapping.cacheContent();
             log.info("Config : MIMEMapping loaded");
         }

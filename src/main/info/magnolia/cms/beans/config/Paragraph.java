@@ -13,7 +13,6 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.security.AccessDeniedException;
 
@@ -75,7 +74,7 @@ public class Paragraph {
         HierarchyManager configHierarchyManager = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
         try {
             log.info("Config : loading Paragraph info - " + modulePath);
-            Content startPage = configHierarchyManager.getPage(modulePath);
+            Content startPage = configHierarchyManager.getContent(modulePath);
             Content paragraphDefinition = startPage.getContent("Paragraphs");
             Paragraph.cacheContent(paragraphDefinition, modulePath);
             log.info("Config : Paragraph info loaded - " + modulePath);
@@ -114,7 +113,7 @@ public class Paragraph {
      */
     private static void addParagraphsToCache(Iterator paragraphs, String startPage) {
         while (paragraphs.hasNext()) {
-            ContentNode c = (ContentNode) paragraphs.next();
+            Content c = (Content) paragraphs.next();
             Paragraph pi = new Paragraph();
             pi.name = c.getNodeData("name").getString();
             pi.templatePath = c.getNodeData("templatePath").getString();
@@ -131,7 +130,7 @@ public class Paragraph {
                 if (dialog.indexOf("/") != 0) {
                     dialog = startPage + DIALOGS_DIR + dialog; // dialog: pars/text.xml -> /info/dialogs/pars/text.xml
                 }
-                Content dialogPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getPage(dialog);
+                Content dialogPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(dialog);
                 pi.dialogContent = dialogPage;
             }
             catch (RepositoryException re) {

@@ -12,7 +12,7 @@
  */
 package info.magnolia.cms.taglibs;
 
-import info.magnolia.cms.core.ContentNode;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.Resource;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
@@ -36,14 +36,14 @@ public class Set extends TagSupport {
      */
     private static Logger log = Logger.getLogger(Set.class);
 
-    private transient ContentNode contentNode;
+    private transient Content contentNode;
 
     private String contentNodeName;
 
     /**
      * @param contentNode to be set
      */
-    public void setContentNode(ContentNode contentNode) {
+    public void setContentNode(Content contentNode) {
         this.contentNode = contentNode;
     }
 
@@ -57,7 +57,7 @@ public class Set extends TagSupport {
     /**
      * @deprecated
      */
-    public void setContainer(ContentNode contentNode) {
+    public void setContainer(Content contentNode) {
         this.setContentNode(contentNode);
     }
 
@@ -79,7 +79,7 @@ public class Set extends TagSupport {
         }
         else {
             try {
-                this.contentNode = Resource.getCurrentActivePage(req).getContentNode(this.contentNodeName);
+                this.contentNode = Resource.getCurrentActivePage(req).getContent(this.contentNodeName);
                 Resource.setGlobalContentNode(req, this.contentNode);
             }
             catch (RepositoryException re) {

@@ -384,7 +384,7 @@ public class Tree extends ControlSuper {
                 path = "/" + label;
             }
             this.deActivateNode(path);
-            parentNode.deleteContent(label);
+            parentNode.delete(label);
             parentNode.save();
         }
         catch (Exception e) {
@@ -435,7 +435,7 @@ public class Tree extends ControlSuper {
                     newNode = parentNode.createContent(label);
                 }
                 else {
-                    newNode = parentNode.createContentNode(label);
+                    newNode = parentNode.createContent(label, ItemType.NT_CONTENTNODE);
                 }
                 newNode.getMetaData().setAuthorId(Authenticator.getUserId(this.getRequest()));
                 newNode.getMetaData().setCreationDate();
@@ -843,7 +843,7 @@ public class Tree extends ControlSuper {
                 c = hm.getContent(path);
             }
             else {
-                c = hm.getContentNode(path);
+                c = hm.getContent(path);
             }
             Syndicator syndicator = new Syndicator(this.getRequest());
             if (recursive) {
@@ -1146,7 +1146,7 @@ public class Tree extends ControlSuper {
         HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
         Content parentNode = null;
         try {
-            parentNode = hm.getPage(this.getPathCurrent());
+            parentNode = hm.getContent(this.getPathCurrent());
             // loop the children of the different item types
             for (int i = 0; i < this.getItemTypes().size(); i++) {
                 String type = (String) this.getItemTypes().get(i);

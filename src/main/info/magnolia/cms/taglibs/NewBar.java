@@ -13,7 +13,6 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.gui.inline.BarNew;
-import info.magnolia.cms.i18n.ContextMessages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.Resource;
 

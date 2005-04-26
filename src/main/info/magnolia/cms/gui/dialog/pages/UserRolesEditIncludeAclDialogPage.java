@@ -2,7 +2,6 @@ package info.magnolia.cms.gui.dialog.pages;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.Edit;
 import info.magnolia.cms.gui.control.Hidden;
@@ -220,13 +219,13 @@ public class UserRolesEditIncludeAclDialogPage extends BasePageServlet {
 	private void addExistingAclToTable(PrintWriter out, Content role, String dynamicTableName, String repository) {
 		boolean noAcl = false;
 		try {
-			ContentNode acl = role.getContentNode("acl_" + repository);
+			Content acl = role.getContent("acl_" + repository);
 			if (acl.getChildren().size() == 0)
 				noAcl = true;
 			Iterator it = acl.getChildren().iterator();
 			boolean skipNext = false;
 			while (it.hasNext()) {
-				ContentNode c = (ContentNode) it.next();
+				Content c = (Content) it.next();
 
 				if (skipNext) {
 					skipNext = false;

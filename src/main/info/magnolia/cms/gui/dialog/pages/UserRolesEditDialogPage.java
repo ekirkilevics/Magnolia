@@ -1,9 +1,9 @@
 package info.magnolia.cms.gui.dialog.pages;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.gui.control.Save;
@@ -112,7 +112,7 @@ public class UserRolesEditDialogPage extends BasePageServlet {
 			
 			if (!create) {
 				try {
-					role = hm.getPage(path);
+					role = hm.getContent(path);
 				} catch (RepositoryException re) {
 					re.printStackTrace();
 				}
@@ -271,12 +271,12 @@ public class UserRolesEditDialogPage extends BasePageServlet {
 				// ######################
 				// remove existing
 				try {
-					role.deleteContentNode("acl_" + repository);
+					role.delete("acl_" + repository);
 				} catch (RepositoryException re) {
 				}
 				// rewrite
 				try {
-					ContentNode acl = role.createContentNode("acl_" + repository);
+					Content acl = role.createContent("acl_" + repository, ItemType.NT_CONTENTNODE);
 					String aclValueStr = form.getParameter("acl" + repository + "List");
 					if (aclValueStr != null && !aclValueStr.equals("")) {
 						String[] aclEntries = aclValueStr.split(";");
@@ -314,8 +314,8 @@ public class UserRolesEditDialogPage extends BasePageServlet {
 								try {
 									String newLabel = Path.getUniqueLabel(hm,
 											acl.getHandle(), "0");
-									ContentNode r = acl
-											.createContentNode(newLabel);
+									Content r = acl
+											.createContent(newLabel, ItemType.NT_CONTENTNODE);
 									r.createNodeData("path").setValue(
 											path);
 									r.createNodeData("permissions").setValue(
@@ -327,7 +327,7 @@ public class UserRolesEditDialogPage extends BasePageServlet {
 							try {
 								String newLabel = Path.getUniqueLabel(hm, acl
 										.getHandle(), "0");
-								ContentNode r = acl.createContentNode(newLabel);
+								Content r = acl.createContent(newLabel, ItemType.NT_CONTENTNODE);
 								r.createNodeData("path").setValue(
 										path + "/*");
 								r.createNodeData("permissions").setValue(

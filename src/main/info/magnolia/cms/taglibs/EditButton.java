@@ -14,6 +14,8 @@ package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.gui.inline.ButtonEdit;
 import info.magnolia.cms.util.Resource;
+import info.magnolia.cms.beans.config.Paragraph;
+import info.magnolia.cms.core.Content;
 
 import java.io.IOException;
 
@@ -22,6 +24,7 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -163,9 +166,11 @@ public class EditButton extends TagSupport {
     /**
      * @return template path
      */
-    private String getTemplate() {
+    public String getTemplate() {
         if (this.displayHandler == null) {
-            return Resource.getLocalContentNode(this.request).getTemplate();
+            Content localContainer = Resource.getLocalContentNode(this.request);
+            String templateName = localContainer.getNodeData("paragraph").getString();
+            return Paragraph.getInfo(templateName).getTemplatePath();
         }
         return this.displayHandler;
     }

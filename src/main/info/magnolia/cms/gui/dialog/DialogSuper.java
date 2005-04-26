@@ -14,7 +14,6 @@ package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.NodeData;
 
 import java.io.IOException;
@@ -30,7 +29,6 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.jsp.PageContext;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -96,7 +94,6 @@ public abstract class DialogSuper implements DialogInterface {
     private DialogSuper topParent;
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(Content, Content, PageContext)
      */
     public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
         throws RepositoryException {
@@ -294,7 +291,7 @@ public abstract class DialogSuper implements DialogInterface {
         try {
             Iterator it = this
                 .getWebsiteNode()
-                .getContentNode(this.getName())
+                .getContent(this.getName())
                 .getChildren(ItemType.NT_NODEDATA)
                 .iterator();
             List l = new ArrayList();
@@ -351,7 +348,7 @@ public abstract class DialogSuper implements DialogInterface {
 
         Iterator it = configNodeParent.getChildren(ItemType.NT_CONTENTNODE).iterator();
         while (it.hasNext()) {
-            ContentNode configNode = (ContentNode) it.next();
+            Content configNode = (Content) it.next();
             String controlType = configNode.getNodeData("controlType").getString();
 
             if (StringUtils.isEmpty(controlType)) {

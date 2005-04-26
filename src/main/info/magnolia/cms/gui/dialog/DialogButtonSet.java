@@ -13,7 +13,6 @@
 package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.ButtonSet;
 import info.magnolia.cms.gui.control.ControlSuper;
@@ -59,9 +58,9 @@ public class DialogButtonSet extends DialogBox {
         // therefor do only use for radio, not for checkbox
         List options = new ArrayList();
         try {
-            Iterator it = configNode.getContentNode("options").getChildren().iterator();
+            Iterator it = configNode.getContent("options").getChildren().iterator();
             while (it.hasNext()) {
-                ContentNode n = ((ContentNode) it.next());
+                Content n = ((Content) it.next());
                 String value = n.getNodeData("value").getString();
                 String label = n.getNodeData("label").getString();
                 label = TemplateMessagesUtil.get(this, label);

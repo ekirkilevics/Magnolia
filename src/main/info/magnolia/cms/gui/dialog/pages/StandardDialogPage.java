@@ -120,17 +120,17 @@ public class StandardDialogPage extends BasePageServlet {
                 configNode = para.getDialogContent();
 
                 try {
-                    Content websiteContent = hm.getPage(path);
+                    Content websiteContent = hm.getContent(path);
                     if (nodeName == null || nodeName.equals("")) {
                         websiteNode = websiteContent;
                     }
                     else {
                         if (nodeCollectionName == null || nodeCollectionName.equals("")) {
-                            websiteNode = websiteContent.getContentNode(nodeName);
+                            websiteNode = websiteContent.getContent(nodeName);
 
                         }
                         else {
-                            websiteNode = websiteContent.getContentNode(nodeCollectionName).getContentNode(nodeName);
+                            websiteNode = websiteContent.getContent(nodeCollectionName).getContent(nodeName);
 
                         }
                     }

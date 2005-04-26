@@ -14,7 +14,6 @@ package info.magnolia.cms.security;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.SearchFactory;
@@ -281,7 +280,7 @@ public final class SessionAccessControl {
         Content userPage = Authenticator.getUserPage(request);
         try {
             if (userPage == null) {
-                userPage = ContentRepository.getHierarchyManager(ContentRepository.USERS).getPage(
+                userPage = ContentRepository.getHierarchyManager(ContentRepository.USERS).getContent(
                     Authenticator.getUserId(request));
             }
         }
@@ -309,9 +308,9 @@ public final class SessionAccessControl {
     private static void updateACL(Content userNode, List userACL, String repositoryID) {
         try {
             /* get access rights of this node (user) */
-            ContentNode acl = null;
+            Content acl = null;
             try {
-                acl = userNode.getContentNode("acl_" + repositoryID);
+                acl = userNode.getContent("acl_" + repositoryID);
             }
             catch (PathNotFoundException e) {
                 log.warn("No acl defined for user " + userNode.getHandle() + " on repository \"" + repositoryID + "\"");
@@ -324,7 +323,7 @@ public final class SessionAccessControl {
             }
             Iterator children = aclCollection.iterator();
             while (children.hasNext()) {
-                ContentNode map = (ContentNode) children.next();
+                Content map = (Content) children.next();
                 StringBuffer uriStringBuffer = new StringBuffer();
                 char[] chars = map.getNodeData("path").getString().toCharArray();
                 int i = 0, last = 0;
@@ -361,7 +360,7 @@ public final class SessionAccessControl {
         try {
             HierarchyManager rolesHierarchy = ContentRepository.getHierarchyManager(ContentRepository.USER_ROLES);
             /* get access rights of this user */
-            ContentNode acl = userNode.getContentNode("roles");
+            Content acl = userNode.getContent("roles");
             Collection aclCollection = acl.getChildren();
             if (aclCollection == null) {
                 return;
@@ -369,9 +368,9 @@ public final class SessionAccessControl {
             Iterator children = aclCollection.iterator();
             /* find the exact match for the current url and acl for it */
             while (children.hasNext()) {
-                ContentNode map = (ContentNode) children.next();
+                Content map = (Content) children.next();
                 String groupPath = map.getNodeData("path").getString();
-                ContentNode groupNode = rolesHierarchy.getContentNode(groupPath);
+                Content groupNode = rolesHierarchy.getContent(groupPath);
                 updateACL(groupNode, groupACL, repositoryID);
             }
         }
@@ -392,9 +391,9 @@ public final class SessionAccessControl {
         try {
             HierarchyManager groupsHierarchy = ContentRepository.getHierarchyManager(ContentRepository.GROUPS);
             /* get access rights of this user */
-            ContentNode acl = null;
+            Content acl = null;
             try {
-                acl = userNode.getContentNode("groups");
+                acl = userNode.getContent("groups");
             }
             catch (PathNotFoundException e) {
                 log.warn("No groups defined for user " + userNode.getHandle());
@@ -406,7 +405,7 @@ public final class SessionAccessControl {
             }
             Iterator children = aclCollection.iterator();
             while (children.hasNext()) {
-                ContentNode map = (ContentNode) children.next();
+                Content map = (Content) children.next();
                 String groupPath = map.getNodeData("path").getString();
                 Content groupNode = groupsHierarchy.getContent(groupPath);
                 updateRolesACL(groupNode, groupACL, repositoryID);

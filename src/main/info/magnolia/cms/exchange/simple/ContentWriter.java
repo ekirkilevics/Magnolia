@@ -14,7 +14,6 @@ package info.magnolia.cms.exchange.simple;
 
 import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
@@ -69,10 +68,10 @@ public class ContentWriter {
 
     public void writeObject(String destination, Object content) throws RepositoryException {
         if (content instanceof SerializableContentNode) {
-            this.writeObject(this.hierarchyManager.getPage(destination), (SerializableContentNode) content);
+            this.writeObject(this.hierarchyManager.getContent(destination), (SerializableContentNode) content);
         }
         else if (content instanceof SerializableContent) {
-            this.writeObject(this.hierarchyManager.getPage(destination), (SerializableContent) content);
+            this.writeObject(this.hierarchyManager.getContent(destination), (SerializableContent) content);
         }
     }
 
@@ -101,7 +100,7 @@ public class ContentWriter {
         Content content = null;
         if (serializableContent instanceof SerializableContentNode) {
             try {
-                content = this.hierarchyManager.getContentNode(parentHandle + "/" + newPageName);
+                content = this.hierarchyManager.getContent(parentHandle + "/" + newPageName);
                 this.safeDelete(content);
             }
             catch (PathNotFoundException e) {
@@ -110,7 +109,7 @@ public class ContentWriter {
         }
         else {
             try {
-                content = this.hierarchyManager.getPage(parentHandle + "/" + newPageName);
+                content = this.hierarchyManager.getContent(parentHandle + "/" + newPageName);
                 this.safeDelete(content);
             }
             catch (PathNotFoundException e) {
@@ -173,9 +172,9 @@ public class ContentWriter {
         if (subNodes.size() > 0) {
             Iterator nodeIterator = subNodes.iterator();
             while (nodeIterator.hasNext()) {
-                ContentNode subNode = (ContentNode) nodeIterator.next();
+                Content subNode = (Content) nodeIterator.next();
                 try {
-                    node.deleteContentNode(subNode.getName());
+                    node.delete(subNode.getName());
                 }
                 catch (RepositoryException re) {
                     log.error("Failed to remove content node - " + subNode.getHandle());
@@ -194,7 +193,7 @@ public class ContentWriter {
         while (contentNodeIterator.hasNext()) {
             SerializableContentNode sContentNode = (SerializableContentNode) contentNodeIterator.next();
             try {
-                ContentNode newContentNode = parent.createContentNode(sContentNode.getName());
+                Content newContentNode = parent.createContent(sContentNode.getName(), ItemType.NT_CONTENTNODE);
                 try {
                     /* write meta data */
                     this.writeMetaData(newContentNode, sContentNode.getMetaData());

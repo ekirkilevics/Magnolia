@@ -13,10 +13,10 @@
 package info.magnolia.cms.gui.control;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
@@ -106,16 +106,16 @@ public class Save extends ControlSuper {
             log.info("Exception caught: " + e.getMessage(), e);
         }
         try {
-            Content page = hm.getPage(path);
+            Content page = hm.getContent(path);
             // get or create nodeCollection
             Content nodeCollection = null;
             if (nodeCollectionName != null) {
                 try {
-                    nodeCollection = page.getContentNode(nodeCollectionName);
+                    nodeCollection = page.getContent(nodeCollectionName);
                 }
                 catch (RepositoryException re) {
                     // nodeCollection does not exist -> create
-                    nodeCollection = page.createContentNode(nodeCollectionName);
+                    nodeCollection = page.createContent(nodeCollectionName, ItemType.NT_CONTENTNODE);
                     log.info("Create - " + nodeCollection.getHandle());
                 }
             }
@@ -126,14 +126,14 @@ public class Save extends ControlSuper {
             Content node = null;
             if (nodeName != null) {
                 try {
-                    node = nodeCollection.getContentNode(nodeName);
+                    node = nodeCollection.getContent(nodeName);
                 }
                 catch (RepositoryException re) {
                     // node does not exist -> create
                     if (nodeName.equals("mgnlNew")) {
                         nodeName = Path.getUniqueLabel(hm, nodeCollection.getHandle(), "0");
                     }
-                    node = nodeCollection.createContentNode(nodeName);
+                    node = nodeCollection.createContent(nodeName, ItemType.NT_CONTENTNODE);
                     node.createNodeData("paragraph").setValue(this.getParagraph());
                     node.getMetaData().setSequencePosition();
                 }
@@ -175,7 +175,7 @@ public class Save extends ControlSuper {
                     Document doc = form.getDocument(name);
                     if (doc == null && form.getParameter(name + "_" + File.REMOVE) != null) {
                         try {
-                            node.deleteContentNode(name + "_" + FileProperties.PROPERTIES_CONTENTNODE);
+                            node.delete(name + "_" + FileProperties.PROPERTIES_CONTENTNODE);
                         }
                         catch (RepositoryException re) {
                             log.info("Exception caught: " + re.getMessage(), re);
@@ -189,16 +189,16 @@ public class Save extends ControlSuper {
 
                     }
                     else {
-                        ContentNode propNode = null;
+                        Content propNode = null;
                         try {
-                            propNode = node.getContentNode(name + "_" + FileProperties.PROPERTIES_CONTENTNODE);
+                            propNode = node.getContent(name + "_" + FileProperties.PROPERTIES_CONTENTNODE);
                         }
                         catch (RepositoryException re) {
                             try {
                                 if (doc != null) {
-                                    propNode = node.createContentNode(name
+                                    propNode = node.createContent(name
                                         + "_"
-                                        + FileProperties.PROPERTIES_CONTENTNODE);
+                                        + FileProperties.PROPERTIES_CONTENTNODE, ItemType.NT_CONTENTNODE);
                                 }
                             }
                             catch (RepositoryException re2) {
@@ -268,13 +268,13 @@ public class Save extends ControlSuper {
                     if (valueType == ControlSuper.VALUETYPE_MULTIPLE) {
                         // remove entire content node and (re-)write each
                         try {
-                            node.deleteContentNode(name);
+                            node.delete(name);
                         }
                         catch (PathNotFoundException e) {
                             log.info("Exception caught: " + e.getMessage(), e);
                         }
                         if (values != null && values.length != 0) {
-                            ContentNode multiNode = node.createContentNode(name);
+                            Content multiNode = node.createContent(name, ItemType.NT_CONTENTNODE);
                             try {
                                 // MetaData.CREATION_DATE has private access; no method to delete it so far...
                                 multiNode.deleteNodeData("creationdate");
@@ -440,9 +440,9 @@ public class Save extends ControlSuper {
     }
 
     /**
-     * @todo configurable regexp on save?
      * @param value
      * @return
+     * todo configurable regexp on save?
      */
     public String getRichEditValueStr(String value) {
 

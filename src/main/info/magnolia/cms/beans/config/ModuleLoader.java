@@ -13,7 +13,6 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.module.InvalidConfigException;
@@ -78,7 +77,7 @@ public final class ModuleLoader {
         setSudoCredentials();
         try {
             HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
-            Content startPage = hm.getPage(CONFIG_PAGE);
+            Content startPage = hm.getContent(CONFIG_PAGE);
             init(startPage);
             log.info("Finished loading modules");
         }
@@ -113,19 +112,19 @@ public final class ModuleLoader {
     }
 
     private static void load(Content module) throws RepositoryException, ClassNotFoundException, InvalidConfigException {
-        ContentNode moduleConfig = module.getContentNode(CONFIG_NODE_REGISTER);
+        Content moduleConfig = module.getContent(CONFIG_NODE_REGISTER);
         ModuleConfig thisModule = new ModuleConfig();
         thisModule.setModuleName(moduleConfig.getNodeData("moduleName").getString());
         thisModule.setModuleDescription(moduleConfig.getNodeData("moduleDescription").getString());
         thisModule.setHierarchyManager(getHierarchyManager(moduleConfig.getNodeData("repository").getString()));
         try {
-            ContentNode sharedRepositories = moduleConfig.getContentNode("sharedRepositories");
+            Content sharedRepositories = moduleConfig.getContent("sharedRepositories");
             thisModule.setSharedHierarchyManagers(getSharedHierarchyManagers(sharedRepositories));
         }
         catch (PathNotFoundException e) {
             log.info("Module : no shared repository definition found for - " + module.getName());
         }
-        thisModule.setInitParameters(getInitParameters(moduleConfig.getContentNode("initParams")));
+        thisModule.setInitParameters(getInitParameters(moduleConfig.getContent("initParams")));
         /* add local store */
         LocalStore store = LocalStore.getInstance(CONFIG_PAGE + "/" + module.getName() + "/" + CONFIG_NODE_LOCAL_STORE);
         thisModule.setLocalStore(store.getStore());
@@ -154,7 +153,7 @@ public final class ModuleLoader {
         init();
     }
 
-    private static Map getInitParameters(ContentNode paramList) {
+    private static Map getInitParameters(Content paramList) {
         Map initParams = new Hashtable();
         Iterator initParameters = paramList.getChildren(ItemType.NT_NODEDATA).iterator();
         while (initParameters.hasNext()) {
@@ -182,13 +181,13 @@ public final class ModuleLoader {
         return hm;
     }
 
-    private static Map getSharedHierarchyManagers(ContentNode sharedRepositoriesNode) throws RepositoryException {
+    private static Map getSharedHierarchyManagers(Content sharedRepositoriesNode) throws RepositoryException {
         Map sharedHierarchy = new Hashtable();
         Iterator repositories = sharedRepositoriesNode.getChildren().iterator();
         List acl = new ArrayList();
         Pattern p = Pattern.compile(RegexWildcardPattern.getMultipleCharPattern());
         while (repositories.hasNext()) {
-            ContentNode repositoryConfig = (ContentNode) repositories.next();
+            Content repositoryConfig = (Content) repositories.next();
             String id = repositoryConfig.getNodeData("id").getString();
             String repositoryName = repositoryConfig.getNodeData("repository").getString();
             Session ticket = ContentRepository.getRepository(repositoryName).login(simpleCredentials, null);

@@ -157,11 +157,12 @@ public class Content extends ContentHandler implements Cloneable {
      * @return <node>ContentNode </node>
      * @throws PathNotFoundException
      * @throws RepositoryException
+     * @deprecated use getContent(String name) instead
      */
-    public ContentNode getContentNode(String name) throws PathNotFoundException, RepositoryException,
+    public Content getContentNode(String name) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
-        ContentNode contentNode = new ContentNode(this.node, name, this.accessManager);
-        return contentNode;
+        Content content = new Content(this.node, name, this.accessManager);
+        return content;
     }
 
     /**
@@ -172,13 +173,11 @@ public class Content extends ContentHandler implements Cloneable {
      * @return newly created <node>ContentNode </node>
      * @throws PathNotFoundException
      * @throws RepositoryException
+     * @deprecated use createContent(String name, String contentType) instead
      */
-    public ContentNode createContentNode(String name) throws PathNotFoundException, RepositoryException,
+    public Content createContentNode(String name) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
-        ContentNode contentNode = (new ContentNode(this.node, name, true, this.accessManager));
-        MetaData metaData = contentNode.getMetaData();
-        metaData.setCreationDate();
-        return contentNode;
+        return this.createContent(name,ItemType.NT_CONTENTNODE);
     }
 
     /**
@@ -348,40 +347,13 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * <p>
-     * delete NodeData with the specified name todo remove all dependencies of this method, there should be no
-     * difference between delete(name) and deleteNodeData(name)
+     * delete NodeData with the specified name
      * </p>
      * @throws PathNotFoundException
      * @throws RepositoryException
      */
     public void deleteNodeData(String name) throws PathNotFoundException, RepositoryException {
-        this.delete(name);
-    }
-
-    /**
-     * <p>
-     * delete Content node with the specified name from the current node todo remove all dependencies of this method,
-     * there should be no difference between delete(name) and deleteContent(name)
-     * </p>
-     * @param name of the Content to be deleted
-     * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
-     */
-    public void deleteContent(String name) throws PathNotFoundException, RepositoryException {
-        this.delete(name);
-    }
-
-    /**
-     * <p>
-     * delete ContentNode with the specified name from the current node todo remove all dependencies of this method,
-     * there should be no difference between delete(name) and deleteContentNode(name)
-     * </p>
-     * @param name of the ContentNode to be deleted
-     * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
-     */
-    public void deleteContentNode(String name) throws PathNotFoundException, RepositoryException {
-        this.delete(name);
+        this.node.getProperty(name).remove();
     }
 
     /**
@@ -475,11 +447,7 @@ public class Content extends ContentHandler implements Cloneable {
     public Collection getChildren(String contentType, String namePattern, int sortCriteria) {
         Collection children = new ArrayList();
         try {
-            if (contentType.equalsIgnoreCase(ItemType.NT_CONTENTNODE)) {
-                children = this.getChildContentNodes(namePattern);
-                children = sort(children, sortCriteria);
-            }
-            else if (contentType.equalsIgnoreCase(ItemType.NT_NODEDATA)) {
+            if (contentType.equalsIgnoreCase(ItemType.NT_NODEDATA)) {
                 children = this.getProperties(namePattern);
             }
             else {
@@ -514,32 +482,6 @@ public class Content extends ContentHandler implements Cloneable {
             try {
                 if (subNode.isNodeType(ItemType.getSystemName(contentType))) {
                     children.add(new Content(subNode, this.accessManager));
-                }
-            }
-            catch (PathNotFoundException e) {
-                log.error(e);
-            }
-            catch (AccessDeniedException e) {
-                // ignore, simply wont add content in a list
-            }
-        }
-        return children;
-    }
-
-    /**
-     * @throws RepositoryException
-     */
-    private Collection getChildContentNodes(String namePattern) throws RepositoryException {
-        Collection children = new ArrayList();
-        NodeIterator nodeIterator = this.node.getNodes(namePattern);
-        if (nodeIterator == null) {
-            return children;
-        }
-        while (nodeIterator.hasNext()) {
-            Node subNode = (Node) nodeIterator.next();
-            try {
-                if (subNode.isNodeType(ItemType.getSystemName(ItemType.NT_CONTENTNODE))) {
-                    children.add(new ContentNode(subNode, this.accessManager));
                 }
             }
             catch (PathNotFoundException e) {

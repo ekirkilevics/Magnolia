@@ -14,7 +14,6 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.CacheHandler;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.util.regex.RegexWildcardPattern;
@@ -80,15 +79,15 @@ public final class Cache {
         COMPRESSION_LIST.clear();
         log.info("Config : loading cache mapping");
         try {
-            Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getPage(CONFIG_PATH);
+            Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(CONFIG_PATH);
             isCacheable = startPage.getNodeData(ACTIVE).getBoolean();
             if (isCacheable) {
                 domain = startPage.getNodeData(DOMAIN).getString();
-                ContentNode contentNode = startPage.getContentNode(CACHE_MAPPING_NODE + "/" + ALLOW_LIST);
+                Content contentNode = startPage.getContent(CACHE_MAPPING_NODE + "/" + ALLOW_LIST);
                 cacheCacheableURIMappings(contentNode, true);
-                contentNode = startPage.getContentNode(CACHE_MAPPING_NODE + "/" + DENY_LIST);
+                contentNode = startPage.getContent(CACHE_MAPPING_NODE + "/" + DENY_LIST);
                 cacheCacheableURIMappings(contentNode, false);
-                ContentNode compressionListNode = startPage.getContentNode(COMPRESSION_LIST_NODE);
+                Content compressionListNode = startPage.getContent(COMPRESSION_LIST_NODE);
                 updateCompressionList(compressionListNode);
                 // todo sort assending so there wont be too much work on comparing
             }
@@ -108,13 +107,13 @@ public final class Cache {
     /**
      * @param nodeList to be added in cache
      */
-    private static void cacheCacheableURIMappings(ContentNode nodeList, boolean allow) {
+    private static void cacheCacheableURIMappings(Content nodeList, boolean allow) {
         if (nodeList == null) {
             return;
         }
         Iterator it = nodeList.getChildren().iterator();
         while (it.hasNext()) {
-            ContentNode container = (ContentNode) it.next();
+            Content container = (Content) it.next();
             NodeData uri = container.getNodeData("URI");
             String pattern = RegexWildcardPattern.getEncodedString(uri.getString());
             Pattern p = Pattern.compile(pattern);
@@ -129,13 +128,13 @@ public final class Cache {
         }
     }
 
-    private static void updateCompressionList(ContentNode list) {
+    private static void updateCompressionList(Content list) {
         if (list == null) {
             return;
         }
         Iterator it = list.getChildren().iterator();
         while (it.hasNext()) {
-            ContentNode node = (ContentNode) it.next();
+            Content node = (Content) it.next();
             COMPRESSION_LIST.put(node.getNodeData("extension").getString(), node.getNodeData("type").getString());
         }
     }

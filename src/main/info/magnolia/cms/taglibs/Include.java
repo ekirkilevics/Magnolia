@@ -12,8 +12,10 @@
  */
 package info.magnolia.cms.taglibs;
 
-import info.magnolia.cms.core.ContentNode;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.Resource;
+import info.magnolia.cms.beans.config.Paragraph;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -40,7 +42,7 @@ public class Include extends BodyTagSupport {
      */
     private static Logger log = Logger.getLogger(Include.class);
 
-    private transient ContentNode contentNode;
+    private transient Content contentNode;
 
     private String path;
 
@@ -104,7 +106,7 @@ public class Include extends BodyTagSupport {
         try {
             HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
             if (this.path == null) {
-                pageContext.include(Resource.getLocalContentNode(req).getTemplate());
+                pageContext.include(this.getTemplate(req));
             }
             else {
                 pageContext.include(this.path);
@@ -116,6 +118,15 @@ public class Include extends BodyTagSupport {
         catch (Exception e) {
             log.error(e.getMessage());
         }
+    }
+
+    /**
+     * @return template path
+     */
+    public String getTemplate(HttpServletRequest request) {
+        Content localContainer = Resource.getLocalContentNode(request);
+        String templateName = localContainer.getNodeData("paragraph").getString();
+        return Paragraph.getInfo(templateName).getTemplatePath();
     }
 
     /**
@@ -140,7 +151,7 @@ public class Include extends BodyTagSupport {
     /**
      * @deprecated
      */
-    public void setContainer(ContentNode contentNode) {
+    public void setContainer(Content contentNode) {
         this.setContentNode(contentNode);
     }
 
@@ -150,7 +161,7 @@ public class Include extends BodyTagSupport {
      * </p>
      * @param contentNode
      */
-    public void setContentNode(ContentNode contentNode) {
+    public void setContentNode(Content contentNode) {
         this.contentNode = contentNode;
     }
 

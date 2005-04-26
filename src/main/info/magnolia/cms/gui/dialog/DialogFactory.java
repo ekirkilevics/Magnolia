@@ -13,7 +13,6 @@
 package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +29,7 @@ import org.apache.log4j.Logger;
  * Factory for dialogs. This class handles the registration of native dialogs mantaing a map of (control name | dialog
  * class).
  * @author Fabrizio Giustina
- * @version $Revision: 364 $ ($Author: fgiust $)
+ * @version $Revision$ ($Author$)
  */
 public final class DialogFactory {
 
@@ -89,11 +88,10 @@ public final class DialogFactory {
      * @param websiteNode current website node
      * @param configNode configuration node for the dialog. The type of the dialog is read from the "controlType"
      * nodeData
-     * @param pageContext jsp page context
      * @throws RepositoryException for errors during initialization of dialog with repository data
      */
     public static DialogInterface loadDialog(HttpServletRequest request, HttpServletResponse response,
-        Content websiteNode, ContentNode configNode) throws RepositoryException {
+        Content websiteNode, Content configNode) throws RepositoryException {
         String controlType = configNode.getNodeData("controlType").getString();
 
         Class dialogClass = (Class) dialogs.get(controlType);

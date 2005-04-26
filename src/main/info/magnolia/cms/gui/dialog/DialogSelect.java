@@ -13,7 +13,6 @@
 package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.control.SelectOption;
 import info.magnolia.cms.gui.misc.CssConstants;
@@ -53,9 +52,9 @@ public class DialogSelect extends DialogBox {
     public void setOptions(Content configNode) {
         List options = new ArrayList();
         try {
-            Iterator it = configNode.getContentNode("options").getChildren().iterator();
+            Iterator it = configNode.getContent("options").getChildren().iterator();
             while (it.hasNext()) {
-                ContentNode n = (ContentNode) it.next();
+                Content n = (Content) it.next();
                 String value = n.getNodeData("value").getString();
                 String label = null;
                 if (n.getNodeData("label").isExist()) {

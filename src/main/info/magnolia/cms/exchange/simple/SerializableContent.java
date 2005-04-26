@@ -14,7 +14,6 @@ package info.magnolia.cms.exchange.simple;
 
 import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.NodeData;
 
 import java.io.Serializable;
@@ -132,7 +131,7 @@ public class SerializableContent implements Serializable {
         }
         Iterator childIterator = children.iterator();
         while (childIterator.hasNext()) {
-            this.contentNodeCollection.add(new SerializableContentNode((ContentNode) childIterator.next(), recurse));
+            this.contentNodeCollection.add(new SerializableContentNode((Content) childIterator.next(), recurse));
         }
     }
 

@@ -25,7 +25,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Marcel Salathe
- * @version $Revision: 364 $ ($Author: fgiust $)
+ * @version $Revision$ ($Author$)
  */
 public class Breadcrumb extends TagSupport {
 

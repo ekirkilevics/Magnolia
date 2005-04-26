@@ -14,7 +14,6 @@ package info.magnolia.cms.taglibs.util;
 
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.SessionAccessControl;
@@ -58,7 +57,7 @@ public class AHref extends BodyTagSupport {
 
     private String nodeDataName;
 
-    private transient ContentNode contentNode;
+    private transient Content contentNode;
 
     private transient NodeData nodeData;
 

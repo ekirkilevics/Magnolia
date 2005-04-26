@@ -102,25 +102,6 @@ public class NodeData extends ContentHandler {
      * @param workingNode current active <code>Node</code>
      * @param name <code>NodeData</code> name to be created
      * @param value Value to be set
-     * @param type PropertyType
-     * @throws PathNotFoundException
-     * @throws RepositoryException
-     * @deprecated as of magnolia 2.0
-     */
-    public NodeData(Node workingNode, String name, Value value, int type, AccessManager manager)
-        throws PathNotFoundException,
-        RepositoryException,
-        AccessDeniedException {
-        this(workingNode, name, value, manager);
-    }
-
-    /**
-     * <p>
-     * constructor | creates a new initialized NodeData
-     * </p>
-     * @param workingNode current active <code>Node</code>
-     * @param name <code>NodeData</code> name to be created
-     * @param value Value to be set
      * @throws PathNotFoundException
      * @throws RepositoryException
      */
@@ -307,7 +288,7 @@ public class NodeData extends ContentHandler {
      */
     public int getType() {
         try {
-            return this.property.getValue().getType();
+            return this.property.getType();
         }
         catch (Exception e) {
             log.warn("Unable to read property type for " + this.property);

@@ -12,7 +12,7 @@
  */
 package info.magnolia.cms.exchange.simple;
 
-import info.magnolia.cms.core.ContentNode;
+import info.magnolia.cms.core.Content;
 
 import java.io.Serializable;
 
@@ -40,16 +40,16 @@ public class SerializableContentNode extends SerializableContent implements Seri
 
     private boolean recurse;
 
-    public SerializableContentNode(ContentNode baseContentNode) {
+    public SerializableContentNode(Content baseContentNode) {
         this.makeSerializable(baseContentNode);
     }
 
-    public SerializableContentNode(ContentNode baseContentNode, boolean recurse) {
+    public SerializableContentNode(Content baseContentNode, boolean recurse) {
         this.recurse = recurse;
         this.makeSerializable(baseContentNode);
     }
 
-    private void makeSerializable(ContentNode baseContentNode) {
+    private void makeSerializable(Content baseContentNode) {
         this.setName(baseContentNode.getName());
         this.metaData = new SerializableMetaData(baseContentNode.getMetaData());
         /* add top level node list */

@@ -2,7 +2,6 @@ package info.magnolia.cms.gui.dialog.pages;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.Hidden;
@@ -101,10 +100,10 @@ public class UserEditIncludeRolesDialogPage extends BasePageServlet {
 
         // add existing acls to table (by js, so the same mechanism as at adding rows can be used)
         try {
-            ContentNode acl = user.getContentNode("roles");
+            Content acl = user.getContent("roles");
             Iterator it = acl.getChildren().iterator();
             while (it.hasNext()) {
-                ContentNode c = (ContentNode) it.next();
+                Content c = (Content) it.next();
                 String path = c.getNodeData("path").getString();
                 String name = "";
                 try {
@@ -119,7 +118,7 @@ public class UserEditIncludeRolesDialogPage extends BasePageServlet {
                     }
                     Content role = null;
                     try {
-                        role = hm.getPage(path);
+                        role = hm.getContent(path);
                         name = role.getTitle();
                     }
                     catch (RepositoryException re) {

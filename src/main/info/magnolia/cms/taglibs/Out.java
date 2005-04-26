@@ -13,7 +13,6 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.util.Resource;
@@ -76,7 +75,7 @@ public class Out extends TagSupport {
      */
     public int doStartTag() {
 
-        ContentNode local = Resource.getLocalContentNode((HttpServletRequest) pageContext.getRequest());
+        Content local = Resource.getLocalContentNode((HttpServletRequest) pageContext.getRequest());
         Content actpage = Resource.getCurrentActivePage((HttpServletRequest) pageContext.getRequest());
         String contentNodeName = this.getContentNodeName();
         String contentNodeCollectionName = this.getContentNodeCollectionName();
@@ -85,12 +84,12 @@ public class Out extends TagSupport {
             try {
                 if (StringUtils.isEmpty(contentNodeCollectionName)) {
                     // e.g. <cms:out nodeDataName="title" contentNodeName="footer"/>
-                    this.setContentNode(actpage.getContentNode(contentNodeName));
+                    this.setContentNode(actpage.getContent(contentNodeName));
                 }
                 else {
                     // e.g. <cms:out nodeDataName="title" contentNodeName="01" contentNodeCollectionName="mainPars"/>
                     // e.g. <cms:out nodeDataName="title" contentNodeName="footer" contentNodeCollectionName=""/>
-                    this.setContentNode(actpage.getContentNode(contentNodeCollectionName).getContentNode(
+                    this.setContentNode(actpage.getContent(contentNodeCollectionName).getContent(
                         contentNodeName));
                 }
             }

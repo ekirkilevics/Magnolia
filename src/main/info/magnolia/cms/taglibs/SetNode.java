@@ -13,7 +13,6 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.util.Resource;
@@ -134,7 +133,7 @@ public class SetNode extends TagSupport {
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
     public int doStartTag() {
-        ContentNode local = Resource.getLocalContentNode((HttpServletRequest) pageContext.getRequest());
+        Content local = Resource.getLocalContentNode((HttpServletRequest) pageContext.getRequest());
         Content actpage = Resource.getCurrentActivePage((HttpServletRequest) pageContext.getRequest());
         String contentNodeName = this.contentNodeName;
         String contentNodeCollectionName = this.contentNodeCollectionName;
@@ -143,14 +142,14 @@ public class SetNode extends TagSupport {
             try {
                 if (StringUtils.isEmpty(contentNodeCollectionName)) {
                     // e.g. <cms:setNode contentNodeName="footer"/>
-                    this.contentNode = actpage.getContentNode(contentNodeName);
+                    this.contentNode = actpage.getContent(contentNodeName);
                 }
                 else {
                     // e.g. <cms:setNode contentNodeName="01" contentNodeCollectionName="mainPars"/>
                     // e.g. <cms:setNode contentNodeName="footer" contentNodeCollectionName=""/>
                     this.contentNode = actpage
-                        .getContentNode(contentNodeCollectionName)
-                        .getContentNode(contentNodeName);
+                        .getContent(contentNodeCollectionName)
+                        .getContent(contentNodeName);
                 }
             }
             catch (RepositoryException re) {
@@ -268,7 +267,6 @@ public class SetNode extends TagSupport {
             NodeData nodeData;
 
             nodeData = this.wrappedNode.getNodeData((String) key);
-
             Object value;
             int type = nodeData.getType();
             if (type == PropertyType.DATE) {

@@ -86,7 +86,7 @@ public class RequestInterceptor extends HttpServlet {
                 String pathSelected = request.getParameter("mgnlPathSelected");
                 String pathSortAbove = request.getParameter("mgnlPathSortAbove");
                 String pathParent = pathSelected.substring(0, pathSelected.lastIndexOf("/"));
-                Iterator it = hm.getContentNode(pathParent).getChildren().iterator();
+                Iterator it = hm.getContent(pathParent).getChildren().iterator();
                 long seqPos0 = 0;
                 long seqPos1 = 0;
                 while (it.hasNext()) {

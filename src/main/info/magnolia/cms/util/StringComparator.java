@@ -12,11 +12,10 @@
  */
 package info.magnolia.cms.util;
 
-import info.magnolia.cms.core.ContentNode;
+import info.magnolia.cms.core.Content;
 
 import java.util.Comparator;
 
-import org.apache.log4j.Logger;
 
 
 /**
@@ -28,7 +27,6 @@ public class StringComparator implements Comparator {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(StringComparator.class);
 
     private String nodeDataName;
 
@@ -40,8 +38,8 @@ public class StringComparator implements Comparator {
         String uri1;
         String uri2;
 
-        uri1 = ((ContentNode) o).getNodeData(this.nodeDataName).getString();
-        uri2 = ((ContentNode) o1).getNodeData(this.nodeDataName).getString();
+        uri1 = ((Content) o).getNodeData(this.nodeDataName).getString();
+        uri2 = ((Content) o1).getNodeData(this.nodeDataName).getString();
 
         return uri1.compareTo(uri2);
     }

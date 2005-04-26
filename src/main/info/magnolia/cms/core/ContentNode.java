@@ -30,6 +30,12 @@ import org.apache.log4j.Logger;
 /**
  * @author Sameer Charles
  * @version 2.1
+ * @deprecated use info.magnolia.cms.core.Content instead
+ *
+ * this calss has been deprecated since magnolia 2.1
+ * since jcr allows to define custom nodetypes there is no use for the wrapper classes over content.
+ * use info.magnolia.cms.core.Content to bind to any kind of NodeType
+ *
  */
 public class ContentNode extends Content {
 
@@ -89,18 +95,4 @@ public class ContentNode extends Content {
         this.node = this.contentNode.node;
     }
 
-    /**
-     * todo this should be a part of meta data, if we change what happens to the existing content where this is stored
-     * as NodeData
-     */
-    public String getTemplate() {
-        try {
-            String templateName = this.getNodeData("paragraph").getString();
-            return Paragraph.getInfo(templateName).getTemplatePath();
-        }
-        catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-        return StringUtils.EMPTY;
-    }
 }

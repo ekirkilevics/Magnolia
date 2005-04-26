@@ -15,7 +15,6 @@ package info.magnolia.cms.gui.control;
 import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.i18n.Messages;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -27,7 +26,6 @@ import javax.jcr.PropertyType;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 
 /**
@@ -69,11 +67,6 @@ public class ControlSuper implements ControlInterface {
     public static final String CSSCLASS_CONTROLBAR = "mgnlControlBar";
 
     public static final String CSSCLASS_CONTROLBARSMALL = "mgnlControlBarSmall";
-
-    /**
-     * Logger.
-     */
-    private static Logger log = Logger.getLogger(ControlSuper.class);
 
     private int valueType = VALUETYPE_SINGLE;
 
@@ -119,11 +112,6 @@ public class ControlSuper implements ControlInterface {
 
     private HttpServletRequest request;
     
-    /**
-     * Used for i18n messages
-     */
-    private Messages messages;
-
     ControlSuper() {
     }
 
@@ -251,7 +239,7 @@ public class ControlSuper implements ControlInterface {
         try {
             Iterator it = this
                 .getWebsiteNode()
-                .getContentNode(this.getName())
+                .getContent(this.getName())
                 .getChildren(ItemType.NT_NODEDATA)
                 .iterator();
             List l = new ArrayList();

@@ -13,9 +13,9 @@
 package info.magnolia.cms.exchange.simple;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.exchange.Packet;
 import info.magnolia.exchange.PacketIOException;
 
@@ -48,11 +48,11 @@ public final class PacketCollector {
         try {
             Object content = null;
             if (hm.isPage(path)) {
-                Content page = hm.getPage(path);
+                Content page = hm.getContent(path);
                 content = new SerializableContent(page, recurse);
             }
-            else if (hm.isContentNode(path)) {
-                ContentNode contentNode = hm.getContentNode(path);
+            else if (hm.isNodeType(path, ItemType.NT_CONTENTNODE)) {
+                Content contentNode = hm.getContent(path);
                 content = new SerializableContentNode(contentNode, recurse);
             }
             else if (hm.isNodeData(path)) {

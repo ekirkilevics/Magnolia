@@ -13,7 +13,6 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
@@ -93,8 +92,8 @@ public class Template {
         HierarchyManager configHierarchyManager = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
         try {
             log.info("Config : loading Template info - " + modulePath);
-            Content startPage = configHierarchyManager.getPage(modulePath);
-            Collection children = startPage.getContentNode("Templates").getChildren();
+            Content startPage = configHierarchyManager.getContent(modulePath);
+            Collection children = startPage.getContent("Templates").getChildren();
             if ((children != null) && !(children.isEmpty())) {
                 Template.templates = children.iterator();
             }
@@ -155,7 +154,7 @@ public class Template {
      */
     private static void addTemplatesToCache(Iterator templates, List visibleTemplates) {
         while (templates.hasNext()) {
-            ContentNode c = (ContentNode) templates.next();
+            Content c = (Content) templates.next();
             try {
                 Template ti = new Template();
                 ti.name = c.getNodeData("name").getValue().getString();
@@ -183,13 +182,13 @@ public class Template {
      * @param node
      * @param ti TemplateInfo
      */
-    private static void addAlternativePaths(ContentNode node, Template ti) {
+    private static void addAlternativePaths(Content node, Template ti) {
         try {
-            ContentNode cl = node.getContentNode("SubTemplates");
+            Content cl = node.getContent("SubTemplates");
             Iterator it = cl.getChildren().iterator();
             ti.alternativePaths = new Hashtable();
             while (it.hasNext()) {
-                ContentNode c = (ContentNode) it.next();
+                Content c = (Content) it.next();
                 ti.alternativePaths.put(c.getNodeData("extension").getString(), c.getNodeData("path").getString());
             }
         }

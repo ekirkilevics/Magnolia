@@ -13,7 +13,6 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.Resource;
 
@@ -27,7 +26,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Marcel Salathe
- * @version $Revision: 364 $ ($Author: fgiust $)
+ * @version $Revision$ ($Author$)
  */
 public class IfEmpty extends BodyTagSupport {
 
@@ -44,7 +43,7 @@ public class IfEmpty extends BodyTagSupport {
 
     private String contentNodeCollectionName = "";
 
-    private transient ContentNode contentNodeCollection;
+    private transient Content contentNodeCollection;
 
     private transient Content contentNode;
 
@@ -60,7 +59,7 @@ public class IfEmpty extends BodyTagSupport {
         // in the case where a contentNodeCollectionName is provided
         if (!this.contentNodeCollectionName.equals("")) {
             try {
-                this.contentNodeCollection = Resource.getCurrentActivePage(req).getContentNode(
+                this.contentNodeCollection = Resource.getCurrentActivePage(req).getContent(
                     this.contentNodeCollectionName);
             }
             catch (RepositoryException e) {
@@ -77,7 +76,7 @@ public class IfEmpty extends BodyTagSupport {
         // if only contentNodeName is provided, it checks if this contentNode exists
         if (!this.contentNodeName.equals("") && this.nodeDataName.equals("")) {
             try {
-                this.contentNode = Resource.getCurrentActivePage(req).getContentNode(this.contentNodeName);
+                this.contentNode = Resource.getCurrentActivePage(req).getContent(this.contentNodeName);
             }
             catch (RepositoryException re) {
                 log.error(re.getMessage());
@@ -91,7 +90,7 @@ public class IfEmpty extends BodyTagSupport {
         // and is not empty
         else if (!this.contentNodeName.equals("") && !this.nodeDataName.equals("")) {
             try {
-                this.contentNode = Resource.getCurrentActivePage(req).getContentNode(this.contentNodeName);
+                this.contentNode = Resource.getCurrentActivePage(req).getContent(this.contentNodeName);
             }
             catch (RepositoryException re) {
                 log.debug("Repository exception while reading " + this.contentNodeName + ": " + re.getMessage());

@@ -16,7 +16,6 @@ import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.HierarchyManager;
 
 import javax.servlet.http.HttpServletRequest;
@@ -126,9 +125,9 @@ public final class Resource {
      * @param req HttpServletRequest as received in JSP or servlet
      * @return ContentNode , local container specific to the current JSP/Servlet paragraph
      */
-    public static ContentNode getLocalContentNode(HttpServletRequest req) {
+    public static Content getLocalContentNode(HttpServletRequest req) {
         try {
-            return (ContentNode) req.getAttribute(Resource.LOCAL_CONTENT_NODE);
+            return (Content) req.getAttribute(Resource.LOCAL_CONTENT_NODE);
         }
         catch (Exception e) {
             return null;
@@ -142,7 +141,7 @@ public final class Resource {
      * @param req HttpServletRequest as received in JSP or servlet
      * @param node to be set
      */
-    public static void setLocalContentNode(HttpServletRequest req, ContentNode node) {
+    public static void setLocalContentNode(HttpServletRequest req, Content node) {
         req.setAttribute(Resource.LOCAL_CONTENT_NODE, node);
     }
 
@@ -163,9 +162,9 @@ public final class Resource {
      * @param req HttpServletRequest as received in JSP or servlet
      * @return ContentNode , global container specific to the current JSP/Servlet page
      */
-    public static ContentNode getGlobalContentNode(HttpServletRequest req) {
+    public static Content getGlobalContentNode(HttpServletRequest req) {
         try {
-            return (ContentNode) req.getAttribute(Resource.GLOBAL_CONTENT_NODE);
+            return (Content) req.getAttribute(Resource.GLOBAL_CONTENT_NODE);
         }
         catch (Exception e) {
             return null;
@@ -179,7 +178,7 @@ public final class Resource {
      * @param req HttpServletRequest as received in JSP or servlet
      * @param node to be set
      */
-    public static void setGlobalContentNode(HttpServletRequest req, ContentNode node) {
+    public static void setGlobalContentNode(HttpServletRequest req, Content node) {
         req.setAttribute(Resource.GLOBAL_CONTENT_NODE, node);
     }
 

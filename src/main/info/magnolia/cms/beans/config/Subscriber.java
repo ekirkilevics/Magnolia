@@ -13,7 +13,6 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.NodeData;
 
 import java.util.ArrayList;
@@ -67,8 +66,8 @@ public class Subscriber {
         Subscriber.cachedContent.clear();
         try {
             log.info("Config : loading Subscribers");
-            Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getPage(START_PAGE);
-            Collection children = startPage.getContentNode("SubscriberConfig").getChildren();
+            Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(START_PAGE);
+            Collection children = startPage.getContent("SubscriberConfig").getChildren();
             if (children != null) {
                 Subscriber.ipList = children.iterator();
                 Subscriber.cacheContent();
@@ -93,7 +92,7 @@ public class Subscriber {
      */
     private static void cacheContent() {
         while (Subscriber.ipList.hasNext()) {
-            ContentNode c = (ContentNode) Subscriber.ipList.next();
+            Content c = (Content) Subscriber.ipList.next();
             Subscriber si = new Subscriber();
             si.params = new Hashtable();
             Iterator paramList = c.getChildren(ItemType.NT_NODEDATA).iterator();
@@ -123,16 +122,16 @@ public class Subscriber {
      * @param subscriberInfo
      * @param contentNode
      */
-    private static void addContext(Subscriber subscriberInfo, ContentNode contentNode) throws Exception {
+    private static void addContext(Subscriber subscriberInfo, Content contentNode) throws Exception {
         subscriberInfo.context = new Hashtable();
-        ContentNode contextList = contentNode.getContentNode("Context");
+        Content contextList = contentNode.getContent("Context");
         Iterator it = contextList.getChildren().iterator();
         while (it.hasNext()) {
-            ContentNode context = (ContentNode) it.next();
+            Content context = (Content) it.next();
             Iterator contextDetails = context.getChildren().iterator();
             List list = new ArrayList();
             while (contextDetails.hasNext()) {
-                ContentNode map = (ContentNode) contextDetails.next();
+                Content map = (Content) contextDetails.next();
                 list.add(map.getNodeData("subscribedURI").getString());
             }
             subscriberInfo.context.put(context.getName(), list);

@@ -53,8 +53,8 @@ public final class Listener {
     public static void init() {
         try {
             log.info("Config : loading Listener info");
-            Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getPage(CONFIG_PAGE);
-            Listener.ipList = startPage.getContentNode("IPConfig").getChildren().iterator();
+            Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(CONFIG_PAGE);
+            Listener.ipList = startPage.getContent("IPConfig").getChildren().iterator();
             Listener.cachedContent.clear();
             Listener.cacheContent();
             log.info("Config : Listener info loaded");
@@ -79,7 +79,7 @@ public final class Listener {
             try {
                 Map types = new Hashtable();
                 Listener.cachedContent.put(c.getNodeData("IP").getString(), types);
-                Iterator it = c.getContentNode("Access").getChildren().iterator();
+                Iterator it = c.getContent("Access").getChildren().iterator();
                 while (it.hasNext()) {
                     Content type = (Content) it.next();
                     types.put(type.getNodeData("Method").getString().toLowerCase(), "");

@@ -139,9 +139,7 @@ public class EditBar extends TagSupport {
      */
     private String getParagraph() {
         if (this.paragraph == null) {
-
             return Resource.getLocalContentNode(this.request).getNodeData("paragraph").getString();
-
         }
         return this.paragraph;
     }

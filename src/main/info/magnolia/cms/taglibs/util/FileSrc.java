@@ -14,7 +14,6 @@ package info.magnolia.cms.taglibs.util;
 
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.taglibs.ContentNodeIterator;
 import info.magnolia.cms.util.Resource;
@@ -47,7 +46,7 @@ public class FileSrc extends TagSupport {
 
     private transient NodeData nodeData;
 
-    private transient ContentNode contentNode;
+    private transient Content contentNode;
 
     private transient Content actpage;
 
@@ -110,7 +109,7 @@ public class FileSrc extends TagSupport {
         this.actpage = Resource.getCurrentActivePage(request);
         if (!this.contentNodeName.equals("")) {
             try {
-                this.contentNode = this.actpage.getContentNode(this.contentNodeName);
+                this.contentNode = this.actpage.getContent(this.contentNodeName);
             }
             catch (RepositoryException re) {
                 writeSrc("");
@@ -206,14 +205,14 @@ public class FileSrc extends TagSupport {
      */
     private void setFileProperties() {
         this.fileExtension = Server.getDefaultExtension();
-        ContentNode properties = null;
+        Content properties = null;
         String contentNodeCollectionName = (String) pageContext.getAttribute(
             ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME,
             PageContext.REQUEST_SCOPE);
         if (contentNodeCollectionName == null) {
             // we are not in a loop
             try {
-                properties = Resource.getGlobalContentNode(this.request).getContentNode(
+                properties = Resource.getGlobalContentNode(this.request).getContent(
                     this.nodeDataName + "_properties");
             }
             catch (Exception e) {
@@ -222,7 +221,7 @@ public class FileSrc extends TagSupport {
         }
         else {
             try {
-                properties = Resource.getLocalContentNode(this.request).getContentNode(
+                properties = Resource.getLocalContentNode(this.request).getContent(
                     this.nodeDataName + "_properties");
             }
             catch (Exception e) {

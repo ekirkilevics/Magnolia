@@ -213,6 +213,7 @@ public class HierarchyManager {
      * @return Content hierarchy node
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException
+     * @deprecated use getContent(String path) instead
      */
     public Content getPage(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         return this.getContent(path);
@@ -244,11 +245,12 @@ public class HierarchyManager {
      * @return ContentNode
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException
+     * @deprecated use getContent(String path) instead
      */
-    public ContentNode getContentNode(String path) throws PathNotFoundException, RepositoryException,
+    public Content getContentNode(String path) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
-        ContentNode contentNode = new ContentNode(this.startPage, getNodePath(path), this.accessManager);
-        return contentNode;
+        Content content = new Content(this.startPage, getNodePath(path), this.accessManager);
+        return content;
     }
 
     /**
@@ -283,7 +285,7 @@ public class HierarchyManager {
      */
     public Content getPage(String path, String templateName) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
-        Content page = getPage(path);
+        Content page = getContent(path);
         if (page.getTemplate().equals(templateName)) {
             return page;
         }
@@ -315,7 +317,7 @@ public class HierarchyManager {
 
     /**
      * <p>
-     * removes specified page
+     * removes specified path, it can be either node or property
      * </p>
      * @param path to be removed
      * @throws javax.jcr.PathNotFoundException
@@ -323,7 +325,11 @@ public class HierarchyManager {
      * @throws AccessDeniedException
      */
     public void delete(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        this.startPage.getNode(makeRelative(path)).remove();
+        if (this.isNodeData(path)) {
+            this.startPage.getProperty(makeRelative(path)).remove();
+        } else {
+            this.startPage.getNode(makeRelative(path)).remove();
+        }
     }
 
     private String makeRelative(String path) {
@@ -393,19 +399,17 @@ public class HierarchyManager {
 
     /**
      * <p>
-     * checks if the requested resource is a ContentNode
+     * evaluate primary node type of the node at the given path
      * </p>
-     * @param path of the requested node
-     * @return boolean true is the requested content is a Node
      */
-    public boolean isContentNode(String path) throws AccessDeniedException {
-        Access.isGranted(this.accessManager, path, Permission.READ);
+    public boolean isNodeType(String path, String type) {
         try {
             Node n = this.startPage.getNode(getNodePath(path));
-            return (n.isNodeType(ItemType.getSystemName(ItemType.NT_CONTENTNODE)));
+            return n.isNodeType(type);
         }
         catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
+            log.error(re.getMessage());
+            log.debug(re);
         }
         return false;
     }

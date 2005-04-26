@@ -13,7 +13,6 @@
 package info.magnolia.cms.gui.control;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.gui.misc.FileProperties;
 
@@ -199,7 +198,7 @@ public class File extends ControlSuper {
     private String getPropertyString(String propertyName) throws RepositoryException {
 
         if (this.getWebsiteNode() != null) {
-            ContentNode contentNode = this.getWebsiteNode().getContentNode(
+            Content contentNode = this.getWebsiteNode().getContent(
                 this.getName() + "_" + FileProperties.PROPERTIES_CONTENTNODE);
             if (contentNode != null) {
                 NodeData nodeData = contentNode.getNodeData(propertyName);

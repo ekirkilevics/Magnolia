@@ -13,7 +13,6 @@
 package info.magnolia.cms.gui.misc;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 
 import javax.jcr.RepositoryException;
 
@@ -100,7 +99,7 @@ public class FileProperties {
     public String getProperty(String property) {
         String value = "";
         try {
-            ContentNode props = this.getContent().getContentNode(this.nodeDataName + "_" + PROPERTIES_CONTENTNODE);
+            Content props = this.getContent().getContent(this.nodeDataName + "_" + PROPERTIES_CONTENTNODE);
             String filename = props.getNodeData(PROPERTY_FILENAME).getString();
             String ext = props.getNodeData(PROPERTY_EXTENSION).getString();
             String fullName = filename;

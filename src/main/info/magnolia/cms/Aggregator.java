@@ -92,7 +92,7 @@ public class Aggregator {
      * @throws RepositoryException
      */
     private void getRequestedContent() throws PathNotFoundException, RepositoryException {
-        this.requestedPage = this.hierarchyManager.getPage(this.uri);
+        this.requestedPage = this.hierarchyManager.getContent(this.uri);
     }
 
     /**

@@ -13,8 +13,8 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.util.Resource;
+import info.magnolia.cms.beans.config.ItemType;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -72,7 +72,7 @@ public class ContentNodeIterator extends TagSupport {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         this.page = Resource.getCurrentActivePage(request);
         try {
-            Collection children = this.page.getContentNode(this.contentNodeCollectionName).getChildren();
+            Collection children = this.page.getContent(this.contentNodeCollectionName).getChildren(ItemType.NT_CONTENTNODE);
             this.size = children.size();
             if (this.size == 0) {
                 return SKIP_BODY;
@@ -89,7 +89,7 @@ public class ContentNodeIterator extends TagSupport {
             this.contentNodeIterator = children.iterator();
             Resource.setLocalContentNodeCollectionName(request, this.contentNodeCollectionName);
             for (; this.beginIndex > -1; --this.beginIndex) {
-                Resource.setLocalContentNode(request, (ContentNode) this.contentNodeIterator.next());
+                Resource.setLocalContentNode(request, (Content) this.contentNodeIterator.next());
             }
         }
         catch (RepositoryException re) {
@@ -112,7 +112,7 @@ public class ContentNodeIterator extends TagSupport {
                 new Integer(this.currentIndex),
                 PageContext.REQUEST_SCOPE);
             for (int i = 0; i < this.step; i++) {
-                Resource.setLocalContentNode(request, (ContentNode) this.contentNodeIterator.next());
+                Resource.setLocalContentNode(request, (Content) this.contentNodeIterator.next());
             }
             return EVAL_BODY_AGAIN;
         }

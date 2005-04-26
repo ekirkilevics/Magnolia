@@ -12,9 +12,9 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.core.ContentNode;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.StringComparator;
 import info.magnolia.cms.util.regex.RegexWildcardPattern;
 
@@ -59,7 +59,7 @@ public class VirtualMap {
         HierarchyManager configHierarchyManager = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
         try {
             log.info("Config : Loading VirtualMap - " + configPath);
-            ContentNode mappingNode = configHierarchyManager.getContentNode(configPath);
+            Content mappingNode = configHierarchyManager.getContent(configPath);
             this.cacheURIMappings(mappingNode);
             log.info("Config : VirtualMap loaded - " + configPath);
         }
@@ -81,12 +81,12 @@ public class VirtualMap {
     /**
      * @param nodeList to be added in cache
      */
-    private void cacheURIMappings(ContentNode nodeList) {
+    private void cacheURIMappings(Content nodeList) {
         Collection list = nodeList.getChildren();
         Collections.sort((List) list, new StringComparator("fromURI"));
         Iterator it = list.iterator();
         while (it.hasNext()) {
-            ContentNode container = (ContentNode) it.next();
+            Content container = (Content) it.next();
             NodeData fromURI = container.getNodeData("fromURI");
             StringBuffer fromURIStringBuffer = new StringBuffer();
             char[] chars = fromURI.getString().toCharArray();

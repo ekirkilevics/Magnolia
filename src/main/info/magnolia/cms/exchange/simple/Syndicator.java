@@ -313,7 +313,7 @@ public class Syndicator {
         if (hm.isPage(this.path)) {
             connection.addRequestProperty(Syndicator.OBJECT_TYPE, ItemType.NT_CONTENT);
         }
-        else if (hm.isContentNode(this.path)) {
+        else if (hm.isNodeType(this.path, ItemType.NT_CONTENTNODE)) {
             connection.addRequestProperty(Syndicator.OBJECT_TYPE, ItemType.NT_CONTENTNODE);
         }
         else if (hm.isNodeData(this.path)) {
@@ -358,7 +358,7 @@ public class Syndicator {
      */
     private void updateActivationDetails() throws RepositoryException {
         HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.request, this.context);
-        Content page = hm.getPage(this.path);
+        Content page = hm.getContent(this.path);
         updateMetaData(page, Syndicator.ACTIVATE);
         if (this.recursive) {
             this.updateTree(page, Syndicator.ACTIVATE);
@@ -370,7 +370,7 @@ public class Syndicator {
      */
     private void updateDeActivationDetails() throws RepositoryException {
         HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.request, this.context);
-        Content page = hm.getPage(this.path);
+        Content page = hm.getContent(this.path);
         updateMetaData(page, Syndicator.DE_ACTIVATE);
         this.updateTree(page, Syndicator.DE_ACTIVATE);
         page.save();

@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
  * the corresponding unloadPage-tag will not revert to the previously loaded page, but restore actpage to the currently
  * displayed page, i.e. the value it held before loadPage was called for the first time.
  * @author Marcel Salathe
- * @version $Revision: 364 $ ($Author: fgiust $)
+ * @version $Revision$ ($Author$)
  */
 public class LoadPage extends BodyTagSupport {
 
@@ -104,7 +104,7 @@ public class LoadPage extends BodyTagSupport {
         }
         else if (StringUtils.isNotEmpty(this.path)) {
             try {
-                newActpage = SessionAccessControl.getHierarchyManager(req).getPage(this.path);
+                newActpage = SessionAccessControl.getHierarchyManager(req).getContent(this.path);
             }
             catch (Exception e) {
                 log.error(e.getMessage());
