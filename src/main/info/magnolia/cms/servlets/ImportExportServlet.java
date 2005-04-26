@@ -72,7 +72,10 @@ public class ImportExportServlet extends HttpServlet {
             response.setHeader("content-disposition", "attachment; filename=" + repository + pathName + ".xml");
 
             try {
-                ws.getSession().exportDocumentView(basepath, stream, false, false);
+                // use exportSystemView till the bug in property type handling is fixed in jackrabbit
+                // http://issues.apache.org/jira/browse/JCR-115
+                // ws.getSession().exportDocumentView(basepath, stream, false, false);
+                ws.getSession().exportSystemView(basepath, stream, false, false);
             }
             catch (Exception e) {
                 throw new NestableRuntimeException(e);
