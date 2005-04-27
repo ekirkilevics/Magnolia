@@ -32,6 +32,7 @@ import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -360,7 +361,17 @@ public final class SessionAccessControl {
         try {
             HierarchyManager rolesHierarchy = ContentRepository.getHierarchyManager(ContentRepository.USER_ROLES);
             /* get access rights of this user */
-            Content acl = userNode.getContent("roles");
+            
+            Content acl = null;
+            try {
+                acl = userNode.getContent("roles");
+            }
+            catch (PathNotFoundException e) {
+                log.warn("No roles defined for user " + userNode.getHandle());
+                return;
+            }
+
+            
             Collection aclCollection = acl.getChildren();
             if (aclCollection == null) {
                 return;
@@ -370,8 +381,10 @@ public final class SessionAccessControl {
             while (children.hasNext()) {
                 Content map = (Content) children.next();
                 String groupPath = map.getNodeData("path").getString();
-                Content groupNode = rolesHierarchy.getContent(groupPath);
-                updateACL(groupNode, groupACL, repositoryID);
+                if(StringUtils.isNotEmpty(groupPath)){
+                    Content groupNode = rolesHierarchy.getContent(groupPath);
+                    updateACL(groupNode, groupACL, repositoryID);
+                }
             }
         }
         catch (Exception e) {

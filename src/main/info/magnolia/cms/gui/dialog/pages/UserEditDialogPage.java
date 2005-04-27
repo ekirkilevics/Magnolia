@@ -71,9 +71,9 @@ public class UserEditDialogPage extends BasePageServlet {
 
     static final String NODE_ROLES = "roles";
 
-    static final String CONTROLNAME_ISADMIN_USERS = "permissionUsers";
+    //static final String CONTROLNAME_ISADMIN_USERS = "permissionUsers";
 
-    static final String CONTROLNAME_ISADMIN_ROLES = "permissionRoles";
+    //static final String CONTROLNAME_ISADMIN_ROLES = "permissionRoles";
 
     // static final String CONTROLNAME_ISADMIN_ACTIVATE="permissionActivate";
     static final String NODE_ACLCONFIG = "acl_config";
@@ -270,10 +270,12 @@ public class UserEditDialogPage extends BasePageServlet {
             langSelect.setName("language");
             langSelect.setLabel(msgs.get("users.edit.language"));
             ArrayList options = new ArrayList();
-            
+
             Collection col = MessagesManager.getAvailableLocales();
-            Messages langMsgs = MessagesManager.getMessages(request, "info.magnolia.module.admininterface.messages_languages");
-            
+            Messages langMsgs = MessagesManager.getMessages(
+                request,
+                "info.magnolia.module.admininterface.messages_languages");
+
             for (Iterator iter = col.iterator(); iter.hasNext();) {
                 Locale locale = (Locale) iter.next();
                 String code = locale.getLanguage();
@@ -284,9 +286,9 @@ public class UserEditDialogPage extends BasePageServlet {
             langSelect.setOptions(options);
             tab.addSub(langSelect);
             tab.addSub(spacer);
-            
+
             // adding the roles checkboxes
-            
+            /*
             DialogButtonSet isUserAdmin = DialogFactory.getDialogButtonSetInstance(request, response, user, null);
             isUserAdmin.setName(CONTROLNAME_ISADMIN_USERS);
             isUserAdmin.setConfig("type", PropertyType.TYPENAME_BOOLEAN);
@@ -322,7 +324,8 @@ public class UserEditDialogPage extends BasePageServlet {
             isConfigAdminButton.setOnclick("mgnlDialogShiftCheckboxSwitch('" + isConfigAdmin.getName() + "');");
             isConfigAdmin.addOption(isConfigAdminButton);
             tab.addSub(isConfigAdmin);
-
+            */
+            
             tab.addSub(spacer);
 
             DialogInclude roles = DialogFactory.getDialogIncludeInstance(request, response, user, null);
@@ -370,21 +373,13 @@ public class UserEditDialogPage extends BasePageServlet {
             // ######################
 
             // remove existing
-            try {
-                user.delete(NODE_ACLUSERS);
-            }
-            catch (RepositoryException re) {
-            }
-            try {
-                user.delete(NODE_ACLROLES);
-            }
-            catch (RepositoryException re) {
-            }
-
-            try {
-                user.delete(NODE_ACLCONFIG);
-            }
-            catch (RepositoryException re) {
+            for (int i = 0; i < ContentRepository.ALL_REPOSITORIES.length; i++) {
+                String repository = ContentRepository.ALL_REPOSITORIES[i];
+                try {
+                    user.delete("acl_" + repository);
+                }
+                catch (RepositoryException re) {
+                }
             }
 
             // rewrite
@@ -397,71 +392,33 @@ public class UserEditDialogPage extends BasePageServlet {
                 Content aclRoles = user.createContent(NODE_ACLROLES, ItemType.NT_CONTENTNODE);
                 Content aclConfig = user.createContent(NODE_ACLCONFIG, ItemType.NT_CONTENTNODE);
                 Save save = new Save();
+                Content u0 = aclUsers.createContent("00", ItemType.NT_CONTENTNODE);
+                u0.createNodeData("path", save.getValue(user.getHandle() + "/" + NODE_ROLES), PropertyType.STRING);
+                u0.createNodeData("permissions", save.getValue(PERMISSION_READ), PropertyType.LONG);
 
-                if (form.getParameter(CONTROLNAME_ISADMIN_USERS).equals("true")) {
-                    // System.out.println("IS user admin");
-                    // is user admin
-                    // full access to all users
-                    Content u0 = aclUsers.createContent("0", ItemType.NT_CONTENTNODE);
-                    u0.createNodeData("path", save.getValue("/*"), PropertyType.STRING);
-                    u0.createNodeData("permissions", save.getValue(PERMISSION_ALL), PropertyType.LONG);
-                }
-                else {
-                    // not users admin
-                    // allow access to own user
-                    Content u0 = aclUsers.createContent("00", ItemType.NT_CONTENTNODE);
-                    u0.createNodeData("path", save.getValue(user.getHandle() + "/" + NODE_ROLES), PropertyType.STRING);
-                    u0.createNodeData("permissions", save.getValue(PERMISSION_READ), PropertyType.LONG);
+                Content u1 = aclUsers.createContent("01", ItemType.NT_CONTENTNODE);
+                u1.createNodeData(
+                    "path",
+                    save.getValue(user.getHandle() + "/" + NODE_ROLES + "/*"),
+                    PropertyType.STRING);
+                u1.createNodeData("permissions", save.getValue(PERMISSION_READ), PropertyType.LONG);
 
-                    Content u1 = aclUsers.createContent("01", ItemType.NT_CONTENTNODE);
-                    u1.createNodeData(
-                        "path",
-                        save.getValue(user.getHandle() + "/" + NODE_ROLES + "/*"),
-                        PropertyType.STRING);
-                    u1.createNodeData("permissions", save.getValue(PERMISSION_READ), PropertyType.LONG);
+                Content u2 = aclUsers.createContent("02", ItemType.NT_CONTENTNODE);
+                u2.createNodeData("path", save.getValue(user.getHandle()), PropertyType.STRING);
+                u2.createNodeData("permissions", save.getValue(PERMISSION_ALL), PropertyType.LONG);
 
-                    Content u2 = aclUsers.createContent("02", ItemType.NT_CONTENTNODE);
-                    u2.createNodeData("path", save.getValue(user.getHandle()), PropertyType.STRING);
-                    u2.createNodeData("permissions", save.getValue(PERMISSION_ALL), PropertyType.LONG);
+                Content u3 = aclUsers.createContent("03", ItemType.NT_CONTENTNODE);
+                u3.createNodeData("path", save.getValue(user.getHandle() + "/*"), PropertyType.STRING);
+                u3.createNodeData("permissions", save.getValue(PERMISSION_READ), PropertyType.LONG);
 
-                    Content u3 = aclUsers.createContent("03", ItemType.NT_CONTENTNODE);
-                    u3.createNodeData("path", save.getValue(user.getHandle() + "/*"), PropertyType.STRING);
-                    u3.createNodeData("permissions", save.getValue(PERMISSION_READ), PropertyType.LONG);
-
-                    Content u4 = aclUsers.createContent("04", ItemType.NT_CONTENTNODE);
-                    u4.createNodeData("path", save.getValue("/*"), PropertyType.STRING);
-                    u4.createNodeData("permissions", save.getValue(PERMISSION_NO), PropertyType.LONG);
-                }
-
-                if (form.getParameter(CONTROLNAME_ISADMIN_ROLES) != null) {
-                    // is roles admin:
-                    // full access to all roles
-                    Content r0 = aclRoles.createContent("0", ItemType.NT_CONTENTNODE);
-                    r0.createNodeData("path", save.getValue("/*"), PropertyType.STRING);
-                    r0.createNodeData("permissions", save.getValue(PERMISSION_ALL), PropertyType.LONG);
-                }
-                else {
-                    // not roles admin:
-                    // read access to all roles
-                    Content r0 = aclRoles.createContent("0", ItemType.NT_CONTENTNODE);
-                    r0.createNodeData("path", save.getValue("/*"), PropertyType.STRING);
-                    r0.createNodeData("permissions", save.getValue(PERMISSION_READ), PropertyType.LONG);
-                }
-
-                if (form.getParameter(CONTROLNAME_ISADMIN_CONFIG) != null) {
-                    // is config admin:
-                    // full access to entire config repository
-                    Content c0 = aclConfig.createContent("0", ItemType.NT_CONTENTNODE);
-                    c0.createNodeData("path", save.getValue("/*"), PropertyType.STRING);
-                    c0.createNodeData("permissions", save.getValue(PERMISSION_ALL), PropertyType.LONG);
-                }
-                else {
-                    // not config admin:
-                    // read access to config repository
-                    Content c0 = aclConfig.createContent("0", ItemType.NT_CONTENTNODE);
-                    c0.createNodeData("path", save.getValue("/*"), PropertyType.STRING);
-                    c0.createNodeData("permissions", save.getValue(PERMISSION_READ), PropertyType.LONG);
-                }
+                // read access to all roles
+                Content r0 = aclRoles.createContent("0", ItemType.NT_CONTENTNODE);
+                r0.createNodeData("path", save.getValue("/*"), PropertyType.STRING);
+                r0.createNodeData("permissions", save.getValue(PERMISSION_READ), PropertyType.LONG);
+                // read access to config repository
+                Content c0 = aclConfig.createContent("0", ItemType.NT_CONTENTNODE);
+                c0.createNodeData("path", save.getValue("/*"), PropertyType.STRING);
+                c0.createNodeData("permissions", save.getValue(PERMISSION_READ), PropertyType.LONG);
 
                 // ######################
                 // # roles acl

@@ -64,6 +64,11 @@ public class AdminInterfaceServlet extends HttpServlet {
         TREE_HANDLERS.put(ContentRepository.USERS, new AdminTreeUsers());
         TREE_HANDLERS.put(ContentRepository.USER_ROLES, new AdminTreeRoles());
         TREE_HANDLERS.put(ContentRepository.CONFIG, new AdminTreeConfig());
+        
+        // use those lines if you wan't to see all the entries in the repository
+        //TREE_HANDLERS.put(ContentRepository.WEBSITE, new AdminTreeConfig());
+        //TREE_HANDLERS.put(ContentRepository.USERS, new AdminTreeConfig());
+        //TREE_HANDLERS.put(ContentRepository.USER_ROLES, new AdminTreeConfig());
     }
 
     /**

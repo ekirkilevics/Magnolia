@@ -18,6 +18,9 @@
     <jsp:directive.page import="info.magnolia.cms.core.ContentNode" />
     <jsp:directive.page import="info.magnolia.cms.beans.config.ItemType" />
     <jsp:directive.page import="javax.servlet.jsp.jstl.fmt.LocaleSupport" />
+    <jsp:directive.page import="info.magnolia.cms.beans.config.ContentRepository"/>
+	<jsp:directive.page import="info.magnolia.cms.security.Permission"/>
+	<jsp:directive.page import="info.magnolia.cms.security.SessionAccessControl"/>
 
     <jsp:directive.page contentType="text/html; charset=UTF-8" />
     <!--<jsp:text>
@@ -48,11 +51,11 @@
 	String userName=userPage.getTitle();
 	if (userName.equals("")) userName=userPage.getName();
     pageContext.setAttribute("username", userName);
-
-	//todo: node data name not static! see usersEdit/main.jsp
-	boolean permissionUsers=userPage.getNodeData("permissionUsers").getBoolean();
-	boolean permissionRoles=userPage.getNodeData("permissionRoles").getBoolean();
-	boolean permissionConfig=userPage.getNodeData("permissionConfig").getBoolean();
+	
+	//boolean permissionUsers=userPage.getNodeData("permissionUsers").getBoolean();
+	boolean permissionUsers = SessionAccessControl.getAccessManager(request,  ContentRepository.USERS).isGranted("/", Permission.WRITE);
+	boolean permissionRoles = SessionAccessControl.getAccessManager(request,  ContentRepository.USER_ROLES).isGranted("/", Permission.WRITE);
+	boolean permissionConfig = SessionAccessControl.getAccessManager(request,  ContentRepository.CONFIG).isGranted("/", Permission.WRITE);
 
 </jsp:scriptlet>
     <div style="position:absolute;top:3px;right:20px;" class="mgnlText">

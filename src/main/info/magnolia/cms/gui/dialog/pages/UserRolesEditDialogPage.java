@@ -293,31 +293,33 @@ public class UserRolesEditDialogPage extends BasePageServlet {
                                 }
                             }
 
-                            if (path.equals("/")) {
-                                // needs only one entry: "/*"
-                                accessType = "sub";
-                                path = "";
-                            }
+                            if (path != "") {
+                                if (path.equals("/")) {
+                                    // needs only one entry: "/*"
+                                    accessType = "sub";
+                                    path = "";
+                                }
 
-                            if (accessType.equals("self")) {
+                                if (accessType.equals("self")) {
+                                    try {
+                                        String newLabel = Path.getUniqueLabel(hm, acl.getHandle(), "0");
+                                        Content r = acl.createContent(newLabel, ItemType.NT_CONTENTNODE);
+                                        r.createNodeData("path").setValue(path);
+                                        r.createNodeData("permissions").setValue(accessRight);
+                                    }
+                                    catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
                                 try {
                                     String newLabel = Path.getUniqueLabel(hm, acl.getHandle(), "0");
                                     Content r = acl.createContent(newLabel, ItemType.NT_CONTENTNODE);
-                                    r.createNodeData("path").setValue(path);
+                                    r.createNodeData("path").setValue(path + "/*");
                                     r.createNodeData("permissions").setValue(accessRight);
                                 }
                                 catch (Exception e) {
                                     e.printStackTrace();
                                 }
-                            }
-                            try {
-                                String newLabel = Path.getUniqueLabel(hm, acl.getHandle(), "0");
-                                Content r = acl.createContent(newLabel, ItemType.NT_CONTENTNODE);
-                                r.createNodeData("path").setValue(path + "/*");
-                                r.createNodeData("permissions").setValue(accessRight);
-                            }
-                            catch (Exception e) {
-                                e.printStackTrace();
                             }
                         }
                     }
