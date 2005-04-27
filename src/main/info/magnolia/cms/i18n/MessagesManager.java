@@ -118,7 +118,7 @@ public class MessagesManager {
 				configHierarchyManager.save();
 			}
 			
-			Collection locales = availableLanguagesContentNode.getProperties();
+			Collection locales = availableLanguagesContentNode.getNodeDataCollection();
 			for (Iterator iter = locales.iterator(); iter.hasNext();) {
 				availableLanguage = (NodeData) iter.next();
                 MessagesManager.availableLocales.add(availableLanguage.getString());

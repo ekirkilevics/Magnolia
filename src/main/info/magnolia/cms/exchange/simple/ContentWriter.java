@@ -151,7 +151,7 @@ public class ContentWriter {
 
     // todo test this
     private void removeNodedataList(Content node) {
-        Collection subNodes = node.getProperties();
+        Collection subNodes = node.getNodeDataCollection();
         if (subNodes.size() > 0) {
             Iterator nodeIterator = subNodes.iterator();
             while (nodeIterator.hasNext()) {

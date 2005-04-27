@@ -292,7 +292,7 @@ public abstract class DialogSuper implements DialogInterface {
             Iterator it = this
                 .getWebsiteNode()
                 .getContent(this.getName())
-                .getProperties()
+                .getNodeDataCollection()
                 .iterator();
             List l = new ArrayList();
             while (it.hasNext()) {
@@ -337,7 +337,7 @@ public abstract class DialogSuper implements DialogInterface {
         }
 
         // get properties -> to this.config
-        Iterator itProps = configNodeParent.getProperties().iterator();
+        Iterator itProps = configNodeParent.getNodeDataCollection().iterator();
         while (itProps.hasNext()) {
             NodeData data = (NodeData) itProps.next();
             String name = data.getName();

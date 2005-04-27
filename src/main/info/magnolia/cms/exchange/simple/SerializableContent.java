@@ -109,7 +109,7 @@ public class SerializableContent implements Serializable {
     }
 
     protected void addNodeDataList(Content content) {
-        Collection children = content.getProperties();
+        Collection children = content.getNodeDataCollection();
         if (children == null) {
             return;
         }

@@ -1179,7 +1179,7 @@ public class Tree extends ControlSuper {
             int left = (parentNode.getLevel()) * this.getIndentionWidth();
             Iterator it;
             if (itemType.equalsIgnoreCase(ItemType.NT_NODEDATA)) {
-                it = parentNode.getProperties().iterator();
+                it = parentNode.getNodeDataCollection().iterator();
             } else {
                 it = parentNode.getChildren(itemType).iterator();
             }
@@ -1224,7 +1224,7 @@ public class Tree extends ControlSuper {
                         String type = (String) this.getItemTypes().get(i);
                         int size = 0;
                         if (type.equalsIgnoreCase(ItemType.NT_NODEDATA))
-                            size = c.getProperties().size();
+                            size = c.getNodeDataCollection().size();
                         else
                             size = c.getChildren(type).size();
                         if (size > 0) {

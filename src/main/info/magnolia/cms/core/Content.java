@@ -473,7 +473,7 @@ public class Content extends ContentHandler implements Cloneable {
     /**
      * Gets all properties bind in NodeData object excluding JCR system properties
      * */
-    public Collection getProperties() {
+    public Collection getNodeDataCollection() {
         Collection children = new ArrayList();
         try {
             PropertyIterator propertyIterator = this.node.getProperties();
@@ -501,7 +501,7 @@ public class Content extends ContentHandler implements Cloneable {
      * Gets all properties bind in NodeData object which qualify the given namePattern
      * @param namePattern
      * */
-    public Collection getProperties(String namePattern) {
+    public Collection getNodeDataCollection(String namePattern) {
         Collection children = new ArrayList();
         try {
             PropertyIterator propertyIterator = this.node.getProperties(namePattern);
