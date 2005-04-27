@@ -66,6 +66,8 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
      */
     private static final long serialVersionUID = 222L;
 
+    private static final String DEFAULT_ENCODING = "UTF-8";
+
     /**
      * Logger.
      */
@@ -86,6 +88,7 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
 
         try {
             response.setContentType("text/plain");
+            response.setCharacterEncoding(DEFAULT_ENCODING);
             // this.handleActivationRequest();
 
             String action = request.getHeader(Syndicator.ACTION);
@@ -216,11 +219,9 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
             log.error("Failed to de-serialize - " + page);
             log.error(e.getMessage(), e);
         }
-        // todo , find a better way to lock only this context->hierarchy
         Lock.setSystemLock();
         CacheHandler.flushCache();
         Lock.resetSystemLock();
-        // SecureURI.add(this.request, this.page);
     }
 
     /**

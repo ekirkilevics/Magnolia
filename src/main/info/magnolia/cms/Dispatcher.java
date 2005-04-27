@@ -56,12 +56,6 @@ public final class Dispatcher {
         }
         log.info("Dispatching request for - " + req.getRequestURL());
         String requestReceiver = (String) req.getAttribute(Aggregator.REQUEST_RECEIVER);
-
-        if (requestReceiver == null) {
-            log.error("null requestReceiver received - aborting request");
-            return;
-        }
-
         RequestDispatcher rd = sc.getRequestDispatcher(requestReceiver);
         log.info("Forward to - " + requestReceiver);
         rd.forward(req, res);

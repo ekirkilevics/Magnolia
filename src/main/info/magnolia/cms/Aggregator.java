@@ -147,7 +147,7 @@ public class Aggregator {
         else {
             /* check again, resource might have different name */
             int lastIndexOfSlash = this.uri.lastIndexOf("/");
-            if (lastIndexOfSlash > -1) {
+            if (lastIndexOfSlash > 0) {
                 this.uri = this.uri.substring(0, lastIndexOfSlash);
                 try {
                     this.getRequestedContent(Aggregator.ATOM);

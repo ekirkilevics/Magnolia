@@ -93,23 +93,25 @@ public class EntryServlet extends HttpServlet {
                         return; /* if success return */
                     }
                 }
-                if (!Cache.isInCacheProcess(req) && info.magnolia.cms.beans.config.Cache.isCacheable()) {
-                    CacheProcess cache = new CacheProcess(new ClonedRequest(req));
-                    cache.start();
-                }
                 if (redirect(req, res)) {
+                    // its a valid request cache it
+                    this.cacheRequest(req);
                     return;
                 }
                 intercept(req, res);
                 /* aggregate content */
                 Aggregator aggregator = new Aggregator(req, res);
-                aggregator.collect();
-                aggregator = null;
-                try {
-                    Dispatcher.dispatch(req, res, getServletContext());
-                }
-                catch (Exception e) {
-                    log.error(e.getMessage(), e);
+                boolean success = aggregator.collect();
+                if (success) {
+                    try {
+                        Dispatcher.dispatch(req, res, getServletContext());
+                    }
+                    catch (Exception e) {
+                        log.error(e.getMessage(), e);
+                    }
+                    this.cacheRequest(req);
+                } else {
+                    res.sendRedirect(req.getContextPath() + Server.get404URI());
                 }
             }
         }
@@ -258,6 +260,17 @@ public class EntryServlet extends HttpServlet {
     private String getURI(HttpServletRequest request) {
         return StringUtils.substringBeforeLast(StringUtils.substringAfter(request.getRequestURI(), request
             .getContextPath()), ".");
+    }
+
+    /**
+     * Caches this request if level-1 cache is active and request is  part of cacheable mapping
+     * @param request
+     * */
+    private void cacheRequest(HttpServletRequest request) {
+        if (!Cache.isInCacheProcess(request) && info.magnolia.cms.beans.config.Cache.isCacheable()) {
+            CacheProcess cache = new CacheProcess(new ClonedRequest(request));
+            cache.start();
+        }
     }
 
     /**
