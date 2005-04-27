@@ -114,8 +114,6 @@ public class MessagesManager {
                     AVAILABLE_LOCALES_CONFIG_NAME,
                     ItemType.NT_CONTENTNODE);
                 
-                availableLanguage = availableLanguagesContentNode.createNodeData("de");
-                availableLanguage.setValue("de");
                 availableLanguage = availableLanguagesContentNode.createNodeData(MessagesManager.FALLBACK_LOCALE);
                 availableLanguage.setValue(MessagesManager.FALLBACK_LOCALE);
                 configHierarchyManager.save();
