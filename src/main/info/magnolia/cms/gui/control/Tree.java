@@ -821,7 +821,16 @@ public class Tree extends ControlSuper {
             if (log.isInfoEnabled()) {
                 log.info("Moving node from " + this.getPath() + " to " + dest);
             }
-            hm.moveTo(this.getPath(), dest);
+            if (hm.isNodeData(this.getPath())) {
+                Content parentPage = hm.getContent(parentPath);
+                NodeData newNodeData = parentPage.createNodeData(newLabel);
+                NodeData existingNodeData = hm.getNodeData(this.getPath());
+                newNodeData.setValue(existingNodeData.getString());
+                existingNodeData.delete();
+                dest = parentPath;
+            } else {
+                hm.moveTo(this.getPath(), dest);
+            }
             SessionAccessControl.invalidateUser(this.getRequest());
             Content newPage = hm.getContent(dest);
             returnValue = newLabel;
