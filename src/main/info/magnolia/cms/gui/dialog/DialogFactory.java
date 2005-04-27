@@ -183,4 +183,11 @@ public final class DialogFactory {
         return dialog;
     }
 
+    public static DialogSelect getDialogSelectInstance(HttpServletRequest request, HttpServletResponse response,
+        Content websiteNode, Content configNode) throws RepositoryException {
+        DialogSelect dialog = new DialogSelect();
+        dialog.init(request, response, websiteNode, configNode);
+        return dialog;
+    }
+
 }

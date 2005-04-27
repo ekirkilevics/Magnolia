@@ -15,6 +15,7 @@ package info.magnolia.cms.security;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.i18n.MessagesManager;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
@@ -85,6 +86,9 @@ public final class Authenticator {
             String fromBrowser = encodedPassword.trim();
             if (fromRepositiry.equalsIgnoreCase(fromBrowser)) {
                 request.getSession().setAttribute(ATTRIBUTE_USER_NODE, userPage);
+                
+                // we must set the language because the JSTL will not use our classes
+                MessagesManager.setUserLanguage(userPage, request.getSession());
                 return true;
             }
             return false;

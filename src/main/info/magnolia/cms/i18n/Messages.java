@@ -74,11 +74,15 @@ public class Messages {
     }
 
     public String getBasename() {
-        if(basename==null)
+        if (basename == null)
             return MessagesManager.DEFAULT_BASENAME;
         return basename;
     }
 
+    protected void setBasename(String basename) {
+        this.basename = basename;
+    }
+    
     public String get(String key) {
         try {
             return getBundle().getString(key);
@@ -102,10 +106,10 @@ public class Messages {
         String msg;
         try {
             msg = getBundle().getString(key);
-            if(msg.startsWith("???")){
+            if (msg.startsWith("???")) {
                 msg = defaultMsg;
             }
-            
+
         }
         catch (MissingResourceException e) {
             msg = defaultMsg;
@@ -113,40 +117,39 @@ public class Messages {
         return msg;
     }
 
-    public String getWithDefault(String key,  Object args[], String defaultMsg) {
-       return MessageFormat.format(getWithDefault(key, defaultMsg), args);
+    public String getWithDefault(String key, Object args[], String defaultMsg) {
+        return MessageFormat.format(getWithDefault(key, defaultMsg), args);
     }
 
-    
     /**
      * Adds Variables to a JS witch can be used with the getMessage(key) method
      * @return Javascript-Construct of this textes
      */
-    public String generateJavaScript(){
-       StringBuffer str = new StringBuffer();
-       ResourceBundle bundle = getBundle();
-       
-       str.append("/* ###################################\n");
-       str.append("### Generated Messages\n");
-       str.append("################################### */\n\n");
-       
-       Enumeration en = bundle.getKeys();
-       while(en.hasMoreElements()){
-           String key = (String) en.nextElement();
-           
-           if(key.startsWith("js.")){
-               String msg = ((String)bundle.getObject(key)).replaceAll("'", "\\\\'").replaceAll("\n","\\\\n");
-               str.append(JS_OBJECTNAME + ".add('"+ key +"','" + msg + "','" + getBasename() + "');");
-               str.append("\n");
-           }
-       }
-       return str.toString();
+    public String generateJavaScript() {
+        StringBuffer str = new StringBuffer();
+        ResourceBundle bundle = getBundle();
+
+        str.append("/* ###################################\n");
+        str.append("### Generated Messages\n");
+        str.append("################################### */\n\n");
+
+        Enumeration en = bundle.getKeys();
+        while (en.hasMoreElements()) {
+            String key = (String) en.nextElement();
+
+            if (key.startsWith("js.")) {
+                String msg = ((String) bundle.getObject(key)).replaceAll("'", "\\\\'").replaceAll("\n", "\\\\n");
+                str.append(JS_OBJECTNAME + ".add('" + key + "','" + msg + "','" + getBasename() + "');");
+                str.append("\n");
+            }
+        }
+        return str.toString();
     }
-    
-    public static String javaScriptString(String str){
-        return str.replaceAll("'", "\\\\'").replaceAll("\n","\\\\n");
+
+    public static String javaScriptString(String str) {
+        return str.replaceAll("'", "\\\\'").replaceAll("\n", "\\\\n");
     }
-    
+
     /**
      * @return Returns the bundle.
      */

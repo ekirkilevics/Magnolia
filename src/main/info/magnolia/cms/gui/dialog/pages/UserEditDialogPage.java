@@ -9,6 +9,7 @@ import info.magnolia.cms.core.Path;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.ControlSuper;
 import info.magnolia.cms.gui.control.Save;
+import info.magnolia.cms.gui.control.SelectOption;
 import info.magnolia.cms.gui.dialog.DialogButton;
 import info.magnolia.cms.gui.dialog.DialogButtonSet;
 import info.magnolia.cms.gui.dialog.DialogDialog;
@@ -16,6 +17,7 @@ import info.magnolia.cms.gui.dialog.DialogEdit;
 import info.magnolia.cms.gui.dialog.DialogFactory;
 import info.magnolia.cms.gui.dialog.DialogInclude;
 import info.magnolia.cms.gui.dialog.DialogPassword;
+import info.magnolia.cms.gui.dialog.DialogSelect;
 import info.magnolia.cms.gui.dialog.DialogStatic;
 import info.magnolia.cms.gui.dialog.DialogTab;
 import info.magnolia.cms.gui.misc.Sources;
@@ -28,6 +30,10 @@ import info.magnolia.cms.util.Resource;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Locale;
 
 import javax.jcr.Node;
 import javax.jcr.PropertyType;
@@ -74,62 +80,271 @@ public class UserEditDialogPage extends BasePageServlet {
 
     static final String CONTROLNAME_ISADMIN_CONFIG = "permissionConfig";
 
-    /**
-     * @see info.magnolia.cms.servlets.BasePageServlet#draw(HttpServletRequest, HttpServletResponse)
-     */
-    public void draw(HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
-        PrintWriter out = response.getWriter();
-        Messages msgs = MessagesManager.getMessages(request);
+    private class MyDialog {
 
-        MultipartForm form = Resource.getPostedForm(request);
-        boolean drawDialog = true;
+        private HttpServletRequest request;
 
-        String path = "";
-        String nodeCollectionName = "";
-        String nodeName = "";
-        String paragraph = "";
-        String richE = "";
-        String richEPaste = "";
-        String repository;
+        private HttpServletResponse response;
 
-        if (form != null) {
-            path = form.getParameter("mgnlPath");
-            repository = form.getParameter("mgnlRepository");
-        }
-        else {
-            path = request.getParameter("mgnlPath");
-            repository = request.getParameter("mgnlRepository");
-        }
+        private PrintWriter out;
 
-        if (repository == null)
-            repository = ContentRepository.USERS;
+        private Messages msgs;
 
-        HierarchyManager hm = new HierarchyManager(request);
-        boolean create = false;
-        if (path.equals(""))
-            create = true;
+        private MultipartForm form;
 
-        try {
-            Session t = SessionAccessControl.getSession(request, repository);
-            Node rootNode = t.getRootNode();
-            hm.init(rootNode);
-        }
-        catch (Exception e) {
-        }
+        private String path;
 
-        Content user = null;
-        if (!create) {
+        private String nodeCollectionName;
+
+        private String nodeName;
+
+        private String paragraph;
+
+        private String richE;
+
+        private String richEPaste;
+
+        private String repository;
+
+        private HierarchyManager hm;
+
+        private boolean create;
+
+        private Content user;
+
+        MyDialog(HttpServletRequest request, HttpServletResponse response) throws IOException {
+            this.request = request;
+            this.response = response;
+            this.out = response.getWriter();
+            this.msgs = MessagesManager.getMessages(request);
+            this.form = Resource.getPostedForm(request);
+
+            this.path = "";
+            this.nodeCollectionName = "";
+            this.nodeName = "";
+            this.paragraph = "";
+            this.richE = "";
+            this.richEPaste = "";
+
+            this.create = false;
+
+            hm = new HierarchyManager(request);
+
+            if (form != null) {
+                path = form.getParameter("mgnlPath");
+                repository = form.getParameter("mgnlRepository");
+            }
+            else {
+                path = request.getParameter("mgnlPath");
+                repository = request.getParameter("mgnlRepository");
+            }
+
+            if (repository == null)
+                repository = ContentRepository.USERS;
+            if (path.equals(""))
+                create = true;
+
             try {
-                user = hm.getContent(path);
+                Session t = SessionAccessControl.getSession(request, repository);
+                Node rootNode = t.getRootNode();
+                hm.init(rootNode);
             }
-            catch (RepositoryException re) {
-                re.printStackTrace();
+            catch (Exception e) {
+            }
+
+            if (!create) {
+                try {
+                    user = hm.getContent(path);
+                }
+                catch (RepositoryException re) {
+                    re.printStackTrace();
+                }
             }
         }
 
-        if (form != null) {
-            // save
+        /**
+         * @see info.magnolia.cms.servlets.BasePageServlet#draw(HttpServletRequest, HttpServletResponse)
+         */
+        public void execute() throws IOException, RepositoryException {
 
+            if (form != null) {
+                // save
+
+                save();
+
+                out.println("<html>");
+                out.println(new Sources(request.getContextPath()).getHtmlJs());
+                out.println("<script type=\"text/javascript\">");
+                // out.println("opener.mgnlUsersTree.refresh();");
+                out.println("opener.mgnlTree.refresh();");
+                out.println("window.close();");
+                out.println("</script></html>");
+
+            }
+            else {
+                nodeCollectionName = request.getParameter("mgnlNodeCollection");
+                nodeName = request.getParameter("mgnlNode");
+                paragraph = request.getParameter("mgnlParagraph");
+                richE = request.getParameter("mgnlRichE");
+                richEPaste = request.getParameter("mgnlRichEPaste");
+
+                DialogDialog dialog = createDialog();
+                dialog.drawHtml(out);
+            }
+
+        }
+
+        /**
+         * @return
+         * @throws RepositoryException
+         */
+        private DialogDialog createDialog() throws RepositoryException {
+            DialogDialog dialog = DialogFactory.getDialogDialogInstance(request, response, user, null);
+
+            dialog.setConfig("path", path);
+            dialog.setConfig("nodeCollection", nodeCollectionName);
+            dialog.setConfig("node", nodeName);
+            dialog.setConfig("paragraph", paragraph);
+            dialog.setConfig("richE", richE);
+            dialog.setConfig("richEPaste", richEPaste);
+            dialog.setConfig("repository", repository);
+            dialog.setJavascriptSources("/admindocroot/js/dialogs/acl.js");
+
+            // opener.document.location.reload();window.close();
+
+            dialog.setConfig("width", DialogDialog.DIALOGSIZE_SLIM_WIDTH);
+            dialog.setConfig("height", DialogDialog.DIALOGSIZE_SLIM_HEIGHT);
+
+            if (create)
+                dialog.setLabel(msgs.get("users.edit.create"));
+            else
+                dialog.setLabel(msgs.get("users.edit.edit"));
+
+            DialogTab tab = dialog.addTab();
+
+            DialogStatic spacer = DialogFactory.getDialogStaticInstance(request, response, null, null);
+            spacer.setConfig("line", false);
+
+            DialogStatic lineHalf = DialogFactory.getDialogStaticInstance(request, response, null, null);
+            lineHalf.setConfig("line", false);
+
+            if (!create) {
+                DialogStatic name = DialogFactory.getDialogStaticInstance(request, response, null, null);
+                // name.setConfig("line",false);
+                name.setLabel("<strong>" + msgs.get("users.edit.username") + "</strong>");
+                name.setValue("<strong>" + user.getName() + "</strong>");
+                tab.addSub(name);
+            }
+            else {
+                DialogEdit name = DialogFactory.getDialogEditInstance(request, response, null, null);
+                name.setName("name");
+                name.setConfig("onchange", "mgnlDialogVerifyName(this.id);");
+                name.setSaveInfo(false);
+                name.setLabel("<strong>" + msgs.get("users.edit.username") + "</strong>");
+                name.setDescription("Legal characters: a-z, 0-9, _ (underscore), - (divis)");
+                tab.addSub(name);
+            }
+            tab.addSub(spacer);
+
+            DialogEdit title = DialogFactory.getDialogEditInstance(request, response, user, null);
+            title.setName("title");
+            title.setLabel(msgs.get("users.edit.fullname"));
+
+            if (create) {
+                title.setConfig("onchange", "mgnlAclSetName(this.value);");
+            }
+            tab.addSub(title);
+
+            DialogPassword pswd = DialogFactory.getDialogPasswordInstance(request, response, user, null);
+            pswd.setName("pswd");
+            pswd.setLabel(msgs.get("users.edit.password"));
+            if (!create) {
+                pswd.setConfig("labelDescription", msgs.get("users.edit.leaveEmpty"));
+            }
+            tab.addSub(pswd);
+
+            tab.addSub(spacer);
+
+            // select language
+            DialogSelect langSelect = DialogFactory.getDialogSelectInstance(request, response, user, null);
+            langSelect.setName("language");
+            langSelect.setLabel(msgs.get("users.edit.language"));
+            ArrayList options = new ArrayList();
+            
+            Collection col = MessagesManager.getAvailableLocales();
+            Messages langMsgs = MessagesManager.getMessages(request, "info.magnolia.module.admininterface.messages_languages");
+            
+            for (Iterator iter = col.iterator(); iter.hasNext();) {
+                Locale locale = (Locale) iter.next();
+                String code = locale.getLanguage();
+                String name = langMsgs.get(code);
+                SelectOption option = new SelectOption(name, code);
+                options.add(option);
+            }
+            langSelect.setOptions(options);
+            tab.addSub(langSelect);
+            tab.addSub(spacer);
+            
+            // adding the roles checkboxes
+            
+            DialogButtonSet isUserAdmin = DialogFactory.getDialogButtonSetInstance(request, response, user, null);
+            isUserAdmin.setName(CONTROLNAME_ISADMIN_USERS);
+            isUserAdmin.setConfig("type", PropertyType.TYPENAME_BOOLEAN);
+            isUserAdmin.setConfig("lineSemi", true);
+            isUserAdmin.setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX);
+            Button isUserAdminButton = new Button();
+            isUserAdminButton.setLabel(msgs.get("users.edit.usersAdministrator"));
+            isUserAdminButton.setValue("true");
+            isUserAdminButton.setOnclick("mgnlDialogShiftCheckboxSwitch('" + isUserAdmin.getName() + "');");
+            isUserAdmin.addOption(isUserAdminButton);
+            tab.addSub(isUserAdmin);
+
+            DialogButtonSet isRoleAdmin = DialogFactory.getDialogButtonSetInstance(request, response, user, null);
+            isRoleAdmin.setName(CONTROLNAME_ISADMIN_ROLES);
+            isRoleAdmin.setConfig("type", PropertyType.TYPENAME_BOOLEAN);
+            isRoleAdmin.setConfig("lineSemi", true);
+            isRoleAdmin.setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX);
+            Button isRolesAdminButton = new Button();
+            isRolesAdminButton.setLabel(msgs.get("users.edit.rolesAdministrator"));
+            isRolesAdminButton.setValue("true");
+            isRolesAdminButton.setOnclick("mgnlDialogShiftCheckboxSwitch('" + isRoleAdmin.getName() + "');");
+            isRoleAdmin.addOption(isRolesAdminButton);
+            tab.addSub(isRoleAdmin);
+
+            DialogButtonSet isConfigAdmin = DialogFactory.getDialogButtonSetInstance(request, response, user, null);
+            isConfigAdmin.setName(CONTROLNAME_ISADMIN_CONFIG);
+            isConfigAdmin.setConfig("type", PropertyType.TYPENAME_BOOLEAN);
+            isConfigAdmin.setConfig("lineSemi", true);
+            isConfigAdmin.setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX);
+            Button isConfigAdminButton = new Button();
+            isConfigAdminButton.setLabel(msgs.get("users.edit.configAdministrator"));
+            isConfigAdminButton.setValue("true");
+            isConfigAdminButton.setOnclick("mgnlDialogShiftCheckboxSwitch('" + isConfigAdmin.getName() + "');");
+            isConfigAdmin.addOption(isConfigAdminButton);
+            tab.addSub(isConfigAdmin);
+
+            tab.addSub(spacer);
+
+            DialogInclude roles = DialogFactory.getDialogIncludeInstance(request, response, user, null);
+            roles.setLabel(msgs.get("users.edit.roles"));
+            roles.setName("aclRolesRepository");
+            roles.setConfig("file", "/admintemplates/adminCentral/dialogs/usersEdit/includeRoles.jsp");
+            tab.addSub(roles);
+
+            DialogButton add = DialogFactory.getDialogButtonInstance(request, response, null, null);
+            add.setConfig("buttonLabel", msgs.get("buttons.add"));
+            add.setConfig("lineSemi", true);
+            add.setConfig("onclick", "mgnlAclAdd(true,-1);");
+            tab.addSub(add);
+
+            dialog.setConfig("saveOnclick", "mgnlAclFormSubmit(true);");
+            return dialog;
+        }
+
+        /**
+         * 
+         */
+        private void save() {
             // create new user
             if (create) {
                 String name = form.getParameter("name");
@@ -143,7 +358,8 @@ public class UserEditDialogPage extends BasePageServlet {
             }
 
             // ######################
-            // # write to .node.xml (controls with saveInfo (full name, password))
+            // # write to .node.xml (controls with saveInfo (full name,
+            // password))
             // ######################
             Save nodeXml = new Save(form, request);
             nodeXml.setPath(path);
@@ -153,7 +369,6 @@ public class UserEditDialogPage extends BasePageServlet {
             // # write users and roles acl
             // ######################
 
-            
             // remove existing
             try {
                 user.delete(NODE_ACLUSERS);
@@ -279,147 +494,11 @@ public class UserEditDialogPage extends BasePageServlet {
             catch (RepositoryException re) {
                 log.error(re.getMessage(), re);
             }
-
-            out.println("<html>");
-            out.println(new Sources(request.getContextPath()).getHtmlJs());
-            out.println("<script type=\"text/javascript\">");
-            // out.println("opener.mgnlUsersTree.refresh();");
-            out.println("opener.mgnlTree.refresh();");
-            out.println("window.close();");
-            out.println("</script></html>");
-            drawDialog = false;
         }
-        else {
-            nodeCollectionName = request.getParameter("mgnlNodeCollection");
-            nodeName = request.getParameter("mgnlNode");
-            paragraph = request.getParameter("mgnlParagraph");
-            richE = request.getParameter("mgnlRichE");
-            richEPaste = request.getParameter("mgnlRichEPaste");
-        }
-
-        if (drawDialog) {
-            DialogDialog dialog = DialogFactory.getDialogDialogInstance(request, response, user, null);
-
-            dialog.setConfig("path", path);
-            dialog.setConfig("nodeCollection", nodeCollectionName);
-            dialog.setConfig("node", nodeName);
-            dialog.setConfig("paragraph", paragraph);
-            dialog.setConfig("richE", richE);
-            dialog.setConfig("richEPaste", richEPaste);
-            dialog.setConfig("repository", repository);
-            dialog.setJavascriptSources("/admindocroot/js/dialogs/acl.js");
-
-            // opener.document.location.reload();window.close();
-
-            dialog.setConfig("width", DialogDialog.DIALOGSIZE_SLIM_WIDTH);
-            dialog.setConfig("height", DialogDialog.DIALOGSIZE_SLIM_HEIGHT);
-
-            if (create)
-                dialog.setLabel(msgs.get("users.edit.create"));
-            else
-                dialog.setLabel(msgs.get("users.edit.edit"));
-
-            DialogTab tab = dialog.addTab();
-
-            DialogStatic spacer = DialogFactory.getDialogStaticInstance(request, response, null, null);
-            spacer.setConfig("line", false);
-
-            DialogStatic lineHalf = DialogFactory.getDialogStaticInstance(request, response, null, null);
-            lineHalf.setConfig("line", false);
-
-            if (!create) {
-                DialogStatic name = DialogFactory.getDialogStaticInstance(request, response, null, null);
-                // name.setConfig("line",false);
-                name.setLabel("<strong>"+msgs.get("users.edit.username")+"</strong>");
-                name.setValue("<strong>" + user.getName() + "</strong>");
-                tab.addSub(name);
-            }
-            else {
-                DialogEdit name = DialogFactory.getDialogEditInstance(request, response, null, null);
-                name.setName("name");
-                name.setConfig("onchange", "mgnlDialogVerifyName(this.id);");
-                name.setSaveInfo(false);
-                name.setLabel("<strong>"+msgs.get("users.edit.username")+"</strong>");
-                name.setDescription("Legal characters: a-z, 0-9, _ (underscore), - (divis)");
-                tab.addSub(name);
-            }
-
-            tab.addSub(spacer);
-
-            DialogEdit title = DialogFactory.getDialogEditInstance(request, response, user, null);
-            title.setName("title");
-            title.setLabel(msgs.get("users.edit.fullname"));
-
-            if (create) {
-                title.setConfig("onchange", "mgnlAclSetName(this.value);");
-            }
-            tab.addSub(title);
-
-            DialogPassword pswd = DialogFactory.getDialogPasswordInstance(request, response, user, null);
-            pswd.setName("pswd");
-            pswd.setLabel(msgs.get("users.edit.password"));
-            if (!create) {
-                pswd.setConfig("labelDescription",msgs.get("users.edit.leaveEmpty"));
-            }
-            tab.addSub(pswd);
-
-            tab.addSub(spacer);
-
-            DialogButtonSet isUserAdmin = DialogFactory.getDialogButtonSetInstance(request, response, user, null);
-            isUserAdmin.setName(CONTROLNAME_ISADMIN_USERS);
-            isUserAdmin.setConfig("type", PropertyType.TYPENAME_BOOLEAN);
-            isUserAdmin.setConfig("lineSemi", true);
-            isUserAdmin.setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX);
-            Button isUserAdminButton = new Button();
-            isUserAdminButton.setLabel(msgs.get("users.edit.usersAdministrator"));
-            isUserAdminButton.setValue("true");
-            isUserAdminButton.setOnclick("mgnlDialogShiftCheckboxSwitch('" + isUserAdmin.getName() + "');");
-            isUserAdmin.addOption(isUserAdminButton);
-            tab.addSub(isUserAdmin);
-
-            DialogButtonSet isRoleAdmin = DialogFactory.getDialogButtonSetInstance(request, response, user, null);
-            isRoleAdmin.setName(CONTROLNAME_ISADMIN_ROLES);
-            isRoleAdmin.setConfig("type", PropertyType.TYPENAME_BOOLEAN);
-            isRoleAdmin.setConfig("lineSemi", true);
-            isRoleAdmin.setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX);
-            Button isRolesAdminButton = new Button();
-            isRolesAdminButton.setLabel(msgs.get("users.edit.rolesAdministrator"));
-            isRolesAdminButton.setValue("true");
-            isRolesAdminButton.setOnclick("mgnlDialogShiftCheckboxSwitch('" + isRoleAdmin.getName() + "');");
-            isRoleAdmin.addOption(isRolesAdminButton);
-            tab.addSub(isRoleAdmin);
-
-            DialogButtonSet isConfigAdmin = DialogFactory.getDialogButtonSetInstance(request, response, user, null);
-            isConfigAdmin.setName(CONTROLNAME_ISADMIN_CONFIG);
-            isConfigAdmin.setConfig("type", PropertyType.TYPENAME_BOOLEAN);
-            isConfigAdmin.setConfig("lineSemi", true);
-            isConfigAdmin.setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX);
-            Button isConfigAdminButton = new Button();
-            isConfigAdminButton.setLabel(msgs.get("users.edit.configAdministrator"));
-            isConfigAdminButton.setValue("true");
-            isConfigAdminButton.setOnclick("mgnlDialogShiftCheckboxSwitch('" + isConfigAdmin.getName() + "');");
-            isConfigAdmin.addOption(isConfigAdminButton);
-            tab.addSub(isConfigAdmin);
-
-            tab.addSub(spacer);
-
-            DialogInclude roles = DialogFactory.getDialogIncludeInstance(request, response, user, null);
-            roles.setLabel(msgs.get("users.edit.roles"));
-            roles.setName("aclRolesRepository");
-            roles.setConfig("file", "/admintemplates/adminCentral/dialogs/usersEdit/includeRoles.jsp");
-            tab.addSub(roles);
-
-            DialogButton add = DialogFactory.getDialogButtonInstance(request, response, null, null);
-            add.setConfig("buttonLabel", msgs.get("buttons.add"));
-            add.setConfig("lineSemi", true);
-            add.setConfig("onclick", "mgnlAclAdd(true,-1);");
-            tab.addSub(add);
-
-            dialog.setConfig("saveOnclick", "mgnlAclFormSubmit(true);");
-
-            dialog.drawHtml(out);
-        }
-
     }
 
+    public void draw(HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
+
+        new MyDialog(request, response).execute();
+    }
 }

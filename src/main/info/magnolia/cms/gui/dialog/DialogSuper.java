@@ -211,7 +211,7 @@ public abstract class DialogSuper implements DialogInterface {
         return this.request;
     }
 
-    protected void setOptions(List options) {
+    public void setOptions(List options) {
         this.options = options;
     }
 

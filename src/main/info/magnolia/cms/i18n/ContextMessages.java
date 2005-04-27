@@ -15,6 +15,7 @@
 package info.magnolia.cms.i18n;
 
 import java.util.Enumeration;
+import java.util.ListResourceBundle;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -58,7 +59,7 @@ public class ContextMessages extends Messages {
 
     private HttpServletRequest req;
 
-    private String basename;
+    //private String basename;
 
     /**
      * Get the bundle and the local from the context
@@ -71,13 +72,13 @@ public class ContextMessages extends Messages {
 
     protected ContextMessages(HttpServletRequest req, String basename) {
         this.req = req;
-        this.basename = basename;
+        this.setBasename(basename);
         loc = getLocalizationContext(req, basename);
     }
 
     protected ContextMessages(HttpServletRequest req, String basename, Locale locale) {
         this.req = req;
-        this.basename = basename;
+        this.setBasename(basename);
         loc = getLocalizationContext(req, basename, locale);
     }
 
@@ -86,9 +87,18 @@ public class ContextMessages extends Messages {
     }
 
     public ResourceBundle getBundle() {
-        return loc.getResourceBundle();
+        ResourceBundle bundle = loc.getResourceBundle(); 
+        if(bundle == null){
+            log.error("bundle: " + this.getBasename() + " not found");
+            bundle = new ListResourceBundle() {
+                protected Object[][] getContents() {
+                    return new String[][]{};
+                }
+            };
+        }
+        return bundle;
     }
-    
+
     /**
      * Gets the default I18N localization context.
      * @param req Request in which to look up the default I18N localization context
