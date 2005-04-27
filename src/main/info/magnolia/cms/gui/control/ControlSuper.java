@@ -240,7 +240,7 @@ public class ControlSuper implements ControlInterface {
             Iterator it = this
                 .getWebsiteNode()
                 .getContent(this.getName())
-                .getChildren(ItemType.NT_NODEDATA)
+                .getProperties()
                 .iterator();
             List l = new ArrayList();
             while (it.hasNext()) {

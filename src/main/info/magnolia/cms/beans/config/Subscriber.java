@@ -95,7 +95,7 @@ public class Subscriber {
             Content c = (Content) Subscriber.ipList.next();
             Subscriber si = new Subscriber();
             si.params = new Hashtable();
-            Iterator paramList = c.getChildren(ItemType.NT_NODEDATA).iterator();
+            Iterator paramList = c.getProperties().iterator();
             while (paramList.hasNext()) {
                 NodeData nd = (NodeData) paramList.next();
                 si.params.put(nd.getName(), nd.getString());

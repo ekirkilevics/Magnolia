@@ -155,7 +155,7 @@ public final class ModuleLoader {
 
     private static Map getInitParameters(Content paramList) {
         Map initParams = new Hashtable();
-        Iterator initParameters = paramList.getChildren(ItemType.NT_NODEDATA).iterator();
+        Iterator initParameters = paramList.getProperties().iterator();
         while (initParameters.hasNext()) {
             NodeData param = (NodeData) initParameters.next();
             initParams.put(param.getName(), param.getString());

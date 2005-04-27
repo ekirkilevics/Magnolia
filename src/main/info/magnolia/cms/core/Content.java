@@ -391,11 +391,7 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
-     * Get collection of specified content type. Use:
-     * <ul>
-     * <li>ItemType.NT_CONTENT to get sub pages ItemType.NT_CONTENTNODE to get sub content nodes (paragraphs)</li>
-     * <li>ItemType.NT_NODEDATA to get node data (properties) <strong>else</strong> YOUR_CUSTOM_TYPE as registered</li>
-     * </ul>
+     * Get collection of specified content type.
      * @param contentType
      * @return Collection of content nodes
      */
@@ -404,11 +400,7 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
-     * Get collection of specified content type. Use:
-     * <ul>
-     * <li>ItemType.NT_CONTENT to get sub pages ItemType.NT_CONTENTNODE to get sub content nodes (paragraphs)</li>
-     * <li>ItemType.NT_NODEDATA to get node data (properties) <strong>else</strong> YOUR_CUSTOM_TYPE as registered</li>
-     * </ul>
+     * Get collection of specified content type.
      * @param contentType
      * @param namePattern
      * @return Collection of content nodes
@@ -418,11 +410,7 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
-     * Get collection of specified content type. Use:
-     * <ul>
-     * <li>ItemType.NT_CONTENT to get sub pages ItemType.NT_CONTENTNODE to get sub content nodes (paragraphs)</li>
-     * <li>ItemType.NT_NODEDATA to get node data (properties) <strong>else</strong> YOUR_CUSTOM_TYPE as registered</li>
-     * </ul>
+     * Get collection of specified content type
      * @param contentType
      * @param sortCriteria which can be either ContentHandler.SORT_BY_SEQUENCE , ContentHandler.SORT_BY_DATE or
      * ContentHandler.SORT_BY_NAME
@@ -433,11 +421,7 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
-     * Get collection of specified content type. Use:
-     * <ul>
-     * <li>ItemType.NT_CONTENT to get sub pages ItemType.NT_CONTENTNODE to get sub content nodes (paragraphs)</li>
-     * <li>ItemType.NT_NODEDATA to get node data (properties) <strong>else</strong> YOUR_CUSTOM_TYPE as registered</li>
-     * </ul>
+     * Get collection of specified content type.
      * @param contentType
      * @param namePattern
      * @param sortCriteria which can be either ContentHandler.SORT_BY_SEQUENCE , ContentHandler.SORT_BY_DATE or
@@ -447,13 +431,8 @@ public class Content extends ContentHandler implements Cloneable {
     public Collection getChildren(String contentType, String namePattern, int sortCriteria) {
         Collection children = new ArrayList();
         try {
-            if (contentType.equalsIgnoreCase(ItemType.NT_NODEDATA)) {
-                children = this.getProperties(namePattern);
-            }
-            else {
-                children = this.getChildContent(contentType, namePattern);
-                children = sort(children, sortCriteria);
-            }
+            children = this.getChildContent(contentType, namePattern);
+            children = sort(children, sortCriteria);
         }
         catch (RepositoryException e) {
             log.error(e.getMessage(), e);
@@ -474,9 +453,6 @@ public class Content extends ContentHandler implements Cloneable {
     private Collection getChildContent(String contentType, String namePattern) throws RepositoryException {
         Collection children = new ArrayList();
         NodeIterator nodeIterator = this.node.getNodes(namePattern);
-        if (nodeIterator == null) {
-            return children;
-        }
         while (nodeIterator.hasNext()) {
             Node subNode = (Node) nodeIterator.next();
             try {
@@ -494,23 +470,58 @@ public class Content extends ContentHandler implements Cloneable {
         return children;
     }
 
-    private Collection getProperties(String namePattern) throws RepositoryException {
+    /**
+     * Gets all properties bind in NodeData object excluding JCR system properties
+     * */
+    public Collection getProperties() {
         Collection children = new ArrayList();
-        PropertyIterator propertyIterator = this.node.getProperties(namePattern);
-        if (propertyIterator == null) {
-            return children;
+        try {
+            PropertyIterator propertyIterator = this.node.getProperties();
+            while (propertyIterator.hasNext()) {
+                Property property = (Property) propertyIterator.next();
+                try {
+                    if (property.getName().indexOf("jcr:") == 0)
+                        continue;
+                    children.add(new NodeData(property, this.accessManager));
+                }
+                catch (PathNotFoundException e) {
+                    log.error(e);
+                }
+                catch (AccessDeniedException e) {
+                    // ignore, simply wont add content in a list
+                }
+            }
+        } catch (RepositoryException re) {
+            log.error(re);
         }
-        while (propertyIterator.hasNext()) {
-            Property property = (Property) propertyIterator.next();
-            try {
-                children.add(new NodeData(property, this.accessManager));
+        return children;
+    }
+
+    /**
+     * Gets all properties bind in NodeData object which qualify the given namePattern
+     * @param namePattern
+     * */
+    public Collection getProperties(String namePattern) {
+        Collection children = new ArrayList();
+        try {
+            PropertyIterator propertyIterator = this.node.getProperties(namePattern);
+            if (propertyIterator == null) {
+                return children;
             }
-            catch (PathNotFoundException e) {
-                log.error(e);
+            while (propertyIterator.hasNext()) {
+                Property property = (Property) propertyIterator.next();
+                try {
+                    children.add(new NodeData(property, this.accessManager));
+                }
+                catch (PathNotFoundException e) {
+                    log.error(e);
+                }
+                catch (AccessDeniedException e) {
+                    // ignore, simply wont add content in a list
+                }
             }
-            catch (AccessDeniedException e) {
-                // ignore, simply wont add content in a list
-            }
+        } catch (RepositoryException re) {
+            log.error(re);
         }
         return children;
     }

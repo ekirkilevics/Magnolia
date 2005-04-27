@@ -1177,7 +1177,12 @@ public class Tree extends ControlSuper {
         try {
             // todo: parentNode - level of this.getPath
             int left = (parentNode.getLevel()) * this.getIndentionWidth();
-            Iterator it = parentNode.getChildren(itemType).iterator();
+            Iterator it;
+            if (itemType.equalsIgnoreCase(ItemType.NT_NODEDATA)) {
+                it = parentNode.getProperties().iterator();
+            } else {
+                it = parentNode.getChildren(itemType).iterator();
+            }
             while (it.hasNext()) {
                 Object o = it.next();
                 Content c = null;
@@ -1193,10 +1198,7 @@ public class Tree extends ControlSuper {
                     d = (NodeData) o;
                     handle = d.getHandle();
                     name = d.getName();
-                    // do not show jcr properties
-                    if(name.startsWith("jcr:"))
-                    	continue;
-                    
+
                     if (d.isGranted(info.magnolia.cms.security.Permission.WRITE)) {
                         permissionWrite = true;
                     }
@@ -1220,7 +1222,12 @@ public class Tree extends ControlSuper {
                     isActivated = c.getMetaData(MetaData.ACTIVATION_INFO).getIsActivated();
                     for (int i = 0; i < this.getItemTypes().size(); i++) {
                         String type = (String) this.getItemTypes().get(i);
-                        if (c.getChildren(type).size() > 0) {
+                        int size = 0;
+                        if (type.equalsIgnoreCase(ItemType.NT_NODEDATA))
+                            size = c.getProperties().size();
+                        else
+                            size = c.getChildren(type).size();
+                        if (size > 0) {
                             hasSub = true;
                             if (this.getPathOpen() != null
                                 && (this.getPathOpen().indexOf(handle + "/") == 0 || this.getPathOpen().equals(handle))) {

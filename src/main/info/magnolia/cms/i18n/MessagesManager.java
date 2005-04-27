@@ -118,12 +118,10 @@ public class MessagesManager {
 				configHierarchyManager.save();
 			}
 			
-			Collection locales = availableLanguagesContentNode.getChildren(ItemType.NT_NODEDATA);
+			Collection locales = availableLanguagesContentNode.getProperties();
 			for (Iterator iter = locales.iterator(); iter.hasNext();) {
 				availableLanguage = (NodeData) iter.next();
-				if(!availableLanguage.getName().startsWith("jcr:")){
-					MessagesManager.availableLocales.add(availableLanguage.getString());
-				}
+                MessagesManager.availableLocales.add(availableLanguage.getString());
 			}
 
 		} catch (RepositoryException re) {
