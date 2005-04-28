@@ -60,40 +60,23 @@ public class Save extends ControlSuper {
     }
 
     public Save(MultipartForm form, HttpServletRequest request) {
-        this.setForm(form);
+        this.form = form;
         this.setRequest(request);
         this.setPath(form.getParameter("mgnlPath"));
         this.setNodeCollectionName(form.getParameter("mgnlNodeCollection"));
         this.setNodeName(form.getParameter("mgnlNode"));
         this.setParagraph(form.getParameter("mgnlParagraph"));
-        this.setRepository(form.getParameter("mgnlRepository"));
-    }
-
-    public void setForm(MultipartForm form) {
-        this.form = form;
-    }
-
-    public MultipartForm getForm() {
-        return this.form;
-    }
-
-    public void setRepository(String s) {
-        this.repository = s;
-    }
-
-    public String getRepository() {
-        return this.repository;
+        this.repository = form.getParameter("mgnlRepository");
     }
 
     public void save() {
-        MultipartForm form = this.getForm();
         String[] saveInfo = form.getParameterValues("mgnlSaveInfo"); // name,type,propertyOrNode
         String nodeCollectionName = this.getNodeCollectionName(null);
         String nodeName = this.getNodeName(null);
         String path = this.getPath();
         HttpServletRequest request = this.getRequest();
 
-        HierarchyManager hm = SessionAccessControl.getHierarchyManager(request, this.getRepository());
+        HierarchyManager hm = SessionAccessControl.getHierarchyManager(request, this.repository);
         try {
             Content page = hm.getContent(path);
             // get or create nodeCollection
@@ -349,7 +332,7 @@ public class Save extends ControlSuper {
 
     public void removeSessionAttributes() {
         HttpSession session = this.getRequest().getSession();
-        MultipartForm form = this.getForm();
+        MultipartForm form = this.form;
         String[] toRemove = form.getParameterValues(DialogSuper.SESSION_ATTRIBUTENAME_DIALOGOBJECT_REMOVE);
         if (toRemove != null) {
             for (int i = 0; i < toRemove.length; i++) {
@@ -364,7 +347,7 @@ public class Save extends ControlSuper {
     }
 
     public Value getValue(long l) {
-        HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
+        HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.repository);
         ValueFactory valueFactory;
         try {
             valueFactory = hm.getWorkspace().getSession().getValueFactory();
@@ -379,7 +362,7 @@ public class Save extends ControlSuper {
 
         ValueFactory valueFactory = null;
 
-        HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
+        HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.repository);
         try {
             valueFactory = hm.getWorkspace().getSession().getValueFactory();
         }

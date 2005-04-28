@@ -12,7 +12,6 @@
  */
 package info.magnolia.cms.gui.control;
 
-import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 
@@ -111,7 +110,7 @@ public class ControlSuper implements ControlInterface {
     private String paragraph;
 
     private HttpServletRequest request;
-    
+
     ControlSuper() {
     }
 
@@ -237,11 +236,7 @@ public class ControlSuper implements ControlInterface {
             return this.values;
         }
         try {
-            Iterator it = this
-                .getWebsiteNode()
-                .getContent(this.getName())
-                .getNodeDataCollection()
-                .iterator();
+            Iterator it = this.getWebsiteNode().getContent(this.getName()).getNodeDataCollection().iterator();
             List l = new ArrayList();
             while (it.hasNext()) {
                 NodeData data = (NodeData) it.next();
@@ -477,9 +472,9 @@ public class ControlSuper implements ControlInterface {
     public int getIsRichEditValue() {
         return this.isRichEditValue;
     }
-    
-    public static String escapeHTML(String str){
-    	return str.replaceAll("\"", "&quot;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+
+    public static String escapeHTML(String str) {
+        return str.replaceAll("\"", "&quot;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
     }
 
 }
