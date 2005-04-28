@@ -28,22 +28,19 @@ import info.magnolia.cms.security.SessionAccessControl;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import javax.jcr.BooleanValue;
-import javax.jcr.DateValue;
-import javax.jcr.DoubleValue;
-import javax.jcr.LongValue;
-import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.StringValue;
 import javax.jcr.Value;
+import javax.jcr.ValueFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.NestableRuntimeException;
+import org.apache.jackrabbit.core.value.DateValue;
 import org.apache.log4j.Logger;
 
 
@@ -96,7 +93,7 @@ public class Save extends ControlSuper {
         String path = this.getPath();
         HttpServletRequest request = this.getRequest();
 
-        HierarchyManager hm = SessionAccessControl.getHierarchyManager(request,this.getRepository());
+        HierarchyManager hm = SessionAccessControl.getHierarchyManager(request, this.getRepository());
         try {
             Content page = hm.getContent(path);
             // get or create nodeCollection
@@ -190,9 +187,9 @@ public class Save extends ControlSuper {
                         catch (RepositoryException re) {
                             try {
                                 if (doc != null) {
-                                    propNode = node.createContent(name
-                                        + "_"
-                                        + FileProperties.PROPERTIES_CONTENTNODE, ItemType.NT_CONTENTNODE);
+                                    propNode = node.createContent(
+                                        name + "_" + FileProperties.PROPERTIES_CONTENTNODE,
+                                        ItemType.NT_CONTENTNODE);
                                 }
                             }
                             catch (RepositoryException re2) {
@@ -367,38 +364,50 @@ public class Save extends ControlSuper {
     }
 
     public Value getValue(long l) {
-        return new LongValue(l);
+        HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
+        ValueFactory valueFactory;
+        try {
+            valueFactory = hm.getWorkspace().getSession().getValueFactory();
+        }
+        catch (RepositoryException e) {
+            throw new NestableRuntimeException(e);
+        }
+        return valueFactory.createValue(0l);
     }
 
     public Value getValue(String valueStr, int type) {
+
+        ValueFactory valueFactory = null;
+
+        HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
+        try {
+            valueFactory = hm.getWorkspace().getSession().getValueFactory();
+        }
+        catch (RepositoryException e) {
+            throw new NestableRuntimeException(e);
+        }
+
         Value value = null;
         if (type == PropertyType.STRING) {
-            value = new StringValue(valueStr);
+            value = valueFactory.createValue(valueStr);
         }
         else if (type == PropertyType.BOOLEAN) {
-            if (valueStr.equals("true")) {
-                value = new BooleanValue(true);
-            }
-            else {
-                value = new BooleanValue(false);
-            }
+            value = valueFactory.createValue(BooleanUtils.toBoolean(valueStr));
         }
         else if (type == PropertyType.DOUBLE) {
             try {
-                double d = (new Double(valueStr)).doubleValue();
-                value = new DoubleValue(d);
+                value = valueFactory.createValue(Double.parseDouble(valueStr));
             }
-            catch (Exception e) {
-                value = new DoubleValue(0);
+            catch (NumberFormatException e) {
+                value = valueFactory.createValue(0d);
             }
         }
         else if (type == PropertyType.LONG) {
             try {
-                long l = (new Long(valueStr)).longValue();
-                value = new LongValue(l);
+                value = valueFactory.createValue(Long.parseLong(valueStr));
             }
-            catch (Exception e) {
-                value = new LongValue(0);
+            catch (NumberFormatException e) {
+                value = valueFactory.createValue(0l);
             }
         }
         else if (type == PropertyType.DATE) {
@@ -439,8 +448,7 @@ public class Save extends ControlSuper {
 
     /**
      * @param value
-     * @return
-     * todo configurable regexp on save?
+     * @return todo configurable regexp on save?
      */
     public String getRichEditValueStr(String value) {
 
