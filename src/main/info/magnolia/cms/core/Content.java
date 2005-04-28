@@ -900,7 +900,8 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * <p>
-     * Refreses current node keeping all changes
+     * If keepChanges is false, this method discards all pending changes recorded in this
+     * session.
      * </p>
      * @see javax.jcr.Node#refresh(boolean)
      * @throws RepositoryException

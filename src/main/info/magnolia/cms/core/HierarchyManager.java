@@ -22,12 +22,13 @@ import info.magnolia.cms.security.Permission;
 import java.util.Collection;
 import java.util.Iterator;
 
-import javax.jcr.ItemExistsException;
+import javax.servlet.http.HttpServletRequest;
 import javax.jcr.Node;
+import javax.jcr.Workspace;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
-import javax.jcr.Workspace;
-import javax.servlet.http.HttpServletRequest;
+import javax.jcr.ItemExistsException;
+import javax.jcr.ItemNotFoundException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -126,7 +127,7 @@ public class HierarchyManager {
         return newPage;
     }
 
-    
+
 
     /**
      * <p>
@@ -389,12 +390,10 @@ public class HierarchyManager {
         }
         boolean isExist = false;
         try {
-            isExist = this.startPage.hasNode(getNodePath(path));
-            if (!isExist) {
-                isExist = this.startPage.hasProperty(getNodePath(path));
-            }
+            isExist = this.workSpace.getSession().itemExists(path);
         }
         catch (RepositoryException re) {
+            log.error(re);
         }
         return isExist;
     }
@@ -439,6 +438,17 @@ public class HierarchyManager {
         catch (RepositoryException e) {
         }
         return false;
+    }
+
+    /**
+     * This method can be used to retrieve Content which has UUID assigned to it,
+     * in other words only those nodes which has mixin type mix:referenceable.
+     *
+     * @param uuid
+     * */
+    public Content getContentByUUID(String uuid) throws ItemNotFoundException, RepositoryException,
+        AccessDeniedException {
+        return (new Content(this.startPage.getSession().getNodeByUUID(uuid), this.accessManager));
     }
 
     /**
@@ -498,13 +508,11 @@ public class HierarchyManager {
         }
     }
 
-    public void refresh() {
-        try {
-            this.startPage.refresh(true);
-        }
-        catch (RepositoryException re) {
-            log.error("Failed to refresh");
-            log.error(re.getMessage(), re);
-        }
+    /**
+     * Returns true if the session has pending (unsaved) changes.
+     * */
+    public boolean hasPendingChanges() throws RepositoryException {
+        return this.startPage.getSession().hasPendingChanges();
     }
+
 }
