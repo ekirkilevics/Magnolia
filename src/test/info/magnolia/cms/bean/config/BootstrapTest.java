@@ -4,7 +4,6 @@ import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.runtime.SystemProperty;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.test.MagnoliaTestUtils;
@@ -57,9 +56,8 @@ public class BootstrapTest extends TestCase {
         HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
         assertNotNull("Config repository not properly configured.", hm);
 
-        Content serverConfigRoot = null;
         try {
-            serverConfigRoot = hm.getPage(Server.CONFIG_PAGE);
+            hm.getContent(Server.CONFIG_PAGE);
         }
         catch (AccessDeniedException e) {
             fail("Access denied to [" + Server.CONFIG_PAGE + "]");
@@ -72,7 +70,35 @@ public class BootstrapTest extends TestCase {
             fail("Exception caught: " + e.getMessage());
         }
 
-        assertNotNull(serverConfigRoot);
+        hm = ContentRepository.getHierarchyManager(ContentRepository.WEBSITE);
+        assertNotNull("Website repository not properly configured.", hm);
+
+        try {
+            hm.getContent("features");
+        }
+        catch (AccessDeniedException e) {
+            fail("Access denied to [features] page");
+        }
+        catch (PathNotFoundException e) {
+            fail("Website repository not correctly initialized, missing [features] page");
+        }
+        catch (RepositoryException e) {
+            log.error(e.getMessage(), e);
+            fail("Exception caught: " + e.getMessage());
+        }
+
+        try {
+            hm.getContent("thispagedoesntexist");
+            fail("Test doesn't get a PathNotFoundException while it should.");
+        }
+        catch (PathNotFoundException e) {
+            // ok
+            log.debug("PathNotFoundException caught as expected");
+        }
+        catch (RepositoryException e) {
+            log.error(e.getMessage(), e);
+            fail("Exception caught: " + e.getMessage());
+        }
 
     }
 
