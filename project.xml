@@ -467,6 +467,36 @@
                 <comment>maven plugin for the findbug report. UNOFFICIAL RELEASE hosted at magnolia.sf.net</comment>
             </properties>
         </dependency>
+
+        <dependency>
+            <groupId>maven</groupId>
+            <artifactId>maven-war-plugin</artifactId>
+            <version>1.7-UNOFFICIAL-1</version>
+            <type>plugin</type>
+            <url>http://magnolia.sourceforge.net/maven/repository/maven/plugins/maven-war-plugin-1.7-UNOFFICIAL-1.jar</url>
+            <properties>
+                <comment>
+               war plugin: unofficial builds which adds the patch in http://jira.codehaus.org/browse/MPWAR-30
+                </comment>
+            </properties>
+        </dependency>
+        <dependency>
+            <groupId>maven</groupId>
+            <artifactId>maven-eclipse-plugin</artifactId>
+            <version>1.10-UNOFFICIAL-1</version>
+            <type>plugin</type>
+            <url>http://magnolia.sourceforge.net/maven/repository/maven/plugins/maven-war-plugin-1.10-UNOFFICIAL-1.jar</url>
+            <properties>
+                <comment>
+                maven eclipse plugin: unofficial builds which contains WTP features
+                </comment>
+            </properties>
+        </dependency>
+
+
+
+
+
     </dependencies>
     <build>
         <sourceDirectory>src/main</sourceDirectory>
