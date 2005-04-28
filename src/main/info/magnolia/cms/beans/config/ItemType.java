@@ -49,22 +49,6 @@ public final class ItemType {
     public static final String NT_NODEDATA = "mgnl:nodeData";
 
     /**
-     * internal magnolia item type values.
-     */
-    public static final int MAGNOLIA_NODE_DATA = 0;
-
-    public static final int MAGNOLIA_CONTENT_NODE = 1;
-
-    public static final int MAGNOLIA_PAGE = 2;
-
-    /**
-     * magnolia item types.
-     */
-    public static final String MAGNOLIA_SYSTEM_DETAILS = "magnoliaSystem";
-
-    public static final String MAGNOLIA_INTERNAL_TYPE = "internalType";
-
-    /**
      * Basic child node types.
      */
     public static final String JCR_CONTENT = "jcr:content";
