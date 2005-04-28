@@ -14,23 +14,21 @@ package info.magnolia.cms.core.search;
 
 import info.magnolia.cms.security.AccessManager;
 
-import javax.jcr.query.InvalidQueryException;
-import javax.jcr.RepositoryException;
 import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+import javax.jcr.query.InvalidQueryException;
+
 
 /**
- * Date: Mar 29, 2005
- * Time: 2:54:21 PM
- *
+ * Date: Mar 29, 2005 Time: 2:54:21 PM
  * @author Sameer Charles
  */
 
 public class QueryManagerImpl implements QueryManager {
 
-
     private javax.jcr.query.QueryManager queryManager;
-    private AccessManager accessManager;
 
+    private AccessManager accessManager;
 
     protected QueryManagerImpl(javax.jcr.query.QueryManager queryManager, AccessManager accessManager) {
         this.queryManager = queryManager;
@@ -47,7 +45,7 @@ public class QueryManagerImpl implements QueryManager {
         return (new QueryImpl(query, this.accessManager));
     }
 
-    public String[] getSupportedQueryLanguages() {
+    public String[] getSupportedQueryLanguages() throws RepositoryException {
         return this.queryManager.getSupportedQueryLanguages();
     }
 

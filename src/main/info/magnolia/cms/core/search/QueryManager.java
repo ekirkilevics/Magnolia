@@ -18,12 +18,9 @@ import javax.jcr.query.InvalidQueryException;
 
 
 /**
- * Date: Apr 4, 2005
- * Time: 11:00:02 AM
- *
+ * Date: Apr 4, 2005 Time: 11:00:02 AM
  * @author Sameer Charles
  */
-
 
 public interface QueryManager {
 
@@ -31,6 +28,6 @@ public interface QueryManager {
 
     Query getQuery(Node node) throws InvalidQueryException, RepositoryException;
 
-    String[] getSupportedQueryLanguages();
+    String[] getSupportedQueryLanguages() throws RepositoryException;
 
 }
