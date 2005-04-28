@@ -68,7 +68,7 @@ public final class SessionAccessControl {
      * Gets the ticket creted while login, creates a new ticket if not existing.
      * @param request
      */
-    public static Session getSession(HttpServletRequest request) throws LoginException, RepositoryException {
+    protected static Session getSession(HttpServletRequest request) throws LoginException, RepositoryException {
         return getSession(request, DEFAULT_REPOSITORY);
     }
 
@@ -77,7 +77,7 @@ public final class SessionAccessControl {
      * @param request
      * @param repositoryID
      */
-    public static Session getSession(HttpServletRequest request, String repositoryID) throws LoginException,
+    protected static Session getSession(HttpServletRequest request, String repositoryID) throws LoginException,
         RepositoryException {
         return getSession(request, repositoryID, DEFAULT_WORKSPACE);
     }
@@ -87,7 +87,7 @@ public final class SessionAccessControl {
      * @param request
      * @param repositoryID
      */
-    public static Session getSession(HttpServletRequest request, String repositoryID, String workspaceID)
+    protected static Session getSession(HttpServletRequest request, String repositoryID, String workspaceID)
         throws LoginException, RepositoryException {
         return getRepositorySession(request, repositoryID, workspaceID);
     }
