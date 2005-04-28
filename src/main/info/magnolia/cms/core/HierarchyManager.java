@@ -126,6 +126,8 @@ public class HierarchyManager {
         return newPage;
     }
 
+    
+
     /**
      * <p>
      * creates contentNode of type <b>contentType </b> contentType must be defined in item type definition of magnolia
@@ -452,8 +454,8 @@ public class HierarchyManager {
      * <p>
      * move content to the specified location
      * </p>
-     * @param source source document path
-     * @param destination where the node has to be moved
+     * @param source source node path
+     * @param destination node where the node has to be moved
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException
      */
@@ -468,8 +470,8 @@ public class HierarchyManager {
      * <p>
      * copy content to the specified location
      * </p>
-     * @param source source document path
-     * @param destination where the node has to be copied
+     * @param source source node path
+     * @param destination node where the node has to be copied
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException
      */

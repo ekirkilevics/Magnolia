@@ -54,10 +54,12 @@ public final class Dispatcher {
             log.error("null ServletContext received - aborting request");
             return;
         }
-        log.info("Dispatching request for - " + req.getRequestURL());
         String requestReceiver = (String) req.getAttribute(Aggregator.REQUEST_RECEIVER);
         RequestDispatcher rd = sc.getRequestDispatcher(requestReceiver);
-        log.info("Forward to - " + requestReceiver);
+        if (log.isDebugEnabled()) {
+            log.debug("Dispatching request for - " + req.getRequestURL());
+            log.debug("Forward to - " + requestReceiver);
+        }
         rd.forward(req, res);
         rd = null;
     }

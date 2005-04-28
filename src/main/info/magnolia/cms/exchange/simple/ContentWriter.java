@@ -78,13 +78,17 @@ public class ContentWriter {
     public void writeObject(Content destination, SerializableContent content) throws RepositoryException {
         this.writeContent(destination, content);
         this.hierarchyManager.save();
-        log.info("Repository refreshed / saved");
+        if (log.isDebugEnabled()) {
+            log.debug("Path "+destination.getHandle()+" saved");
+        }
     }
 
     public void writeObject(Content destination, SerializableContentNode contentNode) throws RepositoryException {
         this.writeContent(destination, contentNode);
         this.hierarchyManager.save();
-        log.info("Repository refreshed / saved");
+        if (log.isDebugEnabled()) {
+            log.debug("Path "+destination.getHandle()+" saved");
+        }
     }
 
     /**
@@ -141,10 +145,11 @@ public class ContentWriter {
     }
 
     private void safeDelete(Content content) {
-        log.info("Taking backup for " + content.getHandle());
         // this.backup = new SerializableContent(content);
         // todo restore? in case of exception
-        log.info("Removing existing page " + content.getHandle());
+        if (log.isDebugEnabled()) {
+            log.debug("Removing existing page " + content.getHandle());
+        }
         this.removeNodedataList(content);
         this.removeContentNodeList(content);
     }
@@ -255,12 +260,14 @@ public class ContentWriter {
         Iterator nodeDataIterator = serializableContent.getNodeDataCollection().iterator();
         while (nodeDataIterator.hasNext()) {
             SerializableNodeData sNodeData = (SerializableNodeData) nodeDataIterator.next();
-            log.info("Writing NodeData list for " + content.getHandle());
-            log.info("Writing NodeData [ "
-                + sNodeData.getName()
-                + " ] Type [ "
-                + PropertyType.nameFromValue(sNodeData.getType())
-                + " ]");
+            if (log.isDebugEnabled()) {
+                log.debug("Writing NodeData list for " + content.getHandle());
+                log.debug("Writing NodeData [ "
+                    + sNodeData.getName()
+                    + " ] Type [ "
+                    + PropertyType.nameFromValue(sNodeData.getType())
+                    + " ]");
+            }
             try {
                 NodeData nodeData = content.createNodeData(sNodeData.getName());
                 switch (sNodeData.getType()) {

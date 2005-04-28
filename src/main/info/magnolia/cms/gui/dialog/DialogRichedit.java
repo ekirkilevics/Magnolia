@@ -151,7 +151,7 @@ public class DialogRichedit extends DialogBox {
             }
         }
         catch (RepositoryException e) {
-            log.info("Exception caught: " + e.getMessage(), e);
+            log.debug("Exception caught: " + e.getMessage(), e);
         }
         return options;
     }

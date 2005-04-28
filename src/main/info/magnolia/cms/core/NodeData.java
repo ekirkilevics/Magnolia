@@ -512,7 +512,7 @@ public class NodeData extends ContentHandler {
                 allAncestors.add(new Content(this.property.getAncestor(--level), this.accessManager));
             }
             catch (AccessDeniedException e) {
-                log.info(e.getMessage());
+                //valid
             }
         }
         return allAncestors;

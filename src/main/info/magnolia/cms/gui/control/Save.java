@@ -108,7 +108,9 @@ public class Save extends ControlSuper {
                 catch (RepositoryException re) {
                     // nodeCollection does not exist -> create
                     nodeCollection = page.createContent(nodeCollectionName, ItemType.NT_CONTENTNODE);
-                    log.info("Create - " + nodeCollection.getHandle());
+                    if (log.isDebugEnabled()) {
+                        log.debug("Create - " + nodeCollection.getHandle());
+                    }
                 }
             }
             else {
@@ -170,13 +172,13 @@ public class Save extends ControlSuper {
                             node.delete(name + "_" + FileProperties.PROPERTIES_CONTENTNODE);
                         }
                         catch (RepositoryException re) {
-                            log.info("Exception caught: " + re.getMessage(), re);
+                            log.debug("Exception caught: " + re.getMessage(), re);
                         }
                         try {
                             node.deleteNodeData(name);
                         }
                         catch (RepositoryException re) {
-                            log.info("Exception caught: " + re.getMessage(), re);
+                            log.debug("Exception caught: " + re.getMessage(), re);
                         }
 
                     }
@@ -194,15 +196,17 @@ public class Save extends ControlSuper {
                                 }
                             }
                             catch (RepositoryException re2) {
-                                log.info("Exception caught: " + re2.getMessage(), re2);
+                                log.debug("Exception caught: " + re2.getMessage(), re2);
                             }
                         }
                         if (doc != null) {
                             NodeData data = node.getNodeData(name);
                             if (!data.isExist()) {
                                 data = node.createNodeData(name);
-                                log.info("creating under - " + node.getHandle());
-                                log.debug("creating node data for binary store - " + name);
+                                if (log.isDebugEnabled()) {
+                                    log.debug("creating under - " + node.getHandle());
+                                    log.debug("creating node data for binary store - " + name);
+                                }
                             }
                             data.setValue(doc.getStream());
                             log.debug("Node data updated");
@@ -247,7 +251,7 @@ public class Save extends ControlSuper {
                                         propNode.deleteNodeData(FileProperties.PROPERTY_TEMPLATE);
                                     }
                                     catch (PathNotFoundException e) {
-                                        log.info("Exception caught: " + e.getMessage(), e);
+                                        log.debug("Exception caught: " + e.getMessage(), e);
                                     }
                                 }
                                 doc.delete();
@@ -263,7 +267,7 @@ public class Save extends ControlSuper {
                             node.delete(name);
                         }
                         catch (PathNotFoundException e) {
-                            log.info("Exception caught: " + e.getMessage(), e);
+                            log.debug("Exception caught: " + e.getMessage(), e);
                         }
                         if (values != null && values.length != 0) {
                             Content multiNode = node.createContent(name, ItemType.NT_CONTENTNODE);
@@ -272,7 +276,7 @@ public class Save extends ControlSuper {
                                 multiNode.deleteNodeData("creationdate");
                             }
                             catch (RepositoryException re) {
-                                log.info("Exception caught: " + re.getMessage(), re);
+                                log.debug("Exception caught: " + re.getMessage(), re);
                             }
                             for (int ii = 0; ii < values.length; ii++) {
                                 String valueStr = values[ii];
@@ -335,7 +339,9 @@ public class Save extends ControlSuper {
                     }
                 }
             }
-            log.info("Saving - " + path);
+            if (log.isDebugEnabled()) {
+                log.debug("Saving - " + path);
+            }
             hm.save();
         }
         catch (RepositoryException re) {
@@ -425,7 +431,7 @@ public class Save extends ControlSuper {
                 value = new DateValue(date);
             }
             catch (Exception e) {
-                log.info("Exception caught: " + e.getMessage(), e);
+                log.debug("Exception caught: " + e.getMessage(), e);
             }
         }
         return value;

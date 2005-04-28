@@ -100,13 +100,7 @@ public class StandardDialogPage extends BasePageServlet {
         }
 
         if (drawDialog) {
-            HierarchyManager hm = null;
-            try {
-                hm = SessionAccessControl.getHierarchyManager(request, repository);
-            }
-            catch (Exception e) {
-                log.info("Exception caught: " + e.getMessage(), e);
-            }
+            HierarchyManager hm = SessionAccessControl.getHierarchyManager(request, repository);
             if (paragraph.indexOf(",") == -1) {
                 Content configNode = null;
                 Content websiteNode = null;

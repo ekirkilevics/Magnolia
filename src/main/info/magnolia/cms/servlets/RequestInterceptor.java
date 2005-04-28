@@ -77,7 +77,7 @@ public class RequestInterceptor extends HttpServlet {
                 hm.delete(path);
             }
             catch (Exception e) {
-                log.info("Exception caught: " + e.getMessage(), e);
+                log.debug("Exception caught: " + e.getMessage(), e);
             }
         }
         else if (action.equals("NODE_SORT")) {
@@ -115,7 +115,7 @@ public class RequestInterceptor extends HttpServlet {
                 nodeSelected.save();
             }
             catch (Exception e) {
-                log.info("Exception caught: " + e.getMessage(), e);
+                log.debug("Exception caught: " + e.getMessage(), e);
             }
         }
     }

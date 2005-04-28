@@ -105,7 +105,7 @@ public class File extends ControlSuper {
             }
         }
         catch (RepositoryException e) {
-            log.info("Exception caught: " + e.getMessage(), e);
+            log.debug("Exception caught: " + e.getMessage(), e);
         }
         return fileName;
     }
@@ -126,7 +126,7 @@ public class File extends ControlSuper {
                 }
             }
             catch (RepositoryException e) {
-                log.info("Exception caught: " + e.getMessage(), e);
+                log.debug("Exception caught: " + e.getMessage(), e);
             }
         }
         return template;
@@ -143,7 +143,7 @@ public class File extends ControlSuper {
             }
         }
         catch (RepositoryException e) {
-            log.info("Exception caught: " + e.getMessage(), e);
+            log.debug("Exception caught: " + e.getMessage(), e);
         }
         return ext;
     }

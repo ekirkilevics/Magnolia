@@ -85,7 +85,7 @@ public class NodeDataUtil {
             }
         }
         catch (Exception e) {
-            log.info("Exception caught: " + e.getMessage(), e);
+            log.debug("Exception caught: " + e.getMessage(), e);
         }
         return StringUtils.EMPTY;
     }

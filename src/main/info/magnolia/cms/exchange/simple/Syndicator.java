@@ -165,11 +165,15 @@ public class Syndicator {
      */
     private synchronized void activate(Subscriber subscriber) throws Exception {
         if (!isSubscribed(subscriber)) {
-            log.info("Exchange : subscriber [ " + subscriber.getName() + " ] is not subscribed to " + this.path);
+            if (log.isDebugEnabled()) {
+                log.debug("Exchange : subscriber [ " + subscriber.getName() + " ] is not subscribed to " + this.path);
+            }
             return;
         }
-        log.info("Exchange : sending activation request to " + subscriber.getName());
-        log.info("Exchange : user [ " + Authenticator.getUserId(this.request) + " ]");
+        if (log.isDebugEnabled()) {
+            log.debug("Exchange : sending activation request to " + subscriber.getName());
+            log.debug("Exchange : user [ " + Authenticator.getUserId(this.request) + " ]");
+        }
         String handle = getActivationURL(subscriber);
         URL url = new URL(handle);
         URLConnection urlConnection = url.openConnection();
@@ -238,7 +242,9 @@ public class Syndicator {
         while (en.hasMoreElements()) {
             Subscriber si = (Subscriber) en.nextElement();
             try {
-                log.info("Removing [ " + this.path + " ] from [ " + si.getParam("address") + " ]");
+                if (log.isDebugEnabled()) {
+                    log.debug("Removing [ " + this.path + " ] from [ " + si.getParam("address") + " ]");
+                }
                 deActivate(si);
             }
             catch (Exception e) {

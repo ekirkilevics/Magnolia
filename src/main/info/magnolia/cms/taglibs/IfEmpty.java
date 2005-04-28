@@ -63,7 +63,7 @@ public class IfEmpty extends BodyTagSupport {
                     this.contentNodeCollectionName);
             }
             catch (RepositoryException e) {
-                log.info("Exception caught: " + e.getMessage(), e);
+                log.debug("Exception caught: " + e.getMessage(), e);
             }
             if (this.contentNodeCollection == null) {
                 return EVAL_BODY_INCLUDE;

@@ -308,7 +308,9 @@ public class CacheHandler extends Thread {
                 file.delete();
             }
             else {
-                log.info("Flushing - " + uri);
+                if (log.isDebugEnabled()) {
+                    log.debug("Flushing - " + uri);
+                }
                 file.delete();
                 Cache.removeFromCachedURIList(uri);
                 Cache.removeFromInProcessURIList(uri);
@@ -335,7 +337,9 @@ public class CacheHandler extends Thread {
                 children[i].delete();
             }
             else {
-                log.info("Flushing - " + children[i].getPath());
+                if (log.isDebugEnabled()) {
+                    log.debug("Flushing - " + children[i].getPath());
+                }
                 String path = StringUtils.substringAfter(children[i].getPath(), Path.getCacheDirectoryPath());
                 Cache.removeFromCachedURIList(path);
                 Cache.removeFromInProcessURIList(path);
@@ -350,7 +354,7 @@ public class CacheHandler extends Thread {
      * </p>
      */
     public static void flushCache() {
-        log.info("Flushing entire cache");
+        log.debug("Flushing entire cache");
         try {
             CacheHandler.flushResource(CACHE_DIRECTORY);
             /* this will create cache start directory again */

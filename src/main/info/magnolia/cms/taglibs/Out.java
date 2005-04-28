@@ -362,11 +362,11 @@ public class Out extends TagSupport {
                 out.print(value);
             }
             catch (IOException e) {
-                log.info("Exception caught: " + e.getMessage(), e);
+                log.debug("Exception caught: " + e.getMessage(), e);
             }
         }
         catch (Exception e) {
-            log.info("Exception caught: " + e.getMessage(), e);
+            log.debug("Exception caught: " + e.getMessage(), e);
         }
     }
 

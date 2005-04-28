@@ -388,7 +388,7 @@ public class Tree extends ControlSuper {
             parentNode.save();
         }
         catch (Exception e) {
-            log.info("Exception caught: " + e.getMessage(), e);
+            log.debug("Exception caught: " + e.getMessage(), e);
         }
     }
 
@@ -399,7 +399,7 @@ public class Tree extends ControlSuper {
             deleteNode(parentPath, label);
         }
         catch (Exception e) {
-            log.info("Exception caught: " + e.getMessage(), e);
+            log.debug("Exception caught: " + e.getMessage(), e);
         }
     }
 
@@ -520,7 +520,7 @@ public class Tree extends ControlSuper {
             }
         }
         catch (Exception e) {
-            log.info("Exception caught: " + e.getMessage(), e);
+            log.debug("Exception caught: " + e.getMessage(), e);
         }
         return returnValue;
     }
@@ -575,7 +575,7 @@ public class Tree extends ControlSuper {
             // return PropertyType.nameFromValue(node.getType());
         }
         catch (Exception e) {
-            log.info("Exception caught: " + e.getMessage(), e);
+            log.debug("Exception caught: " + e.getMessage(), e);
         }
         return "";
     }
@@ -785,13 +785,13 @@ public class Tree extends ControlSuper {
                 newContent.getMetaData(MetaData.ACTIVATION_INFO).setUnActivated();
             }
             catch (Exception e) {
-                log.info("Exception caught: " + e.getMessage(), e);
+                log.debug("Exception caught: " + e.getMessage(), e);
             }
             newContent.save();
             return newContent;
         }
         catch (Exception e) {
-            log.info("Exception caught: " + e.getMessage(), e);
+            log.debug("Exception caught: " + e.getMessage(), e);
         }
         return null;
     }
@@ -838,7 +838,7 @@ public class Tree extends ControlSuper {
             newPage.save();
         }
         catch (Exception e) {
-            log.info("Exception caught: " + e.getMessage(), e);
+            log.debug("Exception caught: " + e.getMessage(), e);
         }
         return returnValue;
     }
@@ -889,7 +889,7 @@ public class Tree extends ControlSuper {
             syndicator.deActivate(this.getRepository(), path);
         }
         catch (Exception e) {
-            log.info("Exception caught: " + e.getMessage(), e);
+            log.debug("Exception caught: " + e.getMessage(), e);
         }
     }
 
@@ -998,7 +998,7 @@ public class Tree extends ControlSuper {
             permissionWrite = root.isGranted(info.magnolia.cms.security.Permission.WRITE);
         }
         catch (RepositoryException e) {
-            log.info("Exception caught: " + e.getMessage(), e);
+            log.debug("Exception caught: " + e.getMessage(), e);
         }
 
         // lineInter: line between nodes, to allow set cursor between nodes
@@ -1163,7 +1163,7 @@ public class Tree extends ControlSuper {
             }
         }
         catch (RepositoryException e) {
-            log.info("Exception caught: " + e.getMessage(), e);
+            log.debug("Exception caught: " + e.getMessage(), e);
         }
         return html.toString();
     }
@@ -1477,7 +1477,7 @@ public class Tree extends ControlSuper {
             }
         }
         catch (RepositoryException e) {
-            log.info("Exception caught: " + e.getMessage(), e);
+            log.debug("Exception caught: " + e.getMessage(), e);
         }
         return html.toString();
     }

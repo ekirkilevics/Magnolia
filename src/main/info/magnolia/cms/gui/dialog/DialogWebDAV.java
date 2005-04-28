@@ -475,7 +475,7 @@ public class DialogWebDAV extends DialogBox {
             out.write("</body></html>");
         }
         catch (Exception e) {
-            log.info("Exception caught: " + e.getMessage(), e);
+            log.debug("Exception caught: " + e.getMessage(), e);
         }
     }
 

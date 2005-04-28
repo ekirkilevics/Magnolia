@@ -679,7 +679,7 @@ public class Content extends ContentHandler implements Cloneable {
                 allAncestors.add(new Content(this.node.getAncestor(--level), this.accessManager));
             }
             catch (AccessDeniedException e) {
-                log.info(e.getMessage());
+                // valid
             }
         }
         return allAncestors;

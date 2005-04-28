@@ -84,7 +84,7 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String context = request.getHeader(Syndicator.WORKING_CONTEXT);
 
-        log.info("SimpleExchange.doGet()");
+        log.debug("SimpleExchange.doGet()");
 
         try {
             response.setContentType("text/plain");
@@ -173,7 +173,9 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
 
         String page = request.getHeader(Syndicator.PAGE);
 
-        log.info("Exchange : update request received for " + page);
+        if (log.isDebugEnabled()) {
+            log.debug("Exchange : update request received for " + page);
+        }
 
         String parent = request.getHeader(Syndicator.PARENT);
         String objectType = request.getHeader(Syndicator.OBJECT_TYPE);
@@ -230,8 +232,9 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
     public void deactivate(HttpServletRequest request) throws Exception {
 
         String page = request.getHeader(Syndicator.PAGE);
-
-        log.info("Exchange : remove request received for " + page);
+        if (log.isDebugEnabled()) {
+            log.debug("Exchange : remove request received for " + page);
+        }
         HierarchyManager hm = this.getHierarchyManager();
         hm.delete(page);
         hm.save();
@@ -246,7 +249,9 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
     private void get(String page, String type, boolean recurse, HttpServletResponse response) throws Exception {
         if (type.equalsIgnoreCase(Syndicator.GET_TYPE_BINARY)) {
             // this.getBinary();
-            log.info("Binary request for " + page);
+            if (log.isDebugEnabled()) {
+                log.debug("Binary request for " + page);
+            }
             HierarchyManager hm = this.getHierarchyManager();
             try {
                 InputStream is = hm.getNodeData(page).getValue().getStream();
@@ -266,7 +271,9 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
         }
         else {
             // this.getSerializedObject(); // default type, supporting magnolia 1.1
-            log.info("Serialized object request for " + page);
+            if (log.isDebugEnabled()) {
+                log.debug("Serialized object request for " + page);
+            }
 
             Packet packet = PacketCollector.getPacket(this.getHierarchyManager(), page, recurse);
             ObjectOutputStream os = new ObjectOutputStream(response.getOutputStream());

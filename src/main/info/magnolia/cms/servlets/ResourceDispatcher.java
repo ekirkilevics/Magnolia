@@ -85,7 +85,7 @@ public class ResourceDispatcher extends HttpServlet {
                 }
             }
             catch (Exception e) {
-                log.info("Exception while dispatching resource  " + e.getClass().getName() + ": " + e.getMessage(), e);
+                log.error("Exception while dispatching resource  " + e.getClass().getName() + ": " + e.getMessage(), e);
             }
         }
         if (log.isDebugEnabled()) {
