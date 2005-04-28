@@ -107,15 +107,7 @@ public class UserEditIncludeRolesDialogPage extends BasePageServlet {
                 String path = c.getNodeData("path").getString();
                 String name = "";
                 try {
-                    HierarchyManager hm = new HierarchyManager(request);
-
-                    try {
-                        Session t = SessionAccessControl.getSession(request, ContentRepository.USER_ROLES);
-                        Node rootNode = t.getRootNode();
-                        hm.init(rootNode);
-                    }
-                    catch (Exception e) {
-                    }
+                    HierarchyManager hm = SessionAccessControl.getHierarchyManager(request,ContentRepository.USER_ROLES);
                     Content role = null;
                     try {
                         role = hm.getContent(path);

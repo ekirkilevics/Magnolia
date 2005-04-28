@@ -96,15 +96,7 @@ public class Save extends ControlSuper {
         String path = this.getPath();
         HttpServletRequest request = this.getRequest();
 
-        HierarchyManager hm = new HierarchyManager(this.getRequest());
-        try {
-            Session t = SessionAccessControl.getSession(request, this.getRepository());
-            Node rootNode = t.getRootNode();
-            hm.init(rootNode);
-        }
-        catch (Exception e) {
-            log.info("Exception caught: " + e.getMessage(), e);
-        }
+        HierarchyManager hm = SessionAccessControl.getHierarchyManager(request,this.getRepository());
         try {
             Content page = hm.getContent(path);
             // get or create nodeCollection

@@ -105,13 +105,7 @@ public class UserRolesEditDialogPage extends BasePageServlet {
             if (path.equals(""))
                 create = true;
 
-            try {
-                Session t = SessionAccessControl.getSession(request, ContentRepository.USER_ROLES);
-                Node rootNode = t.getRootNode();
-                hm.init(rootNode);
-            }
-            catch (Exception e) {
-            }
+            hm = SessionAccessControl.getHierarchyManager(request,ContentRepository.USER_ROLES);
 
             if (!create) {
                 try {

@@ -6,12 +6,9 @@ import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.gui.control.Button;
-import info.magnolia.cms.gui.control.ControlSuper;
 import info.magnolia.cms.gui.control.Save;
 import info.magnolia.cms.gui.control.SelectOption;
 import info.magnolia.cms.gui.dialog.DialogButton;
-import info.magnolia.cms.gui.dialog.DialogButtonSet;
 import info.magnolia.cms.gui.dialog.DialogDialog;
 import info.magnolia.cms.gui.dialog.DialogEdit;
 import info.magnolia.cms.gui.dialog.DialogFactory;
@@ -144,13 +141,7 @@ public class UserEditDialogPage extends BasePageServlet {
             if (path.equals(""))
                 create = true;
 
-            try {
-                Session t = SessionAccessControl.getSession(request, repository);
-                Node rootNode = t.getRootNode();
-                hm.init(rootNode);
-            }
-            catch (Exception e) {
-            }
+            hm = SessionAccessControl.getHierarchyManager(request,repository);
 
             if (!create) {
                 try {
