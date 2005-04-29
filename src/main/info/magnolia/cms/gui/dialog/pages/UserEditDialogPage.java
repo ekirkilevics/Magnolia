@@ -382,7 +382,7 @@ public class UserEditDialogPage extends BasePageServlet {
 
                 Content aclRoles = user.createContent(NODE_ACLROLES, ItemType.NT_CONTENTNODE);
                 Content aclConfig = user.createContent(NODE_ACLCONFIG, ItemType.NT_CONTENTNODE);
-                Save save = new Save();
+                Save save = nodeXml;
                 Content u0 = aclUsers.createContent("00", ItemType.NT_CONTENTNODE);
                 u0.createNodeData("path", save.getValue(user.getHandle() + "/" + NODE_ROLES), PropertyType.STRING);
                 u0.createNodeData("permissions", save.getValue(PERMISSION_READ), PropertyType.LONG);
