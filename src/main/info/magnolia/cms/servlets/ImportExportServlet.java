@@ -74,15 +74,9 @@ public class ImportExportServlet extends HttpServlet {
             Session session = ws.getSession();
 
             try {
-                if (ContentRepository.WEBSITE.equals(repository)) {
-                    // use exportSystemView in order to preserve property types
-                    // http://issues.apache.org/jira/browse/JCR-115
-                    session.exportSystemView(basepath, stream, false, false);
-                }
-                else {
-                    // for other repositories use document view
-                    session.exportDocumentView(basepath, stream, false, false);
-                }
+                // use exportSystemView in order to preserve property types
+                // http://issues.apache.org/jira/browse/JCR-115
+                session.exportSystemView(basepath, stream, false, false);
             }
             catch (Exception e) {
                 throw new NestableRuntimeException(e);
