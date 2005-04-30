@@ -27,7 +27,7 @@
     <repository>
         <connection>scm:subversion:http://svn.magnolia.info/svn/magnolia/trunk</connection>
         <developerConnection>scm:subversion:https://svn.magnolia.info/svn/magnolia/trunk</developerConnection>
-        <url>http://svn.magnolia.info/svn/magnolia/trunk</url>
+        <url>http://svn.magnolia.info/svn</url>
     </repository>
     <versions>
         <version>
