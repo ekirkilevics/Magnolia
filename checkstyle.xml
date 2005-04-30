@@ -24,6 +24,13 @@
             <property name="severity" value="info"/>
         </module>
         <module name="com.puppycrawl.tools.checkstyle.checks.GenericIllegalRegexpCheck">
+            <property name="format" value='equals\(\"\"\)'/>
+            <property name="ignoreCase" value="false"/>
+            <property name="ignoreComments" value="false"/>
+            <property name="message" value="Avoid equals(''), use StringUtils.isEmpty"/>
+            <property name="severity" value="error"/>
+        </module>
+        <module name="com.puppycrawl.tools.checkstyle.checks.GenericIllegalRegexpCheck">
             <property name="format" value="\.printStackTrace\(\)"/>
             <property name="ignoreCase" value="false"/>
             <property name="ignoreComments" value="false"/>
