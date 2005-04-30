@@ -25,6 +25,8 @@ import java.util.Map;
 
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -41,20 +43,26 @@ public class Subscriber {
 
     private static final String START_PAGE = "subscribers";
 
-    private static Iterator ipList;
-
     private static Hashtable cachedContent = new Hashtable();
 
     private String name;
 
-    private Map context;
+    private boolean active;
 
-    private Map params;
+    private boolean requestConfirmation;
+
+    private String address;
+
+    private String protocol;
+
+    private String senderURL;
+
+    private Map context;
 
     /**
      * constructor
      */
-    public Subscriber() {
+    private Subscriber() {
     }
 
     /**
@@ -69,8 +77,7 @@ public class Subscriber {
             Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(START_PAGE);
             Collection children = startPage.getContent("SubscriberConfig").getChildren();
             if (children != null) {
-                Subscriber.ipList = children.iterator();
-                Subscriber.cacheContent();
+                Subscriber.cacheContent(children);
             }
             log.info("Config : Subscribers loaded");
         }
@@ -81,44 +88,50 @@ public class Subscriber {
     }
 
     public static void reload() {
-        log.info("Config : re-loading Sunscribers");
+        log.info("Config : re-loading Subscribers");
         Subscriber.init();
     }
 
     /**
-     * <p>
-     * Cache listener content from the config repository
-     * </p>
+     * Cache listener content from the config repository.
      */
-    private static void cacheContent() {
-        while (Subscriber.ipList.hasNext()) {
-            Content c = (Content) Subscriber.ipList.next();
+    private static void cacheContent(Collection subs) {
+
+        Iterator ipList = subs.iterator();
+
+        while (ipList.hasNext()) {
+            Content c = (Content) ipList.next();
             Subscriber si = new Subscriber();
-            si.params = new Hashtable();
-            Iterator paramList = c.getNodeDataCollection().iterator();
-            while (paramList.hasNext()) {
-                NodeData nd = (NodeData) paramList.next();
-                si.params.put(nd.getName(), nd.getString());
-            }
-            // si.address = c.getNodeData("address").getString();
-            // si.protocol = c.getNodeData("protocol").getString();
-            // si.requestConfirmation = c.getNodeData("requestConfirmation").getBoolean();
+
+            si.address = c.getNodeData("address").getString();
+            si.protocol = c.getNodeData("protocol").getString();
+            si.senderURL = c.getNodeData("senderURL").getString();
+            si.requestConfirmation = c.getNodeData("requestConfirmation").getBoolean();
             si.name = c.getName();
-            /* all context info */
+
+            // don't use getBoolean since subscribers without an "active" node should be enabled by default
+            String activeString = c.getNodeData("active").getString();
+
+            if (StringUtils.isNotEmpty(activeString)) {
+                si.active = BooleanUtils.toBoolean(activeString);
+            }
+            else {
+                si.active = true;
+            }
+
+            // all context info
             try {
                 addContext(si, c);
             }
-            catch (Exception e) { /* valid */
+            catch (Exception e) { // valid
             }
             Subscriber.cachedContent.put(c.getName(), si);
         }
-        Subscriber.ipList = null;
+        ipList = null;
     }
 
     /**
-     * <p>
-     * Adds context datail to cache
-     * </p>
+     * Adds context datail to cache.
      * @param subscriberInfo
      * @param contentNode
      */
@@ -139,9 +152,7 @@ public class Subscriber {
     }
 
     /**
-     * <p>
-     * get list of all configured ip
-     * </p>
+     * Get list of all configured ip.
      * @return Enumeration
      */
     public static Enumeration getList() {
@@ -149,17 +160,35 @@ public class Subscriber {
     }
 
     /**
-     * @return SubscriberInfo object as configured
+     * Getter for <code>active</code>.
+     * @return Returns the active.
      */
-    public static Subscriber getSubscriber(String name) {
-        return (Subscriber) Subscriber.cachedContent.get(name);
+    public boolean isActive() {
+        return this.active;
     }
 
     /**
-     * @return param value
+     * Getter for <code>address</code>.
+     * @return Returns the address.
      */
-    public String getParam(String id) {
-        return (String) this.params.get(id);
+    public String getAddress() {
+        return this.address;
+    }
+
+    /**
+     * Getter for <code>protocol</code>.
+     * @return Returns the protocol.
+     */
+    public String getProtocol() {
+        return this.protocol;
+    }
+
+    /**
+     * Getter for <code>requestConfirmation</code>.
+     * @return Returns the requestConfirmation.
+     */
+    public boolean getRequestConfirmation() {
+        return this.requestConfirmation;
     }
 
     /**
@@ -177,5 +206,13 @@ public class Subscriber {
             return null;
         }
         return (ArrayList) this.context.get(name);
+    }
+
+    /**
+     * Getter for <code>senderURL</code>.
+     * @return Returns the senderURL.
+     */
+    public String getSenderURL() {
+        return this.senderURL;
     }
 }

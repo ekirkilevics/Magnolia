@@ -153,7 +153,9 @@ public class Syndicator {
         Enumeration en = Subscriber.getList();
         while (en.hasMoreElements()) {
             Subscriber si = (Subscriber) en.nextElement();
-            activate(si);
+            if (si.isActive()) {
+                activate(si);
+            }
         }
     }
 
@@ -241,14 +243,17 @@ public class Syndicator {
         Enumeration en = Subscriber.getList();
         while (en.hasMoreElements()) {
             Subscriber si = (Subscriber) en.nextElement();
+            if (!si.isActive()) {
+                continue;
+            }
             try {
                 if (log.isDebugEnabled()) {
-                    log.debug("Removing [ " + this.path + " ] from [ " + si.getParam("address") + " ]");
+                    log.debug("Removing [ " + this.path + " ] from [ " + si.getAddress() + " ]");
                 }
                 deActivate(si);
             }
             catch (Exception e) {
-                log.error("Failed to remove [ " + this.path + " ] from [ " + si.getParam("address") + " ]");
+                log.error("Failed to remove [ " + this.path + " ] from [ " + si.getAddress() + " ]");
                 log.error(e.getMessage(), e);
             }
         }
@@ -273,11 +278,7 @@ public class Syndicator {
      *
      */
     private String getDeactivationURL(Subscriber subscriberInfo) {
-        String handle = subscriberInfo.getParam("protocol")
-            + "://"
-            + subscriberInfo.getParam("address")
-            + "/"
-            + DEFAULT_HANDLER;
+        String handle = subscriberInfo.getProtocol() + "://" + subscriberInfo.getAddress() + "/" + DEFAULT_HANDLER;
         return handle;
     }
 
@@ -292,11 +293,7 @@ public class Syndicator {
      * @return activation handle
      */
     private String getActivationURL(Subscriber subscriberInfo) {
-        String handle = subscriberInfo.getParam("protocol")
-            + "://"
-            + subscriberInfo.getParam("address")
-            + "/"
-            + DEFAULT_HANDLER;
+        String handle = subscriberInfo.getProtocol() + "://" + subscriberInfo.getAddress() + "/" + DEFAULT_HANDLER;
         return handle;
     }
 
@@ -328,7 +325,7 @@ public class Syndicator {
         connection.addRequestProperty("action", "activate");
         connection.addRequestProperty("recursive", BooleanUtils.toStringTrueFalse(this.recursive));
 
-        String senderURL = subscriber.getParam(SENDER_URL);
+        String senderURL = subscriber.getSenderURL();
 
         if (senderURL == null) {
             // todo remove remotePort property once its tested together with apache

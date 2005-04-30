@@ -242,9 +242,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
-     * Returns the <code>boolean</code> representation of the value:
-     * </p>
+     * Returns the <code>boolean</code> representation of the value.
      * @return boolean
      */
     public boolean getBoolean() {
@@ -512,7 +510,7 @@ public class NodeData extends ContentHandler {
                 allAncestors.add(new Content(this.property.getAncestor(--level), this.accessManager));
             }
             catch (AccessDeniedException e) {
-                //valid
+                // valid
             }
         }
         return allAncestors;

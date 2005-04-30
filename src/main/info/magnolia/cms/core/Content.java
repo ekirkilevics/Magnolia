@@ -294,10 +294,11 @@ public class Content extends ContentHandler implements Cloneable {
                 catch (RepositoryException e1) {
                     // ignore, debug only
                 }
-                log.debug("Path not found for property [" + name + "] in node " + nodepath);
+                if (log.isDebugEnabled()) {
+                    log.debug("Path not found for property [" + name + "] in node " + nodepath);
+                }
             }
 
-            // @todo should return null?
             return (new NodeData());
         }
         catch (RepositoryException re) {
