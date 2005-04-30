@@ -483,7 +483,7 @@
         <dependency>
             <groupId>maven</groupId>
             <artifactId>maven-eclipse-plugin</artifactId>
-            <version>1.10-UNOFFICIAL-1</version>
+            <version>1.10-UNOFFICIAL-2-SNAPSHOT</version>
             <type>plugin</type>
             <url>http://magnolia.sourceforge.net/maven/repository/maven/plugins/maven-war-plugin-1.10-UNOFFICIAL-1.jar</url>
             <properties>
@@ -492,7 +492,6 @@
                 </comment>
             </properties>
         </dependency>
-
 
 
 
