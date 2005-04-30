@@ -133,7 +133,7 @@ public final class SessionAccessControl {
     /**
      * gets AccessManager for the current user session for the default repository and workspace
      * @param request
-     * */
+     */
     public static AccessManager getAccessManager(HttpServletRequest request) {
         return getAccessManager(request, DEFAULT_REPOSITORY);
     }
@@ -142,7 +142,7 @@ public final class SessionAccessControl {
      * gets AccessManager for the current user session for the specified repository default workspace
      * @param request
      * @param repositoryID
-     * */
+     */
     public static AccessManager getAccessManager(HttpServletRequest request, String repositoryID) {
         return getAccessManager(request, repositoryID, DEFAULT_WORKSPACE);
     }
@@ -152,15 +152,18 @@ public final class SessionAccessControl {
      * @param request
      * @param repositoryID
      * @param workspaceID
-     * */
+     */
     public static AccessManager getAccessManager(HttpServletRequest request, String repositoryID, String workspaceID) {
-        AccessManager accessManager = (AccessManager) request.getSession().getAttribute(ATTRIBUTE_AM_PREFIX
-        + repositoryID + "_" + workspaceID);
+
+        AccessManager accessManager = (AccessManager) request.getSession().getAttribute(
+            ATTRIBUTE_AM_PREFIX + repositoryID + "_" + workspaceID);
+
         if (accessManager == null) {
             // initialize appropriate repository/workspace session, which will create access manager for it
-            getHierarchyManager(request,repositoryID,workspaceID);
+            getHierarchyManager(request, repositoryID, workspaceID);
             // now session value for access manager must be set
-            accessManager = getAccessManager(request,repositoryID,workspaceID);
+            accessManager = (AccessManager) request.getSession().getAttribute(
+                ATTRIBUTE_AM_PREFIX + repositoryID + "_" + workspaceID);
         }
 
         return accessManager;
@@ -169,9 +172,8 @@ public final class SessionAccessControl {
     /**
      * Gets access controlled query manager
      * @param request
-     * */
-    public static QueryManager getQueryManager(HttpServletRequest request)
-        throws RepositoryException {
+     */
+    public static QueryManager getQueryManager(HttpServletRequest request) throws RepositoryException {
         return getQueryManager(request, DEFAULT_REPOSITORY);
     }
 
@@ -179,7 +181,7 @@ public final class SessionAccessControl {
      * Gets access controlled query manager
      * @param request
      * @param repositoryID
-     * */
+     */
     public static QueryManager getQueryManager(HttpServletRequest request, String repositoryID)
         throws RepositoryException {
         return getQueryManager(request, repositoryID, DEFAULT_WORKSPACE);
@@ -190,15 +192,20 @@ public final class SessionAccessControl {
      * @param request
      * @param repositoryID
      * @param workspaceID
-     * */
+     */
     public static QueryManager getQueryManager(HttpServletRequest request, String repositoryID, String workspaceID)
         throws RepositoryException {
-        QueryManager queryManager = (QueryManager) request.getSession().getAttribute(ATTRIBUTE_QM_PREFIX
-        + repositoryID + "_" + workspaceID);
+        QueryManager queryManager = (QueryManager) request.getSession().getAttribute(
+            ATTRIBUTE_QM_PREFIX + repositoryID + "_" + workspaceID);
         if (queryManager == null) {
-            javax.jcr.query.QueryManager qm = getSession(request,repositoryID,workspaceID).getWorkspace().getQueryManager();
-            queryManager = SearchFactory.getAccessControllableQueryManager(qm, getAccessManager(request,repositoryID,workspaceID));
-            request.getSession().setAttribute(ATTRIBUTE_QM_PREFIX + repositoryID + "_" + workspaceID,queryManager);
+            javax.jcr.query.QueryManager qm = getSession(request, repositoryID, workspaceID)
+                .getWorkspace()
+                .getQueryManager();
+            queryManager = SearchFactory.getAccessControllableQueryManager(qm, getAccessManager(
+                request,
+                repositoryID,
+                workspaceID));
+            request.getSession().setAttribute(ATTRIBUTE_QM_PREFIX + repositoryID + "_" + workspaceID, queryManager);
         }
         return queryManager;
     }
@@ -361,7 +368,7 @@ public final class SessionAccessControl {
         try {
             HierarchyManager rolesHierarchy = ContentRepository.getHierarchyManager(ContentRepository.USER_ROLES);
             /* get access rights of this user */
-            
+
             Content acl = null;
             try {
                 acl = userNode.getContent("roles");
@@ -371,7 +378,6 @@ public final class SessionAccessControl {
                 return;
             }
 
-            
             Collection aclCollection = acl.getChildren();
             if (aclCollection == null) {
                 return;
@@ -381,7 +387,7 @@ public final class SessionAccessControl {
             while (children.hasNext()) {
                 Content map = (Content) children.next();
                 String groupPath = map.getNodeData("path").getString();
-                if(StringUtils.isNotEmpty(groupPath)){
+                if (StringUtils.isNotEmpty(groupPath)) {
                     Content groupNode = rolesHierarchy.getContent(groupPath);
                     updateACL(groupNode, groupACL, repositoryID);
                 }
