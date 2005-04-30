@@ -12,10 +12,10 @@
  */
 package info.magnolia.module.admininterface;
 
-import info.magnolia.cms.beans.config.ItemType;
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.config.Template;
-import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.control.Tree;
@@ -47,7 +47,7 @@ public class AdminTreeWebsite implements AdminTree {
         boolean create, String createItemType) {
         this.request = request;
         Messages msgs = MessagesManager.getMessages(request);
-        
+
         tree.setIconOndblclick("mgnlTreeMenuItemOpen(" + tree.getJavascriptTree() + ");");
         tree.setPath(path);
         if (create) {
@@ -57,12 +57,12 @@ public class AdminTreeWebsite implements AdminTree {
             tree.setPathOpen(pathOpen);
             tree.setPathSelected(pathSelected);
         }
-        tree.addItemType(ItemType.NT_CONTENT);
+        tree.addItemType(ItemType.CONTENT);
 
         // to view all nodes uncomment this lines
-        //tree.addItemType(ItemType.NT_CONTENTNODE);
-        //tree.addItemType(ItemType.NT_NODEDATA);
-        
+        // tree.addItemType(ItemType.NT_CONTENTNODE);
+        // tree.addItemType(ItemType.NT_NODEDATA);
+
         TreeColumn column0 = new TreeColumn(tree.getJavascriptTree(), request);
         column0.setIsLabel(true);
         column0.setWidth(3);
@@ -87,22 +87,23 @@ public class AdminTreeWebsite implements AdminTree {
         column2.setTitle(msgs.get("tree.web.template"));
         // must render this column specially
         column2.setHtmlRenderer(new TemplateTreeColumnHtmlRenderer());
-        
+
         Select templateSelect = new Select();
         templateSelect.setName(tree.getJavascriptTree() + TreeColumn.EDIT_NAMEADDITION);
         templateSelect.setSaveInfo(false);
         templateSelect.setCssClass(TreeColumn.EDIT_CSSCLASS_SELECT);
-        
-         
-        
-        // we must pass the displayValue to this function 
+
+        // we must pass the displayValue to this function
         // templateSelect.setEvent("onblur", tree.getJavascriptTree() + TreeColumn.EDIT_JSSAVE);
         // templateSelect.setEvent("onchange", tree.getJavascriptTree() + TreeColumn.EDIT_JSSAVE);
-        templateSelect.setEvent("onblur", tree.getJavascriptTree() + ".saveNodeData(this.value,this.options[this.selectedIndex].text)");
-        templateSelect.setEvent("onchange", tree.getJavascriptTree() + ".saveNodeData(this.value,this.options[this.selectedIndex].text)");
-        
-        Iterator templates = Template.getAvailableTemplates(SessionAccessControl.getAccessManager(this.request,
-        ContentRepository.CONFIG));
+        templateSelect.setEvent("onblur", tree.getJavascriptTree()
+            + ".saveNodeData(this.value,this.options[this.selectedIndex].text)");
+        templateSelect.setEvent("onchange", tree.getJavascriptTree()
+            + ".saveNodeData(this.value,this.options[this.selectedIndex].text)");
+
+        Iterator templates = Template.getAvailableTemplates(SessionAccessControl.getAccessManager(
+            this.request,
+            ContentRepository.CONFIG));
         while (templates.hasNext()) {
             Template template = (Template) templates.next();
             String title = template.getTitle();
@@ -136,7 +137,7 @@ public class AdminTreeWebsite implements AdminTree {
 
         TreeMenuItem menuNewPage = new TreeMenuItem();
         menuNewPage.setLabel(msgs.get("tree.web.menu.new"));
-        menuNewPage.setOnclick(tree.getJavascriptTree() + ".createNode('" + ItemType.NT_CONTENT + "');");
+        menuNewPage.setOnclick(tree.getJavascriptTree() + ".createNode('" + ItemType.CONTENT.getSystemName() + "');");
         menuNewPage.addJavascriptCondition("mgnlTreeMenuItemConditionPermissionWrite");
 
         TreeMenuItem menuDelete = new TreeMenuItem();

@@ -12,7 +12,6 @@
  */
 package info.magnolia.cms.core;
 
-import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.core.util.Access;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
@@ -22,13 +21,13 @@ import info.magnolia.cms.security.Permission;
 import java.util.Collection;
 import java.util.Iterator;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.jcr.Node;
-import javax.jcr.Workspace;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
 import javax.jcr.ItemExistsException;
 import javax.jcr.ItemNotFoundException;
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Workspace;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -121,13 +120,14 @@ public class HierarchyManager {
      */
     public Content createPage(String path, String label) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
-        Content newPage = (new Content(this.startPage, this.getNodePath(path, label),
-        ItemType.getSystemName(ItemType.NT_CONTENT), this.accessManager));
+        Content newPage = (new Content(
+            this.startPage,
+            this.getNodePath(path, label),
+            ItemType.CONTENT.getSystemName(),
+            this.accessManager));
         this.setMetaData(newPage.getMetaData());
         return newPage;
     }
-
-
 
     /**
      * <p>
@@ -250,8 +250,7 @@ public class HierarchyManager {
      * @throws javax.jcr.RepositoryException
      * @deprecated use getContent(String path) instead
      */
-    public Content getContentNode(String path) throws PathNotFoundException, RepositoryException,
-        AccessDeniedException {
+    public Content getContentNode(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         Content content = new Content(this.startPage, getNodePath(path), this.accessManager);
         return content;
     }
@@ -295,7 +294,7 @@ public class HierarchyManager {
         Content pageToBeFound = null;
         try {
             if (page.hasChildren()) {
-                Collection children = page.getChildren(ItemType.NT_CONTENT, ContentHandler.SORT_BY_NAME);
+                Collection children = page.getChildren(ItemType.CONTENT.getSystemName(), ContentHandler.SORT_BY_NAME);
                 Iterator iterator = children.iterator();
                 while (iterator.hasNext()) {
                     Content child = (Content) iterator.next();
@@ -330,7 +329,8 @@ public class HierarchyManager {
     public void delete(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         if (this.isNodeData(path)) {
             this.startPage.getProperty(makeRelative(path)).remove();
-        } else {
+        }
+        else {
             this.startPage.getNode(makeRelative(path)).remove();
         }
     }
@@ -351,9 +351,7 @@ public class HierarchyManager {
     }
 
     /**
-     * <p>
-     * checks if the requested resource is a page (hierarchy Node)
-     * </p>
+     * Checks if the requested resource is a page (hierarchy Node).
      * @param path of the requested content
      * @return boolean true is the requested content is a Hierarchy Node
      */
@@ -361,13 +359,13 @@ public class HierarchyManager {
         Access.isGranted(this.accessManager, path, Permission.READ);
 
         String nodePath = getNodePath(path);
-        if (nodePath == null || "".equals(nodePath)) {
+        if (StringUtils.isEmpty(nodePath)) {
             return false;
         }
 
         try {
             Node n = this.startPage.getNode(nodePath);
-            return (n.isNodeType(ItemType.getSystemName(ItemType.NT_CONTENT)));
+            return (n.isNodeType(ItemType.CONTENT.getSystemName()));
         }
         catch (RepositoryException re) {
         }
@@ -399,9 +397,7 @@ public class HierarchyManager {
     }
 
     /**
-     * <p>
-     * evaluate primary node type of the node at the given path
-     * </p>
+     * Evaluate primary node type of the node at the given path.
      */
     public boolean isNodeType(String path, String type) {
         try {
@@ -413,6 +409,13 @@ public class HierarchyManager {
             log.debug(re);
         }
         return false;
+    }
+
+    /**
+     * Evaluate primary node type of the node at the given path.
+     */
+    public boolean isNodeType(String path, ItemType type) {
+        return isNodeType(path, type.getSystemName());
     }
 
     /**
@@ -441,11 +444,10 @@ public class HierarchyManager {
     }
 
     /**
-     * This method can be used to retrieve Content which has UUID assigned to it,
-     * in other words only those nodes which has mixin type mix:referenceable.
-     *
+     * This method can be used to retrieve Content which has UUID assigned to it, in other words only those nodes which
+     * has mixin type mix:referenceable.
      * @param uuid
-     * */
+     */
     public Content getContentByUUID(String uuid) throws ItemNotFoundException, RepositoryException,
         AccessDeniedException {
         return (new Content(this.startPage.getSession().getNodeByUUID(uuid), this.accessManager));
@@ -510,7 +512,7 @@ public class HierarchyManager {
 
     /**
      * Returns true if the session has pending (unsaved) changes.
-     * */
+     */
     public boolean hasPendingChanges() throws RepositoryException {
         return this.startPage.getSession().hasPendingChanges();
     }

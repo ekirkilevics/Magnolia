@@ -1,7 +1,7 @@
 package info.magnolia.cms.gui.dialog.pages;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.config.ItemType;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.gui.control.TreeMenuItem;
@@ -93,7 +93,7 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
             websiteTree.setPathOpen(pathOpen);
             websiteTree.setPathSelected(pathSelected);
 
-            websiteTree.addItemType(ItemType.NT_CONTENT);
+            websiteTree.addItemType(ItemType.CONTENT);
 
             TreeColumn column0 = new TreeColumn(websiteTree.getJavascriptTree(), request);
             column0.setIsLabel(true);
@@ -139,7 +139,7 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
             usersTree.setDrawShifter(false);
             usersTree.setIconPage(Tree.ICONDOCROOT + "pawn_glass_yellow.gif");
 
-            usersTree.addItemType(ItemType.NT_CONTENT);
+            usersTree.addItemType(ItemType.CONTENT);
 
             usersTree.setPathOpen(pathOpen);
             usersTree.setPathSelected(pathSelected);
@@ -188,7 +188,7 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
             rolesTree.setDrawShifter(false);
             rolesTree.setIconPage(Tree.ICONDOCROOT + "hat_white.gif");
 
-            rolesTree.addItemType(ItemType.NT_CONTENT);
+            rolesTree.addItemType(ItemType.CONTENT);
 
             rolesTree.setPathOpen(pathOpen);
             rolesTree.setPathSelected(pathSelected);
@@ -240,21 +240,21 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
             websiteTree.setPathOpen(pathOpen);
             websiteTree.setPathSelected(pathSelected);
 
-            websiteTree.addItemType(ItemType.NT_CONTENT);
-            websiteTree.addItemType(ItemType.NT_CONTENTNODE);
+            websiteTree.addItemType(ItemType.CONTENT);
+            websiteTree.addItemType(ItemType.CONTENTNODE);
             websiteTree.addItemType(ItemType.NT_NODEDATA);
-            
+
             TreeColumn column0 = new TreeColumn(websiteTree.getJavascriptTree(), request);
             column0.setIsLabel(true);
             column0.setWidth(3);
 
-            //TreeColumn column1 = new TreeColumn(websiteTree.getJavascriptTree(), request);
-            //column1.setName("title");
-            //column1.setTitle(msgs.get("linkbrowser.web.title"));
-            //column1.setWidth(2);
+            // TreeColumn column1 = new TreeColumn(websiteTree.getJavascriptTree(), request);
+            // column1.setName("title");
+            // column1.setTitle(msgs.get("linkbrowser.web.title"));
+            // column1.setWidth(2);
 
             websiteTree.addColumn(column0);
-            //websiteTree.addColumn(column1);
+            // websiteTree.addColumn(column1);
 
             TreeMenuItem menuRefresh = new TreeMenuItem();
             menuRefresh.setLabel(msgs.get("linkbrowser.refresh"));
@@ -276,8 +276,7 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
             if (!snippetMode)
                 out.println("</div>");
         }
- 
-        
+
         if (!snippetMode) {
             out.println("</body></html>");
         }

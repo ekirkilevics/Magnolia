@@ -12,9 +12,9 @@
  */
 package info.magnolia.cms.exchange.simple;
 
-import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.AccessDeniedException;
@@ -79,7 +79,7 @@ public class ContentWriter {
         this.writeContent(destination, content);
         this.hierarchyManager.save();
         if (log.isDebugEnabled()) {
-            log.debug("Path "+destination.getHandle()+" saved");
+            log.debug("Path " + destination.getHandle() + " saved");
         }
     }
 
@@ -87,7 +87,7 @@ public class ContentWriter {
         this.writeContent(destination, contentNode);
         this.hierarchyManager.save();
         if (log.isDebugEnabled()) {
-            log.debug("Path "+destination.getHandle()+" saved");
+            log.debug("Path " + destination.getHandle() + " saved");
         }
     }
 
@@ -108,7 +108,8 @@ public class ContentWriter {
                 this.safeDelete(content);
             }
             catch (PathNotFoundException e) {
-                content = this.hierarchyManager.createContent(parent.getHandle(), newPageName, ItemType.NT_CONTENTNODE);
+                content = this.hierarchyManager.createContent(parent.getHandle(), newPageName, ItemType.CONTENTNODE
+                    .getSystemName());
             }
         }
         else {
@@ -173,7 +174,7 @@ public class ContentWriter {
     }
 
     private void removeContentNodeList(Content node) {
-        Collection subNodes = node.getChildren(ItemType.NT_CONTENTNODE);
+        Collection subNodes = node.getChildren(ItemType.CONTENTNODE);
         if (subNodes.size() > 0) {
             Iterator nodeIterator = subNodes.iterator();
             while (nodeIterator.hasNext()) {
@@ -198,7 +199,7 @@ public class ContentWriter {
         while (contentNodeIterator.hasNext()) {
             SerializableContentNode sContentNode = (SerializableContentNode) contentNodeIterator.next();
             try {
-                Content newContentNode = parent.createContent(sContentNode.getName(), ItemType.NT_CONTENTNODE);
+                Content newContentNode = parent.createContent(sContentNode.getName(), ItemType.CONTENTNODE);
                 try {
                     /* write meta data */
                     this.writeMetaData(newContentNode, sContentNode.getMetaData());

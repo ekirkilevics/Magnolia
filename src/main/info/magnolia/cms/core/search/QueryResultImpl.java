@@ -12,25 +12,28 @@
  */
 package info.magnolia.cms.core.search;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.Path;
-import info.magnolia.cms.beans.config.ItemType;
 
-import javax.jcr.NodeIterator;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
+
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
-import java.util.*;
 
-import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 
 /**
- * Date: Apr 1, 2005
- * Time: 1:10:04 PM
- *
+ * Date: Apr 1, 2005 Time: 1:10:04 PM
  * @author Sameer Charles
  */
 
@@ -43,12 +46,12 @@ public class QueryResultImpl implements QueryResult {
 
     /**
      * Unfiltered result object
-     * */
+     */
     private javax.jcr.query.QueryResult result;
 
     /**
      * caches all previously queried objects
-     * */
+     */
     private Map objectStore = new Hashtable();
 
     private AccessManager accessManager;
@@ -62,15 +65,16 @@ public class QueryResultImpl implements QueryResult {
 
     /**
      * Build required result objects
-     * */
+     */
     private void build(String nodeType, Collection collection) throws RepositoryException {
-        this.objectStore.put(nodeType,collection);
+        this.objectStore.put(nodeType, collection);
         NodeIterator nodeIterator = this.result.getNodes();
         while (nodeIterator.hasNext()) {
             Node node = nodeIterator.nextNode();
             try {
                 build(node, nodeType, collection);
-            } catch (RepositoryException re) {
+            }
+            catch (RepositoryException re) {
                 log.error(re.getMessage());
                 log.debug(re);
             }
@@ -79,11 +83,11 @@ public class QueryResultImpl implements QueryResult {
 
     /**
      * Build required result objects
-     * */
+     */
     private void build(Node node, String nodeType, Collection collection) throws RepositoryException {
         /**
          * All custom node types
-         * */
+         */
         if (node.isNodeType(nodeType)) {
             if (this.dirtyHandles.get(node.getPath()) == null) {
                 boolean isAllowed = this.accessManager.isGranted(Path.getAbsolutePath(node.getPath()), Permission.READ);
@@ -99,7 +103,7 @@ public class QueryResultImpl implements QueryResult {
     }
 
     public Iterator getContentIterator() {
-        return this.getContentIterator(ItemType.NT_CONTENT);
+        return this.getContentIterator(ItemType.CONTENT.getSystemName());
     }
 
     public Iterator getContentIterator(String nodeType) {
@@ -109,7 +113,8 @@ public class QueryResultImpl implements QueryResult {
             resultSet = new ArrayList();
             try {
                 this.build(nodeType, resultSet);
-            } catch (RepositoryException re) {
+            }
+            catch (RepositoryException re) {
                 log.error(re.getMessage());
             }
         }

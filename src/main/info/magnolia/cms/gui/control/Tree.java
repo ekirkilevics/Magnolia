@@ -13,10 +13,10 @@
 package info.magnolia.cms.gui.control;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
@@ -179,10 +179,6 @@ public class Tree extends ControlSuper {
         return this.indentionWidth;
     }
 
-    public void setItemTypes(List al) {
-        this.itemTypes = al;
-    }
-
     public List getItemTypes() {
         return this.itemTypes;
     }
@@ -192,7 +188,15 @@ public class Tree extends ControlSuper {
      * @param s itemType (one of: ItemType.NT_CONTENT, ItemType.NT_CONTENTNODE, ItemType.NT_NODEDATA)
      */
     public void addItemType(String s) {
-        this.getItemTypes().add(s);
+        this.itemTypes.add(s);
+    }
+
+    /**
+     * Add a itemType to the itemTypes that will be shown in this branch.
+     * @param s itemType (one of: ItemType.CONTENT, ItemType.CONTENTNODE)
+     */
+    public void addItemType(ItemType s) {
+        this.itemTypes.add(s.getSystemName());
     }
 
     /**
@@ -427,15 +431,15 @@ public class Tree extends ControlSuper {
                 }
             }
             if (itemType.equals(ItemType.NT_NODEDATA)) {
-                NodeData d = parentNode.createNodeData(label);
+                parentNode.createNodeData(label);
             }
             else {
                 Content newNode;
-                if (itemType.equals(ItemType.NT_CONTENT)) {
+                if (itemType.equals(ItemType.CONTENT.getSystemName())) {
                     newNode = parentNode.createContent(label);
                 }
                 else {
-                    newNode = parentNode.createContent(label, ItemType.NT_CONTENTNODE);
+                    newNode = parentNode.createContent(label, ItemType.CONTENTNODE);
                 }
                 newNode.getMetaData().setAuthorId(Authenticator.getUserId(this.getRequest()));
                 newNode.getMetaData().setCreationDate();
@@ -443,9 +447,10 @@ public class Tree extends ControlSuper {
                 newNode.getMetaData().setSequencePosition();
                 // todo: default template
                 // now tmp: first template of list is taken...
-                if (this.getRepository().equals(ContentRepository.WEBSITE) && itemType.equals(ItemType.NT_CONTENT)) {
-                    Iterator templates = Template.getAvailableTemplates(SessionAccessControl.getAccessManager(
-                    this.getRequest(), ContentRepository.CONFIG));
+                if (this.getRepository().equals(ContentRepository.WEBSITE)
+                    && itemType.equals(ItemType.CONTENT.getSystemName())) {
+                    Iterator templates = Template.getAvailableTemplates(SessionAccessControl.getAccessManager(this
+                        .getRequest(), ContentRepository.CONFIG));
                     while (templates.hasNext()) {
                         Template template = (Template) templates.next();
                         newNode.getMetaData().setTemplate(template.getName());
@@ -650,30 +655,32 @@ public class Tree extends ControlSuper {
                 }
                 Content parentContent = hm.getContent(pathSelectedParent);
                 Content selectedContent = hm.getContent(pathSelected);
+
                 // *
                 // set sequence position (average of selected and above resp. below)
                 // todo: !!!!!!!!
                 // how to find out type of node?
+
                 String selectedType = ItemType.NT_NODEDATA;
                 String touchedType = ItemType.NT_NODEDATA;
-                Iterator it1 = parentContent.getChildren(ItemType.NT_CONTENT).iterator();
+                Iterator it1 = parentContent.getChildren(ItemType.CONTENT).iterator();
                 while (it1.hasNext()) {
                     Content c = (Content) it1.next();
                     if (c.getHandle().equals(selectedContent.getHandle())) {
-                        selectedType = ItemType.NT_CONTENT;
+                        selectedType = ItemType.CONTENT.getSystemName();
                     }
                     if (c.getHandle().equals(touchedContent.getHandle())) {
-                        touchedType = ItemType.NT_CONTENT;
+                        touchedType = ItemType.CONTENT.getSystemName();
                     }
                 }
-                Iterator it2 = parentContent.getChildren(ItemType.NT_CONTENTNODE).iterator();
+                Iterator it2 = parentContent.getChildren(ItemType.CONTENTNODE).iterator();
                 while (it2.hasNext()) {
                     Content c = (Content) it2.next();
                     if (c.getHandle().equals(selectedContent.getHandle())) {
-                        selectedType = ItemType.NT_CONTENTNODE;
+                        selectedType = ItemType.CONTENTNODE.getSystemName();
                     }
                     if (c.getHandle().equals(touchedContent.getHandle())) {
-                        touchedType = ItemType.NT_CONTENTNODE;
+                        touchedType = ItemType.CONTENTNODE.getSystemName();
                     }
                 }
                 if (touchedType.equals(ItemType.NT_NODEDATA)) {
@@ -703,7 +710,8 @@ public class Tree extends ControlSuper {
 
                 }
                 if (touchedType != selectedType) {
-                    if (touchedType.equals(ItemType.NT_CONTENTNODE) && selectedType.equals(ItemType.NT_CONTENT)) {
+                    if (touchedType.equals(ItemType.CONTENTNODE.getSystemName())
+                        && selectedType.equals(ItemType.CONTENT.getSystemName())) {
                         // move at first position
                         // (tried to move a content node around a page)
                         pasteType = PASTETYPE_ABOVE;
@@ -828,7 +836,8 @@ public class Tree extends ControlSuper {
                 newNodeData.setValue(existingNodeData.getString());
                 existingNodeData.delete();
                 dest = parentPath;
-            } else {
+            }
+            else {
                 hm.moveTo(this.getPath(), dest);
             }
             SessionAccessControl.invalidateUser(this.getRequest());
@@ -1171,10 +1180,10 @@ public class Tree extends ControlSuper {
     public String getHtmlChildrenOfOneType(Content parentNode, String itemType) {
         StringBuffer html = new StringBuffer();
         String icon;
-        if (itemType.equals(ItemType.NT_CONTENT)) {
+        if (itemType.equals(ItemType.CONTENT.getSystemName())) {
             icon = this.getIconPage();
         }
-        else if (itemType.equals(ItemType.NT_CONTENTNODE)) {
+        else if (itemType.equals(ItemType.CONTENTNODE.getSystemName())) {
             icon = this.getIconContentNode();
         }
         else if (itemType.equals(ItemType.NT_NODEDATA)) {
@@ -1189,7 +1198,8 @@ public class Tree extends ControlSuper {
             Iterator it;
             if (itemType.equalsIgnoreCase(ItemType.NT_NODEDATA)) {
                 it = parentNode.getNodeDataCollection().iterator();
-            } else {
+            }
+            else {
                 it = parentNode.getChildren(itemType).iterator();
             }
             while (it.hasNext()) {

@@ -14,6 +14,7 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.AccessDeniedException;
 
 import java.util.Collection;
@@ -96,10 +97,10 @@ public class Paragraph {
      * on every request while matching paragraph info.
      */
     private static void cacheContent(Content content, String modulePath) throws AccessDeniedException {
-        Collection contentNodes = content.getChildren(ItemType.NT_CONTENTNODE);
+        Collection contentNodes = content.getChildren(ItemType.CONTENTNODE);
         Iterator definitions = contentNodes.iterator();
         addParagraphsToCache(definitions, modulePath);
-        Collection subDefinitions = content.getChildren(ItemType.NT_CONTENT);
+        Collection subDefinitions = content.getChildren(ItemType.CONTENT);
         Iterator it = subDefinitions.iterator();
         while (it.hasNext()) {
             Content c = (Content) it.next();

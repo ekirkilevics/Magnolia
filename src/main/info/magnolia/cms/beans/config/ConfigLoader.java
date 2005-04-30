@@ -15,6 +15,7 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.beans.runtime.SystemProperty;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.gui.dialog.DialogManager;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.license.License;
 import info.magnolia.cms.security.SecureURI;
@@ -121,7 +122,7 @@ public class ConfigLoader {
             bootstrapRepositories(Path.getAbsoluteFileSystemPath(bootdir));
         }
 
-        // todo move to appropriate module classes
+        // @todo move to appropriate module classes
         log.info("Init template");
         Template.init();
         log.info("Init paragraph");
@@ -130,6 +131,8 @@ public class ConfigLoader {
         VirtualMap.getInstance().init();
         log.info("Init i18n");
         MessagesManager.init(config);
+        log.info("Init dialog controls");
+        DialogManager.init(config);
 
         log.info("Init secureURI");
         SecureURI.init();

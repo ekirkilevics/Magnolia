@@ -103,11 +103,6 @@ public class DialogFckEdit extends DialogBox {
             getRequest().setAttribute("__fcked_loaded", "true");
         }
 
-        //String id = getId();
-        //if (id == null) {
-        //    id = getName();
-        //}
-        
         String id = getName();
 
         if (id == null) {
@@ -134,7 +129,7 @@ public class DialogFckEdit extends DialogBox {
         out.write("fckInstance.Create();");
         out.write(var + " = fckInstance;");
         out.write("</script>");
-        
+
         // write the saveInfo for the writting back to repository
         out.write("<input type='hidden' name='mgnlSaveInfo' value='" + id + ",String,0,0,0'>");
 
@@ -144,7 +139,7 @@ public class DialogFckEdit extends DialogBox {
 
     /**
      * Replacements:
-     *
+     * 
      * <pre>
      * ' -> \'
      * " -> \"
@@ -152,7 +147,7 @@ public class DialogFckEdit extends DialogBox {
      * \n -> \\n
      * \ -> \\
      * </pre>
-     *
+     * 
      * @param src
      * @return escaped js String
      */

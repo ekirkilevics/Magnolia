@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.URLDecoder;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -469,7 +470,9 @@ public class DialogWebDAV extends DialogBox {
             i = drawHtmlList(out, dirListAS, i);
             i = drawHtmlList(out, fileListAS, i);
             if (i == 1) {
-                out.write("<tr><td colspan=\"3\"></td><td colspan=\"3\"><em>" + MessagesManager.get(this.getRequest(),"dialog.webdav.directoryIsEmpty") + "</em></td></tr>");
+                out.write("<tr><td colspan=\"3\"></td><td colspan=\"3\"><em>"
+                    + MessagesManager.get(this.getRequest(), "dialog.webdav.directoryIsEmpty")
+                    + "</em></td></tr>");
             }
             out.write("</table>");
             out.write("</body></html>");
@@ -534,7 +537,7 @@ public class DialogWebDAV extends DialogBox {
                     }
                 }
                 if (checked) {
-                    out.write(MessagesManager.get(this.getRequest(),"dialog.webdav.checked"));
+                    out.write(MessagesManager.get(this.getRequest(), "dialog.webdav.checked"));
                 }
                 out.write(" />");
             }
@@ -668,9 +671,9 @@ public class DialogWebDAV extends DialogBox {
 
     public String getFormattedDate(String date, String format) {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
-        // todo: replace deprecated (new Date(String date))
-        Date x = new Date(date);
+
         try {
+            Date x = DateFormat.getDateTimeInstance().parse(date);
             return sdf.format(x);
         }
         catch (Exception e) {

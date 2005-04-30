@@ -14,9 +14,9 @@
 package info.magnolia.cms.i18n;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 
 import java.util.ArrayList;
@@ -87,12 +87,12 @@ public class MessagesManager {
                 configNode = serverNode.getContent(I18N_CONFIG_NAME);
             }
             catch (javax.jcr.PathNotFoundException e) {
-                configNode = serverNode.createContent(I18N_CONFIG_NAME, ItemType.NT_CONTENTNODE);
+                configNode = serverNode.createContent(I18N_CONFIG_NAME, ItemType.CONTENTNODE);
                 configHierarchyManager.save();
             }
 
             NodeData languageNodeData = configNode.getNodeData(LOCALE_CONFIG_NAME);
-            
+
             if (languageNodeData.getName() == "") {
                 languageNodeData = configNode.createNodeData(LOCALE_CONFIG_NAME);
                 languageNodeData.setValue(MessagesManager.FALLBACK_LOCALE);
@@ -112,8 +112,8 @@ public class MessagesManager {
             catch (javax.jcr.PathNotFoundException e) {
                 availableLanguagesContentNode = configNode.createContent(
                     AVAILABLE_LOCALES_CONFIG_NAME,
-                    ItemType.NT_CONTENTNODE);
-                
+                    ItemType.CONTENTNODE);
+
                 availableLanguage = availableLanguagesContentNode.createNodeData(MessagesManager.FALLBACK_LOCALE);
                 availableLanguage.setValue(MessagesManager.FALLBACK_LOCALE);
                 configHierarchyManager.save();
@@ -141,30 +141,30 @@ public class MessagesManager {
         if (req != null) {
             return new ContextMessages(req);
         }
-        else {
-            log.debug("using i18n-messages without a request!");
-            return new Messages(MessagesManager.DEFAULT_BASENAME, applicationLocale);
-        }
+
+        log.debug("using i18n-messages without a request!");
+        return new Messages(MessagesManager.DEFAULT_BASENAME, applicationLocale);
+
     }
 
     public static Messages getMessages(HttpServletRequest req, String basename) {
         if (req != null) {
             return new ContextMessages(req, basename);
         }
-        else {
-            log.debug("using i18n-messages without a request!");
-            return new Messages(basename, applicationLocale);
-        }
+
+        log.debug("using i18n-messages without a request!");
+        return new Messages(basename, applicationLocale);
+
     }
 
     public static Messages getMessages(HttpServletRequest req, String basename, Locale locale) {
         if (req != null) {
             return new ContextMessages(req, basename, locale);
         }
-        else {
-            log.debug("using i18n-messages without a request!");
-            return new Messages(basename, locale);
-        }
+
+        log.debug("using i18n-messages without a request!");
+        return new Messages(basename, locale);
+
     }
 
     /**
@@ -175,10 +175,10 @@ public class MessagesManager {
         if (pc != null && pc.getRequest() instanceof HttpServletRequest) {
             return new ContextMessages((HttpServletRequest) pc.getRequest());
         }
-        else {
-            log.debug("using i18n-messages without a request inside a control!");
-            return new Messages(MessagesManager.DEFAULT_BASENAME, applicationLocale);
-        }
+
+        log.debug("using i18n-messages without a request inside a control!");
+        return new Messages(MessagesManager.DEFAULT_BASENAME, applicationLocale);
+
     }
 
     public static String get(HttpServletRequest req, String key) {
@@ -225,7 +225,7 @@ public class MessagesManager {
      */
     public static void setUserLanguage(Content userPage, HttpSession session) {
         String lang = userPage.getNodeData("language").getString();
-        if(StringUtils.isEmpty(lang)){
+        if (StringUtils.isEmpty(lang)) {
             lang = MessagesManager.getDefaultLocale().getLanguage();
         }
         session.setAttribute(Config.FMT_LOCALE + ".session", lang);

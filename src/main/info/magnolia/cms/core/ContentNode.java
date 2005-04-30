@@ -12,7 +12,6 @@
  */
 package info.magnolia.cms.core;
 
-import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.core.util.Access;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
@@ -82,11 +81,7 @@ public class ContentNode extends Content {
         AccessDeniedException {
         this.workingNode = workingNode;
         this.name = name;
-        this.contentNode = new Content(
-            this.workingNode,
-            this.name,
-            ItemType.getSystemName(ItemType.NT_CONTENTNODE),
-            manager);
+        this.contentNode = new Content(this.workingNode, this.name, ItemType.NT_CONTENTNODE, manager);
         this.node = this.contentNode.node;
     }
 

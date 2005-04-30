@@ -12,8 +12,8 @@
  */
 package info.magnolia.cms.exchange.simple;
 
-import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 
 import java.io.Serializable;
@@ -125,7 +125,7 @@ public class SerializableContent implements Serializable {
     }
 
     protected void addContentNodeList(Content content, boolean recurse) {
-        Collection children = content.getChildren(ItemType.NT_CONTENTNODE);
+        Collection children = content.getChildren(ItemType.CONTENTNODE);
         if (children == null) {
             return;
         }
@@ -136,7 +136,7 @@ public class SerializableContent implements Serializable {
     }
 
     protected void addContentList(Content content, boolean recurse) {
-        Collection children = content.getChildren(ItemType.NT_CONTENT);
+        Collection children = content.getChildren(ItemType.CONTENT);
         if (children == null) {
             return;
         }

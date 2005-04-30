@@ -13,8 +13,8 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.Resource;
-import info.magnolia.cms.beans.config.ItemType;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -72,7 +72,7 @@ public class ContentNodeIterator extends TagSupport {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         this.page = Resource.getCurrentActivePage(request);
         try {
-            Collection children = this.page.getContent(this.contentNodeCollectionName).getChildren(ItemType.NT_CONTENTNODE);
+            Collection children = this.page.getContent(this.contentNodeCollectionName).getChildren(ItemType.CONTENTNODE);
             this.size = children.size();
             if (this.size == 0) {
                 return SKIP_BODY;

@@ -12,8 +12,8 @@
  */
 package info.magnolia.module.admininterface;
 
-import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.control.Tree;
@@ -39,9 +39,9 @@ public class AdminTreeConfig implements AdminTree {
      */
     public void configureTree(Tree tree, HttpServletRequest request, String path, String pathOpen, String pathSelected,
         boolean create, String createItemType) {
-        
+
         Messages msgs = MessagesManager.getMessages(request);
-        
+
         tree.setIconPage(Tree.ICONDOCROOT + "folder_cubes.gif");
         tree.setPath(path);
         if (create) {
@@ -51,8 +51,8 @@ public class AdminTreeConfig implements AdminTree {
             tree.setPathOpen(pathOpen);
             tree.setPathSelected(pathSelected);
         }
-        tree.addItemType(ItemType.NT_CONTENT);
-        tree.addItemType(ItemType.NT_CONTENTNODE);
+        tree.addItemType(ItemType.CONTENT.getSystemName());
+        tree.addItemType(ItemType.CONTENTNODE.getSystemName());
         tree.addItemType(ItemType.NT_NODEDATA);
         TreeColumn column0 = new TreeColumn(tree.getJavascriptTree(), request);
         column0.setWidth(1);
@@ -105,8 +105,10 @@ public class AdminTreeConfig implements AdminTree {
         menuNewPage.setLabel("<img src=\""
             + request.getContextPath()
             + new Icon().getSrc(Icon.PAGE, Icon.SIZE_SMALL)
-            + "\"> <span style=\"position:relative;top:-3px;\">"+msgs.get("tree.config.menu.newFolder")+"</span>");
-        menuNewPage.setOnclick(tree.getJavascriptTree() + ".createNode('" + ItemType.NT_CONTENT + "');");
+            + "\"> <span style=\"position:relative;top:-3px;\">"
+            + msgs.get("tree.config.menu.newFolder")
+            + "</span>");
+        menuNewPage.setOnclick(tree.getJavascriptTree() + ".createNode('" + ItemType.CONTENT.getSystemName() + "');");
         menuNewPage.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotNodeData");
         menuNewPage.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotContentNode");
 
@@ -114,15 +116,22 @@ public class AdminTreeConfig implements AdminTree {
         menuNewContentNode.setLabel("<img src=\""
             + request.getContextPath()
             + new Icon().getSrc(Icon.CONTENTNODE, Icon.SIZE_SMALL)
-            + "\"> <span style=\"position:relative;top:-3px\">"+msgs.get("tree.config.menu.newNode")+"</span>");
-        menuNewContentNode.setOnclick(tree.getJavascriptTree() + ".createNode('" + ItemType.NT_CONTENTNODE + "');");
+            + "\"> <span style=\"position:relative;top:-3px\">"
+            + msgs.get("tree.config.menu.newNode")
+            + "</span>");
+        menuNewContentNode.setOnclick(tree.getJavascriptTree()
+            + ".createNode('"
+            + ItemType.CONTENTNODE.getSystemName()
+            + "');");
         menuNewContentNode.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotNodeData");
 
         TreeMenuItem menuNewNodeData = new TreeMenuItem();
         menuNewNodeData.setLabel("<img src=\""
             + request.getContextPath()
             + new Icon().getSrc(Icon.NODEDATA, Icon.SIZE_SMALL)
-            + "\"> <span style=\"position:relative;top:-3px;\">"+msgs.get("tree.config.menu.newNodeData")+"</span>");
+            + "\"> <span style=\"position:relative;top:-3px;\">"
+            + msgs.get("tree.config.menu.newNodeData")
+            + "</span>");
         menuNewNodeData.setOnclick(tree.getJavascriptTree() + ".createNode('" + ItemType.NT_NODEDATA + "');");
         menuNewNodeData.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotNodeData");
 

@@ -12,7 +12,6 @@
  */
 package info.magnolia.cms.core;
 
-import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.core.util.Access;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
@@ -106,12 +105,12 @@ public class MetaData {
      */
     private void setMetaNode(Node workingNode, String name) {
         try {
-            this.node = workingNode.getNode(name).getNode("jcr:content");
+            this.node = workingNode.getNode(name).getNode(ItemType.JCR_CONTENT.getSystemName());
         }
         catch (PathNotFoundException e) {
             try {
-                this.node = workingNode.addNode(name, ItemType.getSystemName(ItemType.NT_FILE));
-                this.node = this.node.addNode("jcr:content", "nt:unstructured");
+                this.node = workingNode.addNode(name, ItemType.NT_FILE);
+                this.node = this.node.addNode(ItemType.JCR_CONTENT.getSystemName(), "nt:unstructured");
                 this.node.setProperty("Data", name);
             }
             catch (RepositoryException re) {

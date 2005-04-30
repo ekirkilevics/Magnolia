@@ -12,8 +12,8 @@
  */
 package info.magnolia.module.admininterface;
 
-import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.control.TreeColumn;
@@ -37,7 +37,7 @@ public class AdminTreeRoles implements AdminTree {
     public void configureTree(Tree tree, HttpServletRequest request, String path, String pathOpen, String pathSelected,
         boolean create, String createItemType) {
         Messages msgs = MessagesManager.getMessages(request);
-        
+
         tree.setDrawShifter(false);
 
         tree.setIconPage(Tree.ICONDOCROOT + "hat_white.gif");
@@ -46,7 +46,7 @@ public class AdminTreeRoles implements AdminTree {
                 + tree.getJavascriptTree()
                 + ",'.magnolia/adminCentral/userRoles/dialog.html');");
         }
-        tree.addItemType(ItemType.NT_CONTENT);
+        tree.addItemType(ItemType.CONTENT);
         if (create) {
             tree.createNode(createItemType);
         }
@@ -92,7 +92,10 @@ public class AdminTreeRoles implements AdminTree {
         menuOpen.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         TreeMenuItem menuNewPage = new TreeMenuItem();
         menuNewPage.setLabel(msgs.get("tree.roles.menu.new"));
-        menuNewPage.setOnclick(tree.getJavascriptTree() + ".createRootNode('" + ItemType.NT_CONTENT + "');");
+        menuNewPage.setOnclick(tree.getJavascriptTree()
+            + ".createRootNode('"
+            + ItemType.CONTENT.getSystemName()
+            + "');");
         TreeMenuItem menuDelete = new TreeMenuItem();
         menuDelete.setLabel(msgs.get("tree.roles.menu.delete"));
         menuDelete.setOnclick(tree.getJavascriptTree() + ".deleteNode();");

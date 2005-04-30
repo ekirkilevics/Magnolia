@@ -14,6 +14,7 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManagerImpl;
@@ -192,7 +193,7 @@ public final class ContentRepository {
             }
 
             Content startPage = hm.getRoot();
-            if (startPage.getChildren(ItemType.NT_CONTENT).size() > 0) {
+            if (startPage.getChildren(ItemType.CONTENT).size() > 0) {
                 if (log.isDebugEnabled()) {
                     log.debug("Content found in [" + repository + "].");
                 }

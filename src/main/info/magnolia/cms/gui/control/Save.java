@@ -13,11 +13,11 @@
 package info.magnolia.cms.gui.control;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.gui.dialog.DialogSuper;
@@ -87,7 +87,7 @@ public class Save extends ControlSuper {
                 }
                 catch (RepositoryException re) {
                     // nodeCollection does not exist -> create
-                    nodeCollection = page.createContent(nodeCollectionName, ItemType.NT_CONTENTNODE);
+                    nodeCollection = page.createContent(nodeCollectionName, ItemType.CONTENTNODE);
                     if (log.isDebugEnabled()) {
                         log.debug("Create - " + nodeCollection.getHandle());
                     }
@@ -107,7 +107,7 @@ public class Save extends ControlSuper {
                     if (nodeName.equals("mgnlNew")) {
                         nodeName = Path.getUniqueLabel(hm, nodeCollection.getHandle(), "0");
                     }
-                    node = nodeCollection.createContent(nodeName, ItemType.NT_CONTENTNODE);
+                    node = nodeCollection.createContent(nodeName, ItemType.CONTENTNODE);
                     node.createNodeData("paragraph").setValue(this.getParagraph());
                     node.getMetaData().setSequencePosition();
                 }
@@ -172,7 +172,7 @@ public class Save extends ControlSuper {
                                 if (doc != null) {
                                     propNode = node.createContent(
                                         name + "_" + FileProperties.PROPERTIES_CONTENTNODE,
-                                        ItemType.NT_CONTENTNODE);
+                                        ItemType.CONTENTNODE);
                                 }
                             }
                             catch (RepositoryException re2) {
@@ -250,7 +250,7 @@ public class Save extends ControlSuper {
                             log.debug("Exception caught: " + e.getMessage(), e);
                         }
                         if (values != null && values.length != 0) {
-                            Content multiNode = node.createContent(name, ItemType.NT_CONTENTNODE);
+                            Content multiNode = node.createContent(name, ItemType.CONTENTNODE);
                             try {
                                 // MetaData.CREATION_DATE has private access; no method to delete it so far...
                                 multiNode.deleteNodeData("creationdate");
@@ -312,7 +312,7 @@ public class Save extends ControlSuper {
                                     data.setValue(value);
                                 }
                                 else {
-                                    node.createNodeData(name, value, type);
+                                    node.createNodeData(name, value);
                                 }
                             }
                         }

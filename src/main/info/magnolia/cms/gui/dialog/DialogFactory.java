@@ -47,7 +47,6 @@ public final class DialogFactory {
         // register magnolia default dialogs
         registerDialog("edit", DialogEdit.class);
         registerDialog("richEdit", DialogRichedit.class);
-        registerDialog("fckEdit", DialogFckEdit.class);
         registerDialog("tab", DialogTab.class);
         registerDialog("buttonSet", DialogButtonSet.class);
         registerDialog("button", DialogButton.class);
@@ -80,6 +79,9 @@ public final class DialogFactory {
     public static void registerDialog(String name, Class dialogClass) {
         // @todo check if dialogClass is a valid dialog
         // @todo synchronize
+
+        log.info("Registering control [" + name + "]");
+
         dialogs.put(name, dialogClass);
     }
 

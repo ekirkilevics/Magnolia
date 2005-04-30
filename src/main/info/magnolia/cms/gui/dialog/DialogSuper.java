@@ -12,8 +12,8 @@
  */
 package info.magnolia.cms.gui.dialog;
 
-import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 
 import java.io.IOException;
@@ -346,7 +346,7 @@ public abstract class DialogSuper implements DialogInterface {
         }
         this.config = config;
 
-        Iterator it = configNodeParent.getChildren(ItemType.NT_CONTENTNODE).iterator();
+        Iterator it = configNodeParent.getChildren(ItemType.CONTENTNODE).iterator();
         while (it.hasNext()) {
             Content configNode = (Content) it.next();
             String controlType = configNode.getNodeData("controlType").getString();

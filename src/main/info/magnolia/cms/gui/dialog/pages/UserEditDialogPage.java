@@ -1,10 +1,10 @@
 package info.magnolia.cms.gui.dialog.pages;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.gui.control.Save;
 import info.magnolia.cms.gui.control.SelectOption;
@@ -363,36 +363,36 @@ public class UserEditDialogPage extends BasePageServlet {
 
                 Content aclUsers;
 
-                aclUsers = user.createContent(NODE_ACLUSERS, ItemType.NT_CONTENTNODE);
+                aclUsers = user.createContent(NODE_ACLUSERS, ItemType.CONTENTNODE);
 
-                Content aclRoles = user.createContent(NODE_ACLROLES, ItemType.NT_CONTENTNODE);
-                Content aclConfig = user.createContent(NODE_ACLCONFIG, ItemType.NT_CONTENTNODE);
+                Content aclRoles = user.createContent(NODE_ACLROLES, ItemType.CONTENTNODE);
+                Content aclConfig = user.createContent(NODE_ACLCONFIG, ItemType.CONTENTNODE);
                 Save save = nodeXml;
-                Content u0 = aclUsers.createContent("00", ItemType.NT_CONTENTNODE);
+                Content u0 = aclUsers.createContent("00", ItemType.CONTENTNODE);
                 u0.createNodeData("path", save.getValue(user.getHandle() + "/" + NODE_ROLES), PropertyType.STRING);
                 u0.createNodeData("permissions", save.getValue(PERMISSION_READ), PropertyType.LONG);
 
-                Content u1 = aclUsers.createContent("01", ItemType.NT_CONTENTNODE);
+                Content u1 = aclUsers.createContent("01", ItemType.CONTENTNODE);
                 u1.createNodeData(
                     "path",
                     save.getValue(user.getHandle() + "/" + NODE_ROLES + "/*"),
                     PropertyType.STRING);
                 u1.createNodeData("permissions", save.getValue(PERMISSION_READ), PropertyType.LONG);
 
-                Content u2 = aclUsers.createContent("02", ItemType.NT_CONTENTNODE);
+                Content u2 = aclUsers.createContent("02", ItemType.CONTENTNODE);
                 u2.createNodeData("path", save.getValue(user.getHandle()), PropertyType.STRING);
                 u2.createNodeData("permissions", save.getValue(PERMISSION_ALL), PropertyType.LONG);
 
-                Content u3 = aclUsers.createContent("03", ItemType.NT_CONTENTNODE);
+                Content u3 = aclUsers.createContent("03", ItemType.CONTENTNODE);
                 u3.createNodeData("path", save.getValue(user.getHandle() + "/*"), PropertyType.STRING);
                 u3.createNodeData("permissions", save.getValue(PERMISSION_READ), PropertyType.LONG);
 
                 // read access to all roles
-                Content r0 = aclRoles.createContent("0", ItemType.NT_CONTENTNODE);
+                Content r0 = aclRoles.createContent("0", ItemType.CONTENTNODE);
                 r0.createNodeData("path", save.getValue("/*"), PropertyType.STRING);
                 r0.createNodeData("permissions", save.getValue(PERMISSION_READ), PropertyType.LONG);
                 // read access to config repository
-                Content c0 = aclConfig.createContent("0", ItemType.NT_CONTENTNODE);
+                Content c0 = aclConfig.createContent("0", ItemType.CONTENTNODE);
                 c0.createNodeData("path", save.getValue("/*"), PropertyType.STRING);
                 c0.createNodeData("permissions", save.getValue(PERMISSION_READ), PropertyType.LONG);
 
@@ -407,14 +407,14 @@ public class UserEditDialogPage extends BasePageServlet {
                 }
 
                 // rewrite
-                Content roles = user.createContent(NODE_ROLES, ItemType.NT_CONTENTNODE);
+                Content roles = user.createContent(NODE_ROLES, ItemType.CONTENTNODE);
 
                 String[] rolesValue = form.getParameter("aclList").split(";");
                 // System.out.println(form.getParameter("aclList"));
                 for (int i = 0; i < rolesValue.length; i++) {
                     try {
                         String newLabel = Path.getUniqueLabel(hm, roles.getHandle(), "0");
-                        Content r = roles.createContent(newLabel, ItemType.NT_CONTENTNODE);
+                        Content r = roles.createContent(newLabel, ItemType.CONTENTNODE);
                         r.createNodeData("path").setValue(rolesValue[i]);
                     }
                     catch (Exception e) {

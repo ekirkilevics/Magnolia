@@ -13,10 +13,10 @@
 package info.magnolia.cms.exchange.simple;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.config.ItemType;
 import info.magnolia.cms.beans.config.Subscriber;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Authenticator;
@@ -317,10 +317,10 @@ public class Syndicator {
         }
         connection.addRequestProperty("parent", this.parent);
         if (hm.isPage(this.path)) {
-            connection.addRequestProperty(Syndicator.OBJECT_TYPE, ItemType.NT_CONTENT);
+            connection.addRequestProperty(Syndicator.OBJECT_TYPE, ItemType.CONTENT.getSystemName());
         }
-        else if (hm.isNodeType(this.path, ItemType.NT_CONTENTNODE)) {
-            connection.addRequestProperty(Syndicator.OBJECT_TYPE, ItemType.NT_CONTENTNODE);
+        else if (hm.isNodeType(this.path, ItemType.CONTENTNODE.getSystemName())) {
+            connection.addRequestProperty(Syndicator.OBJECT_TYPE, ItemType.CONTENTNODE.getSystemName());
         }
         else if (hm.isNodeData(this.path)) {
             connection.addRequestProperty(Syndicator.OBJECT_TYPE, ItemType.NT_NODEDATA);
