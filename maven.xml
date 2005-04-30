@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project >
-<project xmlns:j="jelly:core" xmlns:u="jelly:util" default="rebuild-all">
+<project xmlns:j="jelly:core" xmlns:u="jelly:util" xmlns:ant="jelly:ant" default="rebuild-all">
     <goal name="rebuild-all" prereqs="pom,clean,war:war,dist:build" />
     <postGoal name="site">
         <attainGoal name="pdf" />
@@ -9,23 +9,37 @@
     <preGoal name="jar:jar">
         <!-- add tlds to taglib jar -->
         <j:set var="tld.dir" value="${maven.src.dir}/webapp/WEB-INF/taglib" />
-        <echo message="copying tld files ${tld.dir} to ${maven.build.dest}/META-INF" />
-        <copy todir="${maven.build.dest}/META-INF">
+        <ant:echo message="copying tld files ${tld.dir} to ${maven.build.dest}/META-INF" />
+        <ant:copy todir="${maven.build.dest}/META-INF">
             <fileset dir="${tld.dir}">
                 <include name="*.tld" />
             </fileset>
-        </copy>
+        </ant:copy>
     </preGoal>
 
     <goal name="nightly" prereqs="clean,war:war,site:generate,copy-nightly-war,site:sshdeploy">
     </goal>
 
     <goal name="copy-nightly-war">
-        <copy todir="${maven.build.dir}/docs/nightly">
+        <ant:copy todir="${maven.build.dir}/docs/nightly">
             <fileset dir="${maven.build.dir}">
                 <include name="*.war" />
             </fileset>
-        </copy>
+        </ant:copy>
+    </goal>
+
+    <!-- can be useful when working with IDEs -->
+    <goal name="copylibs">
+        <j:forEach var="lib" items="${pom.artifacts}">
+            <j:set var="dep" value="${lib.dependency}" />
+            <j:if test="${dep.getProperty('war.bundle')=='true'}">
+            <j:if test="${dep.getProperty('eclipse.dependency')!='true'}">
+	                <j:if test="${dep.type =='jar'}">
+	                    <ant:copy todir="${basedir}/src/webapp/WEB-INF/lib" file="${lib.path}" />
+	                </j:if>
+                </j:if>
+            </j:if>
+        </j:forEach>
     </goal>
 
 </project>
