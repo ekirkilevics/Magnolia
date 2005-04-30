@@ -17,7 +17,7 @@ import java.io.Serializable;
 
 /**
  * @author Sameer Charles
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public final class ItemType implements Serializable {
 
