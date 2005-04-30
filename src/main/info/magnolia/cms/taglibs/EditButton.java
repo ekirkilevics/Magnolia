@@ -12,10 +12,10 @@
  */
 package info.magnolia.cms.taglibs;
 
-import info.magnolia.cms.gui.inline.ButtonEdit;
-import info.magnolia.cms.util.Resource;
 import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.gui.inline.ButtonEdit;
+import info.magnolia.cms.util.Resource;
 
 import java.io.IOException;
 
@@ -24,7 +24,6 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.log4j.Logger;
-import org.apache.commons.lang.StringUtils;
 
 
 /**

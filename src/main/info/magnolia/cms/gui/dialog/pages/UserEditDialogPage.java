@@ -32,10 +32,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Locale;
 
-import javax.jcr.Node;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -68,9 +66,9 @@ public class UserEditDialogPage extends BasePageServlet {
 
     static final String NODE_ROLES = "roles";
 
-    //static final String CONTROLNAME_ISADMIN_USERS = "permissionUsers";
+    // static final String CONTROLNAME_ISADMIN_USERS = "permissionUsers";
 
-    //static final String CONTROLNAME_ISADMIN_ROLES = "permissionRoles";
+    // static final String CONTROLNAME_ISADMIN_ROLES = "permissionRoles";
 
     // static final String CONTROLNAME_ISADMIN_ACTIVATE="permissionActivate";
     static final String NODE_ACLCONFIG = "acl_config";
@@ -141,7 +139,7 @@ public class UserEditDialogPage extends BasePageServlet {
             if (path.equals(""))
                 create = true;
 
-            hm = SessionAccessControl.getHierarchyManager(request,repository);
+            hm = SessionAccessControl.getHierarchyManager(request, repository);
 
             if (!create) {
                 try {
@@ -280,43 +278,30 @@ public class UserEditDialogPage extends BasePageServlet {
 
             // adding the roles checkboxes
             /*
-            DialogButtonSet isUserAdmin = DialogFactory.getDialogButtonSetInstance(request, response, user, null);
-            isUserAdmin.setName(CONTROLNAME_ISADMIN_USERS);
-            isUserAdmin.setConfig("type", PropertyType.TYPENAME_BOOLEAN);
-            isUserAdmin.setConfig("lineSemi", true);
-            isUserAdmin.setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX);
-            Button isUserAdminButton = new Button();
-            isUserAdminButton.setLabel(msgs.get("users.edit.usersAdministrator"));
-            isUserAdminButton.setValue("true");
-            isUserAdminButton.setOnclick("mgnlDialogShiftCheckboxSwitch('" + isUserAdmin.getName() + "');");
-            isUserAdmin.addOption(isUserAdminButton);
-            tab.addSub(isUserAdmin);
+             * DialogButtonSet isUserAdmin = DialogFactory.getDialogButtonSetInstance(request, response, user, null);
+             * isUserAdmin.setName(CONTROLNAME_ISADMIN_USERS); isUserAdmin.setConfig("type",
+             * PropertyType.TYPENAME_BOOLEAN); isUserAdmin.setConfig("lineSemi", true);
+             * isUserAdmin.setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX); Button isUserAdminButton = new Button();
+             * isUserAdminButton.setLabel(msgs.get("users.edit.usersAdministrator"));
+             * isUserAdminButton.setValue("true"); isUserAdminButton.setOnclick("mgnlDialogShiftCheckboxSwitch('" +
+             * isUserAdmin.getName() + "');"); isUserAdmin.addOption(isUserAdminButton); tab.addSub(isUserAdmin);
+             * DialogButtonSet isRoleAdmin = DialogFactory.getDialogButtonSetInstance(request, response, user, null);
+             * isRoleAdmin.setName(CONTROLNAME_ISADMIN_ROLES); isRoleAdmin.setConfig("type",
+             * PropertyType.TYPENAME_BOOLEAN); isRoleAdmin.setConfig("lineSemi", true);
+             * isRoleAdmin.setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX); Button isRolesAdminButton = new Button();
+             * isRolesAdminButton.setLabel(msgs.get("users.edit.rolesAdministrator"));
+             * isRolesAdminButton.setValue("true"); isRolesAdminButton.setOnclick("mgnlDialogShiftCheckboxSwitch('" +
+             * isRoleAdmin.getName() + "');"); isRoleAdmin.addOption(isRolesAdminButton); tab.addSub(isRoleAdmin);
+             * DialogButtonSet isConfigAdmin = DialogFactory.getDialogButtonSetInstance(request, response, user, null);
+             * isConfigAdmin.setName(CONTROLNAME_ISADMIN_CONFIG); isConfigAdmin.setConfig("type",
+             * PropertyType.TYPENAME_BOOLEAN); isConfigAdmin.setConfig("lineSemi", true);
+             * isConfigAdmin.setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX); Button isConfigAdminButton = new Button();
+             * isConfigAdminButton.setLabel(msgs.get("users.edit.configAdministrator"));
+             * isConfigAdminButton.setValue("true"); isConfigAdminButton.setOnclick("mgnlDialogShiftCheckboxSwitch('" +
+             * isConfigAdmin.getName() + "');"); isConfigAdmin.addOption(isConfigAdminButton);
+             * tab.addSub(isConfigAdmin);
+             */
 
-            DialogButtonSet isRoleAdmin = DialogFactory.getDialogButtonSetInstance(request, response, user, null);
-            isRoleAdmin.setName(CONTROLNAME_ISADMIN_ROLES);
-            isRoleAdmin.setConfig("type", PropertyType.TYPENAME_BOOLEAN);
-            isRoleAdmin.setConfig("lineSemi", true);
-            isRoleAdmin.setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX);
-            Button isRolesAdminButton = new Button();
-            isRolesAdminButton.setLabel(msgs.get("users.edit.rolesAdministrator"));
-            isRolesAdminButton.setValue("true");
-            isRolesAdminButton.setOnclick("mgnlDialogShiftCheckboxSwitch('" + isRoleAdmin.getName() + "');");
-            isRoleAdmin.addOption(isRolesAdminButton);
-            tab.addSub(isRoleAdmin);
-
-            DialogButtonSet isConfigAdmin = DialogFactory.getDialogButtonSetInstance(request, response, user, null);
-            isConfigAdmin.setName(CONTROLNAME_ISADMIN_CONFIG);
-            isConfigAdmin.setConfig("type", PropertyType.TYPENAME_BOOLEAN);
-            isConfigAdmin.setConfig("lineSemi", true);
-            isConfigAdmin.setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX);
-            Button isConfigAdminButton = new Button();
-            isConfigAdminButton.setLabel(msgs.get("users.edit.configAdministrator"));
-            isConfigAdminButton.setValue("true");
-            isConfigAdminButton.setOnclick("mgnlDialogShiftCheckboxSwitch('" + isConfigAdmin.getName() + "');");
-            isConfigAdmin.addOption(isConfigAdminButton);
-            tab.addSub(isConfigAdmin);
-            */
-            
             tab.addSub(spacer);
 
             DialogInclude roles = DialogFactory.getDialogIncludeInstance(request, response, user, null);
@@ -336,7 +321,7 @@ public class UserEditDialogPage extends BasePageServlet {
         }
 
         /**
-         * 
+         *
          */
         private void save() {
             // create new user

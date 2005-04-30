@@ -16,9 +16,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Iterator;
 
-import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -84,7 +82,7 @@ public class UserEditIncludeRolesDialogPage extends BasePageServlet {
      */
     public void draw(HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
         PrintWriter out = response.getWriter();
-        
+
         DialogSuper dialogControl = (DialogSuper) request.getAttribute("dialogObject");
         Content user = dialogControl.getWebsiteNode();
 
@@ -107,7 +105,9 @@ public class UserEditIncludeRolesDialogPage extends BasePageServlet {
                 String path = c.getNodeData("path").getString();
                 String name = "";
                 try {
-                    HierarchyManager hm = SessionAccessControl.getHierarchyManager(request,ContentRepository.USER_ROLES);
+                    HierarchyManager hm = SessionAccessControl.getHierarchyManager(
+                        request,
+                        ContentRepository.USER_ROLES);
                     Content role = null;
                     try {
                         role = hm.getContent(path);

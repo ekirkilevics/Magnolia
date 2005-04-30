@@ -29,10 +29,9 @@ import java.io.FileInputStream;
 
 import org.apache.log4j.Logger;
 
+
 /**
- * Date: Feb 9, 2005
- * Time: 3:51:20 PM
- *
+ * Date: Feb 9, 2005 Time: 3:51:20 PM
  * @author Sameer Charles
  * @version 2.1
  */
@@ -86,10 +85,9 @@ public class Spool extends HttpServlet {
     }
 
     /**
-     *
      * @param resource
      * @param response
-     * */
+     */
     private boolean spool(File resource, HttpServletResponse response) {
         try {
             FileInputStream in = new FileInputStream(resource);
@@ -102,7 +100,8 @@ public class Spool extends HttpServlet {
             os.flush();
             os.close();
             in.close();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             log.error(e);
             return false;
         }
@@ -115,7 +114,7 @@ public class Spool extends HttpServlet {
      * </p>
      * @param resource
      * @param response
-     * */
+     */
     private void setResponseHeaders(File resource, HttpServletResponse response) {
         response.setContentLength((int) resource.length());
     }

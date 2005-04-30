@@ -13,7 +13,6 @@
 package info.magnolia.cms.core;
 
 import info.magnolia.cms.beans.config.ItemType;
-import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.core.util.Access;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
@@ -23,19 +22,15 @@ import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
 /**
  * @author Sameer Charles
  * @version 2.1
- * @deprecated use info.magnolia.cms.core.Content instead
- *
- * this calss has been deprecated since magnolia 2.1
- * since jcr allows to define custom nodetypes there is no use for the wrapper classes over content.
- * use info.magnolia.cms.core.Content to bind to any kind of NodeType
- *
+ * @deprecated use info.magnolia.cms.core.Content instead this calss has been deprecated since magnolia 2.1 since jcr
+ * allows to define custom nodetypes there is no use for the wrapper classes over content. use
+ * info.magnolia.cms.core.Content to bind to any kind of NodeType
  */
 public class ContentNode extends Content {
 

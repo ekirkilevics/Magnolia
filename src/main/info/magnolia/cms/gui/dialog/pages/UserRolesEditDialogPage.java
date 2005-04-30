@@ -25,9 +25,7 @@ import info.magnolia.cms.util.Resource;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -105,7 +103,7 @@ public class UserRolesEditDialogPage extends BasePageServlet {
             if (path.equals(""))
                 create = true;
 
-            hm = SessionAccessControl.getHierarchyManager(request,ContentRepository.USER_ROLES);
+            hm = SessionAccessControl.getHierarchyManager(request, ContentRepository.USER_ROLES);
 
             if (!create) {
                 try {
@@ -220,7 +218,7 @@ public class UserRolesEditDialogPage extends BasePageServlet {
         }
 
         /**
-         * 
+         *
          */
         private void save() {
             // save

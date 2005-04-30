@@ -23,7 +23,6 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
@@ -81,7 +80,7 @@ public class DialogSelect extends DialogBox {
     public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
         throws RepositoryException {
         super.init(request, response, websiteNode, configNode);
-        if (configNode != null){
+        if (configNode != null) {
             setOptions(configNode);
         }
     }

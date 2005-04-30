@@ -18,7 +18,6 @@ import java.util.Enumeration;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-import java.util.PropertyResourceBundle;
 
 import org.apache.log4j.Logger;
 
@@ -82,7 +81,7 @@ public class Messages {
     protected void setBasename(String basename) {
         this.basename = basename;
     }
-    
+
     public String get(String key) {
         try {
             return getBundle().getString(key);
@@ -155,16 +154,16 @@ public class Messages {
      */
     public ResourceBundle getBundle() {
         if (bundle == null) {
-            bundle = PropertyResourceBundle.getBundle(getBasename(), getLocale());
+            bundle = ResourceBundle.getBundle(getBasename(), getLocale());
         }
         return bundle;
     }
 
     public ResourceBundle getBundle(String basename) {
-        return PropertyResourceBundle.getBundle(basename, getLocale());
+        return ResourceBundle.getBundle(basename, getLocale());
     }
 
     public ResourceBundle getBundle(String basename, Locale locale) {
-        return PropertyResourceBundle.getBundle(basename, getLocale());
+        return ResourceBundle.getBundle(basename, getLocale());
     }
 }
