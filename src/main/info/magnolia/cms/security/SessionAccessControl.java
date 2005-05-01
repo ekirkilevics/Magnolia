@@ -37,7 +37,6 @@ import org.apache.log4j.Logger;
 
 
 /**
- * User: sameercharles Date: June 8, 2004 Time: 05:40:21 PM
  * @author Sameer Charles
  * @version 2.0
  */
@@ -223,9 +222,7 @@ public final class SessionAccessControl {
     }
 
     /**
-     * <p>
      * create user ticket and set ACL (user + group) in the session
-     * </p>
      * @param request
      */
     public static void createSession(HttpServletRequest request) throws LoginException, RepositoryException {
@@ -233,9 +230,7 @@ public final class SessionAccessControl {
     }
 
     /**
-     * <p>
      * create user ticket and set ACL (user + group) in the session
-     * </p>
      * @param request
      */
     private static void createRepositorySession(HttpServletRequest request, String repositoryID) throws LoginException,
@@ -244,9 +239,7 @@ public final class SessionAccessControl {
     }
 
     /**
-     * <p>
      * create user ticket and set ACL (user + group) in the session
-     * </p>
      * @param request
      */
     private static void createRepositorySession(HttpServletRequest request, String repositoryID, String workspaceID)
@@ -307,9 +300,7 @@ public final class SessionAccessControl {
     }
 
     /**
-     * <p>
      * Adds user acl of the specified user to the given userACL
-     * </p>
      * @param userNode
      * @param userACL
      */
@@ -358,16 +349,14 @@ public final class SessionAccessControl {
     }
 
     /**
-     * <p>
      * Adds group acl of the specified user to the given groupACL
-     * </p>
      * @param userNode
      * @param groupACL
      */
     private static void updateRolesACL(Content userNode, List groupACL, String repositoryID) {
         try {
             HierarchyManager rolesHierarchy = ContentRepository.getHierarchyManager(ContentRepository.USER_ROLES);
-            /* get access rights of this user */
+            // get access rights of this user
 
             Content acl = null;
             try {
@@ -400,22 +389,21 @@ public final class SessionAccessControl {
     }
 
     /**
-     * <p>
      * Adds group acl of the specified user to the given groupACL
-     * </p>
      * @param userNode
      * @param groupACL
+     * @todo groups are not handled yet?
      */
     private static void updateGroupsACL(Content userNode, List groupACL, String repositoryID) {
         try {
             HierarchyManager groupsHierarchy = ContentRepository.getHierarchyManager(ContentRepository.GROUPS);
-            /* get access rights of this user */
+            // get access rights of this user
             Content acl = null;
             try {
                 acl = userNode.getContent("groups");
             }
             catch (PathNotFoundException e) {
-                log.warn("No groups defined for user " + userNode.getHandle());
+                log.debug("No groups defined for user " + userNode.getHandle());
                 return;
             }
             Collection aclCollection = acl.getChildren();
@@ -437,9 +425,7 @@ public final class SessionAccessControl {
     }
 
     /**
-     * <p>
      * invalidates user session
-     * </p>
      * @param request
      */
     public static void invalidateUser(HttpServletRequest request) {
@@ -447,9 +433,7 @@ public final class SessionAccessControl {
     }
 
     /**
-     * <p>
      * logout user (as in request) from the specified repository session
-     * </p>
      * @param request
      * @param repositoryID
      */
