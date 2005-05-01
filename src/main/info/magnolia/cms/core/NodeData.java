@@ -36,6 +36,7 @@ import org.apache.log4j.Logger;
 
 
 /**
+ * Wrapper class for a jcr property.
  * @author Sameer Charles
  * @version 2.0
  */
@@ -46,19 +47,20 @@ public class NodeData extends ContentHandler {
      */
     private static Logger log = Logger.getLogger(NodeData.class);
 
+    /**
+     * Wrapped javax.jcr.Property.
+     */
     private Property property;
 
     /**
      * package private constructor
      */
     NodeData() {
-        this.property = null;
+        // property is null
     }
 
     /**
-     * <p>
-     * constructor | create atom object to work-on based on existing <code>NodeData</code>
-     * <p>
+     * Constructor. Create atom object to work-on based on existing <code>NodeData</code>
      * @param workingNode current active <code>Node</code>
      * @param name <code>NodeData</code> name to be retrieved
      */
@@ -72,9 +74,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
-     * constructor | creates a new initialized NodeData of default type <b>String </b>
-     * </p>
+     * Constructor. Creates a new initialized NodeData of default type <strong>String </strong>
      * @param workingNode current active <code>Node</code>
      * @param name <code>NodeData</code> name to be created
      * @throws PathNotFoundException
@@ -87,7 +87,7 @@ public class NodeData extends ContentHandler {
         this.setAccessManager(manager);
         if (createNew) {
             Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
-            this.property = workingNode.setProperty(name, "");
+            this.property = workingNode.setProperty(name, StringUtils.EMPTY);
         }
         else {
             Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.READ);
@@ -96,9 +96,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
-     * constructor | creates a new initialized NodeData
-     * </p>
+     * Constructor. Creates a new initialized NodeData
      * @param workingNode current active <code>Node</code>
      * @param name <code>NodeData</code> name to be created
      * @param value Value to be set
@@ -115,9 +113,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
-     * constructor | creates a new initialized NodeData
-     * </p>
+     * Constructor. Creates a new initialized NodeData
      * @param node <code>Node</code> holding this property
      * @deprecated
      */
@@ -130,9 +126,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
-     * constructor | creates a new initialized NodeData
-     * </p>
+     * Constructor. Creates a new initialized NodeData
      * @param property
      */
     public NodeData(Property property, AccessManager manager)
@@ -145,7 +139,6 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
      * Returns the <code>value</code> of this <code>NodeData</code>. One of type:
      * <ul>
      * <li><code>PropertyType.STRING</code></li>
@@ -156,7 +149,6 @@ public class NodeData extends ContentHandler {
      * <li><code>PropertyType.LONG</code></li>
      * <li><code>PropertyType.BOOLEAN</code></li>
      * </ul>
-     * </p>
      * @return Value
      */
     public Value getValue() {
@@ -179,7 +171,7 @@ public class NodeData extends ContentHandler {
             return this.getString().replaceAll("\n", lineBreak);
         }
         catch (Exception e) {
-            return "";
+            return StringUtils.EMPTY;
         }
     }
 
@@ -192,14 +184,12 @@ public class NodeData extends ContentHandler {
             return this.property.getString();
         }
         catch (Exception e) {
-            return "";
+            return StringUtils.EMPTY;
         }
     }
 
     /**
-     * <p>
      * Returns the <code>long</code> representation of the value:
-     * </p>
      * @return long
      */
     public long getLong() {
@@ -212,9 +202,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
      * Returns the <code>double</code> representation of the value:
-     * </p>
      * @return double
      */
     public double getDouble() {
@@ -227,9 +215,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
      * Returns the <code>Calendar</code> representation of the value:
-     * </p>
      * @return Calendar
      */
     public Calendar getDate() {
@@ -255,9 +241,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
      * Returns the <code>InputStream</code> representation of the value:
-     * </p>
      * @return boolean
      */
     public InputStream getStream() {
@@ -270,7 +254,6 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
      * Returns the <code>type</code> of this <code>NodeData</code>. One of:
      * <ul>
      * <li><code>PropertyType.STRING</code></li>
@@ -281,17 +264,18 @@ public class NodeData extends ContentHandler {
      * <li><code>PropertyType.LONG</code></li>
      * <li><code>PropertyType.BOOLEAN</code></li>
      * </ul>
-     * </p>
      * @return PropertyType
      */
     public int getType() {
-        try {
-            return this.property.getType();
+        if (this.property != null) {
+            try {
+                return this.property.getType();
+            }
+            catch (Exception e) {
+                log.warn("Unable to read property type for " + this.property);
+            }
         }
-        catch (Exception e) {
-            log.warn("Unable to read property type for " + this.property);
-            return PropertyType.UNDEFINED;
-        }
+        return PropertyType.UNDEFINED;
     }
 
     /**
@@ -308,9 +292,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
      * returns size in bytes
-     * </p>
      * @return content length
      */
     public long getContentLength() {
@@ -332,9 +314,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
      * set value of type <code>String</code>
-     * </p>
      * @throws RepositoryException
      * @param value , string to be set
      */
@@ -344,9 +324,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
      * set value of type <code>int</code>
-     * </p>
      * @throws RepositoryException
      * @param value , int value to be set
      */
@@ -356,9 +334,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
      * set value of type <code>long</code>
-     * </p>
      * @throws RepositoryException
      * @param value , long value to be set
      */
@@ -368,9 +344,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
      * set value of type <code>InputStream</code>
-     * </p>
      * @throws RepositoryException
      * @param value , InputStream to be set
      */
@@ -380,9 +354,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
      * set value of type <code>double</code>
-     * </p>
      * @throws RepositoryException
      * @param value , double value to be set
      */
@@ -392,9 +364,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
      * set value of type <code>boolean</code>
-     * </p>
      * @throws RepositoryException
      * @param value , boolean value to be set
      */
@@ -404,9 +374,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
      * set value of type <code>Calendar</code>
-     * </p>
      * @throws RepositoryException
      * @param value , Calendar value to be set
      */
@@ -416,9 +384,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
      * set value of type <code>Value</code>
-     * </p>
      * @throws RepositoryException
      * @param value
      */
@@ -428,9 +394,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
      * checks if the atom exists in the repository
-     * </p>
      * @return boolean
      */
     public boolean isExist() {
@@ -438,9 +402,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
      * get a handle representing path relative to the content repository
-     * </p>
      * @return String representing path (handle) of the content
      */
     public String getHandle() {
@@ -455,9 +417,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
      * get a handle representing path relative to the content repository with the default extension
-     * </p>
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException
      * @return String representing path (handle) of the content
@@ -467,9 +427,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
      * get parent content object
-     * </p>
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException
      * @return Content representing parent node
@@ -479,9 +437,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
      * get absolute parent object starting from the root node
-     * </p>
      * @param digree level at which the requested node exist, relative to the ROOT node
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException
@@ -495,9 +451,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
      * Convenience method for taglib
-     * </p>
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException
      * @return Content representing node on level 0
@@ -517,9 +471,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
      * get node level from the ROOT node : FIXME implement getDepth in javax.jcr
-     * </p>
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException
      * @return level at which current node exist, relative to the ROOT node
@@ -529,9 +481,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
      * Persists all changes to the repository if valiation succeds
-     * </p>
      * @throws RepositoryException
      */
     public void save() throws RepositoryException {
@@ -539,9 +489,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
      * checks for the allowed access rights
-     * </p>
      * @param permissions as defined in javax.jcr.Permission
      * @return true is the current user has specified access on this node.
      */
@@ -557,9 +505,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
      * Remove this path
-     * </p>
      * @throws RepositoryException
      */
     public void delete() throws RepositoryException {
@@ -568,9 +514,7 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * <p>
      * Refreshes current node keeping all changes
-     * </p>
      * @see javax.jcr.Node#refresh(boolean)
      * @throws RepositoryException
      */
