@@ -1,119 +1,109 @@
-.mgnlMainbar, .mgnlMainbarPreview
-    {
-	position:absolute;
-    z-index:900;
-    }
-.mgnlBtnsLeft
-    {
-    text-align: left;
-	}
-.mgnlBtnsRight
-    {
-    text-align: right;
-	}
-.mgnlControlButton,.mgnlControlButton_PUSHED
-	{
-    font-size:11px;
-	height:15px;
-	padding:1px 8px 1px 10px;
-	}
+.mgnlMainbar,.mgnlMainbarPreview {
+	position: absolute;
+	z-index: 900;
+}
 
-.mgnlControlButtonSmall,.mgnlControlButtonSmall_PUSHED
-	{
-    font-size:9px;
-	height:5px;
-	padding:0 3px 0 3px;
-    }
+.mgnlBtnsLeft {
+	text-align: left;
+}
 
-.mgnlControlButton,.mgnlControlButton_PUSHED,.mgnlControlButtonSmall,.mgnlControlButtonSmall_PUSHED
-	{
-    font-family:Verdana, sans-serif;
-    color:#F0F2E6;
-	cursor:default;
+.mgnlBtnsRight {
+	text-align: right;
+}
+
+.mgnlControlButton,.mgnlControlButton_PUSHED {
+	font-size: 11px;
+	height: 15px;
+	padding: 1px 8px 1px 10px;
+}
+
+.mgnlControlButtonSmall,.mgnlControlButtonSmall_PUSHED {
+	font-size: 9px;
+	height: 5px;
+	padding: 0 3px 0 3px;
+}
+
+.mgnlControlButton,.mgnlControlButton_PUSHED,.mgnlControlButtonSmall,.mgnlControlButtonSmall_PUSHED {
+	font-family: Verdana, sans-serif;
+	color: #F0F2E6;
+	cursor: default;
 	white-space: nowrap;
-	}
+}
 
+.mgnlControlButton_PUSHED,.mgnlControlButtonSmall_PUSHED {
+	background-color: #9DB517;
+	border-top: 1px solid #B9C950;
+	border-left: 1px solid #B9C950;
+	border-bottom: 1px solid #8a2;
+	border-right: 1px solid #8a2;
+}
 
-.mgnlControlButton,.mgnlControlButtonSmall,.mgnlControlButtonTransparent,.mgnlControlButtonTransparentSmall,.mgnlControlBar,.mgnlControlBarSmall
-	{
-    background-color:#5E9201;
-	border-style:solid;
-	border-width:1px;
-	border-top-color:#ADC97B;
-    border-left-color:#ADC97B;
-	border-bottom-color:#396101;
-	border-right-color:#396101;
-	}
-.mgnlControlBar,.mgnlControlBarSmall
-    {
-	padding: 0 0 0 0;
+.mgnlControlButtonTransparent,.mgnlControlButtonTransparentSmall {
+	background: transparent;
+	white-space: nowrap;
+}
+
+.mgnlControlButton,.mgnlControlButtonSmall,.mgnlControlButtonTransparent,.mgnlControlButtonTransparentSmall {
+	background-color: #5E9201;
+	border-top: 1px solid #ADC97B;
+	border-left: 1px solid #ADC97B;
+	border-bottom: 1px solid #396101;
+	border-right: 1px solid #396101;
+}
+
+.mgnlControlBarSmall,.mgnlControlBarSmall_PUSHED,.mgnlControlBarSmall_MOUSEOVER {
 	width: 100%;
-	}
+}
 
-.mgnlControlButtonTransparent,.mgnlControlButtonTransparentSmall
-	{
-	background:transparent;
-	white-space: nowrap;
-	}
+.mgnlControlBar,.mgnlControlBarSmall {
+	background-color: #5E9201;
+	border-top: 1px solid #ADC97B;
+	border-left: 1px solid #ADC97B;
+	border-bottom: 1px solid #396101;
+	border-right: 1px solid #396101;
+}
 
+.mgnlControlBar_PUSHED,.mgnlControlBarSmall_PUSHED {
+	background-color: #9DB517;
+	border-top: 1px solid #B9C950;
+	border-left: 1px solid #B9C950;
+	border-bottom: 1px solid #8a2;
+	border-right: 1px solid #8a2;
+}
 
-.mgnlControlButton_PUSHED,.mgnlControlButtonSmall_PUSHED, .mgnlControlBar_PUSHED,  .mgnlControlBarSmall_PUSHED
-	{
-    background-color:#9DB517;
-	border-style:solid;
-	border-width:1px;
-	border-top-color:#B9C950;
-    border-left-color:#B9C950;
-	border-bottom-color:#88AA22;
-	border-right-color:#88AA22;
-	}
+.mgnlControlBar_MOUSEOVER,.mgnlControlBarSmall_MOUSEOVER {
+	background-color: #8a3;
+	border-left: 1px solid #ac6;
+	border-top: 1px solid #ac6;
+	border-right: 1px solid #680;
+	border-bottom: 1px solid #680;
+}
 
-.mgnlControlBar_MOUSEOVER, .mgnlControlBarSmall_MOUSEOVER
-	{
-	border-style:solid;
-	border-width:1px;
-    background-color:#88aa33;
-    border-left-color:#aacc66;
-    border-top-color:#aacc66;
-    border-right-color:#668800;
-    border-bottom-color:#668800;
-	}
+.mgnlControlBar,.mgnlControlBar_PUSHED,.mgnlControlBar_MOUSEOVER {
+	width: 100%;
+}
 
-td.mgnlControlBar, td.mgnlControlBar_PUSHED, td.mgnlControlBar_MOUSEOVER
-	{
-	padding-top:4px;
-	padding-bottom:4px;
-	padding-right:2px;
-	padding-left:2px;
-	}
+.mgnlControlBar td,.mgnlControlBar_PUSHED td,.mgnlControlBar_MOUSEOVER td {
+	padding: 4px 2px 4px 2px;
+}
 
-td.mgnlControlBarSmall, td.mgnlControlBarSmall_PUSHED, td.mgnlControlBarSmall_MOUSEOVER
-	{
-	font-size:4px;
-	padding-top:1px;
-	padding-bottom:1px;
-	padding-right:0px;
-	padding-left:0px;
-	}
-
-#mgnlMoveDivShadow, #mgnlMoveDivDenied, #mgnlMoveDivAllowed {
-	position:absolute;
-	top:-50;
-	left:-50;
-	z-index:901;
-	visibility:hidden;
-	font-family:Verdana;
-	font-size:10px;
+#mgnlMoveDivShadow,#mgnlMoveDivDenied,#mgnlMoveDivAllowed {
+	position: absolute;
+	top: -50;
+	left: -50;
+	z-index: 901;
+	visibility: hidden;
+	font-family: Verdana;
+	font-size: 10px;
 	background-repeat: no-repeat;
 	width: 286px;
 	height: 20px;
-	}
+}
 
 #mgnlMoveDivShadow {
 	background-image: url("../images/mgnlMoveShadow.gif");
-	}
+}
 
 #mgnlMoveDivDenied {
 	background-image: url("../images/mgnlMoveDenied.gif");
-	}
-
+}
