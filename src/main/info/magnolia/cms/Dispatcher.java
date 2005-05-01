@@ -55,11 +55,21 @@ public final class Dispatcher {
             return;
         }
         String requestReceiver = (String) req.getAttribute(Aggregator.REQUEST_RECEIVER);
-        RequestDispatcher rd = sc.getRequestDispatcher(requestReceiver);
+
         if (log.isDebugEnabled()) {
-            log.debug("Dispatching request for - " + req.getRequestURL());
-            log.debug("Forward to - " + requestReceiver);
+            log.debug("Dispatching request for [" + req.getRequestURL() + "] - forward to [" + requestReceiver + "]");
         }
+
+        if (res.isCommitted()) {
+            log.error("Can't forward to ["
+                + requestReceiver
+                + "] for request ["
+                + req.getRequestURL()
+                + "]. Response is already committed.");
+            return;
+        }
+
+        RequestDispatcher rd = sc.getRequestDispatcher(requestReceiver);
         rd.forward(req, res);
         rd = null;
     }

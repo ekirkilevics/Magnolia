@@ -27,6 +27,7 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -99,6 +100,24 @@ public class MetaData {
         this.setAccessManager(manager);
     }
 
+    public String getHandle() throws RepositoryException {
+        return this.node.getPath();
+    }
+
+    public void setAccessManager(AccessManager manager) {
+        this.accessManager = manager;
+    }
+
+    private void allowUpdate() throws AccessDeniedException {
+        try {
+            Access.isGranted(this.accessManager, Path.getAbsolutePath(this.node.getPath()), Permission.WRITE);
+        }
+        catch (RepositoryException re) {
+            log.error(re.getMessage(), re);
+            throw new AccessDeniedException(re.getMessage());
+        }
+    }
+
     /**
      * this will be created even if the current user does not have write access on the content meta data is neded by the
      * system at any level
@@ -144,97 +163,45 @@ public class MetaData {
         catch (RepositoryException e) {
             log.error(e.getMessage(), e);
         }
-        return "";
+        return StringUtils.EMPTY;
     }
 
     /**
-     * <p>
-     * part of metadata , could be used as html header
-     * </p>
+     * Part of metadata , could be used as html header.
      * @return String value of the requested metadata
      */
     public String getTitle() {
-        try {
-            return this.node.getProperty(TITLE).getString();
-        }
-        catch (PathNotFoundException ee) {
-            return "";
-        }
-        catch (RepositoryException re) {
-            return "";
-        }
+        return getStringProperty(TITLE);
     }
 
     /**
-     * <p>
-     * part of metadata, could be used as html header
-     * </p>
+     * Part of metadata, could be used as html header.
      * @param value
      */
     public void setTitle(String value) throws AccessDeniedException {
         allowUpdate();
-        try {
-            this.node.getProperty(TITLE).setValue(value);
-        }
-        catch (PathNotFoundException ee) {
-            try {
-                this.node.setProperty(TITLE, value);
-            }
-            catch (RepositoryException e) {
-                log.error("Failed to set title - " + value);
-            }
-        }
-        catch (RepositoryException re) {
-            log.error("Failed to set title - " + value);
-        }
+        setProperty(TITLE, value);
     }
 
     /**
-     * <p>
-     * part of metadata, adds creation date of the current node
-     * </p>
+     * Part of metadata, adds creation date of the current node
      */
     public void setCreationDate() throws AccessDeniedException {
         allowUpdate();
-        Calendar creationDate = new GregorianCalendar(TimeZone.getDefault());
-        try {
-            this.node.getProperty(CREATION_DATE).setValue(creationDate);
-        }
-        catch (PathNotFoundException ee) {
-            try {
-                this.node.setProperty(CREATION_DATE, creationDate);
-            }
-            catch (RepositoryException e) {
-                log.warn("Failed to set date");
-            }
-        }
-        catch (RepositoryException re) {
-            log.warn("Failed to set date");
-        }
+        Calendar value = new GregorianCalendar(TimeZone.getDefault());
+        setProperty(CREATION_DATE, value);
     }
 
     /**
-     * <p>
-     * part of metadata, get creation date of the current node
-     * </p>
+     * Part of metadata, get creation date of the current node.
      * @return Calendar
      */
     public Calendar getCreationDate() {
-        try {
-            return this.node.getProperty(CREATION_DATE).getDate();
-        }
-        catch (PathNotFoundException ee) {
-            return null;
-        }
-        catch (RepositoryException re) {
-            return null;
-        }
+        return this.getDateProperty(CREATION_DATE);
     }
 
     /**
-     * <p>
-     * part of metadata, adds sequence number of the current node
-     * </p>
+     * Part of metadata, adds sequence number of the current node
      */
     public void setSequencePosition(long seqPos) throws AccessDeniedException {
         allowUpdate();
@@ -257,18 +224,14 @@ public class MetaData {
     }
 
     /**
-     * <p>
-     * part of metadata, adds sequence number of the current node
-     * </p>
+     * Part of metadata, adds sequence number of the current node
      */
     public void setSequencePosition() throws AccessDeniedException {
         setSequencePosition(0);
     }
 
     /**
-     * <p>
-     * part of metadata, get sequence position of the current node
-     * </p>
+     * Part of metadata, get sequence position of the current node
      * @return long
      */
     public long getSequencePosition() {
@@ -277,376 +240,164 @@ public class MetaData {
         }
         catch (PathNotFoundException ee) {
             Calendar cd = getCreationDate();
-            return cd.getTimeInMillis() * SEQUENCE_POS_COEFFICIENT;
-        }
-        catch (Exception e) {
-            return 0;
-        }
-    }
-
-    /**
-     * <p>
-     * part of metadata, adds activated status of the current node
-     * </p>
-     */
-    public void setActivated() throws AccessDeniedException {
-        allowUpdate();
-        try {
-            this.node.getProperty(ACTIVATED).setValue(true);
-        }
-        catch (PathNotFoundException ee) {
-            try {
-                this.node.setProperty(ACTIVATED, true);
-            }
-            catch (RepositoryException e) {
-                log.warn("Failed to set [ Activated ] flag");
-                log.error(e.getMessage(), e);
+            if (cd != null) {
+                return cd.getTimeInMillis() * SEQUENCE_POS_COEFFICIENT;
             }
         }
         catch (RepositoryException e) {
-            log.warn("Failed to set [ Activated ] flag");
             log.error(e.getMessage(), e);
         }
+        return 0;
     }
 
     /**
-     * <p>
-     * part of metadata, adds activated status of the current node
-     * </p>
+     * Part of metadata, adds activated status of the current node
+     */
+    public void setActivated() throws AccessDeniedException {
+        allowUpdate();
+        setProperty(ACTIVATED, true);
+    }
+
+    /**
+     * Part of metadata, adds activated status of the current node.
      */
     public void setUnActivated() throws AccessDeniedException {
         allowUpdate();
-        try {
-            this.node.getProperty(ACTIVATED).setValue(false);
-        }
-        catch (PathNotFoundException ee) {
-            try {
-                this.node.setProperty(ACTIVATED, false);
-            }
-            catch (RepositoryException e) {
-                log.warn("Failed to set [ UnActivated ] flag");
-                log.error(e.getMessage(), e);
-            }
-        }
-        catch (RepositoryException re) {
-            log.warn("Failed to set [ UnActivated ] flag");
-            log.error(re.getMessage(), re);
-        }
+        setProperty(ACTIVATED, false);
     }
 
     /**
-     * <p>
-     * part of metadata, get last activated status of the current node
-     * </p>
+     * Part of metadata, get last activated status of the current node
      * @return Calendar
      */
     public boolean getIsActivated() {
-        try {
-            return this.node.getProperty(ACTIVATED).getBoolean();
-        }
-        catch (RepositoryException re) {
-            return false;
-        }
+        return getBooleanProperty(ACTIVATED);
     }
 
     /**
-     * <p>
-     * part of metadata, adds activated date of the current node
-     * </p>
+     * Part of metadata, adds activated date of the current node
      */
     public void setLastActivationActionDate() throws AccessDeniedException {
         allowUpdate();
-        Calendar currentDate = new GregorianCalendar(TimeZone.getDefault());
-        try {
-            this.node.getProperty(LAST_ACTION).setValue(currentDate);
-        }
-        catch (PathNotFoundException ee) {
-            try {
-                this.node.setProperty(LAST_ACTION, currentDate);
-            }
-            catch (RepositoryException e) {
-            }
-        }
-        catch (RepositoryException re) {
-        }
+        Calendar value = new GregorianCalendar(TimeZone.getDefault());
+        setProperty(LAST_ACTION, value);
     }
 
     /**
-     * <p>
-     * part of metadata, get last activated/de- date of the current node
-     * </p>
+     * Part of metadata, get last activated/de- date of the current node
      * @return Calendar
      */
     public Calendar getLastActionDate() {
-        try {
-            return this.node.getProperty(LAST_ACTION).getDate();
-        }
-        catch (PathNotFoundException ee) {
-            return null;
-        }
-        catch (RepositoryException re) {
-            return null;
-        }
+        return getDateProperty(LAST_ACTION);
     }
 
     /**
-     * <p>
-     * part of metadata, adds modification date of the current node
-     * </p>
+     * Part of metadata, adds modification date of the current node
      */
     public void setModificationDate() throws AccessDeniedException {
         allowUpdate();
-        Calendar currentDate = new GregorianCalendar(TimeZone.getDefault());
-        try {
-            this.node.getProperty(LAST_MODIFIED).setValue(currentDate);
-        }
-        catch (PathNotFoundException ee) {
-            try {
-                this.node.setProperty(LAST_MODIFIED, currentDate);
-            }
-            catch (RepositoryException e) {
-            }
-        }
-        catch (RepositoryException re) {
-        }
+        Calendar value = new GregorianCalendar(TimeZone.getDefault());
+        setProperty(LAST_MODIFIED, value);
     }
 
     /**
-     * <p>
-     * part of metadata, get last modified date of the current node
-     * </p>
+     * Part of metadata, get last modified date of the current node
      * @return Calendar
      */
     public Calendar getModificationDate() {
-        try {
-            return this.node.getProperty(LAST_MODIFIED).getDate();
-        }
-        catch (PathNotFoundException ee) {
-            return null;
-        }
-        catch (RepositoryException re) {
-            return null;
-        }
+        return getDateProperty(LAST_MODIFIED);
     }
 
     /**
-     * <p>
-     * part of metadata , last known author of this node
-     * </p>
+     * Part of metadata, last known author of this node.
      * @return String value of the requested metadata
      */
     public String getAuthorId() {
-        try {
-            return this.node.getProperty(AUTHOR_ID).getString();
-        }
-        catch (PathNotFoundException ee) {
-            return "";
-        }
-        catch (RepositoryException re) {
-            return "";
-        }
+        return getStringProperty(AUTHOR_ID);
     }
 
     /**
-     * <p>
-     * part of metadata, current logged-in author who did some action on this page
-     * </p>
+     * Part of metadata, current logged-in author who did some action on this page.
      * @param value
      */
     public void setAuthorId(String value) throws AccessDeniedException {
         allowUpdate();
-        try {
-            this.node.getProperty(AUTHOR_ID).setValue(value);
-        }
-        catch (PathNotFoundException ee) {
-            try {
-                this.node.setProperty(AUTHOR_ID, value);
-            }
-            catch (RepositoryException e) {
-            }
-        }
-        catch (RepositoryException re) {
-        }
+        setProperty(AUTHOR_ID, value);
     }
 
     /**
-     * <p>
-     * part of metadata , last known activator of this node
-     * </p>
+     * Part of metadata, last known activator of this node.
      * @return String value of the requested metadata
      */
     public String getActivatorId() {
-        try {
-            return this.node.getProperty(ACTIVATOR_ID).getString();
-        }
-        catch (PathNotFoundException ee) {
-            return "";
-        }
-        catch (RepositoryException re) {
-            return "";
-        }
+        return getStringProperty(ACTIVATOR_ID);
     }
 
     /**
-     * <p>
-     * part of metadata, current logged-in author who last activated this page
-     * </p>
+     * Part of metadata, current logged-in author who last activated this page
      * @param value
      */
     public void setActivatorId(String value) throws AccessDeniedException {
         allowUpdate();
-        try {
-            this.node.getProperty(ACTIVATOR_ID).setValue(value);
-        }
-        catch (PathNotFoundException ee) {
-            try {
-                this.node.setProperty(ACTIVATOR_ID, value);
-            }
-            catch (RepositoryException e) {
-            }
-        }
-        catch (RepositoryException re) {
-        }
+        setProperty(ACTIVATOR_ID, value);
     }
 
     /**
-     * <p>
-     * part of metadata, node activation time
-     * </p>
+     * Part of metadata, node activation time
      */
-    public void setStartTime(Calendar startTime) throws AccessDeniedException {
+    public void setStartTime(Calendar value) throws AccessDeniedException {
         allowUpdate();
-        try {
-            this.node.getProperty(START_TIME).setValue(startTime);
-        }
-        catch (PathNotFoundException ee) {
-            try {
-                this.node.setProperty(START_TIME, startTime);
-            }
-            catch (RepositoryException e) {
-            }
-        }
-        catch (RepositoryException re) {
-        }
+        setProperty(START_TIME, value);
     }
 
     /**
-     * <p>
-     * part of metadata, node activation time
-     * </p>
+     * Part of metadata, node activation time
      * @return Calendar
      */
     public Calendar getStartTime() {
-        try {
-            return this.node.getProperty(START_TIME).getDate();
-        }
-        catch (PathNotFoundException ee) {
-            return null;
-        }
-        catch (RepositoryException re) {
-            return null;
-        }
+        return getDateProperty(START_TIME);
     }
 
     /**
-     * <p>
-     * part of metadata, node de-activation time
-     * </p>
+     * Part of metadata, node de-activation time
      */
-    public void setEndTime(Calendar endTime) throws AccessDeniedException {
+    public void setEndTime(Calendar value) throws AccessDeniedException {
         allowUpdate();
-        try {
-            this.node.getProperty(END_TIME).setValue(endTime);
-        }
-        catch (PathNotFoundException ee) {
-            try {
-                this.node.setProperty(END_TIME, endTime);
-            }
-            catch (RepositoryException e) {
-            }
-        }
-        catch (RepositoryException re) {
-        }
+        setProperty(END_TIME, value);
     }
 
     /**
-     * <p>
-     * part of metadata, node de-activation time
-     * </p>
+     * Part of metadata, node de-activation time
      * @return Calendar
      */
     public Calendar getEndTime() {
-        try {
-            return this.node.getProperty(END_TIME).getDate();
-        }
-        catch (PathNotFoundException ee) {
-            return null;
-        }
-        catch (RepositoryException re) {
-            return null;
-        }
+        return getDateProperty(END_TIME);
     }
 
     /**
-     * <p>
-     * part of metadata , template which will be used to render content of this node
-     * </p>
+     * Part of metadata, template which will be used to render content of this node.
      * @return String value of the requested metadata
      */
     public String getTemplate() {
-        try {
-            return this.node.getProperty(TEMPLATE).getString();
-        }
-        catch (PathNotFoundException ee) {
-            return "";
-        }
-        catch (RepositoryException re) {
-            return "";
-        }
+        return getStringProperty(TEMPLATE);
     }
 
     /**
-     * <p>
-     * part of metadata, template which will be used to render content of this node
-     * </p>
+     * Part of metadata, template which will be used to render content of this node
      * @param value
      */
     public void setTemplate(String value) throws AccessDeniedException {
         allowUpdate();
-        try {
-            this.node.getProperty(TEMPLATE).setValue(value);
-        }
-        catch (PathNotFoundException ee) {
-            try {
-                this.node.setProperty(TEMPLATE, value);
-            }
-            catch (RepositoryException e) {
-            }
-        }
-        catch (RepositoryException re) {
-        }
+        setProperty(TEMPLATE, value);
     }
 
     /**
-     * <p>
-     * part of metadata, template type : JSP - Servlet - _xxx_
-     * </p>
+     * Part of metadata, template type : JSP - Servlet - _xxx_
      * @param value
      */
     public void setTemplateType(String value) throws AccessDeniedException {
         allowUpdate();
-        try {
-            this.node.getProperty(TEMPLATE_TYPE).setValue(value);
-        }
-        catch (PathNotFoundException ee) {
-            try {
-                this.node.setProperty(TEMPLATE_TYPE, value);
-            }
-            catch (RepositoryException e) {
-            }
-        }
-        catch (RepositoryException re) {
-        }
+        setProperty(TEMPLATE_TYPE, value);
     }
 
     /**
@@ -770,6 +521,11 @@ public class MetaData {
         try {
             return this.node.getProperty(propertyName).getDate();
         }
+        catch (PathNotFoundException re) {
+            if (log.isDebugEnabled()) {
+                log.debug("PathNotFoundException for property [" + propertyName + "] in node " + this.node);
+            }
+        }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
         }
@@ -782,6 +538,11 @@ public class MetaData {
     public boolean getBooleanProperty(String propertyName) {
         try {
             return this.node.getProperty(propertyName).getBoolean();
+        }
+        catch (PathNotFoundException re) {
+            if (log.isDebugEnabled()) {
+                log.debug("PathNotFoundException for property [" + propertyName + "] in node " + this.node);
+            }
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
@@ -796,6 +557,11 @@ public class MetaData {
         try {
             return this.node.getProperty(propertyName).getDouble();
         }
+        catch (PathNotFoundException re) {
+            if (log.isDebugEnabled()) {
+                log.debug("PathNotFoundException for property [" + propertyName + "] in node " + this.node);
+            }
+        }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
         }
@@ -809,6 +575,11 @@ public class MetaData {
         try {
             return this.node.getProperty(propertyName).getLong();
         }
+        catch (PathNotFoundException re) {
+            if (log.isDebugEnabled()) {
+                log.debug("PathNotFoundException for property [" + propertyName + "] in node " + this.node);
+            }
+        }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
         }
@@ -816,33 +587,23 @@ public class MetaData {
     }
 
     /**
-     * @param propertyName
+     * Returns a String property. If the property does not exist, this will return an empty String.
+     * @param propertyName property name
+     * @return the property value, never null
      */
     public String getStringProperty(String propertyName) {
         try {
             return this.node.getProperty(propertyName).getString();
         }
-        catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        }
-        return "";
-    }
-
-    public String getHandle() throws RepositoryException {
-        return this.node.getPath();
-    }
-
-    public void setAccessManager(AccessManager manager) {
-        this.accessManager = manager;
-    }
-
-    private void allowUpdate() throws AccessDeniedException {
-        try {
-            Access.isGranted(this.accessManager, Path.getAbsolutePath(this.node.getPath()), Permission.WRITE);
+        catch (PathNotFoundException re) {
+            if (log.isDebugEnabled()) {
+                log.debug("PathNotFoundException for property [" + propertyName + "] in node " + this.node);
+            }
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
-            throw new AccessDeniedException(re.getMessage());
         }
+        return StringUtils.EMPTY;
     }
+
 }
