@@ -119,7 +119,7 @@
 	try {
 		Iterator it=Store.getInstance().getStore().getContent("adminCentral").getContent("buttonList").getChildren(ItemType.CONTENTNODE).iterator();
 		while (it.hasNext()) {
-			ContentNode c=(ContentNode) it.next();
+			Content c=(Content) it.next();
 			Button b=new Button();
 			String label = info.magnolia.cms.i18n.TemplateMessagesUtil.get(request, c.getNodeData("label").getString());
 			b.setLabel(labelPre + label + labelPost);
