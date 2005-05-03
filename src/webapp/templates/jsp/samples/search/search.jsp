@@ -1,51 +1,76 @@
-<%@ page import="info.magnolia.cms.core.search.Query,
-                 info.magnolia.cms.security.SessionAccessControl,
-                 info.magnolia.cms.core.search.QueryResult,
-                 java.util.Iterator,
-                 info.magnolia.cms.core.NodeData,
-                 info.magnolia.cms.core.Content"%>
-<%
+<jsp:root version="2.0" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:cms="urn:jsptld:cms-taglib"
+    xmlns:cmsu="urn:jsptld:cms-util-taglib" xmlns:c="urn:jsptld:http://java.sun.com/jsp/jstl/core">
+    <jsp:directive.page contentType="text/html; charset=utf-8" />
+
+    <jsp:directive.page import="info.magnolia.cms.core.search.Query" />
+    <jsp:directive.page import="info.magnolia.cms.security.SessionAccessControl" />
+    <jsp:directive.page import="info.magnolia.cms.core.search.QueryResult" />
+    <jsp:directive.page import="java.util.Iterator" />
+    <jsp:directive.page import="info.magnolia.cms.core.NodeData" />
+    <jsp:directive.page import="info.magnolia.cms.core.Content" />
 
 
-/**
- * Search test
- *
- *
- *
- * */
-out.println("----------------------------------------------------------------------------------------<br><br>");
-out.println("SQL test<br><br>");
-out.println("----------------------------------------------------------------------------------------<br><br>");
-
-String sql = "SELECT * FROM nt:base where jcr:path like '/%' and title like '%'";
-out.println("Statement : "+sql+"<br><br>");
-
-Query q = SessionAccessControl.getQueryManager(request).createQuery(sql, Query.SQL);
-QueryResult result = q.execute();
+    <jsp:text>
+        <![CDATA[<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> ]]>
+    </jsp:text>
+    <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+        <head>
+            <c:import url="/templates/jsp/samples/global/head.jsp" />
+        </head>
+        <body>
+            <c:import url="/templates/jsp/samples/global/mainBar.jsp" />
+            <div id="contentDivMainColumn">
+                <c:import url="/templates/jsp/samples/global/columnMain.jsp" />
 
 
-out.println("<br>");
+                <form name="mgnlsearch" action="">
+                  <textarea id="sql" name="sql" cols="40" rows="10">SELECT * FROM nt:base where jcr:path like '/%' and title like '%'
+                  </textarea>
+                  <input type="submit" name="search" value="search" />
+                </form>
 
-Iterator nodes  = result.getContentIterator("mgnl:content");
-int i = 1;
-out.println("<u>Resulting objects of NodeType (mgnl:content)</u> <br>");
-while (nodes.hasNext()) {
-    Content node = (Content) nodes.next();
-    out.println("("+i+") "+node.getHandle()+"<br>");
-    i++;
-}
+                <c:if test="${!empty(param.sql)}">
 
+	                <h1>Search results for:</h1>
+	                <h2>${param.sql}</h2>
 
-out.println("<br><br>");
+						<c:catch var="exc">
+			                <jsp:scriptlet>
+				                String sql = request.getParameter("sql");
+				                Query q = SessionAccessControl.getQueryManager(request).createQuery(sql, Query.SQL);
+				                QueryResult result = q.execute();
+				                pageContext.setAttribute("result", result.getContentIterator("mgnl:content"));
+			                </jsp:scriptlet>
 
-nodes  = result.getContentIterator("mgnl:contentNode");
-i = 1;
-out.println("<u>Resulting objects on NodeType (mgnl:contentNode)</u> <br>");
-while (nodes.hasNext()) {
-    Content node = (Content) nodes.next();
-    out.println("("+i+") "+node.getHandle()+"<br>");
-    i++;
-}
+			                <h3>Resulting objects of NodeType (mgnl:content)</h3>
 
+			                <c:forEach var="node" items="${result}">
+			                  ${node.handle}<br/>
+			                </c:forEach>
 
-%>
+			                <h3>Resulting objects of NodeType (mgnl:contentNode)</h3>
+
+			                <jsp:scriptlet>
+				                pageContext.setAttribute("result", result.getContentIterator("mgnl:contentNode"));
+			                </jsp:scriptlet>
+
+			                <c:forEach var="node" items="${result}">
+			                  ${node.handle}<br/>
+			                </c:forEach>
+						</c:catch>
+
+						<c:if test="${!empty(exc)}">
+						  	<h1>${exc.message}</h1>
+						</c:if>
+	                </c:if>
+                       <c:import url="/templates/jsp/samples/global/footer.jsp" />
+            </div>
+            <div id="contentDivRightColumn">
+                <c:import url="/templates/jsp/samples/global/columnRight.jsp" />
+            </div>
+            <c:import url="/templates/jsp/samples/global/headerImage.jsp" />
+            <cmsu:simpleNavigation />
+        </body>
+    </html>
+</jsp:root>
