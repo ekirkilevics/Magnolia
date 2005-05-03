@@ -12,6 +12,14 @@
  */
 package info.magnolia.module.admininterface;
 
+import java.lang.reflect.Constructor;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.log4j.Logger;
+
 import info.magnolia.cms.core.Content;
 
 
@@ -21,6 +29,14 @@ import info.magnolia.cms.core.Content;
  * @version 2.0
  */
 public class Store {
+
+    private static Logger log = Logger.getLogger(Store.class);
+
+    /**
+     * Map with repository name/handler class for admin tree. When this servlet will receive a call with a parameter
+     * <code>repository</code>, the corresponding handler will be used top display the admin tree.
+     */
+    private final Map treeHandlers = new HashMap();
 
     private static Store store = new Store();
 
@@ -40,4 +56,21 @@ public class Store {
     public Content getStore() {
         return this.localStore;
     }
+
+    public void registerTreeHandler(String name, Class treeHandler) {
+        treeHandlers.put(name, treeHandler);
+    }
+
+    public AdminTree getTreeHandler(String name, HttpServletRequest request) {
+        try {
+            Class treeHandlerClass = (Class) treeHandlers.get(name);
+            Constructor constructor = treeHandlerClass.getConstructor(new Class[]{String.class, HttpServletRequest.class});
+            return (AdminTree) constructor.newInstance(new Object[]{name, request});
+        }
+        catch (Exception e) {
+            log.error("can't instanciate the treehandler: " + name, e);
+        }
+        return null;
+    }
+
 }

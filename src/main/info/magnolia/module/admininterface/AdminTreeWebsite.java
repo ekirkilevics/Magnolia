@@ -36,27 +36,24 @@ import javax.servlet.http.HttpServletRequest;
  * @author Fabrizio Giustina
  * @version $Id$
  */
-public class AdminTreeWebsite implements AdminTree {
-
-    private HttpServletRequest request;
+public class AdminTreeWebsite extends AdminTree {
 
     /**
-     * @see AdminTree#configureTree(Tree, HttpServletRequest, String, String, String, boolean, String)
+     * @param name
+     * @param request
      */
-    public void configureTree(Tree tree, HttpServletRequest request, String path, String pathOpen, String pathSelected,
-        boolean create, String createItemType) {
-        this.request = request;
+    public AdminTreeWebsite(String name, HttpServletRequest request) {
+        super(name, request);
+    }
+    
+    /* (non-Javadoc)
+     * @see info.magnolia.module.admininterface.AdminTree#prepareTree()
+     */
+    protected void prepareTree(Tree tree, HttpServletRequest request) {
         Messages msgs = MessagesManager.getMessages(request);
 
         tree.setIconOndblclick("mgnlTreeMenuItemOpen(" + tree.getJavascriptTree() + ");");
-        tree.setPath(path);
-        if (create) {
-            tree.createNode(createItemType);
-        }
-        else {
-            tree.setPathOpen(pathOpen);
-            tree.setPathSelected(pathSelected);
-        }
+
         tree.addItemType(ItemType.CONTENT);
 
         // to view all nodes uncomment this lines
@@ -102,7 +99,7 @@ public class AdminTreeWebsite implements AdminTree {
             + ".saveNodeData(this.value,this.options[this.selectedIndex].text)");
 
         Iterator templates = Template.getAvailableTemplates(SessionAccessControl.getAccessManager(
-            this.request,
+            request,
             ContentRepository.CONFIG));
         while (templates.hasNext()) {
             Template template = (Template) templates.next();

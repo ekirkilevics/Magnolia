@@ -12,6 +12,7 @@
  */
 package info.magnolia.module.admininterface;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.module.Module;
 import info.magnolia.cms.module.ModuleConfig;
 
@@ -25,7 +26,12 @@ public class Engine implements Module {
 
     public void init(ModuleConfig config) {
         // set local store to be accessed via admin interface classes or JSP
-        Store.getInstance().setStore(config.getLocalStore());
+        Store store = Store.getInstance();
+        store.setStore(config.getLocalStore());
+        store.registerTreeHandler(ContentRepository.WEBSITE, AdminTreeWebsite.class);
+        store.registerTreeHandler(ContentRepository.USERS, AdminTreeUsers.class);
+        store.registerTreeHandler(ContentRepository.USER_ROLES, AdminTreeRoles.class);
+        store.registerTreeHandler(ContentRepository.CONFIG, AdminTreeConfig.class);
     }
 
     public void destroy() {

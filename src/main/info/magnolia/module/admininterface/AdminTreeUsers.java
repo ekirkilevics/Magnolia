@@ -29,13 +29,21 @@ import javax.servlet.http.HttpServletRequest;
  * @author Fabrizio Giustina
  * @version $Id$
  */
-public class AdminTreeUsers implements AdminTree {
+public class AdminTreeUsers extends AdminTree {
 
+    
     /**
-     * @see AdminTree#configureTree(Tree, HttpServletRequest, String, String, String, boolean, String)
+     * @param name
+     * @param request
      */
-    public void configureTree(Tree tree, HttpServletRequest request, String path, String pathOpen, String pathSelected,
-        boolean create, String createItemType) {
+    public AdminTreeUsers(String name, HttpServletRequest request) {
+        super(name, request);
+    }
+
+    /* (non-Javadoc)
+     * @see info.magnolia.module.admininterface.AdminTree#prepareTree(info.magnolia.cms.gui.control.Tree, javax.servlet.http.HttpServletRequest)
+     */
+    protected void prepareTree(Tree tree, HttpServletRequest request) {
         Messages msgs = MessagesManager.getMessages(request);
 
         tree.setDrawShifter(false);
@@ -46,13 +54,7 @@ public class AdminTreeUsers implements AdminTree {
                 + tree.getJavascriptTree()
                 + ",'.magnolia/adminCentral/users/dialog.html');");
         tree.addItemType(ItemType.CONTENT);
-        if (create) {
-            tree.createNode(createItemType);
-        }
-        else {
-            tree.setPathOpen(pathOpen);
-            tree.setPathSelected(pathSelected);
-        }
+
         TreeColumn column0 = new TreeColumn(tree.getJavascriptTree(), request);
         column0.setIsLabel(true);
         if (Server.isAdmin())

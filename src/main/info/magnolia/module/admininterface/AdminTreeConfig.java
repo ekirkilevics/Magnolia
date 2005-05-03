@@ -32,25 +32,21 @@ import javax.servlet.http.HttpServletRequest;
  * @author Fabrizio Giustina
  * @version $Id$
  */
-public class AdminTreeConfig implements AdminTree {
+public class AdminTreeConfig extends AdminTree {
 
     /**
-     * @see AdminTree#configureTree(Tree, HttpServletRequest, String, String, String, boolean, String)
+     * @param name
+     * @param request
      */
-    public void configureTree(Tree tree, HttpServletRequest request, String path, String pathOpen, String pathSelected,
-        boolean create, String createItemType) {
+    public AdminTreeConfig(String name, HttpServletRequest request) {
+        super(name, request);
+    }
 
+    protected void prepareTree(Tree tree, HttpServletRequest request) {
         Messages msgs = MessagesManager.getMessages(request);
 
         tree.setIconPage(Tree.ICONDOCROOT + "folder_cubes.gif");
-        tree.setPath(path);
-        if (create) {
-            tree.createNode(createItemType);
-        }
-        else {
-            tree.setPathOpen(pathOpen);
-            tree.setPathSelected(pathSelected);
-        }
+
         tree.addItemType(ItemType.CONTENT.getSystemName());
         tree.addItemType(ItemType.CONTENTNODE.getSystemName());
         tree.addItemType(ItemType.NT_NODEDATA);

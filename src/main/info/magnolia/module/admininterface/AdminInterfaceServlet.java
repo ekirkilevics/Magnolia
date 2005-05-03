@@ -13,27 +13,16 @@
 package info.magnolia.module.admininterface;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.config.MIMEMapping;
-import info.magnolia.cms.beans.config.Paragraph;
-import info.magnolia.cms.beans.config.Subscriber;
-import info.magnolia.cms.beans.config.Template;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.gui.control.Tree;
-import info.magnolia.cms.gui.misc.Sources;
-import info.magnolia.cms.gui.misc.Spacer;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -47,29 +36,8 @@ public class AdminInterfaceServlet extends HttpServlet {
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
-
-    /**
-     * Map with repository name/handler class for admin tree. When this servlet will receive a call with a parameter
-     * <code>repository</code>, the corresponding handler will be used top display the admin tree.
-     */
-    private final Map TREE_HANDLERS = new HashMap();
-
-    /**
-     * Loads TREE_HANDLERS with default values.
-     * @see javax.servlet.Servlet#init(javax.servlet.ServletConfig)
-     */
-    public void init(ServletConfig servletConfig) throws ServletException {
-        // @todo dinamically add new handlers for admin interface tree?
-        TREE_HANDLERS.put(ContentRepository.WEBSITE, new AdminTreeWebsite());
-        TREE_HANDLERS.put(ContentRepository.USERS, new AdminTreeUsers());
-        TREE_HANDLERS.put(ContentRepository.USER_ROLES, new AdminTreeRoles());
-        TREE_HANDLERS.put(ContentRepository.CONFIG, new AdminTreeConfig());
-        
-        // use those lines if you wan't to see all the entries in the repository
-        //TREE_HANDLERS.put(ContentRepository.WEBSITE, new AdminTreeConfig());
-        //TREE_HANDLERS.put(ContentRepository.USERS, new AdminTreeConfig());
-        //TREE_HANDLERS.put(ContentRepository.USER_ROLES, new AdminTreeConfig());
-    }
+    
+    private static Logger log = Logger.getLogger(AdminInterfaceServlet.class);
 
     /**
      * @see HttpServlet#doPost(HttpServletRequest,HttpServletResponse)
@@ -109,188 +77,34 @@ public class AdminInterfaceServlet extends HttpServlet {
         // 1. Use POST with forms to return parameters as the parameters are then part of
         // the request body.
 
-        StringBuffer html = new StringBuffer(500);
-        boolean proceed = true;
-
         request.setCharacterEncoding("UTF-8");
 
         // why do i have to change it if request was setted? But i have to!
         response.setCharacterEncoding("UTF-8");
+
+        // Atention: the treeHandlerName is not automatically the name of the used repository
         
-        String repository = request.getParameter("repository");
-        if (StringUtils.isEmpty(repository)) {
-            repository = ContentRepository.WEBSITE;
-        }
-
-        String path = request.getParameter("path");
-        if (StringUtils.isEmpty(path)) {
-            path = "/";
-        }
-
-        String pathOpen = request.getParameter("pathOpen");
-        String pathSelected = request.getParameter("pathSelected");
-
-        boolean create = false;
-        String createItemType = ItemType.NT_NODEDATA;
-        if (request.getParameter("createItemType") != null) {
-            create = true;
-            createItemType = request.getParameter("createItemType");
-        }
-
-        String actionStr = request.getParameter("treeAction");
-        if (actionStr != null) {
-            int action = Integer.parseInt(actionStr);
-            Tree tree = new Tree(repository, request);
-
-            if (action == Tree.ACTION_COPY || action == Tree.ACTION_MOVE) {
-
-                String pathClipboard = request.getParameter("pathClipboard");
-                int pasteType = Integer.parseInt(request.getParameter("pasteType"));
-
-                String newPath = tree.pasteNode(pathClipboard, pathSelected, pasteType, action);
-
-                // pass new path to tree.js for selecting the newly created node
-                // NOTE: tree.js checks for this pattern; adapt it there, if any changes are made here
-                html.append("<input type=\"hidden\" id=\"mgnlSelectNode\" value=\"" + newPath + "\" />");
-
-                if (pasteType == Tree.PASTETYPE_SUB) {
-                    pathOpen = pathSelected;
-                }
-                else {
-                    // open parent path of destination path
-                    pathOpen = pathSelected.substring(0, pathSelected.lastIndexOf("/"));
-                }
-
-                pathSelected = null;
-            }
-            else if (action == Tree.ACTION_ACTIVATE) {
-                boolean recursive = (request.getParameter("recursive") != null);
-                tree.activateNode(pathSelected, recursive);
-            }
-            else if (action == Tree.ACTION_DEACTIVATE) {
-                tree.deActivateNode(pathSelected);
-            }
-
-        }
-
-        String deleteNode = request.getParameter("deleteNode");
-        String saveName = request.getParameter("saveName");
-
-        // value to save is a node data's value (config admin)
-        boolean isNodeDataValue = "true".equals(request.getParameter("isNodeDataValue"));
-
-        // value to save is a node data's type (config admin)
-        boolean isNodeDataType = "true".equals(request.getParameter("isNodeDataType"));
-
-        if (saveName != null || isNodeDataValue || isNodeDataType) {
-
-            String value = StringUtils.defaultString(request.getParameter("saveValue"));
-            String displayValue="";
-            
-            // value to save is a content's meta information
-            boolean isMeta = "true".equals(request.getParameter("isMeta"));
-            // value to save is a label (name of page, content node or node data)
-            boolean isLabel = "true".equals(request.getParameter("isLabel"));
-
-            Tree tree = new Tree(repository, request);
-            if (isNodeDataValue || isNodeDataType) {
-                tree.setPath(StringUtils.substringBeforeLast(path, "/"));
-                saveName = StringUtils.substringAfterLast(path, "/");
-            }
-            else {
-                // "/modules/templating/Templates/x"
-                tree.setPath(path);
-            }
-            
-            if (isLabel) {
-                displayValue = tree.renameNode(value);
-            }
-            else if (isNodeDataType) {
-                int type = Integer.valueOf(value).intValue();
-                displayValue = tree.saveNodeDataType(saveName, type);
-            }
-            else {
-                displayValue = tree.saveNodeData(saveName, value, isMeta);
-            }
-
-            // if there was a displayValue passed show it instead of the written value
-            displayValue = StringUtils.defaultString(request.getParameter("displayValue"), value);
-            html.append(displayValue);
-
-            // @todo should be handled in a better way but, at the moment, this is better than nothing
-            if (path.startsWith("/modules/templating/Templates/")) {
-                Template.reload();
-            }
-            else if (path.startsWith("/modules/templating/Paragraphs/")) {
-                Paragraph.reload();
-            }
-            else if (path.startsWith("/subscribers/")) {
-                Subscriber.reload();
-            }
-            else if (path.startsWith("/server/MIMEMapping")) {
-                MIMEMapping.reload();
-            }
-
-            proceed = false;
-        }
-
-        if (deleteNode != null) {
-            Tree tree = new Tree(repository, request);
-            tree.deleteNode(path, deleteNode);
-        }
-
-        if (proceed) {
-            String mode = StringUtils.defaultString(request.getParameter("treeMode"));
-            boolean snippetMode = mode.equals("snippet");
-
-            if (!snippetMode) {
-                html.append("<html><head>");
-                html.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>");
-                html.append(new Sources(request.getContextPath()).getHtmlJs());
-                html.append(new Sources(request.getContextPath()).getHtmlCss());
-                html.append("<title>Magnolia</title>");
-                html.append("</head>");
-                html.append("<body class=\"mgnlBgDark\" onload=\"mgnlTree.resizeOnload();\" >");
-                html.append(Spacer.getHtml(20, 20));
-            }
-
-            if (TREE_HANDLERS.containsKey(repository)) {
-
-                Tree tree = new Tree(repository, request);
-                tree.setJavascriptTree("mgnlTree");
-                tree.setSnippetMode(snippetMode);
-                tree.setHeight(50);
-
-                ((AdminTree) TREE_HANDLERS.get(repository)).configureTree(
-                    tree,
-                    request,
-                    path,
-                    pathOpen,
-                    pathSelected,
-                    create,
-                    createItemType);
-
-                if (!snippetMode) {
-                    html.append("<div id=\"" + tree.getJavascriptTree() + "_DivSuper\" style=\"display:block;\">");
-                }
-                html.append(tree.getHtml());
-                if (!snippetMode) {
-                    html.append("</div>");
-                }
-
-            }
-
-            if (!snippetMode) {
-                html.append("</body></html>");
-            }
+        // TODO: do not use repository use treeHandlerName instead!!
+        String handlerName = request.getParameter("repository"); //request.getParameter("treeHandler");
+        if (StringUtils.isEmpty(handlerName)) {
+            handlerName = ContentRepository.WEBSITE;
         }
 
         PrintWriter out = response.getWriter();
         response.setContentType("text/html; charset=UTF-8");
 
-        String htmlString = html.toString();
+        
+        AdminTree treeHandler = Store.getInstance().getTreeHandler(handlerName, request);
+        log.debug("treehandler: " + handlerName);
+        String command = treeHandler.getCommand();
+        log.debug("calling command: " + command);
+        String view = treeHandler.execute(command);
+        log.debug("calling view: " + view);
+
+        String htmlString = treeHandler.renderHtml(view);
+        //log.debug("html: " + htmlString);
+        
         response.setContentLength(htmlString.getBytes().length);
         out.write(htmlString);
-
     }
 }
