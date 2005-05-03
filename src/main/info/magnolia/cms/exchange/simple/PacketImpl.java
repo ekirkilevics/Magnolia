@@ -12,7 +12,6 @@
  */
 package info.magnolia.cms.exchange.simple;
 
-import info.magnolia.cms.util.uuid.UUID;
 import info.magnolia.exchange.Packet;
 import info.magnolia.exchange.PacketBody;
 import info.magnolia.exchange.PacketHeader;
@@ -21,6 +20,7 @@ import info.magnolia.exchange.PacketType;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
+import org.doomdark.uuid.UUIDGenerator;
 
 
 /**
@@ -47,8 +47,7 @@ public class PacketImpl implements Packet {
     }
 
     public void assignID() {
-        /* UUID itself is syncronized */
-        this.id = (new UUID()).toString();
+        this.id = UUIDGenerator.getInstance().generateTimeBasedUUID().toString();
         this.getHeaders().addHeader("id", id);
     }
 
