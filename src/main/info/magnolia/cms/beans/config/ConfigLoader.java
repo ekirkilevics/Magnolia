@@ -23,6 +23,7 @@ import info.magnolia.cms.security.SecureURI;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,6 +37,14 @@ import javax.servlet.ServletConfig;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.log4j.Logger;
+import org.apache.xml.serialize.OutputFormat;
+import org.apache.xml.serialize.XMLSerializer;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLFilterImpl;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 
 /**
@@ -48,7 +57,7 @@ public class ConfigLoader {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(ConfigLoader.class);
+    protected static Logger log = Logger.getLogger(ConfigLoader.class);
 
     /**
      * Is this magnolia istance configured?
@@ -275,8 +284,10 @@ public class ConfigLoader {
                 }
                 try {
 
+                    InputStream filteredStream = filterVersionsFormStream(stream);
+
                     log.info("Importing content from " + xmlfile.getName());
-                    session.importXML("/", stream, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
+                    session.importXML("/", filteredStream, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
                 }
                 catch (Exception e) {
                     log.error("Unable to load content from "
@@ -318,4 +329,93 @@ public class ConfigLoader {
 
         }
     }
+
+    /**
+     * Strips all the versioning information from xml using a SaxFilter. The filtered content is written to a temporary
+     * file and then returned as an InputStream.
+     * @param stream Input stream
+     * @return input stream from a filtered xml file
+     * @throws IOException for errors in accessing the original or modified file
+     * @throws SAXException errors during xml parsing
+     */
+    protected InputStream filterVersionsFormStream(InputStream stream) throws IOException, SAXException {
+
+        // create a temporary file and save the trimmed xml
+        File strippedFile = File.createTempFile("import", "xml");
+        FileOutputStream outstream = new FileOutputStream(strippedFile);
+
+        // use XMLSerializer and a SAXFilter in order to rewrite the file
+        XMLReader reader = new VersionFilter(XMLReaderFactory.createXMLReader());
+        reader.setContentHandler(new XMLSerializer(outstream, new OutputFormat()));
+        reader.parse(new InputSource(stream));
+
+        // return the filtered file as an input stream
+        return new FileInputStream(strippedFile);
+    }
+
+    /**
+     * Sax filter, strips version information from a jcr xml (system view).
+     */
+    public class VersionFilter extends XMLFilterImpl {
+
+        /**
+         * if != 0 we are in the middle of a filtered element.
+         */
+        private int inVersionElement;
+
+        /**
+         * Instantiates a new version filter.
+         * @param parent wrapped XMLReader
+         */
+        public VersionFilter(XMLReader parent) {
+            super(parent);
+        }
+
+        /**
+         * @see org.xml.sax.helpers.XMLFilterImpl#endElement(String, String, String)
+         */
+        public void endElement(String uri, String localName, String qName) throws SAXException {
+
+            if (inVersionElement > 0) {
+                inVersionElement--;
+                return;
+            }
+
+            super.endElement(uri, localName, qName);
+        }
+
+        /**
+         * @see org.xml.sax.helpers.XMLFilterImpl#characters(char[], int, int)
+         */
+        public void characters(char[] ch, int start, int length) throws SAXException {
+            // filter content
+            if (inVersionElement == 0) {
+                super.characters(ch, start, length);
+            }
+        }
+
+        /**
+         * @see org.xml.sax.helpers.XMLFilterImpl#startElement(String, String, String, Attributes)
+         */
+        public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
+
+            if (inVersionElement > 0) {
+                inVersionElement++;
+                return;
+            }
+            if ("sv:property".equals(qName)) {
+                String propertyName = atts.getValue("sv:name");
+                if (propertyName != null
+                    && ("jcr:predecessors".equals(propertyName) || "jcr:baseVersion".equals(propertyName) || "jcr:versionHistory"
+                        .equals(propertyName))) {
+                    inVersionElement++;
+                    return;
+                }
+            }
+
+            super.startElement(uri, localName, qName, atts);
+        }
+
+    }
+
 }
