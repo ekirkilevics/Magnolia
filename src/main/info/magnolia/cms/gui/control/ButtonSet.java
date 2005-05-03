@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * @author Vinzenz Wyser
@@ -191,7 +193,7 @@ public class ButtonSet extends ControlSuper {
             if (b.getHtmlPost(null) == null) {
                 b.setHtmlPost(this.getButtonHtmlPost());
             }
-            if (b.getCssClass().equals("")) {
+            if (StringUtils.isEmpty(b.getCssClass())) {
                 b.setCssClass(this.getCssClass());
             }
             b.setId(this.getName() + "_SETBUTTON_" + i);
@@ -206,7 +208,7 @@ public class ButtonSet extends ControlSuper {
                 }
             }
             else {
-                if (!this.getValue().equals("")) {
+                if (StringUtils.isNotEmpty(this.getValue())) {
                     if (this.getValue().equals(b.getValue())) {
                         b.setState(BUTTONSTATE_PUSHED);
                     }

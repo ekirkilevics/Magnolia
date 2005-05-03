@@ -159,7 +159,7 @@ public class HierarchyManager {
     }
 
     private String getNodePath(String path, String label) {
-        if (path == null || (path.equals("")) || (path.equals("/"))) {
+        if (StringUtils.isEmpty(path) || (path.equals("/"))) {
             return label;
         }
         return getNodePath(path + "/" + label);

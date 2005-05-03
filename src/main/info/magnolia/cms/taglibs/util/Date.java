@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -150,7 +151,7 @@ public class Date extends TagSupport {
             return "";
         }
         SimpleDateFormat formatter;
-        if (this.language.equals("")) {
+        if (StringUtils.isEmpty(this.language)) {
             formatter = new SimpleDateFormat(this.pattern);
         }
         else {

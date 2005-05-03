@@ -23,6 +23,7 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -129,7 +130,7 @@ public final class Server {
      */
     public static String get404URI() {
         String uri = (String) Server.cachedContent.get("404URI");
-        if (uri.equals("")) {
+        if (StringUtils.isEmpty(uri)) {
             return "/";
         }
         if (log.isDebugEnabled()) {

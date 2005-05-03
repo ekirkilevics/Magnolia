@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * @author Vinzenz Wyser
@@ -66,7 +68,7 @@ public class Select extends ControlSuper {
         Iterator it = this.getOptions().iterator();
         while (it.hasNext()) {
             SelectOption o = (SelectOption) it.next();
-            if (!this.getValue().equals("")) {
+            if (StringUtils.isNotEmpty(this.getValue())) {
                 if (this.getValue().equals(o.getValue())) {
                     o.setSelected(true);
                 }

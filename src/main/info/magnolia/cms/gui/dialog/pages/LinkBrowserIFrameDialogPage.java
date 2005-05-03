@@ -18,6 +18,8 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * @author Fabrizio Giustina
@@ -41,12 +43,12 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
         int treeHeight = 50;
 
         String repository = request.getParameter("repository");
-        if (repository == null || repository.equals("")) {
+        if (StringUtils.isEmpty(repository)) {
             repository = ContentRepository.WEBSITE;
         }
 
         String path = request.getParameter("path");
-        if (path == null || path.equals("")) {
+        if (StringUtils.isEmpty(path)) {
             path = "/";
         }
 
@@ -57,10 +59,12 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
 
         boolean snippetMode = false;
         String mode = request.getParameter("treeMode");
-        if (mode == null)
+        if (mode == null) {
             mode = "";
-        if (mode.equals("snippet"))
+        }
+        if (mode.equals("snippet")) {
             snippetMode = true;
+        }
 
         // tree.setShifterExpand("");
         // tree.setShifterEmpty("");
@@ -114,18 +118,21 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
             websiteTree.addMenuItem(menuRefresh);
 
             String display = "none";
-            if (repository.equals(ContentRepository.WEBSITE))
+            if (repository.equals(ContentRepository.WEBSITE)) {
                 display = "block";
+            }
 
-            if (!snippetMode)
+            if (!snippetMode) {
                 out.println("<div id="
                     + websiteTree.getJavascriptTree()
                     + "_DivSuper style=\"display:"
                     + display
                     + ";\">");
+            }
             out.print(websiteTree.getHtml()); // print, not println! because of snippet mode!
-            if (!snippetMode)
+            if (!snippetMode) {
                 out.println("</div>");
+            }
 
         }
 
@@ -164,18 +171,21 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
             usersTree.addMenuItem(menuRefresh);
 
             String display = "none";
-            if (repository.equals(ContentRepository.USERS))
+            if (repository.equals(ContentRepository.USERS)) {
                 display = "block";
+            }
 
-            if (!snippetMode)
+            if (!snippetMode) {
                 out.println("<div id="
                     + usersTree.getJavascriptTree()
                     + "_DivSuper style=\"display:"
                     + display
                     + ";\">");
+            }
             out.print(usersTree.getHtml()); // print, not println! because of snippet mode!
-            if (!snippetMode)
+            if (!snippetMode) {
                 out.println("</div>");
+            }
         }
 
         // if (!snippetMode || repository.equals(ContentRepository.USER_ROLES)) {
@@ -213,18 +223,21 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
             rolesTree.addMenuItem(menuRefresh);
 
             String display = "none";
-            if (repository.equals(ContentRepository.USER_ROLES))
+            if (repository.equals(ContentRepository.USER_ROLES)) {
                 display = "block";
+            }
 
-            if (!snippetMode)
+            if (!snippetMode) {
                 out.println("<div id="
                     + rolesTree.getJavascriptTree()
                     + "_DivSuper style=\"display:"
                     + display
                     + ";\">");
+            }
             out.print(rolesTree.getHtml()); // print, not println! because of snippet mode!
-            if (!snippetMode)
+            if (!snippetMode) {
                 out.println("</div>");
+            }
         }
 
         if (repository.equals(ContentRepository.CONFIG)) {
@@ -263,18 +276,21 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
             websiteTree.addMenuItem(menuRefresh);
 
             String display = "none";
-            if (repository.equals(ContentRepository.CONFIG))
+            if (repository.equals(ContentRepository.CONFIG)) {
                 display = "block";
+            }
 
-            if (!snippetMode)
+            if (!snippetMode) {
                 out.println("<div id="
                     + websiteTree.getJavascriptTree()
                     + "_DivSuper style=\"display:"
                     + display
                     + ";\">");
+            }
             out.print(websiteTree.getHtml()); // print, not println! because of snippet mode!
-            if (!snippetMode)
+            if (!snippetMode) {
                 out.println("</div>");
+            }
         }
 
         if (!snippetMode) {

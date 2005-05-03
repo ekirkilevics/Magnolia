@@ -29,6 +29,7 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -100,7 +101,7 @@ public class UserRolesEditDialogPage extends BasePageServlet {
                 path = request.getParameter("mgnlPath");
             }
 
-            if (path.equals(""))
+            if (StringUtils.isEmpty(path))
                 create = true;
 
             hm = SessionAccessControl.getHierarchyManager(request, ContentRepository.USER_ROLES);
@@ -259,7 +260,7 @@ public class UserRolesEditDialogPage extends BasePageServlet {
                 try {
                     Content acl = role.createContent("acl_" + repository, ItemType.CONTENTNODE);
                     String aclValueStr = form.getParameter("acl" + repository + "List");
-                    if (aclValueStr != null && !aclValueStr.equals("")) {
+                    if (StringUtils.isNotEmpty(aclValueStr)) {
                         String[] aclEntries = aclValueStr.split(";");
                         for (int i = 0; i < aclEntries.length; i++) {
                             String path = "";

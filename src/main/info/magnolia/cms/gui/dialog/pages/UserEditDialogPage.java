@@ -37,6 +37,7 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -134,10 +135,12 @@ public class UserEditDialogPage extends BasePageServlet {
                 repository = request.getParameter("mgnlRepository");
             }
 
-            if (repository == null)
+            if (repository == null) {
                 repository = ContentRepository.USERS;
-            if (path.equals(""))
+            }
+            if (StringUtils.isEmpty(path)) {
                 create = true;
+            }
 
             hm = SessionAccessControl.getHierarchyManager(request, repository);
 

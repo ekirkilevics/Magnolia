@@ -147,9 +147,7 @@ public class SetNode extends TagSupport {
                 else {
                     // e.g. <cms:setNode contentNodeName="01" contentNodeCollectionName="mainPars"/>
                     // e.g. <cms:setNode contentNodeName="footer" contentNodeCollectionName=""/>
-                    this.contentNode = actpage
-                        .getContent(contentNodeCollectionName)
-                        .getContent(contentNodeName);
+                    this.contentNode = actpage.getContent(contentNodeCollectionName).getContent(contentNodeName);
                 }
             }
             catch (RepositoryException re) {
@@ -175,8 +173,8 @@ public class SetNode extends TagSupport {
                     // e.g. <cms:setNode />
                     this.contentNode = local;
                 }
-                else if ((contentNodeName != null && contentNodeName.equals(""))
-                    || (contentNodeCollectionName != null && contentNodeCollectionName.equals(""))) {
+                else if ((contentNodeName != null && StringUtils.isEmpty(contentNodeName))
+                    || (contentNodeCollectionName != null && StringUtils.isEmpty(contentNodeCollectionName))) {
                     // empty collection name -> use actpage
                     // e.g. <cms:setNode contentNodeCollectionName=""/>
                     this.contentNode = actpage;

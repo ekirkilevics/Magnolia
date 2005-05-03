@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -57,7 +58,7 @@ public class IfEmpty extends BodyTagSupport {
     public int doStartTag() {
         HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
         // in the case where a contentNodeCollectionName is provided
-        if (!this.contentNodeCollectionName.equals("")) {
+        if (StringUtils.isNotEmpty(this.contentNodeCollectionName)) {
             try {
                 this.contentNodeCollection = Resource.getCurrentActivePage(req).getContent(
                     this.contentNodeCollectionName);
@@ -74,7 +75,7 @@ public class IfEmpty extends BodyTagSupport {
             return SKIP_BODY;
         }
         // if only contentNodeName is provided, it checks if this contentNode exists
-        if (!this.contentNodeName.equals("") && this.nodeDataName.equals("")) {
+        if (StringUtils.isNotEmpty(this.contentNodeName) && StringUtils.isEmpty(this.nodeDataName)) {
             try {
                 this.contentNode = Resource.getCurrentActivePage(req).getContent(this.contentNodeName);
             }
@@ -88,7 +89,7 @@ public class IfEmpty extends BodyTagSupport {
         }
         // if both contentNodeName and nodeDataName are set, it checks if that nodeData of that contentNode exitsts
         // and is not empty
-        else if (!this.contentNodeName.equals("") && !this.nodeDataName.equals("")) {
+        else if (StringUtils.isNotEmpty(this.contentNodeName) && StringUtils.isNotEmpty(this.nodeDataName)) {
             try {
                 this.contentNode = Resource.getCurrentActivePage(req).getContent(this.contentNodeName);
             }
@@ -102,14 +103,16 @@ public class IfEmpty extends BodyTagSupport {
 
                 this.nodeData = this.contentNode.getNodeData(this.nodeDataName);
 
-                if ((this.nodeData == null) || !this.nodeData.isExist() || this.nodeData.getString().equals("")) {
+                if ((this.nodeData == null)
+                    || !this.nodeData.isExist()
+                    || StringUtils.isEmpty(this.nodeData.getString())) {
                     return EVAL_BODY_INCLUDE;
                 }
             }
         }
         // if only nodeDataName is provided, it checks if that nodeData of the current contentNode exists and is not
         // empty
-        else if (this.contentNodeName.equals("") && !this.nodeDataName.equals("")) {
+        else if (StringUtils.isEmpty(this.contentNodeName) && !StringUtils.isNotEmpty(this.nodeDataName)) {
             if (this.actpage) {
                 this.contentNode = Resource.getCurrentActivePage((HttpServletRequest) pageContext.getRequest());
             }
@@ -126,7 +129,9 @@ public class IfEmpty extends BodyTagSupport {
 
                 this.nodeData = this.contentNode.getNodeData(this.nodeDataName);
 
-                if ((this.nodeData == null) || !this.nodeData.isExist() || this.nodeData.getString().equals("")) {
+                if ((this.nodeData == null)
+                    || !this.nodeData.isExist()
+                    || StringUtils.isEmpty(this.nodeData.getString())) {
                     return EVAL_BODY_INCLUDE;
                 }
             }

@@ -26,6 +26,7 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.jstl.core.Config;
 import javax.servlet.jsp.jstl.fmt.LocalizationContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.taglibs.standard.resources.Resources;
 
 
@@ -59,7 +60,7 @@ public class ContextMessages extends Messages {
 
     private HttpServletRequest req;
 
-    //private String basename;
+    // private String basename;
 
     /**
      * Get the bundle and the local from the context
@@ -87,10 +88,11 @@ public class ContextMessages extends Messages {
     }
 
     public ResourceBundle getBundle() {
-        ResourceBundle bundle = loc.getResourceBundle(); 
-        if(bundle == null){
+        ResourceBundle bundle = loc.getResourceBundle();
+        if (bundle == null) {
             log.error("bundle: " + this.getBasename() + " not found");
             bundle = new ListResourceBundle() {
+
                 protected Object[][] getContents() {
                     return new String[][]{};
                 }
@@ -144,7 +146,7 @@ public class ContextMessages extends Messages {
         LocalizationContext locCtxt = null;
         ResourceBundle bundle = null;
 
-        if ((basename == null) || basename.equals("")) {
+        if (StringUtils.isEmpty(basename)) {
             return new LocalizationContext();
         }
 
@@ -405,13 +407,13 @@ public class ContextMessages extends Messages {
      */
     private static Object get(HttpServletRequest req, String name, int scope) {
         switch (scope) {
-            case PageContext.REQUEST_SCOPE :
+            case PageContext.REQUEST_SCOPE:
                 return req.getAttribute(name + REQUEST_SCOPE_SUFFIX);
-            case PageContext.SESSION_SCOPE :
+            case PageContext.SESSION_SCOPE:
                 return get(req.getSession(), name);
-            case PageContext.APPLICATION_SCOPE :
+            case PageContext.APPLICATION_SCOPE:
                 return req.getSession().getServletContext().getAttribute(name + APPLICATION_SCOPE_SUFFIX);
-            default :
+            default:
                 throw new IllegalArgumentException("unknown scope");
         }
     }

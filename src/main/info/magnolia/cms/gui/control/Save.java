@@ -279,20 +279,20 @@ public class Save extends ControlSuper {
                         boolean remove = false;
                         boolean write = false;
                         if (encoding == ControlSuper.ENCODING_BASE64) {
-                            if (!valueStr.replaceAll(" ", "").equals("")) {
+                            if (StringUtils.isNotEmpty(valueStr.replaceAll(" ", ""))) {
                                 valueStr = new String(Base64.encodeBase64(valueStr.getBytes()));
                                 write = true;
                             }
                         }
                         else if (encoding == ControlSuper.ENCODING_UNIX) {
-                            if (!valueStr.equals("")) {
+                            if (StringUtils.isNotEmpty(valueStr)) {
                                 valueStr = Digester.getSHA1Hex(valueStr);
                                 write = true;
                             }
                         }
                         else {
                             // no encoding
-                            if (values == null || valueStr.equals("")) {
+                            if (values == null || StringUtils.isEmpty(valueStr)) {
                                 remove = true;
                             }
                             else {
@@ -456,7 +456,7 @@ public class Save extends ControlSuper {
     }
 
     private String replaceABySpan(String value, String tagName) {
-        if (value == null || value.equals("")) {
+        if (StringUtils.isEmpty(value)) {
             return value;
         }
         String valueStart = value.substring(0, 1);

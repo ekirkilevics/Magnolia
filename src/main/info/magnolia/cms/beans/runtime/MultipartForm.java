@@ -16,6 +16,7 @@ import java.io.File;
 import java.util.Hashtable;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -77,7 +78,7 @@ public class MultipartForm {
     }
 
     public void addDocument(String atomName, String fileName, String type, File file) {
-        if ((fileName == null) || (fileName.equals(""))) {
+        if (StringUtils.isEmpty(fileName)) {
             return;
         }
         Document document = new Document();

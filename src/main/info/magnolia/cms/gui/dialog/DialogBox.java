@@ -20,6 +20,7 @@ import java.io.Writer;
 import java.util.Hashtable;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -81,14 +82,10 @@ public class DialogBox extends DialogSuper {
             out.write("<td width=\"1%\" class=\"" + CssConstants.CSSCLASS_BOXLABEL + "\">");
             // write the label
             out.write(TemplateMessagesUtil.get(this, this.getLabel()));
-            if (!this.getConfigValue("labelDescription").equals("")) {
+            if (StringUtils.isNotEmpty(this.getConfigValue("labelDescription"))) {
                 String desc = this.getConfigValue("labelDescription");
-                desc=TemplateMessagesUtil.get(this, desc);
-                out.write("<div class=\""
-                    + CssConstants.CSSCLASS_DESCRIPTION
-                    + "\">"
-                    + desc
-                    + "</div>");
+                desc = TemplateMessagesUtil.get(this, desc);
+                out.write("<div class=\"" + CssConstants.CSSCLASS_DESCRIPTION + "\">" + desc + "</div>");
             }
             out.write("</td>");
             String cssClass = CssConstants.CSSCLASS_BOXINPUT;
@@ -100,11 +97,15 @@ public class DialogBox extends DialogSuper {
         }
         else {
             out.write("<td width=\"100%\" colspan=\"2\" class=\"" + CssConstants.CSSCLASS_BOXLABEL + "\">");
-            if (!this.getLabel().equals("")) {
-                out.write("<div class=\"" + CssConstants.CSSCLASS_BOXLABEL + "\">" + TemplateMessagesUtil.get(this, this.getLabel()) + "</div>");
+            if (StringUtils.isNotEmpty(this.getLabel())) {
+                out.write("<div class=\""
+                    + CssConstants.CSSCLASS_BOXLABEL
+                    + "\">"
+                    + TemplateMessagesUtil.get(this, this.getLabel())
+                    + "</div>");
             }
-            if (!this.getConfigValue("labelDescription").equals("")) {
-                String desc = this.getConfigValue("labelDescription"); 
+            if (StringUtils.isNotEmpty(this.getConfigValue("labelDescription"))) {
+                String desc = this.getConfigValue("labelDescription");
                 out.write("<div class=\""
                     + CssConstants.CSSCLASS_DESCRIPTION
                     + "\">"
@@ -120,14 +121,15 @@ public class DialogBox extends DialogSuper {
     }
 
     public String getHtmlDescription() {
-        String html = "";
+
         // use div to force a new line
-        if (!this.getDescription().equals("")) {
+        if (StringUtils.isNotEmpty(this.getDescription())) {
             String desc = this.getDescription();
             desc = TemplateMessagesUtil.get(this, desc);
-            html = "<div class=\"" + CssConstants.CSSCLASS_DESCRIPTION + "\">" + desc + "</div>";
+            return "<div class=\"" + CssConstants.CSSCLASS_DESCRIPTION + "\">" + desc + "</div>";
         }
-        return html;
+
+        return StringUtils.EMPTY;
     }
 
     public void initIconExtensions() {
@@ -156,7 +158,7 @@ public class DialogBox extends DialogSuper {
         }
         if (this.getIconExtensions().containsKey(ext)) {
             iconPath = (String) this.getIconExtensions().get(ext);
-            if (iconPath.equals("")) {
+            if (StringUtils.isEmpty(iconPath)) {
                 iconPath = ICONS_PATH + ext + ".gif";
             }
         }

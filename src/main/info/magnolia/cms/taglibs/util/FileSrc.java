@@ -24,6 +24,7 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -107,7 +108,7 @@ public class FileSrc extends TagSupport {
     public int doStartTag() {
         this.request = (HttpServletRequest) pageContext.getRequest();
         this.actpage = Resource.getCurrentActivePage(request);
-        if (!this.contentNodeName.equals("")) {
+        if (StringUtils.isNotEmpty(this.contentNodeName)) {
             try {
                 this.contentNode = this.actpage.getContent(this.contentNodeName);
             }
@@ -132,7 +133,7 @@ public class FileSrc extends TagSupport {
                 return SKIP_BODY;
             }
         }
-        if (this.nodeDataName.equals("")) {
+        if (StringUtils.isEmpty(this.nodeDataName)) {
             writeSrc("");
             return SKIP_BODY;
         }
@@ -212,8 +213,7 @@ public class FileSrc extends TagSupport {
         if (contentNodeCollectionName == null) {
             // we are not in a loop
             try {
-                properties = Resource.getGlobalContentNode(this.request).getContent(
-                    this.nodeDataName + "_properties");
+                properties = Resource.getGlobalContentNode(this.request).getContent(this.nodeDataName + "_properties");
             }
             catch (Exception e) {
                 log.debug(e.getMessage());
@@ -221,8 +221,7 @@ public class FileSrc extends TagSupport {
         }
         else {
             try {
-                properties = Resource.getLocalContentNode(this.request).getContent(
-                    this.nodeDataName + "_properties");
+                properties = Resource.getLocalContentNode(this.request).getContent(this.nodeDataName + "_properties");
             }
             catch (Exception e) {
                 log.debug("Exception caught: " + e.getMessage(), e);
@@ -231,7 +230,7 @@ public class FileSrc extends TagSupport {
         if (properties != null) {
             this.fileName = properties.getNodeData("fileName").getString();
             this.fileExtension = properties.getNodeData("extension").getString();
-            if (this.fileName.equals("")) {
+            if (StringUtils.isEmpty(this.fileName)) {
                 this.fileExtendedName = "." + this.fileExtension;
             }
             else {

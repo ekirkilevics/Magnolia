@@ -31,6 +31,7 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -83,7 +84,7 @@ public class DialogButtonSet extends DialogBox {
         // checkboxSwitch -> only one option, value always true/false
         List options = new ArrayList();
         Button button = new Button(this.getName(), "");
-        String label =configNode.getNodeData("buttonLabel").getString();
+        String label = configNode.getNodeData("buttonLabel").getString();
         label = TemplateMessagesUtil.get(this, label);
         button.setLabel(label);
 
@@ -214,7 +215,7 @@ public class DialogButtonSet extends DialogBox {
             && control.getValueType() != ControlSuper.VALUETYPE_MULTIPLE) {
             // checkboxSwitch: value is stored in a hidden field (allows default selecting)
             String value = this.getValue();
-            if (value.equals("")) {
+            if (StringUtils.isEmpty(value)) {
                 if (this.getConfigValue("selected").equals("true")) {
                     value = "true";
                 }

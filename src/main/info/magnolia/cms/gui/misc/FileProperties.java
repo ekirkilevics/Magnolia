@@ -16,6 +16,7 @@ import info.magnolia.cms.core.Content;
 
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -104,7 +105,7 @@ public class FileProperties {
             String ext = props.getNodeData(PROPERTY_EXTENSION).getString();
             String fullName = filename;
             String fullExt = "";
-            if (ext != null && !ext.equals("")) {
+            if (StringUtils.isNotEmpty(ext)) {
                 fullExt = "." + ext;
                 fullName += fullExt;
             }

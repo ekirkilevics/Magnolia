@@ -146,7 +146,7 @@ public class ControlSuper implements ControlInterface {
     }
 
     public String getNodeCollectionName(String nullOrEmptyValue) {
-        if (this.getNodeCollectionName() == null || this.getNodeCollectionName().equals("")) {
+        if (StringUtils.isEmpty(this.getNodeCollectionName())) {
             return nullOrEmptyValue;
         }
 
@@ -162,7 +162,7 @@ public class ControlSuper implements ControlInterface {
     }
 
     public String getNodeName(String nullOrEmptyValue) {
-        if (this.getNodeName() == null || this.getNodeName().equals("")) {
+        if (StringUtils.isEmpty(this.getNodeName())) {
             return nullOrEmptyValue;
         }
 

@@ -36,6 +36,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -164,7 +165,7 @@ public final class ModuleLoader {
     }
 
     private static HierarchyManager getHierarchyManager(String repositoryName) throws RepositoryException {
-        if (repositoryName == null || (repositoryName.equals(""))) {
+        if (StringUtils.isEmpty(repositoryName)) {
             return null;
         }
         Session moduleRepositoryTicket = ContentRepository.getRepository(repositoryName).login(simpleCredentials, null);

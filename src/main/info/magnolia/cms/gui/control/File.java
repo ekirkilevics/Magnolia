@@ -60,7 +60,7 @@ public class File extends ControlSuper {
     }
 
     public String getHtmlCssClassFileName() {
-        if (!this.getCssClassFileName().equals("")) {
+        if (StringUtils.isNotEmpty(this.getCssClassFileName())) {
             return " class=\"" + this.getCssClassFileName() + "\"";
         }
 

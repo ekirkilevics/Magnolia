@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -217,7 +218,7 @@ public class Log4jConfigurationServlet extends HttpServlet {
      */
     private void displayLogger(PrintWriter out, Logger logger, int row, HttpServletRequest request) {
         String color = null;
-        String loggerName = (logger.getName().equals("") ? ROOT : logger.getName());
+        String loggerName = (StringUtils.isEmpty(logger.getName()) ? ROOT : logger.getName());
 
         color = ((row % 2) == 1) ? "even" : "odd";
 
@@ -265,7 +266,7 @@ public class Log4jConfigurationServlet extends HttpServlet {
             .out.println("ERROR Setting LOG4J Logger:" + e);
         }
 
-        return "Message Set For " + (logger.getName().equals("") ? ROOT : logger.getName());
+        return "Message Set For " + (StringUtils.isEmpty(logger.getName()) ? ROOT : logger.getName());
     }
 
     /**

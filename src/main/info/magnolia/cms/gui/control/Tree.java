@@ -636,11 +636,11 @@ public class Tree extends ControlSuper {
                 // PASTETYPE_ABOVE | PASTETYPE_BELOW
                 String pathSelectedParent = pathSelected.substring(0, pathSelected.lastIndexOf("/"));
                 String pathOriginParent = pathOrigin.substring(0, pathOrigin.lastIndexOf("/"));
-                if (pathSelectedParent.equals("")) {
+                if (StringUtils.isEmpty(pathSelectedParent)) {
                     slash = "";
                     pathSelectedParent = "/";
                 }
-                if (pathOriginParent.equals("")) {
+                if (StringUtils.isEmpty(pathOriginParent)) {
                     pathOriginParent = "/";
                 }
                 Content touchedContent = null;
@@ -846,18 +846,18 @@ public class Tree extends ControlSuper {
                 String placedBefore = null;
                 for (Iterator iter = parent.getChildren(current.getNodeType().getName()).iterator(); iter.hasNext();) {
                     Content child = (Content) iter.next();
-                    if(child.getHandle().equals(this.getPath())){
-                        if(iter.hasNext()){
-                            child = (Content)iter.next();
+                    if (child.getHandle().equals(this.getPath())) {
+                        if (iter.hasNext()) {
+                            child = (Content) iter.next();
                             placedBefore = child.getName();
                         }
                     }
                 }
-                
+
                 hm.moveTo(this.getPath(), dest);
-                
+
                 // now set at the same place as before
-                if(placedBefore != null){
+                if (placedBefore != null) {
                     parent.orderBefore(newLabel, placedBefore);
                 }
             }
@@ -1364,7 +1364,7 @@ public class Tree extends ControlSuper {
                             shifter = this.getShifterEmpty();
                         }
                     }
-                    if (!shifter.equals("")) {
+                    if (StringUtils.isNotEmpty(shifter)) {
                         html.append("<img id=\""
                             + idPre
                             + "_Shifter\" onmousedown=\""
@@ -1395,7 +1395,7 @@ public class Tree extends ControlSuper {
                     + ","
                     + permissionWrite
                     + ");\">");
-                if (!icon.equals("")) {
+                if (StringUtils.isNotEmpty(icon)) {
                     html.append("<img id=\""
                         + idPre
                         + "_Icon\" class=\"mgnlTreeIcon\" src=\""
@@ -1410,7 +1410,7 @@ public class Tree extends ControlSuper {
                     html.append(" />");
                 }
                 String dblclick = "";
-                if (permissionWrite && !this.getColumns(0).getHtmlEdit().equals("")) {
+                if (permissionWrite && StringUtils.isNotEmpty(this.getColumns(0).getHtmlEdit())) {
                     dblclick = " ondblclick=\""
                         + this.getJavascriptTree()
                         + ".editNodeData(this,'"
@@ -1442,7 +1442,7 @@ public class Tree extends ControlSuper {
                         else if (tc.getIsNodeDataValue()) {
                             str = util.getValueString();
                         }
-                        if (str.equals("")) {
+                        if (StringUtils.isEmpty(str)) {
                             str = TreeColumn.EMPTY;
                         }
                         tc.setName(name); // workaround, will be passed to js TreeColumn object
@@ -1461,7 +1461,7 @@ public class Tree extends ControlSuper {
                         + "Main\""
                         + tc.getHtmlCssClass()
                         + tc.getHtmlEvents());
-                    if (permissionWrite && !tc.getHtmlEdit().equals("")) {
+                    if (permissionWrite && StringUtils.isNotEmpty(tc.getHtmlEdit())) {
                         html.append(" ondblclick=\""
                             + this.getJavascriptTree()
                             + ".editNodeData(this,'"

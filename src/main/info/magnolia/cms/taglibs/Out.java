@@ -89,8 +89,7 @@ public class Out extends TagSupport {
                 else {
                     // e.g. <cms:out nodeDataName="title" contentNodeName="01" contentNodeCollectionName="mainPars"/>
                     // e.g. <cms:out nodeDataName="title" contentNodeName="footer" contentNodeCollectionName=""/>
-                    this.setContentNode(actpage.getContent(contentNodeCollectionName).getContent(
-                        contentNodeName));
+                    this.setContentNode(actpage.getContent(contentNodeCollectionName).getContent(contentNodeName));
                 }
             }
             catch (RepositoryException re) {
@@ -100,7 +99,7 @@ public class Out extends TagSupport {
         else {
             if (local == null) {
                 // outside collection iterator
-                if (contentNodeCollectionName != null && !contentNodeCollectionName.equals("")) {
+                if (StringUtils.isNotEmpty(contentNodeCollectionName)) {
                     // ERROR: no content node assignable because contentNodeName is empty
                     // e.g. <cms:out nodeDataName="title" contentNodeCollectionName="mainPars"/>
                     return SKIP_BODY;
@@ -116,8 +115,8 @@ public class Out extends TagSupport {
                     // e.g. <cms:out nodeDataName="title"/>
                     this.setContentNode(local);
                 }
-                else if ((contentNodeName != null && contentNodeName.equals(""))
-                    || (contentNodeCollectionName != null && contentNodeCollectionName.equals(""))) {
+                else if ((contentNodeName != null && StringUtils.isEmpty(contentNodeName))
+                    || (contentNodeCollectionName != null && StringUtils.isEmpty(contentNodeCollectionName))) {
                     // empty collection name -> use actpage
                     // e.g. <cms:out nodeDataName="title" contentNodeCollectionName=""/>
                     this.setContentNode(actpage);
@@ -350,7 +349,7 @@ public class Out extends TagSupport {
                 value = this.getFilePropertyValue();
             }
             else {
-                if (this.getLineBreak().equals("")) {
+                if (StringUtils.isEmpty(this.getLineBreak())) {
                     value = nodeData.getString();
                 }
                 else {

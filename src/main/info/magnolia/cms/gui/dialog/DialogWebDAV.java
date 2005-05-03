@@ -41,6 +41,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.httpclient.HttpURL;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.webdav.lib.Property;
 import org.apache.webdav.lib.WebdavResource;
@@ -194,27 +195,14 @@ public class DialogWebDAV extends DialogBox {
     public void setDAVConnection() {
         WebdavResource wdr = null;
         try {
-            // todo use latest libraries from apache webDAV
-            // if (this.getProtocol().equalsIgnoreCase("https")) {
-            // wdr = new WebdavResource(new
-            // HttpsURL(this.getUser(),this.getPassword(),this.getHost(),this.getPort(),this.getDirectory()));
-            // }
-            // else {
+
             wdr = new WebdavResource(new HttpURL(
                 this.getUser(),
                 this.getPassword(),
                 this.getHost(),
                 this.getPort(),
                 this.getDirectory()));
-            // }
-            /*
-             * //todo: proxy config //proxy not yet supported if (!proxy.equals("")) { wdr.setProxy(proxy,(new
-             * Integer(proxyPort)).intValue()); String proxyUserName =
-             * nodeDataDefinition.getNodeData("proxyUserName").getString(); String proxyPswd =
-             * nodeDataDefinition.getNodeData("proxyPassword").getString(); if (!proxyUserName.equals("")) {
-             * UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(proxyUserName,proxyPswd);
-             * wdr.setProxyCredentials(credentials); } }
-             */
+
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -232,7 +220,7 @@ public class DialogWebDAV extends DialogBox {
         String showName = "&nbsp;";
         String showPath = "";
         String showIcon = "";
-        if (!this.getValue().equals("")) {
+        if (StringUtils.isNotEmpty(this.getValue())) {
             String valueTmp = "";
             boolean isDirectory = false;
             if (this.getValue().lastIndexOf("/") == this.getValue().length() - 1) {
@@ -361,7 +349,7 @@ public class DialogWebDAV extends DialogBox {
             // should never happen
         }
         try {
-            if (dir == null || (dir.equals(""))) {
+            if (StringUtils.isEmpty(dir)) {
                 fileList = wdr.propfindMethod(1);
             }
             else {
@@ -412,7 +400,7 @@ public class DialogWebDAV extends DialogBox {
             while (fileList.hasMoreElements()) {
                 XMLResponseMethodBase.Response response = (XMLResponseMethodBase.Response) fileList.nextElement();
                 Map properties = this.getDAVProperties(response);
-                if (properties.get("name") == null || properties.get("name").equals("")) {
+                if (StringUtils.isEmpty((String) properties.get("name"))) {
                     continue;
                 }
                 String name = (String) properties.get("name");
@@ -447,7 +435,7 @@ public class DialogWebDAV extends DialogBox {
             if (!this.getDirectory().equals(dir)) {
                 Map parentProp = new Hashtable();
                 String name = "";
-                if (parentDirectory.equals("")) {
+                if (StringUtils.isEmpty(parentDirectory)) {
                     name = "/";
                 }
                 else {

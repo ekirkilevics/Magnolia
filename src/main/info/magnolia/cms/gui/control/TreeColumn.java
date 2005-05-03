@@ -19,6 +19,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -56,7 +57,7 @@ public class TreeColumn extends ControlSuper {
     boolean isNodeDataValue;
 
     boolean isNodeDataType;
-    
+
     String dateFormat;
 
     String title = "";
@@ -64,7 +65,7 @@ public class TreeColumn extends ControlSuper {
     boolean permissionWrite;
 
     String htmlEdit = "";
-    
+
     TreeColumnHtmlRenderer htmlRenderer;
 
     private String javascriptTree = "";
@@ -239,12 +240,11 @@ public class TreeColumn extends ControlSuper {
             log.error(e.getMessage(), e);
         }
         // "" not clickable!
-        if (html.equals("")) {
+        if (StringUtils.isEmpty(html)) {
             html = TreeColumn.EMPTY;
         }
         return html;
     }
-
 
     /**
      * @return Returns the htmlRenderer.
@@ -252,6 +252,7 @@ public class TreeColumn extends ControlSuper {
     public TreeColumnHtmlRenderer getHtmlRenderer() {
         return htmlRenderer;
     }
+
     /**
      * @param htmlRenderer Set the delecate Object which will render the html column for each row
      */

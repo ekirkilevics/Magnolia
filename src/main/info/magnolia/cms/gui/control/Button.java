@@ -216,7 +216,7 @@ public class Button extends ControlSuper {
     public String getHtmlPushbutton() {
         StringBuffer html = new StringBuffer();
         html.append("<" + this.getPushButtonTag());
-        if (this.getCssClass().equals("")) {
+        if (StringUtils.isEmpty(this.getCssClass())) {
             if (this.getSmall()) {
                 this.setCssClass(CSSCLASS_CONTROLBUTTONSMALL);
                 this.setLabelNbspPadding(1);

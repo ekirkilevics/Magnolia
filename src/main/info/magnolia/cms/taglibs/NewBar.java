@@ -146,7 +146,7 @@ public class NewBar extends TagSupport {
      */
     private String getNewLabel() {
         String defStr = MessagesManager.getMessages(this.pageContext).get(DEFAULT_NEW_LABEL);
-        //String defStr = LocaleSupport.getLocalizedMessage(this.pageContext, DEFAULT_NEW_LABEL);
+        // String defStr = LocaleSupport.getLocalizedMessage(this.pageContext, DEFAULT_NEW_LABEL);
         return StringUtils.defaultString(this.newLabel, defStr);
     }
 
@@ -165,7 +165,7 @@ public class NewBar extends TagSupport {
         bar.setNodeName("mgnlNew");
         bar.setDefaultButtons();
         if (this.getNewLabel() != null) {
-            if (this.getNewLabel().equals("")) {
+            if (StringUtils.isEmpty(this.getNewLabel())) {
                 bar.setButtonNew(null);
             }
             else {

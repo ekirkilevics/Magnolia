@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -35,7 +36,7 @@ public class LinkBrowserDialogPage extends BasePageServlet {
     public void draw(HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
         PrintWriter out = response.getWriter();
         String repository = request.getParameter("repository");
-        if (repository == null || repository.equals("")) {
+        if (StringUtils.isEmpty(repository)) {
             repository = ContentRepository.WEBSITE;
         }
 

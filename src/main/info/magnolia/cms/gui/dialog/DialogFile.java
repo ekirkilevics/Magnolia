@@ -91,7 +91,11 @@ public class DialogFile extends DialogBox {
         }
         String htmlControlBrowse = control.getHtmlBrowse();
         StringBuffer htmlControlFileName = new StringBuffer();
-        htmlControlFileName.append("<span class=\"" + CssConstants.CSSCLASS_DESCRIPTION + "\">" + MessagesManager.get(this.getRequest(),"dialog.file.filename") + "</span>");
+        htmlControlFileName.append("<span class=\""
+            + CssConstants.CSSCLASS_DESCRIPTION
+            + "\">"
+            + MessagesManager.get(this.getRequest(), "dialog.file.filename")
+            + "</span>");
         htmlControlFileName.append(Spacer.getHtml(1, 1));
         htmlControlFileName.append(control.getHtmlFileName()
             + "<span id=\""
@@ -131,12 +135,7 @@ public class DialogFile extends DialogBox {
             out.write(htmlControlFileName.toString());
             if (!showImage) {
                 String iconPath = this.getIconPath(control.getExtension());
-                /*
-                 * String iconPath=ICONS_PATH+ICONS_GENERAL; if
-                 * (this.getIconExtensions().containsKey(control.getExtension().toLowerCase())) { iconPath=(String)
-                 * this.getIconExtensions().get(control.getExtension().toLowerCase()); if (iconPath.equals(""))
-                 * iconPath=ICONS_PATH+control.getExtension().toLowerCase()+".gif"; }
-                 */
+
                 out.write(Spacer.getHtml(0, 0));
                 out.write("<a href=" + control.getPath() + " target=\"_blank\">");
                 out.write("<img src=\""

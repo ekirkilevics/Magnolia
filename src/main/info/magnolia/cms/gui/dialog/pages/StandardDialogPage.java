@@ -29,6 +29,7 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -115,13 +116,12 @@ public class StandardDialogPage extends BasePageServlet {
 
                 try {
                     Content websiteContent = hm.getContent(path);
-                    if (nodeName == null || nodeName.equals("")) {
+                    if (StringUtils.isEmpty(nodeName)) {
                         websiteNode = websiteContent;
                     }
                     else {
-                        if (nodeCollectionName == null || nodeCollectionName.equals("")) {
+                        if (StringUtils.isEmpty(nodeCollectionName)) {
                             websiteNode = websiteContent.getContent(nodeName);
-
                         }
                         else {
                             websiteNode = websiteContent.getContent(nodeCollectionName).getContent(nodeName);
@@ -188,7 +188,9 @@ public class StandardDialogPage extends BasePageServlet {
                         Paragraph paragraphInfo = Paragraph.getInfo(pars[i]);
                         Button button = new Button(c1.getName(), paragraphInfo.getName());
                         StringBuffer label = new StringBuffer();
-                        label.append("<strong>" + TemplateMessagesUtil.get(request, paragraphInfo.getTitle()) + "</strong><br />");
+                        label.append("<strong>"
+                            + TemplateMessagesUtil.get(request, paragraphInfo.getTitle())
+                            + "</strong><br />");
                         label.append(TemplateMessagesUtil.get(request, paragraphInfo.getDescription()));
                         label.append("<br /><br />");
                         button.setLabel(label.toString());
