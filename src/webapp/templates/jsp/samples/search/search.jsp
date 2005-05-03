@@ -23,10 +23,25 @@
             <div id="contentDivMainColumn">
                 <c:import url="/templates/jsp/samples/global/columnMain.jsp" />
 
+				<c:choose>
+					<c:when test="${!empty(param.sql)}">
+						<c:set var="formvalue" value="${param.sql}" />
+					</c:when>
+					<c:otherwise>
+						<c:set var="formvalue" value="SELECT * FROM nt:base where jcr:path like '/%' and title like '%'" />
+					</c:otherwise>
+				</c:choose>
 
                 <form name="mgnlsearch" action="">
-                  <textarea id="sql" name="sql" cols="40" rows="10">SELECT * FROM nt:base where jcr:path like '/%' and title like '%'
-                  </textarea>
+                  <textarea id="sql" name="sql" cols="40" rows="10">${formvalue}</textarea>
+                  <select name="language">
+                     <option value="sql">sql</option>
+                     <c:choose>
+                       <c:when test="${param.language == 'xpath'}"><option value="xpath" selected="selected">xpath</option></c:when>
+                       <c:otherwise><option value="xpath">xpath</option></c:otherwise>
+                     </c:choose>
+
+                  </select>
                   <input type="submit" name="search" value="search" />
                 </form>
 
@@ -37,8 +52,9 @@
 
 						<c:catch var="exc">
 			                <jsp:scriptlet>
-				                String sql = request.getParameter("sql");
-				                Query q = SessionAccessControl.getQueryManager(request).createQuery(sql, Query.SQL);
+			                    String sql = request.getParameter("sql");
+			                    String language = request.getParameter("language");
+				                Query q = SessionAccessControl.getQueryManager(request).createQuery(sql, language);
 				                QueryResult result = q.execute();
 				                pageContext.setAttribute("result", result.getContentIterator("mgnl:content"));
 			                </jsp:scriptlet>
@@ -46,7 +62,8 @@
 			                <h3>Resulting objects of NodeType (mgnl:content)</h3>
 
 			                <c:forEach var="node" items="${result}">
-			                  ${node.handle}<br/>
+			                  <strong>${node.title}</strong><br/>
+			                  <a href="${pageContext.request.contextPath}${node.handle}.html">${pageContext.request.contextPath}${node.handle}.html</a><br/>
 			                </c:forEach>
 
 			                <h3>Resulting objects of NodeType (mgnl:contentNode)</h3>
@@ -56,7 +73,8 @@
 			                </jsp:scriptlet>
 
 			                <c:forEach var="node" items="${result}">
-			                  ${node.handle}<br/>
+			                  <strong>${node.title}</strong><br/>
+			                  <em>${node.handle}</em><br/>
 			                </c:forEach>
 						</c:catch>
 
