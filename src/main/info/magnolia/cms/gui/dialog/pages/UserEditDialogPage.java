@@ -30,6 +30,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
 import javax.jcr.PropertyType;
@@ -266,7 +267,7 @@ public class UserEditDialogPage extends BasePageServlet {
             DialogSelect langSelect = DialogFactory.getDialogSelectInstance(request, response, user, null);
             langSelect.setName("language");
             langSelect.setLabel(msgs.get("users.edit.language"));
-            ArrayList options = new ArrayList();
+            List options = new ArrayList();
 
             Collection col = MessagesManager.getAvailableLocales();
             Messages langMsgs = MessagesManager.getMessages(
