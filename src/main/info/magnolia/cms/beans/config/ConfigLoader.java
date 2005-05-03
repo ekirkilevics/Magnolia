@@ -12,9 +12,9 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.beans.runtime.SystemProperty;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.gui.dialog.DialogManager;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.license.License;

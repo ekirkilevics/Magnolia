@@ -12,7 +12,6 @@
  */
 package info.magnolia.cms.core;
 
-import info.magnolia.cms.beans.runtime.SystemProperty;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
