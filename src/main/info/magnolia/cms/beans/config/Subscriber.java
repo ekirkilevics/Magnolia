@@ -13,7 +13,6 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.NodeData;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,7 +33,7 @@ import org.apache.log4j.Logger;
  * @author Sameer Charles
  * @version 1.1
  */
-public class Subscriber {
+public final class Subscriber {
 
     /**
      * Logger.
