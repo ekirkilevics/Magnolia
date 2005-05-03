@@ -1263,8 +1263,9 @@ public class Tree extends ControlSuper {
                     for (int i = 0; i < this.getItemTypes().size(); i++) {
                         String type = (String) this.getItemTypes().get(i);
                         int size = 0;
-                        if (type.equalsIgnoreCase(ItemType.NT_NODEDATA))
+                        if (type.equalsIgnoreCase(ItemType.NT_NODEDATA)) {
                             size = c.getNodeDataCollection().size();
+                        }
                         else
                             size = c.getChildren(type).size();
                         if (size > 0) {

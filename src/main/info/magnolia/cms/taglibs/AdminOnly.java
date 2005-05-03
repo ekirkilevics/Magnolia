@@ -30,7 +30,10 @@ public class AdminOnly extends TagSupport {
      */
     private static final long serialVersionUID = 222L;
 
-    private boolean showInPreview = false;
+    /**
+     * Show in preview mode?
+     */
+    private boolean showInPreview;
 
     /**
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
@@ -51,7 +54,8 @@ public class AdminOnly extends TagSupport {
     }
 
     /**
-     * @param trueForPreview The trueForPreview to set.
+     * Show in preview mode?
+     * @param showInPreview if <code>true</code> the content of the tag is shown in preview mode.
      */
     public void setShowInPreview(boolean showInPreview) {
         this.showInPreview = showInPreview;

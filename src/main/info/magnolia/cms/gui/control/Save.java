@@ -355,7 +355,7 @@ public class Save extends ControlSuper {
         catch (RepositoryException e) {
             throw new NestableRuntimeException(e);
         }
-        return valueFactory.createValue(0l);
+        return valueFactory.createValue(0L);
     }
 
     public Value getValue(String valueStr, int type) {
@@ -390,7 +390,7 @@ public class Save extends ControlSuper {
                 value = valueFactory.createValue(Long.parseLong(valueStr));
             }
             catch (NumberFormatException e) {
-                value = valueFactory.createValue(0l);
+                value = valueFactory.createValue(0L);
             }
         }
         else if (type == PropertyType.DATE) {

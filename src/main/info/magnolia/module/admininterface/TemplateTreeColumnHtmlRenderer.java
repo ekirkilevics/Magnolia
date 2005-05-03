@@ -13,8 +13,6 @@
  */
 package info.magnolia.module.admininterface;
 
-import javax.jcr.RepositoryException;
-
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -22,6 +20,7 @@ import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.gui.control.TreeColumnHtmlRenderer;
 import info.magnolia.cms.i18n.TemplateMessagesUtil;
 
+import javax.jcr.RepositoryException;
 
 
 /**
@@ -30,18 +29,16 @@ import info.magnolia.cms.i18n.TemplateMessagesUtil;
  */
 public class TemplateTreeColumnHtmlRenderer implements TreeColumnHtmlRenderer {
 
-    /*
-     * (non-Javadoc)
-     * @see info.magnolia.cms.gui.control.TreeColumnHtmlRenderer#renderHtml(info.magnolia.cms.gui.control.TreeColumn,
-     * info.magnolia.cms.core.Content)
+    /**
+     * @see info.magnolia.cms.gui.control.TreeColumnHtmlRenderer#renderHtml(TreeColumn, Content)
      */
     public String renderHtml(TreeColumn treeColumn, Content content) {
         String templateName = content.getMetaData().getTemplate();
         String strKey = this.findTemplateKey(templateName);
         return TemplateMessagesUtil.get(treeColumn.getRequest(), strKey);
     }
-    
-	private String findTemplateKey(String templateName) {
+
+    private String findTemplateKey(String templateName) {
         HierarchyManager configHierarchyManager = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
         try {
             Content template = configHierarchyManager.getContent("modules/templating/Templates/" + templateName);

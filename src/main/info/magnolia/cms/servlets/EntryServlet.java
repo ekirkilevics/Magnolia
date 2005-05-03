@@ -20,13 +20,21 @@ import info.magnolia.cms.beans.runtime.Cache;
 import info.magnolia.cms.core.CacheHandler;
 import info.magnolia.cms.core.CacheProcess;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.security.*;
+import info.magnolia.cms.security.Authenticator;
+import info.magnolia.cms.security.Listener;
+import info.magnolia.cms.security.Lock;
+import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.security.SecureURI;
+import info.magnolia.cms.security.SessionAccessControl;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -44,9 +52,7 @@ import org.apache.log4j.Logger;
 /**
  * This is the main http servlet which will be called for any resource request this servlet will dispacth or process
  * requests according to their nature -- all resource requests will go to ResourceDispatcher -- all page requests will
- * be handed over to the defined JSP or Servlet (template).
- *
- * Updated to allow caching of virtual URI's
+ * be handed over to the defined JSP or Servlet (template). Updated to allow caching of virtual URI's
  * @author Sameer Charles
  * @version 2.1
  */
@@ -67,8 +73,7 @@ public class EntryServlet extends HttpServlet {
     private static final String REQUEST_INTERCEPTOR = "/RequestInterceptor";
 
     /**
-     * <p/>This makes browser and proxy caches work more effectively, reducing the load on server and network resources.
-     * </p>
+     * This makes browser and proxy caches work more effectively, reducing the load on server and network resources.
      * @param request
      * @return last modified time in miliseconds since 1st Jan 1970 GMT
      */
@@ -110,7 +115,8 @@ public class EntryServlet extends HttpServlet {
                         log.error(e.getMessage(), e);
                     }
                     this.cacheRequest(req);
-                } else {
+                }
+                else {
                     res.sendRedirect(req.getContextPath() + Server.get404URI());
                 }
             }
@@ -121,8 +127,7 @@ public class EntryServlet extends HttpServlet {
     }
 
     /**
-     * <p/>All requests are handles by get handler
-     * </p>
+     * All requests are handles by get handler.
      * @param req
      * @param res
      */
@@ -131,8 +136,7 @@ public class EntryServlet extends HttpServlet {
     }
 
     /**
-     * <p/>checks access from Listener / Authenticator / AccessLock
-     * </p>
+     * Checks access from Listener / Authenticator / AccessLock.
      * @param req HttpServletRequest as received by the service method
      * @param res HttpServletResponse as received by the service method
      * @return boolean
@@ -156,8 +160,7 @@ public class EntryServlet extends HttpServlet {
     }
 
     /**
-     * <p/>Uses access manager to authorise this request
-     * </p>
+     * Uses access manager to authorise this request.
      * @param req HttpServletRequest as received by the service method
      * @param res HttpServletResponse as received by the service method
      * @return boolean true if read access is granted
@@ -175,8 +178,7 @@ public class EntryServlet extends HttpServlet {
     }
 
     /**
-     * <p/>Authenticate on basic headers
-     * </p>
+     * Authenticate on basic headers.
      * @param req
      * @param res
      */
@@ -187,7 +189,7 @@ public class EntryServlet extends HttpServlet {
                 res.setHeader("WWW-Authenticate", "BASIC realm=\"" + Server.getBasicRealm() + "\"");
                 /**
                  * invalidate previous session
-                 * */
+                 */
                 SessionAccessControl.invalidateUser(req);
                 return false;
             }
@@ -197,16 +199,15 @@ public class EntryServlet extends HttpServlet {
             return false;
         }
         /**
-         * initialize website access manager, its a temporary fix
-         * todo : should SessionAccessControl initialize access managers for all workspaces on login ?
-         * */
+         * initialize website access manager, its a temporary fix todo : should SessionAccessControl initialize access
+         * managers for all workspaces on login ?
+         */
         SessionAccessControl.getHierarchyManager(req);
         return true;
     }
 
     /**
-     * <p/>redirect based on the mapping in config/server/.node.xml
-     * </p>
+     * Redirect based on the mapping in config/server/.node.xml
      * @param request
      * @param response
      */
@@ -228,8 +229,7 @@ public class EntryServlet extends HttpServlet {
     }
 
     /**
-     * <p/>attach Interceptor servlet if interception needed
-     * </p>
+     * Attach Interceptor servlet if interception needed
      * @param request
      * @param response
      */
@@ -263,9 +263,9 @@ public class EntryServlet extends HttpServlet {
     }
 
     /**
-     * Caches this request if level-1 cache is active and request is  part of cacheable mapping
+     * Caches this request if level-1 cache is active and request is part of cacheable mapping
      * @param request
-     * */
+     */
     private void cacheRequest(HttpServletRequest request) {
         if (!Cache.isInCacheProcess(request) && info.magnolia.cms.beans.config.Cache.isCacheable()) {
             CacheProcess cache = new CacheProcess(new ClonedRequest(request));
@@ -479,7 +479,7 @@ public class EntryServlet extends HttpServlet {
         }
 
         public void setAttribute(String s, Object o) {
-            this.attributes.put(s,o);
+            this.attributes.put(s, o);
         }
 
         public void removeAttribute(String s) {

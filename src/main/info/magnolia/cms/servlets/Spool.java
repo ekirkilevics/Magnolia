@@ -12,20 +12,21 @@
  */
 package info.magnolia.cms.servlets;
 
-import info.magnolia.cms.security.Authenticator;
-import info.magnolia.cms.security.SessionAccessControl;
-import info.magnolia.cms.security.SecureURI;
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.security.Authenticator;
+import info.magnolia.cms.security.SecureURI;
+import info.magnolia.cms.security.SessionAccessControl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import java.io.IOException;
-import java.io.File;
-import java.io.FileInputStream;
 
 import org.apache.log4j.Logger;
 
@@ -48,8 +49,7 @@ public class Spool extends HttpServlet {
     private static Logger log = Logger.getLogger(Spool.class);
 
     /**
-     * <p/>This makes browser and proxy caches work more effectively, reducing the load on server and network resources.
-     * </p>
+     * This makes browser and proxy caches work more effectively, reducing the load on server and network resources.
      * @param request
      * @return last modified time in miliseconds since 1st Jan 1970 GMT
      */
@@ -120,8 +120,7 @@ public class Spool extends HttpServlet {
     }
 
     /**
-     * <p/>Authenticate on basic headers
-     * </p>
+     * Authenticate on basic headers.
      * @param request
      * @param response
      */

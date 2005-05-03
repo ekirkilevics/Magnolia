@@ -59,13 +59,13 @@ public class Content extends ContentHandler implements Cloneable {
      */
     private static Logger log = Logger.getLogger(Content.class);
 
+    protected Node node;
+
     private String path;
 
     private Node rootNode;
 
     private MetaData metaData;
-
-    protected Node node;
 
     /**
      * constructor

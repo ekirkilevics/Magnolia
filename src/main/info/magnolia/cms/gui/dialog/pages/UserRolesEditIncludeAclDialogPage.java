@@ -37,15 +37,15 @@ public class UserRolesEditIncludeAclDialogPage extends BasePageServlet {
     private static final long serialVersionUID = 222L;
 
     // todo: permission global available somewhere
-    static final long PERMISSION_ALL = Permission.ALL;
+    private static final long PERMISSION_ALL = Permission.ALL;
 
-    static final long PERMISSION_READ = Permission.READ;
+    private static final long PERMISSION_READ = Permission.READ;
 
-    static final long PERMISSION_NO = 0;
+    private static final long PERMISSION_NO = 0;
 
-    static final String CSS_ACL_DIV = "aclDynamicTable";
+    private static final String CSS_ACL_DIV = "aclDynamicTable";
 
-    private static final String getHtmlRowInner(HttpServletRequest request, String dynamicTable, String repository) {
+    private static String getHtmlRowInner(HttpServletRequest request, String dynamicTable, String repository) {
         boolean small = true;
         Messages msgs = MessagesManager.getMessages(request);
 
@@ -229,8 +229,9 @@ public class UserRolesEditIncludeAclDialogPage extends BasePageServlet {
         boolean noAcl = false;
         try {
             Content acl = role.getContent("acl_" + repository);
-            if (acl.getChildren().size() == 0)
+            if (acl.getChildren().size() == 0) {
                 noAcl = true;
+            }
             Iterator it = acl.getChildren().iterator();
             boolean skipNext = false;
             while (it.hasNext()) {
@@ -275,8 +276,9 @@ public class UserRolesEditIncludeAclDialogPage extends BasePageServlet {
         catch (Exception e) {
             noAcl = true;
         }
-        if (noAcl)
+        if (noAcl) {
             out.println(dynamicTableName + ".addNew();");
+        }
     }
 
     /**

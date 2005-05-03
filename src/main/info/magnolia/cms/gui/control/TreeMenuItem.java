@@ -13,6 +13,7 @@
 package info.magnolia.cms.gui.control;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -25,7 +26,7 @@ public class TreeMenuItem extends ControlSuper {
 
     private String javascriptTree = "";
 
-    private ArrayList javascriptConditions = new ArrayList();
+    private List javascriptConditions = new ArrayList();
 
     public TreeMenuItem() {
     }
@@ -58,7 +59,7 @@ public class TreeMenuItem extends ControlSuper {
         this.javascriptConditions.add(methodName);
     }
 
-    public ArrayList getJavascriptConditions() {
+    public List getJavascriptConditions() {
         return this.javascriptConditions;
     }
 

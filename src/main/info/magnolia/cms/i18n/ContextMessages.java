@@ -208,7 +208,6 @@ public class ContextMessages extends Messages {
     /**
      * Determines the client's preferred locales from the request, and compares each of the locales (in order of
      * preference) against the available locales in order to determine the best matching locale.
-     * @param request the reqest in which the resource bundle with the given base name is requested
      * @param basename the resource bundle's base name
      * @return the localization context containing the resource bundle with the given base name and best matching
      * locale, or <tt> null </tt> if no resource bundle match was found
@@ -292,7 +291,6 @@ public class ContextMessages extends Messages {
      * The named scoped attribute is searched in the page, request, session (if valid), and application scope(s) (in
      * this order). If no such attribute exists in any of the scopes, the locale is taken from the named context
      * configuration parameter.
-     * @param pageContext the page in which to search for the named scoped attribute or context configuration parameter
      * @param name the name of the scoped attribute or context configuration parameter
      * @return the locale specified by the named scoped attribute or context configuration parameter, or <tt> null </tt>
      * if no scoped attribute or configuration parameter with the given name exists
@@ -348,16 +346,20 @@ public class ContextMessages extends Messages {
         }
 
         if (country == null) {
-            if (variant != null)
+            if (variant != null) {
                 ret = new Locale(language, "", variant);
-            else
+            }
+            else {
                 ret = new Locale(language, "");
+            }
         }
         else if (country.length() > 0) {
-            if (variant != null)
+            if (variant != null) {
                 ret = new Locale(language, country, variant);
-            else
+            }
+            else {
                 ret = new Locale(language, country);
+            }
         }
         else {
             throw new IllegalArgumentException(Resources.getMessage("LOCALE_EMPTY_COUNTRY"));
@@ -373,7 +375,6 @@ public class ContextMessages extends Messages {
      * For each of the JSP scopes (page, request, session, application), get the value of the configuration variable
      * identified by <tt>name</tt> using method <tt>get()</tt>. Return as soon as a non-null value is found. If no
      * value is found, get the value of the context initialization parameter identified by <tt>name</tt>.
-     * @param request Request context in which the configuration setting is to be searched
      * @param name Context initialization parameter name of the configuration setting
      * @return The <tt>java.lang.Object</tt> associated with the configuration setting identified by <tt>name</tt>,
      * or null if it is not defined.

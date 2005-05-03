@@ -31,19 +31,14 @@ import org.apache.log4j.Logger;
 
 
 /**
- * @author philipp this class wrapes the tree control. The AdminInterfaceServlet instantiates a subclass. The method
- * getCommand is called to map the request parameters to a command. Then execute() is called which uses reflection to call a method.
- * Each method returns a string defining the view. After that, renderHtml is called. To build your own tree you have to override the prepareTree() method
- */
-/**
+ * This class wrapes the tree control. The AdminInterfaceServlet instantiates a subclass. The method getCommand is
+ * called to map the request parameters to a command. Then execute() is called which uses reflection to call a method.
+ * Each method returns a string defining the view. After that, renderHtml is called. To build your own tree you have to
+ * override the prepareTree() method
  * @author philipp
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * @version $Id: $
  */
-abstract public class AdminTree {
-
-    private HttpServletRequest request;
+public abstract class AdminTree {
 
     /**
      * Logger.
@@ -84,7 +79,8 @@ abstract public class AdminTree {
 
     private static final String VIEW_COPY_MOVE = "copymove";
 
-    
+    private HttpServletRequest request;
+
     /**
      * name of the tree (not the repository)
      */
@@ -98,22 +94,12 @@ abstract public class AdminTree {
 
     private String pathSelected;
 
-    
     /**
      * Used to pass the saved value to the view
      */
     private String displayValue;
 
     private String newPath;
-
-    /**
-     * Override this method if you are not using the same name for the tree and the repository
-     * 
-     * @return name of the repository
-     */
-    protected String getRepository() {
-        return this.name;
-    }
 
     public AdminTree(String name, HttpServletRequest request) {
         this.request = request;
@@ -131,8 +117,15 @@ abstract public class AdminTree {
     }
 
     /**
+     * Override this method if you are not using the same name for the tree and the repository
+     * @return name of the repository
+     */
+    protected String getRepository() {
+        return this.name;
+    }
+
+    /**
      * Depending on the request it is generating a logical command name
-     * 
      * @return name of the command
      */
     protected String getCommand() {
@@ -162,8 +155,9 @@ abstract public class AdminTree {
             return ACTION_CREATE_NODE;
         }
 
-        if (request.getParameter("deleteNode") != null)
+        if (request.getParameter("deleteNode") != null) {
             return ACTION_DELETE_NODE;
+        }
 
         // editet any value directly in the columns?
         if (request.getParameter("saveName") != null
@@ -178,7 +172,6 @@ abstract public class AdminTree {
 
     /**
      * Call the method through reflection
-     * 
      * @param command
      * @return the name of the view to show (used in renderHtml)
      */
@@ -195,7 +188,6 @@ abstract public class AdminTree {
         return view;
     }
 
-    
     /**
      * Show the tree
      */
@@ -205,7 +197,6 @@ abstract public class AdminTree {
 
     /**
      * Create a new node and show the tree
-     * 
      * @return
      */
     protected String createNode() {
@@ -273,7 +264,6 @@ abstract public class AdminTree {
 
     /**
      * Saves a value edited directly inside the tree. This can also be a lable
-     * 
      * @return name of the view
      */
     protected String saveValue() {
@@ -334,7 +324,6 @@ abstract public class AdminTree {
 
     /**
      * Render the tree depending on the view name.
-     * 
      * @param view
      * @return
      */
@@ -370,11 +359,10 @@ abstract public class AdminTree {
      * @param tree
      * @param request
      */
-    abstract protected void prepareTree(Tree tree, HttpServletRequest request);
+    protected abstract void prepareTree(Tree tree, HttpServletRequest request);
 
     /**
      * Create the html for the tree. Calls tree.getHtml after calling prepareTree.
-     * 
      * @param html
      */
     private void renderTree(StringBuffer html) {

@@ -39,19 +39,19 @@ import org.apache.log4j.Logger;
  */
 public class UserRolesEditDialogPage extends BasePageServlet {
 
+    protected static Logger log = Logger.getLogger("roles dialog");
+
     /**
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
 
-    static Logger log = Logger.getLogger("roles dialog");
-
     // todo: permission global available somewhere
-    static final long PERMISSION_ALL = Permission.ALL;
+    private static final long PERMISSION_ALL = Permission.ALL;
 
-    static final long PERMISSION_READ = Permission.READ;
+    private static final long PERMISSION_READ = Permission.READ;
 
-    static final long PERMISSION_NO = 0;
+    private static final long PERMISSION_NO = 0;
 
     // this is not longer true
     // static final String NODE_ACL = "acl_website";
@@ -78,13 +78,13 @@ public class UserRolesEditDialogPage extends BasePageServlet {
 
         private HierarchyManager hm;
 
-        private boolean create = false;
+        private boolean create;
 
-        HttpServletRequest request;
+        private HttpServletRequest request;
 
-        HttpServletResponse response;
+        private HttpServletResponse response;
 
-        Content role;
+        private Content role;
 
         MyDialog(HttpServletRequest request, HttpServletResponse response) throws IOException {
             this.request = request;
@@ -101,8 +101,9 @@ public class UserRolesEditDialogPage extends BasePageServlet {
                 path = request.getParameter("mgnlPath");
             }
 
-            if (StringUtils.isEmpty(path))
+            if (StringUtils.isEmpty(path)) {
                 create = true;
+            }
 
             hm = SessionAccessControl.getHierarchyManager(request, ContentRepository.USER_ROLES);
 
@@ -111,7 +112,7 @@ public class UserRolesEditDialogPage extends BasePageServlet {
                     role = hm.getContent(path);
                 }
                 catch (RepositoryException re) {
-                    re.printStackTrace();
+                    log.error(re.getMessage(), re);
                 }
             }
         }
@@ -162,10 +163,12 @@ public class UserRolesEditDialogPage extends BasePageServlet {
                 + "/admindocroot/css/dialogs/pages/userRolesEditDialogPage.css");
             dialog.setConfig("height", 600);
 
-            if (create)
+            if (create) {
                 dialog.setLabel(msgs.get("roles.edit.create"));
-            else
+            }
+            else {
                 dialog.setLabel(msgs.get("roles.edit.edit"));
+            }
 
             DialogTab tab0 = dialog.addTab(msgs.get("roles.edit.properties"));
 
@@ -230,8 +233,8 @@ public class UserRolesEditDialogPage extends BasePageServlet {
                 try {
                     role = hm.createPage("/", name);
                 }
-                catch (RepositoryException re) {
-                    re.printStackTrace();
+                catch (RepositoryException e) {
+                    log.error(e.getMessage(), e);
                 }
             }
 
@@ -272,8 +275,9 @@ public class UserRolesEditDialogPage extends BasePageServlet {
                                 String[] aclValuePair = aclValuePairs[j].split(":");
                                 String aclName = aclValuePair[0].trim();
                                 String aclValue = "";
-                                if (aclValuePair.length > 1)
+                                if (aclValuePair.length > 1) {
                                     aclValue = aclValuePair[1].trim();
+                                }
 
                                 if (aclName.equals("path")) {
                                     path = aclValue;
@@ -286,7 +290,7 @@ public class UserRolesEditDialogPage extends BasePageServlet {
                                 }
                             }
 
-                            if (path != "") {
+                            if (StringUtils.isEmpty(path)) {
                                 if (path.equals("/")) {
                                     // needs only one entry: "/*"
                                     accessType = "sub";
@@ -301,7 +305,7 @@ public class UserRolesEditDialogPage extends BasePageServlet {
                                         r.createNodeData("permissions").setValue(accessRight);
                                     }
                                     catch (Exception e) {
-                                        e.printStackTrace();
+                                        log.error(e.getMessage(), e);
                                     }
                                 }
                                 try {
@@ -311,7 +315,7 @@ public class UserRolesEditDialogPage extends BasePageServlet {
                                     r.createNodeData("permissions").setValue(accessRight);
                                 }
                                 catch (Exception e) {
-                                    e.printStackTrace();
+                                    log.error(e.getMessage(), e);
                                 }
                             }
                         }

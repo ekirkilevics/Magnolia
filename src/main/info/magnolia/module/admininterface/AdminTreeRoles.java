@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Handles the tree rendering for the "roles" repository.
  * @author Fabrizio Giustina
- * @version $Id$
+ * @version $Id: AdminTreeRoles.java 661 2005-05-03 14:10:45Z philipp $
  */
 public class AdminTreeRoles extends AdminTree {
 
@@ -55,14 +55,16 @@ public class AdminTreeRoles extends AdminTree {
 
         TreeColumn column0 = new TreeColumn(tree.getJavascriptTree(), request);
         column0.setIsLabel(true);
-        if (Server.isAdmin())
+        if (Server.isAdmin()) {
             column0.setHtmlEdit();
+        }
         column0.setWidth(2);
         column0.setTitle(msgs.get("tree.roles.name"));
         TreeColumn column1 = new TreeColumn(tree.getJavascriptTree(), request);
         column1.setName("title");
-        if (Server.isAdmin())
+        if (Server.isAdmin()) {
             column1.setHtmlEdit();
+        }
         column1.setWidth(2);
         column1.setTitle(msgs.get("tree.roles.fullname"));
         TreeColumn columnIcons = new TreeColumn(tree.getJavascriptTree(), request);

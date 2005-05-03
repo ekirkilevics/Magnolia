@@ -13,6 +13,7 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.beans.config.Server;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.TagSupport;
 
@@ -27,7 +28,7 @@ public class PublicOnly extends TagSupport {
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
-    
+
     private boolean showInPreview = true;
 
     /**
@@ -49,10 +50,11 @@ public class PublicOnly extends TagSupport {
     public int doEndTag() {
         return EVAL_PAGE;
     }
-	/**
-	 * @param showInPreview The showInPreview to set.
-	 */
-	public void setShowInPreview(boolean showInPreview) {
-		this.showInPreview = showInPreview;
-	}
+
+    /**
+     * @param showInPreview The showInPreview to set.
+     */
+    public void setShowInPreview(boolean showInPreview) {
+        this.showInPreview = showInPreview;
+    }
 }

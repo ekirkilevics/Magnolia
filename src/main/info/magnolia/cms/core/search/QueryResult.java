@@ -12,13 +12,10 @@
  */
 package info.magnolia.cms.core.search;
 
-
 import java.util.Iterator;
 
+
 /**
- * Date: Apr 4, 2005
- * Time: 11:14:57 AM
- *
  * @author Sameer Charles
  */
 
@@ -26,12 +23,12 @@ public interface QueryResult {
 
     /**
      * Gets iterator of Content objects for mgnl:content NodeType
-     * */
-    public Iterator getContentIterator();
+     */
+    Iterator getContentIterator();
 
     /**
      * Gets iterator of Content objects for specified NodeType
-     * */
-    public Iterator getContentIterator(String nodeType);
+     */
+    Iterator getContentIterator(String nodeType);
 
 }

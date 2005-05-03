@@ -1,5 +1,4 @@
-/*
- * Created on Apr 4, 2005
+/**
  *
  * Magnolia and its source-code is licensed under the LGPL.
  * You may copy, adapt, and redistribute this file for commercial or non-commercial use.
@@ -15,11 +14,12 @@ package info.magnolia.cms.gui.control;
 
 import info.magnolia.cms.core.Content;
 
+
 /**
- * @author philipp
- *
  * You can add an implenting class to a TreeColumn to custom the rendering of the column output
+ * @author philipp
  */
 public interface TreeColumnHtmlRenderer {
-    public String renderHtml(TreeColumn treeColumn, Content content);
+
+    String renderHtml(TreeColumn treeColumn, Content content);
 }

@@ -1,5 +1,4 @@
-/*
- * Created on Apr 6, 2005
+/**
  *
  * Magnolia and its source-code is licensed under the LGPL.
  * You may copy, adapt, and redistribute this file for commercial or non-commercial use.
@@ -37,16 +36,20 @@ import org.apache.log4j.Logger;
 
 
 /**
- * @author philipp From this class you get the i18n messages. You should pass a a request, but if you can't the
- * getMessages method will handle it properly. The get() methods are easy to use.
+ * From this class you get the i18n messages. You should pass a a request, but if you can't the getMessages method will
+ * handle it properly. The get() methods are easy to use.
+ * @author philipp
  */
 public class MessagesManager {
-
-    protected static Logger log = Logger.getLogger(Messages.class);
 
     public static String FALLBACK_LOCALE = "en";
 
     public static String DEFAULT_BASENAME = "info.magnolia.module.admininterface.messages";
+
+    /**
+     * Logger.
+     */
+    protected static Logger log = Logger.getLogger(Messages.class);
 
     private static String I18N_CONFIG_NAME = "i18n";
 
@@ -93,7 +96,7 @@ public class MessagesManager {
 
             NodeData languageNodeData = configNode.getNodeData(LOCALE_CONFIG_NAME);
 
-            if (languageNodeData.getName() == "") {
+            if (StringUtils.isEmpty(languageNodeData.getName())) {
                 languageNodeData = configNode.createNodeData(LOCALE_CONFIG_NAME);
                 languageNodeData.setValue(MessagesManager.FALLBACK_LOCALE);
                 configHierarchyManager.save();

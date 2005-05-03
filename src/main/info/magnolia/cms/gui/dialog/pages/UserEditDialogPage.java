@@ -48,33 +48,36 @@ import org.apache.log4j.Logger;
 public class UserEditDialogPage extends BasePageServlet {
 
     /**
+     * Logger.
+     */
+    protected static Logger log = Logger.getLogger("user dialog");
+
+    /**
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
 
-    static Logger log = Logger.getLogger("user dialog");
-
     // todo: permission global available somewhere
-    static final long PERMISSION_ALL = Permission.ALL;
+    private static final long PERMISSION_ALL = Permission.ALL;
 
-    static final long PERMISSION_READ = Permission.READ;
+    private static final long PERMISSION_READ = Permission.READ;
 
-    static final long PERMISSION_NO = 0;
+    private static final long PERMISSION_NO = 0;
 
-    static final String NODE_ACLUSERS = "acl_users";
+    private static final String NODE_ACLUSERS = "acl_users";
 
-    static final String NODE_ACLROLES = "acl_userroles";
+    private static final String NODE_ACLROLES = "acl_userroles";
 
-    static final String NODE_ROLES = "roles";
+    private static final String NODE_ROLES = "roles";
 
     // static final String CONTROLNAME_ISADMIN_USERS = "permissionUsers";
 
     // static final String CONTROLNAME_ISADMIN_ROLES = "permissionRoles";
 
     // static final String CONTROLNAME_ISADMIN_ACTIVATE="permissionActivate";
-    static final String NODE_ACLCONFIG = "acl_config";
+    private static final String NODE_ACLCONFIG = "acl_config";
 
-    static final String CONTROLNAME_ISADMIN_CONFIG = "permissionConfig";
+    private static final String CONTROLNAME_ISADMIN_CONFIG = "permissionConfig";
 
     private class MyDialog {
 
@@ -148,8 +151,8 @@ public class UserEditDialogPage extends BasePageServlet {
                 try {
                     user = hm.getContent(path);
                 }
-                catch (RepositoryException re) {
-                    re.printStackTrace();
+                catch (RepositoryException e) {
+                    log.error(e.getMessage(), e);
                 }
             }
         }
@@ -207,10 +210,12 @@ public class UserEditDialogPage extends BasePageServlet {
             dialog.setConfig("width", DialogDialog.DIALOGSIZE_SLIM_WIDTH);
             dialog.setConfig("height", DialogDialog.DIALOGSIZE_SLIM_HEIGHT);
 
-            if (create)
+            if (create) {
                 dialog.setLabel(msgs.get("users.edit.create"));
-            else
+            }
+            else {
                 dialog.setLabel(msgs.get("users.edit.edit"));
+            }
 
             DialogTab tab = dialog.addTab();
 
@@ -334,8 +339,8 @@ public class UserEditDialogPage extends BasePageServlet {
                 try {
                     user = hm.createPage("/", name);
                 }
-                catch (RepositoryException re) {
-                    re.printStackTrace();
+                catch (RepositoryException e) {
+                    log.error(e.getMessage(), e);
                 }
             }
 
@@ -413,7 +418,7 @@ public class UserEditDialogPage extends BasePageServlet {
                 Content roles = user.createContent(NODE_ROLES, ItemType.CONTENTNODE);
 
                 String[] rolesValue = form.getParameter("aclList").split(";");
-                // System.out.println(form.getParameter("aclList"));
+
                 for (int i = 0; i < rolesValue.length; i++) {
                     try {
                         String newLabel = Path.getUniqueLabel(hm, roles.getHandle(), "0");

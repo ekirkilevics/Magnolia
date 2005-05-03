@@ -27,11 +27,10 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Handles the tree rendering for the "users" repository.
  * @author Fabrizio Giustina
- * @version $Id$
+ * @version $Id: AdminTreeUsers.java 661 2005-05-03 14:10:45Z philipp $
  */
 public class AdminTreeUsers extends AdminTree {
 
-    
     /**
      * @param name
      * @param request
@@ -40,8 +39,10 @@ public class AdminTreeUsers extends AdminTree {
         super(name, request);
     }
 
-    /* (non-Javadoc)
-     * @see info.magnolia.module.admininterface.AdminTree#prepareTree(info.magnolia.cms.gui.control.Tree, javax.servlet.http.HttpServletRequest)
+    /*
+     * (non-Javadoc)
+     * @see info.magnolia.module.admininterface.AdminTree#prepareTree(info.magnolia.cms.gui.control.Tree,
+     * javax.servlet.http.HttpServletRequest)
      */
     protected void prepareTree(Tree tree, HttpServletRequest request) {
         Messages msgs = MessagesManager.getMessages(request);
@@ -49,22 +50,25 @@ public class AdminTreeUsers extends AdminTree {
         tree.setDrawShifter(false);
         // context path is already added by Tree
         tree.setIconPage(Tree.ICONDOCROOT + "pawn_glass_yellow.gif");
-        if (Server.isAdmin())
+        if (Server.isAdmin()) {
             tree.setIconOndblclick("mgnlTreeMenuOpenDialog("
                 + tree.getJavascriptTree()
                 + ",'.magnolia/adminCentral/users/dialog.html');");
+        }
         tree.addItemType(ItemType.CONTENT);
 
         TreeColumn column0 = new TreeColumn(tree.getJavascriptTree(), request);
         column0.setIsLabel(true);
-        if (Server.isAdmin())
+        if (Server.isAdmin()) {
             column0.setHtmlEdit();
+        }
         column0.setTitle(msgs.get("tree.users.name"));
         column0.setWidth(2);
         TreeColumn column1 = new TreeColumn(tree.getJavascriptTree(), request);
         column1.setName("title");
-        if (Server.isAdmin())
+        if (Server.isAdmin()) {
             column1.setHtmlEdit();
+        }
         column1.setTitle(msgs.get("tree.users.fullname"));
         column1.setWidth(2);
         TreeColumn columnIcons = new TreeColumn(tree.getJavascriptTree(), request);

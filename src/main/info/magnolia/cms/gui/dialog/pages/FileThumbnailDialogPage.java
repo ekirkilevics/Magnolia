@@ -75,10 +75,12 @@ public class FileThumbnailDialogPage extends HttpServlet {
             thumbWidth = 150;
             int w = image.getWidth(null);
             int h = image.getHeight(null);
-            if (w == 0)
+            if (w == 0) {
                 w = 1;
-            if (h == 0)
+            }
+            if (h == 0) {
                 h = 1;
+            }
 
             if (w > thumbWidth) {
                 thumbHeight = thumbWidth * h / w;

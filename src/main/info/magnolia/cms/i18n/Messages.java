@@ -73,8 +73,9 @@ public class Messages {
     }
 
     public String getBasename() {
-        if (basename == null)
+        if (basename == null) {
             return MessagesManager.DEFAULT_BASENAME;
+        }
         return basename;
     }
 
@@ -97,7 +98,7 @@ public class Messages {
      * @param args
      * @return
      */
-    public String get(String key, Object args[]) {
+    public String get(String key, Object[] args) {
         return MessageFormat.format(get(key), args);
     }
 
@@ -116,7 +117,7 @@ public class Messages {
         return msg;
     }
 
-    public String getWithDefault(String key, Object args[], String defaultMsg) {
+    public String getWithDefault(String key, Object[] args, String defaultMsg) {
         return MessageFormat.format(getWithDefault(key, defaultMsg), args);
     }
 

@@ -32,13 +32,13 @@ public class Store {
 
     private static Logger log = Logger.getLogger(Store.class);
 
+    private static Store store = new Store();
+
     /**
      * Map with repository name/handler class for admin tree. When this servlet will receive a call with a parameter
      * <code>repository</code>, the corresponding handler will be used top display the admin tree.
      */
     private final Map treeHandlers = new HashMap();
-
-    private static Store store = new Store();
 
     private Content localStore;
 
@@ -64,7 +64,9 @@ public class Store {
     public AdminTree getTreeHandler(String name, HttpServletRequest request) {
         try {
             Class treeHandlerClass = (Class) treeHandlers.get(name);
-            Constructor constructor = treeHandlerClass.getConstructor(new Class[]{String.class, HttpServletRequest.class});
+            Constructor constructor = treeHandlerClass.getConstructor(new Class[]{
+                String.class,
+                HttpServletRequest.class});
             return (AdminTree) constructor.newInstance(new Object[]{name, request});
         }
         catch (Exception e) {

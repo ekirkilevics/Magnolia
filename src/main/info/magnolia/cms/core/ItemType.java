@@ -17,7 +17,7 @@ import java.io.Serializable;
 
 /**
  * @author Sameer Charles
- * @version $Revision$ ($Author$)
+ * @version $Revision: 646 $ ($Author: fgiust $)
  */
 public final class ItemType implements Serializable {
 
@@ -99,17 +99,17 @@ public final class ItemType implements Serializable {
     private static final long serialVersionUID = 222L;
 
     /**
+     * Node name.
+     */
+    private String systemName;
+
+    /**
      * Can't be instantiated.
      * @param systemName jcr system name
      */
     private ItemType(String systemName) {
         this.systemName = systemName;
     }
-
-    /**
-     * Node name.
-     */
-    private String systemName;
 
     /**
      * Getter for <code>name</code>.

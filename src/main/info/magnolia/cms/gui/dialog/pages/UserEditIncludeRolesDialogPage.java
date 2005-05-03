@@ -32,7 +32,7 @@ public class UserEditIncludeRolesDialogPage extends BasePageServlet {
      */
     private static final long serialVersionUID = 222L;
 
-    private static final String getHtmlRowInner(HttpServletRequest request) {
+    private static String getHtmlRowInner(HttpServletRequest request) {
         boolean small = true;
         Messages msgs = MessagesManager.getMessages(request);
 

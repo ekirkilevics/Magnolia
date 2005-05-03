@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Handles the tree rendering for the "website" repository.
  * @author Fabrizio Giustina
- * @version $Id$
+ * @version $Id: AdminTreeWebsite.java 661 2005-05-03 14:10:45Z philipp $
  */
 public class AdminTreeWebsite extends AdminTree {
 
@@ -45,8 +45,9 @@ public class AdminTreeWebsite extends AdminTree {
     public AdminTreeWebsite(String name, HttpServletRequest request) {
         super(name, request);
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see info.magnolia.module.admininterface.AdminTree#prepareTree()
      */
     protected void prepareTree(Tree tree, HttpServletRequest request) {
@@ -63,8 +64,9 @@ public class AdminTreeWebsite extends AdminTree {
         TreeColumn column0 = new TreeColumn(tree.getJavascriptTree(), request);
         column0.setIsLabel(true);
         column0.setWidth(3);
-        if (Server.isAdmin())
+        if (Server.isAdmin()) {
             column0.setHtmlEdit();
+        }
         TreeColumn columnIcons = new TreeColumn(tree.getJavascriptTree(), request);
         columnIcons.setCssClass("");
         columnIcons.setWidth(1);
@@ -75,8 +77,9 @@ public class AdminTreeWebsite extends AdminTree {
         column1.setName("title");
         column1.setTitle(msgs.get("tree.web.title"));
         column1.setWidth(2);
-        if (Server.isAdmin())
+        if (Server.isAdmin()) {
             column1.setHtmlEdit();
+        }
         TreeColumn column2 = new TreeColumn(tree.getJavascriptTree(), request);
         column2.setName(MetaData.TEMPLATE);
         column2.setIsMeta(true);
@@ -108,8 +111,9 @@ public class AdminTreeWebsite extends AdminTree {
             title = Messages.javaScriptString(title);
             templateSelect.setOptions(title, template.getName());
         }
-        if (Server.isAdmin())
+        if (Server.isAdmin()) {
             column2.setHtmlEdit(templateSelect.getHtml());
+        }
         // todo: key/value -> column2.addKeyValue("sampleBasic","Samples: Basic Template");
         // todo: preselection (set on createPage)
         TreeColumn column3 = new TreeColumn(tree.getJavascriptTree(), request);

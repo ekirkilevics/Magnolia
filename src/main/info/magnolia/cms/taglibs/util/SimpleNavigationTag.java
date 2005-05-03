@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
@@ -66,6 +67,11 @@ public class SimpleNavigationTag extends TagSupport {
     private static final long serialVersionUID = 222L;
 
     /**
+     * Logger.
+     */
+    private static Logger log = Logger.getLogger(SimpleNavigationTag.class);
+
+    /**
      * Start level.
      */
     private int startLevel;
@@ -79,11 +85,6 @@ public class SimpleNavigationTag extends TagSupport {
      * Name for the "open menu" nodeData.
      */
     private String openMenu;
-
-    /**
-     * Logger.
-     */
-    private static Logger log = Logger.getLogger(SimpleNavigationTag.class);
 
     /**
      * Setter for the <code>startLevel</code> tag attribute.
@@ -167,7 +168,7 @@ public class SimpleNavigationTag extends TagSupport {
                 continue;
             }
 
-            ArrayList cssClasses = new ArrayList(3);
+            List cssClasses = new ArrayList(3);
 
             String title = child.getNodeData("navTitle").getString(StringUtils.EMPTY);
 

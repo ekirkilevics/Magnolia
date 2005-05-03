@@ -34,8 +34,9 @@ public class WebDavIFrameDialogPage extends BasePageServlet {
             request.getParameter(DialogSuper.SESSION_ATTRIBUTENAME_DIALOGOBJECT));
         // do not remove session attribute!
         if (dav != null) {
-            if (request.getParameter("subDirectory") != null)
+            if (request.getParameter("subDirectory") != null) {
                 dav.setSubDirectory(request.getParameter("subDirectory"));
+            }
             if (request.getParameter("selectedValue") != null) {
                 dav.setValue(request.getParameter("selectedValue"));
             }
