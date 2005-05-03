@@ -15,6 +15,7 @@ package info.magnolia.cms.gui.control;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ContentHandler;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
@@ -838,7 +839,27 @@ public class Tree extends ControlSuper {
                 dest = parentPath;
             }
             else {
+                // we can't rename a node. we must move
+                // we must place the node at the same position
+                Content current = hm.getContent(this.getPath());
+                Content parent = current.getParent();
+                String placedBefore = null;
+                for (Iterator iter = parent.getChildren(current.getNodeType().getName()).iterator(); iter.hasNext();) {
+                    Content child = (Content) iter.next();
+                    if(child.getHandle().equals(this.getPath())){
+                        if(iter.hasNext()){
+                            child = (Content)iter.next();
+                            placedBefore = child.getName();
+                        }
+                    }
+                }
+                
                 hm.moveTo(this.getPath(), dest);
+                
+                // now set at the same place as before
+                if(placedBefore != null){
+                    parent.orderBefore(newLabel, placedBefore);
+                }
             }
             SessionAccessControl.invalidateUser(this.getRequest());
             Content newPage = hm.getContent(dest);
@@ -1200,7 +1221,7 @@ public class Tree extends ControlSuper {
                 it = parentNode.getNodeDataCollection().iterator();
             }
             else {
-                it = parentNode.getChildren(itemType).iterator();
+                it = parentNode.getChildren(itemType, ContentHandler.SORT_BY_SEQUENCE).iterator();
             }
             while (it.hasNext()) {
                 Object o = it.next();
