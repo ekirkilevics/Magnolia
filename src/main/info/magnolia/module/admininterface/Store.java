@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
@@ -32,13 +33,13 @@ public class Store {
 
     private static Logger log = Logger.getLogger(Store.class);
 
-    private static Store store = new Store();
-
     /**
      * Map with repository name/handler class for admin tree. When this servlet will receive a call with a parameter
      * <code>repository</code>, the corresponding handler will be used top display the admin tree.
      */
     private final Map treeHandlers = new HashMap();
+
+    private static Store store = new Store();
 
     private Content localStore;
 
@@ -61,13 +62,11 @@ public class Store {
         treeHandlers.put(name, treeHandler);
     }
 
-    public AdminTree getTreeHandler(String name, HttpServletRequest request) {
+    public AdminTreeMVCHandler getTreeHandler(String name, HttpServletRequest request, HttpServletResponse response) {
         try {
             Class treeHandlerClass = (Class) treeHandlers.get(name);
-            Constructor constructor = treeHandlerClass.getConstructor(new Class[]{
-                String.class,
-                HttpServletRequest.class});
-            return (AdminTree) constructor.newInstance(new Object[]{name, request});
+            Constructor constructor = treeHandlerClass.getConstructor(new Class[]{String.class, HttpServletRequest.class, HttpServletResponse.class});
+            return (AdminTreeMVCHandler) constructor.newInstance(new Object[]{name, request, response});
         }
         catch (Exception e) {
             log.error("can't instanciate the treehandler: " + name, e);

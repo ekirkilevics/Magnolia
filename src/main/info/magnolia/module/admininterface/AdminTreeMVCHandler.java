@@ -21,53 +21,49 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.gui.misc.Spacer;
-
-import java.lang.reflect.Method;
+import info.magnolia.cms.servlets.MVCServletHandlerImpl;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
 /**
- * This class wrapes the tree control. The AdminInterfaceServlet instantiates a subclass. The method getCommand is
- * called to map the request parameters to a command. Then execute() is called which uses reflection to call a method.
- * Each method returns a string defining the view. After that, renderHtml is called. To build your own tree you have to
- * override the prepareTree() method
- * @author philipp
- * @version $Id: $
+ * @author philipp this class wrapes the tree control. The AdminInterfaceServlet instantiates a subclass. To build your
+ * own tree you have to override the prepareTree() method
  */
-public abstract class AdminTree {
+
+abstract public class AdminTreeMVCHandler extends MVCServletHandlerImpl {
 
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(AdminTree.class);
+    private static Logger log = Logger.getLogger(AdminTreeMVCHandler.class);
 
     /**
      * this are the used actions
      */
-    private static final String ACTION_SHOW_TREE = "show";
+    private static final String COMMAND_SHOW_TREE = "show";
 
-    private static final String ACTION_COPY_NODE = "copy";
+    private static final String COMMAND_COPY_NODE = "copy";
 
-    private static final String ACTION_MOVE_NODE = "move";
+    private static final String COMMAND_MOVE_NODE = "move";
 
-    private static final String ACTION_ACTIVATE = "activate";
+    private static final String COMMAND_ACTIVATE = "activate";
 
-    private static final String ACTION_DEACTIVATE = "deactivate";
+    private static final String COMMAND_DEACTIVATE = "deactivate";
 
-    private static final String ACTION_CREATE_NODE = "createNode";
+    private static final String COMMAND_CREATE_NODE = "createNode";
 
-    private static final String ACTION_DELETE_NODE = "delete";
+    private static final String COMMAND_DELETE_NODE = "delete";
 
-    private static final String ACTION_SAVE_VALUE = "saveValue";
+    private static final String COMMAND_SAVE_VALUE = "saveValue";
 
     /**
      * The view names
      */
-    private static final String VIEW_ERROR = "error";
 
     private static final String VIEW_TREE = "tree";
 
@@ -79,13 +75,9 @@ public abstract class AdminTree {
 
     private static final String VIEW_COPY_MOVE = "copymove";
 
-    private HttpServletRequest request;
-
     /**
      * name of the tree (not the repository)
      */
-    private String name;
-
     private Tree tree;
 
     private String path;
@@ -101,9 +93,16 @@ public abstract class AdminTree {
 
     private String newPath;
 
-    public AdminTree(String name, HttpServletRequest request) {
-        this.request = request;
-        this.name = name;
+    /**
+     * Override this method if you are not using the same name for the tree and the repository
+     * @return name of the repository
+     */
+    protected String getRepository() {
+        return getName();
+    }
+
+    public AdminTreeMVCHandler(String name, HttpServletRequest request, HttpServletResponse response) {
+        super(name, request, response);
 
         tree = new Tree(getRepository(), request);
         path = request.getParameter("path");
@@ -117,34 +116,26 @@ public abstract class AdminTree {
     }
 
     /**
-     * Override this method if you are not using the same name for the tree and the repository
-     * @return name of the repository
-     */
-    protected String getRepository() {
-        return this.name;
-    }
-
-    /**
      * Depending on the request it is generating a logical command name
      * @return name of the command
      */
-    protected String getCommand() {
+    public String getCommand() {
 
         // actions returned from the tree (pased through treeAction)
         if (StringUtils.isNotEmpty(request.getParameter("treeAction"))) {
             int treeAction = Integer.parseInt(request.getParameter("treeAction"));
 
             if (treeAction == Tree.ACTION_COPY) {
-                return ACTION_COPY_NODE;
+                return COMMAND_COPY_NODE;
             }
             if (treeAction == Tree.ACTION_MOVE) {
-                return ACTION_MOVE_NODE;
+                return COMMAND_MOVE_NODE;
             }
             if (treeAction == Tree.ACTION_ACTIVATE) {
-                return ACTION_ACTIVATE;
+                return COMMAND_ACTIVATE;
             }
             if (treeAction == Tree.ACTION_DEACTIVATE) {
-                return ACTION_DEACTIVATE;
+                return COMMAND_DEACTIVATE;
             }
 
             return request.getParameter("treeAction");
@@ -152,12 +143,11 @@ public abstract class AdminTree {
 
         // other actions depending other informations
         if (request.getParameter("createItemType") != null) {
-            return ACTION_CREATE_NODE;
+            return COMMAND_CREATE_NODE;
         }
 
-        if (request.getParameter("deleteNode") != null) {
-            return ACTION_DELETE_NODE;
-        }
+        if (request.getParameter("deleteNode") != null)
+            return COMMAND_DELETE_NODE;
 
         // editet any value directly in the columns?
         if (request.getParameter("saveName") != null
@@ -165,33 +155,15 @@ public abstract class AdminTree {
             || "true".equals(request.getParameter("isNodeDataValue"))
             // value to save is a node data's type (config admin)
             || "true".equals(request.getParameter("isNodeDataType"))) {
-            return ACTION_SAVE_VALUE;
+            return COMMAND_SAVE_VALUE;
         }
-        return ACTION_SHOW_TREE;
-    }
-
-    /**
-     * Call the method through reflection
-     * @param command
-     * @return the name of the view to show (used in renderHtml)
-     */
-    protected String execute(String command) {
-        String view = VIEW_ERROR;
-        Method method;
-        try {
-            method = AdminTree.class.getDeclaredMethod(command, new Class[]{});
-            view = (String) method.invoke(this, new Object[]{});
-        }
-        catch (Exception e) {
-            log.error("can't call command: " + command, e);
-        }
-        return view;
+        return COMMAND_SHOW_TREE;
     }
 
     /**
      * Show the tree
      */
-    protected String show() {
+    public String show() {
         return VIEW_TREE;
     }
 
@@ -199,7 +171,7 @@ public abstract class AdminTree {
      * Create a new node and show the tree
      * @return
      */
-    protected String createNode() {
+    public String createNode() {
         String createItemType = ItemType.NT_NODEDATA;
         if (request.getParameter("createItemType") != null) {
             createItemType = request.getParameter("createItemType");
@@ -213,14 +185,14 @@ public abstract class AdminTree {
     /**
      * Copy a node
      */
-    protected String copy() {
+    public String copy() {
         return copyOrMove(Tree.ACTION_COPY);
     }
 
     /**
      * Move a node
      */
-    protected String move() {
+    public String move() {
         return copyOrMove(Tree.ACTION_MOVE);
     }
 
@@ -245,19 +217,19 @@ public abstract class AdminTree {
         return VIEW_COPY_MOVE;
     }
 
-    protected String delete() {
+    public String delete() {
         String deleteNode = request.getParameter("deleteNode");
         tree.deleteNode(path, deleteNode);
         return VIEW_TREE;
     }
 
-    protected String activate() {
+    public String activate() {
         boolean recursive = (request.getParameter("recursive") != null);
         tree.activateNode(pathSelected, recursive);
         return VIEW_NOTHING;
     }
 
-    protected String deactivate() {
+    public String deactivate() {
         tree.deActivateNode(pathSelected);
         return VIEW_NOTHING;
     }
@@ -266,7 +238,7 @@ public abstract class AdminTree {
      * Saves a value edited directly inside the tree. This can also be a lable
      * @return name of the view
      */
-    protected String saveValue() {
+    public String saveValue() {
         String saveName = request.getParameter("saveName");
 
         // value to save is a node data's value (config admin)
@@ -327,7 +299,7 @@ public abstract class AdminTree {
      * @param view
      * @return
      */
-    protected String renderHtml(String view) {
+    public String renderHtml(String view) {
         StringBuffer html = new StringBuffer(500);
 
         if (view == VIEW_TREE || view == VIEW_CREATE || view == VIEW_COPY_MOVE) {
@@ -359,7 +331,7 @@ public abstract class AdminTree {
      * @param tree
      * @param request
      */
-    protected abstract void prepareTree(Tree tree, HttpServletRequest request);
+    abstract protected void prepareTree(Tree tree, HttpServletRequest request);
 
     /**
      * Create the html for the tree. Calls tree.getHtml after calling prepareTree.

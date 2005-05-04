@@ -22,21 +22,24 @@ import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
  * Handles the tree rendering for the "users" repository.
  * @author Fabrizio Giustina
- * @version $Id: AdminTreeUsers.java 661 2005-05-03 14:10:45Z philipp $
+ * @version $Id$
  */
-public class AdminTreeUsers extends AdminTree {
+public class AdminTreeUsers extends AdminTreeMVCHandler {
 
     /**
      * @param name
      * @param request
+     * @param response
      */
-    public AdminTreeUsers(String name, HttpServletRequest request) {
-        super(name, request);
+    public AdminTreeUsers(String name, HttpServletRequest request, HttpServletResponse response) {
+        super(name, request, response);
+        // TODO Auto-generated constructor stub
     }
 
     /*

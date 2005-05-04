@@ -22,21 +22,25 @@ import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
  * Handles the tree rendering for the "roles" repository.
  * @author Fabrizio Giustina
- * @version $Id: AdminTreeRoles.java 661 2005-05-03 14:10:45Z philipp $
+ * @version $Id$
  */
-public class AdminTreeRoles extends AdminTree {
+public class AdminTreeRoles extends AdminTreeMVCHandler {
+
+
 
     /**
      * @param name
      * @param request
+     * @param response
      */
-    public AdminTreeRoles(String name, HttpServletRequest request) {
-        super(name, request);
+    public AdminTreeRoles(String name, HttpServletRequest request, HttpServletResponse response) {
+        super(name, request, response);
     }
 
     protected void prepareTree(Tree tree, HttpServletRequest request) {

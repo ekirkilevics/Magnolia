@@ -29,21 +29,23 @@ import info.magnolia.cms.security.SessionAccessControl;
 import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
  * Handles the tree rendering for the "website" repository.
  * @author Fabrizio Giustina
- * @version $Id: AdminTreeWebsite.java 661 2005-05-03 14:10:45Z philipp $
+ * @version $Id$
  */
-public class AdminTreeWebsite extends AdminTree {
-
+public class AdminTreeWebsite extends AdminTreeMVCHandler {
+    
     /**
      * @param name
      * @param request
+     * @param response
      */
-    public AdminTreeWebsite(String name, HttpServletRequest request) {
-        super(name, request);
+    public AdminTreeWebsite(String name, HttpServletRequest request, HttpServletResponse response) {
+        super(name, request, response);
     }
 
     /*
@@ -111,9 +113,8 @@ public class AdminTreeWebsite extends AdminTree {
             title = Messages.javaScriptString(title);
             templateSelect.setOptions(title, template.getName());
         }
-        if (Server.isAdmin()) {
+        if (Server.isAdmin())
             column2.setHtmlEdit(templateSelect.getHtml());
-        }
         // todo: key/value -> column2.addKeyValue("sampleBasic","Samples: Basic Template");
         // todo: preselection (set on createPage)
         TreeColumn column3 = new TreeColumn(tree.getJavascriptTree(), request);

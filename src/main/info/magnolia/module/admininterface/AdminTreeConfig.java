@@ -25,6 +25,7 @@ import info.magnolia.cms.i18n.MessagesManager;
 
 import javax.jcr.PropertyType;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -32,14 +33,16 @@ import javax.servlet.http.HttpServletRequest;
  * @author Fabrizio Giustina
  * @version $Id$
  */
-public class AdminTreeConfig extends AdminTree {
+public class AdminTreeConfig extends AdminTreeMVCHandler {
+
 
     /**
      * @param name
      * @param request
+     * @param response
      */
-    public AdminTreeConfig(String name, HttpServletRequest request) {
-        super(name, request);
+    public AdminTreeConfig(String name, HttpServletRequest request, HttpServletResponse response) {
+        super(name, request, response);
     }
 
     protected void prepareTree(Tree tree, HttpServletRequest request) {
