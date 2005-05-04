@@ -119,7 +119,7 @@
         <description>Admin interface tree servlet</description>
         <display-name>magnolia AdminTreeServlet</display-name>
         <servlet-name>AdminTreeServlet</servlet-name>
-        <servlet-class>info.magnolia.module.admininterface.AdminInterfaceServlet</servlet-class>
+        <servlet-class>info.magnolia.module.admininterface.AdminTreeMVCServlet</servlet-class>
     </servlet>
     <servlet>
         <description>ImportExportServlet</description>
@@ -138,45 +138,54 @@
         <servlet-name>Spool</servlet-name>
         <servlet-class>info.magnolia.cms.servlets.Spool</servlet-class>
     </servlet>
+
+    <!--
+    	Handles the common dialogs 
+    -->
+    <servlet>
+        <servlet-name>standard</servlet-name>
+        <servlet-class>info.magnolia.module.admininterface.DialogMVCServlet</servlet-class>
+    </servlet>
+
+	<!-- 
+		Other dialogs: we will move them into dialog handlers 
+	-->
+    
     <servlet>
         <servlet-name>fileThumbnail</servlet-name>
-        <servlet-class>info.magnolia.cms.gui.dialog.pages.FileThumbnailDialogPage</servlet-class>
+        <servlet-class>info.magnolia.module.admininterface.pages.FileThumbnailDialogPage</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>linkBrowser</servlet-name>
-        <servlet-class>info.magnolia.cms.gui.dialog.pages.LinkBrowserDialogPage</servlet-class>
+        <servlet-class>info.magnolia.module.admininterface.pages.LinkBrowserDialogPage</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>linkBrowserIFrame</servlet-name>
-        <servlet-class>info.magnolia.cms.gui.dialog.pages.LinkBrowserIFrameDialogPage</servlet-class>
+        <servlet-class>info.magnolia.module.admininterface.pages.LinkBrowserIFrameDialogPage</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>richEIFrame</servlet-name>
-        <servlet-class>info.magnolia.cms.gui.dialog.pages.RichEditorIFrameDialogPage</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>standard</servlet-name>
-        <servlet-class>info.magnolia.cms.gui.dialog.pages.StandardDialogPage</servlet-class>
+        <servlet-class>info.magnolia.module.admininterface.pages.RichEditorIFrameDialogPage</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>webDAVIFrame</servlet-name>
-        <servlet-class>info.magnolia.cms.gui.dialog.pages.WebDavIFrameDialogPage</servlet-class>
+        <servlet-class>info.magnolia.module.admininterface.pages.WebDavIFrameDialogPage</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>userRoles</servlet-name>
-        <servlet-class>info.magnolia.cms.gui.dialog.pages.UserRolesEditDialogPage</servlet-class>
+        <servlet-class>info.magnolia.module.admininterface.pages.UserRolesEditDialogPage</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>user</servlet-name>
-        <servlet-class>info.magnolia.cms.gui.dialog.pages.UserEditDialogPage</servlet-class>
+        <servlet-class>info.magnolia.module.admininterface.pages.UserEditDialogPage</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>includeRoles</servlet-name>
-        <servlet-class>info.magnolia.cms.gui.dialog.pages.UserEditIncludeRolesDialogPage</servlet-class>
+        <servlet-class>info.magnolia.module.admininterface.pages.UserEditIncludeRolesDialogPage</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>includeAcl</servlet-name>
-        <servlet-class>info.magnolia.cms.gui.dialog.pages.UserRolesEditIncludeAclDialogPage</servlet-class>
+        <servlet-class>info.magnolia.module.admininterface.pages.UserRolesEditIncludeAclDialogPage</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>magnolia</servlet-name>
