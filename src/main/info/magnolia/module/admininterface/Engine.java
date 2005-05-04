@@ -15,6 +15,10 @@ package info.magnolia.module.admininterface;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.module.Module;
 import info.magnolia.cms.module.ModuleConfig;
+import info.magnolia.module.admininterface.trees.AdminTreeConfig;
+import info.magnolia.module.admininterface.trees.AdminTreeRoles;
+import info.magnolia.module.admininterface.trees.AdminTreeUsers;
+import info.magnolia.module.admininterface.trees.AdminTreeWebsite;
 
 
 /**
