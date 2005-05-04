@@ -457,6 +457,17 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
+     * Get collection of specified content type
+     * @param contentType ItemType
+     * @param sortCriteria which can be either ContentHandler.SORT_BY_SEQUENCE , ContentHandler.SORT_BY_DATE or
+     * ContentHandler.SORT_BY_NAME
+     * @return Collection of content nodes
+     */
+    public Collection getChildren(ItemType contentType, int sortCriteria) {
+        return this.getChildren(contentType.getSystemName(), sortCriteria);
+    }
+
+    /**
      * Get collection of specified content type.
      * @param contentType
      * @param namePattern
