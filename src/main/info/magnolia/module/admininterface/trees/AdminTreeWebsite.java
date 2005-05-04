@@ -26,7 +26,6 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.TemplateMessagesUtil;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
-import info.magnolia.module.admininterface.TemplateTreeColumnHtmlRenderer;
 
 import java.util.Iterator;
 
