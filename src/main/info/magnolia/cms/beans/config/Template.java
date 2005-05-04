@@ -14,6 +14,7 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
 
@@ -93,7 +94,7 @@ public class Template {
         try {
             log.info("Config : loading Template info - " + modulePath);
             Content startPage = configHierarchyManager.getContent(modulePath);
-            Collection children = startPage.getContent("Templates").getChildren();
+            Collection children = startPage.getContent("Templates").getChildren(ItemType.NT_CONTENTNODE, Content.SORT_BY_SEQUENCE);
             if ((children != null) && !(children.isEmpty())) {
                 Template.templates = children.iterator();
             }
