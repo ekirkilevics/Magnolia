@@ -15,46 +15,44 @@ package info.magnolia.cms.taglibs;
 import info.magnolia.cms.beans.config.Server;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
 
 
 /**
  * @author Sameer Charles
+ * @author Fabrizio Giustina
  * @version $Revision: 364 $ ($Author: fgiust $)
  */
-public class PublicOnly extends TagSupport {
+public class PublicOnly extends ConditionalTagSupport {
 
     /**
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
 
-    private boolean showInPreview = true;
+    /**
+     * Show in preview mode?
+     */
+    private boolean showInPreview;
 
     /**
-     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
+     * Show in preview mode?
+     * @param showInPreview if <code>true</code> the content of the tag is shown in preview mode.
      */
-    public int doStartTag() {
+    public void setShowInPreview(boolean showInPreview) {
+        this.showInPreview = showInPreview;
+    }
+
+    /**
+     * @see javax.servlet.jsp.jstl.core.ConditionalTagSupport#condition()
+     */
+    protected boolean condition() {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         String prev = (String) request.getSession().getAttribute("mgnlPreview");
         // if (Server.isAdmin() && !Resource.showPreview((HttpServletRequest)pageContext.getRequest()))
         if (!Server.isAdmin() || (prev != null && showInPreview)) {
-            return EVAL_BODY_INCLUDE;
+            return true;
         }
-        return SKIP_BODY;
-    }
-
-    /**
-     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
-     */
-    public int doEndTag() {
-        return EVAL_PAGE;
-    }
-
-    /**
-     * @param showInPreview The showInPreview to set.
-     */
-    public void setShowInPreview(boolean showInPreview) {
-        this.showInPreview = showInPreview;
+        return false;
     }
 }

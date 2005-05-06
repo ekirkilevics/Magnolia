@@ -19,7 +19,7 @@ import info.magnolia.cms.util.Resource;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.BodyTagSupport;
+import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -29,7 +29,7 @@ import org.apache.log4j.Logger;
  * @author Marcel Salathe
  * @version $Revision$ ($Author$)
  */
-public class IfEmpty extends BodyTagSupport {
+public class IfEmpty extends ConditionalTagSupport {
 
     /**
      * Stable serialVersionUID.
@@ -53,9 +53,9 @@ public class IfEmpty extends BodyTagSupport {
     private boolean actpage;
 
     /**
-     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
+     * @see javax.servlet.jsp.jstl.core.ConditionalTagSupport#condition()
      */
-    public int doStartTag() {
+    protected boolean condition() {
         HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
         // in the case where a contentNodeCollectionName is provided
         if (StringUtils.isNotEmpty(this.contentNodeCollectionName)) {
@@ -67,12 +67,12 @@ public class IfEmpty extends BodyTagSupport {
                 log.debug("Exception caught: " + e.getMessage(), e);
             }
             if (this.contentNodeCollection == null) {
-                return EVAL_BODY_INCLUDE;
+                return true;
             }
             if (!this.contentNodeCollection.hasChildren()) {
-                return EVAL_BODY_INCLUDE;
+                return true;
             }
-            return SKIP_BODY;
+            return false;
         }
         // if only contentNodeName is provided, it checks if this contentNode exists
         if (StringUtils.isNotEmpty(this.contentNodeName) && StringUtils.isEmpty(this.nodeDataName)) {
@@ -84,7 +84,7 @@ public class IfEmpty extends BodyTagSupport {
             }
             if (this.contentNode == null) {
                 // contentNode doesn't exist, evaluate body
-                return EVAL_BODY_INCLUDE;
+                return true;
             }
         }
         // if both contentNodeName and nodeDataName are set, it checks if that nodeData of that contentNode exitsts
@@ -97,7 +97,7 @@ public class IfEmpty extends BodyTagSupport {
                 log.debug("Repository exception while reading " + this.contentNodeName + ": " + re.getMessage());
             }
             if (this.contentNode == null) {
-                return EVAL_BODY_INCLUDE;
+                return true;
             }
             if (this.contentNode != null) {
 
@@ -106,13 +106,13 @@ public class IfEmpty extends BodyTagSupport {
                 if ((this.nodeData == null)
                     || !this.nodeData.isExist()
                     || StringUtils.isEmpty(this.nodeData.getString())) {
-                    return EVAL_BODY_INCLUDE;
+                    return true;
                 }
             }
         }
         // if only nodeDataName is provided, it checks if that nodeData of the current contentNode exists and is not
         // empty
-        else if (StringUtils.isEmpty(this.contentNodeName) && !StringUtils.isNotEmpty(this.nodeDataName)) {
+        else if (StringUtils.isEmpty(this.contentNodeName) && StringUtils.isNotEmpty(this.nodeDataName)) {
             if (this.actpage) {
                 this.contentNode = Resource.getCurrentActivePage((HttpServletRequest) pageContext.getRequest());
             }
@@ -123,7 +123,7 @@ public class IfEmpty extends BodyTagSupport {
                 }
             }
             if (this.contentNode == null) {
-                return EVAL_BODY_INCLUDE;
+                return true;
             }
             if (this.contentNode != null) {
 
@@ -132,7 +132,7 @@ public class IfEmpty extends BodyTagSupport {
                 if ((this.nodeData == null)
                     || !this.nodeData.isExist()
                     || StringUtils.isEmpty(this.nodeData.getString())) {
-                    return EVAL_BODY_INCLUDE;
+                    return true;
                 }
             }
         }
@@ -143,10 +143,10 @@ public class IfEmpty extends BodyTagSupport {
                 this.contentNode = Resource.getGlobalContentNode((HttpServletRequest) pageContext.getRequest());
             }
             if (this.contentNode == null) {
-                return EVAL_BODY_INCLUDE;
+                return true;
             }
         }
-        return SKIP_BODY;
+        return false;
     }
 
     /**

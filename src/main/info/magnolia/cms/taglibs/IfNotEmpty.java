@@ -14,7 +14,7 @@ package info.magnolia.cms.taglibs;
 
 /**
  * @author Marcel Salathe
- * @version $Revision$ ($Author$)
+ * @version $Revision $ ($Author $)
  */
 public class IfNotEmpty extends IfEmpty {
 
@@ -24,11 +24,10 @@ public class IfNotEmpty extends IfEmpty {
     private static final long serialVersionUID = 222L;
 
     /**
-     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
+     * @see info.magnolia.cms.taglibs.IfEmpty#condition()
      */
-    public int doStartTag() {
-        // Just the opposite of IfEmpty
-        int ifEmptyResult = super.doStartTag();
-        return (ifEmptyResult == SKIP_BODY) ? EVAL_BODY_INCLUDE : SKIP_BODY;
+    protected boolean condition() {
+        return !super.condition();
     }
+
 }

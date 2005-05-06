@@ -16,14 +16,15 @@ import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.util.Resource;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
 
 
 /**
  * @author Sameer Charles
- * @version $Revision$ ($Author$)
+ * @author Fabrizio Giustina
+ * @version $Revision $ ($Author $)
  */
-public class AdminOnly extends TagSupport {
+public class AdminOnly extends ConditionalTagSupport {
 
     /**
      * Stable serialVersionUID.
@@ -36,28 +37,21 @@ public class AdminOnly extends TagSupport {
     private boolean showInPreview;
 
     /**
-     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
-     */
-    public int doStartTag() {
-        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-        if (Server.isAdmin() && (!Resource.showPreview(request) || showInPreview)) {
-            return EVAL_BODY_INCLUDE;
-        }
-        return SKIP_BODY;
-    }
-
-    /**
-     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
-     */
-    public int doEndTag() {
-        return EVAL_PAGE;
-    }
-
-    /**
      * Show in preview mode?
      * @param showInPreview if <code>true</code> the content of the tag is shown in preview mode.
      */
     public void setShowInPreview(boolean showInPreview) {
         this.showInPreview = showInPreview;
+    }
+
+    /**
+     * @see javax.servlet.jsp.jstl.core.ConditionalTagSupport#condition()
+     */
+    protected boolean condition() {
+        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+        if (Server.isAdmin() && (!Resource.showPreview(request) || showInPreview)) {
+            return true;
+        }
+        return false;
     }
 }
