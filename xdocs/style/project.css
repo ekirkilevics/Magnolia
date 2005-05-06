@@ -104,8 +104,10 @@ h2 {
 h3 {
 	border: none;
 	background-color: transparent;
-	font-weight: bold;
+	font-weight: bolder;
 	padding-left: 0;
+	color: #92b901 !important;
+	font-variant: small-caps;
 }
 
 #navcolumn {
