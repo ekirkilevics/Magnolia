@@ -549,7 +549,7 @@
         <report>maven-jxr-plugin</report>
         <report>maven-junit-report-plugin</report>
         <report>maven-simian-plugin</report>
-        <report>maven-faq-plugin</report>
+        <!--<report>maven-faq-plugin</report>-->
         <report>taglib</report>
     </reports>
 </project>
