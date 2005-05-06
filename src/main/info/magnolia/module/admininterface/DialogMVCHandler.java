@@ -1,15 +1,15 @@
 /**
-*
-* Magnolia and its source-code is licensed under the LGPL.
-* You may copy, adapt, and redistribute this file for commercial or non-commercial use.
-* When copying, adapting, or redistributing this document in keeping with the guidelines above,
-* you are required to provide proper attribution to obinary.
-* If you reproduce or distribute the document without making any substantive modifications to its content,
-* please use the following attribution line:
-*
-* Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
-*
-*/
+ *
+ * Magnolia and its source-code is licensed under the LGPL.
+ * You may copy, adapt, and redistribute this file for commercial or non-commercial use.
+ * When copying, adapting, or redistributing this document in keeping with the guidelines above,
+ * you are required to provide proper attribution to obinary.
+ * If you reproduce or distribute the document without making any substantive modifications to its content,
+ * please use the following attribution line:
+ *
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ *
+ */
 package info.magnolia.module.admininterface;
 
 import info.magnolia.cms.beans.config.ContentRepository;
@@ -49,7 +49,6 @@ import org.apache.log4j.Logger;
 
 /**
  * This is the MVCHandler for dialogs. You can make a subclass to take influence on creation or saving.
- * 
  * @author Philipp Bracher
  * @version $Id$
  */
@@ -64,19 +63,19 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
     /*
      * Commands
      */
-    private static final String COMMAND_SAVE = "save";
+    protected static final String COMMAND_SAVE = "save";
 
-    private static final String COMMAND_SELECT_PARAGRAPH = "selectParagraph";
+    protected static final String COMMAND_SELECT_PARAGRAPH = "selectParagraph";
 
-    private static final String COMMAND_SHOW_DIALOG = "showDialog";
+    protected static final String COMMAND_SHOW_DIALOG = "showDialog";
 
     /*
      * Views
      */
-    private static final String VIEW_CLOSE_WINDOW = "close";
+    protected static final String VIEW_CLOSE_WINDOW = "close";
 
-    private static final String VIEW_SHOW_DIALOG = "show";
-    
+    protected static final String VIEW_SHOW_DIALOG = "show";
+
     /**
      * the request passed by the MVCServlet
      */
@@ -87,35 +86,31 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
      */
     protected HttpServletResponse response;
 
-    
     /**
      * The posted multipart form. Use params for easy access.
      */
-    private MultipartForm form;
+    protected MultipartForm form;
 
-    
     /**
      * Path to the node containing the data
      */
-    private String path = "";
+    protected String path = "";
 
-    
     /**
-     * If the dialog serves a collection (multiple instances of the same dialog) 
+     * If the dialog serves a collection (multiple instances of the same dialog)
      */
     private String nodeCollectionName = "";
 
-    
     /**
      * the node containing the date for this dialog
      */
-    private String nodeName = "";
+    protected String nodeName = "";
 
-    private String richE = "";
+    protected String richE = "";
 
-    private String richEPaste = "";
+    protected String richEPaste = "";
 
-    private String repository ="";
+    protected String repository = "";
 
     protected HierarchyManager hm;
 
@@ -125,14 +120,15 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
 
     protected RequestFormUtil params;
 
+    private Content storageNode;
+
     /**
      * Initialize the used parameters: path, nodeCollectionName, nodeName, ..
-     * 
      * @param request
      * @param response
      */
-    public DialogMVCHandler(HttpServletRequest request, HttpServletResponse response) {
-        super("standardDialog", request, response);
+    public DialogMVCHandler(String name, HttpServletRequest request, HttpServletResponse response) {
+        super(name, request, response);
 
         this.request = request;
         this.response = response;
@@ -140,7 +136,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         form = Resource.getPostedForm(request);
 
         params = new RequestFormUtil(request, form);
-        
+
         path = params.getParameter("mgnlPath");
         nodeCollectionName = params.getParameter("mgnlNodeCollection");
         nodeName = params.getParameter("mgnlNode");
@@ -166,19 +162,20 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
 
     /**
      * Calls createDialog and sets the common parameters on the dialog
-     * 
-     * @return 
+     * @return
      */
     public String showDialog() {
         Content configNode = getConfigNode();
-        Content websiteNode = getWesiteNode();
+        Content storageNode = getStorageNode();
 
         try {
-            dialog = createDialog(configNode, websiteNode);
+            dialog = createDialog(configNode, storageNode);
         }
         catch (RepositoryException e) {
             log.error("can't instantiate dialog", e);
         }
+        
+        dialog.setConfig("dialog", getName());
         dialog.setConfig("path", path);
         dialog.setConfig("nodeCollection", nodeCollectionName);
         dialog.setConfig("node", nodeName);
@@ -189,65 +186,73 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         return VIEW_SHOW_DIALOG;
     }
 
-
     /**
      * Is called during showDialog(). Here can you create/ add controls for the dialog.
-     * 
      * @param configNode
-     * @param websiteNode
+     * @param storageNode
      * @throws RepositoryException
      */
-    protected DialogDialog createDialog(Content configNode, Content websiteNode) throws RepositoryException {
-        return DialogFactory.getDialogDialogInstance(request, response, websiteNode, configNode);
+    protected DialogDialog createDialog(Content configNode, Content storageNode) throws RepositoryException {
+        return DialogFactory.getDialogDialogInstance(request, response, storageNode, configNode);
     }
 
     /**
      * Uses the SaveControl. Override to take influence.
-     * 
      * @return close view name
      */
     public String save() {
-        Save control = new Save(form, request);
-        control.save();
+        Save control = onPreSave();
+        onSave(control);
+        onPostSave(control);
         return VIEW_CLOSE_WINDOW;
     }
 
+    protected Save onPreSave() {
+        return new Save(form, request);
+    }
 
-    /**
-     * Defines the node/page containing the data editing in this dialog. The default implementation is using the path parameter
-     */
-    protected Content getWesiteNode() {
-        Content websiteNode = null;
-        try {
-            Content websiteContent = hm.getContent(path);
-            if (nodeName == null || nodeName.equals("")) {
-                websiteNode = websiteContent;
-            }
-            else {
-                if (nodeCollectionName == null || nodeCollectionName.equals("")) {
-                    websiteNode = websiteContent.getContent(nodeName);
+    protected void onSave(Save control) {
+        control.save();
+    }
 
-                }
-                else {
-                    websiteNode = websiteContent.getContent(nodeCollectionName).getContent(nodeName);
-
-                }
-            }
-        }
-        catch (RepositoryException re) {
-            // content does not exist yet
-
-        }
-        return websiteNode;
+    protected void onPostSave(Save control) {
     }
 
     /**
-     * Returns the node with the dialog definition. Override this to customize.
-     * 
+     * Defines the node/page containing the data editing in this dialog. The default implementation is using the path
+     * parameter
+     */
+    protected Content getStorageNode() {
+        if (storageNode == null) {
+            try {
+                Content parentContent = hm.getContent(path);
+                if (nodeName == null || nodeName.equals("")) {
+                    storageNode = parentContent;
+                }
+                else {
+                    if (nodeCollectionName == null || nodeCollectionName.equals("")) {
+                        storageNode = parentContent.getContent(nodeName);
+
+                    }
+                    else {
+                        storageNode = parentContent.getContent(nodeCollectionName).getContent(nodeName);
+
+                    }
+                }
+            }
+            catch (RepositoryException re) {
+                // content does not exist yet
+
+            }
+        }
+        return storageNode;
+    }
+
+    /**
+     * Returns the node with the dialog definition. Default: null
      * @return
      */
     protected Content getConfigNode() {
-        // TODO get the config depending on a parameter
         return null;
     }
 
@@ -255,9 +260,8 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
      * (non-Javadoc)
      * @see info.magnolia.cms.servlets.MVCServletHandler#renderHtml(java.lang.String)
      */
-    public String renderHtml(String view) {
-        StringWriter str = new StringWriter(500);
-        PrintWriter out = new PrintWriter(str);
+    public void renderHtml(String view) throws IOException {
+        PrintWriter out = response.getWriter();
 
         // after saving
         if (view == VIEW_CLOSE_WINDOW) {
@@ -277,9 +281,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
                 log.error(e);
             }
         }
-        return str.getBuffer().toString();
     }
-    
 
     /**
      * @return the default repository

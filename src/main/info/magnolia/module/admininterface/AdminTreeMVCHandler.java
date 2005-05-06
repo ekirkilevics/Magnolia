@@ -13,6 +13,8 @@
 
 package info.magnolia.module.admininterface;
 
+import java.io.IOException;
+
 import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.config.Subscriber;
@@ -298,8 +300,9 @@ abstract public class AdminTreeMVCHandler extends MVCServletHandlerImpl {
      * Render the tree depending on the view name.
      * @param view
      * @return
+     * @throws IOException
      */
-    public String renderHtml(String view) {
+    public void renderHtml(String view) throws IOException {
         StringBuffer html = new StringBuffer(500);
 
         if (view == VIEW_TREE || view == VIEW_CREATE || view == VIEW_COPY_MOVE) {
@@ -323,7 +326,7 @@ abstract public class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         else if (view == VIEW_VALUE) {
             html.append(displayValue);
         }
-        return html.toString();
+        response.getWriter().print(html);
     }
 
     /**

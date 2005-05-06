@@ -12,7 +12,14 @@
  */
 package info.magnolia.module.admininterface;
 
+import java.util.Collection;
+import java.util.Iterator;
+
+import org.apache.log4j.Logger;
+
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.module.Module;
 import info.magnolia.cms.module.ModuleConfig;
 import info.magnolia.module.admininterface.trees.AdminTreeConfig;
@@ -27,15 +34,61 @@ import info.magnolia.module.admininterface.trees.AdminTreeWebsite;
  * @version 2.0
  */
 public class Engine implements Module {
-
+    
+    private static Logger log = Logger.getLogger(Engine.class);
+    
     public void init(ModuleConfig config) {
         // set local store to be accessed via admin interface classes or JSP
         Store store = Store.getInstance();
         store.setStore(config.getLocalStore());
-        store.registerTreeHandler(ContentRepository.WEBSITE, AdminTreeWebsite.class);
-        store.registerTreeHandler(ContentRepository.USERS, AdminTreeUsers.class);
-        store.registerTreeHandler(ContentRepository.USER_ROLES, AdminTreeRoles.class);
-        store.registerTreeHandler(ContentRepository.CONFIG, AdminTreeConfig.class);
+        
+        registerTrees(store);
+        registerDialogs(store);
+        
+        
+    }
+
+    /**
+     * @param store
+     */
+    private void registerDialogs(Store store) {
+        // read the dialog configuration
+        try {
+            Collection dialogs = store.getStore().getContent("dialogs").getChildren(ItemType.CONTENTNODE.getSystemName());
+            for (Iterator iter = dialogs.iterator(); iter.hasNext();) {
+                Content dialog = (Content) iter.next();
+                String name = dialog.getNodeData("name").getString();
+                String className= dialog.getNodeData("class").getString();
+                store.registerDialogHandler(name, Class.forName(className), dialog);
+            }
+        }
+        catch (Exception e) {
+            log.warn("can't find dialogs configuration", e);
+        }
+    }
+
+    /**
+     * @param store
+     */
+    private void registerTrees(Store store) {
+        // read the tree configuration
+        try {
+            Collection trees = store.getStore().getContent("trees").getChildren(ItemType.CONTENTNODE.getSystemName());
+            for (Iterator iter = trees.iterator(); iter.hasNext();) {
+                Content tree = (Content) iter.next();
+                String name = tree.getNodeData("name").getString();
+                String className= tree.getNodeData("class").getString();
+                store.registerTreeHandler(name, Class.forName(className));
+            }
+        }
+        catch (Exception e) {
+            log.warn("can't find trees configuration: will use defaults", e);
+        }
+        // register defaults
+        store.registerDefaultTreeHandler(ContentRepository.WEBSITE, AdminTreeWebsite.class);
+        store.registerDefaultTreeHandler(ContentRepository.USERS, AdminTreeUsers.class);
+        store.registerDefaultTreeHandler(ContentRepository.USER_ROLES, AdminTreeRoles.class);
+        store.registerDefaultTreeHandler(ContentRepository.CONFIG, AdminTreeConfig.class);
     }
 
     public void destroy() {

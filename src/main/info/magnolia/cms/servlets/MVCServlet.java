@@ -93,10 +93,10 @@ public abstract class MVCServlet extends HttpServlet {
         String view = handler.execute(command);
         log.debug("calling view: " + view);
 
-        String htmlString = handler.renderHtml(view);
+        handler.renderHtml(view);
 
-        response.setContentLength(htmlString.getBytes().length);
-        out.write(htmlString);
+        //response.setContentLength(htmlString.getBytes().length);
+        //out.write(htmlString);
     }
 
     /**

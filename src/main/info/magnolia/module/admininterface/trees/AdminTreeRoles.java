@@ -54,7 +54,7 @@ public class AdminTreeRoles extends AdminTreeMVCHandler {
         if (Server.isAdmin()) {
             tree.setIconOndblclick("mgnlTreeMenuOpenDialog("
                 + tree.getJavascriptTree()
-                + ",'.magnolia/adminCentral/userRoles/dialog.html');");
+                + ",'.magnolia/dialogx/roleedit.html');");
         }
         tree.addItemType(ItemType.CONTENT);
 
@@ -94,7 +94,7 @@ public class AdminTreeRoles extends AdminTreeMVCHandler {
         menuOpen.setLabel(msgs.get("tree.roles.menu.edit"));
         menuOpen.setOnclick("mgnlTreeMenuOpenDialog("
             + tree.getJavascriptTree()
-            + ",'.magnolia/adminCentral/userRoles/dialog.html');");
+            + ",'.magnolia/dialogx/roleedit.html');");
         menuOpen.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         TreeMenuItem menuNewPage = new TreeMenuItem();
         menuNewPage.setLabel(msgs.get("tree.roles.menu.new"));

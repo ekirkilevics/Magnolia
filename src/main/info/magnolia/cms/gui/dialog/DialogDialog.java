@@ -160,6 +160,7 @@ public class DialogDialog extends DialogSuper {
         out.write("<form action=\""
             + this.getAction()
             + "\" name=\"mgnlFormMain\" method=\"post\" enctype=\"multipart/form-data\">");
+        out.write(new Hidden("mgnlDialog", this.getConfigValue("dialog"), false).getHtml());
         out.write(new Hidden("mgnlRepository", this.getConfigValue("repository"), false).getHtml());
         out.write(new Hidden("mgnlPath", this.getConfigValue("path"), false).getHtml());
         out.write(new Hidden("mgnlNodeCollection", this.getConfigValue("nodeCollection"), false).getHtml());

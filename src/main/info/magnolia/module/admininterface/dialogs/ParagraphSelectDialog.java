@@ -43,12 +43,9 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
 
     private String paragraph = "";
 
-    /**
-     * @param request
-     * @param response
-     */
     public ParagraphSelectDialog(HttpServletRequest request, HttpServletResponse response) {
-        super(request, response);
+        super("selectParagraph", request, response);
+
         paragraph = params.getParameter("mgnlParagraph");
     }
 
@@ -119,7 +116,7 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
      * (non-Javadoc)
      * @see info.magnolia.module.admininterface.DialogMVCHandler#getWesiteNode()
      */
-    protected Content getWesiteNode() {
+    protected Content getStorageNode() {
         return null;
     }
 

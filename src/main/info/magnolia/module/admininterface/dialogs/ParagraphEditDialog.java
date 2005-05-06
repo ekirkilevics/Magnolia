@@ -12,6 +12,7 @@
 */
 package info.magnolia.module.admininterface.dialogs;
 
+
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,7 +22,6 @@ import org.apache.log4j.Logger;
 import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.dialog.DialogDialog;
-import info.magnolia.cms.servlets.MVCServletHandlerImpl;
 import info.magnolia.module.admininterface.DialogMVCHandler;
 
 
@@ -29,21 +29,17 @@ import info.magnolia.module.admininterface.DialogMVCHandler;
  * Editing paragraph data
  * @author philipp 
  */
-public class ParagraphEditDialog extends DialogMVCHandler {
+public class ParagraphEditDialog extends ConfiguredDialog {
 
     private static Logger log = Logger.getLogger(ParagraphEditDialog.class);
 
     private String paragraph = "";
 
-    /**
-     * @param request
-     * @param response
-     */
-    public ParagraphEditDialog(HttpServletRequest request, HttpServletResponse response) {
-        super(request, response);
+
+    public ParagraphEditDialog(String name, HttpServletRequest request, HttpServletResponse response, Content configNode) {
+        super(name, request, response, configNode);
         paragraph = params.getParameter("mgnlParagraph");
     }
-
     /*
      * (non-Javadoc)
      * @see info.magnolia.module.admininterface.DialogMVCHandler#createDialog(info.magnolia.cms.core.Content,
@@ -57,9 +53,8 @@ public class ParagraphEditDialog extends DialogMVCHandler {
 
     /**
      * Get the configuration of the dialog from the paragraph
-     * @see info.magnolia.module.admininterface.DialogMVCHandler#getConfigNode()
-     **/
-    protected Content getConfigNode() {
+     */
+    public static Content getConfigNode(HttpServletRequest request, String  paragraph){
         Paragraph para = Paragraph.getInfo(paragraph);
 
         if (para == null) {

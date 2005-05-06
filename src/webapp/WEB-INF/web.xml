@@ -172,14 +172,6 @@
         <servlet-class>info.magnolia.module.admininterface.pages.WebDavIFrameDialogPage</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>userRoles</servlet-name>
-        <servlet-class>info.magnolia.module.admininterface.pages.UserRolesEditDialogPage</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>user</servlet-name>
-        <servlet-class>info.magnolia.module.admininterface.pages.UserEditDialogPage</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>includeRoles</servlet-name>
         <servlet-class>info.magnolia.module.admininterface.pages.UserEditIncludeRolesDialogPage</servlet-class>
     </servlet>
@@ -187,6 +179,12 @@
         <servlet-name>includeAcl</servlet-name>
         <servlet-class>info.magnolia.module.admininterface.pages.UserRolesEditIncludeAclDialogPage</servlet-class>
     </servlet>
+
+	<!-- 
+		END: Other dialogs: we will move them into dialog handlers 
+	-->
+
+
     <servlet-mapping>
         <servlet-name>magnolia</servlet-name>
         <url-pattern>/</url-pattern>
@@ -231,8 +229,18 @@
         <servlet-name>ImportExportServlet</servlet-name>
         <url-pattern>/import</url-pattern>
     </servlet-mapping>
+    
     <!--
-        dialogs -->
+        Standard dialogs: currently dialox is mapped 
+    -->
+    <servlet-mapping>
+        <servlet-name>standard</servlet-name>
+        <url-pattern>/admintemplates/dialogs/standard.jsp</url-pattern>
+    </servlet-mapping>
+
+    <!--
+        Other dialogs 
+    -->
     <servlet-mapping>
         <servlet-name>fileThumbnail</servlet-name>
         <url-pattern>/admintemplates/dialogs/fileThumbnail.jsp</url-pattern>
@@ -250,21 +258,10 @@
         <url-pattern>/admintemplates/dialogs/richEIFrame.jsp</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>standard</servlet-name>
-        <url-pattern>/admintemplates/dialogs/standard.jsp</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>webDAVIFrame</servlet-name>
         <url-pattern>/admintemplates/dialogs/webDAVIFrame.jsp</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>userRoles</servlet-name>
-        <url-pattern>/admintemplates/adminCentral/dialogs/userRolesEdit/main.jsp</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>user</servlet-name>
-        <url-pattern>/admintemplates/adminCentral/dialogs/usersEdit/main.jsp</url-pattern>
-    </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>includeAcl</servlet-name>
         <url-pattern>/admintemplates/adminCentral/dialogs/userRolesEdit/includeAcl.jsp</url-pattern>
@@ -274,6 +271,7 @@
         <url-pattern>/admintemplates/adminCentral/dialogs/usersEdit/includeRoles.jsp</url-pattern>
     </servlet-mapping>
     <!-- end dialogs -->
+
     <jsp-config>
         <taglib>
             <taglib-uri>cms-taglib</taglib-uri>

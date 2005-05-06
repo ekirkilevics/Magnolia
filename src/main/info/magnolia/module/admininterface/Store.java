@@ -38,7 +38,8 @@ public class Store {
      * <code>repository</code>, the corresponding handler will be used top display the admin tree.
      */
     private final Map treeHandlers = new HashMap();
-
+    private final Map dialogHandlers = new HashMap();
+    
     private static Store store = new Store();
 
     private Content localStore;
@@ -61,7 +62,18 @@ public class Store {
     public void registerTreeHandler(String name, Class treeHandler) {
         treeHandlers.put(name, treeHandler);
     }
-
+    
+    /**
+     * Register only if not yet an other handler is present
+     * 
+     * @param name
+     * @param class
+     */
+    public void registerDefaultTreeHandler(String name, Class dialogHandler) {
+        if(!this.treeHandlers.containsKey(name)){
+            registerTreeHandler(name, dialogHandler);
+        }
+    }
     public AdminTreeMVCHandler getTreeHandler(String name, HttpServletRequest request, HttpServletResponse response) {
         try {
             Class treeHandlerClass = (Class) treeHandlers.get(name);
@@ -73,5 +85,36 @@ public class Store {
         }
         return null;
     }
+
+    public void registerDialogHandler(String name, Class dialogHandler) {
+        registerDialogHandler(name, dialogHandler, null);
+    }
+    
+    public void registerDialogHandler(String name, Class dialogHandler, Content configNode) {
+        dialogHandlers.put(name, new Object[]{dialogHandler, configNode});
+    }
+
+    public DialogMVCHandler getDialogHandler(String name, HttpServletRequest request, HttpServletResponse response) {
+        DialogMVCHandler handler = null;
+        try {
+            Class dialogHandlerClass = (Class) ((Object[])dialogHandlers.get(name))[0];
+            Content configNode = (Content) ((Object[])dialogHandlers.get(name))[1];
+            if(configNode != null){
+                Constructor constructor = dialogHandlerClass.getConstructor(new Class[]{String.class, HttpServletRequest.class, HttpServletResponse.class, Content.class});
+                return (DialogMVCHandler) constructor.newInstance(new Object[]{name, request, response, configNode});
+                
+            }
+            else{
+                Constructor constructor = dialogHandlerClass.getConstructor(new Class[]{String.class, HttpServletRequest.class, HttpServletResponse.class});
+                return (DialogMVCHandler) constructor.newInstance(new Object[]{name, request, response});                
+            }
+        }
+        catch (Exception e) {
+            log.error("can't instanciate the dialoghandler: " + name, e);
+        }
+        return handler;
+    }
+
+
 
 }

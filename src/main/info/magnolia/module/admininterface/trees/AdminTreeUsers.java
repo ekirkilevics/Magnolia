@@ -57,7 +57,8 @@ public class AdminTreeUsers extends AdminTreeMVCHandler {
         if (Server.isAdmin()) {
             tree.setIconOndblclick("mgnlTreeMenuOpenDialog("
                 + tree.getJavascriptTree()
-                + ",'.magnolia/adminCentral/users/dialog.html');");
+                //+ ",'.magnolia/adminCentral/users/dialog.html');");
+                + ",'.magnolia/dialogx/useredit.html');");
         }
         tree.addItemType(ItemType.CONTENT);
 
@@ -96,7 +97,7 @@ public class AdminTreeUsers extends AdminTreeMVCHandler {
         menuOpen.setLabel(msgs.get("tree.users.menu.edit"));
         menuOpen.setOnclick("mgnlTreeMenuOpenDialog("
             + tree.getJavascriptTree()
-            + ",'.magnolia/adminCentral/users/dialog.html');");
+            + ",'.magnolia/dialogx/user.html');");
         menuOpen.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         TreeMenuItem menuNewPage = new TreeMenuItem();
         menuNewPage.setLabel(msgs.get("tree.users.menu.new"));

@@ -12,6 +12,8 @@
 */
 package info.magnolia.cms.servlets;
 
+import java.io.IOException;
+
 /**
  * This Handler is used in the MVCServlet
  * 
@@ -41,8 +43,9 @@ public interface MVCServletHandler {
      * 
      * @param view
      * @return
+     * @throws IOException
      */
-    public abstract String renderHtml(String view);
+    public abstract void renderHtml(String view) throws IOException;
 
     /**
      * @return
