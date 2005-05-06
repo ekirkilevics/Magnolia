@@ -23,6 +23,11 @@
             <item name="Nightly builds" href="/nightly" />
         </menu>
 
+        <menu name="Build and install">
+            <item name="Building Magnolia" href="/building.html" />
+            <item name="Installing" href="/installing.html" />
+        </menu>
+
         <!--
         <menu name="Downloadable docs">
             <item name="Quick start" href="magnolia.pdf" />
