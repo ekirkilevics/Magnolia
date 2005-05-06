@@ -950,7 +950,6 @@ public class Content extends ContentHandler implements Cloneable {
         else {
             this.node.getNode(path).remove();
         }
-        this.node.getNode(path).remove();
     }
     
     /**
