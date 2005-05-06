@@ -25,7 +25,7 @@
 
         <menu name="Build and install">
             <item name="Building Magnolia" href="/building.html" />
-            <item name="Installing" href="/installing.html" />
+            <item name="Installing" href="/install.html" />
         </menu>
 
         <!--
