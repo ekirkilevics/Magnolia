@@ -944,7 +944,32 @@ public class Content extends ContentHandler implements Cloneable {
      */
     public void delete(String path) throws RepositoryException {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.node.getPath(), path), Permission.REMOVE);
+        if (this.isNodeData(path)) {
+            this.node.getProperty(path).remove();
+        }
+        else {
+            this.node.getNode(path).remove();
+        }
         this.node.getNode(path).remove();
+    }
+    
+    /**
+     * <p>
+     * checks if the requested resource is an NodeData (Property)
+     * </p>
+     * @param path of the requested NodeData
+     * @return boolean true is the requested content is an NodeData
+     * @throws AccessDeniedException
+     * @throws RepositoryException
+     */
+    public boolean isNodeData(String path) throws AccessDeniedException, RepositoryException {
+        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.node.getPath(), path), Permission.READ);
+        try {
+            return this.node.hasProperty(path);
+        }
+        catch (RepositoryException e) {
+        }
+        return false;
     }
 
     /**
