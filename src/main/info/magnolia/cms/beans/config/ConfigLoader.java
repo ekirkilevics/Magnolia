@@ -345,7 +345,8 @@ public class ConfigLoader {
         FileOutputStream outstream = new FileOutputStream(strippedFile);
 
         // use XMLSerializer and a SAXFilter in order to rewrite the file
-        XMLReader reader = new VersionFilter(XMLReaderFactory.createXMLReader());
+        XMLReader reader = new VersionFilter(XMLReaderFactory.createXMLReader(org.apache.xerces.parsers.SAXParser.class
+            .getName()));
         reader.setContentHandler(new XMLSerializer(outstream, new OutputFormat()));
         reader.parse(new InputSource(stream));
 
