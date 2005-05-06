@@ -226,12 +226,12 @@ abstract public class AdminTreeMVCHandler extends MVCServletHandlerImpl {
     public String activate() {
         boolean recursive = (request.getParameter("recursive") != null);
         tree.activateNode(pathSelected, recursive);
-        return VIEW_NOTHING;
+        return VIEW_TREE;
     }
 
     public String deactivate() {
         tree.deActivateNode(pathSelected);
-        return VIEW_NOTHING;
+        return VIEW_TREE;
     }
 
     /**
