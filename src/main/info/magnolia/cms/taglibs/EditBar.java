@@ -155,7 +155,10 @@ public class EditBar extends TagSupport {
         }
 
         if (this.nodeName == null) {
-            bar.setNodeName(Resource.getLocalContentNode((HttpServletRequest) this.pageContext.getRequest()).getName());
+            Content localContentNode = Resource.getLocalContentNode((HttpServletRequest) this.pageContext.getRequest());
+            if (localContentNode != null) {
+                bar.setNodeName(localContentNode.getName());
+            }
         }
         else {
             bar.setNodeName(this.nodeName);
