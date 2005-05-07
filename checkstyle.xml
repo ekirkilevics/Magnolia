@@ -37,6 +37,13 @@
             <property name="message" value="Avoid exception.printStackTrace()"/>
             <property name="severity" value="info"/>
         </module>
+        <module name="com.puppycrawl.tools.checkstyle.checks.GenericIllegalRegexpCheck">
+            <property name="format" value="TODO To change the template for this"/>
+            <property name="ignoreCase" value="false"/>
+            <property name="ignoreComments" value="false"/>
+            <property name="message" value="Please configure you IDE!"/>
+            <property name="severity" value="error"/>
+        </module>
         <module name="com.puppycrawl.tools.checkstyle.checks.ModifierOrderCheck">
             <property name="severity" value="warning"/>
         </module>
