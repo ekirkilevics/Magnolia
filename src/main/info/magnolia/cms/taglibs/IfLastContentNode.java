@@ -18,7 +18,8 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 /**
  * @author Marcel Salathe
- * @version $Revision$ ($Author$)
+ * @author Fabrizio Giustina
+ * @version $Id $
  */
 public class IfLastContentNode extends TagSupport {
 

@@ -30,7 +30,8 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Sameer Charles
- * @version $Revision$ ($Author$)
+ * @author Fabrizio Giustina
+ * @version $Revision $ ($Author $)
  */
 public class ContentNodeIterator extends TagSupport {
 
@@ -52,10 +53,6 @@ public class ContentNodeIterator extends TagSupport {
 
     private String contentNodeCollectionName;
 
-    private Iterator contentNodeIterator;
-
-    private transient Content page;
-
     private int beginIndex;
 
     private int endIndex;
@@ -66,14 +63,62 @@ public class ContentNodeIterator extends TagSupport {
 
     private int currentIndex;
 
+    private Iterator contentNodeIterator;
+
+    /**
+     * @param name container list name on which this tag will iterate
+     * @deprecated
+     */
+    public void setContainerListName(String name) {
+        this.setContentNodeCollectionName(name);
+    }
+
+    /**
+     * @param name content node name on which this tag will iterate
+     */
+    public void setContentNodeCollectionName(String name) {
+        this.contentNodeCollectionName = name;
+    }
+
+    /**
+     * @param index index to begin with
+     */
+    public void setBegin(String index) {
+        this.beginIndex = (new Integer(index)).intValue();
+    }
+
+    /**
+     * @param index index to end at
+     */
+    public void setEnd(String index) {
+        this.endIndex = (new Integer(index)).intValue();
+    }
+
+    /**
+     * @param step to jump to
+     */
+    public void setStep(String step) {
+        this.step = (new Integer(step)).intValue();
+    }
+
+    /**
+     * @return end index
+     */
+    private int getEnd() {
+        if (this.endIndex == 0) {
+            return this.size;
+        }
+        return this.endIndex;
+    }
+
     /**
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
     public int doStartTag() {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-        this.page = Resource.getCurrentActivePage(request);
+        Content page = Resource.getCurrentActivePage(request);
         try {
-            Collection children = this.page.getContent(this.contentNodeCollectionName).getChildren(
+            Collection children = page.getContent(this.contentNodeCollectionName).getChildren(
                 ItemType.CONTENTNODE,
                 ContentHandler.SORT_BY_SEQUENCE);
             this.size = children.size();
@@ -99,7 +144,6 @@ public class ContentNodeIterator extends TagSupport {
             log.debug(re.getMessage());
             return SKIP_BODY;
         }
-        this.page = null;
         return EVAL_BODY_INCLUDE;
     }
 
@@ -123,56 +167,6 @@ public class ContentNodeIterator extends TagSupport {
     }
 
     /**
-     * @param name , container list name on which this tag will iterate
-     * @deprecated
-     */
-    public void setContainerListName(String name) {
-        this.setContentNodeCollectionName(name);
-    }
-
-    /**
-     * @param name , content node name on which this tag will iterate
-     */
-    public void setContentNodeCollectionName(String name) {
-        this.contentNodeCollectionName = name;
-    }
-
-    public String getContentNodeCollectionName() {
-        return this.contentNodeCollectionName;
-    }
-
-    /**
-     * @param index , to begin with
-     */
-    public void setBegin(String index) {
-        this.beginIndex = (new Integer(index)).intValue();
-    }
-
-    /**
-     * @param index , to end at
-     */
-    public void setEnd(String index) {
-        this.endIndex = (new Integer(index)).intValue();
-    }
-
-    /**
-     * @return end index
-     */
-    private int getEnd() {
-        if (this.endIndex == 0) {
-            return this.size;
-        }
-        return this.endIndex;
-    }
-
-    /**
-     * @param step to jump to
-     */
-    public void setStep(String step) {
-        this.step = (new Integer(step)).intValue();
-    }
-
-    /**
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag() {
@@ -182,11 +176,21 @@ public class ContentNodeIterator extends TagSupport {
         pageContext.removeAttribute(ContentNodeIterator.CURRENT_INDEX);
         pageContext.removeAttribute(ContentNodeIterator.SIZE);
         pageContext.removeAttribute(ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME);
+        return EVAL_PAGE;
+    }
+
+    /**
+     * @see javax.servlet.jsp.tagext.TagSupport#release()
+     */
+    public void release() {
+        this.contentNodeCollectionName = null;
+        this.contentNodeIterator = null;
         this.beginIndex = 0;
         this.endIndex = 0;
         this.step = 1;
         this.size = 0;
         this.currentIndex = 0;
-        return EVAL_PAGE;
+        super.release();
     }
+
 }

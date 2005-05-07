@@ -41,10 +41,6 @@ public class EditBar extends TagSupport {
      */
     private static Logger log = Logger.getLogger(EditBar.class);
 
-    // private static final String EDIT_DIALOG_HANDLE = "/.CMSadmin/dialogs/standard.html";
-    // private static final String DEFAULT_EDIT_LABEL = "Edit";
-    // private static final String DEFAULT_MOVE_LABEL = "Move";
-    // private static final String DEFAULT_DELETE_LABEL = "Delete";
     private String nodeName;
 
     private String nodeCollectionName;
@@ -57,13 +53,54 @@ public class EditBar extends TagSupport {
 
     private String moveLabel;
 
-    private HttpServletRequest request;
+    /**
+     * set working contentNode
+     * @param name , comtainer name which will be used to access/write content
+     */
+    public void setContentNodeName(String name) {
+        this.nodeName = name;
+    }
+
+    /**
+     * set working contentNode
+     * @param name , comtainer name which will be used to access/write content
+     */
+    public void setContentNodeCollectionName(String name) {
+        this.nodeCollectionName = name;
+    }
+
+    /**
+     * set current content type, could be any developer defined name
+     * @param type , content type
+     */
+    public void setParagraph(String type) {
+        this.paragraph = type;
+    }
+
+    /**
+     * set the edit label (else "Edit")
+     * @param label , under which content must be stored
+     */
+    public void setEditLabel(String label) {
+        this.editLabel = label;
+    }
+
+    /**
+     * set the delete label (else "Delete")
+     * @param label , under which content must be stored
+     */
+    public void setDeleteLabel(String label) {
+        this.deleteLabel = label;
+    }
+
+    public void setMoveLabel(String label) {
+        this.moveLabel = label;
+    }
 
     /**
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
     public int doStartTag() {
-        this.request = (HttpServletRequest) pageContext.getRequest();
         return EVAL_BODY_INCLUDE;
     }
 
@@ -85,166 +122,86 @@ public class EditBar extends TagSupport {
     }
 
     /**
-     * <p>
-     * set working contentNode
-     * </p>
-     * @param name , comtainer name which will be used to access/write content
-     */
-    public void setContentNodeName(String name) {
-        this.nodeName = name;
-    }
-
-    /**
-     *
-     */
-    private String getNodeName() {
-        if (this.nodeName == null) {
-            return Resource.getLocalContentNode(this.request).getName();
-        }
-        return this.nodeName;
-    }
-
-    /**
-     * <p>
-     * set working contentNode
-     * </p>
-     * @param name , comtainer name which will be used to access/write content
-     */
-    public void setContentNodeCollectionName(String name) {
-        this.nodeCollectionName = name;
-    }
-
-    /**
-     * @return content node collection name
-     */
-    private String getNodeCollectionName() {
-        if (this.nodeCollectionName == null) {
-            return StringUtils.defaultString(Resource.getLocalContentNodeCollectionName(this.request));
-        }
-        return this.nodeCollectionName;
-    }
-
-    /**
-     * <p>
-     * set current content type, could be any developer defined name
-     * </p>
-     * @param type , content type
-     */
-    public void setParagraph(String type) {
-        this.paragraph = type;
-    }
-
-    /**
-     * @return String paragraph (type of par)
-     */
-    private String getParagraph() {
-        if (this.paragraph == null) {
-            return Resource.getLocalContentNode(this.request).getNodeData("paragraph").getString();
-        }
-        return this.paragraph;
-    }
-
-    /**
-     * <p>
-     * get the content path (Page or Node)
-     * </p>
-     * @return String path
-     */
-    private String getPath() {
-        try {
-            return Resource.getCurrentActivePage(this.request).getHandle();
-        }
-        catch (Exception re) {
-            return "";
-        }
-    }
-
-    /**
-     * <p>
-     * set the edit label (else "Edit")
-     * </p>
-     * @param label , under which content must be stored
-     */
-    public void setEditLabel(String label) {
-        this.editLabel = label;
-    }
-
-    /**
-     * @return String , label for the edit bar
-     */
-    private String getEditLabel() {
-        return this.editLabel;
-    }
-
-    /**
-     * <p>
-     * set the delete label (else "Delete")
-     * </p>
-     * @param label , under which content must be stored
-     */
-    public void setDeleteLabel(String label) {
-        this.deleteLabel = label;
-    }
-
-    /**
-     * @return String , label for the edit bar
-     */
-    private String getDeleteLabel() {
-        return this.deleteLabel;
-    }
-
-    public void setMoveLabel(String label) {
-        this.moveLabel = label;
-    }
-
-    /**
-     * @return String , label for the edit bar
-     */
-    private String getMoveLabel() {
-        return this.moveLabel;
-    }
-
-    /**
-     * <p>
-     * displays edit bar
-     * </p>
+     * Displays edit bar.
      * @throws IOException
      */
     private void display() throws IOException {
-        BarEdit bar = new BarEdit(this.request);
-        bar.setPath(this.getPath());
-        bar.setParagraph(this.getParagraph());
-        bar.setNodeCollectionName(this.getNodeCollectionName());
-        bar.setNodeName(this.getNodeName());
+        BarEdit bar = new BarEdit((HttpServletRequest) this.pageContext.getRequest());
+
+        try {
+            bar.setPath(Resource.getCurrentActivePage((HttpServletRequest) this.pageContext.getRequest()).getHandle());
+        }
+        catch (Exception re) {
+            bar.setPath(StringUtils.EMPTY);
+        }
+
+        if (this.paragraph == null) {
+            bar.setParagraph(Resource
+                .getLocalContentNode((HttpServletRequest) this.pageContext.getRequest())
+                .getNodeData("paragraph")
+                .getString());
+        }
+        else {
+            bar.setParagraph(this.paragraph);
+        }
+
+        if (this.nodeCollectionName == null) {
+            bar.setNodeCollectionName(StringUtils.defaultString(Resource
+                .getLocalContentNodeCollectionName((HttpServletRequest) this.pageContext.getRequest())));
+        }
+        else {
+            bar.setNodeCollectionName(this.nodeCollectionName);
+        }
+
+        if (this.nodeName == null) {
+            bar.setNodeName(Resource.getLocalContentNode((HttpServletRequest) this.pageContext.getRequest()).getName());
+        }
+        else {
+            bar.setNodeName(this.nodeName);
+        }
+
         bar.setDefaultButtons();
 
-        if (this.getEditLabel() != null) {
-            if (StringUtils.isEmpty(this.getEditLabel())) {
+        if (this.editLabel != null) {
+            if (StringUtils.isEmpty(this.editLabel)) {
                 bar.setButtonEdit(null);
             }
             else {
-                bar.getButtonEdit().setLabel(this.getEditLabel());
+                bar.getButtonEdit().setLabel(this.editLabel);
             }
         }
 
-        if (this.getMoveLabel() != null) {
-            if (StringUtils.isEmpty(this.getMoveLabel())) {
+        if (this.moveLabel != null) {
+            if (StringUtils.isEmpty(this.moveLabel)) {
                 bar.setButtonMove(null);
             }
             else {
-                bar.getButtonMove().setLabel(this.getMoveLabel());
+                bar.getButtonMove().setLabel(this.moveLabel);
             }
         }
 
-        if (this.getDeleteLabel() != null) {
-            if (StringUtils.isEmpty(this.getDeleteLabel())) {
+        if (this.deleteLabel != null) {
+            if (StringUtils.isEmpty(this.deleteLabel)) {
                 bar.setButtonDelete(null);
             }
             else {
-                bar.getButtonDelete().setLabel(this.getDeleteLabel());
+                bar.getButtonDelete().setLabel(this.deleteLabel);
             }
         }
         bar.placeDefaultButtons();
         bar.drawHtml(pageContext.getOut());
+    }
+
+    /**
+     * @see javax.servlet.jsp.tagext.TagSupport#release()
+     */
+    public void release() {
+        this.nodeName = null;
+        this.nodeCollectionName = null;
+        this.paragraph = null;
+        this.editLabel = null;
+        this.deleteLabel = null;
+        this.moveLabel = null;
+        super.release();
     }
 }

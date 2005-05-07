@@ -54,4 +54,12 @@ public class AdminOnly extends ConditionalTagSupport {
         }
         return false;
     }
+
+    /**
+     * @see javax.servlet.jsp.jstl.core.ConditionalTagSupport#release()
+     */
+    public void release() {
+        this.showInPreview = false;
+        super.release();
+    }
 }

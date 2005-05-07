@@ -28,7 +28,8 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Marcel Salathe
- * @version $Revision$ ($Author$)
+ * @author Fabrizio Giustina
+ * @version $Revision $ ($Author $)
  */
 public class EditButton extends TagSupport {
 
@@ -37,6 +38,9 @@ public class EditButton extends TagSupport {
      */
     private static final long serialVersionUID = 222L;
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(EditButton.class);
 
     private String nodeName;
@@ -49,16 +53,13 @@ public class EditButton extends TagSupport {
 
     private String displayHandler;
 
-    private String small = "true";
-
-    private HttpServletRequest request;
+    private boolean small = true;
 
     /**
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
     public int doStartTag() {
         this.displayHandler = "";
-        this.request = (HttpServletRequest) pageContext.getRequest();
         return EVAL_BODY_INCLUDE;
     }
 
@@ -77,9 +78,7 @@ public class EditButton extends TagSupport {
     }
 
     /**
-     * <p>
      * set working contentNode
-     * </p>
      * @param name , comtainer name which will be used to access/write content
      */
     public void setContentNodeName(String name) {
@@ -91,18 +90,16 @@ public class EditButton extends TagSupport {
      */
     private String getNodeName() {
         if (this.nodeName == null) {
-            if (Resource.getLocalContentNode(this.request) == null) {
+            if (Resource.getLocalContentNode(((HttpServletRequest) pageContext.getRequest())) == null) {
                 return null;
             }
-            return Resource.getLocalContentNode(this.request).getName();
+            return Resource.getLocalContentNode(((HttpServletRequest) pageContext.getRequest())).getName();
         }
         return this.nodeName;
     }
 
     /**
-     * <p>
      * set working contentNode
-     * </p>
      * @param name , comtainer name which will be used to access/write content
      */
     public void setContentNodeCollectionName(String name) {
@@ -114,16 +111,13 @@ public class EditButton extends TagSupport {
      */
     private String getNodeCollectionName() {
         if (this.nodeCollectionName == null) {
-            return Resource.getLocalContentNodeCollectionName(this.request);
+            return Resource.getLocalContentNodeCollectionName(((HttpServletRequest) pageContext.getRequest()));
         }
         return this.nodeCollectionName;
     }
 
     /**
-     * @deprecated
-     * <p>
-     * set current content type, could be any developer defined name
-     * </p>
+     * @deprecated set current content type, could be any developer defined name
      * @param type , content type
      */
     public void setParFile(String type) {
@@ -131,9 +125,7 @@ public class EditButton extends TagSupport {
     }
 
     /**
-     * <p>
      * set current content type, could be any developer defined name
-     * </p>
      * @param type , content type
      */
     public void setParagraph(String type) {
@@ -146,16 +138,15 @@ public class EditButton extends TagSupport {
     private String getParagraph() {
         if (this.paragraph == null) {
 
-            return Resource.getLocalContentNode(this.request).getNodeData("paragraph").getString();
+            return Resource.getLocalContentNode(((HttpServletRequest) pageContext.getRequest())).getNodeData(
+                "paragraph").getString();
 
         }
         return this.paragraph;
     }
 
     /**
-     * <p>
      * set display handler (JSP / Servlet), needs to know the relative path from WEB-INF
-     * </p>
      * @param path , relative to WEB-INF
      */
     public void setTemplate(String path) {
@@ -167,7 +158,7 @@ public class EditButton extends TagSupport {
      */
     public String getTemplate() {
         if (this.displayHandler == null) {
-            Content localContainer = Resource.getLocalContentNode(this.request);
+            Content localContainer = Resource.getLocalContentNode(((HttpServletRequest) pageContext.getRequest()));
             String templateName = localContainer.getNodeData("paragraph").getString();
             return Paragraph.getInfo(templateName).getTemplatePath();
         }
@@ -175,14 +166,12 @@ public class EditButton extends TagSupport {
     }
 
     /**
-     * <p>
      * get the content path (Page or Node)
-     * </p>
      * @return String path
      */
     private String getPath() {
         try {
-            return Resource.getCurrentActivePage(this.request).getHandle();
+            return Resource.getCurrentActivePage(((HttpServletRequest) pageContext.getRequest())).getHandle();
         }
         catch (Exception re) {
             return "";
@@ -190,10 +179,7 @@ public class EditButton extends TagSupport {
     }
 
     /**
-     * @deprecated
-     * <p>
-     * set the edit label (default "Edit")
-     * </p>
+     * @deprecated set the edit label (default "Edit")
      * @param label , under which content must be stored
      */
     public void setEditLabel(String label) {
@@ -201,9 +187,7 @@ public class EditButton extends TagSupport {
     }
 
     /**
-     * <p>
      * set the edit label (default "Edit")
-     * </p>
      * @param label , under which content must be stored
      */
     public void setLabel(String label) {
@@ -218,23 +202,15 @@ public class EditButton extends TagSupport {
     }
 
     /**
-     * <p>
      * sets the size of the button
-     * </p>
-     * @param s , true for a small button (default), false for a large
+     * @param s <code>true</code> for a small button (default), <code>false</code> for a large
      */
-    public void setSmall(String s) {
-        this.small = s;
-    }
-
-    private String getSmall() {
-        return this.small;
+    public void setSmall(boolean small) {
+        this.small = small;
     }
 
     /**
-     * <p>
      * displays edit bar
-     * </p>
      * @throws IOException
      */
     private void display() throws IOException {
@@ -243,7 +219,7 @@ public class EditButton extends TagSupport {
             return;
         }
         JspWriter out = pageContext.getOut();
-        ButtonEdit button = new ButtonEdit(this.request);
+        ButtonEdit button = new ButtonEdit(((HttpServletRequest) pageContext.getRequest()));
         button.setPath(this.getPath());
         button.setParagraph(this.getParagraph());
         button.setNodeCollectionName(this.getNodeCollectionName());
@@ -252,9 +228,22 @@ public class EditButton extends TagSupport {
         if (this.getLabel() != null) {
             button.setLabel(this.getLabel());
         }
-        if (!this.getSmall().equals("false")) {
+        if (this.small) {
             button.setSmall(true);
         }
         button.drawHtml(out);
+    }
+
+    /**
+     * @see javax.servlet.jsp.tagext.TagSupport#release()
+     */
+    public void release() {
+        this.nodeName = null;
+        this.nodeCollectionName = null;
+        this.paragraph = null;
+        this.label = null;
+        this.displayHandler = null;
+        this.small = true;
+        super.release();
     }
 }

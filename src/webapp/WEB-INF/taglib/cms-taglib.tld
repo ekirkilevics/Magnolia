@@ -178,6 +178,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
             <name>small</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
             <description></description>
         </attribute>
     </tag>
@@ -266,9 +267,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
             <type>boolean</type>
-            <description>
-                Show content in the Preview. Default is false.
-            </description>
+            <description>Show content in the Preview. Default is false.</description>
         </attribute>
         <example>
             <![CDATA[
@@ -278,25 +277,18 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
 ]]>
         </example>
     </tag>
-
     <tag>
         <name>publicOnly</name>
         <tag-class>info.magnolia.cms.taglibs.PublicOnly</tag-class>
         <body-content>JSP</body-content>
-        <description>
-            Everything between publicOnly tags will only be shown on the public instance.
-        </description>
-
+        <description>Everything between publicOnly tags will only be shown on the public instance.</description>
         <attribute>
             <name>showInPreview</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
             <type>boolean</type>
-            <description>
-                Show content in the Preview. Default is true.
-            </description>
+            <description>Show content in the Preview. Default is true.</description>
         </attribute>
-
         <example>
             <![CDATA[
 <cms:publicOnly>
@@ -304,9 +296,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
 </cms:publicOnly>
 ]]>
         </example>
-        
     </tag>
-
     <tag>
         <name>includeTemplate</name>
         <tag-class>info.magnolia.cms.taglibs.Include</tag-class>

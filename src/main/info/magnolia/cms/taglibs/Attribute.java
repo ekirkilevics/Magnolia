@@ -62,4 +62,13 @@ public class Attribute extends TagSupport {
         parent.setAttribute(this.name, this.value);
         return EVAL_PAGE;
     }
+
+    /**
+     * @see javax.servlet.jsp.tagext.TagSupport#release()
+     */
+    public void release() {
+        this.name = null;
+        this.value = null;
+        super.release();
+    }
 }

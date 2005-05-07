@@ -27,7 +27,8 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Marcel Salathe
- * @version $Revision$ ($Author$)
+ * @author Fabrizio Giustina
+ * @version $Revision $ ($Author $)
  */
 public class IfEmpty extends ConditionalTagSupport {
 
@@ -36,6 +37,9 @@ public class IfEmpty extends ConditionalTagSupport {
      */
     private static final long serialVersionUID = 222L;
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(IfEmpty.class);
 
     private String nodeDataName = "";
@@ -51,6 +55,57 @@ public class IfEmpty extends ConditionalTagSupport {
     private transient NodeData nodeData;
 
     private boolean actpage;
+
+    /**
+     * @deprecated
+     */
+    public void setAtomName(String name) {
+        this.setNodeDataName(name);
+    }
+
+    /**
+     * @param name , antom name to evaluate
+     */
+    public void setNodeDataName(String name) {
+        this.nodeDataName = name;
+    }
+
+    /**
+     * @deprecated
+     */
+    public void setContainerName(String name) {
+        this.setContentNodeName(name);
+    }
+
+    /**
+     * @param contentNodeName , contentNodeName to check
+     */
+    public void setContentNodeName(String contentNodeName) {
+        this.contentNodeName = contentNodeName;
+    }
+
+    /**
+     * @param name , contentNode collection name
+     * @deprecated
+     */
+    public void setContainerListName(String name) {
+        this.setContentNodeCollectionName(name);
+    }
+
+    /**
+     * @param name contentNodeCollectionName to check
+     */
+    public void setContentNodeCollectionName(String name) {
+        this.contentNodeCollectionName = name;
+    }
+
+    /**
+     * Set the actpage.
+     * @param set
+     */
+    public void setActpage(boolean set) {
+        this.actpage = set;
+    }
 
     /**
      * @see javax.servlet.jsp.jstl.core.ConditionalTagSupport#condition()
@@ -147,57 +202,6 @@ public class IfEmpty extends ConditionalTagSupport {
             }
         }
         return false;
-    }
-
-    /**
-     * @deprecated
-     */
-    public void setAtomName(String name) {
-        this.setNodeDataName(name);
-    }
-
-    /**
-     * @param name , antom name to evaluate
-     */
-    public void setNodeDataName(String name) {
-        this.nodeDataName = name;
-    }
-
-    /**
-     * @deprecated
-     */
-    public void setContainerName(String name) {
-        this.setContentNodeName(name);
-    }
-
-    /**
-     * @param contentNodeName , contentNodeName to check
-     */
-    public void setContentNodeName(String contentNodeName) {
-        this.contentNodeName = contentNodeName;
-    }
-
-    /**
-     * @param name , contentNode collection name
-     * @deprecated
-     */
-    public void setContainerListName(String name) {
-        this.setContentNodeCollectionName(name);
-    }
-
-    /**
-     * @param name contentNodeCollectionName to check
-     */
-    public void setContentNodeCollectionName(String name) {
-        this.contentNodeCollectionName = name;
-    }
-
-    /**
-     * Set the actpage.
-     * @param set
-     */
-    public void setActpage(boolean set) {
-        this.actpage = set;
     }
 
     /**
