@@ -13,24 +13,14 @@
 package info.magnolia.module.admininterface;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.gui.control.Button;
-import info.magnolia.cms.gui.control.ControlSuper;
 import info.magnolia.cms.gui.control.Save;
-import info.magnolia.cms.gui.dialog.DialogBox;
-import info.magnolia.cms.gui.dialog.DialogButtonSet;
 import info.magnolia.cms.gui.dialog.DialogDialog;
 import info.magnolia.cms.gui.dialog.DialogFactory;
-import info.magnolia.cms.gui.dialog.DialogHidden;
-import info.magnolia.cms.gui.dialog.DialogStatic;
-import info.magnolia.cms.gui.dialog.DialogTab;
 import info.magnolia.cms.gui.misc.Sources;
-import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.i18n.TemplateMessagesUtil;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.servlets.MVCServletHandlerImpl;
 import info.magnolia.cms.util.RequestFormUtil;
@@ -38,12 +28,12 @@ import info.magnolia.cms.util.Resource;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -174,7 +164,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         catch (RepositoryException e) {
             log.error("can't instantiate dialog", e);
         }
-        
+
         dialog.setConfig("dialog", getName());
         dialog.setConfig("path", path);
         dialog.setConfig("nodeCollection", nodeCollectionName);
@@ -226,11 +216,11 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         if (storageNode == null) {
             try {
                 Content parentContent = hm.getContent(path);
-                if (nodeName == null || nodeName.equals("")) {
+                if (StringUtils.isEmpty(nodeName)) {
                     storageNode = parentContent;
                 }
                 else {
-                    if (nodeCollectionName == null || nodeCollectionName.equals("")) {
+                    if (StringUtils.isEmpty(nodeCollectionName)) {
                         storageNode = parentContent.getContent(nodeName);
 
                     }
