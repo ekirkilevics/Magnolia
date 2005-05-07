@@ -53,9 +53,9 @@ public class NodeData extends ContentHandler {
     private Property property;
 
     /**
-     * package private constructor
+     * Empty constructor. Should NEVER be used for standard use, test only.
      */
-    NodeData() {
+    protected NodeData() {
         // property is null
     }
 

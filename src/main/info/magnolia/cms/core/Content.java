@@ -68,9 +68,9 @@ public class Content extends ContentHandler implements Cloneable {
     private MetaData metaData;
 
     /**
-     * constructor
+     * Empty constructor. Should NEVER be used for standard use, test only.
      */
-    Content() {
+    protected Content() {
     }
 
     /**
@@ -951,7 +951,7 @@ public class Content extends ContentHandler implements Cloneable {
             this.node.getNode(path).remove();
         }
     }
-    
+
     /**
      * <p>
      * checks if the requested resource is an NodeData (Property)
