@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Magnolia</title>
+        <author email="fgiust(at)users.sourceforge.net">Fabrizio Giustina</author>
+    </properties>
+    <body>
+        <section name="Magnolia">
+            <p>
+                Magnolia is a free enterprise class content management system developed by obinary. Magnolia uses the
+                upcoming standard API for java content repositories (JCR) to access its content. It has an easy to use
+                web-browser interface, a clear API and a useful custom tag library for easy templating in JSP and
+                Servlets.
+            </p>
+        </section>
+        <!--
+        <section name="News">
+            <p></p>
+        </section>
+        -->
+    </body>
+</document>
