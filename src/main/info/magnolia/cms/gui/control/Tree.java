@@ -1034,20 +1034,19 @@ public class Tree extends ControlSuper {
         // lineInter: line between nodes, to allow set cursor between nodes
         // line to place a very last position
         String lineId = this.getJavascriptTree() + "_" + this.getPath() + "_LineInter";
-        html.append("<div id=\"" + lineId + "\" class=\"mgnlTreeLineInter\">");
 
-        html.append("<img src=\""
-            + this.getRequest().getContextPath()
-            + "/admindocroot/0.gif\" width=\"150\" height=\"5\" onmouseover=\""
-            + this.getJavascriptTree()
+        html.append("<div id=\""
+            + lineId
+            + "\" class=\"mgnlTreeLineInter mgnlLineEnabled\" onmouseover=\""
+            + this.javascriptTree
             + ".moveNodeHighlightLine('"
             + lineId
             + "');\" onmouseout=\""
-            + this.getJavascriptTree()
+            + this.javascriptTree
             + ".moveNodeResetLine('"
             + lineId
             + "');\" onmousedown=\""
-            + this.getJavascriptTree()
+            + this.javascriptTree
             + ".pasteNode('"
             + this.getPath()
             + "',"
@@ -1056,9 +1055,8 @@ public class Tree extends ControlSuper {
             + Boolean.toString(permissionWrite)
             + ",'"
             + lineId
-            + "');\" />");
+            + "');\" ></div>");
 
-        html.append("</div>");
         html.append(new Hidden(this.getJavascriptTree() + "_" + this.getPath() + "_PermissionWrite", Boolean
             .toString(permissionWrite), false).getHtml());
         html.append("</div>");
@@ -1200,7 +1198,7 @@ public class Tree extends ControlSuper {
 
     public String getHtmlChildrenOfOneType(Content parentNode, String itemType) {
         StringBuffer html = new StringBuffer();
-        String icon;
+        String icon = null;
         if (itemType.equals(ItemType.CONTENT.getSystemName())) {
             icon = this.getIconPage();
         }
@@ -1210,9 +1208,7 @@ public class Tree extends ControlSuper {
         else if (itemType.equals(ItemType.NT_NODEDATA)) {
             icon = this.getIconNodeData();
         }
-        else {
-            icon = "";
-        }
+
         try {
             // todo: parentNode - level of this.getPath
             int left = (parentNode.getLevel()) * this.getIndentionWidth();
@@ -1278,15 +1274,15 @@ public class Tree extends ControlSuper {
                         }
                     }
                 }
-                String idPre = this.getJavascriptTree() + "_" + handle;
-                String jsHighlightNode = this.getJavascriptTree()
+                String idPre = this.javascriptTree + "_" + handle;
+                String jsHighlightNode = this.javascriptTree
                     + ".nodeHighlight(this,'"
                     + handle
                     + "',"
                     + Boolean.toString(permissionWrite)
                     + ");";
-                String jsResetNode = this.getJavascriptTree() + ".nodeReset(this,'" + handle + "');";
-                String jsSelectNode = this.getJavascriptTree()
+                String jsResetNode = this.javascriptTree + ".nodeReset(this,'" + handle + "');";
+                String jsSelectNode = this.javascriptTree
                     + ".selectNode('"
                     + handle
                     + "',"
@@ -1296,16 +1292,13 @@ public class Tree extends ControlSuper {
                     + "');";
                 String jsExpandNode;
                 if (this.getDrawShifter()) {
-                    jsExpandNode = this.getJavascriptTree() + ".expandNode('" + handle + "');";
+                    jsExpandNode = this.javascriptTree + ".expandNode('" + handle + "');";
                 }
                 else {
                     jsExpandNode = jsSelectNode;
                 }
-                String jsHighlightLine = this.getJavascriptTree()
-                    + ".moveNodeHighlightLine('"
-                    + idPre
-                    + "_LineInter');";
-                String jsResetLine = this.getJavascriptTree() + ".moveNodeResetLine('" + idPre + "_LineInter');";
+                String jsHighlightLine = this.javascriptTree + ".moveNodeHighlightLine('" + idPre + "_LineInter');";
+                String jsResetLine = this.javascriptTree + ".moveNodeResetLine('" + idPre + "_LineInter');";
 
                 int maskWidth = left;
                 if (maskWidth < 1) {
@@ -1313,24 +1306,28 @@ public class Tree extends ControlSuper {
                 }
 
                 // lineInter: line between nodes, to allow set cursor between nodes
-                html.append("<div id=\"" + idPre + "_LineInter\" class=\"mgnlTreeLineInter\">");
-
+                // try to avoid blank images, setting js actions on divs should be ok
                 if (permissionWriteParent) {
-                    html.append("<img src=\""
-                        + this.getRequest().getContextPath()
-                        + "/admindocroot/0.gif\" height=\"5\" width=\"150\" onmouseover=\""
+                    html.append("<div id=\""
+                        + idPre
+                        + "_LineInter\" class=\"mgnlTreeLineInter mgnlLineEnabled\" onmouseover=\""
                         + jsHighlightLine
                         + "\" onmouseout=\""
                         + jsResetLine
                         + "\" onmousedown=\""
-                        + this.getJavascriptTree()
+                        + this.javascriptTree
                         + ".pasteNode('"
                         + handle
                         + "',"
                         + Tree.PASTETYPE_ABOVE
-                        + ",true);\" />");
+                        + ",true);\" ></div>");
                 }
-                html.append("</div>");
+                else {
+                    html.append("<div id=\""
+                        + idPre
+                        + "_LineInter\" class=\"mgnlTreeLineInter mgnlLineDisabled\"></div>");
+                }
+
                 html.append("<div id=\""
                     + idPre
                     + "_DivMain\" style=\"position:relative;top:0;left:0;width:100%;height:18px;\">");
@@ -1342,12 +1339,12 @@ public class Tree extends ControlSuper {
                 html.append("<span id=\""
                     + idPre
                     + "_Column0Outer\" class=\"mgnlTreeColumn "
-                    + this.getJavascriptTree()
+                    + this.javascriptTree
                     + "CssClassColumn0\" style=\"padding-left:"
                     + paddingLeft
                     + "px;\">");
                 if (this.getDrawShifter()) {
-                    String shifter = "";
+                    String shifter = StringUtils.EMPTY;
                     if (hasSub) {
                         if (showSub) {
                             if (this.getShifterCollapse() != null) {
@@ -1369,11 +1366,11 @@ public class Tree extends ControlSuper {
                         html.append("<img id=\""
                             + idPre
                             + "_Shifter\" onmousedown=\""
-                            + this.getJavascriptTree()
+                            + this.javascriptTree
                             + ".shifterDown('"
                             + handle
                             + "');\" onmouseout=\""
-                            + this.getJavascriptTree()
+                            + this.javascriptTree
                             + ".shifterOut();\" class=\"mgnlTreeShifter\" src=\""
                             + this.getRequest().getContextPath()
                             + shifter
@@ -1388,7 +1385,7 @@ public class Tree extends ControlSuper {
                     + jsResetNode
                     + "\" onmousedown=\""
                     + jsSelectNode
-                    + this.getJavascriptTree()
+                    + this.javascriptTree
                     + ".pasteNode('"
                     + handle
                     + "',"
@@ -1412,11 +1409,7 @@ public class Tree extends ControlSuper {
                 }
                 String dblclick = "";
                 if (permissionWrite && StringUtils.isNotEmpty(this.getColumns(0).getHtmlEdit())) {
-                    dblclick = " ondblclick=\""
-                        + this.getJavascriptTree()
-                        + ".editNodeData(this,'"
-                        + handle
-                        + "',0);\"";
+                    dblclick = " ondblclick=\"" + this.javascriptTree + ".editNodeData(this,'" + handle + "',0);\"";
                 }
                 html.append("<span class=\"mgnlTreeText\" id=\"" + idPre + "_Column0Main\"" + dblclick + ">");
                 html.append(name);
@@ -1452,7 +1445,7 @@ public class Tree extends ControlSuper {
                     tc.setEvent("onmouseout", jsResetNode, true);
                     tc.setEvent("onmousedown", jsSelectNode, true);
                     html.append("<span class=\"mgnlTreeColumn "
-                        + this.getJavascriptTree()
+                        + this.javascriptTree
                         + "CssClassColumn"
                         + i
                         + "\"><span id=\""
@@ -1464,7 +1457,7 @@ public class Tree extends ControlSuper {
                         + tc.getHtmlEvents());
                     if (permissionWrite && StringUtils.isNotEmpty(tc.getHtmlEdit())) {
                         html.append(" ondblclick=\""
-                            + this.getJavascriptTree()
+                            + this.javascriptTree
                             + ".editNodeData(this,'"
                             + handle
                             + "',"
@@ -1487,7 +1480,7 @@ public class Tree extends ControlSuper {
                             String slash = "/";
                             if (this.getPathCurrent().equals("/")) {
                                 // first slash already removed
-                                slash = ""; // no slash needed between pathCurrent and nextChunk
+                                slash = StringUtils.EMPTY; // no slash needed between pathCurrent and nextChunk
                             }
                             else {
                                 pathRemaining = pathRemaining.substring(1);

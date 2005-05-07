@@ -15,6 +15,8 @@ package info.magnolia.cms.gui.control;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * @author Vinzenz Wyser
@@ -22,9 +24,9 @@ import java.util.List;
  */
 public class TreeMenuItem extends ControlSuper {
 
-    private String onclick = "";
+    private String onclick;
 
-    private String javascriptTree = "";
+    private String javascriptTree;
 
     private List javascriptConditions = new ArrayList();
 
@@ -73,13 +75,15 @@ public class TreeMenuItem extends ControlSuper {
         html.append("<div class=\"mgnlTreeMenuItem\" id=\""
             + this.getId()
             + "\" onclick=\""
-            + this.getJavascriptTree()
-            + ".menuHide();"
-            + this.getOnclick()
-            + "\" onmouseover=\""
-            + this.getJavascriptTree()
+            + this.javascriptTree
+            + ".menuHide();");
+        if (StringUtils.isNotEmpty(this.onclick)) {
+            html.append(this.onclick);
+        }
+        html.append("\" onmouseover=\""
+            + this.javascriptTree
             + ".menuItemHighlight(this);\"  onmouseout=\""
-            + this.getJavascriptTree()
+            + this.javascriptTree
             + ".menuItemReset(this);\">"
             + this.getLabel()
             + "</div>");

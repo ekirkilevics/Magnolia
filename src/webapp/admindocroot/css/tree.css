@@ -1,153 +1,136 @@
-.mgnlTreeText, .mgnlTreeHeader, .mgnlTreeTextLoading
-	{
-	font-family:Verdana, sans-serif;
-	font-size:11px;
-	vertical-align:top;
-	color:#000000;
-	}
+.mgnlTreeText,.mgnlTreeHeader,.mgnlTreeTextLoading {
+	font-family: Verdana, sans-serif;
+	font-size: 11px;
+	vertical-align: top;
+	color: #000;
+}
 
-.mgnlTreeTextLoading
-	{
-	padding-top:5px;
-	height:18px;
-	}
+.mgnlTreeTextLoading {
+	padding-top: 5px;
+	height: 18px;
+}
 
+.mgnlTreeText,.mgnlTreeHeader {
+	position: relative;
+	top: 2px;
+}
 
-.mgnlTreeText, .mgnlTreeHeader
-	{
-	position:relative;
-	top:2px;
-	}
+.mgnlTreeIcon {
+	position: relative;
+	top: 1px;
+	margin-right: 3px;
+}
 
-.mgnlTreeIcon
-	{
-	position:relative;
-	top:1px;
-	margin-right:3px;
-	}
+.mgnlTreeHeader {
+	font-weight: bold;
+}
 
+.mgnlTreeShifter {
+	position: relative;
+	top: -2px;
+	margin-right: 3px;
+}
 
-.mgnlTreeHeader
-	{
-	font-weight:bold;
-	}
+div.mgnlTreeDiv {
+	width: 500px;
+	overflow: auto;
+	visibility: visible;
+	padding-left: 8px;
+	padding-right: 8px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	border-style: solid;
+	border-width: 1px;
+	border-top-color: #999;
+	border-left-color: #999;
+	border-bottom-color: #ccc;
+	border-right-color: #ccc;
+}
 
+div.mgnlTreeMenu {
+	position: absolute;
+	top: 0px;
+	left: -500px;
+	visibility: hidden;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #999;
+	z-index: 600;
+}
 
-.mgnlTreeShifter
-	{
-	position:relative;
-	top:-2px;
-	margin-right:3px;
-	}
+div.mgnlTreeMenuItem,div.mgnlTreeMenuItem_DISABLED {
+	width: 150px;
+	padding-left: 4px;
+	padding-right: 4px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	font-family: Verdana, sans-serif;
+	color: #000;
+	font-size: 11px;
+	cursor: default;
+}
 
+div.mgnlTreeMenuLine {
+	width: 158;
+	height: 1px;
+	background-color: #999;
+	cursor: default;
+}
 
-div.mgnlTreeDiv
-	{
-	width:500px;
-	overflow:auto;
-	visibility:visible;
-	padding-left:8px;
-	padding-right:8px;
-	padding-top:0px;
-	padding-bottom:0px;
-	border-style:solid;
-	border-width:1px;
-	border-top-color:#999999;
-    border-left-color:#999999;
-	border-bottom-color:#CCCCCC;
-	border-right-color:#CCCCCC;
-	}
+div.mgnlTreeMenuItemX,div.mgnlTreeMenuItemX_DISABLED {
+	width: 150px;
+	padding-left: 4px;
+	padding-right: 4px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	border-style: solid;
+	border-width: 0px;
+	border-top-width: 1px;
+	border-color: #999;
+	font-family: Verdana, sans-serif;
+	color: #000;
+	font-size: 11px;
+	cursor: default;
+}
 
-div.mgnlTreeMenu
-	{
-	position:absolute;
-	top:0px;
-	left:-500px;
-	visibility:hidden;
-	border-style:solid;
-	border-width:1px;
-	border-color:#999999;
-	z-index:600;
-	}
+div.mgnlTreeMenuItem_DISABLED {
+	color: #999;
+}
 
-div.mgnlTreeMenuItem,div.mgnlTreeMenuItem_DISABLED
-	{
-	width:150px;
-	padding-left:4px;
-	padding-right:4px;
-	padding-top:2px;
-	padding-bottom:2px;
-    font-family:Verdana, sans-serif;
-    color:#000000;
-    font-size:11px;
-	cursor:default;
-	}
+.mgnlTreeLineInter {
+	width: 100%;
+	height: 5px;
+	overflow: hidden;
+}
 
-div.mgnlTreeMenuLine
-	{
-	width:158;
-	height:1px;
-	background-color:#999999;
-	cursor:default;
-	}
-
-
-
-div.mgnlTreeMenuItemX,div.mgnlTreeMenuItemX_DISABLED
-	{
-	width:150px;
-	padding-left:4px;
-	padding-right:4px;
-	padding-top:2px;
-	padding-bottom:2px;
-	border-style:solid;
-	border-width:0px;
-	border-top-width:1px;
-	border-color:#999999;
-    font-family:Verdana, sans-serif;
-    color:#000000;
-    font-size:11px;
-	cursor:default;
-	}
-
-
-
-
-div.mgnlTreeMenuItem_DISABLED
-	{
-	color:#999999;
-	}
-
-
-.mgnlTreeLineInter
-	{
-	width:100%;
-	height:5px;
-	}
+.mgnlTreeLineInter img {
+	width: 100%;
+}
 
 .mgnlTreeText {
-    height: 15px;
-    min-width: 20px;
+	height: 15px;
+	min-width: 20px;
 }
 
 .mgnlTreeColumn {
 	white-space: nowrap;
-    min-width: 20px;
-    height: 15px;
+	min-width: 20px;
+	height: 15px;
 }
 
-.mgnlTreeMenu div{
-   line-height: 15px;
-   height: 15px;
-   display: block;
-   cursor: pointer;
-   white-space: nowrap;
+.mgnlTreeMenu div {
+	line-height: 15px;
+	height: 15px;
+	display: block;
+	cursor: pointer;
+	white-space: nowrap;
 }
 
 .mgnlTreeMenuLine {
 	height: 1px !important;
 	padding: 0 !important;
 }
-.mgnlTreeMenuItem{
-	 cursor: pointer;
+
+.mgnlTreeMenuItem {
+	cursor: pointer;
 }
