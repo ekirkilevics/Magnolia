@@ -1,5 +1,4 @@
-/*
- * Created on Apr 4, 2005
+/**
  *
  * Magnolia and its source-code is licensed under the LGPL.
  * You may copy, adapt, and redistribute this file for commercial or non-commercial use.
@@ -24,8 +23,7 @@ import javax.jcr.RepositoryException;
 
 
 /**
- * @author joshu TODO To change the template for this generated type comment go to Window - Preferences - Java - Code
- * Style - Code Templates
+ * @author joshu
  */
 public class TemplateTreeColumnHtmlRenderer implements TreeColumnHtmlRenderer {
 

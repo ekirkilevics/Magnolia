@@ -1,12 +1,16 @@
-/*
- * Created on 04.05.2005
+/**
  *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * Magnolia and its source-code is licensed under the LGPL.
+ * You may copy, adapt, and redistribute this file for commercial or non-commercial use.
+ * When copying, adapting, or redistributing this document in keeping with the guidelines above,
+ * you are required to provide proper attribution to obinary.
+ * If you reproduce or distribute the document without making any substantive modifications to its content,
+ * please use the following attribution line:
+ *
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ *
  */
 package info.magnolia.cms.servlets;
-
-import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 
 import java.lang.reflect.Method;
 
@@ -18,10 +22,9 @@ import org.apache.log4j.Logger;
 
 /**
  * Default implementation of a MVCHandler. Calls the command through reflection.
- *
  * @author Philipp Bracher
  * @version $Id: AdminInterfaceServlet.java 661 2005-05-03 14:10:45Z philipp $
- **/
+ */
 public abstract class MVCServletHandlerImpl implements MVCServletHandler {
 
     /**
@@ -30,13 +33,12 @@ public abstract class MVCServletHandlerImpl implements MVCServletHandler {
     private static Logger log = Logger.getLogger(MVCServletHandlerImpl.class);
 
     private String name;
-    
+
     protected HttpServletRequest request;
 
     protected HttpServletResponse response;
 
     protected static final String VIEW_ERROR = "error";
-    
 
     protected MVCServletHandlerImpl(String name, HttpServletRequest request, HttpServletResponse response) {
         super();
@@ -44,28 +46,26 @@ public abstract class MVCServletHandlerImpl implements MVCServletHandler {
         this.request = request;
         this.response = response;
     }
-    
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see info.magnolia.cms.servlets.MVCServletHandler#getName()
      */
     public String getName() {
         return name;
     }
 
-
     /**
      * Call the method through reflection
-     * 
      * @param command
      * @return the name of the view to show (used in renderHtml)
      */
     public String execute(String command) {
-        String view =VIEW_ERROR; 
+        String view = VIEW_ERROR;
         Method method;
         try {
             method = this.getClass().getMethod(command, new Class[]{});
-            //method.setAccessible(true);
+            // method.setAccessible(true);
             view = (String) method.invoke(this, new Object[]{});
         }
         catch (Exception e) {

@@ -1,5 +1,4 @@
-/*
- * Created on Apr 4, 2005
+/**
  *
  * Magnolia and its source-code is licensed under the LGPL.
  * You may copy, adapt, and redistribute this file for commercial or non-commercial use.
@@ -24,20 +23,17 @@ import info.magnolia.cms.util.NodeDataUtil;
 
 /**
  * @author joshu
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public class TreeColumnHtmlRendererImpl implements TreeColumnHtmlRenderer {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see info.magnolia.cms.gui.control.TreeColumnHtmlRenderer#getHtml(info.magnolia.cms.gui.control.TreeColumn)
      */
     public String renderHtml(TreeColumn treeColumn, Content content) {
         String html;
         if (treeColumn.getIsMeta()) {
-            html = new MetaDataUtil(content).getPropertyValueString(treeColumn.getName(), treeColumn
-                .getDateFormat());
+            html = new MetaDataUtil(content).getPropertyValueString(treeColumn.getName(), treeColumn.getDateFormat());
         }
         else if (treeColumn.getIsLabel()) {
             html = content.getName();
@@ -59,7 +55,7 @@ public class TreeColumnHtmlRendererImpl implements TreeColumnHtmlRenderer {
         return html;
 
     }
-    
+
     private String getHtmlIcons(TreeColumn treeColumn, Content content) {
         StringBuffer html = new StringBuffer();
         if (treeColumn.getIconsActivation()) {
