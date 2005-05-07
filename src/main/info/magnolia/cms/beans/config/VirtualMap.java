@@ -12,11 +12,12 @@
  */
 package info.magnolia.cms.beans.config;
 
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.cms.util.StringComparator;
-import info.magnolia.cms.util.regex.RegexWildcardPattern;
+import info.magnolia.cms.util.UrlPattern;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -24,7 +25,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import javax.jcr.RepositoryException;
 
@@ -88,20 +88,7 @@ public class VirtualMap {
         while (it.hasNext()) {
             Content container = (Content) it.next();
             NodeData fromURI = container.getNodeData("fromURI");
-            StringBuffer fromURIStringBuffer = new StringBuffer();
-            char[] chars = fromURI.getString().toCharArray();
-            int i = 0, last = 0;
-            while (i < chars.length) {
-                char c = chars[i];
-                if (c == '*') {
-                    fromURIStringBuffer.append(chars, last, i - last);
-                    fromURIStringBuffer.append(RegexWildcardPattern.getMultipleCharPattern());
-                    last = i + 1;
-                }
-                i++;
-            }
-            fromURIStringBuffer.append(chars, last, i - last);
-            Pattern p = Pattern.compile(fromURIStringBuffer.toString());
+            UrlPattern p = new SimpleUrlPattern(fromURI.getString());
             VirtualMap.cachedURImapping.put(p, container.getNodeData("toURI").getString());
         }
     }
@@ -114,8 +101,8 @@ public class VirtualMap {
     public String getURIMapping(String uri) {
         Iterator e = VirtualMap.cachedURImapping.keySet().iterator();
         while (e.hasNext()) {
-            Pattern p = (Pattern) e.next();
-            if (p.matcher(uri).matches()) {
+            UrlPattern p = (UrlPattern) e.next();
+            if (p.match(uri)) {
                 return (String) VirtualMap.cachedURImapping.get(p);
             }
         }

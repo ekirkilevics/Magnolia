@@ -20,7 +20,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManagerImpl;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
-import info.magnolia.cms.util.regex.RegexWildcardPattern;
+import info.magnolia.cms.util.UrlPattern;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
 import info.magnolia.repository.RepositoryNotInitializedException;
@@ -33,7 +33,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
@@ -298,7 +297,7 @@ public final class ContentRepository {
 
     private static List getSystemPermissions() {
         List acl = new ArrayList();
-        Pattern p = Pattern.compile(RegexWildcardPattern.getMultipleCharPattern());
+        UrlPattern p = UrlPattern.MATCH_ALL;
         Permission permission = new PermissionImpl();
         permission.setPattern(p);
         permission.setPermissions(Permission.ALL);

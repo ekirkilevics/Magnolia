@@ -12,9 +12,10 @@
  */
 package info.magnolia.cms.security;
 
+import info.magnolia.cms.util.UrlPattern;
+
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 
 /**
@@ -35,15 +36,15 @@ public class PermissionImpl implements Permission {
         nameStrings.put(new Long(Permission.WRITE), Permission.PERMISSION_NAME_WRITE);
     }
 
-    private Pattern pattern;
+    private UrlPattern pattern;
 
     private long permissions;
 
-    public void setPattern(Pattern value) {
+    public void setPattern(UrlPattern value) {
         this.pattern = value;
     }
 
-    public Pattern getPattern() {
+    public UrlPattern getPattern() {
         return this.pattern;
     }
 
@@ -56,7 +57,7 @@ public class PermissionImpl implements Permission {
     }
 
     public boolean match(String path) {
-        return this.pattern.matcher(path).matches();
+        return this.pattern.match(path);
     }
 
     public static String getPermissionAsName(long permission) {

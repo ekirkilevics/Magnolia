@@ -12,13 +12,12 @@
  */
 package info.magnolia.cms.security;
 
-import info.magnolia.cms.util.regex.RegexWildcardPattern;
+import info.magnolia.cms.util.SimpleUrlPattern;
+import info.magnolia.cms.util.UrlPattern;
 
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.regex.Pattern;
-
 
 
 /**
@@ -49,8 +48,7 @@ public final class SecureURI {
      * @param handle
      */
     private static synchronized void addToList(String handle) {
-        String stringPattern = RegexWildcardPattern.getEncodedString(handle);
-        Pattern pattern1 = Pattern.compile(stringPattern);
+        UrlPattern pattern1 = new SimpleUrlPattern(handle);
         SecureURI.cachedContent.put(handle, pattern1);
     }
 
@@ -81,8 +79,8 @@ public final class SecureURI {
     public static boolean isProtected(String uri) {
         Iterator e = SecureURI.cachedContent.keySet().iterator();
         while (e.hasNext()) {
-            Pattern p = (Pattern) SecureURI.cachedContent.get(e.next());
-            if (p.matcher(uri).matches()) {
+            UrlPattern p = (UrlPattern) SecureURI.cachedContent.get(e.next());
+            if (p.match(uri)) {
                 return true;
             }
         }

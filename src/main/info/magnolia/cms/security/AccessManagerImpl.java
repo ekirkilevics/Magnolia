@@ -12,8 +12,6 @@
  */
 package info.magnolia.cms.security;
 
-import info.magnolia.cms.util.regex.RegexWildcardPattern;
-
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -47,10 +45,7 @@ public class AccessManagerImpl implements AccessManager {
         for (int i = 0; i < userPermissions.size(); i++) {
             info.magnolia.cms.security.Permission p = (info.magnolia.cms.security.Permission) userPermissions.get(i);
             if (p.match(path)) {
-                int l = p.getPattern().pattern().length();
-                if (p.getPattern().pattern().indexOf(RegexWildcardPattern.getMultipleCharPattern()) > -1) {
-                    l = l - RegexWildcardPattern.getMultipleCharPattern().length();
-                }
+                int l = p.getPattern().getLength();
                 if (patternLength == l && (permission > p.getPermissions())) {
                     permission = p.getPermissions();
                 }

@@ -189,16 +189,6 @@
             </properties>
         </dependency>
         <dependency>
-            <groupId>oro</groupId>
-            <artifactId>oro</artifactId>
-            <version>2.0.8</version>
-            <type>jar</type>
-			<url>http://jakarta.apache.org/oro/</url>
-            <properties>
-                <war.bundle>true</war.bundle>
-            </properties>
-        </dependency>
-        <dependency>
             <groupId>jstl</groupId>
             <artifactId>jstl</artifactId>
             <version>1.1.2</version>
@@ -307,6 +297,7 @@
                 <war.bundle>true</war.bundle>
             </properties>
         </dependency>
+        <!--
         <dependency>
             <groupId>mx4j</groupId>
             <artifactId>mx4j-jmx</artifactId>
@@ -316,6 +307,17 @@
                 <war.bundle>true</war.bundle>
             </properties>
         </dependency>
+        <dependency>
+            <groupId>oro</groupId>
+            <artifactId>oro</artifactId>
+            <version>2.0.8</version>
+            <type>jar</type>
+			<url>http://jakarta.apache.org/oro/</url>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
+        </dependency>
+        -->
         <dependency>
             <groupId>taglibs</groupId>
             <artifactId>mailer</artifactId>

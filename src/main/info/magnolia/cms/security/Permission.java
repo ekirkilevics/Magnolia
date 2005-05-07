@@ -12,7 +12,7 @@
  */
 package info.magnolia.cms.security;
 
-import java.util.regex.Pattern;
+import info.magnolia.cms.util.UrlPattern;
 
 
 /**
@@ -59,9 +59,9 @@ public interface Permission {
 
     long WRITE = ADD | SET | READ;
 
-    void setPattern(Pattern value);
+    void setPattern(UrlPattern value);
 
-    Pattern getPattern();
+    UrlPattern getPattern();
 
     void setPermissions(long value);
 

@@ -16,12 +16,12 @@ import info.magnolia.cms.core.CacheHandler;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.util.regex.RegexWildcardPattern;
+import info.magnolia.cms.util.SimpleUrlPattern;
+import info.magnolia.cms.util.UrlPattern;
 
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
@@ -115,8 +115,7 @@ public final class Cache {
         while (it.hasNext()) {
             Content container = (Content) it.next();
             NodeData uri = container.getNodeData("URI");
-            String pattern = RegexWildcardPattern.getEncodedString(uri.getString());
-            Pattern p = Pattern.compile(pattern);
+            UrlPattern p = new SimpleUrlPattern(uri.getString());
             cachedCacheableURIMapping.put(p, BooleanUtils.toBooleanObject(allow));
         }
         try {
@@ -171,10 +170,10 @@ public final class Cache {
         int lastMatchedPatternlength = 0;
 
         while (listEnum.hasNext()) {
-            Pattern p = (Pattern) listEnum.next();
-            if (p.matcher(uri).matches()) {
-                // todo this wont work if pattern has more than one windcards
-                int patternLength = getPatternLength(p.pattern());
+            UrlPattern p = (UrlPattern) listEnum.next();
+            if (p.match(uri)) {
+
+                int patternLength = p.getLength();
                 if (lastMatchedPatternlength < patternLength) {
                     lastMatchedPatternlength = patternLength;
                     isAllowed = ((Boolean) cachedCacheableURIMapping.get(p)).booleanValue();
@@ -184,11 +183,4 @@ public final class Cache {
         return isAllowed;
     }
 
-    private static int getPatternLength(String pattern) {
-        int length = pattern.length();
-        if (pattern.indexOf(RegexWildcardPattern.getMultipleCharPattern()) > -1) {
-            return length - RegexWildcardPattern.getMultipleCharPattern().length();
-        }
-        return length;
-    }
 }

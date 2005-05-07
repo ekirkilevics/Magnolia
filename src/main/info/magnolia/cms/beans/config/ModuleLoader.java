@@ -22,14 +22,13 @@ import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.AccessManagerImpl;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
-import info.magnolia.cms.util.regex.RegexWildcardPattern;
+import info.magnolia.cms.util.UrlPattern;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
@@ -170,7 +169,7 @@ public final class ModuleLoader {
         }
         Session moduleRepositoryTicket = ContentRepository.getRepository(repositoryName).login(simpleCredentials, null);
         List acl = new ArrayList();
-        Pattern p = Pattern.compile(RegexWildcardPattern.getMultipleCharPattern());
+        UrlPattern p = UrlPattern.MATCH_ALL;
         Permission permission = new PermissionImpl();
         permission.setPattern(p);
         permission.setPermissions(Permission.ALL);
@@ -186,7 +185,7 @@ public final class ModuleLoader {
         Map sharedHierarchy = new Hashtable();
         Iterator repositories = sharedRepositoriesNode.getChildren().iterator();
         List acl = new ArrayList();
-        Pattern p = Pattern.compile(RegexWildcardPattern.getMultipleCharPattern());
+        UrlPattern p = UrlPattern.MATCH_ALL;
         while (repositories.hasNext()) {
             Content repositoryConfig = (Content) repositories.next();
             String id = repositoryConfig.getNodeData("id").getString();

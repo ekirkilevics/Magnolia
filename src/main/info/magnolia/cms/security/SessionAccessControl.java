@@ -17,13 +17,13 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.SearchFactory;
-import info.magnolia.cms.util.regex.RegexWildcardPattern;
+import info.magnolia.cms.util.SimpleUrlPattern;
+import info.magnolia.cms.util.UrlPattern;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import javax.jcr.LoginException;
 import javax.jcr.PathNotFoundException;
@@ -323,20 +323,9 @@ public final class SessionAccessControl {
             Iterator children = aclCollection.iterator();
             while (children.hasNext()) {
                 Content map = (Content) children.next();
-                StringBuffer uriStringBuffer = new StringBuffer();
-                char[] chars = map.getNodeData("path").getString().toCharArray();
-                int i = 0, last = 0;
-                while (i < chars.length) {
-                    char c = chars[i];
-                    if (c == '*') {
-                        uriStringBuffer.append(chars, last, i - last);
-                        uriStringBuffer.append(RegexWildcardPattern.getMultipleCharPattern());
-                        last = i + 1;
-                    }
-                    i++;
-                }
-                uriStringBuffer.append(chars, last, i - last);
-                Pattern p = Pattern.compile(uriStringBuffer.toString());
+                String path = map.getNodeData("path").getString();
+
+                UrlPattern p = new SimpleUrlPattern(path);
                 Permission permission = new PermissionImpl();
                 permission.setPattern(p);
                 permission.setPermissions(map.getNodeData("permissions").getLong());
