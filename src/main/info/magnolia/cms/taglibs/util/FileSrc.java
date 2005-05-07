@@ -30,7 +30,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Marcel Salathe
- * @version $Revision$ ($Author$)
+ * @version $Revision $ ($Author $)
  * @deprecated
  */
 public class FileSrc extends TagSupport {
@@ -105,6 +105,9 @@ public class FileSrc extends TagSupport {
         this.fileNameOnly = "true";
     }
 
+    /**
+     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
+     */
     public int doStartTag() {
         this.request = (HttpServletRequest) pageContext.getRequest();
         this.actpage = Resource.getCurrentActivePage(request);

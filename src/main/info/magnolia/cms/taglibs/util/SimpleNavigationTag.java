@@ -250,8 +250,8 @@ public class SimpleNavigationTag extends TagSupport {
     private boolean hasVisibleChildren(Content page) {
         Iterator it = page.getChildren().iterator();
         while (it.hasNext()) {
-            Content child = (Content) it.next();
-            if (!child.getNodeData(StringUtils.defaultString(this.hideInNav, DEFAULT_HIDEINNAV_NODEDATA)).getBoolean()) {
+            Content ch = (Content) it.next();
+            if (!ch.getNodeData(StringUtils.defaultString(this.hideInNav, DEFAULT_HIDEINNAV_NODEDATA)).getBoolean()) {
                 return true;
             }
         }

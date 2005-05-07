@@ -21,7 +21,8 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Vinzenz Wyser
- * @version $Revision$ ($Author$)
+ * @author Fabrizio Giustina
+ * @version $Revision $ ($Author $)
  */
 public class StrToObj extends BodyTagSupport {
 
@@ -37,7 +38,7 @@ public class StrToObj extends BodyTagSupport {
 
     private String var;
 
-    private String delims = "\n";
+    private String delims;
 
     public void setVar(String var) {
         this.var = var;
@@ -53,22 +54,22 @@ public class StrToObj extends BodyTagSupport {
     public int doEndTag() {
         String str = getBodyContent().getString();
         if (StringUtils.isNotEmpty(str)) {
-            String[] obj = str.split(this.delims);
-            try {
-                pageContext.setAttribute(this.var, obj, PageContext.PAGE_SCOPE);
-            }
-            catch (Exception e) {
-                log.error(e.getMessage());
-            }
+            String[] obj = str.split(StringUtils.defaultString(this.delims, "\n"));
+            pageContext.setAttribute(this.var, obj, PageContext.PAGE_SCOPE);
+
         }
         else {
-            try {
-                pageContext.setAttribute(this.var, StringUtils.EMPTY, PageContext.PAGE_SCOPE);
-            }
-            catch (Exception e) {
-                log.error(e.getMessage());
-            }
+            pageContext.setAttribute(this.var, StringUtils.EMPTY, PageContext.PAGE_SCOPE);
         }
         return EVAL_PAGE;
+    }
+
+    /**
+     * @see javax.servlet.jsp.tagext.BodyTagSupport#release()
+     */
+    public void release() {
+        this.var = null;
+        this.delims = null;
+        super.release();
     }
 }

@@ -20,12 +20,15 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
 /**
+ * Draws a breadcrumbs with links to parents of the current page.
  * @author Marcel Salathe
- * @version $Revision$ ($Author$)
+ * @author Fabrizio Giustina
+ * @version $Revision $ ($Author $)
  */
 public class Breadcrumb extends TagSupport {
 
@@ -39,10 +42,38 @@ public class Breadcrumb extends TagSupport {
      */
     private static Logger log = Logger.getLogger(Breadcrumb.class);
 
-    private String delimiter = " > ";
+    /**
+     * Delimeter between links.
+     */
+    private String delimiter;
 
+    /**
+     * Breadcrumb start level.
+     */
     private int startLevel = 1;
 
+    /**
+     * Setter for the <code>delimeter</code> tag attribute.
+     * @param delimiter delimeter between links
+     */
+    public void setDelimiter(String delimiter) {
+        this.delimiter = delimiter;
+    }
+
+    /**
+     * Setter for the <code>startLevel</code> tag attribute.
+     * @param startLevel breadcrumb start level
+     */
+    public void setStartLevel(String startLevel) {
+        this.startLevel = (new Integer(startLevel)).intValue();
+        if (this.startLevel < 1) {
+            this.startLevel = 1;
+        }
+    }
+
+    /**
+     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
+     */
     public int doStartTag() throws JspException {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         Content actpage = Resource.getCurrentActivePage(request);
@@ -52,7 +83,7 @@ public class Breadcrumb extends TagSupport {
             JspWriter out = pageContext.getOut();
             for (int i = this.startLevel; i <= currentLevel; i++) {
                 if (i != this.startLevel) {
-                    out.print(this.delimiter);
+                    out.print(StringUtils.defaultString(this.delimiter, " > "));
                 }
                 out.print("<a href=\"");
                 out.print(request.getContextPath());
@@ -69,14 +100,12 @@ public class Breadcrumb extends TagSupport {
         return super.doStartTag();
     }
 
-    public void setDelimiter(String delimiter) {
-        this.delimiter = delimiter;
-    }
-
-    public void setStartLevel(String startLevel) {
-        this.startLevel = (new Integer(startLevel)).intValue();
-        if (this.startLevel < 1) {
-            this.startLevel = 1;
-        }
+    /**
+     * @see javax.servlet.jsp.tagext.TagSupport#release()
+     */
+    public void release() {
+        this.startLevel = 1;
+        this.delimiter = null;
+        super.release();
     }
 }

@@ -12,14 +12,21 @@
  */
 package info.magnolia.cms.taglibs.util;
 
+import java.io.IOException;
+
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyTagSupport;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.log4j.Logger;
 
 
 /**
+ * Escapes html in body.
  * @author Marcel Salathe
- * @version $Revision$ ($Author$)
+ * @author Fabrizio Giustina
+ * @version $Revision $ ($Author $)
  */
 public class Xmp extends BodyTagSupport {
 
@@ -28,24 +35,25 @@ public class Xmp extends BodyTagSupport {
      */
     private static final long serialVersionUID = 222L;
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(Xmp.class);
 
+    /**
+     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
+     */
     public int doEndTag() {
         JspWriter out = pageContext.getOut();
         String xmpString = getBodyContent().getString();
         try {
-            xmpString = changeToXmp(xmpString);
-            out.print(xmpString);
+            out.print(StringEscapeUtils.escapeHtml(xmpString));
         }
-        catch (Exception e) {
-            log.error(e.getMessage());
+        catch (IOException e) {
+            // should never happen
+            throw new NestableRuntimeException(e);
         }
         return EVAL_PAGE;
     }
 
-    private String changeToXmp(String string) {
-        string = string.replaceAll("<", "&lt;");
-        string = string.replaceAll(">", "&gt;");
-        return string;
-    }
 }

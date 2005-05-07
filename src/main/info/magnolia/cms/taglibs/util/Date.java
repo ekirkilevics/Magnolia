@@ -30,7 +30,7 @@ import org.apache.log4j.Logger;
 /**
  * @author Marcel Salathe
  * @deprecated
- * @version $Revision$ ($Author$)
+ * @version $Revision $ ($Author $)
  */
 public class Date extends TagSupport {
 
@@ -115,6 +115,9 @@ public class Date extends TagSupport {
         this.language = language;
     }
 
+    /**
+     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
+     */
     public int doStartTag() {
         if (this.actpage) {
             this.contentNode = Resource.getCurrentActivePage((HttpServletRequest) pageContext.getRequest());
