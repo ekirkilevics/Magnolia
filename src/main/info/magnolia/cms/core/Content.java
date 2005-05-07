@@ -665,8 +665,7 @@ public class Content extends ContentHandler implements Cloneable {
             return this.node.getPath();
         }
         catch (RepositoryException e) {
-            log.error("Failed to get handle");
-            log.error(e.getMessage(), e);
+            log.error("Failed to get handle: " + e.getMessage(), e);
             return StringUtils.EMPTY;
         }
     }

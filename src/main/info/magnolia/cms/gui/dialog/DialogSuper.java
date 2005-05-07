@@ -206,7 +206,7 @@ public abstract class DialogSuper implements DialogInterface {
             log.debug("removeSessionAttribute() for " + name + " failed because this.request is null");
         }
     }
-    
+
     public HttpServletRequest getRequest() {
         return this.request;
     }
@@ -289,11 +289,7 @@ public abstract class DialogSuper implements DialogInterface {
         }
 
         try {
-            Iterator it = this
-                .getWebsiteNode()
-                .getContent(this.getName())
-                .getNodeDataCollection()
-                .iterator();
+            Iterator it = this.getWebsiteNode().getContent(this.getName()).getNodeDataCollection().iterator();
             List l = new ArrayList();
             while (it.hasNext()) {
                 NodeData data = (NodeData) it.next();
@@ -352,15 +348,21 @@ public abstract class DialogSuper implements DialogInterface {
             String controlType = configNode.getNodeData("controlType").getString();
 
             if (StringUtils.isEmpty(controlType)) {
-                log.warn("Missing control type for configNode " + configNode.getHandle());
+                String handle = configNode.getHandle();
+                if (!handle.startsWith("options")) {
+                    log.warn("Missing control type for configNode " + configNode.getHandle());
+                }
                 return;
             }
 
             if (log.isDebugEnabled()) {
                 log.debug("Loading control \"" + controlType + "\" for " + configNode.getHandle());
             }
-            DialogInterface dialogControl = DialogFactory.loadDialog(request, response, this
-                .getWebsiteNode(), configNode);
+            DialogInterface dialogControl = DialogFactory.loadDialog(
+                request,
+                response,
+                this.getWebsiteNode(),
+                configNode);
             this.addSub(dialogControl);
         }
     }
