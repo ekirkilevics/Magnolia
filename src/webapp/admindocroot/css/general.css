@@ -1,28 +1,24 @@
-.mgnlBgDark,body.mgnlDialogBody
-	{
-	background-color:#F0F2E6;
-	}
-.mgnlBgDark
-  {
-  margin:0;
-  padding:0;
-  }
-.mgnlBgLight,div.mgnlDialogTab,div.mgnlTreeDiv,.mgnlTreeMenu,.mgnlAdminCentralButtonsDiv
-	{
-	background-color:#FAFBF4;
-	}
+.mgnlBgDark,body.mgnlDialogBody {
+	background-color: #F0F2E6;
+}
 
-.mgnlText
-	{
-	font-family:Verdana, sans-serif;
-	font-size:11px;
-	color:#000000;
-	}
+.mgnlBgDark {
+	margin: 0;
+	padding: 0;
+}
 
-.mgnlTextSmall
-	{
-	font-family:Verdana, sans-serif;
-	font-size:9px;
-	color:#000000;
-	}
+.mgnlBgLight,div.mgnlDialogTab,div.mgnlTreeDiv,.mgnlTreeMenu,.mgnlAdminCentralButtonsDiv {
+	background-color: #FAFBF4;
+}
 
+.mgnlText {
+	font-family: Verdana, sans-serif;
+	font-size: 11px;
+	color: #000000;
+}
+
+.mgnlTextSmall {
+	font-family: Verdana, sans-serif;
+	font-size: 9px;
+	color: #000;
+}

@@ -1,17 +1,13 @@
-td.mgnlCalendar, td.mgnlCalendarHi, td.mgnlCalendarHeader, td.mgnlCalendarOver
-	{
-	padding:4px;
-	}
+td.mgnlCalendar,td.mgnlCalendarHi,td.mgnlCalendarHeader,td.mgnlCalendarOver {
+	padding: 4px;
+}
 
+td.mgnlCalendarOver {
+	cursor: default;
+	background-color: #F2FAC5;
+}
 
-td.mgnlCalendarOver
-	{
-	cursor:default;
-	background-color:#F2FAC5;
-	}
-
-td.mgnlCalendarHi
-	{
-	cursor:default;
-	background-color:#E1F56F;
-	}
+td.mgnlCalendarHi {
+	cursor: default;
+	background-color: #E1F56F;
+}
