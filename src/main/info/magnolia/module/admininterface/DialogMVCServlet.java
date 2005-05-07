@@ -44,23 +44,30 @@ public class DialogMVCServlet extends MVCServlet {
     private static Logger log = Logger.getLogger(DialogMVCServlet.class);
 
     /**
-     * 
+     *
      */
     protected MVCServletHandler getHandler(HttpServletRequest request, HttpServletResponse response) {
         String dialogName = RequestFormUtil.getParameter(request, "mgnlDialog");
-        if(StringUtils.isEmpty(dialogName)){
-            dialogName = StringUtils.substringAfterLast(request.getRequestURL().toString(), "/").replaceFirst(".html","");
+        if (StringUtils.isEmpty(dialogName)) {
+            dialogName = StringUtils.substringAfterLast(request.getRequestURL().toString(), "/").replaceFirst(
+                ".html",
+                "");
         }
-        
+
         DialogMVCHandler handler = null;
         // old paragrah dialog
-        if(dialogName.equals("standard")) {
+        if (dialogName.equals("standard") || dialogName.equals("standard.jsp")) {
             // this is a workaround for the current paragraphs
             String paragraph = RequestFormUtil.getParameter(request, "mgnlParagraph");
             if (StringUtils.isNotEmpty(paragraph)) {
                 if (paragraph.indexOf(",") == -1) {
                     Content configNode = ParagraphEditDialog.getConfigNode(request, paragraph);
-                    handler = ConfiguredDialog.getConfiguredDialog(paragraph, configNode, request, response, ParagraphEditDialog.class);
+                    handler = ConfiguredDialog.getConfiguredDialog(
+                        paragraph,
+                        configNode,
+                        request,
+                        response,
+                        ParagraphEditDialog.class);
                 }
                 else {
                     handler = new ParagraphSelectDialog(request, response);
