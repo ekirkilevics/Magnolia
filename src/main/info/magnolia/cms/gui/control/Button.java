@@ -236,4 +236,12 @@ public class Button extends ControlSuper {
     public int getButtonType() {
         return this.buttonType;
     }
+
+    /**
+     * @deprecated do nothing
+     * @param i ignored
+     */
+    public void setLabelNbspPadding(int i) {
+        // do nothing
+    }
 }

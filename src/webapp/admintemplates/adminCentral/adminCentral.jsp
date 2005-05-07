@@ -137,7 +137,6 @@
 	b4.setCssClass(bs.getCssClass());
 	b4.setLabel(labelPre+LocaleSupport.getLocalizedMessage(pageContext, "menu.about")+labelPost);
 	b4.setOnclick("mgnlAdminCentralSwitchExtractNonTree('/.magnolia/adminCentral/extractAbout.html');");
-	b4.setLabelNbspPadding(0);
 	b4.setPushButtonTag("div");
 	b4.setIconSrc(request.getContextPath() + new Icon().getSrc("about",Icon.SIZE_MEDIUM));
 	bs.setButtons(b4);
