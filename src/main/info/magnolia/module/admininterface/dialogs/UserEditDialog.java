@@ -1,9 +1,7 @@
 package info.magnolia.module.admininterface.dialogs;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.gui.control.Save;
@@ -17,16 +15,10 @@ import info.magnolia.cms.gui.dialog.DialogPassword;
 import info.magnolia.cms.gui.dialog.DialogSelect;
 import info.magnolia.cms.gui.dialog.DialogStatic;
 import info.magnolia.cms.gui.dialog.DialogTab;
-import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.security.SessionAccessControl;
-import info.magnolia.cms.servlets.BasePageServlet;
-import info.magnolia.cms.util.Resource;
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -38,7 +30,6 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -218,7 +209,10 @@ public class UserEditDialog extends ConfiguredDialog {
             u0.createNodeData("permissions", saveControl.getValue(PERMISSION_READ), PropertyType.LONG);
 
             Content u1 = aclUsers.createContent("01", ItemType.CONTENTNODE);
-            u1.createNodeData("path", saveControl.getValue(user.getHandle() + "/" + NODE_ROLES + "/*"), PropertyType.STRING);
+            u1.createNodeData(
+                "path",
+                saveControl.getValue(user.getHandle() + "/" + NODE_ROLES + "/*"),
+                PropertyType.STRING);
             u1.createNodeData("permissions", saveControl.getValue(PERMISSION_READ), PropertyType.LONG);
 
             Content u2 = aclUsers.createContent("02", ItemType.CONTENTNODE);
