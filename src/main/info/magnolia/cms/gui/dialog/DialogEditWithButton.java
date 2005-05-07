@@ -101,7 +101,7 @@ public class DialogEditWithButton extends DialogBox {
             this.getButton().setLabel(label);
         }
         for (int i = 0; i < this.getButtons().size(); i++) {
-            out.write("</td><td>&nbsp;</td><td class=\"" + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">");
+            out.write("</td><td></td><td class=\"" + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">");
             out.write(this.getButton(i).getHtml());
         }
         out.write("</td></tr></table>");

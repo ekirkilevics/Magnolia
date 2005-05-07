@@ -30,8 +30,6 @@ public class ButtonSet extends ControlSuper {
     // default values for divided button (checkbox, radio)
     private static final String HTML_PRE_DIVIDED = "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">";
 
-    private static final String HTML_INTER_DIVIDED = "";
-
     private static final String HTML_POST_DIVIDED = "</table>";
 
     private static final String BUTTONHTML_PRE_DIVIDED = "<tr><td>";
@@ -41,17 +39,8 @@ public class ButtonSet extends ControlSuper {
     private static final String BUTTONHTML_POST_DIVIDED = "</td></tr>";
 
     // default values for push button
-    private static final String HTML_PRE_PUSH = "";
 
     private static final String HTML_INTER_PUSH = " ";
-
-    private static final String HTML_POST_PUSH = "";
-
-    private static final String BUTTONHTML_PRE_PUSH = "";
-
-    private static final String BUTTONHTML_INTER_PUSH = "";
-
-    private static final String BUTTONHTML_POST_PUSH = "";
 
     private List buttons = new ArrayList();
 
@@ -97,7 +86,7 @@ public class ButtonSet extends ControlSuper {
     public String getButtonHtmlPre() {
         if (this.buttonHtmlPre == null) {
             if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON) {
-                return BUTTONHTML_PRE_PUSH;
+                return StringUtils.EMPTY;
             }
             return BUTTONHTML_PRE_DIVIDED;
         }
@@ -111,7 +100,7 @@ public class ButtonSet extends ControlSuper {
     public String getButtonHtmlInter() {
         if (this.buttonHtmlInter == null) {
             if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON) {
-                return BUTTONHTML_INTER_PUSH;
+                return StringUtils.EMPTY;
             }
             return BUTTONHTML_INTER_DIVIDED;
         }
@@ -125,7 +114,7 @@ public class ButtonSet extends ControlSuper {
     public String getButtonHtmlPost() {
         if (this.buttonHtmlPost == null) {
             if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON) {
-                return BUTTONHTML_POST_PUSH;
+                return StringUtils.EMPTY;
             }
             return BUTTONHTML_POST_DIVIDED;
         }
@@ -136,7 +125,7 @@ public class ButtonSet extends ControlSuper {
     public String getHtmlPre() {
         if (super.getHtmlPre(null) == null) {
             if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON) {
-                return HTML_PRE_PUSH;
+                return StringUtils.EMPTY;
             }
             return HTML_PRE_DIVIDED;
         }
@@ -148,7 +137,7 @@ public class ButtonSet extends ControlSuper {
             if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON) {
                 return HTML_INTER_PUSH;
             }
-            return HTML_INTER_DIVIDED;
+            return StringUtils.EMPTY;
         }
         return super.getHtmlInter();
     }
@@ -156,7 +145,7 @@ public class ButtonSet extends ControlSuper {
     public String getHtmlPost() {
         if (super.getHtmlPost(null) == null) {
             if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON) {
-                return HTML_POST_PUSH;
+                return StringUtils.EMPTY;
             }
             return HTML_POST_DIVIDED;
         }

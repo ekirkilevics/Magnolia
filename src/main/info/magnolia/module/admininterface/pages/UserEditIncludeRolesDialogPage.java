@@ -59,13 +59,13 @@ public class UserEditIncludeRolesDialogPage extends BasePageServlet {
             + "\"><input name=\"acl'+index+'Path\" id=\"acl'+index+'Path\" class=\""
             + CssConstants.CSSCLASS_EDIT
             + "\" type=\"text\" style=\"width:100%;\" value=\"'+path+'\" /></td>");
-        html.append("<td width=\"1\">&nbsp;</td>");
+        html.append("<td width=\"1\"></td>");
         html.append("<td width=\"1\" class=\""
             + CssConstants.CSSCLASS_EDITWITHBUTTON
             + "\">"
             + choose.getHtml()
             + "</td>");
-        html.append("<td width=\"1\">&nbsp;</td>");
+        html.append("<td width=\"1\"></td>");
         html.append("<td width=\"1\" class=\""
             + CssConstants.CSSCLASS_EDITWITHBUTTON
             + "\">"

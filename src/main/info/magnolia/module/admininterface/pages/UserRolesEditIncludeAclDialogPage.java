@@ -98,7 +98,7 @@ public class UserRolesEditIncludeAclDialogPage extends BasePageServlet {
             + "\">"
             + accessRight.getHtml()
             + "</td>");
-        html.append("<td width=\"1\" class=\"mgnlDialogBoxInput\">&nbsp;</td>");
+        html.append("<td width=\"1\" class=\"mgnlDialogBoxInput\"></td>");
 
         if (!repository.equals(ContentRepository.USERS) && !repository.equals(ContentRepository.USER_ROLES)) {
             html.append("<td width=\"1\" class=\""
@@ -106,7 +106,7 @@ public class UserRolesEditIncludeAclDialogPage extends BasePageServlet {
                 + "\">"
                 + accessType.getHtml()
                 + "</td>");
-            html.append("<td width=\"1\">&nbsp;</td>");
+            html.append("<td width=\"1\"></td>");
         }
 
         html.append("<td width=\"100%\"class=\""
@@ -114,13 +114,13 @@ public class UserRolesEditIncludeAclDialogPage extends BasePageServlet {
             + "\">"
             + path.getHtml()
             + "</td>");
-        html.append("<td width=\"1\">&nbsp;</td>");
+        html.append("<td width=\"1\"></td>");
         html.append("<td width=\"1\" class=\""
             + CssConstants.CSSCLASS_EDITWITHBUTTON
             + "\">"
             + choose.getHtml()
             + "</td>");
-        html.append("<td width=\"1\">&nbsp;</td>");
+        html.append("<td width=\"1\"></td>");
         html.append("<td width=\"1\" class=\""
             + CssConstants.CSSCLASS_EDITWITHBUTTON
             + "\">"
@@ -145,7 +145,7 @@ public class UserRolesEditIncludeAclDialogPage extends BasePageServlet {
         Select repositorySelect = getReposiotySelect(request);
 
         out.print(repositorySelect.getHtml());
-        out.print("<p>&nbsp;<p/>");
+        out.print("<p><p/>");
         for (int i = 0; i < ContentRepository.ALL_REPOSITORIES.length; i++) {
             writeRepositoryTable(request, response, msgs, out, role, ContentRepository.ALL_REPOSITORIES[i]);
         }

@@ -150,7 +150,6 @@ public class BarMain extends Bar {
     public void setButtonEditView() {
         Button b = new Button();
         b.setLabel("&raquo;");
-        b.setLabelNbspPadding(1);
         b.setOnclick("mgnlPreview(false);");
         this.setButtonEditView(b);
     }

@@ -45,7 +45,7 @@ public class Date extends TagSupport {
 
     private String nodeDataName;
 
-    private String language = "";
+    private String language;
 
     private transient Content contentNode;
 

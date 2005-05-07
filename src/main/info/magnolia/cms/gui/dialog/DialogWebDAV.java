@@ -579,9 +579,9 @@ public class DialogWebDAV extends DialogBox {
             out.write("</td>");
             out.write("<td style=\"text-align:right;\">" + (String) properties.get("sizeStringValue") + "</td>");
             out.write("<td>" + (String) properties.get("sizeStringUnit") + "</td>");
-            out.write("<td>&nbsp;&nbsp;</td>");
+            out.write("<td></td>");
             out.write("<td style='white-space:nowrap;'>" + (String) properties.get("lastModifiedString") + "</td>");
-            out.write("<td>&nbsp;&nbsp;</td>");
+            out.write("<td></td>");
             out.write("</tr>");
         }
 

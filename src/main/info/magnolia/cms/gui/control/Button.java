@@ -36,8 +36,6 @@ public class Button extends ControlSuper {
 
     private int buttonType = BUTTONTYPE_PUSHBUTTON;
 
-    private int labelNbspPadding = 3;
-
     private String pushButtonTag = "span";
 
     private boolean small;
@@ -47,30 +45,6 @@ public class Button extends ControlSuper {
 
     public Button(String name, String value) {
         super(name, value);
-    }
-
-    // why padding with &nbsp;s ?
-    // css padding causes problems in td of width=1 (td width equals to text width, not entire button)
-    public void setLabelNbspPadding(int i) {
-        this.labelNbspPadding = i;
-    }
-
-    public int getLabelNbspPadding() {
-        return this.labelNbspPadding;
-    }
-
-    /**
-     * @todo this method is now "disabled", returning an empty string. Will be removed if the css-only padding work
-     * everywhere. Testing.
-     * @return ""
-     */
-    public String getHtmlLabelNbspPadding() {
-        return "";
-        // StringBuffer html = new StringBuffer();
-        // for (int i = 0; i < this.getLabelNbspPadding(); i++) {
-        // html.append("&nbsp;");
-        // }
-        // return html.toString();
     }
 
     public void setLabel(String s) {
@@ -95,7 +69,7 @@ public class Button extends ControlSuper {
 
     public String getIconSrc() {
         if (iconSrc == null) {
-            return "";
+            return StringUtils.EMPTY;
         }
 
         // iconSrc already has context path
@@ -219,7 +193,6 @@ public class Button extends ControlSuper {
         if (StringUtils.isEmpty(this.getCssClass())) {
             if (this.getSmall()) {
                 this.setCssClass(CSSCLASS_CONTROLBUTTONSMALL);
-                this.setLabelNbspPadding(1);
             }
             else {
                 this.setCssClass(CSSCLASS_CONTROLBUTTON);
@@ -241,11 +214,9 @@ public class Button extends ControlSuper {
         html.append(this.getHtmlCssClass());
         html.append(this.getHtmlCssStyles());
         html.append(">");
-        html.append(this.getHtmlLabelNbspPadding());
 
         html.append(this.getIconSrc());
         html.append(this.getLabel());
-        html.append(this.getHtmlLabelNbspPadding());
         html.append("</" + this.getPushButtonTag() + ">");
         return html.toString();
     }

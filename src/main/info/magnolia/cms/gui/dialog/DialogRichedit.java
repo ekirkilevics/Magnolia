@@ -410,10 +410,10 @@ public class DialogRichedit extends DialogBox {
                 out.write(" <span class=\"kupu-tb-buttongroup\">");
                 out.write("<button type=\"button\" class=\"kupu-undo\" title=\""
                     + msgs.get("dialog.richedit.undo")
-                    + "\" onclick=\"kupuui.basicButtonHandler('undo');\">&nbsp;</button>");
+                    + "\" onclick=\"kupuui.basicButtonHandler('undo');\"></button>");
                 out.write("<button type=\"button\" class=\"kupu-redo\" title=\""
                     + msgs.get("dialog.richedit.redo")
-                    + "\" onclick=\"kupuui.basicButtonHandler('redo');\">&nbsp;</button>");
+                    + "\" onclick=\"kupuui.basicButtonHandler('redo');\"></button>");
                 out.write(" </span>");
             }
             if (this.getConfigValue("toolbarLists", "true").equals("true")) {
@@ -421,10 +421,10 @@ public class DialogRichedit extends DialogBox {
                 // kupu note: list button events are set on the list tool
                 out.write("<button type=\"button\" class=\"kupu-insertorderedlist\" title=\""
                     + msgs.get("dialog.richedit.numberedlist")
-                    + "\" id=\"kupu-list-ol-addbutton\">&nbsp;</button>");
+                    + "\" id=\"kupu-list-ol-addbutton\"></button>");
                 out.write("<button type=\"button\" class=\"kupu-insertunorderedlist\" title=\""
                     + msgs.get("dialog.richedit.unorderedlist")
-                    + "\" id=\"kupu-list-ul-addbutton\">&nbsp;</button>");
+                    + "\" id=\"kupu-list-ul-addbutton\"></button>");
                 out.write("</span>");
                 out.write("<select id=\"kupu-ulstyles\" class=\"" + CssConstants.CSSCLASS_SELECT + "\">");
                 out.write("  <option value=\"disc\">Disc</option>");
