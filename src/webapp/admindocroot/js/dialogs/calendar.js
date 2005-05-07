@@ -175,17 +175,13 @@ Calendar.prototype.getMonthlyCalendarCode = function() {
 	vCode = vCode + "</tr>";
 
 	vCode = vCode + "<tr><td class=mgnlDialogBoxLine colspan=7><img src="+nullGif+" width=1 height=1></td></tr>";
-	//vCode = vCode + "<tr><td height=4></td></tr>";
 
 	vCode = vCode + vHeader_Code;
 
-	//vCode = vCode + "<tr><td height=4></td></tr>";
 	vCode = vCode + "<tr><td class=mgnlDialogBoxLine colspan=7><img src="+nullGif+" width=1 height=1></td></tr>";
-	//vCode = vCode + "<tr><td height=4></td></tr>";
 
 	vCode = vCode + vData_Code;
 
-	//vCode = vCode + "<tr><td height=4></td></tr>";
 	vCode = vCode + "<tr><td class=mgnlDialogBoxLine colspan=7><img src="+nullGif+" width=1 height=1></td></tr>";
 
 	vCode = vCode + "</table>";
@@ -222,9 +218,6 @@ Calendar.prototype.show = function() {
 	this.wwrite("}");
 
 	this.wwrite("function selectedDateShow() {");
-	//this.wwrite("var d=dateString();");
-	//this.wwrite("var td=document.getElementById('selectedDateTd');");
-	//this.wwrite("td.innerHTML='<font size=2 face="+fontface+">Selected date: '+d+'</font>';");
 	this.wwrite("}");
 
 
@@ -257,7 +250,6 @@ Calendar.prototype.show = function() {
 		"alink=\"" + this.gLinkColor + "\" " +
 		"text=\"" + this.gTextColor + "\">");
 
-//	this.wwrite("<table width='100%' border='1' cellspacing='0' cellpadding='0'><tr><td colspan='2'>");
 	this.wwrite("<table width='1%' border='0' cellspacing='0' cellpadding='0'>");
 	this.wwrite("<tr>");
 	this.wwrite("<td><img src="+nullGif+" width=11 height=11></td>");
@@ -292,8 +284,6 @@ Calendar.prototype.show = function() {
 	this.wwrite("</tr></table>");
 
 
-   // this.wwrite("<table border='0' cellpadding='0' cellspacing='0'>");
-  //  this.wwrite("<tr><td><img src='.admindocroot/0.gif' width='1' height='8'/></td></tr></table>");
 
 	this.wwrite("<table width='100%' border='0' cellspacing='0' cellpadding='0'>");
 
@@ -329,10 +319,6 @@ Calendar.prototype.show = function() {
 	this.wwrite("<tr><td></td><td><br>");
 	this.wwrite("<form name=mgnlFormMain>");
 
-
-	//enz
-	//this.wwrite("<input type='' name='selectedDate' value='"+gNow.getFullYear().toString()+"-"+((gNow.getMonth()*1)+1).toString()+"-"+gNow.getDate()+"'>");
-
 	var type="hidden"; //dev mode: set to text
 	this.wwrite("<input type='"+type+"' name='selectedyyyy' value='"+this.gYear+"'>");
 	this.wwrite("<input type='"+type+"' name='selectedmm' value='"+this.formatNumber((this.gMonth*1)+1)+"'>");
@@ -353,8 +339,6 @@ Calendar.prototype.show = function() {
 
 		var now = new Date();
 
-		//enz
-		//this.wwrite("<select name='hour' onChange=\"self.opener.document." + this.gReturnItem + ".value=document.forms.mgnlFormMain.selectedDate.value+', '+document.forms.mgnlFormMain.hour.value+':'+document.forms.mgnlFormMain.minute.value+':'+document.forms.mgnlFormMain.second.value;\">");
 		this.wwrite("<select class=mgnlDialogControlSelect name='hour' onChange=\"document.forms.mgnlFormMain.selectedHH.value=this.options[this.selectedIndex].text;selectedDateShow();\">");
 
 		var hour = 0;
@@ -370,8 +354,6 @@ Calendar.prototype.show = function() {
 		this.wwrite("</select>");
 		this.wwrite(":");
 
-		//enz
-		//this.wwrite("<select name='minute' onChange=\"self.opener.document." + this.gReturnItem + ".value=document.forms.mgnlFormMain.selectedDate.value+', '+document.forms.mgnlFormMain.hour.value+':'+document.forms.mgnlFormMain.minute.value+':'+document.forms.mgnlFormMain.second.value;\">");
 		this.wwrite("<select class=mgnlDialogControlSelect name='minute' onChange=\"document.forms.mgnlFormMain.selectedMM.value=this.options[this.selectedIndex].text;selectedDateShow();\">");
 		var minute = 0;
 		var minuteString = "0";
@@ -386,8 +368,6 @@ Calendar.prototype.show = function() {
 		this.wwrite("</select>");
 		this.wwrite(":");
 
-		//var
-		//this.wwrite("<select name='second' onChange=\"self.opener.document." + this.gReturnItem + ".value=document.forms.mgnlFormMain.selectedDate.value+', '+document.forms.mgnlFormMain.hour.value+':'+document.forms.mgnlFormMain.minute.value+':'+document.forms.mgnlFormMain.second.value;\">");
 		this.wwrite("<select class=mgnlDialogControlSelect name='second' onChange=\"document.forms.mgnlFormMain.selectedSS.value=this.options[this.selectedIndex].text;selectedDateShow();\">");
 		var second = 0;
 		var secondString = "0";
@@ -407,15 +387,6 @@ Calendar.prototype.show = function() {
 	this.wwriteA("</td></tr>");
 
 	this.wwriteA("<tr><td colspan='2'><br></td></tr>");
-
-	//this.wwrite("<tr><td id='selectedDateTd'><font size=2 face="+fontface+">Selected date: </font>");
-	//this.wwriteA("</td></tr>");
-
-
-	//this.wwrite("<script>");
-	//this.wwrite("selectedDateShow();");
-	//this.wwrite("</script>");
-
 
 
 	if (navigator.platform == "MacPPC") this.wwriteA("<tr><td colspan='2'><img src="+nullGif+" width='1' height='5'></td></tr>");

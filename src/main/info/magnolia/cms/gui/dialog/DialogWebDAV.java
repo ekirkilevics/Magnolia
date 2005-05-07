@@ -58,6 +58,8 @@ public class DialogWebDAV extends DialogBox {
 
     private static final int ICONS_WIDTH = 23;
 
+    public static final String NULLGIF = "/admindocroot/0.gif";
+
     /**
      * Logger.
      */

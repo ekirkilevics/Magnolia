@@ -38,8 +38,6 @@ public class DialogBox extends DialogSuper {
 
     public static final String ICONS_FOLDER = "folder.gif";
 
-    public static final String NULLGIF = "/admindocroot/0.gif";
-
     public static final String ICONS_PATH = "/admindocroot/fileIcons/";
 
     /**
