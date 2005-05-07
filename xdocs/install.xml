@@ -32,9 +32,9 @@
                     <strong>
                         Warning: since bootstrapping could require a large amount of memory, be sure to set the maximum
                         memory available to the server to at least 256MB (usually passing the -Xmx256m parameter to the
-                        java process). If an OutOfMemory error popo up in the console during the bootstrap process you
-                        will need to delete the magnolia webapp and redeploy it since bootstrap will only be started
-                        once.
+                        java process). If an OutOfMemory error pops up in the console during the bootstrap process you
+                        will need to remove the magnolia webapp and redeploy it since bootstrap will not be repeated if
+                        a partial repository has already been loaded.
                     </strong>
                 </p>
                 <p>
@@ -48,7 +48,7 @@
                     Open your favorite browser and go to http://[server name]:[port]/[war name]. That means, for a
                     default installation, http://localhost:8080/magnolia. You should see a login prompt, use
                     <code>superuser</code>
-                    as login/password and you should se the magnolia admin interface.
+                    as login/password and welcome to the magnolia admin interface.
                 </p>
                 <p>
                     If you can't see anything probably the bootstrap process failed. Check you server logs for errors,
