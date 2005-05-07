@@ -44,32 +44,38 @@
             <name>atomName</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description></description>
+            <description>@deprecated use nodeDataName</description>
         </attribute>
         <attribute>
             <name>preHref</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description></description>
+            <description>href part that is added before the nodeData content</description>
         </attribute>
         <attribute>
             <name>postHref</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description></description>
+            <description>href part that is added after the nodeData content</description>
         </attribute>
         <attribute>
             <name>templateName</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description></description>
+            <description>template name to search for</description>
         </attribute>
         <attribute>
             <name>level</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description></description>
+            <type>int</type>
+            <description>level from where to start the template search</description>
         </attribute>
+        <example>
+            <![CDATA[
+<cmsu:aHref ... />
+]]>
+        </example>
     </tag>
     <tag>
         <name>aAttribute</name>
@@ -174,21 +180,12 @@
             <rtexprvalue>true</rtexprvalue>
             <description>@deprecated if "true", the file name without the path will be generated</description>
         </attribute>
-        <example>
-            <![CDATA[
-<a href="<cmsu:fileSrc nodeDataName="document">">
-	Download: <cmsu:fileSrc nodeDataName="document" fileNameOnly="true">
-</a>
-
-<img src="<cmsu:fileSrc nodeDataName="image">">
-]]>
-        </example>
     </tag>
     <tag>
         <name>xmp</name>
         <tag-class>info.magnolia.cms.taglibs.util.Xmp</tag-class>
         <body-content>JSP</body-content>
-        <description>Simulates the xmp tag (because in html it is deprecated)</description>
+        <description>Simulates the xmp tag, escaping content. This is useful for displaying code examples.</description>
     </tag>
     <tag>
         <name>newlines</name>

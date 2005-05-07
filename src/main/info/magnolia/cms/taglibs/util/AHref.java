@@ -21,6 +21,7 @@ import info.magnolia.cms.util.Resource;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.jcr.PropertyType;
 import javax.servlet.http.HttpServletRequest;
@@ -32,8 +33,10 @@ import org.apache.log4j.Logger;
 
 
 /**
+ * Utility tag which can be used to print out a link based on the value of a node data.
  * @author Marcel Salathe
- * @version $Revision$ ($Author$)
+ * @author Fabrizio Giustina
+ * @version $Revision $ ($Author $)
  */
 public class AHref extends BodyTagSupport {
 
@@ -47,64 +50,136 @@ public class AHref extends BodyTagSupport {
      */
     private static Logger log = Logger.getLogger(AHref.class);
 
-    private String preHref = "";
+    /**
+     * href part that is added before the nodeData content.
+     */
+    private String preHref;
 
-    private String postHref = "";
+    /**
+     * href part that is added after the nodeData content.
+     */
+    private String postHref;
 
-    private String level = "0";
+    /**
+     * level from where to start the template search.
+     */
+    private int level;
 
-    private String templateName = "";
+    /**
+     * template name to search for.
+     */
+    private String templateName;
 
+    /**
+     * name of nodeData to evaluate.
+     */
     private String nodeDataName;
 
-    private transient Content contentNode;
+    /**
+     * link attributes, added using child tags.
+     */
+    private transient List attributes;
 
-    private transient NodeData nodeData;
+    /**
+     * @param name name of nodeData to evaluate
+     * @deprecated nodeDataName
+     */
+    public void setAtomName(String name) {
+        this.setNodeDataName(name);
+    }
 
-    private ArrayList attributes;
+    /**
+     * Setter for the <code>nodeDataName</code> tag attribute.
+     * @param name name of nodeData to evaluate
+     */
+    public void setNodeDataName(String name) {
+        this.nodeDataName = name;
+    }
 
-    private HttpServletRequest req;
+    /**
+     * Setter for the <code>preHref</code> tag attribute.
+     * @param preHref href part that is added before the nodeData content
+     */
+    public void setPreHref(String preHref) {
+        this.preHref = preHref;
+    }
+
+    /**
+     * Setter for the <code>postHref</code> tag attribute.
+     * @param postHref href part that is added after the nodeData content
+     */
+    public void setPostHref(String postHref) {
+        this.postHref = postHref;
+    }
+
+    /**
+     * Setter for the <code>templateName</code> tag attribute.
+     * @param templateName template name to search for
+     */
+    public void setTemplateName(String templateName) {
+        this.templateName = templateName;
+    }
+
+    /**
+     * Setter for the <code>level</code> tag attribute.
+     * @param level level from where to start the template search
+     */
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    /**
+     * Adds a link parameter.
+     * @param name name of attribute to add to the a element
+     * @param value value of attribute to add to the a element
+     */
+    public void setAttribute(String name, String value) {
+        if (attributes == null) {
+            attributes = new ArrayList();
+        }
+        String[] attributeArray = new String[]{name, value};
+        attributes.add(attributeArray);
+    }
 
     /**
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag() {
-        req = (HttpServletRequest) pageContext.getRequest();
+        HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
         if (StringUtils.isEmpty(this.templateName)) {
             if (this.nodeDataName == null) {
                 this.writeLink(StringUtils.EMPTY);
                 return EVAL_BODY_BUFFERED;
             }
-            this.contentNode = Resource.getLocalContentNode(req);
-            if (this.contentNode == null) {
-                this.contentNode = Resource.getGlobalContentNode(req);
-                if (this.contentNode == null) {
+            Content contentNode = Resource.getLocalContentNode(req);
+            if (contentNode == null) {
+                contentNode = Resource.getGlobalContentNode(req);
+                if (contentNode == null) {
                     this.writeLink(StringUtils.EMPTY);
                     return EVAL_BODY_BUFFERED;
                 }
             }
 
-            this.nodeData = this.contentNode.getNodeData(this.nodeDataName);
+            NodeData nodeData = contentNode.getNodeData(this.nodeDataName);
 
-            if ((this.nodeData == null) || !this.nodeData.isExist()) {
+            if ((nodeData == null) || !nodeData.isExist()) {
                 this.writeLink(StringUtils.EMPTY);
                 return EVAL_BODY_BUFFERED;
             }
-            int type = this.nodeData.getType();
+            int type = nodeData.getType();
             if (type == PropertyType.STRING) {
-                if (StringUtils.isEmpty(this.nodeData.getString())) {
+                if (StringUtils.isEmpty(nodeData.getString())) {
                     this.writeLink(StringUtils.EMPTY);
                 }
                 else {
-                    this.writeLink(this.nodeData.getString());
+                    this.writeLink(nodeData.getString());
                 }
             }
         }
         else {
-            int digree = new Integer(this.level).intValue();
             Content startPage;
             try {
-                startPage = Resource.getCurrentActivePage(req).getAncestor(digree);
+                startPage = Resource.getCurrentActivePage(req).getAncestor(this.level);
                 HierarchyManager hm = SessionAccessControl.getHierarchyManager(req);
                 Content resultPage = hm.getPage(startPage.getHandle(), this.templateName);
                 this.writeLink(resultPage.getHandle());
@@ -125,24 +200,38 @@ public class AHref extends BodyTagSupport {
         JspWriter out = pageContext.getOut();
         try {
             if (StringUtils.isNotEmpty(path)) {
-                if (SessionAccessControl.getHierarchyManager(req).isPage(path)) {
-                    path += "." + Server.getDefaultExtension();
+
+                out.print("<a href=\""); //$NON-NLS-1$
+                if (this.preHref != null) {
+                    out.print(this.preHref);
                 }
-                out.print("<a href=\"");
-                out.print(this.preHref + path + this.postHref);
-                out.print("\"");
+                out.print(path);
+                if (SessionAccessControl
+                    .getHierarchyManager((HttpServletRequest) pageContext.getRequest())
+                    .isPage(path)) {
+                    out.print("."); //$NON-NLS-1$
+                    out.print(Server.getDefaultExtension());
+                }
+                if (this.postHref != null) {
+                    out.print(this.postHref);
+                }
+                out.print("\""); //$NON-NLS-1$
                 if ((attributes != null) && (attributes.size() > 0)) {
                     Iterator i = attributes.iterator();
                     while (i.hasNext()) {
                         String[] s = (String[]) i.next();
-                        out.print(" " + s[0] + "=\"" + s[1] + "\"");
+                        out.print(" "); //$NON-NLS-1$
+                        out.print(s[0]);
+                        out.print("=\""); //$NON-NLS-1$
+                        out.print(s[1]);
+                        out.print("\""); //$NON-NLS-1$
                     }
                 }
-                out.print(">");
+                out.print(">"); //$NON-NLS-1$
             }
             out.print(getBodyContent().getString());
             if (StringUtils.isNotEmpty(path)) {
-                out.print("</a>");
+                out.print("</a>"); //$NON-NLS-1$
             }
         }
         catch (Exception e) {
@@ -152,56 +241,16 @@ public class AHref extends BodyTagSupport {
     }
 
     /**
-     * @deprecated
+     * @see javax.servlet.jsp.tagext.BodyTagSupport#release()
      */
-    public void setAtomName(String name) {
-        this.setNodeDataName(name);
+    public void release() {
+        this.preHref = null;
+        this.postHref = null;
+        this.level = 0;
+        this.templateName = null;
+        this.nodeDataName = null;
+        this.attributes = null;
+        super.release();
     }
 
-    /**
-     * @param name , antom name to evaluate
-     */
-    public void setNodeDataName(String name) {
-        this.nodeDataName = name;
-    }
-
-    /**
-     * @param preHref , href part that is added before the nodeData content
-     */
-    public void setPreHref(String preHref) {
-        this.preHref = preHref;
-    }
-
-    /**
-     * @param postHref , href part that is added after the nodeData content
-     */
-    public void setPostHref(String postHref) {
-        this.postHref = postHref;
-    }
-
-    /**
-     * @param templateName , template name to search for
-     */
-    public void setTemplateName(String templateName) {
-        this.templateName = templateName;
-    }
-
-    /**
-     * @param level , level from where to start the template search
-     */
-    public void setLevel(String level) {
-        this.level = level;
-    }
-
-    /**
-     * @param name , name of attribute to add to the a element
-     * @param value , value of attribute to add to the a element
-     */
-    public void setAttribute(String name, String value) {
-        if (attributes == null) {
-            attributes = new ArrayList();
-        }
-        String[] attributeArray = new String[]{name, value};
-        attributes.add(attributeArray);
-    }
 }
