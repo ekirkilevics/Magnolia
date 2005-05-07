@@ -12,6 +12,7 @@
  */
 package info.magnolia.cms.taglibs;
 
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.inline.BarEdit;
 import info.magnolia.cms.util.Resource;
 
@@ -136,10 +137,10 @@ public class EditBar extends TagSupport {
         }
 
         if (this.paragraph == null) {
-            bar.setParagraph(Resource
-                .getLocalContentNode((HttpServletRequest) this.pageContext.getRequest())
-                .getNodeData("paragraph")
-                .getString());
+            Content contentParagraph = Resource.getLocalContentNode((HttpServletRequest) this.pageContext.getRequest());
+            if (contentParagraph != null) {
+                bar.setParagraph(contentParagraph.getNodeData("paragraph").getString());
+            }
         }
         else {
             bar.setParagraph(this.paragraph);
