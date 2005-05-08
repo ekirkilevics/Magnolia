@@ -138,19 +138,16 @@
         <servlet-name>Spool</servlet-name>
         <servlet-class>info.magnolia.cms.servlets.Spool</servlet-class>
     </servlet>
-
-    <!--
-    	Handles the common dialogs 
-    -->
     <servlet>
+        <description>Handles the common dialogs</description>
         <servlet-name>standard</servlet-name>
         <servlet-class>info.magnolia.module.admininterface.DialogMVCServlet</servlet-class>
     </servlet>
 
-	<!-- 
-		Other dialogs: we will move them into dialog handlers 
+	<!--
+		Other dialogs: we will move them into dialog handlers
 	-->
-    
+
     <servlet>
         <servlet-name>fileThumbnail</servlet-name>
         <servlet-class>info.magnolia.module.admininterface.pages.FileThumbnailDialogPage</servlet-class>
@@ -180,8 +177,8 @@
         <servlet-class>info.magnolia.module.admininterface.pages.UserRolesEditIncludeAclDialogPage</servlet-class>
     </servlet>
 
-	<!-- 
-		END: Other dialogs: we will move them into dialog handlers 
+	<!--
+		END: Other dialogs: we will move them into dialog handlers
 	-->
 
 
@@ -229,9 +226,9 @@
         <servlet-name>ImportExportServlet</servlet-name>
         <url-pattern>/import</url-pattern>
     </servlet-mapping>
-    
+
     <!--
-        Standard dialogs: currently dialox is mapped 
+        Standard dialogs: currently dialox is mapped
     -->
     <servlet-mapping>
         <servlet-name>standard</servlet-name>
@@ -239,7 +236,7 @@
     </servlet-mapping>
 
     <!--
-        Other dialogs 
+        Other dialogs
     -->
     <servlet-mapping>
         <servlet-name>fileThumbnail</servlet-name>
@@ -285,4 +282,8 @@
     <!--
         i18n configuration moved to the repository config:/server/i18n
     -->
+    <error-page>
+        <error-code>500</error-code>
+        <location>/admintemplates/error.jsp</location>
+    </error-page>
 </web-app>
