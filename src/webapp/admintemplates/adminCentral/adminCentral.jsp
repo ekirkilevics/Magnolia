@@ -31,10 +31,8 @@
     <cms:links adminOnly="false" />
     </head>
 
-    <body class="mgnlBgDark" onload="mgnlAdminCentralResize();">
+    <body class="mgnlBgDark mgnlAdminMain" onload="mgnlAdminCentralResize();">
 
-    <div style="position:absolute;top:32px;left:17px;"><img
-        src="${pageContext.request.contextPath}/admindocroot/adminCentral/magnoliaLogo.gif" /></div>
     <jsp:scriptlet>
     String labelPost = "";
 	String repository=request.getParameter("repository");
