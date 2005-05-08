@@ -56,7 +56,7 @@ public class DialogMVCServlet extends MVCServlet {
 
         DialogMVCHandler handler = null;
         // old paragrah dialog
-        if (dialogName.equals("standard") || dialogName.equals("standard.jsp")) {
+        if (dialogName.equals("standard") || dialogName.equals("standard.jsp") || dialogName.equals("selectParagraph")) {
             // this is a workaround for the current paragraphs
             String paragraph = RequestFormUtil.getParameter(request, "mgnlParagraph");
             if (StringUtils.isNotEmpty(paragraph)) {
