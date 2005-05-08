@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.log4j.Logger;
 
 
@@ -116,8 +117,8 @@ public class EditBar extends TagSupport {
         try {
             this.display();
         }
-        catch (Exception e) {
-            log.error(e.getMessage(), e);
+        catch (IOException e) {
+            throw new NestableRuntimeException(e);
         }
         return EVAL_PAGE;
     }

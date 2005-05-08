@@ -12,16 +12,19 @@
  */
 package info.magnolia.cms.taglibs;
 
+import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.Resource;
-import info.magnolia.cms.beans.config.Paragraph;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import javax.servlet.ServletException;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.BodyTagSupport;
+
+import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.log4j.Logger;
 
 
@@ -42,11 +45,46 @@ public class Include extends BodyTagSupport {
      */
     private static Logger log = Logger.getLogger(Include.class);
 
-    private transient Content contentNode;
-
     private String path;
 
-    private ArrayList attributes;
+    private transient List attributes;
+
+    private transient Content contentNode;
+
+    /**
+     * @deprecated
+     */
+    public void setContainer(Content contentNode) {
+        this.setContentNode(contentNode);
+    }
+
+    /**
+     * Set the content object.
+     * @param contentNode
+     */
+    public void setContentNode(Content contentNode) {
+        this.contentNode = contentNode;
+    }
+
+    /**
+     * Set the jsp path.
+     * @param path
+     */
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    /**
+     * @param name , name of attribute to pass with the include
+     * @param value , value of attribute to pass with the include
+     */
+    public void setAttribute(String name, String value) {
+        if (attributes == null) {
+            attributes = new ArrayList();
+        }
+        String[] attributesArray = new String[]{name, value};
+        attributes.add(attributesArray);
+    }
 
     /**
      * @see javax.servlet.jsp.tagext.IterationTag#doAfterBody()
@@ -67,7 +105,35 @@ public class Include extends BodyTagSupport {
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag() {
-        this.include();
+        try {
+            if (this.contentNode == null) {
+                HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
+                if (this.path == null) {
+
+                    Content localContainer = Resource.getLocalContentNode(req);
+                    String templateName = localContainer.getNodeData("paragraph").getString();
+                    String template = Paragraph.getInfo(templateName).getTemplatePath();
+                    pageContext.include(template);
+                }
+                else {
+                    pageContext.include(this.path);
+                }
+            }
+            else {
+                Resource.setLocalContentNode((HttpServletRequest) pageContext.getRequest(), this.contentNode);
+                pageContext.include(this.path);
+            }
+        }
+        catch (IOException e) {
+            // should never happen
+            throw new NestableRuntimeException(e);
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        finally {
+            Resource.removeLocalContentNode((HttpServletRequest) pageContext.getRequest());
+        }
         this.removeAttributes();
         return EVAL_PAGE;
     }
@@ -88,102 +154,13 @@ public class Include extends BodyTagSupport {
     }
 
     /**
-     *
+     * @see javax.servlet.jsp.tagext.BodyTagSupport#release()
      */
-    private void include() {
-        if (this.contentNode == null) {
-            this.includeFromResource();
-        }
-        else {
-            this.includeFromParam();
-        }
+    public void release() {
+        this.path = null;
+        this.attributes = null;
+        this.contentNode = null;
+        super.release();
     }
 
-    /**
-     *
-     */
-    private void includeFromResource() {
-        try {
-            HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
-            if (this.path == null) {
-                pageContext.include(this.getTemplate(req));
-            }
-            else {
-                pageContext.include(this.path);
-            }
-        }
-        catch (ServletException se) {
-            log.error(se.getMessage());
-        }
-        catch (Exception e) {
-            log.error(e.getMessage());
-        }
-    }
-
-    /**
-     * @return template path
-     */
-    public String getTemplate(HttpServletRequest request) {
-        Content localContainer = Resource.getLocalContentNode(request);
-        String templateName = localContainer.getNodeData("paragraph").getString();
-        return Paragraph.getInfo(templateName).getTemplatePath();
-    }
-
-    /**
-     *
-     */
-    private void includeFromParam() {
-        Resource.setLocalContentNode((HttpServletRequest) pageContext.getRequest(), this.contentNode);
-        try {
-            pageContext.include(this.path);
-        }
-        catch (ServletException se) {
-            log.error(se.getMessage());
-        }
-        catch (IOException e) {
-            log.error(e.getMessage());
-        }
-        finally {
-            Resource.removeLocalContentNode((HttpServletRequest) pageContext.getRequest());
-        }
-    }
-
-    /**
-     * @deprecated
-     */
-    public void setContainer(Content contentNode) {
-        this.setContentNode(contentNode);
-    }
-
-    /**
-     * <p>
-     * set the content object (type ContentNode)
-     * </p>
-     * @param contentNode
-     */
-    public void setContentNode(Content contentNode) {
-        this.contentNode = contentNode;
-    }
-
-    /**
-     * <p>
-     * set the jsp path
-     * </p>
-     * @param path
-     */
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    /**
-     * @param name , name of attribute to pass with the include
-     * @param value , value of attribute to pass with the include
-     */
-    public void setAttribute(String name, String value) {
-        if (attributes == null) {
-            attributes = new ArrayList();
-        }
-        String[] attributesArray = new String[]{name, value};
-        attributes.add(attributesArray);
-    }
 }
