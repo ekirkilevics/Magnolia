@@ -176,6 +176,11 @@ public class ContentNodeIterator extends TagSupport {
         pageContext.removeAttribute(ContentNodeIterator.CURRENT_INDEX);
         pageContext.removeAttribute(ContentNodeIterator.SIZE);
         pageContext.removeAttribute(ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME);
+        this.beginIndex = 0;
+        this.endIndex = 0;
+        this.step = 1;
+        this.size = 0;
+        this.currentIndex = 0;
         return EVAL_PAGE;
     }
 
