@@ -55,10 +55,18 @@ public class DialogMVCServlet extends MVCServlet {
         }
 
         DialogMVCHandler handler = null;
+
+        //TODO remove this code!!! we should register the dialgos during startup
+        String paragraph = RequestFormUtil.getParameter(request, "mgnlParagraph");
+        if (StringUtils.isNotEmpty(paragraph)) {
+            dialogName = "standard";
+        }
+        // END of the workaround
+        
         // old paragrah dialog
         if (dialogName.equals("standard") || dialogName.equals("standard.jsp") || dialogName.equals("selectParagraph")) {
             // this is a workaround for the current paragraphs
-            String paragraph = RequestFormUtil.getParameter(request, "mgnlParagraph");
+            //String paragraph = RequestFormUtil.getParameter(request, "mgnlParagraph");
             if (StringUtils.isNotEmpty(paragraph)) {
                 if (paragraph.indexOf(",") == -1) {
                     Content configNode = ParagraphEditDialog.getConfigNode(request, paragraph);
@@ -77,10 +85,10 @@ public class DialogMVCServlet extends MVCServlet {
 
         else {
             // try to get a registered handler
-            handler = Store.getInstance().getDialogHandler(dialogName, request, response);
-
-            // if not found asume that it is a path in the config repository
-            if (handler == null) {
+            try {
+                handler = Store.getInstance().getDialogHandler(dialogName, request, response);
+            }
+            catch (InvalidDialogHandlerException e) {
                 Content configNode = ConfiguredDialog.getConfigNode(request, dialogName);
                 // try to find a class property or return a ConfiguredDialog
                 if (configNode != null) {
