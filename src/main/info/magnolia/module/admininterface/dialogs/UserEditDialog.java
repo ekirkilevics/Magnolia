@@ -138,14 +138,11 @@ public class UserEditDialog extends ConfiguredDialog {
         List options = new ArrayList();
 
         Collection col = MessagesManager.getAvailableLocales();
-        Messages langMsgs = MessagesManager.getMessages(
-            request,
-            "info.magnolia.module.admininterface.messages_languages");
 
         for (Iterator iter = col.iterator(); iter.hasNext();) {
             Locale locale = (Locale) iter.next();
             String code = locale.getLanguage();
-            String name = langMsgs.get(code);
+            String name = locale.getDisplayName(MessagesManager.getDefaultLocale());
             SelectOption option = new SelectOption(name, code);
             options.add(option);
         }
