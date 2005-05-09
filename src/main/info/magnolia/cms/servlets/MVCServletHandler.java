@@ -22,6 +22,8 @@ import java.io.IOException;
  * @version $Id$
  */
 public interface MVCServletHandler {
+    
+    public static final String VIEW_NOTHING = "nothing";
 
     /**
      * Depending on the request it is generating a logical command name

@@ -16,6 +16,8 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.module.admininterface.Store;
+import info.magnolia.module.admininterface.dialogs.ParagraphEditDialog;
 
 import java.util.Collection;
 import java.util.Hashtable;
@@ -24,6 +26,7 @@ import java.util.Map;
 
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -137,7 +140,26 @@ public class Paragraph {
             catch (RepositoryException re) {
             }
             Paragraph.cachedContent.put(pi.name, pi);
+            pi.registerHandler();
         }
+    }
+
+    /**
+     * This registers the dialog handler for this paragraph
+     */
+    private void registerHandler() {
+        Class handler = ParagraphEditDialog.class;
+        String className = this.dialogContent.getNodeData("class").getString();
+        if (StringUtils.isNotEmpty(className)) {
+            try {
+                handler = Class.forName(className);
+            }
+            catch (ClassNotFoundException e) {
+                log.error("registering paragraph: class [" + className + "] not found", e);
+            }
+        }
+
+        Store.getInstance().registerDialogHandler(this.name, handler, this.dialogContent);
     }
 
     /**
@@ -192,10 +214,10 @@ public class Paragraph {
     /**
      * Returns the cached content of the requested template. TemplateInfo properties :
      * <ol>
-     * <li> title - title describing template </li>
-     * <li> type - jsp / servlet </li>
-     * <li> path - jsp / servlet path </li>
-     * <li> description - description of a template</li>
+     * <li>title - title describing template</li>
+     * <li>type - jsp / servlet</li>
+     * <li>path - jsp / servlet path</li>
+     * <li>description - description of a template</li>
      * </ol>
      * @return TemplateInfo
      */

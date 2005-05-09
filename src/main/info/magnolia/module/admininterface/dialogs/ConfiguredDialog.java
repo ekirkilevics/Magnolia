@@ -55,7 +55,7 @@ public class ConfiguredDialog extends DialogMVCHandler {
             return hm.getContent(name);
         }
         catch (RepositoryException e) {
-            log.error("no configuration found for the dialog + " + name, e);
+            log.error("no config node found for the dialog " + name, e);
         }
         return null;
     }

@@ -80,17 +80,35 @@ public class BarNew extends Bar {
         b.setLabel(MessagesManager.getMessages(getRequest()).get("buttons.new"));
         // todo: dynamic repository
         String repository = ContentRepository.WEBSITE;
-        b.setOnclick("mgnlOpenDialog('"
-            + path
-            + "','"
-            + nodeCollectionName
-            + "','"
-            + nodeName
-            + "','"
-            + paragraph
-            + "','"
-            + repository
-            + "');");
+        // if there are multiple paragraphs show the selectParagraph dialog
+        if(paragraph.indexOf(",") > -1){
+            b.setOnclick("mgnlOpenDialog('"
+	            + path
+	            + "','"
+	            + nodeCollectionName
+	            + "','"
+	            + nodeName
+	            + "','"
+	            + paragraph // this is a list
+	            + "','"
+	            + repository
+	            + "','.magnolia/dialogs/selectParagraph.html');");
+            
+        }
+        // there is only one paragraph
+        else{
+            b.setOnclick("mgnlOpenDialog('"
+	            + path
+	            + "','"
+	            + nodeCollectionName
+	            + "','"
+	            + nodeName
+	            + "','"
+	            + paragraph
+	            + "','"
+	            + repository
+	            + "');");
+        }
         this.setButtonNew(b);
     }
 

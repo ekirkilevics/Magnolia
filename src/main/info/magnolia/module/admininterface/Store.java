@@ -61,6 +61,7 @@ public class Store {
     }
 
     public void registerTreeHandler(String name, Class treeHandler) {
+        log.info("Registering tree handler [" + name + "]");
         treeHandlers.put(name, treeHandler);
     }
 
@@ -99,6 +100,7 @@ public class Store {
     }
 
     public void registerDialogHandler(String name, Class dialogHandler, Content configNode) {
+        log.info("Registering dialog handler [" + name + "]");
         dialogHandlers.put(name, new Object[]{dialogHandler, configNode});
     }
 
@@ -115,21 +117,31 @@ public class Store {
             Class dialogHandlerClass = (Class) handlerConfig[0];
             Content configNode = (Content) handlerConfig[1];
             if (configNode != null) {
+                try {
+                    Constructor constructor = dialogHandlerClass.getConstructor(new Class[]{
+                        String.class,
+                        HttpServletRequest.class,
+                        HttpServletResponse.class,
+                        Content.class});
+                    return (DialogMVCHandler) constructor
+                        .newInstance(new Object[]{name, request, response, configNode});
+                }
+                catch (NoSuchMethodException e) {
+                    Constructor constructor = dialogHandlerClass.getConstructor(new Class[]{
+                        String.class,
+                        HttpServletRequest.class,
+                        HttpServletResponse.class});
+                    return (DialogMVCHandler) constructor.newInstance(new Object[]{name, request, response});
+                }
+            }
+            else {
+
                 Constructor constructor = dialogHandlerClass.getConstructor(new Class[]{
                     String.class,
                     HttpServletRequest.class,
-                    HttpServletResponse.class,
-                    Content.class});
-                return (DialogMVCHandler) constructor.newInstance(new Object[]{name, request, response, configNode});
-
+                    HttpServletResponse.class});
+                return (DialogMVCHandler) constructor.newInstance(new Object[]{name, request, response});
             }
-
-            Constructor constructor = dialogHandlerClass.getConstructor(new Class[]{
-                String.class,
-                HttpServletRequest.class,
-                HttpServletResponse.class});
-            return (DialogMVCHandler) constructor.newInstance(new Object[]{name, request, response});
-
         }
         catch (Exception e) {
             throw new InvalidDialogHandlerException(name, e);

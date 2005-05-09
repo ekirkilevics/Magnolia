@@ -12,10 +12,15 @@
  */
 package info.magnolia.module.admininterface.dialogs;
 
+import java.io.IOException;
+import java.util.Iterator;
+
 import javax.jcr.RepositoryException;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import info.magnolia.cms.beans.config.Paragraph;
@@ -30,6 +35,7 @@ import info.magnolia.cms.gui.dialog.DialogHidden;
 import info.magnolia.cms.gui.dialog.DialogStatic;
 import info.magnolia.cms.gui.dialog.DialogTab;
 import info.magnolia.cms.i18n.TemplateMessagesUtil;
+import info.magnolia.cms.servlets.EntryServlet;
 import info.magnolia.module.admininterface.DialogMVCHandler;
 
 
@@ -43,9 +49,9 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
 
     private String paragraph = "";
 
-    public ParagraphSelectDialog(HttpServletRequest request, HttpServletResponse response) {
-        super("selectParagraph", request, response);
-
+    
+    public ParagraphSelectDialog(String name, HttpServletRequest request, HttpServletResponse response) {
+        super(name, request, response);
         paragraph = params.getParameter("mgnlParagraph");
     }
 
@@ -122,6 +128,31 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
 
     protected Content getConfigNode() {
         return null;
+    }
+    
+    /* (non-Javadoc)
+     * @see info.magnolia.module.admininterface.DialogMVCHandler#save()
+     */
+    public String save() {
+        try {
+            // copy all parameters exept mgnlDialog
+            String query="";
+            for (Iterator iter = form.getParameters().keySet().iterator(); iter.hasNext();) {
+                String key = (String) iter.next();
+                if(!key.equals("mgnlDialog")){
+                    if(query.length()!=0){
+                        query += "&";
+                    }
+                    query+=key + "=" + form.getParameter(key);
+                }
+                
+            }
+            response.sendRedirect(request.getContextPath() + "/.magnolia/dialogs/" + this.paragraph + ".html?" + query);
+        }
+        catch (IOException e) {
+            log.error("can't redirect to the paragraph-dialog",e);
+        }
+        return VIEW_NOTHING;
     }
 
 }

@@ -48,7 +48,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(MVCServletHandlerImpl.class);
+    private static Logger log = Logger.getLogger(DialogMVCHandler.class);
 
     /*
      * Commands
@@ -142,7 +142,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
      * @see info.magnolia.cms.servlets.MVCServletHandler#getCommand()
      */
     public String getCommand() {
-        if (form != null && form.getParameter("mgnlParagraphSelected") == null) {
+        if (form != null ) {
             return COMMAND_SAVE;
         }
         else {
@@ -232,7 +232,6 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
             }
             catch (RepositoryException re) {
                 // content does not exist yet
-
             }
         }
         return storageNode;

@@ -12,6 +12,7 @@
  */
 package info.magnolia.cms.servlets;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import javax.servlet.http.HttpServletRequest;
@@ -63,15 +64,20 @@ public abstract class MVCServletHandlerImpl implements MVCServletHandler {
     public String execute(String command) {
         String view = VIEW_ERROR;
         Method method;
-        try {
-            method = this.getClass().getMethod(command, new Class[]{});
-            // method.setAccessible(true);
-            view = (String) method.invoke(this, new Object[]{});
-        }
-        catch (Exception e) {
-            log.error("can't call command: " + command, e);
-        }
-        return view;
+
+            try {
+                method = this.getClass().getMethod(command, new Class[]{});
+                // method.setAccessible(true);
+                view = (String) method.invoke(this, new Object[]{});
+            }
+            catch (InvocationTargetException e) {
+                log.error("can't call command: " + command, e.getTargetException());// TODO Auto-generated catch block
+            }
+            catch (Exception e) {
+                log.error("can't call command: " + command, e);// TODO Auto-generated catch block
+            }
+
+            return view;
     }
 
 }

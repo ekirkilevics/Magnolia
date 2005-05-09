@@ -34,32 +34,38 @@ import info.magnolia.module.admininterface.trees.AdminTreeWebsite;
  * @version 2.0
  */
 public class Engine implements Module {
-    
+
     private static Logger log = Logger.getLogger(Engine.class);
-    
+
     public void init(ModuleConfig config) {
         // set local store to be accessed via admin interface classes or JSP
         Store store = Store.getInstance();
         store.setStore(config.getLocalStore());
-        
+
         registerTrees(store);
-        registerDialogs(store);
-        
-        
+        registerDialogs(store, "dialogs");
+
     }
 
     /**
+     * register the dialogs from the config
      * @param store
+     * @param path
      */
-    private void registerDialogs(Store store) {
+    private void registerDialogs(Store store, String path) {
         // read the dialog configuration
         try {
-            Collection dialogs = store.getStore().getContent("dialogs").getChildren(ItemType.CONTENTNODE.getSystemName());
+            Collection dialogs = store.getStore().getContent(path).getChildren(ItemType.CONTENTNODE.getSystemName());
             for (Iterator iter = dialogs.iterator(); iter.hasNext();) {
                 Content dialog = (Content) iter.next();
                 String name = dialog.getNodeData("name").getString();
-                String className= dialog.getNodeData("class").getString();
-                store.registerDialogHandler(name, Class.forName(className), dialog);
+                String className = dialog.getNodeData("class").getString();
+                try {
+                    store.registerDialogHandler(name, Class.forName(className), dialog);
+                }
+                catch (ClassNotFoundException e) {
+                    log.warn("can't find dialog hanlder class " + className, e);
+                }
             }
         }
         catch (Exception e) {
@@ -77,7 +83,7 @@ public class Engine implements Module {
             for (Iterator iter = trees.iterator(); iter.hasNext();) {
                 Content tree = (Content) iter.next();
                 String name = tree.getNodeData("name").getString();
-                String className= tree.getNodeData("class").getString();
+                String className = tree.getNodeData("class").getString();
                 store.registerTreeHandler(name, Class.forName(className));
             }
         }

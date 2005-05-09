@@ -17,8 +17,6 @@ import info.magnolia.cms.servlets.MVCServlet;
 import info.magnolia.cms.servlets.MVCServletHandler;
 import info.magnolia.cms.util.RequestFormUtil;
 import info.magnolia.module.admininterface.dialogs.ConfiguredDialog;
-import info.magnolia.module.admininterface.dialogs.ParagraphEditDialog;
-import info.magnolia.module.admininterface.dialogs.ParagraphSelectDialog;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,54 +54,26 @@ public class DialogMVCServlet extends MVCServlet {
 
         DialogMVCHandler handler = null;
 
-        //TODO remove this code!!! we should register the dialgos during startup
-        String paragraph = RequestFormUtil.getParameter(request, "mgnlParagraph");
-        if (StringUtils.isNotEmpty(paragraph)) {
-            dialogName = "standard";
+        // try to get a registered handler
+        try {
+            handler = Store.getInstance().getDialogHandler(dialogName, request, response);
         }
-        // END of the workaround
-        
-        // old paragrah dialog
-        if (dialogName.equals("standard") || dialogName.equals("standard.jsp") || dialogName.equals("selectParagraph")) {
-            // this is a workaround for the current paragraphs
-            //String paragraph = RequestFormUtil.getParameter(request, "mgnlParagraph");
-            if (StringUtils.isNotEmpty(paragraph)) {
-                if (paragraph.indexOf(",") == -1) {
-                    Content configNode = ParagraphEditDialog.getConfigNode(request, paragraph);
-                    handler = ConfiguredDialog.getConfiguredDialog(
-                        paragraph,
-                        configNode,
-                        request,
-                        response,
-                        ParagraphEditDialog.class);
-                }
-                else {
-                    handler = new ParagraphSelectDialog(request, response);
-                }
+        catch (InvalidDialogHandlerException e) {
+            log.info("can' find handler will try to load directly from the config", e);
+            Content configNode = ConfiguredDialog.getConfigNode(request, dialogName);
+            // try to find a class property or return a ConfiguredDialog
+            if (configNode != null) {
+                handler = ConfiguredDialog.getConfiguredDialog(dialogName, configNode, request, response);
+            }
+            else {
+                log.error("no config node found for dialog : " + dialogName);
             }
         }
 
-        else {
-            // try to get a registered handler
-            try {
-                handler = Store.getInstance().getDialogHandler(dialogName, request, response);
-            }
-            catch (InvalidDialogHandlerException e) {
-                Content configNode = ConfiguredDialog.getConfigNode(request, dialogName);
-                // try to find a class property or return a ConfiguredDialog
-                if (configNode != null) {
-                    handler = ConfiguredDialog.getConfiguredDialog(dialogName, configNode, request, response);
-                }
-                else {
-                    log.error("no config node found for dialog : " + dialogName);
-                }
-            }
-
-            if (handler == null) {
-                log.error("no dialog found: " + dialogName);
-            }
-
+        if (handler == null) {
+            log.error("no dialog found: " + dialogName);
         }
+
         return handler;
     }
 

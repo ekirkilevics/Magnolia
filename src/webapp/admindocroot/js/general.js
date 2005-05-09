@@ -216,8 +216,11 @@ function mgnlOpenDialog(path,nodeCollection,node,paragraph,repository,dialogPage
 		else richEPaste="textarea";
 		}
 
-	if (!dialogPage) dialogPage=".magnolia/dialogs/standard.html";
-
+	if (!dialogPage){
+		dialogPage = ".magnolia/dialogs/" + paragraph + ".html";
+	 	//dialogPage=".magnolia/dialogs/standard.html";
+	}
+	
     url="${pageContext.request.contextPath}/";
     url+=dialogPage;
     url+="?mgnlPath="+path;
