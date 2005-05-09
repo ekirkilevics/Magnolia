@@ -100,12 +100,18 @@ public class VirtualMap {
      */
     public String getURIMapping(String uri) {
         Iterator e = VirtualMap.cachedURImapping.keySet().iterator();
+        String mappedURI = StringUtils.EMPTY;
+        int lastMatchedPatternlength = 0;
         while (e.hasNext()) {
             UrlPattern p = (UrlPattern) e.next();
             if (p.match(uri)) {
-                return (String) VirtualMap.cachedURImapping.get(p);
+                int patternLength = p.getLength();
+                if (lastMatchedPatternlength < patternLength) {
+                    lastMatchedPatternlength = patternLength;
+                    mappedURI = (String) VirtualMap.cachedURImapping.get(p);
+                }
             }
         }
-        return StringUtils.EMPTY;
+        return mappedURI;
     }
 }
