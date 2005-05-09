@@ -16,11 +16,9 @@ import java.io.IOException;
 import java.util.Iterator;
 
 import javax.jcr.RepositoryException;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import info.magnolia.cms.beans.config.Paragraph;
@@ -35,7 +33,6 @@ import info.magnolia.cms.gui.dialog.DialogHidden;
 import info.magnolia.cms.gui.dialog.DialogStatic;
 import info.magnolia.cms.gui.dialog.DialogTab;
 import info.magnolia.cms.i18n.TemplateMessagesUtil;
-import info.magnolia.cms.servlets.EntryServlet;
 import info.magnolia.module.admininterface.DialogMVCHandler;
 
 
