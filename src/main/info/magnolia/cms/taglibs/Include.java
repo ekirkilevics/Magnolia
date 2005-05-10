@@ -51,6 +51,8 @@ public class Include extends BodyTagSupport {
 
     private transient Content contentNode;
 
+    private String contentNodeName;
+
     /**
      * @deprecated
      */
@@ -72,6 +74,14 @@ public class Include extends BodyTagSupport {
      */
     public void setPath(String path) {
         this.path = path;
+    }
+
+    /**
+     * If this parameter is passed the include tag uses the defined node of the page
+     * @param contentNodeName
+     */
+    public void setContentNodeName(String contentNodeName) {
+        this.contentNodeName = contentNodeName;
     }
 
     /**
@@ -106,23 +116,39 @@ public class Include extends BodyTagSupport {
      */
     public int doEndTag() {
         try {
-            if (this.contentNode == null) {
-                HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
-                if (this.path == null) {
-
-                    Content localContainer = Resource.getLocalContentNode(req);
-                    String templateName = localContainer.getNodeData("paragraph").getString();
-                    String template = Paragraph.getInfo(templateName).getTemplatePath();
-                    pageContext.include(template);
+            HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
+            // get content
+            Content content = this.contentNode;
+            if (content == null) {
+                // was there a node name passed
+                if (this.contentNodeName != null) {
+                    content = Resource.getCurrentActivePage(req).getContent(this.contentNodeName);
+                    if (content != null) {
+                        Resource.setLocalContentNode(req, content);
+                    }
                 }
+                // use current (first local then global)
                 else {
-                    pageContext.include(this.path);
+                    content = Resource.getLocalContentNode(req);
+                    if (content == null) {
+                        content = Resource.getGlobalContentNode(req);
+                        if (content != null) {
+                            Resource.setLocalContentNode(req, content);
+                        }
+                    }
+                }
+                if (content == null) {
+                    throw new Exception("no content node found");
                 }
             }
-            else {
-                Resource.setLocalContentNode((HttpServletRequest) pageContext.getRequest(), this.contentNode);
-                pageContext.include(this.path);
+
+            String template = this.path;
+            if (template == null) {
+                String templateName = content.getNodeData("paragraph").getString();
+                template = Paragraph.getInfo(templateName).getTemplatePath();
             }
+
+            pageContext.include(template);
         }
         catch (IOException e) {
             // should never happen
