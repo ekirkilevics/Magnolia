@@ -47,7 +47,9 @@ public class DialogMVCServlet extends MVCServlet {
     protected MVCServletHandler getHandler(HttpServletRequest request, HttpServletResponse response) {
         String dialogName = RequestFormUtil.getParameter(request, "mgnlDialog");
         if (StringUtils.isEmpty(dialogName)) {
-            dialogName = StringUtils.substringAfterLast(request.getRequestURL().toString(), "/").replaceFirst(
+            // get the realy called uri
+            dialogName = (String) request.getAttribute("javax.servlet.forward.servlet_path");
+            dialogName = StringUtils.substringAfterLast(dialogName, "/dialogs/").replaceFirst(
                 ".html",
                 "");
         }
