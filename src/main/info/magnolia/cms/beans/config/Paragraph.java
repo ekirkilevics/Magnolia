@@ -136,11 +136,17 @@ public class Paragraph {
                 }
                 Content dialogPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(dialog);
                 pi.dialogContent = dialogPage;
+
+                if (pi.dialogContent != null) {
+                    pi.registerHandler();
+                }
             }
             catch (RepositoryException re) {
+                log.error(re.getMessage(), re);
             }
+
             Paragraph.cachedContent.put(pi.name, pi);
-            pi.registerHandler();
+
         }
     }
 
