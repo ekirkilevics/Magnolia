@@ -39,6 +39,9 @@ import org.apache.log4j.Logger;
  */
 public class HierarchyManager {
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(HierarchyManager.class);
 
     private Node startPage;
@@ -108,9 +111,7 @@ public class HierarchyManager {
     }
 
     /**
-     * <p>
      * creates a new content page
-     * </p>
      * @param path parent handle under which new page has to be created
      * @param label page name to be created
      * @return Content newly created hierarchy node
@@ -129,10 +130,8 @@ public class HierarchyManager {
     }
 
     /**
-     * <p>
      * creates contentNode of type <b>contentType </b> contentType must be defined in item type definition of magnolia
      * as well as JCR implementation
-     * </p>
      * @param path absolute (primary) path to this <code>Node</code>
      * @param label page name
      * @param contentType , JCR node type as configured
@@ -172,10 +171,8 @@ public class HierarchyManager {
     }
 
     /**
-     * <p>
      * Helper method to set page properties, create page calls this method. you could call this method anytime to create
      * working page properties
-     * </p>
      */
     public void setMetaData(MetaData md, String template) throws RepositoryException, AccessDeniedException {
         md.setTemplate(template);
@@ -183,10 +180,8 @@ public class HierarchyManager {
     }
 
     /**
-     * <p>
      * Helper method to set page properties, create page calls this method. you could call this method anytime to create
      * working page properties
-     * </p>
      */
     public void setMetaData(MetaData md) throws RepositoryException, AccessDeniedException {
         md.setCreationDate();
@@ -197,10 +192,8 @@ public class HierarchyManager {
     }
 
     /**
-     * <p>
      * Helper method to set page properties, get page calls this method. you could call this method anytime to update
      * working page properties
-     * </p>
      */
     public void updateMetaData(MetaData md) throws RepositoryException, AccessDeniedException {
         md.setModificationDate();
@@ -208,9 +201,7 @@ public class HierarchyManager {
     }
 
     /**
-     * <p>
      * returns the page specified by path in the parameter
-     * </p>
      * @param path handle of the page to be initialized
      * @return Content hierarchy node
      * @throws javax.jcr.PathNotFoundException
@@ -222,9 +213,7 @@ public class HierarchyManager {
     }
 
     /**
-     * <p>
      * get content object of the requested URI
-     * </p>
      * @param path of the content to be initialized
      * @return Content
      * @throws javax.jcr.PathNotFoundException
@@ -240,9 +229,7 @@ public class HierarchyManager {
     }
 
     /**
-     * <p>
      * get content node object of the requested URI
-     * </p>
      * @param path of the content (container / containerlist) to be initialized
      * @return ContentNode
      * @throws javax.jcr.PathNotFoundException
@@ -255,9 +242,7 @@ public class HierarchyManager {
     }
 
     /**
-     * <p>
      * get NodeData object of the requested URI
-     * </p>
      * @param path of the atom to be initialized
      * @return NodeData
      * @throws javax.jcr.PathNotFoundException
@@ -274,10 +259,8 @@ public class HierarchyManager {
     }
 
     /**
-     * <p>
      * returns the first page with a given template name that is found in tree that starts from the page given py the
      * path (including this page)
-     * </p>
      * @param path handle of the page from where the search should start
      * @param templateName template name to search for
      * @return first Content hierarchy node that has the specified template name assigned
@@ -317,9 +300,7 @@ public class HierarchyManager {
     }
 
     /**
-     * <p>
      * removes specified path, it can be either node or property
-     * </p>
      * @param path to be removed
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException
@@ -332,13 +313,11 @@ public class HierarchyManager {
         else {
             this.startPage.getNode(makeRelative(path)).remove();
         }
+
     }
 
     private String makeRelative(String path) {
-        if (path.startsWith("/")) {
-            return StringUtils.stripStart(path, "/");
-        }
-        return path;
+        return StringUtils.stripStart(path, "/");
     }
 
     /**
@@ -372,9 +351,7 @@ public class HierarchyManager {
     }
 
     /**
-     * <p>
      * check is either the node or property exists with the specified path
-     * </p>
      * @param path
      */
     public boolean isExist(String path) {
@@ -418,19 +395,15 @@ public class HierarchyManager {
     }
 
     /**
-     * <p>
      * checks if the requested resource is an NodeData (Property)
-     * </p>
      * @param path of the requested NodeData
      * @return boolean true is the requested content is an NodeData
      */
     public boolean isNodeData(String path) throws AccessDeniedException {
         Access.isGranted(this.accessManager, path, Permission.READ);
 
-        // org.apache.slide.jcr.core.NodeImpl 01.02.2005 20:22:06 -- ERROR -- failed to resolve path relative to /
-        // org.apache.slide.jcr.core.MalformedPathException: '' is not a relative path
         String nodePath = getNodePath(path);
-        if (nodePath == null || "".equals(nodePath)) {
+        if (StringUtils.isEmpty(nodePath)) {
             return false;
         }
 
@@ -453,18 +426,14 @@ public class HierarchyManager {
     }
 
     /**
-     * <p>
      * gets currently used workspace for this hierarchy manager
-     * </p>
      */
     public Workspace getWorkspace() {
         return this.workSpace;
     }
 
     /**
-     * <p>
      * move content to the specified location
-     * </p>
      * @param source source node path
      * @param destination node where the node has to be moved
      * @throws javax.jcr.PathNotFoundException
@@ -478,9 +447,7 @@ public class HierarchyManager {
     }
 
     /**
-     * <p>
      * copy content to the specified location
-     * </p>
      * @param source source node path
      * @param destination node where the node has to be copied
      * @throws javax.jcr.PathNotFoundException
@@ -494,9 +461,7 @@ public class HierarchyManager {
     }
 
     /**
-     * <p>
-     * Persists all changes to the repository if valiation succeds
-     * </p>
+     * Persists all changes to the repository if validation succeds
      * @throws RepositoryException
      */
     public void save() throws RepositoryException {
