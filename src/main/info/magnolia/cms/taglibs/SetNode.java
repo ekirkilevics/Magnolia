@@ -81,13 +81,8 @@ public class SetNode extends TagSupport {
     private int scope = PageContext.PAGE_SCOPE;
 
     /**
-     * Evaluated content node.
-     */
-    private transient Content contentNode;
-
-    /**
      * set the content node name name, e.g. "01"
-     * @param name
+     * @param name content node name
      */
     public void setContentNodeName(String name) {
         this.contentNodeName = name;
@@ -95,14 +90,15 @@ public class SetNode extends TagSupport {
 
     /**
      * set the name of the collection holding the content node, e.g. "mainColumnParagraphs"
-     * @param name
+     * @param name content node collection name
      */
     public void setContentNodeCollectionName(String name) {
         this.contentNodeCollectionName = name;
     }
 
     /**
-     * @param var
+     * Setter fot the <code>var</code> tag attribute.
+     * @param var variable name: the content node will be added to the pagecontext with this name
      */
     public void setVar(String var) {
         this.var = var;
@@ -130,24 +126,29 @@ public class SetNode extends TagSupport {
     }
 
     /**
-     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
+     * Set contentNode in pagecontext and continue evaluating jsp.
+     * @return int
      */
-    public int doStartTag() {
-        Content local = Resource.getLocalContentNode((HttpServletRequest) pageContext.getRequest());
-        Content actpage = Resource.getCurrentActivePage((HttpServletRequest) pageContext.getRequest());
-        String contentNodeName = this.contentNodeName;
-        String contentNodeCollectionName = this.contentNodeCollectionName;
+    public int doEndTag() {
+
+        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+        Content local = Resource.getLocalContentNode(request);
+        Content actpage = Resource.getCurrentActivePage(request);
+
+        // Evaluated content node.
+        Content contentNode = null;
+
         if (StringUtils.isNotEmpty(contentNodeName)) {
             // contentNodeName is defined
             try {
                 if (StringUtils.isEmpty(contentNodeCollectionName)) {
                     // e.g. <cms:setNode contentNodeName="footer"/>
-                    this.contentNode = actpage.getContent(contentNodeName);
+                    contentNode = actpage.getContent(contentNodeName);
                 }
                 else {
                     // e.g. <cms:setNode contentNodeName="01" contentNodeCollectionName="mainPars"/>
                     // e.g. <cms:setNode contentNodeName="footer" contentNodeCollectionName=""/>
-                    this.contentNode = actpage.getContent(contentNodeCollectionName).getContent(contentNodeName);
+                    contentNode = actpage.getContent(contentNodeCollectionName).getContent(contentNodeName);
                 }
             }
             catch (RepositoryException re) {
@@ -164,33 +165,32 @@ public class SetNode extends TagSupport {
                 else {
                     // e.g. <cms:setNode contentNodeName=""/>
                     // e.g. <cms:setNode contentNodeCollectionName=""/>
-                    this.contentNode = actpage;
+                    contentNode = actpage;
                 }
             }
             else {
                 // inside collection iterator
                 if (contentNodeName == null && contentNodeCollectionName == null) {
                     // e.g. <cms:setNode />
-                    this.contentNode = local;
+                    contentNode = local;
                 }
                 else if ((contentNodeName != null && StringUtils.isEmpty(contentNodeName))
                     || (contentNodeCollectionName != null && StringUtils.isEmpty(contentNodeCollectionName))) {
                     // empty collection name -> use actpage
                     // e.g. <cms:setNode contentNodeCollectionName=""/>
-                    this.contentNode = actpage;
+                    contentNode = actpage;
                 }
             }
         }
-        return SKIP_BODY;
-    }
 
-    /**
-     * Set contentNode in pagecontext and continue evaluating jsp.
-     * @return int
-     */
-    public int doEndTag() {
-        pageContext.setAttribute(this.var, new NodeMapWrapper(this.contentNode), this.scope);
-        this.contentNode = null;
+        // set attribute
+        if (contentNode != null) {
+            pageContext.setAttribute(this.var, new NodeMapWrapper(contentNode), this.scope);
+        }
+        else {
+            pageContext.removeAttribute(this.var);
+        }
+
         return EVAL_PAGE;
     }
 
