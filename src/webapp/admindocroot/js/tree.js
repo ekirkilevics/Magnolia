@@ -557,7 +557,7 @@
 		if (mgnlConfirm(text,title))
 			{
 
-		    var url="${pageContext.request.contextPath}/export?exportxml=true&repository=" + this.repository + "&basepath=" + this.selectedNode.id;
+		    var url="${pageContext.request.contextPath}/export?exportxml=true&mgnlRepository=" + this.repository + "&mgnlPath=" + this.selectedNode.id;
 
 		    location.href=url;
 			}

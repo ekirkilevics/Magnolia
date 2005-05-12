@@ -38,6 +38,16 @@ public class ImportExportServlet extends HttpServlet {
     private static final long serialVersionUID = 222L;
 
     /**
+     * request parameter: repository name.
+     */
+    private static final String PARAM_REPOSITORY = "mgnlRepository";
+
+    /**
+     * request parameter: path.
+     */
+    private static final String PARAM_PATH = "mgnlPath";
+
+    /**
      * Logger.
      */
     private static Logger log = Logger.getLogger(ImportExportServlet.class);
@@ -48,11 +58,11 @@ public class ImportExportServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
 
-        String repository = request.getParameter("repository");
+        String repository = request.getParameter(PARAM_REPOSITORY);
         if (StringUtils.isEmpty(repository)) {
             repository = ContentRepository.WEBSITE;
         }
-        String basepath = request.getParameter("basepath");
+        String basepath = request.getParameter(PARAM_PATH);
         if (StringUtils.isEmpty(basepath)) {
             basepath = "/";
         }
@@ -158,7 +168,7 @@ public class ImportExportServlet extends HttpServlet {
             return;
         }
 
-        String repository = form.getParameter("repository");
+        String repository = form.getParameter(PARAM_REPOSITORY);
         Document xmlFile = form.getDocument("file");
         if (StringUtils.isEmpty(repository) || xmlFile == null) {
             throw new RuntimeException("Wrong parameters");
