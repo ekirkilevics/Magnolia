@@ -29,6 +29,8 @@ ul.level-1,ul.level0 {
 	position: absolute;
 	left: 15px;
 	top: 95px;
+	margin-left: 0;
+	padding-left: 0;
 	border-top: 1px solid #999;
 	border-bottom: 1px solid #999;
 }
@@ -38,6 +40,7 @@ ul.level-1,ul.level0,ul.level1 {
 	padding: 0 0 0 0;
 	list-style-type: none;
 	list-style-position: inside;
+	margin-left: 0;
 }
 
 ul.level0 li a,ul.level-1 li a {
