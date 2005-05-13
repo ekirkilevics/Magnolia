@@ -1,0 +1,160 @@
+/*
+ * Created on 13.05.2005
+ *
+ * TODO To change the template for this generated file go to
+ * Window - Preferences - Java - Code Style - Code Templates
+ */
+package info.magnolia.cms.module;
+
+import info.magnolia.cms.beans.config.ConfigurationException;
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.config.ModuleLoader;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.Path;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.jar.JarFile;
+import javax.jcr.PathNotFoundException;
+import org.apache.log4j.Logger;
+
+
+/**
+ * @author philipp TODO To change the template for this generated type comment go to Window - Preferences - Java - Code
+ * Style - Code Templates
+ */
+public class ModuleFactory {
+
+    private static Logger log = Logger.getLogger(ModuleFactory.class);
+
+    private static ClassLoader classLoader;
+
+    private static Map instantiatedModules = new HashMap();
+
+    public static void init() throws ConfigurationException {
+        log.info("Loading module jars");
+        try {
+            HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
+            Content startPage = hm.getContent(ModuleLoader.CONFIG_PAGE);
+            init(startPage);
+            log.info("Finished loading module jars");
+        }
+        catch (Exception e) {
+            log.fatal("Failed to load the module jar");
+            log.fatal(e.getMessage(), e);
+            throw new ConfigurationException(e.getMessage());
+        }
+    }
+
+    private static void init(Content modulesNode) throws InstantiationException, IllegalAccessException,
+        ClassNotFoundException {
+        Map registeredModules = new HashMap();
+
+        // load all module jars
+        try {
+            List jars = getJarFiles();
+            List urls = new ArrayList();
+
+            for (Iterator iter = jars.iterator(); iter.hasNext();) {
+                JarFile jar = (JarFile) iter.next();
+                try {
+                    urls.add(new File(jar.getName()).toURL());
+                }
+                catch (MalformedURLException e) {
+                    log.error("can't load module jar [" + jar.getName() + "]", e);
+                }
+                try {
+                    String moduleName = jar.getManifest().getMainAttributes().getValue("Magnolia-Module-Name");
+                    String moduleClassName = jar.getManifest().getMainAttributes().getValue("Magnolia-Module-Class");
+                    if (moduleName != null && moduleClassName != null) {
+                        registeredModules.put(moduleName, moduleClassName);
+                        log.info("module loaded [" + moduleName + "]");
+                    }
+                    else {
+                        log.info("no magnolia module manifest found [" + jar.getName() + "]");
+                    }
+
+                }
+                catch (IOException e) {
+                    log.error("can't read manifest", e);
+                }
+            }
+
+            classLoader = URLClassLoader.newInstance((URL[]) urls.toArray(new URL[urls.size()]), ModuleFactory.class
+                .getClassLoader());
+        }
+        catch (IOException e) {
+            log.error("can't load module jars", e);
+        }
+
+        // create instance and call register()
+        for (Iterator iter = registeredModules.keySet().iterator(); iter.hasNext();) {
+            String moduleName = (String) iter.next();
+            String className = (String) registeredModules.get(moduleName);
+
+            Module module = (Module) loadClass(className).newInstance();
+
+            instantiatedModules.put(moduleName, module);
+            Content moduleNode;
+            try {
+                try {
+                    moduleNode = modulesNode.getContent(moduleName);
+                }
+                catch (PathNotFoundException e1) {
+                    moduleNode = modulesNode.createContent(moduleName);
+                    modulesNode.save();
+                }
+                module.register(moduleNode);
+            }
+
+            catch (Exception e) {
+                log.error(e);
+            }
+        }
+    }
+
+    public static Module getModuleInstance(String name) {
+        return (Module) instantiatedModules.get(name);
+    }
+
+    public static Class loadClass(String className) throws ClassNotFoundException {
+        return classLoader.loadClass(className);
+    }
+
+    private static List getJarFiles() throws IOException {
+        ArrayList jars = new ArrayList();
+
+        File dir = new File(Path.getAbsoluteFileSystemPath("WEB-INF/modules"));
+        if (dir != null) {
+            File[] files = dir.listFiles();
+            if (files != null) {
+                for (int i = 0; i < files.length; i++) {
+                    File jarFile = files[i];
+                    if (jarFile.getName().endsWith(".jar")) {
+                        JarFile jar = new JarFile(jarFile);
+                        jars.add(jar);
+                    }
+                }
+            }
+        }
+        return jars;
+    }
+
+    public static void initModule(ModuleConfig thisModule, String moduleClassName) throws InstantiationException,
+        IllegalAccessException, ClassNotFoundException, InvalidConfigException {
+        Module module = getModuleInstance(thisModule.getModuleName());
+        if (module == null) {
+            module = (Module) loadClass(moduleClassName).newInstance();
+        }
+        module.init(thisModule);
+    }
+
+}

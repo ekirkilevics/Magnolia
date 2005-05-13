@@ -14,6 +14,7 @@ package info.magnolia.module.templating;
 
 import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.config.Template;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.module.Module;
 import info.magnolia.cms.module.ModuleConfig;
 import org.apache.log4j.Logger;
@@ -51,5 +52,12 @@ public class Engine implements Module {
 
     public void destroy() {
         // ignore
+    }
+
+    /* (non-Javadoc)
+     * @see info.magnolia.cms.module.Module#register(info.magnolia.cms.core.Content)
+     */
+    public void register(Content moduleNode) {
+        // nothing
     }
 }

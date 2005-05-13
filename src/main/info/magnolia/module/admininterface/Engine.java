@@ -99,4 +99,11 @@ public class Engine implements Module {
 
     public void destroy() {
     }
+
+    /* (non-Javadoc)
+     * @see info.magnolia.cms.module.Module#register(info.magnolia.cms.core.Content)
+     */
+    public void register(Content moduleNode) {
+        // nothing to do
+    }
 }

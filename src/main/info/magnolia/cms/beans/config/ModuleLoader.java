@@ -14,16 +14,19 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.module.InvalidConfigException;
-import info.magnolia.cms.module.Module;
 import info.magnolia.cms.module.ModuleConfig;
+import info.magnolia.cms.module.ModuleFactory;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.AccessManagerImpl;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
 import info.magnolia.cms.util.UrlPattern;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -52,7 +55,7 @@ public final class ModuleLoader {
     /**
      * magnolia module specific keywords
      */
-    private static final String CONFIG_PAGE = "modules";
+    public static final String CONFIG_PAGE = "modules";
 
     private static final String CONFIG_NODE_REGISTER = "Register";
 
@@ -90,8 +93,9 @@ public final class ModuleLoader {
 
     /**
      * @param startPage
+     * @throws IOException
      */
-    private static void init(Content startPage) throws ClassNotFoundException, InvalidConfigException {
+    private static void init(Content startPage) throws ClassNotFoundException, InvalidConfigException, IOException {
         Iterator modules = startPage.getChildren().iterator();
         while (modules.hasNext()) {
             Content module = (Content) modules.next();
@@ -111,41 +115,63 @@ public final class ModuleLoader {
         }
     }
 
+    public static Content createMinimalConfiguration(Content node, String name, String className) throws AccessDeniedException, PathNotFoundException, RepositoryException{
+        node.createContent("Config");
+        node.createContent("VirtualURIMapping", ItemType.CONTENTNODE);
+        
+        Content register = node.createContent(CONFIG_NODE_REGISTER, ItemType.CONTENTNODE);
+        register.createNodeData("moduleName");
+        register.createNodeData("moduleDescription");
+        register.createNodeData("class").setValue(className);
+        register.createNodeData("repository");
+        register.createContent("sharedRepositories",ItemType.CONTENTNODE);
+        register.createContent("initParams",ItemType.CONTENTNODE);
+        return node;
+    }
+
     private static void load(Content module) throws RepositoryException, ClassNotFoundException, InvalidConfigException {
-        Content moduleConfig = module.getContent(CONFIG_NODE_REGISTER);
-        ModuleConfig thisModule = new ModuleConfig();
-        thisModule.setModuleName(moduleConfig.getNodeData("moduleName").getString());
-        thisModule.setModuleDescription(moduleConfig.getNodeData("moduleDescription").getString());
-        thisModule.setHierarchyManager(getHierarchyManager(moduleConfig.getNodeData("repository").getString()));
         try {
-            Content sharedRepositories = moduleConfig.getContent("sharedRepositories");
-            thisModule.setSharedHierarchyManagers(getSharedHierarchyManagers(sharedRepositories));
-        }
-        catch (PathNotFoundException e) {
-            log.info("Module : no shared repository definition found for - " + module.getName());
-        }
-        thisModule.setInitParameters(getInitParameters(moduleConfig.getContent("initParams")));
-        /* add local store */
-        LocalStore store = LocalStore.getInstance(CONFIG_PAGE + "/" + module.getName() + "/" + CONFIG_NODE_LOCAL_STORE);
-        thisModule.setLocalStore(store.getStore());
-        try {
-
-            // temporary workaround for compatibility with old repositories (the package "adminInterface" has been
-            // renamed to "admininterface" according to java naming standards)
-            String moduleClassName = moduleConfig.getNodeData("class").getString();
-            if ("info.magnolia.module.adminInterface.Engine".equals(moduleClassName)) {
-                moduleClassName = "info.magnolia.module.admininterface.Engine";
+            Content moduleConfig = module.getContent(CONFIG_NODE_REGISTER);
+            ModuleConfig thisModule = new ModuleConfig();
+            thisModule.setModuleName(moduleConfig.getNodeData("moduleName").getString());
+            thisModule.setModuleDescription(moduleConfig.getNodeData("moduleDescription").getString());
+            thisModule.setHierarchyManager(getHierarchyManager(moduleConfig.getNodeData("repository").getString()));
+            try {
+                Content sharedRepositories = moduleConfig.getContent("sharedRepositories");
+                thisModule.setSharedHierarchyManagers(getSharedHierarchyManagers(sharedRepositories));
             }
+            catch (PathNotFoundException e) {
+                log.info("Module : no shared repository definition found for - " + module.getName());
+            }
+            thisModule.setInitParameters(getInitParameters(moduleConfig.getContent("initParams")));
+            /* add local store */
+            LocalStore store = LocalStore.getInstance(CONFIG_PAGE
+                + "/"
+                + module.getName()
+                + "/"
+                + CONFIG_NODE_LOCAL_STORE);
+            thisModule.setLocalStore(store.getStore());
+            try {
+                // temporary workaround for compatibility with old repositories (the package "adminInterface" has been
+                // renamed to "admininterface" according to java naming standards)
+                String moduleClassName = moduleConfig.getNodeData("class").getString();
+                if ("info.magnolia.module.adminInterface.Engine".equals(moduleClassName)) {
+                    moduleClassName = "info.magnolia.module.admininterface.Engine";
+                }
 
-            Module moduleClass = (Module) Class.forName(moduleClassName).newInstance();
-            moduleClass.init(thisModule);
+                ModuleFactory.initModule(thisModule, moduleClassName);
+
+            }
+            catch (InstantiationException ie) {
+                log.fatal("Module : [ " + moduleConfig.getNodeData("moduleName").getString() + " ] failed to load");
+                log.fatal(ie.getMessage());
+            }
+            catch (IllegalAccessException ae) {
+                log.fatal(ae.getMessage());
+            }
         }
-        catch (InstantiationException ie) {
-            log.fatal("Module : [ " + moduleConfig.getNodeData("moduleName").getString() + " ] failed to load");
-            log.fatal(ie.getMessage());
-        }
-        catch (IllegalAccessException ae) {
-            log.fatal(ae.getMessage());
+        catch (Exception e) {
+            log.fatal("can't initialize module " + module.getHandle(), e);
         }
     }
 
@@ -207,4 +233,5 @@ public final class ModuleLoader {
     private static void setSudoCredentials() {
         simpleCredentials = new SimpleCredentials("ModuleLoader", "".toCharArray());
     }
+
 }

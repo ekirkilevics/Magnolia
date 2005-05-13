@@ -18,6 +18,7 @@ import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.gui.dialog.DialogManager;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.license.License;
+import info.magnolia.cms.module.ModuleFactory;
 import info.magnolia.cms.security.SecureURI;
 
 import java.io.File;
@@ -147,6 +148,7 @@ public class ConfigLoader {
         SecureURI.init();
         try {
             Server.init();
+            ModuleFactory.init();
             ModuleLoader.init();
             Listener.init();
             Subscriber.init();

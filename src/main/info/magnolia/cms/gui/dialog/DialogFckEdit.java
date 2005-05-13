@@ -116,7 +116,7 @@ public class DialogFckEdit extends DialogBox {
         out.write("fckInstance.Value = '" + escapeJsValue(getValue()) + "';");
         out.write("fckInstance.BasePath = '" + this.getRequest().getContextPath() + FCKEDIT_PATH + "';");
         if (customConfigurationsPath.length() > 0) {
-            out.write("fckInstance.Config['CustomConfigurationsPath'] = '" + customConfigurationsPath + "';");
+            out.write("fckInstance.Config['CustomConfigurationsPath'] = '" + this.getRequest().getContextPath() + "/" + customConfigurationsPath + "';");
         }
         if (jsInitFile.length() > 0) {
             out.write("</script>");
