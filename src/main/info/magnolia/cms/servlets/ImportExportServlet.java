@@ -112,7 +112,7 @@ public class ImportExportServlet extends HttpServlet {
 
         out.println("<h2>Export</h2>");
         out.println("<form method=\"get\" action=\"\">");
-        out.println("repository: <select name=\"repository\"><br/>");
+        out.println("repository: <select name=\"" + PARAM_REPOSITORY + "\"><br/>");
 
         for (int j = 0; j < repositories.length; j++) {
             out.print("<option");
@@ -132,7 +132,7 @@ public class ImportExportServlet extends HttpServlet {
 
         out.println("<h2>Import</h2>");
         out.println("<form method=\"post\" action=\"\" enctype=\"multipart/form-data\">");
-        out.println("repository: <select name=\"repository\"><br/>");
+        out.println("repository: <select name=\"" + PARAM_REPOSITORY + "\"><br/>");
 
         for (int j = 0; j < repositories.length; j++) {
             out.print("<option");
