@@ -433,29 +433,32 @@ public class Save extends ControlSuper {
      * @param value
      * @return todo configurable regexp on save?
      */
-    public String getRichEditValueStr(String value) {
+    protected static String getRichEditValueStr(String value) {
 
         String valueStr = value;
+
         valueStr = StringUtils.replace(valueStr, "\r\n", " ");
         valueStr = StringUtils.replace(valueStr, "\n", " ");
 
         // ie inserts some strange br...
         valueStr = StringUtils.replace(valueStr, "</br>", "");
+        valueStr = StringUtils.replace(valueStr, "<P><BR>", "<P>");
 
         valueStr = StringUtils.replace(valueStr, "<br>", "\n ");
         valueStr = StringUtils.replace(valueStr, "<BR>", "\n ");
         valueStr = StringUtils.replace(valueStr, "<br/>", "\n ");
 
-        // replace <a class="...></a> by <span class=""></span>
-        valueStr = this.replaceABySpan(valueStr, "a");
-
         // replace <P>
-        valueStr = this.replacePByBr(valueStr, "p");
+        valueStr = replacePByBr(valueStr, "p");
+
+        // replace <a class="...></a> by <span class=""></span>
+        valueStr = replaceABySpan(valueStr, "a");
+
 
         return valueStr;
     }
 
-    private String replaceABySpan(String value, String tagName) {
+    protected static String replaceABySpan(String value, String tagName) {
         if (StringUtils.isEmpty(value)) {
             return value;
         }
@@ -481,7 +484,7 @@ public class Save extends ControlSuper {
         }
         String valueStr2 = valueStr.toString();
         if (!tagName.equals(tagName.toUpperCase())) {
-            valueStr2 = this.replaceABySpan(valueStr2, tagName.toUpperCase());
+            valueStr2 = replaceABySpan(valueStr2, tagName.toUpperCase());
         }
         return valueStr2;
     }
@@ -491,7 +494,7 @@ public class Save extends ControlSuper {
      * @param tagName
      * @return
      */
-    private String replacePByBr(String value, String tagName) {
+    protected static String replacePByBr(String value, String tagName) {
 
         if (StringUtils.isBlank(value)) {
             return value;
@@ -510,7 +513,7 @@ public class Save extends ControlSuper {
         value = StringUtils.replace(value, post, "\n\n ");
 
         if (!tagName.equals(tagName.toUpperCase())) {
-            value = this.replacePByBr(value, tagName.toUpperCase());
+            value = replacePByBr(value, tagName.toUpperCase());
         }
         return value;
     }
