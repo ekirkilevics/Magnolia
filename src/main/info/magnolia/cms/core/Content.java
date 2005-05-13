@@ -174,7 +174,7 @@ public class Content extends ContentHandler implements Cloneable {
      */
     public Content createContentNode(String name) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
-        return this.createContent(name, ItemType.NT_CONTENTNODE);
+        return this.createContent(name, ItemType.CONTENTNODE);
     }
 
     /**

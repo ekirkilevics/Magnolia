@@ -94,7 +94,7 @@ public class Template {
         try {
             log.info("Config : loading Template info - " + modulePath);
             Content startPage = configHierarchyManager.getContent(modulePath);
-            Collection children = startPage.getContent("Templates").getChildren(ItemType.NT_CONTENTNODE, Content.SORT_BY_SEQUENCE);
+            Collection children = startPage.getContent("Templates").getChildren(ItemType.CONTENTNODE, Content.SORT_BY_SEQUENCE);
             if ((children != null) && !(children.isEmpty())) {
                 Template.templates = children.iterator();
             }

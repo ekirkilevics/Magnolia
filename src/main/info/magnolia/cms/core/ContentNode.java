@@ -80,7 +80,7 @@ public class ContentNode extends Content {
         AccessDeniedException {
         this.workingNode = workingNode;
         this.name = name;
-        this.contentNode = new Content(this.workingNode, this.name, ItemType.NT_CONTENTNODE, manager);
+        this.contentNode = new Content(this.workingNode, this.name, ItemType.CONTENTNODE.getSystemName(), manager);
         this.node = this.contentNode.node;
     }
 
