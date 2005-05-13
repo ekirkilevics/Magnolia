@@ -3,8 +3,6 @@
 <module name="Checker">
 <property name="severity" value="warning"/>
 <module name="TreeWalker">
-<module name="FileContentsHolder">
-</module>
 <module name="ArrayTypeStyle">
 </module>
 <module name="FinalParameters">
