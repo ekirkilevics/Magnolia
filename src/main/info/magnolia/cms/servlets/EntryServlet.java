@@ -117,6 +117,9 @@ public class EntryServlet extends HttpServlet {
                     this.cacheRequest(req);
                 }
                 else {
+                    if (log.isDebugEnabled()) {
+                        log.debug("Resource not found, redirecting request for [" + req.getRequestURI() + "] to 404 URI");
+                    }
                     res.sendRedirect(req.getContextPath() + Server.get404URI());
                 }
             }
