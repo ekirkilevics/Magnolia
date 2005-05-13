@@ -154,18 +154,24 @@ public class Paragraph {
      * This registers the dialog handler for this paragraph
      */
     private void registerHandler() {
-        Class handler = ParagraphEditDialog.class;
-        String className = this.dialogContent.getNodeData("class").getString();
-        if (StringUtils.isNotEmpty(className)) {
-            try {
-                handler = Class.forName(className);
+        try {
+            Class handler = ParagraphEditDialog.class;
+ 
+            String className = this.dialogContent.getNodeData("class").getString();
+            if (StringUtils.isNotEmpty(className)) {
+                try {
+                    handler = Class.forName(className);
+                }
+                catch (ClassNotFoundException e) {
+                    log.error("registering paragraph: class [" + className + "] not found", e);
+                }
             }
-            catch (ClassNotFoundException e) {
-                log.error("registering paragraph: class [" + className + "] not found", e);
-            }
-        }
 
-        Store.getInstance().registerDialogHandler(this.name, handler, this.dialogContent);
+            Store.getInstance().registerDialogHandler(this.name, handler, this.dialogContent);
+        }
+        catch (Exception e) {
+            log.error("can't register handle for dialog [" + this.name + "]", e);
+        }
     }
 
     /**
