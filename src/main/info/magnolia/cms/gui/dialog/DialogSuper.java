@@ -342,7 +342,7 @@ public abstract class DialogSuper implements DialogInterface {
         }
         this.config = config;
 
-        Iterator it = configNodeParent.getChildren(ItemType.CONTENTNODE).iterator();
+        Iterator it = configNodeParent.getChildren(ItemType.CONTENTNODE, Content.SORT_BY_SEQUENCE).iterator();
         while (it.hasNext()) {
             Content configNode = (Content) it.next();
             String controlType = configNode.getNodeData("controlType").getString();
