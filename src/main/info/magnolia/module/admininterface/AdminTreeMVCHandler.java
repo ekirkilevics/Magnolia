@@ -15,7 +15,6 @@ package info.magnolia.module.admininterface;
 
 import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.beans.config.Subscriber;
-import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.misc.Sources;
