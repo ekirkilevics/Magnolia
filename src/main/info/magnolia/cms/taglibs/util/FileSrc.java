@@ -154,7 +154,7 @@ public class FileSrc extends TagSupport {
         setFileProperties();
 
         String contentNodeCollectionName = (String) pageContext.getAttribute(
-            ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME,
+            "contentNodeCollectionName",
             PageContext.REQUEST_SCOPE);
         if (this.fileNameOnly.equals("true")) {
             try {
