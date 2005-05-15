@@ -15,7 +15,6 @@ package info.magnolia.cms.taglibs.util;
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.taglibs.ContentNodeIterator;
 import info.magnolia.cms.util.Resource;
 
 import javax.jcr.RepositoryException;
@@ -211,7 +210,7 @@ public class FileSrc extends TagSupport {
         this.fileExtension = Server.getDefaultExtension();
         Content properties = null;
         String contentNodeCollectionName = (String) pageContext.getAttribute(
-            ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME,
+            "contentNodeCollectionName",
             PageContext.REQUEST_SCOPE);
         if (contentNodeCollectionName == null) {
             // we are not in a loop
