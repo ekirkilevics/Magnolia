@@ -40,7 +40,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.apache.jackrabbit.core.value.DateValue;
 import org.apache.log4j.Logger;
 
 
@@ -420,7 +419,7 @@ public class Save extends ControlSuper {
                 catch (Exception e) {
                     // ignore, it sets the current date / time
                 }
-                value = new DateValue(date);
+                value = value = valueFactory.createValue(date);
             }
             catch (Exception e) {
                 log.debug("Exception caught: " + e.getMessage(), e);
@@ -453,7 +452,6 @@ public class Save extends ControlSuper {
 
         // replace <a class="...></a> by <span class=""></span>
         valueStr = replaceABySpan(valueStr, "a");
-
 
         return valueStr;
     }
