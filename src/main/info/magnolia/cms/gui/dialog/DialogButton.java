@@ -44,7 +44,7 @@ public class DialogButton extends DialogBox {
     public void drawHtml(Writer out) throws IOException {
         Button control = new Button();
         String label = getConfigValue("buttonLabel");
-        label = TemplateMessagesUtil.get(this, label);
+        label = TemplateMessagesUtil.get(this.getRequest(), label);
         control.setSaveInfo(false);
         control.setLabel(label);
         control.setOnclick(this.getConfigValue("onclick"));

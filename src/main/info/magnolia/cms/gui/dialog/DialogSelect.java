@@ -59,7 +59,7 @@ public class DialogSelect extends DialogBox {
                 String label = null;
                 if (n.getNodeData("label").isExist()) {
                     label = n.getNodeData("label").getString();
-                    label = TemplateMessagesUtil.get(this, label);
+                    label = TemplateMessagesUtil.get(this.getRequest(), label);
                 }
                 SelectOption option = new SelectOption(label, value);
                 if (n.getNodeData("selected").getBoolean()) {

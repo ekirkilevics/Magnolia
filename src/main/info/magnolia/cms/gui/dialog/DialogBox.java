@@ -79,10 +79,10 @@ public class DialogBox extends DialogSuper {
         if (this.getBoxType() == BOXTYPE_2COLS) {
             out.write("<td width=\"1%\" class=\"" + CssConstants.CSSCLASS_BOXLABEL + "\">");
             // write the label
-            out.write(TemplateMessagesUtil.get(this, this.getLabel()));
+            out.write(TemplateMessagesUtil.get(this.getRequest(), this.getLabel()));
             if (StringUtils.isNotEmpty(this.getConfigValue("labelDescription"))) {
                 String desc = this.getConfigValue("labelDescription");
-                desc = TemplateMessagesUtil.get(this, desc);
+                desc = TemplateMessagesUtil.get(this.getRequest(), desc);
                 out.write("<div class=\"" + CssConstants.CSSCLASS_DESCRIPTION + "\">" + desc + "</div>");
             }
             out.write("</td>");
@@ -99,7 +99,7 @@ public class DialogBox extends DialogSuper {
                 out.write("<div class=\""
                     + CssConstants.CSSCLASS_BOXLABEL
                     + "\">"
-                    + TemplateMessagesUtil.get(this, this.getLabel())
+                    + TemplateMessagesUtil.get(this.getRequest(), this.getLabel())
                     + "</div>");
             }
             if (StringUtils.isNotEmpty(this.getConfigValue("labelDescription"))) {
@@ -107,7 +107,7 @@ public class DialogBox extends DialogSuper {
                 out.write("<div class=\""
                     + CssConstants.CSSCLASS_DESCRIPTION
                     + "\">"
-                    + TemplateMessagesUtil.get(this, desc)
+                    + TemplateMessagesUtil.get(this.getRequest(), desc)
                     + "</div>");
             }
         }
@@ -123,7 +123,7 @@ public class DialogBox extends DialogSuper {
         // use div to force a new line
         if (StringUtils.isNotEmpty(this.getDescription())) {
             String desc = this.getDescription();
-            desc = TemplateMessagesUtil.get(this, desc);
+            desc = TemplateMessagesUtil.get(this.getRequest(), desc);
             return "<div class=\"" + CssConstants.CSSCLASS_DESCRIPTION + "\">" + desc + "</div>";
         }
 

@@ -46,7 +46,7 @@ public class DialogTab extends DialogSuper {
         // add tab button to tab set
         if (StringUtils.isNotEmpty(this.getLabel())) {
             Button control = new Button();
-            control.setLabel(TemplateMessagesUtil.get(this, this.getLabel()));
+            control.setLabel(TemplateMessagesUtil.get(this.getRequest(), this.getLabel()));
             control.setOnclick("mgnlDialogShiftTab('" + parentId + "','" + id + "');");
             this.getParent().addOption(control);
         }

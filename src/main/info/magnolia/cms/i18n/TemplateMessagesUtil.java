@@ -1,5 +1,4 @@
-/*
- * Created on Mar 30, 2005
+/**
  *
  * Magnolia and its source-code is licensed under the LGPL.
  * You may copy, adapt, and redistribute this file for commercial or non-commercial use.
@@ -15,26 +14,17 @@ package info.magnolia.cms.i18n;
 
 import javax.servlet.http.HttpServletRequest;
 
-import info.magnolia.cms.gui.dialog.DialogSuper;
-
 
 /**
- * @author philipp This class helps to get the messages used in templates (paragraphs, dialogs, ..). First it make a
- * lookup in messages_templating_custom and then in messages_templating..
+ * This class helps to get the messages used in templates (paragraphs, dialogs, ..). First it make a lookup in
+ * messages_templating_custom and then in messages_templating..
+ * @author philipp
  */
 public class TemplateMessagesUtil {
 
     public static String DEFAULT_BASENAME = "info.magnolia.module.admininterface.messages_templating";
 
     public static String CUSTOM_BASENAME = "info.magnolia.module.admininterface.messages_templating_custom";
-
-    public static String get(DialogSuper dialog, String key) {
-        return get(dialog.getRequest(), key);
-    }
-
-    public static String get(DialogSuper dialog, String key, Object[] args) {
-        return get(dialog.getRequest(), key, args);
-    }
 
     public static String get(HttpServletRequest request, String key) {
         String msg = MessagesManager.getMessages(request, DEFAULT_BASENAME).getWithDefault(key, key);

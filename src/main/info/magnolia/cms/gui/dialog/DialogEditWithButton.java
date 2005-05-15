@@ -97,7 +97,7 @@ public class DialogEditWithButton extends DialogBox {
         out.write(control.getHtml());
         if (this.getConfigValue("buttonLabel", null) != null) {
             String label = this.getConfigValue("buttonLabel");
-            label = TemplateMessagesUtil.get(this, label);
+            label = TemplateMessagesUtil.get(this.getRequest(), label);
             this.getButton().setLabel(label);
         }
         for (int i = 0; i < this.getButtons().size(); i++) {

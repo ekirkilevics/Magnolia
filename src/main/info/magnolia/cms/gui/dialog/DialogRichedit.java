@@ -133,7 +133,7 @@ public class DialogRichedit extends DialogBox {
                 SelectOption option = new SelectOption(null, value);
                 if (n.getNodeData("label").isExist()) {
                     String label = n.getNodeData("label").getString();
-                    label = TemplateMessagesUtil.get(this, label);
+                    label = TemplateMessagesUtil.get(this.getRequest(), label);
                     option.setLabel(label);
                 }
                 if (n.getNodeData("selected").getBoolean()) {

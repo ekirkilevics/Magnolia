@@ -64,7 +64,7 @@ public class DialogButtonSet extends DialogBox {
                 Content n = ((Content) it.next());
                 String value = n.getNodeData("value").getString();
                 String label = n.getNodeData("label").getString();
-                label = TemplateMessagesUtil.get(this, label);
+                label = TemplateMessagesUtil.get(this.getRequest(), label);
                 Button button = new Button(this.getName(), value);
                 // if (n.getNodeData("label").isExist()) button.setLabel(n.getNodeData("label").getString());
                 button.setLabel(label);
@@ -85,7 +85,7 @@ public class DialogButtonSet extends DialogBox {
         List options = new ArrayList();
         Button button = new Button(this.getName(), "");
         String label = configNode.getNodeData("buttonLabel").getString();
-        label = TemplateMessagesUtil.get(this, label);
+        label = TemplateMessagesUtil.get(this.getRequest(), label);
         button.setLabel(label);
 
         if (configNode.getNodeData("selected").getBoolean()) {
