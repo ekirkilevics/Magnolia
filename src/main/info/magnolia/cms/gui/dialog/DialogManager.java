@@ -20,7 +20,6 @@ import java.util.Iterator;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.ValueFactory;
-import javax.servlet.ServletConfig;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -60,7 +59,7 @@ public class DialogManager {
     /**
      * Called through the initialization precess
      */
-    public static void init(ServletConfig config) {
+    public static void init() {
         log.info("Config : loading dialog controls configuration");
 
         // reading the configuration from the repository

@@ -13,8 +13,10 @@
 package info.magnolia.module.admininterface;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.gui.dialog.DialogManager;
 import info.magnolia.cms.module.Module;
 import info.magnolia.cms.module.ModuleConfig;
 import info.magnolia.module.admininterface.trees.AdminTreeConfig;
@@ -50,6 +52,12 @@ public class Engine implements Module {
 
         registerTrees(store);
         registerDialogs(store, "dialogs");
+
+        log.info("Init template");
+        Template.init();
+
+        log.info("Init dialog controls");
+        DialogManager.init();
 
     }
 
