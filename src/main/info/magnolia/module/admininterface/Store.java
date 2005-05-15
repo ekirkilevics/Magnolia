@@ -13,6 +13,7 @@
 package info.magnolia.module.admininterface;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.module.admininterface.dialogs.ParagraphEditDialog;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
@@ -21,16 +22,19 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
 /**
- * Date: Oct 14, 2004 Time: 3:23:06 PM
  * @author Sameer Charles
  * @version 2.0
  */
 public class Store {
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(Store.class);
 
     /**
@@ -104,6 +108,10 @@ public class Store {
         dialogHandlers.put(name, new Object[]{dialogHandler, configNode});
     }
 
+
+
+
+
     public DialogMVCHandler getDialogHandler(String name, HttpServletRequest request, HttpServletResponse response) {
 
         Object[] handlerConfig = (Object[]) dialogHandlers.get(name);
@@ -134,19 +142,41 @@ public class Store {
                     return (DialogMVCHandler) constructor.newInstance(new Object[]{name, request, response});
                 }
             }
-            else {
 
-                Constructor constructor = dialogHandlerClass.getConstructor(new Class[]{
-                    String.class,
-                    HttpServletRequest.class,
-                    HttpServletResponse.class});
-                return (DialogMVCHandler) constructor.newInstance(new Object[]{name, request, response});
-            }
+            Constructor constructor = dialogHandlerClass.getConstructor(new Class[]{
+                String.class,
+                HttpServletRequest.class,
+                HttpServletResponse.class});
+            return (DialogMVCHandler) constructor.newInstance(new Object[]{name, request, response});
         }
         catch (Exception e) {
             throw new InvalidDialogHandlerException(name, e);
         }
 
+    }
+
+    /**
+     * This registers the dialog handler for a paragraph.
+     */
+    public void registerParagraphDialogHandler(String name, Content dialogContent) {
+        try {
+            Class handler = ParagraphEditDialog.class;
+
+            String className = dialogContent.getNodeData("class").getString();
+            if (StringUtils.isNotEmpty(className)) {
+                try {
+                    handler = Class.forName(className);
+                }
+                catch (ClassNotFoundException e) {
+                    log.error("registering paragraph: class [" + className + "] not found", e);
+                }
+            }
+
+            registerDialogHandler(name, handler, dialogContent);
+        }
+        catch (Exception e) {
+            log.error("can't register handle for dialog [" + name + "]", e);
+        }
     }
 
 }

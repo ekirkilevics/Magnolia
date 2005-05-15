@@ -13,6 +13,7 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ContentHandler;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.AccessManager;
@@ -41,19 +42,17 @@ public class Template {
      */
     private static Logger log = Logger.getLogger(Template.class);
 
-    private static Iterator templates;
-
     private static List visibleTemplates = new ArrayList();
 
     private static Map cachedContent = new Hashtable();
 
     /**
-     * Mandatatory.
+     * Template name.
      */
     private String name;
 
     /**
-     * Mandatatory.
+     * Template path.
      */
     private String path;
 
@@ -94,11 +93,14 @@ public class Template {
         try {
             log.info("Config : loading Template info - " + modulePath);
             Content startPage = configHierarchyManager.getContent(modulePath);
-            Collection children = startPage.getContent("Templates").getChildren(ItemType.CONTENTNODE, Content.SORT_BY_SEQUENCE);
+            Collection children = startPage.getContent("Templates").getChildren(
+                ItemType.CONTENTNODE,
+                ContentHandler.SORT_BY_SEQUENCE);
+
             if ((children != null) && !(children.isEmpty())) {
-                Template.templates = children.iterator();
+                Iterator templates = children.iterator();
+                Template.cacheContent(templates);
             }
-            Template.cacheContent();
             log.info("Config : Template info loaded - " + modulePath);
         }
         catch (RepositoryException re) {
@@ -130,7 +132,7 @@ public class Template {
         Iterator it = Template.visibleTemplates.iterator();
         while (it.hasNext()) {
             Template template = (Template) it.next();
-            if (accessManager.isGranted(template.getLocation(),Permission.READ)) {
+            if (accessManager.isGranted(template.getLocation(), Permission.READ)) {
                 templateList.add(template);
             }
         }
@@ -141,10 +143,9 @@ public class Template {
      * Load content of this template info page in a hash table caching at the system load, this will save lot of time on
      * every request while matching template info.
      */
-    private static void cacheContent() {
-        if (Template.templates != null) {
-            addTemplatesToCache(Template.templates, Template.visibleTemplates);
-            Template.templates = null;
+    private static void cacheContent(Iterator templates) {
+        if (templates != null) {
+            addTemplatesToCache(templates, Template.visibleTemplates);
         }
     }
 

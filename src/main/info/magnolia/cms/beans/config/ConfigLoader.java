@@ -128,15 +128,17 @@ public class ConfigLoader {
             }
 
             // a bootstrap directory is configured, trying to initialize repositories
-
             bootstrapRepositories(Path.getAbsoluteFileSystemPath(bootdir));
         }
 
         // @todo move to appropriate module classes
         log.info("Init template");
         Template.init();
+
         log.info("Init paragraph");
-        Paragraph.init();
+        // now initialized in templating module
+        // Paragraph.initParagraphs();
+
         log.info("Init virtualMap");
         VirtualMap.getInstance().init();
         log.info("Init i18n");
@@ -180,28 +182,6 @@ public class ConfigLoader {
             + " ("
             + license.get(License.PRIVIDER_EMAIL)
             + ")");
-    }
-
-    /**
-     * Reload all config info in the same objects created on the startup.
-     */
-    public static void reload() {
-        ContentRepository.reload();
-        Template.reload();
-        Paragraph.reload();
-        VirtualMap.getInstance().reload();
-        SecureURI.reload();
-        try {
-            Server.reload();
-            ModuleLoader.reload();
-        }
-        catch (ConfigurationException e) {
-            setConfigured(false);
-        }
-        Listener.reload();
-        Subscriber.reload();
-        Cache.reload();
-        MIMEMapping.reload();
     }
 
     /**

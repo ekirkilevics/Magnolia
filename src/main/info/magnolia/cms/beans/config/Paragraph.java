@@ -13,27 +13,20 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.module.admininterface.Store;
-import info.magnolia.module.admininterface.dialogs.ParagraphEditDialog;
 
-import java.util.Collection;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 
 
 /**
  * @author Sameer Charles
  */
-public class Paragraph {
+public final class Paragraph {
 
     /**
      * Logger.
@@ -52,7 +45,7 @@ public class Paragraph {
 
     private String dialogPath;
 
-    private String type;
+    private String templateType;
 
     private String description;
 
@@ -61,117 +54,62 @@ public class Paragraph {
     /**
      * constructor
      */
-    public Paragraph() {
-    }
-
-    protected static void init() {
-        log.info("Config : Initializing Paragraph info");
-        Paragraph.cachedContent.clear();
+    private Paragraph() {
     }
 
     /**
-     * <p>
-     * load all paragraph definitions available as a collection of Content objects
-     * </p>
+     * Returns the cached content of the requested template. TemplateInfo properties :
+     * <ol>
+     * <li>title - title describing template</li>
+     * <li>type - jsp / servlet</li>
+     * <li>path - jsp / servlet path</li>
+     * <li>description - description of a template</li>
+     * </ol>
+     * @return TemplateInfo
      */
-    public static void update(String modulePath) {
-        HierarchyManager configHierarchyManager = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
-        try {
-            log.info("Config : loading Paragraph info - " + modulePath);
-            Content startPage = configHierarchyManager.getContent(modulePath);
-            Content paragraphDefinition = startPage.getContent("Paragraphs");
-            Paragraph.cacheContent(paragraphDefinition, modulePath);
-            log.info("Config : Paragraph info loaded - " + modulePath);
-        }
-        catch (RepositoryException re) {
-            log.error("Config : Failed to load Paragraph info - " + modulePath);
-            log.error(re.getMessage(), re);
-        }
-    }
-
-    public static void reload() {
-        log.info("Config : re-initializing Paragraph info");
-        Paragraph.init();
-        update("modules/templating");
-    }
-
-    /**
-     * Load content of this paragraph info page in a hash table caching at the system load, this will save lot of time
-     * on every request while matching paragraph info.
-     */
-    private static void cacheContent(Content content, String modulePath) throws AccessDeniedException {
-        Collection contentNodes = content.getChildren(ItemType.CONTENTNODE);
-        Iterator definitions = contentNodes.iterator();
-        addParagraphsToCache(definitions, modulePath);
-        Collection subDefinitions = content.getChildren(ItemType.CONTENT);
-        Iterator it = subDefinitions.iterator();
-        while (it.hasNext()) {
-            Content c = (Content) it.next();
-            cacheContent(c, modulePath);
-        }
+    public static Paragraph getInfo(String key) {
+        return (Paragraph) Paragraph.cachedContent.get(key);
     }
 
     /**
      * Adds paragraph definition to ParagraphInfo cache.
      * @param paragraphs iterator as read from the repository
      */
-    private static void addParagraphsToCache(Iterator paragraphs, String startPage) {
-        while (paragraphs.hasNext()) {
-            Content c = (Content) paragraphs.next();
-            Paragraph pi = new Paragraph();
-            pi.name = c.getNodeData("name").getString();
-            pi.templatePath = c.getNodeData("templatePath").getString();
-            pi.dialogPath = c.getNodeData("dialogPath").getString();
-            pi.type = c.getNodeData("type").getString();
-            pi.title = c.getNodeData("title").getString();
-            pi.description = c.getNodeData("description").getString();
-            // get remaining from dialog definition
-            try {
-                String dialog = pi.dialogPath;
-                if (dialog.lastIndexOf(".") != -1) {
-                    dialog = dialog.substring(0, dialog.lastIndexOf("."));
-                }
-                if (dialog.indexOf("/") != 0) {
-                    dialog = startPage + DIALOGS_DIR + dialog; // dialog: pars/text.xml -> /info/dialogs/pars/text.xml
-                }
-                Content dialogPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(dialog);
-                pi.dialogContent = dialogPage;
+    public static Paragraph addParagraphToCache(Content c, String startPage) {
 
-                if (pi.dialogContent != null) {
-                    pi.registerHandler();
-                }
-            }
-            catch (RepositoryException re) {
-                log.error(re.getMessage(), re);
-            }
-
-            Paragraph.cachedContent.put(pi.name, pi);
-
-        }
-    }
-
-    /**
-     * This registers the dialog handler for this paragraph
-     */
-    private void registerHandler() {
+        Paragraph pi = new Paragraph();
+        pi.name = c.getNodeData("name").getString();
+        pi.templatePath = c.getNodeData("templatePath").getString();
+        pi.dialogPath = c.getNodeData("dialogPath").getString();
+        pi.templateType = c.getNodeData("type").getString();
+        pi.title = c.getNodeData("title").getString();
+        pi.description = c.getNodeData("description").getString();
+        // get remaining from dialog definition
         try {
-            Class handler = ParagraphEditDialog.class;
- 
-            String className = this.dialogContent.getNodeData("class").getString();
-            if (StringUtils.isNotEmpty(className)) {
-                try {
-                    handler = Class.forName(className);
-                }
-                catch (ClassNotFoundException e) {
-                    log.error("registering paragraph: class [" + className + "] not found", e);
-                }
+            String dialog = pi.dialogPath;
+            if (dialog.lastIndexOf(".") != -1) {
+                dialog = dialog.substring(0, dialog.lastIndexOf("."));
             }
+            if (dialog.indexOf("/") != 0) {
+                dialog = startPage + DIALOGS_DIR + dialog; // dialog: pars/text.xml -> /info/dialogs/pars/text.xml
+            }
+            Content dialogPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(dialog);
+            pi.dialogContent = dialogPage;
 
-            Store.getInstance().registerDialogHandler(this.name, handler, this.dialogContent);
+            // this is registered in module
+            // classes in info.magnolia.cms.beans.config should NEVER depends from classes in info.magnolia.module!!
+            // Store.getInstance().registerParagraphDialogHandler(pi.name, pi.dialogContent);
+
         }
-        catch (Exception e) {
-            log.error("can't register handle for dialog [" + this.name + "]", e);
+        catch (RepositoryException re) {
+            log.error(re.getMessage(), re);
         }
+
+        if (log.isDebugEnabled()) {
+            log.debug("Registering paragraph [" + pi.name + "]");
+        }
+        cachedContent.put(pi.name, pi);
+        return pi;
     }
 
     /**
@@ -206,7 +144,7 @@ public class Paragraph {
      * @return String, template type (jsp / servlet)
      */
     public String getTemplateType() {
-        return this.type;
+        return this.templateType;
     }
 
     /**
@@ -224,43 +162,18 @@ public class Paragraph {
     }
 
     /**
-     * Returns the cached content of the requested template. TemplateInfo properties :
-     * <ol>
-     * <li>title - title describing template</li>
-     * <li>type - jsp / servlet</li>
-     * <li>path - jsp / servlet path</li>
-     * <li>description - description of a template</li>
-     * </ol>
-     * @return TemplateInfo
+     * @see java.lang.Object#toString()
      */
-    public static Paragraph getInfo(String key) {
-        return (Paragraph) Paragraph.cachedContent.get(key);
+    public String toString() {
+        return new ToStringBuilder(this)
+            //
+            .append("name", this.name)
+            .append("templateType", this.templateType)
+            .append("description", this.description)
+            .append("dialogPath", this.dialogPath)
+            .append("title", this.title)
+            .append("templatePath", this.templatePath)
+            .append("dialogContent", this.dialogContent)
+            .toString();
     }
-    /**
-     * <p>
-     * add uuid in paragraph container
-     * </p>
-     * @param container
-     * @param pi , paragraph info
-     */
-    // private static void updateContainer(ContentNode container, ParagraphInfo pi) {
-    // NodeData uuid = container.getNodeData("UUID");
-    // if (uuid.isExist()) {
-    // ParagraphInfo.cachedContent.put(uuid.getString(),pi);
-    // } else {
-    // try {
-    // String id = ParagraphInfo.getUUID();
-    // container.createNodeData("UUID").setValue(id);
-    // ParagraphInfo.cachedContent.put(id,pi);
-    // } catch (RepositoryException re) {
-    // log.fatal("Failed to add UUID in paragraph - "+pi.getName());
-    // }
-    // }
-    // }
-    /**
-     * @return UUID
-     */
-    /*
-     * private static String getUUID() { return (new UUID()).toString(); }
-     */
 }

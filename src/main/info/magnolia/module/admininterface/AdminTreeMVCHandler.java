@@ -13,10 +13,7 @@
 
 package info.magnolia.module.admininterface;
 
-import java.io.IOException;
-
 import info.magnolia.cms.beans.config.MIMEMapping;
-import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.config.Subscriber;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.core.ItemType;
@@ -24,6 +21,8 @@ import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.gui.misc.Spacer;
 import info.magnolia.cms.servlets.MVCServletHandlerImpl;
+
+import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,11 +32,13 @@ import org.apache.log4j.Logger;
 
 
 /**
- * @author philipp this class wrapes the tree control. The AdminInterfaceServlet instantiates a subclass. To build your
- * own tree you have to override the prepareTree() method
+ * this class wrapes the tree control. The AdminInterfaceServlet instantiates a subclass. To build your own tree you
+ * have to override the prepareTree() method
+ * @author philipp
+ * @author Fabrizio Giustina
  */
 
-abstract public class AdminTreeMVCHandler extends MVCServletHandlerImpl {
+public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
 
     /**
      * Logger.
@@ -279,14 +280,17 @@ abstract public class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         // if there was a displayValue passed show it instead of the written value
         displayValue = StringUtils.defaultString(request.getParameter("displayValue"), value);
 
+        // moved to module, using jcr observation
+        // if (path.startsWith("/modules/templating/Templates/")) {
+        // Template.reload();
+        // }
+        // moved to module, using jcr observation
+        // else if (path.startsWith("/modules/templating/Paragraphs/")) {
+        // Paragraph.reload();
+        // }
+
         // @todo should be handled in a better way but, at the moment, this is better than nothing
-        if (path.startsWith("/modules/templating/Templates/")) {
-            Template.reload();
-        }
-        else if (path.startsWith("/modules/templating/Paragraphs/")) {
-            Paragraph.reload();
-        }
-        else if (path.startsWith("/subscribers/")) {
+        if (path.startsWith("/subscribers/")) {
             Subscriber.reload();
         }
         else if (path.startsWith("/server/MIMEMapping")) {

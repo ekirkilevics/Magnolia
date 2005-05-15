@@ -12,11 +12,6 @@
  */
 package info.magnolia.module.admininterface;
 
-import java.util.Collection;
-import java.util.Iterator;
-
-import org.apache.log4j.Logger;
-
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
@@ -27,16 +22,27 @@ import info.magnolia.module.admininterface.trees.AdminTreeRoles;
 import info.magnolia.module.admininterface.trees.AdminTreeUsers;
 import info.magnolia.module.admininterface.trees.AdminTreeWebsite;
 
+import java.util.Collection;
+import java.util.Iterator;
+
+import org.apache.log4j.Logger;
+
 
 /**
- * Date: Jul 13, 2004 Time: 4:25:17 PM
  * @author Sameer Charles
+ * @author Fabrizio Giustina
  * @version 2.0
  */
 public class Engine implements Module {
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(Engine.class);
 
+    /**
+     * @see info.magnolia.cms.module.Module#init(info.magnolia.cms.module.ModuleConfig)
+     */
     public void init(ModuleConfig config) {
         // set local store to be accessed via admin interface classes or JSP
         Store store = Store.getInstance();
@@ -64,7 +70,7 @@ public class Engine implements Module {
                     store.registerDialogHandler(name, Class.forName(className), dialog);
                 }
                 catch (ClassNotFoundException e) {
-                    log.warn("can't find dialog hanlder class " + className, e);
+                    log.warn("can't find dialog handler class " + className, e);
                 }
             }
         }
@@ -97,13 +103,17 @@ public class Engine implements Module {
         store.registerDefaultTreeHandler(ContentRepository.CONFIG, AdminTreeConfig.class);
     }
 
-    public void destroy() {
-    }
-
-    /* (non-Javadoc)
+    /**
      * @see info.magnolia.cms.module.Module#register(info.magnolia.cms.core.Content)
      */
     public void register(Content moduleNode) {
+        // nothing to do
+    }
+
+    /**
+     * @see info.magnolia.cms.module.Module#destroy()
+     */
+    public void destroy() {
         // nothing to do
     }
 }
