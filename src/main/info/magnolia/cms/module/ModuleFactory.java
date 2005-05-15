@@ -1,8 +1,14 @@
-/*
- * Created on 13.05.2005
+/**
  *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * Magnolia and its source-code is licensed under the LGPL.
+ * You may copy, adapt, and redistribute this file for commercial or non-commercial use.
+ * When copying, adapting, or redistributing this document in keeping with the guidelines above,
+ * you are required to provide proper attribution to obinary.
+ * If you reproduce or distribute the document without making any substantive modifications to its content,
+ * please use the following attribution line:
+ *
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ *
  */
 package info.magnolia.cms.module;
 
@@ -12,6 +18,7 @@ import info.magnolia.cms.beans.config.ModuleLoader;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Path;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -23,13 +30,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.jar.JarFile;
+
 import javax.jcr.PathNotFoundException;
+
 import org.apache.log4j.Logger;
 
 
 /**
- * @author philipp TODO To change the template for this generated type comment go to Window - Preferences - Java - Code
- * Style - Code Templates
+ * @author philipp
  */
 public class ModuleFactory {
 
