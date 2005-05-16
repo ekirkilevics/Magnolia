@@ -21,9 +21,6 @@ import info.magnolia.cms.core.Path;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -42,8 +39,6 @@ import org.apache.log4j.Logger;
 public class ModuleFactory {
 
     private static Logger log = Logger.getLogger(ModuleFactory.class);
-
-    private static ClassLoader classLoader;
 
     private static Map instantiatedModules = new HashMap();
 
@@ -69,16 +64,9 @@ public class ModuleFactory {
         // load all module jars
         try {
             List jars = getJarFiles();
-            List urls = new ArrayList();
 
             for (Iterator iter = jars.iterator(); iter.hasNext();) {
                 JarFile jar = (JarFile) iter.next();
-                try {
-                    urls.add(new File(jar.getName()).toURL());
-                }
-                catch (MalformedURLException e) {
-                    log.error("can't load module jar [" + jar.getName() + "]", e);
-                }
                 try {
                     String moduleName = jar.getManifest().getMainAttributes().getValue("Magnolia-Module-Name");
                     String moduleClassName = jar.getManifest().getMainAttributes().getValue("Magnolia-Module-Class");
@@ -86,18 +74,12 @@ public class ModuleFactory {
                         registeredModules.put(moduleName, moduleClassName);
                         log.info("module loaded [" + moduleName + "]");
                     }
-                    else {
-                        log.info("no magnolia module manifest found [" + jar.getName() + "]");
-                    }
-
                 }
                 catch (IOException e) {
                     log.error("can't read manifest", e);
                 }
             }
 
-            classLoader = URLClassLoader.newInstance((URL[]) urls.toArray(new URL[urls.size()]), ModuleFactory.class
-                .getClassLoader());
         }
         catch (IOException e) {
             log.error("can't load module jars", e);
@@ -108,7 +90,7 @@ public class ModuleFactory {
             String moduleName = (String) iter.next();
             String className = (String) registeredModules.get(moduleName);
 
-            Module module = (Module) loadClass(className).newInstance();
+            Module module = (Module) Class.forName(className).newInstance();
 
             instantiatedModules.put(moduleName, module);
             Content moduleNode;
@@ -133,14 +115,10 @@ public class ModuleFactory {
         return (Module) instantiatedModules.get(name);
     }
 
-    public static Class loadClass(String className) throws ClassNotFoundException {
-        return classLoader.loadClass(className);
-    }
-
     private static List getJarFiles() throws IOException {
         ArrayList jars = new ArrayList();
 
-        File dir = new File(Path.getAbsoluteFileSystemPath("WEB-INF/modules"));
+        File dir = new File(Path.getAbsoluteFileSystemPath("WEB-INF/lib"));
         if (dir != null) {
             File[] files = dir.listFiles();
             if (files != null) {
@@ -160,7 +138,7 @@ public class ModuleFactory {
         IllegalAccessException, ClassNotFoundException, InvalidConfigException {
         Module module = getModuleInstance(thisModule.getModuleName());
         if (module == null) {
-            module = (Module) loadClass(moduleClassName).newInstance();
+            module = (Module) Class.forName(moduleClassName).newInstance();
         }
         module.init(thisModule);
     }
