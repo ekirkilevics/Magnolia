@@ -20,7 +20,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.module.Module;
 import info.magnolia.cms.module.ModuleConfig;
-import info.magnolia.module.admininterface.Store;
+import info.magnolia.module.templating.Store;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -77,6 +77,7 @@ public class Engine implements Module {
         this.basePath = (String) config.getInitParameters().get(ATTRIBUTE_BASE_PATH);
 
         // set local store to be accessed via admin interface classes or JSP
+        
         Store.getInstance().setStore(config.getLocalStore());
 
         log.info("Module: " + this.moduleName);
@@ -180,7 +181,7 @@ public class Engine implements Module {
 
             // @todo inter-module dependency! should this be removed? how to handle this situation?
             if (pi.getDialogContent() != null) {
-                Store.getInstance().registerParagraphDialogHandler(pi.getName(), pi.getDialogContent());
+                info.magnolia.module.admininterface.Store.getInstance().registerParagraphDialogHandler(pi.getName(), pi.getDialogContent());
             }
         }
     }
