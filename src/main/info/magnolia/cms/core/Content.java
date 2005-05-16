@@ -559,6 +559,14 @@ public class Content extends ContentHandler implements Cloneable {
     public boolean hasChildren(String contentType) {
         return (this.getChildren(contentType).size() > 0);
     }
+    
+    public boolean hasContent(String name) throws RepositoryException{
+        return this.node.hasNode(name);
+    }
+
+    public boolean hasNodeData(String name) throws RepositoryException{
+        return this.node.hasProperty(name);
+    }
 
     /**
      * gets a Collection containing all clild nodes at the current level+1 level
