@@ -90,11 +90,12 @@ public class ModuleFactory {
             String moduleName = (String) iter.next();
             String className = (String) registeredModules.get(moduleName);
 
-            Module module = (Module) Class.forName(className).newInstance();
-
-            instantiatedModules.put(moduleName, module);
-            Content moduleNode;
             try {
+                Module module = (Module) Class.forName(className).newInstance();
+
+                instantiatedModules.put(moduleName, module);
+                Content moduleNode;
+
                 try {
                     moduleNode = modulesNode.getContent(moduleName);
                 }
@@ -106,7 +107,7 @@ public class ModuleFactory {
             }
 
             catch (Exception e) {
-                log.error(e);
+                log.error("can't register module [" + moduleName + "]", e);
             }
         }
     }
