@@ -15,6 +15,7 @@ package info.magnolia.cms.servlets;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.Resource;
@@ -121,7 +122,7 @@ public class RequestInterceptor extends HttpServlet {
                 String pathSelected = request.getParameter(PARAM_PATH_SELECTED);
                 String pathSortAbove = request.getParameter(PARAM_PATH_SORT_ABOVE);
                 String pathParent = pathSelected.substring(0, pathSelected.lastIndexOf("/"));
-                Iterator it = hm.getContent(pathParent).getChildren().iterator();
+                Iterator it = hm.getContent(pathParent).getChildren(ItemType.CONTENTNODE.getSystemName(), Content.SORT_BY_SEQUENCE).iterator();
                 long seqPos0 = 0;
                 long seqPos1 = 0;
                 while (it.hasNext()) {

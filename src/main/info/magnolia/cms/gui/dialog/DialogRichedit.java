@@ -14,6 +14,7 @@ package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.Edit;
 import info.magnolia.cms.gui.control.Select;
@@ -126,7 +127,7 @@ public class DialogRichedit extends DialogBox {
     public List setOptionsToolbox(Content configNode, String nodeName) {
         List options = new ArrayList();
         try {
-            Iterator it = configNode.getContent(nodeName).getChildren().iterator();
+            Iterator it = configNode.getContent(nodeName).getChildren(ItemType.CONTENTNODE.getSystemName(),Content.SORT_BY_SEQUENCE).iterator();
             while (it.hasNext()) {
                 Content n = (Content) it.next();
                 String value = n.getNodeData("value").getString();

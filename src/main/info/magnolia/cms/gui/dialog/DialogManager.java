@@ -91,7 +91,7 @@ public class DialogManager {
                 return;
             }
 
-            Iterator iterator = configNode.getChildren(ItemType.CONTENTNODE).iterator();
+            Iterator iterator = configNode.getChildren(ItemType.CONTENTNODE, Content.SORT_BY_SEQUENCE).iterator();
 
             while (iterator.hasNext()) {
                 Content controlNode = (Content) iterator.next();
