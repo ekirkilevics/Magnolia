@@ -144,11 +144,13 @@ public class AdminTreeConfig extends AdminTreeMVCHandler {
         TreeMenuItem menuCopy = new TreeMenuItem();
         menuCopy.setLabel(msgs.get("tree.config.menu.copy"));
         menuCopy.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
+        menuCopy.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotNodeData");
         menuCopy.setOnclick(tree.getJavascriptTree() + ".copyNode();");
 
         TreeMenuItem menuCut = new TreeMenuItem();
         menuCut.setLabel(msgs.get("tree.config.menu.move"));
         menuCut.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
+        menuCut.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotNodeData");
         menuCut.setOnclick(tree.getJavascriptTree() + ".cutNode();");
 
         TreeMenuItem menuActivateExcl = new TreeMenuItem();
