@@ -40,7 +40,6 @@ public class AdminTreeUsers extends AdminTreeMVCHandler {
      */
     public AdminTreeUsers(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
-        // TODO Auto-generated constructor stub
     }
 
     /*
@@ -97,7 +96,7 @@ public class AdminTreeUsers extends AdminTreeMVCHandler {
         menuOpen.setLabel(msgs.get("tree.users.menu.edit"));
         menuOpen.setOnclick("mgnlTreeMenuOpenDialog("
             + tree.getJavascriptTree()
-            + ",'.magnolia/dialogs/user.html');");
+            + ",'.magnolia/dialogs/useredit.html');");
         menuOpen.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
         TreeMenuItem menuNewPage = new TreeMenuItem();
         menuNewPage.setLabel(msgs.get("tree.users.menu.new"));
