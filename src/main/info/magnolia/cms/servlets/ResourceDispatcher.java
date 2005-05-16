@@ -24,7 +24,7 @@ import java.util.zip.GZIPOutputStream;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
-import javax.servlet.ServletException;
+import javax.jcr.Value;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -35,10 +35,8 @@ import org.apache.log4j.Logger;
 
 
 /**
- * <p>
- * Class ResourceDispatcher is responsible to gather data from the <b>HttpServletRequest </b> and write back the
- * requested resource on the <b>ServletOutputStream </b>
- * </p>
+ * Class ResourceDispatcher is responsible to gather data from the <strong>HttpServletRequest </strong> and write back
+ * the requested resource on the <strong>ServletOutputStream </strong>.
  * @author Sameer Charles
  * @version 1.0
  */
@@ -49,23 +47,25 @@ public class ResourceDispatcher extends HttpServlet {
      */
     private static final long serialVersionUID = 222L;
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(ResourceDispatcher.class);
 
     /**
      * @param req HttpServletRequest as given by the servlet container
-     * @param res HttpServletResponse as given by the servlet comtainer
-     * @throws ServletException
-     * @throws IOException
+     * @param res HttpServletResponse as given by the servlet container
+     * @throws IOException standard servlet exception
      */
-    public void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+    public void service(HttpServletRequest req, HttpServletResponse res) throws IOException {
         handleResourceRequest(req, res);
     }
 
     /**
-     * <p>
-     * get the requested resource and copy it to the ServletOutputStream , bit by bit
-     * </p>
-     * @throws IOException
+     * Get the requested resource and copy it to the ServletOutputStream, bit by bit.
+     * @param req HttpServletRequest as given by the servlet container
+     * @param res HttpServletResponse as given by the servlet container
+     * @throws IOException standard servlet exception
      */
     private void handleResourceRequest(HttpServletRequest req, HttpServletResponse res) throws IOException {
 
@@ -76,9 +76,9 @@ public class ResourceDispatcher extends HttpServlet {
         if (StringUtils.isNotEmpty(resourceHandle)) {
             try {
                 HierarchyManager hm = (HierarchyManager) req.getAttribute(Aggregator.HIERARCHY_MANAGER);
-                InputStream is = getAtomAsStream(resourceHandle, hm, res);
+                InputStream is = getNodedataAstream(resourceHandle, hm, res);
                 if (is != null) {
-                    // todo always send as is, find better way to dicover if resource could be compressed
+                    // todo always send as is, find better way to discover if resource could be compressed
                     sendUnCompressed(is, res);
                     is.close();
                     return;
@@ -95,13 +95,12 @@ public class ResourceDispatcher extends HttpServlet {
     }
 
     /**
-     * <p>
-     * returns true if the request sender accepts GZIP compressed data
-     * </p>
-     * @return boolean
+     * Returns true if the request sender accepts GZIP compressed data.
+     * @param request HttpServletRequest
+     * @return <code>true</code> if the client accepts gzip encoding
      */
-    private boolean canCompress(HttpServletRequest req) {
-        String encoding = req.getHeader("Accept-Encoding");
+    private boolean canCompress(HttpServletRequest request) {
+        String encoding = request.getHeader("Accept-Encoding");
         if (encoding != null) {
             return (encoding.toLowerCase().indexOf("gzip") > -1);
         }
@@ -109,14 +108,12 @@ public class ResourceDispatcher extends HttpServlet {
     }
 
     /**
-     * <p>
-     * send data as GZIP output stream ;)
-     * </p>
+     * Send data as GZIP output stream ;)
      * @param is Input stream for the resource
      * @param res HttpServletResponse as received by the service method
-     * @throws Exception
+     * @throws IOException standard servlet exception
      */
-    private void sendCompressed(InputStream is, HttpServletResponse res) throws Exception {
+    private void sendCompressed(InputStream is, HttpServletResponse res) throws IOException {
         res.setHeader("Content-Encoding", "gzip");
         GZIPOutputStream gzos = new GZIPOutputStream(res.getOutputStream());
         int bit;
@@ -128,14 +125,12 @@ public class ResourceDispatcher extends HttpServlet {
     }
 
     /**
-     * <p>
-     * send data as is
-     * </p>
+     * Send data as is.
      * @param is Input stream for the resource
      * @param res HttpServletResponse as received by the service method
-     * @throws IOException
+     * @throws IOException standard servlet exception
      */
-    private void sendUnCompressed(InputStream is, HttpServletResponse res) throws Exception {
+    private void sendUnCompressed(InputStream is, HttpServletResponse res) throws IOException {
         ServletOutputStream os = res.getOutputStream();
         byte[] buffer = new byte[8192];
         int read = 0;
@@ -147,10 +142,12 @@ public class ResourceDispatcher extends HttpServlet {
     }
 
     /**
-     *
+     * @param path path for nodedata in jcr repository
+     * @param hm Hierarchy manager
+     * @param res HttpServletResponse
+     * @return InputStream or <code>null</code> if nodeData is not found
      */
-    private InputStream getAtomAsStream(String path, HierarchyManager hm, HttpServletResponse res)
-        throws RepositoryException {
+    private InputStream getNodedataAstream(String path, HierarchyManager hm, HttpServletResponse res) {
         if (log.isDebugEnabled()) {
             log.debug("getAtomAsStream for path \"" + path + "\"");
         }
@@ -161,10 +158,20 @@ public class ResourceDispatcher extends HttpServlet {
                 int sizeInBytes = (new Long(size.getLong())).intValue();
                 res.setContentLength(sizeInBytes);
             }
-            return atom.getValue().getStream();
+
+            Value value = atom.getValue();
+            if (value != null) {
+                return value.getStream();
+            }
+
+            log.warn("Resource not found: [" + path + "]");
+
         }
         catch (PathNotFoundException e) {
-            log.error("Resource not found - " + path);
+            log.warn("Resource not found: [" + path + "]");
+        }
+        catch (RepositoryException e) {
+            log.error("RepositoryException while reading Resource [" + path + "]", e);
         }
         return null;
     }
