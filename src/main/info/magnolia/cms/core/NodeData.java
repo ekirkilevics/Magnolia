@@ -155,6 +155,9 @@ public class NodeData extends ContentHandler {
             return this.property.getValue();
         }
         catch (Exception e) {
+            if (log.isDebugEnabled()) {
+                log.debug(e.getMessage(), e);
+            }
             return null;
         }
     }
