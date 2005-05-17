@@ -16,12 +16,7 @@ import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.beans.runtime.Cache;
 import info.magnolia.cms.security.SecureURI;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
@@ -126,29 +121,27 @@ public class CacheHandler extends Thread {
      * @param out
      */
     private static void streamURI(String uri, OutputStream out, HttpServletRequest request) throws IOException {
-        InputStream in = null;
         try {
             URL url = new URL(info.magnolia.cms.beans.config.Cache.getDomain() + uri);
             URLConnection urlConnection = url.openConnection();
             if (SecureURI.isProtected(uri)) {
                 urlConnection.setRequestProperty("Authorization", request.getHeader("Authorization"));
             }
-            byte[] buffer = new byte[8192];
+            char[] buffer = new char[4096];
             int read = 0;
-            in = urlConnection.getInputStream();
-            while ((read = in.read(buffer)) > 0) {
-                out.write(buffer, 0, read);
+            InputStream in = urlConnection.getInputStream();
+            Reader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+            Writer writer = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
+            while ((read = reader.read(buffer)) > 0) {
+                writer.write(buffer, 0, read);
             }
-            out.close();
+            reader.close();
+            writer.flush();
+            writer.close();
         }
         catch (Exception e) {
             log.error("Failed to stream - " + uri);
             log.error(e.getMessage());
-        }
-        finally {
-            if (in != null) {
-                in.close();
-            }
         }
     }
 
