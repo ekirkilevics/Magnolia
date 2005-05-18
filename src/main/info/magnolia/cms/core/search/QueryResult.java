@@ -12,23 +12,23 @@
  */
 package info.magnolia.cms.core.search;
 
-import java.util.Iterator;
+import java.util.Collection;
 
 
 /**
  * @author Sameer Charles
+ * @author Fabrizio Giustina
  */
-
 public interface QueryResult {
 
     /**
-     * Gets iterator of Content objects for mgnl:content NodeType
+     * Gets a collection of Content objects for mgnl:content NodeType
      */
-    Iterator getContentIterator();
+    Collection getContent();
 
     /**
-     * Gets iterator of Content objects for specified NodeType
+     * Gets a collection of Content objects for specified NodeType
      */
-    Iterator getContentIterator(String nodeType);
+    Collection getContent(String nodeType);
 
 }

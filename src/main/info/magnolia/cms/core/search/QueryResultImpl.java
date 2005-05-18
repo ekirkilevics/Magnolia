@@ -21,7 +21,6 @@ import info.magnolia.cms.security.Permission;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.jcr.Node;
@@ -33,10 +32,9 @@ import org.apache.log4j.Logger;
 
 
 /**
- * Date: Apr 1, 2005 Time: 1:10:04 PM
  * @author Sameer Charles
+ * @author Fabrizio Giustina
  */
-
 public class QueryResultImpl implements QueryResult {
 
     /**
@@ -98,15 +96,22 @@ public class QueryResultImpl implements QueryResult {
             }
             return;
         }
-        if (node.getDepth() > 0)
+        if (node.getDepth() > 0) {
             this.build(node.getParent(), nodeType, collection);
+        }
     }
 
-    public Iterator getContentIterator() {
-        return this.getContentIterator(ItemType.CONTENT.getSystemName());
+    /**
+     * @see info.magnolia.cms.core.search.QueryResult#getContent()
+     */
+    public Collection getContent() {
+        return getContent(ItemType.CONTENT.getSystemName());
     }
 
-    public Iterator getContentIterator(String nodeType) {
+    /**
+     * @see info.magnolia.cms.core.search.QueryResult#getContent(java.lang.String)
+     */
+    public Collection getContent(String nodeType) {
         Collection resultSet = (Collection) this.objectStore.get(nodeType);
         if (resultSet == null) {
             /* build it first time */
@@ -118,7 +123,7 @@ public class QueryResultImpl implements QueryResult {
                 log.error(re.getMessage());
             }
         }
-        return resultSet.iterator();
+        return resultSet;
     }
 
 }

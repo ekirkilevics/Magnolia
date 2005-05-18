@@ -170,3 +170,17 @@ input.checkbox,input.radio {
 	top: 3px;
 	margin-right: 6px;
 }
+
+.searchresult {
+	padding-bottom: 10px;
+	border-bottom: 1px solid #ccc;
+}
+
+.searchresult p {
+	margin: 3px 0 3px 0;
+}
+
+.searchresult h4,.searchresult a {
+	display: block;
+	margin-bottom: 2px;
+}
