@@ -498,9 +498,9 @@ public class Content extends ContentHandler implements Cloneable {
             while (propertyIterator.hasNext()) {
                 Property property = (Property) propertyIterator.next();
                 try {
-                    if (property.getName().indexOf("jcr:") == 0)
-                        continue;
-                    children.add(new NodeData(property, this.accessManager));
+                    if (!property.getName().startsWith("jcr:")) {
+                        children.add(new NodeData(property, this.accessManager));
+                    }
                 }
                 catch (PathNotFoundException e) {
                     log.error(e);
@@ -559,12 +559,12 @@ public class Content extends ContentHandler implements Cloneable {
     public boolean hasChildren(String contentType) {
         return (this.getChildren(contentType).size() > 0);
     }
-    
-    public boolean hasContent(String name) throws RepositoryException{
+
+    public boolean hasContent(String name) throws RepositoryException {
         return this.node.hasNode(name);
     }
 
-    public boolean hasNodeData(String name) throws RepositoryException{
+    public boolean hasNodeData(String name) throws RepositoryException {
         return this.node.hasProperty(name);
     }
 
