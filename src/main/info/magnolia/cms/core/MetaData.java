@@ -28,6 +28,7 @@ import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 
 /**
@@ -603,6 +604,26 @@ public class MetaData {
             log.error(re.getMessage(), re);
         }
         return StringUtils.EMPTY;
+    }
+
+    /**
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        return new ToStringBuilder(this)
+            .append("title", this.getTitle())
+            .append("template", this.getTemplate())
+            .append("authorId", this.getAuthorId())
+            .append("label", this.getLabel())
+            .append("sequencePosition", this.getSequencePosition())
+            .append("activatorId", this.getActivatorId())
+            .append("isActivated", this.getIsActivated())
+            .append("creationDate", this.getCreationDate())
+            .append("lastActionDate", this.getLastActionDate())
+            .append("modificationDate", this.getModificationDate())
+            .append("startTime", this.getStartTime())
+            .append("endTime", this.getEndTime())
+            .toString();
     }
 
 }
