@@ -257,17 +257,10 @@ public class ConfigLoader {
             for (int k = 0; k < files.length; k++) {
                 File xmlfile = files[k];
 
-                InputStream stream;
-                try {
-                    stream = new FileInputStream(xmlfile);
-                }
-                catch (FileNotFoundException e) {
-                    // should never happen
-                    throw new NestableRuntimeException(e);
-                }
-                try {
+                InputStream filteredStream = null;
 
-                    InputStream filteredStream = filterVersionsFormStream(stream);
+                try {
+                    filteredStream = filterVersionsFromFile(xmlfile);
 
                     log.info("Importing content from " + xmlfile.getName());
                     session.importXML("/", filteredStream, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
@@ -283,7 +276,7 @@ public class ConfigLoader {
                 }
                 finally {
                     try {
-                        stream.close();
+                        filteredStream.close();
                     }
                     catch (IOException e) {
                         // ignore
@@ -316,22 +309,39 @@ public class ConfigLoader {
     /**
      * Strips all the versioning information from xml using a SaxFilter. The filtered content is written to a temporary
      * file and then returned as an InputStream.
-     * @param stream Input stream
+     * @param stream input xml file
      * @return input stream from a filtered xml file
      * @throws IOException for errors in accessing the original or modified file
      * @throws SAXException errors during xml parsing
      */
-    protected InputStream filterVersionsFormStream(InputStream stream) throws IOException, SAXException {
+    protected InputStream filterVersionsFromFile(File xmlfile) throws IOException, SAXException {
 
         // create a temporary file and save the trimmed xml
         File strippedFile = File.createTempFile("import", "xml");
+        strippedFile.deleteOnExit();
+
         FileOutputStream outstream = new FileOutputStream(strippedFile);
 
         // use XMLSerializer and a SAXFilter in order to rewrite the file
         XMLReader reader = new VersionFilter(XMLReaderFactory.createXMLReader(org.apache.xerces.parsers.SAXParser.class
             .getName()));
         reader.setContentHandler(new XMLSerializer(outstream, new OutputFormat()));
-        reader.parse(new InputSource(stream));
+
+        InputStream stream;
+        try {
+            stream = new FileInputStream(xmlfile);
+        }
+        catch (FileNotFoundException e) {
+            // should never happen
+            throw new NestableRuntimeException(e);
+        }
+
+        try {
+            reader.parse(new InputSource(stream));
+        }
+        finally {
+            stream.close();
+        }
 
         // return the filtered file as an input stream
         return new FileInputStream(strippedFile);
