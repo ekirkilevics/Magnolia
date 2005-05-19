@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 
 import javax.jcr.PathNotFoundException;
 
@@ -57,8 +58,7 @@ public class ModuleFactory {
         }
     }
 
-    private static void init(Content modulesNode) throws InstantiationException, IllegalAccessException,
-        ClassNotFoundException {
+    private static void init(Content modulesNode) {
         Map registeredModules = new HashMap();
 
         // load all module jars
@@ -68,11 +68,17 @@ public class ModuleFactory {
             for (Iterator iter = jars.iterator(); iter.hasNext();) {
                 JarFile jar = (JarFile) iter.next();
                 try {
-                    String moduleName = jar.getManifest().getMainAttributes().getValue("Magnolia-Module-Name");
-                    String moduleClassName = jar.getManifest().getMainAttributes().getValue("Magnolia-Module-Class");
-                    if (moduleName != null && moduleClassName != null) {
-                        registeredModules.put(moduleName, moduleClassName);
-                        log.info("module loaded [" + moduleName + "]");
+                    Manifest manifest = jar.getManifest();
+                    if (manifest != null) {
+                        String moduleName = jar.getManifest().getMainAttributes().getValue("Magnolia-Module-Name");
+                        String moduleClassName = jar
+                            .getManifest()
+                            .getMainAttributes()
+                            .getValue("Magnolia-Module-Class");
+                        if (moduleName != null && moduleClassName != null) {
+                            registeredModules.put(moduleName, moduleClassName);
+                            log.info("module loaded [" + moduleName + "]");
+                        }
                     }
                 }
                 catch (IOException e) {
