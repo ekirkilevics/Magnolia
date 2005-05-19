@@ -122,11 +122,10 @@ public class SearchResultSnippetTag extends TagSupport {
     /**
      * Extract a collection of snippets from any paragraph in the given page.
      * @return a collection of Strings.
-     * @todo strip html
-     * @todo highlight search results
-     * @todo avoid overlapping snippets
+     * @todo avoid overlapping snippets (use regexp insted of simple indexOfs)
      * @todo only extract snippets from user-configured properties
-     * @todo abbreviate on whitespace
+     * @todo abbreviate on whitespace and puntuation
+     * @todo break methods and write junits
      */
     public Collection getSnippets() {
 
@@ -176,17 +175,27 @@ public class SearchResultSnippetTag extends TagSupport {
                         for (int j = 0; j < searchTerms.length; j++) {
                             String searchTerm = StringUtils.lowerCase(searchTerms[j]);
 
-                            // exclude keywords
-                            if (!ArrayUtils.contains(SimpleSearchTag.KEYWORDS, searchTerm)) {
+                            // exclude keywords and words with less than 2 chars
+                            if (!ArrayUtils.contains(SimpleSearchTag.KEYWORDS, searchTerm) && searchTerm.length() > 2) {
 
                                 if (log.isDebugEnabled()) {
                                     log.debug("Looking for search term [" + searchTerm + "] in [" + resultString + "]");
                                 }
 
+                                // first check, avoid using heavy string replaceAll operations if the search term is not
+                                // there
+                                if (!StringUtils.contains(resultString, searchTerm)) {
+                                    continue;
+                                }
+
+                                // strips out html tags using a regexp
+                                resultString = resultString.replaceAll("\\<.*?\\>", "");
+
                                 // only get first matching keyword
                                 int pos = resultString.toLowerCase().indexOf(searchTerm);
                                 if (pos > -1) {
 
+                                    int posEnd = pos + searchTerm.length();
                                     int from = (pos - chars / 2);
                                     if (from < 0) {
                                         from = 0;
@@ -197,12 +206,19 @@ public class SearchResultSnippetTag extends TagSupport {
                                         to = resultString.length();
                                     }
 
-                                    String snippet = StringUtils.substring(resultString, from, to);
+                                    StringBuffer snippet = new StringBuffer();
+
+                                    snippet.append(StringUtils.substring(resultString, from, pos));
+                                    snippet.append("<strong>");
+                                    snippet.append(searchTerm);
+                                    snippet.append("</strong>");
+                                    snippet.append(StringUtils.substring(resultString, posEnd, to));
+
                                     if (from > 0) {
-                                        snippet = "... " + snippet;
+                                        snippet.insert(0, "... ");
                                     }
                                     if (to < resultString.length()) {
-                                        snippet = snippet + "... ";
+                                        snippet.append("... ");
                                     }
 
                                     if (log.isDebugEnabled()) {
