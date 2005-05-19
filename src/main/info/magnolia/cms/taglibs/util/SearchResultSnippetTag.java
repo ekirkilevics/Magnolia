@@ -124,7 +124,8 @@ public class SearchResultSnippetTag extends TagSupport {
      * @return a collection of Strings.
      * @todo avoid overlapping snippets (use regexp insted of simple indexOfs)
      * @todo only extract snippets from user-configured properties
-     * @todo abbreviate on whitespace and puntuation
+     * @todo abbreviate on whitespace and puntuation, detect start of sentences
+     * @todo replace ampersand in regexp
      * @todo break methods and write junits
      */
     public Collection getSnippets() {
