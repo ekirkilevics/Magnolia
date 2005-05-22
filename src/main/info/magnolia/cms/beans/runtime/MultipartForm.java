@@ -31,6 +31,11 @@ public class MultipartForm {
      */
     private static Logger log = Logger.getLogger(MultipartForm.class);
 
+    /**
+     * The name of the request attribute containing a MultipartForm instance.
+     */
+    public static final String REQUEST_ATTRIBUTE_NAME = "multipartform";
+
     private Map parameters;
 
     private Map documents;

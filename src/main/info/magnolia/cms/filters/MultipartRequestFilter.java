@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.Enumeration;
 
 import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -40,11 +41,10 @@ public class MultipartRequestFilter extends BaseFilter {
     private static final int MAX_FILE_SIZE = 200000000; // 200MB
 
     /**
-     *
-     *
+     * @see javax.servlet.Filter#doFilter(ServletRequest, ServletResponse, .FilterChain)
      */
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain) throws IOException,
-        javax.servlet.ServletException {
+        ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         String type = null;
         String type1 = request.getHeader("Content-Type");
@@ -92,6 +92,6 @@ public class MultipartRequestFilter extends BaseFilter {
             String name = (String) files.nextElement();
             form.addDocument(name, multi.getFilesystemName(name), multi.getContentType(name), multi.getFile(name));
         }
-        request.setAttribute("multipartform", form);
+        request.setAttribute(MultipartForm.REQUEST_ATTRIBUTE_NAME, form);
     }
 }
