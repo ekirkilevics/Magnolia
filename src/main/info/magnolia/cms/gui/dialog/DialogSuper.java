@@ -13,6 +13,7 @@
 package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ContentHandler;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 
@@ -342,15 +343,15 @@ public abstract class DialogSuper implements DialogInterface {
         }
         this.config = config;
 
-        Iterator it = configNodeParent.getChildren(ItemType.CONTENTNODE, Content.SORT_BY_SEQUENCE).iterator();
+        Iterator it = configNodeParent.getChildren(ItemType.CONTENTNODE, ContentHandler.SORT_BY_SEQUENCE).iterator();
         while (it.hasNext()) {
             Content configNode = (Content) it.next();
             String controlType = configNode.getNodeData("controlType").getString();
 
             if (StringUtils.isEmpty(controlType)) {
-                String handle = configNode.getHandle();
-                if (!handle.startsWith("options")) {
-                    log.warn("Missing control type for configNode " + configNode.getHandle());
+                String name = configNode.getName();
+                if (!name.startsWith("options")) {
+                    log.warn("Missing control type for configNode " + name);
                 }
                 return;
             }
