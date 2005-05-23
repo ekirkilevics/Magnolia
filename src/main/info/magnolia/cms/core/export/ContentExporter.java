@@ -32,7 +32,7 @@ import info.magnolia.cms.core.NodeData;
  *
  * @author Mettraux John (john.mettraux &gt;at&lt; openwfe.org)
  * @version 0.1
- * $ID$
+ * $Revision$ $Author$
  */
 public class ContentExporter {
 
