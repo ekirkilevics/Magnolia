@@ -85,8 +85,16 @@ public class ConfigLoader {
             SystemProperty.setProperty(param, value);
         }
 
-        System.setProperty("java.security.auth.login.config", Path
-            .getAbsoluteFileSystemPath("WEB-INF/config/jaas.config"));
+        if (StringUtils.isEmpty(System.getProperty("java.security.auth.login.config"))) {
+            System.setProperty("java.security.auth.login.config", Path
+                .getAbsoluteFileSystemPath("WEB-INF/config/jaas.config"));
+        } else {
+            if (log.isInfoEnabled()) {
+                log.info("JAAS config file set by parent container or some other application");
+                log.info("Config in use "+System.getProperty("java.security.auth.login.config"));
+                log.info("Please make sure JAAS config has all necessary modules (refer config/jaas.config) configured");
+            }
+        }
 
         this.load(config);
     }
