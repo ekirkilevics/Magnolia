@@ -75,7 +75,7 @@ public class DialogFile extends DialogBox {
      * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(Writer)
      */
     public void drawHtml(Writer out) throws IOException {
-        File control = new File(this.getName(), this.getWebsiteNode());
+        File control = getFileControl();
         control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING));
         control.setSaveInfo(false); // set manualy below
         control.setCssClass(CssConstants.CSSCLASS_FILE);
@@ -137,7 +137,7 @@ public class DialogFile extends DialogBox {
                 String iconPath = this.getIconPath(control.getExtension());
 
                 out.write(Spacer.getHtml(0, 0));
-                out.write("<a href=" + control.getPath() + " target=\"_blank\">");
+                out.write("<a href=" + this.getRequest().getContextPath() + control.getPath() + " target=\"_blank\">");
                 out.write("<img src=\""
                     + this.getRequest().getContextPath()
                     + iconPath
@@ -163,5 +163,13 @@ public class DialogFile extends DialogBox {
         control.setNodeDataTemplate(this.getConfigValue("nodeDataTemplate", null));
         out.write(control.getHtmlNodeDataTemplate());
         this.drawHtmlPost(out);
+    }
+
+    /**
+     * @return
+     */
+    protected File getFileControl() {
+        File control = new File(this.getName(), this.getWebsiteNode());
+        return control;
     }
 }
