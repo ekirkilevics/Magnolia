@@ -45,10 +45,14 @@ public class DialogBox extends DialogSuper {
      */
     private static Logger log = Logger.getLogger(DialogBox.class);
 
-    private Map iconExtensions = new Hashtable();
+    private static Map iconExtensions = new Hashtable();
 
     private int boxType = BOXTYPE_2COLS;
 
+    static{
+        DialogBox.initIconExtensions();
+    }
+    
     /**
      * Empty constructor should only be used by DialogFactory.
      */
@@ -130,18 +134,18 @@ public class DialogBox extends DialogSuper {
         return StringUtils.EMPTY;
     }
 
-    public void initIconExtensions() {
-        this.getIconExtensions().put("doc", "");
-        this.getIconExtensions().put("eps", "");
-        this.getIconExtensions().put("gif", "");
-        this.getIconExtensions().put("jpg", "");
-        this.getIconExtensions().put("jpeg", ICONS_PATH + "jpg.gif");
-        this.getIconExtensions().put("pdf", "");
-        this.getIconExtensions().put("ppt", "");
-        this.getIconExtensions().put("tif", "");
-        this.getIconExtensions().put("tiff", ICONS_PATH + "tif.gif");
-        this.getIconExtensions().put("xls", "");
-        this.getIconExtensions().put("zip", "");
+    public static void initIconExtensions() {
+        getIconExtensions().put("doc", "");
+        getIconExtensions().put("eps", "");
+        getIconExtensions().put("gif", "");
+        getIconExtensions().put("jpg", "");
+        getIconExtensions().put("jpeg", ICONS_PATH + "jpg.gif");
+        getIconExtensions().put("pdf", "");
+        getIconExtensions().put("ppt", "");
+        getIconExtensions().put("tif", "");
+        getIconExtensions().put("tiff", ICONS_PATH + "tif.gif");
+        getIconExtensions().put("xls", "");
+        getIconExtensions().put("zip", "");
     }
 
     public String getIconPath(String name) {
@@ -163,12 +167,12 @@ public class DialogBox extends DialogSuper {
         return iconPath;
     }
 
-    public Map getIconExtensions() {
-        return this.iconExtensions;
+    public static Map getIconExtensions() {
+        return iconExtensions;
     }
 
-    public void setIconExtensions(Map t) {
-        this.iconExtensions = t;
+    public static void setIconExtensions(Map t) {
+        iconExtensions = t;
     }
 
     public void setIconExtensions(String extension, String iconPath) {
