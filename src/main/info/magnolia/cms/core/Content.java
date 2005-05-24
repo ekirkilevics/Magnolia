@@ -259,12 +259,24 @@ public class Content extends ContentHandler implements Cloneable {
      * get top level NodeData
      * @return NodeData requested <code>NodeData</code> object
      */
+
     public NodeData getNodeData(String name) {
+        return getNodeData(name, false);
+    }
+
+    public NodeData getNodeData(String name, boolean create) {
         try {
             return (new NodeData(this.node, name, this.accessManager));
         }
         catch (PathNotFoundException e) {
-
+            if(create){
+                try {
+                    return this.createNodeData(name);
+                }
+                catch (Exception e1) {
+                    log.error("can' create property [" + name + "]");
+                }
+            }
             if (log.isDebugEnabled()) {
                 String nodepath = null;
                 try {
