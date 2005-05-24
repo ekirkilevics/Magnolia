@@ -164,11 +164,11 @@ public class Tree extends ControlSuper {
         return ("/");
     }
 
-    private void setPathCurrent(String s) {
+    protected void setPathCurrent(String s) {
         this.pathCurrent = s;
     }
 
-    private String getPathCurrent() {
+    protected String getPathCurrent() {
         return this.pathCurrent;
     }
 
