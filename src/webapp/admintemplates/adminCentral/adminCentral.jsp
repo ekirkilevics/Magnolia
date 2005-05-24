@@ -14,12 +14,12 @@
     <jsp:directive.page import="info.magnolia.cms.beans.config.Server" />
     <jsp:directive.page import="info.magnolia.cms.gui.misc.Sources" />
     <jsp:directive.page import="info.magnolia.module.admininterface.Store" />
+    <jsp:directive.page import="info.magnolia.cms.i18n.MessagesManager" />
     <jsp:directive.page import="java.util.Iterator" />
     <jsp:directive.page import="javax.jcr.RepositoryException" />
     <jsp:directive.page import="info.magnolia.cms.core.ItemType" />
     <jsp:directive.page import="info.magnolia.cms.beans.config.ContentRepository" />
 
-    <jsp:directive.page import="javax.servlet.jsp.jstl.fmt.LocaleSupport" />
 	<jsp:directive.page import="info.magnolia.cms.security.Permission"/>
 
     <jsp:directive.page contentType="text/html; charset=UTF-8" />
@@ -78,7 +78,7 @@
 	        String icon  = menupoint.getNodeData("icon").getString();
 	        String onclick = menupoint.getNodeData("onclick").getString();
 			Button button=new Button();
-			button.setLabel(LocaleSupport.getLocalizedMessage(pageContext, label));
+			button.setLabel(MessagesManager.getWithDefault(request, label, label));
 			button.setOnclick(onclick);
 			button.setPushButtonTag("div");
 			button.setIconSrc(request.getContextPath() + icon);
