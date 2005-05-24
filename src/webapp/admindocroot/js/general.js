@@ -3,6 +3,7 @@
 ### some general magnolia methods (used all over magnolia)
 ################################### */
 
+var contextPath = '${pageContext.request.contextPath}';
 
 var mgnlSort=false; //true as long as a page is selected
 
@@ -181,7 +182,29 @@ function mgnlResetUp(evt)
 	}
 
 
+/* ###################################
+### open window
+################################### */
 
+
+function mgnlOpenWindow(url,width,height)
+	{
+
+	//dialog window is resized in  dialog itself (window.resize)
+    if (!width) width=800;
+    if (!height) height=100;
+	url="${pageContext.request.contextPath}/" + url;
+	if(url.indexOf('?')>=0){
+		url+="&";
+	}
+	else{
+		url+="?";
+	}
+	url+="mgnlCK="+mgnlGetCacheKiller();
+
+	var w=window.open(url,"mgnlDialog"+mgnlGetCacheKiller(),"width="+width+",height="+height+"scrollbars=no,status=yes,resizable=yes");
+	if (w) w.focus();
+	}
 
 
 /* ###################################
