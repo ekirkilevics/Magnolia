@@ -32,11 +32,15 @@ public final class Path {
     private static final String ENCODING_DEFAULT = "UTF-8";
 
     private static final String ATTRIBUTE_URI = "mgnl_decodedURI";
-
+    
+    private static final String JAVAX_FORWARD_SERVLET_PATH = "javax.servlet.forward.servlet_path";
+    
     /**
      * Logger.
      */
     private static Logger log = Logger.getLogger(Path.class);
+
+    
 
     /**
      * Utility class, don't instantiate.
@@ -129,6 +133,10 @@ public final class Path {
             req.setAttribute(ATTRIBUTE_URI, uri);
         }
         return uri;
+    }
+    
+    public static String getOriginalURI(HttpServletRequest req){
+        return (String) req.getAttribute(JAVAX_FORWARD_SERVLET_PATH);
     }
 
     /**
