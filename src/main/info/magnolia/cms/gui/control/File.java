@@ -180,9 +180,7 @@ public class File extends ControlSuper {
     }
 
     public String getPath() {
-        return this.getWebsiteNode().getHandle()
-            + "/"
-            + this.getName()
+        return getHandle()
             + "/"
             + this.getFileName()
             + "."
@@ -195,11 +193,9 @@ public class File extends ControlSuper {
      * @return property string, "" if not found
      * @throws RepositoryException
      */
-    private String getPropertyString(String propertyName) throws RepositoryException {
-
+    protected String getPropertyString(String propertyName) throws RepositoryException {
         if (this.getWebsiteNode() != null) {
-            Content contentNode = this.getWebsiteNode().getContent(
-                this.getName() + "_" + FileProperties.PROPERTIES_CONTENTNODE);
+            Content contentNode = getPropertyNode();
             if (contentNode != null) {
                 NodeData nodeData = contentNode.getNodeData(propertyName);
                 if (nodeData != null) {
@@ -209,5 +205,9 @@ public class File extends ControlSuper {
         }
 
         return StringUtils.EMPTY;
+    }
+    
+    protected Content getPropertyNode() throws RepositoryException{
+        return this.getWebsiteNode().getContent(this.getName() + "_" + FileProperties.PROPERTIES_CONTENTNODE);
     }
 }
