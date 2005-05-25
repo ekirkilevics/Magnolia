@@ -15,6 +15,7 @@ package info.magnolia.cms.core.ie;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.core.Path;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.Property;
@@ -24,8 +25,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import java.io.OutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Map;
 import java.util.Hashtable;
 
@@ -174,8 +174,7 @@ public class XmlExport implements ExportHandler {
         try {
 
             pElt.setAttribute(A_NAME, property.getName());
-            pElt.setAttribute(A_TYPE, ""+property.getType());
-            pElt.setAttribute(A_TYPENAME, PropertyType.nameFromValue(property.getType()));
+            pElt.setAttribute(A_TYPE, PropertyType.nameFromValue(property.getType()));
             exportValue(pElt, property);
 
         } catch (final Throwable t) {
@@ -192,16 +191,29 @@ public class XmlExport implements ExportHandler {
         String sContent = null;
 
         try {
-
             if (property.getType() == PropertyType.BINARY) {
 
                 if (this.binaryAsLink) {
                     sContent = property.getPath();
                 } else {
-                    sContent = new String(Base64.encodeBase64(property.getString().getBytes()));
-                }
-            } else {
+                    StringBuffer stringBuffer = new StringBuffer();
+                    try {
+                        InputStream is = property.getStream();
+                        byte[] buffer = new byte[8192];
+                        int read = 0;
+                        while ((read = is.read(buffer)) > 0) {
+                            stringBuffer.append(new String(buffer));
+                        }
+                        is.close();
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    }
 
+                    sContent = new String(Base64.encodeBase64(stringBuffer.toString().getBytes()));
+                }
+            } else if (property.getType() == PropertyType.DATE) {
+                sContent = property.getDate().getTime().toString();
+            } else {
                 sContent = property.getString();
             }
         } catch (final Throwable t) {
@@ -210,7 +222,6 @@ public class XmlExport implements ExportHandler {
 
             sContent = "exportValue() failure "+t.toString();
         }
-
         pElt.addContent(new org.jdom.Text(sContent));
     }
 

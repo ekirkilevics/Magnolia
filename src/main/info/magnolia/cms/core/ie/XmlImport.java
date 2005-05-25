@@ -16,12 +16,14 @@ package info.magnolia.cms.core.ie;
 import javax.jcr.RepositoryException;
 import javax.jcr.PropertyType;
 import javax.jcr.PathNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ByteArrayInputStream;
+import java.io.*;
 import java.util.*;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.codec.binary.Base64;
 import org.jdom.input.SAXBuilder;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -55,6 +57,17 @@ public class XmlImport implements ImportHandler {
     private final static String A_TYPE = "type";
 
     /**
+     * params
+     * */
+    public final static String DATE_FORMAT = "dateFormat";
+
+    /**
+     * default
+     * */
+    public final static String DEFAULT_DATE_FORMAT = "EEE MMM dd hh:mm:ss zzzz yyyy";
+
+
+    /**
      * fields
      * */
     private boolean binaryAsLink = true;
@@ -74,6 +87,7 @@ public class XmlImport implements ImportHandler {
             SAXBuilder builder = new SAXBuilder();
             Document document = builder.build(inStream);
             this.importContent(target, document.getRootElement());
+            target.save();
         }
         catch (Exception e) {
             log.error("failed to import");
@@ -130,7 +144,6 @@ public class XmlImport implements ImportHandler {
                 if (log.isDebugEnabled()) {
                     log.debug("Adding content - "+newContent.getHandle());
                 }
-                content.save();
                 return newContent;
             } catch (AccessDeniedException ade) {
                 log.error(ade.getMessage());
@@ -161,7 +174,7 @@ public class XmlImport implements ImportHandler {
         }
         // set value and type
         String value = element.getText();
-        int type = (new Integer(element.getAttributeValue(A_TYPE))).intValue();
+        int type = PropertyType.valueFromName(element.getAttributeValue(A_TYPE));
         try {
             this.setPropertyValue(nodeData, type, value);
         } catch (AccessDeniedException ade) {
@@ -185,13 +198,25 @@ public class XmlImport implements ImportHandler {
                 break;
             case PropertyType.DATE:
                 // todo
-                //Calendar cal = new GregorianCalendar();
+                String dateFormat = (String) this.getParameter(DATE_FORMAT);
+                if (StringUtils.isEmpty(dateFormat))
+                    dateFormat = DEFAULT_DATE_FORMAT;
+                SimpleDateFormat simpleFormat = new SimpleDateFormat(dateFormat);
+                try {
+                    Date date = simpleFormat.parse(value);
+                    Calendar cal = new GregorianCalendar();
+                    cal.setTime(date);
+                    nodeData.setValue(cal);
+                } catch (ParseException e) {
+                    log.error("Failed to parse date with the given format "+dateFormat);
+                    log.error(e);
+                }
                 break;
             case PropertyType.BOOLEAN:
                 nodeData.setValue((new Boolean(value)).booleanValue());
                 break;
             case PropertyType.BINARY:
-                nodeData.setValue(new ByteArrayInputStream(value.getBytes()));
+                nodeData.setValue(new ByteArrayInputStream(Base64.decodeBase64(value.getBytes())));
         }
     }
 
