@@ -98,51 +98,66 @@ public final class Bootstrapper {
             HierarchyManager hr = ContentRepository.getHierarchyManager(repository);
             Session session = hr.getWorkspace().getSession();
 
-            for (int k = 0; k < files.length; k++) {
-                File xmlfile = files[k];
+            try {
+                for (int k = 0; k < files.length; k++) {
+                    File xmlfile = files[k];
 
-                InputStream filteredStream = null;
+                    InputStream filteredStream = null;
+
+                    try {
+                        filteredStream = filterVersionsFromFile(xmlfile);
+
+                        log.info("Importing content from " + xmlfile.getName());
+                        session
+                            .importXML("/", filteredStream, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
+                    }
+                    catch (Exception e) {
+                        log.error("Unable to load content from "
+                            + xmlfile.getName()
+                            + " due to a "
+                            + e.getClass().getName()
+                            + " Exception: "
+                            + e.getMessage()
+                            + ". Will try to continue.", e);
+                    }
+                    finally {
+                        try {
+                            filteredStream.close();
+                        }
+                        catch (IOException e) {
+                            // ignore
+                        }
+                    }
+                }
+
+                log.info("Saving changes to [" + repository + "]");
 
                 try {
-                    filteredStream = filterVersionsFromFile(xmlfile);
-
-                    log.info("Importing content from " + xmlfile.getName());
-                    session.importXML("/", filteredStream, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
+                    session.save();
                 }
-                catch (Exception e) {
-                    log.error("Unable to load content from "
-                        + xmlfile.getName()
-                        + " due to a "
+                catch (RepositoryException e) {
+                    log.error("Unable to save changes to the ["
+                        + repository
+                        + "] repository due to a "
                         + e.getClass().getName()
                         + " Exception: "
                         + e.getMessage()
                         + ". Will try to continue.", e);
+                    continue;
                 }
-                finally {
-                    try {
-                        filteredStream.close();
-                    }
-                    catch (IOException e) {
-                        // ignore
-                    }
-                }
-
             }
+            catch (OutOfMemoryError e) {
 
-            log.info("Saving changes to [" + repository + "]");
+                int maxMem = (int) (Runtime.getRuntime().maxMemory() / 1024);
+                int needed = Math.max(256, maxMem + 128);
 
-            try {
-                session.save();
-            }
-            catch (RepositoryException e) {
-                log.error("Unable to save changes to the ["
-                    + repository
-                    + "] repository due to a "
-                    + e.getClass().getName()
-                    + " Exception: "
-                    + e.getMessage()
-                    + ". Will try to continue.", e);
-                continue;
+                log.error("Unable to complete bootstrapping: out of memory.\n"
+                    + maxMem
+                    + "MB were not enough, try to increase the amount of memory available by adding the -Xmx"
+                    + needed
+                    + " parameter to the server startup script.\n"
+                    + "You will need to completely remove the magnolia webapp before trying again");
+                break;
             }
 
             log.info("Repository [" + repository + "] has been initialized.");

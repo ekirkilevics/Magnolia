@@ -43,7 +43,12 @@ public class ConfigLoader {
     /**
      * Is this magnolia istance configured?
      */
-    private static boolean isConfigured;
+    private static boolean configured;
+
+    /**
+     * Set to true when bootstrapping is in progress or if it has failed.
+     */
+    private static boolean bootstrapping;
 
     /**
      * Initialize a ConfigLoader instance. All the supplied parameters will be set in
@@ -117,6 +122,8 @@ public class ConfigLoader {
                 return;
             }
 
+            bootstrapping = true;
+
             // a bootstrap directory is configured, trying to initialize repositories
             Bootstrapper.bootstrapRepositories(Path.getAbsoluteFileSystemPath(bootdir));
         }
@@ -181,7 +188,16 @@ public class ConfigLoader {
      * @return <code>true</code> if Magnolia is configured
      */
     public static boolean isConfigured() {
-        return ConfigLoader.isConfigured;
+        return ConfigLoader.configured;
+    }
+
+    /**
+     * Returns true if repository bootstrapping has started but the configuration has not been loaded successfully.
+     * @return <code>true</code> if repository bootstrapping has started but the configuration has not been loaded
+     * successfully
+     */
+    public static boolean isBootstrapping() {
+        return bootstrapping;
     }
 
     /**
@@ -189,7 +205,10 @@ public class ConfigLoader {
      * @param configured <code>true</code> if Magnolia is configured
      */
     protected static void setConfigured(boolean configured) {
-        ConfigLoader.isConfigured = configured;
+        ConfigLoader.configured = configured;
+
+        // if we are here, bootstrapping has completed or never started
+        ConfigLoader.bootstrapping = false;
     }
 
     /**

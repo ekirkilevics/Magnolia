@@ -14,6 +14,7 @@ package info.magnolia.cms.servlets;
 
 import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.Dispatcher;
+import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.config.VirtualMap;
 import info.magnolia.cms.beans.runtime.Cache;
@@ -87,6 +88,13 @@ public class EntryServlet extends HttpServlet {
      * @param res
      */
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+
+        if (ConfigLoader.isBootstrapping()) {
+            // @todo a nice page, with the log content...
+            res.getWriter().write("Magnolia bootstrapping has failed, check bootstrap.log in magnolia/logs");
+            return;
+        }
+
         try {
             /**
              * Try to find out what the preferred language of this user is.
@@ -118,7 +126,9 @@ public class EntryServlet extends HttpServlet {
                 }
                 else {
                     if (log.isDebugEnabled()) {
-                        log.debug("Resource not found, redirecting request for [" + req.getRequestURI() + "] to 404 URI");
+                        log.debug("Resource not found, redirecting request for ["
+                            + req.getRequestURI()
+                            + "] to 404 URI");
                     }
                     res.sendRedirect(req.getContextPath() + Server.get404URI());
                 }
