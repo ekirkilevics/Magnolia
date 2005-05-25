@@ -132,7 +132,6 @@
 			<description>@deprecated Locale string (see java.util.Locale)</description>
 		</attribute>
 	</tag>
-	<!-- breadcrumb tag -->
 	<tag>
 		<name>breadcrumb</name>
 		<tag-class>info.magnolia.cms.taglibs.util.Breadcrumb</tag-class>
@@ -152,6 +151,13 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<description>displayed between the page names, e.g. ">"</description>
+		</attribute>
+		<attribute>
+			<name>excludeCurrent</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+			<description>exclude the current (active) page from the breadcrumb. Defaults to false</description>
 		</attribute>
 	</tag>
 	<tag>

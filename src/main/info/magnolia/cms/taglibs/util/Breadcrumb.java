@@ -53,6 +53,11 @@ public class Breadcrumb extends TagSupport {
     private int startLevel = 1;
 
     /**
+     * Exclude current page from breadcrumb.
+     */
+    private boolean excludeCurrent;
+
+    /**
      * Setter for the <code>delimeter</code> tag attribute.
      * @param delimiter delimeter between links
      */
@@ -72,16 +77,30 @@ public class Breadcrumb extends TagSupport {
     }
 
     /**
+     * Setter for <code>excludeCurrent</code>.
+     * @param excludeCurrent if <code>true</code> the current (active) page is not included in breadcrumb.
+     */
+    public void setExcludeCurrent(boolean excludeCurrent) {
+        this.excludeCurrent = excludeCurrent;
+    }
+
+    /**
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
     public int doStartTag() throws JspException {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         Content actpage = Resource.getCurrentActivePage(request);
-        int currentLevel = 0;
+        int endLevel = 0;
+
         try {
-            currentLevel = actpage.getLevel();
+            endLevel = actpage.getLevel();
+
+            if (this.excludeCurrent) {
+                endLevel--;
+            }
+
             JspWriter out = pageContext.getOut();
-            for (int i = this.startLevel; i <= currentLevel; i++) {
+            for (int i = this.startLevel; i <= endLevel; i++) {
                 if (i != this.startLevel) {
                     out.print(StringUtils.defaultString(this.delimiter, " > "));
                 }
@@ -106,6 +125,8 @@ public class Breadcrumb extends TagSupport {
     public void release() {
         this.startLevel = 1;
         this.delimiter = null;
+        this.excludeCurrent = false;
         super.release();
     }
+
 }
