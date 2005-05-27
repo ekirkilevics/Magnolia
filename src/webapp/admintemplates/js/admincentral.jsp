@@ -1,5 +1,7 @@
 <jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"> 
     <jsp:directive.page contentType="text/javascript; charset=utf-8" />
+	<!-- debug -->
+    <jsp:directive.include file="../../admindocroot/js/debug.js" />
     
 	<!-- i18n -->
     <jsp:directive.include file="../../admindocroot/js/i18n.js" />
