@@ -13,10 +13,13 @@
 package info.magnolia.module.admininterface;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.admininterface.dialogs.ParagraphEditDialog;
 
 import java.lang.reflect.Constructor;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -106,6 +109,33 @@ public class Store {
     public void registerDialogHandler(String name, Class dialogHandler, Content configNode) {
         log.info("Registering dialog handler [" + name + "]");
         dialogHandlers.put(name, new Object[]{dialogHandler, configNode});
+    }
+    
+    /**
+     * register the dialogs from the config
+     * @param store
+     * @param path
+     */
+    public void registerDialogHandlers(Content defNode) {
+        // read the dialog configuration
+        try {
+            Collection dialogs = defNode.getChildren(ItemType.CONTENT.getSystemName());
+            dialogs.addAll(defNode.getChildren(ItemType.CONTENTNODE.getSystemName()));
+            for (Iterator iter = dialogs.iterator(); iter.hasNext();) {
+                Content dialog = (Content) iter.next();
+                String name = dialog.getNodeData("name").getString();
+                String className = dialog.getNodeData("class").getString();
+                try {
+                    registerDialogHandler(name, Class.forName(className), dialog);
+                }
+                catch (ClassNotFoundException e) {
+                    log.warn("can't find dialog handler class " + className, e);
+                }
+            }
+        }
+        catch (Exception e) {
+            log.warn("can't find dialogs configuration", e);
+        }
     }
 
 

@@ -19,6 +19,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.gui.dialog.DialogManager;
 import info.magnolia.cms.module.Module;
 import info.magnolia.cms.module.ModuleConfig;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.module.admininterface.trees.AdminTreeConfig;
 import info.magnolia.module.admininterface.trees.AdminTreeRoles;
 import info.magnolia.module.admininterface.trees.AdminTreeUsers;
@@ -26,6 +27,9 @@ import info.magnolia.module.admininterface.trees.AdminTreeWebsite;
 
 import java.util.Collection;
 import java.util.Iterator;
+
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
 
 import org.apache.log4j.Logger;
 
@@ -51,7 +55,12 @@ public class Engine implements Module {
         store.setStore(config.getLocalStore());
 
         registerTrees(store);
-        registerDialogs(store, "dialogs");
+        try {
+            store.registerDialogHandlers(store.getStore().getContent("dialogs"));
+        }
+        catch (Exception e) {
+            log.error("can't register the admin interface dialogs", e);
+        }
 
         log.info("Init template");
         Template.init();
@@ -59,32 +68,6 @@ public class Engine implements Module {
         log.info("Init dialog controls");
         DialogManager.init();
 
-    }
-
-    /**
-     * register the dialogs from the config
-     * @param store
-     * @param path
-     */
-    private void registerDialogs(Store store, String path) {
-        // read the dialog configuration
-        try {
-            Collection dialogs = store.getStore().getContent(path).getChildren(ItemType.CONTENTNODE.getSystemName());
-            for (Iterator iter = dialogs.iterator(); iter.hasNext();) {
-                Content dialog = (Content) iter.next();
-                String name = dialog.getNodeData("name").getString();
-                String className = dialog.getNodeData("class").getString();
-                try {
-                    store.registerDialogHandler(name, Class.forName(className), dialog);
-                }
-                catch (ClassNotFoundException e) {
-                    log.warn("can't find dialog handler class " + className, e);
-                }
-            }
-        }
-        catch (Exception e) {
-            log.warn("can't find dialogs configuration", e);
-        }
     }
 
     /**
