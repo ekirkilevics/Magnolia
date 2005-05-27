@@ -84,6 +84,11 @@ public class ResourceDispatcher extends HttpServlet {
                     return;
                 }
             }
+            catch (IOException e) {
+                // don't log at error level since tomcat tipically throws a
+                // org.apache.catalina.connector.ClientAbortException if the user stops loading the page
+                log.debug("Exception while dispatching resource  " + e.getClass().getName() + ": " + e.getMessage(), e);
+            }
             catch (Exception e) {
                 log.error("Exception while dispatching resource  " + e.getClass().getName() + ": " + e.getMessage(), e);
             }
