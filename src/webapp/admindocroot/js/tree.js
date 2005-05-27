@@ -626,8 +626,9 @@
 		{
 		if (mgnlTreeMoveNode)
 			{
+			mgnlDebug("highlight line" + divId, "tree");
 			div=document.getElementById(divId);
-			div.style.backgroundImage="url(/admindocroot/controls/tree/line_internode.gif)";
+			div.style.backgroundImage="url(" + contextPath + "/admindocroot/controls/tree/line_internode.gif)";
 			this.divMoveDenied.style.visibility="hidden";
 			this.moveLastMouseoverId=div.id;
 			this.moveDenied=false;
