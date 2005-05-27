@@ -17,7 +17,9 @@
 		this.path=path;
 		this.name=name;
 		this.divMain=document.getElementById(name+"_"+path+"_DivMain");
-		this.divMenu=document.getElementById(name+"_DivMenu");
+		// this is setted afterward because a cyclic dependency for the conditions
+		this.menu = null;
+		
 		this.addressBar=document.getElementById(name+"AddressBar");
 		this.divMoveShadow=document.getElementById(name+"_MoveShadow");
 		this.divMoveDenied=document.getElementById(name+"_MoveDenied");
@@ -39,7 +41,6 @@
 		this.lastEditedIsNodeDataType=false;
 
 		this.columns=new Array();
-		this.menuItems=new Array();
 
 		this.columnResizerDiv=document.getElementById(name+"_ColumnResizerDiv");
 		this.columnResizerLine=document.getElementById(name+"_ColumnResizerLine");
@@ -57,7 +58,6 @@
 		this.columnMinimumWidth=50;
 
 		this.colors=new Object();
-		this.colors.menuHighlight="#F0F2E6";
 		this.colors.nodeHighlight="#F0F2E6";
 		this.colors.nodeSelected="#e0e0e0";
 
@@ -410,94 +410,27 @@
 		}
 
 
-	mgnlTree.prototype.menuShow = function(event)
-		{
-		if (this.divMenu)
-			{
-			//todo: (hack) find out height/width of div
-			var divMenuHeight=0;
-			var divMenuWidth=150;
-			for (var i=0;i<this.menuItems.length;i++)
-				{
-				divMenuHeight+=18; //17: item height; 1: possible line
-				var item=this.menuItems[i];
-
-				//reset class name: remove _DISABLED (if existing)
-				item.div.className=item.div.className.replace("_DISABLED","");
-
-				var disabled=false;
-				for (var elem in item.conditions)
-					{
-					if (item.conditions[elem](this)==false)
-						{
-						disabled=true;
-						break;
-						}
-					}
-
-				if (disabled)
-					{
-					item.div.className+="_DISABLED";
-					item.div.onclick="";
-					}
-				else
-					{
-					item.div.onclick=item.onclick;
-					}
-				}
-			var pos=mgnlGetMousePos(event);
-
-			var left=pos.x+2;
-			var top=pos.y+2;
-			var windowSize=mgnlGetWindowSize();
-			if (windowSize.h<top+divMenuHeight+25)
-				{
-				top=windowSize.h-divMenuHeight-25;
-				if (top<0) top=0;
-				}
-			if (windowSize.w<left+divMenuWidth+30)
-				{
-				left=windowSize.w-divMenuWidth-30;
-				if (left<0) left=5;
-				}
-
-			this.divMenu.style.left=left;
-			this.divMenu.style.top=top;
-			this.divMenu.style.visibility="visible";
-			}
-		//event.returnValue=false;
-		}
-
-
-
 	mgnlTree.prototype.mainDivReset = function()
 		{
 		this.menuHide();
 		this.moveReset();
 		}
+		
+	mgnlTree.prototype.menuShow = function(event)
+		{
+		if (this.menu)
+			{
+			this.menu.show(event);
+			}
+		}
 
 	mgnlTree.prototype.menuHide = function()
 		{
-		if (this.divMenu)
+		if (this.menu)
 			{
-			this.divMenu.style.visibility="hidden";
+			this.menu.hide();
 			}
 		}
-
-
-	mgnlTree.prototype.menuItemHighlight = function(item)
-		{
-		if (item.className.indexOf("_DISABLED")==-1)
-			{
-			item.style.backgroundColor=this.colors.menuHighlight;
-			}
-		}
-
-	mgnlTree.prototype.menuItemReset = function(item)
-		{
-		item.style.backgroundColor="";
-		}
-
 
 	mgnlTree.prototype.createRootNode = function(createItemType)
 		{
@@ -1012,80 +945,6 @@
 		this.isNodeDataValue=isNodeDataValue;
 		this.isNodeDataType=isNodeDataType;
 		}
-
-
-
-
-
-
-	//#################
-	//### TreeMenuItem
-	//#################
-
-	function mgnlTreeMenuItem(id)
-		{
-		this.id=id;
-		this.div=document.getElementById(id);
-		this.onclick=this.div.onclick;
-		}
-
-
-	//default conditions
-
-	function mgnlTreeMenuItemConditionSelectedNotRoot(tree)
-		{
-		if (tree.selectedNode.id!=tree.path) return true;
-		else return false;
-		}
-
-	function mgnlTreeMenuItemConditionSelectedNotNodeData(tree)
-		{
-		if (tree.selectedNode.itemType!="mgnl:nodeData") return true;
-		else return false;
-		}
-
-	function mgnlTreeMenuItemConditionSelectedNotContentNode(tree)
-		{
-		if (tree.selectedNode.itemType!="mgnl:contentNode") return true;
-		else return false;
-		}
-
-	function mgnlTreeMenuItemConditionSelectedNotContent(tree)
-		{
-		if (tree.selectedNode.itemType!="mgnl:content") return true;
-		else return false;
-		}
-
-	function mgnlTreeMenuItemConditionPermissionWrite(tree)
-		{
-		if (tree.selectedNode.permissionWrite) return true;
-		else return false;
-		}
-
-
-
-	function mgnlTreeMenuItemConditionNotYetImplemented()
-		{
-		return false;
-		}
-
-
-	function mgnlTreeMenuItemOpen(tree)
-		{
-		var url="${pageContext.request.contextPath}" + tree.selectedNode.path+".html";
-		var w=window.open(url,"mgnlInline","");
-		if (w) w.focus();
-		}
-
-	function mgnlTreeMenuOpenDialog(tree,dialogPath)
-		{
-		var path=tree.selectedNode.id;
-		mgnlOpenDialog(path,'','','',tree.repository,dialogPath);
-		}
-
-
-
-
 
 
 	//#################
