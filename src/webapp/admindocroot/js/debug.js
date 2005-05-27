@@ -22,7 +22,7 @@ function mgnlDebug(str, context){
 		window.top.mgnlDebugConsole = console;
 		doc = console.document;
 		doc.write('<input type="button" value="Clear" onclick="document.getElementById(\'consoleDiv\').innerHTML=\'\';" > <p>');
-		doc.write('<div id="consoleDiv" style="font-family: sans-serif; font-size: 10pt">gugus');
+		doc.write('<div id="consoleDiv" style="font-family: sans-serif; font-size: 10pt">');
 		doc.write('</div>');
 		doc.close();
 	}
@@ -35,5 +35,7 @@ function mgnlDebug(str, context){
 	
 	// get the div to write in
 	var div = doc.getElementById('consoleDiv');
+	if(context != null)
+		str = context + ": " + str;
 	div.innerHTML += str + "<br>";
 }
