@@ -42,8 +42,9 @@ public class AdminTreeMVCServlet extends MVCServlet {
      * @see info.magnolia.cms.servlets.MVCServlet#getHandler(javax.servlet.http.HttpServletRequest)
      */
     protected MVCServletHandler getHandler(HttpServletRequest request, HttpServletResponse response) {
-        // TODO: do not use repository use treeHandlerName instead!!
+        
         String handlerName = request.getParameter("repository"); //request.getParameter("treeHandler");
+
         if (StringUtils.isEmpty(handlerName)) {
             handlerName = ContentRepository.WEBSITE;
         }     

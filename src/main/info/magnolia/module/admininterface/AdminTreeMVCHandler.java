@@ -279,15 +279,6 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         // if there was a displayValue passed show it instead of the written value
         displayValue = StringUtils.defaultString(request.getParameter("displayValue"), value);
 
-        // moved to module, using jcr observation
-        // if (path.startsWith("/modules/templating/Templates/")) {
-        // Template.reload();
-        // }
-        // moved to module, using jcr observation
-        // else if (path.startsWith("/modules/templating/Paragraphs/")) {
-        // Paragraph.reload();
-        // }
-
         // @todo should be handled in a better way but, at the moment, this is better than nothing
         if (path.startsWith("/subscribers/")) {
             Subscriber.reload();
@@ -338,6 +329,13 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
      * @param request
      */
     abstract protected void prepareTree(Tree tree, HttpServletRequest request);
+    
+    /**
+     * Prepare the context menu of the tree. This is called during renderTree
+     * @param tree
+     * @param request
+     */
+    abstract protected void prepareContextMenu(Tree tree, HttpServletRequest request);
 
     /**
      * Create the html for the tree. Calls tree.getHtml after calling prepareTree.
@@ -347,23 +345,25 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         String mode = StringUtils.defaultString(request.getParameter("treeMode"));
         boolean snippetMode = mode.equals("snippet");
 
+        tree.setJavascriptTree("mgnlTreeControl");
+        
         if (!snippetMode) {
             html.append("<html><head>");
             html.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>");
-            html.append(new Sources(request.getContextPath()).getHtmlJs());
-            html.append(new Sources(request.getContextPath()).getHtmlCss());
+            renderHeaderIncludes(html);
             html.append("<title>Magnolia</title>");
             html.append("</head>");
-            html.append("<body class=\"mgnlBgDark\" onload=\"mgnlTree.resizeOnload();\" >");
+            html.append("<body class=\"mgnlBgDark\" onload=\"" + tree.getJavascriptTree() + ".resizeOnload();\" >");
             html.append(Spacer.getHtml(20, 20));
         }
-        tree.setJavascriptTree("mgnlTree");
+        
         tree.setSnippetMode(snippetMode);
         tree.setHeight(50);
 
         tree.setPath(path);
 
         prepareTree(tree, request);
+        prepareContextMenu(tree, request);
 
         if (!snippetMode) {
             html.append("<div id=\"" + tree.getJavascriptTree() + "_DivSuper\" style=\"display:block;\">");
@@ -376,5 +376,21 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         if (!snippetMode) {
             html.append("</body></html>");
         }
+    }
+    
+    /**
+     * @param html
+     */
+    protected void renderHeaderIncludes(StringBuffer html) {
+        html.append(new Sources(request.getContextPath()).getHtmlJs());
+        html.append(new Sources(request.getContextPath()).getHtmlCss());
+    }
+
+    //TODO DMS
+    protected Tree getTree() {
+        return this.tree;
+    }
+    protected void setTree(Tree tree) {
+        this.tree = tree;
     }
 }
