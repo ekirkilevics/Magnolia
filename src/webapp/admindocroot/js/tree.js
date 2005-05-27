@@ -128,9 +128,11 @@
 
 	mgnlTree.prototype.selectNode = function(id)
 		{
+		mgnlDebug("selectNode:" + id, "tree");
 		var sNode=this.getNode(id);
 		var divMain=document.getElementById(sNode.divMainId);
-
+		mgnlDebug("selectNode: divMainId:" + sNode.divMainId, "tree");
+		
 		var divMainSelected=document.getElementById(this.selectedNode.divMainId);
 
 		if (divMain && this.selectedNode.divMainId!=sNode.divMainId)
@@ -1055,6 +1057,7 @@
 			httpReq.open("POST",encodeURI(this.url),true);
 			httpReq.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
 
+			// register handler after the the request called after the request returned
 			httpReq.onreadystatechange=function() {
 			   if (httpReq.readyState==4) {
 			    var returnText=httpReq.responseText;
@@ -1141,6 +1144,7 @@
 
 	mgnlTreeDrawNodes = function (id,treeName)
 		{
+		mgnlDebug('mglnTreeDrawNodes', "tree");
 		var div=document.getElementById(treeName+"_"+id+"_DivSub");
 		var tree=eval(treeName);
 
@@ -1182,14 +1186,17 @@ callback
 		var selectNodePattern='<input type="hidden" id="mgnlSelectNode" value="';
 		if (html.indexOf(selectNodePattern)==0)
 			{
-			var tmp=html.substring(0,html.indexOf(">")-1);
+			mgnlDebug('mgnlTreeDrawNodesCallback', "tree");
+			var tmp=html.substring(0,html.indexOf("\" />"));
 			tmp=tmp.replace(selectNodePattern,"");
+			
 			if (tmp!="") selectPath=tmp;
 			}
 
 		if (selectPath)
 			{
-			tree.selectNode(tree.path);
+			mgnlDebug('selectPath: ' + selectPath, "tree")
+			//tree.selectNode(tree.path);
 			tree.selectNode(selectPath);
 			}
 
@@ -1201,8 +1208,6 @@ callback
 				shifter.src=shifter.src.replace("COLLAPSE","EMPTY")
 				}
 			}
-
-
-		//tree.selectedNodeReset();
+	
 }
 
