@@ -9,6 +9,7 @@
     <jsp:directive.include file="../../admindocroot/js/general.js" />
     <jsp:directive.include file="../../admindocroot/js/controls.js" />
     <jsp:directive.include file="../../admindocroot/js/tree.js" />
+    <jsp:directive.include file="../../admindocroot/js/contextmenu.js" />
     <jsp:directive.include file="../../admindocroot/js/adminCentral.js" />
     <jsp:directive.include file="../../admindocroot/js/inline.js" />
 </jsp:root>
