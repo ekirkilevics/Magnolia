@@ -16,6 +16,7 @@ package info.magnolia.cms.core.ie;
 import javax.jcr.RepositoryException;
 import javax.jcr.PropertyType;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.Value;
 import java.io.*;
 import java.util.*;
 import java.text.SimpleDateFormat;
@@ -158,10 +159,22 @@ public class XmlImport implements ImportHandler {
         return null;
     }
 
+    /**
+     * set property value or create a new property if not exist.
+     * PropertyType.REFERENCE are handled differently, since there is no difference in storage of String
+     * and Reference type it must be set while creating a property.
+     *
+     * */
     private void addProperty(Content content, Element element) {
         NodeData nodeData = content.getNodeData(element.getAttributeValue(A_NAME));
+        int type = PropertyType.valueFromName(element.getAttributeValue(A_TYPE));
+        String value = element.getText();
         if (!nodeData.isExist()) {
             try {
+                if (type == PropertyType.REFERENCE) {
+                    Value refValue = content.getJCRNode().getSession().getValueFactory().createValue(value);
+                    nodeData = content.createNodeData(element.getAttributeValue(A_NAME), refValue, type);
+                }
                 nodeData = content.createNodeData(element.getAttributeValue(A_NAME));
                 if (log.isDebugEnabled()) {
                     log.debug("Adding property - "+nodeData.getHandle());
@@ -173,8 +186,6 @@ public class XmlImport implements ImportHandler {
             }
         }
         // set value and type
-        String value = element.getText();
-        int type = PropertyType.valueFromName(element.getAttributeValue(A_TYPE));
         try {
             this.setPropertyValue(nodeData, type, value);
         } catch (AccessDeniedException ade) {
@@ -217,6 +228,12 @@ public class XmlImport implements ImportHandler {
                 break;
             case PropertyType.BINARY:
                 nodeData.setValue(new ByteArrayInputStream(Base64.decodeBase64(value.getBytes())));
+                break;
+            case PropertyType.REFERENCE:
+                /**
+                 * this property must exist before of the same type as REFERENCE
+                 * */
+                nodeData.setValue(value);
         }
     }
 
