@@ -22,17 +22,17 @@ import org.apache.commons.lang.StringUtils;
  * @author Vinzenz Wyser
  * @version 2.0
  */
-public class TreeMenuItem extends ControlSuper {
+public class ContextMenuItem extends ControlSuper {
 
     private String icon;
     
     private String onclick;
-
-    private String javascriptTree;
+    
+    private String javascriptMenuName;
 
     private List javascriptConditions = new ArrayList();
 
-    public TreeMenuItem() {
+    public ContextMenuItem() {
     }
 
     public void setOnclick(String s) {
@@ -41,18 +41,6 @@ public class TreeMenuItem extends ControlSuper {
 
     public String getOnclick() {
         return this.onclick;
-    }
-
-    /**
-     * Set the name of the javascript tree object.
-     * @param variableName
-     */
-    public void setJavascriptTree(String variableName) {
-        this.javascriptTree = variableName;
-    }
-
-    public String getJavascriptTree() {
-        return this.javascriptTree;
     }
 
     /**
@@ -77,8 +65,8 @@ public class TreeMenuItem extends ControlSuper {
         html.append("<div class=\"mgnlTreeMenuItem\" id=\""
             + this.getId()
             + "\" onclick=\""
-            + this.javascriptTree
-            + ".menuHide();");
+            + this.getJavascriptMenuName()
+            + ".hide();");
         if (StringUtils.isNotEmpty(this.onclick)) {
             html.append(this.onclick);
         }
@@ -93,9 +81,9 @@ public class TreeMenuItem extends ControlSuper {
         }
         
         html.append("\" onmouseover=\""
-            + this.javascriptTree
+            + this.getJavascriptMenuName()
             + ".menuItemHighlight(this);\"  onmouseout=\""
-            + this.javascriptTree
+            + this.getJavascriptMenuName()
             + ".menuItemReset(this);\">"
             + label
             + "</div>");
@@ -106,5 +94,11 @@ public class TreeMenuItem extends ControlSuper {
     }
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+    public String getJavascriptMenuName() {
+        return this.javascriptMenuName;
+    }
+    public void setJavascriptMenuName(String javascriptMenuName) {
+        this.javascriptMenuName = javascriptMenuName;
     }
 }

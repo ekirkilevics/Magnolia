@@ -108,7 +108,8 @@ public class Tree extends ControlSuper {
 
     private List columns = new ArrayList();
 
-    private List menuItems = new ArrayList();
+    //private List menuItems = new ArrayList();
+    private ContextMenu menu;
 
     private boolean snippetMode = true;
 
@@ -122,6 +123,7 @@ public class Tree extends ControlSuper {
     public Tree(String repository, HttpServletRequest request) {
         this.setRepository(repository);
         this.setRequest(request);
+        this.setMenu(new ContextMenu(this.getJavascriptTree()));
     }
 
     public void setRepository(String s) {
@@ -323,25 +325,7 @@ public class Tree extends ControlSuper {
         this.getColumns().add(tc);
     }
 
-    /**
-     * Set the context menu.
-     * @param al list of menu items
-     */
-    public void setMenuItems(List al) {
-        this.menuItems = al;
-    }
 
-    public List getMenuItems() {
-        return this.menuItems;
-    }
-
-    public TreeMenuItem getMenuItems(int col) {
-        return (TreeMenuItem) this.getMenuItems().get(col);
-    }
-
-    public void addMenuItem(TreeMenuItem tmi) {
-        this.getMenuItems().add(tmi);
-    }
 
     /**
      * Set the name of the javascript tree object.
@@ -349,6 +333,7 @@ public class Tree extends ControlSuper {
      */
     public void setJavascriptTree(String variableName) {
         this.javascriptTree = variableName;
+        this.menu.setName(variableName+"Menu");
     }
 
     public String getJavascriptTree() {
@@ -1031,6 +1016,7 @@ public class Tree extends ControlSuper {
             log.debug("Exception caught: " + e.getMessage(), e);
         }
 
+      
         // lineInter: line between nodes, to allow set cursor between nodes
         // line to place a very last position
         String lineId = this.getJavascriptTree() + "_" + this.getPath() + "_LineInter";
@@ -1075,46 +1061,7 @@ public class Tree extends ControlSuper {
             + pathOpen
             + "\" />\n\n\n\n");
 
-        // menu
-        StringBuffer menuJavascript = new StringBuffer();
-        if (this.getMenuItems().size() != 0) {
-            html.append("<div id=\"" + this.getJavascriptTree() + "_DivMenu\" class=\"mgnlTreeMenu\">");
-            int counter = 0;
-            for (int i = 0; i < this.getMenuItems().size(); i++) {
-                TreeMenuItem item = this.getMenuItems(i);
-                if (item == null) {
-                    html.append("<div class=\"mgnlTreeMenuLine\"><!-- ie --></div>");
-                }
-                else {
-                    item.setJavascriptTree(this.getJavascriptTree());
-                    String id = this.getJavascriptTree() + "_MenuItem" + i;
-                    item.setId(id);
-                    menuJavascript.append(this.getJavascriptTree()
-                        + ".menuItems["
-                        + counter
-                        + "]=new mgnlTreeMenuItem('"
-                        + id
-                        + "');\n");
-                    menuJavascript.append(this.getJavascriptTree()
-                        + ".menuItems["
-                        + counter
-                        + "].conditions=new Object();");
-                    for (int cond = 0; cond < item.getJavascriptConditions().size(); cond++) {
-                        menuJavascript.append(this.getJavascriptTree()
-                            + ".menuItems["
-                            + counter
-                            + "].conditions["
-                            + cond
-                            + "]="
-                            + item.getJavascriptCondition(cond)
-                            + ";");
-                    }
-                    html.append(item.getHtml());
-                    counter++;
-                }
-            }
-            html.append("</div>");
-        }
+       
         // shadow for moving pages
         html.append("<div id=\"");
         html.append(this.getJavascriptTree());
@@ -1141,9 +1088,7 @@ public class Tree extends ControlSuper {
             + "',"
             + this.getHeight()
             + ");");
-        // html.append(this.getJavascriptTree()+".columns=new Array();"); //->in tree.js
-        // add menu to tree object
-        html.append(menuJavascript);
+
         // add columns to tree object
         for (int i = 0; i < this.getColumns().size(); i++) {
             TreeColumn tc = this.getColumns(i);
@@ -1166,12 +1111,25 @@ public class Tree extends ControlSuper {
                 + tc.getIsNodeDataType()
                 + ");");
         }
-        html.append("mgnlTreeControls['" + this.getJavascriptTree() + "']=" + this.getJavascriptTree() + ";");
+        html.append("mgnlTreeControls['" + this.getJavascriptTree() + "']=" + this.getJavascriptTree() + ";\n");
         // js is not run on remote request
         html.append(this.getJavascriptTree() + ".selectNode('" + this.getPathSelected() + "');");
         html.append("</script>");
+
+        
+        // contextmenu
+        if (menu.getMenuItems().size() != 0) {
+            StringBuffer menuJavascript = new StringBuffer();
+            html.append(menu.getHtml());
+        }
+        
+        // register menu
+        html.append("<script>" + this.getJavascriptTree() + ".menu = " + menu.getName() + "</script>");
+        
         return html.toString();
     }
+
+
 
     public String getHtmlBranch() {
         String html = "";
@@ -1505,5 +1463,19 @@ public class Tree extends ControlSuper {
             log.debug("Exception caught: " + e.getMessage(), e);
         }
         return html.toString();
+    }
+
+    /**
+     * @param menuNewFolder
+     */
+    public void addMenuItem(ContextMenuItem item) {
+        menu.addMenuItem(item);
+        
+    }
+    protected ContextMenu getMenu() {
+        return this.menu;
+    }
+    protected void setMenu(ContextMenu menu) {
+        this.menu = menu;
     }
 }
