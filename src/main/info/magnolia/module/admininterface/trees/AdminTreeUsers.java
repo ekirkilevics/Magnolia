@@ -17,7 +17,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.control.TreeColumn;
-import info.magnolia.cms.gui.control.TreeMenuItem;
+import info.magnolia.cms.gui.control.ContextMenuItem;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
@@ -92,39 +92,47 @@ public class AdminTreeUsers extends AdminTreeMVCHandler {
             tree.addColumn(columnIcons);
         }
         tree.addColumn(column2);
-        TreeMenuItem menuOpen = new TreeMenuItem();
+    }
+    
+    
+    /* (non-Javadoc)
+     * @see info.magnolia.module.admininterface.AdminTreeMVCHandler#prepareContextMenu(info.magnolia.cms.gui.control.Tree, javax.servlet.http.HttpServletRequest)
+     */
+    protected void prepareContextMenu(Tree tree, HttpServletRequest request) {
+        Messages msgs = MessagesManager.getMessages(request);
+        ContextMenuItem menuOpen = new ContextMenuItem();
         menuOpen.setLabel(msgs.get("tree.users.menu.edit"));
         menuOpen.setOnclick("mgnlTreeMenuOpenDialog("
             + tree.getJavascriptTree()
             + ",'.magnolia/dialogs/useredit.html');");
-        menuOpen.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
-        TreeMenuItem menuNewPage = new TreeMenuItem();
+        menuOpen.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("+tree.getJavascriptTree()+")");
+        ContextMenuItem menuNewPage = new ContextMenuItem();
         menuNewPage.setLabel(msgs.get("tree.users.menu.new"));
         menuNewPage.setOnclick(tree.getJavascriptTree()
             + ".createRootNode('"
             + ItemType.CONTENT.getSystemName()
             + "');");
-        TreeMenuItem menuDelete = new TreeMenuItem();
+        ContextMenuItem menuDelete = new ContextMenuItem();
         menuDelete.setLabel(msgs.get("tree.users.menu.delete"));
         menuDelete.setOnclick(tree.getJavascriptTree() + ".deleteNode();");
-        menuDelete.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
-        TreeMenuItem menuMove = new TreeMenuItem();
+        menuDelete.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("+tree.getJavascriptTree()+")");
+        ContextMenuItem menuMove = new ContextMenuItem();
         menuMove.setLabel(msgs.get("tree.users.menu.move"));
         menuMove.setOnclick(tree.getJavascriptTree() + ".cutNode();");
-        menuMove.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
-        TreeMenuItem menuCopy = new TreeMenuItem();
+        menuMove.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("+tree.getJavascriptTree()+")");
+        ContextMenuItem menuCopy = new ContextMenuItem();
         menuCopy.setLabel(msgs.get("tree.users.menu.copy"));
         menuCopy.setOnclick(tree.getJavascriptTree() + ".copyNode();");
-        menuCopy.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
-        TreeMenuItem menuActivateExcl = new TreeMenuItem();
+        menuCopy.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("+tree.getJavascriptTree()+")");
+        ContextMenuItem menuActivateExcl = new ContextMenuItem();
         menuActivateExcl.setLabel(msgs.get("tree.users.menu.activate"));
         menuActivateExcl.setOnclick(tree.getJavascriptTree() + ".activateNode(" + Tree.ACTION_ACTIVATE + ",false);");
-        menuActivateExcl.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
-        TreeMenuItem menuDeActivate = new TreeMenuItem();
+        menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("+tree.getJavascriptTree()+")");
+        ContextMenuItem menuDeActivate = new ContextMenuItem();
         menuDeActivate.setLabel(msgs.get("tree.users.menu.deactivate"));
         menuDeActivate.setOnclick(tree.getJavascriptTree() + ".deActivateNode(" + Tree.ACTION_DEACTIVATE + ");");
-        menuDeActivate.addJavascriptCondition("mgnlTreeMenuItemConditionSelectedNotRoot");
-        TreeMenuItem menuRefresh = new TreeMenuItem();
+        menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("+tree.getJavascriptTree()+")");
+        ContextMenuItem menuRefresh = new ContextMenuItem();
         menuRefresh.setLabel(msgs.get("tree.menu.refresh"));
         menuRefresh.setOnclick(tree.getJavascriptTree() + ".refresh();");
         if (Server.isAdmin()) {
@@ -140,7 +148,6 @@ public class AdminTreeUsers extends AdminTreeMVCHandler {
         }
         tree.addMenuItem(null); // line
         tree.addMenuItem(menuRefresh);
-
     }
 
 }
