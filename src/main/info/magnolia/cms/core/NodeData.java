@@ -107,7 +107,7 @@ public class NodeData extends ContentHandler {
         RepositoryException,
         AccessDeniedException {
         Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
-        this.property = workingNode.setProperty(name, value);
+        this.property = workingNode.setProperty(name, value, value.getType());
         this.setAccessManager(manager);
     }
 
