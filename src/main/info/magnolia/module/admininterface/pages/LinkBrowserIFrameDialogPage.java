@@ -4,7 +4,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.control.TreeColumn;
-import info.magnolia.cms.gui.control.TreeMenuItem;
+import info.magnolia.cms.gui.control.ContextMenuItem;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.gui.misc.Spacer;
 import info.magnolia.cms.i18n.Messages;
@@ -88,7 +88,7 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
         if (repository.equals(ContentRepository.WEBSITE)) {
             Tree websiteTree = new Tree(ContentRepository.WEBSITE, request);
             // websiteTree.setJavascriptTree("mgnlWebsiteTree");
-            websiteTree.setJavascriptTree("mgnlTree");
+            websiteTree.setJavascriptTree("mgnlTreeControl");
             websiteTree.setSnippetMode(snippetMode);
             websiteTree.setHeight(treeHeight);
 
@@ -111,7 +111,7 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
             websiteTree.addColumn(column0);
             websiteTree.addColumn(column1);
 
-            TreeMenuItem menuRefresh = new TreeMenuItem();
+            ContextMenuItem menuRefresh = new ContextMenuItem();
             menuRefresh.setLabel(msgs.get("linkbrowser.refresh"));
             menuRefresh.setOnclick(websiteTree.getJavascriptTree() + ".refresh();");
 
@@ -164,7 +164,7 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
             usersTree.addColumn(column0);
             usersTree.addColumn(column1);
 
-            TreeMenuItem menuRefresh = new TreeMenuItem();
+            ContextMenuItem menuRefresh = new ContextMenuItem();
             menuRefresh.setLabel(msgs.get("linkbrowser.refresh"));
             menuRefresh.setOnclick(usersTree.getJavascriptTree() + ".refresh();");
 
@@ -216,7 +216,7 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
             rolesTree.addColumn(column0);
             rolesTree.addColumn(column1);
 
-            TreeMenuItem menuRefresh = new TreeMenuItem();
+            ContextMenuItem menuRefresh = new ContextMenuItem();
             menuRefresh.setLabel(msgs.get("linkbrowser.refresh"));
             menuRefresh.setOnclick(rolesTree.getJavascriptTree() + ".refresh();");
 
@@ -269,7 +269,7 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
             websiteTree.addColumn(column0);
             // websiteTree.addColumn(column1);
 
-            TreeMenuItem menuRefresh = new TreeMenuItem();
+            ContextMenuItem menuRefresh = new ContextMenuItem();
             menuRefresh.setLabel(msgs.get("linkbrowser.refresh"));
             menuRefresh.setOnclick(websiteTree.getJavascriptTree() + ".refresh();");
 
