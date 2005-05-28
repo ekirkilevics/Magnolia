@@ -130,7 +130,13 @@ public class EntryServlet extends HttpServlet {
                             + req.getRequestURI()
                             + "] to 404 URI");
                     }
-                    res.sendRedirect(req.getContextPath() + Server.get404URI());
+
+                    if (!res.isCommitted()) {
+                        res.sendRedirect(req.getContextPath() + Server.get404URI());
+                    }
+                    else {
+                        log.info("Unable to redirect to 404 page, response is already committed");
+                    }
                 }
             }
         }
