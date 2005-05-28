@@ -96,7 +96,14 @@ public class ResourceDispatcher extends HttpServlet {
         if (log.isDebugEnabled()) {
             log.debug("Redirecting to 404 page \"" + Server.get404URI() + "\"");
         }
-        res.sendRedirect(req.getContextPath() + Server.get404URI());
+
+        if (!res.isCommitted()) {
+            res.sendRedirect(req.getContextPath() + Server.get404URI());
+        }
+        else {
+            log.info("Unable to redirect to 404 page, response is already committed");
+        }
+
     }
 
     /**
