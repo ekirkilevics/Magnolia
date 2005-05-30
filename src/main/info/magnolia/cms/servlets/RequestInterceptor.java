@@ -18,11 +18,13 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.Resource;
 
 import java.util.Iterator;
 
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -112,9 +114,7 @@ public class RequestInterceptor extends HttpServlet {
             try {
                 String path = request.getParameter(PARAM_PATH);
                 // deactivate
-                String pagePath = StringUtils.substringBeforeLast(Path.getURI(request),".");
-                Content page = hm.getContent(pagePath);
-                page.updateMetaData(request);
+                updatePageMetaData(request, hm);
                 hm.delete(path);
                 hm.save();
             }
@@ -154,11 +154,26 @@ public class RequestInterceptor extends HttpServlet {
                     // move between two paragraphs
                     nodeSelected.getMetaData().setSequencePosition((seqPos0 + seqPos1) / 2);
                 }
-                nodeSelected.save();
+                
+                this.updatePageMetaData(request, hm);
+                hm.save();
             }
             catch (RepositoryException e) {
                 log.debug("Exception caught: " + e.getMessage(), e);
             }
         }
+    }
+
+    /**
+     * @param request
+     * @param hm
+     * @throws PathNotFoundException
+     * @throws RepositoryException
+     * @throws AccessDeniedException
+     */
+    private void updatePageMetaData(HttpServletRequest request, HierarchyManager hm) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        String pagePath = StringUtils.substringBeforeLast(Path.getURI(request),".");
+        Content page = hm.getContent(pagePath);
+        page.updateMetaData(request);
     }
 }
