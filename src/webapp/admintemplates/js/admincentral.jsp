@@ -1,17 +1,18 @@
-<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"> 
-    <jsp:directive.page contentType="text/javascript; charset=utf-8" />
-	<!-- debug -->
-    <jsp:directive.include file="../../admindocroot/js/debug.js" />
-    
-	<!-- i18n -->
-    <jsp:directive.include file="../../admindocroot/js/i18n.js" />
-    <jsp:directive.include file="messages.jsp" /> <!-- load the messages from propertyfiles -->
+<%@ page contentType="text/javascript; charset=utf-8" %>
 
-    <jsp:directive.include file="../../admindocroot/js/generic.js" />
-    <jsp:directive.include file="../../admindocroot/js/general.js" />
-    <jsp:directive.include file="../../admindocroot/js/controls.js" />
-    <jsp:directive.include file="../../admindocroot/js/tree.js" />
-    <jsp:directive.include file="../../admindocroot/js/contextmenu.js" />
-    <jsp:directive.include file="../../admindocroot/js/adminCentral.js" />
-    <jsp:directive.include file="../../admindocroot/js/inline.js" />
-</jsp:root>
+var contextPath = '${pageContext.request.contextPath}';
+
+<!-- debug -->
+<%@ include file="../../admindocroot/js/debug.js" %>
+
+<!-- i18n -->
+<%@ include file="../../admindocroot/js/i18n.js" %>
+<%@ include file="messages.jsp" %> <!-- load the messages from propertyfiles -->
+
+<%@ include file="../../admindocroot/js/generic.js" %>
+<%@ include file="../../admindocroot/js/general.js" %>
+<%@ include file="../../admindocroot/js/controls.js" %>
+<%@ include file="../../admindocroot/js/tree.js" %>
+<%@ include file="../../admindocroot/js/contextmenu.js" %>
+<%@ include file="../../admindocroot/js/adminCentral.js" %>
+<%@ include file="../../admindocroot/js/inline.js" %>
