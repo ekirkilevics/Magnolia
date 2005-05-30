@@ -17,6 +17,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
+import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.Resource;
 
@@ -28,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -109,6 +111,10 @@ public class RequestInterceptor extends HttpServlet {
             // delete paragraph
             try {
                 String path = request.getParameter(PARAM_PATH);
+                // deactivate
+                String pagePath = StringUtils.substringBeforeLast(Path.getURI(request),".");
+                Content page = hm.getContent(pagePath);
+                page.updateMetaData(request);
                 hm.delete(path);
                 hm.save();
             }
