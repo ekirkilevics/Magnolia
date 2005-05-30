@@ -84,7 +84,7 @@ public class DialogButtonSet extends DialogBox {
     public void setOption(Content configNode) {
         // checkboxSwitch -> only one option, value always true/false
         List options = new ArrayList();
-        Button button = new Button(this.getName(), "");
+        Button button = new Button(this.getName() + "_dummy", "");
         String label = configNode.getNodeData("buttonLabel").getString();
         label = TemplateMessagesUtil.get(this.getRequest(), label);
         button.setLabel(label);
