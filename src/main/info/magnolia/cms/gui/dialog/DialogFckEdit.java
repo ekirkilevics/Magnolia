@@ -38,6 +38,10 @@ public class DialogFckEdit extends DialogBox {
     public static final String PARAM_JS_INIT_FILE = "jsInitFile";
 
     public static final String PARAM_CUSTOM_CONFIGURATION_PATH = "customConfigurationPath";
+    
+    public static final String PARAM_JS_INIT_FILE_DEFAULT = "/admindocroot/fckeditor/custom/init/textOnly.js";
+
+    public static final String PARAM_CUSTOM_CONFIGURATION_PATH_DEFAULT = "/admindocroot/fckeditor/custom/config/textOnly.js";
 
     /**
      * Logger.
@@ -80,8 +84,8 @@ public class DialogFckEdit extends DialogBox {
     public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
         throws RepositoryException {
         super.init(request, response, websiteNode, configNode);
-        String jsInitFile = this.getConfigValue(PARAM_JS_INIT_FILE);
-        String customConfigurationPath = this.getConfigValue(PARAM_CUSTOM_CONFIGURATION_PATH);
+        String jsInitFile = this.getConfigValue(PARAM_JS_INIT_FILE, PARAM_JS_INIT_FILE_DEFAULT);
+        String customConfigurationPath = this.getConfigValue(PARAM_CUSTOM_CONFIGURATION_PATH, PARAM_CUSTOM_CONFIGURATION_PATH_DEFAULT);
         this.setJSInitFile(jsInitFile);
         this.setCustomConfigurationPath(customConfigurationPath);
     }
