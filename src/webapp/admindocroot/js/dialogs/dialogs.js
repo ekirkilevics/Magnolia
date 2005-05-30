@@ -238,7 +238,7 @@ function mgnlDialogLinkBrowserResize()
 function mgnlDialogLinkBrowserWriteBack(controlName,extension,addcontext)
 	{
 	var iFrameDoc=mgnlGetIFrameDocument('mgnlDialogLinkBrowserIFrame');
-	var addressBar=iFrameDoc.getElementById("mgnlTreeAddressBar");
+	var addressBar=iFrameDoc.getElementById("mgnlTreeControlAddressBar");
 	var control=opener.document.getElementById(controlName);
 
 	if (extension) extension="."+extension;
@@ -246,7 +246,7 @@ function mgnlDialogLinkBrowserWriteBack(controlName,extension,addcontext)
 	var value="";
 	if (addcontext)
 	{
-	  value = "${pageContext.request.contextPath}";
+	  value = contextPath;
 	}
 	control.value= value + addressBar.value+extension;
 	window.close();

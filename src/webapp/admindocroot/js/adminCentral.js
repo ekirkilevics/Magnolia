@@ -63,7 +63,7 @@ function mgnlAdminCentralSwitchExtractTree(repository,href)
 
 	href=mgnlAddParameter(href,"mgnlCK",mgnlGetCacheKiller());
 	href=mgnlAddParameter(href,"repository",repository);
-	iFrameDoc.location.href="${pageContext.request.contextPath}" + href;
+	iFrameDoc.location.href = contextPath + href;
 
 	divExtractTree.style.visibility="visible";
 	}
@@ -90,7 +90,7 @@ function mgnlAdminCentralSwitchExtractNonTree(href)
 	divExtractNonTree.style.visibility="visible";
 
 	href=mgnlAddParameter(href,"mgnlCK",mgnlGetCacheKiller());
-	iFrameDoc.location.href="${pageContext.request.contextPath}" + href;
+	iFrameDoc.location.href = contextPath + href;
 	}
 
 

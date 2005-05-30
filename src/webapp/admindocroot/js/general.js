@@ -3,8 +3,6 @@
 ### some general magnolia methods (used all over magnolia)
 ################################### */
 
-var contextPath = '${pageContext.request.contextPath}';
-
 var mgnlSort=false; //true as long as a page is selected
 
 

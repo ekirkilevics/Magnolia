@@ -170,7 +170,7 @@ function mgnlTreeMenuItemConditionPermissionWrite(tree)
 
 	function mgnlTreeMenuItemOpen(tree)
 		{
-		var url="${pageContext.request.contextPath}" + tree.selectedNode.path+".html";
+		var url= contextPath + tree.selectedNode.path+".html";
 		var w=window.open(url,"mgnlInline","");
 		if (w) w.focus();
 		}
