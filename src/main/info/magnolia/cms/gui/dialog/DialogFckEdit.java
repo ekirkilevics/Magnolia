@@ -39,9 +39,9 @@ public class DialogFckEdit extends DialogBox {
 
     public static final String PARAM_CUSTOM_CONFIGURATION_PATH = "customConfigurationPath";
     
-    public static final String PARAM_JS_INIT_FILE_DEFAULT = "/admindocroot/fckeditor/custom/init/textOnly.js";
+    public static final String PARAM_JS_INIT_FILE_DEFAULT = "/admindocroot/fckeditor/custom/init/basic.js";
 
-    public static final String PARAM_CUSTOM_CONFIGURATION_PATH_DEFAULT = "/admindocroot/fckeditor/custom/config/textOnly.js";
+    public static final String PARAM_CUSTOM_CONFIGURATION_PATH_DEFAULT = "/admindocroot/fckeditor/custom/config/basic.js";
 
     /**
      * Logger.
