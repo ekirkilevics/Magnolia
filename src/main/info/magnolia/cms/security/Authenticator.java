@@ -88,7 +88,11 @@ public final class Authenticator {
                 request.getSession().setAttribute(ATTRIBUTE_USER_NODE, userPage);
                 
                 // we must set the language because the JSTL will not use our classes
-                MessagesManager.setUserLanguage(userPage, request.getSession());
+                String lang = userPage.getNodeData("language").getString();
+                if (StringUtils.isEmpty(lang)) {
+                    lang = MessagesManager.getDefaultLocale().getLanguage();
+                }
+                MessagesManager.setUserLanguage(lang, request.getSession());
                 return true;
             }
             return false;
