@@ -223,14 +223,10 @@ public class MessagesManager {
     }
 
     /**
-     * @param userPage
+     * @param language
      * @param session
      */
-    public static void setUserLanguage(Content userPage, HttpSession session) {
-        String lang = userPage.getNodeData("language").getString();
-        if (StringUtils.isEmpty(lang)) {
-            lang = MessagesManager.getDefaultLocale().getLanguage();
-        }
-        session.setAttribute(Config.FMT_LOCALE + ".session", lang);
+    public static void setUserLanguage(String language, HttpSession session) {
+        session.setAttribute(Config.FMT_LOCALE + ".session", language);
     }
 }
