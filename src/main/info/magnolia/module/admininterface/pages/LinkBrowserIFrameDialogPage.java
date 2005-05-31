@@ -76,7 +76,7 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
             html.append(new Sources(request.getContextPath()).getHtmlCss());
             html.append("</head>");
 
-            html.append("<body class=\"mgnlBgDark\" onload=\"mgnlTree.resize();\">");
+            html.append("<body class=\"mgnlBgDark\" onload=\"mgnlTreeControl.resize();\">");
 
             html.append(Spacer.getHtml(20, 20));
 
@@ -87,7 +87,6 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
         // if (!snippetMode || repository.equals(ContentRepository.WEBSITE)) {
         if (repository.equals(ContentRepository.WEBSITE)) {
             Tree websiteTree = new Tree(ContentRepository.WEBSITE, request);
-            // websiteTree.setJavascriptTree("mgnlWebsiteTree");
             websiteTree.setJavascriptTree("mgnlTreeControl");
             websiteTree.setSnippetMode(snippetMode);
             websiteTree.setHeight(treeHeight);
@@ -140,7 +139,7 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
         if (repository.equals(ContentRepository.USERS)) {
             Tree usersTree = new Tree(ContentRepository.USERS, request);
             // usersTree.setJavascriptTree("mgnlUsersTree");
-            usersTree.setJavascriptTree("mgnlTree");
+            usersTree.setJavascriptTree("mgnlTreeControl");
             usersTree.setSnippetMode(snippetMode);
             usersTree.setHeight(treeHeight);
             usersTree.setDrawShifter(false);
@@ -192,7 +191,7 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
         if (repository.equals(ContentRepository.USER_ROLES)) {
             Tree rolesTree = new Tree(ContentRepository.USER_ROLES, request);
             // rolesTree.setJavascriptTree("mgnlUserRolesTree");
-            rolesTree.setJavascriptTree("mgnlTree");
+            rolesTree.setJavascriptTree("mgnlTreeControl");
             rolesTree.setSnippetMode(snippetMode);
             rolesTree.setHeight(treeHeight);
             rolesTree.setDrawShifter(false);
@@ -244,7 +243,7 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
             Tree websiteTree = new Tree(ContentRepository.CONFIG, request);
             // websiteTree.setJavascriptTree("mgnlWebsiteTree");
             websiteTree.setIconPage(Tree.ICONDOCROOT + "folder_cubes.gif");
-            websiteTree.setJavascriptTree("mgnlTree");
+            websiteTree.setJavascriptTree("mgnlTreeControl");
             websiteTree.setSnippetMode(snippetMode);
             websiteTree.setHeight(treeHeight);
 
