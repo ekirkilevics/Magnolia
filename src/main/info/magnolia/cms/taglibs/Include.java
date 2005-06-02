@@ -31,6 +31,7 @@ import org.apache.log4j.Logger;
 /**
  * @author marcel Salathe
  * @author Sameer Charles
+ * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
 public class Include extends BodyTagSupport {
@@ -45,16 +46,29 @@ public class Include extends BodyTagSupport {
      */
     private static Logger log = Logger.getLogger(Include.class);
 
+    /**
+     * file to be included (e.g. /templates/jsp/x.jsp).
+     */
     private String path;
 
+    /**
+     * Attributes to be passed to the included template (set by nested Attribute tags)
+     */
     private transient List attributes;
 
+    /**
+     * the instance contentNode (i.e. paragraph) you wish to show.
+     */
     private transient Content contentNode;
 
+    /**
+     * the name of the contentNode (i.e. paragraph) you wish to show.
+     */
     private String contentNodeName;
 
     /**
      * @deprecated
+     * @see #setContentNode(Content)
      */
     public void setContainer(Content contentNode) {
         this.setContentNode(contentNode);
@@ -62,15 +76,15 @@ public class Include extends BodyTagSupport {
 
     /**
      * Set the content object.
-     * @param contentNode
+     * @param contentNode the instance contentNode (i.e. paragraph) you wish to show
      */
     public void setContentNode(Content contentNode) {
         this.contentNode = contentNode;
     }
 
     /**
-     * Set the jsp path.
-     * @param path
+     * Set the file to be included.
+     * @param path file to be included (e.g. /templates/jsp/x.jsp)
      */
     public void setPath(String path) {
         this.path = path;
@@ -78,15 +92,15 @@ public class Include extends BodyTagSupport {
 
     /**
      * If this parameter is passed the include tag uses the defined node of the page
-     * @param contentNodeName
+     * @param contentNodeName the name of the contentNode (i.e. paragraph) you wish to show
      */
     public void setContentNodeName(String contentNodeName) {
         this.contentNodeName = contentNodeName;
     }
 
     /**
-     * @param name , name of attribute to pass with the include
-     * @param value , value of attribute to pass with the include
+     * @param name name of attribute to pass with the include
+     * @param value value of attribute to pass with the include
      */
     public void setAttribute(String name, String value) {
         if (attributes == null) {
@@ -142,13 +156,23 @@ public class Include extends BodyTagSupport {
                 }
             }
 
-            String template = this.path;
-            if (template == null) {
-                String templateName = content.getNodeData("paragraph").getString();
-                template = Paragraph.getInfo(templateName).getTemplatePath();
+            String jspPage = this.path;
+
+            if (jspPage == null) {
+                String paragraphName = content.getNodeData("paragraph").getString();
+                Paragraph paragraph = Paragraph.getInfo(paragraphName);
+
+                if (paragraph == null) {
+                    log.error("Paragraph [" + paragraphName + "] not found for page [" + content.getHandle() + "]");
+                }
+                else {
+                    jspPage = paragraph.getTemplatePath();
+                }
             }
 
-            pageContext.include(template);
+            if (jspPage != null) {
+                pageContext.include(jspPage);
+            }
         }
         catch (IOException e) {
             // should never happen
