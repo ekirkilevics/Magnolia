@@ -37,22 +37,37 @@ import org.apache.log4j.Logger;
 
 
 /**
- * @author Sameer Charles
- * @version 1.1 CacheHandle checks if the data is already cached, if yes it spools the data back to the requester either
+ * CacheHandle checks if the data is already cached, if yes it spools the data back to the requester either
  * compressed or as is. If not it caches that request in default and optimized (only gzip for now) stores.
+ * @author Sameer Charles
+ * @version $Revision $ ($Author $)
  */
 public class CacheHandler extends Thread {
 
+    /**
+     * Cache directory file system path
+     * */
     public static final String CACHE_DIRECTORY = Path.getCacheDirectoryPath();
 
+    /**
+     * Default cache files location under main cache directory
+     * */
     private static final String DEFAULT_STORE = "/default";
 
+    /**
+     * Optimized cache files location under main cache directory
+     * */
     private static final String COMPRESSED_STORE = "/optimized";
 
+    /**
+     * Logger
+     * */
     private static Logger log = Logger.getLogger(CacheHandler.class);
 
     /**
-     * @param request
+     * Cache this request in default and optimized stores
+     * @param request duplicate request created for cache
+     * @throws IOException
      */
     public static synchronized void cacheURI(HttpServletRequest request) throws IOException {
 
@@ -108,6 +123,11 @@ public class CacheHandler extends Thread {
         }
     }
 
+    /**
+     * Checks if the page has "redirectURL" property set
+     * @param request
+     * @return true if it has redirect
+     * */
     private static boolean hasRedirect(HttpServletRequest request) {
         Object obj = request.getAttribute(Aggregator.ACTPAGE);
         if (obj == null) {
@@ -123,10 +143,12 @@ public class CacheHandler extends Thread {
     }
 
     /**
-     * @param uri
-     * @param out
+     * Stream given URI
+     * @param uri to be streamed
+     * @param out this could be any stream type inherited from java.io.OutputStream
+     * @param request
      */
-    private static void streamURI(String uri, OutputStream out, HttpServletRequest request) throws IOException {
+    private static void streamURI(String uri, OutputStream out, HttpServletRequest request) {
         try {
             URL url = new URL(info.magnolia.cms.beans.config.Cache.getDomain() + uri);
             URLConnection urlConnection = url.openConnection();
@@ -139,9 +161,6 @@ public class CacheHandler extends Thread {
             while ((read = in.read(buffer)) > 0) {
                 out.write(buffer, 0, read);
             }
-            out.flush();
-            out.close();
-            in.close();
         }
         catch (Exception e) {
             log.error("Failed to stream - " + uri);
@@ -150,7 +169,11 @@ public class CacheHandler extends Thread {
     }
 
     /**
+     * Creates file hierarchy for the given URI in cache store
      * @param uri
+     * @param type could be either CacheHandler.DEFAULT_STORE or CacheHandler.COMPRESSED_STORE
+     * @return newly created file
+     * @throws Exception
      */
     private static File getDestinationFile(String uri, String type) throws Exception {
         validatePath(CACHE_DIRECTORY);
@@ -170,9 +193,7 @@ public class CacheHandler extends Thread {
     }
 
     /**
-     * <p>
-     * create a directory specified by the path
-     * </p>
+     * Create a directory specified by the path
      * @param path to the directory
      */
     public static void validatePath(String path) throws Exception {
@@ -244,9 +265,7 @@ public class CacheHandler extends Thread {
     }
 
     /**
-     * <p>
-     * send data as GZIP output stream ;)
-     * </p>
+     * Send data as GZIP output stream
      * @param is Input stream for the resource
      * @param res HttpServletResponse as received by the service method
      * @throws Exception
@@ -257,9 +276,7 @@ public class CacheHandler extends Thread {
     }
 
     /**
-     * <p>
-     * send data as is
-     * </p>
+     * Send data as is
      * @param is Input stream for the resource
      * @param res HttpServletResponse as received by the service method
      * @throws IOException
@@ -276,10 +293,8 @@ public class CacheHandler extends Thread {
     }
 
     /**
-     * <p>
-     * returns true if the request sender accepts GZIP compressed data
-     * </p>
-     * @return boolean
+     * Checks if the client from whom this request originated accept GZIP compression
+     * @return true if client sends value "gzip" in Accept-Encoding header
      */
     private static boolean canCompress(HttpServletRequest req) {
         if (!info.magnolia.cms.beans.config.Cache.applyCompression(Path.getExtension(req))) {
@@ -293,9 +308,9 @@ public class CacheHandler extends Thread {
     }
 
     /**
-     * empties the cache for the specified resource. Currenty it expects the entire path, including cache location. todo :
-     * make it relative, should be able to flush specified resource from all cache stores.
+     * Empties the cache for the specified resource. Currenty it expects the entire path, including cache location.
      * @param uri
+     * @throws Exception
      */
     public static void flushResource(String uri) throws Exception {
         File file = new File(uri);
@@ -321,9 +336,7 @@ public class CacheHandler extends Thread {
     }
 
     /**
-     * <p>
-     * recursively deletes all files under the specified directory
-     * </p>
+     * Recursively deletes all files under the specified directory
      * @param directory
      */
     private static void emptyDirectory(File directory) {
@@ -346,9 +359,7 @@ public class CacheHandler extends Thread {
     }
 
     /**
-     * <p>
-     * flushes entire cache
-     * </p>
+     * Flushes entire cache
      */
     public static void flushCache() {
         log.debug("Flushing entire cache");
