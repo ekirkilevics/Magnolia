@@ -14,11 +14,13 @@ package info.magnolia.cms.core;
 
 import info.magnolia.cms.security.AccessManager;
 
+import org.apache.commons.lang.exception.NestableRuntimeException;
+
 
 /**
  * @version 2.01
  */
-public abstract class ContentHandler {
+public abstract class ContentHandler implements Cloneable {
 
     public static final int SORT_BY_DATE = 1;
 
@@ -28,6 +30,9 @@ public abstract class ContentHandler {
 
     public static final int IGNORE_SORT = -1;
 
+    /**
+     * AccessManager instance.
+     */
     protected AccessManager accessManager;
 
     /**
@@ -36,23 +41,26 @@ public abstract class ContentHandler {
     ContentHandler() {
     }
 
-    /**
-     * <p>
-     * bit by bit copy of the current object
-     * </p>
-     * @return Object cloned object
-     * @throws CloneNotSupportedException
-     */
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
-
     public void setAccessManager(AccessManager manager) {
         this.accessManager = manager;
     }
 
     public AccessManager getAccessManager() {
         return this.accessManager;
+    }
+
+    /**
+     * Bit by bit copy of the current object.
+     * @return Object cloned object
+     */
+    protected Object clone() {
+        try {
+            return super.clone();
+        }
+        catch (CloneNotSupportedException e) {
+            // should never happen
+            throw new NestableRuntimeException(e);
+        }
     }
 
 }

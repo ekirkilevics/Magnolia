@@ -58,12 +58,24 @@ public class Content extends ContentHandler implements Cloneable {
      */
     private static Logger log = Logger.getLogger(Content.class);
 
+    /**
+     * Wrapped jcr node.
+     */
     protected Node node;
 
+    /**
+     * Path for the jcr node.
+     */
     private String path;
 
+    /**
+     * root node.
+     */
     private Node rootNode;
 
+    /**
+     * node metadata.
+     */
     private MetaData metaData;
 
     /**
@@ -73,11 +85,14 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
-     * constructor to get existing node
+     * Constructor to get existing node.
      * @param rootNode node to start with
      * @param path absolute (primary) path to this <code>Node</code>
-     * @throws PathNotFoundException
-     * @throws RepositoryException
+     * @param manager AccessManager instance
+     * @throws PathNotFoundException if the node at <code>path</code> does not exist
+     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
+     * operation
+     * @throws RepositoryException if an error occurs
      */
     public Content(Node rootNode, String path, AccessManager manager)
         throws PathNotFoundException,
@@ -91,8 +106,12 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
-     * constructor to get existing node
-     * @param elem , initialized node object
+     * Constructor to get existing node.
+     * @param elem initialized node object
+     * @param manager AccessManager instance
+     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
+     * operation
+     * @throws RepositoryException if an error occurs
      */
     public Content(Item elem, AccessManager manager) throws RepositoryException, AccessDeniedException {
         Access.isGranted(manager, Path.getAbsolutePath(elem.getPath()), Permission.READ);
@@ -106,9 +125,12 @@ public class Content extends ContentHandler implements Cloneable {
      * as well as JCR implementation
      * @param rootNode node to start with
      * @param path absolute (primary) path to this <code>Node</code>
-     * @param contentType , JCR node type as configured
-     * @throws PathNotFoundException
-     * @throws RepositoryException
+     * @param contentType JCR node type as configured
+     * @param manager AccessManager instance
+     * @throws PathNotFoundException if the node at <code>path</code> does not exist
+     * @throws RepositoryException if an error occurs
+     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
+     * operation
      */
     public Content(Node rootNode, String path, String contentType, AccessManager manager)
         throws PathNotFoundException,
@@ -123,36 +145,47 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
-     * bit by bit copy of the current object
+     * bit by bit copy of the current object. Warning: this doesn't clone wrapped jcr nodes.
      * @return Object cloned object
      * @throws CloneNotSupportedException
      */
-    public Object clone() throws CloneNotSupportedException {
+    public Object clone() {
         return super.clone();
     }
 
+    /**
+     * @param node
+     */
     protected void setNode(Node node) {
         this.node = node;
     }
 
+    /**
+     * @param node
+     */
     protected void setRootNode(Node node) {
         this.rootNode = node;
     }
 
+    /**
+     * @param path
+     */
     protected void setPath(String path) {
         this.path = path;
     }
 
     /**
      * get ContentNode node of the current node with the specified name
-     * @param name of the node acting as <code>ContentNode</code>
-     * @return <node>ContentNode </node>
-     * @throws PathNotFoundException
-     * @throws RepositoryException
+     * @param path of the node acting as <code>ContentNode</code>
+     * @return ContentNode
+     * @throws PathNotFoundException if the node at <code>path</code> does not exist
+     * @throws RepositoryException if an error occurs
+     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
+     * operation
      * @deprecated use getContent(String name) instead
      */
-    public Content getContentNode(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        Content content = new Content(this.node, name, this.accessManager);
+    public Content getContentNode(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        Content content = new Content(this.node, path, this.accessManager);
         return content;
     }
 
@@ -161,8 +194,10 @@ public class Content extends ContentHandler implements Cloneable {
      * @param name of the node to be created as <code>ContentNode</code>
      * @return newly created <node>ContentNode </node>
      * @throws PathNotFoundException
-     * @throws RepositoryException
+     * @throws RepositoryException if an error occurs
      * @deprecated use createContent(String name, String contentType) instead
+     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
+     * operation
      */
     public Content createContentNode(String name) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
@@ -174,7 +209,9 @@ public class Content extends ContentHandler implements Cloneable {
      * @param name of the node acting as <code>Content</code>
      * @return <node>Content </node>
      * @throws PathNotFoundException
-     * @throws RepositoryException
+     * @throws RepositoryException if an error occurs
+     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
+     * operation
      */
     public Content getContent(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         return (new Content(this.node, name, this.accessManager));
@@ -185,7 +222,9 @@ public class Content extends ContentHandler implements Cloneable {
      * @param name of the node to be created as <code>Content</code>
      * @return newly created <node>Content </node>
      * @throws PathNotFoundException
-     * @throws RepositoryException
+     * @throws RepositoryException if an error occurs
+     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
+     * operation
      */
     public Content createContent(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         return this.createContent(name, ItemType.CONTENT);
@@ -194,9 +233,12 @@ public class Content extends ContentHandler implements Cloneable {
     /**
      * create Content node under the current node with the specified name
      * @param name of the node to be created as <code>Content</code>
+     * @param contentType JCR node type as configured
      * @return newly created <node>Content </node>
      * @throws PathNotFoundException
-     * @throws RepositoryException
+     * @throws RepositoryException if an error occurs
+     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
+     * operation
      */
     public Content createContent(String name, String contentType) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
@@ -212,7 +254,9 @@ public class Content extends ContentHandler implements Cloneable {
      * @param contentType ItemType
      * @return newly created <node>Content </node>
      * @throws PathNotFoundException
-     * @throws RepositoryException
+     * @throws RepositoryException if an error occurs
+     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
+     * operation
      */
     public Content createContent(String name, ItemType contentType) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
@@ -264,17 +308,22 @@ public class Content extends ContentHandler implements Cloneable {
         return getNodeData(name, false);
     }
 
+    /**
+     * @param name
+     * @param create
+     * @return
+     */
     public NodeData getNodeData(String name, boolean create) {
         try {
             return (new NodeData(this.node, name, this.accessManager));
         }
         catch (PathNotFoundException e) {
-            if(create){
+            if (create) {
                 try {
                     return this.createNodeData(name);
                 }
                 catch (Exception e1) {
-                    log.error("can' create property [" + name + "]");
+                    log.error("can't create property [" + name + "]");
                 }
             }
             if (log.isDebugEnabled()) {
@@ -324,7 +373,9 @@ public class Content extends ContentHandler implements Cloneable {
      * @param name to be created
      * @return NodeData requested <code>NodeData</code> object
      * @throws PathNotFoundException
-     * @throws RepositoryException
+     * @throws RepositoryException if an error occurs
+     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
+     * operation
      */
     public NodeData createNodeData(String name) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
@@ -337,7 +388,9 @@ public class Content extends ContentHandler implements Cloneable {
      * @param value to be set initially
      * @return NodeData requested <code>NodeData</code> object
      * @throws PathNotFoundException
-     * @throws RepositoryException
+     * @throws RepositoryException if an error occurs
+     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
+     * operation
      */
     public NodeData createNodeData(String name, Value value) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
@@ -352,7 +405,9 @@ public class Content extends ContentHandler implements Cloneable {
      * @todo propertyType is ignored
      * @return NodeData requested <code>NodeData</code> object
      * @throws PathNotFoundException
-     * @throws RepositoryException
+     * @throws RepositoryException if an error occurs
+     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
+     * operation
      */
     public NodeData createNodeData(String name, Value value, int type) throws PathNotFoundException,
         RepositoryException, AccessDeniedException {
@@ -362,7 +417,7 @@ public class Content extends ContentHandler implements Cloneable {
     /**
      * delete NodeData with the specified name
      * @throws PathNotFoundException
-     * @throws RepositoryException
+     * @throws RepositoryException if an error occurs
      */
     public void deleteNodeData(String name) throws PathNotFoundException, RepositoryException {
         this.node.getProperty(name).remove();
@@ -370,6 +425,9 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * you could call this method anytime to update working page properties - Modification date & Author ID
+     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
+     * operation
+     * @throws RepositoryException if an error occurs
      */
     public void updateMetaData(HttpServletRequest request) throws RepositoryException, AccessDeniedException {
         MetaData md = this.getMetaData();
@@ -383,7 +441,8 @@ public class Content extends ContentHandler implements Cloneable {
      * @return Collection of content nodes
      */
     public Collection getChildren() {
-        String type = "";
+        String type = null;
+
         try {
             type = this.getNodeType().getName();
         }
@@ -391,18 +450,18 @@ public class Content extends ContentHandler implements Cloneable {
             log.error(re.getMessage());
             log.debug(re);
         }
-        // todo workaround
+        // @todo workaround
         // fix all getChildren calls from the root node
-        if (type.equalsIgnoreCase("rep:root")) {
+        if ("rep:root".equalsIgnoreCase(type)) {
             type = ItemType.CONTENT.getSystemName();
         }
         // --------------------------------------------------
-        return this.getChildren(type);
+        return this.getChildren(StringUtils.defaultString(type));
     }
 
     /**
      * Get collection of specified content type.
-     * @param contentType
+     * @param contentType JCR node type as configured
      * @return Collection of content nodes
      */
     public Collection getChildren(String contentType) {
@@ -420,7 +479,7 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * Get collection of specified content type.
-     * @param contentType
+     * @param contentType JCR node type as configured
      * @param namePattern
      * @return Collection of content nodes
      */
@@ -430,7 +489,7 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * Get collection of specified content type
-     * @param contentType
+     * @param contentType JCR node type as configured
      * @param sortCriteria which can be either ContentHandler.SORT_BY_SEQUENCE , ContentHandler.SORT_BY_DATE or
      * ContentHandler.SORT_BY_NAME
      * @return Collection of content nodes
@@ -452,7 +511,7 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * Get collection of specified content type.
-     * @param contentType
+     * @param contentType JCR node type as configured
      * @param namePattern
      * @param sortCriteria which can be either ContentHandler.SORT_BY_SEQUENCE , ContentHandler.SORT_BY_DATE or
      * ContentHandler.SORT_BY_NAME
@@ -470,6 +529,11 @@ public class Content extends ContentHandler implements Cloneable {
         return children;
     }
 
+    /**
+     * @param collection Collection of content nodes
+     * @param sortCriteria
+     * @return
+     */
     private Collection sort(Collection collection, int sortCriteria) {
         if (sortCriteria == ContentHandler.SORT_BY_DATE) {
             return sortByDate(collection);
@@ -480,6 +544,12 @@ public class Content extends ContentHandler implements Cloneable {
         return collection;
     }
 
+    /**
+     * @param contentType JCR node type as configured
+     * @param namePattern
+     * @return
+     * @throws RepositoryException if an error occurs
+     */
     private Collection getChildContent(String contentType, String namePattern) throws RepositoryException {
         Collection children = new ArrayList();
         NodeIterator nodeIterator = this.node.getNodes(namePattern);
@@ -566,30 +636,42 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
+     * @param contentType JCR node type as configured
      * @return Boolean, if sub <code>collectionType</code> exists
      */
     public boolean hasChildren(String contentType) {
         return (this.getChildren(contentType).size() > 0);
     }
 
+    /**
+     * @param name
+     * @return
+     * @throws RepositoryException if an error occurs
+     */
     public boolean hasContent(String name) throws RepositoryException {
         return this.node.hasNode(name);
     }
 
+    /**
+     * @param name
+     * @return
+     * @throws RepositoryException if an error occurs
+     */
     public boolean hasNodeData(String name) throws RepositoryException {
         return this.node.hasProperty(name);
     }
 
     /**
-     * gets a Collection containing all clild nodes at the current level+1 level
-     * @return Collection of content nodes
+     * Gets a Collection containing all child nodes at the current level+1 level
+     * @param contentCollection collection of content nodes
+     * @return sorted collection
      */
-    public Collection sortByDate(Collection c) {
+    public Collection sortByDate(Collection contentCollection) {
         try {
-            if (c == null) {
-                return c;
+            if (contentCollection == null) {
+                return contentCollection;
             }
-            Collections.sort((List) c, new Comparator() {
+            Collections.sort((List) contentCollection, new Comparator() {
 
                 public int compare(Object o1, Object o2) {
                     Date date1 = ((Content) o1).getMetaData().getCreationDate().getTime();
@@ -601,19 +683,20 @@ public class Content extends ContentHandler implements Cloneable {
         catch (Exception e) {
             log.error(e.getMessage());
         }
-        return c;
+        return contentCollection;
     }
 
     /**
-     * gets a Collection containing all clild nodes at the current level+1 level
-     * @return Collection of content nodes
+     * Gets a Collection containing all child nodes at the current level+1 level
+     * @param contentCollection collection of content nodes
+     * @return sorted collection
      */
-    public Collection sortBySequence(Collection c) {
+    public Collection sortBySequence(Collection contentCollection) {
         try {
-            if (c == null) {
-                return c;
+            if (contentCollection == null) {
+                return contentCollection;
             }
-            Collections.sort((List) c, new Comparator() {
+            Collections.sort((List) contentCollection, new Comparator() {
 
                 public int compare(Object o0, Object o1) {
                     try {
@@ -639,7 +722,7 @@ public class Content extends ContentHandler implements Cloneable {
         catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        return c;
+        return contentCollection;
     }
 
     /**
@@ -658,9 +741,8 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * get a handle representing path relative to the content repository with the default extension
-     * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
      * @return String representing path (handle) of the content
+     * @throws RepositoryException if an error occurs
      */
     public String getHandleWithDefaultExtension() throws PathNotFoundException, RepositoryException {
         return (this.node.getPath() + "." + Server.getDefaultExtension());
@@ -669,8 +751,10 @@ public class Content extends ContentHandler implements Cloneable {
     /**
      * get parent content object
      * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
      * @return Content representing parent node
+     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
+     * operation
+     * @throws RepositoryException if an error occurs
      */
     public Content getParent() throws PathNotFoundException, RepositoryException, AccessDeniedException {
         return (new Content(this.node.getParent(), this.accessManager));
@@ -679,9 +763,10 @@ public class Content extends ContentHandler implements Cloneable {
     /**
      * get absolute parent object starting from the root node
      * @param digree level at which the requested node exist, relative to the ROOT node
-     * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
      * @return Content representing parent node
+     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
+     * operation
+     * @throws RepositoryException if an error occurs
      */
     public Content getAncestor(int digree) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         if (digree > this.getLevel()) {
@@ -692,9 +777,8 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * Convenience method for taglib
-     * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
      * @return Content representing node on level 0
+     * @throws RepositoryException if an error occurs
      */
     public Collection getAncestors() throws PathNotFoundException, RepositoryException {
         List allAncestors = new ArrayList();
@@ -713,8 +797,8 @@ public class Content extends ContentHandler implements Cloneable {
     /**
      * get node level from the ROOT node : FIXME implement getDepth in javax.jcr
      * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
      * @return level at which current node exist, relative to the ROOT node
+     * @throws RepositoryException if an error occurs
      */
     public int getLevel() throws PathNotFoundException, RepositoryException {
         return this.node.getPath().split("/").length - 1;
@@ -724,10 +808,9 @@ public class Content extends ContentHandler implements Cloneable {
      * move current node to the specified location above the named <code>beforename</code>
      * @param srcName where current node has to be moved
      * @param beforeName name of the node before the current node has to be placed
-     * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
+     * @throws RepositoryException if an error occurs
      */
-    public void orderBefore(String srcName, String beforeName) throws PathNotFoundException, RepositoryException {
+    public void orderBefore(String srcName, String beforeName) throws RepositoryException {
         this.node.orderBefore(srcName, beforeName);
     }
 
@@ -737,6 +820,7 @@ public class Content extends ContentHandler implements Cloneable {
      * index always starts at 1 (not 0), for compatibility with XPath. As a result, for nodes that do not have
      * same-name-siblings, this method will always return 1.
      * @return The index of this node within the ordered set of its same-name sibling nodes.
+     * @throws RepositoryException if an error occurs
      */
     public int getIndex() throws RepositoryException {
         return this.node.getIndex();
@@ -766,6 +850,7 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * returns primary node type definition of the associated Node of this object
+     * @throws RepositoryException if an error occurs
      */
     public NodeType getNodeType() throws RepositoryException {
         return this.node.getPrimaryNodeType();
@@ -775,6 +860,9 @@ public class Content extends ContentHandler implements Cloneable {
      * Restores this node to the state defined by the version with the specified versionName.
      * @param versionName
      * @param removeExisting
+     * @throws VersionException if the specified <code>versionName</code> does not exist in this node's version
+     * history
+     * @throws RepositoryException if an error occurs
      * @see javax.jcr.Node#restore(String, boolean)
      */
     public void restore(String versionName, boolean removeExisting) throws VersionException,
@@ -786,6 +874,8 @@ public class Content extends ContentHandler implements Cloneable {
      * Restores this node to the state defined by the specified version.
      * @param version
      * @param removeExisting
+     * @throws VersionException if the specified <code>version</code> is not part of this node's version history
+     * @throws RepositoryException if an error occurs
      * @see javax.jcr.Node#restore(javax.jcr.version.Version, boolean)
      */
     public void restore(Version version, boolean removeExisting) throws VersionException,
@@ -798,6 +888,8 @@ public class Content extends ContentHandler implements Cloneable {
      * @param version
      * @param relPath
      * @param removeExisting
+     * @throws VersionException if the specified <code>version</code> is not part of this node's version history
+     * @throws RepositoryException if an error occurs
      * @see javax.jcr.Node#restore(javax.jcr.version.Version, String, boolean)
      */
     public void restore(Version version, String relPath, boolean removeExisting) throws VersionException,
@@ -809,6 +901,9 @@ public class Content extends ContentHandler implements Cloneable {
      * Restores this node to the state recorded in the version specified by versionLabel.
      * @param versionLabel
      * @param removeExisting
+     * @throws VersionException if the specified <code>versionLabel</code> does not exist in this node's version
+     * history
+     * @throws RepositoryException if an error occurs
      * @see javax.jcr.Node#restoreByLabel(String, boolean)
      */
     public void restoreByLabel(String versionLabel, boolean removeExisting) throws VersionException,
@@ -818,6 +913,7 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * add version leaving the node checked out
+     * @throws RepositoryException if an error occurs
      */
     public Version addVersion() throws UnsupportedRepositoryOperationException, RepositoryException {
         Version version = this.checkIn();
@@ -827,6 +923,7 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * @return checked in version
+     * @throws RepositoryException if an error occurs
      */
     public Version checkIn() throws UnsupportedRepositoryOperationException, RepositoryException {
         return this.node.checkin();
@@ -834,6 +931,7 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * check out for further write operations
+     * @throws RepositoryException if an error occurs
      */
     public void checkOut() throws UnsupportedRepositoryOperationException, RepositoryException {
         this.node.checkout();
@@ -841,6 +939,7 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * @return version history
+     * @throws RepositoryException if an error occurs
      */
     public VersionHistory getVersionHistory() throws UnsupportedRepositoryOperationException, RepositoryException {
         return this.node.getVersionHistory();
@@ -848,6 +947,7 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * @return Version iterator retreived from version history
+     * @throws RepositoryException if an error occurs
      */
     public VersionIterator getAllVersions() throws UnsupportedRepositoryOperationException, RepositoryException {
         return this.getVersionHistory().getAllVersions();
@@ -855,7 +955,7 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * Persists all changes to the repository if validation succeds
-     * @throws RepositoryException
+     * @throws RepositoryException if an error occurs
      */
     public void save() throws RepositoryException {
         this.node.getSession().save();
@@ -879,7 +979,7 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * Remove this path
-     * @throws RepositoryException
+     * @throws RepositoryException if an error occurs
      */
     public void delete() throws RepositoryException {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.node.getPath()), Permission.REMOVE);
@@ -888,7 +988,7 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * Remove specified path
-     * @throws RepositoryException
+     * @throws RepositoryException if an error occurs
      */
     public void delete(String path) throws RepositoryException {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.node.getPath(), path), Permission.REMOVE);
@@ -905,7 +1005,9 @@ public class Content extends ContentHandler implements Cloneable {
      * @param path of the requested NodeData
      * @return boolean true is the requested content is an NodeData
      * @throws AccessDeniedException
-     * @throws RepositoryException
+     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
+     * operation
+     * @throws RepositoryException if an error occurs
      */
     public boolean isNodeData(String path) throws AccessDeniedException, RepositoryException {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.node.getPath(), path), Permission.READ);
@@ -913,6 +1015,7 @@ public class Content extends ContentHandler implements Cloneable {
             return this.node.hasProperty(path);
         }
         catch (RepositoryException e) {
+            log.debug("isNodeData(): " + e.getMessage());
         }
         return false;
     }
@@ -920,7 +1023,7 @@ public class Content extends ContentHandler implements Cloneable {
     /**
      * If keepChanges is false, this method discards all pending changes recorded in this session.
      * @see javax.jcr.Node#refresh(boolean)
-     * @throws RepositoryException
+     * @throws RepositoryException if an error occurs
      */
     public void refresh(boolean keepChanges) throws RepositoryException {
         this.node.refresh(keepChanges);
@@ -928,7 +1031,7 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * UUID of the node refrenced by this object
-     * @throws RepositoryException
+     * @throws RepositoryException if an error occurs
      */
     public String getUUID() throws RepositoryException {
         return this.node.getUUID();
@@ -936,7 +1039,8 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * add specified mixin type if allowed
-     * @param type , mixin type to be added
+     * @param type mixin type to be added
+     * @throws RepositoryException if an error occurs
      */
     public void addMixin(String type) throws RepositoryException {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.node.getPath()), Permission.SET);
@@ -952,6 +1056,7 @@ public class Content extends ContentHandler implements Cloneable {
      * Removes the specified mixin node type from this node. Also removes mixinName from this node's jcr:mixinTypes
      * property. <b>The mixin node type removal takes effect on save</b>.
      * @param type , mixin type to be removed
+     * @throws RepositoryException if an error occurs
      */
     public void removeMixin(String type) throws RepositoryException {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.node.getPath()), Permission.SET);
@@ -963,6 +1068,7 @@ public class Content extends ContentHandler implements Cloneable {
      * those mixin types explicitly assigned to this node, and therefore listed in the property jcr:mixinTypes. It does
      * not include mixin types inherited through the additon of supertypes to the primary type hierarchy.
      * @return an array of mixin NodeType objects.
+     * @throws RepositoryException if an error occurs
      */
     public NodeType[] getMixinNodeTypes() throws RepositoryException {
         return this.node.getMixinNodeTypes();
@@ -975,6 +1081,9 @@ public class Content extends ContentHandler implements Cloneable {
      * @param isSessionScoped if true, this lock expires with the current session; if false it expires when explicitly
      * or automatically unlocked for some other reason.
      * @return A Lock object containing a lock token.
+     * @throws LockException if this node is already locked or <code>isDeep</code> is true and a descendant node of
+     * this node already holds a lock.
+     * @throws RepositoryException if an error occurs
      * @see javax.jcr.Node#lock(boolean, boolean)
      */
     public Lock lock(boolean isDeep, boolean isSessionScoped) throws LockException, RepositoryException {
@@ -985,7 +1094,7 @@ public class Content extends ContentHandler implements Cloneable {
      * Returns the Lock object that applies to this node. This may be either a lock on this node itself or a deep lock
      * on a node above this node.
      * @throws LockException If no lock applies to this node, a LockException is thrown.
-     * @throws RepositoryException
+     * @throws RepositoryException if an error occurs
      */
     public Lock getLock() throws LockException, RepositoryException {
         return this.node.getLock();
@@ -996,7 +1105,7 @@ public class Content extends ContentHandler implements Cloneable {
      * changes are persisted automatically; <b>there is no need to call save</b>.
      * @throws LockException if either does not currently hold a lock, or holds a lock for which this Session does not
      * have the correct lock token
-     * @throws RepositoryException
+     * @throws RepositoryException if an error occurs
      */
     public void unlock() throws LockException, RepositoryException {
         this.node.unlock();
@@ -1006,6 +1115,7 @@ public class Content extends ContentHandler implements Cloneable {
      * Returns true if this node holds a lock; otherwise returns false. To hold a lock means that this node has actually
      * had a lock placed on it specifically, as opposed to just having a lock apply to it due to a deep lock held by a
      * node above.
+     * @throws RepositoryException if an error occurs
      */
     public boolean holdsLock() throws RepositoryException {
         return this.node.holdsLock();
