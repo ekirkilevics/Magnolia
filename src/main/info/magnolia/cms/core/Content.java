@@ -147,9 +147,8 @@ public class Content extends ContentHandler implements Cloneable {
     /**
      * bit by bit copy of the current object. Warning: this doesn't clone wrapped jcr nodes.
      * @return Object cloned object
-     * @throws CloneNotSupportedException
      */
-    public Object clone() throws CloneNotSupportedException {
+    public Object clone() {
         return super.clone();
     }
 
