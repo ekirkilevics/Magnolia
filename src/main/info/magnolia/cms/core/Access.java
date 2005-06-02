@@ -19,7 +19,7 @@ import info.magnolia.cms.security.PermissionImpl;
 
 /**
  * @author Sameer Charles
- * @version 2.01
+ * @version $Revision $ ($Author $)
  */
 public final class Access {
 
@@ -30,6 +30,12 @@ public final class Access {
         // unused
     }
 
+    /**
+     * Checks if the accessmanager allows specified permission on the given path
+     * @param manager accessmanager
+     * @param path which needs to be tested using given accessmanager
+     * @param permissions
+     * */
     public static void isGranted(AccessManager manager, String path, long permissions) throws AccessDeniedException {
         if (manager != null && !manager.isGranted(path, permissions)) {
             throw new AccessDeniedException("not allowed to "
