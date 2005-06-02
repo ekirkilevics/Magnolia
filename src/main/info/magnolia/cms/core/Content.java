@@ -149,7 +149,7 @@ public class Content extends ContentHandler implements Cloneable {
      * @return Object cloned object
      * @throws CloneNotSupportedException
      */
-    public Object clone() {
+    public Object clone() throws CloneNotSupportedException {
         return super.clone();
     }
 
@@ -402,7 +402,6 @@ public class Content extends ContentHandler implements Cloneable {
      * @param name to be created
      * @param value to be set initially
      * @param type propertyType
-     * @todo propertyType is ignored
      * @return NodeData requested <code>NodeData</code> object
      * @throws PathNotFoundException
      * @throws RepositoryException if an error occurs
