@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +31,6 @@ import org.apache.log4j.Logger;
 
 
 /**
- * Date: Feb 9, 2005 Time: 3:51:20 PM
  * @author Sameer Charles
  * @version 2.1
  */
@@ -50,7 +48,7 @@ public class Spool extends HttpServlet {
 
     /**
      * This makes browser and proxy caches work more effectively, reducing the load on server and network resources.
-     * @param request
+     * @param request HttpServletRequest
      * @return last modified time in miliseconds since 1st Jan 1970 GMT
      */
     public long getLastModified(HttpServletRequest request) {
@@ -63,10 +61,11 @@ public class Spool extends HttpServlet {
 
     /**
      * All static resource requests are handled here.
-     * @param request
-     * @param response
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     * @throws IOException for error in accessing the resource or the servlet output stream
      */
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (SecureURI.isProtected(Path.getURI(request))) {
             if (!this.authenticate(request, response)) {
                 return;
@@ -79,18 +78,21 @@ public class Spool extends HttpServlet {
         }
         this.setResponseHeaders(resource, response);
         boolean success = this.spool(resource, response);
-        if (!success) {
+        if (!success && !response.isCommitted()) {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
     /**
-     * @param resource
-     * @param response
+     * @param resource File to be returned to the client
+     * @param response HttpServletResponse
+     * @return <code>true</code> if the file has been written to the servlet output stream without errors
+     * @throws IOException for error in accessing the resource or the servlet output stream
      */
-    private boolean spool(File resource, HttpServletResponse response) {
+    private boolean spool(File resource, HttpServletResponse response) throws IOException {
+        FileInputStream in = new FileInputStream(resource);
+
         try {
-            FileInputStream in = new FileInputStream(resource);
             ServletOutputStream os = response.getOutputStream();
             byte[] buffer = new byte[8192];
             int read = 0;
@@ -99,21 +101,28 @@ public class Spool extends HttpServlet {
             }
             os.flush();
             os.close();
-            in.close();
         }
         catch (IOException e) {
-            log.error(e);
+            // only log at debug level, tomcat usually throws a ClientAbortException anytime the user stop loading the
+            // page
+            log.debug("Unable to spool resource due to a " + e.getClass().getName() + " exception", e);
             return false;
+        }
+        finally {
+            try {
+                in.close();
+            }
+            catch (Exception e) {
+                // ignore
+            }
         }
         return true;
     }
 
     /**
-     * <p>
-     * Set content length. content type is set by the filters as defined in server/MIMEMappings
-     * </p>
-     * @param resource
-     * @param response
+     * Set content length. content type is set by the filters as defined in server/MIMEMappings.
+     * @param resource File to be returned to the client
+     * @param response HttpServletResponse
      */
     private void setResponseHeaders(File resource, HttpServletResponse response) {
         response.setContentLength((int) resource.length());
@@ -121,8 +130,9 @@ public class Spool extends HttpServlet {
 
     /**
      * Authenticate on basic headers.
-     * @param request
-     * @param response
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     * @return <code>true</code> if the user has been autenticated
      */
     private boolean authenticate(HttpServletRequest request, HttpServletResponse response) {
         if (SessionAccessControl.isSecuredSession(request)) {
