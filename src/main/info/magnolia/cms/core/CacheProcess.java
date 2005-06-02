@@ -20,18 +20,34 @@ import org.apache.log4j.Logger;
 
 
 /**
- * @version 2.0
+ * Thread responsible to start a cache process.
+ * This will only work if a valid request object has been initialized before
+ * @author Sameer Charles
+ * @version $Revision $ ($Author $)
  */
 public class CacheProcess extends Thread {
 
+    /**
+     * Logger
+     * */
     private static Logger log = Logger.getLogger(CacheProcess.class);
 
+    /**
+     * request
+     * */
     private HttpServletRequest request;
 
+    /**
+     * This request will be used to stream data
+     * @param request
+     * */
     public CacheProcess(HttpServletRequest request) {
         this.request = request;
     }
 
+    /**
+     * Excecutes CacheHandler cache method in background
+     * */
     public void run() {
         try {
             CacheHandler.cacheURI(this.request);

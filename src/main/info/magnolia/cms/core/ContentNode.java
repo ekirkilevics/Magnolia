@@ -25,26 +25,40 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Sameer Charles
- * @version 2.1
+ * @version $Revision $ ($Author $)
  * @deprecated use info.magnolia.cms.core.Content instead this calss has been deprecated since magnolia 2.1 since jcr
  * allows to define custom nodetypes there is no use for the wrapper classes over content. use
  * info.magnolia.cms.core.Content to bind to any kind of NodeType
  */
 public class ContentNode extends Content {
 
+    /**
+     * Logger
+     * */
     private static Logger log = Logger.getLogger(ContentNode.class);
 
+    /**
+     * JCR node which act as a base for this object
+     * */
     private Node workingNode;
 
+    /**
+     * this object name
+     * */
     private String name;
 
+    /**
+     * pointing to this object
+     * */
     private Content contentNode;
 
     /**
      * @param workingNode parent <code>Node</code>
      * @param name of the content node to retrieve
-     * @throws PathNotFoundException
-     * @throws RepositoryException
+     * @param manager access manager for this object
+     * @throws PathNotFoundException if the workingNode does not exist
+     * @throws RepositoryException if failed to create new node
+     * @throws AccessDeniedException if not allowed to write under workingNode
      */
     public ContentNode(Node workingNode, String name, AccessManager manager)
         throws PathNotFoundException,
@@ -59,6 +73,9 @@ public class ContentNode extends Content {
     /**
      * constructor use to typecast node to ContentNode
      * @param node current <code>Node</code>
+     * @param manager access manager for this object
+     * @throws RepositoryException if failed to retrieve this node
+     * @throws AccessDeniedException if not allowed to read this node
      */
     public ContentNode(Node node, AccessManager manager) throws RepositoryException, AccessDeniedException {
         Access.isGranted(manager, Path.getAbsolutePath(node.getPath()), Permission.READ);
@@ -71,8 +88,9 @@ public class ContentNode extends Content {
      * @param workingNode parent <code>Node</code>
      * @param name to be assigned
      * @param createNew creates a new container
-     * @throws PathNotFoundException
+     * @throws PathNotFoundException if workingNode does not exist
      * @throws RepositoryException
+     * @throws AccessDeniedException if not allowed to read this node or write under workingNode
      */
     public ContentNode(Node workingNode, String name, boolean createNew, AccessManager manager)
         throws PathNotFoundException,

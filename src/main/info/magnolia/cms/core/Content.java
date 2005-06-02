@@ -49,7 +49,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Sameer Charles
- * @version 2.1
+ * @version $Revision $ ($Author $)
  */
 public class Content extends ContentHandler implements Cloneable {
 
