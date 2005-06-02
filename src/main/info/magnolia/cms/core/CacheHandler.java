@@ -127,17 +127,15 @@ public class CacheHandler extends Thread {
             if (SecureURI.isProtected(uri)) {
                 urlConnection.setRequestProperty("Authorization", request.getHeader("Authorization"));
             }
-            char[] buffer = new char[4096];
+            byte[] buffer = new byte[8192];
             int read = 0;
             InputStream in = urlConnection.getInputStream();
-            Reader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-            Writer writer = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
-            while ((read = reader.read(buffer)) > 0) {
-                writer.write(buffer, 0, read);
+            while ((read = in.read(buffer)) > 0) {
+                out.write(buffer, 0, read);
             }
-            reader.close();
-            writer.flush();
-            writer.close();
+            out.flush();
+            out.close();
+            in.close();
         }
         catch (Exception e) {
             log.error("Failed to stream - " + uri);
