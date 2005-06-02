@@ -16,7 +16,12 @@ import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.beans.runtime.Cache;
 import info.magnolia.cms.security.SecureURI;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
@@ -51,8 +56,9 @@ public class CacheHandler extends Thread {
      */
     public static synchronized void cacheURI(HttpServletRequest request) throws IOException {
 
-        if (Cache.isCached(request))
+        if (Cache.isCached(request)) {
             return;
+        }
 
         // dont cache
         if (CacheHandler.hasRedirect(request)) {

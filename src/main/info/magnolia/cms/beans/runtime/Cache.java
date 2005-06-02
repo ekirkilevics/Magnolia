@@ -31,9 +31,9 @@ public final class Cache {
     private static Map cachedURIList = new Hashtable();
 
     /**
-     * holds all URI's which are being cached by cache process
-     * this list is updated by CacheHandler on start and end of cache process
-     * */
+     * holds all URI's which are being cached by cache process this list is updated by CacheHandler on start and end of
+     * cache process
+     */
     private static Map inProcessURIList = new Hashtable();
 
     private long time;

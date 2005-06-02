@@ -128,7 +128,9 @@ public class RequestInterceptor extends HttpServlet {
                 String pathSelected = request.getParameter(PARAM_PATH_SELECTED);
                 String pathSortAbove = request.getParameter(PARAM_PATH_SORT_ABOVE);
                 String pathParent = pathSelected.substring(0, pathSelected.lastIndexOf("/"));
-                Iterator it = hm.getContent(pathParent).getChildren(ItemType.CONTENTNODE.getSystemName(), Content.SORT_BY_SEQUENCE).iterator();
+                Iterator it = hm.getContent(pathParent).getChildren(
+                    ItemType.CONTENTNODE.getSystemName(),
+                    Content.SORT_BY_SEQUENCE).iterator();
                 long seqPos0 = 0;
                 long seqPos1 = 0;
                 while (it.hasNext()) {
@@ -154,7 +156,7 @@ public class RequestInterceptor extends HttpServlet {
                     // move between two paragraphs
                     nodeSelected.getMetaData().setSequencePosition((seqPos0 + seqPos1) / 2);
                 }
-                
+
                 this.updatePageMetaData(request, hm);
                 hm.save();
             }
@@ -171,8 +173,9 @@ public class RequestInterceptor extends HttpServlet {
      * @throws RepositoryException
      * @throws AccessDeniedException
      */
-    private void updatePageMetaData(HttpServletRequest request, HierarchyManager hm) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        String pagePath = StringUtils.substringBeforeLast(Path.getURI(request),".");
+    private void updatePageMetaData(HttpServletRequest request, HierarchyManager hm) throws PathNotFoundException,
+        RepositoryException, AccessDeniedException {
+        String pagePath = StringUtils.substringBeforeLast(Path.getURI(request), ".");
         Content page = hm.getContent(pagePath);
         page.updateMetaData(request);
     }

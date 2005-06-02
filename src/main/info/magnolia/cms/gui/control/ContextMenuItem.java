@@ -25,9 +25,9 @@ import org.apache.commons.lang.StringUtils;
 public class ContextMenuItem extends ControlSuper {
 
     private String icon;
-    
+
     private String onclick;
-    
+
     private String javascriptMenuName;
 
     private List javascriptConditions = new ArrayList();
@@ -70,16 +70,16 @@ public class ContextMenuItem extends ControlSuper {
         if (StringUtils.isNotEmpty(this.onclick)) {
             html.append(this.onclick);
         }
-        
+
         String label = this.getLabel();
-        if(StringUtils.isNotEmpty(this.getIcon())){
+        if (StringUtils.isNotEmpty(this.getIcon())) {
             label = "<img src=\""
                 + this.getIcon()
                 + "\"> <span style=\"position:relative;top:-3px\">"
                 + label
                 + "</span>";
         }
-        
+
         html.append("\" onmouseover=\""
             + this.getJavascriptMenuName()
             + ".menuItemHighlight(this);\"  onmouseout=\""
@@ -89,15 +89,19 @@ public class ContextMenuItem extends ControlSuper {
             + "</div>");
         return html.toString();
     }
+
     public String getIcon() {
         return this.icon;
     }
+
     public void setIcon(String icon) {
         this.icon = icon;
     }
+
     public String getJavascriptMenuName() {
         return this.javascriptMenuName;
     }
+
     public void setJavascriptMenuName(String javascriptMenuName) {
         this.javascriptMenuName = javascriptMenuName;
     }

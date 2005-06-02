@@ -15,9 +15,9 @@ package info.magnolia.module.admininterface.trees;
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
+import info.magnolia.cms.gui.control.ContextMenuItem;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.control.TreeColumn;
-import info.magnolia.cms.gui.control.ContextMenuItem;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
@@ -54,9 +54,8 @@ public class AdminTreeUsers extends AdminTreeMVCHandler {
         // context path is already added by Tree
         tree.setIconPage(Tree.ICONDOCROOT + "pawn_glass_yellow.gif");
         if (Server.isAdmin()) {
-            tree.setIconOndblclick("mgnlTreeMenuOpenDialog("
-                + tree.getJavascriptTree()
-                //+ ",'.magnolia/adminCentral/users/dialog.html');");
+            tree.setIconOndblclick("mgnlTreeMenuOpenDialog(" + tree.getJavascriptTree()
+            // + ",'.magnolia/adminCentral/users/dialog.html');");
                 + ",'.magnolia/dialogs/useredit.html');");
         }
         tree.addItemType(ItemType.CONTENT);
@@ -93,10 +92,11 @@ public class AdminTreeUsers extends AdminTreeMVCHandler {
         }
         tree.addColumn(column2);
     }
-    
-    
-    /* (non-Javadoc)
-     * @see info.magnolia.module.admininterface.AdminTreeMVCHandler#prepareContextMenu(info.magnolia.cms.gui.control.Tree, javax.servlet.http.HttpServletRequest)
+
+    /*
+     * (non-Javadoc)
+     * @see info.magnolia.module.admininterface.AdminTreeMVCHandler#prepareContextMenu(info.magnolia.cms.gui.control.Tree,
+     * javax.servlet.http.HttpServletRequest)
      */
     protected void prepareContextMenu(Tree tree, HttpServletRequest request) {
         Messages msgs = MessagesManager.getMessages(request);
@@ -105,7 +105,9 @@ public class AdminTreeUsers extends AdminTreeMVCHandler {
         menuOpen.setOnclick("mgnlTreeMenuOpenDialog("
             + tree.getJavascriptTree()
             + ",'.magnolia/dialogs/useredit.html');");
-        menuOpen.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("+tree.getJavascriptTree()+")");
+        menuOpen.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
+            + tree.getJavascriptTree()
+            + ")");
         ContextMenuItem menuNewPage = new ContextMenuItem();
         menuNewPage.setLabel(msgs.get("tree.users.menu.new"));
         menuNewPage.setOnclick(tree.getJavascriptTree()
@@ -115,23 +117,33 @@ public class AdminTreeUsers extends AdminTreeMVCHandler {
         ContextMenuItem menuDelete = new ContextMenuItem();
         menuDelete.setLabel(msgs.get("tree.users.menu.delete"));
         menuDelete.setOnclick(tree.getJavascriptTree() + ".deleteNode();");
-        menuDelete.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("+tree.getJavascriptTree()+")");
+        menuDelete.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
+            + tree.getJavascriptTree()
+            + ")");
         ContextMenuItem menuMove = new ContextMenuItem();
         menuMove.setLabel(msgs.get("tree.users.menu.move"));
         menuMove.setOnclick(tree.getJavascriptTree() + ".cutNode();");
-        menuMove.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("+tree.getJavascriptTree()+")");
+        menuMove.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
+            + tree.getJavascriptTree()
+            + ")");
         ContextMenuItem menuCopy = new ContextMenuItem();
         menuCopy.setLabel(msgs.get("tree.users.menu.copy"));
         menuCopy.setOnclick(tree.getJavascriptTree() + ".copyNode();");
-        menuCopy.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("+tree.getJavascriptTree()+")");
+        menuCopy.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
+            + tree.getJavascriptTree()
+            + ")");
         ContextMenuItem menuActivateExcl = new ContextMenuItem();
         menuActivateExcl.setLabel(msgs.get("tree.users.menu.activate"));
         menuActivateExcl.setOnclick(tree.getJavascriptTree() + ".activateNode(" + Tree.ACTION_ACTIVATE + ",false);");
-        menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("+tree.getJavascriptTree()+")");
+        menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
+            + tree.getJavascriptTree()
+            + ")");
         ContextMenuItem menuDeActivate = new ContextMenuItem();
         menuDeActivate.setLabel(msgs.get("tree.users.menu.deactivate"));
         menuDeActivate.setOnclick(tree.getJavascriptTree() + ".deActivateNode(" + Tree.ACTION_DEACTIVATE + ");");
-        menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("+tree.getJavascriptTree()+")");
+        menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
+            + tree.getJavascriptTree()
+            + ")");
         ContextMenuItem menuRefresh = new ContextMenuItem();
         menuRefresh.setLabel(msgs.get("tree.menu.refresh"));
         menuRefresh.setOnclick(tree.getJavascriptTree() + ".refresh();");

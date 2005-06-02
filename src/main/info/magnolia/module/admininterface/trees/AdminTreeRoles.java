@@ -15,9 +15,9 @@ package info.magnolia.module.admininterface.trees;
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
+import info.magnolia.cms.gui.control.ContextMenuItem;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.control.TreeColumn;
-import info.magnolia.cms.gui.control.ContextMenuItem;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
@@ -32,8 +32,6 @@ import javax.servlet.http.HttpServletResponse;
  * @version $Id: AdminTreeRoles.java 685 2005-05-04 19:23:59Z philipp $
  */
 public class AdminTreeRoles extends AdminTreeMVCHandler {
-
-
 
     /**
      * @param name
@@ -90,22 +88,25 @@ public class AdminTreeRoles extends AdminTreeMVCHandler {
             tree.addColumn(columnIcons);
         }
         tree.addColumn(column2);
-        
+
     }
 
-    
-    /* (non-Javadoc)
-     * @see info.magnolia.module.admininterface.AdminTreeMVCHandler#prepareContextMenu(info.magnolia.cms.gui.control.Tree, javax.servlet.http.HttpServletRequest)
+    /*
+     * (non-Javadoc)
+     * @see info.magnolia.module.admininterface.AdminTreeMVCHandler#prepareContextMenu(info.magnolia.cms.gui.control.Tree,
+     * javax.servlet.http.HttpServletRequest)
      */
     protected void prepareContextMenu(Tree tree, HttpServletRequest request) {
         Messages msgs = MessagesManager.getMessages(request);
-        
+
         ContextMenuItem menuOpen = new ContextMenuItem();
         menuOpen.setLabel(msgs.get("tree.roles.menu.edit"));
         menuOpen.setOnclick("mgnlTreeMenuOpenDialog("
             + tree.getJavascriptTree()
             + ",'.magnolia/dialogs/roleedit.html');");
-        menuOpen.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("+tree.getJavascriptTree()+")");
+        menuOpen.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
+            + tree.getJavascriptTree()
+            + ")");
         ContextMenuItem menuNewPage = new ContextMenuItem();
         menuNewPage.setLabel(msgs.get("tree.roles.menu.new"));
         menuNewPage.setOnclick(tree.getJavascriptTree()
@@ -115,26 +116,36 @@ public class AdminTreeRoles extends AdminTreeMVCHandler {
         ContextMenuItem menuDelete = new ContextMenuItem();
         menuDelete.setLabel(msgs.get("tree.roles.menu.delete"));
         menuDelete.setOnclick(tree.getJavascriptTree() + ".deleteNode();");
-        menuDelete.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("+tree.getJavascriptTree()+")");
+        menuDelete.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
+            + tree.getJavascriptTree()
+            + ")");
         ContextMenuItem menuMove = new ContextMenuItem();
         menuMove.setLabel(msgs.get("tree.roles.menu.move"));
         menuMove.setOnclick(tree.getJavascriptTree() + ".cutNode();");
-        menuMove.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("+tree.getJavascriptTree()+")");
+        menuMove.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
+            + tree.getJavascriptTree()
+            + ")");
         ContextMenuItem menuCopy = new ContextMenuItem();
         menuCopy.setLabel(msgs.get("tree.roles.menu.copy"));
         menuCopy.setOnclick(tree.getJavascriptTree() + ".copyNode();");
-        menuCopy.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("+tree.getJavascriptTree()+")");
+        menuCopy.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
+            + tree.getJavascriptTree()
+            + ")");
         ContextMenuItem menuRefresh = new ContextMenuItem();
         menuRefresh.setLabel(msgs.get("tree.menu.refresh"));
         menuRefresh.setOnclick(tree.getJavascriptTree() + ".refresh();");
         ContextMenuItem menuActivateExcl = new ContextMenuItem();
         menuActivateExcl.setLabel(msgs.get("tree.roles.menu.activate"));
         menuActivateExcl.setOnclick(tree.getJavascriptTree() + ".activateNode(" + Tree.ACTION_ACTIVATE + ",false);");
-        menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("+tree.getJavascriptTree()+")");
+        menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
+            + tree.getJavascriptTree()
+            + ")");
         ContextMenuItem menuDeActivate = new ContextMenuItem();
         menuDeActivate.setLabel(msgs.get("tree.roles.menu.deactivate"));
         menuDeActivate.setOnclick(tree.getJavascriptTree() + ".deActivateNode(" + Tree.ACTION_DEACTIVATE + ");");
-        menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("+tree.getJavascriptTree()+")");
+        menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
+            + tree.getJavascriptTree()
+            + ")");
         if (Server.isAdmin()) {
             tree.addMenuItem(menuOpen);
             tree.addMenuItem(null); // line

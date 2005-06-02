@@ -108,7 +108,7 @@ public class Tree extends ControlSuper {
 
     private List columns = new ArrayList();
 
-    //private List menuItems = new ArrayList();
+    // private List menuItems = new ArrayList();
     private ContextMenu menu;
 
     private boolean snippetMode = true;
@@ -325,15 +325,13 @@ public class Tree extends ControlSuper {
         this.getColumns().add(tc);
     }
 
-
-
     /**
      * Set the name of the javascript tree object.
      * @param variableName
      */
     public void setJavascriptTree(String variableName) {
         this.javascriptTree = variableName;
-        this.menu.setName(variableName+"Menu");
+        this.menu.setName(variableName + "Menu");
     }
 
     public String getJavascriptTree() {
@@ -1016,7 +1014,6 @@ public class Tree extends ControlSuper {
             log.debug("Exception caught: " + e.getMessage(), e);
         }
 
-      
         // lineInter: line between nodes, to allow set cursor between nodes
         // line to place a very last position
         String lineId = this.getJavascriptTree() + "_" + this.getPath() + "_LineInter";
@@ -1061,7 +1058,6 @@ public class Tree extends ControlSuper {
             + pathOpen
             + "\" />\n\n\n\n");
 
-       
         // shadow for moving pages
         html.append("<div id=\"");
         html.append(this.getJavascriptTree());
@@ -1116,20 +1112,17 @@ public class Tree extends ControlSuper {
         html.append(this.getJavascriptTree() + ".selectNode('" + this.getPathSelected() + "');");
         html.append("</script>");
 
-        
         // contextmenu
         if (menu.getMenuItems().size() != 0) {
             StringBuffer menuJavascript = new StringBuffer();
             html.append(menu.getHtml());
         }
-        
+
         // register menu
         html.append("<script>" + this.getJavascriptTree() + ".menu = " + menu.getName() + "</script>");
-        
+
         return html.toString();
     }
-
-
 
     public String getHtmlBranch() {
         String html = "";
@@ -1220,8 +1213,9 @@ public class Tree extends ControlSuper {
                         if (type.equalsIgnoreCase(ItemType.NT_NODEDATA)) {
                             size = c.getNodeDataCollection().size();
                         }
-                        else
+                        else {
                             size = c.getChildren(type).size();
+                        }
                         if (size > 0) {
                             hasSub = true;
                             if (this.getPathOpen() != null
@@ -1470,11 +1464,13 @@ public class Tree extends ControlSuper {
      */
     public void addMenuItem(ContextMenuItem item) {
         menu.addMenuItem(item);
-        
+
     }
+
     protected ContextMenu getMenu() {
         return this.menu;
     }
+
     protected void setMenu(ContextMenu menu) {
         this.menu = menu;
     }

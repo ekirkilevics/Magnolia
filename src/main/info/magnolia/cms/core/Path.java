@@ -12,7 +12,6 @@
  */
 package info.magnolia.cms.core;
 
-
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -32,15 +31,13 @@ public final class Path {
     private static final String ENCODING_DEFAULT = "UTF-8";
 
     private static final String ATTRIBUTE_URI = "mgnl_decodedURI";
-    
+
     private static final String JAVAX_FORWARD_SERVLET_PATH = "javax.servlet.forward.servlet_path";
-    
+
     /**
      * Logger.
      */
     private static Logger log = Logger.getLogger(Path.class);
-
-    
 
     /**
      * Utility class, don't instantiate.
@@ -134,14 +131,14 @@ public final class Path {
         }
         return uri;
     }
-    
-    public static String getOriginalURI(HttpServletRequest req){
+
+    public static String getOriginalURI(HttpServletRequest req) {
         return (String) req.getAttribute(JAVAX_FORWARD_SERVLET_PATH);
     }
 
     /**
      * Resets the existing URI request attribute
-     * */
+     */
     public static void resetURI(HttpServletRequest req) {
         req.removeAttribute(ATTRIBUTE_URI);
     }

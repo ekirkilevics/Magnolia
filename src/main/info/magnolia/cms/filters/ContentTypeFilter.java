@@ -54,7 +54,8 @@ public class ContentTypeFilter extends BaseFilter {
         if (StringUtils.isNotEmpty(characterEncoding)) {
             resp.setCharacterEncoding(characterEncoding);
             req.setCharacterEncoding(characterEncoding);
-        } else {
+        }
+        else {
             resp.setCharacterEncoding("UTF-8");
         }
     }

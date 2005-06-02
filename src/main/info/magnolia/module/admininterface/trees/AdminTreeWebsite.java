@@ -17,10 +17,10 @@ import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
+import info.magnolia.cms.gui.control.ContextMenuItem;
 import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.control.TreeColumn;
-import info.magnolia.cms.gui.control.ContextMenuItem;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.TemplateMessagesUtil;
@@ -114,8 +114,9 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
             title = Messages.javaScriptString(title);
             templateSelect.setOptions(title, template.getName());
         }
-        if (Server.isAdmin())
+        if (Server.isAdmin()) {
             column2.setHtmlEdit(templateSelect.getHtml());
+        }
         // todo: key/value -> column2.addKeyValue("sampleBasic","Samples: Basic Template");
         // todo: preselection (set on createPage)
         TreeColumn column3 = new TreeColumn(tree.getJavascriptTree(), request);

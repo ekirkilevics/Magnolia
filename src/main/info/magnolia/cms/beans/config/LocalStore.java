@@ -14,8 +14,10 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
+
 import org.apache.log4j.Logger;
 
 

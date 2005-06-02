@@ -17,7 +17,6 @@ import info.magnolia.cms.core.Content;
 import java.util.Comparator;
 
 
-
 /**
  * @author Sameer Charles
  * @version 1.1

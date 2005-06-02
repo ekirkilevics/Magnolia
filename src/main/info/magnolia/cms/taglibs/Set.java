@@ -14,9 +14,11 @@ package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.Resource;
+
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.TagSupport;
+
 import org.apache.log4j.Logger;
 
 

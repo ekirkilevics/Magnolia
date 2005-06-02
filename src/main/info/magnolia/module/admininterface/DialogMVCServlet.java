@@ -49,9 +49,7 @@ public class DialogMVCServlet extends MVCServlet {
         if (StringUtils.isEmpty(dialogName)) {
             // get the realy called uri
             dialogName = (String) request.getAttribute("javax.servlet.forward.servlet_path");
-            dialogName = StringUtils.substringAfterLast(dialogName, "/dialogs/").replaceFirst(
-                ".html",
-                "");
+            dialogName = StringUtils.substringAfterLast(dialogName, "/dialogs/").replaceFirst(".html", "");
         }
 
         DialogMVCHandler handler = null;

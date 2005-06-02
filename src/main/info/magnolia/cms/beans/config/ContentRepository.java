@@ -140,7 +140,7 @@ public final class ContentRepository {
 
     /**
      * loads all configured repository using ID as Key, as configured in repositories.xml.
-     *
+     * 
      * <pre>
      * &lt;Repository name="website"
      *                id="website"

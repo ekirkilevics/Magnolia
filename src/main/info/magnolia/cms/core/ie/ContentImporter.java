@@ -12,47 +12,46 @@
  */
 package info.magnolia.cms.core.ie;
 
+import java.util.Hashtable;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 
-import java.util.Map;
-import java.util.Hashtable;
 
 /**
- * Date: May 24, 2005
- * Time: 4:42:21 PM
- *
- * @author Sameer Charles
- * $Id :$
+ * Date: May 24, 2005 Time: 4:42:21 PM
+ * @author Sameer Charles $Id :$
  */
 public class ContentImporter {
 
-    /* *
+    /*******************************************************************************************************************
      * Logger.
      */
     private static Logger log = Logger.getLogger(ContentImporter.class);
 
     /**
      * default import handler
-     * */
+     */
     public final static String DEFAULT_HANDLER_CLASS = "info.magnolia.cms.core.ie.XmlImport";
 
     public final static String DEFAULT_HANDLER = "defaultHandler";
 
     /**
      * all initialized importers
-     * */
+     */
     private Map handlers = new Hashtable();
 
     private static ContentImporter contentImporter = new ContentImporter();
 
     /**
      * Initialize Content importer with default handler
-     * */
-    private ContentImporter () {
+     */
+    private ContentImporter() {
         try {
-            ImportHandler defaultImporter= (ImportHandler) Class.forName(DEFAULT_HANDLER_CLASS).newInstance();
+            ImportHandler defaultImporter = (ImportHandler) Class.forName(DEFAULT_HANDLER_CLASS).newInstance();
             this.addImportHandler(DEFAULT_HANDLER, defaultImporter);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error(e.getMessage(), e);
         }
     }
@@ -63,15 +62,15 @@ public class ContentImporter {
 
     public void addImportHandler(String name, ImportHandler importhandler) {
         if (log.isDebugEnabled()) {
-            log.debug("Adding import handler "+importhandler.getClass());
+            log.debug("Adding import handler " + importhandler.getClass());
         }
         this.handlers.put(name, importhandler);
     }
 
     public ImportHandler getImportHandler(String name) {
         if (this.handlers.get(name) == null) {
-            log.error("No import handler found with name - "+name);
-            log.error("Returning default import handler - "+DEFAULT_HANDLER);
+            log.error("No import handler found with name - " + name);
+            log.error("Returning default import handler - " + DEFAULT_HANDLER);
             name = DEFAULT_HANDLER;
         }
         return (ImportHandler) this.handlers.get(name);

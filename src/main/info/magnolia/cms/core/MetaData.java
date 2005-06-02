@@ -21,12 +21,15 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
-import javax.jcr.*;
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.PropertyIterator;
+import javax.jcr.RepositoryException;
 import javax.jcr.nodetype.ConstraintViolationException;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -108,8 +111,9 @@ public class MetaData {
 
     private void allowUpdate() throws AccessDeniedException {
         // if node is null, MetaData has not been created and allowUpdate can abort silently
-        if (node == null)
+        if (node == null) {
             return;
+        }
         try {
             Access.isGranted(this.accessManager, Path.getAbsolutePath(this.node.getPath()), Permission.WRITE);
         }
@@ -148,8 +152,9 @@ public class MetaData {
     }
 
     public PropertyIterator getProperties() {
-        if (node == null)
+        if (node == null) {
             return null;
+        }
         try {
             return this.node.getProperties();
         }
@@ -166,7 +171,8 @@ public class MetaData {
     public String getLabel() {
         try {
             return this.node.getName();
-        } catch (NullPointerException e) {
+        }
+        catch (NullPointerException e) {
             log.debug("Meta Data has not beed created");
         }
         catch (RepositoryException e) {
@@ -233,7 +239,7 @@ public class MetaData {
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
                 log.debug("MedaData has not been created");
-                log.debug("cannot set property - "+SEQUENCE_POS);
+                log.debug("cannot set property - " + SEQUENCE_POS);
             }
         }
     }
@@ -265,7 +271,7 @@ public class MetaData {
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
                 log.debug("MedaData has not been created");
-                log.debug("cannot get property - "+SEQUENCE_POS);
+                log.debug("cannot get property - " + SEQUENCE_POS);
             }
         }
         return 0;
@@ -444,7 +450,7 @@ public class MetaData {
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
                 log.debug("MedaData has not been created");
-                log.debug("cannot set property - "+name);
+                log.debug("cannot set property - " + name);
             }
         }
     }
@@ -473,7 +479,7 @@ public class MetaData {
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
                 log.debug("MedaData has not been created");
-                log.debug("cannot set property - "+name);
+                log.debug("cannot set property - " + name);
             }
         }
     }
@@ -502,7 +508,7 @@ public class MetaData {
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
                 log.debug("MedaData has not been created");
-                log.debug("cannot set property - "+name);
+                log.debug("cannot set property - " + name);
             }
         }
     }
@@ -531,7 +537,7 @@ public class MetaData {
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
                 log.debug("MedaData has not been created");
-                log.debug("cannot set property - "+name);
+                log.debug("cannot set property - " + name);
             }
         }
     }
@@ -560,7 +566,7 @@ public class MetaData {
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
                 log.debug("MedaData has not been created");
-                log.debug("cannot set property - "+name);
+                log.debug("cannot set property - " + name);
             }
         }
     }
@@ -583,7 +589,7 @@ public class MetaData {
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
                 log.debug("MedaData has not been created");
-                log.debug("cannot get property - "+propertyName);
+                log.debug("cannot get property - " + propertyName);
             }
         }
         return null;
@@ -607,7 +613,7 @@ public class MetaData {
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
                 log.debug("MedaData has not been created");
-                log.debug("cannot get property - "+propertyName);
+                log.debug("cannot get property - " + propertyName);
             }
         }
         return false;
@@ -631,7 +637,7 @@ public class MetaData {
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
                 log.debug("MedaData has not been created");
-                log.debug("cannot get property - "+propertyName);
+                log.debug("cannot get property - " + propertyName);
             }
         }
         return 0d;
@@ -655,7 +661,7 @@ public class MetaData {
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
                 log.debug("MedaData has not been created");
-                log.debug("cannot get property - "+propertyName);
+                log.debug("cannot get property - " + propertyName);
             }
         }
         return 0L;
@@ -681,7 +687,7 @@ public class MetaData {
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
                 log.debug("MedaData has not been created");
-                log.debug("cannot get property - "+propertyName);
+                log.debug("cannot get property - " + propertyName);
             }
         }
         return StringUtils.EMPTY;

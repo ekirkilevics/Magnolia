@@ -47,7 +47,7 @@ public class DialogLink extends DialogEditWithButton {
         throws RepositoryException {
         super.init(request, response, websiteNode, configNode);
         String extension = this.getConfigValue("extension");
-        String label = MessagesManager.get(this.getRequest(),"dialog.link.internal"); 
+        String label = MessagesManager.get(this.getRequest(), "dialog.link.internal");
         this.getButton().setLabel(label);
         this.getButton().setSaveInfo(false);
         String repository = this.getConfigValue("repository", ContentRepository.WEBSITE);

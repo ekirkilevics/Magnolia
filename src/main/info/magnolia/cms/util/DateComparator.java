@@ -13,6 +13,7 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
+
 import java.util.Comparator;
 import java.util.Date;
 

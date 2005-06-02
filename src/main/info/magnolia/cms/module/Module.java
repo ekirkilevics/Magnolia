@@ -14,6 +14,7 @@ package info.magnolia.cms.module;
 
 import info.magnolia.cms.core.Content;
 
+
 /**
  * Date: Mar 30, 2004 Time: 10:57:18 AM
  * @author Sameer Charles
@@ -36,7 +37,7 @@ public interface Module {
     void init(ModuleConfig moduleConfig) throws InvalidConfigException;
 
     void register(Content moduleNode);
-    
+
     /**
      * At this point module is responsible to release all resources
      */

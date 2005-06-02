@@ -127,7 +127,9 @@ public class DialogRichedit extends DialogBox {
     public List setOptionsToolbox(Content configNode, String nodeName) {
         List options = new ArrayList();
         try {
-            Iterator it = configNode.getContent(nodeName).getChildren(ItemType.CONTENTNODE.getSystemName(),Content.SORT_BY_SEQUENCE).iterator();
+            Iterator it = configNode.getContent(nodeName).getChildren(
+                ItemType.CONTENTNODE.getSystemName(),
+                Content.SORT_BY_SEQUENCE).iterator();
             while (it.hasNext()) {
                 Content n = (Content) it.next();
                 String value = n.getNodeData("value").getString();

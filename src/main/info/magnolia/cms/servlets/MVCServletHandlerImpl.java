@@ -28,18 +28,18 @@ import org.apache.log4j.Logger;
  */
 public abstract class MVCServletHandlerImpl implements MVCServletHandler {
 
+    protected static final String VIEW_ERROR = "error";
+
     /**
      * Logger.
      */
     private static Logger log = Logger.getLogger(MVCServletHandlerImpl.class);
 
-    private String name;
-
     protected HttpServletRequest request;
 
     protected HttpServletResponse response;
 
-    protected static final String VIEW_ERROR = "error";
+    private String name;
 
     protected MVCServletHandlerImpl(String name, HttpServletRequest request, HttpServletResponse response) {
         super();
@@ -48,8 +48,7 @@ public abstract class MVCServletHandlerImpl implements MVCServletHandler {
         this.response = response;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
      * @see info.magnolia.cms.servlets.MVCServletHandler#getName()
      */
     public String getName() {
@@ -65,19 +64,19 @@ public abstract class MVCServletHandlerImpl implements MVCServletHandler {
         String view = VIEW_ERROR;
         Method method;
 
-            try {
-                method = this.getClass().getMethod(command, new Class[]{});
-                // method.setAccessible(true);
-                view = (String) method.invoke(this, new Object[]{});
-            }
-            catch (InvocationTargetException e) {
-                log.error("can't call command: " + command, e.getTargetException());// TODO Auto-generated catch block
-            }
-            catch (Exception e) {
-                log.error("can't call command: " + command, e);// TODO Auto-generated catch block
-            }
+        try {
+            method = this.getClass().getMethod(command, new Class[]{});
+            // method.setAccessible(true);
+            view = (String) method.invoke(this, new Object[]{});
+        }
+        catch (InvocationTargetException e) {
+            log.error("can't call command: " + command, e.getTargetException());
+        }
+        catch (Exception e) {
+            log.error("can't call command: " + command, e);
+        }
 
-            return view;
+        return view;
     }
 
 }

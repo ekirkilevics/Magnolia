@@ -86,7 +86,7 @@ public final class Authenticator {
             String fromBrowser = encodedPassword.trim();
             if (fromRepositiry.equalsIgnoreCase(fromBrowser)) {
                 request.getSession().setAttribute(ATTRIBUTE_USER_NODE, userPage);
-                
+
                 // we must set the language because the JSTL will not use our classes
                 String lang = userPage.getNodeData("language").getString();
                 if (StringUtils.isEmpty(lang)) {

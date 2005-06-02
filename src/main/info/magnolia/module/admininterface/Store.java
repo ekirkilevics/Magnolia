@@ -110,7 +110,7 @@ public class Store {
         log.info("Registering dialog handler [" + name + "]");
         dialogHandlers.put(name, new Object[]{dialogHandler, configNode});
     }
-    
+
     /**
      * register the dialogs from the config
      * @param store
@@ -137,10 +137,6 @@ public class Store {
             log.warn("can't find dialogs configuration", e);
         }
     }
-
-
-
-
 
     public DialogMVCHandler getDialogHandler(String name, HttpServletRequest request, HttpServletResponse response) {
 

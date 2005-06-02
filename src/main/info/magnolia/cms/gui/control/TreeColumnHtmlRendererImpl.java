@@ -12,13 +12,13 @@
  */
 package info.magnolia.cms.gui.control;
 
-import java.util.Calendar;
-
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.MetaDataUtil;
 import info.magnolia.cms.util.NodeDataUtil;
+
+import java.util.Calendar;
 
 
 /**

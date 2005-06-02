@@ -12,9 +12,9 @@
  */
 package info.magnolia.cms.util;
 
-import javax.servlet.http.HttpServletRequest;
-
 import info.magnolia.cms.beans.runtime.MultipartForm;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 /**

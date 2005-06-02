@@ -2,9 +2,9 @@ package info.magnolia.module.admininterface.pages;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.gui.control.ContextMenuItem;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.control.TreeColumn;
-import info.magnolia.cms.gui.control.ContextMenuItem;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.gui.misc.Spacer;
 import info.magnolia.cms.i18n.Messages;

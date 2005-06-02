@@ -38,13 +38,13 @@ import org.apache.log4j.Logger;
 /**
  * Draws a simple, css based, navigation menu. The menu layout can then be customized using css, and the default menu
  * should be enough for most uses.
- *
+ * 
  * <pre>
  *   &lt;cmsu:simpleNavigation startLevel="3" />
  * </pre>
- *
+ * 
  * Will output the following:
- *
+ * 
  * <pre>
  *   &lt;ul class="level3">
  *     &lt;li>&lt;a href="...">page 1 name &lt;/a>&lt;/li>
@@ -59,7 +59,7 @@ import org.apache.log4j.Logger;
  *     &lt;li>&lt;a href="...">page 4 name &lt;/a>&lt;/li>
  *   &lt;/ul>
  * </pre>
- *
+ * 
  * @author Fabrizio Giustina
  * @version $Revision: $ ($Author: $)
  */

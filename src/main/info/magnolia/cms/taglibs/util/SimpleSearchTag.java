@@ -45,14 +45,14 @@ import org.apache.log4j.Logger;
  * <p>
  * Tipical usage:
  * </p>
- *
+ * 
  * <pre>
  *   &lt;cmsu:simplesearch query="${param.search}" startLevel="3" var="results" />
  *   &lt;c:forEach items="${results}">
  *     &lt;a href="${pageContext.request.contextPath}${node.handle}.html">${node.title}&lt;/a>
  *   &lt;/c:forEach>
  * </pre>
- *
+ * 
  * @author Fabrizio Giustina
  * @version $Revision: $ ($Author: $)
  */

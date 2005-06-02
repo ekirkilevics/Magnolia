@@ -12,31 +12,29 @@
  */
 package info.magnolia.cms.core.ie;
 
-
 import info.magnolia.cms.core.Content;
 
-import javax.jcr.RepositoryException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.jcr.RepositoryException;
+
+
 /**
- * Date: May 24, 2005
- * Time: 4:48:26 PM
- *
- * @author Sameer Charles
- * $Id :$
+ * Date: May 24, 2005 Time: 4:48:26 PM
+ * @author Sameer Charles $Id :$
  */
 public interface ImportHandler {
 
     /**
      * If true, this importer assumes that binary data is not embedded in main data file
      * @param binaryAsLink
-     * */
+     */
     public void setBinaryAsLink(boolean binaryAsLink);
 
     /**
      * returns true if the binary properties are included as link
-     * */
+     */
     public boolean getBinaryAsLink();
 
     /**
@@ -45,19 +43,19 @@ public interface ImportHandler {
      * @param inStream
      * @throws RepositoryException
      * @throws java.io.IOException
-     * */
+     */
     public void importContent(Content target, InputStream inStream) throws RepositoryException, IOException;
 
     /**
      * set importer implementation dependent parameters
      * @param key
      * @param value
-     * */
+     */
     public void setParameter(String key, Object value);
 
     /**
      * get parameter previously set on this importer
      * @return Object
-     * */
+     */
     public Object getParameter(String key);
 }

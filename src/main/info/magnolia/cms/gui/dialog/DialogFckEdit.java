@@ -38,7 +38,7 @@ public class DialogFckEdit extends DialogBox {
     public static final String PARAM_JS_INIT_FILE = "jsInitFile";
 
     public static final String PARAM_CUSTOM_CONFIGURATION_PATH = "customConfigurationPath";
-    
+
     public static final String PARAM_JS_INIT_FILE_DEFAULT = "/admindocroot/fckeditor/custom/init/basic.js";
 
     public static final String PARAM_CUSTOM_CONFIGURATION_PATH_DEFAULT = "/admindocroot/fckeditor/custom/config/basic.js";
@@ -85,7 +85,9 @@ public class DialogFckEdit extends DialogBox {
         throws RepositoryException {
         super.init(request, response, websiteNode, configNode);
         String jsInitFile = this.getConfigValue(PARAM_JS_INIT_FILE, PARAM_JS_INIT_FILE_DEFAULT);
-        String customConfigurationPath = this.getConfigValue(PARAM_CUSTOM_CONFIGURATION_PATH, PARAM_CUSTOM_CONFIGURATION_PATH_DEFAULT);
+        String customConfigurationPath = this.getConfigValue(
+            PARAM_CUSTOM_CONFIGURATION_PATH,
+            PARAM_CUSTOM_CONFIGURATION_PATH_DEFAULT);
         this.setJSInitFile(jsInitFile);
         this.setCustomConfigurationPath(customConfigurationPath);
     }
@@ -120,7 +122,11 @@ public class DialogFckEdit extends DialogBox {
         out.write("fckInstance.Value = '" + escapeJsValue(getValue()) + "';");
         out.write("fckInstance.BasePath = '" + this.getRequest().getContextPath() + FCKEDIT_PATH + "';");
         if (customConfigurationsPath.length() > 0) {
-            out.write("fckInstance.Config['CustomConfigurationsPath'] = '" + this.getRequest().getContextPath() + "/" + customConfigurationsPath + "';");
+            out.write("fckInstance.Config['CustomConfigurationsPath'] = '"
+                + this.getRequest().getContextPath()
+                + "/"
+                + customConfigurationsPath
+                + "';");
         }
         if (jsInitFile.length() > 0) {
             out.write("</script>");

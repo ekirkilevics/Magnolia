@@ -142,7 +142,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
      * @see info.magnolia.cms.servlets.MVCServletHandler#getCommand()
      */
     public String getCommand() {
-        if (form != null ) {
+        if (form != null) {
             return COMMAND_SAVE;
         }
         else {

@@ -129,7 +129,7 @@ public class DialogDialog extends DialogSuper {
     }
 
     public void drawHtmlPreSubs(Writer out) throws IOException {
-        
+
         // @todo fix html and add a good doctype. At the moment dialogs don't work in standard compliant mode
         // out.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" ");
         // out.write(" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">");
@@ -144,7 +144,9 @@ public class DialogDialog extends DialogSuper {
             + this.getConfigValue("height", DIALOGSIZE_NORMAL_HEIGHT)
             + ");");
         out.write("</script>");
-        out.write("<title>" + this.getConfigValue("label", MessagesManager.get(getRequest(),"dialog.editTitle")) + "</title>");
+        out.write("<title>"
+            + this.getConfigValue("label", MessagesManager.get(getRequest(), "dialog.editTitle"))
+            + "</title>");
         out.write(new Sources(this.getRequest().getContextPath()).getHtmlJs());
         out.write(new Sources(this.getRequest().getContextPath()).getHtmlCss());
         out.write(new Sources(this.getRequest().getContextPath()).getHtmlRichEdit());
@@ -183,7 +185,7 @@ public class DialogDialog extends DialogSuper {
 
     public void drawHtmlPostSubs(Writer out) throws IOException {
         Messages msgs = MessagesManager.getMessages(getRequest());
-        
+
         // TabSet stuff
         String id = this.getId();
         out.write("<div class=\"" + CssConstants.CSSCLASS_TABSETBUTTONBAR + "\">");

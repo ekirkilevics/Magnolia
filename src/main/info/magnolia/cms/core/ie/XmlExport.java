@@ -15,39 +15,37 @@ package info.magnolia.cms.core.ie;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.core.Path;
 
-import javax.jcr.RepositoryException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Hashtable;
+import java.util.Map;
+
 import javax.jcr.Property;
 import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import java.io.*;
-import java.util.Map;
-import java.util.Hashtable;
 
 /**
- * This utility class provides static methods for turning a content [node]
- * into an XML document.
- *
+ * This utility class provides static methods for turning a content [node] into an XML document.
  * @author Mettraux John (john.mettraux &gt;at&lt; openwfe.org)
- * @version 0.1
- *
- * $Id :$
+ * @version 0.1 $Id :$
  */
 public class XmlExport implements ExportHandler {
 
-    /* *
+    /*******************************************************************************************************************
      * Logger.
      */
     private static Logger log = Logger.getLogger(XmlExport.class);
 
     /**
      * XML structure constants
-     * */
+     */
     private final static String E_CONTENT = "content";
 
     private final static String E_PROPERTY = "property";
@@ -60,17 +58,17 @@ public class XmlExport implements ExportHandler {
 
     /**
      * default properties
-     * */
+     */
     public final static String DEFAULT_ENCODING = "UTF-8";
 
     /**
      * basic parameters
-     * */
+     */
     public final static String ENCODING = "encoding";
 
     /**
      * fields
-     * */
+     */
     private boolean binaryAsLink = true;
 
     private Map params = new Hashtable();
@@ -79,11 +77,10 @@ public class XmlExport implements ExportHandler {
     // CONSTRUCTORS
 
     /**
-     * Builds an XmlExporter, if the parameter 'embedBinaryContent' is set to
-     * true, binary content will be integrated in the generated XML documents
-     * as base64.
+     * Builds an XmlExporter, if the parameter 'embedBinaryContent' is set to true, binary content will be integrated in
+     * the generated XML documents as base64.
      */
-    public XmlExport () {
+    public XmlExport() {
     }
 
     //
@@ -101,12 +98,12 @@ public class XmlExport implements ExportHandler {
      * Turns the given Content instance into a JDOM XML document.
      */
     public Object exportContent(final Content content) {
-	    return new org.jdom.Document(DOMExport(content));
+        return new org.jdom.Document(DOMExport(content));
     }
 
     public void exportContent(final Content content, OutputStream outStream) throws RepositoryException, IOException {
         // check if the encoding is set by config parameters
-        String encoding = ((String)this.getParameter(ENCODING));
+        String encoding = ((String) this.getParameter(ENCODING));
         if (StringUtils.isEmpty(encoding)) {
             encoding = DEFAULT_ENCODING;
         }
@@ -124,19 +121,20 @@ public class XmlExport implements ExportHandler {
     //
     // METHODS
 
-    private org.jdom.Element DOMExport (final Content content) {
+    private org.jdom.Element DOMExport(final Content content) {
 
         final org.jdom.Element elt = new org.jdom.Element(E_CONTENT);
         elt.setAttribute(A_NAME, content.getName());
         try {
             elt.setAttribute(A_TYPE, content.getNodeType().getName());
-        } catch (RepositoryException re) {
+        }
+        catch (RepositoryException re) {
             log.error(re.getMessage(), re);
         }
 
         // collect all nodes
 
-    	export (elt, content.getChildren(ItemType.NT_BASE));
+        export(elt, content.getChildren(ItemType.NT_BASE));
 
         // node data
 
@@ -145,29 +143,29 @@ public class XmlExport implements ExportHandler {
         return elt;
     }
 
-    private void exportNodeData (final org.jdom.Element elt, final java.util.Collection nodeData) {
+    private void exportNodeData(final org.jdom.Element elt, final java.util.Collection nodeData) {
 
         final java.util.Iterator it = nodeData.iterator();
         while (it.hasNext()) {
-            final NodeData nd = (NodeData)it.next();
+            final NodeData nd = (NodeData) it.next();
 
             export(elt, nd.getJCRProperty());
         }
     }
 
-    private void export (final org.jdom.Element elt, final java.util.Collection contentChildren) {
+    private void export(final org.jdom.Element elt, final java.util.Collection contentChildren) {
 
         final java.util.Iterator it = contentChildren.iterator();
 
         while (it.hasNext()) {
 
-            final Content c = (Content)it.next();
+            final Content c = (Content) it.next();
 
             elt.addContent(DOMExport(c));
         }
     }
 
-    private void export (final org.jdom.Element elt, final Property property) {
+    private void export(final org.jdom.Element elt, final Property property) {
 
         final org.jdom.Element pElt = new org.jdom.Element(E_PROPERTY);
 
@@ -177,16 +175,17 @@ public class XmlExport implements ExportHandler {
             pElt.setAttribute(A_TYPE, PropertyType.nameFromValue(property.getType()));
             exportValue(pElt, property);
 
-        } catch (final Throwable t) {
+        }
+        catch (final Throwable t) {
 
-            log.warn("export() skipped a property because of "+t);
+            log.warn("export() skipped a property because of " + t);
             log.debug("export() skipped a property", t);
         }
 
         elt.addContent(pElt);
     }
 
-    private void exportValue (final org.jdom.Element pElt, final Property property) {
+    private void exportValue(final org.jdom.Element pElt, final Property property) {
 
         String sContent = null;
 
@@ -195,7 +194,8 @@ public class XmlExport implements ExportHandler {
 
                 if (this.binaryAsLink) {
                     sContent = property.getPath();
-                } else {
+                }
+                else {
                     StringBuffer stringBuffer = new StringBuffer();
                     try {
                         InputStream is = property.getStream();
@@ -205,22 +205,26 @@ public class XmlExport implements ExportHandler {
                             stringBuffer.append(new String(buffer));
                         }
                         is.close();
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e) {
                         System.out.println(e);
                     }
 
                     sContent = new String(Base64.encodeBase64(stringBuffer.toString().getBytes()));
                 }
-            } else if (property.getType() == PropertyType.DATE) {
+            }
+            else if (property.getType() == PropertyType.DATE) {
                 sContent = property.getDate().getTime().toString();
-            } else {
+            }
+            else {
                 sContent = property.getString();
             }
-        } catch (final Throwable t) {
+        }
+        catch (final Throwable t) {
 
             log.warn("exportValue() failure", t);
 
-            sContent = "exportValue() failure "+t.toString();
+            sContent = "exportValue() failure " + t.toString();
         }
         pElt.addContent(new org.jdom.Text(sContent));
     }
@@ -229,12 +233,10 @@ public class XmlExport implements ExportHandler {
     // STATIC METHODS
 
     /**
-     * A convenience method for setting up a pretty print XMLOutputter
-     * with a given encoding.
+     * A convenience method for setting up a pretty print XMLOutputter with a given encoding.
      */
-    private org.jdom.output.XMLOutputter getXMLOutputter (String encoding) {
-        final org.jdom.output.Format format =
-            org.jdom.output.Format.getPrettyFormat();
+    private org.jdom.output.XMLOutputter getXMLOutputter(String encoding) {
+        final org.jdom.output.Format format = org.jdom.output.Format.getPrettyFormat();
 
         format.setEncoding(encoding);
 
@@ -244,20 +246,19 @@ public class XmlExport implements ExportHandler {
     /**
      * Turns a JDOM document into a String.
      */
-    private String toString (final org.jdom.Document doc, final String encoding) {
+    private String toString(final org.jdom.Document doc, final String encoding) {
 
         final org.jdom.output.XMLOutputter out = this.getXMLOutputter(encoding);
 
-        java.io.ByteArrayOutputStream baos =
-            new java.io.ByteArrayOutputStream();
+        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
 
         try {
             out.output(doc, baos);
             baos.write('\n');
             baos.flush();
-        } catch (final java.io.IOException ie) {
-            log.warn
-                ("Failed to encode workitem as xml", ie);
+        }
+        catch (final java.io.IOException ie) {
+            log.warn("Failed to encode workitem as xml", ie);
         }
 
         return baos.toString();

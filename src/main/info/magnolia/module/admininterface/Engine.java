@@ -19,7 +19,6 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.gui.dialog.DialogManager;
 import info.magnolia.cms.module.Module;
 import info.magnolia.cms.module.ModuleConfig;
-import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.module.admininterface.trees.AdminTreeConfig;
 import info.magnolia.module.admininterface.trees.AdminTreeRoles;
 import info.magnolia.module.admininterface.trees.AdminTreeUsers;
@@ -27,9 +26,6 @@ import info.magnolia.module.admininterface.trees.AdminTreeWebsite;
 
 import java.util.Collection;
 import java.util.Iterator;
-
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
 
 import org.apache.log4j.Logger;
 

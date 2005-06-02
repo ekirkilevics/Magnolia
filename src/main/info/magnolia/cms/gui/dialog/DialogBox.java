@@ -49,10 +49,10 @@ public class DialogBox extends DialogSuper {
 
     private int boxType = BOXTYPE_2COLS;
 
-    static{
+    static {
         DialogBox.initIconExtensions();
     }
-    
+
     /**
      * Empty constructor should only be used by DialogFactory.
      */

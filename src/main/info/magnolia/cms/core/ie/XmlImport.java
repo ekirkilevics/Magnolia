@@ -12,43 +12,49 @@
  */
 package info.magnolia.cms.core.ie;
 
-
-import javax.jcr.RepositoryException;
-import javax.jcr.PropertyType;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.Value;
-import java.io.*;
-import java.util.*;
-import java.text.SimpleDateFormat;
-import java.text.ParseException;
-
-import org.apache.log4j.Logger;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.codec.binary.Base64;
-import org.jdom.input.SAXBuilder;
-import org.jdom.Document;
-import org.jdom.Element;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.AccessDeniedException;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
+
+import javax.jcr.PathNotFoundException;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
+import javax.jcr.Value;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.input.SAXBuilder;
+
+
 /**
- * Date: May 24, 2005
- * Time: 4:59:37 PM
- *
- * @author Sameer Charles
- * $Id :$
+ * Date: May 24, 2005 Time: 4:59:37 PM
+ * @author Sameer Charles $Id :$
  */
 public class XmlImport implements ImportHandler {
 
-    /* *
+    /*******************************************************************************************************************
      * Logger.
      */
     private static Logger log = Logger.getLogger(XmlExport.class);
 
     /**
      * XML structure constants
-     * */
+     */
     private final static String E_CONTENT = "content";
 
     private final static String E_PROPERTY = "property";
@@ -59,18 +65,17 @@ public class XmlImport implements ImportHandler {
 
     /**
      * params
-     * */
+     */
     public final static String DATE_FORMAT = "dateFormat";
 
     /**
      * default
-     * */
+     */
     public final static String DEFAULT_DATE_FORMAT = "EEE MMM dd hh:mm:ss zzzz yyyy";
-
 
     /**
      * fields
-     * */
+     */
     private boolean binaryAsLink = true;
 
     private Map params = new Hashtable();
@@ -117,16 +122,19 @@ public class XmlImport implements ImportHandler {
     private void importContent(Content content, Element element) {
         if (element.getName().equalsIgnoreCase(E_CONTENT)) {
             content = this.addContent(content, element);
-        } else if (element.getName().equalsIgnoreCase(E_PROPERTY)) {
+        }
+        else if (element.getName().equalsIgnoreCase(E_PROPERTY)) {
             this.addProperty(content, element);
-        } else {
+        }
+        else {
             if (log.isDebugEnabled()) {
-                log.debug("Undefined type - "+element.getName());
+                log.debug("Undefined type - " + element.getName());
             }
         }
         // if not allowed or some repository exception occured
-        if (content == null)
+        if (content == null) {
             return;
+        }
         Iterator children = element.getChildren().iterator();
         while (children.hasNext()) {
             Element subElement = (Element) children.next();
@@ -138,33 +146,36 @@ public class XmlImport implements ImportHandler {
         try {
             Content newContent = content.getContent(element.getAttributeValue(A_NAME));
             return newContent;
-        } catch (PathNotFoundException e) {
+        }
+        catch (PathNotFoundException e) {
             try {
-                Content newContent
-                        = content.createContent(element.getAttributeValue(A_NAME), element.getAttributeValue(A_TYPE));
+                Content newContent = content.createContent(element.getAttributeValue(A_NAME), element
+                    .getAttributeValue(A_TYPE));
                 if (log.isDebugEnabled()) {
-                    log.debug("Adding content - "+newContent.getHandle());
+                    log.debug("Adding content - " + newContent.getHandle());
                 }
                 return newContent;
-            } catch (AccessDeniedException ade) {
+            }
+            catch (AccessDeniedException ade) {
                 log.error(ade.getMessage());
-            } catch (RepositoryException re) {
+            }
+            catch (RepositoryException re) {
                 log.error(re.getMessage(), re);
             }
-        } catch (AccessDeniedException ade) {
+        }
+        catch (AccessDeniedException ade) {
             log.error(ade.getMessage());
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error(e.getMessage(), e);
         }
         return null;
     }
 
     /**
-     * set property value or create a new property if not exist.
-     * PropertyType.REFERENCE are handled differently, since there is no difference in storage of String
-     * and Reference type it must be set while creating a property.
-     *
-     * */
+     * set property value or create a new property if not exist. PropertyType.REFERENCE are handled differently, since
+     * there is no difference in storage of String and Reference type it must be set while creating a property.
+     */
     private void addProperty(Content content, Element element) {
         NodeData nodeData = content.getNodeData(element.getAttributeValue(A_NAME));
         int type = PropertyType.valueFromName(element.getAttributeValue(A_TYPE));
@@ -177,26 +188,30 @@ public class XmlImport implements ImportHandler {
                 }
                 nodeData = content.createNodeData(element.getAttributeValue(A_NAME));
                 if (log.isDebugEnabled()) {
-                    log.debug("Adding property - "+nodeData.getHandle());
+                    log.debug("Adding property - " + nodeData.getHandle());
                 }
-            } catch (AccessDeniedException ade) {
+            }
+            catch (AccessDeniedException ade) {
                 log.error(ade.getMessage());
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 log.error(e.getMessage(), e);
             }
         }
         // set value and type
         try {
             this.setPropertyValue(nodeData, type, value);
-        } catch (AccessDeniedException ade) {
+        }
+        catch (AccessDeniedException ade) {
             log.error(ade.getMessage());
-        } catch (RepositoryException re) {
+        }
+        catch (RepositoryException re) {
             log.error(re.getMessage(), re);
         }
     }
 
     private void setPropertyValue(NodeData nodeData, int type, String value) throws AccessDeniedException,
-            RepositoryException {
+        RepositoryException {
         switch (type) {
             case PropertyType.STRING:
                 nodeData.setValue(value);
@@ -210,16 +225,18 @@ public class XmlImport implements ImportHandler {
             case PropertyType.DATE:
                 // todo
                 String dateFormat = (String) this.getParameter(DATE_FORMAT);
-                if (StringUtils.isEmpty(dateFormat))
+                if (StringUtils.isEmpty(dateFormat)) {
                     dateFormat = DEFAULT_DATE_FORMAT;
+                }
                 SimpleDateFormat simpleFormat = new SimpleDateFormat(dateFormat);
                 try {
                     Date date = simpleFormat.parse(value);
                     Calendar cal = new GregorianCalendar();
                     cal.setTime(date);
                     nodeData.setValue(cal);
-                } catch (ParseException e) {
-                    log.error("Failed to parse date with the given format "+dateFormat);
+                }
+                catch (ParseException e) {
+                    log.error("Failed to parse date with the given format " + dateFormat);
                     log.error(e);
                 }
                 break;
@@ -232,7 +249,7 @@ public class XmlImport implements ImportHandler {
             case PropertyType.REFERENCE:
                 /**
                  * this property must exist before of the same type as REFERENCE
-                 * */
+                 */
                 nodeData.setValue(value);
         }
     }

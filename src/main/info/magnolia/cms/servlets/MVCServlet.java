@@ -14,6 +14,7 @@ package info.magnolia.cms.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -95,8 +96,8 @@ public abstract class MVCServlet extends HttpServlet {
 
         handler.renderHtml(view);
 
-        //response.setContentLength(htmlString.getBytes().length);
-        //out.write(htmlString);
+        // response.setContentLength(htmlString.getBytes().length);
+        // out.write(htmlString);
     }
 
     /**

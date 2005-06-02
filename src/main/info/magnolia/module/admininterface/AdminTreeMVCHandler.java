@@ -148,8 +148,9 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
             return COMMAND_CREATE_NODE;
         }
 
-        if (request.getParameter("deleteNode") != null)
+        if (request.getParameter("deleteNode") != null) {
             return COMMAND_DELETE_NODE;
+        }
 
         // editet any value directly in the columns?
         if (request.getParameter("saveName") != null
@@ -329,7 +330,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
      * @param request
      */
     abstract protected void prepareTree(Tree tree, HttpServletRequest request);
-    
+
     /**
      * Prepare the context menu of the tree. This is called during renderTree
      * @param tree
@@ -346,7 +347,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         boolean snippetMode = mode.equals("snippet");
 
         tree.setJavascriptTree("mgnlTreeControl");
-        
+
         if (!snippetMode) {
             html.append("<html><head>");
             html.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>");
@@ -356,7 +357,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
             html.append("<body class=\"mgnlBgDark\" onload=\"" + tree.getJavascriptTree() + ".resizeOnload();\" >");
             html.append(Spacer.getHtml(20, 20));
         }
-        
+
         tree.setSnippetMode(snippetMode);
         tree.setHeight(50);
 
@@ -377,7 +378,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
             html.append("</body></html>");
         }
     }
-    
+
     /**
      * @param html
      */
@@ -386,10 +387,11 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         html.append(new Sources(request.getContextPath()).getHtmlCss());
     }
 
-    //TODO DMS
+    // TODO DMS
     protected Tree getTree() {
         return this.tree;
     }
+
     protected void setTree(Tree tree) {
         this.tree = tree;
     }

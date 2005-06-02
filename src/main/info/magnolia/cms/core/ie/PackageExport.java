@@ -13,33 +13,36 @@
 package info.magnolia.cms.core.ie;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.Path;
-import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.core.Path;
 
-import javax.jcr.RepositoryException;
-import javax.jcr.PropertyType;
-import java.io.*;
-import java.util.Map;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.zip.ZipOutputStream;
+import java.util.Map;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
 
 import org.apache.log4j.Logger;
 import org.doomdark.uuid.UUIDGenerator;
 
+
 /**
- * Date: May 24, 2005
- * Time: 10:34:36 AM
- *
- * @author Sameer Charles
- *
- * $Id :$
+ * Date: May 24, 2005 Time: 10:34:36 AM
+ * @author Sameer Charles $Id :$
  */
 public class PackageExport implements ExportHandler {
 
-    /* *
+    /*******************************************************************************************************************
      * Logger.
      */
     private static Logger log = Logger.getLogger(PackageExport.class);
@@ -50,14 +53,14 @@ public class PackageExport implements ExportHandler {
 
     /**
      * fields
-     * */
+     */
     private boolean binaryAsLink = true;
 
     private Map params = new Hashtable();
 
     /**
      * this class specific parameters
-     * */
+     */
 
     public void setBinaryAsLink(boolean binaryAsLink) {
         this.binaryAsLink = binaryAsLink;
@@ -97,11 +100,9 @@ public class PackageExport implements ExportHandler {
         return this.params.get(key);
     }
 
-
     /**
      * This class will be instantiated on each call to PackageExport.export method
-     *
-     * */
+     */
     class ContentZipper {
 
         private String zipFileName;
@@ -126,9 +127,10 @@ public class PackageExport implements ExportHandler {
                 this.addTextContent();
                 this.addBinaryContent(this.content);
                 this.outputStream.close();
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 log.error(e.getMessage());
-                log.error("failed to pack content, deleteting temp file "+this.getZipFileName());
+                log.error("failed to pack content, deleteting temp file " + this.getZipFileName());
                 if (this.zipFile.exists()) {
                     this.zipFile.delete();
                 }
@@ -161,11 +163,11 @@ public class PackageExport implements ExportHandler {
         }
 
         private void createTargetFile() throws IOException {
-            this.zipFileName = UUIDGenerator.getInstance().generateTimeBasedUUID().toString()+".zip";
+            this.zipFileName = UUIDGenerator.getInstance().generateTimeBasedUUID().toString() + ".zip";
             if (log.isDebugEnabled()) {
-                log.debug("Generating zip file "+this.zipFileName);
+                log.debug("Generating zip file " + this.zipFileName);
             }
-            this.zipFile = new File(Path.getTempDirectoryPath()+"/"+this.zipFileName);
+            this.zipFile = new File(Path.getTempDirectoryPath() + "/" + this.zipFileName);
             this.zipFile.createNewFile();
         }
 
@@ -173,7 +175,7 @@ public class PackageExport implements ExportHandler {
             XmlExport xmlExport = new XmlExport();
             xmlExport.setBinaryAsLink(true);
             if (log.isDebugEnabled()) {
-                log.debug("adding a new zip file entry "+START_DIRECTORY + "/" + DATA_FILE_NAME);
+                log.debug("adding a new zip file entry " + START_DIRECTORY + "/" + DATA_FILE_NAME);
             }
             this.outputStream.putNextEntry(new ZipEntry(START_DIRECTORY + "/" + DATA_FILE_NAME));
             xmlExport.exportContent(this.content, this.outputStream);
@@ -186,7 +188,7 @@ public class PackageExport implements ExportHandler {
                 NodeData nodeData = (NodeData) dataNodes.next();
                 if (nodeData.getType() == PropertyType.BINARY) {
                     if (log.isDebugEnabled()) {
-                        log.debug("adding a new zip file entry "+START_DIRECTORY + nodeData.getHandle());
+                        log.debug("adding a new zip file entry " + START_DIRECTORY + nodeData.getHandle());
                     }
                     this.outputStream.putNextEntry(new ZipEntry(START_DIRECTORY + nodeData.getHandle()));
                     InputStream is = nodeData.getStream();

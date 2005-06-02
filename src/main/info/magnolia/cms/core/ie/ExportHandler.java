@@ -14,29 +14,27 @@ package info.magnolia.cms.core.ie;
 
 import info.magnolia.cms.core.Content;
 
-import javax.jcr.RepositoryException;
-import java.io.OutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+
+import javax.jcr.RepositoryException;
+
 
 /**
- * Date: May 24, 2005
- * Time: 10:47:49 AM
- *
- * @author Sameer Charles
- * $Id :$
+ * Date: May 24, 2005 Time: 10:47:49 AM
+ * @author Sameer Charles $Id :$
  */
 public interface ExportHandler {
-
 
     /**
      * if true include only link to the binary properties else embed in the exported data
      * @param binaryAsLink
-     * */
+     */
     public void setBinaryAsLink(boolean binaryAsLink);
 
     /**
      * returns true if the binary properties are included as link
-     * */
+     */
     public boolean getBinaryAsLink();
 
     /**
@@ -44,7 +42,7 @@ public interface ExportHandler {
      * @param content to be exported
      * @return Object
      * @throws RepositoryException
-     * */
+     */
     public Object exportContent(Content content) throws RepositoryException;
 
     /**
@@ -53,19 +51,19 @@ public interface ExportHandler {
      * @param outStream
      * @throws RepositoryException
      * @throws IOException
-     * */
+     */
     public void exportContent(Content content, OutputStream outStream) throws RepositoryException, IOException;
 
     /**
      * set exporter implementation dependent parameters
      * @param key
      * @param value
-     * */
+     */
     public void setParameter(String key, Object value);
 
     /**
      * get parameter previously set on this exporter
      * @return Object
-     * */
+     */
     public Object getParameter(String key);
 }

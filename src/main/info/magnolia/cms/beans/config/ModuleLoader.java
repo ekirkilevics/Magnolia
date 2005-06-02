@@ -115,17 +115,18 @@ public final class ModuleLoader {
         }
     }
 
-    public static Content createMinimalConfiguration(Content node, String name, String className) throws AccessDeniedException, PathNotFoundException, RepositoryException{
+    public static Content createMinimalConfiguration(Content node, String name, String className)
+        throws AccessDeniedException, PathNotFoundException, RepositoryException {
         node.createContent("Config");
         node.createContent("VirtualURIMapping", ItemType.CONTENTNODE);
-        
+
         Content register = node.createContent(CONFIG_NODE_REGISTER, ItemType.CONTENTNODE);
         register.createNodeData("moduleName");
         register.createNodeData("moduleDescription");
         register.createNodeData("class").setValue(className);
         register.createNodeData("repository");
-        register.createContent("sharedRepositories",ItemType.CONTENTNODE);
-        register.createContent("initParams",ItemType.CONTENTNODE);
+        register.createContent("sharedRepositories", ItemType.CONTENTNODE);
+        register.createContent("initParams", ItemType.CONTENTNODE);
         return node;
     }
 
