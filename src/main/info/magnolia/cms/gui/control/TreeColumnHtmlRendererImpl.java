@@ -26,8 +26,7 @@ import java.util.Calendar;
  */
 public class TreeColumnHtmlRendererImpl implements TreeColumnHtmlRenderer {
 
-    /*
-     * (non-Javadoc)
+    /**
      * @see info.magnolia.cms.gui.control.TreeColumnHtmlRenderer#getHtml(info.magnolia.cms.gui.control.TreeColumn)
      */
     public String renderHtml(TreeColumn treeColumn, Content content) {
@@ -45,7 +44,7 @@ public class TreeColumnHtmlRendererImpl implements TreeColumnHtmlRenderer {
             NodeData data = content.getNodeData(treeColumn.getName());
             html = new NodeDataUtil(data).getValueString(treeColumn.getDateFormat());
         }
-        // todo: (value is not shown after saving ...)
+        // @todo (value is not shown after saving ...)
         if (treeColumn.getKeyValue().size() != 0) {
             String value = (String) treeColumn.getKeyValue().get(html);
             if (value != null) {
@@ -56,6 +55,12 @@ public class TreeColumnHtmlRendererImpl implements TreeColumnHtmlRenderer {
 
     }
 
+    /**
+     * Returns the html for the activation info flag and the permission flag.
+     * @param treeColumn TreeColumn instance
+     * @param content current page
+     * @return html snippet for the activation info flag and the permission flag
+     */
     private String getHtmlIcons(TreeColumn treeColumn, Content content) {
         StringBuffer html = new StringBuffer();
         if (treeColumn.getIconsActivation()) {
@@ -66,7 +71,7 @@ public class TreeColumnHtmlRendererImpl implements TreeColumnHtmlRenderer {
             Calendar lastModifiedDate = generalMetaData.getModificationDate();
             String imgSrc;
             if (isActivated) {
-                if (lastModifiedDate.after(actionDate)) {
+                if (lastModifiedDate != null && lastModifiedDate.after(actionDate)) {
                     // node has been modified after last activation
                     imgSrc = Tree.ICONDOCROOT + "indicator_yellow.gif";
                 }
@@ -79,14 +84,14 @@ public class TreeColumnHtmlRendererImpl implements TreeColumnHtmlRenderer {
                 // never activated or deactivated
                 imgSrc = Tree.ICONDOCROOT + "indicator_red.gif";
             }
-            html.append("<img src=\"" + treeColumn.getRequest().getContextPath() + imgSrc + "\">");
+            html.append("<img src=\"" + treeColumn.getRequest().getContextPath() + imgSrc + "\" />");
         }
         if (treeColumn.getIconsPermission()) {
             if (!content.isGranted(info.magnolia.cms.security.Permission.WRITE)) {
                 html.append("<img src=\""
                     + treeColumn.getRequest().getContextPath()
                     + Tree.ICONDOCROOT
-                    + "pen_blue_canceled.gif\">");
+                    + "pen_blue_canceled.gif\" />");
             }
         }
         return html.toString();
