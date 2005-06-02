@@ -173,7 +173,18 @@ public class Aggregator {
     private void setRequestReceiver() {
         try {
             String templateName = this.requestedPage.getMetaData().getTemplate();
-            this.requestReceiver = Template.getInfo(templateName).getPath(this.extension);
+            Template template = Template.getInfo(templateName);
+
+            if (template == null) {
+                log.error("Template ["
+                    + templateName
+                    + "] for page ["
+                    + this.requestedPage.getHandle()
+                    + "] not found.");
+                return;
+            }
+
+            this.requestReceiver = template.getPath(this.extension);
         }
         catch (Exception e) {
             log.error("Failed to set request receiver");

@@ -56,6 +56,12 @@ public final class Dispatcher {
         }
         String requestReceiver = (String) req.getAttribute(Aggregator.REQUEST_RECEIVER);
 
+        if (requestReceiver == null) {
+            log.error("requestReceiver is missing, returning a 404 error");
+            res.sendError(404);
+            return;
+        }
+
         if (log.isDebugEnabled()) {
             log.debug("Dispatching request for [" + req.getRequestURL() + "] - forward to [" + requestReceiver + "]");
         }
