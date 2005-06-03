@@ -43,13 +43,6 @@ public class LinkBrowserDialogPage extends BasePageServlet {
         String path = request.getParameter("path");
         String pathOpen = request.getParameter("pathOpen");
         String pathSelected = request.getParameter("pathSelected");
-        String destinationControlName = request.getParameter("mgnlControlName");
-        String destinationExtension = request.getParameter("mgnlExtension");
-        boolean addcontext = BooleanUtils.toBoolean(request.getParameter("addcontext"));
-
-        if (destinationExtension == null) {
-            destinationExtension = "";
-        }
 
         StringBuffer html = new StringBuffer();
         html.append("<html><head>");
@@ -82,6 +75,10 @@ public class LinkBrowserDialogPage extends BasePageServlet {
 
         Button bOk = new Button();
         bOk.setLabel(MessagesManager.get(request, "buttons.ok"));
+        // this will call the callback command
+        bOk.setOnclick("mgnlDialogLinkBrowserWriteBack()");
+        
+        /*
         bOk.setOnclick("mgnlDialogLinkBrowserWriteBack('"
             + destinationControlName
             + "','"
@@ -89,7 +86,7 @@ public class LinkBrowserDialogPage extends BasePageServlet {
             + "', "
             + addcontext
             + ");");
-
+        */
         Button bCancel = new Button();
         bCancel.setLabel(MessagesManager.get(request, "buttons.cancel"));
         bCancel.setOnclick("window.close();");
