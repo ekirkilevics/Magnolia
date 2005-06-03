@@ -40,31 +40,62 @@ import org.apache.log4j.Logger;
  * handle it properly. The get() methods are easy to use.
  * @author philipp
  */
-public class MessagesManager {
+public final class MessagesManager {
 
-    public static String FALLBACK_LOCALE = "en";
+    /**
+     * Use this locale if no other provided
+     */
+    public static final String FALLBACK_LOCALE = "en";
 
-    public static String DEFAULT_BASENAME = "info.magnolia.module.admininterface.messages";
+    /**
+     * Use this basename if no other is provided
+     */
+    public static final String DEFAULT_BASENAME = "info.magnolia.module.admininterface.messages";
 
     /**
      * Logger.
      */
     protected static Logger log = Logger.getLogger(Messages.class);
 
-    private static String I18N_CONFIG_NAME = "i18n";
+    /**
+     * The node name where the configuration for i18n is stored
+     */
+    private static final String I18N_CONFIG_NAME = "i18n";
 
-    private static String LOCALE_CONFIG_NAME = "language";
+    /**
+     * The name of the property to store the current system language
+     */
+    private static final String LOCALE_CONFIG_NAME = "language";
 
-    private static String AVAILABLE_LOCALES_CONFIG_NAME = "availableLanguages";
+    /**
+     * Under this node all the available languages are stored. They are showed in the user dialog.
+     */
+    private static final String AVAILABLE_LOCALES_CONFIG_NAME = "availableLanguages";
 
+    /**
+     * The current locale of the application
+     */
     private static Locale applicationLocale;
 
+    /**
+     * List of the available locales
+     */
     private static Collection availableLocales = new ArrayList();
 
+    /**
+     * The context used for the messages
+     */
     private static ServletConfig config;
 
     /**
-     * Called through the initialization precess
+     * Util has no public constructor
+     */
+    private MessagesManager() {
+    }
+
+    /**
+     * Called through the initialization process (startup of the container)
+     * @param config servlet context
      */
     public static void init(ServletConfig config) {
         MessagesManager.config = config;
@@ -138,6 +169,7 @@ public class MessagesManager {
 
     /**
      * Trys to make a new ContextMessages object. if not possible it creates a new Messages object.
+     * @param req uses the request to find the configuration
      * @return Messages
      */
     public static Messages getMessages(HttpServletRequest req) {
@@ -150,6 +182,12 @@ public class MessagesManager {
 
     }
 
+    /**
+     * Provide a basename
+     * @param req request
+     * @param basename basena,e
+     * @return Messages object to get the messages from
+     */
     public static Messages getMessages(HttpServletRequest req, String basename) {
         if (req != null) {
             return new ContextMessages(req, basename);
@@ -160,6 +198,13 @@ public class MessagesManager {
 
     }
 
+    /**
+     * Provide a special locale
+     * @param req request
+     * @param basename basename
+     * @param locale locale
+     * @return Messages object to get the messages from
+     */
     public static Messages getMessages(HttpServletRequest req, String basename, Locale locale) {
         if (req != null) {
             return new ContextMessages(req, basename, locale);
@@ -172,6 +217,7 @@ public class MessagesManager {
 
     /**
      * Trys to make a new ContextMessages object. if not possible it creates a new Messages object.
+     * @param pc the page context to start the lookup
      * @return Messages
      */
     public static Messages getMessages(PageContext pc) {
@@ -184,18 +230,49 @@ public class MessagesManager {
 
     }
 
+    /**
+     * Get a message.
+     * @param req request
+     * @param key key to find
+     * @return message
+     */
+
     public static String get(HttpServletRequest req, String key) {
         return getMessages(req).get(key);
     }
+
+    /**
+     * Get a message with parameters inside: the value {0} must be a number
+     * @param req request
+     * @param key key to find
+     * @param args replacement strings
+     * @return message
+     */
 
     public static String get(HttpServletRequest req, String key, Object[] args) {
         return getMessages(req).get(key, args);
     }
 
+    /**
+     * Use a default string.
+     * @param req request
+     * @param key key to find
+     * @param defaultMsg default message
+     * @return message
+     */
+
     public static String getWithDefault(HttpServletRequest req, String key, String defaultMsg) {
         return getMessages(req).getWithDefault(key, defaultMsg);
     }
 
+    /**
+     * Get a message with parameters inside: the value {0} must be a number. Use a default message.
+     * @param req request
+     * @param key key to find
+     * @param args replacement strings
+     * @param defaultMsg default message
+     * @return message
+     */
     public static String getWithDefault(HttpServletRequest req, String key, Object[] args, String defaultMsg) {
         return getMessages(req).getWithDefault(key, args, defaultMsg);
     }
@@ -223,8 +300,9 @@ public class MessagesManager {
     }
 
     /**
-     * @param language
-     * @param session
+     * Set the user language in the session
+     * @param language lagnguage to ste
+     * @param session current session
      */
     public static void setUserLanguage(String language, HttpSession session) {
         session.setAttribute(Config.FMT_LOCALE + ".session", language);

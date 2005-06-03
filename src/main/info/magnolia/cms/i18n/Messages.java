@@ -23,25 +23,31 @@ import org.apache.log4j.Logger;
 
 
 /**
- * @author Philipp Bracher Provides localized strings. You should uses the ContextMessages class if you can provide a
- * request object. Messages will do the job as good as possible without to know the session (user) and all the other
- * contextual things. Endusers will use the MessageManager to resolve messages.
+ * Provides localized strings. You should uses the ContextMessages class if you can provide a request object. Messages
+ * will do the job as good as possible without to know the session (user) and all the other contextual things. Endusers
+ * will use the MessageManager to resolve messages.
+ * @author Philipp Bracher
  */
 
 public class Messages {
 
-    public static String JS_OBJECTNAME = "mgnlMessages";
+    /**
+     * Name of the javascript object used to make the messages public to the javascripts
+     */
+    public static final String JS_OBJECTNAME = "mgnlMessages";
 
-    protected static Logger log = Logger.getLogger(Messages.class);
-
-    // never use this directly: subclasses can overrite geter
+    /**
+     * The name of the bundle
+     */
     private String basename;
 
-    // never use this directly: subclasses can overrite geter
+    /**
+     * The current locale
+     */
     private Locale locale;
 
     /**
-     * Subclasses will overwrite getBundle()
+     * The current bundle. Subclasses will overwrite getBundle()
      */
     private ResourceBundle bundle;
 
@@ -61,17 +67,24 @@ public class Messages {
 
     /**
      * @param basename name of the bundle
-     * @param locale
+     * @param locale the locale
      */
     protected Messages(String basename, Locale locale) {
         this.locale = locale;
         this.basename = basename;
     }
 
+    /**
+     * @return current locale
+     */
     public Locale getLocale() {
         return locale;
     }
 
+    /**
+     * If no basename is provided this method returns DEFAULT_BASENAME
+     * @return current basename
+     */
     public String getBasename() {
         if (basename == null) {
             return MessagesManager.DEFAULT_BASENAME;
@@ -79,10 +92,18 @@ public class Messages {
         return basename;
     }
 
+    /**
+     * @param basename set the name of the bundle
+     */
     protected void setBasename(String basename) {
         this.basename = basename;
     }
 
+    /**
+     * Get the message from the bundle
+     * @param key the key
+     * @return message
+     */
     public String get(String key) {
         try {
             return getBundle().getString(key);
@@ -94,14 +115,20 @@ public class Messages {
 
     /**
      * Replace the parameters in the string: the entered text {0} is not a valid email
-     * @param key
-     * @param args
-     * @return
+     * @param key the key
+     * @param args the replacement strings
+     * @return message
      */
     public String get(String key, Object[] args) {
         return MessageFormat.format(get(key), args);
     }
 
+    /**
+     * You can provide a default value if the key is not found
+     * @param key key
+     * @param defaultMsg the default message
+     * @return the message
+     */
     public String getWithDefault(String key, String defaultMsg) {
         String msg;
         try {
@@ -117,6 +144,13 @@ public class Messages {
         return msg;
     }
 
+    /**
+     * With default value and replacement strings
+     * @param key key
+     * @param args replacement strings
+     * @param defaultMsg default message
+     * @return message
+     */
     public String getWithDefault(String key, Object[] args, String defaultMsg) {
         return MessageFormat.format(getWithDefault(key, defaultMsg), args);
     }
@@ -146,12 +180,17 @@ public class Messages {
         return str.toString();
     }
 
+    /**
+     * Make the string save for javascript (escape special characters).
+     * @param str string to escape
+     * @return escaped string
+     */
     public static String javaScriptString(String str) {
         return str.replaceAll("'", "\\\\'").replaceAll("\n", "\\\\n");
     }
 
     /**
-     * @return Returns the bundle.
+     * @return Returns the bundle for the current basename
      */
     public ResourceBundle getBundle() {
         if (bundle == null) {
@@ -160,10 +199,21 @@ public class Messages {
         return bundle;
     }
 
+    /**
+     * return the bundle for the provided basename
+     * @param basename basename
+     * @return bundle
+     */
     public ResourceBundle getBundle(String basename) {
         return ResourceBundle.getBundle(basename, getLocale());
     }
 
+    /**
+     * Get the bundle for a defined local
+     * @param basename basename
+     * @param locale locale
+     * @return bundle
+     */
     public ResourceBundle getBundle(String basename, Locale locale) {
         return ResourceBundle.getBundle(basename, getLocale());
     }
