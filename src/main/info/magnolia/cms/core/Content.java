@@ -45,6 +45,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.doomdark.uuid.UUIDGenerator;
 
 
 /**
@@ -57,6 +58,11 @@ public class Content extends ContentHandler implements Cloneable {
      * Logger.
      */
     private static Logger log = Logger.getLogger(Content.class);
+
+    /**
+     * UUID property added on creation of object
+     * */
+    private static final String PROPERTY_UUID = "mgnl:uuid";
 
     /**
      * Wrapped jcr node.
@@ -140,6 +146,7 @@ public class Content extends ContentHandler implements Cloneable {
         this.setPath(path);
         this.setRootNode(rootNode);
         this.node = this.rootNode.addNode(this.path, contentType);
+        this.addUUID();
         this.setAccessManager(manager);
         this.addMixin(ItemType.MIX_VERSIONABLE);
     }
@@ -148,7 +155,7 @@ public class Content extends ContentHandler implements Cloneable {
      * bit by bit copy of the current object. Warning: this doesn't clone wrapped jcr nodes.
      * @return Object cloned object
      */
-    public Object clone() {
+    public Object clone() throws CloneNotSupportedException {
         return super.clone();
     }
 
@@ -578,7 +585,8 @@ public class Content extends ContentHandler implements Cloneable {
             while (propertyIterator.hasNext()) {
                 Property property = (Property) propertyIterator.next();
                 try {
-                    if (!property.getName().startsWith("jcr:")) {
+                    if (!property.getName().startsWith("jcr:")
+                            && !property.getName().startsWith("mgnl:")) {
                         children.add(new NodeData(property, this.accessManager));
                     }
                 }
@@ -1029,10 +1037,11 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * UUID of the node refrenced by this object
+     * @return uuid
      * @throws RepositoryException if an error occurs
      */
     public String getUUID() throws RepositoryException {
-        return this.node.getUUID();
+        return this.getNodeData(PROPERTY_UUID).getString();
     }
 
     /**
@@ -1117,5 +1126,13 @@ public class Content extends ContentHandler implements Cloneable {
      */
     public boolean holdsLock() throws RepositoryException {
         return this.node.holdsLock();
+    }
+
+    /**
+     * Add a UUID property to the existing node
+     * @throws RepositoryException
+     * */
+    private void addUUID() throws RepositoryException {
+        this.node.setProperty(PROPERTY_UUID, UUIDGenerator.getInstance().generateTimeBasedUUID().toString());
     }
 }
