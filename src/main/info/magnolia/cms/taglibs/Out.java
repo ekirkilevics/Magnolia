@@ -15,6 +15,7 @@ package info.magnolia.cms.taglibs;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.gui.misc.FileProperties;
+import info.magnolia.cms.util.LinkUtil;
 import info.magnolia.cms.util.Resource;
 
 import java.io.IOException;
@@ -58,6 +59,11 @@ public class Out extends TagSupport {
 
     private String contentNodeCollectionName;
 
+    /**
+     * The current page. This is important to make relative links.
+     */
+    private transient Content currentActivePage;
+
     private transient Content contentNode;
 
     private transient NodeData nodeData;
@@ -76,7 +82,6 @@ public class Out extends TagSupport {
     public int doStartTag() {
 
         Content local = Resource.getLocalContentNode((HttpServletRequest) pageContext.getRequest());
-        Content actpage = Resource.getCurrentActivePage((HttpServletRequest) pageContext.getRequest());
         String contentNodeName = this.getContentNodeName();
         String contentNodeCollectionName = this.getContentNodeCollectionName();
         if (StringUtils.isNotEmpty(contentNodeName)) {
@@ -84,12 +89,12 @@ public class Out extends TagSupport {
             try {
                 if (StringUtils.isEmpty(contentNodeCollectionName)) {
                     // e.g. <cms:out nodeDataName="title" contentNodeName="footer"/>
-                    this.setContentNode(actpage.getContent(contentNodeName));
+                    this.setContentNode(this.getCurrentActivePage().getContent(contentNodeName));
                 }
                 else {
                     // e.g. <cms:out nodeDataName="title" contentNodeName="01" contentNodeCollectionName="mainPars"/>
                     // e.g. <cms:out nodeDataName="title" contentNodeName="footer" contentNodeCollectionName=""/>
-                    this.setContentNode(actpage.getContent(contentNodeCollectionName).getContent(contentNodeName));
+                    this.setContentNode(this.getCurrentActivePage().getContent(contentNodeCollectionName).getContent(contentNodeName));
                 }
             }
             catch (RepositoryException re) {
@@ -107,7 +112,7 @@ public class Out extends TagSupport {
                 // e.g. <cms:out nodeDataName="title"/>
                 // e.g. <cms:out nodeDataName="title" contentNodeName=""/>
                 // e.g. <cms:out nodeDataName="title" contentNodeCollectionName=""/>
-                this.setContentNode(actpage);
+                this.setContentNode(this.getCurrentActivePage());
             }
             else {
                 // inside collection iterator
@@ -119,7 +124,7 @@ public class Out extends TagSupport {
                     || (contentNodeCollectionName != null && StringUtils.isEmpty(contentNodeCollectionName))) {
                     // empty collection name -> use actpage
                     // e.g. <cms:out nodeDataName="title" contentNodeCollectionName=""/>
-                    this.setContentNode(actpage);
+                    this.setContentNode(this.getCurrentActivePage());
                 }
                 else {
                     // ERROR: no content node assignable because contentNodeName is empty
@@ -136,6 +141,7 @@ public class Out extends TagSupport {
      */
     public int doEndTag() {
         this.display();
+        this.setCurrentActivePage(null);
         this.setContentNodeCollectionName(null);
         this.setContentNodeName(null);
         this.setContentNode(null);
@@ -355,6 +361,8 @@ public class Out extends TagSupport {
                 else {
                     value = nodeData.getString(this.getLineBreak());
                 }
+                // replace internal links
+                value = LinkUtil.convertUUIDsToRelativeLinks(value, this.getCurrentActivePage());
             }
             JspWriter out = pageContext.getOut();
             try {
@@ -390,5 +398,22 @@ public class Out extends TagSupport {
         FileProperties props = new FileProperties(this.getContentNode(), this.nodeDataName);
         String value = props.getProperty(this.fileProperty);
         return value;
+    }
+
+    /**
+     * @return the current page
+     */
+    protected Content getCurrentActivePage() {
+        if (this.currentActivePage == null) {
+            this.currentActivePage = Resource.getCurrentActivePage((HttpServletRequest) pageContext.getRequest());
+        }
+        return this.currentActivePage;
+    }
+
+    /**
+     * @param currentActivePage the current page
+     */
+    protected void setCurrentActivePage(Content currentActivePage) {
+        this.currentActivePage = currentActivePage;
     }
 }

@@ -24,6 +24,7 @@ import info.magnolia.cms.gui.misc.Spacer;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.TemplateMessagesUtil;
+import info.magnolia.cms.util.LinkUtil;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -182,10 +183,16 @@ public class DialogRichedit extends DialogBox {
 
             DialogLine line = new DialogLine();
             this.setSessionAttribute();
-            // remove <span>s by <a>s so its readable by kupu
+            
             String value = this.getValue("<br />");
-            value = value.replaceAll("<span ", "<a ");
-            value = value.replaceAll("</span>", "</a>");
+            // make proper links
+            value = LinkUtil.convertUUIDsToAbsoluteLinks(value);
+            
+            // TODO since we do not manipulate during storing we do not have to replace them. Maybe this leads to problems 
+            // remove <span>s by <a>s so its readable by kupu
+            // value = value.replaceAll("<span ", "<a ");
+            // value = value.replaceAll("</span>", "</a>");
+            
             this.setValue(value);
             // modification of dialogBox
             out.write("</td></tr><tr><td style=\"padding-right:12px;\">");
@@ -276,7 +283,7 @@ public class DialogRichedit extends DialogBox {
                     + repository
                     + "','"
                     + extension
-                    + "',true);");
+                    + "',false);");
                 linkButtonBrowse.setSmall(true);
                 linkButtonBrowse.setLabel(msgs.get("dialog.richedit.internallink"));
                 out.write(linkButtonBrowse.getHtml());
