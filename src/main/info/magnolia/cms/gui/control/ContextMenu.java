@@ -17,36 +17,60 @@ import java.util.List;
 
 
 /**
- * @author philipp
+ * This class encapsulates the context menu, used in the tree.
+ * @author Philipp Bracher
+ * @version $Revision$ ($Author$)
  */
 public class ContextMenu extends ControlSuper {
 
+    /**
+     * All the menu items showed by the context menu
+     */
     private List menuItems = new ArrayList();
 
+    /**
+     * Create a context menu and provide the name (used in javascript)
+     * @param menuName the name used for the menu
+     */
     public ContextMenu(String menuName) {
         super();
         this.setName(menuName);
     }
 
+    /**
+     * @return all menu items
+     */
     public List getMenuItems() {
         return this.menuItems;
     }
 
+    /**
+     * Populate it with a list
+     * @param menuItems the list
+     */
     public void setMenuItems(List menuItems) {
         this.menuItems = menuItems;
     }
 
+    /**
+     * @param col index
+     * @return the item
+     */
     public ContextMenuItem getMenuItem(int col) {
         return (ContextMenuItem) this.getMenuItems().get(col);
     }
 
-    public void addMenuItem(ContextMenuItem tmi) {
-        this.getMenuItems().add(tmi);
+    /**
+     * Add a item
+     * @param item the item object
+     */
+    public void addMenuItem(ContextMenuItem item) {
+        this.getMenuItems().add(item);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see info.magnolia.cms.gui.control.ControlSuper#getHtml()
+    /**
+     * Renders the HTML Code. Creates a div with all the containing menuitems and adds the initialization in javascript
+     * @return html code
      */
     public String getHtml() {
         StringBuffer html = new StringBuffer();
@@ -84,9 +108,6 @@ public class ContextMenu extends ControlSuper {
             }
         }
         html.append("</div>");
-
-        // html.append(this.getJavascriptTree()+".columns=new Array();"); //->in tree.js
-        // add menu to tree object
 
         html.append("<script type=\"text/javascript\">");
         html.append("var " + getName() + "= new mgnlContextMenu('" + getName() + "');");
