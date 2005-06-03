@@ -46,5 +46,6 @@ function aclFormSubmit(){
 }
 
 function aclChoose(prefix, repository){
-	mgnlOpenTreeBrowser(prefix + 'Path',document.getElementById(prefix + 'Path').value,'',repository);
+	var control = document.getElementById(prefix + 'Path');
+	mgnlOpenTreeBrowserWithControl(control, control.value,'',repository);
 }

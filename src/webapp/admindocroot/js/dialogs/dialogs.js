@@ -204,19 +204,28 @@ function mgnlControlFileSetFileName(id,clear)
 ### control link: open link browser
 ################################### */
 
-function mgnlDialogLinkOpenBrowser(controlName,repository,extension,addcontext)
-	{
-	var pathSelected=document.getElementById(controlName).value;
+function mgnlDialogLinkOpenBrowser(controlName,repository,extension,addcontext){
+	var control = document.getElementById(controlName);
+	var pathSelected = control.value;
+	pathSelected = pathSelected.replace(".html","");
 
 	var pathOpen=""; //without selection: open path of editing page
 	var pathElem=document.getElementById("mgnlPath");
 	if (pathElem) pathOpen=pathElem.value;
+	
+	mgnlDebug("link: selectedPath: " + pathSelected, "dialog");
+	mgnlDebug("link: pathOpen: " + pathOpen, "dialog"); 
 
-	if (extension) pathSelected=pathSelected.replace("."+extension,"");
+	var callBackCommand = new MgnlDialogLinkBrowserCallBackCommand(control);
+	mgnlOpenTreeBrowser(pathSelected,pathOpen,repository,null,null,callBackCommand)
+}
 
-	mgnlOpenTreeBrowser(controlName,pathSelected,pathOpen,repository,extension,null,null,addcontext)
+function MgnlDialogLinkBrowserCallBackCommand(control){
+	this.control = control;
+	this.callback = function(value){
+		this.control.value = value +".html";
 	}
-
+}
 
 function mgnlDialogLinkBrowserResize()
 	{
@@ -235,22 +244,18 @@ function mgnlDialogLinkBrowserResize()
 		}
 	}
 
-function mgnlDialogLinkBrowserWriteBack(controlName,extension,addcontext)
-	{
+function mgnlDialogLinkBrowserWriteBack(){
 	var iFrameDoc=mgnlGetIFrameDocument('mgnlDialogLinkBrowserIFrame');
 	var addressBar=iFrameDoc.getElementById("mgnlTreeControlAddressBar");
-	var control=opener.document.getElementById(controlName);
-
-	if (extension) extension="."+extension;
-
-	var value="";
-	if (addcontext)
-	{
-	  value = contextPath;
+	
+	// this should be allway the case
+	if(window.top.mgnlCallBackCommand){
+		mgnlDebug("mgnlDialogLinkBrowserWriteBack: calling callback function", "dialog");
+		window.top.mgnlCallBackCommand.callback(addressBar.value);
 	}
-	control.value= value + addressBar.value+extension;
+	
 	window.close();
-	}
+}
 
 
 

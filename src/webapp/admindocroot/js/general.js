@@ -262,20 +262,50 @@ function mgnlOpenDialog(path,nodeCollection,node,paragraph,repository,dialogPage
 ### open tree browser
 ################################### */
 
-function mgnlOpenTreeBrowser(controlName,pathSelected,pathOpen,repository,extension,width,height,addcontext)
-	{
+function mgnlOpenTreeBrowser(pathSelected, pathOpen, repository, width, height, callBackCommand){
+	mgnlDebug("mgnlOpenTreeBrowser","dialog");
 	if (!width) width=450;
 	if (!height) height=550;
 	var src="${pageContext.request.contextPath}/.magnolia/dialogs/linkBrowser.html?mgnlCK="+mgnlGetCacheKiller();
-	src+="&mgnlControlName="+controlName;
 	if (pathSelected) src+="&pathSelected="+pathSelected;
 	if (pathOpen) src+="&pathOpen="+pathOpen;
 	if (repository) src+="&repository="+repository;
-	if (extension) src+="&mgnlExtension="+extension;
-	if (addcontext) src+="&addcontext="+addcontext;
 	var w=window.open(src,"mgnlTreeBrowser","width="+width+",height="+height+",resizable=yes,status=yes,scrollbars=no");
-	if (w) w.focus();
+	
+	if (w){
+		mgnlDebug("register call back function", "dialog");
+		w.mgnlCallBackCommand = callBackCommand;
 	}
+}
+
+function mgnlOpenTreeBrowserWithControl(control,pathSelected,pathOpen,repository,extension,width,height,addcontext){
+	mgnlDebug("mgnlOpenTreeBrowserWithControl","dialog");
+	var callBackCommand = new MgnlTreeBrowserWithControlCallBackCommand(control,extension,addcontext);
+	mgnlOpenTreeBrowser(pathSelected, pathOpen, repository, width, height, callBackCommand)
+}
+
+/* ###################################
+### tree browser default callback
+################################### */
+
+function MgnlTreeBrowserWithControlCallBackCommand(control, extension, addcontext){
+	this.control = control;
+	this.extension = extension;
+	this.addcontext = addcontext;
+
+	this.callback = function(value){
+		if (this.addcontext){
+		  value = contextPath + value;
+		}
+	
+		if (this.extension){
+			value += "." + extension;
+		}
+		
+		mgnlDebug("MgnlTreeBrowserCallBackCommand: write to the control", "dialog");
+		this.control.value = value;
+	}
+}
 
 
 

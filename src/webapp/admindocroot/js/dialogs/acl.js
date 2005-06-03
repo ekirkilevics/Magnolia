@@ -7,7 +7,8 @@ var globalIndex=0;
 
 function mgnlAclChoose(index,repository)
 	{
-	mgnlOpenTreeBrowser('acl'+index+'Path',document.getElementById('acl'+index+'Path').value,'',repository);
+	var control = document.getElementById('acl'+index+'Path');
+	mgnlOpenTreeBrowserWithControl(control,control.value,'',repository);
 	}
 
 function mgnlAclAdd(contextUsers,rowIndex,path,name,accessRight,accessType)
