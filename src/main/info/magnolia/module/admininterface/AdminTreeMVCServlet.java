@@ -35,15 +35,17 @@ public class AdminTreeMVCServlet extends MVCServlet {
      */
     private static final long serialVersionUID = 222L;
 
+    /**
+     * Logger.
+     */
     private static Logger log = Logger.getLogger(AdminTreeMVCServlet.class);
 
-    /*
-     * (non-Javadoc)
+    /**
      * @see info.magnolia.cms.servlets.MVCServlet#getHandler(javax.servlet.http.HttpServletRequest)
      */
     protected MVCServletHandler getHandler(HttpServletRequest request, HttpServletResponse response) {
 
-        String handlerName = request.getParameter("repository"); // request.getParameter("treeHandler");
+        String handlerName = request.getParameter("repository");
 
         if (StringUtils.isEmpty(handlerName)) {
             handlerName = ContentRepository.WEBSITE;
