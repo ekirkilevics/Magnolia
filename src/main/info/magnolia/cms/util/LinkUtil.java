@@ -45,23 +45,10 @@ public final class LinkUtil {
     /**
      * Pattern to find a magnolia formatted link
      */
-    private static Pattern uuidPattern = Pattern
-        .compile("\\$\\{link:\\{uuid:\\{([^\\}]*)\\},path:\\{([^\\}]*)\\}\\}\\}");
-
-    /**
-     * Transforms a uuid to a absolute path beginning with a /. This path is used to get the page from the repository.
-     * The editor needs this kind of links
-     * @param uuid uuid
-     * @return path
-     */
-    public static String absolutePathFromUUID(String uuid) {
-        try {
-            return hm.getContentByUUID(uuid).getHandle();
-        }
-        catch (Exception e) {
-            return uuid;
-        }
-    }
+    private static Pattern uuidPattern = Pattern.compile("\\$\\{link:\\{uuid:\\{([^\\}]*)\\},"
+        + "repository:\\{[^\\}]*\\}," // has value website unless we support it
+        + "workspace:\\{[^\\}]*\\}," // has value default unless we support it
+        + "path:\\{([^\\}]*)\\}\\}\\}");
 
     /**
      * Transforms all the links to the magnolia format. Used during storing.
@@ -74,8 +61,30 @@ public final class LinkUtil {
         StringBuffer res = new StringBuffer();
         while (matcher.find()) {
             String path = matcher.group(2);
-            String uuid = getUUIDFromAbsolutePath(path);
-            matcher.appendReplacement(res, "$1\\${link:{uuid:{" + uuid + "},path:{" + path + "}}}$3");
+            String uuid = makeUUIDFromAbsolutePath(path);
+            matcher.appendReplacement(res, "$1\\${link:{" 
+                + "uuid:{" + uuid + "},"
+                + "repository:{website},"
+                + "workspace:{default},"
+                + "path:{" + path + "}}}$3");
+        }
+        matcher.appendTail(res);
+        return res.toString();
+    }
+
+    /**
+     * Convert the mangolia format to absolute (repository friendly) pathes
+     * @param str html
+     * @return html with absolute links
+     */
+    public static String convertUUIDsToAbsoluteLinks(String str) {
+        Matcher matcher = uuidPattern.matcher(str);
+        StringBuffer res = new StringBuffer();
+        while (matcher.find()) {
+            String uuid = matcher.group(1);
+            //String absolutePath = matcher.group(2);
+            String absolutePath = LinkUtil.makeAbsolutePathFromUUID(uuid);
+            matcher.appendReplacement(res, absolutePath + ".html");
         }
         matcher.appendTail(res);
         return res.toString();
@@ -91,9 +100,8 @@ public final class LinkUtil {
         Matcher matcher = uuidPattern.matcher(str);
         StringBuffer res = new StringBuffer();
         while (matcher.find()) {
-            // TODO use uuid
-            // String uuid = matcher.group(1);
-            String absolutePath = matcher.group(2);
+            String uuid = matcher.group(1);
+            String absolutePath = LinkUtil.makeAbsolutePathFromUUID(uuid);
             String relativePath = makeRelativePath(absolutePath, page);
             matcher.appendReplacement(res, relativePath);
         }
@@ -102,21 +110,22 @@ public final class LinkUtil {
     }
 
     /**
-     * Convert the mangolia format to absolute (repository firiendly) pathes
-     * @param str html
-     * @return html with absolute links
+     * Transforms a uuid to a absolute path beginning with a /. This path is used to get the page from the repository.
+     * The editor needs this kind of links
+     * @param uuid uuid
+     * @return path
      */
-    public static String convertUUIDsToAbsoluteLinks(String str) {
-        Matcher matcher = uuidPattern.matcher(str);
-        StringBuffer res = new StringBuffer();
-        while (matcher.find()) {
-            // TODO use uuid
-            // String uuid = matcher.group(1);
-            String absolutePath = matcher.group(2);
-            matcher.appendReplacement(res, absolutePath);
+    public static String makeAbsolutePathFromUUID(String uuid) {
+        try {
+            // this uses magnolia uuid
+            return Search.getContentByUUID(hm.getQueryManager(), uuid).getHandle();
+
+            // this uses the jcr uuid
+            //return hm.getContentByUUID(uuid).getHandle();
         }
-        matcher.appendTail(res);
-        return res.toString();
+        catch (Exception e) {
+            return uuid;
+        }
     }
 
     /**
@@ -154,7 +163,7 @@ public final class LinkUtil {
      * @param path path to the page
      * @return the uuid if found
      */
-    public static String getUUIDFromAbsolutePath(String path) {
+    public static String makeUUIDFromAbsolutePath(String path) {
         try {
             return hm.getContent(path).getUUID();
         }
