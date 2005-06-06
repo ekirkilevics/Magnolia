@@ -115,8 +115,10 @@ public final class ModuleLoader {
         }
     }
 
-    public static Content createMinimalConfiguration(Content node, String name, String className)
+    public static Content createMinimalConfiguration(Content node, String name, String className, String version)
         throws AccessDeniedException, PathNotFoundException, RepositoryException {
+        node.createNodeData("version").setValue(version);
+        node.createNodeData("licence");
         node.createContent("Config");
         node.createContent("VirtualURIMapping", ItemType.CONTENTNODE);
 
