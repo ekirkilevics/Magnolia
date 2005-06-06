@@ -19,6 +19,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.gui.dialog.DialogManager;
 import info.magnolia.cms.module.Module;
 import info.magnolia.cms.module.ModuleConfig;
+import info.magnolia.cms.module.RegisterException;
 import info.magnolia.module.admininterface.trees.AdminTreeConfig;
 import info.magnolia.module.admininterface.trees.AdminTreeRoles;
 import info.magnolia.module.admininterface.trees.AdminTreeUsers;
@@ -26,6 +27,7 @@ import info.magnolia.module.admininterface.trees.AdminTreeWebsite;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.jar.JarFile;
 
 import org.apache.log4j.Logger;
 
@@ -90,11 +92,13 @@ public class Engine implements Module {
         store.registerDefaultTreeHandler(ContentRepository.CONFIG, AdminTreeConfig.class);
     }
 
-    /**
-     * @see info.magnolia.cms.module.Module#register(info.magnolia.cms.core.Content)
+    
+    /* (non-Javadoc)
+     * @see info.magnolia.cms.module.Module#register(java.lang.String, java.lang.String, info.magnolia.cms.core.Content, java.util.jar.JarFile, int)
      */
-    public void register(Content moduleNode) {
-        // nothing to do
+    public void register(String moduleName, String version, Content moduleNode, JarFile jar, int registerState)
+        throws RegisterException {
+        // nothing todo
     }
 
     /**
