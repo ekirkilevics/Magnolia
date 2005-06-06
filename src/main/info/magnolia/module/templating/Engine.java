@@ -20,9 +20,11 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.module.Module;
 import info.magnolia.cms.module.ModuleConfig;
+import info.magnolia.cms.module.RegisterException;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.jar.JarFile;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.observation.Event;
@@ -61,11 +63,14 @@ public class Engine implements Module {
      */
     protected String basePath;
 
-    /**
-     * @see info.magnolia.cms.module.Module#register(info.magnolia.cms.core.Content)
+    /*
+     * (non-Javadoc)
+     * @see info.magnolia.cms.module.Module#register(java.lang.String, java.lang.String, info.magnolia.cms.core.Content,
+     * java.util.jar.JarFile, int)
      */
-    public void register(Content moduleNode) {
-        // do nothing
+    public void register(String moduleName, String version, Content moduleNode, JarFile jar, int registerState)
+        throws RegisterException {
+        // nothing to do
     }
 
     /**
