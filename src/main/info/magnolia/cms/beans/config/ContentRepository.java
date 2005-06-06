@@ -16,6 +16,8 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.core.search.SearchFactory;
+import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManagerImpl;
 import info.magnolia.cms.security.Permission;
@@ -140,7 +142,7 @@ public final class ContentRepository {
 
     /**
      * loads all configured repository using ID as Key, as configured in repositories.xml.
-     * 
+     *
      * <pre>
      * &lt;Repository name="website"
      *                id="website"
@@ -288,6 +290,9 @@ public final class ContentRepository {
             hierarchyManager.init(session.getRootNode());
             hierarchyManager.setAccessManager(accessManager);
             ContentRepository.hierarchyManagers.put(map.getID() + "_" + wspID, hierarchyManager);
+            QueryManager queryManager = SearchFactory.getAccessControllableQueryManager
+                    (hierarchyManager.getWorkspace().getQueryManager(),accessManager);
+            hierarchyManager.setQueryManager(queryManager);
         }
         catch (RepositoryException re) {
             log.error("System : Failed to initialize hierarchy manager for JCR - " + map.getID());

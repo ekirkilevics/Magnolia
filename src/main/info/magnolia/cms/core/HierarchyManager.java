@@ -16,6 +16,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.core.search.QueryManager;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -33,8 +34,9 @@ import org.apache.log4j.Logger;
 
 
 /**
+ * User: sameercharles Date: Sept 23, 2004 Time: 1:42:48 PM
  * @author Sameer Charles
- * @version $Revision $ ($Author $)
+ * @version 2.01
  */
 public class HierarchyManager {
 
@@ -44,24 +46,29 @@ public class HierarchyManager {
     private static Logger log = Logger.getLogger(HierarchyManager.class);
 
     /**
-     * Used by this Hierarchy as a "root" node of a workspace
+     * root of this hierarchy
      * */
     private Node startPage;
 
     /**
-     * Workspace represented by this hierarchy
+     * workspacer for this hierarchy
      * */
     private Workspace workSpace;
 
     /**
-     * user who created this hierarchy manager
+     * user who created this hierarchy
      * */
     private String userID;
 
     /**
-     * Access manager used by this hierarchy
+     * access manager for this hierarchy
      * */
     private AccessManager accessManager;
+
+    /**
+     * query manager for this hierarchy
+     * */
+    private QueryManager queryManager;
 
     /**
      * constructor
@@ -70,17 +77,12 @@ public class HierarchyManager {
         this.userID = "anonymous";
     }
 
-    /**
-     * Construct this object with the specified user id
-     * @param userID a string representing the owner
-     * */
     public HierarchyManager(String userID) {
         this.userID = userID;
     }
 
     /**
      * constructor
-     * @param request
      */
     public HierarchyManager(HttpServletRequest request) {
         this.userID = Authenticator.getUserId(request);
@@ -99,8 +101,7 @@ public class HierarchyManager {
     }
 
     /**
-     * Initialize hierarchy manager and sets default workspace
-     * @param rootNode JCR node to be set as root for this workspace represented by this hierarchy
+     * initialize hierarchy manager and sets default workspace
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException
      */
@@ -110,9 +111,7 @@ public class HierarchyManager {
     }
 
     /**
-     * Initialize hierarchy manager and sets default workspace
-     * @param rootNode JCR node to be set as root for this workspace represented by this hierarchy
-     * @param manager access manager to be used by this hierarchy
+     * initialize hierarchy manager and sets default workspace
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException
      */
@@ -124,14 +123,26 @@ public class HierarchyManager {
 
     /**
      * Set access manager for this hierarchy.
-     * @param manager
+     * @param accessManager
      */
-    public void setAccessManager(AccessManager manager) {
-        this.accessManager = manager;
+    public void setAccessManager(AccessManager accessManager) {
+        this.accessManager = accessManager;
     }
 
     /**
-     * Creates a new content page
+     * Set query manager for this hierarchy
+     * @param queryManager
+     * */
+    public void setQueryManager(QueryManager queryManager) {
+        this.queryManager = queryManager;
+    }
+
+    public QueryManager getQueryManager() {
+        return this.queryManager;
+    }
+
+    /**
+     * creates a new content page
      * @param path parent handle under which new page has to be created
      * @param label page name to be created
      * @return Content newly created hierarchy node
@@ -150,14 +161,14 @@ public class HierarchyManager {
     }
 
     /**
-     * Creates contentNode of type <b>contentType</b> contentType must be registered to the JCR used.
+     * creates contentNode of type <b>contentType </b> contentType must be defined in item type definition of magnolia
+     * as well as JCR implementation
      * @param path absolute (primary) path to this <code>Node</code>
      * @param label page name
      * @param contentType , JCR node type as configured
-     * @throws PathNotFoundException if the given path does not exist
-     * @throws RepositoryException if fail to create new node
-     * @throws AccessDeniedException if the AccessManager associated to this object does not allow writing to this path
-     * @return newly created content object
+     * @throws PathNotFoundException
+     * @throws RepositoryException
+     * @throws AccessDeniedException
      */
     public Content createContent(String path, String label, String contentType) throws PathNotFoundException,
         RepositoryException, AccessDeniedException {
@@ -176,12 +187,6 @@ public class HierarchyManager {
         }
     }
 
-    /**
-     * Concatinate goven path and label
-     * @param path
-     * @param label
-     * @return concatinated path
-     * */
     private String getNodePath(String path, String label) {
         if (StringUtils.isEmpty(path) || (path.equals("/"))) {
             return label;
@@ -189,11 +194,6 @@ public class HierarchyManager {
         return getNodePath(path + "/" + label);
     }
 
-    /**
-     * Removes any trailing slashes for the given path
-     * @param path
-     * @return path
-     * */
     private String getNodePath(String path) {
         if (path.startsWith("/")) {
             path = path.replaceFirst("/", "");
@@ -202,12 +202,8 @@ public class HierarchyManager {
     }
 
     /**
-     * Helper method to set object properties, create page calls this method. you could call this method anytime to
-     * create working page properties
-     * @param md meta data for this object
-     * @param template to be set as meta data property
-     * @throws RepositoryException
-     * @throws AccessDeniedException if not allowed to set meta data
+     * Helper method to set page properties, create page calls this method. you could call this method anytime to create
+     * working page properties
      */
     public void setMetaData(MetaData md, String template) throws RepositoryException, AccessDeniedException {
         md.setTemplate(template);
@@ -215,11 +211,8 @@ public class HierarchyManager {
     }
 
     /**
-     * Helper method to set object properties, create page calls this method. you could call this method anytime to create
+     * Helper method to set page properties, create page calls this method. you could call this method anytime to create
      * working page properties
-     * @param md meta data for this object
-     * @throws RepositoryException
-     * @throws AccessDeniedException if not allowed to set meta data
      */
     public void setMetaData(MetaData md) throws RepositoryException, AccessDeniedException {
         md.setCreationDate();
@@ -230,11 +223,8 @@ public class HierarchyManager {
     }
 
     /**
-     * Helper method to set object properties, get page calls this method. you could call this method anytime to update
+     * Helper method to set page properties, get page calls this method. you could call this method anytime to update
      * working page properties
-     * @param md meta data for this object
-     * @throws RepositoryException
-     * @throws AccessDeniedException if not allowed to update meta data
      */
     public void updateMetaData(MetaData md) throws RepositoryException, AccessDeniedException {
         md.setModificationDate();
@@ -242,12 +232,11 @@ public class HierarchyManager {
     }
 
     /**
-     * Returns the page specified by path in the parameter
+     * returns the page specified by path in the parameter
      * @param path handle of the page to be initialized
      * @return Content hierarchy node
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException
-     * @throws AccessDeniedException
      * @deprecated use getContent(String path) instead
      */
     public Content getPage(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
@@ -255,12 +244,11 @@ public class HierarchyManager {
     }
 
     /**
-     * Get content object of the requested URI
+     * get content object of the requested URI
      * @param path of the content to be initialized
      * @return Content
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException
-     * @throws AccessDeniedException if not allowed to read this path
      */
     public Content getContent(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         // todo remove this.. caller should take care of this
@@ -272,12 +260,11 @@ public class HierarchyManager {
     }
 
     /**
-     * Get content node object of the requested URI
+     * get content node object of the requested URI
      * @param path of the content (container / containerlist) to be initialized
      * @return ContentNode
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException
-     * @throws AccessDeniedException
      * @deprecated use getContent(String path) instead
      */
     public Content getContentNode(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
@@ -286,12 +273,11 @@ public class HierarchyManager {
     }
 
     /**
-     * Get NodeData object of the requested URI
-     * @param path of the property to be initialized
+     * get NodeData object of the requested URI
+     * @param path of the atom to be initialized
      * @return NodeData
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException
-     * @throws AccessDeniedException if not alloed to read this path
      */
     public NodeData getNodeData(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         String nodePath = getNodePath(path);
@@ -304,14 +290,13 @@ public class HierarchyManager {
     }
 
     /**
-     * Returns the first page with a given template name that is found in tree that starts from the page given py the
+     * returns the first page with a given template name that is found in tree that starts from the page given py the
      * path (including this page)
      * @param path handle of the page from where the search should start
      * @param templateName template name to search for
      * @return first Content hierarchy node that has the specified template name assigned
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException
-     * @throws AccessDeniedException if not allowed to read this path
      */
     public Content getPage(String path, String templateName) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
@@ -346,11 +331,11 @@ public class HierarchyManager {
     }
 
     /**
-     * Removes specified path, it can be either node or aproperty
+     * removes specified path, it can be either node or property
      * @param path to be removed
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException
-     * @throws AccessDeniedException if not allowed to remove this path
+     * @throws AccessDeniedException
      */
     public void delete(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         if (this.isNodeData(path)) {
@@ -362,20 +347,12 @@ public class HierarchyManager {
 
     }
 
-    /**
-     * Helper method to convert the given path in to a relative path
-     * @param path
-     * @return path with no trailing slashes
-     * */
     private String makeRelative(String path) {
         return StringUtils.stripStart(path, "/");
     }
 
     /**
-     * Get content object representing workspace root node
-     * @return root of the current working workspace
-     * @throws RepositoryException
-     * @throws AccessDeniedException if not allowed to read this workspace
+     * @return startPage of the current working repository-workspace
      */
     public Content getRoot() throws RepositoryException, AccessDeniedException {
         Content content = (new Content(this.startPage, this.accessManager));
@@ -385,8 +362,7 @@ public class HierarchyManager {
     /**
      * Checks if the requested resource is a page (hierarchy Node).
      * @param path of the requested content
-     * @return boolean true if the requested content is a Hierarchy Node
-     * @throws AccessDeniedException if not allowed to read this path
+     * @return boolean true is the requested content is a Hierarchy Node
      */
     public boolean isPage(String path) throws AccessDeniedException {
         Access.isGranted(this.accessManager, path, Permission.READ);
@@ -406,8 +382,8 @@ public class HierarchyManager {
     }
 
     /**
-     * Check is either the node or property exists with the specified path
-     * @param path to be checked
+     * check is either the node or property exists with the specified path
+     * @param path
      */
     public boolean isExist(String path) {
         try {
@@ -429,9 +405,6 @@ public class HierarchyManager {
 
     /**
      * Evaluate primary node type of the node at the given path.
-     * @param path to be evaluated
-     * @param type node type
-     * @return true if the node at the given path is of specified type
      */
     public boolean isNodeType(String path, String type) {
         try {
@@ -447,19 +420,15 @@ public class HierarchyManager {
 
     /**
      * Evaluate primary node type of the node at the given path.
-     * @param path to be evaluated
-     * @param type ItemType
-     * @return true if the requested content is an NodeData
      */
     public boolean isNodeType(String path, ItemType type) {
         return isNodeType(path, type.getSystemName());
     }
 
     /**
-     * Checks if the requested resource is a NodeData (Property)
+     * checks if the requested resource is an NodeData (Property)
      * @param path of the requested NodeData
-     * @return true if the requested content is an NodeData
-     * @throws AccessDeniedException if not allowed to read this path
+     * @return boolean true is the requested content is an NodeData
      */
     public boolean isNodeData(String path) throws AccessDeniedException {
         Access.isGranted(this.accessManager, path, Permission.READ);
@@ -481,10 +450,6 @@ public class HierarchyManager {
      * This method can be used to retrieve Content which has UUID assigned to it, in other words only those nodes which
      * has mixin type mix:referenceable.
      * @param uuid
-     * @return content
-     * @throws ItemNotFoundException
-     * @throws RepositoryException
-     * @throws AccessDeniedException if not allowed to read the node found with the given UUID
      */
     public Content getContentByUUID(String uuid) throws ItemNotFoundException, RepositoryException,
         AccessDeniedException {
@@ -492,20 +457,18 @@ public class HierarchyManager {
     }
 
     /**
-     * Gets currently used workspace for this hierarchy manager
-     * @return workspace
+     * gets currently used workspace for this hierarchy manager
      */
     public Workspace getWorkspace() {
         return this.workSpace;
     }
 
     /**
-     * Move content to the specified location
+     * move content to the specified location
      * @param source source node path
      * @param destination node where the node has to be moved
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException
-     * @throws AccessDeniedException if either not allowed to remove the source or write on destonation
      */
     public void moveTo(String source, String destination) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
@@ -515,12 +478,11 @@ public class HierarchyManager {
     }
 
     /**
-     * Copy content to the specified location
+     * copy content to the specified location
      * @param source source node path
      * @param destination node where the node has to be copied
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException
-     * @throws AccessDeniedException if either not allowed to read the source or write on destonation
      */
     public void copyTo(String source, String destination) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
@@ -544,8 +506,7 @@ public class HierarchyManager {
     }
 
     /**
-     * Check if current session to which this hierarchy is associated has some pending changes to be persisted
-     * @return true if the session has pending (unsaved) changes.
+     * Returns true if the session has pending (unsaved) changes.
      */
     public boolean hasPendingChanges() throws RepositoryException {
         return this.startPage.getSession().hasPendingChanges();
