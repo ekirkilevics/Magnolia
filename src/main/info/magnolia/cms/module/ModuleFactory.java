@@ -12,6 +12,7 @@
  */
 package info.magnolia.cms.module;
 
+import info.magnolia.cms.beans.config.ConfigurationException;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ModuleLoader;
 import info.magnolia.cms.core.Content;
@@ -58,9 +59,9 @@ public final class ModuleFactory {
 
     /**
      * Register all jars with a magnolia module manifets
-     * @throws RegisterException if a module has an not handled error during registration
+     * @throws ConfigurationException if a module has an not handled error during registration
      */
-    public static void init() throws RegisterException {
+    public static void init() throws ConfigurationException {
         log.info("Loading module jars");
         try {
             HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
@@ -71,7 +72,7 @@ public final class ModuleFactory {
         catch (Exception e) {
             log.fatal("Failed to load the module jar");
             log.fatal(e.getMessage(), e);
-            throw new RegisterException(e.getMessage());
+            throw new ConfigurationException(e.getMessage());
         }
     }
 
