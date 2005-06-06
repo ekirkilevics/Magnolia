@@ -26,14 +26,25 @@ public class InvalidConfigException extends BaseException {
      */
     private static final long serialVersionUID = 222L;
 
+    /**
+     * @param message message
+     */
     public InvalidConfigException(String message) {
         super(message);
     }
 
+    /**
+     * 
+     * @param message message
+     * @param cause cause
+     */
     public InvalidConfigException(String message, Exception cause) {
         super(message, (cause instanceof InvalidConfigException) ? ((InvalidConfigException) cause).getCause() : cause);
     }
 
+    /**
+     * @param root root
+     */
     public InvalidConfigException(Exception root) {
         super(root);
     }

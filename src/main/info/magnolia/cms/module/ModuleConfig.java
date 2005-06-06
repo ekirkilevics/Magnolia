@@ -24,64 +24,122 @@ import java.util.Map;
  */
 public class ModuleConfig {
 
-    /* module specific */
+
+    /**
+     * The HM of the modules
+     */
     private Map sharedHierarchyManagers; /* id - HierarchyManager map */
 
+    /**
+     * Startup parameters
+     */
     private Map initParameters;
-
+    
+    /**
+     * Name
+     */
     private String moduleName;
 
+    /**
+     * Description
+     */
     private String moduleDescription;
 
+    /**
+     * Default HM
+     */
     private HierarchyManager hierarchyManager;
 
-    /* local store */
+    /**
+     * The node containing the configuration
+     */
     private Content localStore;
 
+    /**
+     * @return module name
+     */
     public String getModuleName() {
         return this.moduleName;
     }
 
+    /**
+     * @return description
+     */
     public String getModuleDescription() {
         return this.moduleDescription;
     }
 
+    /**
+     * @return hms
+     */
     public Map getSharedHierarchyManagers() {
         return this.sharedHierarchyManagers;
     }
 
+    /**
+     * @return hm
+     */
     public HierarchyManager getHierarchyManager() {
         return this.hierarchyManager;
     }
 
+    /**
+     * @return the parameters
+     */
     public Map getInitParameters() {
         return this.initParameters;
     }
 
+    /**
+     * @return content node with the configuration
+     */
     public Content getLocalStore() {
         return this.localStore;
     }
 
+    /**
+     * @param value name
+     */
     public void setModuleName(String value) {
         this.moduleName = value;
     }
 
+    /**
+     * 
+     * @param value description
+     */
     public void setModuleDescription(String value) {
         this.moduleDescription = value;
     }
 
+    /**
+     * 
+     * @param initParams parameters
+     */
     public void setInitParameters(Map initParams) {
         this.initParameters = initParams;
     }
 
+    /**
+     * 
+     * @param manager manager
+     */
     public void setHierarchyManager(HierarchyManager manager) {
         this.hierarchyManager = manager;
     }
 
+    /**
+     * 
+     * @param shared shared repositories
+     */
     public void setSharedHierarchyManagers(Map shared) {
         this.sharedHierarchyManagers = shared;
     }
 
+    /**
+     * 
+     * @param localStore content node containing the configuration
+     */
     public void setLocalStore(Content localStore) {
         this.localStore = localStore;
     }

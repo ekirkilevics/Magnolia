@@ -12,31 +12,58 @@
  */
 package info.magnolia.cms.module;
 
+import java.util.jar.JarFile;
+
 import info.magnolia.cms.core.Content;
 
 
 /**
- * Date: Mar 30, 2004 Time: 10:57:18 AM
- * @author Sameer Charles
- * @version 2.0
- */
-/**
  * All external module must implement this interface in order to be initialised by magnolia and have access to module
  * specific / shared repositories
+ * @author philipp
+ * @version $Revision$ ($Author$)
  */
+
 public interface Module {
+
+    /**
+     * No registration needed. Same version is already registered
+     */
+    int REGISTER_STATE_NONE = 0;
+
+    /**
+     * First installation. Node didn't exist in the repository
+     */
+    int REGISTER_STATE_INSTALLATION = 1;
+
+    /**
+     * New version of a already registered module
+     */
+    int REGISTER_STATE_NEW_VERSION = 2;
 
     /**
      * Initialise module based on the configuration. once repositories are initialised and tickets are created its a
      * responsibility of the module itself to keep this data. magnolia server will release all handles
-     * @param moduleConfig
+     * @param moduleConfig a class containing the configuration of this module
+     * @throws InvalidConfigException not a valid configuration
      * @see ModuleConfig#getInitParameters()
      * @see ModuleConfig#getModuleDescription()
      * @see ModuleConfig#getModuleName()
      */
     void init(ModuleConfig moduleConfig) throws InvalidConfigException;
 
-    void register(Content moduleNode);
+    /**
+     * This method is called if a jar with a magnolia manifest was found.
+     * 
+     * @param moduleName name read of the manifest
+     * @param version version read of the manifest
+     * @param moduleNode the node in the config repository
+     * @param jar the jar file
+     * @param registerState one of the REGISTER_STATE constants
+     * @throws RegisterException no update
+     */
+    void register(String moduleName, String version, Content moduleNode, JarFile jar, int registerState)
+        throws RegisterException;
 
     /**
      * At this point module is responsible to release all resources
