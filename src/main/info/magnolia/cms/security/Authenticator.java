@@ -17,6 +17,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.i18n.MessagesManager;
 
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 
@@ -36,10 +37,19 @@ public final class Authenticator {
      */
     private static Logger log = Logger.getLogger(Authenticator.class);
 
+    /**
+     * Session attribute holding the magnolia user id.
+     */
     private static final String ATTRIBUTE_USER_ID = "mgnlUserId";
 
+    /**
+     * Session attribute holding the magnolia user password.
+     */
     private static final String ATTRIBUTE_PSWD = "mgnlUserPSWD";
 
+    /**
+     * Session attribute holding the magnolia user node from the jcr repository.
+     */
     private static final String ATTRIBUTE_USER_NODE = "mgnlUserNode";
 
     /**
@@ -70,9 +80,8 @@ public final class Authenticator {
     }
 
     /**
-     * <p>
      * checks is the credentials exist in the repository
-     * </p>
+     * @param request current HttpServletRequest
      * @return boolean
      */
     private static boolean isValidUser(HttpServletRequest request) {
@@ -82,9 +91,9 @@ public final class Authenticator {
             String encodedPassword = new String(Base64.encodeBase64(Authenticator
                 .getPasswordAsString(request)
                 .getBytes()));
-            String fromRepositiry = userPage.getNodeData("pswd").getString().trim();
+            String fromRepository = userPage.getNodeData("pswd").getString().trim();
             String fromBrowser = encodedPassword.trim();
-            if (fromRepositiry.equalsIgnoreCase(fromBrowser)) {
+            if (fromRepository.equalsIgnoreCase(fromBrowser)) {
                 request.getSession().setAttribute(ATTRIBUTE_USER_NODE, userPage);
 
                 // we must set the language because the JSTL will not use our classes
@@ -95,12 +104,17 @@ public final class Authenticator {
                 MessagesManager.setUserLanguage(lang, request.getSession());
                 return true;
             }
-            return false;
         }
-        catch (RepositoryException re) {
-            log.error("Unable to locate user - " + Authenticator.getUserId(request));
-            return false;
+        catch (PathNotFoundException e) {
+            log.info("Unable to locate user [" + Authenticator.getUserId(request) + "], authentication failed");
         }
+        catch (RepositoryException e) {
+            log.error("Unable to locate user ["
+                + Authenticator.getUserId(request)
+                + "], authentication failed due to a "
+                + e.getClass().getName(), e);
+        }
+        return false;
     }
 
     /**
@@ -113,12 +127,14 @@ public final class Authenticator {
 
     /**
      * @param decodedCredentials , BASE64Decoded credentials from the request
+     * @param request current HttpServletRequest
      */
     private static void setUserId(String decodedCredentials, HttpServletRequest request) {
         request.getSession().setAttribute(ATTRIBUTE_USER_ID, StringUtils.substringBefore(decodedCredentials, ":"));
     }
 
     /**
+     * @param request current HttpServletRequest
      * @param decodedCredentials , BASE64Decoded credentials from the request
      */
     private static void setPassword(String decodedCredentials, HttpServletRequest request) {
@@ -126,6 +142,7 @@ public final class Authenticator {
     }
 
     /**
+     * @param request current HttpServletRequest
      * @return String , current logged in user
      */
     public static String getUserId(HttpServletRequest request) {
@@ -148,6 +165,7 @@ public final class Authenticator {
     }
 
     /**
+     * @param request current HttpServletRequest
      * @return char[] , decoded current user password
      */
     public static char[] getPassword(HttpServletRequest request) {
@@ -159,6 +177,7 @@ public final class Authenticator {
     }
 
     /**
+     * @param request current HttpServletRequest
      * @return String password
      */
     private static String getPasswordAsString(HttpServletRequest request) {
@@ -166,6 +185,7 @@ public final class Authenticator {
     }
 
     /**
+     * @param request current HttpServletRequest
      * @return credentials , as received from the servlet request
      */
     public static String getCredentials(HttpServletRequest request) {
@@ -173,6 +193,7 @@ public final class Authenticator {
     }
 
     /**
+     * @param request current HttpServletRequest
      * @return current logged in user page
      */
     public static Content getUserPage(HttpServletRequest request) {
@@ -181,6 +202,8 @@ public final class Authenticator {
 
     /**
      * checks user session for attribute "user node"
+     * @param request current HttpServletRequest
+     * @return <code>true</code> if the user is authenticated, <code>false</code> otherwise
      */
     public static boolean isAuthenticated(HttpServletRequest request) {
         Object user = request.getSession().getAttribute(ATTRIBUTE_USER_NODE);
