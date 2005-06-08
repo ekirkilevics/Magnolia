@@ -16,6 +16,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.gui.control.Button;
+import info.magnolia.cms.gui.control.ControlSuper;
 import info.magnolia.cms.gui.control.Edit;
 import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.control.SelectOption;
@@ -494,7 +495,8 @@ public class DialogRichedit extends DialogBox {
             out.write("<div style=visibility:hidden;position:absolute;top:0px;left:-500px;>");
             Edit hiddenTextarea = new Edit(this.getName(), "");
             hiddenTextarea.setRows("5");
-            hiddenTextarea.setIsRichEditValue(1);
+            // special handling during saving
+            hiddenTextarea.setIsRichEditValue(ControlSuper.RICHEDIT_KUPU);
             out.write(hiddenTextarea.getHtml());
             out.write("</div>");
 

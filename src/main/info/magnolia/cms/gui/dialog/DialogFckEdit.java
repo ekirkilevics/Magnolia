@@ -13,6 +13,8 @@
 package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.gui.control.ControlSuper;
+import info.magnolia.cms.util.LinkUtil;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -33,24 +35,45 @@ import org.apache.log4j.Logger;
  */
 public class DialogFckEdit extends DialogBox {
 
-    public static final String FCKEDIT_PATH = "/admindocroot/fckeditor/";
-
-    public static final String PARAM_JS_INIT_FILE = "jsInitFile";
-
-    public static final String PARAM_CUSTOM_CONFIGURATION_PATH = "customConfigurationPath";
-
-    public static final String PARAM_JS_INIT_FILE_DEFAULT = "/admindocroot/fckeditor/custom/init/basic.js";
-
-    public static final String PARAM_CUSTOM_CONFIGURATION_PATH_DEFAULT = "/admindocroot/fckeditor/custom/config/basic.js";
-
     /**
      * Logger.
      */
     private static Logger log = Logger.getLogger(DialogFckEdit.class);
 
-    private String customConfigurationsPath = "";
+    /**
+     * The new .BasePath of the editor
+     */
+    public static final String FCKEDIT_PATH = "/admindocroot/fckeditor/";
 
-    private String jsInitFile = "";
+    /**
+     * This parameter defines the startup script. This parameter is searched in the dialog configuration.
+     */
+    public static final String PARAM_JS_INIT_FILE = "jsInitFile";
+
+    /**
+     * This parameter defines the configuration script
+     */
+    public static final String PARAM_CUSTOM_CONFIGURATION_PATH = "customConfigurationPath";
+
+    /**
+     * If jsInitFile is not defined
+     */
+    public static final String PARAM_JS_INIT_FILE_DEFAULT = "/admindocroot/fckeditor/custom/init/magnoliaStandard.js";
+
+    /**
+     * If customConfigurationPath is not defined
+     */
+    public static final String PARAM_CUSTOM_CONFIGURATION_PATH_DEFAULT = "/admindocroot/fckeditor/custom/config/magnoliaStandard.js";
+
+    /**
+     * the configuration script name
+     */
+    private String customConfigurationsPath = PARAM_CUSTOM_CONFIGURATION_PATH_DEFAULT;
+
+    /**
+     * the initialization script name
+     */
+    private String jsInitFile = PARAM_JS_INIT_FILE_DEFAULT;
 
     /**
      * Empty constructor should only be used by DialogFactory.
@@ -58,6 +81,9 @@ public class DialogFckEdit extends DialogBox {
     protected DialogFckEdit() {
     }
 
+    /**
+     * @return The name of the variable for the editor object
+     */
     public String getVarName() {
         String id = getId();
         if (id == null) {
@@ -66,12 +92,18 @@ public class DialogFckEdit extends DialogBox {
         return "fck_" + id.replace('-', '_');
     }
 
+    /**
+     * @param name script name
+     */
     public void setCustomConfigurationPath(String name) {
         if (name != null) {
             customConfigurationsPath = name;
         }
     }
 
+    /**
+     * @param name init file
+     */
     public void setJSInitFile(String name) {
         if (name != null) {
             jsInitFile = name;
@@ -98,10 +130,12 @@ public class DialogFckEdit extends DialogBox {
     public void drawHtml(Writer out) throws IOException {
 
         out.write("<tr>");
-        out.write("<td>");
+        out.write("<td>test");
         // @todo add paste box and links here
         out.write("</td>");
         out.write("<td>");
+
+        // load the script onece: if there are multiple instances
         if (getRequest().getAttribute("__fcked_loaded") == null) {
             out.write("<script type=\"text/javascript\" src=\""
                 + this.getRequest().getContextPath()
@@ -116,15 +150,16 @@ public class DialogFckEdit extends DialogBox {
         }
 
         String var = getVarName();
+        String value = getValue();
+        value = LinkUtil.convertUUIDsToAbsoluteLinks(value);
         out.write("<script type=\"text/javascript\">");
         out.write("var " + var + " = null;");
         out.write("fckInstance = new FCKeditor( '" + id + "' );");
-        out.write("fckInstance.Value = '" + escapeJsValue(getValue()) + "';");
+        out.write("fckInstance.Value = '" + escapeJsValue(value) + "';");
         out.write("fckInstance.BasePath = '" + this.getRequest().getContextPath() + FCKEDIT_PATH + "';");
         if (customConfigurationsPath.length() > 0) {
             out.write("fckInstance.Config['CustomConfigurationsPath'] = '"
                 + this.getRequest().getContextPath()
-                + "/"
                 + customConfigurationsPath
                 + "';");
         }
@@ -140,8 +175,16 @@ public class DialogFckEdit extends DialogBox {
         out.write(var + " = fckInstance;");
         out.write("</script>");
 
-        // write the saveInfo for the writting back to repository
-        out.write("<input type='hidden' name='mgnlSaveInfo' value='" + id + ",String,0,0,0'>");
+        // write the saveInfo for the writting back to the repository
+        out.write("<input type='hidden' name='mgnlSaveInfo' value='"
+            + id
+            + ",String,"
+            + ControlSuper.VALUETYPE_SINGLE
+            + ","
+            + ControlSuper.RICHEDIT_FCK
+            + ","
+            + ControlSuper.ENCODING_NO
+            + "'>");
 
         out.write("</td>");
         out.write("</tr>");
