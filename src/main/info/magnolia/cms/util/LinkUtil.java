@@ -15,11 +15,13 @@ package info.magnolia.cms.util;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.gui.dialog.DialogFckEdit;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -31,7 +33,12 @@ import org.apache.commons.lang.StringUtils;
  * @version $Revision$ ($Author$)
  */
 public final class LinkUtil {
-
+    
+    /**
+     * Logger.
+     */
+    private static Logger log = Logger.getLogger(LinkUtil.class);
+    
     /**
      * The HierarchyManager to get the uuid
      */
@@ -82,8 +89,11 @@ public final class LinkUtil {
         StringBuffer res = new StringBuffer();
         while (matcher.find()) {
             String uuid = matcher.group(1);
-            //String absolutePath = matcher.group(2);
             String absolutePath = LinkUtil.makeAbsolutePathFromUUID(uuid);
+            // can't find the uuid
+            if(absolutePath.equals(uuid)){
+                absolutePath = matcher.group(2);
+            }
             matcher.appendReplacement(res, absolutePath + ".html");
         }
         matcher.appendTail(res);
@@ -102,6 +112,13 @@ public final class LinkUtil {
         while (matcher.find()) {
             String uuid = matcher.group(1);
             String absolutePath = LinkUtil.makeAbsolutePathFromUUID(uuid);
+
+            // can't find the uuid
+            if(absolutePath.equals(uuid)){
+                absolutePath = matcher.group(2);
+            }
+
+            // to relative path
             String relativePath = makeRelativePath(absolutePath, page);
             matcher.appendReplacement(res, relativePath);
         }
