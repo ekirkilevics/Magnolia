@@ -22,6 +22,7 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.gui.dialog.DialogSuper;
 import info.magnolia.cms.gui.misc.FileProperties;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Digester;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.LinkUtil;
@@ -46,11 +47,34 @@ import org.apache.log4j.Logger;
 
 /**
  * This class handels the saving in the dialogs. It uses the mgnlSaveInfo parameters sendend from the browser to store
- * the data in the node.
+ * the data in the node.The structure of the parameter is the following: <br>
+ * <code>name, type, valueType, isRichEditValue, encoding</code>
+ * <p>
+ * To find the consts see ControlSuper <table>
+ * <tr>
+ * <td>name</td>
+ * <td>the name of the field</td>
+ * </tr>
+ * <tr>
+ * <td>type</td>
+ * <td>string, boolean, ...</td>
+ * </tr>
+ * <tr>
+ * <td>valueType</td>
+ * <td>single, multiple</td>
+ * </tr>
+ * <tr>
+ * <td>isRichEditValue</td>
+ * <td>value from an editor</td>
+ * </tr>
+ * <tr>
+ * <td>encoding</td>
+ * <td>base64, unix, none</td>
+ * </tr>
+ * </table>
  * @author Vinzenz Wyser
  * @version 2.0
  */
-// TODO: refactor this control
 public class Save extends ControlSuper {
 
     /**
@@ -89,8 +113,11 @@ public class Save extends ControlSuper {
         this.repository = form.getParameter("mgnlRepository");
     }
 
+    /**
+     * Uses the mgnlSageInfo parameters to save the data.
+     */
     public void save() {
-        String[] saveInfo = form.getParameterValues("mgnlSaveInfo"); // name,type,propertyOrNode
+        String[] saveInfos = form.getParameterValues("mgnlSaveInfo"); // name,type,propertyOrNode
         String nodeCollectionName = this.getNodeCollectionName(null);
         String nodeName = this.getNodeName(null);
         String path = this.getPath();
@@ -139,205 +166,9 @@ public class Save extends ControlSuper {
             node.updateMetaData(request);
             page.updateMetaData(request);
             // loop all saveInfo controls; saveInfo format: name, type, valueType(single|multiple, )
-            for (int i = 0; i < saveInfo.length; i++) {
-                String name;
-                int type = type = PropertyType.STRING;
-                int valueType = ControlSuper.VALUETYPE_SINGLE;
-                int isRichEditValue = 0;
-                int encoding = ControlSuper.ENCODING_NO;
-                String[] values = {""};
-                if (saveInfo[i].indexOf(",") != -1) {
-                    String[] info = saveInfo[i].split(",");
-                    name = info[0];
-                    if (info.length >= 2) {
-                        type = PropertyType.valueFromName(info[1]);
-                    }
-                    if (info.length >= 3) {
-                        valueType = Integer.valueOf(info[2]).intValue();
-                    }
-                    if (info.length >= 4) {
-                        isRichEditValue = Integer.valueOf(info[3]).intValue();
-                    }
-                    if (info.length >= 5) {
-                        encoding = Integer.valueOf(info[4]).intValue();
-                    }
-                }
-                else {
-                    name = saveInfo[i];
-                }
-                if (type == PropertyType.BINARY) {
-                    Document doc = form.getDocument(name);
-                    if (doc == null && form.getParameter(name + "_" + File.REMOVE) != null) {
-                        try {
-                            node.delete(name + "_" + FileProperties.PROPERTIES_CONTENTNODE);
-                        }
-                        catch (RepositoryException re) {
-                            log.debug("Exception caught: " + re.getMessage(), re);
-                        }
-                        try {
-                            node.deleteNodeData(name);
-                        }
-                        catch (RepositoryException re) {
-                            log.debug("Exception caught: " + re.getMessage(), re);
-                        }
-
-                    }
-                    else {
-                        Content propNode = null;
-                        try {
-                            propNode = node.getContent(name + "_" + FileProperties.PROPERTIES_CONTENTNODE);
-                        }
-                        catch (RepositoryException re) {
-                            try {
-                                if (doc != null) {
-                                    propNode = node.createContent(
-                                        name + "_" + FileProperties.PROPERTIES_CONTENTNODE,
-                                        ItemType.CONTENTNODE);
-                                }
-                            }
-                            catch (RepositoryException re2) {
-                                log.debug("Exception caught: " + re2.getMessage(), re2);
-                            }
-                        }
-                        if (doc != null) {
-                            NodeData data = node.getNodeData(name);
-                            if (!data.isExist()) {
-                                data = node.createNodeData(name);
-                                if (log.isDebugEnabled()) {
-                                    log.debug("creating under - " + node.getHandle());
-                                    log.debug("creating node data for binary store - " + name);
-                                }
-                            }
-                            data.setValue(doc.getStream());
-                            log.debug("Node data updated");
-                        }
-                        if (propNode != null) {
-                            NodeData propData;
-                            String fileName = form.getParameter(name + "_" + FileProperties.PROPERTY_FILENAME);
-                            if (fileName == null || fileName.equals(StringUtils.EMPTY)) {
-                                fileName = doc.getFileName();
-                            }
-                            propData = propNode.getNodeData(FileProperties.PROPERTY_FILENAME);
-                            if (!propData.isExist()) {
-                                propData = propNode.createNodeData(FileProperties.PROPERTY_FILENAME);
-                            }
-                            propData.setValue(fileName);
-                            if (doc != null) {
-                                propData = propNode.getNodeData(FileProperties.PROPERTY_CONTENTTYPE);
-                                if (!propData.isExist()) {
-                                    propData = propNode.createNodeData(FileProperties.PROPERTY_CONTENTTYPE);
-                                }
-                                propData.setValue(doc.getType());
-                                propData = propNode.getNodeData(FileProperties.PROPERTY_SIZE);
-                                if (!propData.isExist()) {
-                                    propData = propNode.createNodeData(FileProperties.PROPERTY_SIZE);
-                                }
-                                propData.setValue(doc.getLength());
-                                propData = propNode.getNodeData(FileProperties.PROPERTY_EXTENSION);
-                                if (!propData.isExist()) {
-                                    propData = propNode.createNodeData(FileProperties.PROPERTY_EXTENSION);
-                                }
-                                propData.setValue(doc.getExtension());
-                                String template = form.getParameter(name + "_" + FileProperties.PROPERTY_TEMPLATE);
-                                if (StringUtils.isNotEmpty(template)) {
-                                    propData = propNode.getNodeData(FileProperties.PROPERTY_TEMPLATE);
-                                    if (!propData.isExist()) {
-                                        propData = propNode.createNodeData(FileProperties.PROPERTY_TEMPLATE);
-                                    }
-                                    propData.setValue(template);
-                                }
-                                else {
-                                    try {
-                                        propNode.deleteNodeData(FileProperties.PROPERTY_TEMPLATE);
-                                    }
-                                    catch (PathNotFoundException e) {
-                                        log.debug("Exception caught: " + e.getMessage(), e);
-                                    }
-                                }
-                                doc.delete();
-                            }
-                        }
-                    }
-                }
-                else {
-                    values = form.getParameterValues(name);
-                    if (valueType == ControlSuper.VALUETYPE_MULTIPLE) {
-                        // remove entire content node and (re-)write each
-                        try {
-                            node.delete(name);
-                        }
-                        catch (PathNotFoundException e) {
-                            log.debug("Exception caught: " + e.getMessage(), e);
-                        }
-                        if (values != null && values.length != 0) {
-                            Content multiNode = node.createContent(name, ItemType.CONTENTNODE);
-                            try {
-                                // MetaData.CREATION_DATE has private access; no method to delete it so far...
-                                multiNode.deleteNodeData("creationdate");
-                            }
-                            catch (RepositoryException re) {
-                                log.debug("Exception caught: " + re.getMessage(), re);
-                            }
-                            for (int ii = 0; ii < values.length; ii++) {
-                                String valueStr = values[ii];
-                                Value value = this.getValue(valueStr, type);
-                                multiNode.createNodeData("" + ii).setValue(value);
-                            }
-                        }
-                    }
-                    else {
-                        String valueStr = "";
-                        if (values != null) {
-                            valueStr = values[0]; // values is null when the expected field would not exis, e.g no
-                        }
-                        // checkbox selected
-                        NodeData data = node.getNodeData(name);
-                        if (isRichEditValue == 1) {
-                            valueStr = this.getRichEditValueStr(valueStr);
-                        }
-                        // actualy encoding does only work for control password
-                        boolean remove = false;
-                        boolean write = false;
-                        if (encoding == ControlSuper.ENCODING_BASE64) {
-                            if (StringUtils.isNotEmpty(valueStr.replaceAll(" ", ""))) {
-                                valueStr = new String(Base64.encodeBase64(valueStr.getBytes()));
-                                write = true;
-                            }
-                        }
-                        else if (encoding == ControlSuper.ENCODING_UNIX) {
-                            if (StringUtils.isNotEmpty(valueStr)) {
-                                valueStr = Digester.getSHA1Hex(valueStr);
-                                write = true;
-                            }
-                        }
-                        else {
-                            // no encoding
-                            if (values == null || StringUtils.isEmpty(valueStr)) {
-                                remove = true;
-                            }
-                            else {
-                                write = true;
-                            }
-                        }
-                        if (remove) {
-                            // remove node if already exists
-                            if (data.isExist()) {
-                                node.deleteNodeData(name);
-                            }
-                        }
-                        else if (write) {
-                            Value value = this.getValue(valueStr, type);
-                            if (value != null) {
-                                if (data.isExist()) {
-                                    data.setValue(value);
-                                }
-                                else {
-                                    node.createNodeData(name, value);
-                                }
-                            }
-                        }
-                    }
-                }
+            for (int i = 0; i < saveInfos.length; i++) {
+                String saveInfo = saveInfos[i];
+                processSaveInfo(node, saveInfo);
             }
             if (log.isDebugEnabled()) {
                 log.debug("Saving - " + path);
@@ -348,6 +179,261 @@ public class Save extends ControlSuper {
             log.error(re.getMessage(), re);
         }
         this.removeSessionAttributes();
+    }
+
+    /**
+     * This method cears about one mgnlSaveInfo. It adds the value to the node
+     * @param node node to add data
+     * @param saveInfo <code>name, type, valueType, isRichEditValue, encoding</code>
+     * @throws PathNotFoundException exception
+     * @throws RepositoryException exception
+     * @throws AccessDeniedException no access
+     */
+    private void processSaveInfo(Content node, String saveInfo) throws PathNotFoundException, RepositoryException,
+        AccessDeniedException {
+
+        String name;
+        int type = type = PropertyType.STRING;
+        int valueType = ControlSuper.VALUETYPE_SINGLE;
+        int isRichEditValue = 0;
+        int encoding = ControlSuper.ENCODING_NO;
+        String[] values = {""};
+        if (saveInfo.indexOf(",") != -1) {
+            String[] info = saveInfo.split(",");
+            name = info[0];
+            if (info.length >= 2) {
+                type = PropertyType.valueFromName(info[1]);
+            }
+            if (info.length >= 3) {
+                valueType = Integer.valueOf(info[2]).intValue();
+            }
+            if (info.length >= 4) {
+                isRichEditValue = Integer.valueOf(info[3]).intValue();
+            }
+            if (info.length >= 5) {
+                encoding = Integer.valueOf(info[4]).intValue();
+            }
+        }
+        else {
+            name = saveInfo;
+        }
+        if (type == PropertyType.BINARY) {
+            processBinary(node, name);
+        }
+        else {
+            values = form.getParameterValues(name);
+            if (valueType == ControlSuper.VALUETYPE_MULTIPLE) {
+                processMultiple(node, name, type, values);
+            }
+            else {
+                processCommon(node, name, type, isRichEditValue, encoding, values);
+            }
+        }
+    }
+
+    /**
+     * Process a common value
+     * @param node node where the data must be stored
+     * @param name name of the field
+     * @param type type
+     * @param isRichEditValue is it a return value of a richt edit field
+     * @param encoding must we encode (base64)
+     * @param values all values belonging to this field
+     * @throws PathNotFoundException exception
+     * @throws RepositoryException exception
+     * @throws AccessDeniedException exception
+     */
+    private void processCommon(Content node, String name, int type, int isRichEditValue, int encoding, String[] values)
+        throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        String valueStr = StringUtils.EMPTY;
+        if (values != null) {
+            valueStr = values[0]; // values is null when the expected field would not exis, e.g no
+        }
+        // checkbox selected
+        NodeData data = node.getNodeData(name);
+        if (isRichEditValue != ControlSuper.RICHEDIT_NONE) {
+            valueStr = Save.getRichEditValueStr(valueStr, isRichEditValue);
+        }
+        // actualy encoding does only work for control password
+        boolean remove = false;
+        boolean write = false;
+        if (encoding == ControlSuper.ENCODING_BASE64) {
+            if (StringUtils.isNotEmpty(valueStr.replaceAll(" ", ""))) {
+                valueStr = new String(Base64.encodeBase64(valueStr.getBytes()));
+                write = true;
+            }
+        }
+        else if (encoding == ControlSuper.ENCODING_UNIX) {
+            if (StringUtils.isNotEmpty(valueStr)) {
+                valueStr = Digester.getSHA1Hex(valueStr);
+                write = true;
+            }
+        }
+        else {
+            // no encoding
+            if (values == null || StringUtils.isEmpty(valueStr)) {
+                remove = true;
+            }
+            else {
+                write = true;
+            }
+        }
+        if (remove) {
+            // remove node if already exists
+            if (data.isExist()) {
+                node.deleteNodeData(name);
+            }
+        }
+        else if (write) {
+            Value value = this.getValue(valueStr, type);
+            if (value != null) {
+                if (data.isExist()) {
+                    data.setValue(value);
+                }
+                else {
+                    node.createNodeData(name, value);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param node
+     * @param name
+     * @param type
+     * @param values
+     * @throws RepositoryException
+     * @throws PathNotFoundException
+     * @throws AccessDeniedException
+     */
+    private void processMultiple(Content node, String name, int type, String[] values) throws RepositoryException,
+        PathNotFoundException, AccessDeniedException {
+        // remove entire content node and (re-)write each
+        try {
+            node.delete(name);
+        }
+        catch (PathNotFoundException e) {
+            log.debug("Exception caught: " + e.getMessage(), e);
+        }
+        if (values != null && values.length != 0) {
+            Content multiNode = node.createContent(name, ItemType.CONTENTNODE);
+            try {
+                // MetaData.CREATION_DATE has private access; no method to delete it so far...
+                multiNode.deleteNodeData("creationdate");
+            }
+            catch (RepositoryException re) {
+                log.debug("Exception caught: " + re.getMessage(), re);
+            }
+            for (int ii = 0; ii < values.length; ii++) {
+                String valueStr = values[ii];
+                Value value = this.getValue(valueStr, type);
+                multiNode.createNodeData("" + ii).setValue(value);
+            }
+        }
+    }
+
+    /**
+     * Process binary data. File- or imageupload.
+     * @param node
+     * @param name
+     * @throws PathNotFoundException
+     * @throws RepositoryException
+     * @throws AccessDeniedException
+     */
+    private void processBinary(Content node, String name) throws PathNotFoundException, RepositoryException,
+        AccessDeniedException {
+        Document doc = form.getDocument(name);
+        if (doc == null && form.getParameter(name + "_" + File.REMOVE) != null) {
+            try {
+                node.delete(name + "_" + FileProperties.PROPERTIES_CONTENTNODE);
+            }
+            catch (RepositoryException re) {
+                log.debug("Exception caught: " + re.getMessage(), re);
+            }
+            try {
+                node.deleteNodeData(name);
+            }
+            catch (RepositoryException re) {
+                log.debug("Exception caught: " + re.getMessage(), re);
+            }
+
+        }
+        else {
+            Content propNode = null;
+            try {
+                propNode = node.getContent(name + "_" + FileProperties.PROPERTIES_CONTENTNODE);
+            }
+            catch (RepositoryException re) {
+                try {
+                    if (doc != null) {
+                        propNode = node.createContent(
+                            name + "_" + FileProperties.PROPERTIES_CONTENTNODE,
+                            ItemType.CONTENTNODE);
+                    }
+                }
+                catch (RepositoryException re2) {
+                    log.debug("Exception caught: " + re2.getMessage(), re2);
+                }
+            }
+            if (doc != null) {
+                NodeData data = node.getNodeData(name);
+                if (!data.isExist()) {
+                    data = node.createNodeData(name);
+                    if (log.isDebugEnabled()) {
+                        log.debug("creating under - " + node.getHandle());
+                        log.debug("creating node data for binary store - " + name);
+                    }
+                }
+                data.setValue(doc.getStream());
+                log.debug("Node data updated");
+            }
+            if (propNode != null) {
+                NodeData propData;
+                String fileName = form.getParameter(name + "_" + FileProperties.PROPERTY_FILENAME);
+                if (fileName == null || fileName.equals(StringUtils.EMPTY)) {
+                    fileName = doc.getFileName();
+                }
+                propData = propNode.getNodeData(FileProperties.PROPERTY_FILENAME);
+                if (!propData.isExist()) {
+                    propData = propNode.createNodeData(FileProperties.PROPERTY_FILENAME);
+                }
+                propData.setValue(fileName);
+                if (doc != null) {
+                    propData = propNode.getNodeData(FileProperties.PROPERTY_CONTENTTYPE);
+                    if (!propData.isExist()) {
+                        propData = propNode.createNodeData(FileProperties.PROPERTY_CONTENTTYPE);
+                    }
+                    propData.setValue(doc.getType());
+                    propData = propNode.getNodeData(FileProperties.PROPERTY_SIZE);
+                    if (!propData.isExist()) {
+                        propData = propNode.createNodeData(FileProperties.PROPERTY_SIZE);
+                    }
+                    propData.setValue(doc.getLength());
+                    propData = propNode.getNodeData(FileProperties.PROPERTY_EXTENSION);
+                    if (!propData.isExist()) {
+                        propData = propNode.createNodeData(FileProperties.PROPERTY_EXTENSION);
+                    }
+                    propData.setValue(doc.getExtension());
+                    String template = form.getParameter(name + "_" + FileProperties.PROPERTY_TEMPLATE);
+                    if (StringUtils.isNotEmpty(template)) {
+                        propData = propNode.getNodeData(FileProperties.PROPERTY_TEMPLATE);
+                        if (!propData.isExist()) {
+                            propData = propNode.createNodeData(FileProperties.PROPERTY_TEMPLATE);
+                        }
+                        propData.setValue(template);
+                    }
+                    else {
+                        try {
+                            propNode.deleteNodeData(FileProperties.PROPERTY_TEMPLATE);
+                        }
+                        catch (PathNotFoundException e) {
+                            log.debug("Exception caught: " + e.getMessage(), e);
+                        }
+                    }
+                    doc.delete();
+                }
+            }
+        }
     }
 
     public void removeSessionAttributes() {
@@ -452,65 +538,77 @@ public class Save extends ControlSuper {
     /**
      * Manipulates the value returned from html editors (kupu, fck). It encodes the internal links.
      * @param value
+     * @param isRichEditValue
      * @return todo configurable regexp on save?
      */
-    protected static String getRichEditValueStr(String value) {
+    protected static String getRichEditValueStr(String value, int isRichEditValue) {
+
         // encode the internal links to avoid dependences from the contextpath, position of the page
         String valueStr = LinkUtil.convertAbsoluteLinksToUUIDs(value);
+        switch (isRichEditValue) {
+            case ControlSuper.RICHEDIT_KUPU :
+                valueStr = StringUtils.replace(valueStr, "\r\n", " ");
+                valueStr = StringUtils.replace(valueStr, "\n", " ");
 
-        valueStr = StringUtils.replace(valueStr, "\r\n", " ");
-        valueStr = StringUtils.replace(valueStr, "\n", " ");
+                // ie inserts some strange br...
+                valueStr = StringUtils.replace(valueStr, "</br>", "");
+                valueStr = StringUtils.replace(valueStr, "<P><BR>", "<P>");
 
-        // ie inserts some strange br...
-        valueStr = StringUtils.replace(valueStr, "</br>", "");
-        valueStr = StringUtils.replace(valueStr, "<P><BR>", "<P>");
+                valueStr = StringUtils.replace(valueStr, "<br>", "\n ");
+                valueStr = StringUtils.replace(valueStr, "<BR>", "\n ");
+                valueStr = StringUtils.replace(valueStr, "<br/>", "\n ");
 
-        valueStr = StringUtils.replace(valueStr, "<br>", "\n ");
-        valueStr = StringUtils.replace(valueStr, "<BR>", "\n ");
-        valueStr = StringUtils.replace(valueStr, "<br/>", "\n ");
+                // replace <P>
+                valueStr = replacePByBr(valueStr, "p");
 
-        // replace <P>
-        valueStr = replacePByBr(valueStr, "p");
+                // TODO remove it definitly: the method seams not to work
+                // replace <a class="...></a> by <span class=""></span>
+                // valueStr = replaceABySpan(valueStr, "a");
+                break;
 
-        // TODO remove it definitly
-        // replace <a class="...></a> by <span class=""></span>
-        // valueStr = replaceABySpan(valueStr, "a");
+            case ControlSuper.RICHEDIT_FCK :
 
+                break;
+
+            default :
+                break;
+        }
         return valueStr;
+
     }
 
-//    TODO remove this definitly or rewrite it. It does no work!
-//    
-//    protected static String replaceABySpan(String value, String tagName) {
-//        if (StringUtils.isEmpty(value)) {
-//            return value;
-//        }
-//        String valueStart = value.substring(0, 1);
-//        String[] strObj = value.split(" <" + tagName);
-//        StringBuffer valueStr = new StringBuffer();
-//        int i = 0;
-//        while (i < strObj.length) {
-//            String str = strObj[i];
-//            String tagPre = "";
-//            if (i != 0 || (" <" + tagName).equals(valueStart)) {
-//                String openTag = str.substring(0, str.indexOf(">"));
-//                if (openTag.indexOf(" href=") == -1) {
-//                    str = str.replaceAll(" </" + tagName + ">", " </span>");
-//                    tagPre = " <span";
-//                }
-//                else {
-//                    tagPre = " <" + tagName;
-//                }
-//            }
-//            valueStr.append(tagPre + str);
-//            i++;
-//        }
-//        String valueStr2 = valueStr.toString();
-//        if (!tagName.equals(tagName.toUpperCase())) {
-//            valueStr2 = replaceABySpan(valueStr2, tagName.toUpperCase());
-//        }
-//        return valueStr2;
-//    }
+    //    TODO remove this definitly or rewrite it. It does no work!
+    //    
+    //    protected static String replaceABySpan(String value, String tagName) {
+    //        if (StringUtils.isEmpty(value)) {
+    //            return value;
+    //        }
+    //        String valueStart = value.substring(0, 1);
+    //        String[] strObj = value.split(" <" + tagName);
+    //        StringBuffer valueStr = new StringBuffer();
+    //        int i = 0;
+    //        while (i < strObj.length) {
+    //            String str = strObj[i];
+    //            String tagPre = "";
+    //            if (i != 0 || (" <" + tagName).equals(valueStart)) {
+    //                String openTag = str.substring(0, str.indexOf(">"));
+    //                if (openTag.indexOf(" href=") == -1) {
+    //                    str = str.replaceAll(" </" + tagName + ">", " </span>");
+    //                    tagPre = " <span";
+    //                }
+    //                else {
+    //                    tagPre = " <" + tagName;
+    //                }
+    //            }
+    //            valueStr.append(tagPre + str);
+    //            i++;
+    //        }
+    //        String valueStr2 = valueStr.toString();
+    //        if (!tagName.equals(tagName.toUpperCase())) {
+    //            valueStr2 = replaceABySpan(valueStr2, tagName.toUpperCase());
+    //        }
+    //        return valueStr2;
+    //    }
 
     /**
      * @param value
