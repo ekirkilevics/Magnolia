@@ -58,6 +58,12 @@ public class ControlSuper implements ControlInterface {
     public static final int ENCODING_BASE64 = 1;
 
     public static final int ENCODING_UNIX = 2;
+    
+    public static final int RICHEDIT_NONE = 0;
+
+    public static final int RICHEDIT_KUPU = 1;
+
+    public static final int RICHEDIT_FCK = 2;    
 
     public static final String CSSCLASS_CONTROLBUTTON = "mgnlControlButton";
 
@@ -71,7 +77,7 @@ public class ControlSuper implements ControlInterface {
 
     private int encoding = ENCODING_NO;
 
-    private int isRichEditValue;
+    private int isRichEditValue = RICHEDIT_NONE;
 
     private String label;
 
