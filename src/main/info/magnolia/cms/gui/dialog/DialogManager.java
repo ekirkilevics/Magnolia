@@ -42,9 +42,9 @@ public class DialogManager {
     private static String DIALOGCONTROLS_CONFIG_NAME = "controls";
 
     /**
-     * "/modules/templating".
+     * "/modules/adminInterface/Config".
      */
-    private static String MODULE_TEMPLATING_NODE_NAME = "/modules/templating";
+    private static String ADMIN_CONFIG_NODE_NAME = "/modules/adminInterface/Config";
 
     /**
      * Node data name for control class.
@@ -66,7 +66,7 @@ public class DialogManager {
         HierarchyManager configHierarchyManager = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
 
         try {
-            Content serverNode = configHierarchyManager.getContent(MODULE_TEMPLATING_NODE_NAME);
+            Content serverNode = configHierarchyManager.getContent(ADMIN_CONFIG_NODE_NAME);
 
             Content configNode;
             try {
@@ -138,7 +138,7 @@ public class DialogManager {
         }
         catch (RepositoryException e) {
             log.error("Config : Failed to load dialog controls configuration - "
-                + MODULE_TEMPLATING_NODE_NAME
+                + ADMIN_CONFIG_NODE_NAME
                 + "/"
                 + DIALOGCONTROLS_CONFIG_NAME, e);
         }
