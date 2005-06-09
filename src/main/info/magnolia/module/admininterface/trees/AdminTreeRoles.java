@@ -13,6 +13,7 @@
 package info.magnolia.module.admininterface.trees;
 
 import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.beans.config.Subscriber;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.gui.control.ContextMenuItem;
@@ -84,7 +85,7 @@ public class AdminTreeRoles extends AdminTreeMVCHandler {
         column2.setWidth(2);
         tree.addColumn(column0);
         tree.addColumn(column1);
-        if (Server.isAdmin()) {
+        if (Server.isAdmin() || Server.isPublisher()) {
             tree.addColumn(columnIcons);
         }
         tree.addColumn(column2);
@@ -152,7 +153,7 @@ public class AdminTreeRoles extends AdminTreeMVCHandler {
             tree.addMenuItem(menuNewPage);
         }
         tree.addMenuItem(menuDelete);
-        if (Server.isAdmin()) {
+        if ((Server.isAdmin() || Server.isPublisher()) && Subscriber.isSubscribersEnabled()) {
             tree.addMenuItem(null); // line
             tree.addMenuItem(menuActivateExcl);
             tree.addMenuItem(menuDeActivate);

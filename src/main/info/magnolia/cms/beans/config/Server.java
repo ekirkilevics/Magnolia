@@ -91,6 +91,9 @@ public final class Server {
         boolean isAdmin = page.getNodeData("admin").getBoolean();
         Server.cachedContent.put("admin", BooleanUtils.toBooleanObject(isAdmin));
 
+        boolean isPublisher = page.getNodeData("publisher").getBoolean();
+        Server.cachedContent.put("publisher", BooleanUtils.toBooleanObject(isPublisher));
+
         String ext = page.getNodeData("defaultExtension").getString();
         Server.cachedContent.put("defaultExtension", ext);
 
@@ -165,10 +168,19 @@ public final class Server {
     }
 
     /**
-     * @return true if the instance is Admin
+     * @return true if the instance is configured as an admin server
      */
     public static boolean isAdmin() {
         return ((Boolean) Server.cachedContent.get("admin")).booleanValue();
+    }
+
+    /**
+     * Is this server configured as a publisher? If the server is configured as an admin server OR as a publisher server
+     * the "activate" items will be enabled in the menu.
+     * @return true if the instance is configured as a publisher
+     */
+    public static boolean isPublisher() {
+        return ((Boolean) Server.cachedContent.get("publisher")).booleanValue();
     }
 
     /**

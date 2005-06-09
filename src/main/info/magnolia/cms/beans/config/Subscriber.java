@@ -44,6 +44,11 @@ public final class Subscriber {
 
     private static Hashtable cachedContent = new Hashtable();
 
+    /**
+     * <code>true</code> if at least one subscriber is configured and enabled.
+     */
+    private static boolean subscribersEnabled;
+
     private String name;
 
     private boolean active;
@@ -57,6 +62,15 @@ public final class Subscriber {
     private String senderURL;
 
     private Map context;
+
+    /**
+     * Returns <code>true</code> if at least an enabled subscriber is configured, <code>false</code> if there are no
+     * subscriber or none of them is enabled
+     * @return <code>true</code> if at least an enabled subscriber exists
+     */
+    public static boolean isSubscribersEnabled() {
+        return subscribersEnabled;
+    }
 
     /**
      * constructor
@@ -98,6 +112,9 @@ public final class Subscriber {
 
         Iterator ipList = subs.iterator();
 
+        // start by setting the subscribersEnabled property to false, will be reset when an active subscriber is found
+        subscribersEnabled = false;
+
         while (ipList.hasNext()) {
             Content c = (Content) ipList.next();
             Subscriber si = new Subscriber();
@@ -116,6 +133,11 @@ public final class Subscriber {
             }
             else {
                 si.active = true;
+            }
+
+            if (si.active) {
+                // at least one subscriber is enabled
+                subscribersEnabled = true;
             }
 
             // all context info
@@ -214,4 +236,5 @@ public final class Subscriber {
     public String getSenderURL() {
         return this.senderURL;
     }
+
 }

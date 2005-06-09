@@ -14,6 +14,7 @@ package info.magnolia.module.admininterface.trees;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.beans.config.Subscriber;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
@@ -128,7 +129,7 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
         column3.setTitle(msgs.get("tree.web.date"));
         tree.addColumn(column0);
         tree.addColumn(column1);
-        if (Server.isAdmin()) {
+        if (Server.isAdmin() || Server.isPublisher()) {
             tree.addColumn(columnIcons);
         }
         tree.addColumn(column2);
@@ -237,10 +238,14 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
             tree.addMenuItem(null); // line
             tree.addMenuItem(menuCopy);
             tree.addMenuItem(menuMove);
+        }
+        if ((Server.isAdmin() || Server.isPublisher()) && Subscriber.isSubscribersEnabled()) {
             tree.addMenuItem(null); // line
             tree.addMenuItem(menuActivateExcl);
             tree.addMenuItem(menuActivateIncl);
             tree.addMenuItem(menuDeActivate);
+        }
+        if (Server.isAdmin()) {
             tree.addMenuItem(null); // line
             tree.addMenuItem(menuExport);
         }
