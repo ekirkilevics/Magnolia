@@ -243,25 +243,29 @@
 		return w;
 		}
 
-	mgnlTree.prototype.resizeOnload = function()
-		{
-	    if (navigator.userAgent.toLowerCase().indexOf("safari")==-1) this.resize();
-	    else setTimeout("mgnlTreeResizeOnloadSafari('"+this.name+"');",200);
-		}
-	function mgnlTreeResizeOnloadSafari(treeName)
-		{
+	mgnlTree.prototype.resizeOnload = function(){
+	    if (navigator.userAgent.toLowerCase().indexOf("safari")==-1) {
+	    	mgnlDebug("resizeOnload: not safari","tree");
+	    	this.resize();
+	    }
+	    else{
+  	    	mgnlDebug("resizeOnload: safari","tree");
+	    	setTimeout("mgnlTreeResizeOnloadSafari('"+this.name+"');",200);
+	    }
+	}
+		
+	function mgnlTreeResizeOnloadSafari(treeName){
+		mgnlDebug("mgnlTreeResizeOnloadSafari: safari","tree");
 		var tree=eval(treeName);
 		tree.resize();
-		}
+	}
 
 
-	mgnlTree.prototype.resize = function(columnNumber)
-		{
+	mgnlTree.prototype.resize = function(columnNumber){
 		//no columnNumber passed: resize all columns (@ resizing window)
 		//columnNumber passed: resize only this column and re-clip the one before (@ resizing column)
 
-		if (this.divMain)
-			{
+		if (this.divMain){
 			var sizeObj=mgnlGetWindowSize();
 
 			//resize tree div
@@ -282,51 +286,57 @@
 
 			//rules property differs in browsers
 			var rulesKey;
-			if (document.all) rulesKey="rules";
-			else if (document.getElementById) rulesKey="cssRules";
+			if (document.all){
+				rulesKey="rules";
+			}
+			else if (document.getElementById){
+				rulesKey="cssRules";
+			}
+			mgnlDebug("mgnlTree.resize: running with rules: " + rulesKey, "tree"); 
 
+			// for each stylesheet included
 			var treeColumnClasses=new Object();
 			//for (var elem0 in document.styleSheets) //does not work in firebird 0.8, safari 1.2
-			for (var elem0=document.styleSheets.length-1;elem0>=0;elem0--)
 			// internal styles seems to be always in last styleSheets, therefor top down
 			//to do: define break point!
-				{
-				//if (!confirm(document.styleSheets[elem0]).url) break;
-                var rule=document.styleSheets[elem0][rulesKey];
+			for (var elem0 = document.styleSheets.length-1; elem0>=0; elem0--) { 
+				mgnlDebug("mgnlTree.resize: styleSheets[elem0].href = " + document.styleSheets[elem0].href, "tree");
+				
+                var rules=document.styleSheets[elem0][rulesKey];
+				mgnlDebug("mgnlTree.resize: rules", "tree", rules);
 
 				//for (var elem1 in rule) //does not work in firebird 0.8, safari 1.2
-				for (var elem1=0;elem1<rule.length;elem1++)
-					{
-					//if (!confirm(elem1+"::"+rule[elem1])) break;
-					var cssClass=rule[elem1].selectorText;
-					if (cssClass && cssClass.indexOf("."+this.name+"CssClassColumn")!=-1)
-						{
-						treeColumnClasses[cssClass]=rule[elem1];
-						}
+				for (var elem1=0; elem1<rules.length; elem1++){
+					//mgnlDebug("mgnlTree.resize: rules[elem1]", "tree", rules[elem1]);
+
+					var cssClass=rules[elem1].selectorText;
+					// in safar 1.3 the selectorText is in lower case
+					if (cssClass && cssClass.toLowerCase().indexOf("." + this.name.toLowerCase() + "cssclasscolumn")!=-1){
+						treeColumnClasses[cssClass.toLowerCase()]=rules[elem1];
 					}
 				}
+			}
+
+			mgnlDebug("mgnlTree.resize: treeColumnClasses", "tree", treeColumnClasses);
 
 			var left=0;
-			for (var elem in this.columns)
-				{
+			for (var elem in this.columns){
 				//var cssClassObj=this.columns[elem].cssClass;
-				var cssClass="."+this.name+"CssClassColumn"+elem;
+				// in safari is it lowercase
+				var cssClass="."+this.name.toLowerCase()+"cssclasscolumn"+elem;
 				var cssClassObj=treeColumnClasses[cssClass];
 				var columnWidth=parseInt(this.columns[elem].width*quotient);
 				var columnWidthWithoutSpacing=columnWidth-this.columnSpacing;
 				//resize columne (by setting the left and clip attribute of its css class
-				if (cssClassObj)
-					{
-					if (!columnNumber || elem==columnNumber)
-						{
+				if (cssClassObj){
+					if (!columnNumber || elem==columnNumber){
 						cssClassObj.style.left=left;
-						}
-					if (!columnNumber || elem==columnNumber || elem==columnNumber-1)
-						{
-						cssClassObj.style.clip="rect(0 "+columnWidthWithoutSpacing+" 100 0)";
-						}
-					this.columns[elem].width=columnWidth;
 					}
+					if (!columnNumber || elem==columnNumber || elem==columnNumber-1){
+						cssClassObj.style.clip="rect(0 "+columnWidthWithoutSpacing+" 100 0)";
+					}
+					this.columns[elem].width=columnWidth;
+				}
 				//place the column resizer
 				var columnResizer=document.getElementById(this.name+"ColumnResizer"+elem);
 				this.columnResizerDiv.style.top=mgnlGetPosY(this.divMain)-2;
@@ -334,18 +344,16 @@
 
 				this.columnHeaderDiv.style.top=mgnlGetPosY(this.divMain)-18;
 				this.columnHeaderDiv.style.left=mgnlGetPosX(this.divMain)+this.paddingLeft;
-				if (columnResizer)
-					{
-					if (!columnNumber || elem==columnNumber)
-						{
+				if (columnResizer){
+					if (!columnNumber || elem==columnNumber){
 						var offsetResizerWidthSum=(elem-1)*(this.columnResizerGifWidth); //position is relative!
 						columnResizer.style.left=left-offsetResizerWidthSum+this.columnResizerGifWidthHalf+1+parseInt(elem);
-                        }
-					}
-				left+=columnWidth;
+                    }
 				}
+				left+=columnWidth;
 			}
 		}
+	}
 
 
 	mgnlTree.prototype.nodeHighlight = function(htmlObject,id,permissionWrite)
