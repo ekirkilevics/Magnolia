@@ -4,7 +4,8 @@ var mgnlDebugOn = false;
 // set the contextes which you want to debug
 var mgnlDebugContextes = {
 	tree: true,
-	dialog: true
+	dialog: true,
+	debug: true	
 }
 
 function mgnlRootWindow(current){
@@ -15,9 +16,11 @@ function mgnlRootWindow(current){
 	return current;
 }
 
-function mgnlDebug(str, context){
+function mgnlDebug(msg, context, o, level){
 	if(!mgnlDebugOn)
 		return;
+	if(!level)
+		level = 1;
 		
 	// is the context in debug mode?
 	if(context != null && (mgnlDebugContextes[context] == null || !mgnlDebugContextes[context]))
@@ -44,7 +47,38 @@ function mgnlDebug(str, context){
 	
 	// get the div to write in
 	var div = doc.getElementById('consoleDiv');
+	
+	if(o){
+		msg += ":" + mgnlDebugObject(o, level, "");
+	}
+	
 	if(context != null)
-		str = context + ": " + str;
-	div.innerHTML += str + "<br>";
+		msg = context + ": " + msg;
+	div.innerHTML += msg + "<br>";
+}
+
+function mgnlDebugObject(o, level, spaces){
+	var res = "";
+	switch(typeof o){
+	
+		case "object":
+			if(level<=0)
+				return "object";
+			res = "<br>" + spaces + "{<br>";
+			for(var key in o){
+				if(!res.match(/\{<br>$/))
+					res += ",<br>";
+				res += spaces + "&nbsp;&nbsp;&nbsp;" + key + ":";
+				res += mgnlDebugObject(o[key], level-1, spaces + "&nbsp;&nbsp;&nbsp;"); 
+			}
+			res += "<br>" + spaces + "}";
+			break;
+		case "function":
+			return "function"
+			break;
+		
+		default:
+			return o;
+	}
+	return res;
 }
