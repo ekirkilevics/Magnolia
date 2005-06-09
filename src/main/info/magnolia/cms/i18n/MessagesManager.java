@@ -105,6 +105,8 @@ public final class MessagesManager {
 
         // setting basename
         context.setAttribute(Config.FMT_LOCALIZATION_CONTEXT + ".application", MessagesManager.DEFAULT_BASENAME);
+        // for Resin and other J2EE Containers
+        context.setAttribute(Config.FMT_LOCALIZATION_CONTEXT, MessagesManager.DEFAULT_BASENAME);
 
         // setting default language (en)
         MessagesManager.setDefaultLocale(FALLBACK_LOCALE);
