@@ -48,14 +48,14 @@ import org.apache.log4j.Logger;
  * <p>
  * Version .01 implementation Simple implementation of Exchange interface using serialized objects and binary GET
  * </p>
- * 
+ *
  * <pre>
  * todo -
  * 1. implement incremental delivery
  * 2. concurrent activation
  * 3. context locking
  * </pre>
- * 
+ *
  * @author Sameer Charles
  * @version 2.0
  */
@@ -236,11 +236,21 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
             log.debug("Exchange : remove request received for " + page);
         }
         HierarchyManager hm = this.getHierarchyManager();
-        hm.delete(page);
-        hm.save();
-        CacheHandler.flushCache();
-        SecureURI.delete(page);
-        SecureURI.delete(page + "/*");
+
+        try {
+            hm.delete(page);
+            hm.save();
+            CacheHandler.flushCache();
+            SecureURI.delete(page);
+            SecureURI.delete(page + "/*");
+        }
+        catch (PathNotFoundException e) {
+            // ok, the node simply doesn't exist on the public instance, maybe it has never been activated
+            // don't log any error
+            if (log.isDebugEnabled()) {
+                log.debug("Unable to deactivate node " + page + ": " + e.getMessage());
+            }
+        }
     }
 
     /**
