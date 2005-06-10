@@ -88,7 +88,7 @@ public class AdminTreeUsers extends AdminTreeMVCHandler {
         column2.setWidth(2);
         tree.addColumn(column0);
         tree.addColumn(column1);
-        if (Server.isAdmin() || Server.isPublisher()) {
+        if (Server.isAdmin() || Subscriber.isSubscribersEnabled()) {
             tree.addColumn(columnIcons);
         }
         tree.addColumn(column2);
@@ -154,8 +154,8 @@ public class AdminTreeUsers extends AdminTreeMVCHandler {
             tree.addMenuItem(menuNewPage);
         }
         tree.addMenuItem(menuDelete);
-        
-        if (!Subscriber.isSubscribersEnabled() || !(Server.isAdmin() || Server.isPublisher())) {
+
+        if (!Subscriber.isSubscribersEnabled()) {
             menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
             menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
         }

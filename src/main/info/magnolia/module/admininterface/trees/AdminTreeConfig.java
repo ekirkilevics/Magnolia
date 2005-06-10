@@ -98,7 +98,7 @@ public class AdminTreeConfig extends AdminTreeMVCHandler {
         tree.addColumn(column0);
         tree.addColumn(column1);
         tree.addColumn(column2);
-        if (Server.isAdmin() || Server.isPublisher()) {
+        if (Server.isAdmin() || Subscriber.isSubscribersEnabled()) {
             tree.addColumn(columnIcons);
         }
         tree.addColumn(column4);
@@ -234,12 +234,12 @@ public class AdminTreeConfig extends AdminTreeMVCHandler {
         tree.addMenuItem(menuCut);
 
         // is it possible to activate?
-        if (!Subscriber.isSubscribersEnabled() || !(Server.isAdmin() || Server.isPublisher())) {
+        if (!Subscriber.isSubscribersEnabled()) {
             menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
             menuActivateIncl.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
             menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
         }
-        
+
         // only superuser can export data
         if (!Authenticator.getUser(request).isInRole(Role.ROLE_SUPERUSER)) {
             menuExport.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
