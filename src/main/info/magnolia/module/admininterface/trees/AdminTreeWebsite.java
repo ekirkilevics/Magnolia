@@ -147,6 +147,7 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
         Messages msgs = MessagesManager.getMessages(request);
         ContextMenuItem menuOpen = new ContextMenuItem();
         menuOpen.setLabel(msgs.get("tree.web.menu.open"));
+        menuOpen.setIcon(request.getContextPath() + "/admindocroot/icons/16/document_plain_earth.gif");
         menuOpen.setOnclick("mgnlTreeMenuItemOpen(" + tree.getJavascriptTree() + ");");
         menuOpen.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
             + tree.getJavascriptTree()
@@ -154,6 +155,8 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
 
         ContextMenuItem menuNewPage = new ContextMenuItem();
         menuNewPage.setLabel(msgs.get("tree.web.menu.new"));
+        menuNewPage.setIcon(request.getContextPath() + "/admindocroot/icons/16/document_plain_earth_add.gif");
+
         menuNewPage.setOnclick(tree.getJavascriptTree() + ".createNode('" + ItemType.CONTENT.getSystemName() + "');");
         menuNewPage.addJavascriptCondition("new mgnlTreeMenuItemConditionPermissionWrite("
             + tree.getJavascriptTree()
@@ -161,6 +164,7 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
 
         ContextMenuItem menuDelete = new ContextMenuItem();
         menuDelete.setLabel(msgs.get("tree.web.menu.delete"));
+        menuDelete.setIcon(request.getContextPath() + "/admindocroot/icons/16/delete2.gif");
         menuDelete.setOnclick(tree.getJavascriptTree() + ".deleteNode();");
         menuDelete.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
             + tree.getJavascriptTree()
@@ -171,6 +175,7 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
 
         ContextMenuItem menuMove = new ContextMenuItem();
         menuMove.setLabel(msgs.get("tree.web.menu.move"));
+        menuMove.setIcon(request.getContextPath() + "/admindocroot/icons/16/up_down.gif");
         menuMove.setOnclick(tree.getJavascriptTree() + ".cutNode();");
         menuMove.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
             + tree.getJavascriptTree()
@@ -181,6 +186,7 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
 
         ContextMenuItem menuCopy = new ContextMenuItem();
         menuCopy.setLabel(msgs.get("tree.web.menu.copy"));
+        menuCopy.setIcon(request.getContextPath() + "/admindocroot/icons/16/copy.gif");
         menuCopy.setOnclick(tree.getJavascriptTree() + ".copyNode();");
         menuCopy.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
             + tree.getJavascriptTree()
@@ -188,6 +194,8 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
 
         ContextMenuItem menuActivateExcl = new ContextMenuItem();
         menuActivateExcl.setLabel(msgs.get("tree.web.menu.activate"));
+        menuActivateExcl.setIcon(request.getContextPath() + "/admindocroot/icons/16/arrow_right_green.gif");
+
         menuActivateExcl.setOnclick(tree.getJavascriptTree() + ".activateNode(" + Tree.ACTION_ACTIVATE + ",false);");
         menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
             + tree.getJavascriptTree()
@@ -198,6 +206,7 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
 
         ContextMenuItem menuActivateIncl = new ContextMenuItem();
         menuActivateIncl.setLabel(msgs.get("tree.web.menu.activateInclSubs"));
+        menuActivateIncl.setIcon(request.getContextPath() + "/admindocroot/icons/16/arrow_right_green.gif");
         menuActivateIncl.setOnclick(tree.getJavascriptTree() + ".activateNode(" + Tree.ACTION_ACTIVATE + ",true);");
         menuActivateIncl.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
             + tree.getJavascriptTree()
@@ -208,6 +217,7 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
 
         ContextMenuItem menuDeActivate = new ContextMenuItem();
         menuDeActivate.setLabel(msgs.get("tree.web.menu.deactivate"));
+        menuDeActivate.setIcon(request.getContextPath() + "/admindocroot/icons/16/arrow_left_red.gif");
         menuDeActivate.setOnclick(tree.getJavascriptTree() + ".deActivateNode(" + Tree.ACTION_DEACTIVATE + ");");
         menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
             + tree.getJavascriptTree()
@@ -218,10 +228,12 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
 
         ContextMenuItem menuRefresh = new ContextMenuItem();
         menuRefresh.setLabel(msgs.get("tree.menu.refresh"));
+        menuRefresh.setIcon(request.getContextPath() + "/admindocroot/icons/16/refresh.gif");
         menuRefresh.setOnclick(tree.getJavascriptTree() + ".refresh();");
 
         ContextMenuItem menuExport = new ContextMenuItem();
         menuExport.setLabel(msgs.get("tree.menu.export"));
+        menuExport.setIcon(request.getContextPath() + "/admindocroot/icons/16/import1.gif");
         menuExport.setOnclick(tree.getJavascriptTree() + ".exportNode();");
         menuExport.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
             + tree.getJavascriptTree()
@@ -229,9 +241,6 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
         menuExport.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotNodeData("
             + tree.getJavascriptTree()
             + ")");
-
-        tree.addMenuItem(menuOpen);
-        tree.addMenuItem(null); // line
 
         // those menuitems are not active on public side
         if (!Server.isAdmin()) {
@@ -247,18 +256,21 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
             menuActivateIncl.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
             menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
         }
-
+        
         // only superuser can export data
         if (!Authenticator.getUser(request).isInRole(Role.ROLE_SUPERUSER)) {
             menuExport.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
         }
 
+        tree.addMenuItem(menuOpen);
         tree.addMenuItem(menuNewPage);
+        
+        tree.addMenuItem(null); // line
         tree.addMenuItem(menuDelete);
 
         tree.addMenuItem(null); // line
-        tree.addMenuItem(menuCopy);
         tree.addMenuItem(menuMove);
+        tree.addMenuItem(menuCopy);
 
         tree.addMenuItem(null); // line
         tree.addMenuItem(menuActivateExcl);

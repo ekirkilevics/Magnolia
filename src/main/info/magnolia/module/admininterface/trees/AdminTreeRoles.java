@@ -102,6 +102,7 @@ public class AdminTreeRoles extends AdminTreeMVCHandler {
 
         ContextMenuItem menuOpen = new ContextMenuItem();
         menuOpen.setLabel(msgs.get("tree.roles.menu.edit"));
+        menuOpen.setIcon(request.getContextPath() + "/admindocroot/icons/16/hat_white.gif");
         menuOpen.setOnclick("mgnlTreeMenuOpenDialog("
             + tree.getJavascriptTree()
             + ",'.magnolia/dialogs/roleedit.html');");
@@ -110,61 +111,73 @@ public class AdminTreeRoles extends AdminTreeMVCHandler {
             + ")");
         ContextMenuItem menuNewPage = new ContextMenuItem();
         menuNewPage.setLabel(msgs.get("tree.roles.menu.new"));
+        menuNewPage.setIcon(request.getContextPath() + "/admindocroot/icons/16/hat_white_add.gif");
         menuNewPage.setOnclick(tree.getJavascriptTree()
             + ".createRootNode('"
             + ItemType.CONTENT.getSystemName()
             + "');");
         ContextMenuItem menuDelete = new ContextMenuItem();
         menuDelete.setLabel(msgs.get("tree.roles.menu.delete"));
+        menuDelete.setIcon(request.getContextPath() + "/admindocroot/icons/16/delete2.gif");
         menuDelete.setOnclick(tree.getJavascriptTree() + ".deleteNode();");
         menuDelete.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
             + tree.getJavascriptTree()
             + ")");
         ContextMenuItem menuMove = new ContextMenuItem();
         menuMove.setLabel(msgs.get("tree.roles.menu.move"));
+        menuMove.setIcon(request.getContextPath() + "/admindocroot/icons/16/up_down.gif");
         menuMove.setOnclick(tree.getJavascriptTree() + ".cutNode();");
         menuMove.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
             + tree.getJavascriptTree()
             + ")");
         ContextMenuItem menuCopy = new ContextMenuItem();
         menuCopy.setLabel(msgs.get("tree.roles.menu.copy"));
+        menuCopy.setIcon(request.getContextPath() + "/admindocroot/icons/16/copy.gif");
         menuCopy.setOnclick(tree.getJavascriptTree() + ".copyNode();");
         menuCopy.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
             + tree.getJavascriptTree()
             + ")");
         ContextMenuItem menuRefresh = new ContextMenuItem();
         menuRefresh.setLabel(msgs.get("tree.menu.refresh"));
+        menuRefresh.setIcon(request.getContextPath() + "/admindocroot/icons/16/refresh.gif");
         menuRefresh.setOnclick(tree.getJavascriptTree() + ".refresh();");
+        
         ContextMenuItem menuActivateExcl = new ContextMenuItem();
         menuActivateExcl.setLabel(msgs.get("tree.roles.menu.activate"));
+        menuActivateExcl.setIcon(request.getContextPath() + "/admindocroot/icons/16/arrow_right_green.gif");
         menuActivateExcl.setOnclick(tree.getJavascriptTree() + ".activateNode(" + Tree.ACTION_ACTIVATE + ",false);");
         menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
             + tree.getJavascriptTree()
             + ")");
         ContextMenuItem menuDeActivate = new ContextMenuItem();
         menuDeActivate.setLabel(msgs.get("tree.roles.menu.deactivate"));
+        menuDeActivate.setIcon(request.getContextPath() + "/admindocroot/icons/16/arrow_left_red.gif");
         menuDeActivate.setOnclick(tree.getJavascriptTree() + ".deActivateNode(" + Tree.ACTION_DEACTIVATE + ");");
         menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
             + tree.getJavascriptTree()
             + ")");
-        if (Server.isAdmin()) {
-            tree.addMenuItem(menuOpen);
-            tree.addMenuItem(null); // line
-            tree.addMenuItem(menuNewPage);
+        
+        if (!Server.isAdmin()) {
+            menuOpen.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
+            menuNewPage.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
         }
-        tree.addMenuItem(menuDelete);
 
         if (!Subscriber.isSubscribersEnabled()) {
             menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
             menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
         }
+        
+        tree.addMenuItem(menuOpen);
+        tree.addMenuItem(menuNewPage);
+
+        tree.addMenuItem(null); // line
+        tree.addMenuItem(menuDelete);
 
         tree.addMenuItem(null); // line
         tree.addMenuItem(menuActivateExcl);
         tree.addMenuItem(menuDeActivate);
-
+        
         tree.addMenuItem(null); // line
         tree.addMenuItem(menuRefresh);
     }
-
 }
