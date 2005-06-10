@@ -201,6 +201,14 @@ public final class Authenticator {
     }
 
     /**
+     * @param request current HttpServletRequest
+     * @return the current user object
+     */
+    public static User getUser(HttpServletRequest request) {
+        return new User(getUserPage(request));
+    }
+
+    /**
      * checks user session for attribute "user node"
      * @param request current HttpServletRequest
      * @return <code>true</code> if the user is authenticated, <code>false</code> otherwise
