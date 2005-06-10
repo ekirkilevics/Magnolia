@@ -23,6 +23,8 @@ import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.gui.misc.Icon;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.security.Authenticator;
+import info.magnolia.cms.security.Role;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 
 import javax.jcr.PropertyType;
@@ -231,12 +233,22 @@ public class AdminTreeConfig extends AdminTreeMVCHandler {
         tree.addMenuItem(menuCopy);
         tree.addMenuItem(menuCut);
 
-        if ((Server.isAdmin() || Server.isPublisher()) && Subscriber.isSubscribersEnabled()) {
-            tree.addMenuItem(null); // line
-            tree.addMenuItem(menuActivateExcl);
-            tree.addMenuItem(menuActivateIncl);
-            tree.addMenuItem(menuDeActivate);
+        // is it possible to activate?
+        if (!Subscriber.isSubscribersEnabled() || !(Server.isAdmin() || Server.isPublisher())) {
+            menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
+            menuActivateIncl.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
+            menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
         }
+        
+        // only superuser can export data
+        if (!Authenticator.getUser(request).isInRole(Role.ROLE_SUPERUSER)) {
+            menuExport.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
+        }
+
+        tree.addMenuItem(null); // line
+        tree.addMenuItem(menuActivateExcl);
+        tree.addMenuItem(menuActivateIncl);
+        tree.addMenuItem(menuDeActivate);
 
         tree.addMenuItem(null); // line
         tree.addMenuItem(menuExport);

@@ -25,6 +25,8 @@ import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.TemplateMessagesUtil;
+import info.magnolia.cms.security.Authenticator;
+import info.magnolia.cms.security.Role;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 
@@ -230,25 +232,42 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
 
         tree.addMenuItem(menuOpen);
         tree.addMenuItem(null); // line
-        if (Server.isAdmin()) {
-            tree.addMenuItem(menuNewPage);
+
+        // those menuitems are not active on public side
+        if (!Server.isAdmin()) {
+            menuNewPage.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
+            menuCopy.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
+            menuMove.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
+            menuExport.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
         }
+
+        // is there a subscriber?
+        if (!Subscriber.isSubscribersEnabled() || !(Server.isAdmin() || Server.isPublisher())) {
+            menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
+            menuActivateIncl.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
+            menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
+        }
+        
+        // only superuser can export data
+        if (!Authenticator.getUser(request).isInRole(Role.ROLE_SUPERUSER)) {
+            menuExport.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
+        }
+
+        tree.addMenuItem(menuNewPage);
         tree.addMenuItem(menuDelete);
-        if (Server.isAdmin()) {
-            tree.addMenuItem(null); // line
-            tree.addMenuItem(menuCopy);
-            tree.addMenuItem(menuMove);
-        }
-        if ((Server.isAdmin() || Server.isPublisher()) && Subscriber.isSubscribersEnabled()) {
-            tree.addMenuItem(null); // line
-            tree.addMenuItem(menuActivateExcl);
-            tree.addMenuItem(menuActivateIncl);
-            tree.addMenuItem(menuDeActivate);
-        }
-        if (Server.isAdmin()) {
-            tree.addMenuItem(null); // line
-            tree.addMenuItem(menuExport);
-        }
+
+        tree.addMenuItem(null); // line
+        tree.addMenuItem(menuCopy);
+        tree.addMenuItem(menuMove);
+
+        tree.addMenuItem(null); // line
+        tree.addMenuItem(menuActivateExcl);
+        tree.addMenuItem(menuActivateIncl);
+        tree.addMenuItem(menuDeActivate);
+
+        tree.addMenuItem(null); // line
+        tree.addMenuItem(menuExport);
+
         tree.addMenuItem(null); // line
         tree.addMenuItem(menuRefresh);
     }

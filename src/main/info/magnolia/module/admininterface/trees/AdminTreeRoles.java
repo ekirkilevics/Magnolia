@@ -153,11 +153,16 @@ public class AdminTreeRoles extends AdminTreeMVCHandler {
             tree.addMenuItem(menuNewPage);
         }
         tree.addMenuItem(menuDelete);
-        if ((Server.isAdmin() || Server.isPublisher()) && Subscriber.isSubscribersEnabled()) {
-            tree.addMenuItem(null); // line
-            tree.addMenuItem(menuActivateExcl);
-            tree.addMenuItem(menuDeActivate);
+        
+        if (!Subscriber.isSubscribersEnabled() || !(Server.isAdmin() || Server.isPublisher())) {
+            menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
+            menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
         }
+
+        tree.addMenuItem(null); // line
+        tree.addMenuItem(menuActivateExcl);
+        tree.addMenuItem(menuDeActivate);
+        
         tree.addMenuItem(null); // line
         tree.addMenuItem(menuRefresh);
     }
