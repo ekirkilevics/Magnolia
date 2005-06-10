@@ -114,6 +114,14 @@ function mgnlContextMenuItem(id){
 //### Conditions for coloring the menu items
 //##########################################
 
+function mgnlTreeMenuItemConditionBoolean(bool){
+	this.bool = bool;
+
+	this.test = function(){
+		return bool;
+	}
+}
+
 function mgnlTreeMenuItemConditionSelectedNotRoot(tree){
 	this.tree = tree;
 
