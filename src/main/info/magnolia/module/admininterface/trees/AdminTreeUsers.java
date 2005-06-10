@@ -161,12 +161,12 @@ public class AdminTreeUsers extends AdminTreeMVCHandler {
             menuOpen.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
             menuNewPage.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
         }
-        
+
         if (!Subscriber.isSubscribersEnabled()) {
             menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
             menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
         }
-        
+
         tree.addMenuItem(menuOpen);
         tree.addMenuItem(menuNewPage);
 
@@ -176,7 +176,7 @@ public class AdminTreeUsers extends AdminTreeMVCHandler {
         tree.addMenuItem(null); // line
         tree.addMenuItem(menuActivateExcl);
         tree.addMenuItem(menuDeActivate);
-        
+
         tree.addMenuItem(null); // line
         tree.addMenuItem(menuRefresh);
     }

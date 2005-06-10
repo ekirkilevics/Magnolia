@@ -141,7 +141,7 @@ public class AdminTreeRoles extends AdminTreeMVCHandler {
         menuRefresh.setLabel(msgs.get("tree.menu.refresh"));
         menuRefresh.setIcon(request.getContextPath() + "/admindocroot/icons/16/refresh.gif");
         menuRefresh.setOnclick(tree.getJavascriptTree() + ".refresh();");
-        
+
         ContextMenuItem menuActivateExcl = new ContextMenuItem();
         menuActivateExcl.setLabel(msgs.get("tree.roles.menu.activate"));
         menuActivateExcl.setIcon(request.getContextPath() + "/admindocroot/icons/16/arrow_right_green.gif");
@@ -156,7 +156,7 @@ public class AdminTreeRoles extends AdminTreeMVCHandler {
         menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
             + tree.getJavascriptTree()
             + ")");
-        
+
         if (!Server.isAdmin()) {
             menuOpen.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
             menuNewPage.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
@@ -166,7 +166,7 @@ public class AdminTreeRoles extends AdminTreeMVCHandler {
             menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
             menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
         }
-        
+
         tree.addMenuItem(menuOpen);
         tree.addMenuItem(menuNewPage);
 
@@ -176,7 +176,7 @@ public class AdminTreeRoles extends AdminTreeMVCHandler {
         tree.addMenuItem(null); // line
         tree.addMenuItem(menuActivateExcl);
         tree.addMenuItem(menuDeActivate);
-        
+
         tree.addMenuItem(null); // line
         tree.addMenuItem(menuRefresh);
     }

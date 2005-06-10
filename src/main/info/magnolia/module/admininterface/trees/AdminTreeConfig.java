@@ -238,7 +238,7 @@ public class AdminTreeConfig extends AdminTreeMVCHandler {
             menuActivateIncl.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
             menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
         }
-        
+
         // only superuser can export data
         if (!Authenticator.getUser(request).isInRole(Role.ROLE_SUPERUSER)) {
             menuExport.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
@@ -247,7 +247,7 @@ public class AdminTreeConfig extends AdminTreeMVCHandler {
         tree.addMenuItem(menuNewPage);
         tree.addMenuItem(menuNewContentNode);
         tree.addMenuItem(menuNewNodeData);
-        
+
         tree.addMenuItem(null); // line
         tree.addMenuItem(menuDelete);
 
