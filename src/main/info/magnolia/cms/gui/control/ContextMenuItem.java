@@ -44,8 +44,7 @@ public class ContextMenuItem extends ControlSuper {
     }
 
     /**
-     * To enable/disable menu items; the tree object will be passed to the method.
-     * @param methodName (without brackets! e.g "checkIfWriteAccess" not "checkIfWriteAccess();"
+     * Must be a object with a method test(): addJavascriptCondition("new MyCondition()").
      */
     public void addJavascriptCondition(String methodName) {
         this.javascriptConditions.add(methodName);
