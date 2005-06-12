@@ -38,7 +38,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -59,6 +58,9 @@ import org.apache.log4j.Logger;
  */
 public class EntryServlet extends HttpServlet {
 
+    /**
+     * Request parameter: the INTERCEPT holds the name of an administrative action to perform.
+     */
     public static final String INTERCEPT = "mgnlIntercept";
 
     /**
@@ -71,11 +73,14 @@ public class EntryServlet extends HttpServlet {
      */
     private static Logger log = Logger.getLogger(EntryServlet.class);
 
+    /**
+     * The default request interceptor path, defined in web.xml.
+     */
     private static final String REQUEST_INTERCEPTOR = "/RequestInterceptor";
 
     /**
      * This makes browser and proxy caches work more effectively, reducing the load on server and network resources.
-     * @param request
+     * @param request HttpServletRequest
      * @return last modified time in miliseconds since 1st Jan 1970 GMT
      */
     public long getLastModified(HttpServletRequest request) {
@@ -84,10 +89,11 @@ public class EntryServlet extends HttpServlet {
 
     /**
      * All HTTP/s requests are handled here.
-     * @param req
-     * @param res
+     * @param req HttpServletRequest
+     * @param res HttpServletResponse
+     * @throws IOException can be thrown when the servlet is unable to write to the response stream
      */
-    public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+    public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
 
         if (ConfigLoader.isBootstrapping()) {
             // @todo a nice page, with the log content...
@@ -100,10 +106,10 @@ public class EntryServlet extends HttpServlet {
              * Try to find out what the preferred language of this user is.
              */
             if (isAllowed(req, res) && isAuthorized(req, res)) {
-                /* try to stream from cache first */
+                // try to stream from cache first
                 if (Cache.isCached(req)) {
                     if (CacheHandler.streamFromCache(req, res)) {
-                        return; /* if success return */
+                        return; // if success return
                     }
                 }
                 if (redirect(req, res)) {
@@ -112,7 +118,7 @@ public class EntryServlet extends HttpServlet {
                     return;
                 }
                 intercept(req, res);
-                /* aggregate content */
+                // aggregate content
                 Aggregator aggregator = new Aggregator(req, res);
                 boolean success = aggregator.collect();
                 if (success) {
@@ -147,10 +153,11 @@ public class EntryServlet extends HttpServlet {
 
     /**
      * All requests are handles by get handler.
-     * @param req
-     * @param res
+     * @param req HttpServletRequest
+     * @param res HttpServletResponse
+     * @throws IOException can be thrown when the servlet is unable to write to the response stream
      */
-    public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+    public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
         doGet(req, res);
     }
 
@@ -158,7 +165,8 @@ public class EntryServlet extends HttpServlet {
      * Checks access from Listener / Authenticator / AccessLock.
      * @param req HttpServletRequest as received by the service method
      * @param res HttpServletResponse as received by the service method
-     * @return boolean
+     * @return boolean <code>true</code> if access to the resource is allowed
+     * @throws IOException can be thrown when the servlet is unable to write to the response stream
      */
     private boolean isAllowed(HttpServletRequest req, HttpServletResponse res) throws IOException {
         if (Lock.isSystemLocked()) {
@@ -168,7 +176,7 @@ public class EntryServlet extends HttpServlet {
         else if (SessionAccessControl.isSecuredSession(req)) {
             return true;
         }
-        else if ((SecureURI.isProtected(getURI(req)))) {
+        else if (SecureURI.isProtected(getURI(req))) {
             return authenticate(req, res);
         }
         else if (!Listener.isAllowed(req)) {
@@ -183,6 +191,7 @@ public class EntryServlet extends HttpServlet {
      * @param req HttpServletRequest as received by the service method
      * @param res HttpServletResponse as received by the service method
      * @return boolean true if read access is granted
+     * @throws IOException can be thrown when the servlet is unable to write to the response stream
      */
     private boolean isAuthorized(HttpServletRequest req, HttpServletResponse res) throws IOException {
         boolean authorized = true;
@@ -198,17 +207,17 @@ public class EntryServlet extends HttpServlet {
 
     /**
      * Authenticate on basic headers.
-     * @param req
-     * @param res
+     * @param req HttpServletRequest
+     * @param res HttpServletResponst
+     * @return <code>true</code> if the user is authenticated
      */
     private boolean authenticate(HttpServletRequest req, HttpServletResponse res) {
         try {
             if (!Authenticator.authenticate(req)) {
                 res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 res.setHeader("WWW-Authenticate", "BASIC realm=\"" + Server.getBasicRealm() + "\"");
-                /**
-                 * invalidate previous session
-                 */
+
+                // invalidate previous session
                 SessionAccessControl.invalidateUser(req);
                 return false;
             }
@@ -217,24 +226,25 @@ public class EntryServlet extends HttpServlet {
             log.error(e.getMessage(), e);
             return false;
         }
-        /**
-         * initialize website access manager, its a temporary fix todo : should SessionAccessControl initialize access
-         * managers for all workspaces on login ?
-         */
+
+        // initialize website access manager, its a temporary fix
+        // @todo : should SessionAccessControl initialize access managers for all workspaces on login ?
         SessionAccessControl.getHierarchyManager(req);
+
         return true;
     }
 
     /**
      * Redirect based on the mapping in config/server/.node.xml
-     * @param request
-     * @param response
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     * @return <code>true</code> if request has been redirected, <code>false</code> otherwise
      */
     private boolean redirect(HttpServletRequest request, HttpServletResponse response) {
         String uri = this.getURIMap(request);
         if (StringUtils.isNotEmpty(uri)) {
             try {
-                /* first reset the existing URI attribute */
+                // first reset the existing URI attribute
                 Path.resetURI(request);
                 request.getRequestDispatcher(uri).forward(request, response);
             }
@@ -249,8 +259,8 @@ public class EntryServlet extends HttpServlet {
 
     /**
      * Attach Interceptor servlet if interception needed
-     * @param request
-     * @param response
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
      */
     private void intercept(HttpServletRequest request, HttpServletResponse response) {
         if (request.getParameter(INTERCEPT) != null) {
@@ -266,6 +276,7 @@ public class EntryServlet extends HttpServlet {
 
     /**
      * @return URI mapping as in ServerInfo
+     * @param request HttpServletRequest
      */
     private String getURIMap(HttpServletRequest request) {
         return VirtualMap.getInstance().getURIMapping(
@@ -274,7 +285,8 @@ public class EntryServlet extends HttpServlet {
 
     /**
      * Extracts uri and extension.
-     * @param request
+     * @param request HttpServletRequest
+     * @return URI without context path and extension
      */
     private String getURI(HttpServletRequest request) {
         return StringUtils.substringBeforeLast(StringUtils.substringAfter(request.getRequestURI(), request
@@ -283,7 +295,7 @@ public class EntryServlet extends HttpServlet {
 
     /**
      * Caches this request if level-1 cache is active and request is part of cacheable mapping
-     * @param request
+     * @param request HttpServletRequest
      */
     private void cacheRequest(HttpServletRequest request) {
         if (!Cache.isInCacheProcess(request) && info.magnolia.cms.beans.config.Cache.isCacheable()) {
@@ -293,22 +305,39 @@ public class EntryServlet extends HttpServlet {
     }
 
     /**
-     * <p>
-     * Simply a copy of the original request used by CacheProcess
-     * </p>
+     * Simply a copy of the original request used by CacheProcess.
      */
     private static class ClonedRequest implements HttpServletRequest {
 
+        /**
+         * Request attributes.
+         */
         Map attributes = new HashMap();
 
+        /**
+         * Request headers.
+         */
         Map headers = new HashMap();
 
+        /**
+         * Request URI.
+         */
         String uri;
 
+        /**
+         * Request context path.
+         */
         String contextPath;
 
+        /**
+         * Character encoding.
+         */
         String characterEncoding;
 
+        /**
+         * Instantiate a new ClonedRequest, copying needed attributes from the original request.
+         * @param originalRequest wrapped HttpServletRequest
+         */
         public ClonedRequest(HttpServletRequest originalRequest) {
             this.contextPath = originalRequest.getContextPath();
             // remember URI
@@ -325,218 +354,431 @@ public class EntryServlet extends HttpServlet {
             }
         }
 
+        /**
+         * @see javax.servlet.http.HttpServletRequest#getRequestURI()
+         */
         public String getRequestURI() {
             return uri;
         }
 
+        /**
+         * @see javax.servlet.http.HttpServletRequest#getHeader(java.lang.String)
+         */
         public String getHeader(String key) {
             return (String) this.headers.get(key);
         }
 
+        /**
+         * @see javax.servlet.ServletRequest#getAttribute(java.lang.String)
+         */
         public Object getAttribute(String key) {
             return attributes.get(key);
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.http.HttpServletRequest#getRequestURL()
+         */
         public StringBuffer getRequestURL() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.http.HttpServletRequest#getServletPath()
+         */
         public String getServletPath() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.http.HttpServletRequest#getSession(boolean)
+         */
         public HttpSession getSession(boolean b) {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.http.HttpServletRequest#getSession()
+         */
         public HttpSession getSession() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdValid()
+         */
         public boolean isRequestedSessionIdValid() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdFromCookie()
+         */
         public boolean isRequestedSessionIdFromCookie() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdFromURL()
+         */
         public boolean isRequestedSessionIdFromURL() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdFromUrl()
+         */
         public boolean isRequestedSessionIdFromUrl() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.http.HttpServletRequest#getAuthType()
+         */
         public String getAuthType() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.http.HttpServletRequest#getCookies()
+         */
         public Cookie[] getCookies() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.http.HttpServletRequest#getDateHeader(java.lang.String)
+         */
         public long getDateHeader(String s) {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.http.HttpServletRequest#getHeaders(java.lang.String)
+         */
         public Enumeration getHeaders(String s) {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.http.HttpServletRequest#getHeaderNames()
+         */
         public Enumeration getHeaderNames() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.http.HttpServletRequest#getIntHeader(java.lang.String)
+         */
         public int getIntHeader(String s) {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.http.HttpServletRequest#getMethod()
+         */
         public String getMethod() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.http.HttpServletRequest#getPathInfo()
+         */
         public String getPathInfo() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.http.HttpServletRequest#getPathTranslated()
+         */
         public String getPathTranslated() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.http.HttpServletRequest#getContextPath()
+         */
         public String getContextPath() {
             return this.contextPath;
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.http.HttpServletRequest#getQueryString()
+         */
         public String getQueryString() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.http.HttpServletRequest#getRemoteUser()
+         */
         public String getRemoteUser() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.http.HttpServletRequest#isUserInRole(java.lang.String)
+         */
         public boolean isUserInRole(String s) {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.http.HttpServletRequest#getUserPrincipal()
+         */
         public Principal getUserPrincipal() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.http.HttpServletRequest#getRequestedSessionId()
+         */
         public String getRequestedSessionId() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.ServletRequest#getAttributeNames()
+         */
         public Enumeration getAttributeNames() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.ServletRequest#getCharacterEncoding()
+         */
         public String getCharacterEncoding() {
             return this.characterEncoding;
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.ServletRequest#setCharacterEncoding(java.lang.String)
+         */
         public void setCharacterEncoding(String s) throws UnsupportedEncodingException {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.ServletRequest#getContentLength()
+         */
         public int getContentLength() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.ServletRequest#getContentType()
+         */
         public String getContentType() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.ServletRequest#getInputStream()
+         */
         public ServletInputStream getInputStream() throws IOException {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.ServletRequest#getParameter(java.lang.String)
+         */
         public String getParameter(String s) {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.ServletRequest#getParameterNames()
+         */
         public Enumeration getParameterNames() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.ServletRequest#getParameterValues(java.lang.String)
+         */
         public String[] getParameterValues(String s) {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.ServletRequest#getParameterMap()
+         */
         public Map getParameterMap() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.ServletRequest#getProtocol()
+         */
         public String getProtocol() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.ServletRequest#getScheme()
+         */
         public String getScheme() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.ServletRequest#getServerName()
+         */
         public String getServerName() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.ServletRequest#getServerPort()
+         */
         public int getServerPort() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.ServletRequest#getReader()
+         */
         public BufferedReader getReader() throws IOException {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.ServletRequest#getRemoteAddr()
+         */
         public String getRemoteAddr() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.ServletRequest#getRemoteHost()
+         */
         public String getRemoteHost() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.ServletRequest#setAttribute(java.lang.String, java.lang.Object)
+         */
         public void setAttribute(String s, Object o) {
             this.attributes.put(s, o);
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.ServletRequest#removeAttribute(java.lang.String)
+         */
         public void removeAttribute(String s) {
             this.attributes.remove(s);
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.ServletRequest#getLocale()
+         */
         public Locale getLocale() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.ServletRequest#getLocales()
+         */
         public Enumeration getLocales() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.ServletRequest#isSecure()
+         */
         public boolean isSecure() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.ServletRequest#getRequestDispatcher(java.lang.String)
+         */
         public RequestDispatcher getRequestDispatcher(String s) {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.ServletRequest#getRealPath(java.lang.String)
+         */
         public String getRealPath(String s) {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.ServletRequest#getRemotePort()
+         */
         public int getRemotePort() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.ServletRequest#getLocalName()
+         */
         public String getLocalName() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.ServletRequest#getLocalAddr()
+         */
         public String getLocalAddr() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.ServletRequest#getLocalPort()
+         */
         public int getLocalPort() {
             throw new UnsupportedOperationException();
         }
