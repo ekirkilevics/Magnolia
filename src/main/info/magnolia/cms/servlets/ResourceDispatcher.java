@@ -165,15 +165,17 @@ public class ResourceDispatcher extends HttpServlet {
         }
         try {
             NodeData atom = hm.getNodeData(path);
-            if (atom.getType() == PropertyType.BINARY) {
-                NodeData size = hm.getNodeData(path + "_properties/size");
-                int sizeInBytes = (new Long(size.getLong())).intValue();
-                res.setContentLength(sizeInBytes);
-            }
+            if (atom != null) {
+                if (atom.getType() == PropertyType.BINARY) {
+                    NodeData size = hm.getNodeData(path + "_properties/size");
+                    int sizeInBytes = (new Long(size.getLong())).intValue();
+                    res.setContentLength(sizeInBytes);
+                }
 
-            Value value = atom.getValue();
-            if (value != null) {
-                return value.getStream();
+                Value value = atom.getValue();
+                if (value != null) {
+                    return value.getStream();
+                }
             }
 
             log.warn("Resource not found: [" + path + "]");
