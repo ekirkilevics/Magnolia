@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.Locale;
 
 import javax.jcr.RepositoryException;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -85,7 +84,7 @@ public final class MessagesManager {
     /**
      * The context used for the messages
      */
-    private static ServletConfig config;
+    private static ServletContext context;
 
     /**
      * Util has no public constructor
@@ -95,14 +94,13 @@ public final class MessagesManager {
 
     /**
      * Called through the initialization process (startup of the container)
-     * @param config servlet context
+     * @param context servlet context
      */
-    public static void init(ServletConfig config) {
-        MessagesManager.config = config;
-        ServletContext context = config.getServletContext();
+    public static void init(ServletContext context) {
+        MessagesManager.context = context;
+
         // setting fallback
         context.setAttribute(Config.FMT_FALLBACK_LOCALE + ".application", FALLBACK_LOCALE);
-
         // setting basename
         context.setAttribute(Config.FMT_LOCALIZATION_CONTEXT + ".application", MessagesManager.DEFAULT_BASENAME);
         // for Resin and other J2EE Containers
@@ -291,7 +289,7 @@ public final class MessagesManager {
      */
     public static void setDefaultLocale(String defaultLocale) {
         MessagesManager.applicationLocale = new Locale(defaultLocale);
-        config.getServletContext().setAttribute(Config.FMT_LOCALE + ".application", defaultLocale);
+        context.setAttribute(Config.FMT_LOCALE + ".application", defaultLocale);
     }
 
     /**

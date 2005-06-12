@@ -15,8 +15,14 @@ package info.magnolia.cms.servlets;
 import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.logging.Log4jConfigurer;
 
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServlet;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -48,10 +54,21 @@ public class Initializer extends HttpServlet {
      * </ol>
      */
     public void init() {
-        Log4jConfigurer.initLogging(getServletConfig());
+
+        ServletConfig config = getServletConfig();
+
+        Log4jConfigurer.initLogging(config);
+
+        // copy all the initialization parameters in a Map, so that ConfigLoader is not tied to a ServletConfig instance
+        Map parameters = new HashMap();
+        Enumeration configParams = config.getInitParameterNames();
+        while (configParams.hasMoreElements()) {
+            String paramName = (String) configParams.nextElement();
+            parameters.put(paramName, config.getInitParameter(paramName));
+        }
 
         try {
-            new ConfigLoader(getServletConfig());
+            new ConfigLoader(config.getServletContext(), parameters);
         }
         catch (Exception e) {
             log.fatal(e.getMessage(), e);

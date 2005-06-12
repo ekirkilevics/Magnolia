@@ -19,10 +19,11 @@ import info.magnolia.cms.license.License;
 import info.magnolia.cms.module.ModuleFactory;
 import info.magnolia.cms.security.SecureURI;
 
-import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.jcr.RepositoryException;
-import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -53,22 +54,23 @@ public class ConfigLoader {
     /**
      * Initialize a ConfigLoader instance. All the supplied parameters will be set in
      * <code>info.magnolia.cms.beans.runtime.SystemProperty</code>
-     * @param config ServletConfig
+     * @param context ServletContext
+     * @param config contains initialization parameters
      * @see SystemProperty
      */
-    public ConfigLoader(ServletConfig config) {
+    public ConfigLoader(ServletContext context, Map config) {
 
-        String rootDir = config.getServletContext().getRealPath(StringUtils.EMPTY);
+        String rootDir = context.getRealPath(StringUtils.EMPTY);
+
         if (log.isInfoEnabled()) {
             log.info("Assuming paths relative to " + rootDir);
         }
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, rootDir);
 
-        Enumeration e = config.getInitParameterNames();
-        while (e.hasMoreElements()) {
-            String param = (String) e.nextElement();
-            String value = config.getInitParameter(param);
-            SystemProperty.setProperty(param, value);
+        Iterator it = config.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry param = (Map.Entry) it.next();
+            SystemProperty.setProperty((String) param.getKey(), (String) param.getValue());
         }
 
         if (StringUtils.isEmpty(System.getProperty("java.security.auth.login.config"))) {
@@ -84,14 +86,14 @@ public class ConfigLoader {
             }
         }
 
-        this.load(config);
+        this.load(context);
     }
 
     /**
      * Load magnolia configuration from repositories.
-     * @param config ServletConfig
+     * @param context ServletContext
      */
-    private void load(ServletConfig config) {
+    private void load(ServletContext context) {
         // first check for the license information, will fail if this class does not exist
         License license = License.getInstance();
         license.init();
@@ -132,7 +134,7 @@ public class ConfigLoader {
         log.info("Init virtualMap");
         VirtualMap.getInstance().init();
         log.info("Init i18n");
-        MessagesManager.init(config);
+        MessagesManager.init(context);
         log.info("Init secureURI");
         SecureURI.init();
 

@@ -102,9 +102,8 @@ public class EntryServlet extends HttpServlet {
         }
 
         try {
-            /**
-             * Try to find out what the preferred language of this user is.
-             */
+
+            // Try to find out what the preferred language of this user is.
             if (isAllowed(req, res) && isAuthorized(req, res)) {
                 // try to stream from cache first
                 if (Cache.isCached(req)) {
