@@ -32,12 +32,13 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title><fmt:message key="central.title"/></title>
     <cms:links adminOnly="false" />
+    <link rel="shortcut icon" href="${pageContext.request.contextPath}/docroot/favicon.ico" type="image/x-icon" />
     </head>
 
     <body class="mgnlBgDark mgnlAdminMain" onload="mgnlAdminCentralResize();">
 
     <jsp:scriptlet>
-    <![CDATA[ 
+    <![CDATA[
 	String repository=request.getParameter("repository");
 	if (repository==null || repository.equals("")) repository=ContentRepository.WEBSITE;
 
@@ -48,7 +49,7 @@
 	String firstOnClick="";
 	String iFrameSrc="";
 	boolean first = true;
-	
+
 	// this is a workaround for the AdminCentral button in the page edit dialog
     if(pathSelected!= null && pathSelected!=""){
 	    StringBuffer src=new StringBuffer();
@@ -61,7 +62,7 @@
 		if (pathOpen!=null) src.append("&pathOpen="+pathOpen);
 		if (pathSelected!=null) src.append("&pathSelected="+pathSelected);
 		iFrameSrc = src.toString();
-	}	
+	}
 
 
 	ButtonSet bs=new ButtonSet();
@@ -72,7 +73,7 @@
 		Collection menupoints = SessionAccessControl.getHierarchyManager(request, ContentRepository.CONFIG).getContent("/modules/adminInterface/Config/menu").getChildren(ItemType.CONTENTNODE.getSystemName(), Content.SORT_BY_SEQUENCE);
 		//Collection menupoints = Store.getInstance().getStore().getContent("menu").getChildren(ItemType.CONTENTNODE.getSystemName());
 		for (Iterator iter = menupoints.iterator(); iter.hasNext();) {
-		
+
 	        Content menupoint = (Content) iter.next();
 	        String label = menupoint.getNodeData("label").getString();
 	        String icon  = menupoint.getNodeData("icon").getString();
@@ -88,17 +89,17 @@
 				if(iFrameSrc==""){
 					firstOnClick = onclick;
 				}
-				first = false; 
+				first = false;
 			}
 
 			bs.setButtons(button);
 	    }
-	    
+
 	}
 	catch(Exception e){
 		System.out.println(e);
 	}
-    
+
 	// get user information
 	Content userPage=SessionAccessControl.getUserNode(request);
 	String userName=userPage.getTitle();
