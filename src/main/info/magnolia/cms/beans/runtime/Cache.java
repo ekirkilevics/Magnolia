@@ -20,6 +20,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -28,7 +29,15 @@ import org.apache.commons.lang.StringUtils;
  */
 public final class Cache {
 
+    /**
+     * Cached items: the key is the URI of the cached request and the entry is a Cache instance
+     */
     private static Map cachedURIList = new Hashtable();
+
+    /**
+     * Logger.
+     */
+    private static Logger log = Logger.getLogger(Cache.class);
 
     /**
      * holds all URI's which are being cached by cache process this list is updated by CacheHandler on start and end of
@@ -36,10 +45,19 @@ public final class Cache {
      */
     private static Map inProcessURIList = new Hashtable();
 
+    /**
+     * Time in milliseconds.
+     */
     private long time;
 
+    /**
+     * Original size.
+     */
     private int size;
 
+    /**
+     * Compressed size.
+     */
     private int compressedSize;
 
     /**
@@ -50,31 +68,18 @@ public final class Cache {
     }
 
     /**
+     * @param request HttpServletRequest
      * @return true is the request is cached
      */
     public static boolean isCached(HttpServletRequest request) {
-        return isCached(Path.getURI(request));
-    }
-
-    /**
-     * @return true is the request URI is cached
-     */
-    public static boolean isCached(String uri) {
-        return (Cache.cachedURIList.get(uri) != null);
+        return Cache.cachedURIList.get(Path.getURI(request)) != null;
     }
 
     /**
      * @return true is the request URI is being cached
      */
     public static boolean isInCacheProcess(HttpServletRequest request) {
-        return isInCacheProcess(Path.getURI(request));
-    }
-
-    /**
-     * @return true is the request URI is being cached
-     */
-    public static boolean isInCacheProcess(String uri) {
-        return (Cache.inProcessURIList.get(uri) != null);
+        return Cache.inProcessURIList.get(Path.getURI(request)) != null;
     }
 
     /**
@@ -107,6 +112,9 @@ public final class Cache {
         cacheMap.time = lastModified;
         cacheMap.size = size;
         cacheMap.compressedSize = compressedSize;
+        if (log.isDebugEnabled()) {
+            log.debug("Caching URI [" + uri + "]");
+        }
         Cache.cachedURIList.put(uri, cacheMap);
     }
 
@@ -125,14 +133,36 @@ public final class Cache {
     }
 
     /**
-     * @return creation time in miliseconds
+     * @return creation time in milliseconds
      */
     public static long getCreationTime(HttpServletRequest request) {
-        return getCreationTime(Path.getURI(request));
+        Cache cacheMap = (Cache) cachedURIList.get(Path.getURI(request));
+        if (cacheMap == null) {
+            return -1;
+        }
+        return cacheMap.time;
+    }
+
+    /**
+     * @return size as on disk
+     */
+    public static int getSize(HttpServletRequest request) {
+        Cache cacheMap = (Cache) cachedURIList.get(Path.getURI(request));
+        return cacheMap.size;
+    }
+
+    /**
+     * @return size as on disk
+     */
+    public static int getCompressedSize(HttpServletRequest request) {
+        Cache cacheMap = (Cache) cachedURIList.get(Path.getURI(request));
+        return cacheMap.compressedSize;
     }
 
     /**
      * @return creation time in miliseconds
+     * @deprecated use getCreationTime(HttpServletRequest). Cache could decide to handle requests internally using not
+     * only the request URI
      */
     public static long getCreationTime(String uri) {
         Cache cacheMap = (Cache) cachedURIList.get(uri);
@@ -144,13 +174,8 @@ public final class Cache {
 
     /**
      * @return size as on disk
-     */
-    public static int getSize(HttpServletRequest request) {
-        return getSize(Path.getURI(request));
-    }
-
-    /**
-     * @return size as on disk
+     * @deprecated use getSize(HttpServletRequest). Cache could decide to handle requests internally using not only the
+     * request URI
      */
     public static int getSize(String uri) {
         Cache cacheMap = (Cache) cachedURIList.get(uri);
@@ -159,16 +184,30 @@ public final class Cache {
 
     /**
      * @return size as on disk
-     */
-    public static int getCompressedSize(HttpServletRequest request) {
-        return getCompressedSize(Path.getURI(request));
-    }
-
-    /**
-     * @return size as on disk
+     * @deprecated use getCompressedSize(HttpServletRequest). Cache could decide to handle requests internally using not
+     * only the request URI
      */
     public static int getCompressedSize(String uri) {
         Cache cacheMap = (Cache) cachedURIList.get(uri);
         return cacheMap.compressedSize;
     }
+
+    /**
+     * @return true is the request URI is cached
+     * @deprecated use isCached(HttpServletRequest). Cache could decide to handle requests internally using not only the
+     * request URI
+     */
+    public static boolean isCached(String uri) {
+        return Cache.cachedURIList.get(uri) != null;
+    }
+
+    /**
+     * @return true is the request URI is being cached
+     * @deprecated use isInCacheProcess(HttpServletRequest). Cache could decide to handle requests internally using not
+     * only the request URI
+     */
+    public static boolean isInCacheProcess(String uri) {
+        return Cache.inProcessURIList.get(uri) != null;
+    }
+
 }

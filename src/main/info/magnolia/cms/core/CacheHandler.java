@@ -37,8 +37,8 @@ import org.apache.log4j.Logger;
 
 
 /**
- * CacheHandle checks if the data is already cached, if yes it spools the data back to the requester either
- * compressed or as is. If not it caches that request in default and optimized (only gzip for now) stores.
+ * CacheHandle checks if the data is already cached, if yes it spools the data back to the requester either compressed
+ * or as is. If not it caches that request in default and optimized (only gzip for now) stores.
  * @author Sameer Charles
  * @version $Revision $ ($Author $)
  */
@@ -46,22 +46,22 @@ public class CacheHandler extends Thread {
 
     /**
      * Cache directory file system path
-     * */
+     */
     public static final String CACHE_DIRECTORY = Path.getCacheDirectoryPath();
 
     /**
      * Default cache files location under main cache directory
-     * */
+     */
     private static final String DEFAULT_STORE = "/default";
 
     /**
      * Optimized cache files location under main cache directory
-     * */
+     */
     private static final String COMPRESSED_STORE = "/optimized";
 
     /**
      * Logger
-     * */
+     */
     private static Logger log = Logger.getLogger(CacheHandler.class);
 
     /**
@@ -110,7 +110,7 @@ public class CacheHandler extends Thread {
                 }
                 compressedSize = (new Long(gzipFile.length())).intValue();
             }
-            Cache.addToCachedURIList(repositoryURI, (new Date()).getTime(), size, compressedSize);
+            Cache.addToCachedURIList(repositoryURI, new Date().getTime(), size, compressedSize);
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -127,11 +127,11 @@ public class CacheHandler extends Thread {
      * Checks if the page has "redirectURL" property set
      * @param request
      * @return true if it has redirect
-     * */
+     */
     private static boolean hasRedirect(HttpServletRequest request) {
         Object obj = request.getAttribute(Aggregator.ACTPAGE);
         if (obj == null) {
-            return false; /* some other resource */
+            return false; // some other resource
         }
         Content page = (Content) obj;
 
