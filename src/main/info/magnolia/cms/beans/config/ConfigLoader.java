@@ -89,6 +89,7 @@ public class ConfigLoader {
 
     /**
      * Load magnolia configuration from repositories.
+     * @param config ServletConfig
      */
     private void load(ServletConfig config) {
         // first check for the license information, will fail if this class does not exist
@@ -128,25 +129,13 @@ public class ConfigLoader {
             Bootstrapper.bootstrapRepositories(Path.getAbsoluteFileSystemPath(bootdir));
         }
 
-        // now initialized in admininterface module
-        // log.info("Init template");
-        // Template.init();
-
-        // now initialized in templating module
-        // log.info("Init paragraph");
-        // Paragraph.initParagraphs();
-
         log.info("Init virtualMap");
         VirtualMap.getInstance().init();
         log.info("Init i18n");
         MessagesManager.init(config);
-
-        // now initialized in admininterface module
-        // log.info("Init dialog controls");
-        // DialogManager.init(config);
-
         log.info("Init secureURI");
         SecureURI.init();
+
         try {
             Server.init();
             ModuleFactory.init();
