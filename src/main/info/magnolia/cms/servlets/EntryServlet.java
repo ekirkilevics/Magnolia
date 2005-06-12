@@ -311,27 +311,42 @@ public class EntryServlet extends HttpServlet {
         /**
          * Request attributes.
          */
-        Map attributes = new HashMap();
+        private Map attributes = new HashMap();
 
         /**
          * Request headers.
          */
-        Map headers = new HashMap();
+        private Map headers = new HashMap();
 
         /**
          * Request URI.
          */
-        String uri;
+        private String uri;
 
         /**
          * Request context path.
          */
-        String contextPath;
+        private String contextPath;
 
         /**
          * Character encoding.
          */
-        String characterEncoding;
+        private String characterEncoding;
+
+        /**
+         * Server port.
+         */
+        private int serverPort;
+
+        /**
+         * Request scheme (http or https).
+         */
+        private String scheme;
+
+        /**
+         * Server name.
+         */
+        private String serverName;
 
         /**
          * Instantiate a new ClonedRequest, copying needed attributes from the original request.
@@ -351,6 +366,12 @@ public class EntryServlet extends HttpServlet {
             if (authHeader != null) {
                 this.headers.put("Authorization", authHeader);
             }
+
+            // needed if cacheDomain is not set
+            this.serverPort = originalRequest.getServerPort();
+            this.scheme = originalRequest.getScheme();
+            this.serverName = originalRequest.getServerName();
+
         }
 
         /**
@@ -372,6 +393,42 @@ public class EntryServlet extends HttpServlet {
          */
         public Object getAttribute(String key) {
             return attributes.get(key);
+        }
+
+        /**
+         * Throws UnsupportedOperationException.
+         * @see javax.servlet.http.HttpServletRequest#getContextPath()
+         */
+        public String getContextPath() {
+            return this.contextPath;
+        }
+
+        /**
+         * @see javax.servlet.ServletRequest#getCharacterEncoding()
+         */
+        public String getCharacterEncoding() {
+            return this.characterEncoding;
+        }
+
+        /**
+         * @see javax.servlet.ServletRequest#getScheme()
+         */
+        public String getScheme() {
+            return this.scheme;
+        }
+
+        /**
+         * @see javax.servlet.ServletRequest#getServerName()
+         */
+        public String getServerName() {
+            return this.serverName;
+        }
+
+        /**
+         * @see javax.servlet.ServletRequest#getServerPort()
+         */
+        public int getServerPort() {
+            return this.serverPort;
         }
 
         /**
@@ -512,14 +569,6 @@ public class EntryServlet extends HttpServlet {
 
         /**
          * Throws UnsupportedOperationException.
-         * @see javax.servlet.http.HttpServletRequest#getContextPath()
-         */
-        public String getContextPath() {
-            return this.contextPath;
-        }
-
-        /**
-         * Throws UnsupportedOperationException.
          * @see javax.servlet.http.HttpServletRequest#getQueryString()
          */
         public String getQueryString() {
@@ -564,14 +613,6 @@ public class EntryServlet extends HttpServlet {
          */
         public Enumeration getAttributeNames() {
             throw new UnsupportedOperationException();
-        }
-
-        /**
-         * Throws UnsupportedOperationException.
-         * @see javax.servlet.ServletRequest#getCharacterEncoding()
-         */
-        public String getCharacterEncoding() {
-            return this.characterEncoding;
         }
 
         /**
@@ -643,30 +684,6 @@ public class EntryServlet extends HttpServlet {
          * @see javax.servlet.ServletRequest#getProtocol()
          */
         public String getProtocol() {
-            throw new UnsupportedOperationException();
-        }
-
-        /**
-         * Throws UnsupportedOperationException.
-         * @see javax.servlet.ServletRequest#getScheme()
-         */
-        public String getScheme() {
-            throw new UnsupportedOperationException();
-        }
-
-        /**
-         * Throws UnsupportedOperationException.
-         * @see javax.servlet.ServletRequest#getServerName()
-         */
-        public String getServerName() {
-            throw new UnsupportedOperationException();
-        }
-
-        /**
-         * Throws UnsupportedOperationException.
-         * @see javax.servlet.ServletRequest#getServerPort()
-         */
-        public int getServerPort() {
             throw new UnsupportedOperationException();
         }
 

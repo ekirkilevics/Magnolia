@@ -71,12 +71,7 @@ public class CacheHandler extends Thread {
      */
     public static synchronized void cacheURI(HttpServletRequest request) throws IOException {
 
-        if (Cache.isCached(request)) {
-            return;
-        }
-
-        // dont cache
-        if (CacheHandler.hasRedirect(request)) {
+        if (Cache.isCached(request) || CacheHandler.hasRedirect(request)) {
             return;
         }
 
@@ -91,14 +86,23 @@ public class CacheHandler extends Thread {
                 return;
             }
             File file = getDestinationFile(repositoryURI, DEFAULT_STORE);
+
             if (!file.exists()) {
+
                 file.createNewFile();
                 out = new FileOutputStream(file);
-                streamURI(uri, out, request);
+                boolean success = streamURI(uri, out, request);
                 out.flush();
                 out.close();
+                if (!success) {
+                    // don't leave bad or incomplete files!
+                    file.delete();
+                    log.error("NOT Caching uri " + uri + " due to a previous error");
+                }
             }
-            size = (new Long(file.length())).intValue();
+
+            size = (int) file.length();
+
             if (info.magnolia.cms.beans.config.Cache.applyCompression(Path.getExtension(request))) {
                 File gzipFile = getDestinationFile(repositoryURI, COMPRESSED_STORE);
                 if (!gzipFile.exists()) {
@@ -148,9 +152,16 @@ public class CacheHandler extends Thread {
      * @param out this could be any stream type inherited from java.io.OutputStream
      * @param request
      */
-    private static void streamURI(String uri, OutputStream out, HttpServletRequest request) {
+    private static boolean streamURI(String uri, OutputStream out, HttpServletRequest request) {
+
+        String domain = info.magnolia.cms.beans.config.Cache.getDomain();
+
+        if (StringUtils.isEmpty(domain)) {
+            domain = getAppURL(request);
+        }
+
         try {
-            URL url = new URL(info.magnolia.cms.beans.config.Cache.getDomain() + uri);
+            URL url = new URL(domain + uri);
             URLConnection urlConnection = url.openConnection();
             if (SecureURI.isProtected(uri)) {
                 urlConnection.setRequestProperty("Authorization", request.getHeader("Authorization"));
@@ -161,11 +172,37 @@ public class CacheHandler extends Thread {
             while ((read = in.read(buffer)) > 0) {
                 out.write(buffer, 0, read);
             }
+            return true;
         }
         catch (Exception e) {
             log.error("Failed to stream - " + uri);
             log.error(e.getMessage());
         }
+
+        return false;
+    }
+
+    /**
+     * Returns the server url for the web application. Used when a cache domain is not configured.
+     * @param request HttpServletRequest
+     * @return the root webapp url [scheme]://[server]:[port]
+     */
+    private static String getAppURL(HttpServletRequest request) {
+        StringBuffer url = new StringBuffer();
+        int port = request.getServerPort();
+        if (port < 0) {
+            port = 80; // Work around java.net.URL bug
+        }
+        String scheme = request.getScheme();
+        url.append(scheme);
+        url.append("://");
+        url.append(request.getServerName());
+        if ((scheme.equals("http") && (port != 80)) || (scheme.equals("https") && (port != 443))) {
+            url.append(':');
+            url.append(port);
+        }
+
+        return url.toString();
     }
 
     /**
