@@ -115,7 +115,7 @@ public final class ModuleFactory {
                                 // first installation
                                 catch (PathNotFoundException e1) {
                                     moduleNode = modulesNode.createContent(moduleName);
-                                    ModuleLoader.createMinimalConfiguration(
+                                    ModuleUtil.createMinimalConfiguration(
                                         moduleNode,
                                         moduleName,
                                         moduleClassName,
