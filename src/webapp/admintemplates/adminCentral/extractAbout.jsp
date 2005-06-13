@@ -4,7 +4,7 @@
     xmlns:cms="urn:jsptld:cms-taglib">
     <jsp:directive.page contentType="text/html; charset=UTF-8" />
 
-    <jsp:scriptlet>pageContext.setAttribute("license", info.magnolia.cms.license.License.getInstance().getEntries());</jsp:scriptlet>
+    <jsp:scriptlet>pageContext.setAttribute("license", info.magnolia.cms.license.LicenseFileExtractor.getInstance().getEntries());</jsp:scriptlet>
     <jsp:scriptlet>pageContext.setAttribute("isadmin", new Boolean(info.magnolia.cms.beans.config.Server.isAdmin()));</jsp:scriptlet>
 	<fmt:message var="version" key="about.version"/>
 	<fmt:message var="build" key="about.build"/>
