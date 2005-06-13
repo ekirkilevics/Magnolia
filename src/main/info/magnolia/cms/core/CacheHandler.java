@@ -25,7 +25,6 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.ServletOutputStream;
@@ -257,14 +256,12 @@ public class CacheHandler extends Thread {
      * @return true is successful
      */
     public static boolean streamFromCache(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        /* make sure not to stream anything from cache if its a POST request or has ? in URL */
-        if (request.getMethod().toLowerCase().equals("post")) {
+
+        // make sure not to stream anything from cache if it's a POST request or if it has parameters
+        if (request.getMethod().toLowerCase().equals("post") || !request.getParameterMap().isEmpty()) {
             return false;
         }
-        Enumeration paramList = request.getParameterNames();
-        if (paramList.hasMoreElements()) {
-            return false;
-        }
+
         boolean compress = canCompress(request);
         FileInputStream fin = null;
         try {
@@ -291,7 +288,10 @@ public class CacheHandler extends Thread {
                 send(fin, response);
             }
         }
-        catch (Exception e) {
+        catch (IOException e) {
+            if (log.isDebugEnabled()) {
+                log.debug("Error while reading cache for " + e.getMessage(), e);
+            }
         }
         finally {
             if (fin != null) {
@@ -305,9 +305,9 @@ public class CacheHandler extends Thread {
      * Send data as GZIP output stream
      * @param is Input stream for the resource
      * @param res HttpServletResponse as received by the service method
-     * @throws Exception
+     * @throws IOException for errors while writing content to the output stream
      */
-    private static void sendCompressed(InputStream is, HttpServletResponse res) throws Exception {
+    private static void sendCompressed(InputStream is, HttpServletResponse res) throws IOException {
         res.setHeader("Content-Encoding", "gzip");
         send(is, res);
     }
@@ -316,9 +316,9 @@ public class CacheHandler extends Thread {
      * Send data as is
      * @param is Input stream for the resource
      * @param res HttpServletResponse as received by the service method
-     * @throws IOException
+     * @throws IOException for errors while writing content to the output stream
      */
-    private static void send(InputStream is, HttpServletResponse res) throws Exception {
+    private static void send(InputStream is, HttpServletResponse res) throws IOException {
         ServletOutputStream os = res.getOutputStream();
         byte[] buffer = new byte[8192];
         int read = 0;

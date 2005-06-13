@@ -25,7 +25,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Sameer Charles
- * @version 1.5
+ * @version $Revision $ ($Author $)
  */
 public final class Cache {
 
@@ -77,20 +77,21 @@ public final class Cache {
 
     /**
      * @return true is the request URI is being cached
+     * @param request HttpServletRequest
      */
     public static boolean isInCacheProcess(HttpServletRequest request) {
         return Cache.inProcessURIList.get(Path.getURI(request)) != null;
     }
 
     /**
-     * @param uri
+     * @param uri request URI
      */
     public static void addToInProcessURIList(String uri) {
         Cache.inProcessURIList.put(uri, StringUtils.EMPTY);
     }
 
     /**
-     * @param uri
+     * @param uri request URI
      */
     public static void removeFromInProcessURIList(String uri) {
         Cache.inProcessURIList.remove(uri);
@@ -104,7 +105,10 @@ public final class Cache {
     }
 
     /**
-     * @param uri
+     * @param uri request URI
+     * @param lastModified last modification time (ms from 1970)
+     * @param size original size
+     * @param compressedSize compressed size
      * @param lastModified
      */
     public static void addToCachedURIList(String uri, long lastModified, int size, int compressedSize) {
@@ -119,7 +123,7 @@ public final class Cache {
     }
 
     /**
-     * @param uri
+     * @param uri request URI
      */
     public static void removeFromCachedURIList(String uri) {
         Cache.cachedURIList.remove(uri);
@@ -133,6 +137,7 @@ public final class Cache {
     }
 
     /**
+     * @param request HttpServletRequest
      * @return creation time in milliseconds
      */
     public static long getCreationTime(HttpServletRequest request) {
@@ -144,6 +149,7 @@ public final class Cache {
     }
 
     /**
+     * @param request HttpServletRequest
      * @return size as on disk
      */
     public static int getSize(HttpServletRequest request) {
@@ -152,6 +158,7 @@ public final class Cache {
     }
 
     /**
+     * @param request HttpServletRequest
      * @return size as on disk
      */
     public static int getCompressedSize(HttpServletRequest request) {
@@ -160,6 +167,7 @@ public final class Cache {
     }
 
     /**
+     * @param uri request URI
      * @return creation time in miliseconds
      * @deprecated use getCreationTime(HttpServletRequest). Cache could decide to handle requests internally using not
      * only the request URI
@@ -173,6 +181,7 @@ public final class Cache {
     }
 
     /**
+     * @param uri request URI
      * @return size as on disk
      * @deprecated use getSize(HttpServletRequest). Cache could decide to handle requests internally using not only the
      * request URI
@@ -183,6 +192,7 @@ public final class Cache {
     }
 
     /**
+     * @param uri request URI
      * @return size as on disk
      * @deprecated use getCompressedSize(HttpServletRequest). Cache could decide to handle requests internally using not
      * only the request URI
@@ -193,6 +203,7 @@ public final class Cache {
     }
 
     /**
+     * @param uri request URI
      * @return true is the request URI is cached
      * @deprecated use isCached(HttpServletRequest). Cache could decide to handle requests internally using not only the
      * request URI
@@ -202,6 +213,7 @@ public final class Cache {
     }
 
     /**
+     * @param uri request URI
      * @return true is the request URI is being cached
      * @deprecated use isInCacheProcess(HttpServletRequest). Cache could decide to handle requests internally using not
      * only the request URI

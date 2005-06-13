@@ -20,6 +20,10 @@ import java.util.Iterator;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.observation.Event;
+import javax.jcr.observation.EventIterator;
+import javax.jcr.observation.EventListener;
+import javax.jcr.observation.ObservationManager;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.BooleanUtils;
@@ -38,7 +42,7 @@ public final class Server {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(Server.class);
+    protected static Logger log = Logger.getLogger(Server.class);
 
     private static Map cachedContent = new Hashtable();
 
@@ -57,13 +61,23 @@ public final class Server {
      * @throws ConfigurationException if basic config nodes are missing
      */
     public static void init() throws ConfigurationException {
+        load();
+        registerEventListener();
+    }
+
+    /**
+     * Load the server configuration.
+     * @throws ConfigurationException
+     */
+    public static void load() throws ConfigurationException {
         Server.cachedContent.clear();
         Server.cachedURImapping.clear();
         Server.cachedCacheableURIMapping.clear();
         try {
             log.info("Config : loading Server");
             Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(CONFIG_PAGE);
-            Server.cacheContent(startPage);
+            cacheServerConfiguration(startPage);
+            cacheSecureURIList(startPage);
             log.info("Config : Server config loaded");
         }
         catch (RepositoryException re) {
@@ -72,21 +86,19 @@ public final class Server {
         }
     }
 
+    /**
+     * Reload the server configuration: simply calls load().
+     * @throws ConfigurationException
+     */
     public static void reload() throws ConfigurationException {
         log.info("Config : re-loading Server config");
-        Server.init();
+        Server.load();
     }
 
     /**
      * Cache server content from the config repository.
      */
-    private static void cacheContent(Content page) {
-        try {
-            addToSecureList(page.getContent("secureURIList"));
-        }
-        catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        }
+    private static void cacheServerConfiguration(Content page) {
 
         boolean isAdmin = page.getNodeData("admin").getBoolean();
         Server.cachedContent.put("admin", BooleanUtils.toBooleanObject(isAdmin));
@@ -103,7 +115,7 @@ public final class Server {
         }
         catch (Exception e) {
             log.error(e.getMessage());
-            Server.cachedContent.put("defaultMailServer", "");
+            Server.cachedContent.put("defaultMailServer", StringUtils.EMPTY);
         }
 
         Server.cachedContent.put("404URI", page.getNodeData("ResourceNotAvailableURIMapping").getString());
@@ -113,7 +125,89 @@ public final class Server {
 
     }
 
+    /**
+     * Cache server content from the config repository.
+     */
+    private static void cacheSecureURIList(Content page) {
+        try {
+            addToSecureList(page.getContent("secureURIList"));
+        }
+        catch (RepositoryException re) {
+            log.error(re.getMessage(), re);
+        }
+
+    }
+
+    /**
+     * Register an event listener: reload server configuration when something changes.
+     * @todo split reloading of base server configuration and secure URI list
+     */
+    private static void registerEventListener() {
+
+        log.info("Registering event listener for server");
+
+        // server properties, only on the root server node
+        try {
+            ObservationManager observationManager = ContentRepository
+                .getHierarchyManager(ContentRepository.CONFIG)
+                .getWorkspace()
+                .getObservationManager();
+
+            observationManager.addEventListener(
+                new EventListener() {
+
+                    public void onEvent(EventIterator iterator) {
+                        // reload everything
+                        try {
+                            reload();
+                        }
+                        catch (ConfigurationException e) {
+                            log.error(e.getMessage(), e);
+                        }
+                    }
+                },
+                Event.PROPERTY_ADDED | Event.PROPERTY_CHANGED | Event.PROPERTY_REMOVED,
+                "/" + CONFIG_PAGE,
+                false,
+                null,
+                null,
+                false);
+        }
+        catch (RepositoryException e) {
+            log.error("Unable to add event listeners for server", e);
+        }
+
+        // secure URI list
+        try {
+            ObservationManager observationManager = ContentRepository
+                .getHierarchyManager(ContentRepository.CONFIG)
+                .getWorkspace()
+                .getObservationManager();
+
+            observationManager.addEventListener(new EventListener() {
+
+                public void onEvent(EventIterator iterator) {
+                    // reload everything
+                    try {
+                        reload();
+                    }
+                    catch (ConfigurationException e) {
+                        log.error(e.getMessage(), e);
+                    }
+                }
+            }, Event.NODE_ADDED
+                | Event.NODE_REMOVED
+                | Event.PROPERTY_ADDED
+                | Event.PROPERTY_CHANGED
+                | Event.PROPERTY_REMOVED, "/" + CONFIG_PAGE + "/secureURIList", true, null, null, false);
+        }
+        catch (RepositoryException e) {
+            log.error("Unable to add event listeners for server", e);
+        }
+    }
+
     private static void addToSecureList(Content node) {
+
         if (node == null) {
             return;
         }
@@ -145,7 +239,7 @@ public final class Server {
     public static String getDefaultExtension() {
         String defaultExtension = (String) Server.cachedContent.get("defaultExtension");
         if (defaultExtension == null) {
-            return "";
+            return StringUtils.EMPTY;
         }
         return defaultExtension;
     }
@@ -172,15 +266,6 @@ public final class Server {
     }
 
     /**
-     * @deprecated
-     * @see Cache#isCacheable()
-     * @return true if the pages could be cached
-     */
-    public static boolean isCacheable() {
-        return Cache.isCacheable();
-    }
-
-    /**
      *
      */
     public static boolean isVisibleToObinary() {
@@ -188,9 +273,19 @@ public final class Server {
     }
 
     /**
+     * @see Cache#isCacheable()
+     * @return true if the pages could be cached
+     * @deprecated
+     */
+    public static boolean isCacheable() {
+        return Cache.isCacheable();
+    }
+
+    /**
+     * @param request HttpServletRequest
+     * @return true if the requested URI can be added to cache
      * @deprecated
      * @see Cache#isCacheable(javax.servlet.http.HttpServletRequest)
-     * @return true if the requested URI can be added to cache
      */
     public static boolean isCacheable(HttpServletRequest request) {
         return Cache.isCacheable(request);

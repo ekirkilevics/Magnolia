@@ -117,6 +117,7 @@ public class EntryServlet extends HttpServlet {
                     return;
                 }
                 intercept(req, res);
+
                 // aggregate content
                 Aggregator aggregator = new Aggregator(req, res);
                 boolean success = aggregator.collect();
@@ -297,7 +298,7 @@ public class EntryServlet extends HttpServlet {
      * @param request HttpServletRequest
      */
     private void cacheRequest(HttpServletRequest request) {
-        if (!Cache.isInCacheProcess(request) && info.magnolia.cms.beans.config.Cache.isCacheable()) {
+        if (!Cache.isInCacheProcess(request) && info.magnolia.cms.beans.config.Cache.isCacheable(request)) {
             CacheProcess cache = new CacheProcess(new ClonedRequest(request));
             cache.start();
         }

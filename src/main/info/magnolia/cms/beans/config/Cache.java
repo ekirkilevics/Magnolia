@@ -19,11 +19,16 @@ import info.magnolia.cms.core.Path;
 import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.cms.util.UrlPattern;
 
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.observation.Event;
+import javax.jcr.observation.EventIterator;
+import javax.jcr.observation.EventListener;
+import javax.jcr.observation.ObservationManager;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.BooleanUtils;
@@ -56,14 +61,14 @@ public final class Cache {
      */
     private static Logger log = Logger.getLogger(Cache.class);
 
-    private static Map cachedCacheableURIMapping = new Hashtable();
+    private static Map cachedCacheableURIMapping = new HashMap();
 
     /**
      * Compression wont work for these pre compressed formats.
      */
     private static final Map COMPRESSION_LIST = new Hashtable();
 
-    private static boolean isCacheable;
+    private static boolean active;
 
     private static String domain;
 
@@ -75,13 +80,18 @@ public final class Cache {
     }
 
     protected static void init() {
+        load();
+        registerEventListener();
+    }
+
+    public static void load() {
         cachedCacheableURIMapping.clear();
         COMPRESSION_LIST.clear();
         log.info("Config : loading cache mapping");
         try {
             Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(CONFIG_PATH);
-            isCacheable = startPage.getNodeData(ACTIVE).getBoolean();
-            if (isCacheable) {
+            active = startPage.getNodeData(ACTIVE).getBoolean();
+            if (active) {
                 domain = startPage.getNodeData(DOMAIN).getString();
                 Content contentNode = startPage.getContent(CACHE_MAPPING_NODE + "/" + ALLOW_LIST);
                 cacheCacheableURIMappings(contentNode, true);
@@ -89,7 +99,7 @@ public final class Cache {
                 cacheCacheableURIMappings(contentNode, false);
                 Content compressionListNode = startPage.getContent(COMPRESSION_LIST_NODE);
                 updateCompressionList(compressionListNode);
-                // todo sort assending so there wont be too much work on comparing
+                // @todo sort ascending so there wont be too much work on comparing
             }
             log.info("Config : cache mapping loaded");
         }
@@ -101,7 +111,37 @@ public final class Cache {
 
     public static void reload() {
         log.info("Config : reloading cache mapping");
-        Cache.init();
+        load();
+    }
+
+    /**
+     * Register an event listener: reload cache configuration when something changes.
+     */
+    private static void registerEventListener() {
+
+        log.info("Registering event listener for cache");
+
+        try {
+            ObservationManager observationManager = ContentRepository
+                .getHierarchyManager(ContentRepository.CONFIG)
+                .getWorkspace()
+                .getObservationManager();
+
+            observationManager.addEventListener(new EventListener() {
+
+                public void onEvent(EventIterator iterator) {
+                    // reload everything
+                    reload();
+                }
+            }, Event.NODE_ADDED
+                | Event.NODE_REMOVED
+                | Event.PROPERTY_ADDED
+                | Event.PROPERTY_CHANGED
+                | Event.PROPERTY_REMOVED, "/" + CONFIG_PATH, true, null, null, false);
+        }
+        catch (RepositoryException e) {
+            log.error("Unable to add event listeners for cache", e);
+        }
     }
 
     /**
@@ -143,11 +183,21 @@ public final class Cache {
     }
 
     /**
-     * If this instance can be cached. todo check for Level1 and Level2 caching.
-     * @return <code>true</code> if this instance can be cached
+     * If cache enabled?.
+     * @return <code>true</code> if cache is enabled
+     * @deprecated use Cache.isActive()
+     * @see Cache#isActive()
      */
     public static boolean isCacheable() {
-        return isCacheable;
+        return active;
+    }
+
+    /**
+     * If cache enabled?.
+     * @return <code>true</code> if cache is enabled
+     */
+    public static boolean isActive() {
+        return active;
     }
 
     public static String getDomain() {
@@ -158,11 +208,22 @@ public final class Cache {
      * @return true if the requested URI can be added to cache
      */
     public static boolean isCacheable(HttpServletRequest request) {
-        // first check for MIMEMappings, extension must exist otherwise its a fake request
 
+        // is cache enabled?
+        if (!isActive()) {
+            return false;
+        }
+
+        // don't cache POSTs or requests with parameters
+        if ("POST".equals(request.getMethod()) || request.getParameterMap().size() > 0) {
+            return false;
+        }
+
+        // first check for MIMEMappings, extension must exist otherwise its a fake request
         if (StringUtils.isEmpty(MIMEMapping.getMIMEType(Path.getExtension(request)))) {
             return false;
         }
+
         Iterator listEnum = cachedCacheableURIMapping.keySet().iterator();
 
         String uri = Path.getURI(request);
@@ -172,7 +233,6 @@ public final class Cache {
         while (listEnum.hasNext()) {
             UrlPattern p = (UrlPattern) listEnum.next();
             if (p.match(uri)) {
-
                 int patternLength = p.getLength();
                 if (lastMatchedPatternlength < patternLength) {
                     lastMatchedPatternlength = patternLength;
