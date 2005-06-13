@@ -210,7 +210,7 @@ public final class Cache {
     public static boolean isCacheable(HttpServletRequest request) {
 
         // is cache enabled?
-        if (!isActive()) {
+        if (!isActive() || Server.isAdmin()) {
             return false;
         }
 

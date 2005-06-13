@@ -13,6 +13,7 @@
 package info.magnolia.cms.core;
 
 import info.magnolia.cms.Aggregator;
+import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.runtime.Cache;
 import info.magnolia.cms.security.SecureURI;
 
@@ -256,6 +257,11 @@ public class CacheHandler extends Thread {
      * @return true is successful
      */
     public static boolean streamFromCache(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        // by now don't cache anything if server is admin
+        if (Server.isAdmin()) {
+            return false;
+        }
 
         // make sure not to stream anything from cache if it's a POST request or if it has parameters
         if (request.getMethod().toLowerCase().equals("post") || !request.getParameterMap().isEmpty()) {
