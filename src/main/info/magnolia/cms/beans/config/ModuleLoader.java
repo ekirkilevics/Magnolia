@@ -14,12 +14,10 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.module.InvalidConfigException;
 import info.magnolia.cms.module.ModuleConfig;
 import info.magnolia.cms.module.ModuleFactory;
-import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.AccessManagerImpl;
 import info.magnolia.cms.security.Permission;
@@ -57,11 +55,11 @@ public final class ModuleLoader {
      */
     public static final String CONFIG_PAGE = "modules";
 
-    private static final String CONFIG_NODE_REGISTER = "Register";
+    public static final String CONFIG_NODE_REGISTER = "Register";
 
-    private static final String CONFIG_NODE_VIRTUAL_MAPPING = "VirtualURIMapping";
+    public static final String CONFIG_NODE_VIRTUAL_MAPPING = "VirtualURIMapping";
 
-    private static final String CONFIG_NODE_LOCAL_STORE = "Config";
+    public static final String CONFIG_NODE_LOCAL_STORE = "Config";
 
     /**
      * todo fix this with proper JCR implementation.
@@ -113,23 +111,6 @@ public final class ModuleLoader {
                 log.error(re.getMessage(), re);
             }
         }
-    }
-
-    public static Content createMinimalConfiguration(Content node, String name, String className, String version)
-        throws AccessDeniedException, PathNotFoundException, RepositoryException {
-        node.createNodeData("version").setValue(version);
-        node.createNodeData("licence");
-        node.createContent("Config");
-        node.createContent("VirtualURIMapping", ItemType.CONTENTNODE);
-
-        Content register = node.createContent(CONFIG_NODE_REGISTER, ItemType.CONTENTNODE);
-        register.createNodeData("moduleName");
-        register.createNodeData("moduleDescription");
-        register.createNodeData("class").setValue(className);
-        register.createNodeData("repository");
-        register.createContent("sharedRepositories", ItemType.CONTENTNODE);
-        register.createContent("initParams", ItemType.CONTENTNODE);
-        return node;
     }
 
     private static void load(Content module) throws RepositoryException, ClassNotFoundException, InvalidConfigException {
