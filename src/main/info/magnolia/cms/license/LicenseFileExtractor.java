@@ -30,7 +30,7 @@ import org.jdom.input.SAXBuilder;
  * @author Sameer Charles
  * @version 1.1
  */
-public final class License {
+public final class LicenseFileExtractor {
 
     public static final String VERSION_NUMBER = "VersionNumber";
 
@@ -57,13 +57,13 @@ public final class License {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(License.class);
+    private static Logger log = Logger.getLogger(LicenseFileExtractor.class);
 
-    private static License license = new License();
+    private static LicenseFileExtractor license = new LicenseFileExtractor();
 
     private static Map values;
 
-    public static License getInstance() {
+    public static LicenseFileExtractor getInstance() {
         return license;
     }
 
