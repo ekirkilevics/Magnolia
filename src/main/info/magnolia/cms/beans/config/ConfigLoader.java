@@ -15,7 +15,7 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.license.License;
+import info.magnolia.cms.license.LicenseFileExtractor;
 import info.magnolia.cms.module.ModuleFactory;
 import info.magnolia.cms.security.SecureURI;
 
@@ -95,7 +95,7 @@ public class ConfigLoader {
      */
     private void load(ServletContext context) {
         // first check for the license information, will fail if this class does not exist
-        License license = License.getInstance();
+        LicenseFileExtractor license = LicenseFileExtractor.getInstance();
         license.init();
         printVersionInfo(license);
 
@@ -161,16 +161,16 @@ public class ConfigLoader {
      * Print version info to console.
      * @param license loaded License
      */
-    private void printVersionInfo(License license) {
+    private void printVersionInfo(LicenseFileExtractor license) {
         System.out.println("---------------------------------------------");
         System.out.println("MAGNOLIA LICENSE");
         System.out.println("---------------------------------------------");
-        System.out.println("Version number : " + license.get(License.VERSION_NUMBER));
-        System.out.println("Build          : " + license.get(License.BUILD_NUMBER));
+        System.out.println("Version number : " + license.get(LicenseFileExtractor.VERSION_NUMBER));
+        System.out.println("Build          : " + license.get(LicenseFileExtractor.BUILD_NUMBER));
         System.out.println("Provider       : "
-            + license.get(License.PROVIDER)
+            + license.get(LicenseFileExtractor.PROVIDER)
             + " ("
-            + license.get(License.PRIVIDER_EMAIL)
+            + license.get(LicenseFileExtractor.PRIVIDER_EMAIL)
             + ")");
     }
 
