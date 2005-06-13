@@ -51,20 +51,23 @@ ul.level0 li a,ul.level-1 li a {
 	display: block;
 }
 
+/* unselected menupoints */
 ul.level-1 li a,ul.level0 li a {
 	padding-left: 2px;
 	font-weight: bold;
-	color: #538307;
+	color: #8D1811;
 }
 
+/* padding for submenupoints */
 ul ul.level1 li a {
 	padding-left: 10px;
 	font-weight: normal;
 }
 
+/* selected menupoint */
 ul.level0 strong a,ul.level-1 strong a {
-	color: #538307;
-	background-color: #E5F973;
+	color: #8D1811;
+	background-color: #EFD3C5;
 	text-decoration: none;
 }
 
@@ -113,7 +116,7 @@ ul ul.level1 strong a {
 }
 
 .rightColumnTitle {
-	background-color: #999;
+	background-color: #003399;
 	color: #fff;
 	font-weight: bold;
 	padding-top: 2px;
