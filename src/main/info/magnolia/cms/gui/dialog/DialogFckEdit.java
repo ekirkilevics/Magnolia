@@ -184,7 +184,7 @@ public class DialogFckEdit extends DialogBox {
             + ControlSuper.RICHEDIT_FCK
             + ","
             + ControlSuper.ENCODING_NO
-            + "'>");
+            + "' />");
 
         out.write("</td>");
         out.write("</tr>");
@@ -192,7 +192,7 @@ public class DialogFckEdit extends DialogBox {
 
     /**
      * Replacements:
-     * 
+     *
      * <pre>
      * ' -> \'
      * " -> \"
@@ -200,7 +200,7 @@ public class DialogFckEdit extends DialogBox {
      * \n -> \\n
      * \ -> \\
      * </pre>
-     * 
+     *
      * @param src
      * @return escaped js String
      */
