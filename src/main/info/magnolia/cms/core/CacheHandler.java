@@ -67,9 +67,8 @@ public class CacheHandler extends Thread {
     /**
      * Cache this request in default and optimized stores
      * @param request duplicate request created for cache
-     * @throws IOException
      */
-    public static synchronized void cacheURI(HttpServletRequest request) throws IOException {
+    public static synchronized void cacheURI(HttpServletRequest request) {
 
         if (Cache.isCached(request) || CacheHandler.hasRedirect(request)) {
             return;
@@ -121,7 +120,12 @@ public class CacheHandler extends Thread {
         }
         finally {
             if (out != null) {
-                out.close();
+                try {
+                    out.close();
+                }
+                catch (IOException e) {
+                    // ignore
+                }
             }
             Cache.removeFromInProcessURIList(repositoryURI);
         }
@@ -129,7 +133,7 @@ public class CacheHandler extends Thread {
 
     /**
      * Checks if the page has "redirectURL" property set
-     * @param request
+     * @param request HttpServletRequest
      * @return true if it has redirect
      */
     private static boolean hasRedirect(HttpServletRequest request) {
@@ -150,7 +154,8 @@ public class CacheHandler extends Thread {
      * Stream given URI
      * @param uri to be streamed
      * @param out this could be any stream type inherited from java.io.OutputStream
-     * @param request
+     * @param request HttpServletRequest
+     * @return <code>true</code> if resource is successfully returned to the client, <code>false</code> otherwise
      */
     private static boolean streamURI(String uri, OutputStream out, HttpServletRequest request) {
 
@@ -175,8 +180,7 @@ public class CacheHandler extends Thread {
             return true;
         }
         catch (Exception e) {
-            log.error("Failed to stream - " + uri);
-            log.error(e.getMessage());
+            log.error("Failed to stream [" + uri + "] due to a " + e.getClass().getName() + ": " + e.getMessage());
         }
 
         return false;
@@ -207,12 +211,11 @@ public class CacheHandler extends Thread {
 
     /**
      * Creates file hierarchy for the given URI in cache store
-     * @param uri
+     * @param uri request uri
      * @param type could be either CacheHandler.DEFAULT_STORE or CacheHandler.COMPRESSED_STORE
      * @return newly created file
-     * @throws Exception
      */
-    private static File getDestinationFile(String uri, String type) throws Exception {
+    private static File getDestinationFile(String uri, String type) {
         validatePath(CACHE_DIRECTORY);
         validatePath(CACHE_DIRECTORY + type);
         String[] items = uri.split("/");
@@ -233,30 +236,25 @@ public class CacheHandler extends Thread {
      * Create a directory specified by the path
      * @param path to the directory
      */
-    public static void validatePath(String path) throws Exception {
-        try {
-            File file = new File(path);
-            if (!file.isDirectory()) {
-                if (!file.mkdir()) {
-                    log.error("Can not create directory - " + path);
-                }
+    public static void validatePath(String path) {
+
+        File file = new File(path);
+        if (!file.isDirectory()) {
+            if (!file.mkdir()) {
+                log.error("Can not create directory - " + path);
             }
-        }
-        catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new Exception(e);
         }
     }
 
     /**
      * Spools cached data back to the client. This only works if specified request is a GET request and does not have
      * any request parameter, else it wont write anything on the output stream.
-     * @param request
-     * @param response
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
      * @throws IOException
-     * @return true is successful
+     * @return <code>true</code> is successful
      */
-    public static boolean streamFromCache(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public static boolean streamFromCache(HttpServletRequest request, HttpServletResponse response) {
 
         // by now don't cache anything if server is admin
         if (Server.isAdmin()) {
@@ -301,7 +299,12 @@ public class CacheHandler extends Thread {
         }
         finally {
             if (fin != null) {
-                fin.close();
+                try {
+                    fin.close();
+                }
+                catch (IOException e) {
+                    // ignore
+                }
             }
         }
         return true;
@@ -337,13 +340,14 @@ public class CacheHandler extends Thread {
 
     /**
      * Checks if the client from whom this request originated accept GZIP compression
+     * @param request HttpServletRequest
      * @return true if client sends value "gzip" in Accept-Encoding header
      */
-    private static boolean canCompress(HttpServletRequest req) {
-        if (!info.magnolia.cms.beans.config.Cache.applyCompression(Path.getExtension(req))) {
+    private static boolean canCompress(HttpServletRequest request) {
+        if (!info.magnolia.cms.beans.config.Cache.applyCompression(Path.getExtension(request))) {
             return false;
         }
-        String encoding = req.getHeader("Accept-Encoding");
+        String encoding = request.getHeader("Accept-Encoding");
         if (encoding != null) {
             return (encoding.toLowerCase().indexOf("gzip") > -1);
         }
@@ -352,10 +356,9 @@ public class CacheHandler extends Thread {
 
     /**
      * Empties the cache for the specified resource. Currenty it expects the entire path, including cache location.
-     * @param uri
-     * @throws Exception
+     * @param uri request URI
      */
-    public static void flushResource(String uri) throws Exception {
+    public static void flushResource(String uri) {
         File file = new File(uri);
         try {
             if (file.isDirectory()) {
@@ -374,13 +377,12 @@ public class CacheHandler extends Thread {
         catch (Exception e) {
             log.error("Failed to flush - " + uri);
             log.error(e.getMessage(), e);
-            throw new Exception(e);
         }
     }
 
     /**
      * Recursively deletes all files under the specified directory
-     * @param directory
+     * @param directory directory where files should be deleted
      */
     private static void emptyDirectory(File directory) {
         File[] children = directory.listFiles();
@@ -408,7 +410,7 @@ public class CacheHandler extends Thread {
         log.debug("Flushing entire cache");
         try {
             CacheHandler.flushResource(CACHE_DIRECTORY);
-            /* this will create cache start directory again */
+            // this will create cache start directory again
             CacheHandler.validatePath(CACHE_DIRECTORY);
             CacheHandler.validatePath(CACHE_DIRECTORY + DEFAULT_STORE);
             CacheHandler.validatePath(CACHE_DIRECTORY + COMPRESSED_STORE);

@@ -12,16 +12,14 @@
  */
 package info.magnolia.cms.core;
 
-import java.io.IOException;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 
 
 /**
- * Thread responsible to start a cache process.
- * This will only work if a valid request object has been initialized before
+ * Thread responsible to start a cache process. This will only work if a valid request object has been initialized
+ * before
  * @author Sameer Charles
  * @version $Revision $ ($Author $)
  */
@@ -29,31 +27,26 @@ public class CacheProcess extends Thread {
 
     /**
      * Logger
-     * */
+     */
     private static Logger log = Logger.getLogger(CacheProcess.class);
 
     /**
      * request
-     * */
+     */
     private HttpServletRequest request;
 
     /**
      * This request will be used to stream data
-     * @param request
-     * */
+     * @param request HttpServletRequest
+     */
     public CacheProcess(HttpServletRequest request) {
         this.request = request;
     }
 
     /**
-     * Excecutes CacheHandler cache method in background
-     * */
+     * Executes CacheHandler cache method in background
+     */
     public void run() {
-        try {
-            CacheHandler.cacheURI(this.request);
-        }
-        catch (IOException e) {
-            log.error(e.getMessage(), e);
-        }
+        CacheHandler.cacheURI(this.request);
     }
 }
