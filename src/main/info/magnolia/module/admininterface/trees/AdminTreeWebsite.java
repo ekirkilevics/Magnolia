@@ -258,7 +258,7 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
         }
 
         // only superuser can export data
-        if (!Authenticator.getUser(request).isInRole(Role.ROLE_SUPERUSER)) {
+        if (!Authenticator.getUser(request).hasRole(Role.ROLE_SUPERUSER)) {
             menuExport.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)");
         }
 
