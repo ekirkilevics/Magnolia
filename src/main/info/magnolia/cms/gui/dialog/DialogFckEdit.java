@@ -128,12 +128,7 @@ public class DialogFckEdit extends DialogBox {
      * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(Writer)
      */
     public void drawHtml(Writer out) throws IOException {
-
-        out.write("<tr>");
-        out.write("<td>test");
-        // @todo add paste box and links here
-        out.write("</td>");
-        out.write("<td>");
+        this.drawHtmlPre(out);
 
         // load the script onece: if there are multiple instances
         if (getRequest().getAttribute("__fcked_loaded") == null) {
@@ -186,8 +181,10 @@ public class DialogFckEdit extends DialogBox {
             + ControlSuper.ENCODING_NO
             + "' />");
 
-        out.write("</td>");
-        out.write("</tr>");
+        this.drawHtmlPost(out);
+
+        //out.write("</td>");
+        //out.write("</tr>");
     }
 
     /**
