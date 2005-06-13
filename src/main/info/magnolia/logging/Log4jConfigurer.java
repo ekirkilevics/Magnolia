@@ -3,8 +3,8 @@ package info.magnolia.logging;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.lang.StringUtils;
@@ -51,18 +51,24 @@ public abstract class Log4jConfigurer {
     public static final String MAGNOLIA_ROOT_SYSPROPERTY = "magnolia.root.sysproperty";
 
     /**
-     * Initialize Log4J, including setting the web app root system property.
-     * @param servletConfig the current ServletConfig
+     * Utility class, don't instantiate.
      */
-    public static void initLogging(ServletConfig servletConfig) {
+    private Log4jConfigurer() {
+        // unused
+    }
 
-        ServletContext servletContext = servletConfig.getServletContext();
+    /**
+     * Initialize Log4J, including setting the web app root system property.
+     * @param parameters parameter map, containing the <code>MAGNOLIA_ROOT_SYSPROPERTY</code> and
+     * <code>LOG4J_CONFIG</code> properties
+     */
+    public static void initLogging(ServletContext servletContext, Map parameters) {
 
         // can't use log4j yet
         log("Initializing Log4J");
 
         // system property initialization
-        String magnoliaRootSysproperty = servletConfig.getInitParameter(MAGNOLIA_ROOT_SYSPROPERTY);
+        String magnoliaRootSysproperty = (String) parameters.get(MAGNOLIA_ROOT_SYSPROPERTY);
         if (StringUtils.isNotEmpty(magnoliaRootSysproperty)) {
             String root = servletContext.getRealPath("/");
             if (StringUtils.isNotEmpty(root)) {
@@ -71,12 +77,11 @@ public abstract class Log4jConfigurer {
             }
         }
 
-        String log4jFileName = servletConfig.getInitParameter(LOG4J_CONFIG);
+        String log4jFileName = (String) parameters.get(LOG4J_CONFIG);
         if (StringUtils.isNotEmpty(log4jFileName)) {
             boolean isXml = log4jFileName.toLowerCase().endsWith(".xml");
 
-            servletContext.log("Initializing Log4J from [" + log4jFileName + "]");
-            System.out.println("Initializing Log4J from [" + log4jFileName + "]");
+            log("Initializing Log4J from [" + log4jFileName + "]");
             File log4jFile = new File(servletContext.getRealPath(StringUtils.EMPTY), log4jFileName);
             if (log4jFile.exists()) {
                 URL url;
@@ -112,16 +117,16 @@ public abstract class Log4jConfigurer {
 
     /**
      * Shut down Log4J, properly releasing all file locks and resetting the web app root system property.
-     * @param servletContext the current ServletContext
+     * @param parameters parameter map, containing the <code>LOG4J_CONFIG</code> property
      */
-    public static void shutdownLogging(ServletConfig servletConfig) {
+    public static void shutdownLogging(Map parameters) {
         log("Shutting down Log4J");
         try {
             LogManager.shutdown();
         }
         finally {
             // Remove the web app root system property.
-            String param = servletConfig.getInitParameter(MAGNOLIA_ROOT_SYSPROPERTY);
+            String param = (String) parameters.get(MAGNOLIA_ROOT_SYSPROPERTY);
             if (StringUtils.isNotEmpty(param)) {
                 System.getProperties().remove(param);
             }

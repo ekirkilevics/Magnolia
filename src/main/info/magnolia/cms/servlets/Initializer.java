@@ -22,7 +22,6 @@ import java.util.Map;
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServlet;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -57,8 +56,6 @@ public class Initializer extends HttpServlet {
 
         ServletConfig config = getServletConfig();
 
-        Log4jConfigurer.initLogging(config);
-
         // copy all the initialization parameters in a Map, so that ConfigLoader is not tied to a ServletConfig instance
         Map parameters = new HashMap();
         Enumeration configParams = config.getInitParameterNames();
@@ -66,6 +63,8 @@ public class Initializer extends HttpServlet {
             String paramName = (String) configParams.nextElement();
             parameters.put(paramName, config.getInitParameter(paramName));
         }
+
+        Log4jConfigurer.initLogging(config.getServletContext(), parameters);
 
         try {
             new ConfigLoader(config.getServletContext(), parameters);
@@ -79,7 +78,18 @@ public class Initializer extends HttpServlet {
      * @see javax.servlet.Servlet#destroy()
      */
     public void destroy() {
-        Log4jConfigurer.shutdownLogging(getServletConfig());
+
+        ServletConfig config = getServletConfig();
+
+        // copy all the initialization parameters in a Map
+        Map parameters = new HashMap();
+        Enumeration configParams = config.getInitParameterNames();
+        while (configParams.hasMoreElements()) {
+            String paramName = (String) configParams.nextElement();
+            parameters.put(paramName, config.getInitParameter(paramName));
+        }
+
+        Log4jConfigurer.shutdownLogging(parameters);
         super.destroy();
     }
 }
