@@ -320,6 +320,11 @@ public class EntryServlet extends HttpServlet {
         private Map headers = new HashMap();
 
         /**
+         * Parameters.
+         */
+        private Map parameters;
+
+        /**
          * Request URI.
          */
         private String uri;
@@ -350,6 +355,11 @@ public class EntryServlet extends HttpServlet {
         private String serverName;
 
         /**
+         * Server name.
+         */
+        private String method;
+
+        /**
          * Instantiate a new ClonedRequest, copying needed attributes from the original request.
          * @param originalRequest wrapped HttpServletRequest
          */
@@ -372,7 +382,8 @@ public class EntryServlet extends HttpServlet {
             this.serverPort = originalRequest.getServerPort();
             this.scheme = originalRequest.getScheme();
             this.serverName = originalRequest.getServerName();
-
+            this.method = originalRequest.getMethod();
+            this.parameters = originalRequest.getParameterMap();
         }
 
         /**
@@ -430,6 +441,27 @@ public class EntryServlet extends HttpServlet {
          */
         public int getServerPort() {
             return this.serverPort;
+        }
+
+        /**
+         * @see javax.servlet.http.HttpServletRequest#getMethod()
+         */
+        public String getMethod() {
+            return this.method;
+        }
+
+        /**
+         * @see javax.servlet.ServletRequest#getParameterMap()
+         */
+        public Map getParameterMap() {
+            return this.parameters;
+        }
+
+        /**
+         * @see javax.servlet.ServletRequest#getParameter(java.lang.String)
+         */
+        public String getParameter(String s) {
+            return (String) this.parameters.get(s);
         }
 
         /**
@@ -546,14 +578,6 @@ public class EntryServlet extends HttpServlet {
 
         /**
          * Throws UnsupportedOperationException.
-         * @see javax.servlet.http.HttpServletRequest#getMethod()
-         */
-        public String getMethod() {
-            throw new UnsupportedOperationException();
-        }
-
-        /**
-         * Throws UnsupportedOperationException.
          * @see javax.servlet.http.HttpServletRequest#getPathInfo()
          */
         public String getPathInfo() {
@@ -650,14 +674,6 @@ public class EntryServlet extends HttpServlet {
 
         /**
          * Throws UnsupportedOperationException.
-         * @see javax.servlet.ServletRequest#getParameter(java.lang.String)
-         */
-        public String getParameter(String s) {
-            throw new UnsupportedOperationException();
-        }
-
-        /**
-         * Throws UnsupportedOperationException.
          * @see javax.servlet.ServletRequest#getParameterNames()
          */
         public Enumeration getParameterNames() {
@@ -669,14 +685,6 @@ public class EntryServlet extends HttpServlet {
          * @see javax.servlet.ServletRequest#getParameterValues(java.lang.String)
          */
         public String[] getParameterValues(String s) {
-            throw new UnsupportedOperationException();
-        }
-
-        /**
-         * Throws UnsupportedOperationException.
-         * @see javax.servlet.ServletRequest#getParameterMap()
-         */
-        public Map getParameterMap() {
             throw new UnsupportedOperationException();
         }
 
