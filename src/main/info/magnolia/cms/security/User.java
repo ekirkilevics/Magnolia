@@ -47,7 +47,7 @@ public class User {
      * @param roleName the name of the role
      * @return true if in role
      */
-    public boolean isInRole(String roleName) {
+    public boolean hasRole(String roleName) {
         try {
             Content rolesNode = userNode.getContent(NODE_ROLES);
 
