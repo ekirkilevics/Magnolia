@@ -59,6 +59,7 @@ public abstract class Log4jConfigurer {
 
     /**
      * Initialize Log4J, including setting the web app root system property.
+     * @param servletContext ServletContext
      * @param parameters parameter map, containing the <code>MAGNOLIA_ROOT_SYSPROPERTY</code> and
      * <code>LOG4J_CONFIG</code> properties
      */
