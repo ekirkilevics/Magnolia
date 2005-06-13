@@ -41,6 +41,8 @@ public class MainBar extends TagSupport {
     private static Logger log = Logger.getLogger(MainBar.class);
 
     private String paragraph;
+    
+    private boolean adminButtonVisible;
 
     /**
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
@@ -126,5 +128,11 @@ public class MainBar extends TagSupport {
         bar.setDefaultButtons();
         bar.placeDefaultButtons();
         bar.drawHtml(pageContext.getOut());
+    }
+    public boolean isAdminButtonVisible() {
+        return this.adminButtonVisible;
+    }
+    public void setAdminButtonVisible(boolean adminButtonVisible) {
+        this.adminButtonVisible = adminButtonVisible;
     }
 }

@@ -47,6 +47,12 @@ public class BarMain extends Bar {
     private String width = "100%";
 
     private boolean overlay = true;
+    
+    /**
+     * true if the AdminCentral button is visible
+     */
+    private boolean adminButtonVisible = true;
+    
 
     public BarMain(HttpServletRequest request) {
         this.setRequest(request);
@@ -78,7 +84,9 @@ public class BarMain extends Bar {
      * </p>
      */
     public void placeDefaultButtons() {
-        this.getButtonsLeft().add(0, this.getButtonSiteAdmin());
+        if (this.isAdminButtonVisible()) {
+            this.getButtonsLeft().add(0, this.getButtonSiteAdmin());
+        }
         this.getButtonsLeft().add(0, this.getButtonPreview());
         if (this.getParagraph() != null) {
             this.getButtonsRight().add(this.getButtonsRight().size(), this.getButtonProperties());
@@ -272,5 +280,12 @@ public class BarMain extends Bar {
     public void drawHtmlLinks(JspWriter out) throws IOException {
         out.println(new Sources(this.getRequest().getContextPath()).getHtmlCss());
         out.println(new Sources(this.getRequest().getContextPath()).getHtmlJs());
+    }
+    
+    public boolean isAdminButtonVisible() {
+        return this.adminButtonVisible;
+    }
+    public void setAdminButtonVisible(boolean adminButtonVisible) {
+        this.adminButtonVisible = adminButtonVisible;
     }
 }

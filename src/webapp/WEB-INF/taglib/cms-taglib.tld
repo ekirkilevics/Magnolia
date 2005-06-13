@@ -25,6 +25,15 @@
             <rtexprvalue>true</rtexprvalue>
             <description>Name of the paragraph for the page properties (as defined in config)</description>
         </attribute>
+        <attribute>
+            <name>adminButtonVisible</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
+            <description>
+				Set it to false if you don't want to show the AdminCentral button
+            </description>
+        </attribute>
     </tag>
     <tag>
         <name>links</name>
