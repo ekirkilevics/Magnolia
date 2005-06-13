@@ -47,26 +47,28 @@ public class DialogMVCServlet extends MVCServlet {
     protected MVCServletHandler getHandler(HttpServletRequest request, HttpServletResponse response) {
         String dialogName = RequestFormUtil.getParameter(request, "mgnlDialog");
         if (StringUtils.isEmpty(dialogName)) {
-            // get the realy called uri
+            // get the really called uri
             dialogName = (String) request.getAttribute("javax.servlet.forward.servlet_path");
-            dialogName = StringUtils.substringAfterLast(dialogName, "/dialogs/").replaceFirst(".html", "");
+            dialogName = StringUtils.replaceOnce(StringUtils.substringAfterLast(dialogName, "/dialogs/"), ".html", "");
         }
 
         DialogMVCHandler handler = null;
 
-        // try to get a registered handler
-        try {
-            handler = Store.getInstance().getDialogHandler(dialogName, request, response);
-        }
-        catch (InvalidDialogHandlerException e) {
-            log.info("can' find handler will try to load directly from the config", e);
-            Content configNode = ConfiguredDialog.getConfigNode(request, dialogName);
-            // try to find a class property or return a ConfiguredDialog
-            if (configNode != null) {
-                handler = ConfiguredDialog.getConfiguredDialog(dialogName, configNode, request, response);
+        if (dialogName != null) {
+            // try to get a registered handler
+            try {
+                handler = Store.getInstance().getDialogHandler(dialogName, request, response);
             }
-            else {
-                log.error("no config node found for dialog : " + dialogName);
+            catch (InvalidDialogHandlerException e) {
+                log.info("can't find handler will try to load directly from the config", e);
+                Content configNode = ConfiguredDialog.getConfigNode(request, dialogName);
+                // try to find a class property or return a ConfiguredDialog
+                if (configNode != null) {
+                    handler = ConfiguredDialog.getConfiguredDialog(dialogName, configNode, request, response);
+                }
+                else {
+                    log.error("no config node found for dialog : " + dialogName);
+                }
             }
         }
 
