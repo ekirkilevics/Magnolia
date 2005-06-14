@@ -90,7 +90,7 @@ public final class Cache {
 
         // @todo this should probably not be here, but it's important to remove cached entries when the configuration is
         // reloaded
-        info.magnolia.cms.beans.runtime.Cache.clearCachedURIList();
+        CacheHandler.flushCache();
 
         log.info("Config : loading cache mapping");
         try {
