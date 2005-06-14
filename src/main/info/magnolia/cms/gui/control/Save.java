@@ -461,7 +461,7 @@ public class Save extends ControlSuper {
         catch (RepositoryException e) {
             throw new NestableRuntimeException(e);
         }
-        return valueFactory.createValue(0L);
+        return valueFactory.createValue(l);
     }
 
     public Value getValue(String valueStr, int type) {
