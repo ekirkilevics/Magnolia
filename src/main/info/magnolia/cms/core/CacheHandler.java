@@ -180,7 +180,7 @@ public class CacheHandler extends Thread {
             return true;
         }
         catch (Exception e) {
-            log.error("Failed to stream [" + uri + "] due to a " + e.getClass().getName() + ": " + e.getMessage());
+            log.error("Failed to stream [" + uri + "] due to a " + e.getClass().getName() + ": " + e.getMessage(), e);
         }
 
         return false;
