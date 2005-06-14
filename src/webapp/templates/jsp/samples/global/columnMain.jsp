@@ -14,12 +14,14 @@
 
 
 <cms:contentNodeIterator contentNodeCollectionName="mainColumnParagraphs">
+	<c:set var="spacer"><cms:out nodeDataName="spacer"/></c:set>
+    <c:set var="lineAbove"><cms:out nodeDataName="lineAbove"/></c:set>
+
     <div style="clear:both;">
         <cms:adminOnly>
             <cms:editBar/>
         </cms:adminOnly>
         <!-- line -->
-        <c:set var="lineAbove"><cms:out nodeDataName="lineAbove"/></c:set>
         <c:if test="${lineAbove=='true'}">
             <div class="line">
                 <br/>
@@ -30,7 +32,6 @@
 
 	<!-- spacer -->
 	<div style="clear:both;">
-		<c:set var="spacer"><cms:out nodeDataName="spacer"/></c:set>
 		<c:if test="${spacer=='1'}">
 			<br/>
 		</c:if>
