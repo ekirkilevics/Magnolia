@@ -88,10 +88,6 @@ public final class Cache {
         cachedCacheableURIMapping.clear();
         COMPRESSION_LIST.clear();
 
-        // @todo this should probably not be here, but it's important to remove cached entries when the configuration is
-        // reloaded
-        CacheHandler.flushCache();
-
         log.info("Config : loading cache mapping");
         try {
             Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(CONFIG_PATH);
@@ -116,6 +112,11 @@ public final class Cache {
 
     public static void reload() {
         log.info("Config : reloading cache mapping");
+
+        // @todo this should probably not be here, but it's important to remove cached entries when the configuration is
+        // reloaded
+        CacheHandler.flushCache();
+
         load();
     }
 
