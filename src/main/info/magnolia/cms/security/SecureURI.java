@@ -21,12 +21,14 @@ import java.util.Map;
 
 
 /**
- * User: Sameer Charles Date: Mar 22, 2004 Time: 10:55:12 AM
  * @author Sameer Charles
  */
 public final class SecureURI {
 
-    private static Map cachedContent;
+    /**
+     * Map of protected url patterns.
+     */
+    private static Map cachedContent = new Hashtable();
 
     /**
      * Utility class, don't instantiate.
@@ -35,11 +37,16 @@ public final class SecureURI {
         // unused
     }
 
+    /**
+     * Initialize the Secure URI list.
+     */
     public static void init() {
-        SecureURI.cachedContent = new Hashtable();
         SecureURI.cachedContent.clear();
     }
 
+    /**
+     * Reload the secure URI list.
+     */
     public static void reload() {
         init();
     }
@@ -74,7 +81,9 @@ public final class SecureURI {
     }
 
     /**
-     * @param uri
+     * Check if a request URI matches a configured pattern.
+     * @param uri request URI to check
+     * @return <code>true</code> if the given uri matches one of the configured patterns.
      */
     public static boolean isProtected(String uri) {
         Iterator e = SecureURI.cachedContent.keySet().iterator();
