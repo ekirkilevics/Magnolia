@@ -23,10 +23,10 @@
         <VersionNumber>2.1</VersionNumber>
         <BuildNumber>$Revision$</BuildNumber>
         <Provider>obinary ltd</Provider>
-        <ProviderAddress>obinary ag &lt;br/&gt;Binningerstrasse 15 &lt;br/&gt;4051 Basel &lt;br/&gt;Tel +41 61 228 9000&lt;br/&gt;Switzerland</ProviderAddress>
-        <ProviderEmail>support@magnolia.info</ProviderEmail>
+        <ProviderAddress>magnolia organization llc&lt;br/&gt;Binningerstrasse 15 &lt;br/&gt;4051 Basel &lt;br/&gt;Tel +41 61 228 9000&lt;br/&gt;Switzerland</ProviderAddress>
+        <ProviderEmail>info@magnolia.info</ProviderEmail>
         <ProductDomain>www.magnolia.info</ProductDomain>
-        <VersionPageHandle>/redirects/version2_1.html</VersionPageHandle>
+        <VersionPageHandle>/redirects/version2-1.html</VersionPageHandle>
     </Meta>
     
 </License>
