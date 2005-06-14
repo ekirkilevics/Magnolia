@@ -187,6 +187,7 @@ public class UserEditDialog extends ConfiguredDialog {
                 user.delete("acl_" + repository);
             }
             catch (RepositoryException re) {
+                // new user
             }
         }
 
@@ -200,33 +201,10 @@ public class UserEditDialog extends ConfiguredDialog {
             Content aclRoles = user.createContent(NODE_ACLROLES, ItemType.CONTENTNODE);
             Content aclConfig = user.createContent(NODE_ACLCONFIG, ItemType.CONTENTNODE);
 
-            Content u0 = aclUsers.createContent("00", ItemType.CONTENTNODE);
-            u0.createNodeData("path", saveControl.getValue(user.getHandle() + "/" + NODE_ROLES), PropertyType.STRING);
-            u0.createNodeData("permissions", saveControl.getValue(PERMISSION_READ), PropertyType.LONG);
-
-            Content u1 = aclUsers.createContent("01", ItemType.CONTENTNODE);
-            u1.createNodeData(
-                "path",
-                saveControl.getValue(user.getHandle() + "/" + NODE_ROLES + "/*"),
-                PropertyType.STRING);
-            u1.createNodeData("permissions", saveControl.getValue(PERMISSION_READ), PropertyType.LONG);
-
-            Content u2 = aclUsers.createContent("02", ItemType.CONTENTNODE);
-            u2.createNodeData("path", saveControl.getValue(user.getHandle()), PropertyType.STRING);
-            u2.createNodeData("permissions", saveControl.getValue(PERMISSION_ALL), PropertyType.LONG);
-
-            Content u3 = aclUsers.createContent("03", ItemType.CONTENTNODE);
-            u3.createNodeData("path", saveControl.getValue(user.getHandle() + "/*"), PropertyType.STRING);
-            u3.createNodeData("permissions", saveControl.getValue(PERMISSION_READ), PropertyType.LONG);
-
-            // read access to all roles
-            Content r0 = aclRoles.createContent("0", ItemType.CONTENTNODE);
-            r0.createNodeData("path", saveControl.getValue("/*"), PropertyType.STRING);
-            r0.createNodeData("permissions", saveControl.getValue(PERMISSION_READ), PropertyType.LONG);
-            // read access to config repository
-            Content c0 = aclConfig.createContent("0", ItemType.CONTENTNODE);
-            c0.createNodeData("path", saveControl.getValue("/*"), PropertyType.STRING);
-            c0.createNodeData("permissions", saveControl.getValue(PERMISSION_READ), PropertyType.LONG);
+            // give user permission to read and edit himself
+            Content u3 = aclUsers.createContent("0", ItemType.CONTENTNODE);
+            u3.createNodeData("path").setValue(user.getHandle() + "/*");
+            u3.createNodeData("permissions").setValue(PERMISSION_ALL);
 
             // ######################
             // # roles acl
@@ -236,6 +214,7 @@ public class UserEditDialog extends ConfiguredDialog {
                 user.delete(NODE_ROLES);
             }
             catch (RepositoryException re) {
+                // roles node did not exist yet
             }
 
             // rewrite
