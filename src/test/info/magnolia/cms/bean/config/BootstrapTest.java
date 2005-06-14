@@ -54,7 +54,7 @@ public class BootstrapTest extends TestCase {
 
         // quick fix for required cache configuration
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_CACHE_STARTDIR, MagnoliaTestUtils.getProjectRoot()
-            + "/src/webapp/WEB-INF/cache");
+            + "/src/webapp/cache");
 
         new ConfigLoader(context, config);
 
