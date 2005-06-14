@@ -52,6 +52,10 @@ public class BootstrapTest extends TestCase {
         config.put(SystemProperty.MAGNOLIA_BOOTSTRAP_ROOTDIR, MagnoliaTestUtils.getProjectRoot()
             + "/src/webapp/WEB-INF/bootstrap");
 
+        // quick fix for required cache configuration
+        SystemProperty.setProperty(SystemProperty.MAGNOLIA_CACHE_STARTDIR, MagnoliaTestUtils.getProjectRoot()
+            + "/src/webapp/WEB-INF/cache");
+
         new ConfigLoader(context, config);
 
         HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
@@ -102,5 +106,4 @@ public class BootstrapTest extends TestCase {
         }
 
     }
-
 }
