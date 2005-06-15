@@ -79,7 +79,13 @@ public abstract class MVCServlet extends HttpServlet {
         // 1. Use POST with forms to return parameters as the parameters are then part of
         // the request body.
 
-        request.setCharacterEncoding("UTF-8");
+        // this can throw an exception in jetty
+        try {
+            request.setCharacterEncoding("UTF-8");
+        }
+        catch (java.lang.IllegalStateException e) {
+            log.error("can't set character encoding for the request", e);
+        }
 
         // why do i have to change it if request was setted? But i have to!
         response.setCharacterEncoding("UTF-8");
