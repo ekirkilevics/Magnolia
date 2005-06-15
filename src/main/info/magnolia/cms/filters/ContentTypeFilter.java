@@ -53,10 +53,21 @@ public class ContentTypeFilter extends BaseFilter {
         String characterEncoding = MIMEMapping.getContentEncoding((HttpServletRequest) req);
         if (StringUtils.isNotEmpty(characterEncoding)) {
             resp.setCharacterEncoding(characterEncoding);
-            req.setCharacterEncoding(characterEncoding);
+            try {
+                req.setCharacterEncoding(characterEncoding);
+            }
+            catch (Exception e) {
+                log.error("can't set character encoding for the request", e);
+            }
         }
         else {
             resp.setCharacterEncoding("UTF-8");
+            try {
+                req.setCharacterEncoding("UTF-8");
+            }
+            catch (Exception e) {
+                log.error("can't set character encoding for the request", e);
+            }
         }
     }
 }
