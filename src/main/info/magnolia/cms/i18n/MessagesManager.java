@@ -156,7 +156,16 @@ public final class MessagesManager {
             Collection locales = availableLanguagesContentNode.getNodeDataCollection();
             for (Iterator iter = locales.iterator(); iter.hasNext();) {
                 availableLanguage = (NodeData) iter.next();
-                MessagesManager.availableLocales.add(new Locale(availableLanguage.getString()));
+                String name = availableLanguage.getString();
+                String language = name;
+                String country = StringUtils.EMPTY;
+
+                if (name.indexOf("_") == 2) {
+                    language = name.substring(0, 2);
+                    country = name.substring(3);
+                }
+                Locale locale = new Locale(language, country);
+                MessagesManager.availableLocales.add(locale);
             }
 
         }
