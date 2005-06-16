@@ -546,7 +546,8 @@ public class Save extends ControlSuper {
         // encode the internal links to avoid dependences from the contextpath, position of the page
         String valueStr = LinkUtil.convertAbsoluteLinksToUUIDs(value);
         switch (isRichEditValue) {
-            case ControlSuper.RICHEDIT_KUPU :
+            case ControlSuper.RICHEDIT_KUPU:
+            case ControlSuper.RICHEDIT_FCK:
                 valueStr = StringUtils.replace(valueStr, "\r\n", " ");
                 valueStr = StringUtils.replace(valueStr, "\n", " ");
 
@@ -565,11 +566,6 @@ public class Save extends ControlSuper {
                 // replace <a class="...></a> by <span class=""></span>
                 // valueStr = replaceABySpan(valueStr, "a");
                 break;
-
-            case ControlSuper.RICHEDIT_FCK :
-
-                break;
-
             default :
                 break;
         }

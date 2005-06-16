@@ -23,6 +23,7 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -145,7 +146,7 @@ public class DialogFckEdit extends DialogBox {
         }
 
         String var = getVarName();
-        String value = getValue();
+        String value = convertToView(getValue());
         value = LinkUtil.convertUUIDsToAbsoluteLinks(value);
         out.write("<script type=\"text/javascript\">");
         out.write("var " + var + " = null;");
@@ -185,6 +186,17 @@ public class DialogFckEdit extends DialogBox {
 
         //out.write("</td>");
         //out.write("</tr>");
+    }
+
+    /**
+     * @param value
+     * @return
+     */
+    private static String convertToView(String value) {
+        if (value != null) {
+            return value.replaceAll("\n", "<br />");
+        }
+        return StringUtils.EMPTY;
     }
 
     /**
