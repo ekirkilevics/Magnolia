@@ -20,12 +20,16 @@ import info.magnolia.cms.security.Permission;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+import javax.jcr.version.Version;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -145,6 +149,23 @@ public class UserEditDialog extends ConfiguredDialog {
             SelectOption option = new SelectOption(name, code);
             options.add(option);
         }
+
+        // sort them
+        Collections.sort(options, new Comparator() {
+
+            public int compare(Object arg0, Object arg1) {
+                try {
+                    String name0 = ((SelectOption) arg0).getLabel();
+                    String name1 = ((SelectOption) arg1).getLabel();
+                    //System.out.println(name0 + " " + name1 + ": " + name0.compareTo(name1));
+                    return name0.compareTo(name1);
+                }
+                catch (Exception e) {
+                    return 0;
+                }
+            }
+        });
+
         langSelect.setOptions(options);
         tab.addSub(langSelect);
         tab.addSub(spacer);
