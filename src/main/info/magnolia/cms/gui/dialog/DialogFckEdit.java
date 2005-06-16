@@ -193,15 +193,18 @@ public class DialogFckEdit extends DialogBox {
      * @return
      */
     private static String convertToView(String value) {
-        if (value != null) {
-            return value.replaceAll("\n", "<br />");
+        String tmp = value;
+        if (tmp != null) {
+            tmp = tmp.replaceAll("\r\n", "<br />");
+            tmp = tmp.replaceAll("\n", "<br />");
+            return tmp;
         }
         return StringUtils.EMPTY;
     }
 
     /**
      * Replacements:
-     *
+     * 
      * <pre>
      * ' -> \'
      * " -> \"
@@ -209,7 +212,7 @@ public class DialogFckEdit extends DialogBox {
      * \n -> \\n
      * \ -> \\
      * </pre>
-     *
+     * 
      * @param src
      * @return escaped js String
      */
