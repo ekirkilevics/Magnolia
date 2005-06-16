@@ -7,17 +7,20 @@ div,h1,h2,td,ul,li {
 	color: #000;
 	font-size: 11px;
 	vertical-align: top;
+	line-height : 17px;
 }
 
 h1 {
-	font-size: 13px;
-	font-weight: bold;
+	font-size : 13px;
+	font-weight : bolder;
+	color : #993333;
 }
 
 h2 {
-	font-weight: bold;
-	margin-top: 0px;
-	margin-bottom: 6px;
+	font-size : 16px;
+	color : #666666;
+	margin-top: 10px;
+	font-weight: normal;
 }
 
 a {
@@ -28,7 +31,7 @@ a {
 ul.level-1,ul.level0 {
 	position: absolute;
 	left: 15px;
-	top: 95px;
+	top: 88px;
 	margin-left: 0;
 	padding-left: 0;
 	border-top: 1px solid #999;
@@ -51,23 +54,20 @@ ul.level0 li a,ul.level-1 li a {
 	display: block;
 }
 
-/* unselected menupoints */
 ul.level-1 li a,ul.level0 li a {
 	padding-left: 2px;
 	font-weight: bold;
-	 color: #003399;
+	color: #538307;
 }
 
-/* padding for submenupoints */
 ul ul.level1 li a {
 	padding-left: 10px;
 	font-weight: normal;
 }
 
-/* selected menupoint */
 ul.level0 strong a,ul.level-1 strong a {
-	color: #003399;
-	background-color: #CEEBFA;
+	color: #538307;
+	background-color: #E5F973;
 	text-decoration: none;
 }
 
@@ -111,12 +111,12 @@ ul ul.level1 strong a {
 #contentDivRightColumn {
 	position: absolute;
 	left: 702px;
-	top: 96px;
+	top: 75px;
 	width: 225px;
 }
 
 .rightColumnTitle {
-	background-color: #003399;
+	background-color: #999;
 	color: #fff;
 	font-weight: bold;
 	padding-top: 2px;

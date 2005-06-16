@@ -30,7 +30,7 @@
         position:absolute;
         top:15px;
         left:220px;
-        width:520px;
+        width: 550px;
         border-style:solid;
         border-width:1px;
         border-top-color:#999;
@@ -38,9 +38,10 @@
         border-bottom-color:#CCC;
         border-right-color:#CCC;
       }
+
       .framediv iframe {
         width: 100%;
-        height: 400px;
+        height: 450px;
         border: none;
       }
     ]]>

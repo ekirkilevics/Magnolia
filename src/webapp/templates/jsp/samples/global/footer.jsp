@@ -17,7 +17,6 @@
         <cms:out nodeDataName="footerText" contentNodeName="footerPar" />
         <br />
         <br />
-    </cms:ifNotEmpty>Powered by magnolia &amp;ndash; <a href="http://www.magnolia.info" target="_blank">www.magnolia.info</a>
-    <br /> J2EE Content Management Suite based on JSR-170<br />
-    <br />
+    </cms:ifNotEmpty>
+    <img align="right" style="margin-top: 5px" src="${pageContext.request.contextPath}/docroot/samples/imgs/poweredSmall.gif" />
 </jsp:root>
