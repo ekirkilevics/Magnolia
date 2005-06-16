@@ -32,7 +32,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title><fmt:message key="central.title"/></title>
     <cms:links adminOnly="false" />
-    <link rel="shortcut icon" href="${pageContext.request.contextPath}/docroot/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="${pageContext.request.contextPath}/admindocroot/favicon.ico" type="image/x-icon" />
     </head>
 
     <body class="mgnlBgDark mgnlAdminMain" onload="mgnlAdminCentralResize();">
