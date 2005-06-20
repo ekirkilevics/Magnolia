@@ -121,10 +121,6 @@ public class SecurityFilter implements Filter {
             return false;
         }
 
-        // initialize website access manager, temporary fix
-        // @todo : should SessionAccessControl initialize access managers for all workspaces on login ?
-        SessionAccessControl.getHierarchyManager(request);
-
         return true;
     }
 

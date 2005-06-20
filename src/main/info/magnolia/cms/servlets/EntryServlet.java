@@ -21,11 +21,7 @@ import info.magnolia.cms.beans.runtime.Cache;
 import info.magnolia.cms.core.CacheHandler;
 import info.magnolia.cms.core.CacheProcess;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.security.Authenticator;
-import info.magnolia.cms.security.Listener;
-import info.magnolia.cms.security.Lock;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.security.SecureURI;
 import info.magnolia.cms.security.SessionAccessControl;
 
 import java.io.BufferedReader;
@@ -102,9 +98,7 @@ public class EntryServlet extends HttpServlet {
         }
 
         try {
-
-            // Try to find out what the preferred language of this user is.
-            if (isAllowed(req, res) && isAuthorized(req, res)) {
+            if (isAuthorized(req, res)) {
                 // try to stream from cache first
                 if (Cache.isCached(req)) {
                     if (CacheHandler.streamFromCache(req, res)) {
@@ -162,75 +156,19 @@ public class EntryServlet extends HttpServlet {
     }
 
     /**
-     * Checks access from Listener / Authenticator / AccessLock.
-     * @param req HttpServletRequest as received by the service method
-     * @param res HttpServletResponse as received by the service method
-     * @return boolean <code>true</code> if access to the resource is allowed
-     * @throws IOException can be thrown when the servlet is unable to write to the response stream
-     */
-    private boolean isAllowed(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        if (Lock.isSystemLocked()) {
-            res.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
-            return false;
-        }
-        else if (SessionAccessControl.isSecuredSession(req)) {
-            return true;
-        }
-        else if (SecureURI.isProtected(getURI(req))) {
-            return authenticate(req, res);
-        }
-        else if (!Listener.isAllowed(req)) {
-            res.sendError(HttpServletResponse.SC_FORBIDDEN);
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * Uses access manager to authorise this request.
      * @param req HttpServletRequest as received by the service method
      * @param res HttpServletResponse as received by the service method
      * @return boolean true if read access is granted
      * @throws IOException can be thrown when the servlet is unable to write to the response stream
      */
-    private boolean isAuthorized(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        boolean authorized = true;
+    protected boolean isAuthorized(HttpServletRequest req, HttpServletResponse res) throws IOException {
         if (SessionAccessControl.getAccessManager(req) != null) {
             String path = StringUtils.substringBefore(Path.getURI(req), ".");
-            authorized = SessionAccessControl.getAccessManager(req).isGranted(path, Permission.READ);
-        }
-        if (!authorized) {
-            res.sendError(HttpServletResponse.SC_FORBIDDEN);
-        }
-        return authorized;
-    }
-
-    /**
-     * Authenticate on basic headers.
-     * @param req HttpServletRequest
-     * @param res HttpServletResponst
-     * @return <code>true</code> if the user is authenticated
-     */
-    private boolean authenticate(HttpServletRequest req, HttpServletResponse res) {
-        try {
-            if (!Authenticator.authenticate(req)) {
-                res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                res.setHeader("WWW-Authenticate", "BASIC realm=\"" + Server.getBasicRealm() + "\"");
-
-                // invalidate previous session
-                SessionAccessControl.invalidateUser(req);
-                return false;
+            if (!SessionAccessControl.getAccessManager(req).isGranted(path, Permission.READ)) {
+                res.sendError(HttpServletResponse.SC_FORBIDDEN);
             }
         }
-        catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return false;
-        }
-
-        // initialize website access manager, its a temporary fix
-        // @todo : should SessionAccessControl initialize access managers for all workspaces on login ?
-        SessionAccessControl.getHierarchyManager(req);
-
         return true;
     }
 

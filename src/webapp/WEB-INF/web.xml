@@ -36,7 +36,7 @@
     </filter-mapping>
     <filter-mapping>
         <filter-name>SecurityFilter</filter-name>
-        <url-pattern>/TEST</url-pattern>
+        <url-pattern>/*</url-pattern>
     </filter-mapping>
     <servlet>
         <description>The main CMS servlet</description>

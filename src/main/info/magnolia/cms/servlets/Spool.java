@@ -12,11 +12,7 @@
  */
 package info.magnolia.cms.servlets;
 
-import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.security.Authenticator;
-import info.magnolia.cms.security.SecureURI;
-import info.magnolia.cms.security.SessionAccessControl;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,6 +27,7 @@ import org.apache.log4j.Logger;
 
 
 /**
+ * Use this servlet to spool static resources from the servlet context.
  * @author Sameer Charles
  * @version 2.1
  */
@@ -66,11 +63,6 @@ public class Spool extends HttpServlet {
      * @throws IOException for error in accessing the resource or the servlet output stream
      */
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        if (SecureURI.isProtected(Path.getURI(request))) {
-            if (!this.authenticate(request, response)) {
-                return;
-            }
-        }
         File resource = new File(getServletContext().getRealPath(Path.getURI(request)));
         if (!resource.exists() || resource.isDirectory()) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -126,30 +118,6 @@ public class Spool extends HttpServlet {
      */
     private void setResponseHeaders(File resource, HttpServletResponse response) {
         response.setContentLength((int) resource.length());
-    }
-
-    /**
-     * Authenticate on basic headers.
-     * @param request HttpServletRequest
-     * @param response HttpServletResponse
-     * @return <code>true</code> if the user has been autenticated
-     */
-    private boolean authenticate(HttpServletRequest request, HttpServletResponse response) {
-        if (SessionAccessControl.isSecuredSession(request)) {
-            return true;
-        }
-        try {
-            if (!Authenticator.authenticate(request)) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.setHeader("WWW-Authenticate", "BASIC realm=\"" + Server.getBasicRealm() + "\"");
-                return false;
-            }
-        }
-        catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return false;
-        }
-        return true;
     }
 
 }
