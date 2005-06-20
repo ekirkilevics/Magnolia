@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
-	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" version="2.4"
-    id="WebApp">
-    <description>magnolia 2.1</description>
+	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" version="2.4" id="WebApp">
+    <description>Magnolia</description>
     <display-name>magnolia</display-name>
     <filter>
         <description></description>
@@ -21,6 +20,12 @@
             <param-value>false</param-value>
         </init-param>
     </filter>
+    <filter>
+        <description></description>
+        <display-name>SecurityFilter</display-name>
+        <filter-name>SecurityFilter</filter-name>
+        <filter-class>info.magnolia.cms.filters.SecurityFilter</filter-class>
+    </filter>
     <filter-mapping>
         <filter-name>ContentTypeFilter</filter-name>
         <url-pattern>/*</url-pattern>
@@ -29,68 +34,10 @@
         <filter-name>MultipartRequestFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-    <servlet>
-        <description>Main config initializer</description>
-        <display-name>magnolia initializer</display-name>
-        <servlet-name>Initializer</servlet-name>
-        <servlet-class>info.magnolia.cms.servlets.Initializer</servlet-class>
-        <!--
-            WARNING: starting from Magnolia 2.1 paths can be relative to the root dir of the magnolia installation or absolute.
-            Relative paths requires an expanded WAR.
-        -->
-        <init-param>
-            <!--  cache directory -->
-            <param-name>magnolia.cache.startdir</param-name>
-            <param-value>cache</param-value>
-        </init-param>
-        <init-param>
-            <!--  tmp directory for uploaded files -->
-            <param-name>magnolia.upload.tmpdir</param-name>
-            <param-value>tmp</param-value>
-        </init-param>
-        <init-param>
-            <!--  history directory used for activation -->
-            <param-name>magnolia.exchange.history</param-name>
-            <param-value>history</param-value>
-        </init-param>
-        <init-param>
-            <!--  repositories configuration -->
-            <param-name>magnolia.repositories.config</param-name>
-            <param-value>WEB-INF/config/repositories.xml</param-value>
-        </init-param>
-        <init-param>
-            <!--
-                Name of a log4j config file. Can be a .properties or .xml file.
-                The value can be:
-                - a full path
-                - a path relative to the webapp root
-                - a file name which will be loaded from the classpath
-            -->
-            <param-name>log4j.config</param-name>
-            <param-value>WEB-INF/config/log4j.xml</param-value>
-        </init-param>
-        <!--
-            Name of a system variable which will be set to the webapp root. You can use this property in log4j
-            configuration files to handle relative paths, such as <code>${magnolia.root}logs/magnolia-debug.log</code>.
-            Important: if you drop multiple magnolia wars in a container which doesn't isolate system properties
-            (e.g. tomcat) you will need to change the name of the <code>magnolia.root.sysproperty</code> variable in
-            web.xml and in log4j configuration files.
-        -->
-        <init-param>
-            <param-name>magnolia.root.sysproperty</param-name>
-            <param-value>magnolia.root</param-value>
-        </init-param>
-        <!--
-            Directory containing xml files for initialization of a blank magnolia instance. If no content is found
-            in any of the repository, they are initialized importing xml files found in this folder.
-            If you don't want to let magnolia automatically initialize repositories simply remove this parameter.
-        -->
-        <init-param>
-            <param-name>magnolia.bootstrap.dir</param-name>
-            <param-value>WEB-INF/bootstrap</param-value>
-        </init-param>
-        <load-on-startup>0</load-on-startup>
-    </servlet>
+    <filter-mapping>
+        <filter-name>SecurityFilter</filter-name>
+        <url-pattern>/TEST</url-pattern>
+    </filter-mapping>
     <servlet>
         <description>The main CMS servlet</description>
         <display-name>magnolia EntryServlet</display-name>
@@ -127,11 +74,6 @@
         <servlet-name>ImportExportServlet</servlet-name>
         <servlet-class>info.magnolia.cms.servlets.ImportExportServlet</servlet-class>
     </servlet>
-    <!--
-        Use this servlet to spool static resources from the servlet context
-        this servlet respects SecureURI mapping so if you want to have no authentication on static
-        resources deny /docroot/* and /admindocroot/* from /config/server/SecureURI
-    -->
     <servlet>
         <description>Spool servlet</description>
         <display-name>spool</display-name>
@@ -143,11 +85,9 @@
         <servlet-name>standard</servlet-name>
         <servlet-class>info.magnolia.module.admininterface.DialogMVCServlet</servlet-class>
     </servlet>
-
-	<!--
-		Other dialogs: we will move them into dialog handlers
-	-->
-
+    <!--
+        Other dialogs: we will move them into dialog handlers
+    -->
     <servlet>
         <servlet-name>fileThumbnail</servlet-name>
         <servlet-class>info.magnolia.module.admininterface.pages.FileThumbnailDialogPage</servlet-class>
@@ -176,19 +116,12 @@
         <servlet-name>includeAcl</servlet-name>
         <servlet-class>info.magnolia.module.admininterface.pages.UserRolesEditIncludeAclDialogPage</servlet-class>
     </servlet>
-
-	<!--
-		END: Other dialogs: we will move them into dialog handlers
-	-->
-
-
+    <!--
+        END: Other dialogs: we will move them into dialog handlers
+    -->
     <servlet-mapping>
         <servlet-name>magnolia</servlet-name>
         <url-pattern>/</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>magnolia</servlet-name>
-        <url-pattern>*.html</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>RequestInterceptor</servlet-name>
@@ -220,13 +153,12 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ImportExportServlet</servlet-name>
-        <url-pattern>/export</url-pattern>
+        <url-pattern>/.magnolia/mgnl-export</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ImportExportServlet</servlet-name>
-        <url-pattern>/import</url-pattern>
+        <url-pattern>/.magnolia/mgnl-import</url-pattern>
     </servlet-mapping>
-
     <!--
         Standard dialogs: currently dialox is mapped
     -->
@@ -234,7 +166,6 @@
         <servlet-name>standard</servlet-name>
         <url-pattern>/admintemplates/dialogs/standard.jsp</url-pattern>
     </servlet-mapping>
-
     <!--
         Other dialogs
     -->
@@ -258,7 +189,6 @@
         <servlet-name>webDAVIFrame</servlet-name>
         <url-pattern>/admintemplates/dialogs/webDAVIFrame.jsp</url-pattern>
     </servlet-mapping>
-
     <servlet-mapping>
         <servlet-name>includeAcl</servlet-name>
         <url-pattern>/admintemplates/adminCentral/dialogs/userRolesEdit/includeAcl.jsp</url-pattern>
@@ -268,7 +198,39 @@
         <url-pattern>/admintemplates/adminCentral/dialogs/usersEdit/includeRoles.jsp</url-pattern>
     </servlet-mapping>
     <!-- end dialogs -->
-
+    <listener>
+        <description>Magnolia initializer</description>
+        <display-name>initializer</display-name>
+        <listener-class>info.magnolia.cms.servlets.Initializer</listener-class>
+    </listener>
+    <context-param>
+        <param-name>magnolia.cache.startdir</param-name>
+        <param-value>cache</param-value>
+    </context-param>
+    <context-param>
+        <param-name>magnolia.upload.tmpdir</param-name>
+        <param-value>tmp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>magnolia.exchange.history</param-name>
+        <param-value>history</param-value>
+    </context-param>
+    <context-param>
+        <param-name>magnolia.repositories.config</param-name>
+        <param-value>WEB-INF/config/repositories.xml</param-value>
+    </context-param>
+    <context-param>
+        <param-name>log4j.config</param-name>
+        <param-value>WEB-INF/config/log4j.xml</param-value>
+    </context-param>
+    <context-param>
+        <param-name>magnolia.root.sysproperty</param-name>
+        <param-value>magnolia.root</param-value>
+    </context-param>
+    <context-param>
+        <param-name>magnolia.bootstrap.dir</param-name>
+        <param-value>WEB-INF/bootstrap</param-value>
+    </context-param>
     <jsp-config>
         <taglib>
             <taglib-uri>cms-taglib</taglib-uri>
@@ -279,9 +241,6 @@
             <taglib-location>/WEB-INF/taglib/cms-util-taglib.tld</taglib-location>
         </taglib>
     </jsp-config>
-    <!--
-        i18n configuration moved to the repository config:/server/i18n
-    -->
     <error-page>
         <error-code>500</error-code>
         <location>/admintemplates/error.jsp</location>

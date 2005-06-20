@@ -19,18 +19,59 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.http.HttpServlet;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
 import org.apache.log4j.Logger;
 
 
 /**
+ * Magnolia default initializer: initialize logging, reads any parameter specified as context-param in web.xml and calls
+ * ConfigLoader. Users are free to implement custom loaders which read parameters from other sources. Parameters should
+ * be defined in <code>web.xml</code> using <code>context-param</code> elements:
+ *
+ * <pre>
+ * &lt;context-param>
+ *   &lt;param-name>&lt;/param-name>
+ *   &lt;param-value>&lt;/param-value>
+ * &lt;/context-param>
+ * </pre>
+ *
+ * The following parameters are needed:
+ * <dl>
+ * <dt>magnolia.cache.startdir</dt>
+ * <dd>directory used for cached pages</dd>
+ * <dt>magnolia.upload.tmpdir</dt>
+ * <dd>tmp directory for uploaded files</dd>
+ * <dt>magnolia.exchange.history</dt>
+ * <dd>history directory used for activation</dd>
+ * <dt>magnolia.repositories.config</dt>
+ * <dd>repositories configuration</dd>
+ * <dt>log4j.config</dt>
+ * <dd>Name of a log4j config file. Can be a .properties or .xml file. The value can be:
+ * <ul>
+ * <li>a full path</li>
+ * <li>a path relative to the webapp root</li>
+ * <li> a file name which will be loaded from the classpath</li>
+ * </ul>
+ * </dd>
+ * <dt>magnolia.root.sysproperty</dt>
+ * <dd>Name of a system variable which will be set to the webapp root. You can use this property in log4j configuration
+ * files to handle relative paths, such as <code>${magnolia.root}logs/magnolia-debug.log</code>. <strong>Important</strong>:
+ * if you drop multiple magnolia wars in a container which doesn't isolate system properties (e.g. tomcat) you will need
+ * to change the name of the <code>magnolia.root.sysproperty</code> variable in web.xml and in log4j configuration
+ * files.</dd>
+ * <dt>magnolia.bootstrap.dir</dt>
+ * <dd> Directory containing xml files for initialization of a blank magnolia instance. If no content is found in any of
+ * the repository, they are initialized importing xml files found in this folder. If you don't want to let magnolia
+ * automatically initialize repositories simply remove this parameter.</dd>
+ * </dl>
  * @author Sameer Charles
  * @author Fabrizio Giustina
  * @version $Id$
  */
-public class Initializer extends HttpServlet {
+public class Initializer implements ServletContextListener {
 
     /**
      * Stable serialVersionUID.
@@ -44,30 +85,30 @@ public class Initializer extends HttpServlet {
 
     /**
      * <p>
-     * load config data to the servlet instance, accessable via config beans.
+     * load configuration parameters from servlet context, then:
      * </p>
      * <ol>
      * <li>Initialize Log4j</li>
-     * <li>Load all (website / users / admin / config) repositories</li>
-     * <li>Load template config</li>
+     * <li>Instantiate a <code>info.magnolia.cms.beans.config.ConfigLoader</code> instance</li>
      * </ol>
+     * @see ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
+     * @see ConfigLoader
      */
-    public void init() {
-
-        ServletConfig config = getServletConfig();
+    public void contextInitialized(ServletContextEvent sce) {
+        ServletContext context = sce.getServletContext();
 
         // copy all the initialization parameters in a Map, so that ConfigLoader is not tied to a ServletConfig instance
         Map parameters = new HashMap();
-        Enumeration configParams = config.getInitParameterNames();
+        Enumeration configParams = context.getInitParameterNames();
         while (configParams.hasMoreElements()) {
             String paramName = (String) configParams.nextElement();
-            parameters.put(paramName, config.getInitParameter(paramName));
+            parameters.put(paramName, context.getInitParameter(paramName));
         }
 
-        Log4jConfigurer.initLogging(config.getServletContext(), parameters);
+        Log4jConfigurer.initLogging(context, parameters);
 
         try {
-            new ConfigLoader(config.getServletContext(), parameters);
+            new ConfigLoader(context, parameters);
         }
         catch (Exception e) {
             log.fatal(e.getMessage(), e);
@@ -75,21 +116,21 @@ public class Initializer extends HttpServlet {
     }
 
     /**
-     * @see javax.servlet.Servlet#destroy()
+     * Shutdown logging.
+     * @see ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
      */
-    public void destroy() {
-
-        ServletConfig config = getServletConfig();
+    public void contextDestroyed(ServletContextEvent sce) {
+        ServletContext context = sce.getServletContext();
 
         // copy all the initialization parameters in a Map
         Map parameters = new HashMap();
-        Enumeration configParams = config.getInitParameterNames();
+        Enumeration configParams = context.getInitParameterNames();
         while (configParams.hasMoreElements()) {
             String paramName = (String) configParams.nextElement();
-            parameters.put(paramName, config.getInitParameter(paramName));
+            parameters.put(paramName, context.getInitParameter(paramName));
         }
 
         Log4jConfigurer.shutdownLogging(parameters);
-        super.destroy();
     }
+
 }
