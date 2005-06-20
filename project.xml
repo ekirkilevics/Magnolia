@@ -18,7 +18,7 @@
 		API for java content repositories (JCR) to access its content. It has an easy to use web-browser interface, a clear API
 		and a useful custom tag library for easy templating in JSP and Servlets.
 	</description>
-	<shortDescription>Magnolia content-management-system</shortDescription>
+	<shortDescription>Magnolia Content Management Suite</shortDescription>
 	<url>http://magnolia.sourceforge.net</url>
 	<!-- <issueTrackingUrl>http://jira.magnolia.info/browse/MAGNOLIA</issueTrackingUrl> -->
 	<issueTrackingUrl>http://jira.magnolia.info/secure/BrowseProject.jspa?id=10000</issueTrackingUrl>
@@ -39,6 +39,16 @@
 			<id>2.01</id>
 			<name>2.01</name>
 			<tag>magnolia2.01-050124</tag>
+		</version>
+		<version>
+			<id>2.03</id>
+			<name>2.03</name>
+			<tag>magnolia2.03</tag>
+		</version>
+		<version>
+			<id>2.1-rc1</id>
+			<name>2.1 RC1</name>
+			<tag>magnolia2.1-RC1</tag>
 		</version>
 	</versions>
 	<mailingLists>
@@ -272,7 +282,7 @@
 			<artifactId>jcr</artifactId>
 			<version>0.16.4.1</version>
 			<type>jar</type>
-			<url>http://www.day.com/maven/jsr170/jars/jcr-0.16.2.jar</url>
+			<url>http://www.day.com/maven/jsr170/jars/jcr-0.16.4.1.jar</url>
 			<properties>
 				<war.bundle>true</war.bundle>
 			</properties>
