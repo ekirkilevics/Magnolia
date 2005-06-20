@@ -18,5 +18,8 @@
         <br />
         <br />
     </cms:ifNotEmpty>
-    <img align="right" style="margin-top: 5px" src="${pageContext.request.contextPath}/docroot/samples/imgs/poweredSmall.gif" />
+    
+    <a href="http://www.magnolia.info" target="_blank">
+    	<img align="right" style="margin-top: 5px" src="${pageContext.request.contextPath}/docroot/samples/imgs/poweredSmall.gif" />
+    </a>
 </jsp:root>
