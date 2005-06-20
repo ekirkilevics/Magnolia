@@ -19,8 +19,6 @@ import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Workspace;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -41,7 +39,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
  * @author Fabrizio Giustina
  * @version $Id: $
  */
-public class ImportExportServlet extends HttpServlet {
+public class ImportExportServlet extends EntryServlet {
 
     /**
      * Stable serialVersionUID.
@@ -71,26 +69,34 @@ public class ImportExportServlet extends HttpServlet {
     /**
      * @see javax.servlet.http.HttpServlet#doGet(HttpServletRequest, HttpServletResponse)
      */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        request.setCharacterEncoding("UTF-8");
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        String repository = request.getParameter(PARAM_REPOSITORY);
-        if (StringUtils.isEmpty(repository)) {
-            repository = ContentRepository.WEBSITE;
+        if (isAuthorized(request, response)) {
+            try {
+                request.setCharacterEncoding("UTF-8");
+            }
+            catch (IllegalStateException e) {
+                // ignore
+            }
+
+            String repository = request.getParameter(PARAM_REPOSITORY);
+            if (StringUtils.isEmpty(repository)) {
+                repository = ContentRepository.WEBSITE;
+            }
+            String basepath = request.getParameter(PARAM_PATH);
+            if (StringUtils.isEmpty(basepath)) {
+                basepath = "/";
+            }
+
+            boolean keepVersionHistory = BooleanUtils.toBoolean(request.getParameter(PARAM_KEEPVERSIONS));
+
+            if (request.getParameter("exportxml") != null) {
+                executeExport(response, repository, basepath, keepVersionHistory);
+                return;
+            }
+
+            displayForm(response, repository, basepath);
         }
-        String basepath = request.getParameter(PARAM_PATH);
-        if (StringUtils.isEmpty(basepath)) {
-            basepath = "/";
-        }
-
-        boolean keepVersionHistory = BooleanUtils.toBoolean(request.getParameter(PARAM_KEEPVERSIONS));
-
-        if (request.getParameter("exportxml") != null) {
-            executeExport(response, repository, basepath, keepVersionHistory);
-            return;
-        }
-
-        displayForm(response, repository, basepath);
     }
 
     /**
@@ -170,34 +176,33 @@ public class ImportExportServlet extends HttpServlet {
      * A post request is usually an import request.
      * @see javax.servlet.http.HttpServlet#doPost(HttpServletRequest, HttpServletResponse)
      */
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-        IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if (isAuthorized(request, response)) {
+            log.debug("Import request received.");
 
-        log.debug("Import request received.");
+            MultipartForm form = Resource.getPostedForm(request);
+            if (form == null) {
+                log.error("Missing form.");
+                return;
+            }
 
-        MultipartForm form = Resource.getPostedForm(request);
-        if (form == null) {
-            log.error("Missing form.");
-            return;
+            String basepath = form.getParameter(PARAM_PATH);
+            if (StringUtils.isEmpty(basepath)) {
+                basepath = "/";
+            }
+
+            boolean keepVersionHistory = BooleanUtils.toBoolean(form.getParameter(PARAM_KEEPVERSIONS));
+
+            String repository = form.getParameter(PARAM_REPOSITORY);
+            Document xmlFile = form.getDocument("file");
+            if (StringUtils.isEmpty(repository) || xmlFile == null) {
+                throw new RuntimeException("Wrong parameters");
+            }
+
+            executeImport(basepath, repository, xmlFile, keepVersionHistory);
+
+            doGet(request, response);
         }
-
-        String basepath = form.getParameter(PARAM_PATH);
-        if (StringUtils.isEmpty(basepath)) {
-            basepath = "/";
-        }
-
-        boolean keepVersionHistory = BooleanUtils.toBoolean(form.getParameter(PARAM_KEEPVERSIONS));
-
-        String repository = form.getParameter(PARAM_REPOSITORY);
-        Document xmlFile = form.getDocument("file");
-        if (StringUtils.isEmpty(repository) || xmlFile == null) {
-            throw new RuntimeException("Wrong parameters");
-        }
-
-        executeImport(basepath, repository, xmlFile, keepVersionHistory);
-
-        doGet(request, response);
-
     }
 
     /**

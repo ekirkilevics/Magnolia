@@ -19,7 +19,7 @@
 		this.divMain=document.getElementById(name+"_"+path+"_DivMain");
 		// this is setted afterward because a cyclic dependency for the conditions
 		this.menu = null;
-		
+
 		this.addressBar=document.getElementById(name+"AddressBar");
 		this.divMoveShadow=document.getElementById(name+"_MoveShadow");
 		this.divMoveDenied=document.getElementById(name+"_MoveDenied");
@@ -132,7 +132,7 @@
 		var sNode=this.getNode(id);
 		var divMain=document.getElementById(sNode.divMainId);
 		mgnlDebug("selectNode: divMainId:" + sNode.divMainId, "tree");
-		
+
 		var divMainSelected=document.getElementById(this.selectedNode.divMainId);
 
 		if (divMain && this.selectedNode.divMainId!=sNode.divMainId)
@@ -253,7 +253,7 @@
 	    	setTimeout("mgnlTreeResizeOnloadSafari('"+this.name+"');",200);
 	    }
 	}
-		
+
 	function mgnlTreeResizeOnloadSafari(treeName){
 		mgnlDebug("mgnlTreeResizeOnloadSafari: safari","tree");
 		var tree=eval(treeName);
@@ -292,16 +292,16 @@
 			else if (document.getElementById){
 				rulesKey="cssRules";
 			}
-			mgnlDebug("mgnlTree.resize: running with rules: " + rulesKey, "tree"); 
+			mgnlDebug("mgnlTree.resize: running with rules: " + rulesKey, "tree");
 
 			// for each stylesheet included
 			var treeColumnClasses=new Object();
 			//for (var elem0 in document.styleSheets) //does not work in firebird 0.8, safari 1.2
 			// internal styles seems to be always in last styleSheets, therefor top down
 			//to do: define break point!
-			for (var elem0 = document.styleSheets.length-1; elem0>=0; elem0--) { 
+			for (var elem0 = document.styleSheets.length-1; elem0>=0; elem0--) {
 				mgnlDebug("mgnlTree.resize: styleSheets[elem0].href = " + document.styleSheets[elem0].href, "tree");
-				
+
                 var rules=document.styleSheets[elem0][rulesKey];
 				mgnlDebug("mgnlTree.resize: rules", "tree", rules);
 
@@ -425,7 +425,7 @@
 		this.menuHide();
 		this.moveReset();
 		}
-		
+
 	mgnlTree.prototype.menuShow = function(event)
 		{
 		if (this.menu)
@@ -500,7 +500,7 @@
 		if (mgnlConfirm(text,title))
 			{
 
-		    var url="${pageContext.request.contextPath}/export?exportxml=true&mgnlRepository=" + this.repository + "&mgnlPath=" + this.selectedNode.id;
+		    var url="${pageContext.request.contextPath}/.magnolia/mgnl-export?exportxml=true&mgnlRepository=" + this.repository + "&mgnlPath=" + this.selectedNode.id;
 
 		    location.href=url;
 			}
@@ -1198,7 +1198,7 @@ callback
 			mgnlDebug('mgnlTreeDrawNodesCallback', "tree");
 			var tmp=html.substring(0,html.indexOf("\" />"));
 			tmp=tmp.replace(selectNodePattern,"");
-			
+
 			if (tmp!="") selectPath=tmp;
 			}
 
@@ -1217,6 +1217,6 @@ callback
 				shifter.src=shifter.src.replace("COLLAPSE","EMPTY")
 				}
 			}
-	
+
 }
 
