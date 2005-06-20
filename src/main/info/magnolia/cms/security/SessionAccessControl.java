@@ -252,9 +252,7 @@ public final class SessionAccessControl {
             session);
         Content userNode = getUserNode(request);
         List acl = new ArrayList();
-        updateACL(userNode, acl, repositoryID);
         updateRolesACL(userNode, acl, repositoryID);
-        updateGroupsACL(userNode, acl, repositoryID);
         AccessManagerImpl accessManager = new AccessManagerImpl();
         accessManager.setPermissionList(acl);
         request.getSession().setAttribute(ATTRIBUTE_AM_PREFIX + repositoryID + "_" + workspaceID, accessManager);
@@ -301,18 +299,18 @@ public final class SessionAccessControl {
 
     /**
      * Adds user acl of the specified user to the given userACL
-     * @param userNode
+     * @param roleNode
      * @param userACL
      */
-    private static void updateACL(Content userNode, List userACL, String repositoryID) {
+    private static void updateACL(Content roleNode, List userACL, String repositoryID) {
         try {
-            /* get access rights of this node (user) */
+            // get access rights of this node (role)
             Content acl = null;
             try {
-                acl = userNode.getContent("acl_" + repositoryID);
+                acl = roleNode.getContent("acl_" + repositoryID);
             }
             catch (PathNotFoundException e) {
-                log.warn("No acl defined for user " + userNode.getHandle() + " on repository \"" + repositoryID + "\"");
+                log.warn("No acl defined for role " + roleNode.getHandle() + " on repository \"" + repositoryID + "\"");
                 return;
             }
 
@@ -366,49 +364,13 @@ public final class SessionAccessControl {
                 Content map = (Content) children.next();
                 String groupPath = map.getNodeData("path").getString();
                 if (StringUtils.isNotEmpty(groupPath)) {
-                    Content groupNode = rolesHierarchy.getContent(groupPath);
-                    updateACL(groupNode, groupACL, repositoryID);
+                    Content roleNode = rolesHierarchy.getContent(groupPath);
+                    updateACL(roleNode, groupACL, repositoryID);
                 }
             }
         }
         catch (Exception e) {
             log.error("Failed to update roles ACL");
-            log.error(e.getMessage(), e);
-        }
-    }
-
-    /**
-     * Adds group acl of the specified user to the given groupACL
-     * @param userNode
-     * @param groupACL
-     * @todo groups are not handled yet?
-     */
-    private static void updateGroupsACL(Content userNode, List groupACL, String repositoryID) {
-        try {
-            HierarchyManager groupsHierarchy = ContentRepository.getHierarchyManager(ContentRepository.GROUPS);
-            // get access rights of this user
-            Content acl = null;
-            try {
-                acl = userNode.getContent("groups");
-            }
-            catch (PathNotFoundException e) {
-                log.debug("No groups defined for user " + userNode.getHandle());
-                return;
-            }
-            Collection aclCollection = acl.getChildren();
-            if (aclCollection == null) {
-                return;
-            }
-            Iterator children = aclCollection.iterator();
-            while (children.hasNext()) {
-                Content map = (Content) children.next();
-                String groupPath = map.getNodeData("path").getString();
-                Content groupNode = groupsHierarchy.getContent(groupPath);
-                updateRolesACL(groupNode, groupACL, repositoryID);
-            }
-        }
-        catch (Exception e) {
-            log.error("Failed to load user group ACL");
             log.error(e.getMessage(), e);
         }
     }
