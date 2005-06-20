@@ -11,6 +11,8 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 
 /**
  * @author Fabrizio Giustina
@@ -24,6 +26,11 @@ public class RichEditorIFrameDialogPage extends BasePageServlet {
     private static final long serialVersionUID = 222L;
 
     /**
+     * Logger.
+     */
+    private static Logger log = Logger.getLogger(RichEditorIFrameDialogPage.class);
+
+    /**
      * @see info.magnolia.cms.servlets.BasePageServlet#draw(HttpServletRequest, HttpServletResponse)
      */
     public void draw(HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
@@ -31,9 +38,14 @@ public class RichEditorIFrameDialogPage extends BasePageServlet {
 
         DialogRichedit richE = (DialogRichedit) request.getSession().getAttribute(
             request.getParameter(DialogSuper.SESSION_ATTRIBUTENAME_DIALOGOBJECT));
-        richE.removeSessionAttribute();
-        richE.drawHtmlEditor(out);
-
+        if (richE != null) {
+            richE.removeSessionAttribute();
+            richE.drawHtmlEditor(out);
+        }
+        else {
+            log.error("DialogRichedit not found in session with name ["
+                + request.getParameter(DialogSuper.SESSION_ATTRIBUTENAME_DIALOGOBJECT)
+                + "]");
+        }
     }
-
 }
