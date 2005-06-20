@@ -17,7 +17,9 @@ import info.magnolia.cms.beans.config.MIMEMapping;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+import javax.servlet.Filter;
 import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -29,14 +31,29 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Sameer Charles
- * @version 1.1
+ * @author Fabrizio Giustina
+ * @version $Id$
  */
-public class ContentTypeFilter extends BaseFilter {
+public class ContentTypeFilter implements Filter {
 
     /**
      * Logger.
      */
     private static Logger log = Logger.getLogger(ContentTypeFilter.class);
+
+    /**
+     * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
+     */
+    public void init(FilterConfig filterConfig) throws ServletException {
+        // unused
+    }
+
+    /**
+     * @see javax.servlet.Filter#destroy()
+     */
+    public void destroy() {
+        // unused
+    }
 
     /**
      * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse,
@@ -48,26 +65,25 @@ public class ContentTypeFilter extends BaseFilter {
         filterChain.doFilter(req, resp);
     }
 
-    private void setContentType(ServletRequest req, ServletResponse resp) throws UnsupportedEncodingException {
+    private void setContentType(ServletRequest req, ServletResponse resp) {
         resp.setContentType(MIMEMapping.getMIMEType((HttpServletRequest) req));
         String characterEncoding = MIMEMapping.getContentEncoding((HttpServletRequest) req);
-        if (StringUtils.isNotEmpty(characterEncoding)) {
-            resp.setCharacterEncoding(characterEncoding);
-            try {
-                req.setCharacterEncoding(characterEncoding);
-            }
-            catch (Exception e) {
-                log.error("can't set character encoding for the request", e);
-            }
+
+        if (StringUtils.isEmpty(characterEncoding)) {
+            characterEncoding = "UTF-8";
         }
-        else {
-            resp.setCharacterEncoding("UTF-8");
-            try {
-                req.setCharacterEncoding("UTF-8");
-            }
-            catch (Exception e) {
-                log.error("can't set character encoding for the request", e);
-            }
+
+        resp.setCharacterEncoding(characterEncoding);
+
+        try {
+            req.setCharacterEncoding(characterEncoding);
+        }
+        catch (IllegalStateException e) {
+            log.debug("can't set character encoding for the request", e);
+        }
+        catch (UnsupportedEncodingException e) {
+            log.error("can't set character encoding for the request", e);
         }
     }
+
 }
