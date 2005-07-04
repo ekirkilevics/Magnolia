@@ -84,6 +84,19 @@ public class EntryServlet extends HttpServlet {
     }
 
     /**
+     * Allow caching of this specific resource. This method always returns <code>true</code>, and it's here to allow
+     * an easy plug-in of application-specific logic by extending EntrySrvlet. If you need to disable cache for specific
+     * requests (not based on the request URI, since this is configurable from adminCentral) you can override this
+     * method.
+     * @param req HttpServletRequest
+     * @return <code>true</code> if the page returned by this request can be cached, <code>false</code> if cache
+     * should not be used.
+     */
+    protected boolean allowCaching(HttpServletRequest req) {
+        return true;
+    }
+
+    /**
      * All HTTP/s requests are handled here.
      * @param req HttpServletRequest
      * @param res HttpServletResponse
@@ -99,15 +112,22 @@ public class EntryServlet extends HttpServlet {
 
         try {
             if (isAuthorized(req, res)) {
+
+                // allowCaching allows users to plug-in application specific logic
+                boolean cacheable = allowCaching(req);
+
                 // try to stream from cache first
-                if (Cache.isCached(req)) {
+                if (cacheable && Cache.isCached(req)) {
                     if (CacheHandler.streamFromCache(req, res)) {
                         return; // if success return
                     }
                 }
                 if (redirect(req, res)) {
-                    // its a valid request cache it
-                    this.cacheRequest(req);
+
+                    // it's a valid request cache it
+                    if (cacheable) {
+                        this.cacheRequest(req);
+                    }
                     return;
                 }
                 intercept(req, res);
