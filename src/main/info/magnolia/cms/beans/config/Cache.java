@@ -102,11 +102,10 @@ public final class Cache {
                 updateCompressionList(compressionListNode);
                 // @todo sort ascending so there wont be too much work on comparing
             }
-            log.info("Config : cache mapping loaded");
+            log.info("Config: cache mapping loaded");
         }
         catch (RepositoryException re) {
-            log.error("Config : Failed to load cache mapping or no mapping defined");
-            log.error(re.getMessage(), re);
+            log.error("Config: Failed to load cache mapping or no mapping defined - " + re.getMessage(), re);
         }
     }
 
@@ -168,8 +167,7 @@ public final class Cache {
             CacheHandler.validatePath(CacheHandler.CACHE_DIRECTORY);
         }
         catch (Exception e) {
-            log.error("Failed to validate cache directory location");
-            log.error(e.getMessage(), e);
+            log.error("Failed to validate cache directory location: " + e.getMessage(), e);
         }
     }
 
