@@ -27,6 +27,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.observation.Event;
+import javax.jcr.observation.EventIterator;
+import javax.jcr.observation.EventListener;
+import javax.jcr.observation.ObservationManager;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -49,39 +53,32 @@ public class VirtualMap {
      */
     private static Map cachedURImapping = new Hashtable();
 
-    private static VirtualMap virtualMap = new VirtualMap();
-
-    public static VirtualMap getInstance() {
-        return virtualMap;
-    }
-
-    public void update(String configPath) {
+    public static void update(String configPath) {
         HierarchyManager configHierarchyManager = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
         try {
             log.info("Config : Loading VirtualMap - " + configPath);
             Content mappingNode = configHierarchyManager.getContent(configPath);
-            this.cacheURIMappings(mappingNode);
+            cacheURIMappings(mappingNode);
             log.info("Config : VirtualMap loaded - " + configPath);
         }
         catch (RepositoryException re) {
-            log.error("Config : Failed to load VirtualMap - " + configPath);
-            log.error(re.getMessage(), re);
+            log.error("Config : Failed to load VirtualMap - " + configPath + " - " + re.getMessage(), re);
         }
     }
 
-    protected void init() {
+    protected static void init() {
         VirtualMap.cachedURImapping.clear();
     }
 
-    protected void reload() {
+    protected static void reload() {
         log.info("Config : re-loading VirtualMap");
-        this.init();
+        init();
     }
 
     /**
      * @param nodeList to be added in cache
      */
-    private void cacheURIMappings(Content nodeList) {
+    private static void cacheURIMappings(Content nodeList) {
         Collection list = nodeList.getChildren();
         Collections.sort((List) list, new StringComparator("fromURI"));
         Iterator it = list.iterator();
@@ -98,7 +95,7 @@ public class VirtualMap {
      * Servlets".
      * @return URI string mapping
      */
-    public String getURIMapping(String uri) {
+    public static String getURIMapping(String uri) {
         Iterator e = VirtualMap.cachedURImapping.keySet().iterator();
         String mappedURI = StringUtils.EMPTY;
         int lastMatchedPatternlength = 0;

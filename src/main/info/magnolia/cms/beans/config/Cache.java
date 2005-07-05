@@ -159,7 +159,7 @@ public final class Cache {
         Iterator it = nodeList.getChildren().iterator();
         while (it.hasNext()) {
             Content container = (Content) it.next();
-            NodeData uri = container.getNodeData("URI");
+            NodeData uri = container.getNodeData(CACHE_MAPPING_NODE);
             UrlPattern p = new SimpleUrlPattern(uri.getString());
             cachedCacheableURIMapping.put(p, BooleanUtils.toBooleanObject(allow));
         }

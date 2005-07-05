@@ -132,7 +132,7 @@ public class ConfigLoader {
         }
 
         log.info("Init virtualMap");
-        VirtualMap.getInstance().init();
+        VirtualMap.init();
         log.info("Init i18n");
         MessagesManager.init(context);
         log.info("Init secureURI");

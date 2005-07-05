@@ -15,7 +15,6 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.module.InvalidConfigException;
 import info.magnolia.cms.module.ModuleConfig;
 import info.magnolia.cms.module.ModuleFactory;
 import info.magnolia.cms.security.AccessManager;
@@ -93,27 +92,21 @@ public final class ModuleLoader {
      * @param startPage
      * @throws IOException
      */
-    private static void init(Content startPage) throws ClassNotFoundException, InvalidConfigException, IOException {
+    private static void init(Content startPage) {
         Iterator modules = startPage.getChildren().iterator();
         while (modules.hasNext()) {
             Content module = (Content) modules.next();
 
             String modulename = module.getName();
 
-            try {
-                log.info("Initializing module - " + modulename);
-                load(module);
-                VirtualMap.getInstance().update(CONFIG_PAGE + "/" + modulename + "/" + CONFIG_NODE_VIRTUAL_MAPPING);
-                log.info("Module : " + modulename + " initialized");
-            }
-            catch (RepositoryException re) {
-                log.error("Failed to initialize module - " + modulename);
-                log.error(re.getMessage(), re);
-            }
+            log.info("Initializing module - " + modulename);
+            load(module);
+            VirtualMap.update(CONFIG_PAGE + "/" + modulename + "/" + CONFIG_NODE_VIRTUAL_MAPPING);
+            log.info("Module : " + modulename + " initialized");
         }
     }
 
-    private static void load(Content module) throws RepositoryException, ClassNotFoundException, InvalidConfigException {
+    private static void load(Content module) {
         try {
             Content moduleConfig = module.getContent(CONFIG_NODE_REGISTER);
             ModuleConfig thisModule = new ModuleConfig();
