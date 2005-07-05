@@ -375,8 +375,7 @@ public class CacheHandler extends Thread {
             }
         }
         catch (Exception e) {
-            log.error("Failed to flush - " + uri);
-            log.error(e.getMessage(), e);
+            log.error("Failed to flush [" + uri + "]: " + e.getMessage(), e);
         }
     }
 
@@ -386,19 +385,22 @@ public class CacheHandler extends Thread {
      */
     private static void emptyDirectory(File directory) {
         File[] children = directory.listFiles();
-        for (int i = 0; i < children.length; i++) {
-            if (children[i].isDirectory()) {
-                emptyDirectory(children[i]);
-                children[i].delete();
-            }
-            else {
-                if (log.isDebugEnabled()) {
-                    log.debug("Flushing - " + children[i].getPath());
+        // children can be null if File is not a directory or if it has been already deleted
+        if (children != null) {
+            for (int i = 0; i < children.length; i++) {
+                if (children[i] != null && children[i].isDirectory()) {
+                    emptyDirectory(children[i]);
+                    children[i].delete();
                 }
-                String path = StringUtils.substringAfter(children[i].getPath(), Path.getCacheDirectoryPath());
-                Cache.removeFromCachedURIList(path);
-                Cache.removeFromInProcessURIList(path);
-                children[i].delete();
+                else {
+                    if (log.isDebugEnabled()) {
+                        log.debug("Flushing - " + children[i].getPath());
+                    }
+                    String path = StringUtils.substringAfter(children[i].getPath(), Path.getCacheDirectoryPath());
+                    Cache.removeFromCachedURIList(path);
+                    Cache.removeFromInProcessURIList(path);
+                    children[i].delete();
+                }
             }
         }
     }
