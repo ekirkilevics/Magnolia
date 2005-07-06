@@ -53,24 +53,24 @@ public class DialogSelect extends DialogBox {
     public void setOptions(Content configNode) {
         List options = new ArrayList();
         try {
-            Iterator it = configNode.getContent("options").getChildren(ItemType.CONTENTNODE.getSystemName()).iterator();
+            Iterator it = configNode.getContent("options").getChildren(ItemType.CONTENTNODE.getSystemName()).iterator(); //$NON-NLS-1$
             while (it.hasNext()) {
                 Content n = (Content) it.next();
-                String value = n.getNodeData("value").getString();
+                String value = n.getNodeData("value").getString(); //$NON-NLS-1$
                 String label = null;
-                if (n.getNodeData("label").isExist()) {
-                    label = n.getNodeData("label").getString();
+                if (n.getNodeData("label").isExist()) { //$NON-NLS-1$
+                    label = n.getNodeData("label").getString(); //$NON-NLS-1$
                     label = TemplateMessagesUtil.get(this.getRequest(), label);
                 }
                 SelectOption option = new SelectOption(label, value);
-                if (n.getNodeData("selected").getBoolean()) {
+                if (n.getNodeData("selected").getBoolean()) { //$NON-NLS-1$
                     option.setSelected(true);
                 }
                 options.add(option);
             }
         }
         catch (RepositoryException e) {
-            log.debug("Exception caught: " + e.getMessage(), e);
+            log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
         }
         this.setOptions(options);
     }
@@ -91,12 +91,12 @@ public class DialogSelect extends DialogBox {
      */
     public void drawHtml(Writer out) throws IOException {
         Select control = new Select(this.getName(), this.getValue());
-        control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING));
-        if (this.getConfigValue("saveInfo").equals("false")) {
+        control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING)); //$NON-NLS-1$
+        if (this.getConfigValue("saveInfo").equals("false")) { //$NON-NLS-1$ //$NON-NLS-2$
             control.setSaveInfo(false);
         }
         control.setCssClass(CssConstants.CSSCLASS_SELECT);
-        control.setCssStyles("width", this.getConfigValue("width", "100%"));
+        control.setCssStyles("width", this.getConfigValue("width", "100%")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         control.setOptions(this.getOptions());
         this.drawHtmlPre(out);
         out.write(control.getHtml());

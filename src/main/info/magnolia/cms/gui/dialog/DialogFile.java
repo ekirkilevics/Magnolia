@@ -66,9 +66,9 @@ public class DialogFile extends DialogBox {
     }
 
     public void initImageExtensions() {
-        this.getImageExtensions().add("jpg");
-        this.getImageExtensions().add("jpeg");
-        this.getImageExtensions().add("gif");
+        this.getImageExtensions().add("jpg"); //$NON-NLS-1$
+        this.getImageExtensions().add("jpeg"); //$NON-NLS-1$
+        this.getImageExtensions().add("gif"); //$NON-NLS-1$
     }
 
     /**
@@ -76,35 +76,31 @@ public class DialogFile extends DialogBox {
      */
     public void drawHtml(Writer out) throws IOException {
         File control = getFileControl();
-        control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING));
+        control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING)); //$NON-NLS-1$
         control.setSaveInfo(false); // set manualy below
         control.setCssClass(CssConstants.CSSCLASS_FILE);
         control.setCssClassFileName(CssConstants.CSSCLASS_EDIT);
-        control.setCssStyles("width", this.getConfigValue("width", "100%"));
+        control.setCssStyles("width", this.getConfigValue("width", "100%")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
         this.drawHtmlPre(out);
 
-        String width = this.getConfigValue("width", "100%");
+        String width = this.getConfigValue("width", "100%"); //$NON-NLS-1$ //$NON-NLS-2$
         boolean showImage = false;
         if (this.getImageExtensions().contains(control.getExtension().toLowerCase())) {
             showImage = true;
         }
         String htmlControlBrowse = control.getHtmlBrowse();
         StringBuffer htmlControlFileName = new StringBuffer();
-        htmlControlFileName.append("<span class=\""
-            + CssConstants.CSSCLASS_DESCRIPTION
-            + "\">"
-            + MessagesManager.get(this.getRequest(), "dialog.file.filename")
-            + "</span>");
+        htmlControlFileName.append("<span class=\"" //$NON-NLS-1$
+            + CssConstants.CSSCLASS_DESCRIPTION + "\">" //$NON-NLS-1$
+            + MessagesManager.get(this.getRequest(), "dialog.file.filename") //$NON-NLS-1$
+            + "</span>"); //$NON-NLS-1$
         htmlControlFileName.append(Spacer.getHtml(1, 1));
-        htmlControlFileName.append(control.getHtmlFileName()
-            + "<span id=\""
-            + this.getName()
-            + "_fileNameExtension\">."
-            + control.getExtension()
-            + "</span>");
+        htmlControlFileName.append(control.getHtmlFileName() + "<span id=\"" //$NON-NLS-1$
+            + this.getName() + "_fileNameExtension\">." //$NON-NLS-1$
+            + control.getExtension() + "</span>"); //$NON-NLS-1$
         String htmlContentEmpty = htmlControlBrowse + Spacer.getHtml(0, 0) + htmlControlFileName;
-        out.write("<div id=\"" + this.getName() + "_contentDiv\" style=\"width:100%;\">");
+        out.write("<div id=\"" + this.getName() + "_contentDiv\" style=\"width:100%;\">"); //$NON-NLS-1$ //$NON-NLS-2$
         boolean exists = false;
 
         if (this.getWebsiteNode() != null) {
@@ -113,54 +109,46 @@ public class DialogFile extends DialogBox {
 
         if (!exists) {
             out.write(htmlContentEmpty);
-            out.write("</div>");
+            out.write("</div>"); //$NON-NLS-1$
         }
         else {
             if (showImage) {
-                out.write("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"" + width + "\">");
-                out.write("<tr><td class=\"" + CssConstants.CSSCLASS_FILEIMAGE + "\">");
+                out.write("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"" + width + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
+                out.write("<tr><td class=\"" + CssConstants.CSSCLASS_FILEIMAGE + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
                 // todo: image thumbnail template
                 // out.write("<img src=\""+ this.getRequest().getContextPath()
                 // +THUMB_PATH+"?src="+control.getHandle()+"\"
                 // class=\""+CSSCLASS_FILEIMAGE+"\">");
                 // tmp workaround: resize in html ...
-                out.write("<img width=\"150\" src=\""
-                    + this.getRequest().getContextPath()
-                    + control.getHandle()
-                    + "\" class=\""
-                    + CssConstants.CSSCLASS_FILEIMAGE
-                    + "\">");
-                out.write("</td><td>");
+                out.write("<img width=\"150\" src=\"" //$NON-NLS-1$
+                    + this.getRequest().getContextPath() + control.getHandle() + "\" class=\"" //$NON-NLS-1$
+                    + CssConstants.CSSCLASS_FILEIMAGE + "\">"); //$NON-NLS-1$
+                out.write("</td><td>"); //$NON-NLS-1$
             }
             out.write(htmlControlFileName.toString());
             if (!showImage) {
                 String iconPath = this.getIconPath(control.getExtension());
 
                 out.write(Spacer.getHtml(0, 0));
-                out.write("<a href=" + this.getRequest().getContextPath() + control.getPath() + " target=\"_blank\">");
-                out.write("<img src=\""
-                    + this.getRequest().getContextPath()
-                    + iconPath
-                    + "\" class=\""
-                    + CssConstants.CSSCLASS_FILEICON
-                    + "\" border=\"0\">");
-                out.write(control.getFileName() + "." + control.getExtension() + "</a>");
+                out.write("<a href=" + this.getRequest().getContextPath() + control.getPath() + " target=\"_blank\">"); //$NON-NLS-1$ //$NON-NLS-2$
+                out.write("<img src=\"" //$NON-NLS-1$
+                    + this.getRequest().getContextPath() + iconPath + "\" class=\"" //$NON-NLS-1$
+                    + CssConstants.CSSCLASS_FILEICON + "\" border=\"0\">"); //$NON-NLS-1$
+                out.write(control.getFileName() + "." + control.getExtension() + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$
             }
             out.write(Spacer.getHtml(12, 12));
-            out.write(control.getHtmlRemove("mgnlDialogFileRemove('" + this.getName() + "');"));
+            out.write(control.getHtmlRemove("mgnlDialogFileRemove('" + this.getName() + "');")); //$NON-NLS-1$ //$NON-NLS-2$
             if (showImage) {
-                out.write("</td></tr></table>");
+                out.write("</td></tr></table>"); //$NON-NLS-1$
             }
-            out.write("</div>");
-            out.write("<div style=\"position:absolute;top:-500;left:-500;visibility:hidden;\"><textarea id=\""
-                + this.getName()
-                + "_contentEmpty\">"
-                + htmlContentEmpty
-                + "</textarea></div>");
+            out.write("</div>"); //$NON-NLS-1$
+            out.write("<div style=\"position:absolute;top:-500;left:-500;visibility:hidden;\"><textarea id=\"" //$NON-NLS-1$
+                + this.getName() + "_contentEmpty\">" //$NON-NLS-1$
+                + htmlContentEmpty + "</textarea></div>"); //$NON-NLS-1$
         }
         control.setSaveInfo(true);
         out.write(control.getHtmlSaveInfo());
-        control.setNodeDataTemplate(this.getConfigValue("nodeDataTemplate", null));
+        control.setNodeDataTemplate(this.getConfigValue("nodeDataTemplate", null)); //$NON-NLS-1$
         out.write(control.getHtmlNodeDataTemplate());
         this.drawHtmlPost(out);
     }

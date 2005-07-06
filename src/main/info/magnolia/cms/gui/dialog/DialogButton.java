@@ -43,12 +43,12 @@ public class DialogButton extends DialogBox {
      */
     public void drawHtml(Writer out) throws IOException {
         Button control = new Button();
-        String label = getConfigValue("buttonLabel");
+        String label = getConfigValue("buttonLabel"); //$NON-NLS-1$
         label = TemplateMessagesUtil.get(this.getRequest(), label);
         control.setSaveInfo(false);
         control.setLabel(label);
-        control.setOnclick(this.getConfigValue("onclick"));
-        if (this.getConfigValue("small").equals("true")) {
+        control.setOnclick(this.getConfigValue("onclick")); //$NON-NLS-1$
+        if (this.getConfigValue("small").equals("true")) { //$NON-NLS-1$ //$NON-NLS-2$
             control.setSmall(true);
         }
         this.drawHtmlPre(out);

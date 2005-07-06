@@ -47,30 +47,27 @@ public class DialogTab extends DialogSuper {
         if (StringUtils.isNotEmpty(this.getLabel())) {
             Button control = new Button();
             control.setLabel(TemplateMessagesUtil.get(this.getRequest(), this.getLabel()));
-            control.setOnclick("mgnlDialogShiftTab('" + parentId + "','" + id + "');");
+            control.setOnclick("mgnlDialogShiftTab('" + parentId + "','" + id + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             this.getParent().addOption(control);
         }
         // add tab to js object
-        out.write("<script type=\"text/javascript\">");
-        out.write("mgnlControlSets['"
-            + parentId
-            + "'].items[mgnlControlSets['"
-            + parentId
-            + "'].items.length]='"
-            + id
-            + "';");
-        out.write("</script>");
+        out.write("<script type=\"text/javascript\">"); //$NON-NLS-1$
+        out.write("mgnlControlSets['" //$NON-NLS-1$
+            + parentId + "'].items[mgnlControlSets['" //$NON-NLS-1$
+            + parentId + "'].items.length]='" //$NON-NLS-1$
+            + id + "';"); //$NON-NLS-1$
+        out.write("</script>"); //$NON-NLS-1$
         // tab page
-        out.write("<div id=\"" + id + "_div\" class=\"" + CssConstants.CSSCLASS_TAB + "\">");
-        out.write("<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">");
-        out.write("<tr><td class=\"" + CssConstants.CSSCLASS_TAB + "\">");
+        out.write("<div id=\"" + id + "_div\" class=\"" + CssConstants.CSSCLASS_TAB + "\">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        out.write("<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">"); //$NON-NLS-1$
+        out.write("<tr><td class=\"" + CssConstants.CSSCLASS_TAB + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
         out
-            .write("<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"table-layout:fixed\">");
-        out.write("<col width=\"200\" /><col />");
+            .write("<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"table-layout:fixed\">"); //$NON-NLS-1$
+        out.write("<col width=\"200\" /><col />"); //$NON-NLS-1$
     }
 
     public void drawHtmlPostSubs(Writer out) throws IOException {
-        out.write("</table>");
-        out.write("</td></tr></table></div>");
+        out.write("</table>"); //$NON-NLS-1$
+        out.write("</td></tr></table></div>"); //$NON-NLS-1$
     }
 }

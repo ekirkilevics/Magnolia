@@ -34,11 +34,11 @@ public class DialogBox extends DialogSuper {
 
     public static final int BOXTYPE_1COL = 1;
 
-    public static final String ICONS_GENERAL = "general.gif";
+    public static final String ICONS_GENERAL = "general.gif"; //$NON-NLS-1$
 
-    public static final String ICONS_FOLDER = "folder.gif";
+    public static final String ICONS_FOLDER = "folder.gif"; //$NON-NLS-1$
 
-    public static final String ICONS_PATH = "/admindocroot/fileIcons/";
+    public static final String ICONS_PATH = "/admindocroot/fileIcons/"; //$NON-NLS-1$
 
     /**
      * Logger.
@@ -64,8 +64,8 @@ public class DialogBox extends DialogSuper {
     }
 
     public int getBoxType() {
-        String configBoxType = this.getConfigValue("boxType");
-        if (configBoxType.equals("1Col")) {
+        String configBoxType = this.getConfigValue("boxType"); //$NON-NLS-1$
+        if (configBoxType.equals("1Col")) { //$NON-NLS-1$
             return BOXTYPE_1COL;
         }
         return this.boxType;
@@ -73,53 +73,49 @@ public class DialogBox extends DialogSuper {
     }
 
     public void drawHtmlPre(Writer out) throws IOException {
-        if (this.getConfigValue("lineSemi", "false").equals("true")) {
+        if (this.getConfigValue("lineSemi", "false").equals("true")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             out.write(new DialogLine().getHtml(1, 1));
         }
-        else if (this.getConfigValue("line", "true").equals("true")) {
+        else if (this.getConfigValue("line", "true").equals("true")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             out.write(new DialogLine().getHtml());
         }
-        out.write("<tr>");
+        out.write("<tr>"); //$NON-NLS-1$
         if (this.getBoxType() == BOXTYPE_2COLS) {
-            out.write("<td width=\"1%\" class=\"" + CssConstants.CSSCLASS_BOXLABEL + "\">");
+            out.write("<td width=\"1%\" class=\"" + CssConstants.CSSCLASS_BOXLABEL + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
             // write the label
             out.write(TemplateMessagesUtil.get(this.getRequest(), this.getLabel()));
-            if (StringUtils.isNotEmpty(this.getConfigValue("labelDescription"))) {
-                String desc = this.getConfigValue("labelDescription");
+            if (StringUtils.isNotEmpty(this.getConfigValue("labelDescription"))) { //$NON-NLS-1$
+                String desc = this.getConfigValue("labelDescription"); //$NON-NLS-1$
                 desc = TemplateMessagesUtil.get(this.getRequest(), desc);
-                out.write("<div class=\"" + CssConstants.CSSCLASS_DESCRIPTION + "\">" + desc + "</div>");
+                out.write("<div class=\"" + CssConstants.CSSCLASS_DESCRIPTION + "\">" + desc + "</div>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             }
-            out.write("</td>");
+            out.write("</td>"); //$NON-NLS-1$
             String cssClass = CssConstants.CSSCLASS_BOXINPUT;
-            if (this.getClass().getName().indexOf("DialogStatic") != -1
-                || this.getClass().getName().indexOf("DialogButton") != -1) {
+            if (this.getClass().getName().indexOf("DialogStatic") != -1 //$NON-NLS-1$
+                || this.getClass().getName().indexOf("DialogButton") != -1) { //$NON-NLS-1$
                 cssClass = CssConstants.CSSCLASS_BOXLABEL;
             }
-            out.write("<td width=\"100%\" class=\"" + cssClass + "\">");
+            out.write("<td width=\"100%\" class=\"" + cssClass + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         else {
-            out.write("<td width=\"100%\" colspan=\"2\" class=\"" + CssConstants.CSSCLASS_BOXLABEL + "\">");
+            out.write("<td width=\"100%\" colspan=\"2\" class=\"" + CssConstants.CSSCLASS_BOXLABEL + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
             if (StringUtils.isNotEmpty(this.getLabel())) {
-                out.write("<div class=\""
-                    + CssConstants.CSSCLASS_BOXLABEL
-                    + "\">"
-                    + TemplateMessagesUtil.get(this.getRequest(), this.getLabel())
-                    + "</div>");
+                out.write("<div class=\"" //$NON-NLS-1$
+                    + CssConstants.CSSCLASS_BOXLABEL + "\">" //$NON-NLS-1$
+                    + TemplateMessagesUtil.get(this.getRequest(), this.getLabel()) + "</div>"); //$NON-NLS-1$
             }
-            if (StringUtils.isNotEmpty(this.getConfigValue("labelDescription"))) {
-                String desc = this.getConfigValue("labelDescription");
-                out.write("<div class=\""
-                    + CssConstants.CSSCLASS_DESCRIPTION
-                    + "\">"
-                    + TemplateMessagesUtil.get(this.getRequest(), desc)
-                    + "</div>");
+            if (StringUtils.isNotEmpty(this.getConfigValue("labelDescription"))) { //$NON-NLS-1$
+                String desc = this.getConfigValue("labelDescription"); //$NON-NLS-1$
+                out.write("<div class=\"" //$NON-NLS-1$
+                    + CssConstants.CSSCLASS_DESCRIPTION + "\">" //$NON-NLS-1$
+                    + TemplateMessagesUtil.get(this.getRequest(), desc) + "</div>"); //$NON-NLS-1$
             }
         }
     }
 
     public void drawHtmlPost(Writer out) throws IOException {
         out.write(this.getHtmlDescription());
-        out.write("</td></tr>");
+        out.write("</td></tr>"); //$NON-NLS-1$
     }
 
     public String getHtmlDescription() {
@@ -128,32 +124,32 @@ public class DialogBox extends DialogSuper {
         if (StringUtils.isNotEmpty(this.getDescription())) {
             String desc = this.getDescription();
             desc = TemplateMessagesUtil.get(this.getRequest(), desc);
-            return "<div class=\"" + CssConstants.CSSCLASS_DESCRIPTION + "\">" + desc + "</div>";
+            return "<div class=\"" + CssConstants.CSSCLASS_DESCRIPTION + "\">" + desc + "</div>"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
 
         return StringUtils.EMPTY;
     }
 
     public static void initIconExtensions() {
-        getIconExtensions().put("doc", "");
-        getIconExtensions().put("eps", "");
-        getIconExtensions().put("gif", "");
-        getIconExtensions().put("jpg", "");
-        getIconExtensions().put("jpeg", ICONS_PATH + "jpg.gif");
-        getIconExtensions().put("pdf", "");
-        getIconExtensions().put("ppt", "");
-        getIconExtensions().put("tif", "");
-        getIconExtensions().put("tiff", ICONS_PATH + "tif.gif");
-        getIconExtensions().put("xls", "");
-        getIconExtensions().put("zip", "");
+        getIconExtensions().put("doc", ""); //$NON-NLS-1$
+        getIconExtensions().put("eps", ""); //$NON-NLS-1$
+        getIconExtensions().put("gif", ""); //$NON-NLS-1$
+        getIconExtensions().put("jpg", ""); //$NON-NLS-1$
+        getIconExtensions().put("jpeg", ICONS_PATH + "jpg.gif"); //$NON-NLS-1$ //$NON-NLS-2$
+        getIconExtensions().put("pdf", ""); //$NON-NLS-1$
+        getIconExtensions().put("ppt", ""); //$NON-NLS-1$
+        getIconExtensions().put("tif", ""); //$NON-NLS-1$
+        getIconExtensions().put("tiff", ICONS_PATH + "tif.gif"); //$NON-NLS-1$ //$NON-NLS-2$
+        getIconExtensions().put("xls", ""); //$NON-NLS-1$
+        getIconExtensions().put("zip", ""); //$NON-NLS-1$
     }
 
     public String getIconPath(String name) {
         // name might be name (e.g. "bla.gif") or extension (e.g. "gif")
         String iconPath = ICONS_PATH + ICONS_GENERAL;
         String ext;
-        if (name.indexOf(".") != -1) {
-            ext = name.substring(name.lastIndexOf(".") + 1).toLowerCase();
+        if (name.indexOf(".") != -1) { //$NON-NLS-1$
+            ext = name.substring(name.lastIndexOf(".") + 1).toLowerCase(); //$NON-NLS-1$
         }
         else {
             ext = name;
@@ -161,7 +157,7 @@ public class DialogBox extends DialogSuper {
         if (this.getIconExtensions().containsKey(ext)) {
             iconPath = (String) this.getIconExtensions().get(ext);
             if (StringUtils.isEmpty(iconPath)) {
-                iconPath = ICONS_PATH + ext + ".gif";
+                iconPath = ICONS_PATH + ext + ".gif"; //$NON-NLS-1$
             }
         }
         return iconPath;

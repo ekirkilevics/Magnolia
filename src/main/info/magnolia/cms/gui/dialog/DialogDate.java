@@ -51,17 +51,17 @@ public class DialogDate extends DialogEditWithButton {
         throws RepositoryException {
         super.init(request, response, websiteNode, configNode);
         // set buttonlabel in config
-        this.getButton().setLabel(MessagesManager.get(getRequest(), "dialog.date.select"));
+        this.getButton().setLabel(MessagesManager.get(getRequest(), "dialog.date.select")); //$NON-NLS-1$
         this.getButton().setSaveInfo(false);
         this.getButton().setOnclick(
-            "mgnlDialogOpenCalendar('" + this.getName() + "'," + this.getConfigValue("time", "false") + ");");
-        String format = "yyyy-MM-dd";
-        String pattern = "XXXX-XX-XX";
-        if (!this.getConfigValue("time", "false").equals("false")) {
-            format += "'T'HH:mm:ss";
-            pattern += "TXX:XX:XX";
+            "mgnlDialogOpenCalendar('" + this.getName() + "'," + this.getConfigValue("time", "false") + ");"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+        String format = "yyyy-MM-dd"; //$NON-NLS-1$
+        String pattern = "XXXX-XX-XX"; //$NON-NLS-1$
+        if (!this.getConfigValue("time", "false").equals("false")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            format += "'T'HH:mm:ss"; //$NON-NLS-1$
+            pattern += "TXX:XX:XX"; //$NON-NLS-1$
         }
-        this.setConfig("onchange", "mgnlDialogDatePatternCheck(this,'" + pattern + "');");
+        this.setConfig("onchange", "mgnlDialogDatePatternCheck(this,'" + pattern + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         if (this.getWebsiteNode() != null && this.getWebsiteNode().getNodeData(this.getName()).isExist()) {
             Calendar valueCalendar = this.getWebsiteNode().getNodeData(this.getName()).getDate();
             Date valueDate = valueCalendar.getTime();
@@ -70,7 +70,7 @@ public class DialogDate extends DialogEditWithButton {
             this.clearWebsiteNode(); // workaround so the value is taken... hm, pfusch
         }
         // check this!
-        this.setConfig("type", this.getConfigValue("type", PropertyType.TYPENAME_DATE));
+        this.setConfig("type", this.getConfigValue("type", PropertyType.TYPENAME_DATE)); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
 }

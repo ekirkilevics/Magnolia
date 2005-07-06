@@ -48,13 +48,13 @@ public class DialogInclude extends DialogBox {
         }
 
         try {
-            request.setAttribute("dialogObject", this);
+            request.setAttribute("dialogObject", this); //$NON-NLS-1$
 
-            String file = this.getConfigValue("file");
+            String file = this.getConfigValue("file"); //$NON-NLS-1$
 
             request.getRequestDispatcher(file).include(request, this.getResponse());
 
-            request.removeAttribute("dialogObject");
+            request.removeAttribute("dialogObject"); //$NON-NLS-1$
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);

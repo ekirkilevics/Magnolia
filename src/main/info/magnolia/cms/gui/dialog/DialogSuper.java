@@ -42,9 +42,9 @@ import org.apache.log4j.Logger;
  */
 public abstract class DialogSuper implements DialogInterface {
 
-    public static final String SESSION_ATTRIBUTENAME_DIALOGOBJECT = "mgnlSessionAttribute";
+    public static final String SESSION_ATTRIBUTENAME_DIALOGOBJECT = "mgnlSessionAttribute"; //$NON-NLS-1$
 
-    public static final String SESSION_ATTRIBUTENAME_DIALOGOBJECT_REMOVE = "mgnlSessionAttributeRemove";
+    public static final String SESSION_ATTRIBUTENAME_DIALOGOBJECT_REMOVE = "mgnlSessionAttributeRemove"; //$NON-NLS-1$
 
     /**
      * Logger.
@@ -81,7 +81,7 @@ public abstract class DialogSuper implements DialogInterface {
      */
     private List options = new ArrayList();
 
-    private String id = "mgnlControl";
+    private String id = "mgnlControl"; //$NON-NLS-1$
 
     private String value;
 
@@ -100,7 +100,7 @@ public abstract class DialogSuper implements DialogInterface {
         throws RepositoryException {
 
         if (log.isDebugEnabled()) {
-            log.debug("Init " + getClass().getName());
+            log.debug("Init " + getClass().getName()); //$NON-NLS-1$
         }
 
         this.websiteNode = websiteNode;
@@ -166,15 +166,15 @@ public abstract class DialogSuper implements DialogInterface {
     }
 
     public void setSaveInfo(boolean b) {
-        this.setConfig("saveInfo", b);
+        this.setConfig("saveInfo", b); //$NON-NLS-1$
     }
 
     public void setName(String s) {
-        this.setConfig("name", s);
+        this.setConfig("name", s); //$NON-NLS-1$
     }
 
     public String getName() {
-        return this.getConfigValue("name");
+        return this.getConfigValue("name"); //$NON-NLS-1$
     }
 
     public void addOption(Object o) {
@@ -186,11 +186,11 @@ public abstract class DialogSuper implements DialogInterface {
     }
 
     public void setLabel(String s) {
-        this.config.put("label", s);
+        this.config.put("label", s); //$NON-NLS-1$
     }
 
     public void setDescription(String s) {
-        this.config.put("description", s);
+        this.config.put("description", s); //$NON-NLS-1$
     }
 
     public void removeSessionAttribute() {
@@ -204,7 +204,7 @@ public abstract class DialogSuper implements DialogInterface {
             session.removeAttribute(name);
         }
         catch (Exception e) {
-            log.debug("removeSessionAttribute() for " + name + " failed because this.request is null");
+            log.debug("removeSessionAttribute() for " + name + " failed because this.request is null"); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
@@ -225,6 +225,7 @@ public abstract class DialogSuper implements DialogInterface {
         int i = 0;
         while (it.hasNext()) {
             String dsId = this.getId() + "_" + i; // use underscore (not divis)! could be used as js variable names
+                                                    // //$NON-NLS-1$
             DialogSuper ds = (DialogSuper) it.next();
             ds.setId(dsId);
             ds.setParent(this);
@@ -273,11 +274,11 @@ public abstract class DialogSuper implements DialogInterface {
     }
 
     protected String getLabel() {
-        return this.getConfigValue("label", StringUtils.EMPTY);
+        return this.getConfigValue("label", StringUtils.EMPTY); //$NON-NLS-1$
     }
 
     protected String getDescription() {
-        return this.getConfigValue("description", "");
+        return this.getConfigValue("description", ""); //$NON-NLS-1$
     }
 
     protected List getOptions() {
@@ -305,7 +306,7 @@ public abstract class DialogSuper implements DialogInterface {
     }
 
     protected void setSessionAttribute() {
-        String name = SESSION_ATTRIBUTENAME_DIALOGOBJECT + "_" + this.getName() + "_" + new Date().getTime();
+        String name = SESSION_ATTRIBUTENAME_DIALOGOBJECT + "_" + this.getName() + "_" + new Date().getTime(); //$NON-NLS-1$ //$NON-NLS-2$
         this.setConfig(SESSION_ATTRIBUTENAME_DIALOGOBJECT, name);
         HttpServletRequest request = this.getRequest();
         if (request == null) {
@@ -316,7 +317,7 @@ public abstract class DialogSuper implements DialogInterface {
             session.setAttribute(name, this);
         }
         catch (Exception e) {
-            log.error("setSessionAttribute() for " + name + " failed because this.request is null");
+            log.error("setSessionAttribute() for " + name + " failed because this.request is null"); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
@@ -346,18 +347,18 @@ public abstract class DialogSuper implements DialogInterface {
         Iterator it = configNodeParent.getChildren(ItemType.CONTENTNODE, ContentHandler.SORT_BY_SEQUENCE).iterator();
         while (it.hasNext()) {
             Content configNode = (Content) it.next();
-            String controlType = configNode.getNodeData("controlType").getString();
+            String controlType = configNode.getNodeData("controlType").getString(); //$NON-NLS-1$
 
             if (StringUtils.isEmpty(controlType)) {
                 String name = configNode.getName();
-                if (!name.startsWith("options")) {
-                    log.warn("Missing control type for configNode " + name);
+                if (!name.startsWith("options")) { //$NON-NLS-1$
+                    log.warn("Missing control type for configNode " + name); //$NON-NLS-1$
                 }
                 return;
             }
 
             if (log.isDebugEnabled()) {
-                log.debug("Loading control \"" + controlType + "\" for " + configNode.getHandle());
+                log.debug("Loading control \"" + controlType + "\" for " + configNode.getHandle()); //$NON-NLS-1$ //$NON-NLS-2$
             }
             DialogInterface dialogControl = DialogFactory.loadDialog(
                 request,

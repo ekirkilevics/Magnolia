@@ -60,25 +60,24 @@ public class DialogButtonSet extends DialogBox {
         // therefor do only use for radio, not for checkbox
         List options = new ArrayList();
         try {
-            Iterator it = configNode.getContent("options").getChildren(
-                ItemType.CONTENTNODE.getSystemName(),
-                Content.SORT_BY_SEQUENCE).iterator();
+            Iterator it = configNode.getContent("options").getChildren( //$NON-NLS-1$
+                ItemType.CONTENTNODE.getSystemName(), Content.SORT_BY_SEQUENCE).iterator();
             while (it.hasNext()) {
                 Content n = ((Content) it.next());
-                String value = n.getNodeData("value").getString();
-                String label = n.getNodeData("label").getString();
+                String value = n.getNodeData("value").getString(); //$NON-NLS-1$
+                String label = n.getNodeData("label").getString(); //$NON-NLS-1$
                 label = TemplateMessagesUtil.get(this.getRequest(), label);
                 Button button = new Button(this.getName(), value);
                 // if (n.getNodeData("label").isExist()) button.setLabel(n.getNodeData("label").getString());
                 button.setLabel(label);
-                if (setDefaultSelected && n.getNodeData("selected").getBoolean()) {
+                if (setDefaultSelected && n.getNodeData("selected").getBoolean()) { //$NON-NLS-1$
                     button.setState(ControlSuper.BUTTONSTATE_PUSHED);
                 }
                 options.add(button);
             }
         }
         catch (RepositoryException e) {
-            log.debug("Exception caught: " + e.getMessage(), e);
+            log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
         }
         this.setOptions(options);
     }
@@ -86,17 +85,17 @@ public class DialogButtonSet extends DialogBox {
     public void setOption(Content configNode) {
         // checkboxSwitch -> only one option, value always true/false
         List options = new ArrayList();
-        Button button = new Button(this.getName() + "_dummy", "");
-        String label = configNode.getNodeData("buttonLabel").getString();
+        Button button = new Button(this.getName() + "_dummy", ""); //$NON-NLS-1$
+        String label = configNode.getNodeData("buttonLabel").getString(); //$NON-NLS-1$
         label = TemplateMessagesUtil.get(this.getRequest(), label);
         button.setLabel(label);
 
-        if (configNode.getNodeData("selected").getBoolean()) {
+        if (configNode.getNodeData("selected").getBoolean()) { //$NON-NLS-1$
             button.setState(ControlSuper.BUTTONSTATE_PUSHED);
         }
 
-        button.setValue("true");
-        button.setOnclick("mgnlDialogShiftCheckboxSwitch('" + this.getName() + "');");
+        button.setValue("true"); //$NON-NLS-1$
+        button.setOnclick("mgnlDialogShiftCheckboxSwitch('" + this.getName() + "');"); //$NON-NLS-1$ //$NON-NLS-2$
         options.add(button);
         this.setOptions(options);
     }
@@ -110,23 +109,23 @@ public class DialogButtonSet extends DialogBox {
 
         // confignode can be null if instantiated directly
         if (configNode != null) {
-            String controlType = configNode.getNodeData("controlType").getString();
+            String controlType = configNode.getNodeData("controlType").getString(); //$NON-NLS-1$
 
             if (log.isDebugEnabled()) {
-                log.debug("Init DialogButtonSet with type=" + controlType);
+                log.debug("Init DialogButtonSet with type=" + controlType); //$NON-NLS-1$
             }
 
             // custom settings
-            if (controlType.equals("radio")) {
+            if (controlType.equals("radio")) { //$NON-NLS-1$
                 setButtonType(ControlSuper.BUTTONTYPE_RADIO);
                 setOptions(configNode, true);
             }
-            else if (controlType.equals("checkbox")) {
+            else if (controlType.equals("checkbox")) { //$NON-NLS-1$
                 setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX);
                 setOptions(configNode, false);
-                setConfig("valueType", "multiple");
+                setConfig("valueType", "multiple"); //$NON-NLS-1$ //$NON-NLS-2$
             }
-            else if (controlType.equals("checkboxSwitch")) {
+            else if (controlType.equals("checkboxSwitch")) { //$NON-NLS-1$
                 setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX);
                 setOption(configNode);
             }
@@ -155,14 +154,14 @@ public class DialogButtonSet extends DialogBox {
     public void drawHtml(Writer out) throws IOException {
         this.drawHtmlPre(out);
         ButtonSet control;
-        if (this.getConfigValue("valueType").equals("multiple")) {
+        if (this.getConfigValue("valueType").equals("multiple")) { //$NON-NLS-1$ //$NON-NLS-2$
             // checkbox
             control = new ButtonSet(this.getName(), this.getValues());
             control.setValueType(ControlSuper.VALUETYPE_MULTIPLE);
         }
         else if (this.getButtonType() == ControlSuper.BUTTONTYPE_CHECKBOX) {
             // checkboxSwitch
-            control = new ButtonSet(this.getName() + "_SWITCH", this.getValue());
+            control = new ButtonSet(this.getName() + "_SWITCH", this.getValue()); //$NON-NLS-1$
         }
         else {
             // radio
@@ -170,32 +169,30 @@ public class DialogButtonSet extends DialogBox {
         }
         control.setButtonType(this.getButtonType());
         control.setCssClass(CssConstants.CSSCLASS_BUTTONSETBUTTON);
-        if (this.getConfigValue("saveInfo").equals("false")) {
+        if (this.getConfigValue("saveInfo").equals("false")) { //$NON-NLS-1$ //$NON-NLS-2$
             control.setSaveInfo(false);
         }
-        control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING));
-        String width = this.getConfigValue("width", null);
-        control.setButtonHtmlPre("<tr><td class=\"" + CssConstants.CSSCLASS_BUTTONSETBUTTON + "\">");
-        control.setButtonHtmlInter("</td><td class=\"" + CssConstants.CSSCLASS_BUTTONSETLABEL + "\">");
-        control.setButtonHtmlPost("</td></tr>");
-        int cols = Integer.valueOf(this.getConfigValue("cols", "1")).intValue();
+        control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING)); //$NON-NLS-1$
+        String width = this.getConfigValue("width", null); //$NON-NLS-1$
+        control.setButtonHtmlPre("<tr><td class=\"" + CssConstants.CSSCLASS_BUTTONSETBUTTON + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
+        control.setButtonHtmlInter("</td><td class=\"" + CssConstants.CSSCLASS_BUTTONSETLABEL + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
+        control.setButtonHtmlPost("</td></tr>"); //$NON-NLS-1$
+        int cols = Integer.valueOf(this.getConfigValue("cols", "1")).intValue(); //$NON-NLS-1$ //$NON-NLS-2$
         if (cols > 1) {
-            width = "100%"; // outer table squeezes inner table if outer's width is not defined...
-            control.setHtmlPre(control.getHtmlPre() + "<tr>");
-            control.setHtmlPost("</tr>" + control.getHtmlPost());
+            width = "100%"; // outer table squeezes inner table if outer's width is not defined... //$NON-NLS-1$
+            control.setHtmlPre(control.getHtmlPre() + "<tr>"); //$NON-NLS-1$
+            control.setHtmlPost("</tr>" + control.getHtmlPost()); //$NON-NLS-1$
             int item = 1;
             int itemsPerCol = (int) Math.ceil(this.getOptions().size() / ((double) cols));
             for (int i = 0; i < this.getOptions().size(); i++) {
                 Button b = (Button) this.getOptions().get(i);
                 if (item == 1) {
-                    b.setHtmlPre("<td><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">"
+                    b.setHtmlPre("<td><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">" //$NON-NLS-1$
                         + control.getButtonHtmlPre());
                 }
                 if (item == itemsPerCol) {
-                    b.setHtmlPost(control.getButtonHtmlPost()
-                        + "</table></td><td class=\""
-                        + CssConstants.CSSCLASS_BUTTONSETINTERCOL
-                        + "\"></td>");
+                    b.setHtmlPost(control.getButtonHtmlPost() + "</table></td><td class=\"" //$NON-NLS-1$
+                        + CssConstants.CSSCLASS_BUTTONSETINTERCOL + "\"></td>"); //$NON-NLS-1$
                     item = 1;
                 }
                 else {
@@ -206,11 +203,11 @@ public class DialogButtonSet extends DialogBox {
             int lastIndex = this.getOptions().size() - 1;
             // avoid ArrayIndexOutOfBoundsException, but should not happen
             if (lastIndex > -1) {
-                ((Button) this.getOptions().get(lastIndex)).setHtmlPost(control.getButtonHtmlPost() + "</table>");
+                ((Button) this.getOptions().get(lastIndex)).setHtmlPost(control.getButtonHtmlPost() + "</table>"); //$NON-NLS-1$
             }
         }
         if (width != null) {
-            control.setHtmlPre("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"" + width + "\">");
+            control.setHtmlPre("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"" + width + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         control.setButtons(this.getOptions());
         out.write(control.getHtml());
@@ -219,11 +216,11 @@ public class DialogButtonSet extends DialogBox {
             // checkboxSwitch: value is stored in a hidden field (allows default selecting)
             String value = this.getValue();
             if (StringUtils.isEmpty(value)) {
-                if (this.getConfigValue("selected").equals("true")) {
-                    value = "true";
+                if (this.getConfigValue("selected").equals("true")) { //$NON-NLS-1$ //$NON-NLS-2$
+                    value = "true"; //$NON-NLS-1$
                 }
                 else {
-                    value = "false";
+                    value = "false"; //$NON-NLS-1$
                 }
             }
             out.write(new Hidden(this.getName(), value).getHtml());

@@ -23,8 +23,8 @@ import java.util.Hashtable;
 public class DialogWebDAVComparator implements Comparator {
 
     public int compare(Object o, Object o1) throws ClassCastException {
-        String s1 = ((String) ((Hashtable) o).get("name")).toLowerCase();
-        String s2 = ((String) ((Hashtable) o1).get("name")).toLowerCase();
+        String s1 = ((String) ((Hashtable) o).get("name")).toLowerCase(); //$NON-NLS-1$
+        String s2 = ((String) ((Hashtable) o1).get("name")).toLowerCase(); //$NON-NLS-1$
         return s1.compareTo(s2);
     }
 }

@@ -46,13 +46,13 @@ public class DialogLink extends DialogEditWithButton {
     public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
         throws RepositoryException {
         super.init(request, response, websiteNode, configNode);
-        String extension = this.getConfigValue("extension");
-        String label = MessagesManager.get(this.getRequest(), "dialog.link.internal");
+        String extension = this.getConfigValue("extension"); //$NON-NLS-1$
+        String label = MessagesManager.get(this.getRequest(), "dialog.link.internal"); //$NON-NLS-1$
         this.getButton().setLabel(label);
         this.getButton().setSaveInfo(false);
-        String repository = this.getConfigValue("repository", ContentRepository.WEBSITE);
+        String repository = this.getConfigValue("repository", ContentRepository.WEBSITE); //$NON-NLS-1$
         this.getButton().setOnclick(
-            "mgnlDialogLinkOpenBrowser('" + this.getName() + "','" + repository + "','" + extension + "');");
+            "mgnlDialogLinkOpenBrowser('" + this.getName() + "','" + repository + "','" + extension + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     }
 
 }

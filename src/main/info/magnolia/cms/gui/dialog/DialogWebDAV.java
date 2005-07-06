@@ -58,7 +58,7 @@ public class DialogWebDAV extends DialogBox {
 
     private static final int ICONS_WIDTH = 23;
 
-    public static final String NULLGIF = "/admindocroot/0.gif";
+    public static final String NULLGIF = "/admindocroot/0.gif"; //$NON-NLS-1$
 
     /**
      * Logger.
@@ -78,7 +78,7 @@ public class DialogWebDAV extends DialogBox {
 
     private String password = StringUtils.EMPTY;
 
-    private String protocol = "http";
+    private String protocol = "http"; //$NON-NLS-1$
 
     private WebdavResource davConnection;
 
@@ -167,7 +167,7 @@ public class DialogWebDAV extends DialogBox {
     }
 
     public String getHtmlDecodeURI(String s) {
-        return "<script type=\"text/javascript\">document.write(decodeURI(\"" + s + "\"));</script>";
+        return "<script type=\"text/javascript\">document.write(decodeURI(\"" + s + "\"));</script>"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     public void setDAVConnection(WebdavResource w) {
@@ -180,7 +180,7 @@ public class DialogWebDAV extends DialogBox {
 
     private String getSizeValue() {
         if (this.getWebsiteNode() != null) {
-            return this.getWebsiteNode().getNodeData(this.getName() + "_size").getString();
+            return this.getWebsiteNode().getNodeData(this.getName() + "_size").getString(); //$NON-NLS-1$
         }
 
         return StringUtils.EMPTY;
@@ -188,7 +188,7 @@ public class DialogWebDAV extends DialogBox {
 
     private String getModDateValue() {
         if (this.getWebsiteNode() != null) {
-            return this.getWebsiteNode().getNodeData(this.getName() + "_lastModified").getString();
+            return this.getWebsiteNode().getNodeData(this.getName() + "_lastModified").getString(); //$NON-NLS-1$
         }
 
         return StringUtils.EMPTY;
@@ -219,13 +219,13 @@ public class DialogWebDAV extends DialogBox {
         this.drawHtmlPre(out);
         this.setDAVConnection();
         this.setSessionAttribute();
-        String showName = "&nbsp;";
+        String showName = "&nbsp;"; //$NON-NLS-1$
         String showPath = StringUtils.EMPTY;
         String showIcon = StringUtils.EMPTY;
         if (StringUtils.isNotEmpty(this.getValue())) {
             String valueTmp = StringUtils.EMPTY;
             boolean isDirectory = false;
-            if (this.getValue().lastIndexOf("/") == this.getValue().length() - 1) {
+            if (this.getValue().lastIndexOf("/") == this.getValue().length() - 1) { //$NON-NLS-1$
                 // value is directory
                 valueTmp = this.getValue().substring(0, this.getValue().length() - 1);
                 isDirectory = true;
@@ -237,10 +237,10 @@ public class DialogWebDAV extends DialogBox {
                 valueTmp = this.getValue();
                 showIcon = this.getIconPath(this.getValue());
             }
-            if (valueTmp.indexOf("/") != -1) {
-                showName = valueTmp.substring(valueTmp.lastIndexOf("/") + 1);
+            if (valueTmp.indexOf("/") != -1) { //$NON-NLS-1$
+                showName = valueTmp.substring(valueTmp.lastIndexOf("/") + 1); //$NON-NLS-1$
                 if (!isDirectory) {
-                    this.setSubDirectory(valueTmp.substring(0, valueTmp.lastIndexOf("/") + 1));
+                    this.setSubDirectory(valueTmp.substring(0, valueTmp.lastIndexOf("/") + 1)); //$NON-NLS-1$
                 }
             }
             else {
@@ -249,50 +249,39 @@ public class DialogWebDAV extends DialogBox {
                     this.setSubDirectory(StringUtils.EMPTY);
                 }
             }
-            showPath = "/" + this.getSubDirectory().substring(0, this.getSubDirectory().lastIndexOf("/") + 1);
-            showPath = "<a href=\"javascript:mgnlDialogDAVBrowse('"
-                + this.getName()
-                + "_iFrame','selectedValue');\">"
-                + this.getHtmlDecodeURI(showPath)
-                + "</a>";
+            showPath = "/" + this.getSubDirectory().substring(0, this.getSubDirectory().lastIndexOf("/") + 1); //$NON-NLS-1$ //$NON-NLS-2$
+            showPath = "<a href=\"javascript:mgnlDialogDAVBrowse('" //$NON-NLS-1$
+                + this.getName() + "_iFrame','selectedValue');\">" //$NON-NLS-1$
+                + this.getHtmlDecodeURI(showPath) + "</a>"; //$NON-NLS-1$
         }
         else {
-            showPath = "<i>" + MessagesManager.get(this.getRequest(), "dialog.webdav.noSelection") + "</i>";
+            showPath = "<i>" + MessagesManager.get(this.getRequest(), "dialog.webdav.noSelection") + "</i>"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             showIcon = NULLGIF;
         }
 
-        this.setDescription(MessagesManager.get(this.getRequest(), "dialog.webdav.connectedTo")
-            + this.getProtocol()
-            + "://"
-            + this.getHost()
-            + ":"
-            + this.getPort()
-            + this.getDirectory()
-            + "<br />"
+        this.setDescription(MessagesManager.get(this.getRequest(), "dialog.webdav.connectedTo") //$NON-NLS-1$
+            + this.getProtocol() + "://" //$NON-NLS-1$
+            + this.getHost() + ":" //$NON-NLS-1$
+            + this.getPort() + this.getDirectory() + "<br />" //$NON-NLS-1$
             + this.getDescription());
         out.write(Spacer.getHtml(2, 2));
-        out.write("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
-        out.write("<tr>");
-        out.write("<td><img id=\""
-            + this.getName()
-            + "_showIcon\" src=\""
-            + this.getRequest().getContextPath()
-            + showIcon
-            + "\" width=\""
-            + ICONS_WIDTH
-            + "\" height=\""
-            + ICONS_HEIGHT
-            + "\"></td>");
-        out.write("<td id=\"" + this.getName() + "_showName\">" + this.getHtmlDecodeURI(showName) + "</td>");
-        out.write("</tr><tr height=\"4\"><td></td></tr><tr>");
-        out.write("<td><img src=\"" + this.getRequest().getContextPath() + ICONS_PATH + ICONS_FOLDER + "\"></td>");
-        out.write("<td id=\"" + this.getName() + "_showPath\">" + showPath + "</td>");
-        out.write("</tr></table>");
+        out.write("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">"); //$NON-NLS-1$
+        out.write("<tr>"); //$NON-NLS-1$
+        out.write("<td><img id=\"" //$NON-NLS-1$
+            + this.getName() + "_showIcon\" src=\"" //$NON-NLS-1$
+            + this.getRequest().getContextPath() + showIcon + "\" width=\"" //$NON-NLS-1$
+            + ICONS_WIDTH + "\" height=\"" //$NON-NLS-1$
+            + ICONS_HEIGHT + "\"></td>"); //$NON-NLS-1$
+        out.write("<td id=\"" + this.getName() + "_showName\">" + this.getHtmlDecodeURI(showName) + "</td>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        out.write("</tr><tr height=\"4\"><td></td></tr><tr>"); //$NON-NLS-1$
+        out.write("<td><img src=\"" + this.getRequest().getContextPath() + ICONS_PATH + ICONS_FOLDER + "\"></td>"); //$NON-NLS-1$ //$NON-NLS-2$
+        out.write("<td id=\"" + this.getName() + "_showPath\">" + showPath + "</td>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        out.write("</tr></table>"); //$NON-NLS-1$
         out.write(new Hidden(this.getName(), this.getValue()).getHtml());
-        Hidden size = new Hidden(this.getName() + "_size", this.getSizeValue());
+        Hidden size = new Hidden(this.getName() + "_size", this.getSizeValue()); //$NON-NLS-1$
         size.setType(PropertyType.TYPENAME_LONG);
         out.write(size.getHtml());
-        Hidden lastMod = new Hidden(this.getName() + "_lastModified", this.getModDateValue());
+        Hidden lastMod = new Hidden(this.getName() + "_lastModified", this.getModDateValue()); //$NON-NLS-1$
         lastMod.setType(PropertyType.TYPENAME_DATE);
         out.write(lastMod.getHtml());
         out.write(this.getHtmlSessionAttributeRemoveControl());
@@ -300,43 +289,40 @@ public class DialogWebDAV extends DialogBox {
         Button home = new Button();
         home.setSaveInfo(false);
         home.setLabel("Home");
-        home.setOnclick("mgnlDialogDAVBrowse('" + this.getName() + "_iFrame','homeDirectory')");
+        home.setOnclick("mgnlDialogDAVBrowse('" + this.getName() + "_iFrame','homeDirectory')"); //$NON-NLS-1$ //$NON-NLS-2$
         out.write(home.getHtml());
         Button refresh = new Button();
         refresh.setSaveInfo(false);
         refresh.setLabel("Refresh");
-        refresh.setOnclick("mgnlDialogDAVBrowse('" + this.getName() + "_iFrame','refreshDirectory')");
+        refresh.setOnclick("mgnlDialogDAVBrowse('" + this.getName() + "_iFrame','refreshDirectory')"); //$NON-NLS-1$ //$NON-NLS-2$
         out.write(refresh.getHtml());
         Button up = new Button();
         up.setSaveInfo(false);
-        up.setId(this.getName() + "_upDiv");
+        up.setId(this.getName() + "_upDiv"); //$NON-NLS-1$
         up.setLabel("Parent directory");
-        up.setOnclick("mgnlDialogDAVBrowse('" + this.getName() + "_iFrame','parentDirectory')");
+        up.setOnclick("mgnlDialogDAVBrowse('" + this.getName() + "_iFrame','parentDirectory')"); //$NON-NLS-1$ //$NON-NLS-2$
         out.write(up.getHtml());
         out.write(Spacer.getHtml(3, 3));
         // #################
         // iFrame
         // #################
-        out.write("<iframe");
-        out.write(" id=\"" + this.getName() + "_iFrame\"");
-        out.write(" class=\"" + CssConstants.CSSCLASS_WEBDAVIFRAME + "\"");
-        if (this.getConfigValue("height", null) != null) {
-            out.write(" style=\"height:" + this.getConfigValue("height") + ";\")");
+        out.write("<iframe"); //$NON-NLS-1$
+        out.write(" id=\"" + this.getName() + "_iFrame\""); //$NON-NLS-1$ //$NON-NLS-2$
+        out.write(" class=\"" + CssConstants.CSSCLASS_WEBDAVIFRAME + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+        if (this.getConfigValue("height", null) != null) { //$NON-NLS-1$
+            out.write(" style=\"height:" + this.getConfigValue("height") + ";\")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
-        out.write(" frameborder=\"0\"");
-        out.write(" src=\"/.magnolia/dialogs/webDAVIFrame.html?"
-            + SESSION_ATTRIBUTENAME_DIALOGOBJECT
-            + "="
-            + this.getConfigValue(SESSION_ATTRIBUTENAME_DIALOGOBJECT)
-            + "&mgnlCK="
-            + new Date().getTime()
-            + "\"");
-        out.write(" reloadsrc=\"0\"");
-        out.write(" usecss=\"1\"");
-        out.write(" strict_output=\"1\"");
-        out.write(" content_type=\"application/xhtml+xml\"");
-        out.write(" scrolling=\"auto\"");
-        out.write("></iframe>");
+        out.write(" frameborder=\"0\""); //$NON-NLS-1$
+        out.write(" src=\"/.magnolia/dialogs/webDAVIFrame.html?" //$NON-NLS-1$
+            + SESSION_ATTRIBUTENAME_DIALOGOBJECT + "=" //$NON-NLS-1$
+            + this.getConfigValue(SESSION_ATTRIBUTENAME_DIALOGOBJECT) + "&mgnlCK=" //$NON-NLS-1$
+            + new Date().getTime() + "\""); //$NON-NLS-1$
+        out.write(" reloadsrc=\"0\""); //$NON-NLS-1$
+        out.write(" usecss=\"1\""); //$NON-NLS-1$
+        out.write(" strict_output=\"1\""); //$NON-NLS-1$
+        out.write(" content_type=\"application/xhtml+xml\""); //$NON-NLS-1$
+        out.write(" scrolling=\"auto\""); //$NON-NLS-1$
+        out.write("></iframe>"); //$NON-NLS-1$
         this.drawHtmlPost(out);
     }
 
@@ -345,7 +331,7 @@ public class DialogWebDAV extends DialogBox {
         String dir = this.getDirectory() + this.getSubDirectory();
         WebdavResource wdr = this.getDAVConnection();
         try {
-            dir = URLDecoder.decode(dir, "UTF-8");
+            dir = URLDecoder.decode(dir, "UTF-8"); //$NON-NLS-1$
         }
         catch (UnsupportedEncodingException uee) {
             // should never happen
@@ -363,7 +349,7 @@ public class DialogWebDAV extends DialogBox {
                     fileList = wdr.propfindMethod(dir, 1);
                 }
             }
-            out.write("<html><head>");
+            out.write("<html><head>"); //$NON-NLS-1$
             out.write(new Sources(this.getRequest().getContextPath()).getHtmlCss());
             out.write(new Sources(this.getRequest().getContextPath()).getHtmlJs());
             String parentDirectory = StringUtils.EMPTY;
@@ -373,59 +359,57 @@ public class DialogWebDAV extends DialogBox {
                 // (/dir/home/
                 // ->
                 // /dir/home)
-                parentDirectory = parentDirectory.substring(0, parentDirectory.lastIndexOf("/") + 1);
-                out.write("<script type=\"text/javascript\">mgnlDialogDAVShow('"
-                    + this.getName()
-                    + "_upDiv',true);</script>");
+                parentDirectory = parentDirectory.substring(0, parentDirectory.lastIndexOf("/") + 1); //$NON-NLS-1$
+                out.write("<script type=\"text/javascript\">mgnlDialogDAVShow('" //$NON-NLS-1$
+                    + this.getName() + "_upDiv',true);</script>"); //$NON-NLS-1$
             }
             else {
                 // home
-                out.write("<script type=\"text/javascript\">mgnlDialogDAVShow('"
-                    + this.getName()
-                    + "_upDiv',false);</script>");
+                out.write("<script type=\"text/javascript\">mgnlDialogDAVShow('" //$NON-NLS-1$
+                    + this.getName() + "_upDiv',false);</script>"); //$NON-NLS-1$
             }
-            out.write("</head>");
-            out.write("<body>");
-            out.write("<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" width=\"100%\">");
-            out.write("<form name=\"mgnlDialogDAVBrowseForm\" method=\"post\">");
-            out.write(new Hidden("subDirectory", "", false).getHtml());
-            out.write(new Hidden("parentDirectory", parentDirectory, false).getHtml());
-            out.write(new Hidden("homeDirectory", "", false).getHtml());
-            out.write(new Hidden("refreshDirectory", this.getSubDirectory(), false).getHtml());
-            out.write(new Hidden("selectedValue", this.getValue(), false).getHtml());
+            out.write("</head>"); //$NON-NLS-1$
+            out.write("<body>"); //$NON-NLS-1$
+            out.write("<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" width=\"100%\">"); //$NON-NLS-1$
+            out.write("<form name=\"mgnlDialogDAVBrowseForm\" method=\"post\">"); //$NON-NLS-1$
+            out.write(new Hidden("subDirectory", "", false).getHtml()); //$NON-NLS-1$
+            out.write(new Hidden("parentDirectory", parentDirectory, false).getHtml()); //$NON-NLS-1$
+            out.write(new Hidden("homeDirectory", "", false).getHtml()); //$NON-NLS-1$
+            out.write(new Hidden("refreshDirectory", this.getSubDirectory(), false).getHtml()); //$NON-NLS-1$
+            out.write(new Hidden("selectedValue", this.getValue(), false).getHtml()); //$NON-NLS-1$
             out.write(new Hidden(SESSION_ATTRIBUTENAME_DIALOGOBJECT, this
                 .getConfigValue(SESSION_ATTRIBUTENAME_DIALOGOBJECT), false).getHtml());
-            out.write("</form>");
+            out.write("</form>"); //$NON-NLS-1$
             List fileListAS = new ArrayList();
             List dirListAS = new ArrayList();
             List selfAS = new ArrayList();
             while (fileList.hasMoreElements()) {
                 XMLResponseMethodBase.Response response = (XMLResponseMethodBase.Response) fileList.nextElement();
                 Map properties = this.getDAVProperties(response);
-                if (StringUtils.isEmpty((String) properties.get("name"))) {
+                if (StringUtils.isEmpty((String) properties.get("name"))) { //$NON-NLS-1$
                     continue;
                 }
-                String name = (String) properties.get("name");
-                if (this.getSubDirectory().equals(name) || this.getSubDirectory().equals(name + "/")) {
+                String name = (String) properties.get("name"); //$NON-NLS-1$
+                if (this.getSubDirectory().equals(name) || this.getSubDirectory().equals(name + "/")) { //$NON-NLS-1$
                     // self directory
-                    properties.put("isSelf", "true");
+                    properties.put("isSelf", "true"); //$NON-NLS-1$ //$NON-NLS-2$
                 }
-                if (name.indexOf("/") != -1) {
+                if (name.indexOf("/") != -1) { //$NON-NLS-1$
                     // when path contains spaces, the name contains the entire path -> get rid of path
-                    name = name.substring(name.lastIndexOf("/") + 1);
+                    name = name.substring(name.lastIndexOf("/") + 1); //$NON-NLS-1$
                 }
-                if (name.startsWith("._")) {
+                if (name.startsWith("._")) { //$NON-NLS-1$
                     continue;
                 }
-                if (name.startsWith(".") && !this.getConfigValue("showHiddenFiles", "false").equals("true")) {
+                if (name.startsWith(".") && !this.getConfigValue("showHiddenFiles", "false").equals("true")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
                     continue;
                 }
-                properties.put("name", name);
-                String displayType = (String) properties.get("displayType");
-                if (properties.get("isSelf") != null) {
+                properties.put("name", name); //$NON-NLS-1$
+                String displayType = (String) properties.get("displayType"); //$NON-NLS-1$
+                if (properties.get("isSelf") != null) { //$NON-NLS-1$
                     selfAS.add(properties);
                 }
-                else if (displayType.equals("folder")) {
+                else if (displayType.equals("folder")) { //$NON-NLS-1$
                     dirListAS.add(properties);
                 }
                 else {
@@ -438,21 +422,21 @@ public class DialogWebDAV extends DialogBox {
                 Map parentProp = new Hashtable();
                 String name = StringUtils.EMPTY;
                 if (StringUtils.isEmpty(parentDirectory)) {
-                    name = "/";
+                    name = "/"; //$NON-NLS-1$
                 }
                 else {
                     name = parentDirectory.substring(0, parentDirectory.length() - 1);
-                    if (name.indexOf("/") != -1) {
-                        name = name.substring(0, name.lastIndexOf("/"));
+                    if (name.indexOf("/") != -1) { //$NON-NLS-1$
+                        name = name.substring(0, name.lastIndexOf("/")); //$NON-NLS-1$
                     }
                 }
-                parentProp.put("name", name);
-                parentProp.put("isParent", "true");
-                parentProp.put("href", parentDirectory);
-                parentProp.put("displayType", "folder");
-                parentProp.put("sizeStringValue", "");
-                parentProp.put("sizeStringUnit", "");
-                parentProp.put("lastModifiedString", "");
+                parentProp.put("name", name); //$NON-NLS-1$
+                parentProp.put("isParent", "true"); //$NON-NLS-1$ //$NON-NLS-2$
+                parentProp.put("href", parentDirectory); //$NON-NLS-1$
+                parentProp.put("displayType", "folder"); //$NON-NLS-1$ //$NON-NLS-2$
+                parentProp.put("sizeStringValue", ""); //$NON-NLS-1$
+                parentProp.put("sizeStringUnit", ""); //$NON-NLS-1$
+                parentProp.put("lastModifiedString", ""); //$NON-NLS-1$
                 parentAS.add(parentProp);
                 i = drawHtmlList(out, parentAS, i);
             }
@@ -460,15 +444,15 @@ public class DialogWebDAV extends DialogBox {
             i = drawHtmlList(out, dirListAS, i);
             i = drawHtmlList(out, fileListAS, i);
             if (i == 1) {
-                out.write("<tr><td colspan=\"3\"></td><td colspan=\"3\"><em>"
-                    + MessagesManager.get(this.getRequest(), "dialog.webdav.directoryIsEmpty")
-                    + "</em></td></tr>");
+                out.write("<tr><td colspan=\"3\"></td><td colspan=\"3\"><em>" //$NON-NLS-1$
+                    + MessagesManager.get(this.getRequest(), "dialog.webdav.directoryIsEmpty") //$NON-NLS-1$
+                    + "</em></td></tr>"); //$NON-NLS-1$
             }
-            out.write("</table>");
-            out.write("</body></html>");
+            out.write("</table>"); //$NON-NLS-1$
+            out.write("</body></html>"); //$NON-NLS-1$
         }
         catch (Exception e) {
-            log.debug("Exception caught: " + e.getMessage(), e);
+            log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
         }
     }
 
@@ -481,110 +465,99 @@ public class DialogWebDAV extends DialogBox {
         Iterator it = as.iterator();
         while (it.hasNext()) {
             Map properties = (Hashtable) it.next();
-            String displayType = (String) properties.get("displayType");
-            String name = (String) properties.get("name");
+            String displayType = (String) properties.get("displayType"); //$NON-NLS-1$
+            String name = (String) properties.get("name"); //$NON-NLS-1$
             if (!alt) {
-                out.write("<tr>");
+                out.write("<tr>"); //$NON-NLS-1$
             }
             else {
-                out.write("<tr class=" + CssConstants.CSSCLASS_BGALT + ">");
+                out.write("<tr class=" + CssConstants.CSSCLASS_BGALT + ">"); //$NON-NLS-1$ //$NON-NLS-2$
             }
             alt = !alt;
-            out.write("<td></td>");
-            out.write("<td>");
-            if (properties.get("isParent") == null
-                && (displayType.indexOf("folder") == -1 || this
-                    .getConfigValue("allowDirectorySelection")
-                    .equals("true"))) {
+            out.write("<td></td>"); //$NON-NLS-1$
+            out.write("<td>"); //$NON-NLS-1$
+            if (properties.get("isParent") == null //$NON-NLS-1$
+                && (displayType.indexOf("folder") == -1 || this //$NON-NLS-1$
+                    .getConfigValue("allowDirectorySelection") //$NON-NLS-1$
+                    .equals("true"))) { //$NON-NLS-1$
                 String lastModified = StringUtils.EMPTY;
-                if (properties.get("lastModified") != null) {
-                    lastModified = ((String) properties.get("lastModified")).replaceAll(" ", "%20");
+                if (properties.get("lastModified") != null) { //$NON-NLS-1$
+                    lastModified = ((String) properties.get("lastModified")).replaceAll(" ", "%20"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 }
-                out.write("<input type=\"radio\" name=\"" + this.getName() + "_radio\"");
-                out.write(" onclick=mgnlDialogDAVSelect(\""
-                    + this.getName()
-                    + "\",\""
-                    + name
-                    + "\",\""
-                    + i
-                    + "\",\""
-                    + (String) properties.get("size")
-                    + "\",\""
-                    + lastModified
-                    + "\");");
+                out.write("<input type=\"radio\" name=\"" + this.getName() + "_radio\""); //$NON-NLS-1$ //$NON-NLS-2$
+                out.write(" onclick=mgnlDialogDAVSelect(\"" //$NON-NLS-1$
+                    + this.getName() + "\",\"" //$NON-NLS-1$
+                    + name + "\",\"" //$NON-NLS-1$
+                    + i + "\",\"" //$NON-NLS-1$
+                    + (String) properties.get("size") //$NON-NLS-1$
+                    + "\",\"" //$NON-NLS-1$
+                    + lastModified + "\");"); //$NON-NLS-1$
                 // if (this.getValue().equals(this.getSubDirectory()+name) ||
                 // this.getValue().equals(this.getSubDirectory()+name+"/")) out.write(" checked");
                 boolean checked = false;
-                if (properties.get("isSelf") != null) {
+                if (properties.get("isSelf") != null) { //$NON-NLS-1$
                     if (this.getValue().equals(this.getSubDirectory())) {
                         checked = true;
                     }
                 }
                 else {
                     if (this.getValue().equals(this.getSubDirectory() + name)
-                        || this.getValue().equals(this.getSubDirectory() + name + "/")) {
+                        || this.getValue().equals(this.getSubDirectory() + name + "/")) { //$NON-NLS-1$
                         checked = true;
                     }
                 }
                 if (checked) {
-                    out.write(MessagesManager.get(this.getRequest(), "dialog.webdav.checked"));
+                    out.write(MessagesManager.get(this.getRequest(), "dialog.webdav.checked")); //$NON-NLS-1$
                 }
-                out.write(" />");
+                out.write(" />"); //$NON-NLS-1$
             }
-            out.write("</td>");
+            out.write("</td>"); //$NON-NLS-1$
             // out.write("<td>"+this.getValue()+"..."+this.getSubDirectory()+"..."+name+"</td>");
-            String idHidden = this.getName() + "_" + i + "_hidden";
-            String idIcon = this.getName() + "_" + i + "_icon";
+            String idHidden = this.getName() + "_" + i + "_hidden"; //$NON-NLS-1$ //$NON-NLS-2$
+            String idIcon = this.getName() + "_" + i + "_icon"; //$NON-NLS-1$ //$NON-NLS-2$
             i++;
             String iconPath;
-            if (displayType.equals("folder")) {
+            if (displayType.equals("folder")) { //$NON-NLS-1$
                 iconPath = ICONS_PATH + ICONS_FOLDER;
             }
             else {
                 iconPath = this.getIconPath(name);
             }
-            out.write("<td>");
-            out.write("<img src=\""
-                + this.getRequest().getContextPath()
-                + iconPath
-                + "\" border=\"0\" id=\""
-                + idIcon
-                + "\">");
-            out.write("</td>");
-            out.write("<td width=\"100%\">");
-            if (displayType.indexOf("folder") == 0) {
-                if (properties.get("isSelf") != null) {
-                    out.write(this.getHtmlDecodeURI("<b><i>.&nbsp;&nbsp;" + name + "</i></b>"));
+            out.write("<td>"); //$NON-NLS-1$
+            out.write("<img src=\"" //$NON-NLS-1$
+                + this.getRequest().getContextPath() + iconPath + "\" border=\"0\" id=\"" //$NON-NLS-1$
+                + idIcon + "\">"); //$NON-NLS-1$
+            out.write("</td>"); //$NON-NLS-1$
+            out.write("<td width=\"100%\">"); //$NON-NLS-1$
+            if (displayType.indexOf("folder") == 0) { //$NON-NLS-1$
+                if (properties.get("isSelf") != null) { //$NON-NLS-1$
+                    out.write(this.getHtmlDecodeURI("<b><i>.&nbsp;&nbsp;" + name + "</i></b>")); //$NON-NLS-1$ //$NON-NLS-2$
                 }
                 else {
-                    if (properties.get("isParent") != null) {
-                        name = "<b><i>..&nbsp;&nbsp;" + name + "</i></b>";
+                    if (properties.get("isParent") != null) { //$NON-NLS-1$
+                        name = "<b><i>..&nbsp;&nbsp;" + name + "</i></b>"; //$NON-NLS-1$ //$NON-NLS-2$
                     }
-                    out.write("<a href=\"javascript:mgnlDialogDAVBrowse('','" + idHidden + "');\">");
+                    out.write("<a href=\"javascript:mgnlDialogDAVBrowse('','" + idHidden + "');\">"); //$NON-NLS-1$ //$NON-NLS-2$
                     out.write(this.getHtmlDecodeURI(name));
-                    out.write("</a>");
+                    out.write("</a>"); //$NON-NLS-1$
                 }
             }
             else {
                 out.write(this.getHtmlDecodeURI(name));
-                out.write("[<a href=\""
-                    + this.getProtocol()
-                    + "://"
-                    + this.getHost()
-                    + ":"
-                    + this.getPort()
-                    + this.getDirectory()
-                    + (String) properties.get("href")
-                    + "\" target=\"blank\">view</a>]");
+                out.write("[<a href=\"" //$NON-NLS-1$
+                    + this.getProtocol() + "://" //$NON-NLS-1$
+                    + this.getHost() + ":" //$NON-NLS-1$
+                    + this.getPort() + this.getDirectory() + (String) properties.get("href") //$NON-NLS-1$
+                    + "\" target=\"blank\">view</a>]"); //$NON-NLS-1$
             }
-            out.write(new Hidden(idHidden, (String) properties.get("href"), false).getHtml());
-            out.write("</td>");
-            out.write("<td style=\"text-align:right;\">" + (String) properties.get("sizeStringValue") + "</td>");
-            out.write("<td>" + (String) properties.get("sizeStringUnit") + "</td>");
-            out.write("<td></td>");
-            out.write("<td style='white-space:nowrap;'>" + (String) properties.get("lastModifiedString") + "</td>");
-            out.write("<td></td>");
-            out.write("</tr>");
+            out.write(new Hidden(idHidden, (String) properties.get("href"), false).getHtml()); //$NON-NLS-1$
+            out.write("</td>"); //$NON-NLS-1$
+            out.write("<td style=\"text-align:right;\">" + (String) properties.get("sizeStringValue") + "</td>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            out.write("<td>" + (String) properties.get("sizeStringUnit") + "</td>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            out.write("<td></td>"); //$NON-NLS-1$
+            out.write("<td style='white-space:nowrap;'>" + (String) properties.get("lastModifiedString") + "</td>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            out.write("<td></td>"); //$NON-NLS-1$
+            out.write("</tr>"); //$NON-NLS-1$
         }
 
         return i;
@@ -595,54 +568,52 @@ public class DialogWebDAV extends DialogBox {
         /* get the short name */
         Enumeration props = response.getProperties();
         String href = response.getHref();
-        properties.put("href", href.replaceFirst(this.getDirectory(), ""));
+        properties.put("href", href.replaceFirst(this.getDirectory(), "")); //$NON-NLS-1$
         while (props.hasMoreElements()) {
             Property property = (Property) props.nextElement();
-            if (property.getLocalName().equalsIgnoreCase("getcontenttype")) {
-                if (property.getPropertyAsString().equalsIgnoreCase("httpd/unix-directory")) {
-                    properties.put("displayType", "folder");
+            if (property.getLocalName().equalsIgnoreCase("getcontenttype")) { //$NON-NLS-1$
+                if (property.getPropertyAsString().equalsIgnoreCase("httpd/unix-directory")) { //$NON-NLS-1$
+                    properties.put("displayType", "folder"); //$NON-NLS-1$ //$NON-NLS-2$
                     if (href.length() > this.getDirectory().length()) {
                         String name = href.replaceFirst(this.getDirectory(), "");
                         name = name.substring(0, name.length() - 1);
                         name = name.substring(0, name.length());
-                        properties.put("name", name);
+                        properties.put("name", name); //$NON-NLS-1$
                     }
                 }
             }
-            else if (property.getLocalName().equalsIgnoreCase("getcontentlength")) {
-                properties.put("size", property.getPropertyAsString());
+            else if (property.getLocalName().equalsIgnoreCase("getcontentlength")) { //$NON-NLS-1$
+                properties.put("size", property.getPropertyAsString()); //$NON-NLS-1$
             }
-            else if (property.getLocalName().equalsIgnoreCase("getlastmodified")) {
-                properties.put("lastModifiedString", this.getFormattedDate(
-                    property.getPropertyAsString(),
-                    "MMM dd yyyy"));
-                properties.put("lastModified", this.getFormattedDate(
-                    property.getPropertyAsString(),
-                    "yyyy-MM-dd, HH:mm:ss"));
+            else if (property.getLocalName().equalsIgnoreCase("getlastmodified")) { //$NON-NLS-1$
+                properties.put("lastModifiedString", this.getFormattedDate( //$NON-NLS-1$
+                    property.getPropertyAsString(), "MMM dd yyyy")); //$NON-NLS-1$
+                properties.put("lastModified", this.getFormattedDate( //$NON-NLS-1$
+                    property.getPropertyAsString(), "yyyy-MM-dd, HH:mm:ss")); //$NON-NLS-1$
             }
         }
-        if (properties.get("name") == null) {
+        if (properties.get("name") == null) { //$NON-NLS-1$
             if (href.length() > this.getDirectory().length()) {
                 String name = href.replaceFirst(this.getDirectory(), "");
-                properties.put("name", name);
+                properties.put("name", name); //$NON-NLS-1$
             }
-            int index = href.lastIndexOf(".");
+            int index = href.lastIndexOf("."); //$NON-NLS-1$
             if (index > -1) {
-                properties.put("displayType", (href.substring(index + 1)).toLowerCase());
+                properties.put("displayType", (href.substring(index + 1)).toLowerCase()); //$NON-NLS-1$
             }
             else {
-                properties.put("displayType", "general");
+                properties.put("displayType", "general"); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
-        if (properties.get("size") == null) {
-            properties.put("size", "");
-            properties.put("sizeStringValue", "");
-            properties.put("sizeStringUnit", "");
+        if (properties.get("size") == null) { //$NON-NLS-1$
+            properties.put("size", ""); //$NON-NLS-1$
+            properties.put("sizeStringValue", ""); //$NON-NLS-1$
+            properties.put("sizeStringUnit", ""); //$NON-NLS-1$
         }
         else {
-            String[] size = this.getFileSizeString((String) properties.get("size")).split(" ");
-            properties.put("sizeStringValue", size[0]);
-            properties.put("sizeStringUnit", size[1]);
+            String[] size = this.getFileSizeString((String) properties.get("size")).split(" "); //$NON-NLS-1$ //$NON-NLS-2$
+            properties.put("sizeStringValue", size[0]); //$NON-NLS-1$
+            properties.put("sizeStringUnit", size[1]); //$NON-NLS-1$
         }
         return properties;
     }

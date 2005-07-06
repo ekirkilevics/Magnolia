@@ -71,7 +71,7 @@ public final class DialogFactory {
         // @todo check if dialogClass is a valid dialog
         // @todo synchronize
 
-        log.info("Registering control [" + name + "]");
+        log.info("Registering control [" + name + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 
         dialogs.put(name, dialogClass);
     }
@@ -85,12 +85,12 @@ public final class DialogFactory {
      */
     public static DialogInterface loadDialog(HttpServletRequest request, HttpServletResponse response,
         Content websiteNode, Content configNode) throws RepositoryException {
-        String controlType = configNode.getNodeData("controlType").getString();
+        String controlType = configNode.getNodeData("controlType").getString(); //$NON-NLS-1$
 
         Class dialogClass = (Class) dialogs.get(controlType);
 
         if (dialogClass == null) {
-            throw new IllegalArgumentException("Unknown dialog type: \"" + controlType + "\"");
+            throw new IllegalArgumentException("Unknown dialog type: \"" + controlType + "\""); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         DialogInterface dialog;
@@ -99,22 +99,20 @@ public final class DialogFactory {
         }
         catch (InstantiationException e) {
             // should never happen
-            throw new NestableRuntimeException("Unable to instantiate "
-                + dialogClass
-                + " due to: InstantiationException - "
+            throw new NestableRuntimeException("Unable to instantiate " //$NON-NLS-1$
+                + dialogClass + " due to: InstantiationException - " //$NON-NLS-1$
                 + e.getMessage());
         }
         catch (IllegalAccessException e) {
             // should never happen
-            throw new NestableRuntimeException("Unable to instantiate "
-                + dialogClass
-                + " due to: IllegalAccessException - "
+            throw new NestableRuntimeException("Unable to instantiate " //$NON-NLS-1$
+                + dialogClass + " due to: IllegalAccessException - " //$NON-NLS-1$
                 + e.getMessage());
         }
 
         // initialize dialog
         if (log.isDebugEnabled()) {
-            log.debug("Calling init on " + dialogClass.getName());
+            log.debug("Calling init on " + dialogClass.getName()); //$NON-NLS-1$
         }
         dialog.init(request, response, websiteNode, configNode);
         return dialog;
