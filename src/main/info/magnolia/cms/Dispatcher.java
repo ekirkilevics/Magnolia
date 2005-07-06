@@ -13,6 +13,7 @@
 package info.magnolia.cms;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -42,36 +43,35 @@ public final class Dispatcher {
     }
 
     /**
-     * <p>
-     * dispatches the current requested to the handler JSP / Servlet
-     * </p>
+     * Dispatches the current requested to the handler JSP / Servlet
+     * @param req HttpServletRequest
+     * @param res HttpServletResponse
+     * @param sc ServletContext
      * @throws ServletException
      * @throws IOException
      */
     public static void dispatch(HttpServletRequest req, HttpServletResponse res, ServletContext sc)
         throws ServletException, IOException {
         if (sc == null) {
-            log.error("null ServletContext received - aborting request");
+            log.error("null ServletContext received - aborting request"); //$NON-NLS-1$
             return;
         }
         String requestReceiver = (String) req.getAttribute(Aggregator.REQUEST_RECEIVER);
 
         if (requestReceiver == null) {
-            log.error("requestReceiver is missing, returning a 404 error");
+            log.error("requestReceiver is missing, returning a 404 error"); //$NON-NLS-1$
             res.sendError(404);
             return;
         }
 
         if (log.isDebugEnabled()) {
-            log.debug("Dispatching request for [" + req.getRequestURL() + "] - forward to [" + requestReceiver + "]");
+            log.debug(MessageFormat.format("Dispatching request for [{0}] - forward to [{1}]", //$NON-NLS-1$
+                new Object[]{req.getRequestURL(), requestReceiver}));
         }
 
         if (res.isCommitted()) {
-            log.error("Can't forward to ["
-                + requestReceiver
-                + "] for request ["
-                + req.getRequestURL()
-                + "]. Response is already committed.");
+            log.error(MessageFormat.format("Can''t forward to [{0}] for request [{1}]. Response is already committed.", //$NON-NLS-1$
+                new Object[]{requestReceiver, req.getRequestURL()}));
             return;
         }
 
