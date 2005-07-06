@@ -21,6 +21,8 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.SessionAccessControl;
 
+import java.text.MessageFormat;
+
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
@@ -39,21 +41,21 @@ import org.apache.log4j.Logger;
  */
 public class Aggregator {
 
-    public static final String ACTPAGE = "static_actpage";
+    public static final String ACTPAGE = "static_actpage"; //$NON-NLS-1$
 
-    public static final String CURRENT_ACTPAGE = "actpage";
+    public static final String CURRENT_ACTPAGE = "actpage"; //$NON-NLS-1$
 
-    public static final String FILE = "file";
+    public static final String FILE = "file"; //$NON-NLS-1$
 
-    public static final String HANDLE = "handle";
+    public static final String HANDLE = "handle"; //$NON-NLS-1$
 
-    public static final String EXTENSION = "extension";
+    public static final String EXTENSION = "extension"; //$NON-NLS-1$
 
-    public static final String HIERARCHY_MANAGER = "hierarchyManager";
+    public static final String HIERARCHY_MANAGER = "hierarchyManager"; //$NON-NLS-1$
 
-    public static final String REQUEST_RECEIVER = "requestReceiver";
+    public static final String REQUEST_RECEIVER = "requestReceiver"; //$NON-NLS-1$
 
-    public static final String DIRECT_REQUEST_RECEIVER = "/ResourceDispatcher";
+    public static final String DIRECT_REQUEST_RECEIVER = "/ResourceDispatcher"; //$NON-NLS-1$
 
     /**
      * Logger.
@@ -103,11 +105,11 @@ public class Aggregator {
     private void getRequestedContent(int type) throws PathNotFoundException, RepositoryException {
         this.requestedData = this.hierarchyManager.getNodeData(this.uri);
         try {
-            this.subContentNode = this.hierarchyManager.getContent(this.uri + "_properties");
+            this.subContentNode = this.hierarchyManager.getContent(this.uri + "_properties"); //$NON-NLS-1$
         }
         catch (PathNotFoundException e) {
             if (log.isDebugEnabled()) {
-                log.debug("Path not found: " + e.getMessage());
+                log.debug("Path not found: " + e.getMessage()); //$NON-NLS-1$
             }
         }
     }
@@ -117,7 +119,7 @@ public class Aggregator {
      */
     private void parseURI() {
         try {
-            int lastIndexOfDot = Path.getURI(this.request).lastIndexOf(".");
+            int lastIndexOfDot = Path.getURI(this.request).lastIndexOf("."); //$NON-NLS-1$
             this.uri = Path.getURI(this.request).substring(0, lastIndexOfDot);
             this.extension = Path.getURI(this.request).substring(lastIndexOfDot + 1);
         }
@@ -146,7 +148,7 @@ public class Aggregator {
         }
         else {
             /* check again, resource might have different name */
-            int lastIndexOfSlash = this.uri.lastIndexOf("/");
+            int lastIndexOfSlash = this.uri.lastIndexOf("/"); //$NON-NLS-1$
             if (lastIndexOfSlash > 0) {
                 this.uri = this.uri.substring(0, lastIndexOfSlash);
                 try {
@@ -176,19 +178,17 @@ public class Aggregator {
             Template template = Template.getInfo(templateName);
 
             if (template == null) {
-                log.error("Template ["
-                    + templateName
-                    + "] for page ["
-                    + this.requestedPage.getHandle()
-                    + "] not found.");
+
+                log.error(MessageFormat.format("Template [{0}] for page [{1}] not found.", //$NON-NLS-1$
+                    new Object[]{templateName, this.requestedPage.getHandle()}));
+
                 return;
             }
 
             this.requestReceiver = template.getPath(this.extension);
         }
         catch (Exception e) {
-            log.error("Failed to set request receiver");
-            log.error(e.getMessage(), e);
+            log.error("Failed to set request receiver: " + e.getMessage(), e); //$NON-NLS-1$
         }
     }
 
@@ -198,7 +198,7 @@ public class Aggregator {
      */
     private void setRequestReceiver(int type) {
         try {
-            String templateName = this.subContentNode.getNodeData("nodeDataTemplate").getString();
+            String templateName = this.subContentNode.getNodeData("nodeDataTemplate").getString(); //$NON-NLS-1$
             if (StringUtils.isEmpty(templateName)) {
                 this.setRequestReceiver(true);
                 return;
