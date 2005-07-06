@@ -73,25 +73,23 @@ public class TreeColumnHtmlRendererImpl implements TreeColumnHtmlRenderer {
             if (isActivated) {
                 if (lastModifiedDate != null && lastModifiedDate.after(actionDate)) {
                     // node has been modified after last activation
-                    imgSrc = Tree.ICONDOCROOT + "indicator_yellow.gif";
+                    imgSrc = Tree.ICONDOCROOT + "indicator_yellow.gif"; //$NON-NLS-1$
                 }
                 else {
                     // activated and not modified ever since
-                    imgSrc = Tree.ICONDOCROOT + "indicator_green.gif";
+                    imgSrc = Tree.ICONDOCROOT + "indicator_green.gif"; //$NON-NLS-1$
                 }
             }
             else {
                 // never activated or deactivated
-                imgSrc = Tree.ICONDOCROOT + "indicator_red.gif";
+                imgSrc = Tree.ICONDOCROOT + "indicator_red.gif"; //$NON-NLS-1$
             }
-            html.append("<img src=\"" + treeColumn.getRequest().getContextPath() + imgSrc + "\" />");
+            html.append("<img src=\"" + treeColumn.getRequest().getContextPath() + imgSrc + "\" />"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         if (treeColumn.getIconsPermission()) {
             if (!content.isGranted(info.magnolia.cms.security.Permission.WRITE)) {
-                html.append("<img src=\""
-                    + treeColumn.getRequest().getContextPath()
-                    + Tree.ICONDOCROOT
-                    + "pen_blue_canceled.gif\" />");
+                html.append("<img src=\"" //$NON-NLS-1$
+                    + treeColumn.getRequest().getContextPath() + Tree.ICONDOCROOT + "pen_blue_canceled.gif\" />"); //$NON-NLS-1$
             }
         }
         return html.toString();

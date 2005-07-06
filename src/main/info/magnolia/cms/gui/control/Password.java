@@ -15,6 +15,7 @@ package info.magnolia.cms.gui.control;
 import info.magnolia.cms.core.Content;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -37,30 +38,30 @@ public class Password extends ControlSuper {
 
     public String getHtml() {
         StringBuffer html = new StringBuffer();
-        String valueDecoded = "";
-        String value = "";
+        String valueDecoded = StringUtils.EMPTY;
+        String value = StringUtils.EMPTY;
         if (this.getEncoding() == ENCODING_BASE64) {
             // show number of characters (using spaces)
             valueDecoded = new String(Base64.decodeBase64(this.getValue().getBytes()));
 
             for (int i = 0; i < valueDecoded.length(); i++) {
-                value += " ";
+                value += " "; //$NON-NLS-1$
             }
         }
         else if (this.getEncoding() == ENCODING_UNIX) {
-            value = "";
+            value = StringUtils.EMPTY;
         }
         else {
             value = this.getValue();
         }
-        html.append("<input type=\"password\"");
-        html.append(" name=\"" + this.getName() + "\"");
-        html.append(" id=\"" + this.getName() + "\"");
-        html.append(" value=\"" + value + "\"");
+        html.append("<input type=\"password\""); //$NON-NLS-1$
+        html.append(" name=\"" + this.getName() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+        html.append(" id=\"" + this.getName() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+        html.append(" value=\"" + value + "\""); //$NON-NLS-1$ //$NON-NLS-2$
         html.append(getHtmlEvents());
         html.append(this.getHtmlCssClass());
         html.append(this.getHtmlCssStyles());
-        html.append(" />");
+        html.append(" />"); //$NON-NLS-1$
         if (this.getSaveInfo()) {
             html.append(this.getHtmlSaveInfo());
         }

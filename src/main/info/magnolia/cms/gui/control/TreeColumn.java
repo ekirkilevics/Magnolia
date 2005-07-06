@@ -33,11 +33,11 @@ public class TreeColumn extends ControlSuper {
 
     public static final String EDIT_CSSCLASS_SELECT = CssConstants.CSSCLASS_SELECT;
 
-    public static final String EDIT_NAMEADDITION = "_EditNodeData";
+    public static final String EDIT_NAMEADDITION = "_EditNodeData"; //$NON-NLS-1$
 
-    public static final String EDIT_JSSAVE = ".saveNodeData(this.value);";
+    public static final String EDIT_JSSAVE = ".saveNodeData(this.value);"; //$NON-NLS-1$
 
-    public static final String EMPTY = "-";
+    public static final String EMPTY = "-"; //$NON-NLS-1$
 
     /**
      * Logger.
@@ -60,15 +60,15 @@ public class TreeColumn extends ControlSuper {
 
     String dateFormat;
 
-    String title = "";
+    String title = StringUtils.EMPTY;
 
     boolean permissionWrite;
 
-    String htmlEdit = "";
+    String htmlEdit = StringUtils.EMPTY;
 
     TreeColumnHtmlRenderer htmlRenderer;
 
-    private String javascriptTree = "";
+    private String javascriptTree = StringUtils.EMPTY;
 
     private int width = 1;
 
@@ -83,7 +83,7 @@ public class TreeColumn extends ControlSuper {
      */
     public TreeColumn(String javascriptTree, HttpServletRequest request) {
         this.setJavascriptTree(javascriptTree);
-        this.setCssClass("mgnlTreeText");
+        this.setCssClass("mgnlTreeText"); //$NON-NLS-1$
         this.setRequest(request);
         // default delegate
         this.setHtmlRenderer(new TreeColumnHtmlRendererImpl());
@@ -225,14 +225,14 @@ public class TreeColumn extends ControlSuper {
         edit.setName(this.getJavascriptTree() + EDIT_NAMEADDITION);
         edit.setSaveInfo(false);
         edit.setCssClass(EDIT_CSSCLASS_EDIT);
-        edit.setEvent("onkeydown", this.getJavascriptTree() + ".editNodeDataKeydown(event,this);");
-        edit.setEvent("onblur", this.getJavascriptTree() + EDIT_JSSAVE);
+        edit.setEvent("onkeydown", this.getJavascriptTree() + ".editNodeDataKeydown(event,this);"); //$NON-NLS-1$ //$NON-NLS-2$
+        edit.setEvent("onblur", this.getJavascriptTree() + EDIT_JSSAVE); //$NON-NLS-1$
         // edit.setCssStyles("width","100%");
         this.setHtmlEdit(edit.getHtml());
     }
 
     public String getHtml() {
-        String html = "";
+        String html = null;
         try {
             html = htmlRenderer.renderHtml(this, this.getWebsiteNode());
         }

@@ -40,11 +40,11 @@ public class Hidden extends ControlSuper {
 
     public String getHtml() {
         StringBuffer html = new StringBuffer();
-        html.append("<input type=\"hidden\"");
-        html.append(" name=\"" + this.getName() + "\"");
-        html.append(" id=\"" + this.getName() + "\"");
-        html.append(" value=\"" + this.getValue() + "\"");
-        html.append(" />");
+        html.append("<input type=\"hidden\""); //$NON-NLS-1$
+        html.append(" name=\"" + this.getName() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+        html.append(" id=\"" + this.getName() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+        html.append(" value=\"" + this.getValue() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+        html.append(" />"); //$NON-NLS-1$
         html.append(this.getHtmlSaveInfo());
         return html.toString();
     }

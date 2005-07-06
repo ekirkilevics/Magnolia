@@ -75,44 +75,37 @@ public class ContextMenu extends ControlSuper {
     public String getHtml() {
         StringBuffer html = new StringBuffer();
         StringBuffer menuJavascript = new StringBuffer();
-        html.append("<div id=\"" + getName() + "_DivMenu\" class=\"mgnlTreeMenu\" >");
+        html.append("<div id=\"" + getName() + "_DivMenu\" class=\"mgnlTreeMenu\" >"); //$NON-NLS-1$ //$NON-NLS-2$
         int counter = 0;
         for (int i = 0; i < this.getMenuItems().size(); i++) {
             ContextMenuItem item = this.getMenuItem(i);
             if (item == null) {
-                html.append("<div class=\"mgnlTreeMenuLine\"><!-- ie --></div>");
+                html.append("<div class=\"mgnlTreeMenuLine\"><!-- ie --></div>"); //$NON-NLS-1$
             }
             else {
                 item.setJavascriptMenuName(getName());
-                String id = getName() + "_MenuItem" + i;
+                String id = getName() + "_MenuItem" + i; //$NON-NLS-1$
                 item.setId(id);
-                menuJavascript.append(getName()
-                    + ".menuItems["
-                    + counter
-                    + "]=new mgnlContextMenuItem('"
-                    + id
-                    + "');\n");
-                menuJavascript.append(getName() + ".menuItems[" + counter + "].conditions=new Object();");
+                menuJavascript.append(getName() + ".menuItems[" //$NON-NLS-1$
+                    + counter + "]=new mgnlContextMenuItem('" //$NON-NLS-1$
+                    + id + "');\n"); //$NON-NLS-1$
+                menuJavascript.append(getName() + ".menuItems[" + counter + "].conditions=new Object();"); //$NON-NLS-1$ //$NON-NLS-2$
                 for (int cond = 0; cond < item.getJavascriptConditions().size(); cond++) {
-                    menuJavascript.append(getName()
-                        + ".menuItems["
-                        + counter
-                        + "].conditions["
-                        + cond
-                        + "]="
-                        + item.getJavascriptCondition(cond)
-                        + ";");
+                    menuJavascript.append(getName() + ".menuItems[" //$NON-NLS-1$
+                        + counter + "].conditions[" //$NON-NLS-1$
+                        + cond + "]=" //$NON-NLS-1$
+                        + item.getJavascriptCondition(cond) + ";"); //$NON-NLS-1$
                 }
                 html.append(item.getHtml());
                 counter++;
             }
         }
-        html.append("</div>");
+        html.append("</div>"); //$NON-NLS-1$
 
-        html.append("<script type=\"text/javascript\">");
-        html.append("var " + getName() + "= new mgnlContextMenu('" + getName() + "');");
+        html.append("<script type=\"text/javascript\">"); //$NON-NLS-1$
+        html.append("var " + getName() + "= new mgnlContextMenu('" + getName() + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         html.append(menuJavascript);
-        html.append("</script>");
+        html.append("</script>"); //$NON-NLS-1$
         return html.toString();
     }
 }

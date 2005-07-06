@@ -58,20 +58,20 @@ public class ControlSuper implements ControlInterface {
     public static final int ENCODING_BASE64 = 1;
 
     public static final int ENCODING_UNIX = 2;
-    
+
     public static final int RICHEDIT_NONE = 0;
 
     public static final int RICHEDIT_KUPU = 1;
 
-    public static final int RICHEDIT_FCK = 2;    
+    public static final int RICHEDIT_FCK = 2;
 
-    public static final String CSSCLASS_CONTROLBUTTON = "mgnlControlButton";
+    public static final String CSSCLASS_CONTROLBUTTON = "mgnlControlButton"; //$NON-NLS-1$
 
-    public static final String CSSCLASS_CONTROLBUTTONSMALL = "mgnlControlButtonSmall";
+    public static final String CSSCLASS_CONTROLBUTTONSMALL = "mgnlControlButtonSmall"; //$NON-NLS-1$
 
-    public static final String CSSCLASS_CONTROLBAR = "mgnlControlBar";
+    public static final String CSSCLASS_CONTROLBAR = "mgnlControlBar"; //$NON-NLS-1$
 
-    public static final String CSSCLASS_CONTROLBARSMALL = "mgnlControlBarSmall";
+    public static final String CSSCLASS_CONTROLBARSMALL = "mgnlControlBarSmall"; //$NON-NLS-1$
 
     private int valueType = VALUETYPE_SINGLE;
 
@@ -103,7 +103,7 @@ public class ControlSuper implements ControlInterface {
 
     private boolean saveInfo = true;
 
-    private String cssClass = "";
+    private String cssClass = StringUtils.EMPTY;
 
     private Map cssStyles = new Hashtable();
 
@@ -209,7 +209,7 @@ public class ControlSuper implements ControlInterface {
 
     public String getHtmlId() {
         if (StringUtils.isNotEmpty(this.getId())) {
-            return " id=\"" + this.getId() + "\"";
+            return " id=\"" + this.getId() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         return StringUtils.EMPTY;
@@ -301,7 +301,7 @@ public class ControlSuper implements ControlInterface {
         Iterator en = this.getEvents().keySet().iterator();
         while (en.hasNext()) {
             String key = (String) en.next();
-            html.append(" " + key + "=\"" + this.getEvents().get(key) + "\"");
+            html.append(" " + key + "=\"" + this.getEvents().get(key) + "\""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
         return html.toString();
     }
@@ -392,7 +392,7 @@ public class ControlSuper implements ControlInterface {
 
     public String getHtmlCssClass() {
         if (StringUtils.isNotEmpty(this.getCssClass())) {
-            return " class=\"" + this.getCssClass() + "\"";
+            return " class=\"" + this.getCssClass() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         return StringUtils.EMPTY;
@@ -401,20 +401,15 @@ public class ControlSuper implements ControlInterface {
     public String getHtmlSaveInfo() {
         StringBuffer html = new StringBuffer();
         if (this.getSaveInfo()) {
-            html.append("<input type=\"hidden\"");
-            html.append(" name=\"mgnlSaveInfo\"");
-            html.append(" value=\""
-                + this.getName()
-                + ","
-                + PropertyType.nameFromValue(this.getType())
-                + ","
-                + this.getValueType()
-                + ","
-                + this.getIsRichEditValue()
-                + ","
-                + this.getEncoding()
-                + "\"");
-            html.append(" />");
+            html.append("<input type=\"hidden\""); //$NON-NLS-1$
+            html.append(" name=\"mgnlSaveInfo\""); //$NON-NLS-1$
+            html.append(" value=\"" //$NON-NLS-1$
+                + this.getName() + "," //$NON-NLS-1$
+                + PropertyType.nameFromValue(this.getType()) + "," //$NON-NLS-1$
+                + this.getValueType() + "," //$NON-NLS-1$
+                + this.getIsRichEditValue() + "," //$NON-NLS-1$
+                + this.getEncoding() + "\""); //$NON-NLS-1$
+            html.append(" />"); //$NON-NLS-1$
         }
         return html.toString();
     }
@@ -439,7 +434,7 @@ public class ControlSuper implements ControlInterface {
     }
 
     public String getCssStyles(String key) {
-        return this.getCssStyles(key, "");
+        return this.getCssStyles(key, StringUtils.EMPTY);
     }
 
     public String getHtmlCssStyles() {
@@ -447,10 +442,10 @@ public class ControlSuper implements ControlInterface {
         Iterator en = this.getCssStyles().keySet().iterator();
         while (en.hasNext()) {
             String key = (String) en.next();
-            html.append("" + key + ":" + this.getCssStyles().get(key) + ";");
+            html.append(key + ":" + this.getCssStyles().get(key) + ";"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         if (html.length() > 0) {
-            return " style=\"" + html + "\"";
+            return " style=\"" + html + "\""; //$NON-NLS-1$ //$NON-NLS-2$
         }
         return StringUtils.EMPTY;
     }
@@ -480,7 +475,7 @@ public class ControlSuper implements ControlInterface {
     }
 
     public static String escapeHTML(String str) {
-        return str.replaceAll("\"", "&quot;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+        return str.replaceAll("\"", "&quot;").replaceAll("<", "&lt;").replaceAll(">", "&gt;"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
     }
 
 }

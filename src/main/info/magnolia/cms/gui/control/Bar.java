@@ -70,36 +70,36 @@ public class Bar extends ControlSuper {
         else {
             cssClass = CSSCLASS_CONTROLBAR;
         }
-        html.append("<table");
+        html.append("<table"); //$NON-NLS-1$
         html.append(this.getHtmlEvents());
-        html.append(" class=\"" + cssClass + "\"");
+        html.append(" class=\"" + cssClass + "\""); //$NON-NLS-1$ //$NON-NLS-2$
         if (this.getId() != null) {
-            html.append(" id=\"" + this.getId() + "\" cellspacing=\"0\"");
+            html.append(" id=\"" + this.getId() + "\" cellspacing=\"0\""); //$NON-NLS-1$ //$NON-NLS-2$
         }
-        html.append(">");
-        html.append("<tr>");
+        html.append(">"); //$NON-NLS-1$
+        html.append("<tr>"); //$NON-NLS-1$
 
         // left
         List btnLeft = this.getButtonsLeft();
         if (!btnLeft.isEmpty()) {
-            html.append("<td class=\"mgnlBtnsLeft\">");
+            html.append("<td class=\"mgnlBtnsLeft\">"); //$NON-NLS-1$
             Iterator itLeft = btnLeft.iterator();
             while (itLeft.hasNext()) {
                 Button b = (Button) itLeft.next();
                 if (this.getSmall()) {
                     b.setSmall(true);
                 }
-                b.setCssStyles("background", "transparent");
+                b.setCssStyles("background", "transparent"); //$NON-NLS-1$ //$NON-NLS-2$
                 b.setSaveInfo(false);
                 html.append(b.getHtml());
             }
-            html.append("</td>");
+            html.append("</td>"); //$NON-NLS-1$
         }
 
         // right
         List btnRight = this.getButtonsRight();
         if (!btnRight.isEmpty()) {
-            html.append("<td class=\"mgnlBtnsRight\">");
+            html.append("<td class=\"mgnlBtnsRight\">"); //$NON-NLS-1$
 
             Iterator itRight = this.getButtonsRight().iterator();
             while (itRight.hasNext()) {
@@ -107,15 +107,15 @@ public class Bar extends ControlSuper {
                 if (this.getSmall()) {
                     b.setSmall(true);
                 }
-                b.setCssStyles("background", "transparent");
+                b.setCssStyles("background", "transparent"); //$NON-NLS-1$ //$NON-NLS-2$
                 b.setSaveInfo(false);
                 html.append(b.getHtml());
             }
-            html.append("</td>");
+            html.append("</td>"); //$NON-NLS-1$
         }
 
-        html.append("</tr>");
-        html.append("</table>");
+        html.append("</tr>"); //$NON-NLS-1$
+        html.append("</table>"); //$NON-NLS-1$
         return html.toString();
     }
 

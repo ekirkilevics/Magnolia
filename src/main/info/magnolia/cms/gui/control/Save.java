@@ -106,18 +106,18 @@ public class Save extends ControlSuper {
     public Save(MultipartForm form, HttpServletRequest request) {
         this.form = form;
         this.setRequest(request);
-        this.setPath(form.getParameter("mgnlPath"));
-        this.setNodeCollectionName(form.getParameter("mgnlNodeCollection"));
-        this.setNodeName(form.getParameter("mgnlNode"));
-        this.setParagraph(form.getParameter("mgnlParagraph"));
-        this.repository = form.getParameter("mgnlRepository");
+        this.setPath(form.getParameter("mgnlPath")); //$NON-NLS-1$
+        this.setNodeCollectionName(form.getParameter("mgnlNodeCollection")); //$NON-NLS-1$
+        this.setNodeName(form.getParameter("mgnlNode")); //$NON-NLS-1$
+        this.setParagraph(form.getParameter("mgnlParagraph")); //$NON-NLS-1$
+        this.repository = form.getParameter("mgnlRepository"); //$NON-NLS-1$
     }
 
     /**
      * Uses the mgnlSageInfo parameters to save the data.
      */
     public void save() {
-        String[] saveInfos = form.getParameterValues("mgnlSaveInfo"); // name,type,propertyOrNode
+        String[] saveInfos = form.getParameterValues("mgnlSaveInfo"); // name,type,propertyOrNode //$NON-NLS-1$
         String nodeCollectionName = this.getNodeCollectionName(null);
         String nodeName = this.getNodeName(null);
         String path = this.getPath();
@@ -136,7 +136,7 @@ public class Save extends ControlSuper {
                     // nodeCollection does not exist -> create
                     nodeCollection = page.createContent(nodeCollectionName, ItemType.CONTENTNODE);
                     if (log.isDebugEnabled()) {
-                        log.debug("Create - " + nodeCollection.getHandle());
+                        log.debug("Create - " + nodeCollection.getHandle()); //$NON-NLS-1$
                     }
                 }
             }
@@ -151,11 +151,11 @@ public class Save extends ControlSuper {
                 }
                 catch (RepositoryException re) {
                     // node does not exist -> create
-                    if (nodeName.equals("mgnlNew")) {
-                        nodeName = Path.getUniqueLabel(hm, nodeCollection.getHandle(), "0");
+                    if (nodeName.equals("mgnlNew")) { //$NON-NLS-1$
+                        nodeName = Path.getUniqueLabel(hm, nodeCollection.getHandle(), "0"); //$NON-NLS-1$
                     }
                     node = nodeCollection.createContent(nodeName, ItemType.CONTENTNODE);
-                    node.createNodeData("paragraph").setValue(this.getParagraph());
+                    node.createNodeData("paragraph").setValue(this.getParagraph()); //$NON-NLS-1$
                     node.getMetaData().setSequencePosition();
                 }
             }
@@ -171,7 +171,7 @@ public class Save extends ControlSuper {
                 processSaveInfo(node, saveInfo);
             }
             if (log.isDebugEnabled()) {
-                log.debug("Saving - " + path);
+                log.debug("Saving - " + path); //$NON-NLS-1$
             }
             hm.save();
         }
@@ -197,9 +197,9 @@ public class Save extends ControlSuper {
         int valueType = ControlSuper.VALUETYPE_SINGLE;
         int isRichEditValue = 0;
         int encoding = ControlSuper.ENCODING_NO;
-        String[] values = {""};
-        if (saveInfo.indexOf(",") != -1) {
-            String[] info = saveInfo.split(",");
+        String[] values = {StringUtils.EMPTY};
+        if (saveInfo.indexOf(",") != -1) { //$NON-NLS-1$
+            String[] info = saveInfo.split(","); //$NON-NLS-1$
             name = info[0];
             if (info.length >= 2) {
                 type = PropertyType.valueFromName(info[1]);
@@ -258,7 +258,7 @@ public class Save extends ControlSuper {
         boolean remove = false;
         boolean write = false;
         if (encoding == ControlSuper.ENCODING_BASE64) {
-            if (StringUtils.isNotEmpty(valueStr.replaceAll(" ", ""))) {
+            if (StringUtils.isNotBlank(valueStr)) {
                 valueStr = new String(Base64.encodeBase64(valueStr.getBytes()));
                 write = true;
             }
@@ -313,21 +313,21 @@ public class Save extends ControlSuper {
             node.delete(name);
         }
         catch (PathNotFoundException e) {
-            log.debug("Exception caught: " + e.getMessage(), e);
+            log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
         }
         if (values != null && values.length != 0) {
             Content multiNode = node.createContent(name, ItemType.CONTENTNODE);
             try {
                 // MetaData.CREATION_DATE has private access; no method to delete it so far...
-                multiNode.deleteNodeData("creationdate");
+                multiNode.deleteNodeData("creationdate"); //$NON-NLS-1$
             }
             catch (RepositoryException re) {
-                log.debug("Exception caught: " + re.getMessage(), re);
+                log.debug("Exception caught: " + re.getMessage(), re); //$NON-NLS-1$
             }
-            for (int ii = 0; ii < values.length; ii++) {
-                String valueStr = values[ii];
+            for (int j = 0; j < values.length; j++) {
+                String valueStr = values[j];
                 Value value = this.getValue(valueStr, type);
-                multiNode.createNodeData("" + ii).setValue(value);
+                multiNode.createNodeData(Integer.toString(j)).setValue(value);
             }
         }
     }
@@ -343,36 +343,35 @@ public class Save extends ControlSuper {
     private void processBinary(Content node, String name) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
         Document doc = form.getDocument(name);
-        if (doc == null && form.getParameter(name + "_" + File.REMOVE) != null) {
+        if (doc == null && form.getParameter(name + "_" + File.REMOVE) != null) { //$NON-NLS-1$
             try {
-                node.delete(name + "_" + FileProperties.PROPERTIES_CONTENTNODE);
+                node.delete(name + "_" + FileProperties.PROPERTIES_CONTENTNODE); //$NON-NLS-1$
             }
             catch (RepositoryException re) {
-                log.debug("Exception caught: " + re.getMessage(), re);
+                log.debug("Exception caught: " + re.getMessage(), re); //$NON-NLS-1$
             }
             try {
                 node.deleteNodeData(name);
             }
             catch (RepositoryException re) {
-                log.debug("Exception caught: " + re.getMessage(), re);
+                log.debug("Exception caught: " + re.getMessage(), re); //$NON-NLS-1$
             }
 
         }
         else {
             Content propNode = null;
             try {
-                propNode = node.getContent(name + "_" + FileProperties.PROPERTIES_CONTENTNODE);
+                propNode = node.getContent(name + "_" + FileProperties.PROPERTIES_CONTENTNODE); //$NON-NLS-1$
             }
             catch (RepositoryException re) {
                 try {
                     if (doc != null) {
-                        propNode = node.createContent(
-                            name + "_" + FileProperties.PROPERTIES_CONTENTNODE,
+                        propNode = node.createContent(name + "_" + FileProperties.PROPERTIES_CONTENTNODE, //$NON-NLS-1$
                             ItemType.CONTENTNODE);
                     }
                 }
                 catch (RepositoryException re2) {
-                    log.debug("Exception caught: " + re2.getMessage(), re2);
+                    log.debug("Exception caught: " + re2.getMessage(), re2); //$NON-NLS-1$
                 }
             }
             if (doc != null) {
@@ -380,16 +379,16 @@ public class Save extends ControlSuper {
                 if (!data.isExist()) {
                     data = node.createNodeData(name);
                     if (log.isDebugEnabled()) {
-                        log.debug("creating under - " + node.getHandle());
-                        log.debug("creating node data for binary store - " + name);
+                        log.debug("creating under - " + node.getHandle()); //$NON-NLS-1$
+                        log.debug("creating node data for binary store - " + name); //$NON-NLS-1$
                     }
                 }
                 data.setValue(doc.getStream());
-                log.debug("Node data updated");
+                log.debug("Node data updated"); //$NON-NLS-1$
             }
             if (propNode != null) {
                 NodeData propData;
-                String fileName = form.getParameter(name + "_" + FileProperties.PROPERTY_FILENAME);
+                String fileName = form.getParameter(name + "_" + FileProperties.PROPERTY_FILENAME); //$NON-NLS-1$
                 if (fileName == null || fileName.equals(StringUtils.EMPTY)) {
                     fileName = doc.getFileName();
                 }
@@ -414,7 +413,7 @@ public class Save extends ControlSuper {
                         propData = propNode.createNodeData(FileProperties.PROPERTY_EXTENSION);
                     }
                     propData.setValue(doc.getExtension());
-                    String template = form.getParameter(name + "_" + FileProperties.PROPERTY_TEMPLATE);
+                    String template = form.getParameter(name + "_" + FileProperties.PROPERTY_TEMPLATE); //$NON-NLS-1$
                     if (StringUtils.isNotEmpty(template)) {
                         propData = propNode.getNodeData(FileProperties.PROPERTY_TEMPLATE);
                         if (!propData.isExist()) {
@@ -427,7 +426,7 @@ public class Save extends ControlSuper {
                             propNode.deleteNodeData(FileProperties.PROPERTY_TEMPLATE);
                         }
                         catch (PathNotFoundException e) {
-                            log.debug("Exception caught: " + e.getMessage(), e);
+                            log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
                         }
                     }
                     doc.delete();
@@ -504,9 +503,9 @@ public class Save extends ControlSuper {
                 Calendar date = new GregorianCalendar();
                 try {
                     String newDateAndTime = valueStr;
-                    String[] dateAndTimeTokens = newDateAndTime.split("T");
+                    String[] dateAndTimeTokens = newDateAndTime.split("T"); //$NON-NLS-1$
                     String newDate = dateAndTimeTokens[0];
-                    String[] dateTokens = newDate.split("-");
+                    String[] dateTokens = newDate.split("-"); //$NON-NLS-1$
                     int hour = 0;
                     int minute = 0;
                     int second = 0;
@@ -515,7 +514,7 @@ public class Save extends ControlSuper {
                     int day = Integer.parseInt(dateTokens[2]);
                     if (dateAndTimeTokens.length > 1) {
                         String newTime = dateAndTimeTokens[1];
-                        String[] timeTokens = newTime.split(":");
+                        String[] timeTokens = newTime.split(":"); //$NON-NLS-1$
                         hour = Integer.parseInt(timeTokens[0]);
                         minute = Integer.parseInt(timeTokens[1]);
                         second = Integer.parseInt(timeTokens[2]);
@@ -529,7 +528,7 @@ public class Save extends ControlSuper {
                 value = value = valueFactory.createValue(date);
             }
             catch (Exception e) {
-                log.debug("Exception caught: " + e.getMessage(), e);
+                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
             }
         }
         return value;
@@ -548,63 +547,63 @@ public class Save extends ControlSuper {
         switch (isRichEditValue) {
             case ControlSuper.RICHEDIT_KUPU:
             case ControlSuper.RICHEDIT_FCK:
-                valueStr = StringUtils.replace(valueStr, "\r\n", " ");
-                valueStr = StringUtils.replace(valueStr, "\n", " ");
+                valueStr = StringUtils.replace(valueStr, "\r\n", " "); //$NON-NLS-1$ //$NON-NLS-2$
+                valueStr = StringUtils.replace(valueStr, "\n", " "); //$NON-NLS-1$ //$NON-NLS-2$
 
                 // ie inserts some strange br...
-                valueStr = StringUtils.replace(valueStr, "</br>", "");
-                valueStr = StringUtils.replace(valueStr, "<P><BR>", "<P>");
+                valueStr = StringUtils.replace(valueStr, "</br>", StringUtils.EMPTY); //$NON-NLS-1$
+                valueStr = StringUtils.replace(valueStr, "<P><BR>", "<P>"); //$NON-NLS-1$ //$NON-NLS-2$
 
-                valueStr = StringUtils.replace(valueStr, "<br>", "\n ");
-                valueStr = StringUtils.replace(valueStr, "<BR>", "\n ");
-                valueStr = StringUtils.replace(valueStr, "<br/>", "\n ");
+                valueStr = StringUtils.replace(valueStr, "<br>", "\n "); //$NON-NLS-1$ //$NON-NLS-2$
+                valueStr = StringUtils.replace(valueStr, "<BR>", "\n "); //$NON-NLS-1$ //$NON-NLS-2$
+                valueStr = StringUtils.replace(valueStr, "<br/>", "\n "); //$NON-NLS-1$ //$NON-NLS-2$
 
                 // replace <P>
-                valueStr = replacePByBr(valueStr, "p");
+                valueStr = replacePByBr(valueStr, "p"); //$NON-NLS-1$
 
                 // TODO remove it definitly: the method seams not to work
                 // replace <a class="...></a> by <span class=""></span>
                 // valueStr = replaceABySpan(valueStr, "a");
                 break;
-            default :
+            default:
                 break;
         }
         return valueStr;
 
     }
 
-    //    TODO remove this definitly or rewrite it. It does no work!
-    //    
-    //    protected static String replaceABySpan(String value, String tagName) {
-    //        if (StringUtils.isEmpty(value)) {
-    //            return value;
-    //        }
-    //        String valueStart = value.substring(0, 1);
-    //        String[] strObj = value.split(" <" + tagName);
-    //        StringBuffer valueStr = new StringBuffer();
-    //        int i = 0;
-    //        while (i < strObj.length) {
-    //            String str = strObj[i];
-    //            String tagPre = "";
-    //            if (i != 0 || (" <" + tagName).equals(valueStart)) {
-    //                String openTag = str.substring(0, str.indexOf(">"));
-    //                if (openTag.indexOf(" href=") == -1) {
-    //                    str = str.replaceAll(" </" + tagName + ">", " </span>");
-    //                    tagPre = " <span";
-    //                }
-    //                else {
-    //                    tagPre = " <" + tagName;
-    //                }
-    //            }
-    //            valueStr.append(tagPre + str);
-    //            i++;
-    //        }
-    //        String valueStr2 = valueStr.toString();
-    //        if (!tagName.equals(tagName.toUpperCase())) {
-    //            valueStr2 = replaceABySpan(valueStr2, tagName.toUpperCase());
-    //        }
-    //        return valueStr2;
-    //    }
+    // TODO remove this definitly or rewrite it. It does no work!
+    //
+    // protected static String replaceABySpan(String value, String tagName) {
+    // if (StringUtils.isEmpty(value)) {
+    // return value;
+    // }
+    // String valueStart = value.substring(0, 1);
+    // String[] strObj = value.split(" <" + tagName);
+    // StringBuffer valueStr = new StringBuffer();
+    // int i = 0;
+    // while (i < strObj.length) {
+    // String str = strObj[i];
+    // String tagPre = StringUtils.EMPTY;
+    // if (i != 0 || (" <" + tagName).equals(valueStart)) {
+    // String openTag = str.substring(0, str.indexOf(">"));
+    // if (openTag.indexOf(" href=") == -1) {
+    // str = str.replaceAll(" </" + tagName + ">", " </span>");
+    // tagPre = " <span";
+    // }
+    // else {
+    // tagPre = " <" + tagName;
+    // }
+    // }
+    // valueStr.append(tagPre + str);
+    // i++;
+    // }
+    // String valueStr2 = valueStr.toString();
+    // if (!tagName.equals(tagName.toUpperCase())) {
+    // valueStr2 = replaceABySpan(valueStr2, tagName.toUpperCase());
+    // }
+    // return valueStr2;
+    // }
 
     /**
      * @param value
@@ -617,17 +616,17 @@ public class Save extends ControlSuper {
             return value;
         }
 
-        String pre = "<" + tagName + ">";
-        String post = "</" + tagName + ">";
+        String pre = "<" + tagName + ">"; //$NON-NLS-1$ //$NON-NLS-2$
+        String post = "</" + tagName + ">"; //$NON-NLS-1$ //$NON-NLS-2$
 
         // get rid of last </p>
         if (value.endsWith(post)) {
             value = StringUtils.substringBeforeLast(value, post);
         }
 
-        value = StringUtils.replace(value, pre + "&nbsp;" + post, "\n ");
+        value = StringUtils.replace(value, pre + "&nbsp;" + post, "\n "); //$NON-NLS-1$ //$NON-NLS-2$
         value = StringUtils.replace(value, pre, StringUtils.EMPTY);
-        value = StringUtils.replace(value, post, "\n\n ");
+        value = StringUtils.replace(value, post, "\n\n "); //$NON-NLS-1$
 
         if (!tagName.equals(tagName.toUpperCase())) {
             value = replacePByBr(value, tagName.toUpperCase());

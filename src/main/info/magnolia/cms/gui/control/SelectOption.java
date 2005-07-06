@@ -60,17 +60,17 @@ public class SelectOption extends ControlSuper {
 
     public String getHtml() {
         StringBuffer html = new StringBuffer();
-        html.append("<option value=\"" + this.getValue() + "\"");
+        html.append("<option value=\"" + this.getValue() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
         html.append(this.getHtmlCssClass());
         html.append(this.getHtmlCssStyles());
         if (this.getSelected()) {
-            html.append(" selected");
+            html.append(" selected"); //$NON-NLS-1$
         }
         html.append(this.getHtmlId()); // id e.g. needed in rich editor
-        html.append(">");
+        html.append(">"); //$NON-NLS-1$
         // html.append("["+this.getLabel()+"]["+this.getValue()+"]");
         html.append(this.getLabel());
-        html.append("</option>");
+        html.append("</option>"); //$NON-NLS-1$
         return html.toString();
     }
 }

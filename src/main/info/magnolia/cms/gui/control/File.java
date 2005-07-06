@@ -29,14 +29,14 @@ import org.apache.log4j.Logger;
  */
 public class File extends ControlSuper {
 
-    public static final String REMOVE = "remove";
+    public static final String REMOVE = "remove"; //$NON-NLS-1$
 
     /**
      * Logger.
      */
     private static Logger log = Logger.getLogger(File.class);
 
-    private String cssClassFileName = "";
+    private String cssClassFileName;
 
     private String nodeDataTemplate;
 
@@ -60,32 +60,32 @@ public class File extends ControlSuper {
     }
 
     public String getHtmlCssClassFileName() {
-        if (StringUtils.isNotEmpty(this.getCssClassFileName())) {
-            return " class=\"" + this.getCssClassFileName() + "\"";
+        if (StringUtils.isNotEmpty(this.cssClassFileName)) {
+            return " class=\"" + this.cssClassFileName + "\""; //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         return StringUtils.EMPTY;
     }
 
     public String getHtml() {
-        String html = "";
-        html += this.getHtmlBrowse();
-        html += this.getHtmlFileName();
-        html += this.getHtmlNodeDataTemplate();
-        html += this.getHtmlRemove();
-        return html;
+        StringBuffer html = new StringBuffer();
+        html.append(this.getHtmlBrowse());
+        html.append(this.getHtmlFileName());
+        html.append(this.getHtmlNodeDataTemplate());
+        html.append(this.getHtmlRemove());
+        return html.toString();
     }
 
     public String getHtmlBrowse() {
         StringBuffer html = new StringBuffer();
-        html.append("<input type=\"file\"");
-        html.append(" name=\"" + this.getName() + "\"");
-        html.append(" id=\"" + this.getName() + "\"");
-        html.append(" onchange=\"mgnlControlFileSetFileName('" + this.getName() + "')\"");
-        html.append(" onblur=\"mgnlControlFileSetFileName('" + this.getName() + "')\"");
+        html.append("<input type=\"file\""); //$NON-NLS-1$
+        html.append(" name=\"" + this.getName() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+        html.append(" id=\"" + this.getName() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+        html.append(" onchange=\"mgnlControlFileSetFileName('" + this.getName() + "')\""); //$NON-NLS-1$ //$NON-NLS-2$
+        html.append(" onblur=\"mgnlControlFileSetFileName('" + this.getName() + "')\""); //$NON-NLS-1$ //$NON-NLS-2$
         html.append(this.getHtmlCssClass());
-        html.append(" />");
-        Hidden control0 = new Hidden(this.getName() + "_" + REMOVE, "");
+        html.append(" />"); //$NON-NLS-1$
+        Hidden control0 = new Hidden(this.getName() + "_" + REMOVE, StringUtils.EMPTY); //$NON-NLS-1$
         control0.setSaveInfo(false);
         html.append(control0.getHtml());
         if (this.getSaveInfo()) {
@@ -101,11 +101,11 @@ public class File extends ControlSuper {
         }
         catch (PathNotFoundException e) {
             if (log.isDebugEnabled()) {
-                log.debug("Data not found: " + e.getMessage());
+                log.debug("Data not found: " + e.getMessage()); //$NON-NLS-1$
             }
         }
         catch (RepositoryException e) {
-            log.debug("Exception caught: " + e.getMessage(), e);
+            log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
         }
         return fileName;
     }
@@ -122,11 +122,11 @@ public class File extends ControlSuper {
             }
             catch (PathNotFoundException e) {
                 if (log.isDebugEnabled()) {
-                    log.debug("Data not found: " + e.getMessage());
+                    log.debug("Data not found: " + e.getMessage()); //$NON-NLS-1$
                 }
             }
             catch (RepositoryException e) {
-                log.debug("Exception caught: " + e.getMessage(), e);
+                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
             }
         }
         return template;
@@ -139,48 +139,50 @@ public class File extends ControlSuper {
         }
         catch (PathNotFoundException e) {
             if (log.isDebugEnabled()) {
-                log.debug("Data not found: " + e.getMessage());
+                log.debug("Data not found: " + e.getMessage()); //$NON-NLS-1$
             }
         }
         catch (RepositoryException e) {
-            log.debug("Exception caught: " + e.getMessage(), e);
+            log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
         }
         return ext;
     }
 
     public String getHtmlFileName() {
-        Edit control = new Edit(this.getName() + "_" + FileProperties.PROPERTY_FILENAME, this.getFileName());
+        Edit control = new Edit(this.getName() + "_" + FileProperties.PROPERTY_FILENAME, this.getFileName()); //$NON-NLS-1$
         control.setSaveInfo(false);
-        control.setCssClass(this.getCssClassFileName());
+        if (StringUtils.isNotEmpty(this.getCssClassFileName())) {
+            control.setCssClass(this.cssClassFileName);
+        }
 
-        control.setCssStyles("width", "45%");
+        control.setCssStyles("width", "45%"); //$NON-NLS-1$ //$NON-NLS-2$
         return control.getHtml();
     }
 
     public String getHtmlNodeDataTemplate() {
-        Hidden control = new Hidden(this.getName() + "_" + FileProperties.PROPERTY_TEMPLATE, this.getNodeDataTemplate());
+        Hidden control = new Hidden(this.getName() + "_" + FileProperties.PROPERTY_TEMPLATE, this.getNodeDataTemplate()); //$NON-NLS-1$
         control.setSaveInfo(false);
         return control.getHtml();
     }
 
     public String getHtmlRemove() {
-        return getHtmlRemove("");
+        return getHtmlRemove(StringUtils.EMPTY);
     }
 
     public String getHtmlRemove(String additionalOnclick) {
         Button control1 = new Button();
         control1.setLabel("Remove file");
-        control1.setCssClass("mgnlControlButtonSmall");
-        control1.setOnclick(additionalOnclick + "mgnlControlFileRemove('" + this.getName() + "')");
+        control1.setCssClass("mgnlControlButtonSmall"); //$NON-NLS-1$
+        control1.setOnclick(additionalOnclick + "mgnlControlFileRemove('" + this.getName() + "')"); //$NON-NLS-1$ //$NON-NLS-2$
         return control1.getHtml();
     }
 
     public String getHandle() {
-        return this.getWebsiteNode().getHandle() + "/" + this.getName();
+        return this.getWebsiteNode().getHandle() + "/" + this.getName(); //$NON-NLS-1$
     }
 
     public String getPath() {
-        return getHandle() + "/" + this.getFileName() + "." + this.getExtension();
+        return getHandle() + "/" + this.getFileName() + "." + this.getExtension(); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
@@ -204,6 +206,6 @@ public class File extends ControlSuper {
     }
 
     protected Content getPropertyNode() throws RepositoryException {
-        return this.getWebsiteNode().getContent(this.getName() + "_" + FileProperties.PROPERTIES_CONTENTNODE);
+        return this.getWebsiteNode().getContent(this.getName() + "_" + FileProperties.PROPERTIES_CONTENTNODE); //$NON-NLS-1$
     }
 }

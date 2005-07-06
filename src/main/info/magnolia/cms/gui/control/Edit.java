@@ -21,7 +21,7 @@ import info.magnolia.cms.core.Content;
  */
 public class Edit extends ControlSuper {
 
-    String rows = "1";
+    String rows = "1"; //$NON-NLS-1$
 
     public Edit() {
     }
@@ -48,27 +48,27 @@ public class Edit extends ControlSuper {
         if (id == null) {
             id = this.getName();
         }
-        if (this.getRows().equals("1")) {
-            html.append("<input type=\"text\"");
-            html.append(" name=\"" + this.getName() + "\"");
-            html.append(" id=\"" + id + "\"");
-            html.append(" value=\"" + ControlSuper.escapeHTML(this.getValue()) + "\"");
+        if (this.getRows().equals("1")) { //$NON-NLS-1$
+            html.append("<input type=\"text\""); //$NON-NLS-1$
+            html.append(" name=\"" + this.getName() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+            html.append(" id=\"" + id + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+            html.append(" value=\"" + ControlSuper.escapeHTML(this.getValue()) + "\""); //$NON-NLS-1$ //$NON-NLS-2$
             html.append(getHtmlEvents());
             html.append(this.getHtmlCssClass());
             html.append(this.getHtmlCssStyles());
-            html.append(" />");
+            html.append(" />"); //$NON-NLS-1$
         }
         else {
-            html.append("<textarea");
-            html.append(" name=\"" + this.getName() + "\"");
-            html.append(" id=\"" + id + "\"");
-            html.append(" rows=\"" + this.getRows() + "\"");
+            html.append("<textarea"); //$NON-NLS-1$
+            html.append(" name=\"" + this.getName() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+            html.append(" id=\"" + id + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+            html.append(" rows=\"" + this.getRows() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
             html.append(this.getHtmlCssClass());
             html.append(this.getHtmlCssStyles());
             html.append(getHtmlEvents());
-            html.append(">");
+            html.append(">"); //$NON-NLS-1$
             html.append(this.getValue());
-            html.append("</textarea>");
+            html.append("</textarea>"); //$NON-NLS-1$
         }
         if (this.getSaveInfo()) {
             html.append(this.getHtmlSaveInfo());

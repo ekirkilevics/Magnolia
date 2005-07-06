@@ -58,13 +58,13 @@ public class Select extends ControlSuper {
 
     public String getHtml() {
         StringBuffer html = new StringBuffer();
-        html.append("<select");
-        html.append(" name=\"" + this.getName() + "\"");
-        html.append(" id=\"" + this.getName() + "\"");
+        html.append("<select"); //$NON-NLS-1$
+        html.append(" name=\"" + this.getName() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+        html.append(" id=\"" + this.getName() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
         html.append(this.getHtmlCssClass());
         html.append(this.getHtmlCssStyles());
         html.append(this.getHtmlEvents());
-        html.append(">");
+        html.append(">"); //$NON-NLS-1$
         Iterator it = this.getOptions().iterator();
         while (it.hasNext()) {
             SelectOption o = (SelectOption) it.next();
@@ -78,7 +78,7 @@ public class Select extends ControlSuper {
             }
             html.append(o.getHtml());
         }
-        html.append("</select>");
+        html.append("</select>"); //$NON-NLS-1$
         if (this.getSaveInfo()) {
             html.append(this.getHtmlSaveInfo());
         }

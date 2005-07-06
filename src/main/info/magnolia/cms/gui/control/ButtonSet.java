@@ -28,19 +28,19 @@ import org.apache.commons.lang.StringUtils;
 public class ButtonSet extends ControlSuper {
 
     // default values for divided button (checkbox, radio)
-    private static final String HTML_PRE_DIVIDED = "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">";
+    private static final String HTML_PRE_DIVIDED = "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">"; //$NON-NLS-1$
 
-    private static final String HTML_POST_DIVIDED = "</table>";
+    private static final String HTML_POST_DIVIDED = "</table>"; //$NON-NLS-1$
 
-    private static final String BUTTONHTML_PRE_DIVIDED = "<tr><td>";
+    private static final String BUTTONHTML_PRE_DIVIDED = "<tr><td>"; //$NON-NLS-1$
 
-    private static final String BUTTONHTML_INTER_DIVIDED = "</td><td>";
+    private static final String BUTTONHTML_INTER_DIVIDED = "</td><td>"; //$NON-NLS-1$
 
-    private static final String BUTTONHTML_POST_DIVIDED = "</td></tr>";
+    private static final String BUTTONHTML_POST_DIVIDED = "</td></tr>"; //$NON-NLS-1$
 
     // default values for push button
 
-    private static final String HTML_INTER_PUSH = " ";
+    private static final String HTML_INTER_PUSH = " "; //$NON-NLS-1$
 
     private List buttons = new ArrayList();
 
@@ -185,7 +185,7 @@ public class ButtonSet extends ControlSuper {
             if (StringUtils.isEmpty(b.getCssClass())) {
                 b.setCssClass(this.getCssClass());
             }
-            b.setId(this.getName() + "_SETBUTTON_" + i);
+            b.setId(this.getName() + "_SETBUTTON_" + i); //$NON-NLS-1$
             if (this.getValueType() == ControlSuper.VALUETYPE_MULTIPLE) {
                 if (this.getValues().size() != 0) {
                     if (this.getValues().contains(b.getValue())) {

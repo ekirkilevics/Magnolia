@@ -61,31 +61,24 @@ public class ContextMenuItem extends ControlSuper {
     // todo: icons
     public String getHtml() {
         StringBuffer html = new StringBuffer();
-        html.append("<div class=\"mgnlTreeMenuItem\" id=\""
-            + this.getId()
-            + "\" onclick=\""
-            + this.getJavascriptMenuName()
-            + ".hide();");
+        html.append("<div class=\"mgnlTreeMenuItem\" id=\"" //$NON-NLS-1$
+            + this.getId() + "\" onclick=\"" //$NON-NLS-1$
+            + this.getJavascriptMenuName() + ".hide();"); //$NON-NLS-1$
         if (StringUtils.isNotEmpty(this.onclick)) {
             html.append(this.onclick);
         }
 
         String label = this.getLabel();
         if (StringUtils.isNotEmpty(this.getIcon())) {
-            label = "<img src=\""
-                + this.getIcon()
-                + "\"> <span style=\"position:relative;top:-3px\">"
-                + label
-                + "</span>";
+            label = "<img src=\"" //$NON-NLS-1$
+                + this.getIcon() + "\"> <span style=\"position:relative;top:-3px\">" //$NON-NLS-1$
+                + label + "</span>"; //$NON-NLS-1$
         }
 
-        html.append("\" onmouseover=\""
-            + this.getJavascriptMenuName()
-            + ".menuItemHighlight(this);\"  onmouseout=\""
-            + this.getJavascriptMenuName()
-            + ".menuItemReset(this);\">"
-            + label
-            + "</div>");
+        html.append("\" onmouseover=\"" //$NON-NLS-1$
+            + this.getJavascriptMenuName() + ".menuItemHighlight(this);\"  onmouseout=\"" //$NON-NLS-1$
+            + this.getJavascriptMenuName() + ".menuItemReset(this);\">" //$NON-NLS-1$
+            + label + "</div>"); //$NON-NLS-1$
         return html.toString();
     }
 
