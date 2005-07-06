@@ -64,17 +64,17 @@ public class ContextMessages extends Messages {
     /**
      * from jstl Config (this suffix are used to inhibit overwriting in other contextes
      */
-    private static final String REQUEST_SCOPE_SUFFIX = ".request";
+    private static final String REQUEST_SCOPE_SUFFIX = ".request"; //$NON-NLS-1$
 
     /**
      * from jstl Config (this suffix are used to inhibit overwriting in other contextes
      */
-    private static final String SESSION_SCOPE_SUFFIX = ".session";
+    private static final String SESSION_SCOPE_SUFFIX = ".session"; //$NON-NLS-1$
 
     /**
      * from jstl Config (this suffix are used to inhibit overwriting in other contextes
      */
-    private static final String APPLICATION_SCOPE_SUFFIX = ".application";
+    private static final String APPLICATION_SCOPE_SUFFIX = ".application"; //$NON-NLS-1$
 
     /**
      * the context found for the current request
@@ -131,7 +131,7 @@ public class ContextMessages extends Messages {
     public ResourceBundle getBundle() {
         ResourceBundle bundle = loc.getResourceBundle();
         if (bundle == null) {
-            log.error("bundle: " + this.getBasename() + " not found");
+            log.error("bundle: " + this.getBasename() + " not found"); //$NON-NLS-1$ //$NON-NLS-2$
             bundle = new ListResourceBundle() {
 
                 protected Object[][] getContents() {
@@ -405,7 +405,7 @@ public class ContextMessages extends Messages {
         }
 
         if ((language == null) || (language.length() == 0)) {
-            throw new IllegalArgumentException(Resources.getMessage("LOCALE_NO_LANGUAGE"));
+            throw new IllegalArgumentException(Resources.getMessage("LOCALE_NO_LANGUAGE")); //$NON-NLS-1$
         }
 
         if (country == null) {
@@ -425,7 +425,7 @@ public class ContextMessages extends Messages {
             }
         }
         else {
-            throw new IllegalArgumentException(Resources.getMessage("LOCALE_EMPTY_COUNTRY"));
+            throw new IllegalArgumentException(Resources.getMessage("LOCALE_EMPTY_COUNTRY")); //$NON-NLS-1$
         }
 
         return ret;
@@ -479,7 +479,7 @@ public class ContextMessages extends Messages {
             case PageContext.APPLICATION_SCOPE:
                 return req.getSession().getServletContext().getAttribute(name + APPLICATION_SCOPE_SUFFIX);
             default:
-                throw new IllegalArgumentException("unknown scope");
+                throw new IllegalArgumentException("unknown scope"); //$NON-NLS-1$
         }
     }
 

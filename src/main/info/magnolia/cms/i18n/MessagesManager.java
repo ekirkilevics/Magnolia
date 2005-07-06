@@ -44,12 +44,12 @@ public final class MessagesManager {
     /**
      * Use this locale if no other provided
      */
-    public static final String FALLBACK_LOCALE = "en";
+    public static final String FALLBACK_LOCALE = "en"; //$NON-NLS-1$
 
     /**
      * Use this basename if no other is provided
      */
-    public static final String DEFAULT_BASENAME = "info.magnolia.module.admininterface.messages";
+    public static final String DEFAULT_BASENAME = "info.magnolia.module.admininterface.messages"; //$NON-NLS-1$
 
     /**
      * Logger.
@@ -59,17 +59,17 @@ public final class MessagesManager {
     /**
      * The node name where the configuration for i18n is stored
      */
-    private static final String I18N_CONFIG_NAME = "i18n";
+    private static final String I18N_CONFIG_NAME = "i18n"; //$NON-NLS-1$
 
     /**
      * The name of the property to store the current system language
      */
-    private static final String LOCALE_CONFIG_NAME = "language";
+    private static final String LOCALE_CONFIG_NAME = "language"; //$NON-NLS-1$
 
     /**
      * Under this node all the available languages are stored. They are showed in the user dialog.
      */
-    private static final String AVAILABLE_LOCALES_CONFIG_NAME = "availableLanguages";
+    private static final String AVAILABLE_LOCALES_CONFIG_NAME = "availableLanguages"; //$NON-NLS-1$
 
     /**
      * The current locale of the application
@@ -100,9 +100,9 @@ public final class MessagesManager {
         MessagesManager.context = context;
 
         // setting fallback
-        context.setAttribute(Config.FMT_FALLBACK_LOCALE + ".application", FALLBACK_LOCALE);
+        context.setAttribute(Config.FMT_FALLBACK_LOCALE + ".application", FALLBACK_LOCALE); //$NON-NLS-1$
         // setting basename
-        context.setAttribute(Config.FMT_LOCALIZATION_CONTEXT + ".application", MessagesManager.DEFAULT_BASENAME);
+        context.setAttribute(Config.FMT_LOCALIZATION_CONTEXT + ".application", MessagesManager.DEFAULT_BASENAME); //$NON-NLS-1$
         // for Resin and other J2EE Containers
         context.setAttribute(Config.FMT_LOCALIZATION_CONTEXT, MessagesManager.DEFAULT_BASENAME);
 
@@ -112,9 +112,9 @@ public final class MessagesManager {
         // reading the configuration from the repository
         HierarchyManager configHierarchyManager = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
         try {
-            log.info("Config : loading i18n configuration - " + I18N_CONFIG_NAME);
+            log.info("Config : loading i18n configuration - " + I18N_CONFIG_NAME); //$NON-NLS-1$
 
-            Content serverNode = configHierarchyManager.getContent("/server");
+            Content serverNode = configHierarchyManager.getContent("/server"); //$NON-NLS-1$
 
             Content configNode;
             try {
@@ -160,7 +160,7 @@ public final class MessagesManager {
                 String language = name;
                 String country = StringUtils.EMPTY;
 
-                if (name.indexOf("_") == 2) {
+                if (name.indexOf("_") == 2) { //$NON-NLS-1$
                     language = name.substring(0, 2);
                     country = name.substring(3);
                 }
@@ -170,7 +170,7 @@ public final class MessagesManager {
 
         }
         catch (RepositoryException re) {
-            log.error("Config : Failed to load i18n configuration - " + I18N_CONFIG_NAME);
+            log.error("Config : Failed to load i18n configuration - " + I18N_CONFIG_NAME); //$NON-NLS-1$
             log.error(re.getMessage(), re);
         }
 
@@ -186,7 +186,7 @@ public final class MessagesManager {
             return new ContextMessages(req);
         }
 
-        log.debug("using i18n-messages without a request!");
+        log.debug("using i18n-messages without a request!"); //$NON-NLS-1$
         return new Messages(MessagesManager.DEFAULT_BASENAME, applicationLocale);
 
     }
@@ -202,7 +202,7 @@ public final class MessagesManager {
             return new ContextMessages(req, basename);
         }
 
-        log.debug("using i18n-messages without a request!");
+        log.debug("using i18n-messages without a request!"); //$NON-NLS-1$
         return new Messages(basename, applicationLocale);
 
     }
@@ -219,7 +219,7 @@ public final class MessagesManager {
             return new ContextMessages(req, basename, locale);
         }
 
-        log.debug("using i18n-messages without a request!");
+        log.debug("using i18n-messages without a request!"); //$NON-NLS-1$
         return new Messages(basename, locale);
 
     }
@@ -234,7 +234,7 @@ public final class MessagesManager {
             return new ContextMessages((HttpServletRequest) pc.getRequest());
         }
 
-        log.debug("using i18n-messages without a request inside a control!");
+        log.debug("using i18n-messages without a request inside a control!"); //$NON-NLS-1$
         return new Messages(MessagesManager.DEFAULT_BASENAME, applicationLocale);
 
     }
@@ -298,7 +298,7 @@ public final class MessagesManager {
      */
     public static void setDefaultLocale(String defaultLocale) {
         MessagesManager.applicationLocale = new Locale(defaultLocale);
-        context.setAttribute(Config.FMT_LOCALE + ".application", defaultLocale);
+        context.setAttribute(Config.FMT_LOCALE + ".application", defaultLocale); //$NON-NLS-1$
     }
 
     /**
@@ -314,6 +314,6 @@ public final class MessagesManager {
      * @param session current session
      */
     public static void setUserLanguage(String language, HttpSession session) {
-        session.setAttribute(Config.FMT_LOCALE + ".session", language);
+        session.setAttribute(Config.FMT_LOCALE + ".session", language); //$NON-NLS-1$
     }
 }
