@@ -224,8 +224,9 @@ public abstract class DialogSuper implements DialogInterface {
         Iterator it = this.getSubs().iterator();
         int i = 0;
         while (it.hasNext()) {
-            String dsId = this.getId() + "_" + i; // use underscore (not divis)! could be used as js variable names
-                                                    // //$NON-NLS-1$
+            // use underscore (not divis)! could be used as js variable names
+            String dsId = this.getId() + "_" + i; //$NON-NLS-1$
+
             DialogSuper ds = (DialogSuper) it.next();
             ds.setId(dsId);
             ds.setParent(this);
@@ -278,7 +279,7 @@ public abstract class DialogSuper implements DialogInterface {
     }
 
     protected String getDescription() {
-        return this.getConfigValue("description", ""); //$NON-NLS-1$
+        return this.getConfigValue("description", StringUtils.EMPTY); //$NON-NLS-1$
     }
 
     protected List getOptions() {

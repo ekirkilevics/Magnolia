@@ -44,27 +44,27 @@ public class DialogFckEdit extends DialogBox {
     /**
      * The new .BasePath of the editor
      */
-    public static final String FCKEDIT_PATH = "/admindocroot/fckeditor/";
+    public static final String FCKEDIT_PATH = "/admindocroot/fckeditor/"; //$NON-NLS-1$
 
     /**
      * This parameter defines the startup script. This parameter is searched in the dialog configuration.
      */
-    public static final String PARAM_JS_INIT_FILE = "jsInitFile";
+    public static final String PARAM_JS_INIT_FILE = "jsInitFile"; //$NON-NLS-1$
 
     /**
      * This parameter defines the configuration script
      */
-    public static final String PARAM_CUSTOM_CONFIGURATION_PATH = "customConfigurationPath";
+    public static final String PARAM_CUSTOM_CONFIGURATION_PATH = "customConfigurationPath"; //$NON-NLS-1$
 
     /**
      * If jsInitFile is not defined
      */
-    public static final String PARAM_JS_INIT_FILE_DEFAULT = "/admindocroot/fckeditor/custom/init/magnoliaStandard.js";
+    public static final String PARAM_JS_INIT_FILE_DEFAULT = "/admindocroot/fckeditor/custom/init/magnoliaStandard.js"; //$NON-NLS-1$
 
     /**
      * If customConfigurationPath is not defined
      */
-    public static final String PARAM_CUSTOM_CONFIGURATION_PATH_DEFAULT = "/admindocroot/fckeditor/custom/config/magnoliaStandard.js";
+    public static final String PARAM_CUSTOM_CONFIGURATION_PATH_DEFAULT = "/admindocroot/fckeditor/custom/config/magnoliaStandard.js"; //$NON-NLS-1$
 
     /**
      * the configuration script name
@@ -90,7 +90,7 @@ public class DialogFckEdit extends DialogBox {
         if (id == null) {
             id = getName();
         }
-        return "fck_" + id.replace('-', '_');
+        return "fck_" + id.replace('-', '_'); //$NON-NLS-1$
     }
 
     /**
@@ -132,55 +132,55 @@ public class DialogFckEdit extends DialogBox {
         this.drawHtmlPre(out);
 
         // load the script onece: if there are multiple instances
-        if (getRequest().getAttribute("__fcked_loaded") == null) {
-            out.write("<script type=\"text/javascript\" src=\""
+        if (getRequest().getAttribute("__fcked_loaded") == null) { //$NON-NLS-1$
+            out.write("<script type=\"text/javascript\" src=\"" //$NON-NLS-1$
                 + this.getRequest().getContextPath()
-                + "/admindocroot/fckeditor/fckeditor.js\"></script>");
-            getRequest().setAttribute("__fcked_loaded", "true");
+                + "/admindocroot/fckeditor/fckeditor.js\"></script>"); //$NON-NLS-1$
+            getRequest().setAttribute("__fcked_loaded", "true"); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         String id = getName();
 
         if (id == null) {
-            log.error("Missing id for fckEditor instance");
+            log.error("Missing id for fckEditor instance"); //$NON-NLS-1$
         }
 
         String var = getVarName();
         String value = convertToView(getValue());
         value = LinkUtil.convertUUIDsToAbsoluteLinks(value);
-        out.write("<script type=\"text/javascript\">");
-        out.write("var " + var + " = null;");
-        out.write("fckInstance = new FCKeditor( '" + id + "' );");
-        out.write("fckInstance.Value = '" + escapeJsValue(value) + "';");
-        out.write("fckInstance.BasePath = '" + this.getRequest().getContextPath() + FCKEDIT_PATH + "';");
+        out.write("<script type=\"text/javascript\">"); //$NON-NLS-1$
+        out.write("var " + var + " = null;"); //$NON-NLS-1$ //$NON-NLS-2$
+        out.write("fckInstance = new FCKeditor( '" + id + "' );"); //$NON-NLS-1$ //$NON-NLS-2$
+        out.write("fckInstance.Value = '" + escapeJsValue(value) + "';"); //$NON-NLS-1$ //$NON-NLS-2$
+        out.write("fckInstance.BasePath = '" + this.getRequest().getContextPath() + FCKEDIT_PATH + "';"); //$NON-NLS-1$ //$NON-NLS-2$
         if (customConfigurationsPath.length() > 0) {
-            out.write("fckInstance.Config['CustomConfigurationsPath'] = '"
+            out.write("fckInstance.Config['CustomConfigurationsPath'] = '" //$NON-NLS-1$
                 + this.getRequest().getContextPath()
                 + customConfigurationsPath
-                + "';");
+                + "';"); //$NON-NLS-1$
         }
         if (jsInitFile.length() > 0) {
-            out.write("</script>");
-            out.write("<script type=\"text/javascript\" src=\""
+            out.write("</script>"); //$NON-NLS-1$
+            out.write("<script type=\"text/javascript\" src=\"" //$NON-NLS-1$
                 + this.getRequest().getContextPath()
                 + jsInitFile
-                + "\"></script>\n");
-            out.write("<script type=\"text/javascript\">");
+                + "\"></script>\n"); //$NON-NLS-1$
+            out.write("<script type=\"text/javascript\">"); //$NON-NLS-1$
         }
-        out.write("fckInstance.Create();");
-        out.write(var + " = fckInstance;");
-        out.write("</script>");
+        out.write("fckInstance.Create();"); //$NON-NLS-1$
+        out.write(var + " = fckInstance;"); //$NON-NLS-1$
+        out.write("</script>"); //$NON-NLS-1$
 
         // write the saveInfo for the writting back to the repository
-        out.write("<input type='hidden' name='mgnlSaveInfo' value='"
+        out.write("<input type='hidden' name='mgnlSaveInfo' value='" //$NON-NLS-1$
             + id
-            + ",String,"
+            + ",String," //$NON-NLS-1$
             + ControlSuper.VALUETYPE_SINGLE
-            + ","
+            + "," //$NON-NLS-1$
             + ControlSuper.RICHEDIT_FCK
-            + ","
+            + "," //$NON-NLS-1$
             + ControlSuper.ENCODING_NO
-            + "' />");
+            + "' />"); //$NON-NLS-1$
 
         this.drawHtmlPost(out);
 
@@ -195,8 +195,8 @@ public class DialogFckEdit extends DialogBox {
     private static String convertToView(String value) {
         String tmp = value;
         if (tmp != null) {
-            tmp = tmp.replaceAll("\r\n", "<br />");
-            tmp = tmp.replaceAll("\n", "<br />");
+            tmp = tmp.replaceAll("\r\n", "<br />"); //$NON-NLS-1$ //$NON-NLS-2$
+            tmp = tmp.replaceAll("\n", "<br />"); //$NON-NLS-1$ //$NON-NLS-2$
             return tmp;
         }
         return StringUtils.EMPTY;
@@ -220,10 +220,10 @@ public class DialogFckEdit extends DialogBox {
         if (src == null) {
             return null;
         }
-        String escapedSrc = src.replaceAll("'", "\\\\'");
-        escapedSrc = escapedSrc.replaceAll("\"", "\\\"");
-        escapedSrc = escapedSrc.replaceAll("\\r\\n", "\\\\r\\\\n");
-        escapedSrc = escapedSrc.replaceAll("\\n", "\\\\n");
+        String escapedSrc = src.replaceAll("'", "\\\\'"); //$NON-NLS-1$ //$NON-NLS-2$
+        escapedSrc = escapedSrc.replaceAll("\"", "\\\""); //$NON-NLS-1$ //$NON-NLS-2$
+        escapedSrc = escapedSrc.replaceAll("\\r\\n", "\\\\r\\\\n"); //$NON-NLS-1$ //$NON-NLS-2$
+        escapedSrc = escapedSrc.replaceAll("\\n", "\\\\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
         return escapedSrc;
     }

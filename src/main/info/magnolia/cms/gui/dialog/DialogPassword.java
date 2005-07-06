@@ -19,6 +19,7 @@ import info.magnolia.cms.gui.misc.CssConstants;
 import java.io.IOException;
 import java.io.Writer;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -56,7 +57,7 @@ public class DialogPassword extends DialogBox {
         this.drawHtmlPre(out);
         out.write(control.getHtml());
         if (this.getConfigValue("verification", "true").equals("true")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-            Password control2 = new Password(this.getName() + "_verification", ""); //$NON-NLS-1$
+            Password control2 = new Password(this.getName() + "_verification", StringUtils.EMPTY); //$NON-NLS-1$
             // Password control2=new Password(this.getName()+"_verifiaction",this.getValue());
             // control2.setEncoding(ControlSuper.ENCODING_UNIX);
             control2.setSaveInfo(false);

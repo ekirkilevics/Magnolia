@@ -65,7 +65,7 @@ public class DialogWebDAV extends DialogBox {
      */
     private static Logger log = Logger.getLogger(DialogWebDAV.class);
 
-    // dev; remove values later (""; not null!)
+    // dev; remove values later (StringUtils.EMPTY; not null!)
     private String host = StringUtils.EMPTY;
 
     private int port;
@@ -372,9 +372,9 @@ public class DialogWebDAV extends DialogBox {
             out.write("<body>"); //$NON-NLS-1$
             out.write("<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" width=\"100%\">"); //$NON-NLS-1$
             out.write("<form name=\"mgnlDialogDAVBrowseForm\" method=\"post\">"); //$NON-NLS-1$
-            out.write(new Hidden("subDirectory", "", false).getHtml()); //$NON-NLS-1$
+            out.write(new Hidden("subDirectory", StringUtils.EMPTY, false).getHtml()); //$NON-NLS-1$
             out.write(new Hidden("parentDirectory", parentDirectory, false).getHtml()); //$NON-NLS-1$
-            out.write(new Hidden("homeDirectory", "", false).getHtml()); //$NON-NLS-1$
+            out.write(new Hidden("homeDirectory", StringUtils.EMPTY, false).getHtml()); //$NON-NLS-1$
             out.write(new Hidden("refreshDirectory", this.getSubDirectory(), false).getHtml()); //$NON-NLS-1$
             out.write(new Hidden("selectedValue", this.getValue(), false).getHtml()); //$NON-NLS-1$
             out.write(new Hidden(SESSION_ATTRIBUTENAME_DIALOGOBJECT, this
@@ -434,9 +434,9 @@ public class DialogWebDAV extends DialogBox {
                 parentProp.put("isParent", "true"); //$NON-NLS-1$ //$NON-NLS-2$
                 parentProp.put("href", parentDirectory); //$NON-NLS-1$
                 parentProp.put("displayType", "folder"); //$NON-NLS-1$ //$NON-NLS-2$
-                parentProp.put("sizeStringValue", ""); //$NON-NLS-1$
-                parentProp.put("sizeStringUnit", ""); //$NON-NLS-1$
-                parentProp.put("lastModifiedString", ""); //$NON-NLS-1$
+                parentProp.put("sizeStringValue", StringUtils.EMPTY); //$NON-NLS-1$
+                parentProp.put("sizeStringUnit", StringUtils.EMPTY); //$NON-NLS-1$
+                parentProp.put("lastModifiedString", StringUtils.EMPTY); //$NON-NLS-1$
                 parentAS.add(parentProp);
                 i = drawHtmlList(out, parentAS, i);
             }
@@ -568,14 +568,14 @@ public class DialogWebDAV extends DialogBox {
         /* get the short name */
         Enumeration props = response.getProperties();
         String href = response.getHref();
-        properties.put("href", href.replaceFirst(this.getDirectory(), "")); //$NON-NLS-1$
+        properties.put("href", href.replaceFirst(this.getDirectory(), StringUtils.EMPTY)); //$NON-NLS-1$
         while (props.hasMoreElements()) {
             Property property = (Property) props.nextElement();
             if (property.getLocalName().equalsIgnoreCase("getcontenttype")) { //$NON-NLS-1$
                 if (property.getPropertyAsString().equalsIgnoreCase("httpd/unix-directory")) { //$NON-NLS-1$
                     properties.put("displayType", "folder"); //$NON-NLS-1$ //$NON-NLS-2$
                     if (href.length() > this.getDirectory().length()) {
-                        String name = href.replaceFirst(this.getDirectory(), "");
+                        String name = href.replaceFirst(this.getDirectory(), StringUtils.EMPTY);
                         name = name.substring(0, name.length() - 1);
                         name = name.substring(0, name.length());
                         properties.put("name", name); //$NON-NLS-1$
@@ -594,7 +594,7 @@ public class DialogWebDAV extends DialogBox {
         }
         if (properties.get("name") == null) { //$NON-NLS-1$
             if (href.length() > this.getDirectory().length()) {
-                String name = href.replaceFirst(this.getDirectory(), "");
+                String name = href.replaceFirst(this.getDirectory(), StringUtils.EMPTY);
                 properties.put("name", name); //$NON-NLS-1$
             }
             int index = href.lastIndexOf("."); //$NON-NLS-1$
@@ -606,9 +606,9 @@ public class DialogWebDAV extends DialogBox {
             }
         }
         if (properties.get("size") == null) { //$NON-NLS-1$
-            properties.put("size", ""); //$NON-NLS-1$
-            properties.put("sizeStringValue", ""); //$NON-NLS-1$
-            properties.put("sizeStringUnit", ""); //$NON-NLS-1$
+            properties.put("size", StringUtils.EMPTY); //$NON-NLS-1$
+            properties.put("sizeStringValue", StringUtils.EMPTY); //$NON-NLS-1$
+            properties.put("sizeStringUnit", StringUtils.EMPTY); //$NON-NLS-1$
         }
         else {
             String[] size = this.getFileSizeString((String) properties.get("size")).split(" "); //$NON-NLS-1$ //$NON-NLS-2$

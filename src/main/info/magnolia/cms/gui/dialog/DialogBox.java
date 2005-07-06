@@ -131,17 +131,17 @@ public class DialogBox extends DialogSuper {
     }
 
     public static void initIconExtensions() {
-        getIconExtensions().put("doc", ""); //$NON-NLS-1$
-        getIconExtensions().put("eps", ""); //$NON-NLS-1$
-        getIconExtensions().put("gif", ""); //$NON-NLS-1$
-        getIconExtensions().put("jpg", ""); //$NON-NLS-1$
+        getIconExtensions().put("doc", StringUtils.EMPTY); //$NON-NLS-1$
+        getIconExtensions().put("eps", StringUtils.EMPTY); //$NON-NLS-1$
+        getIconExtensions().put("gif", StringUtils.EMPTY); //$NON-NLS-1$
+        getIconExtensions().put("jpg", StringUtils.EMPTY); //$NON-NLS-1$
         getIconExtensions().put("jpeg", ICONS_PATH + "jpg.gif"); //$NON-NLS-1$ //$NON-NLS-2$
-        getIconExtensions().put("pdf", ""); //$NON-NLS-1$
-        getIconExtensions().put("ppt", ""); //$NON-NLS-1$
-        getIconExtensions().put("tif", ""); //$NON-NLS-1$
+        getIconExtensions().put("pdf", StringUtils.EMPTY); //$NON-NLS-1$
+        getIconExtensions().put("ppt", StringUtils.EMPTY); //$NON-NLS-1$
+        getIconExtensions().put("tif", StringUtils.EMPTY); //$NON-NLS-1$
         getIconExtensions().put("tiff", ICONS_PATH + "tif.gif"); //$NON-NLS-1$ //$NON-NLS-2$
-        getIconExtensions().put("xls", ""); //$NON-NLS-1$
-        getIconExtensions().put("zip", ""); //$NON-NLS-1$
+        getIconExtensions().put("xls", StringUtils.EMPTY); //$NON-NLS-1$
+        getIconExtensions().put("zip", StringUtils.EMPTY); //$NON-NLS-1$
     }
 
     public String getIconPath(String name) {
