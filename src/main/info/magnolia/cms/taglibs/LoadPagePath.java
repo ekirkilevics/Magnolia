@@ -33,7 +33,7 @@ public class LoadPagePath extends BodyTagSupport {
     public int doEndTag() throws JspException {
         LoadPage parent = (LoadPage) findAncestorWithClass(this, LoadPage.class);
         if (parent == null) {
-            throw new JspException("nesting error");
+            throw new JspException("nesting error"); //$NON-NLS-1$
         }
         String path = getBodyContent().getString();
         if (path != null) {

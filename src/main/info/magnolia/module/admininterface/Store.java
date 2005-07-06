@@ -68,7 +68,7 @@ public class Store {
     }
 
     public void registerTreeHandler(String name, Class treeHandler) {
-        log.info("Registering tree handler [" + name + "]");
+        log.info("Registering tree handler [" + name + "]"); //$NON-NLS-1$ //$NON-NLS-2$
         treeHandlers.put(name, treeHandler);
     }
 
@@ -107,7 +107,7 @@ public class Store {
     }
 
     public void registerDialogHandler(String name, Class dialogHandler, Content configNode) {
-        log.info("Registering dialog handler [" + name + "]");
+        log.info("Registering dialog handler [" + name + "]"); //$NON-NLS-1$ //$NON-NLS-2$
         dialogHandlers.put(name, new Object[]{dialogHandler, configNode});
     }
 
@@ -123,18 +123,18 @@ public class Store {
             dialogs.addAll(defNode.getChildren(ItemType.CONTENTNODE.getSystemName()));
             for (Iterator iter = dialogs.iterator(); iter.hasNext();) {
                 Content dialog = (Content) iter.next();
-                String name = dialog.getNodeData("name").getString();
-                String className = dialog.getNodeData("class").getString();
+                String name = dialog.getNodeData("name").getString(); //$NON-NLS-1$
+                String className = dialog.getNodeData("class").getString(); //$NON-NLS-1$
                 try {
                     registerDialogHandler(name, Class.forName(className), dialog);
                 }
                 catch (ClassNotFoundException e) {
-                    log.warn("can't find dialog handler class " + className, e);
+                    log.warn("can't find dialog handler class " + className, e); //$NON-NLS-1$
                 }
             }
         }
         catch (Exception e) {
-            log.warn("can't find dialogs configuration", e);
+            log.warn("can't find dialogs configuration", e); //$NON-NLS-1$
         }
     }
 
@@ -188,20 +188,20 @@ public class Store {
         try {
             Class handler = ParagraphEditDialog.class;
 
-            String className = dialogContent.getNodeData("class").getString();
+            String className = dialogContent.getNodeData("class").getString(); //$NON-NLS-1$
             if (StringUtils.isNotEmpty(className)) {
                 try {
                     handler = Class.forName(className);
                 }
                 catch (ClassNotFoundException e) {
-                    log.error("registering paragraph: class [" + className + "] not found", e);
+                    log.error("registering paragraph: class [" + className + "] not found", e); //$NON-NLS-1$ //$NON-NLS-2$
                 }
             }
 
             registerDialogHandler(name, handler, dialogContent);
         }
         catch (Exception e) {
-            log.error("can't register handle for dialog [" + name + "]", e);
+            log.error("can't register handle for dialog [" + name + "]", e); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 

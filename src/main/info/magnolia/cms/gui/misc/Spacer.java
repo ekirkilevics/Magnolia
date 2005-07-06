@@ -34,22 +34,22 @@ public class Spacer {
     public static String getHtml(int height, int width) {
 
         StringBuffer buffer = new StringBuffer(120);
-        buffer.append("<div class=\"");
+        buffer.append("<div class=\""); //$NON-NLS-1$
         buffer.append(CssConstants.CSSCLASS_TINYVSPACE);
-        buffer.append("\" ");
+        buffer.append("\" "); //$NON-NLS-1$
 
         if (height != 0 || width != 0) {
-            buffer.append("style=\"");
+            buffer.append("style=\""); //$NON-NLS-1$
             if (height != 0) {
-                buffer.append("height:" + height + "px;");
+                buffer.append("height:" + height + "px;"); //$NON-NLS-1$ //$NON-NLS-2$
             }
             if (width != 0) {
-                buffer.append("width:" + width + "px;");
+                buffer.append("width:" + width + "px;"); //$NON-NLS-1$ //$NON-NLS-2$
             }
-            buffer.append("\" ");
+            buffer.append("\" "); //$NON-NLS-1$
         }
 
-        buffer.append("><!-- ie --></div>");
+        buffer.append("><!-- ie --></div>"); //$NON-NLS-1$
 
         return buffer.toString();
     }

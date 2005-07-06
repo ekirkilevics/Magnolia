@@ -44,13 +44,13 @@ public final class SessionAccessControl {
 
     private static Logger log = Logger.getLogger(SessionAccessControl.class);
 
-    private static final String ATTRIBUTE_REPOSITORY_SESSION_PREFIX = "mgnlRepositorySession_";
+    private static final String ATTRIBUTE_REPOSITORY_SESSION_PREFIX = "mgnlRepositorySession_"; //$NON-NLS-1$
 
-    private static final String ATTRIBUTE_HM_PREFIX = "mgnlHMgr_";
+    private static final String ATTRIBUTE_HM_PREFIX = "mgnlHMgr_"; //$NON-NLS-1$
 
-    private static final String ATTRIBUTE_AM_PREFIX = "mgnlAccessMgr_";
+    private static final String ATTRIBUTE_AM_PREFIX = "mgnlAccessMgr_"; //$NON-NLS-1$
 
-    private static final String ATTRIBUTE_QM_PREFIX = "mgnlQueryMgr_";
+    private static final String ATTRIBUTE_QM_PREFIX = "mgnlQueryMgr_"; //$NON-NLS-1$
 
     private static final String DEFAULT_REPOSITORY = ContentRepository.WEBSITE;
 
@@ -120,11 +120,11 @@ public final class SessionAccessControl {
     public static HierarchyManager getHierarchyManager(HttpServletRequest request, String repositoryID,
         String workspaceID) {
         HierarchyManager hm = (HierarchyManager) request.getSession().getAttribute(
-            ATTRIBUTE_HM_PREFIX + repositoryID + "_" + workspaceID);
+            ATTRIBUTE_HM_PREFIX + repositoryID + "_" + workspaceID); //$NON-NLS-1$
         if (hm == null) {
             createHierarchyManager(request, repositoryID, workspaceID);
             return (HierarchyManager) request.getSession().getAttribute(
-                ATTRIBUTE_HM_PREFIX + repositoryID + "_" + workspaceID);
+                ATTRIBUTE_HM_PREFIX + repositoryID + "_" + workspaceID); //$NON-NLS-1$
         }
         return hm;
     }
@@ -155,14 +155,14 @@ public final class SessionAccessControl {
     public static AccessManager getAccessManager(HttpServletRequest request, String repositoryID, String workspaceID) {
 
         AccessManager accessManager = (AccessManager) request.getSession().getAttribute(
-            ATTRIBUTE_AM_PREFIX + repositoryID + "_" + workspaceID);
+            ATTRIBUTE_AM_PREFIX + repositoryID + "_" + workspaceID); //$NON-NLS-1$
 
         if (accessManager == null) {
             // initialize appropriate repository/workspace session, which will create access manager for it
             getHierarchyManager(request, repositoryID, workspaceID);
             // now session value for access manager must be set
             accessManager = (AccessManager) request.getSession().getAttribute(
-                ATTRIBUTE_AM_PREFIX + repositoryID + "_" + workspaceID);
+                ATTRIBUTE_AM_PREFIX + repositoryID + "_" + workspaceID); //$NON-NLS-1$
         }
 
         return accessManager;
@@ -195,7 +195,7 @@ public final class SessionAccessControl {
     public static QueryManager getQueryManager(HttpServletRequest request, String repositoryID, String workspaceID)
         throws RepositoryException {
         QueryManager queryManager = (QueryManager) request.getSession().getAttribute(
-            ATTRIBUTE_QM_PREFIX + repositoryID + "_" + workspaceID);
+            ATTRIBUTE_QM_PREFIX + repositoryID + "_" + workspaceID); //$NON-NLS-1$
         if (queryManager == null) {
             javax.jcr.query.QueryManager qm = getSession(request, repositoryID, workspaceID)
                 .getWorkspace()
@@ -204,7 +204,7 @@ public final class SessionAccessControl {
                 request,
                 repositoryID,
                 workspaceID));
-            request.getSession().setAttribute(ATTRIBUTE_QM_PREFIX + repositoryID + "_" + workspaceID, queryManager);
+            request.getSession().setAttribute(ATTRIBUTE_QM_PREFIX + repositoryID + "_" + workspaceID, queryManager); //$NON-NLS-1$
         }
         return queryManager;
     }
@@ -212,11 +212,11 @@ public final class SessionAccessControl {
     private static Session getRepositorySession(HttpServletRequest request, String repositoryID, String workspaceID)
         throws LoginException, RepositoryException {
         Object ticket = request.getSession().getAttribute(
-            ATTRIBUTE_REPOSITORY_SESSION_PREFIX + repositoryID + "_" + workspaceID);
+            ATTRIBUTE_REPOSITORY_SESSION_PREFIX + repositoryID + "_" + workspaceID); //$NON-NLS-1$
         if (ticket == null) {
             createRepositorySession(request, repositoryID, workspaceID);
             return (Session) request.getSession().getAttribute(
-                ATTRIBUTE_REPOSITORY_SESSION_PREFIX + repositoryID + "_" + workspaceID);
+                ATTRIBUTE_REPOSITORY_SESSION_PREFIX + repositoryID + "_" + workspaceID); //$NON-NLS-1$
         }
         return (Session) ticket;
     }
@@ -247,15 +247,14 @@ public final class SessionAccessControl {
         SimpleCredentials sc = new SimpleCredentials(Authenticator.getUserId(request), Authenticator
             .getPassword(request));
         Session session = ContentRepository.getRepository(repositoryID).login(sc, workspaceID);
-        request.getSession().setAttribute(
-            ATTRIBUTE_REPOSITORY_SESSION_PREFIX + repositoryID + "_" + workspaceID,
+        request.getSession().setAttribute(ATTRIBUTE_REPOSITORY_SESSION_PREFIX + repositoryID + "_" + workspaceID, //$NON-NLS-1$
             session);
         Content userNode = getUserNode(request);
         List acl = new ArrayList();
         updateRolesACL(userNode, acl, repositoryID);
         AccessManagerImpl accessManager = new AccessManagerImpl();
         accessManager.setPermissionList(acl);
-        request.getSession().setAttribute(ATTRIBUTE_AM_PREFIX + repositoryID + "_" + workspaceID, accessManager);
+        request.getSession().setAttribute(ATTRIBUTE_AM_PREFIX + repositoryID + "_" + workspaceID, accessManager); //$NON-NLS-1$
     }
 
     private static void createHierarchyManager(HttpServletRequest request, String repositoryID, String workspaceID) {
@@ -263,8 +262,8 @@ public final class SessionAccessControl {
         try {
             hm.init(getSession(request, repositoryID, workspaceID).getRootNode());
             hm.setAccessManager((AccessManager) request.getSession().getAttribute(
-                ATTRIBUTE_AM_PREFIX + repositoryID + "_" + workspaceID));
-            request.getSession().setAttribute(ATTRIBUTE_HM_PREFIX + repositoryID + "_" + workspaceID, hm);
+                ATTRIBUTE_AM_PREFIX + repositoryID + "_" + workspaceID)); //$NON-NLS-1$
+            request.getSession().setAttribute(ATTRIBUTE_HM_PREFIX + repositoryID + "_" + workspaceID, hm); //$NON-NLS-1$
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
@@ -307,10 +306,10 @@ public final class SessionAccessControl {
             // get access rights of this node (role)
             Content acl = null;
             try {
-                acl = roleNode.getContent("acl_" + repositoryID);
+                acl = roleNode.getContent("acl_" + repositoryID); //$NON-NLS-1$
             }
             catch (PathNotFoundException e) {
-                log.warn("No acl defined for role " + roleNode.getHandle() + " on repository \"" + repositoryID + "\"");
+                log.warn("No acl defined for role " + roleNode.getHandle() + " on repository \"" + repositoryID + "\""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 return;
             }
 
@@ -321,12 +320,12 @@ public final class SessionAccessControl {
             Iterator children = aclCollection.iterator();
             while (children.hasNext()) {
                 Content map = (Content) children.next();
-                String path = map.getNodeData("path").getString();
+                String path = map.getNodeData("path").getString(); //$NON-NLS-1$
 
                 UrlPattern p = new SimpleUrlPattern(path);
                 Permission permission = new PermissionImpl();
                 permission.setPattern(p);
-                permission.setPermissions(map.getNodeData("permissions").getLong());
+                permission.setPermissions(map.getNodeData("permissions").getLong()); //$NON-NLS-1$
                 userACL.add(permission);
             }
         }
@@ -347,10 +346,10 @@ public final class SessionAccessControl {
 
             Content acl = null;
             try {
-                acl = userNode.getContent("roles");
+                acl = userNode.getContent("roles"); //$NON-NLS-1$
             }
             catch (PathNotFoundException e) {
-                log.warn("No roles defined for user " + userNode.getHandle());
+                log.warn("No roles defined for user " + userNode.getHandle()); //$NON-NLS-1$
                 return;
             }
 
@@ -362,7 +361,7 @@ public final class SessionAccessControl {
             /* find the exact match for the current url and acl for it */
             while (children.hasNext()) {
                 Content map = (Content) children.next();
-                String groupPath = map.getNodeData("path").getString();
+                String groupPath = map.getNodeData("path").getString(); //$NON-NLS-1$
                 if (StringUtils.isNotEmpty(groupPath)) {
                     Content roleNode = rolesHierarchy.getContent(groupPath);
                     updateACL(roleNode, groupACL, repositoryID);
@@ -370,7 +369,7 @@ public final class SessionAccessControl {
             }
         }
         catch (Exception e) {
-            log.error("Failed to update roles ACL");
+            log.error("Failed to update roles ACL"); //$NON-NLS-1$
             log.error(e.getMessage(), e);
         }
     }

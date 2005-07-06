@@ -77,30 +77,28 @@ public class BarNew extends Bar {
      */
     public void setButtonNew(String path, String nodeCollectionName, String nodeName, String paragraph) {
         Button b = new Button();
-        b.setLabel(MessagesManager.getMessages(getRequest()).get("buttons.new"));
+        b.setLabel(MessagesManager.getMessages(getRequest()).get("buttons.new")); //$NON-NLS-1$
         // todo: dynamic repository
         String repository = ContentRepository.WEBSITE;
         // if there are multiple paragraphs show the selectParagraph dialog
-        if (paragraph.indexOf(",") > -1) {
-            b.setOnclick("mgnlOpenDialog('" + path + "','" + nodeCollectionName + "','" + nodeName + "','" + paragraph // this
-                // is a
-                // list
-                + "','" + repository + "','.magnolia/dialogs/selectParagraph.html');");
+        if (paragraph.indexOf(",") > -1) { //$NON-NLS-1$
+            b.setOnclick("mgnlOpenDialog('" // //$NON-NLS-1$
+                + path + "','" //$NON-NLS-1$
+                + nodeCollectionName + "','" // //$NON-NLS-1$
+                + nodeName + "','" // //$NON-NLS-1$
+                + paragraph // this is a list
+                + "','" // //$NON-NLS-1$
+                + repository + "','.magnolia/dialogs/selectParagraph.html');"); //$NON-NLS-1$
 
         }
         // there is only one paragraph
         else {
-            b.setOnclick("mgnlOpenDialog('"
-                + path
-                + "','"
-                + nodeCollectionName
-                + "','"
-                + nodeName
-                + "','"
-                + paragraph
-                + "','"
-                + repository
-                + "');");
+            b.setOnclick("mgnlOpenDialog('" //$NON-NLS-1$
+                + path + "','" //$NON-NLS-1$
+                + nodeCollectionName + "','" //$NON-NLS-1$
+                + nodeName + "','" //$NON-NLS-1$
+                + paragraph + "','" //$NON-NLS-1$
+                + repository + "');"); //$NON-NLS-1$
         }
         this.setButtonNew(b);
     }
@@ -113,10 +111,10 @@ public class BarNew extends Bar {
     public void drawHtml(JspWriter out) throws IOException {
         boolean isGranted = Resource.getActivePage(this.getRequest()).isGranted(Permission.SET);
         if (!Resource.showPreview(this.getRequest()) && isGranted) {
-            this.setEvent("onmousedown", "mgnlMoveNodeEnd(this,'" + this.getPath() + "');");
-            this.setEvent("onmouseover", "mgnlMoveNodeHigh(this);");
-            this.setEvent("onmouseout", "mgnlMoveNodeReset(this);");
-            this.setId(this.getNodeCollectionName() + "__" + this.getNodeName());
+            this.setEvent("onmousedown", "mgnlMoveNodeEnd(this,'" + this.getPath() + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            this.setEvent("onmouseover", "mgnlMoveNodeHigh(this);"); //$NON-NLS-1$ //$NON-NLS-2$
+            this.setEvent("onmouseout", "mgnlMoveNodeReset(this);"); //$NON-NLS-1$ //$NON-NLS-2$
+            this.setId(this.getNodeCollectionName() + "__" + this.getNodeName()); //$NON-NLS-1$
             out.println(this.getHtml());
         }
     }

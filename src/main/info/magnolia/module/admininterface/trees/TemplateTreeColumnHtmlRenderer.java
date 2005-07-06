@@ -39,7 +39,7 @@ public class TemplateTreeColumnHtmlRenderer implements TreeColumnHtmlRenderer {
     private String findTemplateKey(String templateName) {
         HierarchyManager configHierarchyManager = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
         try {
-            Content template = configHierarchyManager.getContent("modules/templating/Templates/" + templateName);
+            Content template = configHierarchyManager.getContent("modules/templating/Templates/" + templateName); //$NON-NLS-1$
             return template.getTitle();
         }
         catch (RepositoryException e) {

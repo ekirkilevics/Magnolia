@@ -55,23 +55,23 @@ public class XmlImport implements ImportHandler {
     /**
      * XML structure constants
      */
-    private static final String E_CONTENT = "content";
+    private static final String E_CONTENT = "content"; //$NON-NLS-1$
 
-    private static final String E_PROPERTY = "property";
+    private static final String E_PROPERTY = "property"; //$NON-NLS-1$
 
-    private static final String A_NAME = "name";
+    private static final String A_NAME = "name"; //$NON-NLS-1$
 
-    private static final String A_TYPE = "type";
+    private static final String A_TYPE = "type"; //$NON-NLS-1$
 
     /**
      * params
      */
-    public static final String DATE_FORMAT = "dateFormat";
+    public static final String DATE_FORMAT = "dateFormat"; //$NON-NLS-1$
 
     /**
      * default
      */
-    public static final String DEFAULT_DATE_FORMAT = "EEE MMM dd hh:mm:ss zzzz yyyy";
+    public static final String DEFAULT_DATE_FORMAT = "EEE MMM dd hh:mm:ss zzzz yyyy"; //$NON-NLS-1$
 
     /**
      * fields
@@ -96,7 +96,7 @@ public class XmlImport implements ImportHandler {
             target.save();
         }
         catch (Exception e) {
-            log.error("failed to import");
+            log.error("failed to import"); //$NON-NLS-1$
             log.error(e.getMessage(), e);
         }
         finally {
@@ -128,7 +128,7 @@ public class XmlImport implements ImportHandler {
         }
         else {
             if (log.isDebugEnabled()) {
-                log.debug("Undefined type - " + element.getName());
+                log.debug("Undefined type - " + element.getName()); //$NON-NLS-1$
             }
         }
         // if not allowed or some repository exception occured
@@ -152,7 +152,7 @@ public class XmlImport implements ImportHandler {
                 Content newContent = content.createContent(element.getAttributeValue(A_NAME), element
                     .getAttributeValue(A_TYPE));
                 if (log.isDebugEnabled()) {
-                    log.debug("Adding content - " + newContent.getHandle());
+                    log.debug("Adding content - " + newContent.getHandle()); //$NON-NLS-1$
                 }
                 return newContent;
             }
@@ -188,7 +188,7 @@ public class XmlImport implements ImportHandler {
                 }
                 nodeData = content.createNodeData(element.getAttributeValue(A_NAME));
                 if (log.isDebugEnabled()) {
-                    log.debug("Adding property - " + nodeData.getHandle());
+                    log.debug("Adding property - " + nodeData.getHandle()); //$NON-NLS-1$
                 }
             }
             catch (AccessDeniedException ade) {
@@ -236,7 +236,7 @@ public class XmlImport implements ImportHandler {
                     nodeData.setValue(cal);
                 }
                 catch (ParseException e) {
-                    log.error("Failed to parse date with the given format " + dateFormat);
+                    log.error("Failed to parse date with the given format " + dateFormat); //$NON-NLS-1$
                     log.error(e);
                 }
                 break;

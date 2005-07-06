@@ -27,7 +27,7 @@ public class AccessManagerImpl implements AccessManager {
 
     public boolean isGranted(String path, long permissions) {
         if (StringUtils.isEmpty(path)) {
-            path = "/";
+            path = "/"; //$NON-NLS-1$
         }
         return (getPermissions(path) & permissions) == permissions;
     }

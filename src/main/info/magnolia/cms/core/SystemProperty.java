@@ -22,17 +22,17 @@ import java.util.Map;
  */
 public final class SystemProperty {
 
-    public static final String MAGNOLIA_REPOSITORIES_CONFIG = "magnolia.repositories.config";
+    public static final String MAGNOLIA_REPOSITORIES_CONFIG = "magnolia.repositories.config"; //$NON-NLS-1$
 
-    public static final String MAGNOLIA_EXCHANGE_HISTORY = "magnolia.exchange.history";
+    public static final String MAGNOLIA_EXCHANGE_HISTORY = "magnolia.exchange.history"; //$NON-NLS-1$
 
-    public static final String MAGNOLIA_UPLOAD_TMPDIR = "magnolia.upload.tmpdir";
+    public static final String MAGNOLIA_UPLOAD_TMPDIR = "magnolia.upload.tmpdir"; //$NON-NLS-1$
 
-    public static final String MAGNOLIA_CACHE_STARTDIR = "magnolia.cache.startdir";
+    public static final String MAGNOLIA_CACHE_STARTDIR = "magnolia.cache.startdir"; //$NON-NLS-1$
 
-    public static final String MAGNOLIA_APP_ROOTDIR = "magnolia.app.rootdir";
+    public static final String MAGNOLIA_APP_ROOTDIR = "magnolia.app.rootdir"; //$NON-NLS-1$
 
-    public static final String MAGNOLIA_BOOTSTRAP_ROOTDIR = "magnolia.bootstrap.dir";
+    public static final String MAGNOLIA_BOOTSTRAP_ROOTDIR = "magnolia.bootstrap.dir"; //$NON-NLS-1$
 
     private static Map properties = new Hashtable();
 

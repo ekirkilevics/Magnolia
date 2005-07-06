@@ -102,18 +102,18 @@ public class Breadcrumb extends TagSupport {
             JspWriter out = pageContext.getOut();
             for (int i = this.startLevel; i <= endLevel; i++) {
                 if (i != this.startLevel) {
-                    out.print(StringUtils.defaultString(this.delimiter, " > "));
+                    out.print(StringUtils.defaultString(this.delimiter, " > ")); //$NON-NLS-1$
                 }
-                out.print("<a href=\"");
+                out.print("<a href=\""); //$NON-NLS-1$
                 out.print(request.getContextPath());
                 out.print(actpage.getAncestor(i).getHandleWithDefaultExtension());
-                out.print("\">");
+                out.print("\">"); //$NON-NLS-1$
                 out.print(actpage.getAncestor(i).getTitle());
-                out.print("</a>");
+                out.print("</a>"); //$NON-NLS-1$
             }
         }
         catch (Exception e) {
-            log.debug("Exception caught: " + e.getMessage(), e);
+            log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
         }
 
         return super.doStartTag();

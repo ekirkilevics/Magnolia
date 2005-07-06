@@ -12,11 +12,11 @@
  */
 package info.magnolia.cms.core;
 
+import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.core.search.QueryManager;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -74,7 +74,7 @@ public class HierarchyManager {
      * constructor
      */
     public HierarchyManager() {
-        this.userID = "anonymous";
+        this.userID = "anonymous"; //$NON-NLS-1$
     }
 
     public HierarchyManager(String userID) {
@@ -188,15 +188,15 @@ public class HierarchyManager {
     }
 
     private String getNodePath(String path, String label) {
-        if (StringUtils.isEmpty(path) || (path.equals("/"))) {
+        if (StringUtils.isEmpty(path) || (path.equals("/"))) { //$NON-NLS-1$
             return label;
         }
-        return getNodePath(path + "/" + label);
+        return getNodePath(path + "/" + label); //$NON-NLS-1$
     }
 
     private String getNodePath(String path) {
-        if (path.startsWith("/")) {
-            path = path.replaceFirst("/", "");
+        if (path.startsWith("/")) { //$NON-NLS-1$
+            path = path.replaceFirst("/", StringUtils.EMPTY); //$NON-NLS-1$
         }
         return path;
     }
@@ -252,7 +252,7 @@ public class HierarchyManager {
      */
     public Content getContent(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         // todo remove this.. caller should take care of this
-        if (path.equals("/")) {
+        if (path.equals("/")) { //$NON-NLS-1$
             return this.getRoot();
         }
         Content content = (new Content(this.startPage, getNodePath(path), this.accessManager));
@@ -324,7 +324,7 @@ public class HierarchyManager {
             }
         }
         catch (Exception e) {
-            log.error("Failed to get - " + path);
+            log.error("Failed to get - " + path); //$NON-NLS-1$
             log.error(e.getMessage(), e);
         }
         return pageToBeFound;
@@ -348,7 +348,7 @@ public class HierarchyManager {
     }
 
     private String makeRelative(String path) {
-        return StringUtils.stripStart(path, "/");
+        return StringUtils.stripStart(path, "/"); //$NON-NLS-1$
     }
 
     /**

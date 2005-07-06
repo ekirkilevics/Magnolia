@@ -62,7 +62,7 @@ public class AAttribute extends TagSupport {
 
         AHref parent = (AHref) findAncestorWithClass(this, AHref.class);
         if (parent == null) {
-            throw new JspException("nesting error");
+            throw new JspException("nesting error"); //$NON-NLS-1$
         }
         parent.setAttribute(this.name, this.value);
 

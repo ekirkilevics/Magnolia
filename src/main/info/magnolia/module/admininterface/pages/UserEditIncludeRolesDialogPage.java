@@ -39,42 +39,38 @@ public class UserEditIncludeRolesDialogPage extends BasePageServlet {
         Messages msgs = MessagesManager.getMessages(request);
 
         Button choose = new Button();
-        choose.setLabel(msgs.get("buttons.choose"));
-        choose.setOnclick("mgnlAclChoose('+index+',\\\'" + ContentRepository.USER_ROLES + "\\\');");
+        choose.setLabel(msgs.get("buttons.choose")); //$NON-NLS-1$
+        choose.setOnclick("mgnlAclChoose('+index+',\\\'" + ContentRepository.USER_ROLES + "\\\');"); //$NON-NLS-1$ //$NON-NLS-2$
 
         choose.setSmall(small);
 
         Button delete = new Button();
-        delete.setLabel(msgs.get("buttons.delete"));
-        delete.setOnclick("mgnlAclDelete('+index+');");
+        delete.setLabel(msgs.get("buttons.delete")); //$NON-NLS-1$
+        delete.setOnclick("mgnlAclDelete('+index+');"); //$NON-NLS-1$
         delete.setSmall(small);
 
         StringBuffer html = new StringBuffer();
         // set as table since ie/win does not support setting of innerHTML of a tr
-        html.append("<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr style=\"height:20px\">");
+        html.append("<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr style=\"height:20px\">"); //$NON-NLS-1$
 
         // todo: show name instead of path again (adapt linkBrowser.jsp, resp. Tree.java)
         // html.append("<td id=\"acl'+index+'TdName\" width=\"100%\" class=\"mgnlDialogAcl\">'+name+'</td>");
 
-        html.append("<td width=\"100%\" class=\""
+        html.append("<td width=\"100%\" class=\"" //$NON-NLS-1$
             + CssConstants.CSSCLASS_EDITWITHBUTTON
-            + "\"><input name=\"acl'+index+'Path\" id=\"acl'+index+'Path\" class=\""
+            + "\"><input name=\"acl'+index+'Path\" id=\"acl'+index+'Path\" class=\"" //$NON-NLS-1$
             + CssConstants.CSSCLASS_EDIT
-            + "\" type=\"text\" style=\"width:100%;\" value=\"'+path+'\" /></td>");
-        html.append("<td width=\"1\"></td>");
-        html.append("<td width=\"1\" class=\""
-            + CssConstants.CSSCLASS_EDITWITHBUTTON
-            + "\">"
-            + choose.getHtml()
-            + "</td>");
-        html.append("<td width=\"1\"></td>");
-        html.append("<td width=\"1\" class=\""
-            + CssConstants.CSSCLASS_EDITWITHBUTTON
-            + "\">"
-            + delete.getHtml()
-            + "</td>");
+            + "\" type=\"text\" style=\"width:100%;\" value=\"'+path+'\" /></td>"); //$NON-NLS-1$
+        html.append("<td width=\"1\"></td>"); //$NON-NLS-1$
+        html.append("<td width=\"1\" class=\"" //$NON-NLS-1$
+            + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">" //$NON-NLS-1$
+            + choose.getHtml() + "</td>"); //$NON-NLS-1$
+        html.append("<td width=\"1\"></td>"); //$NON-NLS-1$
+        html.append("<td width=\"1\" class=\"" //$NON-NLS-1$
+            + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">" //$NON-NLS-1$
+            + delete.getHtml() + "</td>"); //$NON-NLS-1$
 
-        html.append("</tr></table>");
+        html.append("</tr></table>"); //$NON-NLS-1$
 
         return html.toString();
     }
@@ -85,26 +81,26 @@ public class UserEditIncludeRolesDialogPage extends BasePageServlet {
     public void draw(HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
         PrintWriter out = response.getWriter();
 
-        DialogSuper dialogControl = (DialogSuper) request.getAttribute("dialogObject");
+        DialogSuper dialogControl = (DialogSuper) request.getAttribute("dialogObject"); //$NON-NLS-1$
         Content user = dialogControl.getWebsiteNode();
 
-        out.println(new Hidden("aclList", "", false).getHtml());
+        out.println(new Hidden("aclList", StringUtils.EMPTY, false).getHtml()); //$NON-NLS-1$
 
-        out.println("<table id=\"aclTable\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\"></table>");
+        out.println("<table id=\"aclTable\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\"></table>"); //$NON-NLS-1$
 
-        out.println("<script type=\"text/javascript\">");
-        out.println("function mgnlAclGetHtmlRow(index,path,name)");
-        out.println("{");
-        out.println("return '" + getHtmlRowInner(request) + "'");
-        out.println("}");
+        out.println("<script type=\"text/javascript\">"); //$NON-NLS-1$
+        out.println("function mgnlAclGetHtmlRow(index,path,name)"); //$NON-NLS-1$
+        out.println("{"); //$NON-NLS-1$
+        out.println("return '" + getHtmlRowInner(request) + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+        out.println("}"); //$NON-NLS-1$
 
         // add existing acls to table (by js, so the same mechanism as at adding rows can be used)
         try {
-            Content acl = user.getContent("roles");
+            Content acl = user.getContent("roles"); //$NON-NLS-1$
             Iterator it = acl.getChildren().iterator();
             while (it.hasNext()) {
                 Content c = (Content) it.next();
-                String path = c.getNodeData("path").getString();
+                String path = c.getNodeData("path").getString(); //$NON-NLS-1$
                 String name = StringUtils.EMPTY;
                 try {
                     HierarchyManager hm = SessionAccessControl.getHierarchyManager(
@@ -121,14 +117,14 @@ public class UserEditIncludeRolesDialogPage extends BasePageServlet {
                 catch (Exception e) {
                 }
 
-                out.println("mgnlAclAdd(true,-1,'" + path + "','" + name + "');");
+                out.println("mgnlAclAdd(true,-1,'" + path + "','" + name + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             }
         }
         catch (Exception e) {
-            out.println("mgnlAclAdd(true,-1);");
+            out.println("mgnlAclAdd(true,-1);"); //$NON-NLS-1$
         }
 
-        out.println("</script>");
+        out.println("</script>"); //$NON-NLS-1$
 
     }
 }

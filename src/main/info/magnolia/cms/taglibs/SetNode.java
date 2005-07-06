@@ -110,13 +110,13 @@ public class SetNode extends TagSupport {
      * <code>application</code><code></code>.
      */
     public void setScope(String scope) {
-        if ("request".equalsIgnoreCase(scope)) {
+        if ("request".equalsIgnoreCase(scope)) { //$NON-NLS-1$
             this.scope = PageContext.REQUEST_SCOPE;
         }
-        else if ("session".equalsIgnoreCase(scope)) {
+        else if ("session".equalsIgnoreCase(scope)) { //$NON-NLS-1$
             this.scope = PageContext.SESSION_SCOPE;
         }
-        else if ("application".equalsIgnoreCase(scope)) {
+        else if ("application".equalsIgnoreCase(scope)) { //$NON-NLS-1$
             this.scope = PageContext.APPLICATION_SCOPE;
         }
         else {

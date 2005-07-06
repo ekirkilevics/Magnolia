@@ -66,7 +66,7 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
      */
     private static final long serialVersionUID = 222L;
 
-    private static final String DEFAULT_ENCODING = "UTF-8";
+    private static final String DEFAULT_ENCODING = "UTF-8"; //$NON-NLS-1$
 
     /**
      * Logger.
@@ -84,10 +84,10 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String context = request.getHeader(Syndicator.WORKING_CONTEXT);
 
-        log.debug("SimpleExchange.doGet()");
+        log.debug("SimpleExchange.doGet()"); //$NON-NLS-1$
 
         try {
-            response.setContentType("text/plain");
+            response.setContentType("text/plain"); //$NON-NLS-1$
             response.setCharacterEncoding(DEFAULT_ENCODING);
             // this.handleActivationRequest();
 
@@ -110,7 +110,7 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
 
             // @todo getHierarchyManager() should not return null without throwing an exception
             if (this.hierarchyManager == null) {
-                throw new ExchangeException("HierarchyManager is not configured for " + context);
+                throw new ExchangeException("HierarchyManager is not configured for " + context); //$NON-NLS-1$
             }
 
             if (action.equals(Syndicator.ACTIVATE)) {
@@ -124,7 +124,7 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
                 get(page, type, recurse, response);
             }
             else {
-                throw new UnsupportedOperationException("Method not supported by Exchange protocol - Simple (.01)");
+                throw new UnsupportedOperationException("Method not supported by Exchange protocol - Simple (.01)"); //$NON-NLS-1$
             }
         }
         catch (OutOfMemoryError e) {
@@ -132,11 +132,9 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
             // @todo find memory leaks!
             Runtime rt = Runtime.getRuntime();
 
-            log.error("---------\nOutOfMemoryError caught during activation. Total memory = "
-                + rt.totalMemory()
-                + ", free memory = "
-                + rt.freeMemory()
-                + "\n---------");
+            log.error("---------\nOutOfMemoryError caught during activation. Total memory = " //$NON-NLS-1$
+                + rt.totalMemory() + ", free memory = " //$NON-NLS-1$
+                + rt.freeMemory() + "\n---------"); //$NON-NLS-1$
 
         }
         catch (Throwable e) {
@@ -146,13 +144,13 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
         Runtime rt = Runtime.getRuntime();
 
         if (log.isDebugEnabled()) {
-            log.debug("Before gc(): total memory = " + rt.totalMemory() + ", free memory = " + rt.freeMemory());
+            log.debug("Before gc(): total memory = " + rt.totalMemory() + ", free memory = " + rt.freeMemory()); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         rt.gc();
 
         if (log.isDebugEnabled()) {
-            log.debug("After gc(): total memory = " + rt.totalMemory() + ", free memory = " + rt.freeMemory());
+            log.debug("After gc(): total memory = " + rt.totalMemory() + ", free memory = " + rt.freeMemory()); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
@@ -174,7 +172,7 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
         String page = request.getHeader(Syndicator.PAGE);
 
         if (log.isDebugEnabled()) {
-            log.debug("Exchange : update request received for " + page);
+            log.debug("Exchange : update request received for " + page); //$NON-NLS-1$
         }
 
         String parent = request.getHeader(Syndicator.PARENT);
@@ -189,15 +187,15 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
         String senderURL = request.getHeader(Syndicator.SENDER_URL);
 
         if (StringUtils.isEmpty(senderURL)) {
-            senderURL = protocol + "://" + host + ":" + remotePort;
+            senderURL = protocol + "://" + host + ":" + remotePort; //$NON-NLS-1$ //$NON-NLS-2$
         }
 
-        String handle = StringUtils.defaultString(senderContext) + "/" + Syndicator.DEFAULT_HANDLER;
+        String handle = StringUtils.defaultString(senderContext) + "/" + Syndicator.DEFAULT_HANDLER; //$NON-NLS-1$
 
         URL url = new URL(senderURL + handle);
-        String credentials = request.getHeader("Authorization");
+        String credentials = request.getHeader("Authorization"); //$NON-NLS-1$
         URLConnection urlConnection = url.openConnection();
-        urlConnection.setRequestProperty("Authorization", credentials);
+        urlConnection.setRequestProperty("Authorization", credentials); //$NON-NLS-1$
         urlConnection.addRequestProperty(Syndicator.ACTION, Syndicator.GET);
         urlConnection.addRequestProperty(Syndicator.WORKING_CONTEXT, context);
         urlConnection.addRequestProperty(Syndicator.PAGE, page);
@@ -213,12 +211,12 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
             // deserialize received object
             ContentWriter contentWriter = new ContentWriter(this.getHierarchyManager(), context, senderURL
                 + StringUtils.defaultString(senderContext)
-                + "/"
+                + "/" //$NON-NLS-1$
                 + Syndicator.DEFAULT_HANDLER, request);
             contentWriter.writeObject(parent, sc);
         }
         catch (Exception e) {
-            log.error("Failed to de-serialize - " + page);
+            log.error("Failed to de-serialize - " + page); //$NON-NLS-1$
             log.error(e.getMessage(), e);
         }
         Lock.setSystemLock();
@@ -233,7 +231,7 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
 
         String page = request.getHeader(Syndicator.PAGE);
         if (log.isDebugEnabled()) {
-            log.debug("Exchange : remove request received for " + page);
+            log.debug("Exchange : remove request received for " + page); //$NON-NLS-1$
         }
         HierarchyManager hm = this.getHierarchyManager();
 
@@ -242,13 +240,13 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
             hm.save();
             CacheHandler.flushCache();
             SecureURI.delete(page);
-            SecureURI.delete(page + "/*");
+            SecureURI.delete(page + "/*"); //$NON-NLS-1$
         }
         catch (PathNotFoundException e) {
             // ok, the node simply doesn't exist on the public instance, maybe it has never been activated
             // don't log any error
             if (log.isDebugEnabled()) {
-                log.debug("Unable to deactivate node " + page + ": " + e.getMessage());
+                log.debug("Unable to deactivate node " + page + ": " + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
     }
@@ -260,7 +258,7 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
         if (type.equalsIgnoreCase(Syndicator.GET_TYPE_BINARY)) {
             // this.getBinary();
             if (log.isDebugEnabled()) {
-                log.debug("Binary request for " + page);
+                log.debug("Binary request for " + page); //$NON-NLS-1$
             }
             HierarchyManager hm = this.getHierarchyManager();
             try {
@@ -275,14 +273,14 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
                 os.close();
             }
             catch (PathNotFoundException e) {
-                log.error("Unable to spool " + page);
+                log.error("Unable to spool " + page); //$NON-NLS-1$
                 throw new PathNotFoundException(e.getMessage());
             }
         }
         else {
             // this.getSerializedObject(); // default type, supporting magnolia 1.1
             if (log.isDebugEnabled()) {
-                log.debug("Serialized object request for " + page);
+                log.debug("Serialized object request for " + page); //$NON-NLS-1$
             }
 
             Packet packet = PacketCollector.getPacket(this.getHierarchyManager(), page, recurse);
@@ -305,7 +303,7 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
      */
     private String getProtocolName(HttpServletRequest request) {
         String protocol = request.getProtocol();
-        int lastIndexOfSlash = protocol.lastIndexOf("/");
+        int lastIndexOfSlash = protocol.lastIndexOf("/"); //$NON-NLS-1$
         return protocol.substring(0, lastIndexOfSlash);
     }
 }

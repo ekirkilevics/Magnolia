@@ -46,25 +46,25 @@ public class XmlExport implements ExportHandler {
     /**
      * XML structure constants
      */
-    private static final String E_CONTENT = "content";
+    private static final String E_CONTENT = "content"; //$NON-NLS-1$
 
-    private static final String E_PROPERTY = "property";
+    private static final String E_PROPERTY = "property"; //$NON-NLS-1$
 
-    private static final String A_NAME = "name";
+    private static final String A_NAME = "name"; //$NON-NLS-1$
 
-    private static final String A_TYPE = "type";
+    private static final String A_TYPE = "type"; //$NON-NLS-1$
 
-    private static final String A_TYPENAME = "tname";
+    private static final String A_TYPENAME = "tname"; //$NON-NLS-1$
 
     /**
      * default properties
      */
-    public static final String DEFAULT_ENCODING = "UTF-8";
+    public static final String DEFAULT_ENCODING = "UTF-8"; //$NON-NLS-1$
 
     /**
      * basic parameters
      */
-    public static final String ENCODING = "encoding";
+    public static final String ENCODING = "encoding"; //$NON-NLS-1$
 
     /**
      * fields
@@ -178,8 +178,8 @@ public class XmlExport implements ExportHandler {
         }
         catch (final Throwable t) {
 
-            log.warn("export() skipped a property because of " + t);
-            log.debug("export() skipped a property", t);
+            log.warn("export() skipped a property because of " + t); //$NON-NLS-1$
+            log.debug("export() skipped a property", t); //$NON-NLS-1$
         }
 
         elt.addContent(pElt);
@@ -222,9 +222,9 @@ public class XmlExport implements ExportHandler {
         }
         catch (final Throwable t) {
 
-            log.warn("exportValue() failure", t);
+            log.warn("exportValue() failure", t); //$NON-NLS-1$
 
-            sContent = "exportValue() failure " + t.toString();
+            sContent = "exportValue() failure " + t.toString(); //$NON-NLS-1$
         }
         pElt.addContent(new org.jdom.Text(sContent));
     }
@@ -258,7 +258,7 @@ public class XmlExport implements ExportHandler {
             baos.flush();
         }
         catch (final java.io.IOException ie) {
-            log.warn("Failed to encode workitem as xml", ie);
+            log.warn("Failed to encode workitem as xml", ie); //$NON-NLS-1$
         }
 
         return baos.toString();

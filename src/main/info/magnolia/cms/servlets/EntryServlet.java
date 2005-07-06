@@ -57,7 +57,7 @@ public class EntryServlet extends HttpServlet {
     /**
      * Request parameter: the INTERCEPT holds the name of an administrative action to perform.
      */
-    public static final String INTERCEPT = "mgnlIntercept";
+    public static final String INTERCEPT = "mgnlIntercept"; //$NON-NLS-1$
 
     /**
      * Stable serialVersionUID.
@@ -72,7 +72,7 @@ public class EntryServlet extends HttpServlet {
     /**
      * The default request interceptor path, defined in web.xml.
      */
-    private static final String REQUEST_INTERCEPTOR = "/RequestInterceptor";
+    private static final String REQUEST_INTERCEPTOR = "/RequestInterceptor"; //$NON-NLS-1$
 
     /**
      * This makes browser and proxy caches work more effectively, reducing the load on server and network resources.
@@ -106,7 +106,7 @@ public class EntryServlet extends HttpServlet {
 
         if (ConfigLoader.isBootstrapping()) {
             // @todo a nice page, with the log content...
-            res.getWriter().write("Magnolia bootstrapping has failed, check bootstrap.log in magnolia/logs");
+            res.getWriter().write("Magnolia bootstrapping has failed, check bootstrap.log in magnolia/logs"); //$NON-NLS-1$
             return;
         }
 
@@ -146,16 +146,15 @@ public class EntryServlet extends HttpServlet {
                 }
                 else {
                     if (log.isDebugEnabled()) {
-                        log.debug("Resource not found, redirecting request for ["
-                            + req.getRequestURI()
-                            + "] to 404 URI");
+                        log.debug("Resource not found, redirecting request for [" //$NON-NLS-1$
+                            + req.getRequestURI() + "] to 404 URI"); //$NON-NLS-1$
                     }
 
                     if (!res.isCommitted()) {
                         res.sendRedirect(req.getContextPath() + Server.get404URI());
                     }
                     else {
-                        log.info("Unable to redirect to 404 page, response is already committed");
+                        log.info("Unable to redirect to 404 page, response is already committed"); //$NON-NLS-1$
                     }
                 }
             }
@@ -184,7 +183,7 @@ public class EntryServlet extends HttpServlet {
      */
     protected boolean isAuthorized(HttpServletRequest req, HttpServletResponse res) throws IOException {
         if (SessionAccessControl.getAccessManager(req) != null) {
-            String path = StringUtils.substringBefore(Path.getURI(req), ".");
+            String path = StringUtils.substringBefore(Path.getURI(req), "."); //$NON-NLS-1$
             if (!SessionAccessControl.getAccessManager(req).isGranted(path, Permission.READ)) {
                 res.sendError(HttpServletResponse.SC_FORBIDDEN);
             }
@@ -207,7 +206,7 @@ public class EntryServlet extends HttpServlet {
                 request.getRequestDispatcher(uri).forward(request, response);
             }
             catch (Exception e) {
-                log.error("Failed to forward - " + uri);
+                log.error("Failed to forward - " + uri); //$NON-NLS-1$
                 log.error(e.getMessage(), e);
             }
             return true;
@@ -226,7 +225,7 @@ public class EntryServlet extends HttpServlet {
                 request.getRequestDispatcher(REQUEST_INTERCEPTOR).include(request, response);
             }
             catch (Exception e) {
-                log.error("Failed to Intercept");
+                log.error("Failed to Intercept"); //$NON-NLS-1$
                 log.error(e.getMessage(), e);
             }
         }
@@ -247,7 +246,7 @@ public class EntryServlet extends HttpServlet {
      */
     private String getURI(HttpServletRequest request) {
         return StringUtils.substringBeforeLast(StringUtils.substringAfter(request.getRequestURI(), request
-            .getContextPath()), ".");
+            .getContextPath()), "."); //$NON-NLS-1$
     }
 
     /**
@@ -330,9 +329,9 @@ public class EntryServlet extends HttpServlet {
             this.attributes.put(Aggregator.ACTPAGE, originalRequest.getAttribute(Aggregator.ACTPAGE));
 
             // copy headers
-            String authHeader = originalRequest.getHeader("Authorization");
+            String authHeader = originalRequest.getHeader("Authorization"); //$NON-NLS-1$
             if (authHeader != null) {
-                this.headers.put("Authorization", authHeader);
+                this.headers.put("Authorization", authHeader); //$NON-NLS-1$
             }
 
             // needed if cacheDomain is not set

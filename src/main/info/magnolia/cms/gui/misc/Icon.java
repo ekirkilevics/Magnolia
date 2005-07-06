@@ -18,7 +18,7 @@ package info.magnolia.cms.gui.misc;
  */
 public class Icon {
 
-    public static final String BASEPATH = "/admindocroot/icons";
+    public static final String BASEPATH = "/admindocroot/icons"; //$NON-NLS-1$
 
     public static final int SIZE_SMALL = 16;
 
@@ -28,19 +28,19 @@ public class Icon {
 
     public static final int SIZE_XLARGE = 48;
 
-    public static final String PAGE = "folder_cubes";
+    public static final String PAGE = "folder_cubes"; //$NON-NLS-1$
 
-    public static final String CONTENTNODE = "cubes";
+    public static final String CONTENTNODE = "cubes"; //$NON-NLS-1$
 
-    public static final String NODEDATA = "cube_green";
+    public static final String NODEDATA = "cube_green"; //$NON-NLS-1$
 
-    public static final String WEBPAGE = "document_plain_earth";
+    public static final String WEBPAGE = "document_plain_earth"; //$NON-NLS-1$
 
-    public static final String ROLE = "hat_white";
+    public static final String ROLE = "hat_white"; //$NON-NLS-1$
 
-    public static final String USER = "pawn_glass_yellow";
+    public static final String USER = "pawn_glass_yellow"; //$NON-NLS-1$
 
     public String getSrc(String iconName, int size) {
-        return Icon.BASEPATH + "/" + size + "/" + iconName + ".gif";
+        return Icon.BASEPATH + "/" + size + "/" + iconName + ".gif"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 }

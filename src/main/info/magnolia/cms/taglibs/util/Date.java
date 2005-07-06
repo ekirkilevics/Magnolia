@@ -41,7 +41,7 @@ public class Date extends TagSupport {
 
     private static Logger log = Logger.getLogger(Date.class);
 
-    private String pattern = "yyyy.MM.dd - HH:mm:ss";
+    private String pattern = "yyyy.MM.dd - HH:mm:ss"; //$NON-NLS-1$
 
     private String nodeDataName;
 

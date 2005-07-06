@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
  */
 public class UserRolesEditDialog extends ConfiguredDialog {
 
-    protected static Logger log = Logger.getLogger("roles dialog");
+    protected static Logger log = Logger.getLogger("roles dialog"); //$NON-NLS-1$
 
     /**
      * Stable serialVersionUID.
@@ -69,49 +69,49 @@ public class UserRolesEditDialog extends ConfiguredDialog {
 
         DialogDialog dialog = super.createDialog(configNode, storageNode);
 
-        dialog.setJavascriptSources(request.getContextPath() + "/admindocroot/js/dialogs/DynamicTable.js");
+        dialog.setJavascriptSources(request.getContextPath() + "/admindocroot/js/dialogs/DynamicTable.js"); //$NON-NLS-1$
         dialog.setJavascriptSources(request.getContextPath()
-            + "/admindocroot/js/dialogs/pages/userRolesEditDialogPage.js");
-        dialog.setCssSources(request.getContextPath() + "/admindocroot/css/dialogs/pages/userRolesEditDialogPage.css");
-        dialog.setConfig("height", 600);
+            + "/admindocroot/js/dialogs/pages/userRolesEditDialogPage.js"); //$NON-NLS-1$
+        dialog.setCssSources(request.getContextPath() + "/admindocroot/css/dialogs/pages/userRolesEditDialogPage.css"); //$NON-NLS-1$
+        dialog.setConfig("height", 600); //$NON-NLS-1$
 
-        dialog.setLabel(msgs.get("roles.edit.edit"));
+        dialog.setLabel(msgs.get("roles.edit.edit")); //$NON-NLS-1$
 
-        DialogTab tab0 = dialog.addTab(msgs.get("roles.edit.properties"));
+        DialogTab tab0 = dialog.addTab(msgs.get("roles.edit.properties")); //$NON-NLS-1$
 
-        DialogTab tab1 = dialog.addTab(msgs.get("roles.edit.accessControlList"));
+        DialogTab tab1 = dialog.addTab(msgs.get("roles.edit.accessControlList")); //$NON-NLS-1$
 
         DialogStatic spacer = DialogFactory.getDialogStaticInstance(request, response, null, null);
-        spacer.setConfig("line", false);
+        spacer.setConfig("line", false); //$NON-NLS-1$
 
         DialogStatic name = DialogFactory.getDialogStaticInstance(request, response, null, null);
         // name.setConfig("line",false);
-        name.setLabel("<strong>" + msgs.get("roles.edit.rolename") + "</strong>");
-        name.setValue("<strong>" + storageNode.getName() + "</strong>");
+        name.setLabel("<strong>" + msgs.get("roles.edit.rolename") + "</strong>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        name.setValue("<strong>" + storageNode.getName() + "</strong>"); //$NON-NLS-1$ //$NON-NLS-2$
         tab0.addSub(name);
 
         tab0.addSub(spacer);
 
         DialogEdit title = DialogFactory.getDialogEditInstance(request, response, storageNode, null);
-        title.setName("title");
-        title.setLabel(msgs.get("roles.edit.fullname"));
+        title.setName("title"); //$NON-NLS-1$
+        title.setLabel(msgs.get("roles.edit.fullname")); //$NON-NLS-1$
         tab0.addSub(title);
 
         tab0.addSub(spacer);
 
         DialogEdit desc = DialogFactory.getDialogEditInstance(request, response, storageNode, null);
-        desc.setName("description");
-        desc.setLabel(msgs.get("roles.edit.description"));
-        desc.setConfig("rows", 6);
+        desc.setName("description"); //$NON-NLS-1$
+        desc.setLabel(msgs.get("roles.edit.description")); //$NON-NLS-1$
+        desc.setConfig("rows", 6); //$NON-NLS-1$
         tab0.addSub(desc);
 
         DialogInclude acl = DialogFactory.getDialogIncludeInstance(request, response, storageNode, null);
         acl.setBoxType(DialogBox.BOXTYPE_1COL);
-        acl.setName("aclRolesRepository");
-        acl.setConfig("file", "/admintemplates/adminCentral/dialogs/userRolesEdit/includeAcl.jsp");
+        acl.setName("aclRolesRepository"); //$NON-NLS-1$
+        acl.setConfig("file", "/admintemplates/adminCentral/dialogs/userRolesEdit/includeAcl.jsp"); //$NON-NLS-1$ //$NON-NLS-2$
         tab1.addSub(acl);
 
-        dialog.setConfig("saveOnclick", "aclFormSubmit();");
+        dialog.setConfig("saveOnclick", "aclFormSubmit();"); //$NON-NLS-1$ //$NON-NLS-2$
         return dialog;
     }
 
@@ -137,64 +137,64 @@ public class UserRolesEditDialog extends ConfiguredDialog {
             // ######################
             // remove existing
             try {
-                role.delete("acl_" + repository);
+                role.delete("acl_" + repository); //$NON-NLS-1$
             }
             catch (RepositoryException re) {
             }
             // rewrite
             try {
-                Content acl = role.createContent("acl_" + repository, ItemType.CONTENTNODE);
-                String aclValueStr = form.getParameter("acl" + repository + "List");
+                Content acl = role.createContent("acl_" + repository, ItemType.CONTENTNODE); //$NON-NLS-1$
+                String aclValueStr = form.getParameter("acl" + repository + "List"); //$NON-NLS-1$ //$NON-NLS-2$
                 if (StringUtils.isNotEmpty(aclValueStr)) {
-                    String[] aclEntries = aclValueStr.split(";");
+                    String[] aclEntries = aclValueStr.split(";"); //$NON-NLS-1$
                     for (int i = 0; i < aclEntries.length; i++) {
                         String path = StringUtils.EMPTY;
                         long accessRight = 0;
                         String accessType = StringUtils.EMPTY;
 
-                        String[] aclValuePairs = aclEntries[i].split(",");
+                        String[] aclValuePairs = aclEntries[i].split(","); //$NON-NLS-1$
                         for (int j = 0; j < aclValuePairs.length; j++) {
-                            String[] aclValuePair = aclValuePairs[j].split(":");
+                            String[] aclValuePair = aclValuePairs[j].split(":"); //$NON-NLS-1$
                             String aclName = aclValuePair[0].trim();
                             String aclValue = StringUtils.EMPTY;
                             if (aclValuePair.length > 1) {
                                 aclValue = aclValuePair[1].trim();
                             }
 
-                            if (aclName.equals("path")) {
+                            if (aclName.equals("path")) { //$NON-NLS-1$
                                 path = aclValue;
                             }
-                            else if (aclName.equals("accessType")) {
+                            else if (aclName.equals("accessType")) { //$NON-NLS-1$
                                 accessType = aclValue;
                             }
-                            else if (aclName.equals("accessRight")) {
+                            else if (aclName.equals("accessRight")) { //$NON-NLS-1$
                                 accessRight = Long.parseLong(aclValue);
                             }
                         }
 
                         if (StringUtils.isNotEmpty(path)) {
-                            if (path.equals("/")) {
+                            if (path.equals("/")) { //$NON-NLS-1$
                                 // needs only one entry: "/*"
-                                accessType = "sub";
+                                accessType = "sub"; //$NON-NLS-1$
                                 path = StringUtils.EMPTY;
                             }
 
-                            if (accessType.equals("self")) {
+                            if (accessType.equals("self")) { //$NON-NLS-1$
                                 try {
-                                    String newLabel = Path.getUniqueLabel(hm, acl.getHandle(), "0");
+                                    String newLabel = Path.getUniqueLabel(hm, acl.getHandle(), "0"); //$NON-NLS-1$
                                     Content r = acl.createContent(newLabel, ItemType.CONTENTNODE);
-                                    r.createNodeData("path").setValue(path);
-                                    r.createNodeData("permissions").setValue(accessRight);
+                                    r.createNodeData("path").setValue(path); //$NON-NLS-1$
+                                    r.createNodeData("permissions").setValue(accessRight); //$NON-NLS-1$
                                 }
                                 catch (Exception e) {
                                     log.error(e.getMessage(), e);
                                 }
                             }
                             try {
-                                String newLabel = Path.getUniqueLabel(hm, acl.getHandle(), "0");
+                                String newLabel = Path.getUniqueLabel(hm, acl.getHandle(), "0"); //$NON-NLS-1$
                                 Content r = acl.createContent(newLabel, ItemType.CONTENTNODE);
-                                r.createNodeData("path").setValue(path + "/*");
-                                r.createNodeData("permissions").setValue(accessRight);
+                                r.createNodeData("path").setValue(path + "/*"); //$NON-NLS-1$ //$NON-NLS-2$
+                                r.createNodeData("permissions").setValue(accessRight); //$NON-NLS-1$
                             }
                             catch (Exception e) {
                                 log.error(e.getMessage(), e);

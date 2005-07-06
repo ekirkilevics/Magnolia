@@ -54,7 +54,7 @@ public class StrToObj extends BodyTagSupport {
     public int doEndTag() {
         String str = getBodyContent().getString();
         if (StringUtils.isNotEmpty(str)) {
-            String[] obj = str.split(StringUtils.defaultString(this.delims, "\n"));
+            String[] obj = str.split(StringUtils.defaultString(this.delims, "\n")); //$NON-NLS-1$
             pageContext.setAttribute(this.var, obj, PageContext.PAGE_SCOPE);
 
         }

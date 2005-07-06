@@ -28,15 +28,15 @@ public class ProviderImpl implements Provider {
 
     private static Logger log = Logger.getLogger(ProviderImpl.class);
 
-    private static final String CONFIG_FILENAME_KEY = "configFile";
+    private static final String CONFIG_FILENAME_KEY = "configFile"; //$NON-NLS-1$
 
-    private static final String REPOSITORY_HOME_KEY = "repositoryHome";
+    private static final String REPOSITORY_HOME_KEY = "repositoryHome"; //$NON-NLS-1$
 
-    private static final String CONTEXT_FACTORY_CLASS_KEY = "contextFactoryClass";
+    private static final String CONTEXT_FACTORY_CLASS_KEY = "contextFactoryClass"; //$NON-NLS-1$
 
-    private static final String PROVIDER_URL_KEY = "providerURL";
+    private static final String PROVIDER_URL_KEY = "providerURL"; //$NON-NLS-1$
 
-    private static final String BIND_NAME_KEY = "bindName";
+    private static final String BIND_NAME_KEY = "bindName"; //$NON-NLS-1$
 
     private RepositoryMapping repositoryMapping;
 
@@ -55,7 +55,7 @@ public class ProviderImpl implements Provider {
         repositoryHome = Path.getAbsoluteFileSystemPath(repositoryHome);
 
         if (log.isInfoEnabled()) {
-            log.info("Loading repository at " + repositoryHome + " (config file: " + configFile + ")");
+            log.info("Loading repository at " + repositoryHome + " (config file: " + configFile + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
         String contextFactoryClass = (String) params.get(CONTEXT_FACTORY_CLASS_KEY);
         String providerURL = (String) params.get(PROVIDER_URL_KEY);
@@ -75,7 +75,7 @@ public class ProviderImpl implements Provider {
 
     public Repository getUnderlineRepository() throws RepositoryNotInitializedException {
         if (this.repository == null) {
-            throw new RepositoryNotInitializedException("Null repository");
+            throw new RepositoryNotInitializedException("Null repository"); //$NON-NLS-1$
         }
         return this.repository;
     }
@@ -86,7 +86,7 @@ public class ProviderImpl implements Provider {
         }
         catch (NamespaceException e) {
             log.info(e.getMessage());
-            log.info("registering prefix [ " + namespacePrefix + " ] with uri " + uri);
+            log.info("registering prefix [ " + namespacePrefix + " ] with uri " + uri); //$NON-NLS-1$ //$NON-NLS-2$
             workspace.getNamespaceRegistry().registerNamespace(namespacePrefix, uri);
         }
     }

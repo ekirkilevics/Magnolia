@@ -34,16 +34,16 @@ public class WebDavIFrameDialogPage extends BasePageServlet {
             request.getParameter(DialogSuper.SESSION_ATTRIBUTENAME_DIALOGOBJECT));
         // do not remove session attribute!
         if (dav != null) {
-            if (request.getParameter("subDirectory") != null) {
-                dav.setSubDirectory(request.getParameter("subDirectory"));
+            if (request.getParameter("subDirectory") != null) { //$NON-NLS-1$
+                dav.setSubDirectory(request.getParameter("subDirectory")); //$NON-NLS-1$
             }
-            if (request.getParameter("selectedValue") != null) {
-                dav.setValue(request.getParameter("selectedValue"));
+            if (request.getParameter("selectedValue") != null) { //$NON-NLS-1$
+                dav.setValue(request.getParameter("selectedValue")); //$NON-NLS-1$
             }
             dav.drawHtmlList(out);
         }
         else {
-            out.println("<i>" + MessagesManager.get(request, "webdav.error") + "</i>");
+            out.println("<i>" + MessagesManager.get(request, "webdav.error") + "</i>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
 
     }

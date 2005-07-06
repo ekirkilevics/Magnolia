@@ -85,32 +85,32 @@ public class Log4jConfigurationServlet extends HttpServlet {
     /**
      * The response content type: text/html
      */
-    private static final String CONTENT_TYPE = "text/html";
+    private static final String CONTENT_TYPE = "text/html"; //$NON-NLS-1$
 
     /**
      * Should not print html head and body?
      */
-    private static final String CONFIG_FRAGMENT = "fragment";
+    private static final String CONFIG_FRAGMENT = "fragment"; //$NON-NLS-1$
 
     /**
      * The root appender.
      */
-    private static final String ROOT = "Root";
+    private static final String ROOT = "Root"; //$NON-NLS-1$
 
     /**
      * The name of the class / package.
      */
-    private static final String PARAM_CLASS = "class";
+    private static final String PARAM_CLASS = "class"; //$NON-NLS-1$
 
     /**
      * The logging level.
      */
-    private static final String PARAM_LEVEL = "level";
+    private static final String PARAM_LEVEL = "level"; //$NON-NLS-1$
 
     /**
      * Sort by level?
      */
-    private static final String PARAM_SORTBYLEVEL = "sortbylevel";
+    private static final String PARAM_SORTBYLEVEL = "sortbylevel"; //$NON-NLS-1$
 
     /**
      * All the log levels.
@@ -139,7 +139,7 @@ public class Log4jConfigurationServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String sortByLevelParam = request.getParameter(PARAM_SORTBYLEVEL);
-        boolean sortByLevel = ("true".equalsIgnoreCase(sortByLevelParam) || "yes".equalsIgnoreCase(sortByLevelParam));
+        boolean sortByLevel = ("true".equalsIgnoreCase(sortByLevelParam) || "yes".equalsIgnoreCase(sortByLevelParam)); //$NON-NLS-1$ //$NON-NLS-2$
 
         List loggers = getSortedLoggers(sortByLevel);
         int loggerNum = 0;
@@ -153,22 +153,22 @@ public class Log4jConfigurationServlet extends HttpServlet {
         }
 
         // print scripts
-        out.println("<a href=\"" + request.getRequestURI() + "\">Refresh</a>");
+        out.println("<a href=\"" + request.getRequestURI() + "\">Refresh</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 
-        out.println("<table class=\"log4jtable\">");
-        out.println("<thead><tr>");
+        out.println("<table class=\"log4jtable\">"); //$NON-NLS-1$
+        out.println("<thead><tr>"); //$NON-NLS-1$
 
-        out.println("<th title=\"Logger name\">");
-        out.println("<a href=\"?" + PARAM_SORTBYLEVEL + "=false\">Class</a>");
-        out.println("</th>");
+        out.println("<th title=\"Logger name\">"); //$NON-NLS-1$
+        out.println("<a href=\"?" + PARAM_SORTBYLEVEL + "=false\">Class</a>"); //$NON-NLS-1$ //$NON-NLS-2$
+        out.println("</th>"); //$NON-NLS-1$
 
-        out.println("<th title=\"Is logging level inherited from parent?\" style=\"text-align:right\" >*</th>");
-        out.println("<th title=\"Logger level\">");
-        out.println("<a href=\"?" + PARAM_SORTBYLEVEL + "=true\">Level</a>");
-        out.println("</th>");
+        out.println("<th title=\"Is logging level inherited from parent?\" style=\"text-align:right\" >*</th>"); //$NON-NLS-1$
+        out.println("<th title=\"Logger level\">"); //$NON-NLS-1$
+        out.println("<a href=\"?" + PARAM_SORTBYLEVEL + "=true\">Level</a>"); //$NON-NLS-1$ //$NON-NLS-2$
+        out.println("</th>"); //$NON-NLS-1$
 
-        out.println("</tr></thead>");
-        out.println("<tbody>");
+        out.println("</tr></thead>"); //$NON-NLS-1$
+        out.println("<tbody>"); //$NON-NLS-1$
 
         // print the root Logger
         displayLogger(out, Logger.getRootLogger(), loggerNum++, request);
@@ -180,12 +180,12 @@ public class Log4jConfigurationServlet extends HttpServlet {
             displayLogger(out, (Logger) iterator.next(), loggerNum++, request);
         }
 
-        out.println("</tbody>");
-        out.println("</table>");
-        out.println("<a href=\"\">Refresh</a>");
+        out.println("</tbody>"); //$NON-NLS-1$
+        out.println("</table>"); //$NON-NLS-1$
+        out.println("<a href=\"\">Refresh</a>"); //$NON-NLS-1$
 
         if (!isFragment) {
-            out.println("</body></html>");
+            out.println("</body></html>"); //$NON-NLS-1$
             out.flush();
             out.close();
         }
@@ -220,32 +220,32 @@ public class Log4jConfigurationServlet extends HttpServlet {
         String color = null;
         String loggerName = (StringUtils.isEmpty(logger.getName()) ? ROOT : logger.getName());
 
-        color = ((row % 2) == 1) ? "even" : "odd";
+        color = ((row % 2) == 1) ? "even" : "odd"; //$NON-NLS-1$ //$NON-NLS-2$
 
-        out.println("<tr class=\"" + color + "\">");
+        out.println("<tr class=\"" + color + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
 
         // logger
-        out.println("<td>");
+        out.println("<td>"); //$NON-NLS-1$
         out.println(loggerName);
-        out.println("</td>");
+        out.println("</td>"); //$NON-NLS-1$
 
         // level inherited?
-        out.println("<td style=\"text-align:right\">");
+        out.println("<td style=\"text-align:right\">"); //$NON-NLS-1$
         if ((logger.getLevel() == null)) {
-            out.println("*");
+            out.println("*"); //$NON-NLS-1$
         }
-        out.println("</td>");
+        out.println("</td>"); //$NON-NLS-1$
 
         // level and selection
-        out.println("<td>");
-        out.println("<form action=\"\" method=\"post\">");
+        out.println("<td>"); //$NON-NLS-1$
+        out.println("<form action=\"\" method=\"post\">"); //$NON-NLS-1$
         printLevelSelector(out, logger.getEffectiveLevel().toString());
-        out.println("<input type=\"hidden\" name=\"" + PARAM_CLASS + "\" value=\"" + loggerName + "\">");
-        out.print("<input type=\"submit\" name=\"Set\" value=\"Set \">");
-        out.println("</form>");
-        out.println("</td>");
+        out.println("<input type=\"hidden\" name=\"" + PARAM_CLASS + "\" value=\"" + loggerName + "\">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        out.print("<input type=\"submit\" name=\"Set\" value=\"Set \">"); //$NON-NLS-1$
+        out.println("</form>"); //$NON-NLS-1$
+        out.println("</td>"); //$NON-NLS-1$
 
-        out.println("</tr>");
+        out.println("</tr>"); //$NON-NLS-1$
     }
 
     /**
@@ -263,10 +263,10 @@ public class Log4jConfigurationServlet extends HttpServlet {
         }
         catch (Throwable e) {
             System // permetti system.out
-            .out.println("ERROR Setting LOG4J Logger:" + e);
+            .out.println("ERROR Setting LOG4J Logger:" + e); //$NON-NLS-1$
         }
 
-        return "Message Set For " + (StringUtils.isEmpty(logger.getName()) ? ROOT : logger.getName());
+        return "Message Set For " + (StringUtils.isEmpty(logger.getName()) ? ROOT : logger.getName()); //$NON-NLS-1$
     }
 
     /**
@@ -296,23 +296,23 @@ public class Log4jConfigurationServlet extends HttpServlet {
      * @param request The request
      */
     private void printHeader(PrintWriter out, HttpServletRequest request) {
-        out.println("<html><head><title>Log4J Control Console</title>");
+        out.println("<html><head><title>Log4J Control Console</title>"); //$NON-NLS-1$
 
-        out.println("<style type=\"text/css\">");
-        out.println("body{ background-color:#fff; }");
-        out.println("body, td, th, select, input{ font-family:Verdana, Geneva, Arial, sans-serif; font-size: 8pt;}");
-        out.println("select, input{ border: 1px solid #ccc;}");
-        out.println("table.log4jtable, table.log4jtable td { border-collapse:collapse; border: 1px solid #ccc; ");
-        out.println("white-space: nowrap; text-align: left; }");
-        out.println("form { margin:0; padding:0; }");
-        out.println("table.log4jtable thead tr th{ background-color: #5991A6; padding: 2px; }");
-        out.println("table.log4jtable tr.even { background-color: #eee; }");
-        out.println("table.log4jtable tr.odd { background-color: #fff; }");
-        out.println("</style>");
+        out.println("<style type=\"text/css\">"); //$NON-NLS-1$
+        out.println("body{ background-color:#fff; }"); //$NON-NLS-1$
+        out.println("body, td, th, select, input{ font-family:Verdana, Geneva, Arial, sans-serif; font-size: 8pt;}"); //$NON-NLS-1$
+        out.println("select, input{ border: 1px solid #ccc;}"); //$NON-NLS-1$
+        out.println("table.log4jtable, table.log4jtable td { border-collapse:collapse; border: 1px solid #ccc; "); //$NON-NLS-1$
+        out.println("white-space: nowrap; text-align: left; }"); //$NON-NLS-1$
+        out.println("form { margin:0; padding:0; }"); //$NON-NLS-1$
+        out.println("table.log4jtable thead tr th{ background-color: #5991A6; padding: 2px; }"); //$NON-NLS-1$
+        out.println("table.log4jtable tr.even { background-color: #eee; }"); //$NON-NLS-1$
+        out.println("table.log4jtable tr.odd { background-color: #fff; }"); //$NON-NLS-1$
+        out.println("</style>"); //$NON-NLS-1$
 
-        out.println("</head>");
-        out.println("<body>");
-        out.println("<h3>Log4J Control Console</h3>");
+        out.println("</head>"); //$NON-NLS-1$
+        out.println("<body>"); //$NON-NLS-1$
+        out.println("<h3>Log4J Control Console</h3>"); //$NON-NLS-1$
     }
 
     /**
@@ -321,18 +321,18 @@ public class Log4jConfigurationServlet extends HttpServlet {
      * @param currentLevel the current level for the log (the selected option).
      */
     private void printLevelSelector(PrintWriter out, String currentLevel) {
-        out.println("<select id=\"" + PARAM_LEVEL + "\" name=\"" + PARAM_LEVEL + "\">");
+        out.println("<select id=\"" + PARAM_LEVEL + "\" name=\"" + PARAM_LEVEL + "\">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
         for (int j = 0; j < LEVELS.length; j++) {
-            out.print("<option");
+            out.print("<option"); //$NON-NLS-1$
             if (LEVELS[j].equals(currentLevel)) {
-                out.print(" selected=\"selected\"");
+                out.print(" selected=\"selected\""); //$NON-NLS-1$
             }
-            out.print(">");
+            out.print(">"); //$NON-NLS-1$
             out.print(LEVELS[j]);
-            out.println("</option>");
+            out.println("</option>"); //$NON-NLS-1$
         }
-        out.println("</select>");
+        out.println("</select>"); //$NON-NLS-1$
     }
 
     /**
@@ -394,7 +394,7 @@ public class Log4jConfigurationServlet extends HttpServlet {
      */
     public void init(ServletConfig config) throws ServletException {
         String fragmentParam = config.getInitParameter(CONFIG_FRAGMENT);
-        isFragment = ("true".equalsIgnoreCase(fragmentParam) || "yes".equalsIgnoreCase(fragmentParam));
+        isFragment = ("true".equalsIgnoreCase(fragmentParam) || "yes".equalsIgnoreCase(fragmentParam)); //$NON-NLS-1$ //$NON-NLS-2$
         super.init(config);
     }
 

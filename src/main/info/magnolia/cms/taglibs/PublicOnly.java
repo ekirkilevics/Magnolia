@@ -48,7 +48,7 @@ public class PublicOnly extends ConditionalTagSupport {
      */
     protected boolean condition() {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-        String prev = (String) request.getSession().getAttribute("mgnlPreview");
+        String prev = (String) request.getSession().getAttribute("mgnlPreview"); //$NON-NLS-1$
         // if (Server.isAdmin() && !Resource.showPreview((HttpServletRequest)pageContext.getRequest()))
         if (!Server.isAdmin() || (prev != null && showInPreview)) {
             return true;

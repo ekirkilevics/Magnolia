@@ -47,9 +47,9 @@ public class PackageExport implements ExportHandler {
      */
     private static Logger log = Logger.getLogger(PackageExport.class);
 
-    private static final String START_DIRECTORY = "data";
+    private static final String START_DIRECTORY = "data"; //$NON-NLS-1$
 
-    public static final String DATA_FILE_NAME = "data.xml";
+    public static final String DATA_FILE_NAME = "data.xml"; //$NON-NLS-1$
 
     /**
      * fields
@@ -71,7 +71,7 @@ public class PackageExport implements ExportHandler {
     }
 
     public Object exportContent(Content content) throws RepositoryException {
-        String message = "export to object not supported by PackageExport";
+        String message = "export to object not supported by PackageExport"; //$NON-NLS-1$
         log.error(message);
         throw new UnsupportedOperationException(message);
     }
@@ -130,7 +130,7 @@ public class PackageExport implements ExportHandler {
             }
             catch (IOException e) {
                 log.error(e.getMessage());
-                log.error("failed to pack content, deleteting temp file " + this.getZipFileName());
+                log.error("failed to pack content, deleteting temp file " + this.getZipFileName()); //$NON-NLS-1$
                 if (this.zipFile.exists()) {
                     this.zipFile.delete();
                 }
@@ -163,11 +163,11 @@ public class PackageExport implements ExportHandler {
         }
 
         private void createTargetFile() throws IOException {
-            this.zipFileName = UUIDGenerator.getInstance().generateTimeBasedUUID().toString() + ".zip";
+            this.zipFileName = UUIDGenerator.getInstance().generateTimeBasedUUID().toString() + ".zip"; //$NON-NLS-1$
             if (log.isDebugEnabled()) {
-                log.debug("Generating zip file " + this.zipFileName);
+                log.debug("Generating zip file " + this.zipFileName); //$NON-NLS-1$
             }
-            this.zipFile = new File(Path.getTempDirectoryPath() + "/" + this.zipFileName);
+            this.zipFile = new File(Path.getTempDirectoryPath() + "/" + this.zipFileName); //$NON-NLS-1$
             this.zipFile.createNewFile();
         }
 
@@ -175,9 +175,9 @@ public class PackageExport implements ExportHandler {
             XmlExport xmlExport = new XmlExport();
             xmlExport.setBinaryAsLink(true);
             if (log.isDebugEnabled()) {
-                log.debug("adding a new zip file entry " + START_DIRECTORY + "/" + DATA_FILE_NAME);
+                log.debug("adding a new zip file entry " + START_DIRECTORY + "/" + DATA_FILE_NAME); //$NON-NLS-1$ //$NON-NLS-2$
             }
-            this.outputStream.putNextEntry(new ZipEntry(START_DIRECTORY + "/" + DATA_FILE_NAME));
+            this.outputStream.putNextEntry(new ZipEntry(START_DIRECTORY + "/" + DATA_FILE_NAME)); //$NON-NLS-1$
             xmlExport.exportContent(this.content, this.outputStream);
             this.outputStream.closeEntry();
         }
@@ -188,7 +188,7 @@ public class PackageExport implements ExportHandler {
                 NodeData nodeData = (NodeData) dataNodes.next();
                 if (nodeData.getType() == PropertyType.BINARY) {
                     if (log.isDebugEnabled()) {
-                        log.debug("adding a new zip file entry " + START_DIRECTORY + nodeData.getHandle());
+                        log.debug("adding a new zip file entry " + START_DIRECTORY + nodeData.getHandle()); //$NON-NLS-1$
                     }
                     this.outputStream.putNextEntry(new ZipEntry(START_DIRECTORY + nodeData.getHandle()));
                     InputStream is = nodeData.getStream();

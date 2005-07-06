@@ -25,7 +25,7 @@ public class DateUtil {
     /**
      * Default date format.
      */
-    public static final String FORMAT_DEFAULTPATTERN = "yyyy-MM-dd'T'HH:mm:ss.SZ";
+    public static final String FORMAT_DEFAULTPATTERN = "yyyy-MM-dd'T'HH:mm:ss.SZ"; //$NON-NLS-1$
 
     public String getFormattedDate(Date date) {
         return this.getFormattedDate(date, FORMAT_DEFAULTPATTERN);

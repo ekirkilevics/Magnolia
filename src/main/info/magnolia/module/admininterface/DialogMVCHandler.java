@@ -53,18 +53,18 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
     /*
      * Commands
      */
-    protected static final String COMMAND_SAVE = "save";
+    protected static final String COMMAND_SAVE = "save"; //$NON-NLS-1$
 
-    protected static final String COMMAND_SELECT_PARAGRAPH = "selectParagraph";
+    protected static final String COMMAND_SELECT_PARAGRAPH = "selectParagraph"; //$NON-NLS-1$
 
-    protected static final String COMMAND_SHOW_DIALOG = "showDialog";
+    protected static final String COMMAND_SHOW_DIALOG = "showDialog"; //$NON-NLS-1$
 
     /*
      * Views
      */
-    protected static final String VIEW_CLOSE_WINDOW = "close";
+    protected static final String VIEW_CLOSE_WINDOW = "close"; //$NON-NLS-1$
 
-    protected static final String VIEW_SHOW_DIALOG = "show";
+    protected static final String VIEW_SHOW_DIALOG = "show"; //$NON-NLS-1$
 
     /**
      * the request passed by the MVCServlet
@@ -127,12 +127,12 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
 
         params = new RequestFormUtil(request, form);
 
-        path = params.getParameter("mgnlPath");
-        nodeCollectionName = params.getParameter("mgnlNodeCollection");
-        nodeName = params.getParameter("mgnlNode");
-        richE = params.getParameter("mgnlRichE");
-        richEPaste = params.getParameter("mgnlRichEPaste");
-        repository = params.getParameter("mgnlRepository", getRepository());
+        path = params.getParameter("mgnlPath"); //$NON-NLS-1$
+        nodeCollectionName = params.getParameter("mgnlNodeCollection"); //$NON-NLS-1$
+        nodeName = params.getParameter("mgnlNode"); //$NON-NLS-1$
+        richE = params.getParameter("mgnlRichE"); //$NON-NLS-1$
+        richEPaste = params.getParameter("mgnlRichEPaste"); //$NON-NLS-1$
+        repository = params.getParameter("mgnlRepository", getRepository()); //$NON-NLS-1$
 
         hm = SessionAccessControl.getHierarchyManager(request, repository);
         msgs = MessagesManager.getMessages(request);
@@ -162,16 +162,16 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
             dialog = createDialog(configNode, storageNode);
         }
         catch (RepositoryException e) {
-            log.error("can't instantiate dialog", e);
+            log.error("can't instantiate dialog", e); //$NON-NLS-1$
         }
 
-        dialog.setConfig("dialog", getName());
-        dialog.setConfig("path", path);
-        dialog.setConfig("nodeCollection", nodeCollectionName);
-        dialog.setConfig("node", nodeName);
-        dialog.setConfig("richE", richE);
-        dialog.setConfig("richEPaste", richEPaste);
-        dialog.setConfig("repository", repository);
+        dialog.setConfig("dialog", getName()); //$NON-NLS-1$
+        dialog.setConfig("path", path); //$NON-NLS-1$
+        dialog.setConfig("nodeCollection", nodeCollectionName); //$NON-NLS-1$
+        dialog.setConfig("node", nodeName); //$NON-NLS-1$
+        dialog.setConfig("richE", richE); //$NON-NLS-1$
+        dialog.setConfig("richEPaste", richEPaste); //$NON-NLS-1$
+        dialog.setConfig("repository", repository); //$NON-NLS-1$
 
         return VIEW_SHOW_DIALOG;
     }
@@ -254,12 +254,12 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
 
         // after saving
         if (view == VIEW_CLOSE_WINDOW) {
-            out.println("<html>");
+            out.println("<html>"); //$NON-NLS-1$
             out.println(new Sources(request.getContextPath()).getHtmlJs());
-            out.println("<script type=\"text/javascript\">");
-            out.println("mgnlDialogReloadOpener();");
-            out.println("window.close();");
-            out.println("</script></html>");
+            out.println("<script type=\"text/javascript\">"); //$NON-NLS-1$
+            out.println("mgnlDialogReloadOpener();"); //$NON-NLS-1$
+            out.println("window.close();"); //$NON-NLS-1$
+            out.println("</script></html>"); //$NON-NLS-1$
         }
         // show the created dialog
         else if (view == VIEW_SHOW_DIALOG) {

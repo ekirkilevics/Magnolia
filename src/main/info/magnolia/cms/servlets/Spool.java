@@ -97,7 +97,7 @@ public class Spool extends HttpServlet {
         catch (IOException e) {
             // only log at debug level, tomcat usually throws a ClientAbortException anytime the user stop loading the
             // page
-            log.debug("Unable to spool resource due to a " + e.getClass().getName() + " exception", e);
+            log.debug("Unable to spool resource due to a " + e.getClass().getName() + " exception", e); //$NON-NLS-1$ //$NON-NLS-2$
             return false;
         }
         finally {

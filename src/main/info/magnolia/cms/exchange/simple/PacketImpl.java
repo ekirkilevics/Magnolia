@@ -48,20 +48,20 @@ public class PacketImpl implements Packet {
 
     public void assignID() {
         this.id = UUIDGenerator.getInstance().generateTimeBasedUUID().toString();
-        this.getHeaders().addHeader("id", id);
+        this.getHeaders().addHeader("id", id); //$NON-NLS-1$
     }
 
     public void assignID(String id) {
         this.id = id;
-        this.getHeaders().addHeader("ID", id);
+        this.getHeaders().addHeader("ID", id); //$NON-NLS-1$
     }
 
     public void setChannelID(String id) {
-        log.debug("Method not implemented (setChannelID)");
+        log.debug("Method not implemented (setChannelID)"); //$NON-NLS-1$
     }
 
     public String getChannelID() {
-        log.debug("Method not implemented (getChannelID)");
+        log.debug("Method not implemented (getChannelID)"); //$NON-NLS-1$
         return null;
     }
 
@@ -82,7 +82,7 @@ public class PacketImpl implements Packet {
 
     public void setBody(PacketBody body) {
         this.body = body;
-        this.getHeaders().addHeader("Type", PacketType.getNameByType(this.body.getType()));
+        this.getHeaders().addHeader("Type", PacketType.getNameByType(this.body.getType())); //$NON-NLS-1$
     }
 
     public PacketBody getBody() {

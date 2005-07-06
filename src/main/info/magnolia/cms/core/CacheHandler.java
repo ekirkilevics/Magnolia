@@ -52,12 +52,12 @@ public class CacheHandler extends Thread {
     /**
      * Default cache files location under main cache directory
      */
-    private static final String DEFAULT_STORE = "/default";
+    private static final String DEFAULT_STORE = "/default"; //$NON-NLS-1$
 
     /**
      * Optimized cache files location under main cache directory
      */
-    private static final String COMPRESSED_STORE = "/optimized";
+    private static final String COMPRESSED_STORE = "/optimized"; //$NON-NLS-1$
 
     /**
      * Logger
@@ -96,7 +96,7 @@ public class CacheHandler extends Thread {
                 if (!success) {
                     // don't leave bad or incomplete files!
                     file.delete();
-                    log.error("NOT Caching uri " + uri + " due to a previous error");
+                    log.error("NOT Caching uri " + uri + " due to a previous error"); //$NON-NLS-1$ //$NON-NLS-2$
                 }
             }
 
@@ -143,7 +143,7 @@ public class CacheHandler extends Thread {
         }
         Content page = (Content) obj;
 
-        if (StringUtils.isEmpty(page.getNodeData("redirectURL").getString())) {
+        if (StringUtils.isEmpty(page.getNodeData("redirectURL").getString())) { //$NON-NLS-1$
             return false;
         }
         return true;
@@ -169,7 +169,7 @@ public class CacheHandler extends Thread {
             URL url = new URL(domain + uri);
             URLConnection urlConnection = url.openConnection();
             if (SecureURI.isProtected(uri)) {
-                urlConnection.setRequestProperty("Authorization", request.getHeader("Authorization"));
+                urlConnection.setRequestProperty("Authorization", request.getHeader("Authorization")); //$NON-NLS-1$ //$NON-NLS-2$
             }
             byte[] buffer = new byte[8192];
             int read = 0;
@@ -180,7 +180,7 @@ public class CacheHandler extends Thread {
             return true;
         }
         catch (Exception e) {
-            log.error("Failed to stream [" + uri + "] due to a " + e.getClass().getName() + ": " + e.getMessage(), e);
+            log.error("Failed to stream [" + uri + "] due to a " + e.getClass().getName() + ": " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
 
         return false;
@@ -199,9 +199,9 @@ public class CacheHandler extends Thread {
         }
         String scheme = request.getScheme();
         url.append(scheme);
-        url.append("://");
+        url.append("://"); //$NON-NLS-1$
         url.append(request.getServerName());
-        if ((scheme.equals("http") && (port != 80)) || (scheme.equals("https") && (port != 443))) {
+        if ((scheme.equals("http") && (port != 80)) || (scheme.equals("https") && (port != 443))) { //$NON-NLS-1$ //$NON-NLS-2$
             url.append(':');
             url.append(port);
         }
@@ -218,17 +218,17 @@ public class CacheHandler extends Thread {
     private static File getDestinationFile(String uri, String type) {
         validatePath(CACHE_DIRECTORY);
         validatePath(CACHE_DIRECTORY + type);
-        String[] items = uri.split("/");
+        String[] items = uri.split("/"); //$NON-NLS-1$
         StringBuffer buffer = new StringBuffer();
         int i = 0;
         for (; i < (items.length - 1); i++) {
             if (StringUtils.isEmpty(items[i])) {
                 continue;
             }
-            buffer.append("/" + items[i]);
+            buffer.append("/" + items[i]); //$NON-NLS-1$
             validatePath(CACHE_DIRECTORY + type + buffer.toString());
         }
-        buffer.append("/" + items[i]);
+        buffer.append("/" + items[i]); //$NON-NLS-1$
         return (new File(CACHE_DIRECTORY + type + buffer.toString()));
     }
 
@@ -241,7 +241,7 @@ public class CacheHandler extends Thread {
         File file = new File(path);
         if (!file.isDirectory()) {
             if (!file.mkdir()) {
-                log.error("Can not create directory - " + path);
+                log.error("Can not create directory - " + path); //$NON-NLS-1$
             }
         }
     }
@@ -262,7 +262,7 @@ public class CacheHandler extends Thread {
         }
 
         // make sure not to stream anything from cache if it's a POST request or if it has parameters
-        if (request.getMethod().toLowerCase().equals("post") || !request.getParameterMap().isEmpty()) {
+        if (request.getMethod().toLowerCase().equals("post") || !request.getParameterMap().isEmpty()) { //$NON-NLS-1$
             return false;
         }
 
@@ -294,7 +294,7 @@ public class CacheHandler extends Thread {
         }
         catch (IOException e) {
             if (log.isDebugEnabled()) {
-                log.debug("Error while reading cache for " + e.getMessage(), e);
+                log.debug("Error while reading cache for " + e.getMessage(), e); //$NON-NLS-1$
             }
         }
         finally {
@@ -317,7 +317,7 @@ public class CacheHandler extends Thread {
      * @throws IOException for errors while writing content to the output stream
      */
     private static void sendCompressed(InputStream is, HttpServletResponse res) throws IOException {
-        res.setHeader("Content-Encoding", "gzip");
+        res.setHeader("Content-Encoding", "gzip"); //$NON-NLS-1$ //$NON-NLS-2$
         send(is, res);
     }
 
@@ -347,9 +347,9 @@ public class CacheHandler extends Thread {
         if (!info.magnolia.cms.beans.config.Cache.applyCompression(Path.getExtension(request))) {
             return false;
         }
-        String encoding = request.getHeader("Accept-Encoding");
+        String encoding = request.getHeader("Accept-Encoding"); //$NON-NLS-1$
         if (encoding != null) {
-            return (encoding.toLowerCase().indexOf("gzip") > -1);
+            return (encoding.toLowerCase().indexOf("gzip") > -1); //$NON-NLS-1$
         }
         return false;
     }
@@ -367,7 +367,7 @@ public class CacheHandler extends Thread {
             }
             else {
                 if (log.isDebugEnabled()) {
-                    log.debug("Flushing - " + uri);
+                    log.debug("Flushing - " + uri); //$NON-NLS-1$
                 }
                 file.delete();
                 Cache.removeFromCachedURIList(uri);
@@ -375,7 +375,7 @@ public class CacheHandler extends Thread {
             }
         }
         catch (Exception e) {
-            log.error("Failed to flush [" + uri + "]: " + e.getMessage(), e);
+            log.error("Failed to flush [" + uri + "]: " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
@@ -394,7 +394,7 @@ public class CacheHandler extends Thread {
                 }
                 else {
                     if (log.isDebugEnabled()) {
-                        log.debug("Flushing - " + children[i].getPath());
+                        log.debug("Flushing - " + children[i].getPath()); //$NON-NLS-1$
                     }
                     String path = StringUtils.substringAfter(children[i].getPath(), Path.getCacheDirectoryPath());
                     Cache.removeFromCachedURIList(path);
@@ -409,7 +409,7 @@ public class CacheHandler extends Thread {
      * Flushes entire cache
      */
     public static void flushCache() {
-        log.debug("Flushing entire cache");
+        log.debug("Flushing entire cache"); //$NON-NLS-1$
         try {
             CacheHandler.flushResource(CACHE_DIRECTORY);
             // this will create cache start directory again

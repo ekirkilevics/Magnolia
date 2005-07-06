@@ -65,7 +65,7 @@ public final class PacketCollector {
                 }
             }
             else {
-                log.error("Unknown object type OR path does not exist for - " + path);
+                log.error("Unknown object type OR path does not exist for - " + path); //$NON-NLS-1$
                 return packet;
             }
             packet.getBody().setBody(content);

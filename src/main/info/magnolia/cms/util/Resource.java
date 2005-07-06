@@ -34,18 +34,18 @@ public final class Resource {
     /**
      * Attribute used for enabling the preview mode.
      */
-    public static final String MGNL_PREVIEW_ATTRIBUTE = "mgnlPreview";
+    public static final String MGNL_PREVIEW_ATTRIBUTE = "mgnlPreview"; //$NON-NLS-1$
 
     /**
      * Logger.
      */
     private static Logger log = Logger.getLogger(Resource.class);
 
-    private static final String GLOBAL_CONTENT_NODE = "contentObjGlobal";
+    private static final String GLOBAL_CONTENT_NODE = "contentObjGlobal"; //$NON-NLS-1$
 
-    private static final String LOCAL_CONTENT_NODE = "contentObj";
+    private static final String LOCAL_CONTENT_NODE = "contentObj"; //$NON-NLS-1$
 
-    private static final String LOCAL_CONTENT_NODE_COLLECTION_NAME = "localContentNodeCollectionName";
+    private static final String LOCAL_CONTENT_NODE_COLLECTION_NAME = "localContentNodeCollectionName"; //$NON-NLS-1$
 
     /**
      * Utility class, don't instantiate.
@@ -93,17 +93,14 @@ public final class Resource {
     }
 
     /**
-     * <p>
-     * get HierarchyManager object from the request OR from the user session this hierarchy manager points to website
-     * repository, in order to swith between user and website repositories, use method (changeContext) on this object
-     * </p>
+     * Get HierarchyManager object from the request OR from the user session this hierarchy manager points to website
+     * repository, in order to swith between user and website repositories, use method (changeContext) on this object.
      * @param req HttpServletRequest as received in JSP or servlet
      * @return hierarchy manager, for the website repository
      * @deprecated as on magnolia 2.0, use SessionAccessControl instead
      * @see info.magnolia.cms.security.SessionAccessControl#getHierarchyManager(javax.servlet.http.HttpServletRequest)
      */
     public static HierarchyManager getHierarchyManager(HttpServletRequest req) {
-        log.info("Deprecated : use SessionAccessControl.getHierarchyManager(HttpServletRequest,String) instead");
         return (HierarchyManager) req.getAttribute(Aggregator.HIERARCHY_MANAGER);
     }
 
@@ -115,7 +112,7 @@ public final class Resource {
      * @return initialised multipart form object with the posted data
      */
     public static MultipartForm getPostedForm(HttpServletRequest req) {
-        return (MultipartForm) req.getAttribute("multipartform");
+        return (MultipartForm) req.getAttribute("multipartform"); //$NON-NLS-1$
     }
 
     /**

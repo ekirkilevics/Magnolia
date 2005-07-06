@@ -35,11 +35,11 @@ import org.apache.log4j.Logger;
  */
 public class ContentNodeIterator extends TagSupport {
 
-    public static final String CONTENT_NODE_COLLECTION_NAME = "contentNodeCollectionName";
+    public static final String CONTENT_NODE_COLLECTION_NAME = "contentNodeCollectionName"; //$NON-NLS-1$
 
-    protected static final String CURRENT_INDEX = "currentIndex";
+    protected static final String CURRENT_INDEX = "currentIndex"; //$NON-NLS-1$
 
-    protected static final String SIZE = "size";
+    protected static final String SIZE = "size"; //$NON-NLS-1$
 
     /**
      * Stable serialVersionUID.

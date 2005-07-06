@@ -41,17 +41,17 @@ public class LocalStore {
     }
 
     private void init() {
-        log.info("Config : Initializing LocalStore for - " + configPath);
+        log.info("Config : Initializing LocalStore for - " + configPath); //$NON-NLS-1$
         HierarchyManager configHierarchyManager = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
         try {
             localStore = configHierarchyManager.getContent(configPath);
-            log.info("Config : LocalStore initialized for -" + configPath);
+            log.info("Config : LocalStore initialized for -" + configPath); //$NON-NLS-1$
         }
         catch (PathNotFoundException e) {
-            log.error("Config : No LocalStore defined for - " + configPath);
+            log.error("Config : No LocalStore defined for - " + configPath); //$NON-NLS-1$
         }
         catch (RepositoryException re) {
-            log.error("Config : Failed to initialize LocalStore for - " + configPath);
+            log.error("Config : Failed to initialize LocalStore for - " + configPath); //$NON-NLS-1$
             log.error(re.getMessage(), re);
         }
     }

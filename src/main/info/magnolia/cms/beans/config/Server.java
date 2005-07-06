@@ -37,7 +37,7 @@ import org.apache.log4j.Logger;
  */
 public final class Server {
 
-    public static final String CONFIG_PAGE = "server";
+    public static final String CONFIG_PAGE = "server"; //$NON-NLS-1$
 
     /**
      * Logger.
@@ -74,15 +74,15 @@ public final class Server {
         Server.cachedURImapping.clear();
         Server.cachedCacheableURIMapping.clear();
         try {
-            log.info("Config : loading Server");
+            log.info("Config : loading Server"); //$NON-NLS-1$
             Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(CONFIG_PAGE);
             cacheServerConfiguration(startPage);
             cacheSecureURIList(startPage);
-            log.info("Config : Server config loaded");
+            log.info("Config : Server config loaded"); //$NON-NLS-1$
         }
         catch (RepositoryException re) {
-            log.error("Config : Failed to load Server config: " + re.getMessage(), re);
-            throw new ConfigurationException("Config : Failed to load Server config: " + re.getMessage(), re);
+            log.error("Config : Failed to load Server config: " + re.getMessage(), re); //$NON-NLS-1$
+            throw new ConfigurationException("Config : Failed to load Server config: " + re.getMessage(), re); //$NON-NLS-1$
         }
     }
 
@@ -91,7 +91,7 @@ public final class Server {
      * @throws ConfigurationException
      */
     public static void reload() throws ConfigurationException {
-        log.info("Config : re-loading Server config");
+        log.info("Config : re-loading Server config"); //$NON-NLS-1$
         Server.load();
     }
 
@@ -100,28 +100,28 @@ public final class Server {
      */
     private static void cacheServerConfiguration(Content page) {
 
-        boolean isAdmin = page.getNodeData("admin").getBoolean();
-        Server.cachedContent.put("admin", BooleanUtils.toBooleanObject(isAdmin));
+        boolean isAdmin = page.getNodeData("admin").getBoolean(); //$NON-NLS-1$
+        Server.cachedContent.put("admin", BooleanUtils.toBooleanObject(isAdmin)); //$NON-NLS-1$
 
-        String ext = page.getNodeData("defaultExtension").getString();
-        Server.cachedContent.put("defaultExtension", ext);
+        String ext = page.getNodeData("defaultExtension").getString(); //$NON-NLS-1$
+        Server.cachedContent.put("defaultExtension", ext); //$NON-NLS-1$
 
-        String basicRealm = page.getNodeData("basicRealm").getString();
-        Server.cachedContent.put("basicRealm", basicRealm);
+        String basicRealm = page.getNodeData("basicRealm").getString(); //$NON-NLS-1$
+        Server.cachedContent.put("basicRealm", basicRealm); //$NON-NLS-1$
 
         try {
-            String mailServer = page.getNodeData("defaultMailServer").getString();
-            Server.cachedContent.put("defaultMailServer", mailServer);
+            String mailServer = page.getNodeData("defaultMailServer").getString(); //$NON-NLS-1$
+            Server.cachedContent.put("defaultMailServer", mailServer); //$NON-NLS-1$
         }
         catch (Exception e) {
             log.error(e.getMessage());
-            Server.cachedContent.put("defaultMailServer", StringUtils.EMPTY);
+            Server.cachedContent.put("defaultMailServer", StringUtils.EMPTY); //$NON-NLS-1$
         }
 
-        Server.cachedContent.put("404URI", page.getNodeData("ResourceNotAvailableURIMapping").getString());
+        Server.cachedContent.put("404URI", page.getNodeData("ResourceNotAvailableURIMapping").getString()); //$NON-NLS-1$ //$NON-NLS-2$
 
-        boolean visibleToObinary = page.getNodeData("visibleToObinary").getBoolean();
-        Server.cachedContent.put("visibleToObinary", BooleanUtils.toBooleanObject(visibleToObinary));
+        boolean visibleToObinary = page.getNodeData("visibleToObinary").getBoolean(); //$NON-NLS-1$
+        Server.cachedContent.put("visibleToObinary", BooleanUtils.toBooleanObject(visibleToObinary)); //$NON-NLS-1$
 
     }
 
@@ -130,7 +130,7 @@ public final class Server {
      */
     private static void cacheSecureURIList(Content page) {
         try {
-            addToSecureList(page.getContent("secureURIList"));
+            addToSecureList(page.getContent("secureURIList")); //$NON-NLS-1$
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
@@ -144,7 +144,7 @@ public final class Server {
      */
     private static void registerEventListener() {
 
-        log.info("Registering event listener for server");
+        log.info("Registering event listener for server"); //$NON-NLS-1$
 
         // server properties, only on the root server node
         try {
@@ -153,28 +153,22 @@ public final class Server {
                 .getWorkspace()
                 .getObservationManager();
 
-            observationManager.addEventListener(
-                new EventListener() {
+            observationManager.addEventListener(new EventListener() {
 
-                    public void onEvent(EventIterator iterator) {
-                        // reload everything
-                        try {
-                            reload();
-                        }
-                        catch (ConfigurationException e) {
-                            log.error(e.getMessage(), e);
-                        }
+                public void onEvent(EventIterator iterator) {
+                    // reload everything
+                    try {
+                        reload();
                     }
-                },
-                Event.PROPERTY_ADDED | Event.PROPERTY_CHANGED | Event.PROPERTY_REMOVED,
-                "/" + CONFIG_PAGE,
-                false,
-                null,
-                null,
-                false);
+                    catch (ConfigurationException e) {
+                        log.error(e.getMessage(), e);
+                    }
+                }
+            }, Event.PROPERTY_ADDED | Event.PROPERTY_CHANGED | Event.PROPERTY_REMOVED, "/" + CONFIG_PAGE, //$NON-NLS-1$
+                false, null, null, false);
         }
         catch (RepositoryException e) {
-            log.error("Unable to add event listeners for server", e);
+            log.error("Unable to add event listeners for server", e); //$NON-NLS-1$
         }
 
         // secure URI list
@@ -199,10 +193,10 @@ public final class Server {
                 | Event.NODE_REMOVED
                 | Event.PROPERTY_ADDED
                 | Event.PROPERTY_CHANGED
-                | Event.PROPERTY_REMOVED, "/" + CONFIG_PAGE + "/secureURIList", true, null, null, false);
+                | Event.PROPERTY_REMOVED, "/" + CONFIG_PAGE + "/secureURIList", true, null, null, false); //$NON-NLS-1$ //$NON-NLS-2$
         }
         catch (RepositoryException e) {
-            log.error("Unable to add event listeners for server", e);
+            log.error("Unable to add event listeners for server", e); //$NON-NLS-1$
         }
     }
 
@@ -214,7 +208,7 @@ public final class Server {
         Iterator childIterator = node.getChildren().iterator();
         while (childIterator.hasNext()) {
             Content sub = (Content) childIterator.next();
-            String uri = sub.getNodeData("URI").getString();
+            String uri = sub.getNodeData("URI").getString(); //$NON-NLS-1$
             SecureURI.add(uri);
         }
     }
@@ -223,12 +217,12 @@ public final class Server {
      * @return resource not available URI mapping as specifies in serverInfo, else /
      */
     public static String get404URI() {
-        String uri = (String) Server.cachedContent.get("404URI");
+        String uri = (String) Server.cachedContent.get("404URI"); //$NON-NLS-1$
         if (StringUtils.isEmpty(uri)) {
-            return "/";
+            return "/"; //$NON-NLS-1$
         }
         if (log.isDebugEnabled()) {
-            log.debug("404URI is \"" + uri + "\"");
+            log.debug("404URI is \"" + uri + "\""); //$NON-NLS-1$ //$NON-NLS-2$
         }
         return uri;
     }
@@ -237,7 +231,7 @@ public final class Server {
      * @return default URL extension as configured
      */
     public static String getDefaultExtension() {
-        String defaultExtension = (String) Server.cachedContent.get("defaultExtension");
+        String defaultExtension = (String) Server.cachedContent.get("defaultExtension"); //$NON-NLS-1$
         if (defaultExtension == null) {
             return StringUtils.EMPTY;
         }
@@ -248,28 +242,28 @@ public final class Server {
      * @return default mail server
      */
     public static String getDefaultMailServer() {
-        return (String) Server.cachedContent.get("defaultMailServer");
+        return (String) Server.cachedContent.get("defaultMailServer"); //$NON-NLS-1$
     }
 
     /**
      * @return basic realm string
      */
     public static String getBasicRealm() {
-        return (String) Server.cachedContent.get("basicRealm");
+        return (String) Server.cachedContent.get("basicRealm"); //$NON-NLS-1$
     }
 
     /**
      * @return true if the instance is configured as an admin server
      */
     public static boolean isAdmin() {
-        return ((Boolean) Server.cachedContent.get("admin")).booleanValue();
+        return ((Boolean) Server.cachedContent.get("admin")).booleanValue(); //$NON-NLS-1$
     }
 
     /**
      *
      */
     public static boolean isVisibleToObinary() {
-        return ((Boolean) Server.cachedContent.get("visibleToObinary")).booleanValue();
+        return ((Boolean) Server.cachedContent.get("visibleToObinary")).booleanValue(); //$NON-NLS-1$
     }
 
     /**

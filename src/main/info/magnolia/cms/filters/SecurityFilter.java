@@ -109,7 +109,7 @@ public class SecurityFilter implements Filter {
         try {
             if (!Authenticator.authenticate(request)) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.setHeader("WWW-Authenticate", "BASIC realm=\"" + Server.getBasicRealm() + "\"");
+                response.setHeader("WWW-Authenticate", "BASIC realm=\"" + Server.getBasicRealm() + "\""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
                 // invalidate previous session
                 SessionAccessControl.invalidateUser(request);

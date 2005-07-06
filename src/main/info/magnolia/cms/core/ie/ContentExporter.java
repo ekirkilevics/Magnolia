@@ -32,9 +32,9 @@ public class ContentExporter {
     /**
      * default export handler
      */
-    public static final String DEFAULT_HANDLER_CLASS = "info.magnolia.cms.core.ie.XmlExport";
+    public static final String DEFAULT_HANDLER_CLASS = "info.magnolia.cms.core.ie.XmlExport"; //$NON-NLS-1$
 
-    public static final String DEFAULT_HANDLER = "defaultHandler";
+    public static final String DEFAULT_HANDLER = "defaultHandler"; //$NON-NLS-1$
 
     /**
      * all initialized exporters
@@ -62,15 +62,15 @@ public class ContentExporter {
 
     public void addExportHandler(String name, ExportHandler export) {
         if (log.isDebugEnabled()) {
-            log.debug("Adding export handler " + export.getClass());
+            log.debug("Adding export handler " + export.getClass()); //$NON-NLS-1$
         }
         this.handlers.put(name, export);
     }
 
     public ExportHandler getExportHandler(String name) {
         if (this.handlers.get(name) == null) {
-            log.error("No export handler found with name - " + name);
-            log.error("Returning default export handler - " + DEFAULT_HANDLER);
+            log.error("No export handler found with name - " + name); //$NON-NLS-1$
+            log.error("Returning default export handler - " + DEFAULT_HANDLER); //$NON-NLS-1$
             name = DEFAULT_HANDLER;
         }
         return (ExportHandler) this.handlers.get(name);

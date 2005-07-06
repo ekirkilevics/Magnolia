@@ -45,11 +45,12 @@ public class DialogMVCServlet extends MVCServlet {
      *
      */
     protected MVCServletHandler getHandler(HttpServletRequest request, HttpServletResponse response) {
-        String dialogName = RequestFormUtil.getParameter(request, "mgnlDialog");
+        String dialogName = RequestFormUtil.getParameter(request, "mgnlDialog"); //$NON-NLS-1$
         if (StringUtils.isEmpty(dialogName)) {
             // get the really called uri
-            dialogName = (String) request.getAttribute("javax.servlet.forward.servlet_path");
-            dialogName = StringUtils.replaceOnce(StringUtils.substringAfterLast(dialogName, "/dialogs/"), ".html", "");
+            dialogName = (String) request.getAttribute("javax.servlet.forward.servlet_path"); //$NON-NLS-1$
+            dialogName = StringUtils.replaceOnce(StringUtils.substringAfterLast(dialogName, "/dialogs/"), ".html", //$NON-NLS-1$ //$NON-NLS-2$
+                StringUtils.EMPTY);
         }
 
         DialogMVCHandler handler = null;
@@ -60,20 +61,20 @@ public class DialogMVCServlet extends MVCServlet {
                 handler = Store.getInstance().getDialogHandler(dialogName, request, response);
             }
             catch (InvalidDialogHandlerException e) {
-                log.info("can't find handler will try to load directly from the config", e);
+                log.info("can't find handler will try to load directly from the config", e); //$NON-NLS-1$
                 Content configNode = ConfiguredDialog.getConfigNode(request, dialogName);
                 // try to find a class property or return a ConfiguredDialog
                 if (configNode != null) {
                     handler = ConfiguredDialog.getConfiguredDialog(dialogName, configNode, request, response);
                 }
                 else {
-                    log.error("no config node found for dialog : " + dialogName);
+                    log.error("no config node found for dialog : " + dialogName); //$NON-NLS-1$
                 }
             }
         }
 
         if (handler == null) {
-            log.error("no dialog found: " + dialogName);
+            log.error("no dialog found: " + dialogName); //$NON-NLS-1$
         }
 
         return handler;

@@ -57,7 +57,7 @@ public class Attribute extends TagSupport {
     public int doEndTag() throws JspException {
         Include parent = (Include) findAncestorWithClass(this, Include.class);
         if (parent == null) {
-            throw new JspException("nesting error");
+            throw new JspException("nesting error"); //$NON-NLS-1$
         }
         parent.setAttribute(this.name, this.value);
         return EVAL_PAGE;

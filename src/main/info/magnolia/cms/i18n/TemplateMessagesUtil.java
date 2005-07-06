@@ -26,12 +26,12 @@ public final class TemplateMessagesUtil {
     /**
      * Use this basename if the string is not found in the custom basename
      */
-    public static final String DEFAULT_BASENAME = "info.magnolia.module.admininterface.messages_templating";
+    public static final String DEFAULT_BASENAME = "info.magnolia.module.admininterface.messages_templating"; //$NON-NLS-1$
 
     /**
      * Name of the custom basename
      */
-    public static final String CUSTOM_BASENAME = "info.magnolia.module.admininterface.messages_templating_custom";
+    public static final String CUSTOM_BASENAME = "info.magnolia.module.admininterface.messages_templating_custom"; //$NON-NLS-1$
 
     /**
      * Util has no public constructor

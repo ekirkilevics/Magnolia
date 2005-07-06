@@ -62,15 +62,15 @@ public final class ModuleFactory {
      * @throws ConfigurationException if a module has an not handled error during registration
      */
     public static void init() throws ConfigurationException {
-        log.info("Loading module jars");
+        log.info("Loading module jars"); //$NON-NLS-1$
         try {
             HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
             Content startPage = hm.getContent(ModuleLoader.CONFIG_PAGE);
             init(startPage);
-            log.info("Finished loading module jars");
+            log.info("Finished loading module jars"); //$NON-NLS-1$
         }
         catch (Exception e) {
-            log.fatal("Failed to load the module jar");
+            log.fatal("Failed to load the module jar"); //$NON-NLS-1$
             log.fatal(e.getMessage(), e);
             throw new ConfigurationException(e.getMessage());
         }
@@ -90,12 +90,12 @@ public final class ModuleFactory {
                     Manifest manifest = jar.getManifest();
                     if (manifest != null) {
                         // read from manifest
-                        String moduleName = manifest.getMainAttributes().getValue("Magnolia-Module-Name");
-                        String version = manifest.getMainAttributes().getValue("Magnolia-Module-Version");
+                        String moduleName = manifest.getMainAttributes().getValue("Magnolia-Module-Name"); //$NON-NLS-1$
+                        String version = manifest.getMainAttributes().getValue("Magnolia-Module-Version"); //$NON-NLS-1$
                         String moduleClassName = jar
                             .getManifest()
                             .getMainAttributes()
-                            .getValue("Magnolia-Module-Class");
+                            .getValue("Magnolia-Module-Class"); //$NON-NLS-1$
 
                         // if everything is provided
                         if (moduleName != null && moduleClassName != null && version != null) {
@@ -108,7 +108,7 @@ public final class ModuleFactory {
                                 try {
                                     moduleNode = modulesNode.getContent(moduleName);
                                     // node exists: is it a new version ?
-                                    if (!version.equals(moduleNode.getNodeData("version").getString())) {
+                                    if (!version.equals(moduleNode.getNodeData("version").getString())) { //$NON-NLS-1$
                                         registerState = Module.REGISTER_STATE_NEW_VERSION;
                                     }
                                 }
@@ -127,43 +127,41 @@ public final class ModuleFactory {
                                     // call register: this is always done not only during the first startup
                                     module.register(moduleName, version, moduleNode, jar, registerState);
                                     if (registerState == Module.REGISTER_STATE_NEW_VERSION) {
-                                        moduleNode.getNodeData("version", true).setValue(version);
+                                        moduleNode.getNodeData("version", true).setValue(version); //$NON-NLS-1$
                                     }
                                     modulesNode.save();
                                 }
                                 catch (RegisterException e) {
                                     switch (registerState) {
                                         case Module.REGISTER_STATE_INSTALLATION:
-                                            log.error("can't install module [" + moduleName + "]" + version, e);
+                                            log.error("can't install module [" + moduleName + "]" + version, e); //$NON-NLS-1$ //$NON-NLS-2$
                                             break;
                                         case Module.REGISTER_STATE_NEW_VERSION:
-                                            log.error(
-                                                "can't update module [" + moduleName + "] to version " + version,
+                                            log.error("can't update module [" + moduleName + "] to version " + version, //$NON-NLS-1$ //$NON-NLS-2$
                                                 e);
                                             break;
                                         default:
-                                            log.error("error during registering an already installed module ["
-                                                + moduleName
-                                                + "]", e);
+                                            log.error("error during registering an already installed module [" //$NON-NLS-1$
+                                                + moduleName + "]", e); //$NON-NLS-1$
                                             break;
                                     }
                                 }
                             }
 
                             catch (Exception e) {
-                                log.error("can't register module [" + moduleName + "]", e);
+                                log.error("can't register module [" + moduleName + "]", e); //$NON-NLS-1$ //$NON-NLS-2$
                             }
                         }
                     }
                 }
                 catch (IOException e) {
-                    log.error("can't read manifest", e);
+                    log.error("can't read manifest", e); //$NON-NLS-1$
                 }
             }
 
         }
         catch (IOException e) {
-            log.error("can't load module jars", e);
+            log.error("can't load module jars", e); //$NON-NLS-1$
         }
     }
 
@@ -183,13 +181,13 @@ public final class ModuleFactory {
     private static List getJarFiles() throws IOException {
         List jars = new ArrayList();
 
-        File dir = new File(Path.getAbsoluteFileSystemPath("WEB-INF/lib"));
+        File dir = new File(Path.getAbsoluteFileSystemPath("WEB-INF/lib")); //$NON-NLS-1$
         if (dir != null) {
             File[] files = dir.listFiles();
             if (files != null) {
                 for (int i = 0; i < files.length; i++) {
                     File jarFile = files[i];
-                    if (jarFile.getName().endsWith(".jar")) {
+                    if (jarFile.getName().endsWith(".jar")) { //$NON-NLS-1$
                         JarFile jar = new JarFile(jarFile);
                         jars.add(jar);
                     }

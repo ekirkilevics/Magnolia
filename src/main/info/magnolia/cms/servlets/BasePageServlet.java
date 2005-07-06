@@ -30,10 +30,10 @@ public abstract class BasePageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         if (!Server.isAdmin()) {
-            response.sendRedirect("/");
+            response.sendRedirect("/"); //$NON-NLS-1$
         }
 
-        response.setContentType("text/html; charset=UTF-8");
+        response.setContentType("text/html; charset=UTF-8"); //$NON-NLS-1$
 
         try {
             draw(request, response);

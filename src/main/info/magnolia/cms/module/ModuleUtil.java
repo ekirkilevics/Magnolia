@@ -73,7 +73,7 @@ public final class ModuleUtil {
         }
 
         if (root == null) {
-            throw new Exception("Invalid magnolia " + SystemProperty.MAGNOLIA_APP_ROOTDIR + " path");
+            throw new Exception("Invalid magnolia " + SystemProperty.MAGNOLIA_APP_ROOTDIR + " path"); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         Map files = new HashMap();
@@ -82,11 +82,11 @@ public final class ModuleUtil {
             JarEntry entry = (JarEntry) entries.nextElement();
             String name = entry.getName().toUpperCase();
             // Exclude root, dirs, ch-dir, META-INF-dir and jars
-            if (!name.equals("/")
-                & !name.endsWith("/")
-                & !name.startsWith("CH")
-                & !name.startsWith("META-INF")
-                & !name.endsWith(".JAR")) {
+            if (!name.equals("/") //$NON-NLS-1$
+                & !name.endsWith("/") //$NON-NLS-1$
+                & !name.startsWith("CH") //$NON-NLS-1$
+                & !name.startsWith("META-INF") //$NON-NLS-1$
+                & !name.endsWith(".JAR")) { //$NON-NLS-1$
                 files.put(new File(root, entry.getName()), entry);
             }
         }
@@ -98,21 +98,21 @@ public final class ModuleUtil {
             File file = (File) iter.next();
             String s = StringUtils.EMPTY;
             if (!file.getParentFile().exists() & !file.getParentFile().mkdirs()) {
-                s = "Can't create directories for " + file.getAbsolutePath();
+                s = "Can't create directories for " + file.getAbsolutePath(); //$NON-NLS-1$
             }
             else if (!file.getParentFile().canWrite()) {
-                s = "Can't write to " + file.getAbsolutePath();
+                s = "Can't write to " + file.getAbsolutePath(); //$NON-NLS-1$
             }
             if (s.length() > 0) {
                 if (error.length() > 0) {
-                    error += "\r\n";
+                    error += "\r\n"; //$NON-NLS-1$
                 }
                 error += s;
             }
         }
 
         if (error.length() > 0) {
-            throw new Exception("Errors while installing files: " + error);
+            throw new Exception("Errors while installing files: " + error); //$NON-NLS-1$
         }
 
         // Copy files
@@ -159,18 +159,18 @@ public final class ModuleUtil {
      */
     public static Content createMinimalConfiguration(Content node, String name, String className, String version)
         throws AccessDeniedException, PathNotFoundException, RepositoryException {
-        node.createNodeData("version").setValue(version);
-        node.createNodeData("license");
-        node.createContent("Config");
-        node.createContent("VirtualURIMapping", ItemType.CONTENTNODE);
+        node.createNodeData("version").setValue(version); //$NON-NLS-1$
+        node.createNodeData("license"); //$NON-NLS-1$
+        node.createContent("Config"); //$NON-NLS-1$
+        node.createContent("VirtualURIMapping", ItemType.CONTENTNODE); //$NON-NLS-1$
 
         Content register = node.createContent(ModuleLoader.CONFIG_NODE_REGISTER, ItemType.CONTENTNODE);
-        register.createNodeData("moduleName");
-        register.createNodeData("moduleDescription");
-        register.createNodeData("class").setValue(className);
-        register.createNodeData("repository");
-        register.createContent("sharedRepositories", ItemType.CONTENTNODE);
-        register.createContent("initParams", ItemType.CONTENTNODE);
+        register.createNodeData("moduleName"); //$NON-NLS-1$
+        register.createNodeData("moduleDescription"); //$NON-NLS-1$
+        register.createNodeData("class").setValue(className); //$NON-NLS-1$
+        register.createNodeData("repository"); //$NON-NLS-1$
+        register.createContent("sharedRepositories", ItemType.CONTENTNODE); //$NON-NLS-1$
+        register.createContent("initParams", ItemType.CONTENTNODE); //$NON-NLS-1$
         return node;
     }
 

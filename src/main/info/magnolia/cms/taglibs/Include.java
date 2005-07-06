@@ -152,18 +152,18 @@ public class Include extends BodyTagSupport {
                     }
                 }
                 if (content == null) {
-                    throw new Exception("no content node found");
+                    throw new Exception("no content node found"); //$NON-NLS-1$
                 }
             }
 
             String jspPage = this.path;
 
             if (jspPage == null) {
-                String paragraphName = content.getNodeData("paragraph").getString();
+                String paragraphName = content.getNodeData("paragraph").getString(); //$NON-NLS-1$
                 Paragraph paragraph = Paragraph.getInfo(paragraphName);
 
                 if (paragraph == null) {
-                    log.error("Paragraph [" + paragraphName + "] not found for page [" + content.getHandle() + "]");
+                    log.error("Paragraph [" + paragraphName + "] not found for page [" + content.getHandle() + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 }
                 else {
                     jspPage = paragraph.getTemplatePath();

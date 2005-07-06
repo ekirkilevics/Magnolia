@@ -30,9 +30,9 @@ import javax.jcr.version.VersionException;
 
 public interface Query {
 
-    String XPATH = "xpath";
+    String XPATH = "xpath"; //$NON-NLS-1$
 
-    String SQL = "sql";
+    String SQL = "sql"; //$NON-NLS-1$
 
     /**
      * <i>Description inherited from javax.jcr.query.Query#execute()</i><br>

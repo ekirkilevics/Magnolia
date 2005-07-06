@@ -117,7 +117,7 @@ public final class Cache {
         cacheMap.size = size;
         cacheMap.compressedSize = compressedSize;
         if (log.isDebugEnabled()) {
-            log.debug("Caching URI [" + uri + "]");
+            log.debug("Caching URI [" + uri + "]"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         Cache.cachedURIList.put(uri, cacheMap);
     }

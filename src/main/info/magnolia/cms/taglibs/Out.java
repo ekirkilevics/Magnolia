@@ -49,9 +49,9 @@ public class Out extends TagSupport {
      */
     private static Logger log = Logger.getLogger(Out.class);
 
-    private static final String DEFAULT_LINEBREAK = "<br />";
+    private static final String DEFAULT_LINEBREAK = "<br />"; //$NON-NLS-1$
 
-    private static final String DEFAULT_DATEPATTERN = "yyyy-MM-dd";
+    private static final String DEFAULT_DATEPATTERN = "yyyy-MM-dd"; //$NON-NLS-1$
 
     private String nodeDataName;
 
@@ -370,11 +370,11 @@ public class Out extends TagSupport {
                 out.print(value);
             }
             catch (IOException e) {
-                log.debug("Exception caught: " + e.getMessage(), e);
+                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
             }
         }
         catch (Exception e) {
-            log.debug("Exception caught: " + e.getMessage(), e);
+            log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
         }
     }
 

@@ -56,13 +56,13 @@ public class VirtualMap {
     public static void update(String configPath) {
         HierarchyManager configHierarchyManager = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
         try {
-            log.info("Config : Loading VirtualMap - " + configPath);
+            log.info("Config : Loading VirtualMap - " + configPath); //$NON-NLS-1$
             Content mappingNode = configHierarchyManager.getContent(configPath);
             cacheURIMappings(mappingNode);
-            log.info("Config : VirtualMap loaded - " + configPath);
+            log.info("Config : VirtualMap loaded - " + configPath); //$NON-NLS-1$
         }
         catch (RepositoryException re) {
-            log.error("Config : Failed to load VirtualMap - " + configPath + " - " + re.getMessage(), re);
+            log.error("Config : Failed to load VirtualMap - " + configPath + " - " + re.getMessage(), re); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
@@ -71,7 +71,7 @@ public class VirtualMap {
     }
 
     protected static void reload() {
-        log.info("Config : re-loading VirtualMap");
+        log.info("Config : re-loading VirtualMap"); //$NON-NLS-1$
         init();
     }
 
@@ -80,13 +80,13 @@ public class VirtualMap {
      */
     private static void cacheURIMappings(Content nodeList) {
         Collection list = nodeList.getChildren();
-        Collections.sort((List) list, new StringComparator("fromURI"));
+        Collections.sort((List) list, new StringComparator("fromURI")); //$NON-NLS-1$
         Iterator it = list.iterator();
         while (it.hasNext()) {
             Content container = (Content) it.next();
-            NodeData fromURI = container.getNodeData("fromURI");
+            NodeData fromURI = container.getNodeData("fromURI"); //$NON-NLS-1$
             UrlPattern p = new SimpleUrlPattern(fromURI.getString());
-            VirtualMap.cachedURImapping.put(p, container.getNodeData("toURI").getString());
+            VirtualMap.cachedURImapping.put(p, container.getNodeData("toURI").getString()); //$NON-NLS-1$
         }
     }
 

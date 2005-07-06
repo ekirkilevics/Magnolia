@@ -71,7 +71,7 @@ public class ResourceDispatcher extends HttpServlet {
 
         String resourceHandle = (String) req.getAttribute(Aggregator.HANDLE);
         if (log.isDebugEnabled()) {
-            log.debug("handleResourceRequest, resourceHandle=\"" + resourceHandle + "\"");
+            log.debug("handleResourceRequest, resourceHandle=\"" + resourceHandle + "\""); //$NON-NLS-1$ //$NON-NLS-2$
         }
         if (StringUtils.isNotEmpty(resourceHandle)) {
             try {
@@ -87,21 +87,21 @@ public class ResourceDispatcher extends HttpServlet {
             catch (IOException e) {
                 // don't log at error level since tomcat tipically throws a
                 // org.apache.catalina.connector.ClientAbortException if the user stops loading the page
-                log.debug("Exception while dispatching resource  " + e.getClass().getName() + ": " + e.getMessage(), e);
+                log.debug("Exception while dispatching resource  " + e.getClass().getName() + ": " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
             }
             catch (Exception e) {
-                log.error("Exception while dispatching resource  " + e.getClass().getName() + ": " + e.getMessage(), e);
+                log.error("Exception while dispatching resource  " + e.getClass().getName() + ": " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
         if (log.isDebugEnabled()) {
-            log.debug("Redirecting to 404 page \"" + Server.get404URI() + "\"");
+            log.debug("Redirecting to 404 page \"" + Server.get404URI() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         if (!res.isCommitted()) {
             res.sendRedirect(req.getContextPath() + Server.get404URI());
         }
         else {
-            log.info("Unable to redirect to 404 page, response is already committed");
+            log.info("Unable to redirect to 404 page, response is already committed"); //$NON-NLS-1$
         }
 
     }
@@ -112,9 +112,9 @@ public class ResourceDispatcher extends HttpServlet {
      * @return <code>true</code> if the client accepts gzip encoding
      */
     private boolean canCompress(HttpServletRequest request) {
-        String encoding = request.getHeader("Accept-Encoding");
+        String encoding = request.getHeader("Accept-Encoding"); //$NON-NLS-1$
         if (encoding != null) {
-            return (encoding.toLowerCase().indexOf("gzip") > -1);
+            return (encoding.toLowerCase().indexOf("gzip") > -1); //$NON-NLS-1$
         }
         return false;
     }
@@ -126,7 +126,7 @@ public class ResourceDispatcher extends HttpServlet {
      * @throws IOException standard servlet exception
      */
     private void sendCompressed(InputStream is, HttpServletResponse res) throws IOException {
-        res.setHeader("Content-Encoding", "gzip");
+        res.setHeader("Content-Encoding", "gzip"); //$NON-NLS-1$ //$NON-NLS-2$
         GZIPOutputStream gzos = new GZIPOutputStream(res.getOutputStream());
         int bit;
         while ((bit = is.read()) != -1) {
@@ -161,13 +161,13 @@ public class ResourceDispatcher extends HttpServlet {
      */
     private InputStream getNodedataAstream(String path, HierarchyManager hm, HttpServletResponse res) {
         if (log.isDebugEnabled()) {
-            log.debug("getAtomAsStream for path \"" + path + "\"");
+            log.debug("getAtomAsStream for path \"" + path + "\""); //$NON-NLS-1$ //$NON-NLS-2$
         }
         try {
             NodeData atom = hm.getNodeData(path);
             if (atom != null) {
                 if (atom.getType() == PropertyType.BINARY) {
-                    NodeData size = hm.getNodeData(path + "_properties/size");
+                    NodeData size = hm.getNodeData(path + "_properties/size"); //$NON-NLS-1$
                     int sizeInBytes = (new Long(size.getLong())).intValue();
                     res.setContentLength(sizeInBytes);
                 }
@@ -178,14 +178,14 @@ public class ResourceDispatcher extends HttpServlet {
                 }
             }
 
-            log.warn("Resource not found: [" + path + "]");
+            log.warn("Resource not found: [" + path + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 
         }
         catch (PathNotFoundException e) {
-            log.warn("Resource not found: [" + path + "]");
+            log.warn("Resource not found: [" + path + "]"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         catch (RepositoryException e) {
-            log.error("RepositoryException while reading Resource [" + path + "]", e);
+            log.error("RepositoryException while reading Resource [" + path + "]", e); //$NON-NLS-1$ //$NON-NLS-2$
         }
         return null;
     }

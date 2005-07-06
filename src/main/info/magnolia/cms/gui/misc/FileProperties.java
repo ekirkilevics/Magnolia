@@ -54,20 +54,35 @@ public class FileProperties {
 
     public static final String HANDLE = "handle"; // /en/mainColumnParagraph/04/file //$NON-NLS-1$
 
-    public static final String PATH_WITHOUT_NAME = "pathWithoutName"; // /en/mainColumnParagraph/04/file.Pdf
-                                                                        // //$NON-NLS-1$
+    /**
+     * /en/mainColumnParagraph/04/file.Pdf
+     */
+    public static final String PATH_WITHOUT_NAME = "pathWithoutName"; //$NON-NLS-1$
 
-    public static final String PATH = "path"; // path including fileName: //$NON-NLS-1$
+    /**
+     * path including fileName: <code>/en/mainColumnParagraph/04/file/report2004.Pdf</code>
+     */
+    public static final String PATH = "path"; //$NON-NLS-1$
 
-    // /en/mainColumnParagraph/04/file/report2004.Pdf
-    public static final String SIZE_BYTES = "sizeBytes"; // size in bytes: 263492 //$NON-NLS-1$
+    /**
+     * size in bytes: <code>263492</code>
+     */
+    public static final String SIZE_BYTES = "sizeBytes"; //$NON-NLS-1$
 
-    public static final String SIZE_KB = "sizeKB"; // size in KB: 257.3 //$NON-NLS-1$
+    /**
+     * size in KB: <code>257.3</code>
+     */
+    public static final String SIZE_KB = "sizeKB"; //$NON-NLS-1$
 
-    public static final String SIZE_MB = "sizeMB"; // size in MB: 0.2 //$NON-NLS-1$
+    /**
+     * size in MB: <code>0.2</code>
+     */
+    public static final String SIZE_MB = "sizeMB"; //$NON-NLS-1$
 
-    public static final String SIZE = "size"; // size and unit depending of size in bytes, KB, or MB: 257.3
-                                                // //$NON-NLS-1$
+    /**
+     * size and unit depending of size in bytes, KB, or MB: <code>257.3</code>
+     */
+    public static final String SIZE = "size"; //$NON-NLS-1$
 
     /**
      * Logger.

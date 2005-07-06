@@ -43,37 +43,37 @@ public class RequestInterceptor extends HttpServlet {
     /**
      * Action: sort a paragraph.
      */
-    private static final String ACTION_NODE_SORT = "NODE_SORT";
+    private static final String ACTION_NODE_SORT = "NODE_SORT"; //$NON-NLS-1$
 
     /**
      * Action: delete a paragraph.
      */
-    private static final String ACTION_NODE_DELETE = "NODE_DELETE";
+    private static final String ACTION_NODE_DELETE = "NODE_DELETE"; //$NON-NLS-1$
 
     /**
      * Action: preview a page.
      */
-    private static final String ACTION_PREVIEW = "PREVIEW";
+    private static final String ACTION_PREVIEW = "PREVIEW"; //$NON-NLS-1$
 
     /**
      * request parameter: repository name.
      */
-    private static final String PARAM_REPOSITORY = "mgnlRepository";
+    private static final String PARAM_REPOSITORY = "mgnlRepository"; //$NON-NLS-1$
 
     /**
      * request parameter: node path, used for paragraph deletion.
      */
-    private static final String PARAM_PATH = "mgnlPath";
+    private static final String PARAM_PATH = "mgnlPath"; //$NON-NLS-1$
 
     /**
      * request parameter: sort-above paragraph.
      */
-    private static final String PARAM_PATH_SORT_ABOVE = "mgnlPathSortAbove";
+    private static final String PARAM_PATH_SORT_ABOVE = "mgnlPathSortAbove"; //$NON-NLS-1$
 
     /**
      * request parameter: selected paragraph.
      */
-    private static final String PARAM_PATH_SELECTED = "mgnlPathSelected";
+    private static final String PARAM_PATH_SELECTED = "mgnlPathSelected"; //$NON-NLS-1$
 
     /**
      * Stable serialVersionUID.
@@ -119,7 +119,7 @@ public class RequestInterceptor extends HttpServlet {
                 hm.save();
             }
             catch (RepositoryException e) {
-                log.error("Exception caught: " + e.getMessage(), e);
+                log.error("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
             }
         }
         else if (action.equals(ACTION_NODE_SORT)) {
@@ -127,7 +127,7 @@ public class RequestInterceptor extends HttpServlet {
             try {
                 String pathSelected = request.getParameter(PARAM_PATH_SELECTED);
                 String pathSortAbove = request.getParameter(PARAM_PATH_SORT_ABOVE);
-                String pathParent = pathSelected.substring(0, pathSelected.lastIndexOf("/"));
+                String pathParent = pathSelected.substring(0, pathSelected.lastIndexOf("/")); //$NON-NLS-1$
                 Iterator it = hm.getContent(pathParent).getChildren(
                     ItemType.CONTENTNODE.getSystemName(),
                     Content.SORT_BY_SEQUENCE).iterator();
@@ -161,7 +161,7 @@ public class RequestInterceptor extends HttpServlet {
                 hm.save();
             }
             catch (RepositoryException e) {
-                log.debug("Exception caught: " + e.getMessage(), e);
+                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
             }
         }
     }
@@ -175,7 +175,7 @@ public class RequestInterceptor extends HttpServlet {
      */
     private void updatePageMetaData(HttpServletRequest request, HierarchyManager hm) throws PathNotFoundException,
         RepositoryException, AccessDeniedException {
-        String pagePath = StringUtils.substringBeforeLast(Path.getURI(request), ".");
+        String pagePath = StringUtils.substringBeforeLast(Path.getURI(request), "."); //$NON-NLS-1$
         Content page = hm.getContent(pagePath);
         page.updateMetaData(request);
     }

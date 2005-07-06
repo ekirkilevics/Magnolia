@@ -29,7 +29,7 @@ public class InvalidDialogHandlerException extends RuntimeException {
      * @param dialogName missing dialog name
      */
     public InvalidDialogHandlerException(String dialogName) {
-        super("No dialog handler for [" + dialogName + "] found");
+        super("No dialog handler for [" + dialogName + "] found"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
@@ -39,11 +39,9 @@ public class InvalidDialogHandlerException extends RuntimeException {
      * @param cause previous exception
      */
     public InvalidDialogHandlerException(String dialogName, Throwable cause) {
-        super("Unable to instantiate a dialog handler for ["
-            + dialogName
-            + "] due to a "
-            + cause.getClass().getName()
-            + " exception", cause);
+        super("Unable to instantiate a dialog handler for [" //$NON-NLS-1$
+            + dialogName + "] due to a " //$NON-NLS-1$
+            + cause.getClass().getName() + " exception", cause); //$NON-NLS-1$
     }
 
 }

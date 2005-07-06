@@ -24,6 +24,8 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * @author Fabrizio Giustina
@@ -159,7 +161,7 @@ public class UserRolesEditIncludeAclDialogPage extends BasePageServlet {
         String hiddenFieldName = "acl" + repository + "List"; //$NON-NLS-1$ //$NON-NLS-2$
 
         out.println("<div id=\"acl" + repository + "Div\" class=\"" + CSS_ACL_DIV + "\">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        out.println(new Hidden(hiddenFieldName, "", false).getHtml());
+        out.println(new Hidden(hiddenFieldName, StringUtils.EMPTY, false).getHtml());
 
         // the table
         out.println("<table id=\"" //$NON-NLS-1$

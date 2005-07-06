@@ -42,38 +42,38 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
 
         int treeHeight = 50;
 
-        String repository = request.getParameter("repository");
+        String repository = request.getParameter("repository"); //$NON-NLS-1$
         if (StringUtils.isEmpty(repository)) {
             repository = ContentRepository.WEBSITE;
         }
 
-        String path = request.getParameter("path");
+        String path = request.getParameter("path"); //$NON-NLS-1$
         if (StringUtils.isEmpty(path)) {
-            path = "/";
+            path = "/"; //$NON-NLS-1$
         }
 
-        String pathOpen = request.getParameter("pathOpen");
-        String pathSelected = request.getParameter("pathSelected");
+        String pathOpen = request.getParameter("pathOpen"); //$NON-NLS-1$
+        String pathSelected = request.getParameter("pathSelected"); //$NON-NLS-1$
 
         StringBuffer html = new StringBuffer();
 
         boolean snippetMode = false;
-        String mode = request.getParameter("treeMode");
+        String mode = request.getParameter("treeMode"); //$NON-NLS-1$
         if (mode == null) {
             mode = StringUtils.EMPTY;
         }
-        if (mode.equals("snippet")) {
+        if (mode.equals("snippet")) { //$NON-NLS-1$
             snippetMode = true;
         }
 
         if (!snippetMode) {
-            html.append("<html><head>");
-            html.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>");
+            html.append("<html><head>"); //$NON-NLS-1$
+            html.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>"); //$NON-NLS-1$
             html.append(new Sources(request.getContextPath()).getHtmlJs());
             html.append(new Sources(request.getContextPath()).getHtmlCss());
-            html.append("</head>");
+            html.append("</head>"); //$NON-NLS-1$
 
-            html.append("<body class=\"mgnlBgDark\" onload=\"mgnlTreeControl.resize();\">");
+            html.append("<body class=\"mgnlBgDark\" onload=\"mgnlTreeControl.resize();\">"); //$NON-NLS-1$
 
             html.append(Spacer.getHtml(20, 20));
 
@@ -84,7 +84,7 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
         // if (!snippetMode || repository.equals(ContentRepository.WEBSITE)) {
         if (repository.equals(ContentRepository.WEBSITE)) {
             Tree websiteTree = new Tree(ContentRepository.WEBSITE, request);
-            websiteTree.setJavascriptTree("mgnlTreeControl");
+            websiteTree.setJavascriptTree("mgnlTreeControl"); //$NON-NLS-1$
             websiteTree.setSnippetMode(snippetMode);
             websiteTree.setHeight(treeHeight);
 
@@ -100,34 +100,32 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
             column0.setWidth(3);
 
             TreeColumn column1 = new TreeColumn(websiteTree.getJavascriptTree(), request);
-            column1.setName("title");
-            column1.setTitle(msgs.get("linkbrowser.web.title"));
+            column1.setName("title"); //$NON-NLS-1$
+            column1.setTitle(msgs.get("linkbrowser.web.title")); //$NON-NLS-1$
             column1.setWidth(2);
 
             websiteTree.addColumn(column0);
             websiteTree.addColumn(column1);
 
             ContextMenuItem menuRefresh = new ContextMenuItem();
-            menuRefresh.setLabel(msgs.get("linkbrowser.refresh"));
-            menuRefresh.setOnclick(websiteTree.getJavascriptTree() + ".refresh();");
+            menuRefresh.setLabel(msgs.get("linkbrowser.refresh")); //$NON-NLS-1$
+            menuRefresh.setOnclick(websiteTree.getJavascriptTree() + ".refresh();"); //$NON-NLS-1$
 
             websiteTree.addMenuItem(menuRefresh);
 
-            String display = "none";
+            String display = "none"; //$NON-NLS-1$
             if (repository.equals(ContentRepository.WEBSITE)) {
-                display = "block";
+                display = "block"; //$NON-NLS-1$
             }
 
             if (!snippetMode) {
-                out.println("<div id="
-                    + websiteTree.getJavascriptTree()
-                    + "_DivSuper style=\"display:"
-                    + display
-                    + ";\">");
+                out.println("<div id=" //$NON-NLS-1$
+                    + websiteTree.getJavascriptTree() + "_DivSuper style=\"display:" //$NON-NLS-1$
+                    + display + ";\">"); //$NON-NLS-1$
             }
             out.print(websiteTree.getHtml()); // print, not println! because of snippet mode!
             if (!snippetMode) {
-                out.println("</div>");
+                out.println("</div>"); //$NON-NLS-1$
             }
 
         }
@@ -136,11 +134,11 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
         if (repository.equals(ContentRepository.USERS)) {
             Tree usersTree = new Tree(ContentRepository.USERS, request);
             // usersTree.setJavascriptTree("mgnlUsersTree");
-            usersTree.setJavascriptTree("mgnlTreeControl");
+            usersTree.setJavascriptTree("mgnlTreeControl"); //$NON-NLS-1$
             usersTree.setSnippetMode(snippetMode);
             usersTree.setHeight(treeHeight);
             usersTree.setDrawShifter(false);
-            usersTree.setIconPage(Tree.ICONDOCROOT + "pawn_glass_yellow.gif");
+            usersTree.setIconPage(Tree.ICONDOCROOT + "pawn_glass_yellow.gif"); //$NON-NLS-1$
 
             usersTree.addItemType(ItemType.CONTENT);
 
@@ -149,38 +147,36 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
 
             TreeColumn column0 = new TreeColumn(usersTree.getJavascriptTree(), request);
             column0.setIsLabel(true);
-            column0.setTitle(msgs.get("linkbrowser.user.username"));
+            column0.setTitle(msgs.get("linkbrowser.user.username")); //$NON-NLS-1$
             column0.setWidth(2);
 
             TreeColumn column1 = new TreeColumn(usersTree.getJavascriptTree(), request);
-            column1.setName("title");
-            column1.setTitle(msgs.get("linkbrowser.user.fullname"));
+            column1.setName("title"); //$NON-NLS-1$
+            column1.setTitle(msgs.get("linkbrowser.user.fullname")); //$NON-NLS-1$
             column1.setWidth(2);
 
             usersTree.addColumn(column0);
             usersTree.addColumn(column1);
 
             ContextMenuItem menuRefresh = new ContextMenuItem();
-            menuRefresh.setLabel(msgs.get("linkbrowser.refresh"));
-            menuRefresh.setOnclick(usersTree.getJavascriptTree() + ".refresh();");
+            menuRefresh.setLabel(msgs.get("linkbrowser.refresh")); //$NON-NLS-1$
+            menuRefresh.setOnclick(usersTree.getJavascriptTree() + ".refresh();"); //$NON-NLS-1$
 
             usersTree.addMenuItem(menuRefresh);
 
-            String display = "none";
+            String display = "none"; //$NON-NLS-1$
             if (repository.equals(ContentRepository.USERS)) {
-                display = "block";
+                display = "block"; //$NON-NLS-1$
             }
 
             if (!snippetMode) {
-                out.println("<div id="
-                    + usersTree.getJavascriptTree()
-                    + "_DivSuper style=\"display:"
-                    + display
-                    + ";\">");
+                out.println("<div id=" //$NON-NLS-1$
+                    + usersTree.getJavascriptTree() + "_DivSuper style=\"display:" //$NON-NLS-1$
+                    + display + ";\">"); //$NON-NLS-1$
             }
             out.print(usersTree.getHtml()); // print, not println! because of snippet mode!
             if (!snippetMode) {
-                out.println("</div>");
+                out.println("</div>"); //$NON-NLS-1$
             }
         }
 
@@ -188,11 +184,11 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
         if (repository.equals(ContentRepository.USER_ROLES)) {
             Tree rolesTree = new Tree(ContentRepository.USER_ROLES, request);
             // rolesTree.setJavascriptTree("mgnlUserRolesTree");
-            rolesTree.setJavascriptTree("mgnlTreeControl");
+            rolesTree.setJavascriptTree("mgnlTreeControl"); //$NON-NLS-1$
             rolesTree.setSnippetMode(snippetMode);
             rolesTree.setHeight(treeHeight);
             rolesTree.setDrawShifter(false);
-            rolesTree.setIconPage(Tree.ICONDOCROOT + "hat_white.gif");
+            rolesTree.setIconPage(Tree.ICONDOCROOT + "hat_white.gif"); //$NON-NLS-1$
 
             rolesTree.addItemType(ItemType.CONTENT);
 
@@ -202,45 +198,43 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
             TreeColumn column0 = new TreeColumn(rolesTree.getJavascriptTree(), request);
             column0.setIsLabel(true);
             column0.setWidth(2);
-            column0.setTitle("name");
+            column0.setTitle("name"); //$NON-NLS-1$
 
             TreeColumn column1 = new TreeColumn(rolesTree.getJavascriptTree(), request);
-            column1.setName("title");
+            column1.setName("title"); //$NON-NLS-1$
             column1.setWidth(2);
-            column1.setTitle(msgs.get("linkbrowser.role.fullrolename"));
+            column1.setTitle(msgs.get("linkbrowser.role.fullrolename")); //$NON-NLS-1$
 
             rolesTree.addColumn(column0);
             rolesTree.addColumn(column1);
 
             ContextMenuItem menuRefresh = new ContextMenuItem();
-            menuRefresh.setLabel(msgs.get("linkbrowser.refresh"));
-            menuRefresh.setOnclick(rolesTree.getJavascriptTree() + ".refresh();");
+            menuRefresh.setLabel(msgs.get("linkbrowser.refresh")); //$NON-NLS-1$
+            menuRefresh.setOnclick(rolesTree.getJavascriptTree() + ".refresh();"); //$NON-NLS-1$
 
             rolesTree.addMenuItem(menuRefresh);
 
-            String display = "none";
+            String display = "none"; //$NON-NLS-1$
             if (repository.equals(ContentRepository.USER_ROLES)) {
-                display = "block";
+                display = "block"; //$NON-NLS-1$
             }
 
             if (!snippetMode) {
-                out.println("<div id="
-                    + rolesTree.getJavascriptTree()
-                    + "_DivSuper style=\"display:"
-                    + display
-                    + ";\">");
+                out.println("<div id=" //$NON-NLS-1$
+                    + rolesTree.getJavascriptTree() + "_DivSuper style=\"display:" //$NON-NLS-1$
+                    + display + ";\">"); //$NON-NLS-1$
             }
             out.print(rolesTree.getHtml()); // print, not println! because of snippet mode!
             if (!snippetMode) {
-                out.println("</div>");
+                out.println("</div>"); //$NON-NLS-1$
             }
         }
 
         if (repository.equals(ContentRepository.CONFIG)) {
             Tree websiteTree = new Tree(ContentRepository.CONFIG, request);
             // websiteTree.setJavascriptTree("mgnlWebsiteTree");
-            websiteTree.setIconPage(Tree.ICONDOCROOT + "folder_cubes.gif");
-            websiteTree.setJavascriptTree("mgnlTreeControl");
+            websiteTree.setIconPage(Tree.ICONDOCROOT + "folder_cubes.gif"); //$NON-NLS-1$
+            websiteTree.setJavascriptTree("mgnlTreeControl"); //$NON-NLS-1$
             websiteTree.setSnippetMode(snippetMode);
             websiteTree.setHeight(treeHeight);
 
@@ -266,31 +260,29 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
             // websiteTree.addColumn(column1);
 
             ContextMenuItem menuRefresh = new ContextMenuItem();
-            menuRefresh.setLabel(msgs.get("linkbrowser.refresh"));
-            menuRefresh.setOnclick(websiteTree.getJavascriptTree() + ".refresh();");
+            menuRefresh.setLabel(msgs.get("linkbrowser.refresh")); //$NON-NLS-1$
+            menuRefresh.setOnclick(websiteTree.getJavascriptTree() + ".refresh();"); //$NON-NLS-1$
 
             websiteTree.addMenuItem(menuRefresh);
 
-            String display = "none";
+            String display = "none"; //$NON-NLS-1$
             if (repository.equals(ContentRepository.CONFIG)) {
-                display = "block";
+                display = "block"; //$NON-NLS-1$
             }
 
             if (!snippetMode) {
-                out.println("<div id="
-                    + websiteTree.getJavascriptTree()
-                    + "_DivSuper style=\"display:"
-                    + display
-                    + ";\">");
+                out.println("<div id=" //$NON-NLS-1$
+                    + websiteTree.getJavascriptTree() + "_DivSuper style=\"display:" //$NON-NLS-1$
+                    + display + ";\">"); //$NON-NLS-1$
             }
             out.print(websiteTree.getHtml()); // print, not println! because of snippet mode!
             if (!snippetMode) {
-                out.println("</div>");
+                out.println("</div>"); //$NON-NLS-1$
             }
         }
 
         if (!snippetMode) {
-            out.println("</body></html>");
+            out.println("</body></html>"); //$NON-NLS-1$
         }
 
         // WARNING: no white spaces below!

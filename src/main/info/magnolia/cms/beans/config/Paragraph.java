@@ -33,7 +33,7 @@ public final class Paragraph {
      */
     private static Logger log = Logger.getLogger(Paragraph.class);
 
-    private static final String DIALOGS_DIR = "/dialogs/";
+    private static final String DIALOGS_DIR = "/dialogs/"; //$NON-NLS-1$
 
     private static Map cachedContent = new Hashtable();
 
@@ -78,19 +78,19 @@ public final class Paragraph {
     public static Paragraph addParagraphToCache(Content c, String startPage) {
 
         Paragraph pi = new Paragraph();
-        pi.name = c.getNodeData("name").getString();
-        pi.templatePath = c.getNodeData("templatePath").getString();
-        pi.dialogPath = c.getNodeData("dialogPath").getString();
-        pi.templateType = c.getNodeData("type").getString();
-        pi.title = c.getNodeData("title").getString();
-        pi.description = c.getNodeData("description").getString();
+        pi.name = c.getNodeData("name").getString(); //$NON-NLS-1$
+        pi.templatePath = c.getNodeData("templatePath").getString(); //$NON-NLS-1$
+        pi.dialogPath = c.getNodeData("dialogPath").getString(); //$NON-NLS-1$
+        pi.templateType = c.getNodeData("type").getString(); //$NON-NLS-1$
+        pi.title = c.getNodeData("title").getString(); //$NON-NLS-1$
+        pi.description = c.getNodeData("description").getString(); //$NON-NLS-1$
         // get remaining from dialog definition
         try {
             String dialog = pi.dialogPath;
-            if (dialog.lastIndexOf(".") != -1) {
-                dialog = dialog.substring(0, dialog.lastIndexOf("."));
+            if (dialog.lastIndexOf(".") != -1) { //$NON-NLS-1$
+                dialog = dialog.substring(0, dialog.lastIndexOf(".")); //$NON-NLS-1$
             }
-            if (dialog.indexOf("/") != 0) {
+            if (dialog.indexOf("/") != 0) { //$NON-NLS-1$
                 dialog = startPage + DIALOGS_DIR + dialog; // dialog: pars/text.xml -> /info/dialogs/pars/text.xml
             }
             Content dialogPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(dialog);
@@ -106,7 +106,7 @@ public final class Paragraph {
         }
 
         if (log.isDebugEnabled()) {
-            log.debug("Registering paragraph [" + pi.name + "]");
+            log.debug("Registering paragraph [" + pi.name + "]"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         cachedContent.put(pi.name, pi);
         return pi;
@@ -166,14 +166,14 @@ public final class Paragraph {
      */
     public String toString() {
         return new ToStringBuilder(this)
-            //
-            .append("name", this.name)
-            .append("templateType", this.templateType)
-            .append("description", this.description)
-            .append("dialogPath", this.dialogPath)
-            .append("title", this.title)
-            .append("templatePath", this.templatePath)
-            .append("dialogContent", this.dialogContent)
+        //
+            .append("name", this.name) //$NON-NLS-1$
+            .append("templateType", this.templateType) //$NON-NLS-1$
+            .append("description", this.description) //$NON-NLS-1$
+            .append("dialogPath", this.dialogPath) //$NON-NLS-1$
+            .append("title", this.title) //$NON-NLS-1$
+            .append("templatePath", this.templatePath) //$NON-NLS-1$
+            .append("dialogContent", this.dialogContent) //$NON-NLS-1$
             .toString();
     }
 }

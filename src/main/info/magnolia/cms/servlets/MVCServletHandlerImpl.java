@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
  */
 public abstract class MVCServletHandlerImpl implements MVCServletHandler {
 
-    protected static final String VIEW_ERROR = "error";
+    protected static final String VIEW_ERROR = "error"; //$NON-NLS-1$
 
     /**
      * Logger.
@@ -70,10 +70,10 @@ public abstract class MVCServletHandlerImpl implements MVCServletHandler {
             view = (String) method.invoke(this, new Object[]{});
         }
         catch (InvocationTargetException e) {
-            log.error("can't call command: " + command, e.getTargetException());
+            log.error("can't call command: " + command, e.getTargetException()); //$NON-NLS-1$
         }
         catch (Exception e) {
-            log.error("can't call command: " + command, e);
+            log.error("can't call command: " + command, e); //$NON-NLS-1$
         }
 
         return view;

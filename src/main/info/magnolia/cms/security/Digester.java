@@ -28,19 +28,19 @@ public final class Digester {
     /**
      * supported algorithms
      */
-    public static final String SHA1 = "SHA-1";
+    public static final String SHA1 = "SHA-1"; //$NON-NLS-1$
 
-    public static final String MD5 = "MD5";
+    public static final String MD5 = "MD5"; //$NON-NLS-1$
 
     /**
      * There are five (5) FIPS-approved* algorithms for generating a condensed representation of a message (message
      * digest): SHA-1, SHA-224, SHA-256,SHA-384, and SHA-512. <strong>Not supported yet </strong>
      */
-    public static final String SHA256 = "SHA-256";
+    public static final String SHA256 = "SHA-256"; //$NON-NLS-1$
 
-    public static final String SHA384 = "SHA-384";
+    public static final String SHA384 = "SHA-384"; //$NON-NLS-1$
 
-    public static final String SHA512 = "SHA-512";
+    public static final String SHA512 = "SHA-512"; //$NON-NLS-1$
 
     private static Logger log = Logger.getLogger(Digester.class);
 

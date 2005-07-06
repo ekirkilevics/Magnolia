@@ -64,7 +64,7 @@ public class MainBar extends TagSupport {
             this.display();
         }
         catch (Exception e) {
-            log.warn("Exception caught during display: " + e.getMessage(), e);
+            log.warn("Exception caught during display: " + e.getMessage(), e); //$NON-NLS-1$
         }
         return EVAL_PAGE;
     }

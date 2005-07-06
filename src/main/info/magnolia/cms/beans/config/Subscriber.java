@@ -40,7 +40,7 @@ public final class Subscriber {
      */
     private static Logger log = Logger.getLogger(Subscriber.class);
 
-    private static final String START_PAGE = "subscribers";
+    private static final String START_PAGE = "subscribers"; //$NON-NLS-1$
 
     private static Hashtable cachedContent = new Hashtable();
 
@@ -86,22 +86,22 @@ public final class Subscriber {
     public static void init() {
         Subscriber.cachedContent.clear();
         try {
-            log.info("Config : loading Subscribers");
+            log.info("Config : loading Subscribers"); //$NON-NLS-1$
             Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(START_PAGE);
-            Collection children = startPage.getContent("SubscriberConfig").getChildren();
+            Collection children = startPage.getContent("SubscriberConfig").getChildren(); //$NON-NLS-1$
             if (children != null) {
                 Subscriber.cacheContent(children);
             }
-            log.info("Config : Subscribers loaded");
+            log.info("Config : Subscribers loaded"); //$NON-NLS-1$
         }
         catch (RepositoryException re) {
-            log.error("Config : Failed to load Subscribers");
+            log.error("Config : Failed to load Subscribers"); //$NON-NLS-1$
             log.error(re.getMessage(), re);
         }
     }
 
     public static void reload() {
-        log.info("Config : re-loading Subscribers");
+        log.info("Config : re-loading Subscribers"); //$NON-NLS-1$
         Subscriber.init();
     }
 
@@ -119,14 +119,14 @@ public final class Subscriber {
             Content c = (Content) ipList.next();
             Subscriber si = new Subscriber();
 
-            si.address = c.getNodeData("address").getString();
-            si.protocol = c.getNodeData("protocol").getString();
-            si.senderURL = c.getNodeData("senderURL").getString();
-            si.requestConfirmation = c.getNodeData("requestConfirmation").getBoolean();
+            si.address = c.getNodeData("address").getString(); //$NON-NLS-1$
+            si.protocol = c.getNodeData("protocol").getString(); //$NON-NLS-1$
+            si.senderURL = c.getNodeData("senderURL").getString(); //$NON-NLS-1$
+            si.requestConfirmation = c.getNodeData("requestConfirmation").getBoolean(); //$NON-NLS-1$
             si.name = c.getName();
 
             // don't use getBoolean since subscribers without an "active" node should be enabled by default
-            String activeString = c.getNodeData("active").getString();
+            String activeString = c.getNodeData("active").getString(); //$NON-NLS-1$
 
             if (StringUtils.isNotEmpty(activeString)) {
                 si.active = BooleanUtils.toBoolean(activeString);
@@ -158,7 +158,7 @@ public final class Subscriber {
      */
     private static void addContext(Subscriber subscriberInfo, Content contentNode) throws Exception {
         subscriberInfo.context = new Hashtable();
-        Content contextList = contentNode.getContent("Context");
+        Content contextList = contentNode.getContent("Context"); //$NON-NLS-1$
         Iterator it = contextList.getChildren().iterator();
         while (it.hasNext()) {
             Content context = (Content) it.next();
@@ -166,7 +166,7 @@ public final class Subscriber {
             List list = new ArrayList();
             while (contextDetails.hasNext()) {
                 Content map = (Content) contextDetails.next();
-                list.add(map.getNodeData("subscribedURI").getString());
+                list.add(map.getNodeData("subscribedURI").getString()); //$NON-NLS-1$
             }
             subscriberInfo.context.put(context.getName(), list);
         }

@@ -40,17 +40,17 @@ public final class Authenticator {
     /**
      * Session attribute holding the magnolia user id.
      */
-    private static final String ATTRIBUTE_USER_ID = "mgnlUserId";
+    private static final String ATTRIBUTE_USER_ID = "mgnlUserId"; //$NON-NLS-1$
 
     /**
      * Session attribute holding the magnolia user password.
      */
-    private static final String ATTRIBUTE_PSWD = "mgnlUserPSWD";
+    private static final String ATTRIBUTE_PSWD = "mgnlUserPSWD"; //$NON-NLS-1$
 
     /**
      * Session attribute holding the magnolia user node from the jcr repository.
      */
-    private static final String ATTRIBUTE_USER_NODE = "mgnlUserNode";
+    private static final String ATTRIBUTE_USER_NODE = "mgnlUserNode"; //$NON-NLS-1$
 
     /**
      * Utility class, don't instantiate.
@@ -65,7 +65,7 @@ public final class Authenticator {
      * @return boolean
      */
     public static boolean authenticate(HttpServletRequest req) {
-        String credentials = req.getHeader("Authorization");
+        String credentials = req.getHeader("Authorization"); //$NON-NLS-1$
         if (StringUtils.isEmpty(credentials) || credentials.length() <= 6) {
             return false;
         }
@@ -95,13 +95,13 @@ public final class Authenticator {
             String encodedPassword = new String(Base64.encodeBase64(Authenticator
                 .getPasswordAsString(request)
                 .getBytes()));
-            String fromRepository = userPage.getNodeData("pswd").getString().trim();
+            String fromRepository = userPage.getNodeData("pswd").getString().trim(); //$NON-NLS-1$
             String fromBrowser = encodedPassword.trim();
             if (fromRepository.equalsIgnoreCase(fromBrowser)) {
                 request.getSession().setAttribute(ATTRIBUTE_USER_NODE, userPage);
 
                 // we must set the language because the JSTL will not use our classes
-                String lang = userPage.getNodeData("language").getString();
+                String lang = userPage.getNodeData("language").getString(); //$NON-NLS-1$
                 if (StringUtils.isEmpty(lang)) {
                     lang = MessagesManager.getDefaultLocale().getLanguage();
                 }
@@ -110,12 +110,11 @@ public final class Authenticator {
             }
         }
         catch (PathNotFoundException e) {
-            log.info("Unable to locate user [" + Authenticator.getUserId(request) + "], authentication failed");
+            log.info("Unable to locate user [" + Authenticator.getUserId(request) + "], authentication failed"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         catch (RepositoryException e) {
-            log.error("Unable to locate user ["
-                + Authenticator.getUserId(request)
-                + "], authentication failed due to a "
+            log.error("Unable to locate user [" //$NON-NLS-1$
+                + Authenticator.getUserId(request) + "], authentication failed due to a " //$NON-NLS-1$
                 + e.getClass().getName(), e);
         }
         return false;
@@ -134,7 +133,7 @@ public final class Authenticator {
      * @param request current HttpServletRequest
      */
     private static void setUserId(String decodedCredentials, HttpServletRequest request) {
-        request.getSession().setAttribute(ATTRIBUTE_USER_ID, StringUtils.substringBefore(decodedCredentials, ":"));
+        request.getSession().setAttribute(ATTRIBUTE_USER_ID, StringUtils.substringBefore(decodedCredentials, ":")); //$NON-NLS-1$
     }
 
     /**
@@ -142,7 +141,7 @@ public final class Authenticator {
      * @param decodedCredentials , BASE64Decoded credentials from the request
      */
     private static void setPassword(String decodedCredentials, HttpServletRequest request) {
-        request.getSession().setAttribute(ATTRIBUTE_PSWD, StringUtils.substringAfter(decodedCredentials, ":"));
+        request.getSession().setAttribute(ATTRIBUTE_PSWD, StringUtils.substringAfter(decodedCredentials, ":")); //$NON-NLS-1$
     }
 
     /**
@@ -152,9 +151,9 @@ public final class Authenticator {
     public static String getUserId(HttpServletRequest request) {
         Object userId = request.getSession().getAttribute(ATTRIBUTE_USER_ID);
         if (userId == null) {
-            String credentials = request.getHeader("Authorization");
+            String credentials = request.getHeader("Authorization"); //$NON-NLS-1$
             if (credentials == null) {
-                return "superuser";
+                return "superuser"; //$NON-NLS-1$
             }
             try {
                 credentials = getDecodedCredentials(credentials.substring(6).trim());
@@ -162,7 +161,7 @@ public final class Authenticator {
                 userId = request.getSession().getAttribute(ATTRIBUTE_USER_ID);
             }
             catch (Exception e) {
-                return "superuser";
+                return "superuser"; //$NON-NLS-1$
             }
         }
         return (String) userId;
@@ -193,7 +192,7 @@ public final class Authenticator {
      * @return credentials , as received from the servlet request
      */
     public static String getCredentials(HttpServletRequest request) {
-        return request.getHeader("Authorization");
+        return request.getHeader("Authorization"); //$NON-NLS-1$
     }
 
     /**

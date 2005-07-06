@@ -52,7 +52,7 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
 
     public ParagraphSelectDialog(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
-        paragraph = params.getParameter("mgnlParagraph");
+        paragraph = params.getParameter("mgnlParagraph"); //$NON-NLS-1$
     }
 
     /**
@@ -63,51 +63,50 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
         // multiple paragraphs: show selection dialog
         dialog = DialogFactory.getDialogDialogInstance(request, response, null, null);
 
-        dialog.setConfig("paragraph", paragraph);
+        dialog.setConfig("paragraph", paragraph); //$NON-NLS-1$
 
-        dialog.setLabel(msgs.get("dialog.paragraph.createNew"));
-        dialog.setConfig("saveLabel", msgs.get("buttons.ok"));
+        dialog.setLabel(msgs.get("dialog.paragraph.createNew")); //$NON-NLS-1$
+        dialog.setConfig("saveLabel", msgs.get("buttons.ok")); //$NON-NLS-1$ //$NON-NLS-2$
 
         DialogHidden h1 = DialogFactory.getDialogHiddenInstance(request, response, null, null);
-        h1.setName("mgnlParagraphSelected");
-        h1.setValue("true");
-        h1.setConfig("saveInfo", "false");
+        h1.setName("mgnlParagraphSelected"); //$NON-NLS-1$
+        h1.setValue("true"); //$NON-NLS-1$
+        h1.setConfig("saveInfo", "false"); //$NON-NLS-1$ //$NON-NLS-2$
         dialog.addSub(h1);
 
         DialogTab tab = dialog.addTab();
 
         DialogStatic c0 = DialogFactory.getDialogStaticInstance(request, response, null, null);
 
-        c0.setConfig("line", "false");
-        c0.setValue(msgs.get("dialog.paragraph.select"));
+        c0.setConfig("line", "false"); //$NON-NLS-1$ //$NON-NLS-2$
+        c0.setValue(msgs.get("dialog.paragraph.select")); //$NON-NLS-1$
         c0.setBoxType((DialogBox.BOXTYPE_1COL));
         tab.addSub(c0);
 
         DialogButtonSet c1 = DialogFactory.getDialogButtonSetInstance(request, response, null, null);
-        c1.setName("mgnlParagraph");
+        c1.setName("mgnlParagraph"); //$NON-NLS-1$
         c1.setButtonType(ControlSuper.BUTTONTYPE_RADIO);
         c1.setBoxType(DialogBox.BOXTYPE_1COL);
-        c1.setConfig("saveInfo", "false");
-        c1.setConfig("width", "100%");
+        c1.setConfig("saveInfo", "false"); //$NON-NLS-1$ //$NON-NLS-2$
+        c1.setConfig("width", "100%"); //$NON-NLS-1$ //$NON-NLS-2$
 
-        String[] pars = paragraph.split(",");
+        String[] pars = paragraph.split(","); //$NON-NLS-1$
         for (int i = 0; i < pars.length; i++) {
             try {
                 Paragraph paragraphInfo = Paragraph.getInfo(pars[i]);
                 Button button = new Button(c1.getName(), paragraphInfo.getName());
                 StringBuffer label = new StringBuffer();
-                label.append("<strong>"
-                    + TemplateMessagesUtil.get(request, paragraphInfo.getTitle())
-                    + "</strong><br />");
+                label.append("<strong>" //$NON-NLS-1$
+                    + TemplateMessagesUtil.get(request, paragraphInfo.getTitle()) + "</strong><br />"); //$NON-NLS-1$
                 label.append(TemplateMessagesUtil.get(request, paragraphInfo.getDescription()));
-                label.append("<br /><br />");
+                label.append("<br /><br />"); //$NON-NLS-1$
                 button.setLabel(label.toString());
-                button.setOnclick("document.mgnlFormMain.submit();");
+                button.setOnclick("document.mgnlFormMain.submit();"); //$NON-NLS-1$
                 c1.addOption(button);
             }
             catch (Exception e) {
                 // paragraph definition does not exist
-                log.warn("Exception caught: " + e.getMessage(), e);
+                log.warn("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
             }
         }
 
@@ -139,20 +138,20 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
             StringBuffer query = new StringBuffer();
             for (Iterator iter = form.getParameters().keySet().iterator(); iter.hasNext();) {
                 String key = (String) iter.next();
-                if (!key.equals("mgnlDialog")) {
+                if (!key.equals("mgnlDialog")) { //$NON-NLS-1$
                     if (query.length() != 0) {
-                        query.append("&");
+                        query.append("&"); //$NON-NLS-1$
                     }
                     query.append(key);
-                    query.append("=");
+                    query.append("="); //$NON-NLS-1$
                     query.append(form.getParameter(key));
                 }
 
             }
-            response.sendRedirect(request.getContextPath() + "/.magnolia/dialogs/" + this.paragraph + ".html?" + query);
+            response.sendRedirect(request.getContextPath() + "/.magnolia/dialogs/" + this.paragraph + ".html?" + query); //$NON-NLS-1$ //$NON-NLS-2$
         }
         catch (IOException e) {
-            log.error("can't redirect to the paragraph-dialog", e);
+            log.error("can't redirect to the paragraph-dialog", e); //$NON-NLS-1$
         }
         return VIEW_NOTHING;
     }

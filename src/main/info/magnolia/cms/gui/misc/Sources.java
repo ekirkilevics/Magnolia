@@ -21,7 +21,7 @@ public class Sources {
     /**
      * Attribute set in request when links are drawn by custom tags.
      */
-    public static final String REQUEST_LINKS_DRAWN = "mgnl_links_drawn";
+    public static final String REQUEST_LINKS_DRAWN = "mgnl_links_drawn"; //$NON-NLS-1$
 
     /**
      * Context path for the current request.
@@ -38,52 +38,52 @@ public class Sources {
 
     public String getHtmlJs() {
         StringBuffer html = new StringBuffer();
-        html.append("<script type=\"text/javascript\" src=\"");
+        html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
         html.append(contextPath);
-        html.append("/admintemplates/js/admincentral.jsp\"></script>");
-        html.append("<script type=\"text/javascript\" src=\"");
+        html.append("/admintemplates/js/admincentral.jsp\"></script>"); //$NON-NLS-1$
+        html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
         html.append(contextPath);
-        html.append("/admintemplates/js/dialogs.jsp\"></script>");
+        html.append("/admintemplates/js/dialogs.jsp\"></script>"); //$NON-NLS-1$
         return html.toString();
     }
 
     public String getHtmlCss() {
         StringBuffer html = new StringBuffer();
-        html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
+        html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\""); //$NON-NLS-1$
         html.append(contextPath);
-        html.append("/admindocroot/css/admin-all.css\" />");
+        html.append("/admindocroot/css/admin-all.css\" />"); //$NON-NLS-1$
         return html.toString();
     }
 
     public String getHtmlRichEdit() {
         StringBuffer html = new StringBuffer();
-        html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
+        html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\""); //$NON-NLS-1$
         html.append(contextPath);
-        html.append("/admindocroot/richE/kupustyles.css\" />");
-        html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
+        html.append("/admindocroot/richE/kupustyles.css\" />"); //$NON-NLS-1$
+        html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\""); //$NON-NLS-1$
         html.append(contextPath);
-        html.append("/admindocroot/richE/kupucustom.css\" />");
-        html.append("<script type=\"text/javascript\" src=\"");
+        html.append("/admindocroot/richE/kupucustom.css\" />"); //$NON-NLS-1$
+        html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
         html.append(contextPath);
-        html.append("/admindocroot/richE/sarissa.js\"> </script>");
-        html.append("<script type=\"text/javascript\" src=\"");
+        html.append("/admindocroot/richE/sarissa.js\"> </script>"); //$NON-NLS-1$
+        html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
         html.append(contextPath);
-        html.append("/admindocroot/richE/kupuhelpers.js\"> </script>");
-        html.append("<script type=\"text/javascript\" src=\"");
+        html.append("/admindocroot/richE/kupuhelpers.js\"> </script>"); //$NON-NLS-1$
+        html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
         html.append(contextPath);
-        html.append("/admindocroot/richE/kupueditor.js\"> </script>");
-        html.append("<script type=\"text/javascript\" src=\"");
+        html.append("/admindocroot/richE/kupueditor.js\"> </script>"); //$NON-NLS-1$
+        html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
         html.append(contextPath);
-        html.append("/admindocroot/richE/kupubasetools.js\"> </script>");
-        html.append("<script type=\"text/javascript\" src=\"");
+        html.append("/admindocroot/richE/kupubasetools.js\"> </script>"); //$NON-NLS-1$
+        html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
         html.append(contextPath);
-        html.append("/admindocroot/richE/kupuloggers.js\"> </script>");
-        html.append("<script type=\"text/javascript\" src=\"");
+        html.append("/admindocroot/richE/kupuloggers.js\"> </script>"); //$NON-NLS-1$
+        html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
         html.append(contextPath);
-        html.append("/admindocroot/richE/kupucontentfilters.js\"> </script>");
-        html.append("<script type=\"text/javascript\" src=\"");
+        html.append("/admindocroot/richE/kupucontentfilters.js\"> </script>"); //$NON-NLS-1$
+        html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
         html.append(contextPath);
-        html.append("/admindocroot/richE/kupuinit.js\"> </script>");
+        html.append("/admindocroot/richE/kupuinit.js\"> </script>"); //$NON-NLS-1$
         return html.toString();
     }
 

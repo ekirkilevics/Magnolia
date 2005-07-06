@@ -43,9 +43,8 @@ public class RichEditorIFrameDialogPage extends BasePageServlet {
             richE.drawHtmlEditor(out);
         }
         else {
-            log.error("DialogRichedit not found in session with name ["
-                + request.getParameter(DialogSuper.SESSION_ATTRIBUTENAME_DIALOGOBJECT)
-                + "]");
+            log.error("DialogRichedit not found in session with name [" //$NON-NLS-1$
+                + request.getParameter(DialogSuper.SESSION_ATTRIBUTENAME_DIALOGOBJECT) + "]"); //$NON-NLS-1$
         }
     }
 }

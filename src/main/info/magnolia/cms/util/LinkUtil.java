@@ -46,15 +46,15 @@ public final class LinkUtil {
     /**
      * Pattern to find a link
      */
-    private static Pattern linkPattern = Pattern.compile("(<a[^>]+href[ ]*=[ ]*\")(/[^\"]*).html(\"[^>]*>)");
+    private static Pattern linkPattern = Pattern.compile("(<a[^>]+href[ ]*=[ ]*\")(/[^\"]*).html(\"[^>]*>)"); //$NON-NLS-1$
 
     /**
      * Pattern to find a magnolia formatted link
      */
-    private static Pattern uuidPattern = Pattern.compile("\\$\\{link:\\{uuid:\\{([^\\}]*)\\},"
-        + "repository:\\{[^\\}]*\\}," // has value website unless we support it
-        + "workspace:\\{[^\\}]*\\}," // has value default unless we support it
-        + "path:\\{([^\\}]*)\\}\\}\\}");
+    private static Pattern uuidPattern = Pattern.compile("\\$\\{link:\\{uuid:\\{([^\\}]*)\\}," //$NON-NLS-1$
+        + "repository:\\{[^\\}]*\\}," // has value website unless we support it //$NON-NLS-1$
+        + "workspace:\\{[^\\}]*\\}," // has value default unless we support it //$NON-NLS-1$
+        + "path:\\{([^\\}]*)\\}\\}\\}"); //$NON-NLS-1$
 
     /**
      * Transforms all the links to the magnolia format. Used during storing.
@@ -68,15 +68,13 @@ public final class LinkUtil {
         while (matcher.find()) {
             String path = matcher.group(2);
             String uuid = makeUUIDFromAbsolutePath(path);
-            matcher.appendReplacement(res, "$1\\${link:{"
-                + "uuid:{"
-                + uuid
-                + "},"
-                + "repository:{website},"
-                + "workspace:{default},"
-                + "path:{"
-                + path
-                + "}}}$3");
+            matcher.appendReplacement(res, "$1\\${link:{" //$NON-NLS-1$
+                + "uuid:{" //$NON-NLS-1$
+                + uuid + "}," //$NON-NLS-1$
+                + "repository:{website}," //$NON-NLS-1$
+                + "workspace:{default}," //$NON-NLS-1$
+                + "path:{" //$NON-NLS-1$
+                + path + "}}}$3"); //$NON-NLS-1$
         }
         matcher.appendTail(res);
         return res.toString();
@@ -97,7 +95,7 @@ public final class LinkUtil {
             if (absolutePath.equals(uuid)) {
                 absolutePath = matcher.group(2);
             }
-            matcher.appendReplacement(res, absolutePath + ".html");
+            matcher.appendReplacement(res, absolutePath + ".html"); //$NON-NLS-1$
         }
         matcher.appendTail(res);
         return res.toString();
@@ -165,17 +163,17 @@ public final class LinkUtil {
         }
 
         for (int i = 1; i < level; i++) {
-            relativePath += "../";
+            relativePath += "../"; //$NON-NLS-1$
         }
 
-        if (absolutePath.startsWith("/")) {
+        if (absolutePath.startsWith("/")) { //$NON-NLS-1$
             relativePath += absolutePath.substring(1);
         }
         else {
             relativePath += absolutePath;
         }
 
-        return relativePath + ".html";
+        return relativePath + ".html"; //$NON-NLS-1$
     }
 
     /**

@@ -170,7 +170,7 @@ public class NodeData extends ContentHandler {
      */
     public String getString(String lineBreak) {
         try {
-            return this.getString().replaceAll("\n", lineBreak);
+            return this.getString().replaceAll("\n", lineBreak); //$NON-NLS-1$
         }
         catch (Exception e) {
             return StringUtils.EMPTY;
@@ -274,7 +274,7 @@ public class NodeData extends ContentHandler {
                 return this.property.getType();
             }
             catch (Exception e) {
-                log.warn("Unable to read property type for " + this.property);
+                log.warn("Unable to read property type for " + this.property); //$NON-NLS-1$
             }
         }
         return PropertyType.UNDEFINED;
@@ -288,7 +288,7 @@ public class NodeData extends ContentHandler {
             return this.property.getName();
         }
         catch (Exception e) {
-            log.warn("Unable to read property name for " + this.property);
+            log.warn("Unable to read property name for " + this.property); //$NON-NLS-1$
             return StringUtils.EMPTY;
         }
     }
@@ -302,7 +302,7 @@ public class NodeData extends ContentHandler {
             return this.property.getLength();
         }
         catch (RepositoryException re) {
-            log.warn("Unable to read content length for " + this.property);
+            log.warn("Unable to read content length for " + this.property); //$NON-NLS-1$
             return 0;
         }
     }
@@ -412,7 +412,7 @@ public class NodeData extends ContentHandler {
             return this.property.getPath();
         }
         catch (RepositoryException e) {
-            log.error("Failed to get handle");
+            log.error("Failed to get handle"); //$NON-NLS-1$
             log.error(e.getMessage(), e);
             return StringUtils.EMPTY;
         }
@@ -425,7 +425,7 @@ public class NodeData extends ContentHandler {
      * @return String representing path (handle) of the content
      */
     public String getHandleWithDefaultExtension() throws PathNotFoundException, RepositoryException {
-        return (this.property.getPath() + "." + Server.getDefaultExtension());
+        return (this.property.getPath() + "." + Server.getDefaultExtension()); //$NON-NLS-1$
     }
 
     /**
@@ -479,7 +479,7 @@ public class NodeData extends ContentHandler {
      * @return level at which current node exist, relative to the ROOT node
      */
     public int getLevel() throws PathNotFoundException, RepositoryException {
-        return this.property.getPath().split("/").length - 1;
+        return this.property.getPath().split("/").length - 1; //$NON-NLS-1$
     }
 
     /**

@@ -131,7 +131,7 @@ public class SearchResultSnippetTag extends TagSupport {
     public Collection getSnippets() {
 
         if (log.isDebugEnabled()) {
-            log.debug("collecting snippets");
+            log.debug("collecting snippets"); //$NON-NLS-1$
         }
 
         Collection snippets = new ArrayList();
@@ -150,7 +150,7 @@ public class SearchResultSnippetTag extends TagSupport {
                 Content paragraph = (Content) parIterator.next();
 
                 if (log.isDebugEnabled()) {
-                    log.debug("Iterating on paragraph " + paragraph);
+                    log.debug("Iterating on paragraph " + paragraph); //$NON-NLS-1$
                 }
 
                 Collection properties = paragraph.getNodeDataCollection();
@@ -163,8 +163,8 @@ public class SearchResultSnippetTag extends TagSupport {
                         String resultString = property.getString();
 
                         if (log.isDebugEnabled()) {
-                            log.debug("Iterating on property " + property.getName());
-                            log.debug("Property value is " + resultString);
+                            log.debug("Iterating on property " + property.getName()); //$NON-NLS-1$
+                            log.debug("Property value is " + resultString); //$NON-NLS-1$
                         }
 
                         // a quick and buggy way to avoid configuration properties, we should allow the user to
@@ -180,7 +180,7 @@ public class SearchResultSnippetTag extends TagSupport {
                             if (!ArrayUtils.contains(SimpleSearchTag.KEYWORDS, searchTerm) && searchTerm.length() > 2) {
 
                                 if (log.isDebugEnabled()) {
-                                    log.debug("Looking for search term [" + searchTerm + "] in [" + resultString + "]");
+                                    log.debug("Looking for search term [" + searchTerm + "] in [" + resultString + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                                 }
 
                                 // first check, avoid using heavy string replaceAll operations if the search term is not
@@ -190,7 +190,7 @@ public class SearchResultSnippetTag extends TagSupport {
                                 }
 
                                 // strips out html tags using a regexp
-                                resultString = resultString.replaceAll("\\<.*?\\>", "");
+                                resultString = resultString.replaceAll("\\<.*?\\>", ""); //$NON-NLS-1$ //$NON-NLS-2$
 
                                 // only get first matching keyword
                                 int pos = resultString.toLowerCase().indexOf(searchTerm);
@@ -210,28 +210,27 @@ public class SearchResultSnippetTag extends TagSupport {
                                     StringBuffer snippet = new StringBuffer();
 
                                     snippet.append(StringUtils.substring(resultString, from, pos));
-                                    snippet.append("<strong>");
+                                    snippet.append("<strong>"); //$NON-NLS-1$
                                     snippet.append(searchTerm);
-                                    snippet.append("</strong>");
+                                    snippet.append("</strong>"); //$NON-NLS-1$
                                     snippet.append(StringUtils.substring(resultString, posEnd, to));
 
                                     if (from > 0) {
-                                        snippet.insert(0, "... ");
+                                        snippet.insert(0, "... "); //$NON-NLS-1$
                                     }
                                     if (to < resultString.length()) {
-                                        snippet.append("... ");
+                                        snippet.append("... "); //$NON-NLS-1$
                                     }
 
                                     if (log.isDebugEnabled()) {
-                                        log.debug("Search term found, adding snippet " + snippet);
+                                        log.debug("Search term found, adding snippet " + snippet); //$NON-NLS-1$
                                     }
 
                                     snippets.add(snippet);
                                     if (snippets.size() >= this.maxSnippets) {
                                         if (log.isDebugEnabled()) {
-                                            log.debug("Maximum number of snippets ("
-                                                + this.maxSnippets
-                                                + ") reached, exiting");
+                                            log.debug("Maximum number of snippets (" //$NON-NLS-1$
+                                                + this.maxSnippets + ") reached, exiting"); //$NON-NLS-1$
                                         }
                                         break outer;
                                     }

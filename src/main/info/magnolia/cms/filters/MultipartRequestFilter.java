@@ -63,7 +63,7 @@ public class MultipartRequestFilter implements Filter {
         ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         String type = null;
-        String type1 = request.getHeader("Content-Type");
+        String type1 = request.getHeader("Content-Type"); //$NON-NLS-1$
         String type2 = request.getContentType();
         if (type1 == null && type2 != null) {
             type = type2;
@@ -74,7 +74,7 @@ public class MultipartRequestFilter implements Filter {
         else if (type1 != null && type2 != null) {
             type = (type1.length() > type2.length() ? type1 : type2);
         }
-        if ((type != null) && type.toLowerCase().startsWith("multipart/form-data")) {
+        if ((type != null) && type.toLowerCase().startsWith("multipart/form-data")) { //$NON-NLS-1$
             parseParameters(request);
         }
         filterChain.doFilter(req, res);
@@ -86,7 +86,7 @@ public class MultipartRequestFilter implements Filter {
      */
     private static void parseParameters(HttpServletRequest request) throws IOException {
         MultipartForm form = new MultipartForm();
-        String encoding = StringUtils.defaultString(request.getCharacterEncoding(), "UTF-8");
+        String encoding = StringUtils.defaultString(request.getCharacterEncoding(), "UTF-8"); //$NON-NLS-1$
         MultipartRequest multi = new MultipartRequest(
             request,
             Path.getTempDirectoryPath(),

@@ -51,7 +51,7 @@ public class Engine implements Module {
     /**
      * base path jcr property.
      */
-    private static final String ATTRIBUTE_BASE_PATH = "basePath";
+    private static final String ATTRIBUTE_BASE_PATH = "basePath"; //$NON-NLS-1$
 
     /**
      * Module name.
@@ -84,10 +84,10 @@ public class Engine implements Module {
 
         Store.getInstance().setStore(config.getLocalStore());
 
-        log.info("Module: " + this.moduleName);
-        log.info(this.moduleName + ": updating Template list");
+        log.info("Module: " + this.moduleName); //$NON-NLS-1$
+        log.info(this.moduleName + ": updating Template list"); //$NON-NLS-1$
         Template.update(this.basePath);
-        log.info(this.moduleName + ": updating Paragraph list");
+        log.info(this.moduleName + ": updating Paragraph list"); //$NON-NLS-1$
         registerParagraphs();
 
         registerEventListeners();
@@ -107,22 +107,22 @@ public class Engine implements Module {
     private void registerEventListeners() {
 
         // automatically reload paragraphs
-        registerEventListeners("/" + this.basePath + "/Paragraphs", new EventListener() {
+        registerEventListeners("/" + this.basePath + "/Paragraphs", new EventListener() { //$NON-NLS-1$ //$NON-NLS-2$
 
-            public void onEvent(EventIterator iterator) {
-                // reload everything, should we handle single-paragraph reloading?
-                registerParagraphs();
-            }
-        });
+                public void onEvent(EventIterator iterator) {
+                    // reload everything, should we handle single-paragraph reloading?
+                    registerParagraphs();
+                }
+            });
 
         // automatically reload templates
-        registerEventListeners("/" + this.basePath + "/Templates", new EventListener() {
+        registerEventListeners("/" + this.basePath + "/Templates", new EventListener() { //$NON-NLS-1$ //$NON-NLS-2$
 
-            public void onEvent(EventIterator iterator) {
-                // reload everything, should we handle single-template reloading?
-                Template.reload();
-            }
-        });
+                public void onEvent(EventIterator iterator) {
+                    // reload everything, should we handle single-template reloading?
+                    Template.reload();
+                }
+            });
     }
 
     /**
@@ -132,7 +132,7 @@ public class Engine implements Module {
      */
     private void registerEventListeners(String observationPath, EventListener listener) {
 
-        log.info("Registering event listener for path [" + observationPath + "]");
+        log.info("Registering event listener for path [" + observationPath + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 
         try {
 
@@ -146,7 +146,7 @@ public class Engine implements Module {
                 | Event.PROPERTY_CHANGED, observationPath, true, null, null, false);
         }
         catch (RepositoryException e) {
-            log.error("Unable to add event listeners for " + observationPath, e);
+            log.error("Unable to add event listeners for " + observationPath, e); //$NON-NLS-1$
         }
 
     }
@@ -158,18 +158,18 @@ public class Engine implements Module {
         // simply overwrite (it's a map, clear is not needed)
         // Paragraph.cachedContent.clear();
 
-        log.info(this.moduleName + ": initializing Paragraph info");
+        log.info(this.moduleName + ": initializing Paragraph info"); //$NON-NLS-1$
         HierarchyManager configHierarchyManager = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
         try {
-            log.info(this.moduleName + ": loading Paragraph info - " + this.basePath);
+            log.info(this.moduleName + ": loading Paragraph info - " + this.basePath); //$NON-NLS-1$
             Content startPage = configHierarchyManager.getContent(this.basePath);
-            Content paragraphDefinition = startPage.getContent("Paragraphs");
+            Content paragraphDefinition = startPage.getContent("Paragraphs"); //$NON-NLS-1$
 
             cacheParagraphsContent(paragraphDefinition);
-            log.info(this.moduleName + ": Paragraph info loaded - " + this.basePath);
+            log.info(this.moduleName + ": Paragraph info loaded - " + this.basePath); //$NON-NLS-1$
         }
         catch (RepositoryException re) {
-            log.error(this.moduleName + ": Failed to load Paragraph info - " + this.basePath);
+            log.error(this.moduleName + ": Failed to load Paragraph info - " + this.basePath); //$NON-NLS-1$
             log.error(re.getMessage(), re);
         }
     }

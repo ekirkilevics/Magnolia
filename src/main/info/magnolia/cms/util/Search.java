@@ -32,7 +32,7 @@ public class Search {
      */
     public static Content getContentByUUID(QueryManager queryManager, String uuid) {
         try {
-            String statement = "SELECT * FROM nt:base where mgnl:uuid like '" + uuid + "'";
+            String statement = "SELECT * FROM nt:base where mgnl:uuid like '" + uuid + "'"; //$NON-NLS-1$ //$NON-NLS-2$
             Query q = queryManager.createQuery(statement, Query.SQL);
             QueryResult result = q.execute();
             Iterator it = result.getContent().iterator();

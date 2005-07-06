@@ -52,11 +52,11 @@ public class File {
     public void setProperties(Content properties) {
         this.properties = properties;
 
-        this.setNodeDataTemplate(this.properties.getNodeData("nodeDataTemplate").getString());
-        this.setExtension(this.properties.getNodeData("extension").getString());
-        this.setFileName(this.properties.getNodeData("fileName").getString());
-        this.setContentType(this.properties.getNodeData("contentType").getString());
-        Integer size = new Integer(this.properties.getNodeData("size").getString());
+        this.setNodeDataTemplate(this.properties.getNodeData("nodeDataTemplate").getString()); //$NON-NLS-1$
+        this.setExtension(this.properties.getNodeData("extension").getString()); //$NON-NLS-1$
+        this.setFileName(this.properties.getNodeData("fileName").getString()); //$NON-NLS-1$
+        this.setContentType(this.properties.getNodeData("contentType").getString()); //$NON-NLS-1$
+        Integer size = new Integer(this.properties.getNodeData("size").getString()); //$NON-NLS-1$
         this.setSize(size.intValue());
 
     }

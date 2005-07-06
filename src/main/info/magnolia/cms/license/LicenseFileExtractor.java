@@ -32,27 +32,27 @@ import org.jdom.input.SAXBuilder;
  */
 public final class LicenseFileExtractor {
 
-    public static final String VERSION_NUMBER = "VersionNumber";
+    public static final String VERSION_NUMBER = "VersionNumber"; //$NON-NLS-1$
 
-    public static final String BUILD_NUMBER = "BuildNumber";
+    public static final String BUILD_NUMBER = "BuildNumber"; //$NON-NLS-1$
 
-    public static final String PROVIDER = "Provider";
+    public static final String PROVIDER = "Provider"; //$NON-NLS-1$
 
-    public static final String PROVIDER_ADDRESS = "ProviderAddress";
+    public static final String PROVIDER_ADDRESS = "ProviderAddress"; //$NON-NLS-1$
 
-    public static final String PRIVIDER_EMAIL = "ProviderEmail";
+    public static final String PRIVIDER_EMAIL = "ProviderEmail"; //$NON-NLS-1$
 
-    public static final String PRODUCT_DOMAIN = "ProductDomain";
+    public static final String PRODUCT_DOMAIN = "ProductDomain"; //$NON-NLS-1$
 
-    public static final String VERSION_PAGE_HANDLE = "VersionPageHandle";
+    public static final String VERSION_PAGE_HANDLE = "VersionPageHandle"; //$NON-NLS-1$
 
-    private static final String LICENSE_FILE_PATH = "info/magnolia/cms/license/license.xml";
+    private static final String LICENSE_FILE_PATH = "info/magnolia/cms/license/license.xml"; //$NON-NLS-1$
 
-    private static final String ELEMENT_META = "Meta";
+    private static final String ELEMENT_META = "Meta"; //$NON-NLS-1$
 
     private static final String NOT_DEFINED = "Not Defined";
 
-    private static final String OS_NAME = "OSName";
+    private static final String OS_NAME = "OSName"; //$NON-NLS-1$
 
     /**
      * Logger.
@@ -79,8 +79,8 @@ public final class LicenseFileExtractor {
     }
 
     public String getOSName() {
-        String osName = System.getProperty("os.name");
-        return osName.replaceAll(" ", "-");
+        String osName = System.getProperty("os.name"); //$NON-NLS-1$
+        return osName.replaceAll(" ", "-"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     public void init() {
@@ -95,7 +95,7 @@ public final class LicenseFileExtractor {
             this.load(document);
         }
         catch (Exception e) {
-            log.error("failed to load license information");
+            log.error("failed to load license information"); //$NON-NLS-1$
             log.error(e.getMessage(), e);
         }
         finally {
@@ -125,7 +125,7 @@ public final class LicenseFileExtractor {
             values.put(element.getName(), element.getText());
         }
 
-        String osName = System.getProperty("os.name");
-        values.put(OS_NAME, osName.replaceAll(" ", "-"));
+        String osName = System.getProperty("os.name"); //$NON-NLS-1$
+        values.put(OS_NAME, osName.replaceAll(" ", "-")); //$NON-NLS-1$ //$NON-NLS-2$
     }
 }

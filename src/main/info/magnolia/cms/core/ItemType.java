@@ -17,81 +17,81 @@ import java.io.Serializable;
 
 /**
  * @author Sameer Charles
- * @version $Revision: 646 $ ($Author: fgiust $)
+ * @version $Revision$ ($Author$)
  */
 public final class ItemType implements Serializable {
 
     /**
      * Node type: base.
      */
-    public static final String NT_BASE = "nt:base";
+    public static final String NT_BASE = "nt:base"; //$NON-NLS-1$
 
     /**
      * Node type: unstructured.
      */
-    public static final String NT_UNSTRUCTRUED = "nt:unstructured";
+    public static final String NT_UNSTRUCTRUED = "nt:unstructured"; //$NON-NLS-1$
 
     /**
      * Node type: hierarchyNode.
      */
-    public static final String NT_HIERARCHY = "nt:hierarchyNode";
+    public static final String NT_HIERARCHY = "nt:hierarchyNode"; //$NON-NLS-1$
 
     /**
      * Node type: folder.
      */
-    public static final String NT_FOLDER = "nt:folder";
+    public static final String NT_FOLDER = "nt:folder"; //$NON-NLS-1$
 
     /**
      * Node type: base.
      */
-    public static final String NT_FILE = "nt:file";
+    public static final String NT_FILE = "nt:file"; //$NON-NLS-1$
 
     /**
      * Mixin: node has access control.
      */
-    public static final String MIX_ACCESSCONTROLLABLE = "mix:accessControllable";
+    public static final String MIX_ACCESSCONTROLLABLE = "mix:accessControllable"; //$NON-NLS-1$
 
     /**
      * Mixin: node can be referenced.
      */
-    public static final String MIX_REFERENCEABLE = "mix:referenceable";
+    public static final String MIX_REFERENCEABLE = "mix:referenceable"; //$NON-NLS-1$
 
     /**
      * Mixin: node can be versioned.
      */
-    public static final String MIX_VERSIONABLE = "mix:versionable";
+    public static final String MIX_VERSIONABLE = "mix:versionable"; //$NON-NLS-1$
 
     /**
      * Magnolia content.
      * @deprecated use ItemType.CONTENT
      */
-    public static final String NT_CONTENT = "mgnl:content";
+    public static final String NT_CONTENT = "mgnl:content"; //$NON-NLS-1$
 
     /**
      * Magnolia content node.
      * @deprecated use ItemType.CONTENTNODE
      */
-    public static final String NT_CONTENTNODE = "mgnl:contentNode";
+    public static final String NT_CONTENTNODE = "mgnl:contentNode"; //$NON-NLS-1$
 
     /**
      * @deprecated
      */
-    public static final String NT_NODEDATA = "mgnl:nodeData";
+    public static final String NT_NODEDATA = "mgnl:nodeData"; //$NON-NLS-1$
 
     /**
      * "mgnl:content"
      */
-    public static final ItemType CONTENT = new ItemType("mgnl:content");
+    public static final ItemType CONTENT = new ItemType("mgnl:content"); //$NON-NLS-1$
 
     /**
      * "mgnl:contentNode"
      */
-    public static final ItemType CONTENTNODE = new ItemType("mgnl:contentNode");
+    public static final ItemType CONTENTNODE = new ItemType("mgnl:contentNode"); //$NON-NLS-1$
 
     /**
      * "jcr:content"
      */
-    public static final ItemType JCR_CONTENT = new ItemType("jcr:content");
+    public static final ItemType JCR_CONTENT = new ItemType("jcr:content"); //$NON-NLS-1$
 
     /**
      * Stable serialVersionUID.

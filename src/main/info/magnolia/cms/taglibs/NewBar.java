@@ -36,7 +36,7 @@ public class NewBar extends TagSupport {
      */
     private static final long serialVersionUID = 222L;
 
-    private static final String DEFAULT_NEW_LABEL = "buttons.new";
+    private static final String DEFAULT_NEW_LABEL = "buttons.new"; //$NON-NLS-1$
 
     /**
      * Logger.
@@ -68,7 +68,7 @@ public class NewBar extends TagSupport {
             this.display();
         }
         catch (Exception e) {
-            log.debug("Exception caught: " + e.getMessage(), e);
+            log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
         }
         return EVAL_PAGE;
     }
@@ -162,7 +162,7 @@ public class NewBar extends TagSupport {
         bar.setPath(this.getPath());
         bar.setParagraph(this.getParagraph());
         bar.setNodeCollectionName(this.getContentNodeCollectionName());
-        bar.setNodeName("mgnlNew");
+        bar.setNodeName("mgnlNew"); //$NON-NLS-1$
         bar.setDefaultButtons();
         if (this.getNewLabel() != null) {
             if (StringUtils.isEmpty(this.getNewLabel())) {

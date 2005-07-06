@@ -46,36 +46,36 @@ public class PacketBodyImpl implements PacketBody {
     }
 
     public void setLength(long size) {
-        log.debug("Method not implemented ( setlength() )");
+        log.debug("Method not implemented ( setlength() )"); //$NON-NLS-1$
     }
 
     public long getLength() {
-        log.debug("Method not implemented ( getlength() )");
+        log.debug("Method not implemented ( getlength() )"); //$NON-NLS-1$
         return 0;
     }
 
     public void setBody(String data) {
-        log.debug("Method not implemented ( setBody(String) )");
+        log.debug("Method not implemented ( setBody(String) )"); //$NON-NLS-1$
     }
 
     public void setBody(InputStream data) throws PacketIOException {
-        log.debug("Method not implemented ( setBody(InputStream) )");
+        log.debug("Method not implemented ( setBody(InputStream) )"); //$NON-NLS-1$
     }
 
     public void setBody(Long data) throws PacketIOException {
-        log.debug("Method not implemented ( setBody(Long) )");
+        log.debug("Method not implemented ( setBody(Long) )"); //$NON-NLS-1$
     }
 
     public void setBody(Double data) throws PacketIOException {
-        log.debug("Method not implemented ( setBody(Double) )");
+        log.debug("Method not implemented ( setBody(Double) )"); //$NON-NLS-1$
     }
 
     public void setBody(Calendar data) throws PacketIOException {
-        log.debug("Method not implemented ( setBody(Calendar) )");
+        log.debug("Method not implemented ( setBody(Calendar) )"); //$NON-NLS-1$
     }
 
     public void setBody(Boolean data) throws PacketIOException {
-        log.debug("Method not implemented ( setBody(Boolean) )");
+        log.debug("Method not implemented ( setBody(Boolean) )"); //$NON-NLS-1$
     }
 
     public void setBody(Object data) throws PacketIOException {

@@ -29,7 +29,7 @@ public class InvalidTreeHandlerException extends RuntimeException {
      * @param treeName missing tree name
      */
     public InvalidTreeHandlerException(String treeName) {
-        super("No tree handler for [" + treeName + "] found");
+        super("No tree handler for [" + treeName + "] found"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
@@ -39,11 +39,9 @@ public class InvalidTreeHandlerException extends RuntimeException {
      * @param treeName previous exception
      */
     public InvalidTreeHandlerException(String treeName, Throwable cause) {
-        super("Unable to instantiate a tree handler for ["
-            + treeName
-            + "] due to a "
-            + cause.getClass().getName()
-            + " exception", cause);
+        super("Unable to instantiate a tree handler for [" //$NON-NLS-1$
+            + treeName + "] due to a " //$NON-NLS-1$
+            + cause.getClass().getName() + " exception", cause); //$NON-NLS-1$
     }
 
 }

@@ -34,7 +34,7 @@ public class MultipartForm {
     /**
      * The name of the request attribute containing a MultipartForm instance.
      */
-    public static final String REQUEST_ATTRIBUTE_NAME = "multipartform";
+    public static final String REQUEST_ATTRIBUTE_NAME = "multipartform"; //$NON-NLS-1$
 
     private Map parameters;
 
@@ -90,7 +90,7 @@ public class MultipartForm {
         document.setAtomName(atomName);
         document.setType(type);
         document.setFile(file);
-        int lastIndexOfDot = fileName.lastIndexOf(".");
+        int lastIndexOfDot = fileName.lastIndexOf("."); //$NON-NLS-1$
         if (lastIndexOfDot == -1) {
             document.setExtention(StringUtils.EMPTY);
             document.setFileName(fileName);

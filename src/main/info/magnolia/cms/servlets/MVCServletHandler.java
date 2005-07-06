@@ -22,7 +22,7 @@ import java.io.IOException;
  */
 public interface MVCServletHandler {
 
-    public static final String VIEW_NOTHING = "nothing";
+    public static final String VIEW_NOTHING = "nothing"; //$NON-NLS-1$
 
     /**
      * Depending on the request it is generating a logical command name

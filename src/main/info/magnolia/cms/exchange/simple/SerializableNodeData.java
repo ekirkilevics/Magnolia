@@ -108,7 +108,7 @@ public class SerializableNodeData implements Serializable {
                  */
                 break;
             default:
-                throw new SerializationException("Unsupported property type");
+                throw new SerializationException("Unsupported property type"); //$NON-NLS-1$
         }
     }
 

@@ -54,16 +54,16 @@ public class Engine implements Module {
 
         registerTrees(store);
         try {
-            store.registerDialogHandlers(store.getStore().getContent("dialogs"));
+            store.registerDialogHandlers(store.getStore().getContent("dialogs")); //$NON-NLS-1$
         }
         catch (Exception e) {
-            log.error("can't register the admin interface dialogs", e);
+            log.error("can't register the admin interface dialogs", e); //$NON-NLS-1$
         }
 
-        log.info("Init template");
+        log.info("Init template"); //$NON-NLS-1$
         Template.init();
 
-        log.info("Init dialog controls");
+        log.info("Init dialog controls"); //$NON-NLS-1$
         DialogManager.init();
 
     }
@@ -74,16 +74,16 @@ public class Engine implements Module {
     private void registerTrees(Store store) {
         // read the tree configuration
         try {
-            Collection trees = store.getStore().getContent("trees").getChildren(ItemType.CONTENTNODE.getSystemName());
+            Collection trees = store.getStore().getContent("trees").getChildren(ItemType.CONTENTNODE.getSystemName()); //$NON-NLS-1$
             for (Iterator iter = trees.iterator(); iter.hasNext();) {
                 Content tree = (Content) iter.next();
-                String name = tree.getNodeData("name").getString();
-                String className = tree.getNodeData("class").getString();
+                String name = tree.getNodeData("name").getString(); //$NON-NLS-1$
+                String className = tree.getNodeData("class").getString(); //$NON-NLS-1$
                 store.registerTreeHandler(name, Class.forName(className));
             }
         }
         catch (Exception e) {
-            log.warn("can't find trees configuration: will use defaults", e);
+            log.warn("can't find trees configuration: will use defaults", e); //$NON-NLS-1$
         }
         // register defaults
         store.registerDefaultTreeHandler(ContentRepository.WEBSITE, AdminTreeWebsite.class);

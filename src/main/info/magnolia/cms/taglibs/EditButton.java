@@ -140,7 +140,7 @@ public class EditButton extends TagSupport {
         if (this.paragraph == null) {
 
             return Resource.getLocalContentNode(((HttpServletRequest) pageContext.getRequest())).getNodeData(
-                "paragraph").getString();
+                "paragraph").getString(); //$NON-NLS-1$
 
         }
         return this.paragraph;
@@ -160,7 +160,7 @@ public class EditButton extends TagSupport {
     public String getTemplate() {
         if (this.displayHandler == null) {
             Content localContainer = Resource.getLocalContentNode(((HttpServletRequest) pageContext.getRequest()));
-            String templateName = localContainer.getNodeData("paragraph").getString();
+            String templateName = localContainer.getNodeData("paragraph").getString(); //$NON-NLS-1$
             return Paragraph.getInfo(templateName).getTemplatePath();
         }
         return this.displayHandler;

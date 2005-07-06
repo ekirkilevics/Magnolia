@@ -32,9 +32,9 @@ public class ContentImporter {
     /**
      * default import handler
      */
-    public static final String DEFAULT_HANDLER_CLASS = "info.magnolia.cms.core.ie.XmlImport";
+    public static final String DEFAULT_HANDLER_CLASS = "info.magnolia.cms.core.ie.XmlImport"; //$NON-NLS-1$
 
-    public static final String DEFAULT_HANDLER = "defaultHandler";
+    public static final String DEFAULT_HANDLER = "defaultHandler"; //$NON-NLS-1$
 
     /**
      * all initialized importers
@@ -62,15 +62,15 @@ public class ContentImporter {
 
     public void addImportHandler(String name, ImportHandler importhandler) {
         if (log.isDebugEnabled()) {
-            log.debug("Adding import handler " + importhandler.getClass());
+            log.debug("Adding import handler " + importhandler.getClass()); //$NON-NLS-1$
         }
         this.handlers.put(name, importhandler);
     }
 
     public ImportHandler getImportHandler(String name) {
         if (this.handlers.get(name) == null) {
-            log.error("No import handler found with name - " + name);
-            log.error("Returning default import handler - " + DEFAULT_HANDLER);
+            log.error("No import handler found with name - " + name); //$NON-NLS-1$
+            log.error("Returning default import handler - " + DEFAULT_HANDLER); //$NON-NLS-1$
             name = DEFAULT_HANDLER;
         }
         return (ImportHandler) this.handlers.get(name);

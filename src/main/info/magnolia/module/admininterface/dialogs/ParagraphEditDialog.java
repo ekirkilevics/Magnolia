@@ -36,7 +36,7 @@ public class ParagraphEditDialog extends ConfiguredDialog {
 
     public ParagraphEditDialog(String name, HttpServletRequest request, HttpServletResponse response, Content configNode) {
         super(name, request, response, configNode);
-        paragraph = params.getParameter("mgnlParagraph");
+        paragraph = params.getParameter("mgnlParagraph"); //$NON-NLS-1$
     }
 
     /*
@@ -46,7 +46,7 @@ public class ParagraphEditDialog extends ConfiguredDialog {
      */
     protected DialogDialog createDialog(Content configNode, Content websiteNode) throws RepositoryException {
         DialogDialog dialog = super.createDialog(configNode, websiteNode);
-        dialog.setConfig("paragraph", paragraph);
+        dialog.setConfig("paragraph", paragraph); //$NON-NLS-1$
         return dialog;
     }
 
@@ -58,7 +58,7 @@ public class ParagraphEditDialog extends ConfiguredDialog {
 
         if (para == null) {
             // out.println(msgs.get("dialog.paragraph.paragraphNotAvailable", new String[]{paragraph}));
-            log.error("paragraph not found: " + paragraph);
+            log.error("paragraph not found: " + paragraph); //$NON-NLS-1$
             return null;
         }
 

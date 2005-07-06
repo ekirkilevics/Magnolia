@@ -34,7 +34,7 @@ public class Messages {
     /**
      * Name of the javascript object used to make the messages public to the javascripts
      */
-    public static final String JS_OBJECTNAME = "mgnlMessages";
+    public static final String JS_OBJECTNAME = "mgnlMessages"; //$NON-NLS-1$
 
     /**
      * The name of the bundle
@@ -109,7 +109,7 @@ public class Messages {
             return getBundle().getString(key);
         }
         catch (MissingResourceException e) {
-            return "???" + key + "???";
+            return "???" + key + "???"; //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
@@ -133,7 +133,7 @@ public class Messages {
         String msg;
         try {
             msg = getBundle().getString(key);
-            if (msg.startsWith("???")) {
+            if (msg.startsWith("???")) { //$NON-NLS-1$
                 msg = defaultMsg;
             }
 
@@ -163,18 +163,18 @@ public class Messages {
         StringBuffer str = new StringBuffer();
         ResourceBundle bundle = getBundle();
 
-        str.append("/* ###################################\n");
-        str.append("### Generated Messages\n");
-        str.append("################################### */\n\n");
+        str.append("/* ###################################\n"); //$NON-NLS-1$
+        str.append("### Generated Messages\n"); //$NON-NLS-1$
+        str.append("################################### */\n\n"); //$NON-NLS-1$
 
         Enumeration en = bundle.getKeys();
         while (en.hasMoreElements()) {
             String key = (String) en.nextElement();
 
-            if (key.startsWith("js.")) {
-                String msg = ((String) bundle.getObject(key)).replaceAll("'", "\\\\'").replaceAll("\n", "\\\\n");
-                str.append(JS_OBJECTNAME + ".add('" + key + "','" + msg + "','" + getBasename() + "');");
-                str.append("\n");
+            if (key.startsWith("js.")) { //$NON-NLS-1$
+                String msg = ((String) bundle.getObject(key)).replaceAll("'", "\\\\'").replaceAll("\n", "\\\\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+                str.append(JS_OBJECTNAME + ".add('" + key + "','" + msg + "','" + getBasename() + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+                str.append("\n"); //$NON-NLS-1$
             }
         }
         return str.toString();
@@ -186,7 +186,7 @@ public class Messages {
      * @return escaped string
      */
     public static String javaScriptString(String str) {
-        return str.replaceAll("'", "\\\\'").replaceAll("\n", "\\\\n");
+        return str.replaceAll("'", "\\\\'").replaceAll("\n", "\\\\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     }
 
     /**

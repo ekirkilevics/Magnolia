@@ -66,12 +66,12 @@ public class SimpleSearchTag extends TagSupport {
     /**
      * Reserved chars, stripped from query.
      */
-    private static final String RESERVED_CHARS = "()[]{}<>:/\\@*?=\"'&";
+    private static final String RESERVED_CHARS = "()[]{}<>:/\\@*?=\"'&"; //$NON-NLS-1$
 
     /**
      * keywords.
      */
-    public static final String[] KEYWORDS = new String[]{"and", "or"};
+    public static final String[] KEYWORDS = new String[]{"and", "or"}; //$NON-NLS-1$ //$NON-NLS-2$
 
     /**
      * Logger.
@@ -120,13 +120,13 @@ public class SimpleSearchTag extends TagSupport {
      * @param scope The scope to set.
      */
     public void setScope(String scope) {
-        if ("request".equalsIgnoreCase(scope)) {
+        if ("request".equalsIgnoreCase(scope)) { //$NON-NLS-1$
             this.scope = PageContext.REQUEST_SCOPE;
         }
-        else if ("session".equalsIgnoreCase(scope)) {
+        else if ("session".equalsIgnoreCase(scope)) { //$NON-NLS-1$
             this.scope = PageContext.SESSION_SCOPE;
         }
-        else if ("application".equalsIgnoreCase(scope)) {
+        else if ("application".equalsIgnoreCase(scope)) { //$NON-NLS-1$
             this.scope = PageContext.APPLICATION_SCOPE;
         }
         else {
@@ -151,19 +151,19 @@ public class SimpleSearchTag extends TagSupport {
         String queryString = generateXPathQuery();
 
         if (queryString == null) {
-            log.debug("A valid query could not be built, skipping");
+            log.debug("A valid query could not be built, skipping"); //$NON-NLS-1$
             return EVAL_PAGE;
         }
 
         if (log.isDebugEnabled()) {
-            log.debug("Executing xpath query " + queryString);
+            log.debug("Executing xpath query " + queryString); //$NON-NLS-1$
         }
 
         Query q;
         try {
             q = SessionAccessControl.getQueryManager((HttpServletRequest) this.pageContext.getRequest()).createQuery(
                 queryString,
-                "xpath");
+                "xpath"); //$NON-NLS-1$
 
             QueryResult result = q.execute();
 
@@ -193,7 +193,7 @@ public class SimpleSearchTag extends TagSupport {
             try {
                 Content activePage = Resource.getActivePage((HttpServletRequest) this.pageContext.getRequest());
                 if (activePage != null) {
-                    startPath = StringUtils.strip(activePage.getAncestor(this.startLevel).getHandle(), "/");
+                    startPath = StringUtils.strip(activePage.getAncestor(this.startLevel).getHandle(), "/"); //$NON-NLS-1$
                 }
             }
             catch (RepositoryException e) {
@@ -216,9 +216,9 @@ public class SimpleSearchTag extends TagSupport {
         if (StringUtils.isNotEmpty(startPath)) {
             xpath.append(startPath);
         }
-        xpath.append("//*[@jcr:primaryType=\'mgnl:content\']/*/*[");
+        xpath.append("//*[@jcr:primaryType=\'mgnl:content\']/*/*["); //$NON-NLS-1$
 
-        String joinOperator = "and";
+        String joinOperator = "and"; //$NON-NLS-1$
         boolean emptyQuery = true;
 
         for (int j = 0; j < tokens.length; j++) {
@@ -228,19 +228,19 @@ public class SimpleSearchTag extends TagSupport {
             }
             else {
                 if (!emptyQuery) {
-                    xpath.append(" ");
+                    xpath.append(" "); //$NON-NLS-1$
                     xpath.append(joinOperator);
-                    xpath.append(" ");
+                    xpath.append(" "); //$NON-NLS-1$
                 }
-                xpath.append("jcr:contains(., '");
+                xpath.append("jcr:contains(., '"); //$NON-NLS-1$
                 xpath.append(tkn);
-                xpath.append("')");
+                xpath.append("')"); //$NON-NLS-1$
                 emptyQuery = false;
             }
 
         }
 
-        xpath.append("]");
+        xpath.append("]"); //$NON-NLS-1$
 
         // if no valid search terms are added don't return a catch-all query
         if (emptyQuery) {

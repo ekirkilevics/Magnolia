@@ -44,7 +44,7 @@ public class BarMain extends Bar {
 
     private int left;
 
-    private String width = "100%";
+    private String width = "100%"; //$NON-NLS-1$
 
     private boolean overlay = true;
 
@@ -113,7 +113,7 @@ public class BarMain extends Bar {
      */
     public void setButtonProperties(String path, String paragraph) {
         ButtonEdit b = new ButtonEdit(this.getRequest());
-        b.setLabel(MessagesManager.getMessages(getRequest()).get("buttons.properties"));
+        b.setLabel(MessagesManager.getMessages(getRequest()).get("buttons.properties")); //$NON-NLS-1$
         b.setPath(path);
         b.setParagraph(paragraph);
         b.setDefaultOnclick(this.getRequest());
@@ -135,9 +135,9 @@ public class BarMain extends Bar {
      */
     public void setButtonPreview() {
         Button b = new Button();
-        String str = MessagesManager.getMessages(this.getRequest()).get("buttons.preview");
-        b.setLabel("&laquo; " + str);
-        b.setOnclick("mgnlPreview(true);");
+        String str = MessagesManager.getMessages(this.getRequest()).get("buttons.preview"); //$NON-NLS-1$
+        b.setLabel("&laquo; " + str); //$NON-NLS-1$
+        b.setOnclick("mgnlPreview(true);"); //$NON-NLS-1$
         this.setButtonPreview(b);
     }
 
@@ -156,8 +156,8 @@ public class BarMain extends Bar {
      */
     public void setButtonEditView() {
         Button b = new Button();
-        b.setLabel("&raquo;");
-        b.setOnclick("mgnlPreview(false);");
+        b.setLabel("&raquo;"); //$NON-NLS-1$
+        b.setOnclick("mgnlPreview(false);"); //$NON-NLS-1$
         this.setButtonEditView(b);
     }
 
@@ -181,8 +181,8 @@ public class BarMain extends Bar {
      */
     public void setButtonSiteAdmin(String path) {
         Button b = new Button();
-        b.setLabel(MessagesManager.getMessages(getRequest()).get("buttons.admincentral"));
-        b.setOnclick("mgnlOpenAdminCentral('" + path + "');");
+        b.setLabel(MessagesManager.getMessages(getRequest()).get("buttons.admincentral")); //$NON-NLS-1$
+        b.setOnclick("mgnlOpenAdminCentral('" + path + "');"); //$NON-NLS-1$ //$NON-NLS-2$
         this.setButtonSiteAdmin(b);
     }
 
@@ -246,26 +246,23 @@ public class BarMain extends Bar {
                     // is edit mode
                     this.setSmall(false);
                     if (this.getOverlay()) {
-                        out.println("<div class=\"mgnlMainbar\" style=\"top:"
-                            + top
-                            + "px;left:"
-                            + left
-                            + "px;width:"
-                            + this.getWidth()
-                            + ";\">");
+                        out.println("<div class=\"mgnlMainbar\" style=\"top:" //$NON-NLS-1$
+                            + top + "px;left:" //$NON-NLS-1$
+                            + left + "px;width:" //$NON-NLS-1$
+                            + this.getWidth() + ";\">"); //$NON-NLS-1$
                     }
                     out.println(this.getHtml());
                     if (this.getOverlay()) {
-                        out.println("</div>");
+                        out.println("</div>"); //$NON-NLS-1$
                     }
                 }
                 else {
                     // is in preview mode
                     top += 4;
                     left += 4;
-                    out.println("<div class=\"mgnlMainbarPreview\" style=\"top:" + top + "px;left:" + left + "px;\">");
+                    out.println("<div class=\"mgnlMainbarPreview\" style=\"top:" + top + "px;left:" + left + "px;\">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                     out.println(this.getButtonEditView().getHtml());
-                    out.println("</div>");
+                    out.println("</div>"); //$NON-NLS-1$
                 }
             }
         }

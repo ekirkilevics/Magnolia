@@ -69,7 +69,7 @@ public abstract class BaseException extends Exception {
         }
 
         String rootMessage = rootCause.getMessage();
-        return message != null ? message + ": " + rootMessage : rootMessage;
+        return message != null ? message + ": " + rootMessage : rootMessage; //$NON-NLS-1$
 
     }
 
@@ -83,7 +83,7 @@ public abstract class BaseException extends Exception {
         }
 
         String rootMessage = rootCause.getLocalizedMessage();
-        return message != null ? message + ": " + rootMessage : rootMessage;
+        return message != null ? message + ": " + rootMessage : rootMessage; //$NON-NLS-1$
 
     }
 

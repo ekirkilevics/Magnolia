@@ -79,7 +79,7 @@ public class ContentWriter {
         this.writeContent(destination, content);
         this.hierarchyManager.save();
         if (log.isDebugEnabled()) {
-            log.debug("Path " + destination.getHandle() + " saved");
+            log.debug("Path " + destination.getHandle() + " saved"); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
@@ -87,7 +87,7 @@ public class ContentWriter {
         this.writeContent(destination, contentNode);
         this.hierarchyManager.save();
         if (log.isDebugEnabled()) {
-            log.debug("Path " + destination.getHandle() + " saved");
+            log.debug("Path " + destination.getHandle() + " saved"); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
@@ -98,13 +98,13 @@ public class ContentWriter {
     private void writeContent(Content parent, SerializableContent serializableContent) throws RepositoryException {
         String newPageName = serializableContent.getName();
         String parentHandle = parent.getHandle();
-        if (parentHandle.equals("/")) {
+        if (parentHandle.equals("/")) { //$NON-NLS-1$
             parentHandle = StringUtils.EMPTY;
         }
         Content content = null;
         if (serializableContent instanceof SerializableContentNode) {
             try {
-                content = this.hierarchyManager.getContent(parentHandle + "/" + newPageName);
+                content = this.hierarchyManager.getContent(parentHandle + "/" + newPageName); //$NON-NLS-1$
                 this.safeDelete(content);
             }
             catch (PathNotFoundException e) {
@@ -114,7 +114,7 @@ public class ContentWriter {
         }
         else {
             try {
-                content = this.hierarchyManager.getContent(parentHandle + "/" + newPageName);
+                content = this.hierarchyManager.getContent(parentHandle + "/" + newPageName); //$NON-NLS-1$
                 this.safeDelete(content);
             }
             catch (PathNotFoundException e) {
@@ -139,7 +139,7 @@ public class ContentWriter {
                 this.writeContent(content, sContent);
             }
             catch (RepositoryException re) {
-                log.error("Failed to update " + (parent.getHandle() + "/" + newPageName));
+                log.error("Failed to update " + (parent.getHandle() + "/" + newPageName)); //$NON-NLS-1$ //$NON-NLS-2$
                 log.error(re.getMessage(), re);
             }
         }
@@ -149,7 +149,7 @@ public class ContentWriter {
         // this.backup = new SerializableContent(content);
         // todo restore? in case of exception
         if (log.isDebugEnabled()) {
-            log.debug("Removing existing page " + content.getHandle());
+            log.debug("Removing existing page " + content.getHandle()); //$NON-NLS-1$
         }
         this.removeNodedataList(content);
         this.removeContentNodeList(content);
@@ -166,7 +166,7 @@ public class ContentWriter {
                     node.deleteNodeData(subNode.getName());
                 }
                 catch (RepositoryException re) {
-                    log.error("Failed to remove node data - " + subNode.getHandle());
+                    log.error("Failed to remove node data - " + subNode.getHandle()); //$NON-NLS-1$
                     log.error(re.getMessage(), re);
                 }
             }
@@ -183,7 +183,7 @@ public class ContentWriter {
                     node.delete(subNode.getName());
                 }
                 catch (RepositoryException re) {
-                    log.error("Failed to remove content node - " + subNode.getHandle());
+                    log.error("Failed to remove content node - " + subNode.getHandle()); //$NON-NLS-1$
                     log.error(re.getMessage(), re);
                 }
             }
@@ -245,10 +245,10 @@ public class ContentWriter {
                     break;
                 case PropertyType.NAME:
                     // can't be set
-                    log.debug("Ignoring NAME property");
+                    log.debug("Ignoring NAME property"); //$NON-NLS-1$
                     break;
                 default:
-                    log.error("Unknown property type - " + property.getType());
+                    log.error("Unknown property type - " + property.getType()); //$NON-NLS-1$
             }
         }
     }
@@ -262,12 +262,10 @@ public class ContentWriter {
         while (nodeDataIterator.hasNext()) {
             SerializableNodeData sNodeData = (SerializableNodeData) nodeDataIterator.next();
             if (log.isDebugEnabled()) {
-                log.debug("Writing NodeData list for " + content.getHandle());
-                log.debug("Writing NodeData [ "
-                    + sNodeData.getName()
-                    + " ] Type [ "
-                    + PropertyType.nameFromValue(sNodeData.getType())
-                    + " ]");
+                log.debug("Writing NodeData list for " + content.getHandle()); //$NON-NLS-1$
+                log.debug("Writing NodeData [ " //$NON-NLS-1$
+                    + sNodeData.getName() + " ] Type [ " //$NON-NLS-1$
+                    + PropertyType.nameFromValue(sNodeData.getType()) + " ]"); //$NON-NLS-1$
             }
             try {
                 NodeData nodeData = content.createNodeData(sNodeData.getName());
@@ -291,7 +289,7 @@ public class ContentWriter {
                         String binaryResourceHandle = sNodeData.getBinaryAsLink();
                         URL url = new URL(this.baseURL);
                         URLConnection urlConnection = url.openConnection();
-                        urlConnection.setRequestProperty("Authorization", credentials);
+                        urlConnection.setRequestProperty("Authorization", credentials); //$NON-NLS-1$
                         urlConnection.addRequestProperty(Syndicator.PAGE, binaryResourceHandle);
                         urlConnection.addRequestProperty(Syndicator.ACTION, Syndicator.GET);
                         urlConnection.addRequestProperty(Syndicator.GET_TYPE, Syndicator.GET_TYPE_BINARY);

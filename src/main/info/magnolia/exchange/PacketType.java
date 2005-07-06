@@ -38,19 +38,19 @@ public final class PacketType {
     /**
      * String representations for packet data types
      */
-    public static final String TYPENAME_STRING = "String";
+    public static final String TYPENAME_STRING = "String"; //$NON-NLS-1$
 
-    public static final String TYPENAME_BINARY = "Binary";
+    public static final String TYPENAME_BINARY = "Binary"; //$NON-NLS-1$
 
-    public static final String TYPENAME_LONG = "Long";
+    public static final String TYPENAME_LONG = "Long"; //$NON-NLS-1$
 
-    public static final String TYPENAME_DOUBLE = "Double";
+    public static final String TYPENAME_DOUBLE = "Double"; //$NON-NLS-1$
 
-    public static final String TYPENAME_DATE = "Date";
+    public static final String TYPENAME_DATE = "Date"; //$NON-NLS-1$
 
-    public static final String TYPENAME_BOOLEAN = "Boolean";
+    public static final String TYPENAME_BOOLEAN = "Boolean"; //$NON-NLS-1$
 
-    public static final String TYPENAME_OBJECT = "Object";
+    public static final String TYPENAME_OBJECT = "Object"; //$NON-NLS-1$
 
     /**
      * Utility class, don't instantiate.
@@ -80,7 +80,7 @@ public final class PacketType {
             case OBJECT:
                 return TYPENAME_OBJECT;
             default:
-                throw new IllegalArgumentException("unknown type: " + type);
+                throw new IllegalArgumentException("unknown type: " + type); //$NON-NLS-1$
         }
     }
 }

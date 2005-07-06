@@ -70,7 +70,7 @@ public class ContentTypeFilter implements Filter {
         String characterEncoding = MIMEMapping.getContentEncoding((HttpServletRequest) req);
 
         if (StringUtils.isEmpty(characterEncoding)) {
-            characterEncoding = "UTF-8";
+            characterEncoding = "UTF-8"; //$NON-NLS-1$
         }
 
         resp.setCharacterEncoding(characterEncoding);
@@ -79,10 +79,10 @@ public class ContentTypeFilter implements Filter {
             req.setCharacterEncoding(characterEncoding);
         }
         catch (IllegalStateException e) {
-            log.debug("can't set character encoding for the request", e);
+            log.debug("can't set character encoding for the request", e); //$NON-NLS-1$
         }
         catch (UnsupportedEncodingException e) {
-            log.error("can't set character encoding for the request", e);
+            log.error("can't set character encoding for the request", e); //$NON-NLS-1$
         }
     }
 

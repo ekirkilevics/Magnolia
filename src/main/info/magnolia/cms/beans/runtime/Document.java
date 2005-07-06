@@ -104,7 +104,7 @@ public class Document {
             return this.fileName;
         }
 
-        return this.fileName + "." + this.extension;
+        return this.fileName + "." + this.extension; //$NON-NLS-1$
     }
 
     /**

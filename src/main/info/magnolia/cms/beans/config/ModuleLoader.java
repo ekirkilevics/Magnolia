@@ -206,7 +206,7 @@ public final class ModuleLoader {
     }
 
     private static void setSudoCredentials() {
-        simpleCredentials = new SimpleCredentials("ModuleLoader", "".toCharArray()); //$NON-NLS-1$
+        simpleCredentials = new SimpleCredentials("ModuleLoader", StringUtils.EMPTY.toCharArray()); //$NON-NLS-1$
     }
 
 }

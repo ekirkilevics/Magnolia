@@ -120,10 +120,10 @@ public class BarEdit extends Bar {
      */
     public void setButtonMove(String nodeCollectionName, String nodeName) {
         Button b = new Button();
-        b.setLabel(MessagesManager.getMessages(getRequest()).get("buttons.move"));
+        b.setLabel(MessagesManager.getMessages(getRequest()).get("buttons.move")); //$NON-NLS-1$
         // sets the id of the bar
-        this.setId(nodeCollectionName + "__" + nodeName);
-        b.setOnclick("mgnlMoveNodeStart('" + nodeCollectionName + "','" + nodeName + "','" + this.getId() + "');");
+        this.setId(nodeCollectionName + "__" + nodeName); //$NON-NLS-1$
+        b.setOnclick("mgnlMoveNodeStart('" + nodeCollectionName + "','" + nodeName + "','" + this.getId() + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         this.setButtonMove(b);
     }
 
@@ -149,8 +149,8 @@ public class BarEdit extends Bar {
      */
     public void setButtonDelete(String path, String nodeCollectionName, String nodeName) {
         Button b = new Button();
-        b.setLabel(MessagesManager.getMessages(getRequest()).get("buttons.delete"));
-        b.setOnclick("mgnlDeleteNode('" + path + "','" + nodeCollectionName + "','" + nodeName + "');");
+        b.setLabel(MessagesManager.getMessages(getRequest()).get("buttons.delete")); //$NON-NLS-1$
+        b.setOnclick("mgnlDeleteNode('" + path + "','" + nodeCollectionName + "','" + nodeName + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         this.setButtonDelete(b);
     }
 
@@ -162,9 +162,9 @@ public class BarEdit extends Bar {
     public void drawHtml(JspWriter out) throws IOException {
         boolean isGranted = Resource.getActivePage(this.getRequest()).isGranted(Permission.SET);
         if (!Resource.showPreview(this.getRequest()) && isGranted && Server.isAdmin()) {
-            this.setEvent("onmousedown", "mgnlMoveNodeEnd(this,'" + this.getPath() + "');");
-            this.setEvent("onmouseover", "mgnlMoveNodeHigh(this);");
-            this.setEvent("onmouseout", "mgnlMoveNodeReset(this);");
+            this.setEvent("onmousedown", "mgnlMoveNodeEnd(this,'" + this.getPath() + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            this.setEvent("onmouseover", "mgnlMoveNodeHigh(this);"); //$NON-NLS-1$ //$NON-NLS-2$
+            this.setEvent("onmouseout", "mgnlMoveNodeReset(this);"); //$NON-NLS-1$ //$NON-NLS-2$
             out.println(this.getHtml());
         }
     }

@@ -83,7 +83,7 @@ public class Template {
      * Load all temple definitions available as a collection of Content objects.
      */
     public static void init() {
-        log.info("Config : initializing Template info");
+        log.info("Config : initializing Template info"); //$NON-NLS-1$
         Template.cachedContent.clear();
         Template.visibleTemplates.clear();
     }
@@ -91,28 +91,27 @@ public class Template {
     public static void update(String modulePath) {
         HierarchyManager configHierarchyManager = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
         try {
-            log.info("Config : loading Template info - " + modulePath);
+            log.info("Config : loading Template info - " + modulePath); //$NON-NLS-1$
             Content startPage = configHierarchyManager.getContent(modulePath);
-            Collection children = startPage.getContent("Templates").getChildren(
-                ItemType.CONTENTNODE,
-                ContentHandler.SORT_BY_SEQUENCE);
+            Collection children = startPage.getContent("Templates") //$NON-NLS-1$
+                .getChildren(ItemType.CONTENTNODE, ContentHandler.SORT_BY_SEQUENCE);
 
             if ((children != null) && !(children.isEmpty())) {
                 Iterator templates = children.iterator();
                 Template.cacheContent(templates);
             }
-            log.info("Config : Template info loaded - " + modulePath);
+            log.info("Config : Template info loaded - " + modulePath); //$NON-NLS-1$
         }
         catch (RepositoryException re) {
-            log.error("Config : Failed to load Template info - " + modulePath);
+            log.error("Config : Failed to load Template info - " + modulePath); //$NON-NLS-1$
             log.error(re.getMessage(), re);
         }
     }
 
     public static void reload() {
-        log.info("Config : re-initializing Template info");
+        log.info("Config : re-initializing Template info"); //$NON-NLS-1$
         Template.init();
-        update("modules/templating");
+        update("modules/templating"); //$NON-NLS-1$
     }
 
     /**
@@ -159,14 +158,14 @@ public class Template {
             Content c = (Content) templates.next();
             try {
                 Template ti = new Template();
-                ti.name = c.getNodeData("name").getValue().getString();
-                ti.path = c.getNodeData("path").getValue().getString();
+                ti.name = c.getNodeData("name").getValue().getString(); //$NON-NLS-1$
+                ti.path = c.getNodeData("path").getValue().getString(); //$NON-NLS-1$
                 Template.addAlternativePaths(c, ti);
-                ti.type = c.getNodeData("type").getValue().getString();
-                ti.visible = c.getNodeData("visible").getBoolean();
-                ti.title = c.getNodeData("title").getString();
-                ti.description = c.getNodeData("description").getString();
-                ti.image = c.getNodeData("image").getString();
+                ti.type = c.getNodeData("type").getValue().getString(); //$NON-NLS-1$
+                ti.visible = c.getNodeData("visible").getBoolean(); //$NON-NLS-1$
+                ti.title = c.getNodeData("title").getString(); //$NON-NLS-1$
+                ti.description = c.getNodeData("description").getString(); //$NON-NLS-1$
+                ti.image = c.getNodeData("image").getString(); //$NON-NLS-1$
                 Template.cachedContent.put(ti.name, ti);
                 ti.setLocation(c.getHandle());
                 if (ti.visible) {
@@ -174,7 +173,7 @@ public class Template {
                 }
             }
             catch (RepositoryException re) {
-                log.fatal("Failed to cache TemplateInfo");
+                log.fatal("Failed to cache TemplateInfo"); //$NON-NLS-1$
             }
         }
     }
@@ -186,12 +185,12 @@ public class Template {
      */
     private static void addAlternativePaths(Content node, Template ti) {
         try {
-            Content cl = node.getContent("SubTemplates");
+            Content cl = node.getContent("SubTemplates"); //$NON-NLS-1$
             Iterator it = cl.getChildren().iterator();
             ti.alternativePaths = new Hashtable();
             while (it.hasNext()) {
                 Content c = (Content) it.next();
-                ti.alternativePaths.put(c.getNodeData("extension").getString(), c.getNodeData("path").getString());
+                ti.alternativePaths.put(c.getNodeData("extension").getString(), c.getNodeData("path").getString()); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
         catch (RepositoryException re) {

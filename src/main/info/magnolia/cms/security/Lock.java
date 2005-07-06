@@ -27,7 +27,7 @@ import org.apache.log4j.Logger;
  */
 public final class Lock {
 
-    private static final String SESSION_LOCK = "magnolia:sessionLock";
+    private static final String SESSION_LOCK = "magnolia:sessionLock"; //$NON-NLS-1$
 
     private static Logger log = Logger.getLogger(Lock.class);
 
@@ -45,9 +45,8 @@ public final class Lock {
     }
 
     public static void setSessionLock(HttpServletRequest request) {
-        log.info("Session lock enabled for user ( "
-            + Authenticator.getUserId(request)
-            + " ) on "
+        log.info("Session lock enabled for user ( " //$NON-NLS-1$
+            + Authenticator.getUserId(request) + " ) on " //$NON-NLS-1$
             + (new Date()).toString());
         request.getSession().setAttribute(SESSION_LOCK, (new Date()).toString());
     }
@@ -60,7 +59,7 @@ public final class Lock {
     }
 
     public static void setHierarchyLock(String path) {
-        Lock.lockedHierarchyList.put(path, "");
+        Lock.lockedHierarchyList.put(path, ""); //$NON-NLS-1$
     }
 
     public static void resetHierarchyLock(String path) {
@@ -73,21 +72,21 @@ public final class Lock {
 
     public static void setSystemLock() {
         if (Lock.isSystemLocked()) {
-            log.info("System lock exist, created on " + Lock.lockSetDate.toString());
+            log.info("System lock exist, created on " + Lock.lockSetDate.toString()); //$NON-NLS-1$
         }
         else {
             Lock.isSystemLocked = true;
             Lock.lockSetDate = new Date();
-            log.info("New System lock created on " + Lock.lockSetDate.toString() + " )");
+            log.info("New System lock created on " + Lock.lockSetDate.toString() + " )"); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
     public static void resetSystemLock() {
         if (!Lock.isSystemLocked()) {
-            log.info("No Lock found to reset");
+            log.info("No Lock found to reset"); //$NON-NLS-1$
         }
         else {
-            log.info("Resetting system lock created on " + Lock.lockSetDate.toString());
+            log.info("Resetting system lock created on " + Lock.lockSetDate.toString()); //$NON-NLS-1$
             Lock.isSystemLocked = false;
         }
     }

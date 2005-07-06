@@ -33,7 +33,7 @@ public class PacketHeaderImpl implements PacketHeader {
 
     public void addHeader(String name, String value) throws IllegalArgumentException {
         if (value == null) {
-            throw (new IllegalArgumentException("Null value not allowed"));
+            throw (new IllegalArgumentException("Null value not allowed")); //$NON-NLS-1$
         }
         this.header.put(name, value);
     }

@@ -119,7 +119,7 @@ public class IfEmpty extends ConditionalTagSupport {
                     this.contentNodeCollectionName);
             }
             catch (RepositoryException e) {
-                log.debug("Exception caught: " + e.getMessage(), e);
+                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
             }
             if (this.contentNodeCollection == null) {
                 return true;
@@ -149,7 +149,7 @@ public class IfEmpty extends ConditionalTagSupport {
                 this.contentNode = Resource.getCurrentActivePage(req).getContent(this.contentNodeName);
             }
             catch (RepositoryException re) {
-                log.debug("Repository exception while reading " + this.contentNodeName + ": " + re.getMessage());
+                log.debug("Repository exception while reading " + this.contentNodeName + ": " + re.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
             }
             if (this.contentNode == null) {
                 return true;

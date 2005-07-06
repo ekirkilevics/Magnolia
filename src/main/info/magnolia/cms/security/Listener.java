@@ -56,7 +56,7 @@ public final class Listener {
         }
         try {
             /* probably there is a mapping for "*" */
-            Map access = info.magnolia.cms.beans.config.Listener.getInfo("*");
+            Map access = info.magnolia.cms.beans.config.Listener.getInfo("*"); //$NON-NLS-1$
             return (access.get(req.getMethod().toLowerCase()) != null);
         }
         catch (Exception e) {

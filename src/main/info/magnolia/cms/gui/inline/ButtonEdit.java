@@ -32,7 +32,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class ButtonEdit extends Button {
 
-    String label = "buttons.edit";
+    String label = "buttons.edit"; //$NON-NLS-1$
 
     public ButtonEdit() {
     }
@@ -65,17 +65,12 @@ public class ButtonEdit extends Button {
         }
         // todo: dynamic repository
         String repository = ContentRepository.WEBSITE;
-        this.setOnclick("mgnlOpenDialog('"
-            + this.getPath()
-            + "','"
-            + nodeCollectionName
-            + "','"
-            + nodeName
-            + "','"
-            + this.getParagraph()
-            + "','"
-            + repository
-            + "');");
+        this.setOnclick("mgnlOpenDialog('" //$NON-NLS-1$
+            + this.getPath() + "','" //$NON-NLS-1$
+            + nodeCollectionName + "','" //$NON-NLS-1$
+            + nodeName + "','" //$NON-NLS-1$
+            + this.getParagraph() + "','" //$NON-NLS-1$
+            + repository + "');"); //$NON-NLS-1$
     }
 
     public String getLabel() {

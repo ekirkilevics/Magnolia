@@ -21,6 +21,6 @@ public class Role {
     /**
      * The standard name for the superuser role
      */
-    public static final String ROLE_SUPERUSER = "superuser";
+    public static final String ROLE_SUPERUSER = "superuser"; //$NON-NLS-1$
 
 }

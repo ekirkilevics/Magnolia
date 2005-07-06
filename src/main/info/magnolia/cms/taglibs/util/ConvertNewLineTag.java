@@ -55,16 +55,16 @@ public class ConvertNewLineTag extends BodyTagSupport {
         String bodyText = bodyContent.getString();
 
         if (StringUtils.isNotEmpty(bodyText)) {
-            StringTokenizer bodyTk = new StringTokenizer(bodyText, "\n", false);
+            StringTokenizer bodyTk = new StringTokenizer(bodyText, "\n", false); //$NON-NLS-1$
             JspWriter out = pageContext.getOut();
 
             try {
                 if (this.para) {
                     // wrap text in p
                     while (bodyTk.hasMoreTokens()) {
-                        out.write("<p>");
+                        out.write("<p>"); //$NON-NLS-1$
                         out.write(StringUtils.replaceChars(bodyTk.nextToken(), (char) 63, '\''));
-                        out.write("</p>");
+                        out.write("</p>"); //$NON-NLS-1$
                     }
                 }
                 else {
@@ -72,7 +72,7 @@ public class ConvertNewLineTag extends BodyTagSupport {
                     while (bodyTk.hasMoreTokens()) {
                         out.write(StringUtils.replaceChars(bodyTk.nextToken(), (char) 63, '\''));
                         if (bodyTk.hasMoreTokens()) {
-                            out.write("<br/>");
+                            out.write("<br/>"); //$NON-NLS-1$
                         }
                     }
                 }

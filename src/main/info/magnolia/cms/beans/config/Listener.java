@@ -20,6 +20,7 @@ import java.util.Map;
 
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -34,7 +35,7 @@ public final class Listener {
      */
     private static Logger log = Logger.getLogger(Listener.class);
 
-    private static final String CONFIG_PAGE = "server";
+    private static final String CONFIG_PAGE = "server"; //$NON-NLS-1$
 
     private static Iterator ipList;
 
@@ -52,21 +53,21 @@ public final class Listener {
      */
     public static void init() {
         try {
-            log.info("Config : loading Listener info");
+            log.info("Config : loading Listener info"); //$NON-NLS-1$
             Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(CONFIG_PAGE);
-            Listener.ipList = startPage.getContent("IPConfig").getChildren().iterator();
+            Listener.ipList = startPage.getContent("IPConfig").getChildren().iterator(); //$NON-NLS-1$
             Listener.cachedContent.clear();
             Listener.cacheContent();
-            log.info("Config : Listener info loaded");
+            log.info("Config : Listener info loaded"); //$NON-NLS-1$
         }
         catch (RepositoryException re) {
-            log.error("Config : Failed to load Listener info");
+            log.error("Config : Failed to load Listener info"); //$NON-NLS-1$
             log.error(re.getMessage(), re);
         }
     }
 
     public static void reload() {
-        log.info("Config : re-loading Listener info");
+        log.info("Config : re-loading Listener info"); //$NON-NLS-1$
         Listener.init();
     }
 
@@ -78,11 +79,11 @@ public final class Listener {
             Content c = (Content) Listener.ipList.next();
             try {
                 Map types = new Hashtable();
-                Listener.cachedContent.put(c.getNodeData("IP").getString(), types);
-                Iterator it = c.getContent("Access").getChildren().iterator();
+                Listener.cachedContent.put(c.getNodeData("IP").getString(), types); //$NON-NLS-1$
+                Iterator it = c.getContent("Access").getChildren().iterator(); //$NON-NLS-1$
                 while (it.hasNext()) {
                     Content type = (Content) it.next();
-                    types.put(type.getNodeData("Method").getString().toLowerCase(), "");
+                    types.put(type.getNodeData("Method").getString().toLowerCase(), StringUtils.EMPTY); //$NON-NLS-1$
                 }
             }
             catch (RepositoryException re) {
