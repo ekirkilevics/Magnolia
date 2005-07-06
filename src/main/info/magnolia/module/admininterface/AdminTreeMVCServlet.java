@@ -45,7 +45,7 @@ public class AdminTreeMVCServlet extends MVCServlet {
      */
     protected MVCServletHandler getHandler(HttpServletRequest request, HttpServletResponse response) {
 
-        String handlerName = request.getParameter("repository");
+        String handlerName = request.getParameter("repository"); //$NON-NLS-1$
 
         if (StringUtils.isEmpty(handlerName)) {
             handlerName = ContentRepository.WEBSITE;

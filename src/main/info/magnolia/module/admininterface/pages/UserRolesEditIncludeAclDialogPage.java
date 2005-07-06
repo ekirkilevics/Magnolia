@@ -43,7 +43,7 @@ public class UserRolesEditIncludeAclDialogPage extends BasePageServlet {
 
     private static final long PERMISSION_NO = 0;
 
-    private static final String CSS_ACL_DIV = "aclDynamicTable";
+    private static final String CSS_ACL_DIV = "aclDynamicTable"; //$NON-NLS-1$
 
     private static String getHtmlRowInner(HttpServletRequest request, String dynamicTable, String repository) {
         boolean small = true;
@@ -51,86 +51,76 @@ public class UserRolesEditIncludeAclDialogPage extends BasePageServlet {
 
         Select accessRight = new Select();
         accessRight.setSaveInfo(false);
-        accessRight.setName("'+prefix+'AccessRight");
-        accessRight.setCssClass("mgnlDialogControlSelect");
-        accessRight.setOptions(msgs.get("roles.permission.readWrite"), Long.toString(PERMISSION_ALL));
-        accessRight.setOptions(msgs.get("roles.permission.readOnly"), Long.toString(PERMISSION_READ));
-        accessRight.setOptions(msgs.get("roles.permission.deny"), Long.toString(PERMISSION_NO));
-        accessRight.setValue("' + object.accessRight + '");
+        accessRight.setName("'+prefix+'AccessRight"); //$NON-NLS-1$
+        accessRight.setCssClass("mgnlDialogControlSelect"); //$NON-NLS-1$
+        accessRight.setOptions(msgs.get("roles.permission.readWrite"), Long.toString(PERMISSION_ALL)); //$NON-NLS-1$
+        accessRight.setOptions(msgs.get("roles.permission.readOnly"), Long.toString(PERMISSION_READ)); //$NON-NLS-1$
+        accessRight.setOptions(msgs.get("roles.permission.deny"), Long.toString(PERMISSION_NO)); //$NON-NLS-1$
+        accessRight.setValue("' + object.accessRight + '"); //$NON-NLS-1$
 
         Select accessType = new Select();
         accessType.setSaveInfo(false);
-        accessType.setName("'+prefix+'AccessType");
-        accessType.setCssClass("mgnlDialogControlSelect");
+        accessType.setName("'+prefix+'AccessType"); //$NON-NLS-1$
+        accessType.setCssClass("mgnlDialogControlSelect"); //$NON-NLS-1$
         if (repository.equals(ContentRepository.WEBSITE)) {
-            accessType.setOptions(msgs.get("roles.edit.thisAndSubPages"), "self");
-            accessType.setOptions(msgs.get("roles.edit.subPages"), "sub");
+            accessType.setOptions(msgs.get("roles.edit.thisAndSubPages"), "self"); //$NON-NLS-1$ //$NON-NLS-2$
+            accessType.setOptions(msgs.get("roles.edit.subPages"), "sub"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         else {
-            accessType.setOptions(msgs.get("roles.edit.thisAndSubNodes"), "self");
-            accessType.setOptions(msgs.get("roles.edit.subNodes"), "sub");
+            accessType.setOptions(msgs.get("roles.edit.thisAndSubNodes"), "self"); //$NON-NLS-1$ //$NON-NLS-2$
+            accessType.setOptions(msgs.get("roles.edit.subNodes"), "sub"); //$NON-NLS-1$ //$NON-NLS-2$
         }
-        accessType.setValue("' + object.accessType + '");
+        accessType.setValue("' + object.accessType + '"); //$NON-NLS-1$
 
         Edit path = new Edit();
         path.setSaveInfo(false);
-        path.setName("'+prefix+'Path");
-        path.setValue("'+object.path+'");
+        path.setName("'+prefix+'Path"); //$NON-NLS-1$
+        path.setValue("'+object.path+'"); //$NON-NLS-1$
         path.setCssClass(CssConstants.CSSCLASS_EDIT);
-        path.setCssStyles("width", "100%");
+        path.setCssStyles("width", "100%"); //$NON-NLS-1$ //$NON-NLS-2$
 
         Button choose = new Button();
-        choose.setLabel(msgs.get("buttons.choose"));
-        choose.setOnclick("aclChoose(\\''+prefix+'\\',\\'" + repository + "\\');");
+        choose.setLabel(msgs.get("buttons.choose")); //$NON-NLS-1$
+        choose.setOnclick("aclChoose(\\''+prefix+'\\',\\'" + repository + "\\');"); //$NON-NLS-1$ //$NON-NLS-2$
         choose.setSmall(small);
 
         Button delete = new Button();
-        delete.setLabel(msgs.get("buttons.delete"));
-        delete.setOnclick(dynamicTable + ".del('+index+');");
+        delete.setLabel(msgs.get("buttons.delete")); //$NON-NLS-1$
+        delete.setOnclick(dynamicTable + ".del('+index+');"); //$NON-NLS-1$
         delete.setSmall(small);
 
         StringBuffer html = new StringBuffer();
         // set as table since ie/win does not support setting of innerHTML of a
         // tr
-        html.append("<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>");
-        html.append("<td width=\"1\" class=\""
-            + CssConstants.CSSCLASS_EDITWITHBUTTON
-            + "\">"
-            + accessRight.getHtml()
-            + "</td>");
-        html.append("<td width=\"1\" class=\"mgnlDialogBoxInput\"></td>");
+        html.append("<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>"); //$NON-NLS-1$
+        html.append("<td width=\"1\" class=\"" //$NON-NLS-1$
+            + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">" //$NON-NLS-1$
+            + accessRight.getHtml() + "</td>"); //$NON-NLS-1$
+        html.append("<td width=\"1\" class=\"mgnlDialogBoxInput\"></td>"); //$NON-NLS-1$
 
         if (!repository.equals(ContentRepository.USERS) && !repository.equals(ContentRepository.USER_ROLES)) {
-            html.append("<td width=\"1\" class=\""
-                + CssConstants.CSSCLASS_EDITWITHBUTTON
-                + "\">"
-                + accessType.getHtml()
-                + "</td>");
-            html.append("<td width=\"1\"></td>");
+            html.append("<td width=\"1\" class=\"" //$NON-NLS-1$
+                + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">" //$NON-NLS-1$
+                + accessType.getHtml() + "</td>"); //$NON-NLS-1$
+            html.append("<td width=\"1\"></td>"); //$NON-NLS-1$
         }
         else {
             html
-                .append("<input type=\"hidden\" id=\"' + prefix + 'AccessType\" name=\"' + prefix + 'AccessType\" value=\"sub\"/>");
+                .append("<input type=\"hidden\" id=\"' + prefix + 'AccessType\" name=\"' + prefix + 'AccessType\" value=\"sub\"/>"); //$NON-NLS-1$
         }
 
-        html.append("<td width=\"100%\"class=\""
-            + CssConstants.CSSCLASS_EDITWITHBUTTON
-            + "\">"
-            + path.getHtml()
-            + "</td>");
-        html.append("<td width=\"1\"></td>");
-        html.append("<td width=\"1\" class=\""
-            + CssConstants.CSSCLASS_EDITWITHBUTTON
-            + "\">"
-            + choose.getHtml()
-            + "</td>");
-        html.append("<td width=\"1\"></td>");
-        html.append("<td width=\"1\" class=\""
-            + CssConstants.CSSCLASS_EDITWITHBUTTON
-            + "\">"
-            + delete.getHtml()
-            + "</td>");
-        html.append("</tr></table>");
+        html.append("<td width=\"100%\"class=\"" //$NON-NLS-1$
+            + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">" //$NON-NLS-1$
+            + path.getHtml() + "</td>"); //$NON-NLS-1$
+        html.append("<td width=\"1\"></td>"); //$NON-NLS-1$
+        html.append("<td width=\"1\" class=\"" //$NON-NLS-1$
+            + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">" //$NON-NLS-1$
+            + choose.getHtml() + "</td>"); //$NON-NLS-1$
+        html.append("<td width=\"1\"></td>"); //$NON-NLS-1$
+        html.append("<td width=\"1\" class=\"" //$NON-NLS-1$
+            + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">" //$NON-NLS-1$
+            + delete.getHtml() + "</td>"); //$NON-NLS-1$
+        html.append("</tr></table>"); //$NON-NLS-1$
 
         return html.toString();
     }
@@ -142,14 +132,14 @@ public class UserRolesEditIncludeAclDialogPage extends BasePageServlet {
         PrintWriter out = response.getWriter();
         Messages msgs = MessagesManager.getMessages(request);
 
-        DialogSuper dialogControl = (DialogSuper) request.getAttribute("dialogObject");
+        DialogSuper dialogControl = (DialogSuper) request.getAttribute("dialogObject"); //$NON-NLS-1$
         Content role = dialogControl.getWebsiteNode();
 
         // select the repository
         Select repositorySelect = getReposiotySelect(request);
 
         out.print(repositorySelect.getHtml());
-        out.print("<p><p/>");
+        out.print("<p><p/>"); //$NON-NLS-1$
         for (int i = 0; i < ContentRepository.ALL_REPOSITORIES.length; i++) {
             writeRepositoryTable(request, response, msgs, out, role, ContentRepository.ALL_REPOSITORIES[i]);
         }
@@ -164,65 +154,61 @@ public class UserRolesEditIncludeAclDialogPage extends BasePageServlet {
      */
     private void writeRepositoryTable(HttpServletRequest request, HttpServletResponse response, Messages msgs,
         PrintWriter out, Content role, String repository) throws RepositoryException, IOException {
-        String tableName = "acl" + repository + "Table";
-        String dynamicTableName = "acl" + repository + "DynamicTable";
-        String hiddenFieldName = "acl" + repository + "List";
+        String tableName = "acl" + repository + "Table"; //$NON-NLS-1$ //$NON-NLS-2$
+        String dynamicTableName = "acl" + repository + "DynamicTable"; //$NON-NLS-1$ //$NON-NLS-2$
+        String hiddenFieldName = "acl" + repository + "List"; //$NON-NLS-1$ //$NON-NLS-2$
 
-        out.println("<div id=\"acl" + repository + "Div\" class=\"" + CSS_ACL_DIV + "\">");
+        out.println("<div id=\"acl" + repository + "Div\" class=\"" + CSS_ACL_DIV + "\">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         out.println(new Hidden(hiddenFieldName, "", false).getHtml());
 
         // the table
-        out.println("<table id=\""
+        out.println("<table id=\"" //$NON-NLS-1$
             + tableName
-            + "\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\"><tr><td></td></tr></table>");
+            + "\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\"><tr><td></td></tr></table>"); //$NON-NLS-1$
 
         // add button
 
-        out.println("<table width=\"100%\">");
+        out.println("<table width=\"100%\">"); //$NON-NLS-1$
         DialogButton add = DialogFactory.getDialogButtonInstance(request, response, null, null);
         add.setBoxType(DialogBox.BOXTYPE_1COL);
-        add.setConfig("buttonLabel", msgs.get("buttons.add"));
-        add.setConfig("onclick", dynamicTableName + ".addNew();");
+        add.setConfig("buttonLabel", msgs.get("buttons.add")); //$NON-NLS-1$ //$NON-NLS-2$
+        add.setConfig("onclick", dynamicTableName + ".addNew();"); //$NON-NLS-1$ //$NON-NLS-2$
         add.drawHtml(out);
-        out.println("</table>");
+        out.println("</table>"); //$NON-NLS-1$
 
-        out.println("</div>");
+        out.println("</div>"); //$NON-NLS-1$
 
-        out.println("<script type=\"text/javascript\">");
+        out.println("<script type=\"text/javascript\">"); //$NON-NLS-1$
         // register the repository
-        out.println("aclRepositories[aclRepositories.length]= '" + repository + "';");
+        out.println("aclRepositories[aclRepositories.length]= '" + repository + "';"); //$NON-NLS-1$ //$NON-NLS-2$
 
         if (repository == ContentRepository.WEBSITE) {
-            out.println("document.getElementById('acl" + repository + "Div').style.visibility='visible';");
+            out.println("document.getElementById('acl" + repository + "Div').style.visibility='visible';"); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         // make renderer function
-        out.println("function acl" + repository + "RenderFunction(cell, prefix, index, object)");
-        out.println("{");
-        out.println("cell.innerHTML= '" + getHtmlRowInner(request, dynamicTableName, repository) + "';\n");
-        out.println("document.getElementById(prefix + 'AccessType').value = object.accessType;\n");
+        out.println("function acl" + repository + "RenderFunction(cell, prefix, index, object)"); //$NON-NLS-1$ //$NON-NLS-2$
+        out.println("{"); //$NON-NLS-1$
+        out.println("cell.innerHTML= '" + getHtmlRowInner(request, dynamicTableName, repository) + "';\n"); //$NON-NLS-1$ //$NON-NLS-2$
+        out.println("document.getElementById(prefix + 'AccessType').value = object.accessType;\n"); //$NON-NLS-1$
 
         if (!repository.equals(ContentRepository.USERS) && !repository.equals(ContentRepository.USER_ROLES)) {
-            out.println("document.getElementById(prefix + 'AccessRight').value = object.accessRight;\n");
+            out.println("document.getElementById(prefix + 'AccessRight').value = object.accessRight;\n"); //$NON-NLS-1$
         }
 
-        out.println("}");
+        out.println("}"); //$NON-NLS-1$
 
         // create the dynamicTable
-        out.println(dynamicTableName
-            + " = new MgnlDynamicTable('"
-            + tableName
-            + "',document.mgnlFormMain."
-            + hiddenFieldName
-            + ", aclGetNewPermissionObject, aclGetPermissionObject, acl"
-            + repository
-            + "RenderFunction, null);");
+        out.println(dynamicTableName + " = new MgnlDynamicTable('" //$NON-NLS-1$
+            + tableName + "',document.mgnlFormMain." //$NON-NLS-1$
+            + hiddenFieldName + ", aclGetNewPermissionObject, aclGetPermissionObject, acl" //$NON-NLS-1$
+            + repository + "RenderFunction, null);"); //$NON-NLS-1$
 
         // add existing acls to table (by js, so the same mechanism as at
         // adding rows can be used)
         addExistingAclToTable(out, role, dynamicTableName, repository);
 
-        out.println("</script>");
+        out.println("</script>"); //$NON-NLS-1$
     }
 
     /**
@@ -232,7 +218,7 @@ public class UserRolesEditIncludeAclDialogPage extends BasePageServlet {
     private void addExistingAclToTable(PrintWriter out, Content role, String dynamicTableName, String repository) {
         boolean noAcl = false;
         try {
-            Content acl = role.getContent("acl_" + repository);
+            Content acl = role.getContent("acl_" + repository); //$NON-NLS-1$
             if (acl.getChildren().size() == 0) {
                 noAcl = true;
             }
@@ -245,35 +231,31 @@ public class UserRolesEditIncludeAclDialogPage extends BasePageServlet {
                     skipNext = false;
                 }
                 else {
-                    String path = c.getNodeData("path").getString();
-                    String accessRight = c.getNodeData("permissions").getString();
+                    String path = c.getNodeData("path").getString(); //$NON-NLS-1$
+                    String accessRight = c.getNodeData("permissions").getString(); //$NON-NLS-1$
                     String accessType;
 
-                    if (path.indexOf("/*") == -1) {
+                    if (path.indexOf("/*") == -1) { //$NON-NLS-1$
                         // access to self and subs, skip next (which is same
                         // with /*)
                         skipNext = true;
-                        accessType = "self";
+                        accessType = "self"; //$NON-NLS-1$
                     }
                     else {
-                        if (path.equals("/*")) {
-                            path = "/";
-                            accessType = "self";
+                        if (path.equals("/*")) { //$NON-NLS-1$
+                            path = "/"; //$NON-NLS-1$
+                            accessType = "self"; //$NON-NLS-1$
                         }
                         else {
-                            path = path.substring(0, path.lastIndexOf("/*"));
-                            accessType = "sub";
+                            path = path.substring(0, path.lastIndexOf("/*")); //$NON-NLS-1$
+                            accessType = "sub"; //$NON-NLS-1$
                         }
                     }
 
-                    out.println(dynamicTableName
-                        + ".add({accessRight:"
-                        + accessRight
-                        + ",accessType:'"
-                        + accessType
-                        + "',path:'"
-                        + path
-                        + "'});");
+                    out.println(dynamicTableName + ".add({accessRight:" //$NON-NLS-1$
+                        + accessRight + ",accessType:'" //$NON-NLS-1$
+                        + accessType + "',path:'" //$NON-NLS-1$
+                        + path + "'});"); //$NON-NLS-1$
                 }
             }
         }
@@ -281,7 +263,7 @@ public class UserRolesEditIncludeAclDialogPage extends BasePageServlet {
             noAcl = true;
         }
         if (noAcl) {
-            out.println(dynamicTableName + ".addNew();");
+            out.println(dynamicTableName + ".addNew();"); //$NON-NLS-1$
         }
     }
 
@@ -291,16 +273,16 @@ public class UserRolesEditIncludeAclDialogPage extends BasePageServlet {
      */
     private Select getReposiotySelect(HttpServletRequest request) {
         Select repositorySelect = new Select();
-        repositorySelect.setName("aclRepository");
-        repositorySelect.setCssClass("mgnlDialogControlSelect");
-        repositorySelect.setEvent("onchange", "aclChangeRepository(this.value)");
+        repositorySelect.setName("aclRepository"); //$NON-NLS-1$
+        repositorySelect.setCssClass("mgnlDialogControlSelect"); //$NON-NLS-1$
+        repositorySelect.setEvent("onchange", "aclChangeRepository(this.value)"); //$NON-NLS-1$ //$NON-NLS-2$
         repositorySelect.setSaveInfo(false);
         repositorySelect.setValue(ContentRepository.WEBSITE);
 
         // loop through the repositories
         for (int i = 0; i < ContentRepository.ALL_REPOSITORIES.length; i++) {
             String name = ContentRepository.ALL_REPOSITORIES[i];
-            String label = MessagesManager.get(request, "repository." + name);
+            String label = MessagesManager.get(request, "repository." + name); //$NON-NLS-1$
             repositorySelect.setOptions(label, name);
         }
         return repositorySelect;

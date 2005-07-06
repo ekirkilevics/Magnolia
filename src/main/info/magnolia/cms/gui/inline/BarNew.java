@@ -83,8 +83,8 @@ public class BarNew extends Bar {
         // if there are multiple paragraphs show the selectParagraph dialog
         if (paragraph.indexOf(",") > -1) {
             b.setOnclick("mgnlOpenDialog('" + path + "','" + nodeCollectionName + "','" + nodeName + "','" + paragraph // this
-                                                                                                                        // is a
-                                                                                                                        // list
+                // is a
+                // list
                 + "','" + repository + "','.magnolia/dialogs/selectParagraph.html');");
 
         }

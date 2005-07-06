@@ -40,7 +40,7 @@ import org.apache.taglibs.standard.resources.Resources;
  */
 
 public class ContextMessages extends Messages {
-    
+
     /**
      * The log4j logger
      */
@@ -472,13 +472,13 @@ public class ContextMessages extends Messages {
      */
     private static Object get(HttpServletRequest req, String name, int scope) {
         switch (scope) {
-            case PageContext.REQUEST_SCOPE :
+            case PageContext.REQUEST_SCOPE:
                 return req.getAttribute(name + REQUEST_SCOPE_SUFFIX);
-            case PageContext.SESSION_SCOPE :
+            case PageContext.SESSION_SCOPE:
                 return get(req.getSession(), name);
-            case PageContext.APPLICATION_SCOPE :
+            case PageContext.APPLICATION_SCOPE:
                 return req.getSession().getServletContext().getAttribute(name + APPLICATION_SCOPE_SUFFIX);
-            default :
+            default:
                 throw new IllegalArgumentException("unknown scope");
         }
     }

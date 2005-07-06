@@ -25,7 +25,7 @@ public abstract class ContentHandler implements Cloneable {
 
     /**
      * Constants for getChildren method
-     * */
+     */
     public static final int SORT_BY_DATE = 1;
 
     public static final int SORT_BY_NAME = 2;
@@ -48,7 +48,7 @@ public abstract class ContentHandler implements Cloneable {
     /**
      * Set access manager for this object
      * @param manager
-     * */
+     */
     public void setAccessManager(AccessManager manager) {
         this.accessManager = manager;
     }
@@ -56,7 +56,7 @@ public abstract class ContentHandler implements Cloneable {
     /**
      * Get access manager if previously set for this object
      * @return AccessManager
-     * */
+     */
     public AccessManager getAccessManager() {
         return this.accessManager;
     }

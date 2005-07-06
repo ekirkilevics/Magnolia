@@ -41,33 +41,33 @@ public class MetaData {
      * Top level atoms viewed as metadata of the specified content these must be set by the authoring system itself, but
      * could be changed via custom templates if neccessary.
      */
-    public static final String TITLE = "title";
+    public static final String TITLE = "title"; //$NON-NLS-1$
 
-    public static final String CREATION_DATE = "creationdate";
+    public static final String CREATION_DATE = "creationdate"; //$NON-NLS-1$
 
-    public static final String LAST_MODIFIED = "lastmodified";
+    public static final String LAST_MODIFIED = "lastmodified"; //$NON-NLS-1$
 
-    public static final String LAST_ACTION = "lastaction";
+    public static final String LAST_ACTION = "lastaction"; //$NON-NLS-1$
 
-    public static final String AUTHOR_ID = "authorid";
+    public static final String AUTHOR_ID = "authorid"; //$NON-NLS-1$
 
-    public static final String ACTIVATOR_ID = "activatorid";
+    public static final String ACTIVATOR_ID = "activatorid"; //$NON-NLS-1$
 
-    public static final String START_TIME = "starttime";
+    public static final String START_TIME = "starttime"; //$NON-NLS-1$
 
-    public static final String END_TIME = "endtime";
+    public static final String END_TIME = "endtime"; //$NON-NLS-1$
 
-    public static final String TEMPLATE = "template";
+    public static final String TEMPLATE = "template"; //$NON-NLS-1$
 
-    public static final String TEMPLATE_TYPE = "templatetype";
+    public static final String TEMPLATE_TYPE = "templatetype"; //$NON-NLS-1$
 
-    public static final String ACTIVATED = "activated";
+    public static final String ACTIVATED = "activated"; //$NON-NLS-1$
 
-    public static final String SEQUENCE_POS = "sequenceposition";
+    public static final String SEQUENCE_POS = "sequenceposition"; //$NON-NLS-1$
 
-    public static final String ACTIVATION_INFO = ".activationInfo";
+    public static final String ACTIVATION_INFO = ".activationInfo"; //$NON-NLS-1$
 
-    public static final String DEFAULT_META_NODE = "MetaData";
+    public static final String DEFAULT_META_NODE = "MetaData"; //$NON-NLS-1$
 
     public static final long SEQUENCE_POS_COEFFICIENT = 1000;
 
@@ -134,15 +134,15 @@ public class MetaData {
         catch (PathNotFoundException e) {
             try {
                 this.node = workingNode.addNode(name, ItemType.NT_FILE);
-                this.node = this.node.addNode(ItemType.JCR_CONTENT.getSystemName(), "nt:unstructured");
-                this.node.setProperty("Data", name);
+                this.node = this.node.addNode(ItemType.JCR_CONTENT.getSystemName(), "nt:unstructured"); //$NON-NLS-1$
+                this.node.setProperty("Data", name); //$NON-NLS-1$
             }
             catch (ConstraintViolationException cve) {
-                log.debug("Unable to create meta data node - " + name);
+                log.debug("Unable to create meta data node - " + name); //$NON-NLS-1$
                 log.debug(cve.getMessage());
             }
             catch (RepositoryException re) {
-                log.error("Failed to create meta data node - " + name);
+                log.error("Failed to create meta data node - " + name); //$NON-NLS-1$
                 log.error(re.getMessage(), re);
             }
         }
@@ -173,7 +173,7 @@ public class MetaData {
             return this.node.getName();
         }
         catch (NullPointerException e) {
-            log.debug("Meta Data has not beed created");
+            log.debug("Meta Data has not beed created"); //$NON-NLS-1$
         }
         catch (RepositoryException e) {
             log.error(e.getMessage(), e);
@@ -238,8 +238,8 @@ public class MetaData {
         }
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
-                log.debug("MedaData has not been created");
-                log.debug("cannot set property - " + SEQUENCE_POS);
+                log.debug("MedaData has not been created"); //$NON-NLS-1$
+                log.debug("cannot set property - " + SEQUENCE_POS); //$NON-NLS-1$
             }
         }
     }
@@ -270,8 +270,8 @@ public class MetaData {
         }
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
-                log.debug("MedaData has not been created");
-                log.debug("cannot get property - " + SEQUENCE_POS);
+                log.debug("MedaData has not been created"); //$NON-NLS-1$
+                log.debug("cannot get property - " + SEQUENCE_POS); //$NON-NLS-1$
             }
         }
         return 0;
@@ -449,8 +449,8 @@ public class MetaData {
         }
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
-                log.debug("MedaData has not been created");
-                log.debug("cannot set property - " + name);
+                log.debug("MedaData has not been created"); //$NON-NLS-1$
+                log.debug("cannot set property - " + name); //$NON-NLS-1$
             }
         }
     }
@@ -478,8 +478,8 @@ public class MetaData {
         }
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
-                log.debug("MedaData has not been created");
-                log.debug("cannot set property - " + name);
+                log.debug("MedaData has not been created"); //$NON-NLS-1$
+                log.debug("cannot set property - " + name); //$NON-NLS-1$
             }
         }
     }
@@ -507,8 +507,8 @@ public class MetaData {
         }
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
-                log.debug("MedaData has not been created");
-                log.debug("cannot set property - " + name);
+                log.debug("MedaData has not been created"); //$NON-NLS-1$
+                log.debug("cannot set property - " + name); //$NON-NLS-1$
             }
         }
     }
@@ -536,8 +536,8 @@ public class MetaData {
         }
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
-                log.debug("MedaData has not been created");
-                log.debug("cannot set property - " + name);
+                log.debug("MedaData has not been created"); //$NON-NLS-1$
+                log.debug("cannot set property - " + name); //$NON-NLS-1$
             }
         }
     }
@@ -565,8 +565,8 @@ public class MetaData {
         }
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
-                log.debug("MedaData has not been created");
-                log.debug("cannot set property - " + name);
+                log.debug("MedaData has not been created"); //$NON-NLS-1$
+                log.debug("cannot set property - " + name); //$NON-NLS-1$
             }
         }
     }
@@ -580,7 +580,7 @@ public class MetaData {
         }
         catch (PathNotFoundException re) {
             if (log.isDebugEnabled()) {
-                log.debug("PathNotFoundException for property [" + propertyName + "] in node " + this.node);
+                log.debug("PathNotFoundException for property [" + propertyName + "] in node " + this.node); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
         catch (RepositoryException re) {
@@ -588,8 +588,8 @@ public class MetaData {
         }
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
-                log.debug("MedaData has not been created");
-                log.debug("cannot get property - " + propertyName);
+                log.debug("MedaData has not been created"); //$NON-NLS-1$
+                log.debug("cannot get property - " + propertyName); //$NON-NLS-1$
             }
         }
         return null;
@@ -604,7 +604,7 @@ public class MetaData {
         }
         catch (PathNotFoundException re) {
             if (log.isDebugEnabled()) {
-                log.debug("PathNotFoundException for property [" + propertyName + "] in node " + this.node);
+                log.debug("PathNotFoundException for property [" + propertyName + "] in node " + this.node); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
         catch (RepositoryException re) {
@@ -612,8 +612,8 @@ public class MetaData {
         }
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
-                log.debug("MedaData has not been created");
-                log.debug("cannot get property - " + propertyName);
+                log.debug("MedaData has not been created"); //$NON-NLS-1$
+                log.debug("cannot get property - " + propertyName); //$NON-NLS-1$
             }
         }
         return false;
@@ -628,7 +628,7 @@ public class MetaData {
         }
         catch (PathNotFoundException re) {
             if (log.isDebugEnabled()) {
-                log.debug("PathNotFoundException for property [" + propertyName + "] in node " + this.node);
+                log.debug("PathNotFoundException for property [" + propertyName + "] in node " + this.node); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
         catch (RepositoryException re) {
@@ -636,8 +636,8 @@ public class MetaData {
         }
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
-                log.debug("MedaData has not been created");
-                log.debug("cannot get property - " + propertyName);
+                log.debug("MedaData has not been created"); //$NON-NLS-1$
+                log.debug("cannot get property - " + propertyName); //$NON-NLS-1$
             }
         }
         return 0d;
@@ -652,7 +652,7 @@ public class MetaData {
         }
         catch (PathNotFoundException re) {
             if (log.isDebugEnabled()) {
-                log.debug("PathNotFoundException for property [" + propertyName + "] in node " + this.node);
+                log.debug("PathNotFoundException for property [" + propertyName + "] in node " + this.node); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
         catch (RepositoryException re) {
@@ -660,8 +660,8 @@ public class MetaData {
         }
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
-                log.debug("MedaData has not been created");
-                log.debug("cannot get property - " + propertyName);
+                log.debug("MedaData has not been created"); //$NON-NLS-1$
+                log.debug("cannot get property - " + propertyName); //$NON-NLS-1$
             }
         }
         return 0L;
@@ -678,7 +678,7 @@ public class MetaData {
         }
         catch (PathNotFoundException re) {
             if (log.isDebugEnabled()) {
-                log.debug("PathNotFoundException for property [" + propertyName + "] in node " + this.node);
+                log.debug("PathNotFoundException for property [" + propertyName + "] in node " + this.node); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
         catch (RepositoryException re) {
@@ -686,8 +686,8 @@ public class MetaData {
         }
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
-                log.debug("MedaData has not been created");
-                log.debug("cannot get property - " + propertyName);
+                log.debug("MedaData has not been created"); //$NON-NLS-1$
+                log.debug("cannot get property - " + propertyName); //$NON-NLS-1$
             }
         }
         return StringUtils.EMPTY;
@@ -697,19 +697,18 @@ public class MetaData {
      * @see java.lang.Object#toString()
      */
     public String toString() {
-        return new ToStringBuilder(this)
-            .append("title", this.getTitle())
-            .append("template", this.getTemplate())
-            .append("authorId", this.getAuthorId())
-            .append("label", this.getLabel())
-            .append("sequencePosition", this.getSequencePosition())
-            .append("activatorId", this.getActivatorId())
-            .append("isActivated", this.getIsActivated())
-            .append("creationDate", this.getCreationDate())
-            .append("lastActionDate", this.getLastActionDate())
-            .append("modificationDate", this.getModificationDate())
-            .append("startTime", this.getStartTime())
-            .append("endTime", this.getEndTime())
+        return new ToStringBuilder(this).append("title", this.getTitle()) //$NON-NLS-1$
+            .append("template", this.getTemplate()) //$NON-NLS-1$
+            .append("authorId", this.getAuthorId()) //$NON-NLS-1$
+            .append("label", this.getLabel()) //$NON-NLS-1$
+            .append("sequencePosition", this.getSequencePosition()) //$NON-NLS-1$
+            .append("activatorId", this.getActivatorId()) //$NON-NLS-1$
+            .append("isActivated", this.getIsActivated()) //$NON-NLS-1$
+            .append("creationDate", this.getCreationDate()) //$NON-NLS-1$
+            .append("lastActionDate", this.getLastActionDate()) //$NON-NLS-1$
+            .append("modificationDate", this.getModificationDate()) //$NON-NLS-1$
+            .append("startTime", this.getStartTime()) //$NON-NLS-1$
+            .append("endTime", this.getEndTime()) //$NON-NLS-1$
             .toString();
     }
 

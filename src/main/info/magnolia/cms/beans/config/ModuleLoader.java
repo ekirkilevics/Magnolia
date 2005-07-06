@@ -52,13 +52,13 @@ public final class ModuleLoader {
     /**
      * magnolia module specific keywords
      */
-    public static final String CONFIG_PAGE = "modules";
+    public static final String CONFIG_PAGE = "modules"; //$NON-NLS-1$
 
-    public static final String CONFIG_NODE_REGISTER = "Register";
+    public static final String CONFIG_NODE_REGISTER = "Register"; //$NON-NLS-1$
 
-    public static final String CONFIG_NODE_VIRTUAL_MAPPING = "VirtualURIMapping";
+    public static final String CONFIG_NODE_VIRTUAL_MAPPING = "VirtualURIMapping"; //$NON-NLS-1$
 
-    public static final String CONFIG_NODE_LOCAL_STORE = "Config";
+    public static final String CONFIG_NODE_LOCAL_STORE = "Config"; //$NON-NLS-1$
 
     /**
      * todo fix this with proper JCR implementation.
@@ -73,16 +73,16 @@ public final class ModuleLoader {
     }
 
     protected static void init() throws ConfigurationException {
-        log.info("Loading modules");
+        log.info("Loading modules"); //$NON-NLS-1$
         setSudoCredentials();
         try {
             HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
             Content startPage = hm.getContent(CONFIG_PAGE);
             init(startPage);
-            log.info("Finished loading modules");
+            log.info("Finished loading modules"); //$NON-NLS-1$
         }
         catch (Exception e) {
-            log.fatal("Failed to initialize module loader");
+            log.fatal("Failed to initialize module loader"); //$NON-NLS-1$
             log.fatal(e.getMessage(), e);
             throw new ConfigurationException(e.getMessage());
         }
@@ -99,10 +99,10 @@ public final class ModuleLoader {
 
             String modulename = module.getName();
 
-            log.info("Initializing module - " + modulename);
+            log.info("Initializing module - " + modulename); //$NON-NLS-1$
             load(module);
-            VirtualMap.update(CONFIG_PAGE + "/" + modulename + "/" + CONFIG_NODE_VIRTUAL_MAPPING);
-            log.info("Module : " + modulename + " initialized");
+            VirtualMap.update(CONFIG_PAGE + "/" + modulename + "/" + CONFIG_NODE_VIRTUAL_MAPPING); //$NON-NLS-1$ //$NON-NLS-2$
+            log.info("Module : " + modulename + " initialized"); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
@@ -110,37 +110,35 @@ public final class ModuleLoader {
         try {
             Content moduleConfig = module.getContent(CONFIG_NODE_REGISTER);
             ModuleConfig thisModule = new ModuleConfig();
-            thisModule.setModuleName(moduleConfig.getNodeData("moduleName").getString());
-            thisModule.setModuleDescription(moduleConfig.getNodeData("moduleDescription").getString());
-            thisModule.setHierarchyManager(getHierarchyManager(moduleConfig.getNodeData("repository").getString()));
+            thisModule.setModuleName(moduleConfig.getNodeData("moduleName").getString()); //$NON-NLS-1$
+            thisModule.setModuleDescription(moduleConfig.getNodeData("moduleDescription").getString()); //$NON-NLS-1$
+            thisModule.setHierarchyManager(getHierarchyManager(moduleConfig.getNodeData("repository").getString())); //$NON-NLS-1$
             try {
-                Content sharedRepositories = moduleConfig.getContent("sharedRepositories");
+                Content sharedRepositories = moduleConfig.getContent("sharedRepositories"); //$NON-NLS-1$
                 thisModule.setSharedHierarchyManagers(getSharedHierarchyManagers(sharedRepositories));
             }
             catch (PathNotFoundException e) {
-                log.info("Module : no shared repository definition found for - " + module.getName());
+                log.info("Module : no shared repository definition found for - " + module.getName()); //$NON-NLS-1$
             }
-            thisModule.setInitParameters(getInitParameters(moduleConfig.getContent("initParams")));
+            thisModule.setInitParameters(getInitParameters(moduleConfig.getContent("initParams"))); //$NON-NLS-1$
             /* add local store */
-            LocalStore store = LocalStore.getInstance(CONFIG_PAGE
-                + "/"
-                + module.getName()
-                + "/"
+            LocalStore store = LocalStore.getInstance(CONFIG_PAGE + "/" //$NON-NLS-1$
+                + module.getName() + "/" //$NON-NLS-1$
                 + CONFIG_NODE_LOCAL_STORE);
             thisModule.setLocalStore(store.getStore());
             try {
                 // temporary workaround for compatibility with old repositories (the package "adminInterface" has been
                 // renamed to "admininterface" according to java naming standards)
-                String moduleClassName = moduleConfig.getNodeData("class").getString();
-                if ("info.magnolia.module.adminInterface.Engine".equals(moduleClassName)) {
-                    moduleClassName = "info.magnolia.module.admininterface.Engine";
+                String moduleClassName = moduleConfig.getNodeData("class").getString(); //$NON-NLS-1$
+                if ("info.magnolia.module.adminInterface.Engine".equals(moduleClassName)) { //$NON-NLS-1$
+                    moduleClassName = "info.magnolia.module.admininterface.Engine"; //$NON-NLS-1$
                 }
 
                 ModuleFactory.initModule(thisModule, moduleClassName);
 
             }
             catch (InstantiationException ie) {
-                log.fatal("Module : [ " + moduleConfig.getNodeData("moduleName").getString() + " ] failed to load");
+                log.fatal("Module : [ " + moduleConfig.getNodeData("moduleName").getString() + " ] failed to load"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 log.fatal(ie.getMessage());
             }
             catch (IllegalAccessException ae) {
@@ -148,7 +146,7 @@ public final class ModuleLoader {
             }
         }
         catch (Exception e) {
-            log.fatal("can't initialize module " + module.getHandle(), e);
+            log.fatal("can't initialize module " + module.getHandle(), e); //$NON-NLS-1$
         }
     }
 
@@ -191,12 +189,12 @@ public final class ModuleLoader {
         UrlPattern p = UrlPattern.MATCH_ALL;
         while (repositories.hasNext()) {
             Content repositoryConfig = (Content) repositories.next();
-            String id = repositoryConfig.getNodeData("id").getString();
-            String repositoryName = repositoryConfig.getNodeData("repository").getString();
+            String id = repositoryConfig.getNodeData("id").getString(); //$NON-NLS-1$
+            String repositoryName = repositoryConfig.getNodeData("repository").getString(); //$NON-NLS-1$
             Session ticket = ContentRepository.getRepository(repositoryName).login(simpleCredentials, null);
             Permission permission = new PermissionImpl();
             permission.setPattern(p);
-            permission.setPermissions(repositoryConfig.getNodeData("permissions").getLong());
+            permission.setPermissions(repositoryConfig.getNodeData("permissions").getLong()); //$NON-NLS-1$
             acl.add(permission);
             AccessManager accessManager = new AccessManagerImpl();
             accessManager.setPermissionList(acl);
@@ -208,7 +206,7 @@ public final class ModuleLoader {
     }
 
     private static void setSudoCredentials() {
-        simpleCredentials = new SimpleCredentials("ModuleLoader", "".toCharArray());
+        simpleCredentials = new SimpleCredentials("ModuleLoader", "".toCharArray()); //$NON-NLS-1$
     }
 
 }

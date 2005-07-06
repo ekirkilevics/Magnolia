@@ -38,7 +38,7 @@ public final class TemplateMessagesUtil {
      */
     private TemplateMessagesUtil() {
     }
-    
+
     /**
      * Get the message.
      * @param request request

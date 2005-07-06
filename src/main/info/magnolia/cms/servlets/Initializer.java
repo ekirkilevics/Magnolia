@@ -30,14 +30,14 @@ import org.apache.log4j.Logger;
  * Magnolia default initializer: initialize logging, reads any parameter specified as context-param in web.xml and calls
  * ConfigLoader. Users are free to implement custom loaders which read parameters from other sources. Parameters should
  * be defined in <code>web.xml</code> using <code>context-param</code> elements:
- *
+ * 
  * <pre>
  * &lt;context-param>
  *   &lt;param-name>&lt;/param-name>
  *   &lt;param-value>&lt;/param-value>
  * &lt;/context-param>
  * </pre>
- *
+ * 
  * The following parameters are needed:
  * <dl>
  * <dt>magnolia.cache.startdir</dt>

@@ -237,8 +237,7 @@ public class EntryServlet extends HttpServlet {
      * @param request HttpServletRequest
      */
     private String getURIMap(HttpServletRequest request) {
-        return VirtualMap.getURIMapping(
-            StringUtils.substringAfter(request.getRequestURI(), request.getContextPath()));
+        return VirtualMap.getURIMapping(StringUtils.substringAfter(request.getRequestURI(), request.getContextPath()));
     }
 
     /**

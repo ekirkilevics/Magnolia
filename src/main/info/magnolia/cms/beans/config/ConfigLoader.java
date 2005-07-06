@@ -63,7 +63,7 @@ public class ConfigLoader {
         String rootDir = context.getRealPath(StringUtils.EMPTY);
 
         if (log.isInfoEnabled()) {
-            log.info("Assuming paths relative to " + rootDir);
+            log.info("Assuming paths relative to " + rootDir); //$NON-NLS-1$
         }
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, rootDir);
 
@@ -73,16 +73,16 @@ public class ConfigLoader {
             SystemProperty.setProperty((String) param.getKey(), (String) param.getValue());
         }
 
-        if (StringUtils.isEmpty(System.getProperty("java.security.auth.login.config"))) {
-            System.setProperty("java.security.auth.login.config", Path
-                .getAbsoluteFileSystemPath("WEB-INF/config/jaas.config"));
+        if (StringUtils.isEmpty(System.getProperty("java.security.auth.login.config"))) { //$NON-NLS-1$
+            System.setProperty("java.security.auth.login.config", Path //$NON-NLS-1$
+                .getAbsoluteFileSystemPath("WEB-INF/config/jaas.config")); //$NON-NLS-1$
         }
         else {
             if (log.isInfoEnabled()) {
-                log.info("JAAS config file set by parent container or some other application");
-                log.info("Config in use " + System.getProperty("java.security.auth.login.config"));
+                log.info("JAAS config file set by parent container or some other application"); //$NON-NLS-1$
+                log.info("Config in use " + System.getProperty("java.security.auth.login.config")); //$NON-NLS-1$ //$NON-NLS-2$
                 log
-                    .info("Please make sure JAAS config has all necessary modules (refer config/jaas.config) configured");
+                    .info("Please make sure JAAS config has all necessary modules (refer config/jaas.config) configured"); //$NON-NLS-1$
             }
         }
 
@@ -99,7 +99,7 @@ public class ConfigLoader {
         license.init();
         printVersionInfo(license);
 
-        log.info("Init content repositories");
+        log.info("Init content repositories"); //$NON-NLS-1$
         ContentRepository.init();
 
         // check for initialized repositories
@@ -109,15 +109,15 @@ public class ConfigLoader {
             initialized = ContentRepository.checkIfInitialized();
         }
         catch (RepositoryException re) {
-            log.fatal("Unable to initialize repositories. Magnolia can't start.", re);
+            log.fatal("Unable to initialize repositories. Magnolia can't start.", re); //$NON-NLS-1$
             return;
         }
 
         if (initialized) {
-            log.info("Repositories are initialized (some content found). Loading configuration");
+            log.info("Repositories are initialized (some content found). Loading configuration"); //$NON-NLS-1$
         }
         else {
-            log.warn("Repositories are not initialized (no content found).");
+            log.warn("Repositories are not initialized (no content found)."); //$NON-NLS-1$
 
             String bootdir = SystemProperty.getProperty(SystemProperty.MAGNOLIA_BOOTSTRAP_ROOTDIR);
             if (StringUtils.isEmpty(bootdir)) {
@@ -131,11 +131,11 @@ public class ConfigLoader {
             Bootstrapper.bootstrapRepositories(Path.getAbsoluteFileSystemPath(bootdir));
         }
 
-        log.info("Init virtualMap");
+        log.info("Init virtualMap"); //$NON-NLS-1$
         VirtualMap.init();
-        log.info("Init i18n");
+        log.info("Init i18n"); //$NON-NLS-1$
         MessagesManager.init(context);
-        log.info("Init secureURI");
+        log.info("Init secureURI"); //$NON-NLS-1$
         SecureURI.init();
 
         try {
@@ -147,10 +147,10 @@ public class ConfigLoader {
             Cache.init();
             MIMEMapping.init();
             setConfigured(true);
-            log.info("Configuration loaded!");
+            log.info("Configuration loaded!"); //$NON-NLS-1$
         }
         catch (ConfigurationException e) {
-            log.info("An error occurred during initialization, incomplete configuration found?");
+            log.info("An error occurred during initialization, incomplete configuration found?"); //$NON-NLS-1$
             enterListeningMode();
             return;
         }
@@ -162,16 +162,14 @@ public class ConfigLoader {
      * @param license loaded License
      */
     private void printVersionInfo(LicenseFileExtractor license) {
-        System.out.println("---------------------------------------------");
-        System.out.println("MAGNOLIA LICENSE");
-        System.out.println("---------------------------------------------");
-        System.out.println("Version number : " + license.get(LicenseFileExtractor.VERSION_NUMBER));
-        System.out.println("Build          : " + license.get(LicenseFileExtractor.BUILD_NUMBER));
-        System.out.println("Provider       : "
-            + license.get(LicenseFileExtractor.PROVIDER)
-            + " ("
-            + license.get(LicenseFileExtractor.PRIVIDER_EMAIL)
-            + ")");
+        System.out.println("---------------------------------------------"); //$NON-NLS-1$
+        System.out.println("MAGNOLIA LICENSE"); //$NON-NLS-1$
+        System.out.println("---------------------------------------------"); //$NON-NLS-1$
+        System.out.println("Version number : " + license.get(LicenseFileExtractor.VERSION_NUMBER)); //$NON-NLS-1$
+        System.out.println("Build          : " + license.get(LicenseFileExtractor.BUILD_NUMBER)); //$NON-NLS-1$
+        System.out.println("Provider       : " //$NON-NLS-1$
+            + license.get(LicenseFileExtractor.PROVIDER) + " (" //$NON-NLS-1$
+            + license.get(LicenseFileExtractor.PRIVIDER_EMAIL) + ")"); //$NON-NLS-1$
     }
 
     /**
@@ -206,10 +204,10 @@ public class ConfigLoader {
      * Set the configured propery to false and print out an informative message to System.out.
      */
     private void enterListeningMode() {
-        System.out.println("\n-----------------------------------------------------------------");
-        System.out.println("Server not configured, entering in listening mode for activation.");
-        System.out.println("You can now activate content from an existing magnolia instance.");
-        System.out.println("-----------------------------------------------------------------\n");
+        System.out.println("\n-----------------------------------------------------------------"); //$NON-NLS-1$
+        System.out.println("Server not configured, entering in listening mode for activation."); //$NON-NLS-1$
+        System.out.println("You can now activate content from an existing magnolia instance."); //$NON-NLS-1$
+        System.out.println("-----------------------------------------------------------------\n"); //$NON-NLS-1$
         setConfigured(false);
     }
 

@@ -62,7 +62,7 @@ public class Content extends ContentHandler implements Cloneable {
     /**
      * UUID property added on creation of object
      */
-    private static final String PROPERTY_UUID = "mgnl:uuid";
+    private static final String PROPERTY_UUID = "mgnl:uuid"; //$NON-NLS-1$
 
     /**
      * Wrapped jcr node.
@@ -284,7 +284,7 @@ public class Content extends ContentHandler implements Cloneable {
      * @return String, title
      */
     public String getTitle() {
-        return this.getNodeData("title").getString();
+        return this.getNodeData("title").getString(); //$NON-NLS-1$
     }
 
     /**
@@ -330,7 +330,7 @@ public class Content extends ContentHandler implements Cloneable {
                     return this.createNodeData(name);
                 }
                 catch (Exception e1) {
-                    log.error("can't create property [" + name + "]");
+                    log.error("can't create property [" + name + "]"); //$NON-NLS-1$ //$NON-NLS-2$
                 }
             }
             if (log.isDebugEnabled()) {
@@ -342,7 +342,7 @@ public class Content extends ContentHandler implements Cloneable {
                     // ignore, debug only
                 }
                 if (log.isDebugEnabled()) {
-                    log.debug("Path not found for property [" + name + "] in node " + nodepath);
+                    log.debug("Path not found for property [" + name + "] in node " + nodepath); //$NON-NLS-1$ //$NON-NLS-2$
                 }
             }
 
@@ -356,7 +356,7 @@ public class Content extends ContentHandler implements Cloneable {
             catch (RepositoryException e1) {
                 // ignore, debug only
             }
-            log.warn("Repository exception while trying to read property [" + name + "] for node " + nodepath, re);
+            log.warn("Repository exception while trying to read property [" + name + "] for node " + nodepath, re); //$NON-NLS-1$ //$NON-NLS-2$
             return (new NodeData());
         }
     }
@@ -458,7 +458,7 @@ public class Content extends ContentHandler implements Cloneable {
         }
         // @todo workaround
         // fix all getChildren calls from the root node
-        if ("rep:root".equalsIgnoreCase(type)) {
+        if ("rep:root".equalsIgnoreCase(type)) { //$NON-NLS-1$
             type = ItemType.CONTENT.getSystemName();
         }
         // --------------------------------------------------
@@ -501,7 +501,7 @@ public class Content extends ContentHandler implements Cloneable {
      * @return Collection of content nodes
      */
     public Collection getChildren(String contentType, int sortCriteria) {
-        return this.getChildren(contentType, "*", sortCriteria);
+        return this.getChildren(contentType, "*", sortCriteria); //$NON-NLS-1$
     }
 
     /**
@@ -586,7 +586,7 @@ public class Content extends ContentHandler implements Cloneable {
             while (propertyIterator.hasNext()) {
                 Property property = (Property) propertyIterator.next();
                 try {
-                    if (!property.getName().startsWith("jcr:") && !property.getName().startsWith("mgnl:")) {
+                    if (!property.getName().startsWith("jcr:") && !property.getName().startsWith("mgnl:")) { //$NON-NLS-1$ //$NON-NLS-2$
                         children.add(new NodeData(property, this.accessManager));
                     }
                 }
@@ -708,13 +708,13 @@ public class Content extends ContentHandler implements Cloneable {
                     try {
                         long pos0 = (((Content) o0).getMetaData().getSequencePosition());
                         long pos1 = (((Content) o1).getMetaData().getSequencePosition());
-                        String s0 = "0";
-                        String s1 = "0";
+                        String s0 = "0"; //$NON-NLS-1$
+                        String s1 = "0"; //$NON-NLS-1$
                         if (pos0 > pos1) {
-                            s0 = "1";
+                            s0 = "1"; //$NON-NLS-1$
                         }
                         else if (pos0 < pos1) {
-                            s1 = "1";
+                            s1 = "1"; //$NON-NLS-1$
                         }
                         return s0.compareTo(s1);
                     }
@@ -740,7 +740,7 @@ public class Content extends ContentHandler implements Cloneable {
             return this.node.getPath();
         }
         catch (RepositoryException e) {
-            log.error("Failed to get handle: " + e.getMessage(), e);
+            log.error("Failed to get handle: " + e.getMessage(), e); //$NON-NLS-1$
             return StringUtils.EMPTY;
         }
     }
@@ -751,7 +751,7 @@ public class Content extends ContentHandler implements Cloneable {
      * @throws RepositoryException if an error occurs
      */
     public String getHandleWithDefaultExtension() throws PathNotFoundException, RepositoryException {
-        return (this.node.getPath() + "." + Server.getDefaultExtension());
+        return (this.node.getPath() + "." + Server.getDefaultExtension()); //$NON-NLS-1$
     }
 
     /**
@@ -807,7 +807,7 @@ public class Content extends ContentHandler implements Cloneable {
      * @throws RepositoryException if an error occurs
      */
     public int getLevel() throws PathNotFoundException, RepositoryException {
-        return this.node.getPath().split("/").length - 1;
+        return this.node.getPath().split("/").length - 1; //$NON-NLS-1$
     }
 
     /**
@@ -1021,7 +1021,7 @@ public class Content extends ContentHandler implements Cloneable {
             return this.node.hasProperty(path);
         }
         catch (RepositoryException e) {
-            log.debug("isNodeData(): " + e.getMessage());
+            log.debug("isNodeData(): " + e.getMessage()); //$NON-NLS-1$
         }
         return false;
     }
@@ -1054,7 +1054,7 @@ public class Content extends ContentHandler implements Cloneable {
             this.node.addMixin(type);
         }
         else {
-            log.error("Node - " + this.node.getPath() + " does not allow mixin type - " + type);
+            log.error("Node - " + this.node.getPath() + " does not allow mixin type - " + type); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 

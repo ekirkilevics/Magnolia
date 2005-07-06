@@ -47,35 +47,35 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
     /**
      * this are the used actions
      */
-    private static final String COMMAND_SHOW_TREE = "show";
+    private static final String COMMAND_SHOW_TREE = "show"; //$NON-NLS-1$
 
-    private static final String COMMAND_COPY_NODE = "copy";
+    private static final String COMMAND_COPY_NODE = "copy"; //$NON-NLS-1$
 
-    private static final String COMMAND_MOVE_NODE = "move";
+    private static final String COMMAND_MOVE_NODE = "move"; //$NON-NLS-1$
 
-    private static final String COMMAND_ACTIVATE = "activate";
+    private static final String COMMAND_ACTIVATE = "activate"; //$NON-NLS-1$
 
-    private static final String COMMAND_DEACTIVATE = "deactivate";
+    private static final String COMMAND_DEACTIVATE = "deactivate"; //$NON-NLS-1$
 
-    private static final String COMMAND_CREATE_NODE = "createNode";
+    private static final String COMMAND_CREATE_NODE = "createNode"; //$NON-NLS-1$
 
-    private static final String COMMAND_DELETE_NODE = "delete";
+    private static final String COMMAND_DELETE_NODE = "delete"; //$NON-NLS-1$
 
-    private static final String COMMAND_SAVE_VALUE = "saveValue";
+    private static final String COMMAND_SAVE_VALUE = "saveValue"; //$NON-NLS-1$
 
     /**
      * The view names
      */
 
-    private static final String VIEW_TREE = "tree";
+    private static final String VIEW_TREE = "tree"; //$NON-NLS-1$
 
-    private static final String VIEW_CREATE = "create";
+    private static final String VIEW_CREATE = "create"; //$NON-NLS-1$
 
-    private static final String VIEW_VALUE = "value";
+    private static final String VIEW_VALUE = "value"; //$NON-NLS-1$
 
-    private static final String VIEW_NOTHING = "nothing";
+    private static final String VIEW_NOTHING = "nothing"; //$NON-NLS-1$
 
-    private static final String VIEW_COPY_MOVE = "copymove";
+    private static final String VIEW_COPY_MOVE = "copymove"; //$NON-NLS-1$
 
     /**
      * name of the tree (not the repository)
@@ -107,13 +107,13 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         super(name, request, response);
 
         tree = new Tree(getRepository(), request);
-        path = request.getParameter("path");
+        path = request.getParameter("path"); //$NON-NLS-1$
         if (StringUtils.isEmpty(path)) {
-            path = "/";
+            path = "/"; //$NON-NLS-1$
         }
 
-        pathOpen = request.getParameter("pathOpen");
-        pathSelected = request.getParameter("pathSelected");
+        pathOpen = request.getParameter("pathOpen"); //$NON-NLS-1$
+        pathSelected = request.getParameter("pathSelected"); //$NON-NLS-1$
 
     }
 
@@ -124,8 +124,8 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
     public String getCommand() {
 
         // actions returned from the tree (pased through treeAction)
-        if (StringUtils.isNotEmpty(request.getParameter("treeAction"))) {
-            int treeAction = Integer.parseInt(request.getParameter("treeAction"));
+        if (StringUtils.isNotEmpty(request.getParameter("treeAction"))) { //$NON-NLS-1$
+            int treeAction = Integer.parseInt(request.getParameter("treeAction")); //$NON-NLS-1$
 
             if (treeAction == Tree.ACTION_COPY) {
                 return COMMAND_COPY_NODE;
@@ -140,24 +140,24 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
                 return COMMAND_DEACTIVATE;
             }
 
-            return request.getParameter("treeAction");
+            return request.getParameter("treeAction"); //$NON-NLS-1$
         }
 
         // other actions depending other informations
-        if (request.getParameter("createItemType") != null) {
+        if (request.getParameter("createItemType") != null) { //$NON-NLS-1$
             return COMMAND_CREATE_NODE;
         }
 
-        if (request.getParameter("deleteNode") != null) {
+        if (request.getParameter("deleteNode") != null) { //$NON-NLS-1$
             return COMMAND_DELETE_NODE;
         }
 
         // editet any value directly in the columns?
-        if (request.getParameter("saveName") != null
-        // value to save is a node data's value (config admin)
-            || "true".equals(request.getParameter("isNodeDataValue"))
+        if (request.getParameter("saveName") != null //$NON-NLS-1$
+            // value to save is a node data's value (config admin)
+            || "true".equals(request.getParameter("isNodeDataValue")) //$NON-NLS-1$ //$NON-NLS-2$
             // value to save is a node data's type (config admin)
-            || "true".equals(request.getParameter("isNodeDataType"))) {
+            || "true".equals(request.getParameter("isNodeDataType"))) { //$NON-NLS-1$ //$NON-NLS-2$
             return COMMAND_SAVE_VALUE;
         }
         return COMMAND_SHOW_TREE;
@@ -176,8 +176,8 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
      */
     public String createNode() {
         String createItemType = ItemType.NT_NODEDATA;
-        if (request.getParameter("createItemType") != null) {
-            createItemType = request.getParameter("createItemType");
+        if (request.getParameter("createItemType") != null) { //$NON-NLS-1$
+            createItemType = request.getParameter("createItemType"); //$NON-NLS-1$
         }
 
         tree.setPath(path);
@@ -204,8 +204,8 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
      * @return
      */
     private String copyOrMove(int action) {
-        String pathClipboard = request.getParameter("pathClipboard");
-        int pasteType = Integer.parseInt(request.getParameter("pasteType"));
+        String pathClipboard = request.getParameter("pathClipboard"); //$NON-NLS-1$
+        int pasteType = Integer.parseInt(request.getParameter("pasteType")); //$NON-NLS-1$
 
         newPath = tree.pasteNode(pathClipboard, pathSelected, pasteType, action);
         if (pasteType == Tree.PASTETYPE_SUB) {
@@ -213,7 +213,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         }
         else {
             // open parent path of destination path
-            pathOpen = pathSelected.substring(0, pathSelected.lastIndexOf("/"));
+            pathOpen = pathSelected.substring(0, pathSelected.lastIndexOf("/")); //$NON-NLS-1$
         }
 
         pathSelected = null;
@@ -221,13 +221,13 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
     }
 
     public String delete() {
-        String deleteNode = request.getParameter("deleteNode");
+        String deleteNode = request.getParameter("deleteNode"); //$NON-NLS-1$
         tree.deleteNode(path, deleteNode);
         return VIEW_TREE;
     }
 
     public String activate() {
-        boolean recursive = (request.getParameter("recursive") != null);
+        boolean recursive = (request.getParameter("recursive") != null); //$NON-NLS-1$
         tree.activateNode(pathSelected, recursive);
         return VIEW_TREE;
     }
@@ -242,24 +242,24 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
      * @return name of the view
      */
     public String saveValue() {
-        String saveName = request.getParameter("saveName");
+        String saveName = request.getParameter("saveName"); //$NON-NLS-1$
 
         // value to save is a node data's value (config admin)
-        boolean isNodeDataValue = "true".equals(request.getParameter("isNodeDataValue"));
+        boolean isNodeDataValue = "true".equals(request.getParameter("isNodeDataValue")); //$NON-NLS-1$ //$NON-NLS-2$
 
         // value to save is a node data's type (config admin)
-        boolean isNodeDataType = "true".equals(request.getParameter("isNodeDataType"));
+        boolean isNodeDataType = "true".equals(request.getParameter("isNodeDataType")); //$NON-NLS-1$ //$NON-NLS-2$
 
-        String value = StringUtils.defaultString(request.getParameter("saveValue"));
+        String value = StringUtils.defaultString(request.getParameter("saveValue")); //$NON-NLS-1$
         displayValue = StringUtils.EMPTY;
         // value to save is a content's meta information
-        boolean isMeta = "true".equals(request.getParameter("isMeta"));
+        boolean isMeta = "true".equals(request.getParameter("isMeta")); //$NON-NLS-1$ //$NON-NLS-2$
         // value to save is a label (name of page, content node or node data)
-        boolean isLabel = "true".equals(request.getParameter("isLabel"));
+        boolean isLabel = "true".equals(request.getParameter("isLabel")); //$NON-NLS-1$ //$NON-NLS-2$
 
         if (isNodeDataValue || isNodeDataType) {
-            tree.setPath(StringUtils.substringBeforeLast(path, "/"));
-            saveName = StringUtils.substringAfterLast(path, "/");
+            tree.setPath(StringUtils.substringBeforeLast(path, "/")); //$NON-NLS-1$
+            saveName = StringUtils.substringAfterLast(path, "/"); //$NON-NLS-1$
         }
         else {
             // "/modules/templating/Templates/x"
@@ -278,13 +278,13 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         }
 
         // if there was a displayValue passed show it instead of the written value
-        displayValue = StringUtils.defaultString(request.getParameter("displayValue"), value);
+        displayValue = StringUtils.defaultString(request.getParameter("displayValue"), value); //$NON-NLS-1$
 
         // @todo should be handled in a better way but, at the moment, this is better than nothing
-        if (path.startsWith("/subscribers/")) {
+        if (path.startsWith("/subscribers/")) { //$NON-NLS-1$
             Subscriber.reload();
         }
-        else if (path.startsWith("/server/MIMEMapping")) {
+        else if (path.startsWith("/server/MIMEMapping")) { //$NON-NLS-1$
             MIMEMapping.reload();
         }
 
@@ -311,7 +311,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
             if (view == VIEW_COPY_MOVE) {
                 // pass new path to tree.js for selecting the newly created node
                 // NOTE: tree.js checks for this pattern; adapt it there, if any changes are made here
-                html.append("<input type=\"hidden\" id=\"mgnlSelectNode\" value=\"" + newPath + "\" />");
+                html.append("<input type=\"hidden\" id=\"mgnlSelectNode\" value=\"" + newPath + "\" />"); //$NON-NLS-1$ //$NON-NLS-2$
             }
 
             renderTree(html);
@@ -329,32 +329,32 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
      * @param tree
      * @param request
      */
-    abstract protected void prepareTree(Tree tree, HttpServletRequest request);
+    protected abstract void prepareTree(Tree tree, HttpServletRequest request);
 
     /**
      * Prepare the context menu of the tree. This is called during renderTree
      * @param tree
      * @param request
      */
-    abstract protected void prepareContextMenu(Tree tree, HttpServletRequest request);
+    protected abstract void prepareContextMenu(Tree tree, HttpServletRequest request);
 
     /**
      * Create the html for the tree. Calls tree.getHtml after calling prepareTree.
      * @param html
      */
     private void renderTree(StringBuffer html) {
-        String mode = StringUtils.defaultString(request.getParameter("treeMode"));
-        boolean snippetMode = mode.equals("snippet");
+        String mode = StringUtils.defaultString(request.getParameter("treeMode")); //$NON-NLS-1$
+        boolean snippetMode = mode.equals("snippet"); //$NON-NLS-1$
 
-        tree.setJavascriptTree("mgnlTreeControl");
+        tree.setJavascriptTree("mgnlTreeControl"); //$NON-NLS-1$
 
         if (!snippetMode) {
-            html.append("<html><head>");
-            html.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>");
+            html.append("<html><head>"); //$NON-NLS-1$
+            html.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>"); //$NON-NLS-1$
             renderHeaderIncludes(html);
-            html.append("<title>Magnolia</title>");
-            html.append("</head>");
-            html.append("<body class=\"mgnlBgDark\" onload=\"" + tree.getJavascriptTree() + ".resizeOnload();\" >");
+            html.append("<title>Magnolia</title>"); //$NON-NLS-1$
+            html.append("</head>"); //$NON-NLS-1$
+            html.append("<body class=\"mgnlBgDark\" onload=\"" + tree.getJavascriptTree() + ".resizeOnload();\" >"); //$NON-NLS-1$ //$NON-NLS-2$
             html.append(Spacer.getHtml(20, 20));
         }
 
@@ -367,15 +367,15 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         prepareContextMenu(tree, request);
 
         if (!snippetMode) {
-            html.append("<div id=\"" + tree.getJavascriptTree() + "_DivSuper\" style=\"display:block;\">");
+            html.append("<div id=\"" + tree.getJavascriptTree() + "_DivSuper\" style=\"display:block;\">"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         html.append(tree.getHtml());
         if (!snippetMode) {
-            html.append("</div>");
+            html.append("</div>"); //$NON-NLS-1$
         }
 
         if (!snippetMode) {
-            html.append("</body></html>");
+            html.append("</body></html>"); //$NON-NLS-1$
         }
     }
 

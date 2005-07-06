@@ -68,12 +68,12 @@ public class SimpleNavigationTag extends TagSupport {
     /**
      * Default name for "open menu" nodeData.
      */
-    public static final String DEFAULT_OPENMENU_NODEDATA = "openMenu";
+    public static final String DEFAULT_OPENMENU_NODEDATA = "openMenu"; //$NON-NLS-1$
 
     /**
      * Default name for "hide in nav" nodeData.
      */
-    public static final String DEFAULT_HIDEINNAV_NODEDATA = "hideInNav";
+    public static final String DEFAULT_HIDEINNAV_NODEDATA = "hideInNav"; //$NON-NLS-1$
 
     /**
      * Stable serialVersionUID.
@@ -134,7 +134,7 @@ public class SimpleNavigationTag extends TagSupport {
             drawChildren(activePage.getAncestor(this.startLevel), activePage, out);
         }
         catch (RepositoryException e) {
-            log.error("RepositoryException caught while drawing navigation: " + e.getMessage(), e);
+            log.error("RepositoryException caught while drawing navigation: " + e.getMessage(), e); //$NON-NLS-1$
             return EVAL_PAGE;
         }
         catch (IOException e) {
@@ -170,9 +170,9 @@ public class SimpleNavigationTag extends TagSupport {
             return;
         }
 
-        out.print("<ul class=\"level");
+        out.print("<ul class=\"level"); //$NON-NLS-1$
         out.print(page.getLevel());
-        out.print("\">");
+        out.print("\">"); //$NON-NLS-1$
 
         Iterator it = children.iterator();
         while (it.hasNext()) {
@@ -184,7 +184,7 @@ public class SimpleNavigationTag extends TagSupport {
 
             List cssClasses = new ArrayList(3);
 
-            String title = child.getNodeData("navTitle").getString(StringUtils.EMPTY);
+            String title = child.getNodeData("navTitle").getString(StringUtils.EMPTY); //$NON-NLS-1$
 
             // if nav title is not set, the main title is taken
             if (StringUtils.isEmpty(title)) {
@@ -203,7 +203,7 @@ public class SimpleNavigationTag extends TagSupport {
                 // self
                 showChildren = true;
                 self = true;
-                cssClasses.add("active");
+                cssClasses.add("active"); //$NON-NLS-1$
             }
             else {
                 showChildren = (child.getLevel() <= activePage.getAncestors().size() && activePage.getAncestor(
@@ -216,43 +216,43 @@ public class SimpleNavigationTag extends TagSupport {
                     .getBoolean();
             }
 
-            cssClasses.add(hasVisibleChildren(child) ? (showChildren ? "open" : "closed") : "leaf");
+            cssClasses.add(hasVisibleChildren(child) ? (showChildren ? "open" : "closed") : "leaf"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
             StringBuffer css = new StringBuffer(cssClasses.size() * 10);
             Iterator iterator = cssClasses.iterator();
             while (iterator.hasNext()) {
                 css.append(iterator.next());
                 if (iterator.hasNext()) {
-                    css.append(" ");
+                    css.append(" "); //$NON-NLS-1$
                 }
             }
 
-            out.print("<li class=\"");
+            out.print("<li class=\""); //$NON-NLS-1$
             out.print(css.toString());
-            out.print("\">");
+            out.print("\">"); //$NON-NLS-1$
 
             if (self) {
-                out.println("<strong>");
+                out.println("<strong>"); //$NON-NLS-1$
             }
 
-            out.print("<a href=\"");
+            out.print("<a href=\""); //$NON-NLS-1$
             out.print(((HttpServletRequest) this.pageContext.getRequest()).getContextPath());
             out.print(child.getHandle());
-            out.print(".html\">");
+            out.print(".html\">"); //$NON-NLS-1$
             out.print(StringEscapeUtils.escapeHtml(title));
-            out.print(" </a>");
+            out.print(" </a>"); //$NON-NLS-1$
 
             if (self) {
-                out.println("</strong>");
+                out.println("</strong>"); //$NON-NLS-1$
             }
 
             if (showChildren) {
                 drawChildren(child, activePage, out);
             }
-            out.print("</li>");
+            out.print("</li>"); //$NON-NLS-1$
         }
 
-        out.print("</ul>");
+        out.print("</ul>"); //$NON-NLS-1$
     }
 
     /**

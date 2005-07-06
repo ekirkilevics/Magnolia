@@ -42,19 +42,19 @@ import org.apache.log4j.Logger;
  */
 public final class Cache {
 
-    private static final String CONFIG_PATH = "server/cache/level1";
+    private static final String CONFIG_PATH = "server/cache/level1"; //$NON-NLS-1$
 
-    private static final String CACHE_MAPPING_NODE = "URI";
+    private static final String CACHE_MAPPING_NODE = "URI"; //$NON-NLS-1$
 
-    private static final String COMPRESSION_LIST_NODE = "compression";
+    private static final String COMPRESSION_LIST_NODE = "compression"; //$NON-NLS-1$
 
-    private static final String ALLOW_LIST = "allow";
+    private static final String ALLOW_LIST = "allow"; //$NON-NLS-1$
 
-    private static final String DENY_LIST = "deny";
+    private static final String DENY_LIST = "deny"; //$NON-NLS-1$
 
-    private static final String ACTIVE = "active";
+    private static final String ACTIVE = "active"; //$NON-NLS-1$
 
-    private static final String DOMAIN = "domain";
+    private static final String DOMAIN = "domain"; //$NON-NLS-1$
 
     /**
      * Logger.
@@ -88,29 +88,29 @@ public final class Cache {
         cachedCacheableURIMapping.clear();
         COMPRESSION_LIST.clear();
 
-        log.info("Config : loading cache mapping");
+        log.info("Config : loading cache mapping"); //$NON-NLS-1$
         try {
             Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(CONFIG_PATH);
             active = startPage.getNodeData(ACTIVE).getBoolean();
             if (active) {
                 domain = startPage.getNodeData(DOMAIN).getString();
-                Content contentNode = startPage.getContent(CACHE_MAPPING_NODE + "/" + ALLOW_LIST);
+                Content contentNode = startPage.getContent(CACHE_MAPPING_NODE + "/" + ALLOW_LIST); //$NON-NLS-1$
                 cacheCacheableURIMappings(contentNode, true);
-                contentNode = startPage.getContent(CACHE_MAPPING_NODE + "/" + DENY_LIST);
+                contentNode = startPage.getContent(CACHE_MAPPING_NODE + "/" + DENY_LIST); //$NON-NLS-1$
                 cacheCacheableURIMappings(contentNode, false);
                 Content compressionListNode = startPage.getContent(COMPRESSION_LIST_NODE);
                 updateCompressionList(compressionListNode);
                 // @todo sort ascending so there wont be too much work on comparing
             }
-            log.info("Config: cache mapping loaded");
+            log.info("Config: cache mapping loaded"); //$NON-NLS-1$
         }
         catch (RepositoryException re) {
-            log.error("Config: Failed to load cache mapping or no mapping defined - " + re.getMessage(), re);
+            log.error("Config: Failed to load cache mapping or no mapping defined - " + re.getMessage(), re); //$NON-NLS-1$
         }
     }
 
     public static void reload() {
-        log.info("Config : reloading cache mapping");
+        log.info("Config : reloading cache mapping"); //$NON-NLS-1$
 
         // @todo this should probably not be here, but it's important to remove cached entries when the configuration is
         // reloaded
@@ -124,7 +124,7 @@ public final class Cache {
      */
     private static void registerEventListener() {
 
-        log.info("Registering event listener for cache");
+        log.info("Registering event listener for cache"); //$NON-NLS-1$
 
         try {
             ObservationManager observationManager = ContentRepository
@@ -142,10 +142,10 @@ public final class Cache {
                 | Event.NODE_REMOVED
                 | Event.PROPERTY_ADDED
                 | Event.PROPERTY_CHANGED
-                | Event.PROPERTY_REMOVED, "/" + CONFIG_PATH, true, null, null, false);
+                | Event.PROPERTY_REMOVED, "/" + CONFIG_PATH, true, null, null, false); //$NON-NLS-1$
         }
         catch (RepositoryException e) {
-            log.error("Unable to add event listeners for cache", e);
+            log.error("Unable to add event listeners for cache", e); //$NON-NLS-1$
         }
     }
 
@@ -167,7 +167,7 @@ public final class Cache {
             CacheHandler.validatePath(CacheHandler.CACHE_DIRECTORY);
         }
         catch (Exception e) {
-            log.error("Failed to validate cache directory location: " + e.getMessage(), e);
+            log.error("Failed to validate cache directory location: " + e.getMessage(), e); //$NON-NLS-1$
         }
     }
 
@@ -178,7 +178,7 @@ public final class Cache {
         Iterator it = list.getChildren().iterator();
         while (it.hasNext()) {
             Content node = (Content) it.next();
-            COMPRESSION_LIST.put(node.getNodeData("extension").getString(), node.getNodeData("type").getString());
+            COMPRESSION_LIST.put(node.getNodeData("extension").getString(), node.getNodeData("type").getString()); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
@@ -219,7 +219,7 @@ public final class Cache {
         }
 
         // don't cache POSTs or requests with parameters
-        if ("POST".equals(request.getMethod()) || request.getParameterMap().size() > 0) {
+        if ("POST".equals(request.getMethod()) || request.getParameterMap().size() > 0) { //$NON-NLS-1$
             return false;
         }
 

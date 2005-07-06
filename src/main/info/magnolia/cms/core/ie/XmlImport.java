@@ -55,23 +55,23 @@ public class XmlImport implements ImportHandler {
     /**
      * XML structure constants
      */
-    private final static String E_CONTENT = "content";
+    private static final String E_CONTENT = "content";
 
-    private final static String E_PROPERTY = "property";
+    private static final String E_PROPERTY = "property";
 
-    private final static String A_NAME = "name";
+    private static final String A_NAME = "name";
 
-    private final static String A_TYPE = "type";
+    private static final String A_TYPE = "type";
 
     /**
      * params
      */
-    public final static String DATE_FORMAT = "dateFormat";
+    public static final String DATE_FORMAT = "dateFormat";
 
     /**
      * default
      */
-    public final static String DEFAULT_DATE_FORMAT = "EEE MMM dd hh:mm:ss zzzz yyyy";
+    public static final String DEFAULT_DATE_FORMAT = "EEE MMM dd hh:mm:ss zzzz yyyy";
 
     /**
      * fields

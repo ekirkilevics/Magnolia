@@ -33,14 +33,14 @@ import javax.jcr.PathNotFoundException;
 
 import org.apache.log4j.Logger;
 
+
 /**
  * Responsible for initialization and registration of modules.
  * @author philipp
  * @version $Revision$ ($Author$)
  */
 public final class ModuleFactory {
-    
-    
+
     /**
      * Util has no public constructor
      */
@@ -96,7 +96,7 @@ public final class ModuleFactory {
                             .getManifest()
                             .getMainAttributes()
                             .getValue("Magnolia-Module-Class");
-                        
+
                         // if everything is provided
                         if (moduleName != null && moduleClassName != null && version != null) {
                             try {
@@ -133,15 +133,15 @@ public final class ModuleFactory {
                                 }
                                 catch (RegisterException e) {
                                     switch (registerState) {
-                                        case Module.REGISTER_STATE_INSTALLATION :
+                                        case Module.REGISTER_STATE_INSTALLATION:
                                             log.error("can't install module [" + moduleName + "]" + version, e);
                                             break;
-                                        case Module.REGISTER_STATE_NEW_VERSION :
+                                        case Module.REGISTER_STATE_NEW_VERSION:
                                             log.error(
                                                 "can't update module [" + moduleName + "] to version " + version,
                                                 e);
                                             break;
-                                        default :
+                                        default:
                                             log.error("error during registering an already installed module ["
                                                 + moduleName
                                                 + "]", e);

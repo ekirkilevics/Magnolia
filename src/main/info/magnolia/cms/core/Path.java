@@ -28,11 +28,11 @@ import org.apache.log4j.Logger;
  */
 public final class Path {
 
-    private static final String ENCODING_DEFAULT = "UTF-8";
+    private static final String ENCODING_DEFAULT = "UTF-8"; //$NON-NLS-1$
 
-    private static final String ATTRIBUTE_URI = "mgnl_decodedURI";
+    private static final String ATTRIBUTE_URI = "mgnl_decodedURI"; //$NON-NLS-1$
 
-    private static final String JAVAX_FORWARD_SERVLET_PATH = "javax.servlet.forward.servlet_path";
+    private static final String JAVAX_FORWARD_SERVLET_PATH = "javax.servlet.forward.servlet_path"; //$NON-NLS-1$
 
     /**
      * Logger.
@@ -161,11 +161,11 @@ public final class Path {
     }
 
     public static String getExtension(HttpServletRequest req) {
-        return StringUtils.substringAfterLast(req.getRequestURI(), ".");
+        return StringUtils.substringAfterLast(req.getRequestURI(), "."); //$NON-NLS-1$
     }
 
     public static String getUniqueLabel(HierarchyManager hierarchyManager, String parent, String label) {
-        while (hierarchyManager.isExist(parent + "/" + label)) {
+        while (hierarchyManager.isExist(parent + "/" + label)) { //$NON-NLS-1$
             label = createUniqueName(label);
         }
         return label;
@@ -176,7 +176,7 @@ public final class Path {
             return false;
         }
 
-        if (path.startsWith("/") || path.startsWith(File.separator)) {
+        if (path.startsWith("/") || path.startsWith(File.separator)) { //$NON-NLS-1$
             return true;
         }
 
@@ -209,7 +209,7 @@ public final class Path {
                 newLabel.append(s.charAt(i));
             }
             else {
-                newLabel.append("-");
+                newLabel.append("-"); //$NON-NLS-1$
             }
         }
         if (newLabel.length() == 0) {
@@ -255,39 +255,39 @@ public final class Path {
     }
 
     public static String getAbsolutePath(String path, String label) {
-        if (StringUtils.isEmpty(path) || (path.equals("/"))) {
-            return "/" + label;
+        if (StringUtils.isEmpty(path) || (path.equals("/"))) { //$NON-NLS-1$
+            return "/" + label; //$NON-NLS-1$
         }
 
-        return path + "/" + label;
+        return path + "/" + label; //$NON-NLS-1$
     }
 
     public static String getAbsolutePath(String path) {
-        if (!path.startsWith("/")) {
-            return "/" + path;
+        if (!path.startsWith("/")) { //$NON-NLS-1$
+            return "/" + path; //$NON-NLS-1$
         }
         return path;
     }
 
     public static String getNodePath(String path, String label) {
-        if (StringUtils.isEmpty(path) || (path.equals("/"))) {
+        if (StringUtils.isEmpty(path) || (path.equals("/"))) { //$NON-NLS-1$
             return label;
         }
-        return getNodePath(path + "/" + label);
+        return getNodePath(path + "/" + label); //$NON-NLS-1$
     }
 
     public static String getNodePath(String path) {
-        if (path.startsWith("/")) {
-            path = path.replaceFirst("/", StringUtils.EMPTY);
+        if (path.startsWith("/")) { //$NON-NLS-1$
+            path = path.replaceFirst("/", StringUtils.EMPTY); //$NON-NLS-1$
         }
         return path;
     }
 
     public static String getParentPath(String path) {
-        int lastIndexOfSlash = path.lastIndexOf("/");
+        int lastIndexOfSlash = path.lastIndexOf("/"); //$NON-NLS-1$
         if (lastIndexOfSlash > 0) {
             return path.substring(0, lastIndexOfSlash);
         }
-        return "/";
+        return "/"; //$NON-NLS-1$
     }
 }

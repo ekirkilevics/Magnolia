@@ -35,7 +35,7 @@ public final class Access {
      * @param manager accessmanager
      * @param path which needs to be tested using given accessmanager
      * @param permissions
-     * */
+     */
     public static void isGranted(AccessManager manager, String path, long permissions) throws AccessDeniedException {
         if (manager != null && !manager.isGranted(path, permissions)) {
             throw new AccessDeniedException("not allowed to "

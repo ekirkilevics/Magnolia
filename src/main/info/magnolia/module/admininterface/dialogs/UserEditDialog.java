@@ -59,15 +59,15 @@ public class UserEditDialog extends ConfiguredDialog {
 
     private static final long PERMISSION_NO = 0;
 
-    private static final String NODE_ACLUSERS = "acl_users";
+    private static final String NODE_ACLUSERS = "acl_users"; //$NON-NLS-1$
 
-    private static final String NODE_ACLROLES = "acl_userroles";
+    private static final String NODE_ACLROLES = "acl_userroles"; //$NON-NLS-1$
 
-    private static final String NODE_ROLES = "roles";
+    private static final String NODE_ROLES = "roles"; //$NON-NLS-1$
 
-    private static final String NODE_ACLCONFIG = "acl_config";
+    private static final String NODE_ACLCONFIG = "acl_config"; //$NON-NLS-1$
 
-    private static final String CONTROLNAME_ISADMIN_CONFIG = "permissionConfig";
+    private static final String CONTROLNAME_ISADMIN_CONFIG = "permissionConfig"; //$NON-NLS-1$
 
     /*
      * (non-Javadoc)
@@ -98,46 +98,46 @@ public class UserEditDialog extends ConfiguredDialog {
      */
     protected DialogDialog createDialog(Content configNode, Content storageNode) throws RepositoryException {
         DialogDialog dialog = super.createDialog(configNode, storageNode);
-        dialog.setJavascriptSources("/admindocroot/js/dialogs/acl.js");
+        dialog.setJavascriptSources("/admindocroot/js/dialogs/acl.js"); //$NON-NLS-1$
 
         // opener.document.location.reload();window.close();
 
-        dialog.setConfig("width", DialogDialog.DIALOGSIZE_SLIM_WIDTH);
-        dialog.setConfig("height", DialogDialog.DIALOGSIZE_SLIM_HEIGHT);
+        dialog.setConfig("width", DialogDialog.DIALOGSIZE_SLIM_WIDTH); //$NON-NLS-1$
+        dialog.setConfig("height", DialogDialog.DIALOGSIZE_SLIM_HEIGHT); //$NON-NLS-1$
 
-        dialog.setLabel(msgs.get("users.edit.edit"));
+        dialog.setLabel(msgs.get("users.edit.edit")); //$NON-NLS-1$
 
         DialogTab tab = dialog.addTab();
 
         DialogStatic spacer = DialogFactory.getDialogStaticInstance(request, response, null, null);
-        spacer.setConfig("line", false);
+        spacer.setConfig("line", false); //$NON-NLS-1$
 
         DialogStatic lineHalf = DialogFactory.getDialogStaticInstance(request, response, null, null);
-        lineHalf.setConfig("line", false);
+        lineHalf.setConfig("line", false); //$NON-NLS-1$
 
         DialogStatic nameEdit = DialogFactory.getDialogStaticInstance(request, response, null, null);
-        nameEdit.setLabel("<strong>" + msgs.get("users.edit.username") + "</strong>");
-        nameEdit.setValue("<strong>" + storageNode.getName() + "</strong>");
+        nameEdit.setLabel("<strong>" + msgs.get("users.edit.username") + "</strong>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        nameEdit.setValue("<strong>" + storageNode.getName() + "</strong>"); //$NON-NLS-1$ //$NON-NLS-2$
         tab.addSub(nameEdit);
         tab.addSub(spacer);
 
         DialogEdit title = DialogFactory.getDialogEditInstance(request, response, storageNode, null);
-        title.setName("title");
-        title.setLabel(msgs.get("users.edit.fullname"));
+        title.setName("title"); //$NON-NLS-1$
+        title.setLabel(msgs.get("users.edit.fullname")); //$NON-NLS-1$
 
         tab.addSub(title);
 
         DialogPassword pswd = DialogFactory.getDialogPasswordInstance(request, response, storageNode, null);
-        pswd.setName("pswd");
-        pswd.setLabel(msgs.get("users.edit.password"));
+        pswd.setName("pswd"); //$NON-NLS-1$
+        pswd.setLabel(msgs.get("users.edit.password")); //$NON-NLS-1$
         tab.addSub(pswd);
 
         tab.addSub(spacer);
 
         // select language
         DialogSelect langSelect = DialogFactory.getDialogSelectInstance(request, response, storageNode, null);
-        langSelect.setName("language");
-        langSelect.setLabel(msgs.get("users.edit.language"));
+        langSelect.setName("language"); //$NON-NLS-1$
+        langSelect.setLabel(msgs.get("users.edit.language")); //$NON-NLS-1$
         List options = new ArrayList();
 
         Collection col = MessagesManager.getAvailableLocales();
@@ -157,7 +157,7 @@ public class UserEditDialog extends ConfiguredDialog {
                 try {
                     String name0 = ((SelectOption) arg0).getLabel();
                     String name1 = ((SelectOption) arg1).getLabel();
-                    //System.out.println(name0 + " " + name1 + ": " + name0.compareTo(name1));
+                    // System.out.println(name0 + " " + name1 + ": " + name0.compareTo(name1));
                     return name0.compareTo(name1);
                 }
                 catch (Exception e) {
@@ -173,18 +173,18 @@ public class UserEditDialog extends ConfiguredDialog {
         tab.addSub(spacer);
 
         DialogInclude roles = DialogFactory.getDialogIncludeInstance(request, response, storageNode, null);
-        roles.setLabel(msgs.get("users.edit.roles"));
-        roles.setName("aclRolesRepository");
-        roles.setConfig("file", "/admintemplates/adminCentral/dialogs/usersEdit/includeRoles.jsp");
+        roles.setLabel(msgs.get("users.edit.roles")); //$NON-NLS-1$
+        roles.setName("aclRolesRepository"); //$NON-NLS-1$
+        roles.setConfig("file", "/admintemplates/adminCentral/dialogs/usersEdit/includeRoles.jsp"); //$NON-NLS-1$ //$NON-NLS-2$
         tab.addSub(roles);
 
         DialogButton add = DialogFactory.getDialogButtonInstance(request, response, null, null);
-        add.setConfig("buttonLabel", msgs.get("buttons.add"));
-        add.setConfig("lineSemi", true);
-        add.setConfig("onclick", "mgnlAclAdd(true,-1);");
+        add.setConfig("buttonLabel", msgs.get("buttons.add")); //$NON-NLS-1$ //$NON-NLS-2$
+        add.setConfig("lineSemi", true); //$NON-NLS-1$
+        add.setConfig("onclick", "mgnlAclAdd(true,-1);"); //$NON-NLS-1$ //$NON-NLS-2$
         tab.addSub(add);
 
-        dialog.setConfig("saveOnclick", "mgnlAclFormSubmit(true);");
+        dialog.setConfig("saveOnclick", "mgnlAclFormSubmit(true);"); //$NON-NLS-1$ //$NON-NLS-2$
         return dialog;
     }
 
@@ -205,7 +205,7 @@ public class UserEditDialog extends ConfiguredDialog {
         for (int i = 0; i < ContentRepository.ALL_REPOSITORIES.length; i++) {
             String repository = ContentRepository.ALL_REPOSITORIES[i];
             try {
-                user.delete("acl_" + repository);
+                user.delete("acl_" + repository); //$NON-NLS-1$
             }
             catch (RepositoryException re) {
                 // new user
@@ -223,9 +223,9 @@ public class UserEditDialog extends ConfiguredDialog {
             Content aclConfig = user.createContent(NODE_ACLCONFIG, ItemType.CONTENTNODE);
 
             // give user permission to read and edit himself
-            Content u3 = aclUsers.createContent("0", ItemType.CONTENTNODE);
-            u3.createNodeData("path").setValue(user.getHandle() + "/*");
-            u3.createNodeData("permissions").setValue(PERMISSION_ALL);
+            Content u3 = aclUsers.createContent("0", ItemType.CONTENTNODE); //$NON-NLS-1$
+            u3.createNodeData("path").setValue(user.getHandle() + "/*"); //$NON-NLS-1$ //$NON-NLS-2$
+            u3.createNodeData("permissions").setValue(PERMISSION_ALL); //$NON-NLS-1$
 
             // ######################
             // # roles acl
@@ -241,13 +241,13 @@ public class UserEditDialog extends ConfiguredDialog {
             // rewrite
             Content roles = user.createContent(NODE_ROLES, ItemType.CONTENTNODE);
 
-            String[] rolesValue = form.getParameter("aclList").split(";");
+            String[] rolesValue = form.getParameter("aclList").split(";"); //$NON-NLS-1$ //$NON-NLS-2$
 
             for (int i = 0; i < rolesValue.length; i++) {
                 try {
-                    String newLabel = Path.getUniqueLabel(hm, roles.getHandle(), "0");
+                    String newLabel = Path.getUniqueLabel(hm, roles.getHandle(), "0"); //$NON-NLS-1$
                     Content r = roles.createContent(newLabel, ItemType.CONTENTNODE);
-                    r.createNodeData("path").setValue(rolesValue[i]);
+                    r.createNodeData("path").setValue(rolesValue[i]); //$NON-NLS-1$
                 }
                 catch (Exception e) {
                     log.error(e.getMessage(), e);

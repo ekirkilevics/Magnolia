@@ -48,14 +48,14 @@ import org.apache.log4j.Logger;
  * <p>
  * Version .01 implementation Simple implementation of Exchange interface using serialized objects and binary GET
  * </p>
- *
+ * 
  * <pre>
  * todo -
  * 1. implement incremental delivery
  * 2. concurrent activation
  * 3. context locking
  * </pre>
- *
+ * 
  * @author Sameer Charles
  * @version 2.0
  */

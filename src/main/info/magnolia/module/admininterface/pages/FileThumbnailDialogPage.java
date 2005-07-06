@@ -44,10 +44,10 @@ public class FileThumbnailDialogPage extends HttpServlet {
      * @see javax.servlet.http.HttpServlet#doGet(HttpServletRequest, HttpServletResponse)
      */
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("image/jpeg");
+        response.setContentType("image/jpeg"); //$NON-NLS-1$
 
-        String src = request.getParameter("src");
-        String size = request.getParameter("size");
+        String src = request.getParameter("src"); //$NON-NLS-1$
+        String size = request.getParameter("size"); //$NON-NLS-1$
 
         HierarchyManager hm = SessionAccessControl.getHierarchyManager(request);
 

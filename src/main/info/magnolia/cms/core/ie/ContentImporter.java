@@ -32,9 +32,9 @@ public class ContentImporter {
     /**
      * default import handler
      */
-    public final static String DEFAULT_HANDLER_CLASS = "info.magnolia.cms.core.ie.XmlImport";
+    public static final String DEFAULT_HANDLER_CLASS = "info.magnolia.cms.core.ie.XmlImport";
 
-    public final static String DEFAULT_HANDLER = "defaultHandler";
+    public static final String DEFAULT_HANDLER = "defaultHandler";
 
     /**
      * all initialized importers

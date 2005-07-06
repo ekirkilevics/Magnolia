@@ -54,7 +54,6 @@ public interface Module {
 
     /**
      * This method is called if a jar with a magnolia manifest was found.
-     * 
      * @param moduleName name read of the manifest
      * @param version version read of the manifest
      * @param moduleNode the node in the config repository

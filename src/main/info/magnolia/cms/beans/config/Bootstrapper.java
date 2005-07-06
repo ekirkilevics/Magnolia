@@ -65,11 +65,11 @@ public final class Bootstrapper {
      */
     protected static void bootstrapRepositories(String bootdir) {
 
-        System.out.println("\n-----------------------------------------------------------------\n");
-        System.out.println("Trying to initialize repositories from [" + bootdir + "]");
-        System.out.println("\n-----------------------------------------------------------------\n");
+        System.out.println("\n-----------------------------------------------------------------\n"); //$NON-NLS-1$
+        System.out.println("Trying to initialize repositories from [" + bootdir + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+        System.out.println("\n-----------------------------------------------------------------\n"); //$NON-NLS-1$
 
-        log.info("Trying to initialize repositories from [" + bootdir + "]");
+        log.info("Trying to initialize repositories from [" + bootdir + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 
         for (int j = 0; j < ContentRepository.ALL_REPOSITORIES.length; j++) {
             String repository = ContentRepository.ALL_REPOSITORIES[j];
@@ -77,23 +77,23 @@ public final class Bootstrapper {
             File xmldir = new File(bootdir, repository);
 
             if (!xmldir.exists() || !xmldir.isDirectory()) {
-                log.info("Directory [" + repository + "] not found for repository [" + repository + "], skipping...");
+                log.info("Directory [" + repository + "] not found for repository [" + repository + "], skipping..."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 continue;
             }
 
             File[] files = xmldir.listFiles(new FilenameFilter() {
 
                 public boolean accept(File dir, String name) {
-                    return name.endsWith(".xml");
+                    return name.endsWith(".xml"); //$NON-NLS-1$
                 }
             });
 
             if (files.length == 0) {
-                log.info("No xml files found in directory [" + repository + "], skipping...");
+                log.info("No xml files found in directory [" + repository + "], skipping..."); //$NON-NLS-1$ //$NON-NLS-2$
                 continue;
             }
 
-            log.info("Trying to import content from " + files.length + " files...");
+            log.info("Trying to import content from " + files.length + " files..."); //$NON-NLS-1$ //$NON-NLS-2$
 
             HierarchyManager hr = ContentRepository.getHierarchyManager(repository);
             Session session = hr.getWorkspace().getSession();
@@ -107,18 +107,15 @@ public final class Bootstrapper {
                     try {
                         filteredStream = filterVersionsFromFile(xmlfile);
 
-                        log.info("Importing content from " + xmlfile.getName());
+                        log.info("Importing content from " + xmlfile.getName()); //$NON-NLS-1$
                         session
-                            .importXML("/", filteredStream, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
+                            .importXML("/", filteredStream, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING); //$NON-NLS-1$
                     }
                     catch (Exception e) {
-                        log.error("Unable to load content from "
-                            + xmlfile.getName()
-                            + " due to a "
-                            + e.getClass().getName()
-                            + " Exception: "
-                            + e.getMessage()
-                            + ". Will try to continue.", e);
+                        log.error("Unable to load content from " //$NON-NLS-1$
+                            + xmlfile.getName() + " due to a " //$NON-NLS-1$
+                            + e.getClass().getName() + " Exception: " //$NON-NLS-1$
+                            + e.getMessage() + ". Will try to continue.", e); //$NON-NLS-1$
                     }
                     finally {
                         try {
@@ -130,19 +127,16 @@ public final class Bootstrapper {
                     }
                 }
 
-                log.info("Saving changes to [" + repository + "]");
+                log.info("Saving changes to [" + repository + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 
                 try {
                     session.save();
                 }
                 catch (RepositoryException e) {
-                    log.error("Unable to save changes to the ["
-                        + repository
-                        + "] repository due to a "
-                        + e.getClass().getName()
-                        + " Exception: "
-                        + e.getMessage()
-                        + ". Will try to continue.", e);
+                    log.error("Unable to save changes to the [" //$NON-NLS-1$
+                        + repository + "] repository due to a " //$NON-NLS-1$
+                        + e.getClass().getName() + " Exception: " //$NON-NLS-1$
+                        + e.getMessage() + ". Will try to continue.", e); //$NON-NLS-1$
                     continue;
                 }
             }
@@ -151,16 +145,14 @@ public final class Bootstrapper {
                 int maxMem = (int) (Runtime.getRuntime().maxMemory() / 1024);
                 int needed = Math.max(256, maxMem + 128);
 
-                log.error("Unable to complete bootstrapping: out of memory.\n"
-                    + maxMem
-                    + "MB were not enough, try to increase the amount of memory available by adding the -Xmx"
-                    + needed
-                    + " parameter to the server startup script.\n"
-                    + "You will need to completely remove the magnolia webapp before trying again");
+                log.error("Unable to complete bootstrapping: out of memory.\n" //$NON-NLS-1$
+                    + maxMem + "MB were not enough, try to increase the amount of memory available by adding the -Xmx" //$NON-NLS-1$
+                    + needed + " parameter to the server startup script.\n" //$NON-NLS-1$
+                    + "You will need to completely remove the magnolia webapp before trying again"); //$NON-NLS-1$
                 break;
             }
 
-            log.info("Repository [" + repository + "] has been initialized.");
+            log.info("Repository [" + repository + "] has been initialized."); //$NON-NLS-1$ //$NON-NLS-2$
 
         }
     }
@@ -176,7 +168,7 @@ public final class Bootstrapper {
     protected static InputStream filterVersionsFromFile(File xmlfile) throws IOException, SAXException {
 
         // create a temporary file and save the trimmed xml
-        File strippedFile = File.createTempFile("import", "xml");
+        File strippedFile = File.createTempFile("import", "xml"); //$NON-NLS-1$ //$NON-NLS-2$
         strippedFile.deleteOnExit();
 
         FileOutputStream outstream = new FileOutputStream(strippedFile);
@@ -256,11 +248,11 @@ public final class Bootstrapper {
                 inVersionElement++;
                 return;
             }
-            if ("sv:property".equals(qName)) {
-                String attName = atts.getValue("sv:name");
+            if ("sv:property".equals(qName)) { //$NON-NLS-1$
+                String attName = atts.getValue("sv:name"); //$NON-NLS-1$
                 if (attName != null
-                    && ("jcr:predecessors".equals(attName) || "jcr:baseVersion".equals(attName) || "jcr:versionHistory"
-                        .equals(attName))) {
+                    && ("jcr:predecessors".equals(attName) || "jcr:baseVersion".equals(attName) || "jcr:versionHistory" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    .equals(attName))) {
                     inVersionElement++;
                     return;
                 }

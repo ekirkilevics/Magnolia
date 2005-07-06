@@ -47,38 +47,38 @@ public class Syndicator {
 
     public static final String DEFAULT_CONTEXT = ContentRepository.WEBSITE;
 
-    public static final String DEFAULT_HANDLER = "ActivationHandler";
+    public static final String DEFAULT_HANDLER = "ActivationHandler"; //$NON-NLS-1$
 
     /* request headers */
-    public static final String ACTIVATE = "activate";
+    public static final String ACTIVATE = "activate"; //$NON-NLS-1$
 
-    public static final String DE_ACTIVATE = "deactivate";
+    public static final String DE_ACTIVATE = "deactivate"; //$NON-NLS-1$
 
-    public static final String GET = "get";
+    public static final String GET = "get"; //$NON-NLS-1$
 
-    public static final String WORKING_CONTEXT = "context";
+    public static final String WORKING_CONTEXT = "context"; //$NON-NLS-1$
 
-    public static final String PAGE = "page";
+    public static final String PAGE = "page"; //$NON-NLS-1$
 
-    public static final String PARENT = "parent";
+    public static final String PARENT = "parent"; //$NON-NLS-1$
 
-    public static final String ACTION = "action";
+    public static final String ACTION = "action"; //$NON-NLS-1$
 
-    public static final String RECURSIVE = "recursive";
+    public static final String RECURSIVE = "recursive"; //$NON-NLS-1$
 
-    public static final String REMOTE_PORT = "remote-port";
+    public static final String REMOTE_PORT = "remote-port"; //$NON-NLS-1$
 
-    public static final String SENDER_URL = "senderURL";
+    public static final String SENDER_URL = "senderURL"; //$NON-NLS-1$
 
-    public static final String SENDER_CONTEXT = "senderContext";
+    public static final String SENDER_CONTEXT = "senderContext"; //$NON-NLS-1$
 
-    public static final String OBJECT_TYPE = "objectType";
+    public static final String OBJECT_TYPE = "objectType"; //$NON-NLS-1$
 
-    public static final String GET_TYPE = "gettype";
+    public static final String GET_TYPE = "gettype"; //$NON-NLS-1$
 
-    public static final String GET_TYPE_BINARY = "binary";
+    public static final String GET_TYPE_BINARY = "binary"; //$NON-NLS-1$
 
-    public static final String GET_TYPE_SERIALIZED_OBJECT = "serializedObject";
+    public static final String GET_TYPE_SERIALIZED_OBJECT = "serializedObject"; //$NON-NLS-1$
 
     /**
      * Logger.
@@ -168,20 +168,20 @@ public class Syndicator {
     private synchronized void activate(Subscriber subscriber) throws Exception {
         if (!isSubscribed(subscriber)) {
             if (log.isDebugEnabled()) {
-                log.debug("Exchange : subscriber [ " + subscriber.getName() + " ] is not subscribed to " + this.path);
+                log.debug("Exchange : subscriber [ " + subscriber.getName() + " ] is not subscribed to " + this.path); //$NON-NLS-1$ //$NON-NLS-2$
             }
             return;
         }
         if (log.isDebugEnabled()) {
-            log.debug("Exchange : sending activation request to " + subscriber.getName());
-            log.debug("Exchange : user [ " + Authenticator.getUserId(this.request) + " ]");
+            log.debug("Exchange : sending activation request to " + subscriber.getName()); //$NON-NLS-1$
+            log.debug("Exchange : user [ " + Authenticator.getUserId(this.request) + " ]"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         String handle = getActivationURL(subscriber);
         URL url = new URL(handle);
         URLConnection urlConnection = url.openConnection();
         this.addActivationHeaders(urlConnection, subscriber);
         urlConnection.getContent();
-        log.info("Exchange : activation request received by " + subscriber.getName());
+        log.info("Exchange : activation request received by " + subscriber.getName()); //$NON-NLS-1$
         updateActivationDetails();
     }
 
@@ -193,10 +193,10 @@ public class Syndicator {
             if (this.path.equals(uri)) {
                 isSubscribed = true;
             }
-            else if (this.path.startsWith(uri + "/")) {
+            else if (this.path.startsWith(uri + "/")) { //$NON-NLS-1$
                 isSubscribed = true;
             }
-            else if (uri.endsWith("/") && (this.path.startsWith(uri))) {
+            else if (uri.endsWith("/") && (this.path.startsWith(uri))) { //$NON-NLS-1$
                 isSubscribed = true;
             }
         }
@@ -248,12 +248,12 @@ public class Syndicator {
             }
             try {
                 if (log.isDebugEnabled()) {
-                    log.debug("Removing [ " + this.path + " ] from [ " + si.getAddress() + " ]");
+                    log.debug("Removing [ " + this.path + " ] from [ " + si.getAddress() + " ]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 }
                 deActivate(si);
             }
             catch (Exception e) {
-                log.error("Failed to remove [ " + this.path + " ] from [ " + si.getAddress() + " ]");
+                log.error("Failed to remove [ " + this.path + " ] from [ " + si.getAddress() + " ]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 log.error(e.getMessage(), e);
             }
         }
@@ -278,29 +278,29 @@ public class Syndicator {
      *
      */
     private String getDeactivationURL(Subscriber subscriberInfo) {
-        String handle = subscriberInfo.getProtocol() + "://" + subscriberInfo.getAddress() + "/" + DEFAULT_HANDLER;
+        String handle = subscriberInfo.getProtocol() + "://" + subscriberInfo.getAddress() + "/" + DEFAULT_HANDLER; //$NON-NLS-1$ //$NON-NLS-2$
         return handle;
     }
 
     private void addDeactivationHeaders(URLConnection connection) {
-        connection.setRequestProperty("Authorization", Authenticator.getCredentials(this.request));
-        connection.addRequestProperty("context", this.context);
-        connection.addRequestProperty("page", this.path);
-        connection.addRequestProperty("action", "deactivate");
+        connection.setRequestProperty("Authorization", Authenticator.getCredentials(this.request)); //$NON-NLS-1$
+        connection.addRequestProperty("context", this.context); //$NON-NLS-1$
+        connection.addRequestProperty("page", this.path); //$NON-NLS-1$
+        connection.addRequestProperty("action", "deactivate"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
      * @return activation handle
      */
     private String getActivationURL(Subscriber subscriberInfo) {
-        String handle = subscriberInfo.getProtocol() + "://" + subscriberInfo.getAddress() + "/" + DEFAULT_HANDLER;
+        String handle = subscriberInfo.getProtocol() + "://" + subscriberInfo.getAddress() + "/" + DEFAULT_HANDLER; //$NON-NLS-1$ //$NON-NLS-2$
         return handle;
     }
 
     private void addActivationHeaders(URLConnection connection, Subscriber subscriber) throws AccessDeniedException {
-        connection.setRequestProperty("Authorization", Authenticator.getCredentials(this.request));
-        connection.addRequestProperty("context", this.context);
-        connection.addRequestProperty("page", this.path);
+        connection.setRequestProperty("Authorization", Authenticator.getCredentials(this.request)); //$NON-NLS-1$
+        connection.addRequestProperty("context", this.context); //$NON-NLS-1$
+        connection.addRequestProperty("page", this.path); //$NON-NLS-1$
         HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.request, this.context);
         if (StringUtils.isEmpty(this.parent)) {
             try {
@@ -308,11 +308,11 @@ public class Syndicator {
                 this.parent = page.getParent().getHandle();
             }
             catch (RepositoryException re) {
-                log.error("failed to build parent path for - " + this.path);
+                log.error("failed to build parent path for - " + this.path); //$NON-NLS-1$
                 log.error(re.getMessage(), re);
             }
         }
-        connection.addRequestProperty("parent", this.parent);
+        connection.addRequestProperty("parent", this.parent); //$NON-NLS-1$
         if (hm.isPage(this.path)) {
             connection.addRequestProperty(Syndicator.OBJECT_TYPE, ItemType.CONTENT.getSystemName());
         }
@@ -322,8 +322,8 @@ public class Syndicator {
         else if (hm.isNodeData(this.path)) {
             connection.addRequestProperty(Syndicator.OBJECT_TYPE, ItemType.NT_NODEDATA);
         }
-        connection.addRequestProperty("action", "activate");
-        connection.addRequestProperty("recursive", BooleanUtils.toStringTrueFalse(this.recursive));
+        connection.addRequestProperty("action", "activate"); //$NON-NLS-1$ //$NON-NLS-2$
+        connection.addRequestProperty("recursive", BooleanUtils.toStringTrueFalse(this.recursive)); //$NON-NLS-1$
 
         String senderURL = subscriber.getSenderURL();
 
@@ -348,9 +348,9 @@ public class Syndicator {
         }
         for (int i = 0; i < list.size(); i++) {
             Map map = (Hashtable) list.get(i);
-            if (this.path.indexOf(((String) map.get("source"))) == 0) {
+            if (this.path.indexOf(((String) map.get("source"))) == 0) { //$NON-NLS-1$
                 // match, assign and exit
-                this.parent = this.parent.replaceFirst((String) map.get("source"), (String) map.get("destination"));
+                this.parent = this.parent.replaceFirst((String) map.get("source"), (String) map.get("destination")); //$NON-NLS-1$ //$NON-NLS-2$
                 break;
             }
         }

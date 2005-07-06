@@ -55,7 +55,7 @@ public class ConfiguredDialog extends DialogMVCHandler {
             return hm.getContent(name);
         }
         catch (RepositoryException e) {
-            log.error("no config node found for the dialog " + name, e);
+            log.error("no config node found for the dialog " + name, e); //$NON-NLS-1$
         }
         return null;
     }
@@ -80,7 +80,7 @@ public class ConfiguredDialog extends DialogMVCHandler {
         try {
             Class handlerClass = defaultClass;
             try {
-                className = configNode.getNodeData("class").getString();
+                className = configNode.getNodeData("class").getString(); //$NON-NLS-1$
                 handlerClass = Class.forName(className);
             }
             catch (Exception e) {
@@ -93,7 +93,7 @@ public class ConfiguredDialog extends DialogMVCHandler {
             return (ConfiguredDialog) constructor.newInstance(new Object[]{name, request, response, configNode});
         }
         catch (Exception e) {
-            log.error("can't instantiate dialog: ", e);
+            log.error("can't instantiate dialog: ", e); //$NON-NLS-1$
             return null;
         }
     }

@@ -134,8 +134,7 @@ public class DialogFckEdit extends DialogBox {
         // load the script onece: if there are multiple instances
         if (getRequest().getAttribute("__fcked_loaded") == null) { //$NON-NLS-1$
             out.write("<script type=\"text/javascript\" src=\"" //$NON-NLS-1$
-                + this.getRequest().getContextPath()
-                + "/admindocroot/fckeditor/fckeditor.js\"></script>"); //$NON-NLS-1$
+                + this.getRequest().getContextPath() + "/admindocroot/fckeditor/fckeditor.js\"></script>"); //$NON-NLS-1$
             getRequest().setAttribute("__fcked_loaded", "true"); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
@@ -155,16 +154,12 @@ public class DialogFckEdit extends DialogBox {
         out.write("fckInstance.BasePath = '" + this.getRequest().getContextPath() + FCKEDIT_PATH + "';"); //$NON-NLS-1$ //$NON-NLS-2$
         if (customConfigurationsPath.length() > 0) {
             out.write("fckInstance.Config['CustomConfigurationsPath'] = '" //$NON-NLS-1$
-                + this.getRequest().getContextPath()
-                + customConfigurationsPath
-                + "';"); //$NON-NLS-1$
+                + this.getRequest().getContextPath() + customConfigurationsPath + "';"); //$NON-NLS-1$
         }
         if (jsInitFile.length() > 0) {
             out.write("</script>"); //$NON-NLS-1$
             out.write("<script type=\"text/javascript\" src=\"" //$NON-NLS-1$
-                + this.getRequest().getContextPath()
-                + jsInitFile
-                + "\"></script>\n"); //$NON-NLS-1$
+                + this.getRequest().getContextPath() + jsInitFile + "\"></script>\n"); //$NON-NLS-1$
             out.write("<script type=\"text/javascript\">"); //$NON-NLS-1$
         }
         out.write("fckInstance.Create();"); //$NON-NLS-1$
@@ -173,14 +168,10 @@ public class DialogFckEdit extends DialogBox {
 
         // write the saveInfo for the writting back to the repository
         out.write("<input type='hidden' name='mgnlSaveInfo' value='" //$NON-NLS-1$
-            + id
-            + ",String," //$NON-NLS-1$
-            + ControlSuper.VALUETYPE_SINGLE
-            + "," //$NON-NLS-1$
-            + ControlSuper.RICHEDIT_FCK
-            + "," //$NON-NLS-1$
-            + ControlSuper.ENCODING_NO
-            + "' />"); //$NON-NLS-1$
+            + id + ",String," //$NON-NLS-1$
+            + ControlSuper.VALUETYPE_SINGLE + "," //$NON-NLS-1$
+            + ControlSuper.RICHEDIT_FCK + "," //$NON-NLS-1$
+            + ControlSuper.ENCODING_NO + "' />"); //$NON-NLS-1$
 
         this.drawHtmlPost(out);
 

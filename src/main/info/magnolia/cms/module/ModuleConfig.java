@@ -24,7 +24,6 @@ import java.util.Map;
  */
 public class ModuleConfig {
 
-
     /**
      * The HM of the modules
      */
@@ -34,7 +33,7 @@ public class ModuleConfig {
      * Startup parameters
      */
     private Map initParameters;
-    
+
     /**
      * Name
      */
@@ -105,7 +104,6 @@ public class ModuleConfig {
     }
 
     /**
-     * 
      * @param value description
      */
     public void setModuleDescription(String value) {
@@ -113,7 +111,6 @@ public class ModuleConfig {
     }
 
     /**
-     * 
      * @param initParams parameters
      */
     public void setInitParameters(Map initParams) {
@@ -121,7 +118,6 @@ public class ModuleConfig {
     }
 
     /**
-     * 
      * @param manager manager
      */
     public void setHierarchyManager(HierarchyManager manager) {
@@ -129,7 +125,6 @@ public class ModuleConfig {
     }
 
     /**
-     * 
      * @param shared shared repositories
      */
     public void setSharedHierarchyManagers(Map shared) {
@@ -137,7 +132,6 @@ public class ModuleConfig {
     }
 
     /**
-     * 
      * @param localStore content node containing the configuration
      */
     public void setLocalStore(Content localStore) {

@@ -586,10 +586,10 @@ public class DialogWebDAV extends DialogBox {
                 properties.put("size", property.getPropertyAsString()); //$NON-NLS-1$
             }
             else if (property.getLocalName().equalsIgnoreCase("getlastmodified")) { //$NON-NLS-1$
-                properties.put("lastModifiedString", this.getFormattedDate( //$NON-NLS-1$
-                    property.getPropertyAsString(), "MMM dd yyyy")); //$NON-NLS-1$
-                properties.put("lastModified", this.getFormattedDate( //$NON-NLS-1$
-                    property.getPropertyAsString(), "yyyy-MM-dd, HH:mm:ss")); //$NON-NLS-1$
+                properties.put("lastModifiedString", //$NON-NLS-1$
+                    this.getFormattedDate(property.getPropertyAsString(), "MMM dd yyyy")); //$NON-NLS-1$
+                properties.put("lastModified", //$NON-NLS-1$
+                    this.getFormattedDate(property.getPropertyAsString(), "yyyy-MM-dd, HH:mm:ss")); //$NON-NLS-1$
             }
         }
         if (properties.get("name") == null) { //$NON-NLS-1$

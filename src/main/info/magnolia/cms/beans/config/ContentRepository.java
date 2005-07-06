@@ -59,26 +59,26 @@ public final class ContentRepository {
     /**
      * default repository ID's.
      */
-    public static final String WEBSITE = "website";
+    public static final String WEBSITE = "website"; //$NON-NLS-1$
 
-    public static final String USERS = "users";
+    public static final String USERS = "users"; //$NON-NLS-1$
 
-    public static final String USER_ROLES = "userroles";
+    public static final String USER_ROLES = "userroles"; //$NON-NLS-1$
 
-    public static final String GROUPS = "groups";
+    public static final String GROUPS = "groups"; //$NON-NLS-1$
 
-    public static final String CONFIG = "config";
+    public static final String CONFIG = "config"; //$NON-NLS-1$
 
     public static final String[] ALL_REPOSITORIES = new String[]{WEBSITE, USERS, USER_ROLES, CONFIG};
 
-    public static final String DEFAULT_WORKSPACE = "default";
+    public static final String DEFAULT_WORKSPACE = "default"; //$NON-NLS-1$
 
     /**
      * magnolia namespace.
      */
-    public static final String NAMESPACE_PREFIX = "mgnl";
+    public static final String NAMESPACE_PREFIX = "mgnl"; //$NON-NLS-1$
 
-    public static final String NAMESPACE_URI = "http://www.magnolia.info/jcr/mgnl";
+    public static final String NAMESPACE_URI = "http://www.magnolia.info/jcr/mgnl"; //$NON-NLS-1$
 
     /**
      * Logger.
@@ -88,29 +88,29 @@ public final class ContentRepository {
     /**
      * repository element string.
      */
-    private static final String ELEMENT_REPOSITORY = "Repository";
+    private static final String ELEMENT_REPOSITORY = "Repository"; //$NON-NLS-1$
 
-    private static final String ELEMENT_PARAM = "param";
+    private static final String ELEMENT_PARAM = "param"; //$NON-NLS-1$
 
-    private static final String ELEMENT_WORKSPACE = "workspace";
+    private static final String ELEMENT_WORKSPACE = "workspace"; //$NON-NLS-1$
 
     /**
      * Attribute names.
      */
-    private static final String ATTRIBUTE_NAME = "name";
+    private static final String ATTRIBUTE_NAME = "name"; //$NON-NLS-1$
 
-    private static final String ATTRIBUTE_ID = "id";
+    private static final String ATTRIBUTE_ID = "id"; //$NON-NLS-1$
 
-    private static final String ATTRIBUTE_LOAD_ON_STARTUP = "loadOnStartup";
+    private static final String ATTRIBUTE_LOAD_ON_STARTUP = "loadOnStartup"; //$NON-NLS-1$
 
-    private static final String ATTRIBUTE_PROVIDER = "provider";
+    private static final String ATTRIBUTE_PROVIDER = "provider"; //$NON-NLS-1$
 
-    private static final String ATTRIBUTE_VALUE = "value";
+    private static final String ATTRIBUTE_VALUE = "value"; //$NON-NLS-1$
 
     /**
      * Magnolia system user.
      */
-    private static final String SYSTEM_USER = "magnolia";
+    private static final String SYSTEM_USER = "magnolia"; //$NON-NLS-1$
 
     /**
      * All available repositories store.
@@ -142,7 +142,7 @@ public final class ContentRepository {
 
     /**
      * loads all configured repository using ID as Key, as configured in repositories.xml.
-     *
+     * 
      * <pre>
      * &lt;Repository name="website"
      *                id="website"
@@ -161,12 +161,12 @@ public final class ContentRepository {
      *</pre>
      */
     public static void init() {
-        log.info("System : loading JCR");
+        log.info("System : loading JCR"); //$NON-NLS-1$
         repositories.clear();
         hierarchyManagers.clear();
         try {
             loadRepositories();
-            log.info("System : JCR loaded");
+            log.info("System : JCR loaded"); //$NON-NLS-1$
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -185,18 +185,18 @@ public final class ContentRepository {
         for (int j = 0; j < ALL_REPOSITORIES.length; j++) {
             String repository = ALL_REPOSITORIES[j];
             if (log.isDebugEnabled()) {
-                log.debug("Checking [" + repository + "] repository.");
+                log.debug("Checking [" + repository + "] repository."); //$NON-NLS-1$ //$NON-NLS-2$
             }
             HierarchyManager hm = getHierarchyManager(repository);
 
             if (hm == null) {
-                throw new RuntimeException("Repository [" + repository + "] not loaded");
+                throw new RuntimeException("Repository [" + repository + "] not loaded"); //$NON-NLS-1$ //$NON-NLS-2$
             }
 
             Content startPage = hm.getRoot();
             if (startPage.getChildren(ItemType.CONTENT).size() > 0) {
                 if (log.isDebugEnabled()) {
-                    log.debug("Content found in [" + repository + "].");
+                    log.debug("Content found in [" + repository + "]."); //$NON-NLS-1$ //$NON-NLS-2$
                 }
                 return true;
             }
@@ -209,7 +209,7 @@ public final class ContentRepository {
      * @see #init()
      */
     public static void reload() {
-        log.info("System : reloading JCR");
+        log.info("System : reloading JCR"); //$NON-NLS-1$
         ContentRepository.init();
     }
 
@@ -254,14 +254,14 @@ public final class ContentRepository {
                 loadRepository(map);
             }
             catch (Exception e) {
-                log.error("System : Failed to load JCR \"" + map.getID() + "\" " + e.getMessage(), e);
+                log.error("System : Failed to load JCR \"" + map.getID() + "\" " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
     }
 
     private static void loadRepository(RepositoryMapping map) throws RepositoryNotInitializedException,
         InstantiationException, IllegalAccessException, ClassNotFoundException {
-        log.info("System : loading JCR - " + map.getID());
+        log.info("System : loading JCR - " + map.getID()); //$NON-NLS-1$
         Provider handlerClass = (Provider) Class.forName(map.getProvider()).newInstance();
         handlerClass.init(map);
         Repository repository = handlerClass.getUnderlineRepository();
@@ -289,7 +289,7 @@ public final class ContentRepository {
             HierarchyManager hierarchyManager = new HierarchyManager(ContentRepository.SYSTEM_USER);
             hierarchyManager.init(session.getRootNode());
             hierarchyManager.setAccessManager(accessManager);
-            ContentRepository.hierarchyManagers.put(map.getID() + "_" + wspID, hierarchyManager);
+            ContentRepository.hierarchyManagers.put(map.getID() + "_" + wspID, hierarchyManager); //$NON-NLS-1$
 
             try {
                 QueryManager queryManager = SearchFactory.getAccessControllableQueryManager(hierarchyManager
@@ -299,11 +299,11 @@ public final class ContentRepository {
             }
             catch (RepositoryException e) {
                 // probably no search manager is configured for this workspace
-                log.info("QueryManager not initialized for repository " + repository + ": " + e.getMessage());
+                log.info("QueryManager not initialized for repository " + repository + ": " + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
         catch (RepositoryException re) {
-            log.error("System : Failed to initialize hierarchy manager for JCR - " + map.getID());
+            log.error("System : Failed to initialize hierarchy manager for JCR - " + map.getID()); //$NON-NLS-1$
             log.error(re.getMessage(), re);
         }
     }
@@ -326,7 +326,7 @@ public final class ContentRepository {
     private static Document buildDocument() throws JDOMException, IOException {
         File source = Path.getRepositoriesConfigFile();
         if (!source.exists()) {
-            throw new FileNotFoundException("Failed to locate magnolia repositories config file at "
+            throw new FileNotFoundException("Failed to locate magnolia repositories config file at " //$NON-NLS-1$
                 + source.getAbsolutePath());
         }
         SAXBuilder builder = new SAXBuilder();
@@ -346,7 +346,7 @@ public final class ContentRepository {
      * access on the specified repository.
      */
     public static HierarchyManager getHierarchyManager(String repositoryID, String workspaceID) {
-        return (HierarchyManager) ContentRepository.hierarchyManagers.get(repositoryID + "_" + workspaceID);
+        return (HierarchyManager) ContentRepository.hierarchyManagers.get(repositoryID + "_" + workspaceID); //$NON-NLS-1$
     }
 
     /**

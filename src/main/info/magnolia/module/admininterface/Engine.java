@@ -92,9 +92,10 @@ public class Engine implements Module {
         store.registerDefaultTreeHandler(ContentRepository.CONFIG, AdminTreeConfig.class);
     }
 
-    
-    /* (non-Javadoc)
-     * @see info.magnolia.cms.module.Module#register(java.lang.String, java.lang.String, info.magnolia.cms.core.Content, java.util.jar.JarFile, int)
+    /*
+     * (non-Javadoc)
+     * @see info.magnolia.cms.module.Module#register(java.lang.String, java.lang.String, info.magnolia.cms.core.Content,
+     * java.util.jar.JarFile, int)
      */
     public void register(String moduleName, String version, Content moduleNode, JarFile jar, int registerState)
         throws RegisterException {

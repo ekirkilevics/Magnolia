@@ -34,7 +34,6 @@ public class InvalidConfigException extends BaseException {
     }
 
     /**
-     * 
      * @param message message
      * @param cause cause
      */

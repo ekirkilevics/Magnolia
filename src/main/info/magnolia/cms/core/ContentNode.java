@@ -34,22 +34,22 @@ public class ContentNode extends Content {
 
     /**
      * Logger
-     * */
+     */
     private static Logger log = Logger.getLogger(ContentNode.class);
 
     /**
      * JCR node which act as a base for this object
-     * */
+     */
     private Node workingNode;
 
     /**
      * this object name
-     * */
+     */
     private String name;
 
     /**
      * pointing to this object
-     * */
+     */
     private Content contentNode;
 
     /**

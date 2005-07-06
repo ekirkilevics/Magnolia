@@ -77,16 +77,11 @@ public class LinkBrowserDialogPage extends BasePageServlet {
         bOk.setLabel(MessagesManager.get(request, "buttons.ok"));
         // this will call the callback command
         bOk.setOnclick("mgnlDialogLinkBrowserWriteBack()");
-        
+
         /*
-        bOk.setOnclick("mgnlDialogLinkBrowserWriteBack('"
-            + destinationControlName
-            + "','"
-            + destinationExtension
-            + "', "
-            + addcontext
-            + ");");
-        */
+         * bOk.setOnclick("mgnlDialogLinkBrowserWriteBack('" + destinationControlName + "','" + destinationExtension +
+         * "', " + addcontext + ");");
+         */
         Button bCancel = new Button();
         bCancel.setLabel(MessagesManager.get(request, "buttons.cancel"));
         bCancel.setOnclick("window.close();");

@@ -37,7 +37,7 @@ public final class MIMEMapping {
      */
     private static Logger log = Logger.getLogger(MIMEMapping.class);
 
-    private static final String START_PAGE = "server";
+    private static final String START_PAGE = "server"; //$NON-NLS-1$
 
     private static Iterator mimeList;
 
@@ -56,20 +56,20 @@ public final class MIMEMapping {
     public static void init() {
         MIMEMapping.cachedContent.clear();
         try {
-            log.info("Config : loading MIMEMapping");
+            log.info("Config : loading MIMEMapping"); //$NON-NLS-1$
             Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(START_PAGE);
-            MIMEMapping.mimeList = startPage.getContent("MIMEMapping").getChildren().iterator();
+            MIMEMapping.mimeList = startPage.getContent("MIMEMapping").getChildren().iterator(); //$NON-NLS-1$
             MIMEMapping.cacheContent();
-            log.info("Config : MIMEMapping loaded");
+            log.info("Config : MIMEMapping loaded"); //$NON-NLS-1$
         }
         catch (RepositoryException re) {
-            log.error("Config : Failed to load MIMEMapping");
+            log.error("Config : Failed to load MIMEMapping"); //$NON-NLS-1$
             log.error(re.getMessage(), re);
         }
     }
 
     public static void reload() {
-        log.info("Config : re-loading MIMEMapping");
+        log.info("Config : re-loading MIMEMapping"); //$NON-NLS-1$
         MIMEMapping.init();
     }
 
@@ -80,12 +80,12 @@ public final class MIMEMapping {
         while (MIMEMapping.mimeList.hasNext()) {
             Content c = (Content) MIMEMapping.mimeList.next();
             try {
-                MIMEMapping.cachedContent.put(c.getNodeData("extension").getString(), c
-                    .getNodeData("mime-type")
+                MIMEMapping.cachedContent.put(c.getNodeData("extension").getString(), c //$NON-NLS-1$
+                    .getNodeData("mime-type") //$NON-NLS-1$
                     .getString());
             }
             catch (Exception e) {
-                log.error("Failed to cache MIMEMapping");
+                log.error("Failed to cache MIMEMapping"); //$NON-NLS-1$
             }
         }
         MIMEMapping.mimeList = null;
@@ -111,7 +111,7 @@ public final class MIMEMapping {
     public static String getMIMEType(HttpServletRequest request) {
         String extension = (String) request.getAttribute(Aggregator.EXTENSION);
         if (StringUtils.isEmpty(extension)) {
-            extension = StringUtils.substringAfterLast(request.getRequestURI(), ".");
+            extension = StringUtils.substringAfterLast(request.getRequestURI(), "."); //$NON-NLS-1$
             if (StringUtils.isEmpty(extension)) {
                 extension = Server.getDefaultExtension();
             }
@@ -119,7 +119,7 @@ public final class MIMEMapping {
         String mimeType = (String) MIMEMapping.cachedContent.get(extension.toLowerCase());
 
         if (mimeType == null && StringUtils.isNotEmpty(extension)) {
-            log.info("Cannot find MIME type for extension \"" + extension + "\"");
+            log.info("Cannot find MIME type for extension \"" + extension + "\""); //$NON-NLS-1$ //$NON-NLS-2$
             mimeType = (String) MIMEMapping.cachedContent.get(Server.getDefaultExtension());
         }
         return mimeType;
@@ -131,10 +131,10 @@ public final class MIMEMapping {
     public static String getContentEncoding(HttpServletRequest request) {
         String contentType = MIMEMapping.getMIMEType(request);
         if (contentType != null) {
-            int index = contentType.lastIndexOf(";");
+            int index = contentType.lastIndexOf(";"); //$NON-NLS-1$
             if (index > -1) {
                 String encoding = contentType.substring(index + 1).toLowerCase().trim();
-                encoding = encoding.replaceAll("charset=", StringUtils.EMPTY);
+                encoding = encoding.replaceAll("charset=", StringUtils.EMPTY); //$NON-NLS-1$
                 return encoding;
             }
         }

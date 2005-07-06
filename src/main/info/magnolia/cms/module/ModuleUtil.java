@@ -42,13 +42,12 @@ import org.apache.commons.lang.StringUtils;
  */
 public final class ModuleUtil {
 
-    
     /**
-     * Util has no public constructor 
+     * Util has no public constructor
      */
     private ModuleUtil() {
     }
-    
+
     /**
      * blocksize
      */
@@ -62,7 +61,7 @@ public final class ModuleUtil {
     public static void installFiles(JarFile jar) throws Exception {
 
         String root = null;
-        //Try to get root
+        // Try to get root
         try {
             File f = new File(SystemProperty.getProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR));
             if (f.isDirectory()) {
@@ -82,7 +81,7 @@ public final class ModuleUtil {
         while (entries.hasMoreElements()) {
             JarEntry entry = (JarEntry) entries.nextElement();
             String name = entry.getName().toUpperCase();
-            //Exclude root, dirs, ch-dir, META-INF-dir and jars
+            // Exclude root, dirs, ch-dir, META-INF-dir and jars
             if (!name.equals("/")
                 & !name.endsWith("/")
                 & !name.startsWith("CH")
@@ -92,7 +91,7 @@ public final class ModuleUtil {
             }
         }
 
-        //Loop throgh files an check writeable
+        // Loop throgh files an check writeable
         String error = StringUtils.EMPTY;
         Iterator iter = files.keySet().iterator();
         while (iter.hasNext()) {
@@ -116,7 +115,7 @@ public final class ModuleUtil {
             throw new Exception("Errors while installing files: " + error);
         }
 
-        //Copy files
+        // Copy files
         iter = files.keySet().iterator();
         while (iter.hasNext()) {
             File file = (File) iter.next();
@@ -149,7 +148,6 @@ public final class ModuleUtil {
 
     /**
      * Create a minimal module configuration
-     * 
      * @param node the module node
      * @param name module name
      * @param className the class used
@@ -165,7 +163,7 @@ public final class ModuleUtil {
         node.createNodeData("license");
         node.createContent("Config");
         node.createContent("VirtualURIMapping", ItemType.CONTENTNODE);
-    
+
         Content register = node.createContent(ModuleLoader.CONFIG_NODE_REGISTER, ItemType.CONTENTNODE);
         register.createNodeData("moduleName");
         register.createNodeData("moduleDescription");
