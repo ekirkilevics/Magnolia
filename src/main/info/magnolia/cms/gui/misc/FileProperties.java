@@ -98,13 +98,13 @@ public class FileProperties {
     }
 
     public String getProperty(String property) {
-        String value = "";
+        String value = StringUtils.EMPTY;
         try {
             Content props = this.getContent().getContent(this.nodeDataName + "_" + PROPERTIES_CONTENTNODE);
             String filename = props.getNodeData(PROPERTY_FILENAME).getString();
             String ext = props.getNodeData(PROPERTY_EXTENSION).getString();
             String fullName = filename;
-            String fullExt = "";
+            String fullExt = StringUtils.EMPTY;
             if (StringUtils.isNotEmpty(ext)) {
                 fullExt = "." + ext;
                 fullName += fullExt;

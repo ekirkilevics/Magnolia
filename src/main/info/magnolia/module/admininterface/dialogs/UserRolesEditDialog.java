@@ -148,15 +148,15 @@ public class UserRolesEditDialog extends ConfiguredDialog {
                 if (StringUtils.isNotEmpty(aclValueStr)) {
                     String[] aclEntries = aclValueStr.split(";");
                     for (int i = 0; i < aclEntries.length; i++) {
-                        String path = "";
+                        String path = StringUtils.EMPTY;
                         long accessRight = 0;
-                        String accessType = "";
+                        String accessType = StringUtils.EMPTY;
 
                         String[] aclValuePairs = aclEntries[i].split(",");
                         for (int j = 0; j < aclValuePairs.length; j++) {
                             String[] aclValuePair = aclValuePairs[j].split(":");
                             String aclName = aclValuePair[0].trim();
-                            String aclValue = "";
+                            String aclValue = StringUtils.EMPTY;
                             if (aclValuePair.length > 1) {
                                 aclValue = aclValuePair[1].trim();
                             }
@@ -176,7 +176,7 @@ public class UserRolesEditDialog extends ConfiguredDialog {
                             if (path.equals("/")) {
                                 // needs only one entry: "/*"
                                 accessType = "sub";
-                                path = "";
+                                path = StringUtils.EMPTY;
                             }
 
                             if (accessType.equals("self")) {

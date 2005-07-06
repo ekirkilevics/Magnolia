@@ -46,25 +46,25 @@ public class XmlExport implements ExportHandler {
     /**
      * XML structure constants
      */
-    private final static String E_CONTENT = "content";
+    private static final String E_CONTENT = "content";
 
-    private final static String E_PROPERTY = "property";
+    private static final String E_PROPERTY = "property";
 
-    private final static String A_NAME = "name";
+    private static final String A_NAME = "name";
 
-    private final static String A_TYPE = "type";
+    private static final String A_TYPE = "type";
 
-    private final static String A_TYPENAME = "tname";
+    private static final String A_TYPENAME = "tname";
 
     /**
      * default properties
      */
-    public final static String DEFAULT_ENCODING = "UTF-8";
+    public static final String DEFAULT_ENCODING = "UTF-8";
 
     /**
      * basic parameters
      */
-    public final static String ENCODING = "encoding";
+    public static final String ENCODING = "encoding";
 
     /**
      * fields

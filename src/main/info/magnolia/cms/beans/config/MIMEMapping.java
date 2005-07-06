@@ -130,15 +130,14 @@ public final class MIMEMapping {
      */
     public static String getContentEncoding(HttpServletRequest request) {
         String contentType = MIMEMapping.getMIMEType(request);
-        if (contentType == null) {
-            return "";
+        if (contentType != null) {
+            int index = contentType.lastIndexOf(";");
+            if (index > -1) {
+                String encoding = contentType.substring(index + 1).toLowerCase().trim();
+                encoding = encoding.replaceAll("charset=", StringUtils.EMPTY);
+                return encoding;
+            }
         }
-        int index = contentType.lastIndexOf(";");
-        if (index > -1) {
-            String encoding = contentType.substring(index + 1).toLowerCase().trim();
-            encoding = encoding.replaceAll("charset=", "");
-            return encoding;
-        }
-        return "";
+        return StringUtils.EMPTY;
     }
 }

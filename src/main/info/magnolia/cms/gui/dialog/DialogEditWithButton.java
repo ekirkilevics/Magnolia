@@ -80,31 +80,31 @@ public class DialogEditWithButton extends DialogBox {
      */
     public void drawHtml(Writer out) throws IOException {
         Edit control = new Edit(this.getName(), this.getValue());
-        control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING));
-        if (this.getConfigValue("saveInfo").equals("false")) {
+        control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING)); //$NON-NLS-1$
+        if (this.getConfigValue("saveInfo").equals("false")) { //$NON-NLS-1$ //$NON-NLS-2$
             control.setSaveInfo(false);
         }
         control.setCssClass(CssConstants.CSSCLASS_EDIT);
-        control.setRows(this.getConfigValue("rows", "1"));
-        control.setCssStyles("width", "100%");
-        if (this.getConfigValue("onchange", null) != null) {
-            control.setEvent("onchange", this.getConfigValue("onchange"));
+        control.setRows(this.getConfigValue("rows", "1")); //$NON-NLS-1$ //$NON-NLS-2$
+        control.setCssStyles("width", "100%"); //$NON-NLS-1$ //$NON-NLS-2$
+        if (this.getConfigValue("onchange", null) != null) { //$NON-NLS-1$
+            control.setEvent("onchange", this.getConfigValue("onchange")); //$NON-NLS-1$ //$NON-NLS-2$
         }
         this.drawHtmlPre(out);
-        String width = this.getConfigValue("width", "100%");
-        out.write("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"" + width + "\">");
-        out.write("<tr><td width=\"100%\"  class=\"" + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">");
+        String width = this.getConfigValue("width", "100%"); //$NON-NLS-1$ //$NON-NLS-2$
+        out.write("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"" + width + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
+        out.write("<tr><td width=\"100%\"  class=\"" + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
         out.write(control.getHtml());
-        if (this.getConfigValue("buttonLabel", null) != null) {
-            String label = this.getConfigValue("buttonLabel");
+        if (this.getConfigValue("buttonLabel", null) != null) { //$NON-NLS-1$
+            String label = this.getConfigValue("buttonLabel"); //$NON-NLS-1$
             label = TemplateMessagesUtil.get(this.getRequest(), label);
             this.getButton().setLabel(label);
         }
         for (int i = 0; i < this.getButtons().size(); i++) {
-            out.write("</td><td></td><td class=\"" + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">");
+            out.write("</td><td></td><td class=\"" + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
             out.write(this.getButton(i).getHtml());
         }
-        out.write("</td></tr></table>");
+        out.write("</td></tr></table>"); //$NON-NLS-1$
 
         this.drawHtmlPost(out);
     }

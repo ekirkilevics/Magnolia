@@ -20,6 +20,7 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -31,7 +32,7 @@ public class ParagraphEditDialog extends ConfiguredDialog {
 
     private static Logger log = Logger.getLogger(ParagraphEditDialog.class);
 
-    private String paragraph = "";
+    private String paragraph = StringUtils.EMPTY;
 
     public ParagraphEditDialog(String name, HttpServletRequest request, HttpServletResponse response, Content configNode) {
         super(name, request, response, configNode);

@@ -251,7 +251,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         boolean isNodeDataType = "true".equals(request.getParameter("isNodeDataType"));
 
         String value = StringUtils.defaultString(request.getParameter("saveValue"));
-        displayValue = "";
+        displayValue = StringUtils.EMPTY;
         // value to save is a content's meta information
         boolean isMeta = "true".equals(request.getParameter("isMeta"));
         // value to save is a label (name of page, content node or node data)

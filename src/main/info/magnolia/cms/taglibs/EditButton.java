@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -59,7 +60,7 @@ public class EditButton extends TagSupport {
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
     public int doStartTag() {
-        this.displayHandler = "";
+        this.displayHandler = StringUtils.EMPTY;
         return EVAL_BODY_INCLUDE;
     }
 
@@ -174,7 +175,7 @@ public class EditButton extends TagSupport {
             return Resource.getCurrentActivePage(((HttpServletRequest) pageContext.getRequest())).getHandle();
         }
         catch (Exception re) {
-            return "";
+            return StringUtils.EMPTY;
         }
     }
 

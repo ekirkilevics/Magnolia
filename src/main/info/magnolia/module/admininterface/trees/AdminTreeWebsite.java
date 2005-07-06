@@ -35,6 +35,8 @@ import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * Handles the tree rendering for the "website" repository.
@@ -74,7 +76,7 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
             column0.setHtmlEdit();
         }
         TreeColumn columnIcons = new TreeColumn(tree.getJavascriptTree(), request);
-        columnIcons.setCssClass("");
+        columnIcons.setCssClass(StringUtils.EMPTY);
         columnIcons.setWidth(1);
         columnIcons.setIsIcons(true);
         columnIcons.setIconsActivation(true);

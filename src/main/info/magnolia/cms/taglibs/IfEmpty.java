@@ -42,11 +42,11 @@ public class IfEmpty extends ConditionalTagSupport {
      */
     private static Logger log = Logger.getLogger(IfEmpty.class);
 
-    private String nodeDataName = "";
+    private String nodeDataName = StringUtils.EMPTY;
 
-    private String contentNodeName = "";
+    private String contentNodeName = StringUtils.EMPTY;
 
-    private String contentNodeCollectionName = "";
+    private String contentNodeCollectionName = StringUtils.EMPTY;
 
     private transient Content contentNodeCollection;
 
@@ -218,9 +218,9 @@ public class IfEmpty extends ConditionalTagSupport {
      * @see javax.servlet.jsp.tagext.Tag#release()
      */
     public void release() {
-        this.nodeDataName = "";
-        this.contentNodeName = "";
-        this.contentNodeCollectionName = "";
+        this.nodeDataName = StringUtils.EMPTY;
+        this.contentNodeName = StringUtils.EMPTY;
+        this.contentNodeCollectionName = StringUtils.EMPTY;
         this.actpage = false;
     }
 

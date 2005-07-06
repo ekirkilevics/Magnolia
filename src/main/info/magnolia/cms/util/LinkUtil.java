@@ -15,7 +15,6 @@ package info.magnolia.cms.util;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.gui.dialog.DialogFckEdit;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,12 +32,12 @@ import org.apache.log4j.Logger;
  * @version $Revision$ ($Author$)
  */
 public final class LinkUtil {
-    
+
     /**
      * Logger.
      */
     private static Logger log = Logger.getLogger(LinkUtil.class);
-    
+
     /**
      * The HierarchyManager to get the uuid
      */
@@ -69,11 +68,15 @@ public final class LinkUtil {
         while (matcher.find()) {
             String path = matcher.group(2);
             String uuid = makeUUIDFromAbsolutePath(path);
-            matcher.appendReplacement(res, "$1\\${link:{" 
-                + "uuid:{" + uuid + "},"
+            matcher.appendReplacement(res, "$1\\${link:{"
+                + "uuid:{"
+                + uuid
+                + "},"
                 + "repository:{website},"
                 + "workspace:{default},"
-                + "path:{" + path + "}}}$3");
+                + "path:{"
+                + path
+                + "}}}$3");
         }
         matcher.appendTail(res);
         return res.toString();
@@ -91,7 +94,7 @@ public final class LinkUtil {
             String uuid = matcher.group(1);
             String absolutePath = LinkUtil.makeAbsolutePathFromUUID(uuid);
             // can't find the uuid
-            if(absolutePath.equals(uuid)){
+            if (absolutePath.equals(uuid)) {
                 absolutePath = matcher.group(2);
             }
             matcher.appendReplacement(res, absolutePath + ".html");
@@ -114,7 +117,7 @@ public final class LinkUtil {
             String absolutePath = LinkUtil.makeAbsolutePathFromUUID(uuid);
 
             // can't find the uuid
-            if(absolutePath.equals(uuid)){
+            if (absolutePath.equals(uuid)) {
                 absolutePath = matcher.group(2);
             }
 
@@ -138,7 +141,7 @@ public final class LinkUtil {
             return Search.getContentByUUID(hm.getQueryManager(), uuid).getHandle();
 
             // this uses the jcr uuid
-            //return hm.getContentByUUID(uuid).getHandle();
+            // return hm.getContentByUUID(uuid).getHandle();
         }
         catch (Exception e) {
             return uuid;

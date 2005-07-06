@@ -60,14 +60,11 @@ public class LinkBrowserIFrameDialogPage extends BasePageServlet {
         boolean snippetMode = false;
         String mode = request.getParameter("treeMode");
         if (mode == null) {
-            mode = "";
+            mode = StringUtils.EMPTY;
         }
         if (mode.equals("snippet")) {
             snippetMode = true;
         }
-
-        // tree.setShifterExpand("");
-        // tree.setShifterEmpty("");
 
         if (!snippetMode) {
             html.append("<html><head>");

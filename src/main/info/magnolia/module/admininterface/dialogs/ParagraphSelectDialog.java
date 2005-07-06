@@ -33,6 +33,7 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -47,7 +48,7 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
      */
     private static Logger log = Logger.getLogger(ParagraphSelectDialog.class);
 
-    private String paragraph = "";
+    private String paragraph = StringUtils.EMPTY;
 
     public ParagraphSelectDialog(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);

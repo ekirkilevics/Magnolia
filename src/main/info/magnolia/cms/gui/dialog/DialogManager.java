@@ -39,28 +39,28 @@ public class DialogManager {
     /**
      * Config node name: "controls".
      */
-    private static String DIALOGCONTROLS_CONFIG_NAME = "controls";
+    private static String DIALOGCONTROLS_CONFIG_NAME = "controls"; //$NON-NLS-1$
 
     /**
      * "/modules/adminInterface/Config".
      */
-    private static String ADMIN_CONFIG_NODE_NAME = "/modules/adminInterface/Config";
+    private static String ADMIN_CONFIG_NODE_NAME = "/modules/adminInterface/Config"; //$NON-NLS-1$
 
     /**
      * Node data name for control class.
      */
-    private static String DATA_CONTROL_CLASS = "class";
+    private static String DATA_CONTROL_CLASS = "class"; //$NON-NLS-1$
 
     /**
      * Node data name for control name.
      */
-    private static String DATA_CONTROL_NAME = "name";
+    private static String DATA_CONTROL_NAME = "name"; //$NON-NLS-1$
 
     /**
      * Called through the initialization precess
      */
     public static void init() {
-        log.info("Config : loading dialog controls configuration");
+        log.info("Config : loading dialog controls configuration"); //$NON-NLS-1$
 
         // reading the configuration from the repository
         HierarchyManager configHierarchyManager = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
@@ -74,15 +74,15 @@ public class DialogManager {
             }
             catch (javax.jcr.PathNotFoundException e) {
 
-                log.info("Initialize default configuration for dialog controls");
+                log.info("Initialize default configuration for dialog controls"); //$NON-NLS-1$
 
                 configNode = serverNode.createContent(DIALOGCONTROLS_CONFIG_NAME, ItemType.CONTENT);
 
                 ValueFactory valueFactory = configHierarchyManager.getWorkspace().getSession().getValueFactory();
 
                 // sample fckedit dialog
-                Content fckedit = configNode.createContent("fckEdit", ItemType.CONTENTNODE);
-                fckedit.createNodeData(DATA_CONTROL_NAME, valueFactory.createValue("fckEdit"));
+                Content fckedit = configNode.createContent("fckEdit", ItemType.CONTENTNODE); //$NON-NLS-1$
+                fckedit.createNodeData(DATA_CONTROL_NAME, valueFactory.createValue("fckEdit")); //$NON-NLS-1$
                 fckedit.createNodeData(DATA_CONTROL_CLASS, valueFactory.createValue(DialogFckEdit.class.getName()));
                 configHierarchyManager.save();
             }
@@ -97,20 +97,17 @@ public class DialogManager {
                 Content controlNode = (Content) iterator.next();
 
                 if (log.isDebugEnabled()) {
-                    log.debug("Initializing control [" + controlNode + "]");
+                    log.debug("Initializing control [" + controlNode + "]"); //$NON-NLS-1$ //$NON-NLS-2$
                 }
 
                 String classNodeData = controlNode.getNodeData(DATA_CONTROL_CLASS).getString();
                 String nameNodeData = controlNode.getNodeData(DATA_CONTROL_NAME).getString();
 
                 if (StringUtils.isEmpty(classNodeData) || StringUtils.isEmpty(nameNodeData)) {
-                    log.warn("Config : Can't add custom control with name ["
-                        + nameNodeData
-                        + "] and class ["
-                        + classNodeData
-                        + "] specified in node ["
-                        + controlNode.getName()
-                        + "]");
+                    log.warn("Config : Can't add custom control with name [" //$NON-NLS-1$
+                        + nameNodeData + "] and class [" //$NON-NLS-1$
+                        + classNodeData + "] specified in node [" //$NON-NLS-1$
+                        + controlNode.getName() + "]"); //$NON-NLS-1$
 
                     continue;
                 }
@@ -120,14 +117,13 @@ public class DialogManager {
                     controlClass = Class.forName(classNodeData);
                 }
                 catch (ClassNotFoundException e) {
-                    log.error("Config : Failed to load dialog control with class [" + classNodeData, e);
+                    log.error("Config : Failed to load dialog control with class [" + classNodeData, e); //$NON-NLS-1$
                     continue;
                 }
 
                 if (!DialogInterface.class.isAssignableFrom(controlClass)) {
-                    log.error("Config : Invalid class specified for control ["
-                        + nameNodeData
-                        + "]: does not implement DialogInterface");
+                    log.error("Config : Invalid class specified for control [" //$NON-NLS-1$
+                        + nameNodeData + "]: does not implement DialogInterface"); //$NON-NLS-1$
                     continue;
                 }
 
@@ -137,9 +133,8 @@ public class DialogManager {
 
         }
         catch (RepositoryException e) {
-            log.error("Config : Failed to load dialog controls configuration - "
-                + ADMIN_CONFIG_NODE_NAME
-                + "/"
+            log.error("Config : Failed to load dialog controls configuration - " //$NON-NLS-1$
+                + ADMIN_CONFIG_NODE_NAME + "/" //$NON-NLS-1$
                 + DIALOGCONTROLS_CONFIG_NAME, e);
         }
 

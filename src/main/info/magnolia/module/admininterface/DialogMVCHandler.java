@@ -84,23 +84,23 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
     /**
      * Path to the node containing the data
      */
-    protected String path = "";
+    protected String path = StringUtils.EMPTY;
 
     /**
      * If the dialog serves a collection (multiple instances of the same dialog)
      */
-    private String nodeCollectionName = "";
+    private String nodeCollectionName = StringUtils.EMPTY;
 
     /**
      * the node containing the date for this dialog
      */
-    protected String nodeName = "";
+    protected String nodeName = StringUtils.EMPTY;
 
-    protected String richE = "";
+    protected String richE = StringUtils.EMPTY;
 
-    protected String richEPaste = "";
+    protected String richEPaste = StringUtils.EMPTY;
 
-    protected String repository = "";
+    protected String repository = StringUtils.EMPTY;
 
     protected HierarchyManager hm;
 

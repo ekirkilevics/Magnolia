@@ -92,7 +92,7 @@ public class MultipartForm {
         document.setFile(file);
         int lastIndexOfDot = fileName.lastIndexOf(".");
         if (lastIndexOfDot == -1) {
-            document.setExtention("");
+            document.setExtention(StringUtils.EMPTY);
             document.setFileName(fileName);
         }
         else {

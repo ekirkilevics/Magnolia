@@ -55,9 +55,9 @@ public class DialogRichedit extends DialogBox {
      */
     private static Logger log = Logger.getLogger(DialogRichedit.class);
 
-    private String richE = "";
+    private String richE = StringUtils.EMPTY;
 
-    private String richEPaste = "";
+    private String richEPaste = StringUtils.EMPTY;
 
     private List optionsToolboxStyleCssClasses = new ArrayList();
 
@@ -184,16 +184,17 @@ public class DialogRichedit extends DialogBox {
 
             DialogLine line = new DialogLine();
             this.setSessionAttribute();
-            
+
             String value = this.getValue("<br />");
             // make proper links
             value = LinkUtil.convertUUIDsToAbsoluteLinks(value);
-            
-            // TODO since we do not manipulate during storing we do not have to replace them. Maybe this leads to problems 
+
+            // TODO since we do not manipulate during storing we do not have to replace them. Maybe this leads to
+            // problems
             // remove <span>s by <a>s so its readable by kupu
             // value = value.replaceAll("<span ", "<a ");
             // value = value.replaceAll("</span>", "</a>");
-            
+
             this.setValue(value);
             // modification of dialogBox
             out.write("</td></tr><tr><td style=\"padding-right:12px;\">");

@@ -50,11 +50,11 @@ public class FileSrc extends TagSupport {
 
     private transient Content actpage;
 
-    private String nodeDataName = "";
+    private String nodeDataName = StringUtils.EMPTY;
 
-    private String contentNodeName = "";
+    private String contentNodeName = StringUtils.EMPTY;
 
-    private String fileNameOnly = "";
+    private String fileNameOnly = StringUtils.EMPTY;
 
     private HttpServletRequest request;
 
@@ -64,7 +64,7 @@ public class FileSrc extends TagSupport {
 
     private String fileExtendedName;
 
-    private String slash = "";
+    private String slash = StringUtils.EMPTY;
 
     /**
      * @deprecated
@@ -115,10 +115,10 @@ public class FileSrc extends TagSupport {
                 this.contentNode = this.actpage.getContent(this.contentNodeName);
             }
             catch (RepositoryException re) {
-                writeSrc("");
+                writeSrc(StringUtils.EMPTY);
             }
             if (this.contentNode == null) {
-                writeSrc("");
+                writeSrc(StringUtils.EMPTY);
                 return SKIP_BODY;
             }
         }
@@ -131,23 +131,23 @@ public class FileSrc extends TagSupport {
                 this.contentNodeName = this.contentNode.getName();
             }
             else {
-                writeSrc("");
+                writeSrc(StringUtils.EMPTY);
                 return SKIP_BODY;
             }
         }
         if (StringUtils.isEmpty(this.nodeDataName)) {
-            writeSrc("");
+            writeSrc(StringUtils.EMPTY);
             return SKIP_BODY;
         }
         try {
             this.nodeData = this.contentNode.getNodeData(this.contentNodeName);
         }
         catch (Exception e) {
-            writeSrc("");
+            writeSrc(StringUtils.EMPTY);
             return SKIP_BODY;
         }
         if (this.nodeData == null) {
-            writeSrc("");
+            writeSrc(StringUtils.EMPTY);
             return SKIP_BODY;
         }
         setFileProperties();

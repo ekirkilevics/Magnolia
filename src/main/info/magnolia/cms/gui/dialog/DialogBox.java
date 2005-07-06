@@ -151,7 +151,7 @@ public class DialogBox extends DialogSuper {
     public String getIconPath(String name) {
         // name might be name (e.g. "bla.gif") or extension (e.g. "gif")
         String iconPath = ICONS_PATH + ICONS_GENERAL;
-        String ext = "";
+        String ext;
         if (name.indexOf(".") != -1) {
             ext = name.substring(name.lastIndexOf(".") + 1).toLowerCase();
         }

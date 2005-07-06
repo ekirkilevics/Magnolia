@@ -17,6 +17,7 @@ import info.magnolia.cms.core.MetaData;
 
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -75,6 +76,6 @@ public class MetaDataUtil {
         catch (Exception e) {
             log.debug("Exception caught: " + e.getMessage(), e);
         }
-        return "";
+        return StringUtils.EMPTY;
     }
 }

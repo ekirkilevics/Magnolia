@@ -108,8 +108,9 @@ public class UserRolesEditIncludeAclDialogPage extends BasePageServlet {
                 + "</td>");
             html.append("<td width=\"1\"></td>");
         }
-        else{
-            html.append("<input type=\"hidden\" id=\"' + prefix + 'AccessType\" name=\"' + prefix + 'AccessType\" value=\"sub\"/>");
+        else {
+            html
+                .append("<input type=\"hidden\" id=\"' + prefix + 'AccessType\" name=\"' + prefix + 'AccessType\" value=\"sub\"/>");
         }
 
         html.append("<td width=\"100%\"class=\""

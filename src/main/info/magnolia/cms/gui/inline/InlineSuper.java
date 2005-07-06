@@ -12,15 +12,18 @@
  */
 package info.magnolia.cms.gui.inline;
 
+import org.apache.commons.lang.StringUtils;
+
+
 /**
  * @author Vinzenz Wyser
  * @version 2.0
  */
 public class InlineSuper {
 
-    private String path = "";
+    private String path = StringUtils.EMPTY;
 
-    private String paragraph = "";
+    private String paragraph = StringUtils.EMPTY;
 
     public void setPath(String s) {
         this.path = s;

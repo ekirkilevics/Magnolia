@@ -55,7 +55,7 @@ public class Date extends TagSupport {
 
     /**
      * Date pattern. see http://java.sun.com/j2se/1.4.1/docs/api/java/text/SimpleDateFormat.html
-     * 
+     *
      * <pre>
      *   G  Era designator          Text                AD
      *   y  Year                    Year                1996; 96
@@ -77,7 +77,7 @@ public class Date extends TagSupport {
      *   z  Time zone               General time zone   Pacific Standard Time; PST; GMT-08:00
      *   Z  Time zone               RFC 822 time zone   -0800
      * </pre>
-     * 
+     *
      * @deprecated
      */
     public void setPattern(String pattern) {
@@ -140,18 +140,18 @@ public class Date extends TagSupport {
     }
 
     public String getDateString() {
-        String date = "";
+        String date = null;
         if (this.contentNode == null) {
-            return "";
+            return StringUtils.EMPTY;
         }
 
         this.nodeData = this.contentNode.getNodeData(this.nodeDataName);
 
         if (!this.nodeData.isExist()) {
-            return "";
+            return StringUtils.EMPTY;
         }
         if (this.nodeData.getDate() == null) {
-            return "";
+            return StringUtils.EMPTY;
         }
         SimpleDateFormat formatter;
         if (StringUtils.isEmpty(this.language)) {
@@ -161,7 +161,7 @@ public class Date extends TagSupport {
             formatter = new SimpleDateFormat(this.pattern, new Locale(this.language));
         }
         date = formatter.format(this.nodeData.getDate().getTime());
-        // return this.nodeData.getDate().getTime().toString();
+
         return date;
     }
 }

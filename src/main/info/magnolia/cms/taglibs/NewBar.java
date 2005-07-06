@@ -99,7 +99,7 @@ public class NewBar extends TagSupport {
             return Resource.getCurrentActivePage(request).getHandle();
         }
         catch (Exception re) {
-            return "";
+            return StringUtils.EMPTY;
         }
     }
 

@@ -32,9 +32,9 @@ public class ContentExporter {
     /**
      * default export handler
      */
-    public final static String DEFAULT_HANDLER_CLASS = "info.magnolia.cms.core.ie.XmlExport";
+    public static final String DEFAULT_HANDLER_CLASS = "info.magnolia.cms.core.ie.XmlExport";
 
-    public final static String DEFAULT_HANDLER = "defaultHandler";
+    public static final String DEFAULT_HANDLER = "defaultHandler";
 
     /**
      * all initialized exporters

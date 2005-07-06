@@ -26,6 +26,8 @@ import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * Handles the tree rendering for the "users" repository.
@@ -76,7 +78,7 @@ public class AdminTreeUsers extends AdminTreeMVCHandler {
         column1.setTitle(msgs.get("tree.users.fullname"));
         column1.setWidth(2);
         TreeColumn columnIcons = new TreeColumn(tree.getJavascriptTree(), request);
-        columnIcons.setCssClass("");
+        columnIcons.setCssClass(StringUtils.EMPTY);
         columnIcons.setWidth(1);
         columnIcons.setIsIcons(true);
         columnIcons.setIconsActivation(true);

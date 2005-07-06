@@ -47,27 +47,27 @@ public class HierarchyManager {
 
     /**
      * root of this hierarchy
-     * */
+     */
     private Node startPage;
 
     /**
      * workspacer for this hierarchy
-     * */
+     */
     private Workspace workSpace;
 
     /**
      * user who created this hierarchy
-     * */
+     */
     private String userID;
 
     /**
      * access manager for this hierarchy
-     * */
+     */
     private AccessManager accessManager;
 
     /**
      * query manager for this hierarchy
-     * */
+     */
     private QueryManager queryManager;
 
     /**
@@ -132,7 +132,7 @@ public class HierarchyManager {
     /**
      * Set query manager for this hierarchy
      * @param queryManager
-     * */
+     */
     public void setQueryManager(QueryManager queryManager) {
         this.queryManager = queryManager;
     }
@@ -218,7 +218,7 @@ public class HierarchyManager {
         md.setCreationDate();
         md.setModificationDate();
         md.setAuthorId(this.userID);
-        md.setTitle("");
+        md.setTitle(StringUtils.EMPTY);
         md.setSequencePosition();
     }
 

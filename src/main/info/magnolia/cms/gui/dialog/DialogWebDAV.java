@@ -66,17 +66,17 @@ public class DialogWebDAV extends DialogBox {
     private static Logger log = Logger.getLogger(DialogWebDAV.class);
 
     // dev; remove values later (""; not null!)
-    private String host = "";
+    private String host = StringUtils.EMPTY;
 
     private int port;
 
-    private String directory = "";
+    private String directory = StringUtils.EMPTY;
 
-    private String subDirectory = "";
+    private String subDirectory = StringUtils.EMPTY;
 
-    private String user = "";
+    private String user = StringUtils.EMPTY;
 
-    private String password = "";
+    private String password = StringUtils.EMPTY;
 
     private String protocol = "http";
 
@@ -183,7 +183,7 @@ public class DialogWebDAV extends DialogBox {
             return this.getWebsiteNode().getNodeData(this.getName() + "_size").getString();
         }
 
-        return "";
+        return StringUtils.EMPTY;
     }
 
     private String getModDateValue() {
@@ -191,7 +191,7 @@ public class DialogWebDAV extends DialogBox {
             return this.getWebsiteNode().getNodeData(this.getName() + "_lastModified").getString();
         }
 
-        return "";
+        return StringUtils.EMPTY;
     }
 
     public void setDAVConnection() {
@@ -220,10 +220,10 @@ public class DialogWebDAV extends DialogBox {
         this.setDAVConnection();
         this.setSessionAttribute();
         String showName = "&nbsp;";
-        String showPath = "";
-        String showIcon = "";
+        String showPath = StringUtils.EMPTY;
+        String showIcon = StringUtils.EMPTY;
         if (StringUtils.isNotEmpty(this.getValue())) {
-            String valueTmp = "";
+            String valueTmp = StringUtils.EMPTY;
             boolean isDirectory = false;
             if (this.getValue().lastIndexOf("/") == this.getValue().length() - 1) {
                 // value is directory
@@ -246,7 +246,7 @@ public class DialogWebDAV extends DialogBox {
             else {
                 showName = valueTmp;
                 if (!isDirectory) {
-                    this.setSubDirectory("");
+                    this.setSubDirectory(StringUtils.EMPTY);
                 }
             }
             showPath = "/" + this.getSubDirectory().substring(0, this.getSubDirectory().lastIndexOf("/") + 1);
@@ -366,7 +366,7 @@ public class DialogWebDAV extends DialogBox {
             out.write("<html><head>");
             out.write(new Sources(this.getRequest().getContextPath()).getHtmlCss());
             out.write(new Sources(this.getRequest().getContextPath()).getHtmlJs());
-            String parentDirectory = "";
+            String parentDirectory = StringUtils.EMPTY;
             if (!this.getDirectory().equals(dir)) {
                 parentDirectory = this.getSubDirectory().substring(0, this.getSubDirectory().length() - 1); // get rid
                 // of last /
@@ -436,7 +436,7 @@ public class DialogWebDAV extends DialogBox {
             List parentAS = new ArrayList();
             if (!this.getDirectory().equals(dir)) {
                 Map parentProp = new Hashtable();
-                String name = "";
+                String name = StringUtils.EMPTY;
                 if (StringUtils.isEmpty(parentDirectory)) {
                     name = "/";
                 }
@@ -496,7 +496,7 @@ public class DialogWebDAV extends DialogBox {
                 && (displayType.indexOf("folder") == -1 || this
                     .getConfigValue("allowDirectorySelection")
                     .equals("true"))) {
-                String lastModified = "";
+                String lastModified = StringUtils.EMPTY;
                 if (properties.get("lastModified") != null) {
                     lastModified = ((String) properties.get("lastModified")).replaceAll(" ", "%20");
                 }

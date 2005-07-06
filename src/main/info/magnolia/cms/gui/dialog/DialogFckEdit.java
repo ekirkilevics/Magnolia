@@ -184,8 +184,8 @@ public class DialogFckEdit extends DialogBox {
 
         this.drawHtmlPost(out);
 
-        //out.write("</td>");
-        //out.write("</tr>");
+        // out.write("</td>");
+        // out.write("</tr>");
     }
 
     /**

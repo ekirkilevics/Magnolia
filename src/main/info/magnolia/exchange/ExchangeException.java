@@ -12,6 +12,8 @@
  */
 package info.magnolia.exchange;
 
+import org.apache.commons.lang.StringUtils;
+
 import info.magnolia.cms.core.BaseException;
 
 
@@ -26,7 +28,7 @@ public class ExchangeException extends BaseException {
     private static final long serialVersionUID = 222L;
 
     public ExchangeException() {
-        super("");
+        super(StringUtils.EMPTY);
     }
 
     public ExchangeException(String message) {

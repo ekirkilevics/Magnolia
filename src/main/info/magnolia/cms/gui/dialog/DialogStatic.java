@@ -40,7 +40,7 @@ public class DialogStatic extends DialogBox {
      */
     public void drawHtml(Writer out) throws IOException {
         this.drawHtmlPre(out);
-        String value = this.getConfigValue("value", null);
+        String value = this.getConfigValue("value", null); //$NON-NLS-1$
         if (value == null) {
             value = this.getValue();
         }

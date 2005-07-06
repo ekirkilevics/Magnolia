@@ -20,6 +20,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -41,7 +42,7 @@ public class MainBar extends TagSupport {
     private static Logger log = Logger.getLogger(MainBar.class);
 
     private String paragraph;
-    
+
     private boolean adminButtonVisible;
 
     /**
@@ -80,7 +81,7 @@ public class MainBar extends TagSupport {
             return Resource.getCurrentActivePage(request).getHandle();
         }
         catch (Exception re) {
-            return "";
+            return StringUtils.EMPTY;
         }
     }
 
@@ -129,9 +130,11 @@ public class MainBar extends TagSupport {
         bar.placeDefaultButtons();
         bar.drawHtml(pageContext.getOut());
     }
+
     public boolean isAdminButtonVisible() {
         return this.adminButtonVisible;
     }
+
     public void setAdminButtonVisible(boolean adminButtonVisible) {
         this.adminButtonVisible = adminButtonVisible;
     }

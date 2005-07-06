@@ -42,7 +42,7 @@ public class DialogHidden extends DialogBox {
      */
     public void drawHtml(Writer out) throws IOException {
         Hidden control = new Hidden(this.getName(), this.getValue());
-        if (this.getConfigValue("saveInfo").equals("false")) {
+        if (this.getConfigValue("saveInfo").equals("false")) { //$NON-NLS-1$ //$NON-NLS-2$
             control.setSaveInfo(false);
         }
 

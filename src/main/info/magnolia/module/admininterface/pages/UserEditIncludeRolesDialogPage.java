@@ -20,6 +20,8 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * @author Fabrizio Giustina
@@ -103,7 +105,7 @@ public class UserEditIncludeRolesDialogPage extends BasePageServlet {
             while (it.hasNext()) {
                 Content c = (Content) it.next();
                 String path = c.getNodeData("path").getString();
-                String name = "";
+                String name = StringUtils.EMPTY;
                 try {
                     HierarchyManager hm = SessionAccessControl.getHierarchyManager(
                         request,

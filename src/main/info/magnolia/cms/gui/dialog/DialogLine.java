@@ -14,6 +14,8 @@ package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.gui.misc.CssConstants;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * @author Vinzenz Wyser
@@ -40,30 +42,26 @@ public class DialogLine {
     }
 
     public String getHtml(int colspanBeforeLine, int colspanLine, int colspanAfterLine) {
-        String pre = "";
-        String post = "";
+        String pre = StringUtils.EMPTY;
+        String post = StringUtils.EMPTY;
         if (colspanBeforeLine != 0) {
-            pre = "<td colspan=\"" + colspanBeforeLine + "\"></td>";
+            pre = "<td colspan=\"" + colspanBeforeLine + "\"></td>"; //$NON-NLS-1$ //$NON-NLS-2$
         }
         if (colspanAfterLine != 0) {
-            pre = "<td colspan=\"" + colspanAfterLine + "\"></td>";
+            pre = "<td colspan=\"" + colspanAfterLine + "\"></td>"; //$NON-NLS-1$ //$NON-NLS-2$
         }
-        return "<tr>"
-            + pre
-            + "<td colspan=\""
-            + colspanLine
-            + "\" class=\""
-            + CssConstants.CSSCLASS_BOXLINE
-            + "\"></td>"
-            + post
-            + "</tr>";
+        return "<tr>" //$NON-NLS-1$
+            + pre + "<td colspan=\"" //$NON-NLS-1$
+            + colspanLine + "\" class=\"" //$NON-NLS-1$
+            + CssConstants.CSSCLASS_BOXLINE + "\"></td>" //$NON-NLS-1$
+            + post + "</tr>"; //$NON-NLS-1$
     }
 
     public String getHtml(String width) {
         StringBuffer html = new StringBuffer();
-        html.append("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:" + width + ";\">");
+        html.append("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:" + width + ";\">"); //$NON-NLS-1$ //$NON-NLS-2$
         html.append(this.getHtml(1));
-        html.append("</table>");
+        html.append("</table>"); //$NON-NLS-1$
         return html.toString();
     }
 }

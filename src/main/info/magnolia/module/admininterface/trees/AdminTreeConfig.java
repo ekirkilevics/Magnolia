@@ -31,6 +31,8 @@ import javax.jcr.PropertyType;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * Handles the tree rendering for the "config" repository.
@@ -62,13 +64,13 @@ public class AdminTreeConfig extends AdminTreeMVCHandler {
         column0.setIsLabel(true);
         column0.setWidth(3);
         TreeColumn column1 = new TreeColumn(tree.getJavascriptTree(), request);
-        column1.setName("");
+        column1.setName(StringUtils.EMPTY);
         column1.setTitle(msgs.get("tree.config.value"));
         column1.setIsNodeDataValue(true);
         column1.setWidth(2);
         column1.setHtmlEdit();
         TreeColumn column2 = new TreeColumn(tree.getJavascriptTree(), request);
-        column2.setName("");
+        column2.setName(StringUtils.EMPTY);
         column2.setTitle(msgs.get("tree.config.type"));
         column2.setIsNodeDataType(true);
         column2.setWidth(2);
@@ -84,7 +86,7 @@ public class AdminTreeConfig extends AdminTreeMVCHandler {
         // todo: typeSelect.setOptions(PropertyType.TYPENAME_DATE,Integer.toString(PropertyType.DATE));
         column2.setHtmlEdit(typeSelect.getHtml());
         TreeColumn columnIcons = new TreeColumn(tree.getJavascriptTree(), request);
-        columnIcons.setCssClass("");
+        columnIcons.setCssClass(StringUtils.EMPTY);
         columnIcons.setWidth(1);
         columnIcons.setIsIcons(true);
         columnIcons.setIconsActivation(true);

@@ -68,7 +68,7 @@ public class Out extends TagSupport {
 
     private transient NodeData nodeData;
 
-    private String fileProperty = "";
+    private String fileProperty = StringUtils.EMPTY;
 
     private String datePattern = DEFAULT_DATEPATTERN; // according to ISO 8601
 
@@ -94,7 +94,8 @@ public class Out extends TagSupport {
                 else {
                     // e.g. <cms:out nodeDataName="title" contentNodeName="01" contentNodeCollectionName="mainPars"/>
                     // e.g. <cms:out nodeDataName="title" contentNodeName="footer" contentNodeCollectionName=""/>
-                    this.setContentNode(this.getCurrentActivePage().getContent(contentNodeCollectionName).getContent(contentNodeName));
+                    this.setContentNode(this.getCurrentActivePage().getContent(contentNodeCollectionName).getContent(
+                        contentNodeName));
                 }
             }
             catch (RepositoryException re) {

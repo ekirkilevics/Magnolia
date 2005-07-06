@@ -12,6 +12,8 @@
  */
 package info.magnolia.exchange;
 
+import org.apache.commons.lang.StringUtils;
+
 import info.magnolia.cms.core.BaseException;
 
 
@@ -27,7 +29,7 @@ public class ChannelException extends BaseException {
     private static final long serialVersionUID = 222L;
 
     public ChannelException() {
-        super("");
+        super(StringUtils.EMPTY);
     }
 
     public ChannelException(String message) {

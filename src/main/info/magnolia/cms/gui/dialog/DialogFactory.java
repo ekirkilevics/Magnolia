@@ -43,27 +43,16 @@ public final class DialogFactory {
      */
     private static Logger log = Logger.getLogger(DialogFactory.class);
 
-    /* we moved this to the config repository
-    static {
-        // register magnolia default dialogs
-        registerDialog("edit", DialogEdit.class);
-        registerDialog("richEdit", DialogRichedit.class);
-        registerDialog("tab", DialogTab.class);
-        registerDialog("buttonSet", DialogButtonSet.class);
-        registerDialog("button", DialogButton.class);
-        registerDialog("static", DialogStatic.class);
-        registerDialog("file", DialogFile.class);
-        registerDialog("link", DialogLink.class);
-        registerDialog("date", DialogDate.class);
-        registerDialog("radio", DialogButtonSet.class);
-        registerDialog("checkbox", DialogButtonSet.class);
-        registerDialog("checkboxSwitch", DialogButtonSet.class);
-        registerDialog("select", DialogSelect.class);
-        registerDialog("password", DialogPassword.class);
-        registerDialog("include", DialogInclude.class);
-        registerDialog("webDAV", DialogWebDAV.class);
-    }
-    */
+    /*
+     * we moved this to the config repository static { // register magnolia default dialogs registerDialog("edit",
+     * DialogEdit.class); registerDialog("richEdit", DialogRichedit.class); registerDialog("tab", DialogTab.class);
+     * registerDialog("buttonSet", DialogButtonSet.class); registerDialog("button", DialogButton.class);
+     * registerDialog("static", DialogStatic.class); registerDialog("file", DialogFile.class); registerDialog("link",
+     * DialogLink.class); registerDialog("date", DialogDate.class); registerDialog("radio", DialogButtonSet.class);
+     * registerDialog("checkbox", DialogButtonSet.class); registerDialog("checkboxSwitch", DialogButtonSet.class);
+     * registerDialog("select", DialogSelect.class); registerDialog("password", DialogPassword.class);
+     * registerDialog("include", DialogInclude.class); registerDialog("webDAV", DialogWebDAV.class); }
+     */
 
     /**
      * Utility class, don't instantiate.
