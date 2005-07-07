@@ -233,8 +233,8 @@ public class FileSrc extends TagSupport {
                 int posLastDot = this.fileName.lastIndexOf("."); //$NON-NLS-1$
                 int posExt = this.fileName.lastIndexOf("." + this.fileExtension); //$NON-NLS-1$
                 if (posExt == -1 || (posExt != -1 && posExt != posLastDot)) {
-                    this.fileExtendedName += "." + this.fileExtension; // magnolia v 1.0: fileName saved with extension
-                    // //$NON-NLS-1$
+                    // magnolia v 1.0: fileName saved with extension
+                    this.fileExtendedName += "." + this.fileExtension; //$NON-NLS-1$
                 }
             }
         }

@@ -50,7 +50,7 @@ public final class LicenseFileExtractor {
 
     private static final String ELEMENT_META = "Meta"; //$NON-NLS-1$
 
-    private static final String NOT_DEFINED = "Not Defined";
+    private static final String NOT_DEFINED = "Not Defined"; //$NON-NLS-1$
 
     private static final String OS_NAME = "OSName"; //$NON-NLS-1$
 

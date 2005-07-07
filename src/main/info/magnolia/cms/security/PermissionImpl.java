@@ -19,7 +19,6 @@ import java.util.Map;
 
 
 /**
- * Date: Jan 4, 2005 Time: 11:35:22 AM
  * @author Sameer Charles
  */
 public class PermissionImpl implements Permission {

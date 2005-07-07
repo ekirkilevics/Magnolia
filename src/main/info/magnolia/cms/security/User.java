@@ -27,7 +27,7 @@ public class User {
     /**
      * Under this subnodes the assigned roles are saved
      */
-    private static final String NODE_ROLES = "roles";
+    private static final String NODE_ROLES = "roles"; //$NON-NLS-1$
 
     /**
      * the content object
@@ -53,7 +53,7 @@ public class User {
 
             for (Iterator iter = rolesNode.getChildren().iterator(); iter.hasNext();) {
                 Content node = (Content) iter.next();
-                if (node.getNodeData("path").getString().equals("/" + roleName)) {
+                if (node.getNodeData("path").getString().equals("/" + roleName)) { //$NON-NLS-1$ //$NON-NLS-2$
                     return true;
                 }
             }

@@ -81,24 +81,24 @@ public abstract class MVCServlet extends HttpServlet {
 
         // this can throw an exception in jetty
         try {
-            request.setCharacterEncoding("UTF-8");
+            request.setCharacterEncoding("UTF-8"); //$NON-NLS-1$
         }
         catch (java.lang.IllegalStateException e) {
-            log.error("can't set character encoding for the request", e);
+            log.error("can't set character encoding for the request", e); //$NON-NLS-1$
         }
 
         // why do i have to change it if request was setted? But i have to!
-        response.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8"); //$NON-NLS-1$
 
         PrintWriter out = response.getWriter();
-        response.setContentType("text/html; charset=UTF-8");
+        response.setContentType("text/html; charset=UTF-8"); //$NON-NLS-1$
 
         MVCServletHandler handler = getHandler(request, response);
-        log.debug("handler: " + handler.getName());
+        log.debug("handler: " + handler.getName()); //$NON-NLS-1$
         String command = handler.getCommand();
-        log.debug("calling command: " + command);
+        log.debug("calling command: " + command); //$NON-NLS-1$
         String view = handler.execute(command);
-        log.debug("calling view: " + view);
+        log.debug("calling view: " + view); //$NON-NLS-1$
 
         handler.renderHtml(view);
 

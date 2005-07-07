@@ -622,12 +622,12 @@ public class DialogWebDAV extends DialogBox {
         int bytes = (new Integer(fileSize)).intValue();
         int size = (bytes / 1024);
         if (size == 0) {
-            return (bytes + " Bytes");
+            return (bytes + " " + "Bytes"); //$NON-NLS-1$
         }
         else if (size >= 1024) {
-            return ((size / 1024) + " MB");
+            return ((size / 1024) + " " + "MB"); //$NON-NLS-1$
         }
-        return (size + " KB");
+        return (size + " " + "KB"); //$NON-NLS-1$
     }
 
     public String getFormattedDate(String date, String format) {

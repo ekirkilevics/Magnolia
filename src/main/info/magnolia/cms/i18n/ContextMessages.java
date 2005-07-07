@@ -1,6 +1,4 @@
-/*
- * Created on Mar 16, 2005
- *
+/**
  * Magnolia and its source-code is licensed under the LGPL.
  * You may copy, adapt, and redistribute this file for commercial or non-commercial use.
  * When copying, adapting, or redistributing this document in keeping with the guidelines above,
@@ -11,7 +9,6 @@
  * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-
 package info.magnolia.cms.i18n;
 
 import java.util.Enumeration;
@@ -59,7 +56,7 @@ public class ContextMessages extends Messages {
     /**
      * Copied from the setLocal Tag (jstl)
      */
-    private static final Locale EMPTY_LOCALE = new Locale("", "");
+    private static final Locale EMPTY_LOCALE = new Locale(StringUtils.EMPTY, StringUtils.EMPTY);
 
     /**
      * from jstl Config (this suffix are used to inhibit overwriting in other contextes
@@ -322,7 +319,7 @@ public class ContextMessages extends Messages {
                  * failed on the variant)
                  */
                 if (pref.getLanguage().equals(avail.getLanguage())
-                    && ("".equals(avail.getCountry()) || pref.getCountry().equals(avail.getCountry()))) {
+                    && (StringUtils.isEmpty(avail.getCountry()) || pref.getCountry().equals(avail.getCountry()))) {
                     /*
                      * Language match. By making sure the available locale does not have a country and matches the
                      * preferred locale's language, we rule out "matches" based on the container's default locale. For
@@ -410,10 +407,10 @@ public class ContextMessages extends Messages {
 
         if (country == null) {
             if (variant != null) {
-                ret = new Locale(language, "", variant);
+                ret = new Locale(language, StringUtils.EMPTY, variant);
             }
             else {
-                ret = new Locale(language, "");
+                ret = new Locale(language, StringUtils.EMPTY);
             }
         }
         else if (country.length() > 0) {
