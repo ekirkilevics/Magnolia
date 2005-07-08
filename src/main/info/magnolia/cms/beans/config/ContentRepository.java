@@ -110,7 +110,12 @@ public final class ContentRepository {
     /**
      * Magnolia system user.
      */
-    private static final String SYSTEM_USER = "magnolia"; //$NON-NLS-1$
+    public static final String SYSTEM_USER = "admin"; //$NON-NLS-1$
+
+    /**
+     * Magnolia system password
+     */
+    public static final char[] SYSTEM_PSWD = "admin".toCharArray(); //$NON-NLS-1$
 
     /**
      * All available repositories store.
@@ -280,7 +285,7 @@ public final class ContentRepository {
     private static void loadHierarchyManager(Repository repository, String wspID, RepositoryMapping map,
         Provider provider) {
         try {
-            SimpleCredentials sc = new SimpleCredentials(ContentRepository.SYSTEM_USER, StringUtils.EMPTY.toCharArray());
+            SimpleCredentials sc = new SimpleCredentials(ContentRepository.SYSTEM_USER, ContentRepository.SYSTEM_PSWD);
             Session session = repository.login(sc, wspID);
             provider.registerNamespace(NAMESPACE_PREFIX, NAMESPACE_URI, session.getWorkspace());
             List acl = getSystemPermissions();
