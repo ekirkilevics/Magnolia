@@ -244,8 +244,7 @@ public final class SessionAccessControl {
      */
     private static void createRepositorySession(HttpServletRequest request, String repositoryID, String workspaceID)
         throws LoginException, RepositoryException {
-        SimpleCredentials sc = new SimpleCredentials(Authenticator.getUserId(request), Authenticator
-            .getPassword(request));
+        SimpleCredentials sc = new SimpleCredentials(ContentRepository.SYSTEM_USER, ContentRepository.SYSTEM_PSWD);
         Session session = ContentRepository.getRepository(repositoryID).login(sc, workspaceID);
         request.getSession().setAttribute(ATTRIBUTE_REPOSITORY_SESSION_PREFIX + repositoryID + "_" + workspaceID, //$NON-NLS-1$
             session);
