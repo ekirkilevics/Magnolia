@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.MessageFormat;
 import java.util.Date;
 import java.util.zip.GZIPOutputStream;
 
@@ -75,6 +76,12 @@ public class CacheHandler extends Thread {
         }
 
         String uri = request.getRequestURI();
+
+        // strip the context path
+        if (uri.startsWith(request.getContextPath())) {
+            uri = StringUtils.substringAfter(uri, request.getContextPath());
+        }
+
         String repositoryURI = Path.getURI(request);
 
         FileOutputStream out = null;
@@ -87,7 +94,6 @@ public class CacheHandler extends Thread {
             File file = getDestinationFile(repositoryURI, DEFAULT_STORE);
 
             if (!file.exists()) {
-
                 file.createNewFile();
                 out = new FileOutputStream(file);
                 boolean success = streamURI(uri, out, request);
@@ -96,7 +102,14 @@ public class CacheHandler extends Thread {
                 if (!success) {
                     // don't leave bad or incomplete files!
                     file.delete();
-                    log.error("NOT Caching uri " + uri + " due to a previous error"); //$NON-NLS-1$ //$NON-NLS-2$
+                    log.error(MessageFormat.format("NOT Caching uri [{0}] due to a previous error", //$NON-NLS-1$
+                        new Object[]{uri}));
+                }
+                else {
+                    if (log.isInfoEnabled()) {
+                        log.info(MessageFormat.format("Successfully cached URI [{0}]", //$NON-NLS-1$
+                            new Object[]{uri}));
+                    }
                 }
             }
 
@@ -180,7 +193,8 @@ public class CacheHandler extends Thread {
             return true;
         }
         catch (Exception e) {
-            log.error("Failed to stream [" + uri + "] due to a " + e.getClass().getName() + ": " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            log.error(MessageFormat.format("Failed to stream [{0}] due to a {1}: {2}", //$NON-NLS-1$
+                new Object[]{uri, e.getClass().getName(), e.getMessage()}), e);
         }
 
         return false;
@@ -189,7 +203,7 @@ public class CacheHandler extends Thread {
     /**
      * Returns the server url for the web application. Used when a cache domain is not configured.
      * @param request HttpServletRequest
-     * @return the root webapp url [scheme]://[server]:[port]
+     * @return the root webapp url [scheme]://[server]:[port]/[context]
      */
     private static String getAppURL(HttpServletRequest request) {
         StringBuffer url = new StringBuffer();
@@ -205,6 +219,8 @@ public class CacheHandler extends Thread {
             url.append(':');
             url.append(port);
         }
+        url.append("/");
+        url.append(request.getContextPath());
 
         return url.toString();
     }
