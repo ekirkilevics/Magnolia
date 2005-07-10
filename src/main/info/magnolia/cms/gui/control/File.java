@@ -15,6 +15,7 @@ package info.magnolia.cms.gui.control;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.gui.misc.FileProperties;
+import info.magnolia.cms.i18n.MessagesManager;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
@@ -171,7 +172,7 @@ public class File extends ControlSuper {
 
     public String getHtmlRemove(String additionalOnclick) {
         Button control1 = new Button();
-        control1.setLabel("Remove file");
+        control1.setLabel(MessagesManager.get(getRequest(), "dialog.file.remove")); //$NON-NLS-1$
         control1.setCssClass("mgnlControlButtonSmall"); //$NON-NLS-1$
         control1.setOnclick(additionalOnclick + "mgnlControlFileRemove('" + this.getName() + "')"); //$NON-NLS-1$ //$NON-NLS-2$
         return control1.getHtml();

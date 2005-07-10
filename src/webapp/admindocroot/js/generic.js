@@ -4,12 +4,17 @@
 ################################### */
 
 
+/**
+ * Simple shortcut for document.getElementById()
+ */
+function $(element)
+{
+    return document.getElementById(element);
+}
 
-
-/* ###################################
-### get position of an object
-################################### */
-
+/**
+ * get position of an object
+ */
 function mgnlGetPosX(obj)
 	{
 	if (!obj) return 0;

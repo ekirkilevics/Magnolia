@@ -76,7 +76,7 @@ mgnlContextMenu.prototype.show = function(event){
 		}
 	//event.returnValue=false;
 }
-	
+
 mgnlContextMenu.prototype.hide = function()
 	{
 	if (this.divMenu)
@@ -98,7 +98,7 @@ mgnlContextMenu.prototype.menuItemReset = function(item)
 	{
 	item.style.backgroundColor="";
 	}
-	
+
 //#################
 //### TreeMenuItem
 //#################
@@ -188,4 +188,4 @@ function mgnlTreeMenuItemConditionPermissionWrite(tree)
 		var path=tree.selectedNode.id;
 		mgnlOpenDialog(path,'','','',tree.repository,dialogPath);
 		}
-	
+

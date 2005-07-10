@@ -134,3 +134,13 @@ div.mgnlTreeMenuItem_DISABLED {
 .mgnlTreeMenuItem {
 	cursor: pointer;
 }
+
+#mgnlImportdiv {
+	position: absolute;
+	width: 350px;
+	height: 50px;
+}
+
+#mgnlImportdiv form {
+	padding: 20px;
+}

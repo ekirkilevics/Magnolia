@@ -5,6 +5,7 @@ import info.magnolia.cms.beans.config.Bootstrapper.VersionFilter;
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.Resource;
 
 import java.io.File;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.text.MessageFormat;
 
 import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.RepositoryException;
@@ -34,8 +36,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 
 /**
- * Simple servlet used to import/export data from jcr, actually using the standard jcr import/export features (support
- * for the magnolia proprietary export format will be added soon).
+ * Simple servlet used to import/export data from jcr using the standard jcr import/export features.
  * @author Fabrizio Giustina
  * @version $Id: $
  */
@@ -49,17 +50,33 @@ public class ImportExportServlet extends EntryServlet {
     /**
      * request parameter: repository name.
      */
-    private static final String PARAM_REPOSITORY = "mgnlRepository";
+    private static final String PARAM_REPOSITORY = "mgnlRepository"; //$NON-NLS-1$
 
     /**
      * request parameter: path.
      */
-    private static final String PARAM_PATH = "mgnlPath";
+    private static final String PARAM_PATH = "mgnlPath"; //$NON-NLS-1$
 
     /**
      * request parameter: keep versions.
      */
-    private static final String PARAM_KEEPVERSIONS = "mgnlKeepVersions";
+    private static final String PARAM_KEEPVERSIONS = "mgnlKeepVersions"; //$NON-NLS-1$
+
+    /**
+     * request parameter: imported file.
+     */
+    private static final String PARAM_FILE = "mgnlFileImport"; //$NON-NLS-1$
+
+    /**
+     * request parameter: export requested.
+     */
+    private static final String PARAM_EXPORT_ACTION = "exportxml"; //$NON-NLS-1$
+
+    private static final String[] repositories = new String[]{
+        ContentRepository.WEBSITE,
+        ContentRepository.CONFIG,
+        ContentRepository.USERS,
+        ContentRepository.USER_ROLES};
 
     /**
      * Logger.
@@ -73,7 +90,7 @@ public class ImportExportServlet extends EntryServlet {
 
         if (isAuthorized(request, response)) {
             try {
-                request.setCharacterEncoding("UTF-8");
+                request.setCharacterEncoding("UTF-8"); //$NON-NLS-1$
             }
             catch (IllegalStateException e) {
                 // ignore
@@ -85,17 +102,17 @@ public class ImportExportServlet extends EntryServlet {
             }
             String basepath = request.getParameter(PARAM_PATH);
             if (StringUtils.isEmpty(basepath)) {
-                basepath = "/";
+                basepath = "/"; //$NON-NLS-1$
             }
 
             boolean keepVersionHistory = BooleanUtils.toBoolean(request.getParameter(PARAM_KEEPVERSIONS));
 
-            if (request.getParameter("exportxml") != null) {
+            if (request.getParameter(PARAM_EXPORT_ACTION) != null) {
                 executeExport(response, repository, basepath, keepVersionHistory);
                 return;
             }
 
-            displayForm(response, repository, basepath);
+            displayExportForm(request, response.getWriter(), repository, basepath);
         }
     }
 
@@ -104,72 +121,96 @@ public class ImportExportServlet extends EntryServlet {
      * @param response HttpServletResponse
      * @param repository selected repository
      * @param basepath base path in repository (extracted from request parameter or default)
-     * @throws IOException for errors while accessing the servlet output stream
      */
-    private void displayForm(HttpServletResponse response, String repository, String basepath) throws IOException {
-        String[] repositories = new String[]{
-            ContentRepository.WEBSITE,
-            ContentRepository.CONFIG,
-            ContentRepository.USERS,
-            ContentRepository.USER_ROLES};
+    private void displayExportForm(HttpServletRequest request, PrintWriter out, String repository, String basepath) {
 
-        // not exporting
-        PrintWriter out = response.getWriter();
-        out.println("<html>");
-        out.println("<head>");
-        out.println("<title>Magnolia Export servlet</title>");
-        out.println("</head><body>");
+        out.println("<html><head><title>Magnolia</title></head><body>"); //$NON-NLS-1$
 
-        out.println("<h2>Export</h2>");
-        out.println("<form method=\"get\" action=\"\">");
-        out.println("repository: <select name=\"" + PARAM_REPOSITORY + "\">");
+        out.println("<h2>"); //$NON-NLS-1$
+        out.println(MessagesManager.get(request, "importexport.export")); //$NON-NLS-1$
+        out.println("</h2>"); //$NON-NLS-1$
+        out.println("<form method=\"get\" action=\"\">"); //$NON-NLS-1$
 
+        writeRepositoryField(request, out, repository);
+        writeBasePathField(request, out, basepath);
+        writeKeepVersionField(request, out);
+
+        out.println("<input type=\"submit\" name=\"" //$NON-NLS-1$
+            + PARAM_EXPORT_ACTION + "\" value=\"" //$NON-NLS-1$
+            + MessagesManager.get(request, "importexport.export") //$NON-NLS-1$
+            + "\" />"); //$NON-NLS-1$
+
+        out.println("</form></body></html>"); //$NON-NLS-1$
+    }
+
+    /**
+     * Display a simple form for importing/exporting data.
+     * @param response HttpServletResponse
+     * @param repository selected repository
+     * @param basepath base path in repository (extracted from request parameter or default)
+     */
+    private void displayImportForm(HttpServletRequest request, PrintWriter out, String repository, String basepath) {
+
+        out.println("<html><head><title>Magnolia</title></head><body>"); //$NON-NLS-1$
+
+        out.println("<h2>"); //$NON-NLS-1$
+        out.println(MessagesManager.get(request, "importexport.import")); //$NON-NLS-1$
+        out.println("</h2>"); //$NON-NLS-1$
+        out.println("<form method=\"post\" action=\"\" enctype=\"multipart/form-data\">"); //$NON-NLS-1$
+
+        writeRepositoryField(request, out, repository);
+        writeBasePathField(request, out, basepath);
+        writeKeepVersionField(request, out);
+        out.println(MessagesManager.get(request, "importexport.file") //$NON-NLS-1$
+            + " <input type=\"file\" name=\"" + PARAM_FILE + "\" /><br/>");  //$NON-NLS-1$//$NON-NLS-2$
+
+        out.println("<input type=\"submit\" name=\"" //$NON-NLS-1$
+            + PARAM_EXPORT_ACTION + "\" value=\"" //$NON-NLS-1$
+            + MessagesManager.get(request, "importexport.import") //$NON-NLS-1$
+            + "\" />"); //$NON-NLS-1$
+
+        out.println("</form></body></html>"); //$NON-NLS-1$
+    }
+
+    /**
+     * @param out
+     * @param basepath
+     */
+    private void writeBasePathField(HttpServletRequest request, PrintWriter out, String basepath) {
+        out.println(MessagesManager.get(request, "importexport.basepath") //$NON-NLS-1$
+            + " <input name=\"" //$NON-NLS-1$
+            + PARAM_PATH + "\" value=\"" //$NON-NLS-1$
+            + basepath + "\" /><br/>"); //$NON-NLS-1$
+    }
+
+    /**
+     * @param out
+     */
+    private void writeKeepVersionField(HttpServletRequest request, PrintWriter out) {
+        out.println(MessagesManager.get(request, "importexport.keepversions") //$NON-NLS-1$
+            + " <input name=\"" //$NON-NLS-1$
+            + PARAM_KEEPVERSIONS + "\" value=\"true\" type=\"checkbox\"/><br/>"); //$NON-NLS-1$
+    }
+
+    /**
+     * @param out
+     * @param repository
+     */
+    private void writeRepositoryField(HttpServletRequest request, PrintWriter out, String repository) {
+        out.println(MessagesManager.get(request, "importexport.repository") //$NON-NLS-1$
+            + " <select name=\"" //$NON-NLS-1$
+            + PARAM_REPOSITORY + "\">"); //$NON-NLS-1$
         for (int j = 0; j < repositories.length; j++) {
-            out.print("<option");
+            out.print("<option"); //$NON-NLS-1$
             if (repository.equals(repositories[j])) {
-                out.print(" selected=\"selected\"");
+                out.print(" selected=\"selected\""); //$NON-NLS-1$
             }
-            out.print(">");
+            out.print(">"); //$NON-NLS-1$
             out.print(repositories[j]);
-            out.print("</option>");
+            out.print("</option>"); //$NON-NLS-1$
         }
-
-        out.println("</select>");
-        out.println("<br/>");
-        out.println("base path: <input name=\"" + PARAM_PATH + "\" value=\"" + basepath + "\" /><br/>");
-        out
-            .println("keep versions: <input name=\""
-                + PARAM_KEEPVERSIONS
-                + "\" value=\"true\" type=\"checkbox\"/><br/>");
-        out.println("<input type=\"submit\" name=\"exportxml\" value=\"export\" />");
-        out.println("</form>");
-
-        out.println("<h2>Import</h2>");
-        out.println("<form method=\"post\" action=\"\" enctype=\"multipart/form-data\">");
-        out.println("repository: <select name=\"" + PARAM_REPOSITORY + "\"><br/>");
-
-        for (int j = 0; j < repositories.length; j++) {
-            out.print("<option");
-            if (repository.equals(repositories[j])) {
-                out.print(" selected=\"selected\"");
-            }
-            out.print(">");
-            out.print(repositories[j]);
-            out.print("</option>");
-        }
-
-        out.println("</select>");
-        out.println("<br/>");
-        out.println("base path: <input name=\"" + PARAM_PATH + "\" value=\"" + basepath + "\" /><br/>");
-        out
-            .println("keep versions: <input name=\""
-                + PARAM_KEEPVERSIONS
-                + "\" value=\"true\" type=\"checkbox\"/><br/>");
-        out.println("file: <input type=\"file\" name=\"file\" /><br/>");
-        out.println("<input type=\"submit\" name=\"importxml\" value=\"import\" />");
-        out.println("</form>");
-
-        out.println("</body></html>");
+        out.println("</select>"); //$NON-NLS-1$
+        out.println("<br/>"); //$NON-NLS-1$
     }
 
     /**
@@ -178,25 +219,25 @@ public class ImportExportServlet extends EntryServlet {
      */
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (isAuthorized(request, response)) {
-            log.debug("Import request received.");
+            log.debug("Import request received."); //$NON-NLS-1$
 
             MultipartForm form = Resource.getPostedForm(request);
             if (form == null) {
-                log.error("Missing form.");
+                log.error("Missing form."); //$NON-NLS-1$
                 return;
             }
 
             String basepath = form.getParameter(PARAM_PATH);
             if (StringUtils.isEmpty(basepath)) {
-                basepath = "/";
+                basepath = "/"; //$NON-NLS-1$
             }
 
             boolean keepVersionHistory = BooleanUtils.toBoolean(form.getParameter(PARAM_KEEPVERSIONS));
 
             String repository = form.getParameter(PARAM_REPOSITORY);
-            Document xmlFile = form.getDocument("file");
+            Document xmlFile = form.getDocument(PARAM_FILE);
             if (StringUtils.isEmpty(repository) || xmlFile == null) {
-                throw new RuntimeException("Wrong parameters");
+                throw new RuntimeException("Wrong parameters"); //$NON-NLS-1$
             }
 
             executeImport(basepath, repository, xmlFile, keepVersionHistory);
@@ -218,14 +259,14 @@ public class ImportExportServlet extends EntryServlet {
         HierarchyManager hr = ContentRepository.getHierarchyManager(repository);
         Workspace ws = hr.getWorkspace();
         OutputStream stream = response.getOutputStream();
-        response.setContentType("text/xml");
-        response.setCharacterEncoding("UTF-8");
-        String pathName = StringUtils.replace(basepath, "/", ".");
-        if (".".equals(pathName)) {
+        response.setContentType("text/xml"); //$NON-NLS-1$
+        response.setCharacterEncoding("UTF-8"); //$NON-NLS-1$
+        String pathName = StringUtils.replace(basepath, "/", "."); //$NON-NLS-1$ //$NON-NLS-2$
+        if (".".equals(pathName)) { //$NON-NLS-1$
             // root node
             pathName = StringUtils.EMPTY;
         }
-        response.setHeader("content-disposition", "attachment; filename=" + repository + pathName + ".xml");
+        response.setHeader("content-disposition", "attachment; filename=" + repository + pathName + ".xml"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
         Session session = ws.getSession();
 
@@ -238,7 +279,7 @@ public class ImportExportServlet extends EntryServlet {
             else {
 
                 // write to a temp file and then re-read it to remove version history
-                File tempFile = File.createTempFile("export", "xml");
+                File tempFile = File.createTempFile("export", "xml"); //$NON-NLS-1$ //$NON-NLS-2$
                 tempFile.deleteOnExit();
                 OutputStream fileStream = new FileOutputStream(tempFile);
 
@@ -289,7 +330,10 @@ public class ImportExportServlet extends EntryServlet {
         HierarchyManager hr = ContentRepository.getHierarchyManager(repository);
         Workspace ws = hr.getWorkspace();
 
-        log.info("About to import file into the [" + repository + "] repository");
+        if (log.isInfoEnabled()) {
+            log.info(MessageFormat.format("About to import file into the [{0}] repository", new Object[]{repository})); //$NON-NLS-1$
+        }
+
         InputStream stream = xmlFile.getStream();
         Session session = ws.getSession();
         try {
@@ -299,7 +343,7 @@ public class ImportExportServlet extends EntryServlet {
             else {
 
                 // create a temporary file and save the trimmed xml
-                File strippedFile = File.createTempFile("import", "xml");
+                File strippedFile = File.createTempFile("import", "xml"); //$NON-NLS-1$ //$NON-NLS-2$
                 strippedFile.deleteOnExit();
 
                 FileOutputStream outstream = new FileOutputStream(strippedFile);
@@ -348,15 +392,11 @@ public class ImportExportServlet extends EntryServlet {
             session.save();
         }
         catch (RepositoryException e) {
-            log.error("Unable to save changes to the ["
-                + repository
-                + "] repository due to a "
-                + e.getClass().getName()
-                + " Exception: "
-                + e.getMessage()
-                + ".", e);
+            log.error(MessageFormat.format(
+                "Unable to save changes to the [{0}] repository due to a {1} Exception: {2}.", //$NON-NLS-1$
+                new Object[]{repository, e.getClass().getName(), e.getMessage()}), e);
         }
 
-        log.info("Import done");
+        log.info("Import done"); //$NON-NLS-1$
     }
 }

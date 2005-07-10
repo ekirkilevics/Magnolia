@@ -54,8 +54,7 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
         super(name, request, response);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
      * @see info.magnolia.module.admininterface.AdminTree#prepareTree()
      */
     protected void prepareTree(Tree tree, HttpServletRequest request) {
@@ -140,8 +139,7 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
         tree.addColumn(column3);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
      * @see info.magnolia.module.admininterface.AdminTreeMVCHandler#prepareContextMenu(info.magnolia.cms.gui.control.Tree,
      * javax.servlet.http.HttpServletRequest)
      */
@@ -222,11 +220,20 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
 
         ContextMenuItem menuExport = new ContextMenuItem();
         menuExport.setLabel(msgs.get("tree.menu.export")); //$NON-NLS-1$
-        menuExport.setIcon(request.getContextPath() + "/admindocroot/icons/16/import1.gif"); //$NON-NLS-1$
+        menuExport.setIcon(request.getContextPath() + "/admindocroot/icons/16/export.gif"); //$NON-NLS-1$
         menuExport.setOnclick(tree.getJavascriptTree() + ".exportNode();"); //$NON-NLS-1$
         menuExport.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
             + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
         menuExport.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotNodeData(" //$NON-NLS-1$
+            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+
+        ContextMenuItem menuImport = new ContextMenuItem();
+        menuImport.setLabel(msgs.get("tree.menu.import")); //$NON-NLS-1$
+        menuImport.setIcon(request.getContextPath() + "/admindocroot/icons/16/import1.gif"); //$NON-NLS-1$
+        menuImport.setOnclick(tree.getJavascriptTree() + ".importNode(this);"); //$NON-NLS-1$
+        menuImport.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
+            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+        menuImport.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotNodeData(" //$NON-NLS-1$
             + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
 
         // those menuitems are not active on public side
@@ -247,27 +254,32 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
         // only superuser can export data
         if (!Authenticator.getUser(request).hasRole(Role.ROLE_SUPERUSER)) {
             menuExport.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
+            menuImport.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
         }
 
         tree.addMenuItem(menuOpen);
         tree.addMenuItem(menuNewPage);
 
-        tree.addMenuItem(null); // line
+        tree.addSeparator();
         tree.addMenuItem(menuDelete);
 
-        tree.addMenuItem(null); // line
+        tree.addSeparator();
         tree.addMenuItem(menuMove);
         tree.addMenuItem(menuCopy);
 
-        tree.addMenuItem(null); // line
+        tree.addSeparator();
         tree.addMenuItem(menuActivateExcl);
         tree.addMenuItem(menuActivateIncl);
         tree.addMenuItem(menuDeActivate);
 
-        tree.addMenuItem(null); // line
+        tree.addSeparator();
         tree.addMenuItem(menuExport);
 
-        tree.addMenuItem(null); // line
+        // testing
+        // tree.addSeparator();
+        // tree.addMenuItem(menuImport);
+
+        tree.addSeparator();
         tree.addMenuItem(menuRefresh);
     }
 

@@ -1379,7 +1379,13 @@ public class Tree extends ControlSuper {
      */
     public void addMenuItem(ContextMenuItem item) {
         menu.addMenuItem(item);
+    }
 
+    /**
+     * Add a separator line between menu items.
+     */
+    public void addSeparator() {
+        menu.addMenuItem(null);
     }
 
     protected ContextMenu getMenu() {

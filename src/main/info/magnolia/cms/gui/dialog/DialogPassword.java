@@ -15,6 +15,7 @@ package info.magnolia.cms.gui.dialog;
 import info.magnolia.cms.gui.control.ControlSuper;
 import info.magnolia.cms.gui.control.Password;
 import info.magnolia.cms.gui.misc.CssConstants;
+import info.magnolia.cms.i18n.MessagesManager;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -69,7 +70,7 @@ public class DialogPassword extends DialogBox {
             // todo: verification on submit; think about
             out.write("<div class=\"" //$NON-NLS-1$
                 + CssConstants.CSSCLASS_DESCRIPTION + "\">" //$NON-NLS-1$
-                + "Please verify your entry:" //
+                + MessagesManager.get(this.getRequest(), "dialog.password.verify") //$NON-NLS-1$
                 + "</div>"); //$NON-NLS-1$
             out.write(control2.getHtml());
         }

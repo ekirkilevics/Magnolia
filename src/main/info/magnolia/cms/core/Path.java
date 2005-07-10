@@ -28,6 +28,11 @@ import org.apache.log4j.Logger;
  */
 public final class Path {
 
+    /**
+     * 
+     */
+    private static final String DEFAULT_UNTITLED_NODE_NAME = "untitled";
+
     private static final String ENCODING_DEFAULT = "UTF-8"; //$NON-NLS-1$
 
     private static final String ATTRIBUTE_URI = "mgnl_decodedURI"; //$NON-NLS-1$
@@ -213,7 +218,7 @@ public final class Path {
             }
         }
         if (newLabel.length() == 0) {
-            newLabel.append("untitled");
+            newLabel.append(DEFAULT_UNTITLED_NODE_NAME);
         }
         return newLabel.toString();
     }

@@ -506,6 +506,27 @@
 			}
 		}
 
+    mgnlTree.prototype.importNode = function(link)
+		{
+           	var strDiv ='<form method="post" enctype="multipart/form-data" action="${pageContext.request.contextPath}/.magnolia/mgnl-import">'
+			strDiv +='<input type="hidden" name="mgnlRepository" value="' + this.repository + '">'
+			strDiv +='<input type="hidden" name="mgnlPath" value="' + this.selectedNode.id + '">'
+			strDiv +='<input type="file" name="mgnlFileImport" id="mgnlFileImport" />'
+			strDiv +='<input type="submit" name="importxml" value="import" />'
+            strDiv +='</form>'
+
+            var resDiv = document.createElement('div');
+		    resDiv.id= "mgnlImportdiv";
+		    // placeUnder($(inputId), resDiv);
+		    document.body.appendChild(resDiv);
+		    resDiv.innerHTML = strDiv;
+
+		    $('mgnlImportdiv').style.left = mgnlGetPosX(link) + "px";
+		    $('mgnlImportdiv').style.top = mgnlGetPosY(link) + "px";
+
+		}
+
+
 	mgnlTree.prototype.copyNode = function()
 		{
 		mgnlTreeMoveNode=true;
