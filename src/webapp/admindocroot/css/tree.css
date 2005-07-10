@@ -139,6 +139,8 @@ div.mgnlTreeMenuItem_DISABLED {
 	position: absolute;
 	width: 350px;
 	height: 50px;
+	background-color: #F0F2E6;
+	border: 1px solid #000;
 }
 
 #mgnlImportdiv form {

@@ -209,11 +209,20 @@ public class AdminTreeConfig extends AdminTreeMVCHandler {
 
         ContextMenuItem menuExport = new ContextMenuItem();
         menuExport.setLabel(msgs.get("tree.menu.export")); //$NON-NLS-1$
-        menuExport.setIcon(request.getContextPath() + "/admindocroot/icons/16/import1.gif"); //$NON-NLS-1$
+        menuExport.setIcon(request.getContextPath() + "/admindocroot/icons/16/export.gif"); //$NON-NLS-1$
         menuExport.setOnclick(tree.getJavascriptTree() + ".exportNode();"); //$NON-NLS-1$
         menuExport.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
             + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
         menuExport.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotNodeData(" //$NON-NLS-1$
+            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+
+        ContextMenuItem menuImport = new ContextMenuItem();
+        menuImport.setLabel(msgs.get("tree.menu.import")); //$NON-NLS-1$
+        menuImport.setIcon(request.getContextPath() + "/admindocroot/icons/16/import1.gif"); //$NON-NLS-1$
+        menuImport.setOnclick(tree.getJavascriptTree() + ".importNode(this);"); //$NON-NLS-1$
+        menuImport.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
+            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+        menuImport.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotNodeData(" //$NON-NLS-1$
             + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
 
         // is it possible to activate?
@@ -226,28 +235,30 @@ public class AdminTreeConfig extends AdminTreeMVCHandler {
         // only superuser can export data
         if (!Authenticator.getUser(request).hasRole(Role.ROLE_SUPERUSER)) {
             menuExport.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
+            menuImport.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
         }
 
         tree.addMenuItem(menuNewPage);
         tree.addMenuItem(menuNewContentNode);
         tree.addMenuItem(menuNewNodeData);
 
-        tree.addMenuItem(null); // line
+        tree.addSeparator();
         tree.addMenuItem(menuDelete);
 
-        tree.addMenuItem(null); // line
+        tree.addSeparator();
         tree.addMenuItem(menuCut);
         tree.addMenuItem(menuCopy);
 
-        tree.addMenuItem(null); // line
+        tree.addSeparator();
         tree.addMenuItem(menuActivateExcl);
         tree.addMenuItem(menuActivateIncl);
         tree.addMenuItem(menuDeActivate);
 
-        tree.addMenuItem(null); // line
+        tree.addSeparator();
         tree.addMenuItem(menuExport);
+        tree.addMenuItem(menuImport);
 
-        tree.addMenuItem(null); // line
+        tree.addSeparator();
         tree.addMenuItem(menuRefresh);
     }
 

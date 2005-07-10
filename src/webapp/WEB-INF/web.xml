@@ -153,11 +153,11 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ImportExportServlet</servlet-name>
-        <url-pattern>/.magnolia/mgnl-export</url-pattern>
+        <url-pattern>/.magnolia/mgnl-export/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ImportExportServlet</servlet-name>
-        <url-pattern>/.magnolia/mgnl-import</url-pattern>
+        <url-pattern>/.magnolia/mgnl-import/*</url-pattern>
     </servlet-mapping>
     <!--
         Standard dialogs: currently dialox is mapped

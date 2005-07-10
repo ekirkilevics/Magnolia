@@ -68,6 +68,11 @@ public class ImportExportServlet extends EntryServlet {
     private static final String PARAM_FILE = "mgnlFileImport"; //$NON-NLS-1$
 
     /**
+     * request parameter: redirect page after import.
+     */
+    private static final String PARAM_REDIRECT = "mgnlRedirect"; //$NON-NLS-1$
+
+    /**
      * request parameter: export requested.
      */
     private static final String PARAM_EXPORT_ACTION = "exportxml"; //$NON-NLS-1$
@@ -112,7 +117,13 @@ public class ImportExportServlet extends EntryServlet {
                 return;
             }
 
-            displayExportForm(request, response.getWriter(), repository, basepath);
+            if (StringUtils.contains(request.getRequestURI(), "import")) {
+                displayImportForm(request, response.getWriter(), repository, basepath);
+            }
+            else {
+                displayExportForm(request, response.getWriter(), repository, basepath);
+            }
+
         }
     }
 
@@ -162,7 +173,7 @@ public class ImportExportServlet extends EntryServlet {
         writeBasePathField(request, out, basepath);
         writeKeepVersionField(request, out);
         out.println(MessagesManager.get(request, "importexport.file") //$NON-NLS-1$
-            + " <input type=\"file\" name=\"" + PARAM_FILE + "\" /><br/>");  //$NON-NLS-1$//$NON-NLS-2$
+            + " <input type=\"file\" name=\"" + PARAM_FILE + "\" /><br/>"); //$NON-NLS-1$//$NON-NLS-2$
 
         out.println("<input type=\"submit\" name=\"" //$NON-NLS-1$
             + PARAM_EXPORT_ACTION + "\" value=\"" //$NON-NLS-1$
@@ -242,7 +253,17 @@ public class ImportExportServlet extends EntryServlet {
 
             executeImport(basepath, repository, xmlFile, keepVersionHistory);
 
-            doGet(request, response);
+            String redirectPage = form.getParameter(PARAM_REDIRECT);
+            if (StringUtils.isNotBlank(redirectPage)) {
+                if (log.isInfoEnabled()) {
+                    log.info(MessageFormat.format("Redirecting to [{0}]", //$NON-NLS-1$
+                        new Object[]{redirectPage}));
+                }
+                response.sendRedirect(redirectPage);
+            }
+            else {
+                doGet(request, response);
+            }
         }
     }
 
@@ -336,9 +357,18 @@ public class ImportExportServlet extends EntryServlet {
 
         InputStream stream = xmlFile.getStream();
         Session session = ws.getSession();
+
+        int importMode = ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW;
+
+        // only in the website repo UUID can be important, since they could be used in future for internal links
+        // try to keep them untouched so
+        if ("website".equals(repository)) { //$NON-NLS-1$
+            importMode = ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING;
+        }
+
         try {
             if (keepVersionHistory) {
-                session.importXML(basepath, stream, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
+                session.importXML(basepath, stream, importMode);
             }
             else {
 
@@ -363,10 +393,7 @@ public class ImportExportServlet extends EntryServlet {
                 // return the filtered file as an input stream
                 InputStream filteredStream = new FileInputStream(strippedFile);
                 try {
-                    session.importXML(
-                        basepath,
-                        filteredStream,
-                        ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
+                    session.importXML(basepath, filteredStream, importMode);
                 }
                 finally {
                     try {

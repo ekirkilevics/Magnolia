@@ -274,10 +274,7 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
 
         tree.addSeparator();
         tree.addMenuItem(menuExport);
-
-        // testing
-        // tree.addSeparator();
-        // tree.addMenuItem(menuImport);
+        tree.addMenuItem(menuImport);
 
         tree.addSeparator();
         tree.addMenuItem(menuRefresh);

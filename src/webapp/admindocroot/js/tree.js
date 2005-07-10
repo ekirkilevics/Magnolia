@@ -500,7 +500,7 @@
 		if (mgnlConfirm(text,title))
 			{
 
-		    var url="${pageContext.request.contextPath}/.magnolia/mgnl-export?exportxml=true&mgnlRepository=" + this.repository + "&mgnlPath=" + this.selectedNode.id;
+		    var url="${pageContext.request.contextPath}/.magnolia/mgnl-export/file.xml?exportxml=true&mgnlRepository=" + this.repository + "&mgnlPath=" + this.selectedNode.id;
 
 		    location.href=url;
 			}
@@ -508,20 +508,21 @@
 
     mgnlTree.prototype.importNode = function(link)
 		{
-           	var strDiv ='<form method="post" enctype="multipart/form-data" action="${pageContext.request.contextPath}/.magnolia/mgnl-import">'
-			strDiv +='<input type="hidden" name="mgnlRepository" value="' + this.repository + '">'
-			strDiv +='<input type="hidden" name="mgnlPath" value="' + this.selectedNode.id + '">'
-			strDiv +='<input type="file" name="mgnlFileImport" id="mgnlFileImport" />'
-			strDiv +='<input type="submit" name="importxml" value="import" />'
-            strDiv +='</form>'
+
+           	var strDiv ='<form method="post" enctype="multipart/form-data" action="${pageContext.request.contextPath}/.magnolia/mgnl-import/import.html">';
+			strDiv +='<input type="hidden" name="mgnlRepository" value="' + this.repository + '">';
+			strDiv +='<input type="hidden" name="mgnlPath" value="' + this.selectedNode.id + '">';
+			strDiv +='<input type="hidden" name="mgnlRedirect" value="${pageContext.request.contextPath}/.magnolia/adminCentral/extractTree.html?mgnlRepository=' + this.repository + '">';
+			strDiv +='<input type="file" name="mgnlFileImport" id="mgnlFileImport" />';
+			strDiv +='<input type="submit" name="importxml" value="' + mgnlMessages.get('js.import.button') + '" />';
+            strDiv +='</form>';
 
             var resDiv = document.createElement('div');
 		    resDiv.id= "mgnlImportdiv";
-		    // placeUnder($(inputId), resDiv);
 		    document.body.appendChild(resDiv);
 		    resDiv.innerHTML = strDiv;
 
-		    $('mgnlImportdiv').style.left = mgnlGetPosX(link) + "px";
+		    $('mgnlImportdiv').style.left = (mgnlGetPosX(link) + 20) + "px";
 		    $('mgnlImportdiv').style.top = mgnlGetPosY(link) + "px";
 
 		}
