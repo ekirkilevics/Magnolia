@@ -16,9 +16,9 @@ import junit.framework.TestCase;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
-import org.apache.jackrabbit.core.NamespaceResolver;
 import org.apache.jackrabbit.core.query.xpath.TokenMgrError;
 import org.apache.jackrabbit.core.query.xpath.XPathQueryBuilder;
+import org.apache.jackrabbit.name.NamespaceResolver;
 import org.apache.log4j.Logger;
 
 

@@ -270,9 +270,30 @@
         </dependency>
         <dependency>
             <groupId>jackrabbit</groupId>
-            <artifactId>jackrabbit</artifactId>
-            <version>0.16.4.1-dev</version>
+            <artifactId>jackrabbit-api</artifactId>
+            <version>1.0-dev</version>
             <type>jar</type>
+            <url>http://incubator.apache.org/jackrabbit</url>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
+        </dependency>
+        <dependency>
+            <groupId>jackrabbit</groupId>
+            <artifactId>jackrabbit-commons</artifactId>
+            <version>1.0-dev</version>
+            <type>jar</type>
+            <url>http://incubator.apache.org/jackrabbit</url>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
+        </dependency>
+        <dependency>
+            <groupId>jackrabbit</groupId>
+            <artifactId>jackrabbit-core</artifactId>
+            <version>1.0-dev</version>
+            <type>jar</type>
+            <url>http://incubator.apache.org/jackrabbit</url>
             <properties>
                 <war.bundle>true</war.bundle>
             </properties>
