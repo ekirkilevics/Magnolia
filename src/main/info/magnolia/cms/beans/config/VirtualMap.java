@@ -27,10 +27,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
-import javax.jcr.observation.Event;
-import javax.jcr.observation.EventIterator;
-import javax.jcr.observation.EventListener;
-import javax.jcr.observation.ObservationManager;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;

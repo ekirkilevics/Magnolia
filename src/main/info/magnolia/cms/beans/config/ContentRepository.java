@@ -42,7 +42,6 @@ import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
 
 import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -147,7 +146,7 @@ public final class ContentRepository {
 
     /**
      * loads all configured repository using ID as Key, as configured in repositories.xml.
-     * 
+     *
      * <pre>
      * &lt;Repository name="website"
      *                id="website"

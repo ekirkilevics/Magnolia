@@ -219,7 +219,7 @@ public class CacheHandler extends Thread {
             url.append(':');
             url.append(port);
         }
-        url.append("/");
+        url.append("/"); //$NON-NLS-1$
         url.append(request.getContextPath());
 
         return url.toString();

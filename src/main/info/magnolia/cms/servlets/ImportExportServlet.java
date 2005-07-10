@@ -117,7 +117,7 @@ public class ImportExportServlet extends EntryServlet {
                 return;
             }
 
-            if (StringUtils.contains(request.getRequestURI(), "import")) {
+            if (StringUtils.contains(request.getRequestURI(), "import")) { //$NON-NLS-1$
                 displayImportForm(request, response.getWriter(), repository, basepath);
             }
             else {
