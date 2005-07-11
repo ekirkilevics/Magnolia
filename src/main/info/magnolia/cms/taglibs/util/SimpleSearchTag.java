@@ -18,8 +18,9 @@ import info.magnolia.cms.core.search.QueryResult;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.Resource;
 
+import java.text.MessageFormat;
+
 import javax.jcr.RepositoryException;
-import javax.jcr.query.InvalidQueryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
@@ -45,14 +46,14 @@ import org.apache.log4j.Logger;
  * <p>
  * Tipical usage:
  * </p>
- * 
+ *
  * <pre>
  *   &lt;cmsu:simplesearch query="${param.search}" startLevel="3" var="results" />
  *   &lt;c:forEach items="${results}">
  *     &lt;a href="${pageContext.request.contextPath}${node.handle}.html">${node.title}&lt;/a>
  *   &lt;/c:forEach>
  * </pre>
- * 
+ *
  * @author Fabrizio Giustina
  * @version $Revision: $ ($Author: $)
  */
@@ -169,11 +170,10 @@ public class SimpleSearchTag extends TagSupport {
 
             pageContext.setAttribute(var, result.getContent(), scope);
         }
-        catch (InvalidQueryException e) {
-            log.error(e.getMessage(), e);
-        }
-        catch (RepositoryException e) {
-            log.error(e.getMessage(), e);
+        catch (Exception e) {
+            log.error(MessageFormat.format(
+                "{0} caught while parsing query for search term [{1}] - query is [{2}]: {3}", //$NON-NLS-1$
+                new Object[]{e.getClass().getName(), this.query, queryString, e.getMessage()}), e);
         }
 
         return EVAL_PAGE;
