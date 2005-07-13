@@ -68,4 +68,8 @@ public class User {
 
         return false;
     }
+    
+    public String getLanguage(){
+    		return userNode.getNodeData("language").getString();
+    }
 }
