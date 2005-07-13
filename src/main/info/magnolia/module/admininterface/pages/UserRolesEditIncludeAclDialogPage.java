@@ -142,8 +142,8 @@ public class UserRolesEditIncludeAclDialogPage extends BasePageServlet {
 
         out.print(repositorySelect.getHtml());
         out.print("<p><p/>"); //$NON-NLS-1$
-        for (int i = 0; i < ContentRepository.ALL_REPOSITORIES.length; i++) {
-            writeRepositoryTable(request, response, msgs, out, role, ContentRepository.ALL_REPOSITORIES[i]);
+        for (int i = 0; i < ContentRepository.getAllRepositoryNames().length; i++) {
+            writeRepositoryTable(request, response, msgs, out, role, ContentRepository.getAllRepositoryNames()[i]);
         }
     }
 
@@ -282,8 +282,8 @@ public class UserRolesEditIncludeAclDialogPage extends BasePageServlet {
         repositorySelect.setValue(ContentRepository.WEBSITE);
 
         // loop through the repositories
-        for (int i = 0; i < ContentRepository.ALL_REPOSITORIES.length; i++) {
-            String name = ContentRepository.ALL_REPOSITORIES[i];
+        for (int i = 0; i < ContentRepository.getAllRepositoryNames().length; i++) {
+            String name = ContentRepository.getAllRepositoryNames()[i];
             String label = MessagesManager.get(request, "repository." + name); //$NON-NLS-1$
             repositorySelect.setOptions(label, name);
         }
