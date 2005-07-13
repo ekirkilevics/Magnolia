@@ -14,6 +14,7 @@ package info.magnolia.cms.module;
 
 import info.magnolia.cms.beans.config.ModuleLoader;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.AccessDeniedException;
@@ -21,7 +22,10 @@ import info.magnolia.cms.security.AccessDeniedException;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -32,6 +36,7 @@ import java.util.jar.JarFile;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.lang.StringUtils;
 
 
@@ -52,6 +57,74 @@ public final class ModuleUtil {
      * blocksize
      */
     public static final int DATA_BLOCK_SIZE = 1024 * 1024;
+
+    /**
+     * registers the properties in the repository
+     * @param hm
+     * @param name
+     * @throws IOException
+     * @throws RepositoryException
+     * @throws PathNotFoundException
+     * @throws AccessDeniedException
+     */
+    public static void registerProperties(HierarchyManager hm, String name) throws IOException, AccessDeniedException,
+        PathNotFoundException, RepositoryException {
+        Map map = new ListOrderedMap();
+
+        // not using properties since they are not ordered
+        // Properties props = new Properties();
+        // props.load(ModuleUtil.class.getResourceAsStream("/" + name.replace('.', '/') + ".properties"));
+        InputStream stream = ModuleUtil.class.getResourceAsStream("/" + name.replace('.', '/') + ".properties");
+        LineNumberReader lines = new LineNumberReader(new InputStreamReader(stream));
+
+        String line = lines.readLine();
+        while (line != null) {
+            line = line.trim();
+            if (line.length() > 0 && !line.startsWith("#")) {
+                String key = StringUtils.substringBefore(line, "=").trim();
+                String value = StringUtils.substringAfter(line, "=").trim();
+                map.put(key, value);
+            }
+            line = lines.readLine();
+        }
+        lines.close();
+        stream.close();
+        registerProperties(hm, map);
+    }
+
+    public static void registerProperties(HierarchyManager hm, Map map) throws AccessDeniedException,
+        PathNotFoundException, RepositoryException {
+        for (Iterator iter = map.keySet().iterator(); iter.hasNext();) {
+            String key = (String) iter.next();
+            String value = (String) map.get(key);
+
+            String name = StringUtils.substringAfterLast(key, ".");
+            String path = StringUtils.substringBeforeLast(key, ".").replace('.', '/');
+            Content node = createPath(hm, path);
+            node.getNodeData(name, true).setValue(value);
+        }
+    }
+
+    public static Content createPath(HierarchyManager hm, String path) throws AccessDeniedException,
+        PathNotFoundException, RepositoryException {
+        return createPath(hm, path, ItemType.CONTENTNODE);
+    }
+
+    public static Content createPath(HierarchyManager hm, String path, ItemType type) throws AccessDeniedException,
+        PathNotFoundException, RepositoryException {
+        String names[] = path.split("/");
+        Content node = hm.getRoot();
+        for (int i = 0; i < names.length; i++) {
+            String name = names[i];
+            if (node.hasContent(name)) {
+                node = node.getContent(name);
+            }
+            else {
+                node = node.createContent(name, type);
+            }
+        }
+        return node;
+    }
 
     /**
      * Extracts files of a jar and stores them in the magnolia file structure
@@ -81,6 +154,7 @@ public final class ModuleUtil {
         while (entries.hasMoreElements()) {
             JarEntry entry = (JarEntry) entries.nextElement();
             String name = entry.getName().toUpperCase();
+
             // Exclude root, dirs, ch-dir, META-INF-dir and jars
             if (!name.equals("/") //$NON-NLS-1$
                 & !name.endsWith("/") //$NON-NLS-1$
