@@ -30,11 +30,7 @@ import info.magnolia.repository.RepositoryNotInitializedException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
@@ -51,7 +47,7 @@ import org.jdom.input.SAXBuilder;
 
 /**
  * @author Sameer Charles
- * @version 2.01
+ * $Id :$
  */
 public final class ContentRepository {
 
@@ -68,7 +64,7 @@ public final class ContentRepository {
 
     public static final String CONFIG = "config"; //$NON-NLS-1$
 
-    public static final String[] ALL_REPOSITORIES = new String[]{WEBSITE, USERS, USER_ROLES, CONFIG};
+    //public static String[] ALL_REPOSITORIES = new String[]{WEBSITE, USERS, USER_ROLES, CONFIG};
 
     public static final String DEFAULT_WORKSPACE = "default"; //$NON-NLS-1$
 
@@ -138,6 +134,11 @@ public final class ContentRepository {
     private static Map repositoryMappings = new Hashtable();
 
     /**
+     * holds all repository names as configured in repositories.xml
+     * */
+    private static String[] repositoryNames;
+
+    /**
      * Utility class, don't instantiate.
      */
     private ContentRepository() {
@@ -186,8 +187,8 @@ public final class ContentRepository {
      * @throws RepositoryException exception while accessing the repository
      */
     public static boolean checkIfInitialized() throws AccessDeniedException, RepositoryException {
-        for (int j = 0; j < ALL_REPOSITORIES.length; j++) {
-            String repository = ALL_REPOSITORIES[j];
+        for (int j = 0; j < getAllRepositoryNames().length; j++) {
+            String repository = getAllRepositoryNames()[j];
             if (log.isDebugEnabled()) {
                 log.debug("Checking [" + repository + "] repository."); //$NON-NLS-1$ //$NON-NLS-2$
             }
@@ -220,13 +221,17 @@ public final class ContentRepository {
     private static void loadRepositories() throws Exception {
         Document document = buildDocument();
         Element root = document.getRootElement();
-        Iterator children = root.getChildren(ContentRepository.ELEMENT_REPOSITORY).iterator();
+        Collection repositoryElements = root.getChildren(ContentRepository.ELEMENT_REPOSITORY);
+        ContentRepository.repositoryNames = new String[repositoryElements.size()];
+        Iterator children = repositoryElements.iterator();
+        int repositoryIndex = 0;
         while (children.hasNext()) {
             Element element = (Element) children.next();
             String name = element.getAttributeValue(ATTRIBUTE_NAME);
             String id = element.getAttributeValue(ATTRIBUTE_ID);
             String load = element.getAttributeValue(ATTRIBUTE_LOAD_ON_STARTUP);
             String provider = element.getAttributeValue(ATTRIBUTE_PROVIDER);
+            ContentRepository.repositoryNames[repositoryIndex] = id;
             RepositoryMapping map = new RepositoryMapping();
             map.setID(id);
             map.setName(name);
@@ -260,6 +265,7 @@ public final class ContentRepository {
             catch (Exception e) {
                 log.error("System : Failed to load JCR \"" + map.getID() + "\" " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
             }
+            repositoryIndex++;
         }
     }
 
@@ -366,4 +372,13 @@ public final class ContentRepository {
     public static RepositoryMapping getRepositoryMapping(String repositoryID) {
         return (RepositoryMapping) ContentRepository.repositoryMappings.get(repositoryID);
     }
+
+    /**
+     * Gets repository names array as configured in repositories.xml
+     * @return repository names
+     * */
+    public static String[] getAllRepositoryNames() {
+        return ContentRepository.repositoryNames;
+    }
+
 }
