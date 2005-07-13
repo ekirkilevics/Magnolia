@@ -129,8 +129,8 @@ public class UserRolesEditDialog extends ConfiguredDialog {
         Content role = this.getStorageNode();
 
         // for each repository
-        for (int x = 0; x < ContentRepository.ALL_REPOSITORIES.length; x++) {
-            String repository = ContentRepository.ALL_REPOSITORIES[x];
+        for (int x = 0; x < ContentRepository.getAllRepositoryNames().length; x++) {
+            String repository = ContentRepository.getAllRepositoryNames()[x];
 
             // ######################
             // # acl
