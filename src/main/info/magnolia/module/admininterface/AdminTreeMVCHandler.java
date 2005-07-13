@@ -47,35 +47,35 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
     /**
      * this are the used actions
      */
-    private static final String COMMAND_SHOW_TREE = "show"; //$NON-NLS-1$
+    protected static final String COMMAND_SHOW_TREE = "show"; //$NON-NLS-1$
 
-    private static final String COMMAND_COPY_NODE = "copy"; //$NON-NLS-1$
+    protected static final String COMMAND_COPY_NODE = "copy"; //$NON-NLS-1$
 
-    private static final String COMMAND_MOVE_NODE = "move"; //$NON-NLS-1$
+    protected static final String COMMAND_MOVE_NODE = "move"; //$NON-NLS-1$
 
-    private static final String COMMAND_ACTIVATE = "activate"; //$NON-NLS-1$
+    protected static final String COMMAND_ACTIVATE = "activate"; //$NON-NLS-1$
 
-    private static final String COMMAND_DEACTIVATE = "deactivate"; //$NON-NLS-1$
+    protected static final String COMMAND_DEACTIVATE = "deactivate"; //$NON-NLS-1$
 
-    private static final String COMMAND_CREATE_NODE = "createNode"; //$NON-NLS-1$
+    protected static final String COMMAND_CREATE_NODE = "createNode"; //$NON-NLS-1$
 
-    private static final String COMMAND_DELETE_NODE = "delete"; //$NON-NLS-1$
+    protected static final String COMMAND_DELETE_NODE = "delete"; //$NON-NLS-1$
 
-    private static final String COMMAND_SAVE_VALUE = "saveValue"; //$NON-NLS-1$
+    protected static final String COMMAND_SAVE_VALUE = "saveValue"; //$NON-NLS-1$
 
     /**
      * The view names
      */
 
-    private static final String VIEW_TREE = "tree"; //$NON-NLS-1$
+    protected static final String VIEW_TREE = "tree"; //$NON-NLS-1$
 
-    private static final String VIEW_CREATE = "create"; //$NON-NLS-1$
+    protected static final String VIEW_CREATE = "create"; //$NON-NLS-1$
 
-    private static final String VIEW_VALUE = "value"; //$NON-NLS-1$
+    protected static final String VIEW_VALUE = "value"; //$NON-NLS-1$
 
-    private static final String VIEW_NOTHING = "nothing"; //$NON-NLS-1$
+    protected static final String VIEW_NOTHING = "nothing"; //$NON-NLS-1$
 
-    private static final String VIEW_COPY_MOVE = "copymove"; //$NON-NLS-1$
+    protected static final String VIEW_COPY_MOVE = "copymove"; //$NON-NLS-1$
 
     /**
      * name of the tree (not the repository)
@@ -342,7 +342,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
      * Create the html for the tree. Calls tree.getHtml after calling prepareTree.
      * @param html
      */
-    private void renderTree(StringBuffer html) {
+    protected void renderTree(StringBuffer html) {
         String mode = StringUtils.defaultString(request.getParameter("treeMode")); //$NON-NLS-1$
         boolean snippetMode = mode.equals("snippet"); //$NON-NLS-1$
 
@@ -387,7 +387,6 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         html.append(new Sources(request.getContextPath()).getHtmlCss());
     }
 
-    // TODO DMS
     protected Tree getTree() {
         return this.tree;
     }
@@ -395,4 +394,9 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
     protected void setTree(Tree tree) {
         this.tree = tree;
     }
+
+    protected String getPath() {
+        return path;
+    }
+
 }
