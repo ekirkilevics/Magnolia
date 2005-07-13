@@ -64,8 +64,6 @@ public final class ContentRepository {
 
     public static final String CONFIG = "config"; //$NON-NLS-1$
 
-    //public static String[] ALL_REPOSITORIES = new String[]{WEBSITE, USERS, USER_ROLES, CONFIG};
-
     public static final String DEFAULT_WORKSPACE = "default"; //$NON-NLS-1$
 
     /**
