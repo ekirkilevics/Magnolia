@@ -5,7 +5,7 @@
     <postGoal name="site">
         <attainGoal name="pdf" />
     </postGoal>
-
+	
     <preGoal name="jar:jar">
         <!-- add tlds to taglib jar -->
         <j:set var="tld.dir" value="${maven.src.dir}/webapp/WEB-INF/taglib" />
@@ -41,5 +41,16 @@
             </j:if>
         </j:forEach>
     </goal>
+	
+	<!-- convert the java properties files to a readable utf8 format -->
+	<goal name="java2utf8">
+		<ant:native2ascii src="src/resources/info/magnolia/module/admininterface" dest="src/resources/info/magnolia/module/admininterface/utf8" ext=".txt" encoding="UTF8" reverse="true"/>
+	</goal>
 
+	<!-- convert the utf8 properties files to the java format -->
+	<goal name="utf82ascii">
+		<ant:native2ascii src="src/resources/info/magnolia/module/admininterface/utf8" dest="src/resources/info/magnolia/module/admininterface" ext=".properties" encoding="UTF8"/>
+	</goal>
+
+	
 </project>
