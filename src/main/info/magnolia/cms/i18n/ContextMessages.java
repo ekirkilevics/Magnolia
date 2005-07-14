@@ -27,6 +27,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.taglibs.standard.resources.Resources;
 
+import com.mockrunner.jms.MessageManager;
+
 
 /**
  * @author philipp bracher This calss is doing the same thing as javax.servlet.jsp.jastl.fmt.LocalSupport. LocalSupport
@@ -137,6 +139,15 @@ public class ContextMessages extends Messages {
             };
         }
         return bundle;
+    }
+
+    /**
+     * Finds the current locale (request, session, appication)
+     * @param req Request
+     * @return Returns the current locale
+     */
+    public static Locale getCurrentLocale(HttpServletRequest req) {
+        return getLocalizationContext(req).getLocale();
     }
 
     /**
@@ -469,13 +480,13 @@ public class ContextMessages extends Messages {
      */
     private static Object get(HttpServletRequest req, String name, int scope) {
         switch (scope) {
-            case PageContext.REQUEST_SCOPE:
+            case PageContext.REQUEST_SCOPE :
                 return req.getAttribute(name + REQUEST_SCOPE_SUFFIX);
-            case PageContext.SESSION_SCOPE:
+            case PageContext.SESSION_SCOPE :
                 return get(req.getSession(), name);
-            case PageContext.APPLICATION_SCOPE:
+            case PageContext.APPLICATION_SCOPE :
                 return req.getSession().getServletContext().getAttribute(name + APPLICATION_SCOPE_SUFFIX);
-            default:
+            default :
                 throw new IllegalArgumentException("unknown scope"); //$NON-NLS-1$
         }
     }

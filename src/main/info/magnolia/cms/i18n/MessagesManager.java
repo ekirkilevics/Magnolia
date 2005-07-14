@@ -294,6 +294,18 @@ public final class MessagesManager {
     }
 
     /**
+     * @return Returns the current locale for the current user
+     */
+    public static Locale getCurrentLocale(HttpServletRequest req) {
+        try {
+            return ContextMessages.getCurrentLocale(req);
+        }
+        catch (Exception e) {
+            return getDefaultLocale();
+        }
+    }
+
+    /**
      * @param defaultLocale The defaultLocale to set.
      */
     public static void setDefaultLocale(String defaultLocale) {

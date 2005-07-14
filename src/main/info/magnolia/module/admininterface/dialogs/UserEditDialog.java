@@ -33,6 +33,8 @@ import javax.jcr.version.Version;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -145,7 +147,10 @@ public class UserEditDialog extends ConfiguredDialog {
         for (Iterator iter = col.iterator(); iter.hasNext();) {
             Locale locale = (Locale) iter.next();
             String code = locale.getLanguage();
-            String name = locale.getDisplayName(MessagesManager.getDefaultLocale());
+            if (StringUtils.isNotEmpty(locale.getCountry())) {
+                code += "_" + locale.getCountry();
+            }
+            String name = locale.getDisplayName(MessagesManager.getCurrentLocale(request));
             SelectOption option = new SelectOption(name, code);
             options.add(option);
         }
@@ -157,7 +162,6 @@ public class UserEditDialog extends ConfiguredDialog {
                 try {
                     String name0 = ((SelectOption) arg0).getLabel();
                     String name1 = ((SelectOption) arg1).getLabel();
-                    // System.out.println(name0 + " " + name1 + ": " + name0.compareTo(name1));
                     return name0.compareTo(name1);
                 }
                 catch (Exception e) {
