@@ -27,8 +27,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.taglibs.standard.resources.Resources;
 
-import com.mockrunner.jms.MessageManager;
-
 
 /**
  * @author philipp bracher This calss is doing the same thing as javax.servlet.jsp.jastl.fmt.LocalSupport. LocalSupport
