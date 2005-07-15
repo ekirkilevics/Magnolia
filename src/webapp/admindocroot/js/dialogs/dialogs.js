@@ -216,14 +216,18 @@ function mgnlDialogLinkOpenBrowser(controlName,repository,extension,addcontext){
 	mgnlDebug("link: selectedPath: " + pathSelected, "dialog");
 	mgnlDebug("link: pathOpen: " + pathOpen, "dialog"); 
 
-	var callBackCommand = new MgnlDialogLinkBrowserCallBackCommand(control);
+	var callBackCommand = new MgnlDialogLinkBrowserCallBackCommand(control, extension);
 	mgnlOpenTreeBrowser(pathSelected,pathOpen,repository,null,null,callBackCommand)
 }
 
-function MgnlDialogLinkBrowserCallBackCommand(control){
+function MgnlDialogLinkBrowserCallBackCommand(control, extension){
 	this.control = control;
+	this.extension = extension;
 	this.callback = function(value){
-		this.control.value = value +".html";
+		if(extension!= null && extension != ""){
+			value += "." + this.extension;
+		}
+		this.control.value = value;
 	}
 }
 
