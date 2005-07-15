@@ -1,14 +1,13 @@
-package info.magnolia.module.admininterface.pages;
+package info.magnolia.module.admininterface.dialogpages;
 
 import info.magnolia.cms.gui.dialog.DialogSuper;
 import info.magnolia.cms.gui.dialog.DialogWebDAV;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.servlets.BasePageServlet;
+import info.magnolia.module.admininterface.DialogPageMVCHandler;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,17 +16,18 @@ import javax.servlet.http.HttpServletResponse;
  * @author Fabrizio Giustina
  * @version $Id: $
  */
-public class WebDavIFrameDialogPage extends BasePageServlet {
+public class WebDavIFrameDialogPage extends DialogPageMVCHandler {
+
+    public WebDavIFrameDialogPage(String name, HttpServletRequest request, HttpServletResponse response) {
+        super(name, request, response);
+    }
 
     /**
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
 
-    /**
-     * @see info.magnolia.cms.servlets.BasePageServlet#draw(HttpServletRequest, HttpServletResponse)
-     */
-    public void draw(HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
+    protected void draw(HttpServletRequest request, HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
 
         DialogWebDAV dav = (DialogWebDAV) request.getSession().getAttribute(

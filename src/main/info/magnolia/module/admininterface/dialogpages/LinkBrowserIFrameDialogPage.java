@@ -1,4 +1,4 @@
-package info.magnolia.module.admininterface.pages;
+package info.magnolia.module.admininterface.dialogpages;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
@@ -9,12 +9,11 @@ import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.gui.misc.Spacer;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.servlets.BasePageServlet;
+import info.magnolia.module.admininterface.DialogPageMVCHandler;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -25,17 +24,18 @@ import org.apache.commons.lang.StringUtils;
  * @author Fabrizio Giustina
  * @version $Id: $
  */
-public class LinkBrowserIFrameDialogPage extends BasePageServlet {
+public class LinkBrowserIFrameDialogPage extends DialogPageMVCHandler {
+
+    public LinkBrowserIFrameDialogPage(String name, HttpServletRequest request, HttpServletResponse response) {
+        super(name, request, response);
+    }
 
     /**
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
 
-    /**
-     * @see info.magnolia.cms.servlets.BasePageServlet#draw(HttpServletRequest, HttpServletResponse)
-     */
-    public void draw(HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
+    protected void draw(HttpServletRequest request, HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
         Messages msgs = MessagesManager.getMessages(request);
         // WARNING: no white spaces tolerated for save nodeData!

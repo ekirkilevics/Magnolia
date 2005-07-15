@@ -1,21 +1,19 @@
-package info.magnolia.module.admininterface.pages;
+package info.magnolia.module.admininterface.dialogpages;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.servlets.BasePageServlet;
+import info.magnolia.module.admininterface.DialogPageMVCHandler;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
 
-import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 
 
@@ -23,17 +21,18 @@ import org.apache.commons.lang.StringUtils;
  * @author Fabrizio Giustina
  * @version $Id: $
  */
-public class LinkBrowserDialogPage extends BasePageServlet {
+public class LinkBrowserDialogPage extends DialogPageMVCHandler {
+
+    public LinkBrowserDialogPage(String name, HttpServletRequest request, HttpServletResponse response) {
+        super(name, request, response);
+    }
 
     /**
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
 
-    /**
-     * @see info.magnolia.cms.servlets.BasePageServlet#draw(HttpServletRequest, HttpServletResponse)
-     */
-    public void draw(HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
+    protected void draw(HttpServletRequest request, HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
         String repository = request.getParameter("repository"); //$NON-NLS-1$
         if (StringUtils.isEmpty(repository)) {
@@ -54,7 +53,7 @@ public class LinkBrowserDialogPage extends BasePageServlet {
 
         StringBuffer src = new StringBuffer();
         src.append(request.getContextPath());
-        src.append("/.magnolia/dialogs/linkBrowserIFrame.html"); //$NON-NLS-1$
+        src.append("/.magnolia/dialogpages/linkBrowserIFrame.html"); //$NON-NLS-1$
         src.append("?&amp;mgnlCK=" + new Date().getTime()); //$NON-NLS-1$
         src.append("&amp;repository=" + repository); //$NON-NLS-1$
         if (path != null) {
@@ -94,7 +93,5 @@ public class LinkBrowserDialogPage extends BasePageServlet {
         html.append("</body></html>"); //$NON-NLS-1$
 
         out.println(html);
-
     }
-
 }

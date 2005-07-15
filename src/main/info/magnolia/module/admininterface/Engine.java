@@ -60,6 +60,13 @@ public class Engine implements Module {
             log.error("can't register the admin interface dialogs", e); //$NON-NLS-1$
         }
 
+        try {
+            store.registerDialogPageHandlers(store.getStore().getContent("dialogpages")); //$NON-NLS-1$
+        }
+        catch (Exception e) {
+            log.error("can't register the admin interface dialogpagess", e); //$NON-NLS-1$
+        }
+
         log.info("Init template"); //$NON-NLS-1$
         Template.init();
 

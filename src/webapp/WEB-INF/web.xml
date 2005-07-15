@@ -81,44 +81,20 @@
         <servlet-class>info.magnolia.cms.servlets.Spool</servlet-class>
     </servlet>
     <servlet>
-        <description>Handles the common dialogs</description>
-        <servlet-name>standard</servlet-name>
+        <description>Handles the magnolia dialogs (those with the magnolia controls)</description>
+        <servlet-name>DialogServlet</servlet-name>
         <servlet-class>info.magnolia.module.admininterface.DialogMVCServlet</servlet-class>
     </servlet>
-    <!--
-        Other dialogs: we will move them into dialog handlers
-    -->
+    <servlet>
+        <description>Handles the other magnolia dialogs (pages, includes, ..)</description>
+        <servlet-name>DialogPageServlet</servlet-name>
+        <servlet-class>info.magnolia.module.admininterface.DialogPageMVCServlet</servlet-class>
+    </servlet>
     <servlet>
         <servlet-name>fileThumbnail</servlet-name>
-        <servlet-class>info.magnolia.module.admininterface.pages.FileThumbnailDialogPage</servlet-class>
+        <servlet-class>info.magnolia.module.admininterface.dialogpages.FileThumbnailDialogPage</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>linkBrowser</servlet-name>
-        <servlet-class>info.magnolia.module.admininterface.pages.LinkBrowserDialogPage</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>linkBrowserIFrame</servlet-name>
-        <servlet-class>info.magnolia.module.admininterface.pages.LinkBrowserIFrameDialogPage</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>richEIFrame</servlet-name>
-        <servlet-class>info.magnolia.module.admininterface.pages.RichEditorIFrameDialogPage</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>webDAVIFrame</servlet-name>
-        <servlet-class>info.magnolia.module.admininterface.pages.WebDavIFrameDialogPage</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>includeRoles</servlet-name>
-        <servlet-class>info.magnolia.module.admininterface.pages.UserEditIncludeRolesDialogPage</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>includeAcl</servlet-name>
-        <servlet-class>info.magnolia.module.admininterface.pages.UserRolesEditIncludeAclDialogPage</servlet-class>
-    </servlet>
-    <!--
-        END: Other dialogs: we will move them into dialog handlers
-    -->
+    
     <servlet-mapping>
         <servlet-name>magnolia</servlet-name>
         <url-pattern>/</url-pattern>
@@ -159,50 +135,25 @@
         <servlet-name>ImportExportServlet</servlet-name>
         <url-pattern>/.magnolia/mgnl-import/*</url-pattern>
     </servlet-mapping>
-    <!--
-        Standard dialogs: currently dialox is mapped
-    -->
     <servlet-mapping>
-        <servlet-name>standard</servlet-name>
-        <url-pattern>/admintemplates/dialogs/standard.jsp</url-pattern>
+        <servlet-name>DialogServlet</servlet-name>
+        <url-pattern>/.magnolia/dialogs/*</url-pattern>
     </servlet-mapping>
-    <!--
-        Other dialogs
-    -->
+    <servlet-mapping>
+        <servlet-name>DialogPageServlet</servlet-name>
+        <url-pattern>/.magnolia/dialogpages/*</url-pattern>
+    </servlet-mapping>    
     <servlet-mapping>
         <servlet-name>fileThumbnail</servlet-name>
         <url-pattern>/admintemplates/dialogs/fileThumbnail.jsp</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>linkBrowser</servlet-name>
-        <url-pattern>/admintemplates/dialogs/linkBrowser.jsp</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>linkBrowserIFrame</servlet-name>
-        <url-pattern>/admintemplates/dialogs/linkBrowserIFrame.jsp</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>richEIFrame</servlet-name>
-        <url-pattern>/admintemplates/dialogs/richEIFrame.jsp</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>webDAVIFrame</servlet-name>
-        <url-pattern>/admintemplates/dialogs/webDAVIFrame.jsp</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>includeAcl</servlet-name>
-        <url-pattern>/admintemplates/adminCentral/dialogs/userRolesEdit/includeAcl.jsp</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>includeRoles</servlet-name>
-        <url-pattern>/admintemplates/adminCentral/dialogs/usersEdit/includeRoles.jsp</url-pattern>
-    </servlet-mapping>
-    <!-- end dialogs -->
+
     <listener>
         <description>Magnolia initializer</description>
         <display-name>initializer</display-name>
         <listener-class>info.magnolia.cms.servlets.Initializer</listener-class>
     </listener>
+
     <context-param>
         <param-name>magnolia.cache.startdir</param-name>
         <param-value>cache</param-value>

@@ -1,13 +1,12 @@
-package info.magnolia.module.admininterface.pages;
+package info.magnolia.module.admininterface.dialogpages;
 
 import info.magnolia.cms.gui.dialog.DialogRichedit;
 import info.magnolia.cms.gui.dialog.DialogSuper;
-import info.magnolia.cms.servlets.BasePageServlet;
+import info.magnolia.module.admininterface.DialogPageMVCHandler;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,7 +17,11 @@ import org.apache.log4j.Logger;
  * @author Fabrizio Giustina
  * @version $Id: $
  */
-public class RichEditorIFrameDialogPage extends BasePageServlet {
+public class RichEditorIFrameDialogPage extends DialogPageMVCHandler {
+
+    public RichEditorIFrameDialogPage(String name, HttpServletRequest request, HttpServletResponse response) {
+        super(name, request, response);
+    }
 
     /**
      * Stable serialVersionUID.
@@ -30,10 +33,7 @@ public class RichEditorIFrameDialogPage extends BasePageServlet {
      */
     private static Logger log = Logger.getLogger(RichEditorIFrameDialogPage.class);
 
-    /**
-     * @see info.magnolia.cms.servlets.BasePageServlet#draw(HttpServletRequest, HttpServletResponse)
-     */
-    public void draw(HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
+    protected void draw(HttpServletRequest request, HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
 
         DialogRichedit richE = (DialogRichedit) request.getSession().getAttribute(
@@ -47,4 +47,5 @@ public class RichEditorIFrameDialogPage extends BasePageServlet {
                 + request.getParameter(DialogSuper.SESSION_ATTRIBUTENAME_DIALOGOBJECT) + "]"); //$NON-NLS-1$
         }
     }
+
 }

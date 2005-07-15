@@ -266,7 +266,7 @@ function mgnlOpenTreeBrowser(pathSelected, pathOpen, repository, width, height, 
 	mgnlDebug("mgnlOpenTreeBrowser","dialog");
 	if (!width) width=450;
 	if (!height) height=550;
-	var src="${pageContext.request.contextPath}/.magnolia/dialogs/linkBrowser.html?mgnlCK="+mgnlGetCacheKiller();
+	var src="${pageContext.request.contextPath}/.magnolia/dialogpages/linkBrowser.html?mgnlCK="+mgnlGetCacheKiller();
 	if (pathSelected) src+="&pathSelected="+pathSelected;
 	if (pathOpen) src+="&pathOpen="+pathOpen;
 	if (repository) src+="&repository="+repository;

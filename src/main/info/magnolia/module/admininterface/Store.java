@@ -40,102 +40,25 @@ public class Store {
      */
     private static Logger log = Logger.getLogger(Store.class);
 
+    private static Store store = new Store();
+
+    public static Store getInstance() {
+        return Store.store;
+    }
+
+    private final Map dialogHandlers = new HashMap();
+
+    private final Map dialogPageHandlers = new HashMap();
+
+    private Content localStore;
+
     /**
      * Map with repository name/handler class for admin tree. When this servlet will receive a call with a parameter
      * <code>repository</code>, the corresponding handler will be used top display the admin tree.
      */
     private final Map treeHandlers = new HashMap();
 
-    private final Map dialogHandlers = new HashMap();
-
-    private static Store store = new Store();
-
-    private Content localStore;
-
     protected Store() {
-    }
-
-    public static Store getInstance() {
-        return Store.store;
-    }
-
-    public void setStore(Content localStore) {
-        this.localStore = localStore;
-    }
-
-    public Content getStore() {
-        return this.localStore;
-    }
-
-    public void registerTreeHandler(String name, Class treeHandler) {
-        log.info("Registering tree handler [" + name + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-        treeHandlers.put(name, treeHandler);
-    }
-
-    /**
-     * Register only if not yet an other handler is present
-     * @param name
-     * @param class
-     */
-    public void registerDefaultTreeHandler(String name, Class dialogHandler) {
-        if (!this.treeHandlers.containsKey(name)) {
-            registerTreeHandler(name, dialogHandler);
-        }
-    }
-
-    public AdminTreeMVCHandler getTreeHandler(String name, HttpServletRequest request, HttpServletResponse response) {
-
-        Class treeHandlerClass = (Class) treeHandlers.get(name);
-        if (treeHandlerClass == null) {
-            throw new InvalidDialogHandlerException(name);
-        }
-
-        try {
-            Constructor constructor = treeHandlerClass.getConstructor(new Class[]{
-                String.class,
-                HttpServletRequest.class,
-                HttpServletResponse.class});
-            return (AdminTreeMVCHandler) constructor.newInstance(new Object[]{name, request, response});
-        }
-        catch (Exception e) {
-            throw new InvalidTreeHandlerException(name, e);
-        }
-    }
-
-    public void registerDialogHandler(String name, Class dialogHandler) {
-        registerDialogHandler(name, dialogHandler, null);
-    }
-
-    public void registerDialogHandler(String name, Class dialogHandler, Content configNode) {
-        log.info("Registering dialog handler [" + name + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-        dialogHandlers.put(name, new Object[]{dialogHandler, configNode});
-    }
-
-    /**
-     * register the dialogs from the config
-     * @param store
-     * @param path
-     */
-    public void registerDialogHandlers(Content defNode) {
-        // read the dialog configuration
-        try {
-            Collection dialogs = defNode.getChildren(ItemType.CONTENT.getSystemName());
-            dialogs.addAll(defNode.getChildren(ItemType.CONTENTNODE.getSystemName()));
-            for (Iterator iter = dialogs.iterator(); iter.hasNext();) {
-                Content dialog = (Content) iter.next();
-                String name = dialog.getNodeData("name").getString(); //$NON-NLS-1$
-                String className = dialog.getNodeData("class").getString(); //$NON-NLS-1$
-                try {
-                    registerDialogHandler(name, Class.forName(className), dialog);
-                }
-                catch (ClassNotFoundException e) {
-                    log.warn("can't find dialog handler class " + className, e); //$NON-NLS-1$
-                }
-            }
-        }
-        catch (Exception e) {
-            log.warn("can't find dialogs configuration", e); //$NON-NLS-1$
-        }
     }
 
     public DialogMVCHandler getDialogHandler(String name, HttpServletRequest request, HttpServletResponse response) {
@@ -181,6 +104,128 @@ public class Store {
 
     }
 
+    public DialogPageMVCHandler getDialogPageHandler(String name, HttpServletRequest request,
+        HttpServletResponse response) {
+
+        Class dialogPageHandlerClass = (Class) dialogPageHandlers.get(name);
+        if (dialogPageHandlerClass == null) {
+            throw new InvalidDialogPageHandlerException(name);
+        }
+
+        try {
+            Constructor constructor = dialogPageHandlerClass.getConstructor(new Class[]{
+                String.class,
+                HttpServletRequest.class,
+                HttpServletResponse.class});
+            return (DialogPageMVCHandler) constructor.newInstance(new Object[]{name, request, response});
+        }
+        catch (Exception e) {
+            throw new InvalidDialogPageHandlerException(name, e);
+        }
+    }
+
+    public Content getStore() {
+        return this.localStore;
+    }
+
+    public AdminTreeMVCHandler getTreeHandler(String name, HttpServletRequest request, HttpServletResponse response) {
+
+        Class treeHandlerClass = (Class) treeHandlers.get(name);
+        if (treeHandlerClass == null) {
+            throw new InvalidDialogHandlerException(name);
+        }
+
+        try {
+            Constructor constructor = treeHandlerClass.getConstructor(new Class[]{
+                String.class,
+                HttpServletRequest.class,
+                HttpServletResponse.class});
+            return (AdminTreeMVCHandler) constructor.newInstance(new Object[]{name, request, response});
+        }
+        catch (Exception e) {
+            throw new InvalidTreeHandlerException(name, e);
+        }
+    }
+
+    /**
+     * Register only if not yet an other handler is present
+     * @param name
+     * @param class
+     */
+    public void registerDefaultTreeHandler(String name, Class dialogHandler) {
+        if (!this.treeHandlers.containsKey(name)) {
+            registerTreeHandler(name, dialogHandler);
+        }
+    }
+
+    public void registerDialogHandler(String name, Class dialogHandler) {
+        registerDialogHandler(name, dialogHandler, null);
+    }
+
+    public void registerDialogHandler(String name, Class dialogHandler, Content configNode) {
+        log.info("Registering dialog handler [" + name + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+        dialogHandlers.put(name, new Object[]{dialogHandler, configNode});
+    }
+
+    /**
+     * register the dialogs from the config
+     * @param store
+     * @param path
+     */
+    public void registerDialogHandlers(Content defNode) {
+        // read the dialog configuration
+        try {
+            Collection dialogs = defNode.getChildren(ItemType.CONTENT.getSystemName());
+            dialogs.addAll(defNode.getChildren(ItemType.CONTENTNODE.getSystemName()));
+            for (Iterator iter = dialogs.iterator(); iter.hasNext();) {
+                Content dialog = (Content) iter.next();
+                String name = dialog.getNodeData("name").getString(); //$NON-NLS-1$
+                String className = dialog.getNodeData("class").getString(); //$NON-NLS-1$
+                try {
+                    registerDialogHandler(name, Class.forName(className), dialog);
+                }
+                catch (ClassNotFoundException e) {
+                    log.warn("can't find dialog handler class " + className, e); //$NON-NLS-1$
+                }
+            }
+        }
+        catch (Exception e) {
+            log.warn("can't find dialogs configuration", e); //$NON-NLS-1$
+        }
+    }
+
+    public void registerDialogPageHandler(String name, Class dialogPageHandler) {
+        log.info("Registering dialogpage handler [" + name + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+        dialogPageHandlers.put(name, dialogPageHandler);
+    }
+
+    /**
+     * register the pages from the config
+     * @param store
+     * @param path
+     */
+    public void registerDialogPageHandlers(Content defNode) {
+        // read the dialog configuration
+        try {
+            Collection pages = defNode.getChildren(ItemType.CONTENT.getSystemName());
+            pages.addAll(defNode.getChildren(ItemType.CONTENTNODE.getSystemName()));
+            for (Iterator iter = pages.iterator(); iter.hasNext();) {
+                Content page = (Content) iter.next();
+                String name = page.getNodeData("name").getString(); //$NON-NLS-1$
+                String className = page.getNodeData("class").getString(); //$NON-NLS-1$
+                try {
+                    registerDialogPageHandler(name, Class.forName(className));
+                }
+                catch (ClassNotFoundException e) {
+                    log.warn("can't find dialogpage handler class " + className, e); //$NON-NLS-1$
+                }
+            }
+        }
+        catch (Exception e) {
+            log.warn("can't find dialogpages configuration", e); //$NON-NLS-1$
+        }
+    }
+
     /**
      * This registers the dialog handler for a paragraph.
      */
@@ -203,6 +248,15 @@ public class Store {
         catch (Exception e) {
             log.error("can't register handle for dialog [" + name + "]", e); //$NON-NLS-1$ //$NON-NLS-2$
         }
+    }
+
+    public void registerTreeHandler(String name, Class treeHandler) {
+        log.info("Registering tree handler [" + name + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+        treeHandlers.put(name, treeHandler);
+    }
+
+    public void setStore(Content localStore) {
+        this.localStore = localStore;
     }
 
 }

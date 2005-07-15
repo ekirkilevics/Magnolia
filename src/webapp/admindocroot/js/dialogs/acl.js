@@ -26,7 +26,7 @@ function mgnlAclAdd(contextUsers,rowIndex,path,name,accessRight,accessType)
 	//alert(rowIndex);
 	tr.setAttribute("id","acl"+index);
 	td=tr.insertCell(0);
-	td.innerHTML=mgnlAclGetHtmlRow(index,path,name); // -> to be found in includeAcl.jsp resp. includeRoles.jsp
+	td.innerHTML=mgnlAclGetHtmlRow(index,path,name); 
 	if (!contextUsers)
 		{
 		document.getElementById("acl"+index+"AccessRight").value=accessRight;

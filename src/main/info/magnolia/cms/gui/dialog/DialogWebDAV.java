@@ -318,7 +318,7 @@ public class DialogWebDAV extends DialogBox {
             out.write(" style=\"height:" + this.getConfigValue("height") + ";\")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
         out.write(" frameborder=\"0\""); //$NON-NLS-1$
-        out.write(" src=\"/.magnolia/dialogs/webDAVIFrame.html?" //$NON-NLS-1$
+        out.write(" src=\"/.magnolia/dialogpages/webDAVIFrame.html?" //$NON-NLS-1$
             + SESSION_ATTRIBUTENAME_DIALOGOBJECT + "=" //$NON-NLS-1$
             + this.getConfigValue(SESSION_ATTRIBUTENAME_DIALOGOBJECT) + "&mgnlCK=" //$NON-NLS-1$
             + new Date().getTime() + "\""); //$NON-NLS-1$

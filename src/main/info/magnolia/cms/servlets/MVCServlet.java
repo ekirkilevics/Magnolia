@@ -94,6 +94,12 @@ public abstract class MVCServlet extends HttpServlet {
         response.setContentType("text/html; charset=UTF-8"); //$NON-NLS-1$
 
         MVCServletHandler handler = getHandler(request, response);
+        
+        if(handler==null){
+            log.error("no handler found"); //$NON-NLS-1$
+            return;
+        }
+        
         log.debug("handler: " + handler.getName()); //$NON-NLS-1$
         String command = handler.getCommand();
         log.debug("calling command: " + command); //$NON-NLS-1$
@@ -102,8 +108,6 @@ public abstract class MVCServlet extends HttpServlet {
 
         handler.renderHtml(view);
 
-        // response.setContentLength(htmlString.getBytes().length);
-        // out.write(htmlString);
     }
 
     /**

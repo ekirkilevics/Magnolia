@@ -1,4 +1,4 @@
-package info.magnolia.module.admininterface.pages;
+package info.magnolia.module.admininterface.dialogpages;
 
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;

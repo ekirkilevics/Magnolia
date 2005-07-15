@@ -1,4 +1,4 @@
-package info.magnolia.module.admininterface.pages;
+package info.magnolia.module.admininterface.dialogpages;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
@@ -14,7 +14,7 @@ import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.servlets.BasePageServlet;
+import info.magnolia.module.admininterface.DialogPageMVCHandler;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -31,7 +31,11 @@ import org.apache.commons.lang.StringUtils;
  * @author Fabrizio Giustina
  * @version $Id: $
  */
-public class UserRolesEditIncludeAclDialogPage extends BasePageServlet {
+public class UserRolesEditIncludeAclDialogPage extends DialogPageMVCHandler {
+
+    public UserRolesEditIncludeAclDialogPage(String name, HttpServletRequest request, HttpServletResponse response) {
+        super(name, request, response);
+    }
 
     /**
      * Stable serialVersionUID.
@@ -128,9 +132,10 @@ public class UserRolesEditIncludeAclDialogPage extends BasePageServlet {
     }
 
     /**
+     * @throws Exception 
      * @see info.magnolia.cms.servlets.BasePageServlet#draw(HttpServletRequest, HttpServletResponse)
      */
-    public void draw(HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
+    protected void draw(HttpServletRequest request, HttpServletResponse response) throws Exception {
         PrintWriter out = response.getWriter();
         Messages msgs = MessagesManager.getMessages(request);
 
@@ -184,7 +189,7 @@ public class UserRolesEditIncludeAclDialogPage extends BasePageServlet {
         // register the repository
         out.println("aclRepositories[aclRepositories.length]= '" + repository + "';"); //$NON-NLS-1$ //$NON-NLS-2$
 
-        if (repository == ContentRepository.WEBSITE) {
+        if (repository.equals(ContentRepository.WEBSITE)) {
             out.println("document.getElementById('acl" + repository + "Div').style.visibility='visible';"); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
