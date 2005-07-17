@@ -241,7 +241,7 @@ function mgnlOpenDialog(path,nodeCollection,node,paragraph,repository,dialogPage
 		dialogPage = ".magnolia/dialogs/" + paragraph + ".html";
 	 	//dialogPage=".magnolia/dialogs/standard.html";
 	}
-	
+
     url="${pageContext.request.contextPath}/";
     url+=dialogPage;
     url+="?mgnlPath="+path;
@@ -271,7 +271,7 @@ function mgnlOpenTreeBrowser(pathSelected, pathOpen, repository, width, height, 
 	if (pathOpen) src+="&pathOpen="+pathOpen;
 	if (repository) src+="&repository="+repository;
 	var w=window.open(src,"mgnlTreeBrowser","width="+width+",height="+height+",resizable=yes,status=yes,scrollbars=no");
-	
+
 	if (w){
 		mgnlDebug("register call back function", "dialog");
 		w.mgnlCallBackCommand = callBackCommand;
@@ -297,11 +297,11 @@ function MgnlTreeBrowserWithControlCallBackCommand(control, extension, addcontex
 		if (this.addcontext){
 		  value = contextPath + value;
 		}
-	
+
 		if (this.extension){
 			value += "." + extension;
 		}
-		
+
 		mgnlDebug("MgnlTreeBrowserCallBackCommand: write to the control", "dialog");
 		this.control.value = value;
 	}
@@ -340,7 +340,7 @@ function mgnlUpdateCK(href)
 	if (tmp[1])
 		{
 		var qs=tmp[1].split("&");
-		for (var elem in qs)
+		for (var elem=0; elem<qs.length; elem++)
 			{
 			if (qs[elem].indexOf("mgnlCK=")!=0) href2+="&"+qs[elem];
 			}
