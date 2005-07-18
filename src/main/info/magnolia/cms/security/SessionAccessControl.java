@@ -249,11 +249,14 @@ public final class SessionAccessControl {
         request.getSession().setAttribute(ATTRIBUTE_REPOSITORY_SESSION_PREFIX + repositoryID + "_" + workspaceID, //$NON-NLS-1$
             session);
         Content userNode = getUserNode(request);
-        List acl = new ArrayList();
-        updateRolesACL(userNode, acl, repositoryID);
-        AccessManagerImpl accessManager = new AccessManagerImpl();
-        accessManager.setPermissionList(acl);
-        request.getSession().setAttribute(ATTRIBUTE_AM_PREFIX + repositoryID + "_" + workspaceID, accessManager); //$NON-NLS-1$
+
+        if (userNode != null) {
+            List acl = new ArrayList();
+            updateRolesACL(userNode, acl, repositoryID);
+            AccessManagerImpl accessManager = new AccessManagerImpl();
+            accessManager.setPermissionList(acl);
+            request.getSession().setAttribute(ATTRIBUTE_AM_PREFIX + repositoryID + "_" + workspaceID, accessManager); //$NON-NLS-1$
+        }
     }
 
     private static void createHierarchyManager(HttpServletRequest request, String repositoryID, String workspaceID) {
@@ -277,8 +280,10 @@ public final class SessionAccessControl {
         Content userPage = Authenticator.getUserPage(request);
         try {
             if (userPage == null) {
-                userPage = ContentRepository.getHierarchyManager(ContentRepository.USERS).getContent(
-                    Authenticator.getUserId(request));
+                String userid = Authenticator.getUserId(request);
+                if (StringUtils.isNotBlank(userid)) {
+                    userPage = ContentRepository.getHierarchyManager(ContentRepository.USERS).getContent(userid);
+                }
             }
         }
         catch (Exception e) {
@@ -339,6 +344,12 @@ public final class SessionAccessControl {
      * @param groupACL
      */
     private static void updateRolesACL(Content userNode, List groupACL, String repositoryID) {
+
+        if (userNode == null) {
+            log.error("Called updateRolesACL with a null userNode"); //$NON-NLS-1$
+            return;
+        }
+
         try {
             HierarchyManager rolesHierarchy = ContentRepository.getHierarchyManager(ContentRepository.USER_ROLES);
             // get access rights of this user
