@@ -38,9 +38,9 @@ public final class Access {
      */
     public static void isGranted(AccessManager manager, String path, long permissions) throws AccessDeniedException {
         if (manager != null && !manager.isGranted(path, permissions)) {
-            throw new AccessDeniedException("not allowed to " //$NON-NLS-1$
-                + PermissionImpl.getPermissionAsName(permissions) + " - " //$NON-NLS-1$
-                + path);
+            throw new AccessDeniedException("User not allowed to " //$NON-NLS-1$
+                + PermissionImpl.getPermissionAsName(permissions) + " path [" //$NON-NLS-1$
+                + path + "]");
         }
     }
 }
