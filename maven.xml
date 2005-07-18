@@ -16,6 +16,43 @@
             </fileset>
         </ant:copy>
     </preGoal>
+	
+	<postGoal name="war:war-resources">
+		<j:set var="instanceName" value="${magnolia.build.instance}"/>
+		<j:if test="${instanceName == 'public'}">
+			<ant:replace file="${maven.war.webapp.dir}/WEB-INF/web.xml" token="&lt;param-value&gt;magnolia.root&lt;/param-value&gt;" value="&lt;param-value&gt;magnolia.public.root&lt;/param-value&gt;"/>
+
+			<ant:replace file="${maven.war.webapp.dir}/WEB-INF/config/log4j.xml" token="$${magnolia.root}" value="$${magnolia.public.root}"/>
+		
+			<ant:replace file="${maven.war.webapp.dir}/WEB-INF/config/repositories.xml" token="Author" value="Public"/>
+			<ant:replace file="${maven.war.webapp.dir}/WEB-INF/config/repositories.xml" token="jackrabbit-cqfs-nosearch.xml" value="jackrabbit-file-search.xml"/>
+
+			<!-- we should use xslt to manipulate the xml files -->
+			<!-- unfortunately maven does not know the replacetoken and replacevalue tags -->
+	    		<ant:replace file="${maven.war.webapp.dir}/WEB-INF/bootstrap/config/config.server.xml"
+	    			token="&lt;sv:property sv:name=&quot;URI&quot; sv:type=&quot;String&quot;&gt;&lt;sv:value&gt;/*&lt;/sv:value&gt;&lt;/sv:property&gt;"
+	    			value="&lt;sv:property sv:name=&quot;URI&quot; sv:type=&quot;String&quot;&gt;&lt;sv:value&gt;/.magnolia/*&lt;/sv:value&gt;&lt;/sv:property&gt;"
+	    		/>	
+	
+	    		<ant:replace file="${maven.war.webapp.dir}/WEB-INF/bootstrap/config/config.server.xml"
+				token="&lt;sv:property sv:name=&quot;admin&quot; sv:type=&quot;String&quot;&gt;&lt;sv:value&gt;true&lt;/sv:value&gt;&lt;/sv:property&gt;"
+				value="&lt;sv:property sv:name=&quot;admin&quot; sv:type=&quot;String&quot;&gt;&lt;sv:value&gt;false&lt;/sv:value&gt;&lt;/sv:property&gt;"
+			/>	
+	
+			<ant:replace file="${maven.war.webapp.dir}/WEB-INF/bootstrap/config/config.server.xml"
+				token="&lt;sv:property sv:name=&quot;ResourceNotAvailableURIMapping&quot; sv:type=&quot;String&quot;&gt;&lt;sv:value&gt;/.magnolia/adminCentral.html&lt;/sv:value&gt;&lt;/sv:property&gt;"
+				value="&lt;sv:property sv:name=&quot;ResourceNotAvailableURIMapping&quot; sv:type=&quot;String&quot;&gt;&lt;sv:value&gt;/features.html&lt;/sv:value&gt;&lt;/sv:property&gt;"
+			/>
+		</j:if>
+		<j:if test="${instanceName == 'author'}">
+			<ant:replace file="${maven.war.webapp.dir}/WEB-INF/bootstrap/config/config.subscribers.xml"
+				token="&lt;sv:property sv:name=&quot;active&quot; sv:type=&quot;String&quot;&gt;&lt;sv:value&gt;false&lt;/sv:value&gt;&lt;/sv:property&gt;"
+				value="&lt;sv:property sv:name=&quot;active&quot; sv:type=&quot;String&quot;&gt;&lt;sv:value&gt;true&lt;/sv:value&gt;&lt;/sv:property&gt;"
+			/>
+		</j:if>
+	
+	</postGoal>
+	
 
     <goal name="nightly" prereqs="clean,war:war,site:generate,copy-nightly-war,site:sshdeploy">
     </goal>
