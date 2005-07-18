@@ -50,6 +50,13 @@ public class ConfiguredDialog extends DialogMVCHandler {
     }
 
     public static Content getConfigNode(HttpServletRequest request, String name) {
+
+        if (name == null) {
+            // should never happen
+            log.error("getConfigNode called with a null name.");
+            return null;
+        }
+
         HierarchyManager hm = SessionAccessControl.getHierarchyManager(request, ContentRepository.CONFIG);
         try {
             return hm.getContent(name);

@@ -63,7 +63,7 @@ public class DialogMVCServlet extends MVCServlet {
 
         DialogMVCHandler handler = null;
 
-        if (dialogName != null) {
+        if (StringUtils.isNotBlank(dialogName)) {
             // try to get a registered handler
             try {
                 handler = Store.getInstance().getDialogHandler(dialogName, request, response);

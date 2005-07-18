@@ -90,21 +90,26 @@ public abstract class MVCServlet extends HttpServlet {
         // why do i have to change it if request was setted? But i have to!
         response.setCharacterEncoding("UTF-8"); //$NON-NLS-1$
 
-        PrintWriter out = response.getWriter();
         response.setContentType("text/html; charset=UTF-8"); //$NON-NLS-1$
 
         MVCServletHandler handler = getHandler(request, response);
-        
-        if(handler==null){
+
+        if (handler == null) {
             log.error("no handler found"); //$NON-NLS-1$
             return;
         }
-        
-        log.debug("handler: " + handler.getName()); //$NON-NLS-1$
+
+        if (log.isDebugEnabled()) {
+            log.debug("handler: " + handler.getName()); //$NON-NLS-1$
+        }
         String command = handler.getCommand();
-        log.debug("calling command: " + command); //$NON-NLS-1$
+        if (log.isDebugEnabled()) {
+            log.debug("calling command: " + command); //$NON-NLS-1$
+        }
         String view = handler.execute(command);
-        log.debug("calling view: " + view); //$NON-NLS-1$
+        if (log.isDebugEnabled()) {
+            log.debug("calling view: " + view); //$NON-NLS-1$
+        }
 
         handler.renderHtml(view);
 
