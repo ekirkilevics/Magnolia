@@ -175,6 +175,12 @@ public class Aggregator {
     private void setRequestReceiver() {
         try {
             String templateName = this.requestedPage.getMetaData().getTemplate();
+
+            if (StringUtils.isBlank(templateName)) {
+                log.error(MessageFormat.format("No template configured for page [{1}].", //$NON-NLS-1$
+                    new Object[]{this.requestedPage.getHandle()}));
+            }
+
             Template template = Template.getInfo(templateName);
 
             if (template == null) {
