@@ -20,6 +20,7 @@ import info.magnolia.cms.i18n.MessagesManager;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
@@ -217,7 +218,19 @@ public final class Authenticator {
      * @return <code>true</code> if the user is authenticated, <code>false</code> otherwise
      */
     public static boolean isAuthenticated(HttpServletRequest request) {
-        Object user = request.getSession().getAttribute(ATTRIBUTE_USER_NODE);
-        return !(user == null);
+        // don't force a creation of a new session
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            try {
+                return session.getAttribute(ATTRIBUTE_USER_NODE) != null;
+            }
+            catch (IllegalStateException e) {
+                // can happen if the session has just been invalidated
+                log.debug("IllegalStateException caught"); //$NON-NLS-1$
+                return false;
+            }
+        }
+
+        return false;
     }
 }
