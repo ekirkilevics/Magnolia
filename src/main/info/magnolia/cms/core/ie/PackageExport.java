@@ -42,10 +42,10 @@ import org.doomdark.uuid.UUIDGenerator;
  */
 public class PackageExport implements ExportHandler {
 
-    /*******************************************************************************************************************
+    /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(PackageExport.class);
+    protected static Logger log = Logger.getLogger(PackageExport.class);
 
     private static final String START_DIRECTORY = "data"; //$NON-NLS-1$
 
