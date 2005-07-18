@@ -14,60 +14,49 @@
 <!ATTLIST workspace
     id ID #REQUIRED>
 ]>
-
 <!--
-
-
- @version 2.1
+    @version 2.1
 -->
-
-
-
 <Repositories>
-
-        <!-- magnolia default website repository -->
-        <Repository name="website" id="website" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true" >
-            <param name="configFile" value="WEB-INF/config/repository-configuration.xml"/>
-            <param name="repositoryHome" value="repositories/website"/>
-            <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory"/>
-            <param name="providerURL" value="localhost"/>
-            <param name="bindName" value="websiteAuthor"/>
-            <!--
+    <!-- magnolia default website repository -->
+    <Repository name="website" id="website" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
+        <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-cqfs-search.xml" />
+        <param name="repositoryHome" value="repositories/website" />
+        <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory" />
+        <param name="providerURL" value="localhost" />
+        <param name="bindName" value="websiteAuthor" />
+        <!--
             You can define workspaces for this repository, attribute "id" is used to to login to the specified
             workspace, check provider specific configuration file to configure workspaces.
             WEB-INF/config/repository-configuration.xml
-            -->
-            <!--
+        -->
+        <!--
             <workspace id="website" />
             <workspace id="config" />
-            -->
-        </Repository>
-
-        <!-- magnolia default config repository -->
-        <Repository name="config" id="config" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
-            <param name="configFile" value="WEB-INF/config/repository-configuration.xml"/>
-            <param name="repositoryHome" value="repositories/config"/>
-            <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory"/>
-            <param name="providerURL" value="localhost"/>
-            <param name="bindName" value="configAuthor"/>
-        </Repository>
-
-        <!-- magnolia user repository -->
-        <Repository name="users" id="users" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
-            <param name="configFile" value="WEB-INF/config/repository-configuration.xml"/>
-            <param name="repositoryHome" value="repositories/users"/>
-            <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory"/>
-            <param name="providerURL" value="localhost"/>
-            <param name="bindName" value="usersAuthor"/>
-        </Repository>
-
-        <!-- magnolia default user roles repository -->
-        <Repository name="userroles" id="userroles" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
-            <param name="configFile" value="WEB-INF/config/repository-configuration.xml"/>
-            <param name="repositoryHome" value="repositories/userroles"/>
-            <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory"/>
-            <param name="providerURL" value="localhost"/>
-            <param name="bindName" value="userrolesAuthor"/>
-        </Repository>
-
+        -->
+    </Repository>
+    <!-- magnolia default config repository -->
+    <Repository name="config" id="config" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
+        <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-cqfs-nosearch.xml" />
+        <param name="repositoryHome" value="repositories/config" />
+        <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory" />
+        <param name="providerURL" value="localhost" />
+        <param name="bindName" value="configAuthor" />
+    </Repository>
+    <!-- magnolia user repository -->
+    <Repository name="users" id="users" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
+        <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-cqfs-nosearch.xml" />
+        <param name="repositoryHome" value="repositories/users" />
+        <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory" />
+        <param name="providerURL" value="localhost" />
+        <param name="bindName" value="usersAuthor" />
+    </Repository>
+    <!-- magnolia default user roles repository -->
+    <Repository name="userroles" id="userroles" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
+        <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-cqfs-nosearch.xml" />
+        <param name="repositoryHome" value="repositories/userroles" />
+        <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory" />
+        <param name="providerURL" value="localhost" />
+        <param name="bindName" value="userrolesAuthor" />
+    </Repository>
 </Repositories>
