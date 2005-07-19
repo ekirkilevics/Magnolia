@@ -7,8 +7,6 @@
         <attainGoal name="pdf" />
     </postGoal>
     
-	
-    
     <preGoal name="jar:jar">
         <!-- add tlds to taglib jar -->
         <j:set var="tld.dir" value="${maven.src.dir}/webapp/WEB-INF/taglib" />
@@ -21,6 +19,9 @@
     </preGoal>
 	
 	<postGoal name="war:war-resources">
+		<!-- copy the readme file -->
+		<ant:copyfile dest="${maven.war.webapp.dir}/readme.txt" src="readme.war.txt"/>
+		
 		<j:set var="instanceName" value="${magnolia.build.instance}"/>
 
 	    <!-- jdk1.4 -->

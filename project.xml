@@ -51,6 +51,11 @@
             <name>2.1 RC1</name>
             <tag>magnolia2.1-RC1</tag>
         </version>
+        <version>
+            <id>2.1-rc2</id>
+            <name>2.1 RC2</name>
+            <tag>magnolia2.1-RC2</tag>
+        </version>
     </versions>
     <mailingLists>
         <mailingList>
