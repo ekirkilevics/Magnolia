@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project >
 <project xmlns:j="jelly:core" xmlns:u="jelly:util" xmlns:ant="jelly:ant" default="rebuild-all">
+
     <goal name="rebuild-all" prereqs="pom,clean,war:war,dist:build" />
     <postGoal name="site">
         <attainGoal name="pdf" />
     </postGoal>
+    
 	
+    
     <preGoal name="jar:jar">
         <!-- add tlds to taglib jar -->
         <j:set var="tld.dir" value="${maven.src.dir}/webapp/WEB-INF/taglib" />
@@ -19,6 +22,13 @@
 	
 	<postGoal name="war:war-resources">
 		<j:set var="instanceName" value="${magnolia.build.instance}"/>
+
+	    <!-- jdk1.4 -->
+    		${systemScope.setProperty('javax.xml.transform.TransformerFactory','org.apache.xalan.processor.TransformerFactoryImpl')}
+    
+    		<!-- jdk1.5 -->
+    		<!-- ${systemScope.setProperty('javax.xml.transform.TransformerFactory','com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl')}-->
+
 		<j:if test="${instanceName == 'public'}">
 			<ant:replace file="${maven.war.webapp.dir}/WEB-INF/web.xml" token="&lt;param-value&gt;magnolia.root&lt;/param-value&gt;" value="&lt;param-value&gt;magnolia.public.root&lt;/param-value&gt;"/>
 
@@ -27,28 +37,12 @@
 			<ant:replace file="${maven.war.webapp.dir}/WEB-INF/config/repositories.xml" token="Author" value="Public"/>
 			<ant:replace file="${maven.war.webapp.dir}/WEB-INF/config/repositories.xml" token="jackrabbit-cqfs-nosearch.xml" value="jackrabbit-file-search.xml"/>
 
-			<!-- we should use xslt to manipulate the xml files -->
-			<!-- unfortunately maven does not know the replacetoken and replacevalue tags -->
-	    		<ant:replace file="${maven.war.webapp.dir}/WEB-INF/bootstrap/config/config.server.xml"
-	    			token="&lt;sv:property sv:name=&quot;URI&quot; sv:type=&quot;String&quot;&gt;&lt;sv:value&gt;/*&lt;/sv:value&gt;&lt;/sv:property&gt;"
-	    			value="&lt;sv:property sv:name=&quot;URI&quot; sv:type=&quot;String&quot;&gt;&lt;sv:value&gt;/.magnolia/*&lt;/sv:value&gt;&lt;/sv:property&gt;"
-	    		/>	
-	
-	    		<ant:replace file="${maven.war.webapp.dir}/WEB-INF/bootstrap/config/config.server.xml"
-				token="&lt;sv:property sv:name=&quot;admin&quot; sv:type=&quot;String&quot;&gt;&lt;sv:value&gt;true&lt;/sv:value&gt;&lt;/sv:property&gt;"
-				value="&lt;sv:property sv:name=&quot;admin&quot; sv:type=&quot;String&quot;&gt;&lt;sv:value&gt;false&lt;/sv:value&gt;&lt;/sv:property&gt;"
-			/>	
-	
-			<ant:replace file="${maven.war.webapp.dir}/WEB-INF/bootstrap/config/config.server.xml"
-				token="&lt;sv:property sv:name=&quot;ResourceNotAvailableURIMapping&quot; sv:type=&quot;String&quot;&gt;&lt;sv:value&gt;/.magnolia/adminCentral.html&lt;/sv:value&gt;&lt;/sv:property&gt;"
-				value="&lt;sv:property sv:name=&quot;ResourceNotAvailableURIMapping&quot; sv:type=&quot;String&quot;&gt;&lt;sv:value&gt;/features.html&lt;/sv:value&gt;&lt;/sv:property&gt;"
-			/>
+
+	    		<ant:xslt style= "src/webapp/WEB-INF/bootstrap/config/config.server.public.xsl" in="src/webapp/WEB-INF/bootstrap/config/config.server.xml" out="${maven.war.webapp.dir}/WEB-INF/bootstrap/config/config.server.xml"/>
 		</j:if>
+
 		<j:if test="${instanceName == 'author'}">
-			<ant:replace file="${maven.war.webapp.dir}/WEB-INF/bootstrap/config/config.subscribers.xml"
-				token="&lt;sv:property sv:name=&quot;active&quot; sv:type=&quot;String&quot;&gt;&lt;sv:value&gt;false&lt;/sv:value&gt;&lt;/sv:property&gt;"
-				value="&lt;sv:property sv:name=&quot;active&quot; sv:type=&quot;String&quot;&gt;&lt;sv:value&gt;true&lt;/sv:value&gt;&lt;/sv:property&gt;"
-			/>
+	    		<ant:xslt processor="trax" style= "src/webapp/WEB-INF/bootstrap/config/config.subscribers.author.xsl" in="src/webapp/WEB-INF/bootstrap/config/subscribers.server.xml" out="${maven.war.webapp.dir}/WEB-INF/bootstrap/config/subscribers.server.xml"/>
 		</j:if>
 	
 	</postGoal>
