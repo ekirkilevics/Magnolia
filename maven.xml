@@ -18,9 +18,9 @@
         </ant:copy>
     </preGoal>
 	
-	<postGoal name="war:war-resources">
+	<postGoal name="war:webapp">
 		<!-- copy the readme file -->
-		<ant:copyfile dest="${maven.war.webapp.dir}/readme.txt" src="readme.war.txt"/>
+		<ant:copy file="release/release notes.war.txt" tofile="${maven.war.webapp.dir}/release notes.txt" />
 		
 		<j:set var="instanceName" value="${magnolia.build.instance}"/>
 
@@ -31,21 +31,35 @@
     		<!-- ${systemScope.setProperty('javax.xml.transform.TransformerFactory','com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl')}-->
 
 		<j:if test="${instanceName == 'public'}">
+			<ant:echo>changing configuration and bootstrap for public instance</ant:echo>
 			<ant:replace file="${maven.war.webapp.dir}/WEB-INF/web.xml" token="&lt;param-value&gt;magnolia.root&lt;/param-value&gt;" value="&lt;param-value&gt;magnolia.public.root&lt;/param-value&gt;"/>
 
 			<ant:replace file="${maven.war.webapp.dir}/WEB-INF/config/log4j.xml" token="$${magnolia.root}" value="$${magnolia.public.root}"/>
 		
 			<ant:replace file="${maven.war.webapp.dir}/WEB-INF/config/repositories.xml" token="Author" value="Public"/>
-			<ant:replace file="${maven.war.webapp.dir}/WEB-INF/config/repositories.xml" token="jackrabbit-cqfs-nosearch.xml" value="jackrabbit-file-search.xml"/>
-
-
+			
+			<ant:delete file="${maven.war.webapp.dir}/WEB-INF/bootstrap/config/config.server.xml"/>
 	    		<ant:xslt style= "src/webapp/WEB-INF/bootstrap/config/config.server.public.xsl" in="src/webapp/WEB-INF/bootstrap/config/config.server.xml" out="${maven.war.webapp.dir}/WEB-INF/bootstrap/config/config.server.xml"/>
 		</j:if>
-
+		
 		<j:if test="${instanceName == 'author'}">
-	    		<ant:xslt processor="trax" style= "src/webapp/WEB-INF/bootstrap/config/config.subscribers.author.xsl" in="src/webapp/WEB-INF/bootstrap/config/subscribers.server.xml" out="${maven.war.webapp.dir}/WEB-INF/bootstrap/config/subscribers.server.xml"/>
+			<ant:echo>changing configuration and bootstrap for author instance</ant:echo>
+			
+			<ant:delete file="${maven.war.webapp.dir}/WEB-INF/bootstrap/config/config.subscribers.xml"/>
+	    		<ant:xslt style= "src/webapp/WEB-INF/bootstrap/config/config.subscribers.author.xsl" in="src/webapp/WEB-INF/bootstrap/config/config.subscribers.xml" out="${maven.war.webapp.dir}/WEB-INF/bootstrap/config/config.subscribers.xml"/>
 		</j:if>
 	
+		<j:if test="${instanceName != 'dev'}">
+			<ant:echo>removing cqfs: using filesystem instead</ant:echo>
+			<ant:delete>
+				<ant:fileset dir="${maven.war.webapp.dir}/WEB-INF/lib">
+				    <ant:include name="cqfs-*"/>
+				</ant:fileset>
+			</ant:delete>
+			
+			<ant:replace file="${maven.war.webapp.dir}/WEB-INF/config/repositories.xml" token="jackrabbit-cqfs-search.xml" value="jackrabbit-file-search.xml"/>
+			<ant:replace file="${maven.war.webapp.dir}/WEB-INF/config/repositories.xml" token="jackrabbit-cqfs-nosearch.xml" value="jackrabbit-file-nosearch.xml"/>
+		</j:if>
 	</postGoal>
 	
 
