@@ -208,41 +208,54 @@
 			<description>If true each line will be wrapped in a &lt;p> tag. Default to false (use br's).</description>
 		</attribute>
 	</tag>
-	<tag>
-		<name>simpleNavigation</name>
-		<tag-class>info.magnolia.cms.taglibs.util.SimpleNavigationTag</tag-class>
-		<body-content>EMPTY</body-content>
-		<description>
-			Draws a simple, css based, navigation menu. The menu layout can then be customized using css, and the default menu
-			should be enough for most uses.
-		</description>
-		<attribute>
-			<name>startLevel</name>
+    <tag>
+        <name>simpleNavigation</name>
+        <tag-class>
+            info.magnolia.cms.taglibs.util.SimpleNavigationTag</tag-class>
+        <body-content>EMPTY</body-content>
+        <description> Draws a simple, css based, navigation menu. The menu layout can then be
+            customized using css, and the default menu should be enough for most uses.
+        </description>
+        <attribute>
+            <name>startLevel</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>int</type>
+            <description>The start level for navigation, defaults to 0.</description>
+        </attribute>
+        <attribute>
+            <name>endLevel</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>int</type>
+            <description>The end level for navigation, defaults to 0.</description>
+        </attribute>
+        		<attribute>
+			<name>style</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-			<type>int</type>
-			<description>The start level for navigation, defaults to 0.</description>
+			<description>The style to apply to this menu</description>
 		</attribute>
-		<attribute>
-			<name>hideInNav</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-			<description>
-				Name for the "hide in nav" nodeData. If a page contains a boolean property with this name and it is set to true,
-				the page is not shown in navigation. Defaults to "hideInNav"
-			</description>
-		</attribute>
-		<attribute>
-			<name>openMenu</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-			<description>
-				Name for the "open menu" nodeData. If a page contains a boolean property with this name and it is set to true,
-				subpages are always shown also if the page is not selected. Defaults to "openMenu"
-			</description>
-		</attribute>
-		<example>
-			<![CDATA[
+        <attribute>
+            <name>hideInNav</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description> Name for the "hide in nav" nodeData. If a page contains a boolean
+                property with this name and it is set to true, the page is not shown in
+                navigation. Defaults to "hideInNav"
+            </description>
+        </attribute>
+        <attribute>
+            <name>openMenu</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description> Name for the "open menu" nodeData. If a page contains a boolean
+                property with this name and it is set to true, subpages are always shown also
+                if the page is not selected. Defaults to "openMenu"
+            </description>
+        </attribute>
+        <example>
+            <![CDATA[
  <cmsu:simpleNavigation startLevel="3" />
 
  Will output the following:
@@ -260,8 +273,8 @@
      <li><a href="...">page 4 name </a></li>
    </ul>
 ]]>
-		</example>
-	</tag>
+        </example>
+    </tag>
 	<tag>
 		<name>simpleSearch</name>
 		<tag-class>info.magnolia.cms.taglibs.util.SimpleSearchTag</tag-class>

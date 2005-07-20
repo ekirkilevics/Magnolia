@@ -89,6 +89,11 @@ public class SimpleNavigationTag extends TagSupport {
      * Start level.
      */
     private int startLevel;
+    
+    /**
+     * End level
+     */
+    private int endLevel;
 
     /**
      * Name for the "hide in nav" nodeData.
@@ -99,6 +104,11 @@ public class SimpleNavigationTag extends TagSupport {
      * Name for the "open menu" nodeData.
      */
     private String openMenu;
+    
+    /**
+     * Style to apply to the menu
+     */
+    private String style;
 
     /**
      * Setter for the <code>startLevel</code> tag attribute.
@@ -106,6 +116,24 @@ public class SimpleNavigationTag extends TagSupport {
      */
     public void setStartLevel(int startLevel) {
         this.startLevel = startLevel;
+    }
+    
+    /**
+     * Setter for the <code>endLevel</code> tag attribute.
+     * @param endLevel the end level for navigation, defaults to not used if not set
+     */
+    public void setEndLevel(int endLevel)
+    {
+        this.endLevel = endLevel;
+    }
+    
+    /**
+     * Setter for the <code>style</code> tag attribute.
+     * @param style to apply to this menu, default is empty and not used
+     */
+    public void setStyle(String style)
+    {
+        this.style = style;
     }
 
     /**
@@ -131,7 +159,11 @@ public class SimpleNavigationTag extends TagSupport {
         Content activePage = Resource.getActivePage((HttpServletRequest) this.pageContext.getRequest());
         JspWriter out = this.pageContext.getOut();
         try {
+            if(style!=null)
+              out.println("<span class=\""+style+"\">");
             drawChildren(activePage.getAncestor(this.startLevel), activePage, out);
+            if(style!=null)
+              out.println("</span>");
         }
         catch (RepositoryException e) {
             log.error("RepositoryException caught while drawing navigation: " + e.getMessage(), e); //$NON-NLS-1$
@@ -169,6 +201,10 @@ public class SimpleNavigationTag extends TagSupport {
         if (children.size() == 0) {
             return;
         }
+        
+        if(startLevel > endLevel)
+            endLevel = 0;
+        
 
         out.print("<ul class=\"level"); //$NON-NLS-1$
         out.print(page.getLevel());
@@ -215,7 +251,11 @@ public class SimpleNavigationTag extends TagSupport {
                     .getNodeData(StringUtils.defaultString(this.openMenu, DEFAULT_OPENMENU_NODEDATA))
                     .getBoolean();
             }
-
+            
+            if(endLevel>0) {
+                showChildren &= child.getLevel() < endLevel;
+            }
+            
             cssClasses.add(hasVisibleChildren(child) ? (showChildren ? "open" : "closed") : "leaf"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
             StringBuffer css = new StringBuffer(cssClasses.size() * 10);
