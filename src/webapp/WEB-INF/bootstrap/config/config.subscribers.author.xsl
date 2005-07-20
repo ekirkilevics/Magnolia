@@ -15,4 +15,9 @@
 		<sv:value>true</sv:value>
 	</xsl:template>
 
+	<!-- /subscribers/SubscriberConfig/0001/senderURL -->
+	<xsl:template match="sv:node[@sv:name='subscribers']/sv:node[@sv:name='SubscriberConfig']/sv:node[@sv:name='0001']/sv:property[@sv:name='senderURL']/sv:value">
+		<sv:value>http://localhost:8081/magnoliaAuthor</sv:value>
+	</xsl:template>
+	
 </xsl:stylesheet>
