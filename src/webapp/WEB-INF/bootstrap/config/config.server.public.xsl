@@ -17,7 +17,7 @@
 
 	<!-- /server/secureURIList/0001/URI -->
 	<xsl:template match="sv:node[@sv:name='server']/sv:node[@sv:name='secureURIList']/sv:node[@sv:name='0001']/sv:property[@sv:name='URI']/sv:value">
-		<sv:value>/.magnlolia*</sv:value>
+		<sv:value>/.magnolia*</sv:value>
 	</xsl:template>
 
 	<!-- /server/ResourceNotAvailableURIMapping -->
