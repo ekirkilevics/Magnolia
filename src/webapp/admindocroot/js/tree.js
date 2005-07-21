@@ -513,8 +513,9 @@
 			strDiv +='<input type="hidden" name="mgnlRepository" value="' + this.repository + '">';
 			strDiv +='<input type="hidden" name="mgnlPath" value="' + this.selectedNode.id + '">';
 			strDiv +='<input type="hidden" name="mgnlRedirect" value="${pageContext.request.contextPath}/.magnolia/adminCentral/extractTree.html?mgnlRepository=' + this.repository + '">';
-			strDiv +='<input type="file" name="mgnlFileImport" id="mgnlFileImport" />';
-			strDiv +='<input type="submit" name="importxml" value="' + mgnlMessages.get('js.import.button') + '" />';
+			strDiv +='<input type="file" name="mgnlFileImport" id="mgnlFileImport" /><br/>';
+			strDiv +='<input type="submit" class="mgnlImportButton" name="importxml" value="' + mgnlMessages.get('js.import.button') + '" />';
+			strDiv +='<input type="reset" class="mgnlImportButton" onclick="document.body.removeChild(this.parentNode.parentNode)" />';
             strDiv +='</form>';
 
             var resDiv = document.createElement('div');

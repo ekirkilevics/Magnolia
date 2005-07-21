@@ -5,7 +5,11 @@ import info.magnolia.cms.beans.config.Bootstrapper.VersionFilter;
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.Resource;
 
 import java.io.File;
@@ -21,12 +25,15 @@ import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Workspace;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
@@ -40,7 +47,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
  * @author Fabrizio Giustina
  * @version $Id: $
  */
-public class ImportExportServlet extends EntryServlet {
+public class ImportExportServlet extends HttpServlet {
 
     /**
      * Stable serialVersionUID.
@@ -68,6 +75,11 @@ public class ImportExportServlet extends EntryServlet {
     private static final String PARAM_FILE = "mgnlFileImport"; //$NON-NLS-1$
 
     /**
+     * request parameter: UUID behavior for import.
+     */
+    private static final String PARAM_UUID_BEHAVIOR = "mgnlUuidBehavior"; //$NON-NLS-1$
+
+    /**
      * request parameter: redirect page after import.
      */
     private static final String PARAM_REDIRECT = "mgnlRedirect"; //$NON-NLS-1$
@@ -77,12 +89,6 @@ public class ImportExportServlet extends EntryServlet {
      */
     private static final String PARAM_EXPORT_ACTION = "exportxml"; //$NON-NLS-1$
 
-    private static final String[] repositories = new String[]{
-        ContentRepository.WEBSITE,
-        ContentRepository.CONFIG,
-        ContentRepository.USERS,
-        ContentRepository.USER_ROLES};
-
     /**
      * Logger.
      */
@@ -91,39 +97,43 @@ public class ImportExportServlet extends EntryServlet {
     /**
      * @see javax.servlet.http.HttpServlet#doGet(HttpServletRequest, HttpServletResponse)
      */
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-        if (isAuthorized(request, response)) {
-            try {
-                request.setCharacterEncoding("UTF-8"); //$NON-NLS-1$
-            }
-            catch (IllegalStateException e) {
-                // ignore
-            }
+        try {
+            request.setCharacterEncoding("UTF-8"); //$NON-NLS-1$
+        }
+        catch (IllegalStateException e) {
+            // ignore
+        }
 
-            String repository = request.getParameter(PARAM_REPOSITORY);
-            if (StringUtils.isEmpty(repository)) {
-                repository = ContentRepository.WEBSITE;
-            }
-            String basepath = request.getParameter(PARAM_PATH);
-            if (StringUtils.isEmpty(basepath)) {
-                basepath = "/"; //$NON-NLS-1$
-            }
+        String repository = request.getParameter(PARAM_REPOSITORY);
+        if (StringUtils.isEmpty(repository)) {
+            repository = ContentRepository.WEBSITE;
+        }
+        String basepath = request.getParameter(PARAM_PATH);
+        if (StringUtils.isEmpty(basepath)) {
+            basepath = "/"; //$NON-NLS-1$
+        }
 
-            boolean keepVersionHistory = BooleanUtils.toBoolean(request.getParameter(PARAM_KEEPVERSIONS));
+        boolean keepVersionHistory = BooleanUtils.toBoolean(request.getParameter(PARAM_KEEPVERSIONS));
 
-            if (request.getParameter(PARAM_EXPORT_ACTION) != null) {
+        if (request.getParameter(PARAM_EXPORT_ACTION) != null) {
+
+            if (checkPermissions(request, repository, basepath, Permission.WRITE)) {
                 executeExport(response, repository, basepath, keepVersionHistory);
                 return;
             }
 
-            if (StringUtils.contains(request.getRequestURI(), "import")) { //$NON-NLS-1$
-                displayImportForm(request, response.getWriter(), repository, basepath);
-            }
-            else {
-                displayExportForm(request, response.getWriter(), repository, basepath);
-            }
+            throw new ServletException(new AccessDeniedException(
+                "Write permission needed for export. User not allowed to WRITE path [" //$NON-NLS-1$
+                    + basepath + "]")); //$NON-NLS-1$
+        }
 
+        if (StringUtils.contains(request.getRequestURI(), "import")) { //$NON-NLS-1$
+            displayImportForm(request, response.getWriter(), repository, basepath);
+        }
+        else {
+            displayExportForm(request, response.getWriter(), repository, basepath);
         }
     }
 
@@ -135,7 +145,9 @@ public class ImportExportServlet extends EntryServlet {
      */
     private void displayExportForm(HttpServletRequest request, PrintWriter out, String repository, String basepath) {
 
-        out.println("<html><head><title>Magnolia</title></head><body>"); //$NON-NLS-1$
+        out.println("<html><head><title>Magnolia</title>"); //$NON-NLS-1$
+        out.println(new Sources(request.getContextPath()).getHtmlCss());
+        out.println("</head><body class=\"mgnlBgLight mgnlImportExport\">"); //$NON-NLS-1$
 
         out.println("<h2>"); //$NON-NLS-1$
         out.println(MessagesManager.get(request, "importexport.export")); //$NON-NLS-1$
@@ -162,7 +174,9 @@ public class ImportExportServlet extends EntryServlet {
      */
     private void displayImportForm(HttpServletRequest request, PrintWriter out, String repository, String basepath) {
 
-        out.println("<html><head><title>Magnolia</title></head><body>"); //$NON-NLS-1$
+        out.println("<html><head><title>Magnolia</title>"); //$NON-NLS-1$
+        out.println(new Sources(request.getContextPath()).getHtmlCss());
+        out.println("</head><body class=\"mgnlBgLight mgnlImportExport\">"); //$NON-NLS-1$
 
         out.println("<h2>"); //$NON-NLS-1$
         out.println(MessagesManager.get(request, "importexport.import")); //$NON-NLS-1$
@@ -174,6 +188,30 @@ public class ImportExportServlet extends EntryServlet {
         writeKeepVersionField(request, out);
         out.println(MessagesManager.get(request, "importexport.file") //$NON-NLS-1$
             + " <input type=\"file\" name=\"" + PARAM_FILE + "\" /><br/>"); //$NON-NLS-1$//$NON-NLS-2$
+
+        out.println("<input type=\"radio\" name=\""
+            + PARAM_UUID_BEHAVIOR
+            + "\" value=\""
+            + ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW
+            + "\">");
+        out.println(MessagesManager.get(request, "importexport.createnew"));
+        out.println("<br/>");
+
+        out.println("<input type=\"radio\" name=\""
+            + PARAM_UUID_BEHAVIOR
+            + "\" value=\""
+            + ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING
+            + "\">");
+        out.println(MessagesManager.get(request, "importexport.removeexisting"));
+        out.println("<br/>");
+
+        out.println("<input type=\"radio\" name=\""
+            + PARAM_UUID_BEHAVIOR
+            + "\" value=\""
+            + ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING
+            + "\">");
+        out.println(MessagesManager.get(request, "importexport.replaceexisting"));
+        out.println("<br/>");
 
         out.println("<input type=\"submit\" name=\"" //$NON-NLS-1$
             + PARAM_EXPORT_ACTION + "\" value=\"" //$NON-NLS-1$
@@ -211,6 +249,8 @@ public class ImportExportServlet extends EntryServlet {
         out.println(MessagesManager.get(request, "importexport.repository") //$NON-NLS-1$
             + " <select name=\"" //$NON-NLS-1$
             + PARAM_REPOSITORY + "\">"); //$NON-NLS-1$
+
+        String[] repositories = ContentRepository.getAllRepositoryNames();
         for (int j = 0; j < repositories.length; j++) {
             out.print("<option"); //$NON-NLS-1$
             if (repository.equals(repositories[j])) {
@@ -228,42 +268,55 @@ public class ImportExportServlet extends EntryServlet {
      * A post request is usually an import request.
      * @see javax.servlet.http.HttpServlet#doPost(HttpServletRequest, HttpServletResponse)
      */
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        if (isAuthorized(request, response)) {
-            log.debug("Import request received."); //$NON-NLS-1$
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-            MultipartForm form = Resource.getPostedForm(request);
-            if (form == null) {
-                log.error("Missing form."); //$NON-NLS-1$
-                return;
+        log.debug("Import request received."); //$NON-NLS-1$
+
+        MultipartForm form = Resource.getPostedForm(request);
+        if (form == null) {
+            log.error("Missing form."); //$NON-NLS-1$
+            return;
+        }
+
+        String basepath = form.getParameter(PARAM_PATH);
+        if (StringUtils.isEmpty(basepath)) {
+            basepath = "/"; //$NON-NLS-1$
+        }
+
+        boolean keepVersionHistory = BooleanUtils.toBoolean(form.getParameter(PARAM_KEEPVERSIONS));
+
+        String repository = form.getParameter(PARAM_REPOSITORY);
+        Document xmlFile = form.getDocument(PARAM_FILE);
+        if (StringUtils.isEmpty(repository) || xmlFile == null) {
+            throw new RuntimeException("Wrong parameters"); //$NON-NLS-1$
+        }
+
+        String uuidBehaviorString = form.getParameter(PARAM_UUID_BEHAVIOR);
+
+        int uuidBehavior = ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW;
+        if (NumberUtils.isNumber(uuidBehaviorString)) {
+            uuidBehavior = Integer.parseInt(uuidBehaviorString);
+        }
+
+        if (checkPermissions(request, repository, basepath, Permission.WRITE)) {
+            executeImport(basepath, repository, xmlFile, keepVersionHistory, uuidBehavior);
+        }
+        else {
+            throw new ServletException(new AccessDeniedException(
+                "Write permission needed for import. User not allowed to WRITE path [" //$NON-NLS-1$
+                    + basepath + "]")); //$NON-NLS-1$
+        }
+
+        String redirectPage = form.getParameter(PARAM_REDIRECT);
+        if (StringUtils.isNotBlank(redirectPage)) {
+            if (log.isInfoEnabled()) {
+                log.info(MessageFormat.format("Redirecting to [{0}]", //$NON-NLS-1$
+                    new Object[]{redirectPage}));
             }
-
-            String basepath = form.getParameter(PARAM_PATH);
-            if (StringUtils.isEmpty(basepath)) {
-                basepath = "/"; //$NON-NLS-1$
-            }
-
-            boolean keepVersionHistory = BooleanUtils.toBoolean(form.getParameter(PARAM_KEEPVERSIONS));
-
-            String repository = form.getParameter(PARAM_REPOSITORY);
-            Document xmlFile = form.getDocument(PARAM_FILE);
-            if (StringUtils.isEmpty(repository) || xmlFile == null) {
-                throw new RuntimeException("Wrong parameters"); //$NON-NLS-1$
-            }
-
-            executeImport(basepath, repository, xmlFile, keepVersionHistory);
-
-            String redirectPage = form.getParameter(PARAM_REDIRECT);
-            if (StringUtils.isNotBlank(redirectPage)) {
-                if (log.isInfoEnabled()) {
-                    log.info(MessageFormat.format("Redirecting to [{0}]", //$NON-NLS-1$
-                        new Object[]{redirectPage}));
-                }
-                response.sendRedirect(redirectPage);
-            }
-            else {
-                doGet(request, response);
-            }
+            response.sendRedirect(redirectPage);
+        }
+        else {
+            doGet(request, response);
         }
     }
 
@@ -346,8 +399,11 @@ public class ImportExportServlet extends EntryServlet {
      * @param basepath base path in repository
      * @param xmlFile uploaded file
      * @param keepVersionHistory if <code>false</code> version info will be stripped before importing the document
+     * @param importMode a valid value for ImportUUIDBehavior
+     * @see ImportUUIDBehavior
      */
-    private void executeImport(String basepath, String repository, Document xmlFile, boolean keepVersionHistory) {
+    private void executeImport(String basepath, String repository, Document xmlFile, boolean keepVersionHistory,
+        int importMode) {
         HierarchyManager hr = ContentRepository.getHierarchyManager(repository);
         Workspace ws = hr.getWorkspace();
 
@@ -357,14 +413,6 @@ public class ImportExportServlet extends EntryServlet {
 
         InputStream stream = xmlFile.getStream();
         Session session = ws.getSession();
-
-        int importMode = ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW;
-
-        // only in the website repo UUID can be important, since they could be used in future for internal links
-        // try to keep them untouched so
-        if ("website".equals(repository)) { //$NON-NLS-1$
-            importMode = ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING;
-        }
 
         try {
             if (keepVersionHistory) {
@@ -426,4 +474,20 @@ public class ImportExportServlet extends EntryServlet {
 
         log.info("Import done"); //$NON-NLS-1$
     }
+
+    /**
+     * Uses access manager to authorise this request.
+     * @param request HttpServletRequest as received by the service method
+     * @return boolean true if read access is granted
+     */
+    protected boolean checkPermissions(HttpServletRequest request, String repository, String basePath,
+        long permissionType) {
+        if (SessionAccessControl.getAccessManager(request, repository) != null) {
+            if (!SessionAccessControl.getAccessManager(request).isGranted(basePath, permissionType)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

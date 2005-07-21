@@ -23,8 +23,6 @@ import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.gui.misc.Icon;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.security.Authenticator;
-import info.magnolia.cms.security.Role;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 
 import javax.jcr.PropertyType;
@@ -232,11 +230,11 @@ public class AdminTreeConfig extends AdminTreeMVCHandler {
             menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
         }
 
-        // only superuser can export data
-        if (!Authenticator.getUser(request).hasRole(Role.ROLE_SUPERUSER)) {
-            menuExport.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
-            menuImport.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
-        }
+        menuImport.addJavascriptCondition("new mgnlTreeMenuItemConditionPermissionWrite(" //$NON-NLS-1$
+            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+
+        menuExport.addJavascriptCondition("new mgnlTreeMenuItemConditionPermissionWrite(" //$NON-NLS-1$
+            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
 
         tree.addMenuItem(menuNewPage);
         tree.addMenuItem(menuNewContentNode);
