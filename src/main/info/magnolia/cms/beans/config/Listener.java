@@ -106,7 +106,7 @@ public final class Listener {
                 | Event.NODE_REMOVED
                 | Event.PROPERTY_ADDED
                 | Event.PROPERTY_CHANGED
-                | Event.PROPERTY_REMOVED, "/" + CONFIG_PAGE + "/" + "IPConfig", true, null, null, false); //$NON-NLS-1$
+                | Event.PROPERTY_REMOVED, "/" + CONFIG_PAGE + "/" + "IPConfig", true, null, null, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
         catch (RepositoryException e) {
             log.error("Unable to add event listeners for Listeners", e); //$NON-NLS-1$

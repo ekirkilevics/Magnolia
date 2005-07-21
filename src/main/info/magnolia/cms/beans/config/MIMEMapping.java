@@ -108,7 +108,7 @@ public final class MIMEMapping {
                 | Event.NODE_REMOVED
                 | Event.PROPERTY_ADDED
                 | Event.PROPERTY_CHANGED
-                | Event.PROPERTY_REMOVED, "/" + START_PAGE + "/" + "MIMEMapping", true, null, null, false); //$NON-NLS-1$
+                | Event.PROPERTY_REMOVED, "/" + START_PAGE + "/" + "MIMEMapping", true, null, null, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
         catch (RepositoryException e) {
             log.error("Unable to add event listeners for MIMEMapping", e); //$NON-NLS-1$
