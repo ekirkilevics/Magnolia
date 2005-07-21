@@ -19,6 +19,10 @@ import java.util.Iterator;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.observation.Event;
+import javax.jcr.observation.EventIterator;
+import javax.jcr.observation.EventListener;
+import javax.jcr.observation.ObservationManager;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -52,6 +56,14 @@ public final class Listener {
      * Reads listener config from the config repository and caches its content in to the hash table.
      */
     public static void init() {
+        load();
+        registerEventListener();
+    }
+
+    /**
+     * Reads listener config from the config repository and caches its content in to the hash table.
+     */
+    public static void load() {
         try {
             log.info("Config : loading Listener info"); //$NON-NLS-1$
             Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(CONFIG_PAGE);
@@ -68,7 +80,37 @@ public final class Listener {
 
     public static void reload() {
         log.info("Config : re-loading Listener info"); //$NON-NLS-1$
-        Listener.init();
+        Listener.load();
+    }
+
+    /**
+     * Register an event listener: reload cache configuration when something changes.
+     */
+    private static void registerEventListener() {
+
+        log.info("Registering event listener for Listeners"); //$NON-NLS-1$
+
+        try {
+            ObservationManager observationManager = ContentRepository
+                .getHierarchyManager(ContentRepository.CONFIG)
+                .getWorkspace()
+                .getObservationManager();
+
+            observationManager.addEventListener(new EventListener() {
+
+                public void onEvent(EventIterator iterator) {
+                    // reload everything
+                    reload();
+                }
+            }, Event.NODE_ADDED
+                | Event.NODE_REMOVED
+                | Event.PROPERTY_ADDED
+                | Event.PROPERTY_CHANGED
+                | Event.PROPERTY_REMOVED, "/" + CONFIG_PAGE + "/" + "IPConfig", true, null, null, false); //$NON-NLS-1$
+        }
+        catch (RepositoryException e) {
+            log.error("Unable to add event listeners for Listeners", e); //$NON-NLS-1$
+        }
     }
 
     /**

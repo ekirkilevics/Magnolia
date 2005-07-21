@@ -20,6 +20,10 @@ import java.util.Iterator;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.observation.Event;
+import javax.jcr.observation.EventIterator;
+import javax.jcr.observation.EventListener;
+import javax.jcr.observation.ObservationManager;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -54,6 +58,14 @@ public final class MIMEMapping {
      * Reads all configured mime mapping (config/server/MIMEMapping).
      */
     public static void init() {
+        load();
+        registerEventListener();
+    }
+
+    /**
+     * Reads all configured mime mapping (config/server/MIMEMapping).
+     */
+    public static void load() {
         MIMEMapping.cachedContent.clear();
         try {
             log.info("Config : loading MIMEMapping"); //$NON-NLS-1$
@@ -70,7 +82,37 @@ public final class MIMEMapping {
 
     public static void reload() {
         log.info("Config : re-loading MIMEMapping"); //$NON-NLS-1$
-        MIMEMapping.init();
+        MIMEMapping.load();
+    }
+
+    /**
+     * Register an event listener: reload cache configuration when something changes.
+     */
+    private static void registerEventListener() {
+
+        log.info("Registering event listener for MIMEMapping"); //$NON-NLS-1$
+
+        try {
+            ObservationManager observationManager = ContentRepository
+                .getHierarchyManager(ContentRepository.CONFIG)
+                .getWorkspace()
+                .getObservationManager();
+
+            observationManager.addEventListener(new EventListener() {
+
+                public void onEvent(EventIterator iterator) {
+                    // reload everything
+                    reload();
+                }
+            }, Event.NODE_ADDED
+                | Event.NODE_REMOVED
+                | Event.PROPERTY_ADDED
+                | Event.PROPERTY_CHANGED
+                | Event.PROPERTY_REMOVED, "/" + START_PAGE + "/" + "MIMEMapping", true, null, null, false); //$NON-NLS-1$
+        }
+        catch (RepositoryException e) {
+            log.error("Unable to add event listeners for MIMEMapping", e); //$NON-NLS-1$
+        }
     }
 
     /**
