@@ -13,21 +13,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.taglibs.standard.resources.Resources;
 
 
 /**
-*
-* Magnolia and its source-code is licensed under the LGPL.
-* You may copy, adapt, and redistribute this file for commercial or non-commercial use.
-* When copying, adapting, or redistributing this document in keeping with the guidelines above,
-* you are required to provide proper attribution to obinary.
-* If you reproduce or distribute the document without making any substantive modifications to its content,
-* please use the following attribution line:
-*
-* Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
-*
-*/
+ *
+ * Magnolia and its source-code is licensed under the LGPL.
+ * You may copy, adapt, and redistribute this file for commercial or non-commercial use.
+ * When copying, adapting, or redistributing this document in keeping with the guidelines above,
+ * you are required to provide proper attribution to obinary.
+ * If you reproduce or distribute the document without making any substantive modifications to its content,
+ * please use the following attribution line:
+ *
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ *
+ */
 
 /**
  * The inner class ImportResponseWrapper is copied from the JSTL include tag
@@ -35,7 +36,7 @@ import org.apache.taglibs.standard.resources.Resources;
  */
 public class JSPIncludeUtil {
 
-    public static final String DEFAULT_ENCODING = "UTF-8";
+    public static final String DEFAULT_ENCODING = "UTF-8"; //$NON-NLS-1$
 
     /** Wraps responses to allow us to retrieve results as Strings. */
     private static class ImportResponseWrapper extends HttpServletResponseWrapper {
@@ -60,7 +61,7 @@ public class JSPIncludeUtil {
         private StringWriter sw = new StringWriter();
 
         /** A buffer, alternatively, to accumulate bytes. */
-        private ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        protected ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
         /** A ServletOutputStream we convey, tied to this Writer. */
         private ServletOutputStream sos = new ServletOutputStream() {
@@ -92,7 +93,7 @@ public class JSPIncludeUtil {
         /** Returns a Writer designed to buffer the output. */
         public PrintWriter getWriter() {
             if (isStreamUsed)
-                throw new IllegalStateException(Resources.getMessage("IMPORT_ILLEGAL_STREAM"));
+                throw new IllegalStateException(Resources.getMessage("IMPORT_ILLEGAL_STREAM")); //$NON-NLS-1$
             isWriterUsed = true;
             return new PrintWriter(sw);
         }
@@ -100,7 +101,7 @@ public class JSPIncludeUtil {
         /** Returns a ServletOutputStream designed to buffer the output. */
         public ServletOutputStream getOutputStream() {
             if (isWriterUsed)
-                throw new IllegalStateException(Resources.getMessage("IMPORT_ILLEGAL_WRITER"));
+                throw new IllegalStateException(Resources.getMessage("IMPORT_ILLEGAL_WRITER")); //$NON-NLS-1$
             isStreamUsed = true;
             return sos;
         }
@@ -133,13 +134,14 @@ public class JSPIncludeUtil {
             if (isWriterUsed)
                 return sw.toString();
             else if (isStreamUsed) {
-                if (charEncoding != null && !charEncoding.equals(""))
+                if (StringUtils.isNotEmpty(charEncoding)) {
                     return bos.toString(charEncoding);
-                else
-                    return bos.toString(DEFAULT_ENCODING);
+                }
+
+                return bos.toString(DEFAULT_ENCODING);
             }
             else
-                return ""; // target didn't write anything
+                return StringUtils.EMPTY; // target didn't write anything
         }
     }
 

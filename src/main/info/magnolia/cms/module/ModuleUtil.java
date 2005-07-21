@@ -74,15 +74,15 @@ public final class ModuleUtil {
         // not using properties since they are not ordered
         // Properties props = new Properties();
         // props.load(ModuleUtil.class.getResourceAsStream("/" + name.replace('.', '/') + ".properties"));
-        InputStream stream = ModuleUtil.class.getResourceAsStream("/" + name.replace('.', '/') + ".properties");
+        InputStream stream = ModuleUtil.class.getResourceAsStream("/" + name.replace('.', '/') + ".properties"); //$NON-NLS-1$ //$NON-NLS-2$
         LineNumberReader lines = new LineNumberReader(new InputStreamReader(stream));
 
         String line = lines.readLine();
         while (line != null) {
             line = line.trim();
-            if (line.length() > 0 && !line.startsWith("#")) {
-                String key = StringUtils.substringBefore(line, "=").trim();
-                String value = StringUtils.substringAfter(line, "=").trim();
+            if (line.length() > 0 && !line.startsWith("#")) { //$NON-NLS-1$
+                String key = StringUtils.substringBefore(line, "=").trim(); //$NON-NLS-1$
+                String value = StringUtils.substringAfter(line, "=").trim(); //$NON-NLS-1$
                 map.put(key, value);
             }
             line = lines.readLine();
@@ -98,8 +98,8 @@ public final class ModuleUtil {
             String key = (String) iter.next();
             String value = (String) map.get(key);
 
-            String name = StringUtils.substringAfterLast(key, ".");
-            String path = StringUtils.substringBeforeLast(key, ".").replace('.', '/');
+            String name = StringUtils.substringAfterLast(key, "."); //$NON-NLS-1$
+            String path = StringUtils.substringBeforeLast(key, ".").replace('.', '/'); //$NON-NLS-1$
             Content node = createPath(hm, path);
             node.getNodeData(name, true).setValue(value);
         }
@@ -112,7 +112,7 @@ public final class ModuleUtil {
 
     public static Content createPath(HierarchyManager hm, String path, ItemType type) throws AccessDeniedException,
         PathNotFoundException, RepositoryException {
-        String names[] = path.split("/");
+        String names[] = path.split("/"); //$NON-NLS-1$
         Content node = hm.getRoot();
         for (int i = 0; i < names.length; i++) {
             String name = names[i];

@@ -137,8 +137,8 @@ public class Save extends ControlSuper {
             }
             catch(RepositoryException e){
                 if(isCreate()){
-                    String parentPath = StringUtils.substringBeforeLast(path, "/");
-                    String label = StringUtils.substringAfterLast(path, "/");
+                    String parentPath = StringUtils.substringBeforeLast(path, "/"); //$NON-NLS-1$
+                    String label = StringUtils.substringAfterLast(path, "/"); //$NON-NLS-1$
                     if(StringUtils.isEmpty(parentPath)){
                         page = hm.getRoot();
                     }
@@ -148,7 +148,7 @@ public class Save extends ControlSuper {
                     page = page.createContent(label, creationItemType);
                 }
                 else{
-                    log.error("tried to save a not existing node. use create = true to force creation");
+                    log.error("tried to save a not existing node. use create = true to force creation"); //$NON-NLS-1$
                 }
             }
             

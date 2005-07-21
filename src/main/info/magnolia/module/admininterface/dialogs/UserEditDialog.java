@@ -148,7 +148,7 @@ public class UserEditDialog extends ConfiguredDialog {
             Locale locale = (Locale) iter.next();
             String code = locale.getLanguage();
             if (StringUtils.isNotEmpty(locale.getCountry())) {
-                code += "_" + locale.getCountry();
+                code += "_" + locale.getCountry(); //$NON-NLS-1$
             }
             String name = locale.getDisplayName(MessagesManager.getCurrentLocale(request));
             SelectOption option = new SelectOption(name, code);

@@ -172,10 +172,10 @@ public class SimpleNavigationTag extends TagSupport {
         JspWriter out = this.pageContext.getOut();
         try {
             if (style != null)
-                out.println("<span class=\"" + style + "\">");
+                out.println("<span class=\"" + style + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
             drawChildren(activePage.getAncestor(this.startLevel), activePage, out);
             if (style != null)
-                out.println("</span>");
+                out.println("</span>"); //$NON-NLS-1$
         }
         catch (RepositoryException e) {
             log.error("RepositoryException caught while drawing navigation: " + e.getMessage(), e); //$NON-NLS-1$
@@ -299,7 +299,7 @@ public class SimpleNavigationTag extends TagSupport {
                 out.print("\""); //$NON-NLS-1$
             }
 
-            out.print(">");
+            out.print(">"); //$NON-NLS-1$
 
             out.print(StringEscapeUtils.escapeHtml(title));
             out.print(" </a>"); //$NON-NLS-1$

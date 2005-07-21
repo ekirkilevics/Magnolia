@@ -12,6 +12,8 @@
  */
 package info.magnolia.cms.core;
 
+import java.text.MessageFormat;
+
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.PermissionImpl;
@@ -38,9 +40,8 @@ public final class Access {
      */
     public static void isGranted(AccessManager manager, String path, long permissions) throws AccessDeniedException {
         if (manager != null && !manager.isGranted(path, permissions)) {
-            throw new AccessDeniedException("User not allowed to " //$NON-NLS-1$
-                + PermissionImpl.getPermissionAsName(permissions) + " path [" //$NON-NLS-1$
-                + path + "]");
+            throw new AccessDeniedException(MessageFormat.format("User not allowed to {0} path [{1}]", //$NON-NLS-1$
+                new Object[]{PermissionImpl.getPermissionAsName(permissions), path}));
         }
     }
 }

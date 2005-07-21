@@ -53,7 +53,7 @@ public class ConfiguredDialog extends DialogMVCHandler {
 
         if (name == null) {
             // should never happen
-            log.error("getConfigNode called with a null name.");
+            log.error("getConfigNode called with a null name."); //$NON-NLS-1$
             return null;
         }
 

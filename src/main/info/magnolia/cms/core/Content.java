@@ -978,7 +978,7 @@ public class Content extends ContentHandler implements Cloneable {
             return true;
         }
         catch (RepositoryException re) {
-            log.debug(this.getHandle() + " says: no access");
+            log.debug(this.getHandle() + " says: no access"); //$NON-NLS-1$
         }
         return false;
     }

@@ -189,29 +189,29 @@ public class ImportExportServlet extends HttpServlet {
         out.println(MessagesManager.get(request, "importexport.file") //$NON-NLS-1$
             + " <input type=\"file\" name=\"" + PARAM_FILE + "\" /><br/>"); //$NON-NLS-1$//$NON-NLS-2$
 
-        out.println("<input type=\"radio\" name=\""
+        out.println("<input type=\"radio\" name=\"" //$NON-NLS-1$
             + PARAM_UUID_BEHAVIOR
-            + "\" value=\""
+            + "\" value=\"" //$NON-NLS-1$
             + ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW
-            + "\">");
-        out.println(MessagesManager.get(request, "importexport.createnew"));
-        out.println("<br/>");
+            + "\">"); //$NON-NLS-1$
+        out.println(MessagesManager.get(request, "importexport.createnew")); //$NON-NLS-1$
+        out.println("<br/>"); //$NON-NLS-1$
 
-        out.println("<input type=\"radio\" name=\""
+        out.println("<input type=\"radio\" name=\"" //$NON-NLS-1$
             + PARAM_UUID_BEHAVIOR
-            + "\" value=\""
+            + "\" value=\"" //$NON-NLS-1$
             + ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING
-            + "\">");
-        out.println(MessagesManager.get(request, "importexport.removeexisting"));
-        out.println("<br/>");
+            + "\">"); //$NON-NLS-1$
+        out.println(MessagesManager.get(request, "importexport.removeexisting")); //$NON-NLS-1$
+        out.println("<br/>"); //$NON-NLS-1$
 
-        out.println("<input type=\"radio\" name=\""
+        out.println("<input type=\"radio\" name=\"" //$NON-NLS-1$
             + PARAM_UUID_BEHAVIOR
-            + "\" value=\""
+            + "\" value=\"" //$NON-NLS-1$
             + ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING
-            + "\">");
-        out.println(MessagesManager.get(request, "importexport.replaceexisting"));
-        out.println("<br/>");
+            + "\">"); //$NON-NLS-1$
+        out.println(MessagesManager.get(request, "importexport.replaceexisting")); //$NON-NLS-1$
+        out.println("<br/>"); //$NON-NLS-1$
 
         out.println("<input type=\"submit\" name=\"" //$NON-NLS-1$
             + PARAM_EXPORT_ACTION + "\" value=\"" //$NON-NLS-1$
