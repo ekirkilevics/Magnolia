@@ -29,6 +29,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.jar.JarFile;
 
+import javax.jcr.RepositoryException;
+import javax.jcr.observation.Event;
+import javax.jcr.observation.EventIterator;
+import javax.jcr.observation.EventListener;
+import javax.jcr.observation.ObservationManager;
+
 import org.apache.log4j.Logger;
 
 
@@ -42,7 +48,7 @@ public class Engine implements Module {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(Engine.class);
+    protected static Logger log = Logger.getLogger(Engine.class);
 
     /**
      * @see info.magnolia.cms.module.Module#init(info.magnolia.cms.module.ModuleConfig)
@@ -53,6 +59,7 @@ public class Engine implements Module {
         store.setStore(config.getLocalStore());
 
         registerTrees(store);
+
         try {
             store.registerDialogHandlers(store.getStore().getContent("dialogs")); //$NON-NLS-1$
         }
@@ -73,15 +80,18 @@ public class Engine implements Module {
         log.info("Init dialog controls"); //$NON-NLS-1$
         DialogManager.init();
 
+        registerEventListeners(store);
+
     }
 
     /**
      * @param store
      */
-    private void registerTrees(Store store) {
+    protected static void registerTrees(Store store) {
         // read the tree configuration
         try {
-            Collection trees = store.getStore().getContent("trees").getChildren(ItemType.CONTENTNODE.getSystemName()); //$NON-NLS-1$
+            Collection trees = store.getStore().getContent("trees") //$NON-NLS-1$
+                .getChildren(ItemType.CONTENTNODE.getSystemName());
             for (Iterator iter = trees.iterator(); iter.hasNext();) {
                 Content tree = (Content) iter.next();
                 String name = tree.getNodeData("name").getString(); //$NON-NLS-1$
@@ -99,8 +109,93 @@ public class Engine implements Module {
         store.registerDefaultTreeHandler(ContentRepository.CONFIG, AdminTreeConfig.class);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Register an event listener: reload cache configuration when something changes.
+     */
+    private static void registerEventListeners(final Store store) {
+
+        ObservationManager observationManager = null;
+
+        try {
+
+            observationManager = ContentRepository
+                .getHierarchyManager(ContentRepository.CONFIG)
+                .getWorkspace()
+                .getObservationManager();
+        }
+        catch (RepositoryException e) {
+            log.error("Unable to add event listeners for admininterface module", e); //$NON-NLS-1$
+            return;
+        }
+        log.info("Registering event listener for trees"); //$NON-NLS-1$
+        try {
+            observationManager.addEventListener(new EventListener() {
+
+                public void onEvent(EventIterator iterator) {
+                    // reload everything
+                    registerTrees(store);
+                }
+            }, Event.NODE_ADDED
+                | Event.NODE_REMOVED
+                | Event.PROPERTY_ADDED
+                | Event.PROPERTY_CHANGED
+                | Event.PROPERTY_REMOVED, store.getStore().getHandle() + "/" + "trees" //$NON-NLS-1$  //$NON-NLS-2$
+            , true, null, null, false);
+        }
+        catch (RepositoryException e) {
+            log.error("Unable to add event listeners for trees", e); //$NON-NLS-1$
+        }
+
+        log.info("Registering event listener for dialogs"); //$NON-NLS-1$
+        try {
+            observationManager.addEventListener(new EventListener() {
+
+                public void onEvent(EventIterator iterator) {
+                    try {
+                        store.registerDialogHandlers(store.getStore().getContent("dialogs")); //$NON-NLS-1$
+                    }
+                    catch (Exception e) {
+                        log.error("Unable to reload the admin interface dialogs", e); //$NON-NLS-1$
+                    }
+                }
+            }, Event.NODE_ADDED
+                | Event.NODE_REMOVED
+                | Event.PROPERTY_ADDED
+                | Event.PROPERTY_CHANGED
+                | Event.PROPERTY_REMOVED, store.getStore().getHandle() + "/" + "dialogs" //$NON-NLS-1$  //$NON-NLS-2$
+            , true, null, null, false);
+        }
+        catch (RepositoryException e) {
+            log.error("Unable to add event listeners for dialogs", e); //$NON-NLS-1$
+        }
+
+        log.info("Registering event listener for dialogpages"); //$NON-NLS-1$
+        try {
+            observationManager.addEventListener(new EventListener() {
+
+                public void onEvent(EventIterator iterator) {
+
+                    try {
+                        store.registerDialogHandlers(store.getStore().getContent("dialogpages")); //$NON-NLS-1$
+                    }
+                    catch (Exception e) {
+                        log.error("Unable to reload the admin interface dialogpages", e); //$NON-NLS-1$
+                    }
+                }
+            }, Event.NODE_ADDED
+                | Event.NODE_REMOVED
+                | Event.PROPERTY_ADDED
+                | Event.PROPERTY_CHANGED
+                | Event.PROPERTY_REMOVED, store.getStore().getHandle() + "/" + "dialogpages" //$NON-NLS-1$  //$NON-NLS-2$
+            , true, null, null, false);
+        }
+        catch (RepositoryException e) {
+            log.error("Unable to add event listeners for dialogpages", e); //$NON-NLS-1$
+        }
+
+    }
+
+    /**
      * @see info.magnolia.cms.module.Module#register(java.lang.String, java.lang.String, info.magnolia.cms.core.Content,
      * java.util.jar.JarFile, int)
      */
