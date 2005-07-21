@@ -37,14 +37,18 @@ import org.apache.log4j.Logger;
 
 /**
  * Draws a simple, css based, navigation menu. The menu layout can then be customized using css, and the default menu
- * should be enough for most uses.
- * 
+ * should be enough for most uses. Two following page properties will also be used in the menu:
+ * <ul>
+ * <li><code>navTitle</code>: a title to use for the navigation menu, if different from the real page title</li>
+ * <li><code>accessKey</code>: an optional access key which will be added to the link</li>
+ * </ul>
+ *
  * <pre>
  *   &lt;cmsu:simpleNavigation startLevel="3" />
  * </pre>
- * 
+ *
  * Will output the following:
- * 
+ *
  * <pre>
  *   &lt;ul class="level3">
  *     &lt;li>&lt;a href="...">page 1 name &lt;/a>&lt;/li>
@@ -59,11 +63,21 @@ import org.apache.log4j.Logger;
  *     &lt;li>&lt;a href="...">page 4 name &lt;/a>&lt;/li>
  *   &lt;/ul>
  * </pre>
- * 
+ *
  * @author Fabrizio Giustina
  * @version $Revision: $ ($Author: $)
  */
 public class SimpleNavigationTag extends TagSupport {
+
+    /**
+     * Page property: navigation title.
+     */
+    private static final String NODEDATA_NAVIGATIONTITLE = "navTitle"; //$NON-NLS-1$
+
+    /**
+     * Page property: access key.
+     */
+    public static final String NODEDATA_ACCESSKEY = "accessKey"; //$NON-NLS-1$
 
     /**
      * Default name for "open menu" nodeData.
@@ -89,7 +103,7 @@ public class SimpleNavigationTag extends TagSupport {
      * Start level.
      */
     private int startLevel;
-    
+
     /**
      * End level
      */
@@ -104,7 +118,7 @@ public class SimpleNavigationTag extends TagSupport {
      * Name for the "open menu" nodeData.
      */
     private String openMenu;
-    
+
     /**
      * Style to apply to the menu
      */
@@ -117,22 +131,20 @@ public class SimpleNavigationTag extends TagSupport {
     public void setStartLevel(int startLevel) {
         this.startLevel = startLevel;
     }
-    
+
     /**
      * Setter for the <code>endLevel</code> tag attribute.
      * @param endLevel the end level for navigation, defaults to not used if not set
      */
-    public void setEndLevel(int endLevel)
-    {
+    public void setEndLevel(int endLevel) {
         this.endLevel = endLevel;
     }
-    
+
     /**
      * Setter for the <code>style</code> tag attribute.
      * @param style to apply to this menu, default is empty and not used
      */
-    public void setStyle(String style)
-    {
+    public void setStyle(String style) {
         this.style = style;
     }
 
@@ -159,11 +171,11 @@ public class SimpleNavigationTag extends TagSupport {
         Content activePage = Resource.getActivePage((HttpServletRequest) this.pageContext.getRequest());
         JspWriter out = this.pageContext.getOut();
         try {
-            if(style!=null)
-              out.println("<span class=\""+style+"\">");
+            if (style != null)
+                out.println("<span class=\"" + style + "\">");
             drawChildren(activePage.getAncestor(this.startLevel), activePage, out);
-            if(style!=null)
-              out.println("</span>");
+            if (style != null)
+                out.println("</span>");
         }
         catch (RepositoryException e) {
             log.error("RepositoryException caught while drawing navigation: " + e.getMessage(), e); //$NON-NLS-1$
@@ -201,10 +213,9 @@ public class SimpleNavigationTag extends TagSupport {
         if (children.size() == 0) {
             return;
         }
-        
-        if(startLevel > endLevel)
+
+        if (startLevel > endLevel)
             endLevel = 0;
-        
 
         out.print("<ul class=\"level"); //$NON-NLS-1$
         out.print(page.getLevel());
@@ -220,7 +231,7 @@ public class SimpleNavigationTag extends TagSupport {
 
             List cssClasses = new ArrayList(3);
 
-            String title = child.getNodeData("navTitle").getString(StringUtils.EMPTY); //$NON-NLS-1$
+            String title = child.getNodeData(NODEDATA_NAVIGATIONTITLE).getString(StringUtils.EMPTY);
 
             // if nav title is not set, the main title is taken
             if (StringUtils.isEmpty(title)) {
@@ -251,11 +262,11 @@ public class SimpleNavigationTag extends TagSupport {
                     .getNodeData(StringUtils.defaultString(this.openMenu, DEFAULT_OPENMENU_NODEDATA))
                     .getBoolean();
             }
-            
-            if(endLevel>0) {
+
+            if (endLevel > 0) {
                 showChildren &= child.getLevel() < endLevel;
             }
-            
+
             cssClasses.add(hasVisibleChildren(child) ? (showChildren ? "open" : "closed") : "leaf"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
             StringBuffer css = new StringBuffer(cssClasses.size() * 10);
@@ -275,10 +286,21 @@ public class SimpleNavigationTag extends TagSupport {
                 out.println("<strong>"); //$NON-NLS-1$
             }
 
+            String accesskey = child.getNodeData(NODEDATA_ACCESSKEY).getString(StringUtils.EMPTY);
+
             out.print("<a href=\""); //$NON-NLS-1$
             out.print(((HttpServletRequest) this.pageContext.getRequest()).getContextPath());
             out.print(child.getHandle());
-            out.print(".html\">"); //$NON-NLS-1$
+            out.print(".html\""); //$NON-NLS-1$
+
+            if (StringUtils.isNotEmpty(accesskey)) {
+                out.print(" accesskey=\""); //$NON-NLS-1$
+                out.print(accesskey);
+                out.print("\""); //$NON-NLS-1$
+            }
+
+            out.print(">");
+
             out.print(StringEscapeUtils.escapeHtml(title));
             out.print(" </a>"); //$NON-NLS-1$
 
