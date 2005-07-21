@@ -16,12 +16,12 @@ body.mgnlAdminMain {
 	cursor: default;
 }
 
-.mgnlAdminCentralButtonTransparent,.mgnlAdminCentralButtonTransparentSmall {
+.mgnlAdminCentralButtonTransparent,.mgnlAdminCentralButtonTransparentSmall
+	{
 	background: transparent;
 }
 
 .mgnlAdminCentralButton_PUSHED {
-	background-color: #D0E079;
 	background-color: #e0e0e0;
 }
 

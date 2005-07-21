@@ -137,12 +137,26 @@ div.mgnlTreeMenuItem_DISABLED {
 
 #mgnlImportdiv {
 	position: absolute;
-	width: 350px;
-	height: 50px;
+	width: 300px;
+	height: 90px;
 	background-color: #F0F2E6;
 	border: 1px solid #000;
 }
 
 #mgnlImportdiv form {
 	padding: 20px;
+}
+
+#mgnlImportdiv input.mgnlImportButton {
+	font-family: Verdana, sans-serif;
+	font-size: 11px;
+	padding: 1px 8px 1px 10px;
+	color: #F0F2E6;
+	background-color: #5E9201;
+	cursor: default;
+	border-top: 1px solid #ADC97B;
+	border-left: 1px solid #ADC97B;
+	border-bottom: 1px solid #396101;
+	border-right: 1px solid #396101;
+	margin-top: 10px;
 }
