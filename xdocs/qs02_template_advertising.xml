@@ -6,10 +6,115 @@
     <body>
         <section name="Advertising the existence of a page template">
             <p>
+            	When a Magnolia user creates a new page, he will have a choice of available page templates in a
+            	dialog window. The available choices are a configuration issue and are defined in the config
+            	repository. Point your browser to the authoring environment (e.g. http://localhost:8080/magnoliaAuthor), 
+            	select "Config" and browse "Modules/templating/Templates". Right-click on "Templates" and create 
+            	a "New Content Node".
             </p>
-            
+            <img src="images/magnolia-createTemplate.jpg"/>
+            <p>
+            	A new content node named "untitled" will be added. Double-click on "untitled" to change the 
+            	content node name and type "quickstart". We will add "properties" to define the Template "quickstart". 
+            	These are added as "Node Data" to the "Content Node" (our Template node). Each template property consists 
+            	of a "Property Name", "Property Value" and a "Property Type". Add the following properties to define 
+            	the Template "quickstart".<br/>
+            	Right-click on the "quickstart" content node and select "New Node Data". 
+            	<table>
+            	  <tr>
+            	    <th>Name</th>
+            	    <th>Value</th>
+            	    <th>Type</th>
+            	  </tr>
+            	  <tr>
+            	    <td>name</td>
+            	    <td>quickstart</td>
+            	    <td>String</td>
+            	  </tr>            	  
+            	  <tr>
+            	    <td>title</td>
+            	    <td>Quickstart Template</td>
+            	    <td>String</td>
+            	  </tr>
+            	  <tr>
+            	    <td>visible</td>
+            	    <td>true Template</td>
+            	    <td>Boolean</td>
+            	  </tr>
+            	  <tr>
+            	    <td>path</td>
+            	    <td>/templates/jsp/quickstart/main.jsp</td>
+            	    <td>String</td>
+            	  </tr>
+            	  <tr>
+            	    <td>type</td>
+            	    <td>jsp</td>
+            	    <td>String</td>
+            	  </tr>            	  
+            	</table>           	
+            </p>
+            <p>
+            	Your Template "quickstart" should look like follows:
+            </p>
+            	<img src="images/magnolia-quickstartTemplate.jpg" />
+            <p>
+            	Here is a description of the properties:
+            	<table>
+            	  <tr>
+            	    <th>Name</th>
+            	    <th>Description</th>
+            	  </tr>
+            	  <tr>
+            	    <td>name</td>
+            	    <td>
+            	      The name of the template. This name will be stored with each Web page created to define
+            	      how the content is rendered. The "name" property is used internally to access the template.
+            	    </td>
+            	  </tr>
+            	  <tr>
+            	    <td>title</td>
+            	    <td>
+            	      This property is used to select the template in the Admin Console. When selecting a Template
+            	      for a new Web page, the title will be visible in the template dropdown window.
+            	    </td>
+            	  </tr>
+            	  <tr>
+            	    <td>visible</td>
+            	    <td>
+            	      If this property is set to 'true', then the template name will show up in the dropdown field, 
+            	      otherwise this template will not be selectable when creating a new Web page.
+            	    </td>
+            	  </tr>
+            	  <tr>
+            	    <td>path</td>
+            	    <td>
+            	      The "path" property defines the physical path/name of the script, which is used to start building 
+            	      the Web page. The path starts with a web app folder (e.g. "/templates/..." is physically under 
+            	      "/webapps/magnoliaAuthor/templates...")
+            	    </td>
+            	  </tr>
+            	  <tr>
+            	    <td>type</td>
+            	    <td>
+            	      The type of the template script (defined with property "path")
+            	    </td>
+            	  </tr>
+            	</table>
+            </p>
+            <p>
+            	Our Template is configured and available for creating a new Web page. But keep in mind, that we did not
+            	write the template script "main.jsp" yet. So nothing will happen when selecting a Web page created using
+            	this template.<br/>
+            	But let us tweak and see, if our template "Quick Start" has been configured correctly. Click on "Website" 
+            	in the leftside Navigation and double-click on the "Template" setting of the "features" Web page.
+            </p>
+            <p>
+            	<img src="images/magnolia-checkTemplate.jpg" />
+            </p>
+            <p>
+            	Congratulation! Allthough not yet very exciting, you have configured your first Template!
+            </p>
         </section>
 
     </body>
 </document>
-

@@ -71,8 +71,10 @@
           target: pack              
          ================================= -->
     <target name="pack" depends="build, tomcat" description="--> description">
-		<copy file="${release.src}/license.bundled.txt" tofile="${release.dest}/wars/license.txt" overwrite="true"/>
-    		<zip destfile="${release.dest}/magnolia${release.name}_war_files.zip" basedir="${release.dest}/wars"/>
+		<copy file="${release.src}/license.wars.txt" tofile="${release.dest}/wars/license.txt" overwrite="true"/>
+		<copy file="${release.src}/release notes.war.txt" tofile="${release.dest}/wars/release notes.txt" overwrite="true"/>
+
+	    	<zip destfile="${release.dest}/magnolia${release.name}_war_files.zip" basedir="${release.dest}/wars"/>
      	<zip destfile="${release.dest}/magnolia${release.name}_with_tomcat.zip" basedir="${release.dest}/bundled"/>
     </target>
 	

@@ -10,6 +10,9 @@
 
         <menu name="Quick start">
             <item name="Introduction" href="/qs01_introduction.html" />
+            <item name="Create a Page Template" href="/qs02_template_advertising.html" />
+            <item name="Building a Page Template" href="/qs03_template_building.html" />
+            <item name="Refining the Page Template" href="/qs04_template_property.html" />
         </menu>
 
 

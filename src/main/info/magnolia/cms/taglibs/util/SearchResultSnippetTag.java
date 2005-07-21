@@ -185,7 +185,7 @@ public class SearchResultSnippetTag extends TagSupport {
 
                                 // first check, avoid using heavy string replaceAll operations if the search term is not
                                 // there
-                                if (!StringUtils.contains(resultString, searchTerm)) {
+                                if (!StringUtils.contains(resultString.toLowerCase(), searchTerm)) {
                                     continue;
                                 }
 
@@ -211,7 +211,7 @@ public class SearchResultSnippetTag extends TagSupport {
 
                                     snippet.append(StringUtils.substring(resultString, from, pos));
                                     snippet.append("<strong>"); //$NON-NLS-1$
-                                    snippet.append(searchTerm);
+                                    snippet.append(StringUtils.substring(resultString, pos, posEnd));
                                     snippet.append("</strong>"); //$NON-NLS-1$
                                     snippet.append(StringUtils.substring(resultString, posEnd, to));
 

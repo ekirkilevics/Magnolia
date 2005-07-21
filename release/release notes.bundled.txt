@@ -2,9 +2,9 @@
 
               M A G N O L I A
           Content Management Suite
-		Build 1074
+                Build 1074
 
-              Jun 17th 2005
+              July 20th 2005
            Release Notes v 2.1 RC2 
 
           http://www.magnolia.info/
@@ -17,17 +17,19 @@ Overview
 
 Welcome to Magnolia 2.1
 
-These release notes contain information that 
-should help getting you up & running with Magnolia
+These release notes contain information to get 
+you up & running with magnolia
 
-===============================================
-Changes, information and bugs
-===============================================
+All information regarding magnolia can be found 
+at http://www.magnolia.info/
 
-All necessary changes and Information are 
-written on.
+Wiki information about magnolia 2.1 can be found 
+at http://www.magnolia.info/wiki/Wiki.jsp?page=Magnolia2.1
 
+For changes, information and bugs regarding all
+magnolia versions please see
 http://www.magnolia.info/en/magnolia/developer/issues.html
+
 
 ===============================================
 Magnolia Package
@@ -38,11 +40,12 @@ The Package contains:
  Magnolia 2.1 RC2
  Samples
 
+
 =============================================== 
 System Requirements
 ===============================================
 
-To run Magnolia, all you need is Java 1.4.2.x
+To run magnolia, all you need is Java 1.4.2.x
 We bundle tomcat as a J2EE application server for
 your convenience but other J2EE servers should 
 work as well.
@@ -53,11 +56,11 @@ be found at www.magnolia.info
 
 
 =============================================== 
-Installation & setup:  starting Magnolia
+Installation & setup: starting magnolia
 ===============================================
 
 After unzipping, you will have to start the two
-Magnolia instances in one step
+magnolia instances in one step
 
 1. Starting the Instances
 
@@ -66,7 +69,7 @@ Magnolia instances in one step
   open a shell and set the environment variables
   JAVA_HOME and preferably CATALINA_HOME. If you
   do not set CATALINA_HOME, you will have to 
-  start Magnolia from within the bin/ directory
+  start magnolia from within the bin/ directory
  
     > sh
     > cd INSTALL_DIRECTORY/tomcat/bin
@@ -96,7 +99,7 @@ Magnolia instances in one step
 
 
 =============================================== 
-Connecting to Magnolia
+Connecting to magnolia
 ===============================================Ê
 
 Note : Authoring and Public instance must be 
@@ -104,7 +107,7 @@ running before you can access these URL's
 this will take a few minutes to initialize 
 the repositories.
 
-To start using the Magnolia public environment, 
+To start using the magnolia public environment, 
 open a browser and goto 
 http://localhost:8081/magnoliaPublic
 
@@ -112,7 +115,7 @@ To edit configuration on public instance go to
 http://localhost:8081/magnoliaPublic/.magnolia and login as 
 superuser.
 
-To start using the Magnolia authoring environment, 
+To start using the magnolia authoring environment, 
 open a browser and goto 
 http://localhost:8081/magnoliaAuthor
 
@@ -123,7 +126,7 @@ The default username & password are:
 
 
 =============================================== 
-Known Issues in Magnolia 2.1 RC2
+Known Issues in magnolia 2.1 RC2
 =============================================== 
 
 http://www.magnolia.info/en/magnolia/developer/issues.html
@@ -142,7 +145,7 @@ ANY KIND, EXPRESSED OR IMPLIED, UNDER THE TERMS OF
 THE INCLUDED LICENSE AGREEMENT.
 
 Free help is available at the community 
-mailing-list (http://www.magnolia.info/en/magnolia/developer/user-list.html) 
+mailing-list at http://www.magnolia.info/en/magnolia/developer/user-list.html 
 on a volunteer basis from members of the community and the 
 obinary ltd. staff. Please submit help requests 
 and bug reports concerning our free software 
@@ -152,14 +155,15 @@ For email and phone support, commercial support
 packages are available from obinary ltd. See 
 http://www.magnolia.info/en/magnolia/services.html
 for details on our commercial services regarding
-Magnolia
+magnolia
 
 
-Thanks for using Magnolia 2.1 RC2
+Thanks for using magnolia
 
 obinary ltd.
 marketing@magnolia.info
 
 Copyright 1993-2004 obinary ltd. 
 
-http://www.magnolia.info All rights reserved.
+http://www.magnolia.info 
+All rights reserved.

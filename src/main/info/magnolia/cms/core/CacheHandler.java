@@ -432,6 +432,9 @@ public class CacheHandler extends Thread {
             CacheHandler.validatePath(CACHE_DIRECTORY);
             CacheHandler.validatePath(CACHE_DIRECTORY + DEFAULT_STORE);
             CacheHandler.validatePath(CACHE_DIRECTORY + COMPRESSED_STORE);
+            
+            // clear in-memory cache also
+            Cache.clearCachedURIList();
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
