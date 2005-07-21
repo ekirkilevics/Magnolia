@@ -55,4 +55,13 @@ public class PublicOnly extends ConditionalTagSupport {
         }
         return false;
     }
+
+    /**
+     * @see javax.servlet.jsp.jstl.core.ConditionalTagSupport#release()
+     */
+    public void release() {
+        super.release();
+        this.showInPreview = false;
+    }
+
 }

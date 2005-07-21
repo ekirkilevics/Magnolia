@@ -138,4 +138,13 @@ public class MainBar extends TagSupport {
     public void setAdminButtonVisible(boolean adminButtonVisible) {
         this.adminButtonVisible = adminButtonVisible;
     }
+
+    /**
+     * @see javax.servlet.jsp.tagext.TagSupport#release()
+     */
+    public void release() {
+        super.release();
+        this.paragraph = null;
+        this.adminButtonVisible = false;
+    }
 }

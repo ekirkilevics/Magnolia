@@ -175,4 +175,14 @@ public class NewBar extends TagSupport {
         bar.placeDefaultButtons();
         bar.drawHtml(pageContext.getOut());
     }
+
+    /**
+     * @see javax.servlet.jsp.tagext.TagSupport#release()
+     */
+    public void release() {
+        super.release();
+        this.contentNodeCollectionName = null;
+        this.paragraph = null;
+        this.newLabel = null;
+    }
 }

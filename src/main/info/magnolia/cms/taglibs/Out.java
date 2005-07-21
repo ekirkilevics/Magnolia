@@ -417,4 +417,23 @@ public class Out extends TagSupport {
     protected void setCurrentActivePage(Content currentActivePage) {
         this.currentActivePage = currentActivePage;
     }
+
+    /**
+     * @see javax.servlet.jsp.tagext.TagSupport#release()
+     */
+    public void release() {
+        super.release();
+
+        this.nodeDataName = null;
+        this.contentNodeName = null;
+        this.contentNodeCollectionName = null;
+        this.currentActivePage = null;
+        this.contentNode = null;
+        this.nodeData = null;
+        this.fileProperty = StringUtils.EMPTY;
+        this.datePattern = DEFAULT_DATEPATTERN;
+        this.dateLanguage = null;
+        this.lineBreak = DEFAULT_LINEBREAK;
+
+    }
 }
