@@ -24,6 +24,10 @@ import java.util.Iterator;
 import java.util.Locale;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.observation.Event;
+import javax.jcr.observation.EventIterator;
+import javax.jcr.observation.EventListener;
+import javax.jcr.observation.ObservationManager;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -109,6 +113,15 @@ public final class MessagesManager {
         // setting default language (en)
         MessagesManager.setDefaultLocale(FALLBACK_LOCALE);
 
+        load();
+        registerEventListener();
+    }
+
+    /**
+     * Load i18n configuration.
+     */
+    public static void load() {
+
         // reading the configuration from the repository
         HierarchyManager configHierarchyManager = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
         try {
@@ -154,6 +167,10 @@ public final class MessagesManager {
             }
 
             Collection locales = availableLanguagesContentNode.getNodeDataCollection();
+
+            // clear collection for reload
+            MessagesManager.availableLocales.clear();
+
             for (Iterator iter = locales.iterator(); iter.hasNext();) {
                 availableLanguage = (NodeData) iter.next();
                 String name = availableLanguage.getString();
@@ -173,7 +190,43 @@ public final class MessagesManager {
             log.error("Config : Failed to load i18n configuration - " + I18N_CONFIG_NAME); //$NON-NLS-1$
             log.error(re.getMessage(), re);
         }
+    }
 
+    /**
+     * Register an event listener: reload configuration when something changes.
+     */
+    private static void registerEventListener() {
+
+        log.info("Registering event listener for i18n"); //$NON-NLS-1$
+
+        try {
+            ObservationManager observationManager = ContentRepository
+                .getHierarchyManager(ContentRepository.CONFIG)
+                .getWorkspace()
+                .getObservationManager();
+
+            observationManager.addEventListener(new EventListener() {
+
+                public void onEvent(EventIterator iterator) {
+                    // reload everything
+                    reload();
+                }
+            }, Event.NODE_ADDED
+                | Event.NODE_REMOVED
+                | Event.PROPERTY_ADDED
+                | Event.PROPERTY_CHANGED
+                | Event.PROPERTY_REMOVED, "/server/" + I18N_CONFIG_NAME, true, null, null, false); //$NON-NLS-1$
+        }
+        catch (RepositoryException e) {
+            log.error("Unable to add event listeners for i18n", e); //$NON-NLS-1$
+        }
+    }
+
+    /**
+     * Reload i18n configuration.
+     */
+    public static void reload() {
+        load();
     }
 
     /**
@@ -194,7 +247,7 @@ public final class MessagesManager {
     /**
      * Provide a basename
      * @param req request
-     * @param basename basena,e
+     * @param basename basename
      * @return Messages object to get the messages from
      */
     public static Messages getMessages(HttpServletRequest req, String basename) {

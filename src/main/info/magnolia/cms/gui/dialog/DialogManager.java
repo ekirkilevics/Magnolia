@@ -13,6 +13,7 @@ package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ContentHandler;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 
@@ -20,6 +21,10 @@ import java.util.Iterator;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.ValueFactory;
+import javax.jcr.observation.Event;
+import javax.jcr.observation.EventIterator;
+import javax.jcr.observation.EventListener;
+import javax.jcr.observation.ObservationManager;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -57,9 +62,57 @@ public class DialogManager {
     private static String DATA_CONTROL_NAME = "name"; //$NON-NLS-1$
 
     /**
-     * Called through the initialization precess
+     * Called through the initialization process
      */
     public static void init() {
+        load();
+        registerEventListener();
+    }
+
+    /**
+     * Register an event listener: reload configuration when something changes.
+     */
+    private static void registerEventListener() {
+
+        log.info("Registering event listener for Controls"); //$NON-NLS-1$
+
+        try {
+            ObservationManager observationManager = ContentRepository
+                .getHierarchyManager(ContentRepository.CONFIG)
+                .getWorkspace()
+                .getObservationManager();
+
+            observationManager.addEventListener(
+                new EventListener() {
+
+                    public void onEvent(EventIterator iterator) {
+                        // reload everything
+                        reload();
+                    }
+                },
+                Event.NODE_ADDED
+                    | Event.NODE_REMOVED
+                    | Event.PROPERTY_ADDED
+                    | Event.PROPERTY_CHANGED
+                    | Event.PROPERTY_REMOVED,
+                ADMIN_CONFIG_NODE_NAME + "/" + DIALOGCONTROLS_CONFIG_NAME, true, null, null, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        }
+        catch (RepositoryException e) {
+            log.error("Unable to add event listeners for Controls", e); //$NON-NLS-1$
+        }
+    }
+
+    /**
+     * Called through the initialization process
+     */
+    public static void reload() {
+        load();
+    }
+
+    /**
+     * Loads and caches dialog controls.
+     */
+    public static void load() {
         log.info("Config : loading dialog controls configuration"); //$NON-NLS-1$
 
         // reading the configuration from the repository
@@ -91,7 +144,9 @@ public class DialogManager {
                 return;
             }
 
-            Iterator iterator = configNode.getChildren(ItemType.CONTENTNODE, Content.SORT_BY_SEQUENCE).iterator();
+            Iterator iterator = configNode
+                .getChildren(ItemType.CONTENTNODE, ContentHandler.SORT_BY_SEQUENCE)
+                .iterator();
 
             while (iterator.hasNext()) {
                 Content controlNode = (Content) iterator.next();
@@ -139,4 +194,5 @@ public class DialogManager {
         }
 
     }
+
 }
