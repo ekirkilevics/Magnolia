@@ -4,43 +4,74 @@
     <body>
         <links>
             <item name="Magnolia community" href="http://www.magnolia.info/en/community.html" />
-            <item name="Magnolia International" href="http://www.magnolia.info/en/international.html" />
+            <item name="Magnolia International"
+                href="http://www.magnolia.info/en/international.html" />
             <item name="Wiki" href="http://wiki.magnolia.info" />
         </links>
 
-        <menu name="Quick start">
-            <item name="Introduction" href="/qs01_introduction.html" />
-            <item name="Create a Page Template" href="/qs02_template_advertising.html" />
-            <item name="Building a Page Template" href="/qs03_template_building.html" />
-            <item name="Refining the Page Template" href="/qs04_template_property.html" />
+        <menu name="Documentation">
+            <item name="Introduction" href="/intro/intro.html" />
+            
+            <item name="Build and install" href="/install/install.html" collapse="true">
+                <item name="Installing" href="/install/install.html" />
+                <item name="Upgrade" href="/install/upgrade.html" />
+                <item name="Building Magnolia" href="/install/build.html" />
+                <item name="JBoss" href="/install/jboss.html" />
+                <item name="Apache" href="/install/apache.html" />
+            </item>
+
+            <item name="Configuration" href="/config/config.html" collapse="true">
+                <item name="Public instance" href="/config/public.html" />
+                <item name="Cache" href="/config/cache.html" />
+                <item name="Subscribers" href="/config/subscribers.html" />
+                <item name="web.xml" href="/config/webxml.html" />
+            </item>
+
+            <item name="Templating Quickstart" href="/qs/01_introduction.html" collapse="true">
+                <item name="Introduction" href="/qs/01_introduction.html" />
+                <item name="Create a Page Template" href="/qs/02_template_advertising.html" />
+                <item name="Building a Page Template" href="/qs/03_template_building.html" />
+                <item name="Refining the Page Template" href="/qs/04_template_property.html" />
+            </item>
+
+            <item name="Templating" href="/templating/templating.html" collapse="true">
+                <item name="Templates" href="/templating/templates.html" />
+                <item name="Paragraphs" href="/templating/paragraphs.html" />
+                <item name="Dialogs" href="/templating/dialogs.html" />
+                <item name="Controls" href="/templating/controls.html" />
+                <item name="I18N" href="/templating/i18n.html" />
+            </item>
+
+            <item name="Tag libraries" href="/tagreference-cms-taglib.html" collapse="true">
+                <item name="Cms taglib" href="/tagreference-cms-taglib.html" />
+                <item name="Cms util taglib" href="/tagreference-cms-util-taglib.html" />
+            </item>
+
+            <item name="Advanced Topics" href="/advanced/advanced.html" collapse="true">
+                <item name="Custom Dialogs" href="/advanced/customDialogs.html" />
+                <item name="Custom Controls" href="/advanced/customControls.html" />
+                <item name="Custom Modules" href="/advanced/modules.html" />
+                <item name="I18N" href="/advanced/i18n.html" />
+            </item>
+
+            <item name="API JavaDoc" href="apidocs/index.html" />
+
         </menu>
-
-
-        <menu name="Tag libraries">
-            <item name="Cms taglib" href="/tagreference-cms-taglib.html" />
-            <item name="Cms util taglib" href="/tagreference-cms-util-taglib.html" />
-        </menu>
-
 
         <menu name="Download">
             <item name="Nightly builds" href="/nightly" />
         </menu>
 
-        <menu name="Build and install">
-            <item name="Building Magnolia" href="/building.html" />
-            <item name="Installing" href="/install.html" />
-        </menu>
-
         <!--
-        <menu name="Downloadable docs">
+            <menu name="Downloadable docs">
             <item name="Quick start" href="magnolia.pdf" />
-        </menu>
+            </menu>
         -->
 
         <menu name="Developers">
             <item name="Coding conventions" href="/coding_conventions.html" />
+            <item name="Eclipse" href="/eclipseWTP.html" />
         </menu>
-
 
     </body>
 </project>

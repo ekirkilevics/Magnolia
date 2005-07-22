@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+    <properties>
+        <title>Refining the page template - adding a custom property</title>
+    </properties>
+    <body>
+        <section name="Refining the page template - adding a custom property">
+            <p>
+            	So let us explore some more details. First of all you will have noticed the
+	    <source>
+<![CDATA[<cms:mainBar paragraph="samplesPageProperties" />]]>	    
+	    </source>
+            </p>
+            <p>
+            	tag. As you have seen when you viewed your first page, a green bar will be shown across the top of 
+            	the page, and lets you access a number of admin options - at the moment switch to preview mode, go 
+            	to the administration environment or show the page properties dialog box.
+            </p>
+            <p>
+            	-- short background intermission --
+            </p>
+            <p>
+            	Tjos bar will only be visible on admin pages. So what is the difference between an authoring page 
+            	and a public page? Well, there really is none. Magnolia has the concept of stages, where we usually 
+            	have at least an authoring and a public stage, each corresponding to its own instance of the application. 
+            	So if this page is displayed on an authoring instance, the admin bars will be visible. If the page is 
+            	displayed on a public instance, the admin bars will not be shown. If an instance is public or authoring 
+            	is determined by the property "Config/server/admin". 
+            </p>
+            <p>
+            	-- end of intermission --
+            </p>
+            <p>
+            	So on we move. If you click on "Properties" in the "mainBar", a page properties dialog will be fired up. 
+            	A dialog defines the model (in MVC parlance). While the dialog defines which properties you want to 
+            	collect and store in the repository, the template defines which of these will be rendered as output - and
+            	how.
+            </p>
+            <p>
+            	Dialogs are defined through the administration GUI and reside under
+	    <source>
+<![CDATA[Config/modules/templating/dialogs]]>	    
+	    </source>            	
+            </p>
+            <p>
+            	Which dialog is displayed when we click on the "Properties" button? As stated earlier, a paragraph 
+            	definition maps a template to a dialog. Paragraphs are defined in
+	    <source>
+<![CDATA[Config/modules/templating/Paragraphs]]>	    
+	    </source>             	
+            </p>
+            <p>
+            	The "mainBar" tag points to a paragraph definition, and the paragraph entry points to the dialog 
+            	being displayed. The idea behind this redirection is that different templates can use the same dialog 
+            	definitions. This makes it easy to switch the look and feel of a site.
+            </p>
+            <p>
+            	To define and use custom page properties we need to:
+            	<ol>
+            	  <li>Create a custom dialog and define the desired custom property.</li>
+            	  <li>Define a paragraph pointing to (1).</li>
+            	  <li>Adapt the page template pointing to (2) and displaying the custom property.</li>
+            	</ol>
+            </p>
+            
+            <subsection name="Create a custom dialog">
+            	<p>
+            		Four our example, create a folder called "quickstart".<br/>
+            		Right-click on "Config/modules/templating/dialogs" and select "New folder":
+	    <source>
+<![CDATA[Config/modules/templating/dialogs/quickstart]]>	    
+	    </source>             	            		
+            	</p>
+            	<p>
+            		Copy the sample dialog with a right-click on "Config/modules/templating/samples/pageProperties", 
+            		select "Copy" and click on "Config/modules/templating/dialogs/quickstart".
+            	</p>
+	    <source>
+<![CDATA[from
+
+"Config/modules/templating/samples/pageProperties"
+
+to
+
+"Config/modules/templating/dialogs/quickstart/pageProperties"]]>	    
+	    </source>              	
+	    	<p>
+	    		As with page templates and paragraphs (as we will see later) the structure contains data 
+	    		nodes defining properties of the dialog. Let us add a data node for the background color 
+	    		of our page.
+	    	</p>
+	    	<p>
+	    		<img src="../images/qs/magnolia_quickstartPageProperties.jpg" />
+	    	</p>
+	    	<p>
+	    		Thus we have a custom dialog for page properties that allows us to store our desired 
+	    		background color.
+	    	</p>
+           	
+            </subsection>
+
+            <subsection name="Create a Paragraph Definition pointing to our custom dialog">
+            	<p>
+            <source>
+<![CDATA[Copy
+
+"Config/modules/templating/Paragraphs/samplesPageProperties"
+
+to
+
+"Config/modules/templating/Paragraphs/quickstartPageProperties"
+
+and change name and dialogPath]]>	    
+	    </source>                         	
+            	</p>
+            	<p>
+            		<img src="../images/qs/magnolia_quickstartParagraphPageProperties.jpg" />
+            	</p>
+            </subsection>
+            
+            <subsection name="Adapt the Page Template">
+            	<p>
+            		We need to change the page template's "mainBar" paragraph-Parameter to point to our paragraph 
+            		definition and adapt the page template to use our new background color property.
+            	</p>
+            	<p>
+            		We fire up the page template again ("/templates/jsp/quickstart/main.jsp") and replace
+            	</p>
+            <source>            	
+<![CDATA["<cms:mainBar paragraph="samplesPageProperties" />"
+
+with
+
+"<cms:mainBar paragraph="quickstartPageProperties" />"]]>	    
+	    </source>                 
+	    	<p>
+	    		Since we now use our custom mapping between the jsp (view) and the dialog definition (model), 
+	    		let us use the background color property by changing
+	    	</p>
+            <source>            	
+<![CDATA["<body bgcolor="#ffffff" >"
+
+with
+
+"<body bgcolor="<cms:out nodeDataName="bgcolor" />" "]]>	    
+	    </source>	     
+	    	<p>
+	    		Save all files and restart Tomcat. We will find a new property called "Background Color" in 
+	    		our page properties dialog box. Let us try it out and enter a HTML-color-code (lets say #aabbcc) 
+	    		and save. After reloading the page, we will have a nice greyish-blue background.
+	    	</p>
+	    	<p>
+	    		<img src="qs/images/magnolia_quickstartWebPageBackground.jpg" />
+	    	</p>
+	    	<p>
+	    		The cms:out tag is from our cms-taglib that we have made available at the start of our 
+	    		page template:
+	    	</p>
+            <source>            	
+<![CDATA[<%@ taglib uri="cms-taglib" prefix="cms" %>]]>	    
+	    </source>
+	    	<p>
+	    		As we can see, cms:out allows us to access properties like "bgcolor" above.
+	    	</p>	
+	    	<p>
+	    		Congratulations! We have defined our first custom property for a page template.
+	    	</p>
+            </subsection>
+            
+            
+        </section>
+
+    </body>
+</document>
