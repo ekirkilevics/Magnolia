@@ -90,6 +90,16 @@ import org.apache.log4j.Logger;
  * the repository, they are initialized importing xml files found in this folder. If you don't want to let magnolia
  * automatically initialize repositories simply remove this parameter.</dd>
  * </dl>
+ * <h3>Advance use: deployment service</h3>
+ * <p>
+ * Using the <code>${servername}</code> and <code>${webapp}</code> properties you can easily bundle in the same
+ * webapp different set of configurations which are automatically applied dependending on the server name (useful for
+ * switching between development, test and production instances where the repository configuration need to be different)
+ * or the webapp name (useful to bundle both the public and admin log4j/jndi/bootstrap configuration in the same war).
+ * By default the initializer will try to search for the file in different location with different combination of
+ * <code>servername</code> and <code>webapp</code>: the <code>default</code> fallback directory will be used if
+ * no other environment-specific directory has been added.
+ * </p>
  * @author Fabrizio Giustina
  * @version $Id: PropertyInitializer.java 1110 2005-07-06 15:30:44Z fgiust $
  */
@@ -103,7 +113,7 @@ public class PropertyInitializer implements ServletContextListener {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(Initializer.class);
+    private static Logger log = Logger.getLogger(PropertyInitializer.class);
 
     /**
      * Context parameter name.
@@ -139,6 +149,10 @@ public class PropertyInitializer implements ServletContextListener {
         ServletContext context = sce.getServletContext();
 
         String propertiesLocationString = context.getInitParameter(MAGNOLIA_INITIALIZATION_FILE);
+
+        if (log.isDebugEnabled()) {
+            log.debug(MAGNOLIA_INITIALIZATION_FILE + " value in web.xml is :[" + propertiesLocationString + "]");
+        }
         if (StringUtils.isEmpty(propertiesLocationString)) {
             propertiesLocationString = DEFAULT_INITIALIZATION_PARAMETER;
         }
@@ -154,9 +168,12 @@ public class PropertyInitializer implements ServletContextListener {
             log.error(e.getMessage());
         }
 
-        String rootPath = context.getRealPath("/"); //$NON-NLS-1$
-        String webapp = StringUtils.substringAfterLast(StringUtils.replace(rootPath, "\\", //$NON-NLS-1$
-            "/"), "/"); //$NON-NLS-1$ //$NON-NLS-2$
+        String rootPath = StringUtils.replace(context.getRealPath(StringUtils.EMPTY), "\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
+        String webapp = StringUtils.substringAfterLast(rootPath, "/"); //$NON-NLS-1$
+
+        if (log.isDebugEnabled()) {
+            log.debug("rootPath is [" + rootPath + "], webapp is [" + webapp + "]");
+        }
 
         for (int j = 0; j < propertiesLocation.length; j++) {
             String location = StringUtils.trim(propertiesLocation[j]);
@@ -205,7 +222,7 @@ public class PropertyInitializer implements ServletContextListener {
         log
             .fatal(MessageFormat
                 .format(
-                    "No configuration found using location list {0}. ${servername} is [{1}], ${webapp} is [{2}] and base path is [{3}]", //$NON-NLS-1$
+                    "No configuration found using location list {0}. [servername] is [{1}], [webapp] is [{2}] and base path is [{3}]", //$NON-NLS-1$
                     new Object[]{ArrayUtils.toString(propertiesLocation), servername, webapp, rootPath}));
 
     }
