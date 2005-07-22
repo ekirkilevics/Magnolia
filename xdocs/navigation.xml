@@ -69,8 +69,8 @@
         -->
 
         <menu name="Developers">
-            <item name="Coding conventions" href="/coding_conventions.html" />
-            <item name="Eclipse" href="/eclipseWTP.html" />
+            <item name="Coding conventions" href="/developer/coding_conventions.html" />
+            <item name="Eclipse" href="/developer/eclipseWTP.html" />
         </menu>
 
     </body>
