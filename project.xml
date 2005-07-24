@@ -439,6 +439,16 @@
                 <comment>Needed to run HttpUnit tests.</comment>
             </properties>
         </dependency>
+        <dependency>
+            <groupId>commons-el</groupId>
+            <artifactId>commons-el</artifactId>
+            <version>1.0</version>
+            <type>jar</type>
+            <url>http://jakarta.apache.org/commons/el/</url>
+            <properties>
+                <comment>Needed to run HttpUnit tests.</comment>
+            </properties>
+        </dependency>
         <!--
             <dependency>
             <groupId>jdk</groupId>
