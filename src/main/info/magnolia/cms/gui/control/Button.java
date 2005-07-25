@@ -181,8 +181,9 @@ public class Button extends ControlSuper {
         }
         html.append("\" " + this.getHtmlCssClass() + ">"); //$NON-NLS-1$ //$NON-NLS-2$
 
-        html.append(this.getIconSrc());
         html.append(this.getLabel());
+        html.append(this.getIconSrc());
+
         html.append("</a>"); //$NON-NLS-1$
         return html.toString();
     }
