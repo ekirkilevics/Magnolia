@@ -8,8 +8,9 @@
      ====================================================================== -->
 <project name="project" default="release">
 	<property name="release.name" value="2.1rc2" />
+	<property name="release.tomcat.dir" value="/Users/philipp/CMS"/>
 	<property name="release.tomcat.name" value="jakarta-tomcat-5.0.28"/>
-	<property name="release.dest" value="release/${release.name}"/>
+	<property name="release.dest" value="/Users/philipp/CMS/${release.name}"/>
 	<property name="release.src" value="release"/>
 	<property name="maven.home" value="/Applications/maven-1.0.2"/>
 	
@@ -23,13 +24,14 @@
 		<delete dir="${release.dest}" failonerror="no"/>
 	</target>
 	
-	<target name="tomcat" depends="build">
-		<gunzip src="${release.src}/${release.tomcat.name}.tar.gz" />
-		<untar src="${release.src}/${release.tomcat.name}.tar" dest="${release.dest}"/>
-		<delete file="${release.src}/${release.tomcat.name}.tar" />
-		<move file="${release.dest}/${release.tomcat.name}" tofile="${release.dest}/bundled/tomcat" />
+	<target name="tomcat" depends="build" >
+		<mkdir dir="${release.dest}/bundled"/>
+		<gunzip src="${release.tomcat.dir}/${release.tomcat.name}.tar.gz" dest="${release.dest}/bundled/tomcat.tar"  />
+		<untar src="${release.dest}/bundled/tomcat.tar" dest="${release.dest}/bundled"/>
+		<move file="${release.dest}/bundled/${release.tomcat.name}" tofile="${release.dest}/bundled/tomcat"/>
+		<delete file="${release.dest}/bundled/tomcat.tar" />
 		
-		<delete dir="${release.dest}/tomcat/webapps/tomcat-docs" />
+		<delete dir="${release.dest}/bundled/tomcat/webapps/tomcat-docs" />
 		
 		<copy file="${release.src}/release notes.bundled.txt" tofile="${release.dest}/bundled/release notes.txt" overwrite="true"/>
 		<copy file="${release.src}/license.bundled.txt" tofile="${release.dest}/bundled/license.txt" overwrite="true"/>
