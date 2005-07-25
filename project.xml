@@ -24,7 +24,7 @@
     <!-- <issueTrackingUrl>http://jira.magnolia.info/browse/MAGNOLIA</issueTrackingUrl> -->
     <issueTrackingUrl>http://jira.magnolia.info/secure/BrowseProject.jspa?id=10000</issueTrackingUrl>
     <siteAddress>shell.sourceforge.net</siteAddress>
-    <siteDirectory>/home/groups/m/ma/magnolia/htdocs/</siteDirectory>
+    <siteDirectory>/home/groups/m/ma/magnolia/htdocs</siteDirectory>
     <repository>
         <connection>scm:subversion:http://svn.magnolia.info/svn/magnolia/trunk</connection>
         <developerConnection>scm:subversion:https://svn.magnolia.info/svn/magnolia/trunk</developerConnection>
@@ -449,21 +449,6 @@
                 <comment>Needed to run HttpUnit tests.</comment>
             </properties>
         </dependency>
-        <!--
-            <dependency>
-            <groupId>jdk</groupId>
-            <artifactId>tools</artifactId>
-            <version>1.4</version>
-            <type>jar</type>
-            <url>http://java.sun.com/j2se/1.4.2/download.html</url>
-            <properties>
-            <comment>
-            Needed to run HttpUnit tests. This is the tools.jar from sun jdk. Jar in not in maven repository but is set to
-            JAVA_HOME/../lib/tools.jar in project.properties
-            </comment>
-            </properties>
-            </dependency>
-        -->
         <dependency>
             <groupId>mockrunner</groupId>
             <artifactId>mockrunner</artifactId>
@@ -543,7 +528,7 @@
         </resources>
     </build>
     <reports>
-        <!--<report>maven-jira-plugin</report>-->
+        <report>maven-jira-plugin</report>
         <report>maven-changelog-plugin</report>
         <report>maven-developer-activity-plugin</report>
         <report>maven-file-activity-plugin</report>
