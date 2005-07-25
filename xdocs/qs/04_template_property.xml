@@ -4,7 +4,7 @@
         <title>Refining the page template - adding a custom property</title>
     </properties>
     <body>
-        <section name="Refining the page template - adding a custom property">
+        <section name="4. Refining the page template - adding a custom property">
             <p>
             	So let us explore some more details. First of all you will have noticed the
 	    <source>
@@ -20,12 +20,12 @@
             	-- short background intermission --
             </p>
             <p>
-            	Tjos bar will only be visible on admin pages. So what is the difference between an authoring page 
+            	This bar will only be visible on admin pages. So what is the difference between an authoring page 
             	and a public page? Well, there really is none. Magnolia has the concept of stages, where we usually 
             	have at least an authoring and a public stage, each corresponding to its own instance of the application. 
             	So if this page is displayed on an authoring instance, the admin bars will be visible. If the page is 
             	displayed on a public instance, the admin bars will not be shown. If an instance is public or authoring 
-            	is determined by the property "Config/server/admin". 
+            	is determined by the property <code>Config/server/admin</code>. 
             </p>
             <p>
             	-- end of intermission --
@@ -63,17 +63,18 @@
             	</ol>
             </p>
             
-            <subsection name="Create a custom dialog">
+            <subsection name="4.1 Create a custom dialog">
             	<p>
             		Four our example, create a folder called "quickstart".<br/>
-            		Right-click on "Config/modules/templating/dialogs" and select "New folder":
+            		Right-click on <code>Config/modules/templating/dialogs</code> and select "New folder":
 	    <source>
 <![CDATA[Config/modules/templating/dialogs/quickstart]]>	    
 	    </source>             	            		
             	</p>
             	<p>
-            		Copy the sample dialog with a right-click on "Config/modules/templating/samples/pageProperties", 
-            		select "Copy" and click on "Config/modules/templating/dialogs/quickstart".
+            		Copy the sample dialog with a right-click on 
+            		<code>Config/modules/templating/samples/pageProperties</code>, 
+            		select "Copy" and click on <code>Config/modules/templating/dialogs/quickstart</code>.
             	</p>
 	    <source>
 <![CDATA[from
@@ -90,7 +91,7 @@ to
 	    		of our page.
 	    	</p>
 	    	<p>
-	    		<img src="../images/qs/magnolia_quickstartPageProperties.jpg" />
+	    		<img src="../images/qs/04_magnolia_quickstartPageProperties.jpg" />
 	    	</p>
 	    	<p>
 	    		Thus we have a custom dialog for page properties that allows us to store our desired 
@@ -99,7 +100,7 @@ to
            	
             </subsection>
 
-            <subsection name="Create a Paragraph Definition pointing to our custom dialog">
+            <subsection name="4.2 Create a Paragraph Definition pointing to our custom dialog">
             	<p>
             <source>
 <![CDATA[Copy
@@ -114,17 +115,17 @@ and change name and dialogPath]]>
 	    </source>                         	
             	</p>
             	<p>
-            		<img src="../images/qs/magnolia_quickstartParagraphPageProperties.jpg" />
+            		<img src="../images/qs/04_magnolia_quickstartParagraphPageProperties.jpg" />
             	</p>
             </subsection>
             
-            <subsection name="Adapt the Page Template">
+            <subsection name="4.3 Adapt the Page Template">
             	<p>
             		We need to change the page template's "mainBar" paragraph-Parameter to point to our paragraph 
             		definition and adapt the page template to use our new background color property.
             	</p>
             	<p>
-            		We fire up the page template again ("/templates/jsp/quickstart/main.jsp") and replace
+            		We fire up the page template again (<code>/templates/jsp/quickstart/main.jsp</code>) and replace
             	</p>
             <source>            	
 <![CDATA["<cms:mainBar paragraph="samplesPageProperties" />"
@@ -145,22 +146,22 @@ with
 "<body bgcolor="<cms:out nodeDataName="bgcolor" />" "]]>	    
 	    </source>	     
 	    	<p>
-	    		Save all files and restart Tomcat. We will find a new property called "Background Color" in 
+	    		Save all files. We will find a new property called "Background Color" in 
 	    		our page properties dialog box. Let us try it out and enter a HTML-color-code (lets say #aabbcc) 
 	    		and save. After reloading the page, we will have a nice greyish-blue background.
 	    	</p>
 	    	<p>
-	    		<img src="qs/images/magnolia_quickstartWebPageBackground.jpg" />
+	    		<img src="../images/qs/04_magnolia_quickstartWebPageBackground.jpg" />
 	    	</p>
 	    	<p>
-	    		The cms:out tag is from our cms-taglib that we have made available at the start of our 
-	    		page template:
+	    		The <code>cms:out</code> tag is from our cms-taglib that we have made available at 
+	    		the start of our page template:
 	    	</p>
             <source>            	
 <![CDATA[<%@ taglib uri="cms-taglib" prefix="cms" %>]]>	    
 	    </source>
 	    	<p>
-	    		As we can see, cms:out allows us to access properties like "bgcolor" above.
+	    		As we can see, <code>cms:out</code> allows us to access properties like "bgcolor" above.
 	    	</p>	
 	    	<p>
 	    		Congratulations! We have defined our first custom property for a page template.

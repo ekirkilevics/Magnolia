@@ -4,8 +4,31 @@
         <title>Where to go from here</title>
     </properties>
     <body>
-        <section name="Where to go from here">
+        <section name="8. Where to go from here">
             <p>
+            	Places to explore:
+            	<ul>
+            		<li>The <b>samples-template</b> we provide will give you a lot of ideas how to proceed, 
+            		as it is considerable more complex than the examples above, and includes amongst others 
+            		a mail form paragraph that allows you to create arbitrary forms.</li>
+            		<li>The <b>tag libraries</b> - check out separate documentation or the source code 
+            		to see which tags the Magnolia tag libraries provide to make templating in JSP easier. 
+            		(Also check out the standard JSTL).</li>
+            		<li>Check <b>www.magnolia.info</b> for updates and news as well as <b>wiki.magnolia.info</b> 
+            		for community documentation.</li>
+            		<li>Visit <b>jira.magnolia.info</b> to view reported bugs or feature requests and to 
+            		submit your own.</li>
+            		<li>Get registered on the <b>magnolia-list</b> to discuss with your fellow Magnolians 
+            		(to subscribe, send an empty mail to <b>user-list-on@magnolia.info</b>).</li>
+            	</ul>
+            </p>
+            <p>
+            </p>
+            <p>
+            </p>
+            <p>
+            	For feedback and suggestions regarding this documentation, please contact the author directly: 
+            	boris.kraft@obinary.com
             </p>
             
         </section>

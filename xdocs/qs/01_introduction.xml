@@ -4,7 +4,7 @@
         <title>Introduction</title>
     </properties>
     <body>
-        <section name="Introduction">
+        <section name="1. Introduction">
             <p>
                 Welcome to Magnolia, and congratulations to the aspiring Magnolia templater! (that would be you).
                 Building templates in Magnolia is very simple once you have acquainted yourself with the basic
@@ -79,4 +79,3 @@
 
     </body>
 </document>
-

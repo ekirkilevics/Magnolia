@@ -4,12 +4,190 @@
         <title>Adding paragraphs</title>
     </properties>
     <body>
-        <section name="Adding paragraphs">
+        <section name="5. Adding paragraphs">
             <p>
+            	Within a page you will commonly find a number of differently formatted paragraphs. We may define 
+            	any number of paragraph templates to be used within a page template.
+            </p>
+            <p>
+            	Let us first create a new JSP to describe the content area of our page, where we will later add 
+            	the paragraphs (while this is not really necessary, it will make things easier for you in the 
+            	long run).
+            </p>
+            <p>
+            	In our page template <code>main.jsp</code> we replace the "Hello World" line of code with
+            </p>
+            <source>
+<![CDATA[<c:import url="content.jsp" />]]>            
+            </source>
+            <p>
+            	and create a second file called - you guessed it - <code>content.jsp</code>, which is stored in 
+            	the same directory as our <code>main.jsp</code> (<code>/templates/jsp/quickstart/content.jsp</code>).
+            </p>
+            <p>
+            	We have to add the Magnolia tag-libraries definition as we did 
+            	in <code>main.jsp</code>.
+            </p>
+            <p>
+            	Create <code>content.jsp</code> in the "quickstart" template directory 
+            	(<code>/templates/jsp/quickstart</code>) and use following code.
+            </p>
+            <source>
+<![CDATA[<%@ taglib uri="cms-taglib" prefix="cms" %>
+<%@ taglib uri="cms-util-taglib" prefix="cmsu" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<%-- <br> placed to position table below "mainBar" --%>
+<br>
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr>
+    <td>
+      <h1>
+        <cms:out nodeDataName="title" />
+      </h1>
+    </td>
+  </tr>
+</table>]]>            
+            </source>
+            <p>
+            	Reload the web page - and you should see the page title again.<br/>
+            	Edit the page title in the "Page Properties" (using the "mainBar" button "Properties").
+            </p>
+            <p>
+            	<img src="../images/qs/05_magnolia_HelloAgain.jpg" />
+            </p>
+ 
+            <p>
+            	To access paragraphs, two more admin bars exist - the "newBar" and the "editBar". Let us add 
+            	a "newBar" to the <code>content.jsp</code> template. Add the following lines at the end of 
+            	the table (after closing "<code>tr</code>" but before closing "<code>table</code>" tag):
+            </p>
+
+            <source>
+<![CDATA[  <cms:adminOnly>
+    <tr>
+      <td>
+        <cms:newBar contentNodeCollectionName="contentParagraph" paragraph="samplesTextImage" />
+      </td>
+    </tr>
+  </cms:adminOnly>]]>            
+            </source>
+
+
+            <p>
+            	The "contentNodeCollectionName" will be used when we want to access the content we store via this 
+            	dialog. It can be any name you want. The paragraph parameter allows you to add any number of paragraph 
+            	definitions, separated by commas (','). If you have defined more than one, a selection box will be 
+            	shown that allows you to choose which paragraph you wish to create (the same is true for page templates).
+            </p>
+            <strong>
+            	WARNING: there must be no spaces between the paragraph-names you provide.
+            </strong>
+            <p>
+            	The "samplesTextImage"-paragraph is provided with the Magnolia default installation, so let us see 
+            	what it looks like: Reloading the page will show you an additional green bar at the bottom of the page, 
+            	with a single new-button on it.
+            </p>
+            <p>
+            	<img src="../images/qs/05_magnolia_WebPageWithNewBar.jpg" />
+            </p>
+            <p>
+            	Click on the "New" button to get the paragraph dialog:
+            </p>
+            <p>
+            	<img src="../images/qs/05_magnolia_samplesTextImageDialog.jpg" />
+            </p>
+            <p>
+            	Enter some information, save and - you will see nothing, as we still have to include the content 
+            	in our page template, which we shall do now. Add the following lines to <code>content.jsp</code> 
+            	before the "newBar"-definition (starting at "<code>cms:adminOnly</code>".
+            </p>
+            <source>
+<![CDATA[  <cms:contentNodeIterator
+    contentNodeCollectionName="contentParagraph">
+    <cms:adminOnly>
+      <tr>
+        <td>
+          <cms:editBar/>
+        </td>
+      </tr>
+    </cms:adminOnly>
+    <cms:includeTemplate />
+  </cms:contentNodeIterator>]]>            
+            </source>            
+            <p>
+            	And here is the complete code for <code>content.jsp</code>.
+            </p>
+            <source>
+<![CDATA[<%@ taglib uri="cms-taglib" prefix="cms" %>
+<%@ taglib uri="cms-util-taglib" prefix="cmsu" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<%-- <br> placed to position table below "mainBar" --%>
+<br>
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr>
+    <td>
+      <h1>
+        <cms:out nodeDataName="title" />
+      </h1>
+    </td>
+  </tr>
+
+  <cms:contentNodeIterator
+    contentNodeCollectionName="contentParagraph">
+    <cms:adminOnly>
+      <tr>
+        <td>
+          <cms:editBar/>
+        </td>
+      </tr>
+    </cms:adminOnly>
+    <%-- These tr/td tags are needed, since the "textImage" paragraph does not have them --%>
+    <tr>
+      <td>
+        <cms:includeTemplate />
+      </td>
+    </tr>
+  </cms:contentNodeIterator>
+  
+  <cms:adminOnly>
+    <tr>
+      <td>
+        <cms:newBar contentNodeCollectionName="contentParagraph" paragraph="samplesTextImage" />
+      </td>
+    </tr>
+  </cms:adminOnly>
+</table>]]>            
+            </source>
+            <p>
+            	The <code>contentNodeIterator</code> tag will loop over the contentNode collection as defined in the 
+            	"contentNodeCollectionName" attribute. This is the same contentNode collection that is used in the 
+            	"newBar". This mechanism allows you to create several individual lists on the same page. Within 
+            	<code>contentNodeIterator</code> you find the <code>includeTemplate</code>-tag, which will render 
+            	the content of the current paragraph. Adding an "editBar" within <code>adminOnly</code>-tags allows 
+            	you to edit the paragraphs.
+            </p>
+            <p>
+            	Your page now will look something like the following (provided you have added some text and image):
+            </p>
+            <p>
+            	<img src="../images/qs/05_magnolia_WebPageWithSampleTextImage.jpg" />
+            </p>
+            <p>
+            	<strong>
+            	Since we reference the "textImage"-template from the "samples" directory, our page template would 
+            	need to be changed slightly to provide 2-column rows instead of the single column design we have 
+            	applied so far, so that the "editBar" and the "newBar" actually go across the whole paragraph width. 
+            	The "newBar" and "editBar"-tags render the content within their own table.
+            	</strong>
+            </p>
+            <p>
+            	Now you can already add as many paragraphs as you want, move them around and delete them.
             </p>
             
+                       
         </section>
 
     </body>
 </document>
-

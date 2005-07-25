@@ -4,12 +4,86 @@
         <title>Dissecting paragraph templates</title>
     </properties>
     <body>
-        <section name="Dissecting paragraph templates">
+        <section name="6. Dissecting paragraph templates">
             <p>
+            	So let us see how and where the information for paragraphs is coming from. Like page templates, 
+            	defining paragraph templates consist of three parts:
+            	<ol>
+            		<li>A dialog to define which properties we wish to store.</li>
+            		<li>A paragraph definition to map the template to the dialog and describe the template, 
+            		so that the author knows what it is meant for.</li>
+            		<li>A template (jsp or servlet) to render the information stored via the dialog.</li>
+            	</ol>
             </p>
-            
+            <p>
+            	We already know that dialog definitions are located at
+            </p>
+            <source>
+<![CDATA[Config/modules/templating/dialogs/]]>
+            </source>
+            <p>
+            	and that pargraph definitions are located at
+            </p>
+            <source>
+<![CDATA[Config/modules/templating/Paragraphs/]]>
+            </source>
+            <p>
+            	Finally, as a third part, you will need something to render the paragraph's information.
+            </p>
+            <p>
+            	So let us have a look at the dialog definition at
+            </p>
+            <source>
+<![CDATA[Config/modules/templating/dialogs/samples/mainColumn/textImage]]>
+            </source>
+            <p>
+            	<img src="../images/qs/06_magnolia_textImageDialogConfig.jpg" />
+            </p>
+            <p>
+            	The top level of a dialog definition consists of the available tabs. Each tab can hold any number 
+            	of properties, and will be rendered in the dialog box as shown below:
+            </p>
+            <p>
+            	<img src="../images/qs/06_magnolia_textImageDialog.jpg" />
+            </p>
+            <p>
+            	If we take a closer look at one of the tabs, we note that below the content node we find two data nodes 
+            	describing the tab - its labe and its (control)-type. Currently <code>tab</code> is the only available 
+            	control type for tabs. You can provide custom controls and use these if you wish.
+            </p>
+            <p>
+            	At the same level the available properties for that tab are defined as shown in the next screenshot:
+            </p>
+            <p>
+            	<img src="../images/qs/06_magnolia_textImageDialogProperties.jpg" />
+            </p>
+            <p>
+            	The properties work the same way we have already encountered the for the page properties, i.e. we 
+            	define one content node per property we wish to add, and add data nodes that describe that property.
+            </p>
+            <p>
+            	Second, the paragraph definition has the same format we already encountered for the page properties. 
+            	As you can see from the <code>templatePath</code> data node, the sample paragraph we have been using 
+            	so far has its jsp-file located at <code>templates/jsp/samples/paragraphs/textImage.jsp</code>.
+            </p>
+            <p>
+            	Third, a JSP file exists to render the paragraph information. Let us have a look at a couple of 
+            	tags we find in the jsp, for example:
+            </p>
+            <source>
+<![CDATA[<cms:ifNotEmpty nodeDataName="image" >]]>
+            </source>
+            <p>
+            	Test if a given <code>nodeData</code> has a value. The <code>nodeDataName</code> (in this case: 
+            	"image") is defined in the dialog-definition above. There is a corresponding <code>cms:ifEmpty</code> 
+            	tag.
+            </p>
+            <p>
+            	(All tags are documented at <code>www.magnolia.info</code>)
+            </p>
+            <p>
+            	So by now we should be able to implement our first custom paragraph. Lets do it!
+            </p>
         </section>
-
     </body>
 </document>
-

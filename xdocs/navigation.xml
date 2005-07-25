@@ -11,7 +11,7 @@
 
         <menu name="Documentation">
             <item name="Introduction" href="/intro/intro.html" />
-            
+
             <item name="Build and install" href="/install/install.html" collapse="true">
                 <item name="Installing" href="/install/install.html" />
                 <item name="Upgrade" href="/install/upgrade.html" />
@@ -28,10 +28,14 @@
             </item>
 
             <item name="Templating Quickstart" href="/qs/01_introduction.html" collapse="true">
-                <item name="Introduction" href="/qs/01_introduction.html" />
-                <item name="Create a Page Template" href="/qs/02_template_advertising.html" />
-                <item name="Building a Page Template" href="/qs/03_template_building.html" />
-                <item name="Refining the Page Template" href="/qs/04_template_property.html" />
+                <item name="1. Introduction" href="/qs/01_introduction.html" />
+                <item name="2. Create a Page Template" href="/qs/02_template_advertising.html" />
+                <item name="3. Building a Page Template" href="/qs/03_template_building.html" />
+                <item name="4. Refining the Page Template" href="/qs/04_template_property.html" />
+                <item name="5. Adding Paragraphs" href="/qs/05_paragraphs.html" />
+                <item name="6. Dissecting Paragraph Templates" href="/qs/06_paragraphs_dissecting.html" />
+                <item name="7. First paragraph" href="/qs/07_firstparagraph.html" />
+                <item name="8. Where to go" href="/qs/08_wheretogo.html" />
             </item>
 
             <item name="Templating" href="/templating/templating.html" collapse="true">

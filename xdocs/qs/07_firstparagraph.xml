@@ -4,12 +4,136 @@
         <title>Our first paragraph - a text paragraph with subtitle</title>
     </properties>
     <body>
-        <section name="Our first paragraph - a text paragraph with subtitle">
+        <section name="7. Our first paragraph - a text paragraph with subtitle">
             <p>
+            	Just to get you started, we will define a very simple text paragraph, consisting of <code>Title</code>, 
+            	<code>Subtitle</code> and <code>Content</code> properties. We start with defining the dialog, then 
+            	create the paragraph description and finally we will define what the output will look like using JSP. 
+            	This what we will get:
             </p>
+            <p>
+            	<img src="../images/qs/07_magnolia_ExtendedTextOutput.jpg" />
+            </p>
+            <p>
+            	Copy the page properties dialog
+            </p>
+            <source>
+<![CDATA[Config/modules/templating/dialogs/quickstart/pageProperties
+
+to
+
+Config/modules/templating/dialogs/quickstart/extendedText]]>
+            </source>    
+            <p>
+            	To do so, right-click on <code>pageProperties</code>, select "Copy" from the Context Menu and move 
+            	the mouse pointer to the parent node ("quickstart"). The subtree will be copied to 
+            	<code>Config/modules/templating/dialogs/quickstart/pageProperties0</code>. Double-click on the name 
+            	and change it to <code>extendedText</code>.
+            </p>
+            <p>
+            	<img src="../images/qs/07_magnolia_pageProperties0.jpg" />
+            </p>
+            <p>
+            	(Alternatively we can create the structure from scratch).
+            </p>
+            <p>
+            	Let us define the properties we wish to have available by deleting background color data node and 
+            	copying the <code>title</code> node to <code>subtitle</code> and <code>content</code>, then 
+            	renaming the entries to match the following screenshot:
+            </p>
+            <p>
+            	<img src="../images/qs/07_magnolia_ExtendedTextDialogDefinition.jpg" />
+            </p>
+            <p>
+            	Now we need to add a paragraph definition:
+            </p>
+            <source>
+<![CDATA[Config/modules/templating/Paragraphs/quickstart/extendedText]]>
+            </source>        
+            <p>
+            	The simplest way is to copy an existing paragraph definition and adjust it to our needs. The 
+            	result should look as follows:
+            </p>            
+            <p>
+            	<img src="../images/qs/07_magnolia_ExtendedTextParagraph.jpg" />
+            </p>
+            <p>
+            	Now define the rendering in <code>html</code> by providing the jsp-file 
+            	<code>/templates/jsp/quickstart/paragraphs/extendedText.jsp</code>. Please note that we keep 
+            	the <code>html</code> intentionally simple, so that we do not drown relevant parts in style and layout.
+            </p>
+            <source>
+<![CDATA[<%@ taglib uri="cms-taglib" prefix="cms" %>
+<%@ taglib uri="cms-util-taglib" prefix="cmsu" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<%-- <br> placed to position table below "mainBar" --%>
+<br>
+<tr>
+  <td>
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+
+      <cms:ifNotEmpty nodeDataName="title" >
+        <tr>
+          <td>
+            <h2>
+              <cms:out nodeDataName="title" />
+            </h2>
+          </td>
+        </tr>
+      </cms:ifNotEmpty>
+
+      <cms:ifNotEmpty nodeDataName="subtitle" >
+        <tr>
+          <td>
+            <b><cms:out nodeDataName="subtitle" /></b>
+          </td>
+        </tr>
+      </cms:ifNotEmpty>
+
+      <cms:ifNotEmpty nodeDataName="content" >
+        <tr>
+          <td>
+            <cms:out nodeDataName="content" />
+          </td>
+        </tr>
+      </cms:ifNotEmpty>
+      
+    </table>
+  </td>
+</tr>]]>
+            </source>            
+            <p>
+            	Finally, to make this paragraph available in our quickstart page template, we need to revisit 
+            	<code>/templates/jsp/quickstart/content.jsp</code> and change the line
+            </p>
+            <source>
+<![CDATA[<cms:newBar contentNodeCollectionName="contentParagraph" paragraph="samplesTextImage" />
+
+to
+
+<cms:newBar contentNodeCollectionName="contentParagraph" 
+	paragraph="samplesTextImage,quickstartExtendedText" />]]>
+            </source>
+            <p>
+            	Make sure you have no spaces between the two paragraph definitions. Restart Tomcat and enjoy your first 
+            	custom paragraph!
+            </p>
+            <p>
+            	<img src="../images/qs/07_magnolia_ExtendedTextDialog.jpg" />
+            </p>
+            <p>
+            	Remember that we customized only one (the author-) instance in this tutorial. To make your changes 
+            	available at other (public-) instances, you need to copy the new or modified jsp files to other 
+            	instances using the file system. All changes to the configuration can be <code>activated</code> 
+            	directly through the administration GUI - simply click on the corresponding <code>content nodes</code> 
+            	and choose "Activate incl. sub nodes". In our case, we have modified "dialogs", "Paragraphs" and 
+            	"Templates". As configuration can differ between your instances, you should generally not activate 
+            	the whole <code>Config/modules</code> tree unless you know what you are doing.
+            </p>
+            
             
         </section>
 
     </body>
 </document>
-

@@ -4,22 +4,23 @@
         <title>Building a page template</title>
     </properties>
     <body>
-        <section name="Building a page template">
+        <section name="3. Building a page template">
             <p>
             	A Web page is based on a so called "Page Template". In a dynamic world (like a CMS) the Template
             	consists of a server side script, which is executed and the result is returned to the Client.
             	The "Quickstart Template" we have created refers to
-            	<p>
-            		templates/jsp/quickstart/main.jsp
-            	</p>
-            	This path/file has been defined in the previous section. The "templates/jsp/quickstart" directory 
+            	<source>
+templates/jsp/quickstart/main.jsp
+            	</source>
+            	This path/file has been defined in the previous section. The <code>templates/jsp/quickstart</code> directory 
             	can contain several "templates" (meaning: several template scripts), since any template can include 
-            	other templates (e.g. "main.jsp" can include templates like "navigation.jsp", "content.jsp", etc.).
+            	other templates (e.g. <code>main.jsp</code> can include templates like <code>navigation.jsp</code>, 
+            	<code>content.jsp</code>, etc.).
             </p>
             <p>
             	<strong>
             		WARNING: even though this file is in UTF8, be warned that template directories and names 
-            		must be in ASCII.
+            		MUST be in ASCII.
             	</strong>
             </p>
             <p>
@@ -35,10 +36,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>]]>
             </source>
             <p>
-            	This will include the standard (JSTL) and magnolia tab-libraries.
+            	This will include the standard JSTL (which we will need later) and the Magnolia tag-libraries.
             </p>
             <p>
-            	Now lets start the HTML and HEAD.
+            	Now lets start the <code>HTML</code> and <code>HEAD</code>.
             </p>
             <source>
 <![CDATA[<%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -47,24 +48,25 @@
     <title>
       <cms:out nodeDataName="title" />
     </title>
-  </head>
-</html>]]>
+  </head>]]>
             </source>
             <p>
             	When creating a new Web Page you define a "title" as well. This property is available for every 
-            	Web page you create. We get the content of property "title" with the cms-tag "out"..
+            	Web page you create. We get the content of property "title" with the cms-tag <code>out</code>..
             </p>
             <p>
-            	On we move with the BODY:
+            	On we move with the <code>BODY</code>:
             </p>
+            <source>
 <![CDATA[... (continued) ...
 <body bgcolor="#ffffff" >
     <cms:mainBar paragraph="samplesPageProperties" />
     <br><h2>Hello World</h2></br>
   </body>
 </html>]]>     
+	    </source>
 	    <p>
-	    	Let us save the file in the template directory (in this case "templates/jsp/quickstart/main.jsp"). 
+	    	Let us save the file in the template directory (in this case <code>templates/jsp/quickstart/main.jsp</code>). 
 	    	You will need to create the directory first, as it is completely up to you how you name your templates, 
 	    	and "quickstart" is just an example for the purpose of this tutorial. 
 	    </p>   
@@ -75,7 +77,7 @@
 	    	"Main Bar" and our message to the world.
 	    </p>
 	    <p>
-	    	<img src="../images/qs/magnolia_quickstartWebPage.jpg" />
+	    	<img src="../images/qs/03_magnolia_quickstartWebPage.jpg" />
 	    </p>
 	    <p>
 	    	Congratulations! You have just created your first working template in Magnolia.
@@ -86,5 +88,3 @@
 
     </body>
 </document>
-
-
