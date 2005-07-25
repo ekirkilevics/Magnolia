@@ -13,6 +13,7 @@
 
 package info.magnolia.cms.i18n;
 
+import java.lang.reflect.Field;
 import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.Locale;
@@ -30,6 +31,11 @@ import org.apache.log4j.Logger;
  */
 
 public class Messages {
+
+    /**
+     * The log4j logger
+     */
+    private static Logger log = Logger.getLogger(Messages.class);
 
     /**
      * Name of the javascript object used to make the messages public to the javascripts
@@ -55,6 +61,7 @@ public class Messages {
      * Used by sublcasses. Do not use without knowledge
      */
     protected Messages() {
+
     }
 
     /**
@@ -216,5 +223,25 @@ public class Messages {
      */
     public ResourceBundle getBundle(String basename, Locale locale) {
         return ResourceBundle.getBundle(basename, getLocale());
+    }
+
+    public void reloadBundles() {
+        reloadBundle(getBundle());
+    }
+
+    protected void reloadBundle(ResourceBundle bund) {
+        try {
+            Class klass = bund.getClass().getSuperclass();
+            Field field;
+            field = klass.getDeclaredField("cacheList");
+            field.setAccessible(true);
+            sun.misc.SoftCache cache = (sun.misc.SoftCache) field.get(null);
+            cache.clear();
+            if (log.isInfoEnabled())
+                log.info("Cleaning messages for locale:" + bund.getLocale() + "...");
+        }
+        catch (Exception e) {
+            log.error("Error while cleaning messages ...");
+        }
     }
 }

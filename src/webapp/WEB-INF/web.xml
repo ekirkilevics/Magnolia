@@ -94,6 +94,10 @@
         <servlet-name>fileThumbnail</servlet-name>
         <servlet-class>info.magnolia.module.admininterface.dialogpages.FileThumbnailDialogPage</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ReloadI18nServlet</servlet-name>
+        <servlet-class>info.magnolia.cms.servlets.ReloadI18nServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>magnolia</servlet-name>
         <url-pattern>/</url-pattern>
@@ -145,6 +149,10 @@
     <servlet-mapping>
         <servlet-name>fileThumbnail</servlet-name>
         <url-pattern>/admintemplates/dialogs/fileThumbnail.jsp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReloadI18nServlet</servlet-name>
+        <url-pattern>/.magnolia/reload-i18n/*</url-pattern>
     </servlet-mapping>
     <listener>
         <description>Magnolia initializer</description>
