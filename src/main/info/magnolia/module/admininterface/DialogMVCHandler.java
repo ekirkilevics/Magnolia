@@ -217,7 +217,12 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
             try {
                 Content parentContent = hm.getContent(path);
                 if (StringUtils.isEmpty(nodeName)) {
-                    storageNode = parentContent;
+                    if (StringUtils.isEmpty(nodeCollectionName)) {
+                        storageNode = parentContent;
+                    }
+                    else {
+                        storageNode = parentContent.getContent(nodeCollectionName);
+                    }
                 }
                 else {
                     if (StringUtils.isEmpty(nodeCollectionName)) {
