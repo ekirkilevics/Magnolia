@@ -5,7 +5,7 @@
 		Build 1074
 
               Jun 17th 2005
-           Release Notes v 2.1 RC2 
+           Release Notes v 2.1 RC3 
 
           http://www.magnolia.info/
 
@@ -34,7 +34,7 @@ Magnolia Package
 ===============================================
 The Package contains:
 
- Magnolia 2.1 RC2
+ Magnolia 2.1 RC3
  Samples
 
 =============================================== 
@@ -87,7 +87,7 @@ The default username & password are:
 
 
 =============================================== 
-Known Issues in Magnolia 2.1 RC2
+Known Issues in Magnolia 2.1 RC3
 =============================================== 
 
 http://www.magnolia.info/en/magnolia/developer/issues.html
@@ -119,7 +119,7 @@ for details on our commercial services regarding
 Magnolia
 
 
-Thanks for using Magnolia 2.1 RC2
+Thanks for using Magnolia 2.1 RC3
 
 obinary ltd.
 marketing@magnolia.info

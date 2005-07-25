@@ -5,7 +5,7 @@
                 Build 1074
 
               July 20th 2005
-           Release Notes v 2.1 RC2 
+           Release Notes v 2.1 RC3 
 
           http://www.magnolia.info/
 
@@ -37,7 +37,7 @@ Magnolia Package
 The Package contains:
  
  Apache Tomcat 5.0.28
- Magnolia 2.1 RC2
+ Magnolia 2.1 RC3
  Samples
 
 
@@ -126,7 +126,7 @@ The default username & password are:
 
 
 =============================================== 
-Known Issues in magnolia 2.1 RC2
+Known Issues in magnolia 2.1 RC3
 =============================================== 
 
 http://www.magnolia.info/en/magnolia/developer/issues.html
