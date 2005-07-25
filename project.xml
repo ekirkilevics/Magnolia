@@ -15,9 +15,9 @@
     <packageName>info.magnolia</packageName>
     <logo>/images/magnolia-logo.png</logo>
     <description>
-        Magnolia is a free enterprise class content management system developed by obinary. Magnolia uses the upcoming standard API for java
-        content repositories (JCR) to access its content. It has an easy to use web-browser interface, a clear API and a useful custom tag
-        library for easy templating in JSP and Servlets.
+        Magnolia is a free enterprise class content management system developed by obinary. Magnolia uses the upcoming
+        standard API for java content repositories (JCR) to access its content. It has an easy to use web-browser
+        interface, a clear API and a useful custom tag library for easy templating in JSP and Servlets.
     </description>
     <shortDescription>Magnolia Content Management Suite</shortDescription>
     <url>http://magnolia.sourceforge.net</url>
@@ -465,7 +465,7 @@
         <dependency>
             <groupId>maven-taglib</groupId>
             <artifactId>maven-taglib-plugin</artifactId>
-            <version>1.3</version>
+            <version>1.3.1</version>
             <type>plugin</type>
             <url>http://maven-taglib.sourceforge.net</url>
             <properties>
@@ -488,7 +488,9 @@
             <type>plugin</type>
             <url>http://magnolia.sourceforge.net/repository/maven/plugins/maven-war-plugin-1.7-UNOFFICIAL-1.jar</url>
             <properties>
-                <comment>war plugin: unofficial builds which adds the patch in http://jira.codehaus.org/browse/MPWAR-30</comment>
+                <comment>
+                    war plugin: unofficial builds which adds the patch in http://jira.codehaus.org/browse/MPWAR-30
+                </comment>
             </properties>
         </dependency>
         <dependency>
