@@ -565,6 +565,83 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
         </attribute>
     </tag>
     <tag>
+		<name>ifNotExisting</name>
+		<tag-class>info.magnolia.cms.taglibs.IfNotExisting</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+				evaluates the body only if a container and / or the corresponding atom does not exist
+		</description>
+		<attribute>
+				<name>nodeDataName</name>
+				<required>false</required>
+				<rtexprvalue>true</rtexprvalue>
+				<description></description>
+		</attribute>
+		<attribute>
+				<name>atomName</name>
+				<required>false</required>
+				<rtexprvalue>true</rtexprvalue>
+				<description></description>
+		</attribute>
+		<attribute>
+				<name>contentNodeName</name>
+				<required>false</required>
+				<rtexprvalue>true</rtexprvalue>
+				<description></description>
+		</attribute>
+		<attribute>
+				<name>contentNodeCollectionName</name>
+				<required>false</required>
+				<rtexprvalue>true</rtexprvalue>
+				<description></description>
+		</attribute>
+		<attribute>
+				<name>actpage</name>
+				<required>false</required>
+				<rtexprvalue>true</rtexprvalue>
+				<type>boolean</type>
+				<description></description>
+		</attribute>
+    </tag>
+    <tag>
+		<name>ifExisting</name>
+		<tag-class>info.magnolia.cms.taglibs.IfExisting</tag-class>
+		<body-content>JSP</body-content>
+		<description>this is exactly the opposite of the ifNotExisting Tag</description>
+		<attribute>
+				<name>nodeDataName</name>
+				<required>false</required>
+				<rtexprvalue>true</rtexprvalue>
+				<description></description>
+		</attribute>
+		<attribute>
+				<name>atomName</name>
+				<required>false</required>
+				<rtexprvalue>true</rtexprvalue>
+				<description></description>
+		</attribute>
+		<attribute>
+				<name>contentNodeName</name>
+				<required>false</required>
+				<rtexprvalue>true</rtexprvalue>
+				<description></description>
+		</attribute>
+		<attribute>
+				<name>contentNodeCollectionName</name>
+				<required>false</required>
+				<rtexprvalue>true</rtexprvalue>
+				<description></description>
+		</attribute>
+		<attribute>
+				<name>actpage</name>
+				<required>false</required>
+				<rtexprvalue>true</rtexprvalue>
+				<type>boolean</type>
+				<description></description>
+		</attribute>
+    </tag>
+    
+    <tag>
         <name>loadPage</name>
         <tag-class>info.magnolia.cms.taglibs.LoadPage</tag-class>
         <body-content>JSP</body-content>
