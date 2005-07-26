@@ -2,9 +2,8 @@
 
               M A G N O L I A
           Content Management Suite
-		Build 1074
 
-              Jun 17th 2005
+              Jun 26th 2005
            Release Notes v 2.1 RC3 
 
           http://www.magnolia.info/
