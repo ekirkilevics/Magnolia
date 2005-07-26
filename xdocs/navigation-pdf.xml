@@ -2,16 +2,11 @@
 <project name="Magnolia">
     <title>Magnolia</title>
     <body>
-
-        
-       <menu name="Documentation">
-           <item name="Introduction" href="/intro/intro.html"/>
-           
-            <item name="Build and install" href="/install/install.html" collapse="true">
-                <item name="Installing" href="/install/install.html" />
-                <item name="Upgrade" href="/install/upgrade.html" />
-                <item name="Building Magnolia" href="/install/build.html" />
-            </item>
+        <menu name="Documentation">
+            <item name="Introduction" href="/intro/intro.html" />
+            <item name="Installing" href="/install/install.html" />
+            <item name="Upgrade" href="/install/upgrade.html" />
+            <item name="Building Magnolia" href="/install/build.html" />
 
             <item name="Configuration" href="/config/configuration.html" collapse="true">
                 <item name="Public instance" href="/config/public.html" />
@@ -19,12 +14,10 @@
                 <item name="Activation" href="/config/activation.html" />
             </item>
 
-            <item name="Quickstart" href="/qs/01_introduction.html" collapse="true">
-                <item name="Introduction" href="/qs/01_introduction.html" />
-                <item name="Create a Page Template" href="/qs/02_template_advertising.html" />
-                <item name="Building a Page Template" href="/qs/03_template_building.html" />
-                <item name="Refining the Page Template" href="/qs/04_template_property.html" />
-            </item>
+            <item name="Quickstart: Introduction" href="/qs/01_introduction.html" />
+            <item name="Create a Page Template" href="/qs/02_template_advertising.html" />
+            <item name="Building a Page Template" href="/qs/03_template_building.html" />
+            <item name="Refining the Page Template" href="/qs/04_template_property.html" />
 
             <item name="Templating" href="/templating/templating.html" collapse="true">
                 <item name="Templates" href="/templating/templates.html" />
@@ -34,6 +27,5 @@
                 <item name="I18N" href="/templating/i18n.html" />
             </item>
         </menu>
-
     </body>
 </project>
