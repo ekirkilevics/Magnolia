@@ -267,7 +267,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         }
 
         if (isLabel) {
-            displayValue = tree.renameNode(value);
+            displayValue = rename(value);
         }
         else if (isNodeDataType) {
             int type = Integer.valueOf(value).intValue();
@@ -289,6 +289,15 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         }
 
         return VIEW_VALUE;
+    }
+
+    /**
+     * Called during a renaming of a node. First is the action saveValue called
+     * @param value the new name
+     * @return return the new name (can change if there were not allowed characters passed)
+     */
+    protected String rename(String value) {
+        return tree.renameNode(value);
     }
 
     /**
