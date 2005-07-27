@@ -13,11 +13,14 @@
 function MgnlDynamicTable(tableName, hiddenField, getNewObjectFunction, getObjectFunction, renderObjectFunction, validateFunction){
 	this.tableName = tableName;
 	this.objects = new Array();
-	// object getObject(prefix) returns an object with the content of the fields
+	
+	// object getNewObject()
 	this.getNewObject = getNewObjectFunction;
+
+	// object getObject(prefix) returns an object with the content of the fields
 	this.getObject = getObjectFunction;
 
-	// string renderObject(prefix, index, object)
+	// string renderObject(cell, prefix, rowNumber, object);
 	this.renderObject = renderObjectFunction;
 	// boolean validate(object)
 	this.validate = validateFunction;
