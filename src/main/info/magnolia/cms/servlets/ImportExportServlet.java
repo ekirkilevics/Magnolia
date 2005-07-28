@@ -70,6 +70,11 @@ public class ImportExportServlet extends HttpServlet {
     private static final String PARAM_KEEPVERSIONS = "mgnlKeepVersions"; //$NON-NLS-1$
 
     /**
+     * request parameter: format
+     */
+    private static final String PARAM_FORMAT = "mgnlFormat"; //$NON-NLS-1$
+
+    /**
      * request parameter: imported file.
      */
     private static final String PARAM_FILE = "mgnlFileImport"; //$NON-NLS-1$
@@ -88,6 +93,11 @@ public class ImportExportServlet extends HttpServlet {
      * request parameter: export requested.
      */
     private static final String PARAM_EXPORT_ACTION = "exportxml"; //$NON-NLS-1$
+
+    /**
+     * Number of space for indentation
+     */
+    private static final int INDENT_VALUE = 2; //$NON-NLS-1$
 
     /**
      * Logger.
@@ -116,11 +126,12 @@ public class ImportExportServlet extends HttpServlet {
         }
 
         boolean keepVersionHistory = BooleanUtils.toBoolean(request.getParameter(PARAM_KEEPVERSIONS));
+        boolean format = BooleanUtils.toBoolean(request.getParameter(PARAM_FORMAT));
 
         if (request.getParameter(PARAM_EXPORT_ACTION) != null) {
 
             if (checkPermissions(request, repository, basepath, Permission.WRITE)) {
-                executeExport(response, repository, basepath, keepVersionHistory);
+                executeExport(response, repository, basepath, format, keepVersionHistory);
                 return;
             }
 
@@ -157,6 +168,7 @@ public class ImportExportServlet extends HttpServlet {
         writeRepositoryField(request, out, repository);
         writeBasePathField(request, out, basepath);
         writeKeepVersionField(request, out);
+        writeFormatField(request, out);
 
         out.println("<input type=\"submit\" name=\"" //$NON-NLS-1$
             + PARAM_EXPORT_ACTION + "\" value=\"" //$NON-NLS-1$
@@ -190,26 +202,20 @@ public class ImportExportServlet extends HttpServlet {
             + " <input type=\"file\" name=\"" + PARAM_FILE + "\" /><br/>"); //$NON-NLS-1$//$NON-NLS-2$
 
         out.println("<input type=\"radio\" name=\"" //$NON-NLS-1$
-            + PARAM_UUID_BEHAVIOR
-            + "\" value=\"" //$NON-NLS-1$
-            + ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW
-            + "\">"); //$NON-NLS-1$
+            + PARAM_UUID_BEHAVIOR + "\" value=\"" //$NON-NLS-1$
+            + ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW + "\">"); //$NON-NLS-1$
         out.println(MessagesManager.get(request, "importexport.createnew")); //$NON-NLS-1$
         out.println("<br/>"); //$NON-NLS-1$
 
         out.println("<input type=\"radio\" name=\"" //$NON-NLS-1$
-            + PARAM_UUID_BEHAVIOR
-            + "\" value=\"" //$NON-NLS-1$
-            + ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING
-            + "\">"); //$NON-NLS-1$
+            + PARAM_UUID_BEHAVIOR + "\" value=\"" //$NON-NLS-1$
+            + ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING + "\">"); //$NON-NLS-1$
         out.println(MessagesManager.get(request, "importexport.removeexisting")); //$NON-NLS-1$
         out.println("<br/>"); //$NON-NLS-1$
 
         out.println("<input type=\"radio\" name=\"" //$NON-NLS-1$
-            + PARAM_UUID_BEHAVIOR
-            + "\" value=\"" //$NON-NLS-1$
-            + ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING
-            + "\">"); //$NON-NLS-1$
+            + PARAM_UUID_BEHAVIOR + "\" value=\"" //$NON-NLS-1$
+            + ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING + "\">"); //$NON-NLS-1$
         out.println(MessagesManager.get(request, "importexport.replaceexisting")); //$NON-NLS-1$
         out.println("<br/>"); //$NON-NLS-1$
 
@@ -239,6 +245,15 @@ public class ImportExportServlet extends HttpServlet {
         out.println(MessagesManager.get(request, "importexport.keepversions") //$NON-NLS-1$
             + " <input name=\"" //$NON-NLS-1$
             + PARAM_KEEPVERSIONS + "\" value=\"true\" type=\"checkbox\"/><br/>"); //$NON-NLS-1$
+    }
+
+    /**
+     * @param out
+     */
+    private void writeFormatField(HttpServletRequest request, PrintWriter out) {
+        out.println(MessagesManager.get(request, "importexport.format") //$NON-NLS-1$
+            + " <input name=\"" //$NON-NLS-1$
+            + PARAM_FORMAT + "\" value=\"true\" type=\"checkbox\"/><br/>"); //$NON-NLS-1$
     }
 
     /**
@@ -325,10 +340,11 @@ public class ImportExportServlet extends HttpServlet {
      * @param response HttpServletResponse
      * @param repository selected repository
      * @param basepath base path in repository
+     * @param format should we format the resulting xml
      * @param keepVersionHistory if <code>false</code> version info will be stripped from the exported document
      * @throws IOException for errors while accessing the servlet output stream
      */
-    private void executeExport(HttpServletResponse response, String repository, String basepath,
+    private void executeExport(HttpServletResponse response, String repository, String basepath, boolean format,
         boolean keepVersionHistory) throws IOException {
         HierarchyManager hr = ContentRepository.getHierarchyManager(repository);
         Workspace ws = hr.getWorkspace();
@@ -348,40 +364,17 @@ public class ImportExportServlet extends HttpServlet {
             if (keepVersionHistory) {
                 // use exportSystemView in order to preserve property types
                 // http://issues.apache.org/jira/browse/JCR-115
-                session.exportSystemView(basepath, stream, false, false);
+                if (!format)
+                    session.exportSystemView(basepath, stream, false, false);
+                else {
+                    parseAndFormat(stream, null, repository, basepath, format, session);
+                }
             }
             else {
-
-                // write to a temp file and then re-read it to remove version history
-                File tempFile = File.createTempFile("export", "xml"); //$NON-NLS-1$ //$NON-NLS-2$
-                tempFile.deleteOnExit();
-                OutputStream fileStream = new FileOutputStream(tempFile);
-
-                session.exportSystemView(basepath, fileStream, false, false);
-
-                try {
-                    fileStream.close();
-                }
-                catch (IOException e) {
-                    // ignore
-                }
-
-                InputStream fileInputStream = new FileInputStream(tempFile);
-
                 // use XMLSerializer and a SAXFilter in order to rewrite the file
                 XMLReader reader = new VersionFilter(XMLReaderFactory
                     .createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName()));
-
-                reader.setContentHandler(new XMLSerializer(stream, new OutputFormat()));
-
-                reader.parse(new InputSource(fileInputStream));
-
-                try {
-                    fileInputStream.close();
-                }
-                catch (IOException e) {
-                    // ignore
-                }
+                parseAndFormat(stream, reader, repository, basepath, format, session);
             }
         }
         catch (Exception e) {
@@ -391,6 +384,59 @@ public class ImportExportServlet extends HttpServlet {
         stream.flush();
         stream.close();
         return;
+    }
+
+    /**
+     * This export the content of the repository, and format it if necessary
+     * @param stream the stream to write the content to
+     * @param reader the reader to use to parse the xml content (so that we can perform filtering), if null instanciate
+     * a default one
+     * @param repository the repository to export
+     * @param basepath the basepath in the repository
+     * @param format should we format the xml
+     * @param session the session to use to export the data from the repository
+     * @throws Exception if anything goes wrong ...
+     */
+    private void parseAndFormat(OutputStream stream, XMLReader reader, String repository, String basepath,
+        boolean format, Session session) throws Exception {
+
+        if (reader == null)
+            reader = XMLReaderFactory.createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName());
+
+        // write to a temp file and then re-read it to remove version history
+        File tempFile = File.createTempFile("export-" + repository + session.getUserID(), "xml"); //$NON-NLS-1$ //$NON-NLS-2$
+        tempFile.deleteOnExit();
+        OutputStream fileStream = new FileOutputStream(tempFile);
+
+        session.exportSystemView(basepath, fileStream, false, false);
+
+        try {
+            fileStream.close();
+        }
+        catch (IOException e) {
+            // ignore
+        }
+
+        InputStream fileInputStream = new FileInputStream(tempFile);
+
+        OutputFormat forma = new OutputFormat();
+        if (format) {
+            forma.setIndenting(true);
+            forma.setIndent(INDENT_VALUE);
+        }
+        reader.setContentHandler(new XMLSerializer(stream, forma));
+
+        reader.parse(new InputSource(fileInputStream));
+
+        try {
+            fileInputStream.close();
+        }
+        catch (IOException e) {
+            // ignore
+        }
+
+        if (!tempFile.delete())
+            log.error("Could not delete temporary export file..." + tempFile.getAbsolutePath());
     }
 
     /**

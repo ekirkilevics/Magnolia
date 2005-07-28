@@ -512,7 +512,10 @@ public class ContextMessages extends Messages {
         return ret;
     }
 
-    public void reloadBundles() {
+    /**
+     * Reload bundles 
+     */
+    public void reloadBundles() throws Exception{
         reloadBundle(loc.getResourceBundle());
     }
 

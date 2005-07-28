@@ -225,11 +225,11 @@ public class Messages {
         return ResourceBundle.getBundle(basename, getLocale());
     }
 
-    public void reloadBundles() {
+    public void reloadBundles() throws Exception {
         reloadBundle(getBundle());
     }
 
-    protected void reloadBundle(ResourceBundle bund) {
+    protected void reloadBundle(ResourceBundle bund)  throws Exception{
         try {
             Class klass = bund.getClass().getSuperclass();
             Field field;
@@ -242,6 +242,7 @@ public class Messages {
         }
         catch (Exception e) {
             log.error("Error while cleaning messages ...");
+            throw e;
         }
     }
 }
