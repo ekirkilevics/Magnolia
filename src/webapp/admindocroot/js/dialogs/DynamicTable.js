@@ -3,6 +3,60 @@
 ################################### */
 
 /* ###################################
+This is an example
+Header:
+<script src="${pageContext.request.contextPath}/admindocroot/js/json.js"></script>
+<script src="${pageContext.request.contextPath}/admindocroot/js/dialogs/DynamicTable.js"></script>
+
+Body:
+<script>
+	// create an object for a new line
+	function getNewObject(){
+		return {value:''};
+	}
+	
+	// extracts an object from the content
+	function getObject(prefix){
+		// to get the cell use getElementById(prefix)
+		var obj = new Object();
+		obj.value = document.getElementById(prefix + "_value").value;
+		return obj;
+	}
+	
+	// render a row
+	function renderObject(cell, prefix, rowNumber, obj){
+		html = '<input type="text" id="' + prefix + '_value" value="' + obj.value + '">';
+		html += '<input type="button" onclick="searchTable.addNew();" value="+">';
+		html += '<input type="button" onclick="searchTable.del(' + rowNumber + ');" value="-">';
+		cell.innerHTML = html;
+	}
+	
+	function validate(obj){
+		return true;
+	}
+</script>
+
+<table id="searchTable"><tr><td></td></tr></table>
+
+Use JSON to parse this returned value<br>
+<input type="button" value="save" onclick="searchTable.persist()">
+<input type="text" name="persist">
+
+<script>
+	// initialize
+	var hiddenField = document.formAdvancedSearch.persist;
+	var searchTable = new MgnlDynamicTable("searchTable", hiddenField, getNewObject, getObject, renderObject, validate);
+	
+	// use JSON format to persist
+	searchTable.json=true;
+
+	// load the table with the current value
+	searchTable.add({value:'hello'});
+	searchTable.addNew();
+</script>
+################################### */
+
+/* ###################################
 ### DynamicTable Class
 ################################### */
 
@@ -26,6 +80,9 @@ function MgnlDynamicTable(tableName, hiddenField, getNewObjectFunction, getObjec
 	this.validate = validateFunction;
 	// used for persistence
 	this.hiddenField = hiddenField;
+	
+	// default persistence is some thing handmade
+	this.json=false;
 }
 
 
@@ -101,7 +158,15 @@ MgnlDynamicTable.prototype.getObjects = function(){
 ### Render the table
 ################################### */
 
-MgnlDynamicTable.prototype.render = function (object){
+MgnlDynamicTable.prototype.render = function (update){
+	if(update==null){
+		update = false;
+	}
+	
+	if(update){
+		this.objects = this.getObjects();
+	}
+
 	// delte all
 	var table = document.getElementById(this.tableName);
 
@@ -126,14 +191,20 @@ MgnlDynamicTable.prototype.render = function (object){
 MgnlDynamicTable.prototype.persist = function (){
 	var str = "";
 	this.objects = this.getObjects();
-
-	// persist all
-	for(i=0; i < this.objects.length; i++){
-		if(i >0)
-			str += "; ";
-		str += this.persistObject(this.objects[i]) ;
+	
+	if(this.json){
+		// must include the json javascript
+		str = JSON.stringify(this.objects);		
 	}
-	str += "";
+	// old model
+	else{
+		// persist all
+		for(i=0; i < this.objects.length; i++){
+			if(i >0)
+				str += "; ";
+			str += this.persistObject(this.objects[i]) ;
+		}
+	}
 	this.hiddenField.value = str;
 }
 
