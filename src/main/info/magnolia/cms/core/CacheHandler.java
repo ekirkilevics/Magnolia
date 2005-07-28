@@ -180,6 +180,8 @@ public class CacheHandler extends Thread {
 
         try {
             URL url = new URL(domain + uri);
+            if (log.isDebugEnabled())
+                log.debug("Streaming uri:" + url.toExternalForm());
             URLConnection urlConnection = url.openConnection();
             if (SecureURI.isProtected(uri)) {
                 urlConnection.setRequestProperty("Authorization", request.getHeader("Authorization")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -219,8 +221,12 @@ public class CacheHandler extends Thread {
             url.append(':');
             url.append(port);
         }
-        url.append("/"); //$NON-NLS-1$
-        url.append(request.getContextPath());
+        String contextPath = request.getContextPath();
+        if (contextPath.length() > 0 && contextPath.charAt(0) == '/')
+            ;
+        else
+            url.append("/"); //$NON-NLS-1$
+        url.append(contextPath);
 
         return url.toString();
     }
@@ -298,6 +304,10 @@ public class CacheHandler extends Thread {
             if (file.length() < 4) {
                 return false;
             }
+
+            if (log.isDebugEnabled())
+                log.debug("Streaming from cache the file:" + file.getAbsolutePath());
+
             fin = new FileInputStream(file);
             if (compress) {
                 response.setContentLength(Cache.getCompressedSize(request));
@@ -432,7 +442,7 @@ public class CacheHandler extends Thread {
             CacheHandler.validatePath(CACHE_DIRECTORY);
             CacheHandler.validatePath(CACHE_DIRECTORY + DEFAULT_STORE);
             CacheHandler.validatePath(CACHE_DIRECTORY + COMPRESSED_STORE);
-            
+
             // clear in-memory cache also
             Cache.clearCachedURIList();
         }
