@@ -64,4 +64,11 @@ public class ParagraphEditDialog extends ConfiguredDialog {
 
         return para.getDialogContent();
     }
+
+    /**
+     * @return Returns the paragraph.
+     */
+    public String getParagraph() {
+        return paragraph;
+    }
 }
