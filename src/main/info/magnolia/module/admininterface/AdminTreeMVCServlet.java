@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 
 /**
@@ -34,11 +33,6 @@ public class AdminTreeMVCServlet extends MVCServlet {
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
-
-    /**
-     * Logger.
-     */
-    private static Logger log = Logger.getLogger(AdminTreeMVCServlet.class);
 
     /**
      * @see info.magnolia.cms.servlets.MVCServlet#getHandler(javax.servlet.http.HttpServletRequest)

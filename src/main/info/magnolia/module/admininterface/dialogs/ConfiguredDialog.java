@@ -19,11 +19,13 @@ import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.module.admininterface.DialogMVCHandler;
 
 import java.lang.reflect.Constructor;
+import java.text.MessageFormat;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -83,14 +85,17 @@ public class ConfiguredDialog extends DialogMVCHandler {
     public static ConfiguredDialog getConfiguredDialog(String name, Content configNode, HttpServletRequest request,
         HttpServletResponse response, Class defaultClass) {
         // get class name
-        String className;
+        String className = null;
         try {
             Class handlerClass = defaultClass;
             try {
                 className = configNode.getNodeData("class").getString(); //$NON-NLS-1$
-                handlerClass = Class.forName(className);
+                if (StringUtils.isNotEmpty(className)) {
+                    handlerClass = Class.forName(className);
+                }
             }
             catch (Exception e) {
+                log.error(MessageFormat.format("Unable to load class {0}", new Object[]{className}));
             }
             Constructor constructor = handlerClass.getConstructor(new Class[]{
                 String.class,

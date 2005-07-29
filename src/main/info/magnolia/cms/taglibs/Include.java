@@ -181,11 +181,11 @@ public class Include extends BodyTagSupport {
         catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        finally {
-            // commendet out because the node should be present after the tag
-            // following tags are else not able to get the current node 
-            //Resource.removeLocalContentNode((HttpServletRequest) pageContext.getRequest());
-        }
+        // finally {
+        // commented out because the node should be present after the tag
+        // following tags are else not able to get the current node
+        // Resource.removeLocalContentNode((HttpServletRequest) pageContext.getRequest());
+        // }
         this.removeAttributes();
         return EVAL_PAGE;
     }

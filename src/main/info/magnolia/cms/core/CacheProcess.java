@@ -14,8 +14,6 @@ package info.magnolia.cms.core;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
-
 
 /**
  * Thread responsible to start a cache process. This will only work if a valid request object has been initialized
@@ -24,11 +22,6 @@ import org.apache.log4j.Logger;
  * @version $Revision $ ($Author $)
  */
 public class CacheProcess extends Thread {
-
-    /**
-     * Logger
-     */
-    private static Logger log = Logger.getLogger(CacheProcess.class);
 
     /**
      * request

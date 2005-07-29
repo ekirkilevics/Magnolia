@@ -11,7 +11,6 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.apache.log4j.Logger;
 
 
 /**
@@ -26,11 +25,6 @@ public class LinksTag extends TagSupport {
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
-
-    /**
-     * Logger.
-     */
-    private static Logger log = Logger.getLogger(MainBar.class);
 
     /**
      * Show links only in admin instance, default to <code>true</code>.

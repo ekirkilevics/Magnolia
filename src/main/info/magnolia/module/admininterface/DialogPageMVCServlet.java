@@ -12,14 +12,9 @@
  */
 package info.magnolia.module.admininterface;
 
-import java.util.Enumeration;
-import java.util.Iterator;
-
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.servlets.MVCServlet;
 import info.magnolia.cms.servlets.MVCServletHandler;
 import info.magnolia.cms.util.RequestFormUtil;
-import info.magnolia.module.admininterface.dialogs.ConfiguredDialog;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -73,7 +68,7 @@ public class DialogPageMVCServlet extends MVCServlet {
                 log.error("no dialogpage found: " + pageName); //$NON-NLS-1$
             }
         }
-        else{
+        else {
             log.error("no dialogpage name passed"); //$NON-NLS-1$
         }
 

@@ -12,7 +12,6 @@ import info.magnolia.cms.gui.dialog.DialogFactory;
 import info.magnolia.cms.gui.dialog.DialogInclude;
 import info.magnolia.cms.gui.dialog.DialogStatic;
 import info.magnolia.cms.gui.dialog.DialogTab;
-import info.magnolia.cms.security.Permission;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
@@ -34,13 +33,6 @@ public class UserRolesEditDialog extends ConfiguredDialog {
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
-
-    // todo: permission global available somewhere
-    private static final long PERMISSION_ALL = Permission.ALL;
-
-    private static final long PERMISSION_READ = Permission.READ;
-
-    private static final long PERMISSION_NO = 0;
 
     /**
      * @param name
@@ -140,6 +132,7 @@ public class UserRolesEditDialog extends ConfiguredDialog {
                 role.delete("acl_" + repository); //$NON-NLS-1$
             }
             catch (RepositoryException re) {
+                // ignore, not existing
             }
             // rewrite
             try {

@@ -16,7 +16,6 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 
 /**
@@ -30,11 +29,6 @@ public class StrToObj extends BodyTagSupport {
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
-
-    /**
-     * Legger.
-     */
-    private static Logger log = Logger.getLogger(StrToObj.class);
 
     private String var;
 

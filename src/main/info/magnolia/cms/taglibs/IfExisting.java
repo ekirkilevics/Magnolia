@@ -13,7 +13,6 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.Resource;
 
 import javax.jcr.RepositoryException;
@@ -47,11 +46,7 @@ public class IfExisting extends ConditionalTagSupport {
 
     private String contentNodeCollectionName = StringUtils.EMPTY;
 
-    private transient Content contentNodeCollection;
-
     private transient Content contentNode;
-
-    private transient NodeData nodeData;
 
     private boolean actpage;
 
@@ -127,11 +122,11 @@ public class IfExisting extends ConditionalTagSupport {
             if (this.contentNode != null) {
 
                 try {
-                    if ( this.contentNode.hasNodeData(this.nodeDataName) ) {
+                    if (this.contentNode.hasNodeData(this.nodeDataName)) {
                         return true;
                     }
                 }
-                catch ( RepositoryException e ) {
+                catch (RepositoryException e) {
                     return false;
                 }
             }
@@ -153,11 +148,11 @@ public class IfExisting extends ConditionalTagSupport {
             if (this.contentNode != null) {
 
                 try {
-                    if ( this.contentNode.hasNodeData(this.nodeDataName) ) {
+                    if (this.contentNode.hasNodeData(this.nodeDataName)) {
                         return true;
                     }
                 }
-                catch ( RepositoryException e ) {
+                catch (RepositoryException e) {
                     return false;
                 }
             }
@@ -179,9 +174,7 @@ public class IfExisting extends ConditionalTagSupport {
      * @see javax.servlet.jsp.tagext.BodyTagSupport#doEndTag()
      */
     public int doEndTag() throws JspException {
-        this.contentNodeCollection = null;
         this.contentNode = null;
-        this.nodeData = null;
         return super.doEndTag();
     }
 

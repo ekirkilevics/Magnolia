@@ -20,8 +20,6 @@ import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
-import org.apache.log4j.Logger;
-
 
 /**
  * @author Sameer Charles
@@ -31,11 +29,6 @@ import org.apache.log4j.Logger;
  * info.magnolia.cms.core.Content to bind to any kind of NodeType
  */
 public class ContentNode extends Content {
-
-    /**
-     * Logger
-     */
-    private static Logger log = Logger.getLogger(ContentNode.class);
 
     /**
      * JCR node which act as a base for this object

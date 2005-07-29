@@ -23,7 +23,6 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.apache.log4j.Logger;
 
 
 /**
@@ -37,11 +36,6 @@ public class EditBar extends TagSupport {
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
-
-    /**
-     * Logger.
-     */
-    private static Logger log = Logger.getLogger(EditBar.class);
 
     private String nodeName;
 

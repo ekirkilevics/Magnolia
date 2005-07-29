@@ -36,14 +36,14 @@ import org.apache.log4j.Logger;
  * Since JSTL doesn't allow calling a method like <code>Content.getNodeData(String)</code> the <code>Content</code>
  * is wrapped into a <code>NodeMapWrapper</code> which exposes NodeData using a map interface. This tag can be useful
  * in similar situations:
- * 
+ *
  * <pre>
  * &lt;cms:setNode var="currentNode"/>
  * &lt;c:if test="${!empty currentNode.title}">
  *   &lt;c:out value="${currentNode.title}"/>
  * &lt;/c:if>
  * </pre>
- * 
+ *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
@@ -158,15 +158,14 @@ public class SetNode extends TagSupport {
         else {
             if (local == null) {
                 // outside collection iterator
-                if (StringUtils.isNotEmpty(contentNodeCollectionName)) {
-                    // ERROR: no content node assignable because contentNodeName is empty
-                    // e.g. <cms:setNode contentNodeCollectionName="mainPars"/>
-                }
-                else {
+                if (StringUtils.isEmpty(contentNodeCollectionName)) {
                     // e.g. <cms:setNode contentNodeName=""/>
                     // e.g. <cms:setNode contentNodeCollectionName=""/>
                     contentNode = actpage;
                 }
+                // else:
+                // ERROR: no content node assignable because contentNodeName is empty
+                // e.g. <cms:setNode contentNodeCollectionName="mainPars"/>
             }
             else {
                 // inside collection iterator
