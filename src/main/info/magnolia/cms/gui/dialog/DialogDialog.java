@@ -136,6 +136,13 @@ public class DialogDialog extends DialogSuper {
         // out.write(" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">");
 
         out.write("<html>"); //$NON-NLS-1$
+        this.drawHtmlPreSubsHead(out);
+        out.write("<body class=\"mgnlDialogBody\" onload=\"mgnlDialogInit();\">"); //$NON-NLS-1$
+        this.drawHtmlPreSubsForm(out);
+        this.drawHtmlPreSubsTabSet(out);
+    }
+
+    protected void drawHtmlPreSubsHead(Writer out) throws IOException {
         out.write("<head>"); //$NON-NLS-1$
         out.write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>"); // kupu //$NON-NLS-1$
         out.write("<script type=\"text/javascript\">"); //$NON-NLS-1$
@@ -159,7 +166,9 @@ public class DialogDialog extends DialogSuper {
         this.drawJavascriptSources(out);
         this.drawCssSources(out);
         out.write("</head>"); //$NON-NLS-1$
-        out.write("<body class=\"mgnlDialogBody\" onload=\"mgnlDialogInit();\">"); //$NON-NLS-1$
+    }
+
+    protected void drawHtmlPreSubsForm(Writer out) throws IOException {
         out.write("<form action=\"" //$NON-NLS-1$
             + this.getAction() + "\" name=\"mgnlFormMain\" method=\"post\" enctype=\"multipart/form-data\">"); //$NON-NLS-1$
         out.write(new Hidden("mgnlDialog", this.getConfigValue("dialog"), false).getHtml()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -173,19 +182,25 @@ public class DialogDialog extends DialogSuper {
         if (this.getConfigValue("paragraph").indexOf(",") == -1) { //$NON-NLS-1$ //$NON-NLS-2$
             out.write(new Hidden("mgnlParagraph", this.getConfigValue("paragraph"), false).getHtml()); //$NON-NLS-1$ //$NON-NLS-2$
         } // else multiple paragraph selection -> radios for selection
-        // TabSet stuff
+    }
+
+    protected void drawHtmlPreSubsTabSet(Writer out) throws IOException {
         String id = this.getId();
         out.write("<script type=\"text/javascript\">"); //$NON-NLS-1$
         out.write("mgnlControlSets['" + id + "']=new Object();"); //$NON-NLS-1$ //$NON-NLS-2$
         out.write("mgnlControlSets['" + id + "'].items=new Array();"); //$NON-NLS-1$ //$NON-NLS-2$
         out.write("mgnlControlSets['" + id + "'].resize=true;"); //$NON-NLS-1$ //$NON-NLS-2$
         out.write("</script>"); //$NON-NLS-1$
-        // end TabSet stuff
     }
 
     public void drawHtmlPostSubs(Writer out) throws IOException {
-        Messages msgs = MessagesManager.getMessages(getRequest());
+        this.drawHtmlPostSubsTabSet(out);
+        this.drawHtmlPostSubsButtons(out);
 
+        out.write("</form></body></html>"); //$NON-NLS-1$
+    }
+
+    protected void drawHtmlPostSubsTabSet(Writer out) throws IOException {
         // TabSet stuff
         String id = this.getId();
         out.write("<div class=\"" + CssConstants.CSSCLASS_TABSETBUTTONBAR + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -206,6 +221,11 @@ public class DialogDialog extends DialogSuper {
         out.write("mgnlDialogShiftTab('" + id + "',false,0)"); //$NON-NLS-1$ //$NON-NLS-2$
         out.write("</script>"); //$NON-NLS-1$
         // end TabSet stuff
+    }
+
+    protected void drawHtmlPostSubsButtons(Writer out) throws IOException {
+        Messages msgs = MessagesManager.getMessages(getRequest());
+
         out.write("<div class=\"" + CssConstants.CSSCLASS_TABSETSAVEBAR + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
 
         Button save = new Button();
@@ -218,6 +238,5 @@ public class DialogDialog extends DialogSuper {
         out.write(cancel.getHtml());
 
         out.write("</div>"); //$NON-NLS-1$
-        out.write("</form></body></html>"); //$NON-NLS-1$
     }
 }
