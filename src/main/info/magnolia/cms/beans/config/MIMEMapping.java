@@ -15,6 +15,7 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.core.Content;
 
+import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
@@ -43,8 +44,6 @@ public final class MIMEMapping {
 
     private static final String START_PAGE = "server"; //$NON-NLS-1$
 
-    private static Iterator mimeList;
-
     private static Map cachedContent = new Hashtable();
 
     /**
@@ -70,8 +69,8 @@ public final class MIMEMapping {
         try {
             log.info("Config : loading MIMEMapping"); //$NON-NLS-1$
             Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(START_PAGE);
-            MIMEMapping.mimeList = startPage.getContent("MIMEMapping").getChildren().iterator(); //$NON-NLS-1$
-            MIMEMapping.cacheContent();
+            Collection mimeList = startPage.getContent("MIMEMapping").getChildren(); //$NON-NLS-1$
+            MIMEMapping.cacheContent(mimeList);
             log.info("Config : MIMEMapping loaded"); //$NON-NLS-1$
         }
         catch (RepositoryException re) {
@@ -118,9 +117,10 @@ public final class MIMEMapping {
     /**
      * Cache all MIME types configured.
      */
-    private static void cacheContent() {
-        while (MIMEMapping.mimeList.hasNext()) {
-            Content c = (Content) MIMEMapping.mimeList.next();
+    private static void cacheContent(Collection mimeList) {
+        Iterator iterator = mimeList.iterator();
+        while (iterator.hasNext()) {
+            Content c = (Content) iterator.next();
             try {
                 MIMEMapping.cachedContent.put(c.getNodeData("extension").getString(), c //$NON-NLS-1$
                     .getNodeData("mime-type") //$NON-NLS-1$
@@ -130,7 +130,6 @@ public final class MIMEMapping {
                 log.error("Failed to cache MIMEMapping"); //$NON-NLS-1$
             }
         }
-        MIMEMapping.mimeList = null;
     }
 
     /**
