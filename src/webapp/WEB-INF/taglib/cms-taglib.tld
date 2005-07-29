@@ -30,9 +30,7 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
             <type>boolean</type>
-            <description>
-				Set it to false if you don't want to show the AdminCentral button
-            </description>
+            <description>Set it to false if you don't want to show the AdminCentral button</description>
         </attribute>
     </tag>
     <tag>
@@ -275,9 +273,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
             <type>boolean</type>
-            <description>
-                Show content in the Preview. Default is false.
-            </description>
+            <description>Show content in the Preview. Default is false.</description>
         </attribute>
         <example>
             <![CDATA[
@@ -287,25 +283,18 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
 ]]>
         </example>
     </tag>
-
     <tag>
         <name>publicOnly</name>
         <tag-class>info.magnolia.cms.taglibs.PublicOnly</tag-class>
         <body-content>JSP</body-content>
-        <description>
-            Everything between publicOnly tags will only be shown on the public instance.
-        </description>
-
+        <description>Everything between publicOnly tags will only be shown on the public instance.</description>
         <attribute>
             <name>showInPreview</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
             <type>boolean</type>
-            <description>
-                Show content in the Preview. Default is true.
-            </description>
+            <description>Show content in the Preview. Default is true.</description>
         </attribute>
-
         <example>
             <![CDATA[
 <cms:publicOnly>
@@ -313,9 +302,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
 </cms:publicOnly>
 ]]>
         </example>
-        
     </tag>
-
     <tag>
         <name>includeTemplate</name>
         <tag-class>info.magnolia.cms.taglibs.Include</tag-class>
@@ -334,7 +321,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
             <name>contentNode</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <type>info.magnolia.cms.core.ContentNode</type>
+            <type>info.magnolia.cms.core.Content</type>
             <description></description>
         </attribute>
         <attribute>
@@ -347,7 +334,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
             <name>container</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <type>info.magnolia.cms.core.ContentNode</type>
+            <type>info.magnolia.cms.core.Content</type>
             <description>@deprecated use contentNode</description>
         </attribute>
     </tag>
@@ -372,14 +359,14 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
             <name>contentNode</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <type>info.magnolia.cms.core.ContentNode</type>
+            <type>info.magnolia.cms.core.Content</type>
             <description>contentNodeobject to be set as global contentNode for the page</description>
         </attribute>
         <attribute>
             <name>container</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <type>info.magnolia.cms.core.ContentNode</type>
+            <type>info.magnolia.cms.core.Content</type>
             <description>@deprecated use contentNode</description>
         </attribute>
     </tag>
@@ -565,82 +552,79 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
         </attribute>
     </tag>
     <tag>
-		<name>ifNotExisting</name>
-		<tag-class>info.magnolia.cms.taglibs.IfNotExisting</tag-class>
-		<body-content>JSP</body-content>
-		<description>
-				evaluates the body only if a container and / or the corresponding atom does not exist
-		</description>
-		<attribute>
-				<name>nodeDataName</name>
-				<required>false</required>
-				<rtexprvalue>true</rtexprvalue>
-				<description></description>
-		</attribute>
-		<attribute>
-				<name>atomName</name>
-				<required>false</required>
-				<rtexprvalue>true</rtexprvalue>
-				<description></description>
-		</attribute>
-		<attribute>
-				<name>contentNodeName</name>
-				<required>false</required>
-				<rtexprvalue>true</rtexprvalue>
-				<description></description>
-		</attribute>
-		<attribute>
-				<name>contentNodeCollectionName</name>
-				<required>false</required>
-				<rtexprvalue>true</rtexprvalue>
-				<description></description>
-		</attribute>
-		<attribute>
-				<name>actpage</name>
-				<required>false</required>
-				<rtexprvalue>true</rtexprvalue>
-				<type>boolean</type>
-				<description></description>
-		</attribute>
+        <name>ifNotExisting</name>
+        <tag-class>info.magnolia.cms.taglibs.IfNotExisting</tag-class>
+        <body-content>JSP</body-content>
+        <description>evaluates the body only if a container and / or the corresponding atom does not exist</description>
+        <attribute>
+            <name>nodeDataName</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description></description>
+        </attribute>
+        <attribute>
+            <name>atomName</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description></description>
+        </attribute>
+        <attribute>
+            <name>contentNodeName</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description></description>
+        </attribute>
+        <attribute>
+            <name>contentNodeCollectionName</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description></description>
+        </attribute>
+        <attribute>
+            <name>actpage</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
+            <description></description>
+        </attribute>
     </tag>
     <tag>
-		<name>ifExisting</name>
-		<tag-class>info.magnolia.cms.taglibs.IfExisting</tag-class>
-		<body-content>JSP</body-content>
-		<description>this is exactly the opposite of the ifNotExisting Tag</description>
-		<attribute>
-				<name>nodeDataName</name>
-				<required>false</required>
-				<rtexprvalue>true</rtexprvalue>
-				<description></description>
-		</attribute>
-		<attribute>
-				<name>atomName</name>
-				<required>false</required>
-				<rtexprvalue>true</rtexprvalue>
-				<description></description>
-		</attribute>
-		<attribute>
-				<name>contentNodeName</name>
-				<required>false</required>
-				<rtexprvalue>true</rtexprvalue>
-				<description></description>
-		</attribute>
-		<attribute>
-				<name>contentNodeCollectionName</name>
-				<required>false</required>
-				<rtexprvalue>true</rtexprvalue>
-				<description></description>
-		</attribute>
-		<attribute>
-				<name>actpage</name>
-				<required>false</required>
-				<rtexprvalue>true</rtexprvalue>
-				<type>boolean</type>
-				<description></description>
-		</attribute>
+        <name>ifExisting</name>
+        <tag-class>info.magnolia.cms.taglibs.IfExisting</tag-class>
+        <body-content>JSP</body-content>
+        <description>this is exactly the opposite of the ifNotExisting Tag</description>
+        <attribute>
+            <name>nodeDataName</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description></description>
+        </attribute>
+        <attribute>
+            <name>atomName</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description></description>
+        </attribute>
+        <attribute>
+            <name>contentNodeName</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description></description>
+        </attribute>
+        <attribute>
+            <name>contentNodeCollectionName</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description></description>
+        </attribute>
+        <attribute>
+            <name>actpage</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
+            <description></description>
+        </attribute>
     </tag>
-    
     <tag>
         <name>loadPage</name>
         <tag-class>info.magnolia.cms.taglibs.LoadPage</tag-class>
