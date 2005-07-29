@@ -72,7 +72,7 @@ public class SimpleSearchTag extends TagSupport {
     /**
      * keywords.
      */
-    public static final String[] KEYWORDS = new String[]{"and", "or"}; //$NON-NLS-1$ //$NON-NLS-2$
+    static final String[] KEYWORDS = new String[]{"and", "or"}; //$NON-NLS-1$ //$NON-NLS-2$
 
     /**
      * Logger.

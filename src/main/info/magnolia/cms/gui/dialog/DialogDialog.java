@@ -28,7 +28,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 
 /**
@@ -44,11 +43,6 @@ public class DialogDialog extends DialogSuper {
     public static final String DIALOGSIZE_SLIM_WIDTH = "500"; //$NON-NLS-1$
 
     public static final String DIALOGSIZE_SLIM_HEIGHT = "600"; //$NON-NLS-1$
-
-    /**
-     * Logger.
-     */
-    private static Logger log = Logger.getLogger(DialogDialog.class);
 
     private String callbackJavascript = "opener.document.location.reload();window.close();"; //$NON-NLS-1$
 

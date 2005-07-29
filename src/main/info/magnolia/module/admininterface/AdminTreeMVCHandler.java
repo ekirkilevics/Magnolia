@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 
 /**
@@ -38,11 +37,6 @@ import org.apache.log4j.Logger;
  */
 
 public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = Logger.getLogger(AdminTreeMVCHandler.class);
 
     /**
      * this are the used actions
@@ -309,7 +303,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
     public void renderHtml(String view) throws IOException {
         StringBuffer html = new StringBuffer(500);
 
-        if (view == VIEW_TREE || view == VIEW_CREATE || view == VIEW_COPY_MOVE) {
+        if (VIEW_TREE.equals(view) || VIEW_CREATE.equals(view) || VIEW_COPY_MOVE.equals(view)) {
             // if there was a node created we have not to set the pathes
             if (view != VIEW_CREATE) {
                 tree.setPathOpen(pathOpen);

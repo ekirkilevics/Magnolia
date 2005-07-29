@@ -22,7 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 
 /**
@@ -35,11 +34,6 @@ public final class Resource {
      * Attribute used for enabling the preview mode.
      */
     public static final String MGNL_PREVIEW_ATTRIBUTE = "mgnlPreview"; //$NON-NLS-1$
-
-    /**
-     * Logger.
-     */
-    private static Logger log = Logger.getLogger(Resource.class);
 
     private static final String GLOBAL_CONTENT_NODE = "contentObjGlobal"; //$NON-NLS-1$
 

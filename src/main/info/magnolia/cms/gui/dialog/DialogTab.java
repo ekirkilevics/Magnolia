@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.Writer;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 
 /**
@@ -28,11 +27,6 @@ import org.apache.log4j.Logger;
  * @version 2.0
  */
 public class DialogTab extends DialogSuper {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = Logger.getLogger(DialogTab.class);
 
     /**
      * Empty constructor should only be used by DialogFactory.

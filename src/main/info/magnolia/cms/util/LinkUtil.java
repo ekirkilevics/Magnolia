@@ -19,7 +19,8 @@ import info.magnolia.cms.core.HierarchyManager;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
+import javax.jcr.RepositoryException;
+
 import org.apache.log4j.Logger;
 
 
@@ -153,27 +154,29 @@ public final class LinkUtil {
      * @return relative path
      */
     public static String makeRelativePath(String absolutePath, Content page) {
-        String relativePath = StringUtils.EMPTY;
+        StringBuffer relativePath = new StringBuffer();
         int level;
         try {
             level = page.getLevel();
         }
-        catch (Exception e) {
+        catch (RepositoryException e) {
             level = 0;
         }
 
         for (int i = 1; i < level; i++) {
-            relativePath += "../"; //$NON-NLS-1$
+            relativePath.append("../"); //$NON-NLS-1$
         }
 
         if (absolutePath.startsWith("/")) { //$NON-NLS-1$
-            relativePath += absolutePath.substring(1);
+            relativePath.append(absolutePath.substring(1));
         }
         else {
-            relativePath += absolutePath;
+            relativePath.append(absolutePath);
         }
 
-        return relativePath + ".html"; //$NON-NLS-1$
+        relativePath.append(".html"); //$NON-NLS-1$
+
+        return relativePath.toString();
     }
 
     /**

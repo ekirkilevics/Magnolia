@@ -693,7 +693,7 @@ public class Tree extends ControlSuper {
                     posAbove = c.getMetaData().getSequencePosition();
 
                 }
-                if (touchedType != selectedType) {
+                if (!touchedType.equals(selectedType)) {
                     if (touchedType.equals(ItemType.CONTENTNODE.getSystemName())
                         && selectedType.equals(ItemType.CONTENT.getSystemName())) {
                         // move at first position

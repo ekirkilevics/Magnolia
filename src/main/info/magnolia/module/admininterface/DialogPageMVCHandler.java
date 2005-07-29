@@ -12,13 +12,13 @@
  */
 package info.magnolia.module.admininterface;
 
-import java.io.IOException;
-
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.servlets.MVCServletHandlerImpl;
 import info.magnolia.cms.util.RequestFormUtil;
 import info.magnolia.cms.util.Resource;
+
+import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,7 +27,7 @@ import org.apache.log4j.Logger;
 
 
 /**
- * This is the MVCHandler for simple dialog pages. 
+ * This is the MVCHandler for simple dialog pages.
  * @author Philipp Bracher
  * @version $Revision$
  */
@@ -42,7 +42,7 @@ public abstract class DialogPageMVCHandler extends MVCServletHandlerImpl {
     protected static final String COMMAND_SHOW = "show"; //$NON-NLS-1$
 
     protected static final String VIEW_DRAW = "draw"; //$NON-NLS-1$
- 
+
     /**
      * the request passed by the MVCServlet
      */
@@ -61,7 +61,6 @@ public abstract class DialogPageMVCHandler extends MVCServletHandlerImpl {
     protected info.magnolia.cms.i18n.Messages msgs;
 
     protected RequestFormUtil params;
-
 
     /**
      * @param request
@@ -91,9 +90,9 @@ public abstract class DialogPageMVCHandler extends MVCServletHandlerImpl {
     public String show() {
         return VIEW_DRAW;
     }
-    
+
     public void renderHtml(String view) throws IOException {
-        if(view == VIEW_DRAW){
+        if (VIEW_DRAW.equals(view)) {
             try {
                 draw(request, response);
             }

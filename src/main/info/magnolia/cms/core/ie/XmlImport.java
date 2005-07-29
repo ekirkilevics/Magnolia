@@ -34,6 +34,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
@@ -47,7 +48,7 @@ import org.jdom.input.SAXBuilder;
  */
 public class XmlImport implements ImportHandler {
 
-    /*******************************************************************************************************************
+    /**
      * Logger.
      */
     private static Logger log = Logger.getLogger(XmlExport.class);
@@ -236,12 +237,11 @@ public class XmlImport implements ImportHandler {
                     nodeData.setValue(cal);
                 }
                 catch (ParseException e) {
-                    log.error("Failed to parse date with the given format " + dateFormat); //$NON-NLS-1$
-                    log.error(e);
+                    log.error("Failed to parse date with the given format " + dateFormat, e); //$NON-NLS-1$
                 }
                 break;
             case PropertyType.BOOLEAN:
-                nodeData.setValue((new Boolean(value)).booleanValue());
+                nodeData.setValue(BooleanUtils.toBoolean(value));
                 break;
             case PropertyType.BINARY:
                 nodeData.setValue(new ByteArrayInputStream(Base64.decodeBase64(value.getBytes())));

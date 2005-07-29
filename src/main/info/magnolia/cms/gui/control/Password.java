@@ -38,11 +38,10 @@ public class Password extends ControlSuper {
 
     public String getHtml() {
         StringBuffer html = new StringBuffer();
-        String valueDecoded = StringUtils.EMPTY;
         String value = StringUtils.EMPTY;
         if (this.getEncoding() == ENCODING_BASE64) {
             // show number of characters (using spaces)
-            valueDecoded = new String(Base64.decodeBase64(this.getValue().getBytes()));
+            String valueDecoded = new String(Base64.decodeBase64(this.getValue().getBytes()));
 
             for (int i = 0; i < valueDecoded.length(); i++) {
                 value += " "; //$NON-NLS-1$

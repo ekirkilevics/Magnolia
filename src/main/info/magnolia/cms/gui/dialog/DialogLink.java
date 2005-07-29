@@ -20,19 +20,12 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
-
 
 /**
  * @author Vinzenz Wyser
  * @version 2.0
  */
 public class DialogLink extends DialogEditWithButton {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = Logger.getLogger(DialogLink.class);
 
     /**
      * Empty constructor should only be used by DialogFactory.

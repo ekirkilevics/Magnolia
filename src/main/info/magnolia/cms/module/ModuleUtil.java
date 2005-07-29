@@ -157,10 +157,10 @@ public final class ModuleUtil {
 
             // Exclude root, dirs, ch-dir, META-INF-dir and jars
             if (!name.equals("/") //$NON-NLS-1$
-                & !name.endsWith("/") //$NON-NLS-1$
-                & !name.startsWith("CH") //$NON-NLS-1$
-                & !name.startsWith("META-INF") //$NON-NLS-1$
-                & !name.endsWith(".JAR")) { //$NON-NLS-1$
+                && !name.endsWith("/") //$NON-NLS-1$
+                && !name.startsWith("CH") //$NON-NLS-1$
+                && !name.startsWith("META-INF") //$NON-NLS-1$
+                && !name.endsWith(".JAR")) { //$NON-NLS-1$
                 files.put(new File(root, entry.getName()), entry);
             }
         }
@@ -171,7 +171,7 @@ public final class ModuleUtil {
         while (iter.hasNext()) {
             File file = (File) iter.next();
             String s = StringUtils.EMPTY;
-            if (!file.getParentFile().exists() & !file.getParentFile().mkdirs()) {
+            if (!file.getParentFile().exists() && !file.getParentFile().mkdirs()) {
                 s = "Can't create directories for " + file.getAbsolutePath(); //$NON-NLS-1$
             }
             else if (!file.getParentFile().canWrite()) {

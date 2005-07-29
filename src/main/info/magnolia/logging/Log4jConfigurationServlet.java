@@ -43,7 +43,7 @@ import org.apache.log4j.Logger;
  * <p>
  * web.xml configuration:
  * </p>
- * 
+ *
  * <pre>
  * &lt;servlet>
  *   &lt;servlet-name>log4j&lt;/servlet-name>
@@ -51,12 +51,12 @@ import org.apache.log4j.Logger;
  *   &lt;servlet-class>org.apache.log4j.servlet.ConfigurationServlet&lt;/servlet-class>
  * &lt;/servlet>
  * </pre>
- * 
+ *
  * <p>
  * The <code>fragment</code> parameter can be added if you don't want a full xhtml page in output, but only the
  * content of the body tag, so that it can be used in portlets or struts tiles.
  * </p>
- * 
+ *
  * <pre>
  * &lt;servlet>
  *   &lt;servlet-name>log4j&lt;/servlet-name>
@@ -68,7 +68,7 @@ import org.apache.log4j.Logger;
  *   &lt;/init-param>
  * &lt;/servlet>
  * </pre>
- * 
+ *
  * @author Luther E. Birdzell lebirdzell@yahoo.com
  * @author Yoav Shapira yoavs@apache.org
  * @author Fabrizio Giustina
@@ -338,7 +338,7 @@ public class Log4jConfigurationServlet extends HttpServlet {
     /**
      * Compare the names of two <code>Logger</code>s. Used for sorting.
      */
-    private class LoggerComparator implements Comparator {
+    private static class LoggerComparator implements Comparator {
 
         /**
          * Sort by level? (default is sort by class name)

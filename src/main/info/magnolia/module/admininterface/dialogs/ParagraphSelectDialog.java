@@ -59,9 +59,7 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
      * @see .DialogMVCHandler#createDialog(Content, Content)
      */
     protected DialogDialog createDialog(Content configNode, Content websiteNode) throws RepositoryException {
-        DialogDialog dialog = super.createDialog(configNode, websiteNode);
-        // multiple paragraphs: show selection dialog
-        dialog = DialogFactory.getDialogDialogInstance(request, response, null, null);
+        DialogDialog dialog = DialogFactory.getDialogDialogInstance(request, response, null, null);
 
         dialog.setConfig("paragraph", paragraph); //$NON-NLS-1$
 

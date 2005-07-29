@@ -118,15 +118,8 @@ public class Aggregator {
      * Parse uri to get exact Content path.
      */
     private void parseURI() {
-        try {
-            int lastIndexOfDot = Path.getURI(this.request).lastIndexOf("."); //$NON-NLS-1$
-            this.uri = Path.getURI(this.request).substring(0, lastIndexOfDot);
-            this.extension = Path.getURI(this.request).substring(lastIndexOfDot + 1);
-        }
-        catch (Exception e) {
-            this.uri = Path.getURI(this.request);
-            this.extension = Server.getDefaultExtension();
-        }
+        this.uri = StringUtils.substringBeforeLast(Path.getURI(this.request), "."); //$NON-NLS-1$
+        this.extension = StringUtils.substringAfterLast(Path.getURI(this.request), "."); //$NON-NLS-1$
     }
 
     /**

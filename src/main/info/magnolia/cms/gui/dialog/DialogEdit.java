@@ -20,19 +20,12 @@ import java.io.Writer;
 
 import javax.jcr.PropertyType;
 
-import org.apache.log4j.Logger;
-
 
 /**
  * @author Vinzenz Wyser
  * @version 2.0
  */
 public class DialogEdit extends DialogBox {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = Logger.getLogger(DialogEdit.class);
 
     /**
      * Empty constructor should only be used by DialogFactory.
