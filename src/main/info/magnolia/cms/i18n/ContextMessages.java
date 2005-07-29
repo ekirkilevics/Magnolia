@@ -79,16 +79,10 @@ public class ContextMessages extends Messages {
     private LocalizationContext loc;
 
     /**
-     * Current request
-     */
-    private HttpServletRequest req;
-
-    /**
      * Get the bundle and the local from the context
      * @param req current request
      */
     protected ContextMessages(HttpServletRequest req) {
-        this.req = req;
         loc = getLocalizationContext(req);
     }
 
@@ -98,7 +92,6 @@ public class ContextMessages extends Messages {
      * @param basename the name of the bundle
      */
     protected ContextMessages(HttpServletRequest req, String basename) {
-        this.req = req;
         this.setBasename(basename);
         loc = getLocalizationContext(req, basename);
     }
@@ -110,7 +103,6 @@ public class ContextMessages extends Messages {
      * @param locale use this local to get the strings
      */
     protected ContextMessages(HttpServletRequest req, String basename, Locale locale) {
-        this.req = req;
         this.setBasename(basename);
         loc = getLocalizationContext(req, basename, locale);
     }
@@ -403,14 +395,14 @@ public class ContextMessages extends Messages {
         Locale ret = null;
         String language = locale;
         String country = null;
-        int index = -1;
+        int index;
 
         if (((index = locale.indexOf(HYPHEN)) > -1) || ((index = locale.indexOf(UNDERSCORE)) > -1)) {
             language = locale.substring(0, index);
             country = locale.substring(index + 1);
         }
 
-        if ((language == null) || (language.length() == 0)) {
+        if (StringUtils.isEmpty(language)) {
             throw new IllegalArgumentException(Resources.getMessage("LOCALE_NO_LANGUAGE")); //$NON-NLS-1$
         }
 
@@ -478,13 +470,13 @@ public class ContextMessages extends Messages {
      */
     private static Object get(HttpServletRequest req, String name, int scope) {
         switch (scope) {
-            case PageContext.REQUEST_SCOPE :
+            case PageContext.REQUEST_SCOPE:
                 return req.getAttribute(name + REQUEST_SCOPE_SUFFIX);
-            case PageContext.SESSION_SCOPE :
+            case PageContext.SESSION_SCOPE:
                 return get(req.getSession(), name);
-            case PageContext.APPLICATION_SCOPE :
+            case PageContext.APPLICATION_SCOPE:
                 return req.getSession().getServletContext().getAttribute(name + APPLICATION_SCOPE_SUFFIX);
-            default :
+            default:
                 throw new IllegalArgumentException("unknown scope"); //$NON-NLS-1$
         }
     }
@@ -513,9 +505,9 @@ public class ContextMessages extends Messages {
     }
 
     /**
-     * Reload bundles 
+     * Reload bundles
      */
-    public void reloadBundles() throws Exception{
+    public void reloadBundles() throws Exception {
         reloadBundle(loc.getResourceBundle());
     }
 
