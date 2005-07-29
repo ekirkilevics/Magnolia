@@ -145,9 +145,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         if (form != null) {
             return COMMAND_SAVE;
         }
-        else {
-            return COMMAND_SHOW_DIALOG;
-        }
+        return COMMAND_SHOW_DIALOG;
     }
 
     /**
