@@ -64,9 +64,12 @@ Use JSON to parse this returned value<br>
 ### Constructor
 ################################### */
 
-function MgnlDynamicTable(tableName, hiddenField, getNewObjectFunction, getObjectFunction, renderObjectFunction, validateFunction){
+function MgnlDynamicTable(tableName, hiddenField, getNewObjectFunction, getObjectFunction, renderObjectFunction, validateFunction, objects){
 	this.tableName = tableName;
-	this.objects = new Array();
+	if(objects == null){
+		objects = new Array();
+	}
+	this.objects = objects;
 	
 	// object getNewObject()
 	this.getNewObject = getNewObjectFunction;
@@ -187,7 +190,6 @@ MgnlDynamicTable.prototype.render = function (update){
 ### persist the table and save it in the hidden field
 ################################### */
 
-// we should use WDDX or something similar
 MgnlDynamicTable.prototype.persist = function (){
 	var str = "";
 	this.objects = this.getObjects();
