@@ -48,7 +48,7 @@ public class ReloadI18nServlet extends HttpServlet {
         IOException {
         PrintWriter out = response.getWriter();
         displayReloadForm(request, out);
-        out.println("----------------------<br/>");
+        out.println("----------------------<br/>"); //$NON-NLS-1$
         executeReload(request, out);
         out.flush();
         out.close();
@@ -58,10 +58,10 @@ public class ReloadI18nServlet extends HttpServlet {
         try {
             MessagesManager.getMessages(request, null, MessagesManager.getDefaultLocale()).reloadBundles();
             out
-                .println(MessagesManager.get(request, "reloadi18n.reloaded") + ":" + new SimpleDateFormat().format(new Date()) + "<br><br>"); //$NON-NLS-1$
+                .println(MessagesManager.get(request, "reloadi18n.reloaded") + ":" + new SimpleDateFormat().format(new Date()) + "<br><br>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
         catch (Exception e) {
-            out.println(MessagesManager.get(request, "reloadi18n.error") + "<br/><br/>");
+            out.println(MessagesManager.get(request, "reloadi18n.error") + "<br/><br/>"); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
     }

@@ -37,12 +37,19 @@ import org.apache.log4j.Logger;
  * @author Sameer Charles
  * @version 2.0
  */
-public class VirtualMap {
+public final class VirtualMap {
 
     /**
      * Logger.
      */
     private static Logger log = Logger.getLogger(VirtualMap.class);
+
+    /**
+     * Don't instantiate.
+     */
+    private VirtualMap() {
+        // unused
+    }
 
     /**
      * all cached data.

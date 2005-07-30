@@ -8,7 +8,7 @@ import java.io.File;
  * @author fgiust
  * @version $Revision: $ ($Author: $)
  */
-public class MagnoliaTestUtils {
+public final class MagnoliaTestUtils {
 
     /**
      * Utility class, don't instantiate.

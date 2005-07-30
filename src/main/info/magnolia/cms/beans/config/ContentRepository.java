@@ -30,7 +30,12 @@ import info.magnolia.repository.RepositoryNotInitializedException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
@@ -144,7 +149,7 @@ public final class ContentRepository {
 
     /**
      * loads all configured repository using ID as Key, as configured in repositories.xml.
-     * 
+     *
      * <pre>
      * &lt;Repository name="website"
      *                id="website"

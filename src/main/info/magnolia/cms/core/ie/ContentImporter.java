@@ -19,12 +19,11 @@ import org.apache.log4j.Logger;
 
 
 /**
- * Date: May 24, 2005 Time: 4:42:21 PM
  * @author Sameer Charles $Id :$
  */
-public class ContentImporter {
+public final class ContentImporter {
 
-    /*******************************************************************************************************************
+    /**
      * Logger.
      */
     private static Logger log = Logger.getLogger(ContentImporter.class);
@@ -71,7 +70,7 @@ public class ContentImporter {
         if (this.handlers.get(name) == null) {
             log.error("No import handler found with name - " + name); //$NON-NLS-1$
             log.error("Returning default import handler - " + DEFAULT_HANDLER); //$NON-NLS-1$
-            name = DEFAULT_HANDLER;
+            return (ImportHandler) this.handlers.get(DEFAULT_HANDLER);
         }
         return (ImportHandler) this.handlers.get(name);
     }

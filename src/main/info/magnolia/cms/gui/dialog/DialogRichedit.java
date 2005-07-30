@@ -14,6 +14,7 @@ package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ContentHandler;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.ControlSuper;
@@ -131,7 +132,7 @@ public class DialogRichedit extends DialogBox {
         try {
             Iterator it = configNode.getContent(nodeName).getChildren(
                 ItemType.CONTENTNODE.getSystemName(),
-                Content.SORT_BY_SEQUENCE).iterator();
+                ContentHandler.SORT_BY_SEQUENCE).iterator();
             while (it.hasNext()) {
                 Content n = (Content) it.next();
                 String value = n.getNodeData("value").getString(); //$NON-NLS-1$

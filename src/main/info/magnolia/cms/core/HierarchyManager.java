@@ -196,7 +196,7 @@ public class HierarchyManager {
 
     private String getNodePath(String path) {
         if (path.startsWith("/")) { //$NON-NLS-1$
-            path = path.replaceFirst("/", StringUtils.EMPTY); //$NON-NLS-1$
+            return path.replaceFirst("/", StringUtils.EMPTY); //$NON-NLS-1$
         }
         return path;
     }
@@ -377,6 +377,7 @@ public class HierarchyManager {
             return (n.isNodeType(ItemType.CONTENT.getSystemName()));
         }
         catch (RepositoryException re) {
+            // ignore, not existing?
         }
         return false;
     }
@@ -442,6 +443,7 @@ public class HierarchyManager {
             return this.startPage.hasProperty(nodePath);
         }
         catch (RepositoryException e) {
+            // ignore, no property
         }
         return false;
     }

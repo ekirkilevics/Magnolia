@@ -30,12 +30,12 @@ public interface ExportHandler {
      * if true include only link to the binary properties else embed in the exported data
      * @param binaryAsLink
      */
-    public void setBinaryAsLink(boolean binaryAsLink);
+    void setBinaryAsLink(boolean binaryAsLink);
 
     /**
      * returns true if the binary properties are included as link
      */
-    public boolean getBinaryAsLink();
+    boolean getBinaryAsLink();
 
     /**
      * export content to an object defined by the implementing class
@@ -43,7 +43,7 @@ public interface ExportHandler {
      * @return Object
      * @throws RepositoryException
      */
-    public Object exportContent(Content content) throws RepositoryException;
+    Object exportContent(Content content) throws RepositoryException;
 
     /**
      * export content to the provided output stream
@@ -52,18 +52,18 @@ public interface ExportHandler {
      * @throws RepositoryException
      * @throws IOException
      */
-    public void exportContent(Content content, OutputStream outStream) throws RepositoryException, IOException;
+    void exportContent(Content content, OutputStream outStream) throws RepositoryException, IOException;
 
     /**
      * set exporter implementation dependent parameters
      * @param key
      * @param value
      */
-    public void setParameter(String key, Object value);
+    void setParameter(String key, Object value);
 
     /**
      * get parameter previously set on this exporter
      * @return Object
      */
-    public Object getParameter(String key);
+    Object getParameter(String key);
 }

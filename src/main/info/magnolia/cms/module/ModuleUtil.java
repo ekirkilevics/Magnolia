@@ -112,7 +112,7 @@ public final class ModuleUtil {
 
     public static Content createPath(HierarchyManager hm, String path, ItemType type) throws AccessDeniedException,
         PathNotFoundException, RepositoryException {
-        String names[] = path.split("/"); //$NON-NLS-1$
+        String[] names = path.split("/"); //$NON-NLS-1$
         Content node = hm.getRoot();
         for (int i = 0; i < names.length; i++) {
             String name = names[i];

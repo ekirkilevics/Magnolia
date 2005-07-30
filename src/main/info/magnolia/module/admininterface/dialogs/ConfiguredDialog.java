@@ -95,7 +95,7 @@ public class ConfiguredDialog extends DialogMVCHandler {
                 }
             }
             catch (Exception e) {
-                log.error(MessageFormat.format("Unable to load class {0}", new Object[]{className}));
+                log.error(MessageFormat.format("Unable to load class {0}", new Object[]{className})); //$NON-NLS-1$
             }
             Constructor constructor = handlerClass.getConstructor(new Class[]{
                 String.class,

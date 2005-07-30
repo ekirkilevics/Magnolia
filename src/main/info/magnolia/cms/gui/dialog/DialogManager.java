@@ -34,7 +34,7 @@ import org.apache.log4j.Logger;
  * @author Fabrizio Giustina
  * @version $Revision: $ ($Author: $)
  */
-public class DialogManager {
+public final class DialogManager {
 
     /**
      * Logger.
@@ -60,6 +60,13 @@ public class DialogManager {
      * Node data name for control name.
      */
     private static String DATA_CONTROL_NAME = "name"; //$NON-NLS-1$
+
+    /**
+     * don't instantiate.
+     */
+    private DialogManager() {
+        // unused
+    }
 
     /**
      * Called through the initialization process

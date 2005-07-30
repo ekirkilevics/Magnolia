@@ -31,6 +31,12 @@
                 value="Always use safer methods StringUtils.substringBefore()/After() or StringUtils.contains when possible" />
         </module>
         <module name="GenericIllegalRegexp">
+            <property name="severity" value="warning" />
+            <property name="format" value="\.substring\(" />
+            <property name="message"
+                value="Always use safer methods StringUtils.substringBefore()/After() or StringUtils.contains when possible" />
+        </module>
+        <module name="GenericIllegalRegexp">
             <property name="severity" value="info" />
             <property name="format" value="\.printStackTrace\(\)" />
             <property name="message" value="Avoid exception.printStackTrace()" />
@@ -143,7 +149,7 @@
             <property name="severity" value="ignore" />
         </module>
         <module name="ThrowsCount">
-            <property name="max" value="5" />
+            <property name="max" value="7" />
         </module>
         <module name="VisibilityModifier">
             <property name="packageAllowed" value="true" />
@@ -196,7 +202,7 @@
         </module>
         <module name="MethodName"></module>
         <module name="PackageName">
-            <property name="format" value="^[a-z]+(\.[a-z][a-z]*)*$" />
+            <property name="format" value="^[a-z]+(\.[a-z0-9]*)*$" />
         </module>
         <module name="ParameterName">
             <property name="severity" value="info" />

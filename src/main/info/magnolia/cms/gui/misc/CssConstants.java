@@ -5,7 +5,7 @@ package info.magnolia.cms.gui.misc;
  * @author Fabrizio Giustina
  * @version $Id: $
  */
-public class CssConstants {
+public final class CssConstants {
 
     public static final String CSSCLASS_INTERCOL = "mgnlDialogInterCol"; //$NON-NLS-1$
 

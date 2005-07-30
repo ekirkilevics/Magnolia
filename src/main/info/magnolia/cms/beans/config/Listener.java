@@ -129,6 +129,7 @@ public final class Listener {
                 }
             }
             catch (RepositoryException re) {
+                log.error("RepositoryException caught while loading listener configuration: " + re.getMessage(), re); //$NON-NLS-1$
             }
         }
         Listener.ipList = null;

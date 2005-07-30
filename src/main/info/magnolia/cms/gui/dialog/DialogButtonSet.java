@@ -177,7 +177,7 @@ public class DialogButtonSet extends DialogBox {
         control.setButtonType(this.getButtonType());
 
         // maem: extension to allow for fine grained layout control. E.g. radio buttons with picture
-        control.setCssClass(this.getConfigValue("cssClass", CssConstants.CSSCLASS_BUTTONSETBUTTON));
+        control.setCssClass(this.getConfigValue("cssClass", CssConstants.CSSCLASS_BUTTONSETBUTTON)); //$NON-NLS-1$
 
         if (this.getConfigValue("saveInfo").equals("false")) { //$NON-NLS-1$ //$NON-NLS-2$
             control.setSaveInfo(false);

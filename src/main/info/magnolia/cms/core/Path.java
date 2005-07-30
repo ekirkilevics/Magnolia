@@ -29,7 +29,7 @@ import org.apache.log4j.Logger;
 public final class Path {
 
     /**
-     * 
+     *
      */
     private static final String DEFAULT_UNTITLED_NODE_NAME = "untitled";
 
@@ -170,8 +170,8 @@ public final class Path {
     }
 
     public static String getUniqueLabel(HierarchyManager hierarchyManager, String parent, String label) {
-        if (parent.equals("/")) {
-            parent = "";
+        if (parent.equals("/")) { //$NON-NLS-1$
+            parent = StringUtils.EMPTY;
         }
         while (hierarchyManager.isExist(parent + "/" + label)) { //$NON-NLS-1$
             label = createUniqueName(label);

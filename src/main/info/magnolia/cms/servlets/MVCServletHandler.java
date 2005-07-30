@@ -22,20 +22,20 @@ import java.io.IOException;
  */
 public interface MVCServletHandler {
 
-    public static final String VIEW_NOTHING = "nothing"; //$NON-NLS-1$
+    String VIEW_NOTHING = "nothing"; //$NON-NLS-1$
 
     /**
      * Depending on the request it is generating a logical command name
      * @return name of the command
      */
-    public abstract String getCommand();
+    String getCommand();
 
     /**
      * Call the method through reflection
      * @param command
      * @return the name of the view to show (used in renderHtml)
      */
-    public abstract String execute(String command);
+    String execute(String command);
 
     /**
      * Render the tree depending on the view name.
@@ -43,10 +43,10 @@ public interface MVCServletHandler {
      * @return
      * @throws IOException
      */
-    public abstract void renderHtml(String view) throws IOException;
+    void renderHtml(String view) throws IOException;
 
     /**
      * @return
      */
-    public abstract String getName();
+    String getName();
 }

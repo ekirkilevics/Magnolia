@@ -151,7 +151,7 @@ public class PropertyInitializer implements ServletContextListener {
         String propertiesLocationString = context.getInitParameter(MAGNOLIA_INITIALIZATION_FILE);
 
         if (log.isDebugEnabled()) {
-            log.debug(MAGNOLIA_INITIALIZATION_FILE + " value in web.xml is :[" + propertiesLocationString + "]");
+            log.debug(MAGNOLIA_INITIALIZATION_FILE + " value in web.xml is :[" + propertiesLocationString + "]"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         if (StringUtils.isEmpty(propertiesLocationString)) {
             propertiesLocationString = DEFAULT_INITIALIZATION_PARAMETER;
@@ -172,7 +172,7 @@ public class PropertyInitializer implements ServletContextListener {
         String webapp = StringUtils.substringAfterLast(rootPath, "/"); //$NON-NLS-1$
 
         if (log.isDebugEnabled()) {
-            log.debug("rootPath is [" + rootPath + "], webapp is [" + webapp + "]");
+            log.debug("rootPath is [" + rootPath + "], webapp is [" + webapp + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
 
         for (int j = 0; j < propertiesLocation.length; j++) {

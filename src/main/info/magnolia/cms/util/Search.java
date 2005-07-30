@@ -18,12 +18,19 @@ import org.apache.log4j.Logger;
  * @author Sameer Charles
  * @version $Revision $ ($Author $)
  */
-public class Search {
+public final class Search {
 
     /**
      * Logger
      */
     private static Logger log = Logger.getLogger(Search.class);
+
+    /**
+     * don't instantiate.
+     */
+    private Search() {
+        // unused
+    }
 
     /**
      * Using JCR search to get content object associated with the given UUID

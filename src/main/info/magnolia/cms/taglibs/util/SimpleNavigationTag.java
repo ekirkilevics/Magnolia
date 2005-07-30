@@ -42,13 +42,13 @@ import org.apache.log4j.Logger;
  * <li><code>navTitle</code>: a title to use for the navigation menu, if different from the real page title</li>
  * <li><code>accessKey</code>: an optional access key which will be added to the link</li>
  * </ul>
- * 
+ *
  * <pre>
  *   &lt;cmsu:simpleNavigation startLevel="3" />
  * </pre>
- * 
+ *
  * Will output the following:
- * 
+ *
  * <pre>
  *   &lt;ul class="level3">
  *     &lt;li>&lt;a href="...">page 1 name &lt;/a>&lt;/li>
@@ -63,7 +63,7 @@ import org.apache.log4j.Logger;
  *     &lt;li>&lt;a href="...">page 4 name &lt;/a>&lt;/li>
  *   &lt;/ul>
  * </pre>
- * 
+ *
  * @author Fabrizio Giustina
  * @version $Revision: $ ($Author: $)
  */
@@ -183,11 +183,13 @@ public class SimpleNavigationTag extends TagSupport {
         Content activePage = Resource.getActivePage((HttpServletRequest) this.pageContext.getRequest());
         JspWriter out = this.pageContext.getOut();
         try {
-            if (style != null)
+            if (style != null) {
                 out.println("<span class=\"" + style + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
+            }
             drawChildren(activePage.getAncestor(this.startLevel), activePage, out);
-            if (style != null)
+            if (style != null) {
                 out.println("</span>"); //$NON-NLS-1$
+            }
         }
         catch (RepositoryException e) {
             log.error("RepositoryException caught while drawing navigation: " + e.getMessage(), e); //$NON-NLS-1$
@@ -226,8 +228,9 @@ public class SimpleNavigationTag extends TagSupport {
             return;
         }
 
-        if (startLevel > endLevel)
+        if (startLevel > endLevel) {
             endLevel = 0;
+        }
 
         out.print("<ul class=\"level"); //$NON-NLS-1$
         out.print(page.getLevel());
@@ -237,12 +240,13 @@ public class SimpleNavigationTag extends TagSupport {
         while (it.hasNext()) {
             Content child = (Content) it.next();
 
-            if (!expandAll)
+            if (!expandAll) {
                 if (child
                     .getNodeData(StringUtils.defaultString(this.hideInNav, DEFAULT_HIDEINNAV_NODEDATA))
                     .getBoolean()) {
                     continue;
                 }
+            }
 
             List cssClasses = new ArrayList(3);
 
@@ -345,8 +349,9 @@ public class SimpleNavigationTag extends TagSupport {
      */
     private boolean hasVisibleChildren(Content page) {
         Iterator it = page.getChildren().iterator();
-        if (it.hasNext() && expandAll)
+        if (it.hasNext() && expandAll) {
             return true;
+        }
         while (it.hasNext()) {
             Content ch = (Content) it.next();
             if (!ch.getNodeData(StringUtils.defaultString(this.hideInNav, DEFAULT_HIDEINNAV_NODEDATA)).getBoolean()) {

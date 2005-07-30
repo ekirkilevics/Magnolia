@@ -22,9 +22,9 @@ import org.apache.log4j.Logger;
  * This class is a main export handler, which could be used to instanciate appropriate export handlers using ID
  * @author Sameer Charles $Id :$
  */
-public class ContentExporter {
+public final class ContentExporter {
 
-    /*******************************************************************************************************************
+    /**
      * Logger.
      */
     private static Logger log = Logger.getLogger(ContentExporter.class);
@@ -71,7 +71,7 @@ public class ContentExporter {
         if (this.handlers.get(name) == null) {
             log.error("No export handler found with name - " + name); //$NON-NLS-1$
             log.error("Returning default export handler - " + DEFAULT_HANDLER); //$NON-NLS-1$
-            name = DEFAULT_HANDLER;
+            return (ExportHandler) this.handlers.get(DEFAULT_HANDLER);
         }
         return (ExportHandler) this.handlers.get(name);
     }

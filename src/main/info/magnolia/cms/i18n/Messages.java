@@ -233,15 +233,16 @@ public class Messages {
         try {
             Class klass = bund.getClass().getSuperclass();
             Field field;
-            field = klass.getDeclaredField("cacheList");
+            field = klass.getDeclaredField("cacheList"); //$NON-NLS-1$
             field.setAccessible(true);
             sun.misc.SoftCache cache = (sun.misc.SoftCache) field.get(null);
             cache.clear();
-            if (log.isInfoEnabled())
-                log.info("Cleaning messages for locale:" + bund.getLocale() + "...");
+            if (log.isInfoEnabled()) {
+                log.info("Cleaning messages for locale:" + bund.getLocale() + "..."); //$NON-NLS-1$ //$NON-NLS-2$
+            }
         }
         catch (Exception e) {
-            log.error("Error while cleaning messages ...");
+            log.error("Error while cleaning messages ..."); //$NON-NLS-1$
             throw e;
         }
     }

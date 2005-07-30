@@ -647,7 +647,7 @@ public class Tree extends ControlSuper {
 
                 String selectedType = ItemType.NT_NODEDATA;
                 String touchedType = ItemType.NT_NODEDATA;
-                Iterator it1 = parentContent.getChildren(ItemType.CONTENT, Content.SORT_BY_SEQUENCE).iterator();
+                Iterator it1 = parentContent.getChildren(ItemType.CONTENT, ContentHandler.SORT_BY_SEQUENCE).iterator();
                 while (it1.hasNext()) {
                     Content c = (Content) it1.next();
                     if (c.getHandle().equals(selectedContent.getHandle())) {
@@ -657,7 +657,9 @@ public class Tree extends ControlSuper {
                         touchedType = ItemType.CONTENT.getSystemName();
                     }
                 }
-                Iterator it2 = parentContent.getChildren(ItemType.CONTENTNODE, Content.SORT_BY_SEQUENCE).iterator();
+                Iterator it2 = parentContent
+                    .getChildren(ItemType.CONTENTNODE, ContentHandler.SORT_BY_SEQUENCE)
+                    .iterator();
                 while (it2.hasNext()) {
                     Content c = (Content) it2.next();
                     if (c.getHandle().equals(selectedContent.getHandle())) {
@@ -674,7 +676,7 @@ public class Tree extends ControlSuper {
                 long posAbove = 0;
                 long posBelow = 0;
                 long posFirst = 0;
-                Iterator it = parentContent.getChildren(touchedType, Content.SORT_BY_SEQUENCE).iterator();
+                Iterator it = parentContent.getChildren(touchedType, ContentHandler.SORT_BY_SEQUENCE).iterator();
                 boolean first = true;
                 while (it.hasNext()) {
                     Content c = (Content) it.next();
@@ -745,8 +747,8 @@ public class Tree extends ControlSuper {
         try {
             HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
             if (hm.isExist(destination)) {
-                String parentPath = destination.substring(0, destination.lastIndexOf("/")); //$NON-NLS-1$
-                String label = destination.substring(destination.lastIndexOf("/") + 1); //$NON-NLS-1$
+                String parentPath = StringUtils.substringBeforeLast(destination, "/"); //$NON-NLS-1$
+                String label = StringUtils.substringAfterLast(destination, "/"); //$NON-NLS-1$
                 label = Path.getUniqueLabel(hm, parentPath, label);
                 destination = parentPath + "/" + label; //$NON-NLS-1$
             }

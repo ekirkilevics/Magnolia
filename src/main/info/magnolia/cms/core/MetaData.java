@@ -219,28 +219,26 @@ public class MetaData {
      * Part of metadata, adds sequence number of the current node
      */
     public void setSequencePosition(long seqPos) throws AccessDeniedException {
-        allowUpdate();
-        if (seqPos == 0) {
-            Date now = new Date();
-            seqPos = now.getTime() * SEQUENCE_POS_COEFFICIENT;
+        if (this.node == null) {
+            return;
         }
+
+        allowUpdate();
+        long newPos = (seqPos == 0) ? new Date().getTime() * SEQUENCE_POS_COEFFICIENT : seqPos;
+
         try {
-            this.node.getProperty(SEQUENCE_POS).setValue(seqPos);
+            this.node.getProperty(SEQUENCE_POS).setValue(newPos);
         }
         catch (PathNotFoundException ee) {
             try {
-                this.node.setProperty(SEQUENCE_POS, seqPos);
+                this.node.setProperty(SEQUENCE_POS, newPos);
             }
             catch (RepositoryException e) {
+                // ignore?
             }
         }
         catch (RepositoryException re) {
-        }
-        catch (NullPointerException e) {
-            if (log.isDebugEnabled()) {
-                log.debug("MedaData has not been created"); //$NON-NLS-1$
-                log.debug("cannot set property - " + SEQUENCE_POS); //$NON-NLS-1$
-            }
+            // ignore?
         }
     }
 

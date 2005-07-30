@@ -31,32 +31,30 @@ import org.apache.taglibs.standard.resources.Resources;
  */
 
 /**
- * The inner class ImportResponseWrapper is copied from the JSTL include tag
+ * We provide either a Writer or an OutputStream as requested. We actually have a true Writer and an OutputStream
+ * backing both, since we don't want to use a character encoding both ways (Writer -> OutputStream -> Writer). So we use
+ * no encoding at all (as none is relevant) when the target resource uses a Writer. And we decode the OutputStream's
+ * bytes using OUR tag's 'charEncoding' attribute, or ISO-8859-1 as the default. We thus ignore setLocale() and
+ * setContentType() in this wrapper. In other words, the target's asserted encoding is used to convert from a Writer to
+ * an OutputStream, which is typically the medium through with the target will communicate its ultimate response. Since
+ * we short-circuit that mechanism and read the target's characters directly if they're offered as such, we simply
+ * ignore the target's encoding assertion. The inner class ImportResponseWrapper is copied from the JSTL include tag
  * @author philipp
  */
-public class JSPIncludeUtil {
+public final class JSPIncludeUtil {
 
     public static final String DEFAULT_ENCODING = "UTF-8"; //$NON-NLS-1$
+
+    /**
+     * Don't instantiate.
+     */
+    private JSPIncludeUtil() {
+        // unused
+    }
 
     /** Wraps responses to allow us to retrieve results as Strings. */
     private static class ImportResponseWrapper extends HttpServletResponseWrapper {
 
-        // ************************************************************
-        // Overview
-
-        /*
-         * We provide either a Writer or an OutputStream as requested. We actually have a true Writer and an
-         * OutputStream backing both, since we don't want to use a character encoding both ways (Writer -> OutputStream ->
-         * Writer). So we use no encoding at all (as none is relevant) when the target resource uses a Writer. And we
-         * decode the OutputStream's bytes using OUR tag's 'charEncoding' attribute, or ISO-8859-1 as the default. We
-         * thus ignore setLocale() and setContentType() in this wrapper. In other words, the target's asserted encoding
-         * is used to convert from a Writer to an OutputStream, which is typically the medium through with the target
-         * will communicate its ultimate response. Since we short-circuit that mechanism and read the target's
-         * characters directly if they're offered as such, we simply ignore the target's encoding assertion.
-         */
-
-        // ************************************************************
-        // Data
         /** The Writer we convey. */
         private StringWriter sw = new StringWriter();
 
@@ -82,31 +80,36 @@ public class JSPIncludeUtil {
 
         private String charEncoding;
 
-        // ************************************************************
-        // Constructor and methods
-
         /** Constructs a new ImportResponseWrapper. */
         public ImportResponseWrapper(HttpServletResponse response) {
             super(response);
         }
 
-        /** Returns a Writer designed to buffer the output. */
+        /**
+         * Returns a Writer designed to buffer the output.
+         */
         public PrintWriter getWriter() {
-            if (isStreamUsed)
+            if (isStreamUsed) {
                 throw new IllegalStateException(Resources.getMessage("IMPORT_ILLEGAL_STREAM")); //$NON-NLS-1$
+            }
             isWriterUsed = true;
             return new PrintWriter(sw);
         }
 
-        /** Returns a ServletOutputStream designed to buffer the output. */
+        /**
+         * Returns a ServletOutputStream designed to buffer the output.
+         */
         public ServletOutputStream getOutputStream() {
-            if (isWriterUsed)
+            if (isWriterUsed) {
                 throw new IllegalStateException(Resources.getMessage("IMPORT_ILLEGAL_WRITER")); //$NON-NLS-1$
+            }
             isStreamUsed = true;
             return sos;
         }
 
-        /** Has no effect. */
+        /**
+         * Has no effect.
+         */
         public void setContentType(String x) {
             // ignore
         }
@@ -131,8 +134,9 @@ public class JSPIncludeUtil {
         // not simply toString() because we need to throw
         // UnsupportedEncodingException
         public String getString() throws UnsupportedEncodingException {
-            if (isWriterUsed)
+            if (isWriterUsed) {
                 return sw.toString();
+            }
             else if (isStreamUsed) {
                 if (StringUtils.isNotEmpty(charEncoding)) {
                     return bos.toString(charEncoding);
@@ -140,8 +144,9 @@ public class JSPIncludeUtil {
 
                 return bos.toString(DEFAULT_ENCODING);
             }
-            else
+            else {
                 return StringUtils.EMPTY; // target didn't write anything
+            }
         }
     }
 

@@ -364,8 +364,9 @@ public class ImportExportServlet extends HttpServlet {
             if (keepVersionHistory) {
                 // use exportSystemView in order to preserve property types
                 // http://issues.apache.org/jira/browse/JCR-115
-                if (!format)
+                if (!format) {
                     session.exportSystemView(basepath, stream, false, false);
+                }
                 else {
                     parseAndFormat(stream, null, repository, basepath, format, session);
                 }
@@ -399,8 +400,9 @@ public class ImportExportServlet extends HttpServlet {
     private void parseAndFormat(OutputStream stream, XMLReader reader, String repository, String basepath,
         boolean format, Session session) throws Exception {
 
-        if (reader == null)
+        if (reader == null) {
             reader = XMLReaderFactory.createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName());
+        }
 
         // write to a temp file and then re-read it to remove version history
         File tempFile = File.createTempFile("export-" + repository + session.getUserID(), "xml"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -434,8 +436,9 @@ public class ImportExportServlet extends HttpServlet {
             // ignore
         }
 
-        if (!tempFile.delete())
-            log.error("Could not delete temporary export file..." + tempFile.getAbsolutePath());
+        if (!tempFile.delete()) {
+            log.error("Could not delete temporary export file..." + tempFile.getAbsolutePath()); //$NON-NLS-1$
+        }
     }
 
     /**

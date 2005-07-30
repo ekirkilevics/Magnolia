@@ -20,10 +20,15 @@ package info.magnolia.cms.module;
 public class RegisterException extends Exception {
 
     /**
-     * Default
-     * @param arg0 message
+     * Stable serialVersionUID.
      */
-    public RegisterException(String arg0) {
-        super(arg0);
+    private static final long serialVersionUID = 222L;
+
+    /**
+     * Default
+     * @param message message
+     */
+    public RegisterException(String message) {
+        super(message);
     }
 }

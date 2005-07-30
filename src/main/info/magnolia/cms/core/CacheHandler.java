@@ -180,8 +180,9 @@ public class CacheHandler extends Thread {
 
         try {
             URL url = new URL(domain + uri);
-            if (log.isDebugEnabled())
-                log.debug("Streaming uri:" + url.toExternalForm());
+            if (log.isDebugEnabled()) {
+                log.debug("Streaming uri:" + url.toExternalForm()); //$NON-NLS-1$
+            }
             URLConnection urlConnection = url.openConnection();
             if (SecureURI.isProtected(uri)) {
                 urlConnection.setRequestProperty("Authorization", request.getHeader("Authorization")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -304,8 +305,9 @@ public class CacheHandler extends Thread {
                 return false;
             }
 
-            if (log.isDebugEnabled())
-                log.debug("Streaming from cache the file:" + file.getAbsolutePath());
+            if (log.isDebugEnabled()) {
+                log.debug("Streaming from cache the file:" + file.getAbsolutePath()); //$NON-NLS-1$
+            }
 
             fin = new FileInputStream(file);
             if (compress) {

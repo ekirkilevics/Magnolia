@@ -194,6 +194,8 @@ public class Template {
             }
         }
         catch (RepositoryException re) {
+            log.error("RepositoryException caught while loading alternative templates path configuration: " //$NON-NLS-1$
+                + re.getMessage(), re);
         }
     }
 

@@ -17,7 +17,7 @@ package info.magnolia.cms.gui.misc;
  * @author Vinzenz Wyser
  * @version 2.0
  */
-public class Spacer {
+public final class Spacer {
 
     /**
      * utility class, don't instantiate.

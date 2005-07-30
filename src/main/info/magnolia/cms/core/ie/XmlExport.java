@@ -198,8 +198,8 @@ public class XmlExport implements ExportHandler {
                     try {
                         InputStream is = property.getStream();
                         byte[] buffer = new byte[8192];
-                        int read;
-                        while ((read = is.read(buffer)) > 0) {
+
+                        while ((is.read(buffer)) > 0) {
                             stringBuffer.append(new String(buffer));
                         }
                         is.close();

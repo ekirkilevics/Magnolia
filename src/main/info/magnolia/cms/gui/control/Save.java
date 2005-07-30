@@ -90,7 +90,7 @@ public class Save extends ControlSuper {
     /**
      * creates the node if it is not present
      */
-    private boolean create = false;
+    private boolean create;
 
     private ItemType creationItemType = ItemType.CONTENT;
 

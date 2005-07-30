@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -28,6 +29,11 @@ import org.apache.commons.lang.StringUtils;
  * @version $Id: $
  */
 public class UserEditIncludeRolesDialogPage extends DialogPageMVCHandler {
+
+    /**
+     * Logger.
+     */
+    private static Logger log = Logger.getLogger(UserEditIncludeRolesDialogPage.class);
 
     public UserEditIncludeRolesDialogPage(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
@@ -106,19 +112,17 @@ public class UserEditIncludeRolesDialogPage extends DialogPageMVCHandler {
                 Content c = (Content) it.next();
                 String path = c.getNodeData("path").getString(); //$NON-NLS-1$
                 String name = StringUtils.EMPTY;
+
+                HierarchyManager hm = SessionAccessControl.getHierarchyManager(request, ContentRepository.USER_ROLES);
+                Content role = null;
                 try {
-                    HierarchyManager hm = SessionAccessControl.getHierarchyManager(
-                        request,
-                        ContentRepository.USER_ROLES);
-                    Content role = null;
-                    try {
-                        role = hm.getContent(path);
-                        name = role.getTitle();
-                    }
-                    catch (RepositoryException re) {
-                    }
+                    role = hm.getContent(path);
+                    name = role.getTitle();
                 }
-                catch (Exception e) {
+                catch (RepositoryException re) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("Repository exception: " + re.getMessage(), re); //$NON-NLS-1$
+                    }
                 }
 
                 out.println("mgnlAclAdd(true,-1,'" + path + "','" + name + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

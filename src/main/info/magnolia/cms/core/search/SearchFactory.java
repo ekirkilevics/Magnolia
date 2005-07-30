@@ -16,11 +16,17 @@ import info.magnolia.cms.security.AccessManager;
 
 
 /**
- * Date: Apr 1, 2005 Time: 11:12:49 AM
  * @author Sameer Charles
  */
 
-public abstract class SearchFactory {
+public final class SearchFactory {
+
+    /**
+     * don't instantiate.
+     */
+    private SearchFactory() {
+        // unused
+    }
 
     public static QueryManager getAccessControllableQueryManager(javax.jcr.query.QueryManager queryManager,
         AccessManager accessManager) {
