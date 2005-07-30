@@ -563,12 +563,6 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
             <description></description>
         </attribute>
         <attribute>
-            <name>atomName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-        <attribute>
             <name>contentNodeName</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -595,12 +589,6 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
         <description>this is exactly the opposite of the ifNotExisting Tag</description>
         <attribute>
             <name>nodeDataName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-        <attribute>
-            <name>atomName</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
             <description></description>
