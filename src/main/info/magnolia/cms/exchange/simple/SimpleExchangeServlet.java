@@ -48,14 +48,14 @@ import org.apache.log4j.Logger;
  * <p>
  * Version .01 implementation Simple implementation of Exchange interface using serialized objects and binary GET
  * </p>
- * 
+ *
  * <pre>
  * todo -
  * 1. implement incremental delivery
  * 2. concurrent activation
  * 3. context locking
  * </pre>
- * 
+ *
  * @author Sameer Charles
  * @version 2.0
  */
@@ -128,10 +128,7 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
             }
         }
         catch (OutOfMemoryError e) {
-
-            // @todo find memory leaks!
             Runtime rt = Runtime.getRuntime();
-
             log.error("---------\nOutOfMemoryError caught during activation. Total memory = " //$NON-NLS-1$
                 + rt.totalMemory() + ", free memory = " //$NON-NLS-1$
                 + rt.freeMemory() + "\n---------"); //$NON-NLS-1$
@@ -139,18 +136,6 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
         }
         catch (Throwable e) {
             log.error(e.getMessage(), e);
-        }
-
-        Runtime rt = Runtime.getRuntime();
-
-        if (log.isDebugEnabled()) {
-            log.debug("Before gc(): total memory = " + rt.totalMemory() + ", free memory = " + rt.freeMemory()); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-
-        rt.gc();
-
-        if (log.isDebugEnabled()) {
-            log.debug("After gc(): total memory = " + rt.totalMemory() + ", free memory = " + rt.freeMemory()); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
