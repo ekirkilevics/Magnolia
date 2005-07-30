@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
 import org.apache.log4j.Logger;
@@ -192,6 +193,9 @@ public class Template {
                 Content c = (Content) it.next();
                 ti.alternativePaths.put(c.getNodeData("extension").getString(), c.getNodeData("path").getString()); //$NON-NLS-1$ //$NON-NLS-2$
             }
+        }
+        catch (PathNotFoundException e) {
+            // ignore, SubTemplates not set
         }
         catch (RepositoryException re) {
             log.error("RepositoryException caught while loading alternative templates path configuration: " //$NON-NLS-1$
