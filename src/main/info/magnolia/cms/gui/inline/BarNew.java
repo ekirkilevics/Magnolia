@@ -81,7 +81,7 @@ public class BarNew extends Bar {
         // todo: dynamic repository
         String repository = ContentRepository.WEBSITE;
         // if there are multiple paragraphs show the selectParagraph dialog
-        if (paragraph.indexOf(",") > -1) { //$NON-NLS-1$
+        if (StringUtils.contains(paragraph, ',')) {
             b.setOnclick("mgnlOpenDialog('" // //$NON-NLS-1$
                 + path + "','" //$NON-NLS-1$
                 + nodeCollectionName + "','" // //$NON-NLS-1$
@@ -89,7 +89,6 @@ public class BarNew extends Bar {
                 + paragraph // this is a list
                 + "','" // //$NON-NLS-1$
                 + repository + "','.magnolia/dialogs/selectParagraph.html');"); //$NON-NLS-1$
-
         }
         // there is only one paragraph
         else {

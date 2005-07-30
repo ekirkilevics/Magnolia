@@ -19,7 +19,9 @@ import info.magnolia.cms.core.NodeData;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collection;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.jcr.Property;
@@ -29,6 +31,9 @@ import javax.jcr.RepositoryException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.output.Format;
 
 
 /**
@@ -96,7 +101,7 @@ public class XmlExport implements ExportHandler {
      * Turns the given Content instance into a JDOM XML document.
      */
     public Object exportContent(final Content content) {
-        return new org.jdom.Document(DOMExport(content));
+        return new Document(domExport(content));
     }
 
     public void exportContent(final Content content, OutputStream outStream) throws RepositoryException, IOException {
@@ -105,7 +110,7 @@ public class XmlExport implements ExportHandler {
         if (StringUtils.isEmpty(encoding)) {
             encoding = DEFAULT_ENCODING;
         }
-        this.getXMLOutputter(encoding).output(((org.jdom.Document) this.exportContent(content)), outStream);
+        this.getXMLOutputter(encoding).output(((Document) this.exportContent(content)), outStream);
     }
 
     public void setParameter(String key, Object value) {
@@ -116,12 +121,9 @@ public class XmlExport implements ExportHandler {
         return this.params.get(key);
     }
 
-    //
-    // METHODS
+    private Element domExport(final Content content) {
 
-    private org.jdom.Element DOMExport(final Content content) {
-
-        final org.jdom.Element elt = new org.jdom.Element(E_CONTENT);
+        Element elt = new Element(E_CONTENT);
         elt.setAttribute(A_NAME, content.getName());
         try {
             elt.setAttribute(A_TYPE, content.getNodeType().getName());
@@ -131,41 +133,36 @@ public class XmlExport implements ExportHandler {
         }
 
         // collect all nodes
-
         export(elt, content.getChildren(ItemType.NT_BASE));
 
         // node data
-
         exportNodeData(elt, content.getNodeDataCollection());
 
         return elt;
     }
 
-    private void exportNodeData(final org.jdom.Element elt, final java.util.Collection nodeData) {
+    private void exportNodeData(Element elt, Collection nodeData) {
 
-        final java.util.Iterator it = nodeData.iterator();
+        Iterator it = nodeData.iterator();
         while (it.hasNext()) {
-            final NodeData nd = (NodeData) it.next();
+            NodeData nd = (NodeData) it.next();
 
             export(elt, nd.getJCRProperty());
         }
     }
 
-    private void export(final org.jdom.Element elt, final java.util.Collection contentChildren) {
+    private void export(Element elt, Collection contentChildren) {
 
-        final java.util.Iterator it = contentChildren.iterator();
-
+        Iterator it = contentChildren.iterator();
         while (it.hasNext()) {
-
-            final Content c = (Content) it.next();
-
-            elt.addContent(DOMExport(c));
+            Content c = (Content) it.next();
+            elt.addContent(domExport(c));
         }
     }
 
-    private void export(final org.jdom.Element elt, final Property property) {
+    private void export(Element elt, Property property) {
 
-        final org.jdom.Element pElt = new org.jdom.Element(E_PROPERTY);
+        Element pElt = new Element(E_PROPERTY);
 
         try {
 
@@ -227,17 +224,12 @@ public class XmlExport implements ExportHandler {
         pElt.addContent(new org.jdom.Text(sContent));
     }
 
-    //
-    // STATIC METHODS
-
     /**
      * A convenience method for setting up a pretty print XMLOutputter with a given encoding.
      */
     private org.jdom.output.XMLOutputter getXMLOutputter(String encoding) {
-        final org.jdom.output.Format format = org.jdom.output.Format.getPrettyFormat();
-
+        Format format = Format.getPrettyFormat();
         format.setEncoding(encoding);
-
         return new org.jdom.output.XMLOutputter(format);
     }
 

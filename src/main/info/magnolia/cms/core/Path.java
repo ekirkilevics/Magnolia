@@ -286,7 +286,7 @@ public final class Path {
 
     public static String getNodePath(String path) {
         if (path.startsWith("/")) { //$NON-NLS-1$
-            path = path.replaceFirst("/", StringUtils.EMPTY); //$NON-NLS-1$
+            return path.replaceFirst("/", StringUtils.EMPTY); //$NON-NLS-1$
         }
         return path;
     }
@@ -294,7 +294,7 @@ public final class Path {
     public static String getParentPath(String path) {
         int lastIndexOfSlash = path.lastIndexOf("/"); //$NON-NLS-1$
         if (lastIndexOfSlash > 0) {
-            return path.substring(0, lastIndexOfSlash);
+            return StringUtils.substringBefore(path, "/"); //$NON-NLS-1$
         }
         return "/"; //$NON-NLS-1$
     }

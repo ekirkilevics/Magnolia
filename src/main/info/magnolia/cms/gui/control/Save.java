@@ -226,7 +226,7 @@ public class Save extends ControlSuper {
         int isRichEditValue = 0;
         int encoding = ControlSuper.ENCODING_NO;
         String[] values = {StringUtils.EMPTY};
-        if (saveInfo.indexOf(",") != -1) { //$NON-NLS-1$
+        if (StringUtils.contains(saveInfo, ',')) {
             String[] info = saveInfo.split(","); //$NON-NLS-1$
             name = info[0];
             if (info.length >= 2) {
@@ -605,28 +605,30 @@ public class Save extends ControlSuper {
      * @param tagName
      * @return
      */
-    protected static String replacePByBr(String value, String tagName) {
+    protected static String replacePByBr(final String value, String tagName) {
 
         if (StringUtils.isBlank(value)) {
             return value;
         }
 
+        String fixedValue = value;
+
         String pre = "<" + tagName + ">"; //$NON-NLS-1$ //$NON-NLS-2$
         String post = "</" + tagName + ">"; //$NON-NLS-1$ //$NON-NLS-2$
 
         // get rid of last </p>
-        if (value.endsWith(post)) {
-            value = StringUtils.substringBeforeLast(value, post);
+        if (fixedValue.endsWith(post)) {
+            fixedValue = StringUtils.substringBeforeLast(fixedValue, post);
         }
 
-        value = StringUtils.replace(value, pre + "&nbsp;" + post, "\n "); //$NON-NLS-1$ //$NON-NLS-2$
-        value = StringUtils.replace(value, pre, StringUtils.EMPTY);
-        value = StringUtils.replace(value, post, "\n\n "); //$NON-NLS-1$
+        fixedValue = StringUtils.replace(fixedValue, pre + "&nbsp;" + post, "\n "); //$NON-NLS-1$ //$NON-NLS-2$
+        fixedValue = StringUtils.replace(fixedValue, pre, StringUtils.EMPTY);
+        fixedValue = StringUtils.replace(fixedValue, post, "\n\n "); //$NON-NLS-1$
 
         if (!tagName.equals(tagName.toUpperCase())) {
-            value = replacePByBr(value, tagName.toUpperCase());
+            fixedValue = replacePByBr(fixedValue, tagName.toUpperCase());
         }
-        return value;
+        return fixedValue;
     }
 
     public boolean isCreate() {

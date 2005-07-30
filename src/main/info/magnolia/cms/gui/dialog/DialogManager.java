@@ -44,22 +44,22 @@ public final class DialogManager {
     /**
      * Config node name: "controls".
      */
-    private static String DIALOGCONTROLS_CONFIG_NAME = "controls"; //$NON-NLS-1$
+    private static final String DIALOGCONTROLS_CONFIG_NAME = "controls"; //$NON-NLS-1$
 
     /**
      * "/modules/adminInterface/Config".
      */
-    private static String ADMIN_CONFIG_NODE_NAME = "/modules/adminInterface/Config"; //$NON-NLS-1$
+    private static final String ADMIN_CONFIG_NODE_NAME = "/modules/adminInterface/Config"; //$NON-NLS-1$
 
     /**
      * Node data name for control class.
      */
-    private static String DATA_CONTROL_CLASS = "class"; //$NON-NLS-1$
+    private static final String DATA_CONTROL_CLASS = "class"; //$NON-NLS-1$
 
     /**
      * Node data name for control name.
      */
-    private static String DATA_CONTROL_NAME = "name"; //$NON-NLS-1$
+    private static final String DATA_CONTROL_NAME = "name"; //$NON-NLS-1$
 
     /**
      * don't instantiate.

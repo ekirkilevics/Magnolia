@@ -303,7 +303,6 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
      */
     private String getProtocolName(HttpServletRequest request) {
         String protocol = request.getProtocol();
-        int lastIndexOfSlash = protocol.lastIndexOf("/"); //$NON-NLS-1$
-        return protocol.substring(0, lastIndexOfSlash);
+        return StringUtils.substringBeforeLast(protocol, "/"); //$NON-NLS-1$
     }
 }

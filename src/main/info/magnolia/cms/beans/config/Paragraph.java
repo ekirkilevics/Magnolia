@@ -19,6 +19,7 @@ import java.util.Map;
 
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 
@@ -87,9 +88,8 @@ public final class Paragraph {
         // get remaining from dialog definition
         try {
             String dialog = pi.dialogPath;
-            if (dialog.lastIndexOf(".") != -1) { //$NON-NLS-1$
-                dialog = dialog.substring(0, dialog.lastIndexOf(".")); //$NON-NLS-1$
-            }
+            dialog = StringUtils.substringBeforeLast(dialog, "."); //$NON-NLS-1$
+
             if (dialog.indexOf("/") != 0) { //$NON-NLS-1$
                 dialog = startPage + DIALOGS_DIR + dialog; // dialog: pars/text.xml -> /info/dialogs/pars/text.xml
             }

@@ -84,14 +84,13 @@ public class MultipartForm {
         document.setAtomName(atomName);
         document.setType(type);
         document.setFile(file);
-        int lastIndexOfDot = fileName.lastIndexOf("."); //$NON-NLS-1$
-        if (lastIndexOfDot == -1) {
+        if (!StringUtils.contains(fileName, ".")) { //$NON-NLS-1$
             document.setExtention(StringUtils.EMPTY);
             document.setFileName(fileName);
         }
         else {
-            document.setExtention(fileName.substring(lastIndexOfDot + 1));
-            document.setFileName(fileName.substring(0, lastIndexOfDot));
+            document.setExtention(StringUtils.substringAfterLast(fileName, ".")); //$NON-NLS-1$
+            document.setFileName(StringUtils.substringBeforeLast(fileName, ".")); //$NON-NLS-1$
         }
         this.documents.put(atomName, document);
     }

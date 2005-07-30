@@ -142,9 +142,8 @@ public class Aggregator {
             // check again, resource might have different name
             int lastIndexOfSlash = this.uri.lastIndexOf("/"); //$NON-NLS-1$
 
-
             if (lastIndexOfSlash > 0) {
-                this.uri = this.uri.substring(0, lastIndexOfSlash);
+                this.uri = StringUtils.substringBeforeLast(this.uri, "/"); //$NON-NLS-1$
                 try {
                     this.getRequestedContent(Aggregator.ATOM);
                     this.setRequestReceiver(Aggregator.ATOM);
