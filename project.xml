@@ -10,10 +10,11 @@
     <organization>
         <name>Obinary Ltd</name>
         <url>http://www.obinary.com</url>
+        <logo>images/obinary-logo.png</logo>
     </organization>
     <inceptionYear>1993</inceptionYear>
     <packageName>info.magnolia</packageName>
-    <logo>/images/magnolia-logo.png</logo>
+    <logo>images/magnolia-logo.png</logo>
     <description>
         Magnolia is a free enterprise class content management system developed by obinary. Magnolia uses the upcoming
         standard API for java content repositories (JCR) to access its content. It has an easy to use web-browser

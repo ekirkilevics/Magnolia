@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+    <properties>
+        <title>Templating Quickstart</title>
+    </properties>
+    <body>
+        <section name="Templating Quickstart">
+            <p>
+                Welcome to Magnolia, and congratulations to the aspiring Magnolia templater! (that would be you).
+                Building templates in Magnolia is very simple once you have acquainted yourself with the basic
+                mechanisms and structures involved. This document will try to make that process as painless as possible,
+                with a focus on speed vs. depth.
+            </p>
+        </section>
+    </body>
+</document>

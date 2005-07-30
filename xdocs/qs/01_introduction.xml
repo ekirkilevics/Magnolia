@@ -6,12 +6,6 @@
     <body>
         <section name="1. Introduction">
             <p>
-                Welcome to Magnolia, and congratulations to the aspiring Magnolia templater! (that would be you).
-                Building templates in Magnolia is very simple once you have acquainted yourself with the basic
-                mechanisms and structures involved. This document will try to make that process as painless as possible,
-                with a focus on speed vs. depth.
-            </p>
-            <p>
                 <strong>
                     The following examples assume that you have Magnolia installed and up and running inside tomcat,
                     which is currently our default distribution. If you use a different J2EE server, adjust your
@@ -76,6 +70,5 @@
             </p>
             <p>We will first look at page templates, then at paragraph templates.</p>
         </section>
-
     </body>
 </document>

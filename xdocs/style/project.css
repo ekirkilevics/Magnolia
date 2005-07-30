@@ -36,6 +36,10 @@ h2 {
 	height: 100px;
 }
 
+#organizationLogo {
+	display: none;
+}
+
 #leftColumn {
 	background-color: transparent;
 	position: absolute;
@@ -235,18 +239,50 @@ a.externalLink,a.newWindow {
 	background-image: none !important; /*ie5*/
 }
 
-a.externalLink/* */{
-    background-image: url(../images/magnolia_external.png) !important;
+a
+.externalLink
+  /* */
+{
+background-image
+:
+
+url
+(../images/magnolia_external
+.png
+)
+
+!
+important
+;
+
 
 }
-a.newWindow/* */{
-    background-image: url(../images/magnolia_newwindow.png) !important;
+a
+.newWindow
+  /* */
+{
+background-image
+:
+
+url
+(../images/magnolia_newwindow
+.png
+)
+
+!
+important
+;
+
+
 }
 table {
-  width: 68%;
-}
-i {content: "\"/*" }
-table {
-  width: 100%;
+	width: 68%;
 }
 
+i {
+	content: "\"/*"
+}
+
+table {
+	width: 100%;
+}
