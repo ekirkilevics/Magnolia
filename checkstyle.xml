@@ -160,6 +160,7 @@
             <property name="severity" value="ignore" />
         </module>
         <module name="JavadocMethod">
+            <property name="severity" value="info" />
             <property name="tokens" value="METHOD_DEF, CTOR_DEF" />
         </module>
         <module name="JavadocStyle">
@@ -168,9 +169,12 @@
             <property name="tokens" value="INTERFACE_DEF, CLASS_DEF, METHOD_DEF, CTOR_DEF, VARIABLE_DEF" />
         </module>
         <module name="JavadocType">
+            <property name="severity" value="info" />
             <property name="tokens" value="CLASS_DEF, INTERFACE_DEF" />
         </module>
-        <module name="JavadocVariable"></module>
+        <module name="JavadocVariable">
+            <property name="severity" value="info" />
+        </module>
         <module name="CyclomaticComplexity">
             <property name="severity" value="info" />
             <property name="max" value="26" />
