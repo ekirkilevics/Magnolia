@@ -16,16 +16,6 @@ var mgnlMove=false;
 //inline editing: true as long as a paragraph is selected for moving
 
 
-function eventHandlerOnResize(e)
-	{
-	//resize tabs before resize of trees (in case there are any trees on a tab)
-	mgnlDialogResizeTabs();
-	mgnlDialogLinkBrowserResize();
-	mgnlTreeResize();
-	mgnlAdminCentralResize();
-	}
-window.onresize = eventHandlerOnResize;
-
 
 
 
@@ -377,3 +367,13 @@ function mgnlConfirm(text,title)
    	return confirm(alertText);
    	}
 
+
+function eventHandlerOnResize(e)
+	{
+	//resize tabs before resize of trees (in case there are any trees on a tab)
+	mgnlDialogResizeTabs();
+	mgnlDialogLinkBrowserResize();
+	mgnlTreeResize();
+	mgnlAdminCentralResize();
+	}
+window.onresize = eventHandlerOnResize;
