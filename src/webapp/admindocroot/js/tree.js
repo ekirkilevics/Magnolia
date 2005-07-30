@@ -845,16 +845,18 @@
 			{
 			//todo: create params object (see node.expand()
 			var node=this.lastEditedNode;
-			var path=node.path;
 			var htmlObject=this.lastEditedHtmlObject;
+			if (htmlObject == null) {
+			  return;
+			}
 			var name=this.lastEditedName;
 			var isMeta=this.lastEditedIsMeta;
 			var isLabel=this.lastEditedIsLabel;
 			var isNodeDataValue=this.lastEditedIsNodeDataValue;
 			var isNodeDataType=this.lastEditedIsNodeDataType;
-			if(displayValue==null)
+			if(displayValue==null) {
 				displayValue="";
-
+            }
 			this.lastEditedHtmlObject=null;
 			this.lastEditedOriginalValue="";
 			this.lastEditedName="";
