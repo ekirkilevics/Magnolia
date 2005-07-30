@@ -148,8 +148,7 @@ public class Tree extends ControlSuper {
      */
     public void setPathSelected(String s) {
         if (StringUtils.isNotEmpty(s)) {
-            // this.setPathOpen(s);
-            this.setPathOpen(s.substring(0, s.lastIndexOf("/"))); //$NON-NLS-1$
+            this.setPathOpen(StringUtils.substringBeforeLast(s, "/")); //$NON-NLS-1$
         }
         this.pathSelected = s;
     }
@@ -382,8 +381,8 @@ public class Tree extends ControlSuper {
 
     public void deleteNode(String path) {
         try {
-            String parentPath = path.substring(0, path.lastIndexOf("/")); //$NON-NLS-1$
-            String label = path.substring(path.lastIndexOf("/") + 1); //$NON-NLS-1$
+            String parentPath = StringUtils.substringBeforeLast(path, "/"); //$NON-NLS-1$
+            String label = StringUtils.substringAfterLast(path, "/"); //$NON-NLS-1$
             deleteNode(parentPath, label);
         }
         catch (Exception e) {
@@ -582,7 +581,7 @@ public class Tree extends ControlSuper {
         if (action == ACTION_MOVE) {
             move = true;
         }
-        String label = pathOrigin.substring(pathOrigin.lastIndexOf("/") + 1); //$NON-NLS-1$
+        String label = StringUtils.substringAfterLast(pathOrigin, "/"); //$NON-NLS-1$
         String slash = "/"; //$NON-NLS-1$
         if (pathSelected.equals("/")) { //$NON-NLS-1$
             slash = StringUtils.EMPTY;
@@ -617,8 +616,9 @@ public class Tree extends ControlSuper {
             try {
                 HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
                 // PASTETYPE_ABOVE | PASTETYPE_BELOW
-                String pathSelectedParent = pathSelected.substring(0, pathSelected.lastIndexOf("/")); //$NON-NLS-1$
-                String pathOriginParent = pathOrigin.substring(0, pathOrigin.lastIndexOf("/")); //$NON-NLS-1$
+
+                String pathSelectedParent = StringUtils.substringBeforeLast(pathSelected, "/"); //$NON-NLS-1$
+                String pathOriginParent = StringUtils.substringBeforeLast(pathOrigin, "/"); //$NON-NLS-1$
                 if (StringUtils.isEmpty(pathSelectedParent)) {
                     slash = StringUtils.EMPTY;
                     pathSelectedParent = "/"; //$NON-NLS-1$
@@ -802,7 +802,7 @@ public class Tree extends ControlSuper {
         String returnValue = StringUtils.EMPTY;
         try {
             HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
-            String parentPath = this.getPath().substring(0, this.getPath().lastIndexOf("/")); //$NON-NLS-1$
+            String parentPath = StringUtils.substringBeforeLast(this.getPath(), "/"); //$NON-NLS-1$
             newLabel = Path.getValidatedLabel(newLabel);
             String dest = parentPath + "/" + newLabel; //$NON-NLS-1$
             if (hm.isExist(dest)) {
@@ -1353,13 +1353,8 @@ public class Tree extends ControlSuper {
                             else {
                                 pathRemaining = pathRemaining.substring(1);
                             }
-                            String nextChunk;
-                            if (pathRemaining.indexOf("/") != -1) { //$NON-NLS-1$
-                                nextChunk = pathRemaining.substring(0, pathRemaining.indexOf("/")); //$NON-NLS-1$
-                            }
-                            else {
-                                nextChunk = pathRemaining; // last chunk
-                            }
+                            String nextChunk = StringUtils.substringBefore(pathRemaining, "/"); //$NON-NLS-1$
+
                             String pathNext = this.getPathCurrent() + slash + nextChunk;
                             this.setPathCurrent(pathNext);
                             html.append(this.getHtmlChildren());

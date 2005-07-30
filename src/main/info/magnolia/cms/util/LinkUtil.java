@@ -167,7 +167,7 @@ public final class LinkUtil {
             relativePath.append("../"); //$NON-NLS-1$
         }
 
-        if (absolutePath.startsWith("/")) { //$NON-NLS-1$
+        if (absolutePath.startsWith("/")) {
             relativePath.append(absolutePath.substring(1));
         }
         else {

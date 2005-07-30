@@ -242,9 +242,8 @@ public class UserRolesEditIncludeAclDialogPage extends DialogPageMVCHandler {
                     String accessRight = c.getNodeData("permissions").getString(); //$NON-NLS-1$
                     String accessType;
 
-                    if (path.indexOf("/*") == -1) { //$NON-NLS-1$
-                        // access to self and subs, skip next (which is same
-                        // with /*)
+                    if (!StringUtils.contains(path, "/*")) { //$NON-NLS-1$
+                        // access to self and subs, skip next (which is same with /*)
                         skipNext = true;
                         accessType = "self"; //$NON-NLS-1$
                     }
@@ -254,7 +253,7 @@ public class UserRolesEditIncludeAclDialogPage extends DialogPageMVCHandler {
                             accessType = "self"; //$NON-NLS-1$
                         }
                         else {
-                            path = path.substring(0, path.lastIndexOf("/*")); //$NON-NLS-1$
+                            path = StringUtils.substringBeforeLast(path, "/*"); //$NON-NLS-1$
                             accessType = "sub"; //$NON-NLS-1$
                         }
                     }
