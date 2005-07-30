@@ -19,7 +19,6 @@ import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 
 /**
@@ -38,11 +37,6 @@ public final class Path {
     private static final String ATTRIBUTE_URI = "mgnl_decodedURI"; //$NON-NLS-1$
 
     private static final String JAVAX_FORWARD_SERVLET_PATH = "javax.servlet.forward.servlet_path"; //$NON-NLS-1$
-
-    /**
-     * Logger.
-     */
-    private static Logger log = Logger.getLogger(Path.class);
 
     /**
      * Utility class, don't instantiate.

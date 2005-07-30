@@ -18,6 +18,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.Resource;
 
+import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyTagSupport;
@@ -97,7 +98,7 @@ public class LoadPage extends BodyTagSupport {
                 HierarchyManager hm = SessionAccessControl.getHierarchyManager(req);
                 newActpage = hm.getPage(startPage.getHandle(), this.templateName);
             }
-            catch (Exception e) {
+            catch (RepositoryException e) {
                 log.error(e.getMessage());
                 return EVAL_PAGE;
             }

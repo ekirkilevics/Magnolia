@@ -14,6 +14,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Workspace;
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 import org.apache.jackrabbit.core.jndi.RegistryHelper;
 import org.apache.log4j.Logger;
@@ -68,7 +69,10 @@ public class ProviderImpl implements Provider {
             RegistryHelper.registerRepository(ctx, bindName, configFile, repositoryHome, true);
             this.repository = (Repository) ctx.lookup(bindName);
         }
-        catch (Exception e) {
+        catch (NamingException e) {
+            throw new RepositoryNotInitializedException(e);
+        }
+        catch (RepositoryException e) {
             throw new RepositoryNotInitializedException(e);
         }
     }

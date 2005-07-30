@@ -19,16 +19,19 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.Resource;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.log4j.Logger;
 
 
@@ -184,7 +187,7 @@ public class AHref extends BodyTagSupport {
                 Content resultPage = hm.getPage(startPage.getHandle(), this.templateName);
                 this.writeLink(resultPage.getHandle());
             }
-            catch (Exception e) {
+            catch (RepositoryException e) {
                 log.error(e.getMessage());
                 this.writeLink(StringUtils.EMPTY);
             }
@@ -234,8 +237,11 @@ public class AHref extends BodyTagSupport {
                 out.print("</a>"); //$NON-NLS-1$
             }
         }
-        catch (Exception e) {
+        catch (RepositoryException e) {
             log.error(e.getMessage(), e);
+        }
+        catch (IOException e) {
+            throw new NestableRuntimeException(e);
         }
         attributes = null;
     }

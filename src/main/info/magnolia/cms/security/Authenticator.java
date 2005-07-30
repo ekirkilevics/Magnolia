@@ -156,14 +156,10 @@ public final class Authenticator {
             if (credentials == null) {
                 return "superuser"; //$NON-NLS-1$
             }
-            try {
-                credentials = getDecodedCredentials(credentials.substring(6).trim());
-                Authenticator.setUserId(credentials, request);
-                userId = request.getSession().getAttribute(ATTRIBUTE_USER_ID);
-            }
-            catch (Exception e) {
-                return "superuser"; //$NON-NLS-1$
-            }
+
+            credentials = getDecodedCredentials(credentials.substring(6).trim());
+            Authenticator.setUserId(credentials, request);
+            userId = request.getSession().getAttribute(ATTRIBUTE_USER_ID);
         }
         return (String) userId;
     }

@@ -378,7 +378,7 @@ public final class SessionAccessControl {
                 }
             }
         }
-        catch (Exception e) {
+        catch (RepositoryException e) {
             log.error("Failed to update roles ACL"); //$NON-NLS-1$
             log.error(e.getMessage(), e);
         }

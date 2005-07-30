@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 
 import javax.jcr.RepositoryException;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -33,11 +33,6 @@ import org.apache.log4j.Logger;
  * @version $Revision$ ($Author$)
  */
 public final class LinkUtil {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = Logger.getLogger(LinkUtil.class);
 
     /**
      * The HierarchyManager to get the uuid
@@ -168,7 +163,7 @@ public final class LinkUtil {
         }
 
         if (absolutePath.startsWith("/")) {
-            relativePath.append(absolutePath.substring(1));
+            relativePath.append(StringUtils.substringAfter(absolutePath, "/"));
         }
         else {
             relativePath.append(absolutePath);
@@ -188,7 +183,7 @@ public final class LinkUtil {
         try {
             return hm.getContent(path).getUUID();
         }
-        catch (Exception e) {
+        catch (RepositoryException e) {
             return path;
         }
     }

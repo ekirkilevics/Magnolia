@@ -409,13 +409,16 @@ public class ImportExportServlet extends HttpServlet {
         tempFile.deleteOnExit();
         OutputStream fileStream = new FileOutputStream(tempFile);
 
-        session.exportSystemView(basepath, fileStream, false, false);
-
         try {
-            fileStream.close();
+            session.exportSystemView(basepath, fileStream, false, false);
         }
-        catch (IOException e) {
-            // ignore
+        finally {
+            try {
+                fileStream.close();
+            }
+            catch (IOException e) {
+                // ignore
+            }
         }
 
         InputStream fileInputStream = new FileInputStream(tempFile);

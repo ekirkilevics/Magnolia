@@ -67,16 +67,6 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
     protected static final String VIEW_SHOW_DIALOG = "show"; //$NON-NLS-1$
 
     /**
-     * the request passed by the MVCServlet
-     */
-    protected HttpServletRequest request;
-
-    /**
-     * The repsonse passed by the MVCServlet
-     */
-    protected HttpServletResponse response;
-
-    /**
      * The posted multipart form. Use params for easy access.
      */
     protected MultipartForm form;
@@ -256,7 +246,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         PrintWriter out = response.getWriter();
 
         // after saving
-        if (view == VIEW_CLOSE_WINDOW) {
+        if (VIEW_CLOSE_WINDOW.equals(view)) {
             out.println("<html>"); //$NON-NLS-1$
             out.println(new Sources(request.getContextPath()).getHtmlJs());
             out.println("<script type=\"text/javascript\">"); //$NON-NLS-1$

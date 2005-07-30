@@ -78,8 +78,6 @@ public final class JSPIncludeUtil {
         /** The HTTP status set by the target. */
         private int status = 200;
 
-        private String charEncoding;
-
         /** Constructs a new ImportResponseWrapper. */
         public ImportResponseWrapper(HttpServletResponse response) {
             super(response);
@@ -138,10 +136,6 @@ public final class JSPIncludeUtil {
                 return sw.toString();
             }
             else if (isStreamUsed) {
-                if (StringUtils.isNotEmpty(charEncoding)) {
-                    return bos.toString(charEncoding);
-                }
-
                 return bos.toString(DEFAULT_ENCODING);
             }
             else {

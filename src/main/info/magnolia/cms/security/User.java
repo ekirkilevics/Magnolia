@@ -12,9 +12,11 @@
  */
 package info.magnolia.cms.security;
 
+import info.magnolia.cms.core.Content;
+
 import java.util.Iterator;
 
-import info.magnolia.cms.core.Content;
+import javax.jcr.RepositoryException;
 
 
 /**
@@ -62,7 +64,7 @@ public class User {
             }
 
         }
-        catch (Exception e) {
+        catch (RepositoryException e) {
             // nothing
         }
 

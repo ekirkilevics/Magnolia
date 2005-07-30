@@ -14,6 +14,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Workspace;
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.rmi.PortableRemoteObject;
 
 import org.apache.log4j.Logger;
@@ -67,7 +68,7 @@ public class ProviderImpl implements Provider {
             this.repository = (Repository) PortableRemoteObject.narrow(obj, Repository.class);
 
         }
-        catch (Exception e) {
+        catch (NamingException e) {
             throw new RepositoryNotInitializedException(e);
         }
     }

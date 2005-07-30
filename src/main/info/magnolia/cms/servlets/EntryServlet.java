@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.jcr.RepositoryException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.Cookie;
@@ -159,7 +160,10 @@ public class EntryServlet extends HttpServlet {
                 }
             }
         }
-        catch (Exception e) {
+        catch (RepositoryException e) {
+            log.error(e.getMessage(), e);
+        }
+        catch (RuntimeException e) {
             log.error(e.getMessage(), e);
         }
     }
@@ -237,16 +241,6 @@ public class EntryServlet extends HttpServlet {
      */
     private String getURIMap(HttpServletRequest request) {
         return VirtualMap.getURIMapping(StringUtils.substringAfter(request.getRequestURI(), request.getContextPath()));
-    }
-
-    /**
-     * Extracts uri and extension.
-     * @param request HttpServletRequest
-     * @return URI without context path and extension
-     */
-    private String getURI(HttpServletRequest request) {
-        return StringUtils.substringBeforeLast(StringUtils.substringAfter(request.getRequestURI(), request
-            .getContextPath()), "."); //$NON-NLS-1$
     }
 
     /**

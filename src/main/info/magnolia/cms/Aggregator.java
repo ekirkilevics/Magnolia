@@ -148,7 +148,7 @@ public class Aggregator {
                     this.getRequestedContent(Aggregator.ATOM);
                     this.setRequestReceiver(Aggregator.ATOM);
                 }
-                catch (Exception e) {
+                catch (RepositoryException e) {
                     this.setRequestReceiver(true);
                     success = false;
                 }

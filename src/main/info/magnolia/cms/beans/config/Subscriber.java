@@ -144,7 +144,8 @@ public final class Subscriber {
             try {
                 addContext(si, c);
             }
-            catch (Exception e) { // valid
+            catch (RepositoryException e) {
+                // valid
             }
             Subscriber.cachedContent.put(c.getName(), si);
         }
@@ -156,7 +157,7 @@ public final class Subscriber {
      * @param subscriberInfo
      * @param contentNode
      */
-    private static void addContext(Subscriber subscriberInfo, Content contentNode) throws Exception {
+    private static void addContext(Subscriber subscriberInfo, Content contentNode) throws RepositoryException {
         subscriberInfo.context = new Hashtable();
         Content contextList = contentNode.getContent("Context"); //$NON-NLS-1$
         Iterator it = contextList.getChildren().iterator();

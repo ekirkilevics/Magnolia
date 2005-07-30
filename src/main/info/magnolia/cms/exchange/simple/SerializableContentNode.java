@@ -14,14 +14,12 @@ package info.magnolia.cms.exchange.simple;
 
 import info.magnolia.cms.core.Content;
 
-import java.io.Serializable;
-
 
 /**
  * @author Sameer Charles
  * @version 2.0
  */
-public class SerializableContentNode extends SerializableContent implements Serializable {
+public class SerializableContentNode extends SerializableContent {
 
     /**
      * Stable serialVersionUID.

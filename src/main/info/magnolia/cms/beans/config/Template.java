@@ -213,7 +213,7 @@ public class Template {
      * </ol>
      * @return TemplateInfo
      */
-    public static Template getInfo(String key) throws Exception {
+    public static Template getInfo(String key) {
         return (Template) Template.cachedContent.get(key);
     }
 

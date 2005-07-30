@@ -128,7 +128,7 @@ public class CacheHandler extends Thread {
             }
             Cache.addToCachedURIList(repositoryURI, new Date().getTime(), size, compressedSize);
         }
-        catch (Exception e) {
+        catch (IOException e) {
             log.error(e.getMessage(), e);
         }
         finally {
@@ -195,7 +195,7 @@ public class CacheHandler extends Thread {
             }
             return true;
         }
-        catch (Exception e) {
+        catch (IOException e) {
             log.error(MessageFormat.format("Failed to stream [{0}] due to a {1}: {2}", //$NON-NLS-1$
                 new Object[]{uri, e.getClass().getName(), e.getMessage()}), e);
         }
@@ -376,7 +376,7 @@ public class CacheHandler extends Thread {
         }
         String encoding = request.getHeader("Accept-Encoding"); //$NON-NLS-1$
         if (encoding != null) {
-            return (encoding.toLowerCase().indexOf("gzip") > -1); //$NON-NLS-1$
+            return StringUtils.contains(encoding.toLowerCase(), "gzip"); //$NON-NLS-1$
         }
         return false;
     }

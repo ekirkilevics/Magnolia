@@ -128,12 +128,16 @@ public class ResourceDispatcher extends HttpServlet {
     private void sendCompressed(InputStream is, HttpServletResponse res) throws IOException {
         res.setHeader("Content-Encoding", "gzip"); //$NON-NLS-1$ //$NON-NLS-2$
         GZIPOutputStream gzos = new GZIPOutputStream(res.getOutputStream());
-        int bit;
-        while ((bit = is.read()) != -1) {
-            gzos.write(bit);
+        try {
+            int bit;
+            while ((bit = is.read()) != -1) {
+                gzos.write(bit);
+            }
+            gzos.flush();
         }
-        gzos.flush();
-        gzos.close();
+        finally {
+            gzos.close();
+        }
     }
 
     /**

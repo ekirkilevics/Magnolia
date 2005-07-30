@@ -18,6 +18,7 @@ import info.magnolia.logging.Log4jConfigurer;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -47,7 +48,7 @@ import org.apache.log4j.Logger;
  * <p>
  * If no <code>magnolia.initialization.file</code> context parameter is set, the following default is assumed:
  * </p>
- * 
+ *
  * <pre>
  * &lt;context-param>
  *   &lt;param-name>magnolia.initialization.file&lt;/param-name>
@@ -60,7 +61,7 @@ import org.apache.log4j.Logger;
  *   &lt;/param-value>
  * &lt;/context-param>
  * </pre>
- * 
+ *
  * The following parameters are needed in the properties file:
  * <dl>
  * <dt>magnolia.cache.startdir</dt>
@@ -203,7 +204,6 @@ public class PropertyInitializer implements ServletContextListener {
 
             try {
                 envProperties.load(fileStream);
-                fileStream.close();
 
                 log.info(MessageFormat.format("Loading configuration at {0}", new Object[]{initFile //$NON-NLS-1$
                     .getAbsolutePath()}));
@@ -214,6 +214,14 @@ public class PropertyInitializer implements ServletContextListener {
             }
             catch (Exception e) {
                 log.fatal(e.getMessage(), e);
+            }
+            finally {
+                try {
+                    fileStream.close();
+                }
+                catch (IOException e) {
+                    // ignore
+                }
             }
             return;
 

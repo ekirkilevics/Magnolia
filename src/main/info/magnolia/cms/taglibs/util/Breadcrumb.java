@@ -15,12 +15,16 @@ package info.magnolia.cms.taglibs.util;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.Resource;
 
+import java.io.IOException;
+
+import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.log4j.Logger;
 
 
@@ -112,8 +116,11 @@ public class Breadcrumb extends TagSupport {
                 out.print("</a>"); //$NON-NLS-1$
             }
         }
-        catch (Exception e) {
+        catch (RepositoryException e) {
             log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+        }
+        catch (IOException e) {
+            throw new NestableRuntimeException(e);
         }
 
         return super.doStartTag();
