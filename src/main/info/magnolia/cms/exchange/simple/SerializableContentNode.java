@@ -16,11 +16,8 @@ import info.magnolia.cms.core.Content;
 
 import java.io.Serializable;
 
-import org.apache.log4j.Logger;
-
 
 /**
- * Date: Jun 21, 2004 Time: 2:32:14 PM
  * @author Sameer Charles
  * @version 2.0
  */
@@ -30,11 +27,6 @@ public class SerializableContentNode extends SerializableContent implements Seri
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
-
-    /**
-     * Logger.
-     */
-    private static Logger log = Logger.getLogger(SerializableContentNode.class);
 
     private SerializableMetaData metaData;
 

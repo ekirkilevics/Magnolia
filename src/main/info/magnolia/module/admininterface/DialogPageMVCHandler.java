@@ -23,8 +23,6 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
-
 
 /**
  * This is the MVCHandler for simple dialog pages.
@@ -33,11 +31,6 @@ import org.apache.log4j.Logger;
  */
 
 public abstract class DialogPageMVCHandler extends MVCServletHandlerImpl {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = Logger.getLogger(DialogPageMVCHandler.class);
 
     protected static final String COMMAND_SHOW = "show"; //$NON-NLS-1$
 

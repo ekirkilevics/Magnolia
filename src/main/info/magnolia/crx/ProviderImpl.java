@@ -20,8 +20,7 @@ import org.apache.log4j.Logger;
 
 
 /**
- * @author Sameer Charles
- * $Id: $
+ * @author Sameer Charles $Id: $
  */
 public class ProviderImpl implements Provider {
 
@@ -65,7 +64,7 @@ public class ProviderImpl implements Provider {
         try {
             InitialContext ctx = new InitialContext(env);
             Object obj = ctx.lookup(bindName);
-            this.repository =  (Repository)PortableRemoteObject.narrow(obj,  Repository.class);
+            this.repository = (Repository) PortableRemoteObject.narrow(obj, Repository.class);
 
         }
         catch (Exception e) {

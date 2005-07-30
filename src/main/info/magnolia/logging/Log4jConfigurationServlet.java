@@ -43,7 +43,7 @@ import org.apache.log4j.Logger;
  * <p>
  * web.xml configuration:
  * </p>
- *
+ * 
  * <pre>
  * &lt;servlet>
  *   &lt;servlet-name>log4j&lt;/servlet-name>
@@ -51,12 +51,12 @@ import org.apache.log4j.Logger;
  *   &lt;servlet-class>org.apache.log4j.servlet.ConfigurationServlet&lt;/servlet-class>
  * &lt;/servlet>
  * </pre>
- *
+ * 
  * <p>
  * The <code>fragment</code> parameter can be added if you don't want a full xhtml page in output, but only the
  * content of the body tag, so that it can be used in portlets or struts tiles.
  * </p>
- *
+ * 
  * <pre>
  * &lt;servlet>
  *   &lt;servlet-name>log4j&lt;/servlet-name>
@@ -68,7 +68,7 @@ import org.apache.log4j.Logger;
  *   &lt;/init-param>
  * &lt;/servlet>
  * </pre>
- *
+ * 
  * @author Luther E. Birdzell lebirdzell@yahoo.com
  * @author Yoav Shapira yoavs@apache.org
  * @author Fabrizio Giustina
@@ -149,7 +149,7 @@ public class Log4jConfigurationServlet extends HttpServlet {
             response.setContentType(CONTENT_TYPE);
 
             // print title and header
-            printHeader(out, request);
+            printHeader(out);
         }
 
         // print scripts
@@ -171,13 +171,13 @@ public class Log4jConfigurationServlet extends HttpServlet {
         out.println("<tbody>"); //$NON-NLS-1$
 
         // print the root Logger
-        displayLogger(out, Logger.getRootLogger(), loggerNum++, request);
+        displayLogger(out, Logger.getRootLogger(), loggerNum++);
 
         // print the rest of the loggers
         Iterator iterator = loggers.iterator();
 
         while (iterator.hasNext()) {
-            displayLogger(out, (Logger) iterator.next(), loggerNum++, request);
+            displayLogger(out, (Logger) iterator.next(), loggerNum++);
         }
 
         out.println("</tbody>"); //$NON-NLS-1$
@@ -216,7 +216,7 @@ public class Log4jConfigurationServlet extends HttpServlet {
      * @param row the row number in the table this logger will appear in.
      * @param request the servlet request.
      */
-    private void displayLogger(PrintWriter out, Logger logger, int row, HttpServletRequest request) {
+    private void displayLogger(PrintWriter out, Logger logger, int row) {
         String color = null;
         String loggerName = (StringUtils.isEmpty(logger.getName()) ? ROOT : logger.getName());
 
@@ -295,7 +295,7 @@ public class Log4jConfigurationServlet extends HttpServlet {
      * @param out The output writer
      * @param request The request
      */
-    private void printHeader(PrintWriter out, HttpServletRequest request) {
+    private void printHeader(PrintWriter out) {
         out.println("<html><head><title>Log4J Control Console</title>"); //$NON-NLS-1$
 
         out.println("<style type=\"text/css\">"); //$NON-NLS-1$

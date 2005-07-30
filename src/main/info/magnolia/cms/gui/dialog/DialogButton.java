@@ -18,19 +18,12 @@ import info.magnolia.cms.i18n.TemplateMessagesUtil;
 import java.io.IOException;
 import java.io.Writer;
 
-import org.apache.log4j.Logger;
-
 
 /**
  * @author Vinzenz Wyser
  * @version 2.0
  */
 public class DialogButton extends DialogBox {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = Logger.getLogger(DialogButton.class);
 
     /**
      * Empty constructor should only be used by DialogFactory.

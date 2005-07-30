@@ -17,7 +17,6 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 
 /**
@@ -25,11 +24,6 @@ import org.apache.log4j.Logger;
  * @version 1.1
  */
 public class MultipartForm {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = Logger.getLogger(MultipartForm.class);
 
     /**
      * The name of the request attribute containing a MultipartForm instance.

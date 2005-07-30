@@ -222,10 +222,9 @@ public class CacheHandler extends Thread {
             url.append(port);
         }
         String contextPath = request.getContextPath();
-        if (contextPath.length() > 0 && contextPath.charAt(0) == '/')
-            ;
-        else
+        if (!(contextPath.length() > 0 && contextPath.charAt(0) == '/')) {
             url.append("/"); //$NON-NLS-1$
+        }
         url.append(contextPath);
 
         return url.toString();

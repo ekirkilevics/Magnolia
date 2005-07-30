@@ -383,7 +383,6 @@ public class ImportExportServlet extends HttpServlet {
 
         stream.flush();
         stream.close();
-        return;
     }
 
     /**

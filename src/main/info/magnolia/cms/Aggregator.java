@@ -12,7 +12,6 @@
  */
 package info.magnolia.cms;
 
-import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.core.Content;
@@ -137,10 +136,10 @@ public class Aggregator {
         }
         else if (this.hierarchyManager.isPage(this.uri)) {
             this.getRequestedContent();
-            this.setRequestReceiver();
+            this.setRequestReceiver(false);
         }
         else {
-            /* check again, resource might have different name */
+            // check again, resource might have different name
             int lastIndexOfSlash = this.uri.lastIndexOf("/"); //$NON-NLS-1$
             if (lastIndexOfSlash > 0) {
                 this.uri = this.uri.substring(0, lastIndexOfSlash);
@@ -160,35 +159,6 @@ public class Aggregator {
         }
         this.updateRequest();
         return success;
-    }
-
-    /**
-     * Set the template responsible to handle this request.
-     */
-    private void setRequestReceiver() {
-        try {
-            String templateName = this.requestedPage.getMetaData().getTemplate();
-
-            if (StringUtils.isBlank(templateName)) {
-                log.error(MessageFormat.format("No template configured for page [{1}].", //$NON-NLS-1$
-                    new Object[]{this.requestedPage.getHandle()}));
-            }
-
-            Template template = Template.getInfo(templateName);
-
-            if (template == null) {
-
-                log.error(MessageFormat.format("Template [{0}] for page [{1}] not found.", //$NON-NLS-1$
-                    new Object[]{templateName, this.requestedPage.getHandle()}));
-
-                return;
-            }
-
-            this.requestReceiver = template.getPath(this.extension);
-        }
-        catch (Exception e) {
-            log.error("Failed to set request receiver: " + e.getMessage(), e); //$NON-NLS-1$
-        }
     }
 
     /**
@@ -214,7 +184,34 @@ public class Aggregator {
      * Set the servlet responsible to handle direct resource request.
      */
     private void setRequestReceiver(boolean direct) {
-        this.requestReceiver = Aggregator.DIRECT_REQUEST_RECEIVER;
+        if (direct) {
+            this.requestReceiver = Aggregator.DIRECT_REQUEST_RECEIVER;
+        }
+        else {
+            try {
+                String templateName = this.requestedPage.getMetaData().getTemplate();
+
+                if (StringUtils.isBlank(templateName)) {
+                    log.error(MessageFormat.format("No template configured for page [{1}].", //$NON-NLS-1$
+                        new Object[]{this.requestedPage.getHandle()}));
+                }
+
+                Template template = Template.getInfo(templateName);
+
+                if (template == null) {
+
+                    log.error(MessageFormat.format("Template [{0}] for page [{1}] not found.", //$NON-NLS-1$
+                        new Object[]{templateName, this.requestedPage.getHandle()}));
+
+                    return;
+                }
+
+                this.requestReceiver = template.getPath(this.extension);
+            }
+            catch (Exception e) {
+                log.error("Failed to set request receiver: " + e.getMessage(), e); //$NON-NLS-1$
+            }
+        }
     }
 
     /**

@@ -46,8 +46,7 @@ import org.jdom.input.SAXBuilder;
 
 
 /**
- * @author Sameer Charles
- * $Id :$
+ * @author Sameer Charles $Id :$
  */
 public final class ContentRepository {
 
@@ -133,7 +132,7 @@ public final class ContentRepository {
 
     /**
      * holds all repository names as configured in repositories.xml
-     * */
+     */
     private static String[] repositoryNames;
 
     /**
@@ -145,7 +144,7 @@ public final class ContentRepository {
 
     /**
      * loads all configured repository using ID as Key, as configured in repositories.xml.
-     *
+     * 
      * <pre>
      * &lt;Repository name="website"
      *                id="website"
@@ -374,7 +373,7 @@ public final class ContentRepository {
     /**
      * Gets repository names array as configured in repositories.xml
      * @return repository names
-     * */
+     */
     public static String[] getAllRepositoryNames() {
         return ContentRepository.repositoryNames;
     }

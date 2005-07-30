@@ -132,7 +132,7 @@ public class UserRolesEditIncludeAclDialogPage extends DialogPageMVCHandler {
     }
 
     /**
-     * @throws Exception 
+     * @throws Exception
      * @see info.magnolia.cms.servlets.BasePageServlet#draw(HttpServletRequest, HttpServletResponse)
      */
     protected void draw(HttpServletRequest request, HttpServletResponse response) throws Exception {

@@ -72,9 +72,9 @@ public class DialogButtonSet extends DialogBox {
                 // if (n.getNodeData("label").isExist()) button.setLabel(n.getNodeData("label").getString());
                 button.setLabel(label);
 
-                String iconSrc = n.getNodeData("iconSrc").getString();
-                if ( !iconSrc.equals("") ) {
-                    button.setIconSrc( iconSrc );
+                String iconSrc = n.getNodeData("iconSrc").getString(); //$NON-NLS-1$
+                if (StringUtils.isNotEmpty(iconSrc)) {
+                    button.setIconSrc(iconSrc);
                 }
 
                 if (setDefaultSelected && n.getNodeData("selected").getBoolean()) { //$NON-NLS-1$
@@ -177,7 +177,7 @@ public class DialogButtonSet extends DialogBox {
         control.setButtonType(this.getButtonType());
 
         // maem: extension to allow for fine grained layout control. E.g. radio buttons with picture
-        control.setCssClass(this.getConfigValue( "cssClass", CssConstants.CSSCLASS_BUTTONSETBUTTON ) );
+        control.setCssClass(this.getConfigValue("cssClass", CssConstants.CSSCLASS_BUTTONSETBUTTON));
 
         if (this.getConfigValue("saveInfo").equals("false")) { //$NON-NLS-1$ //$NON-NLS-2$
             control.setSaveInfo(false);

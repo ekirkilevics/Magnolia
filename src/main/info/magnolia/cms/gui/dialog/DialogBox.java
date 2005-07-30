@@ -21,7 +21,6 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 
 /**
@@ -39,11 +38,6 @@ public class DialogBox extends DialogSuper {
     public static final String ICONS_FOLDER = "folder.gif"; //$NON-NLS-1$
 
     public static final String ICONS_PATH = "/admindocroot/fileIcons/"; //$NON-NLS-1$
-
-    /**
-     * Logger.
-     */
-    private static Logger log = Logger.getLogger(DialogBox.class);
 
     private static Map iconExtensions = new Hashtable();
 
@@ -154,8 +148,8 @@ public class DialogBox extends DialogSuper {
         else {
             ext = name;
         }
-        if (this.getIconExtensions().containsKey(ext)) {
-            iconPath = (String) this.getIconExtensions().get(ext);
+        if (getIconExtensions().containsKey(ext)) {
+            iconPath = (String) getIconExtensions().get(ext);
             if (StringUtils.isEmpty(iconPath)) {
                 iconPath = ICONS_PATH + ext + ".gif"; //$NON-NLS-1$
             }
@@ -172,6 +166,6 @@ public class DialogBox extends DialogSuper {
     }
 
     public void setIconExtensions(String extension, String iconPath) {
-        this.iconExtensions.put(extension, iconPath);
+        iconExtensions.put(extension, iconPath);
     }
 }

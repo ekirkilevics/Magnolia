@@ -28,16 +28,12 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
-
 
 /**
  * @author Vinzenz Wyser
  * @version 2.0
  */
 public class DialogFile extends DialogBox {
-
-    private static Logger log = Logger.getLogger(DialogFile.class);
 
     private List imageExtensions = new ArrayList();
 

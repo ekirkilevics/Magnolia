@@ -23,7 +23,6 @@ import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
 import info.magnolia.cms.util.UrlPattern;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -90,7 +89,6 @@ public final class ModuleLoader {
 
     /**
      * @param startPage
-     * @throws IOException
      */
     private static void init(Content startPage) {
         Iterator modules = startPage.getChildren().iterator();

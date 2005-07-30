@@ -45,4 +45,3 @@ public class InvalidDialogPageHandlerException extends RuntimeException {
     }
 
 }
-

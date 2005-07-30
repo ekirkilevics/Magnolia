@@ -19,7 +19,6 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.apache.log4j.Logger;
 
 
 /**
@@ -34,11 +33,6 @@ public class Xmp extends BodyTagSupport {
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
-
-    /**
-     * Logger.
-     */
-    private static Logger log = Logger.getLogger(Xmp.class);
 
     /**
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()

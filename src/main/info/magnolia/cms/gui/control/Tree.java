@@ -1074,7 +1074,6 @@ public class Tree extends ControlSuper {
 
         // contextmenu
         if (menu.getMenuItems().size() != 0) {
-            StringBuffer menuJavascript = new StringBuffer();
             html.append(menu.getHtml());
         }
 

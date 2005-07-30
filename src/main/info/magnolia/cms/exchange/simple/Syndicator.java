@@ -25,10 +25,8 @@ import info.magnolia.cms.security.SessionAccessControl;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
@@ -335,24 +333,6 @@ public class Syndicator {
         }
         else {
             connection.addRequestProperty(SENDER_URL, senderURL);
-        }
-    }
-
-    /**
-     * @deprecated
-     */
-    private void updateDestination(Subscriber subscriberInfo) {
-        List list = subscriberInfo.getContext(this.context);
-        if (list == null) {
-            return;
-        }
-        for (int i = 0; i < list.size(); i++) {
-            Map map = (Hashtable) list.get(i);
-            if (this.path.indexOf(((String) map.get("source"))) == 0) { //$NON-NLS-1$
-                // match, assign and exit
-                this.parent = this.parent.replaceFirst((String) map.get("source"), (String) map.get("destination")); //$NON-NLS-1$ //$NON-NLS-2$
-                break;
-            }
         }
     }
 

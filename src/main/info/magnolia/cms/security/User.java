@@ -68,8 +68,8 @@ public class User {
 
         return false;
     }
-    
-    public String getLanguage(){
-    		return userNode.getNodeData("language").getString(); //$NON-NLS-1$
+
+    public String getLanguage() {
+        return userNode.getNodeData("language").getString(); //$NON-NLS-1$
     }
 }

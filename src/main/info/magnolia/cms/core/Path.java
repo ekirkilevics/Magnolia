@@ -170,7 +170,7 @@ public final class Path {
     }
 
     public static String getUniqueLabel(HierarchyManager hierarchyManager, String parent, String label) {
-        if(parent.equals("/")){
+        if (parent.equals("/")) {
             parent = "";
         }
         while (hierarchyManager.isExist(parent + "/" + label)) { //$NON-NLS-1$

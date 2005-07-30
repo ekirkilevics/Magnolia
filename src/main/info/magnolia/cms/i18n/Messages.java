@@ -229,7 +229,7 @@ public class Messages {
         reloadBundle(getBundle());
     }
 
-    protected void reloadBundle(ResourceBundle bund)  throws Exception{
+    protected void reloadBundle(ResourceBundle bund) throws Exception {
         try {
             Class klass = bund.getClass().getSuperclass();
             Field field;

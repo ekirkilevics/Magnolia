@@ -47,7 +47,7 @@ import org.apache.log4j.Logger;
  * <p>
  * If no <code>magnolia.initialization.file</code> context parameter is set, the following default is assumed:
  * </p>
- *
+ * 
  * <pre>
  * &lt;context-param>
  *   &lt;param-name>magnolia.initialization.file&lt;/param-name>
@@ -60,7 +60,7 @@ import org.apache.log4j.Logger;
  *   &lt;/param-value>
  * &lt;/context-param>
  * </pre>
- *
+ * 
  * The following parameters are needed in the properties file:
  * <dl>
  * <dt>magnolia.cache.startdir</dt>

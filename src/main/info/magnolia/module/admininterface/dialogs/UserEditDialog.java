@@ -50,13 +50,6 @@ public class UserEditDialog extends ConfiguredDialog {
      */
     private static final long serialVersionUID = 222L;
 
-    // todo: permission global available somewhere
-    private static final long PERMISSION_ALL = Permission.ALL;
-
-    private static final long PERMISSION_READ = Permission.READ;
-
-    private static final long PERMISSION_NO = 0;
-
     private static final String NODE_ACLUSERS = "acl_users"; //$NON-NLS-1$
 
     private static final String NODE_ACLROLES = "acl_userroles"; //$NON-NLS-1$
@@ -64,8 +57,6 @@ public class UserEditDialog extends ConfiguredDialog {
     private static final String NODE_ROLES = "roles"; //$NON-NLS-1$
 
     private static final String NODE_ACLCONFIG = "acl_config"; //$NON-NLS-1$
-
-    private static final String CONTROLNAME_ISADMIN_CONFIG = "permissionConfig"; //$NON-NLS-1$
 
     /*
      * (non-Javadoc)
@@ -219,13 +210,13 @@ public class UserEditDialog extends ConfiguredDialog {
 
             aclUsers = user.createContent(NODE_ACLUSERS, ItemType.CONTENTNODE);
 
-            Content aclRoles = user.createContent(NODE_ACLROLES, ItemType.CONTENTNODE);
-            Content aclConfig = user.createContent(NODE_ACLCONFIG, ItemType.CONTENTNODE);
+            user.createContent(NODE_ACLROLES, ItemType.CONTENTNODE);
+            user.createContent(NODE_ACLCONFIG, ItemType.CONTENTNODE);
 
             // give user permission to read and edit himself
             Content u3 = aclUsers.createContent("0", ItemType.CONTENTNODE); //$NON-NLS-1$
             u3.createNodeData("path").setValue(user.getHandle() + "/*"); //$NON-NLS-1$ //$NON-NLS-2$
-            u3.createNodeData("permissions").setValue(PERMISSION_ALL); //$NON-NLS-1$
+            u3.createNodeData("permissions").setValue(Permission.ALL); //$NON-NLS-1$
 
             // ######################
             // # roles acl

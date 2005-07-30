@@ -38,7 +38,7 @@ import org.apache.log4j.Logger;
  */
 public class XmlExport implements ExportHandler {
 
-    /*******************************************************************************************************************
+    /**
      * Logger.
      */
     private static Logger log = Logger.getLogger(XmlExport.class);
@@ -53,8 +53,6 @@ public class XmlExport implements ExportHandler {
     private static final String A_NAME = "name"; //$NON-NLS-1$
 
     private static final String A_TYPE = "type"; //$NON-NLS-1$
-
-    private static final String A_TYPENAME = "tname"; //$NON-NLS-1$
 
     /**
      * default properties
@@ -200,7 +198,7 @@ public class XmlExport implements ExportHandler {
                     try {
                         InputStream is = property.getStream();
                         byte[] buffer = new byte[8192];
-                        int read = 0;
+                        int read;
                         while ((read = is.read(buffer)) > 0) {
                             stringBuffer.append(new String(buffer));
                         }
@@ -241,27 +239,6 @@ public class XmlExport implements ExportHandler {
         format.setEncoding(encoding);
 
         return new org.jdom.output.XMLOutputter(format);
-    }
-
-    /**
-     * Turns a JDOM document into a String.
-     */
-    private String toString(final org.jdom.Document doc, final String encoding) {
-
-        final org.jdom.output.XMLOutputter out = this.getXMLOutputter(encoding);
-
-        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
-
-        try {
-            out.output(doc, baos);
-            baos.write('\n');
-            baos.flush();
-        }
-        catch (final java.io.IOException ie) {
-            log.warn("Failed to encode workitem as xml", ie); //$NON-NLS-1$
-        }
-
-        return baos.toString();
     }
 
 }
