@@ -506,6 +506,7 @@
         </dependency>
     </dependencies>
     <build>
+        <nagEmailAddress>dummy-mail@for-test.magnolia</nagEmailAddress>
         <defaultGoal>rebuild-all</defaultGoal>
         <sourceDirectory>src/main</sourceDirectory>
         <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
