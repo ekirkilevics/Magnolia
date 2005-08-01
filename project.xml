@@ -26,8 +26,8 @@
     <siteAddress>shell.sourceforge.net</siteAddress>
     <siteDirectory>/home/groups/m/ma/magnolia/htdocs</siteDirectory>
     <repository>
-        <connection>scm:subversion:http://svn.magnolia.info/svn/magnolia/trunk</connection>
-        <developerConnection>scm:subversion:https://svn.magnolia.info/svn/magnolia/trunk</developerConnection>
+        <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk</connection>
+        <developerConnection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk</developerConnection>
         <url>http://svn.magnolia.info/view</url>
     </repository>
     <versions>
