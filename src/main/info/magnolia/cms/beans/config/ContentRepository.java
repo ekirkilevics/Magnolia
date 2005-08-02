@@ -311,7 +311,7 @@ public final class ContentRepository {
             }
             catch (RepositoryException e) {
                 // probably no search manager is configured for this workspace
-                log.info("QueryManager not initialized for repository " + repository + ": " + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+                log.info("QueryManager not initialized for repository " + map.getID() + ": " + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
         catch (RepositoryException re) {
