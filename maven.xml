@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project >
 <project xmlns:j="jelly:core" xmlns:u="jelly:util" xmlns:ant="jelly:ant" default="rebuild-all">
-
     <goal name="rebuild-all" prereqs="pom,clean,war:war,dist:build" />
     <postGoal name="site">
         <attainGoal name="pdf" />
     </postGoal>
-    
     <preGoal name="jar:jar">
         <!-- add tlds to taglib jar -->
         <j:set var="tld.dir" value="${maven.src.dir}/webapp/WEB-INF/taglib" />
@@ -17,55 +15,55 @@
             </fileset>
         </ant:copy>
     </preGoal>
-	
-	<postGoal name="war:webapp">
-		<!-- copy the readme file -->
-		<ant:copy file="release/release notes.war.txt" tofile="${maven.war.webapp.dir}/release notes.txt" />
-		
-		<j:set var="instanceName" value="${magnolia.build.instance}"/>
+    <postGoal name="war:webapp">
+        <!-- copy the readme file -->
+        <ant:copy file="release/release notes.war.txt" tofile="${maven.war.webapp.dir}/release notes.txt" />
+        <j:set var="instanceName" value="${magnolia.build.instance}" />
 
-	    <!-- jdk1.4 -->
-    		${systemScope.setProperty('javax.xml.transform.TransformerFactory','org.apache.xalan.processor.TransformerFactoryImpl')}
-    
-    		<!-- jdk1.5 -->
-    		<!-- ${systemScope.setProperty('javax.xml.transform.TransformerFactory','com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl')}-->
+        <ant:available classname="com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl" property="java15transformer"/>
+        <j:choose>
+          <j:when test="java15transformer">
+            ${systemScope.setProperty('javax.xml.transform.TransformerFactory','com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl')}
+          </j:when>
+          <j:otherwise>
+            ${systemScope.setProperty('javax.xml.transform.TransformerFactory','org.apache.xalan.processor.TransformerFactoryImpl')}
+          </j:otherwise>
+        </j:choose>
 
-		<j:if test="${instanceName == 'public'}">
-			<ant:echo>changing configuration and bootstrap for public instance</ant:echo>
-			<ant:replace file="${maven.war.webapp.dir}/WEB-INF/web.xml" token="&lt;param-value&gt;magnolia.root&lt;/param-value&gt;" value="&lt;param-value&gt;magnolia.public.root&lt;/param-value&gt;"/>
-
-			<ant:replace file="${maven.war.webapp.dir}/WEB-INF/config/log4j.xml" token="$${magnolia.root}" value="$${magnolia.public.root}"/>
-		
-			<ant:replace file="${maven.war.webapp.dir}/WEB-INF/config/repositories.xml" token="Author" value="Public"/>
-			
-			<ant:delete file="${maven.war.webapp.dir}/WEB-INF/bootstrap/config/config.server.xml"/>
-	    		<ant:xslt style= "src/webapp/WEB-INF/bootstrap/config/config.server.public.xsl" in="src/webapp/WEB-INF/bootstrap/config/config.server.xml" out="${maven.war.webapp.dir}/WEB-INF/bootstrap/config/config.server.xml"/>
-		</j:if>
-		
-		<j:if test="${instanceName == 'author'}">
-			<ant:echo>changing configuration and bootstrap for author instance</ant:echo>
-			
-			<ant:delete file="${maven.war.webapp.dir}/WEB-INF/bootstrap/config/config.subscribers.xml"/>
-	    		<ant:xslt style= "src/webapp/WEB-INF/bootstrap/config/config.subscribers.author.xsl" in="src/webapp/WEB-INF/bootstrap/config/config.subscribers.xml" out="${maven.war.webapp.dir}/WEB-INF/bootstrap/config/config.subscribers.xml"/>
-		</j:if>
-	
-		<j:if test="${instanceName != 'dev'}">
-			<ant:echo>removing cqfs: using filesystem instead</ant:echo>
-			<ant:delete>
-				<ant:fileset dir="${maven.war.webapp.dir}/WEB-INF/lib">
-				    <ant:include name="cqfs-*"/>
-				</ant:fileset>
-			</ant:delete>
-			
-			<ant:replace file="${maven.war.webapp.dir}/WEB-INF/config/repositories.xml" token="jackrabbit-cqfs-search.xml" value="jackrabbit-file-search.xml"/>
-			<ant:replace file="${maven.war.webapp.dir}/WEB-INF/config/repositories.xml" token="jackrabbit-cqfs-nosearch.xml" value="jackrabbit-file-nosearch.xml"/>
-		</j:if>
-	</postGoal>
-	
-
-    <goal name="nightly" prereqs="clean,war:war,site:generate,copy-nightly-war,site:sshdeploy">
-    </goal>
-
+        <j:if test="${instanceName == 'public'}">
+            <ant:echo>changing configuration and bootstrap for public instance</ant:echo>
+            <ant:replace file="${maven.war.webapp.dir}/WEB-INF/web.xml"
+                token="&lt;param-value&gt;magnolia.root&lt;/param-value&gt;"
+                value="&lt;param-value&gt;magnolia.public.root&lt;/param-value&gt;" />
+            <ant:replace file="${maven.war.webapp.dir}/WEB-INF/config/log4j.xml" token="$${magnolia.root}"
+                value="$${magnolia.public.root}" />
+            <ant:replace file="${maven.war.webapp.dir}/WEB-INF/config/repositories.xml" token="Author" value="Public" />
+            <ant:delete file="${maven.war.webapp.dir}/WEB-INF/bootstrap/config/config.server.xml" />
+            <ant:xslt style="src/webapp/WEB-INF/bootstrap/config/config.server.public.xsl"
+                in="src/webapp/WEB-INF/bootstrap/config/config.server.xml"
+                out="${maven.war.webapp.dir}/WEB-INF/bootstrap/config/config.server.xml" />
+        </j:if>
+        <j:if test="${instanceName == 'author'}">
+            <ant:echo>changing configuration and bootstrap for author instance</ant:echo>
+            <ant:delete file="${maven.war.webapp.dir}/WEB-INF/bootstrap/config/config.subscribers.xml" />
+            <ant:xslt style="src/webapp/WEB-INF/bootstrap/config/config.subscribers.author.xsl"
+                in="src/webapp/WEB-INF/bootstrap/config/config.subscribers.xml"
+                out="${maven.war.webapp.dir}/WEB-INF/bootstrap/config/config.subscribers.xml" />
+        </j:if>
+        <j:if test="${instanceName != 'dev'}">
+            <ant:echo>removing cqfs: using filesystem instead</ant:echo>
+            <ant:delete>
+                <ant:fileset dir="${maven.war.webapp.dir}/WEB-INF/lib">
+                    <ant:include name="cqfs-*" />
+                </ant:fileset>
+            </ant:delete>
+            <ant:replace file="${maven.war.webapp.dir}/WEB-INF/config/repositories.xml"
+                token="jackrabbit-cqfs-search.xml" value="jackrabbit-file-search.xml" />
+            <ant:replace file="${maven.war.webapp.dir}/WEB-INF/config/repositories.xml"
+                token="jackrabbit-cqfs-nosearch.xml" value="jackrabbit-file-nosearch.xml" />
+        </j:if>
+    </postGoal>
+    <goal name="nightly" prereqs="clean,war:war,site:generate,copy-nightly-war,site:sshdeploy"></goal>
     <goal name="copy-nightly-war">
         <ant:copy todir="${maven.build.dir}/docs/nightly">
             <fileset dir="${maven.build.dir}">
@@ -73,30 +71,99 @@
             </fileset>
         </ant:copy>
     </goal>
-
     <!-- can be useful when working with IDEs -->
     <goal name="copylibs">
         <j:forEach var="lib" items="${pom.artifacts}">
             <j:set var="dep" value="${lib.dependency}" />
             <j:if test="${dep.getProperty('war.bundle')=='true'}">
-            <j:if test="${dep.getProperty('eclipse.dependency')!='true'}">
-	                <j:if test="${dep.type =='jar'}">
-	                    <ant:copy todir="${basedir}/src/webapp/WEB-INF/lib" file="${lib.path}" />
-	                </j:if>
+                <j:if test="${dep.getProperty('eclipse.dependency')!='true'}">
+                    <j:if test="${dep.type =='jar'}">
+                        <ant:copy todir="${basedir}/src/webapp/WEB-INF/lib" file="${lib.path}" />
+                    </j:if>
                 </j:if>
             </j:if>
         </j:forEach>
     </goal>
-	
-	<!-- convert the java properties files to a readable utf8 format -->
-	<goal name="java2utf8">
-		<ant:native2ascii src="src/resources/info/magnolia/module/admininterface" dest="src/resources/info/magnolia/module/admininterface/utf8" ext=".txt" encoding="UTF8" reverse="true"/>
-	</goal>
+    <!-- convert the java properties files to a readable utf8 format -->
+    <goal name="java2utf8">
+        <ant:native2ascii src="src/resources/info/magnolia/module/admininterface"
+            dest="src/resources/info/magnolia/module/admininterface/utf8" ext=".txt" encoding="UTF8" reverse="true" />
+    </goal>
+    <!-- convert the utf8 properties files to the java format -->
+    <goal name="utf82ascii">
+        <ant:native2ascii src="src/resources/info/magnolia/module/admininterface/utf8"
+            dest="src/resources/info/magnolia/module/admininterface" ext=".properties" encoding="UTF8" />
+    </goal>
+    <!--
+        =======================================================
+        custom release goals, only used for a full distribution
+        =======================================================
+    -->
+    <goal name="release" prereqs="rel-clear,rel-build,rel-gettomcat,rel-tomcat,rel-pack"></goal>
+    <goal name="rel-clear">
+        <delete dir="${release.dest}" failonerror="no" />
+    </goal>
+    <goal name="rel-gettomcat">
+        <ant:echo>Checking/downloading tomcat distribution</ant:echo>
 
-	<!-- convert the utf8 properties files to the java format -->
-	<goal name="utf82ascii">
-		<ant:native2ascii src="src/resources/info/magnolia/module/admininterface/utf8" dest="src/resources/info/magnolia/module/admininterface" ext=".properties" encoding="UTF8"/>
-	</goal>
+        <ant:available property="tomcat-present" file="src/release/tomcat/${release.tomcat.name}.tar.gz"/>
+        <j:choose>
+          <j:when test="tomcat-present">
+            <ant:echo>Tomcat distribution already available, not downloading</ant:echo>
+          </j:when>
+          <j:otherwise>
+            <ant:echo>Downloading Tomcat distribution.</ant:echo>
+             <ant:get dest="src/release/tomcat/${release.tomcat.name}.tar.gz" usetimestamp="true" ignoreerrors="true" verbose="true"
+            src="http://www.apache.org/dist/jakarta/tomcat-5/v5.0.28/bin/${release.tomcat.name}.tar.gz" />
+           <ant:available property="tomcat-present" file="src/release/tomcat/${release.tomcat.name}.tar.gz"/>
+           <ant:fail unless="tomcat-present" message="Unable to download tomcat distribution. You can manually download tomcat from http://www.apache.org/dist/jakarta/tomcat-5/v5.0.28/bin/${release.tomcat.name}.tar.gz to src/release/tomcat/${release.tomcat.name}.tar.gz" />
+          </j:otherwise>
+        </j:choose>
 
-	
+    </goal>
+    <goal name="rel-tomcat" prereqs="rel-build, rel-gettomcat">
+        <mkdir dir="${release.dest}/bundled" />
+        <gunzip src="src/release/tomcat/${release.tomcat.name}.tar.gz" dest="${release.dest}/bundled/tomcat.tar" />
+        <untar src="${release.dest}/bundled/tomcat.tar" dest="${release.dest}/bundled" />
+        <move file="${release.dest}/bundled/${release.tomcat.name}" tofile="${release.dest}/bundled/tomcat" />
+        <delete file="${release.dest}/bundled/tomcat.tar" />
+        <delete dir="${release.dest}/bundled/tomcat/webapps/tomcat-docs" />
+        <copy file="${release.src}/release notes.bundled.txt" tofile="${release.dest}/bundled/release notes.txt"
+            overwrite="true" />
+        <copy file="${release.src}/license.bundled.txt" tofile="${release.dest}/bundled/license.txt" overwrite="true" />
+        <copy file="${release.src}/server.xml" todir="${release.dest}/bundled/tomcat/conf" overwrite="true" />
+        <copy file="${release.src}/server-original.xml" todir="${release.dest}/bundled/tomcat/conf" overwrite="true" />
+        <copy file="${release.src}/catalina.sh" todir="${release.dest}/bundled/tomcat/bin" overwrite="true" />
+        <copy file="${release.src}/catalina.bat" todir="${release.dest}/bundled/tomcat/bin" overwrite="true" />
+        <copy file="${release.src}/startup.sh" todir="${release.dest}/bundled/tomcat/bin" overwrite="true" />
+        <copy file="${release.src}/startup.bat" todir="${release.dest}/bundled/tomcat/bin" overwrite="true" />
+        <copy todir="${release.dest}/bundled/tomcat/webapps">
+            <fileset dir="${release.dest}/wars">
+                <include name="*.war" />
+            </fileset>
+        </copy>
+    </goal>
+    <goal name="rel-build" prereqs="rel-clear">
+        <delete dir="target" />
+        <exec executable="maven.bat">
+            <arg value="-Dmagnolia.build.instance=author" />
+            <arg value="-o" />
+            <arg value="war" />
+        </exec>
+        <copy file="target/magnolia.war" tofile="${release.dest}/wars/magnoliaAuthor.war" />
+        <delete dir="target" />
+        <exec executable="maven.bat">
+            <arg value="-o" />
+            <arg value="-Dmagnolia.build.instance=public" />
+            <arg value="war" />
+        </exec>
+        <copy file="target/magnolia.war" tofile="${release.dest}/wars/magnoliaPublic.war" />
+    </goal>
+    <goal name="rel-pack" prereqs="rel-build, rel-tomcat">
+        <copy file="${release.src}/license.wars.txt" tofile="${release.dest}/wars/license.txt" overwrite="true" />
+        <copy file="${release.src}/release notes.war.txt" tofile="${release.dest}/wars/release notes.txt"
+            overwrite="true" />
+        <zip destfile="${release.dest}/magnolia-${pom.currentVersion}_war_files.zip" basedir="${release.dest}/wars" />
+        <zip destfile="${release.dest}/magnolia-${pom.currentVersion}_with_tomcat.zip" basedir="${release.dest}/bundled" />
+    </goal>
 </project>

@@ -36,7 +36,7 @@ public class RepositoryNotInitializedException extends RepositoryException {
             : cause);
     }
 
-    public RepositoryNotInitializedException(Exception root) {
+    public RepositoryNotInitializedException(Throwable root) {
         super(root);
     }
 }
