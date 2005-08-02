@@ -15,7 +15,9 @@ import javax.jcr.Workspace;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 
+import org.apache.commons.lang.SystemUtils;
 import org.apache.jackrabbit.core.jndi.RegistryHelper;
 import org.apache.log4j.Logger;
 
@@ -64,15 +66,41 @@ public class ProviderImpl implements Provider {
         Hashtable env = new Hashtable();
         env.put(Context.INITIAL_CONTEXT_FACTORY, contextFactoryClass);
         env.put(Context.PROVIDER_URL, providerURL);
+
+        // WORKAROUND for tomcat 5.0/jdk 1.5 problem
+        // tomcat\common\endorsed contains an xml-apis.jar needed by tomcat and loaded before all xmsl stuff present in
+        // the jdk (1.4 naming problem). In the xml-apis.jar file the TransformerFactoryImpl is set to
+        // "org.apache.xalan.processor.TransformerFactoryImpl" instead of
+        // "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl".
+        // solution: remove the file xml-apis.jar from the directory OR manually change the
+        // javax.xml.transform.TransformerFactory system property
+
+        if (SystemUtils.isJavaVersionAtLeast(1.5f)
+            && !"com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl".equals(System
+                .getProperty("javax.xml.transform.TransformerFactory"))) {
+
+            log.info("Java 1.5 detected, setting system property \"javax.xml.transform.TransformerFactory\" to "
+                + "\"com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl\"");
+            System.setProperty(
+                "javax.xml.transform.TransformerFactory",
+                "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
+        }
+
         try {
             InitialContext ctx = new InitialContext(env);
             RegistryHelper.registerRepository(ctx, bindName, configFile, repositoryHome, true);
             this.repository = (Repository) ctx.lookup(bindName);
         }
         catch (NamingException e) {
+            log.error("Unable to initialize repository: " + e.getMessage(), e);
             throw new RepositoryNotInitializedException(e);
         }
         catch (RepositoryException e) {
+            log.error("Unable to initialize repository: " + e.getMessage(), e);
+            throw new RepositoryNotInitializedException(e);
+        }
+        catch (TransformerFactoryConfigurationError e) {
+            log.error("Unable to initialize repository: " + e.getMessage(), e);
             throw new RepositoryNotInitializedException(e);
         }
     }
