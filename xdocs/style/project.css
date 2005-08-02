@@ -137,8 +137,9 @@ h3 {
 	padding: 2px;
 	list-style-position: outside;
 	font-size: 7.5pt !important;
-	padding-left: 16px !important;
-	padding-left /**/: 2px !important;
+	padding-left: 16px;
+	padding-left/**/: 2px !important;
+	/* warning, don't reformat, there should be no comment between padding-left and comment, to fix IE5 issues */
 }
 
 #navcolumn strong {
@@ -239,50 +240,20 @@ a.externalLink,a.newWindow {
 	background-image: none !important; /*ie5*/
 }
 
-a
-.externalLink
-  /* */
-{
-background-image
-:
 
-url
-(../images/magnolia_external
-.png
-)
-
-!
-important
-;
-
+a.externalLink/* */{
+    background-image: url(../images/magnolia_external.png) !important;
 
 }
-a
-.newWindow
-  /* */
-{
-background-image
-:
-
-url
-(../images/magnolia_newwindow
-.png
-)
-
-!
-important
-;
-
-
+a.newWindow/* */{
+    background-image: url(../images/magnolia_newwindow.png) !important;
 }
 table {
-	width: 68%;
+  width: 68%;
 }
-
-i {
-	content: "\"/*"
-}
-
+i {content: "\"/*" }
 table {
-	width: 100%;
+  width: 100%;
+}
+
 }
