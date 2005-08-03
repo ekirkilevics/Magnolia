@@ -6,7 +6,7 @@
         <c:set var="imageurl">
             <cms:out nodeDataName="image" />
         </c:set>
-        <img src="${pageContext.request.contextPath}${imageurl}" class="${imagedata.imageFloat}" alt="${imagedata.imageAlt}" />
+        <img src="${pageContext.request.contextPath}${imageurl}" class="contentImage_${imagedata.imageFloat}" alt="${imagedata.imageAlt}" />
     </cms:ifNotEmpty>
 
     <cms:ifNotEmpty nodeDataName="title">
