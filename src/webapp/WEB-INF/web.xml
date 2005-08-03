@@ -98,6 +98,10 @@
         <servlet-name>ReloadI18nServlet</servlet-name>
         <servlet-class>info.magnolia.cms.servlets.ReloadI18nServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CacheServlet</servlet-name>
+        <servlet-class>info.magnolia.cms.servlets.CacheGeneratorServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>magnolia</servlet-name>
         <url-pattern>/</url-pattern>
@@ -153,6 +157,10 @@
     <servlet-mapping>
         <servlet-name>ReloadI18nServlet</servlet-name>
         <url-pattern>/.magnolia/reload-i18n/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CacheServlet</servlet-name>
+        <url-pattern>/.magnolia/cash-all/*</url-pattern>
     </servlet-mapping>
     <listener>
         <description>Magnolia initializer</description>

@@ -215,9 +215,11 @@ public final class Cache {
     public static boolean isCacheable(HttpServletRequest request) {
 
         // is cache enabled?
-        if (!isActive() || Server.isAdmin()) {
+        if (!isActive()) {
             return false;
         }
+
+        // || Server.isAdmin()
 
         // don't cache POSTs or requests with parameters
         if ("POST".equals(request.getMethod()) || request.getParameterMap().size() > 0) { //$NON-NLS-1$

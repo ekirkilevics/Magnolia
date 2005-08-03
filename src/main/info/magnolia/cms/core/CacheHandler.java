@@ -13,7 +13,6 @@
 package info.magnolia.cms.core;
 
 import info.magnolia.cms.Aggregator;
-import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.runtime.Cache;
 import info.magnolia.cms.security.SecureURI;
 
@@ -89,6 +88,8 @@ public class CacheHandler extends Thread {
         int compressedSize = 0;
         try {
             if (!info.magnolia.cms.beans.config.Cache.isCacheable(request)) {
+                if (log.isDebugEnabled())
+                    log.debug("Request:" + request.getServletPath() + " not cacheable");
                 return;
             }
             File file = getDestinationFile(repositoryURI, DEFAULT_STORE);
@@ -279,9 +280,9 @@ public class CacheHandler extends Thread {
     public static boolean streamFromCache(HttpServletRequest request, HttpServletResponse response) {
 
         // by now don't cache anything if server is admin
-        if (Server.isAdmin()) {
-            return false;
-        }
+        // if (Server.isAdmin()) {
+        // return false;
+        // }
 
         // make sure not to stream anything from cache if it's a POST request or if it has parameters
         if (request.getMethod().toLowerCase().equals("post") || !request.getParameterMap().isEmpty()) { //$NON-NLS-1$
