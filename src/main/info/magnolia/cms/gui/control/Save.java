@@ -111,26 +111,26 @@ public class Save extends ControlSuper {
      * @param request request
      */
     public Save(MultipartForm form, HttpServletRequest request) {
-        this.form = form;
+        this.setForm(form);
         this.setRequest(request);
         this.setPath(form.getParameter("mgnlPath")); //$NON-NLS-1$
         this.setNodeCollectionName(form.getParameter("mgnlNodeCollection")); //$NON-NLS-1$
         this.setNodeName(form.getParameter("mgnlNode")); //$NON-NLS-1$
         this.setParagraph(form.getParameter("mgnlParagraph")); //$NON-NLS-1$
-        this.repository = form.getParameter("mgnlRepository"); //$NON-NLS-1$
+        this.setRepository(form.getParameter("mgnlRepository")); //$NON-NLS-1$
     }
 
     /**
      * Uses the mgnlSageInfo parameters to save the data.
      */
     public void save() {
-        String[] saveInfos = form.getParameterValues("mgnlSaveInfo"); // name,type,propertyOrNode //$NON-NLS-1$
+        String[] saveInfos = getForm().getParameterValues("mgnlSaveInfo"); // name,type,propertyOrNode //$NON-NLS-1$
         String nodeCollectionName = this.getNodeCollectionName(null);
         String nodeName = this.getNodeName(null);
         String path = this.getPath();
         HttpServletRequest request = this.getRequest();
 
-        HierarchyManager hm = SessionAccessControl.getHierarchyManager(request, this.repository);
+        HierarchyManager hm = SessionAccessControl.getHierarchyManager(request, this.getRepository());
         try {
             Content page = null;
             try {
@@ -249,7 +249,7 @@ public class Save extends ControlSuper {
             processBinary(node, name);
         }
         else {
-            values = form.getParameterValues(name);
+            values = getForm().getParameterValues(name);
             if (valueType == ControlSuper.VALUETYPE_MULTIPLE) {
                 processMultiple(node, name, type, values);
             }
@@ -370,8 +370,8 @@ public class Save extends ControlSuper {
      */
     private void processBinary(Content node, String name) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
-        Document doc = form.getDocument(name);
-        if (doc == null && form.getParameter(name + "_" + File.REMOVE) != null) { //$NON-NLS-1$
+        Document doc = getForm().getDocument(name);
+        if (doc == null && getForm().getParameter(name + "_" + File.REMOVE) != null) { //$NON-NLS-1$
             try {
                 node.delete(name + "_" + FileProperties.PROPERTIES_CONTENTNODE); //$NON-NLS-1$
             }
@@ -416,7 +416,7 @@ public class Save extends ControlSuper {
             }
             if (propNode != null) {
                 NodeData propData;
-                String fileName = form.getParameter(name + "_" + FileProperties.PROPERTY_FILENAME); //$NON-NLS-1$
+                String fileName = getForm().getParameter(name + "_" + FileProperties.PROPERTY_FILENAME); //$NON-NLS-1$
                 if (fileName == null || fileName.equals(StringUtils.EMPTY)) {
                     fileName = doc.getFileName();
                 }
@@ -441,7 +441,7 @@ public class Save extends ControlSuper {
                         propData = propNode.createNodeData(FileProperties.PROPERTY_EXTENSION);
                     }
                     propData.setValue(doc.getExtension());
-                    String template = form.getParameter(name + "_" + FileProperties.PROPERTY_TEMPLATE); //$NON-NLS-1$
+                    String template = getForm().getParameter(name + "_" + FileProperties.PROPERTY_TEMPLATE); //$NON-NLS-1$
                     if (StringUtils.isNotEmpty(template)) {
                         propData = propNode.getNodeData(FileProperties.PROPERTY_TEMPLATE);
                         if (!propData.isExist()) {
@@ -465,7 +465,7 @@ public class Save extends ControlSuper {
 
     public void removeSessionAttributes() {
         HttpSession session = this.getRequest().getSession();
-        MultipartForm form = this.form;
+        MultipartForm form = getForm();
         String[] toRemove = form.getParameterValues(DialogSuper.SESSION_ATTRIBUTENAME_DIALOGOBJECT_REMOVE);
         if (toRemove != null) {
             for (int i = 0; i < toRemove.length; i++) {
@@ -480,7 +480,7 @@ public class Save extends ControlSuper {
     }
 
     public Value getValue(long l) {
-        HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.repository);
+        HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
         ValueFactory valueFactory;
         try {
             valueFactory = hm.getWorkspace().getSession().getValueFactory();
@@ -495,7 +495,7 @@ public class Save extends ControlSuper {
 
         ValueFactory valueFactory = null;
 
-        HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.repository);
+        HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
         try {
             valueFactory = hm.getWorkspace().getSession().getValueFactory();
         }
@@ -573,8 +573,8 @@ public class Save extends ControlSuper {
         // encode the internal links to avoid dependences from the contextpath, position of the page
         String valueStr = LinkUtil.convertAbsoluteLinksToUUIDs(value);
         switch (isRichEditValue) {
-            case ControlSuper.RICHEDIT_KUPU:
-            case ControlSuper.RICHEDIT_FCK:
+            case ControlSuper.RICHEDIT_KUPU :
+            case ControlSuper.RICHEDIT_FCK :
                 valueStr = StringUtils.replace(valueStr, "\r\n", " "); //$NON-NLS-1$ //$NON-NLS-2$
                 valueStr = StringUtils.replace(valueStr, "\n", " "); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -593,7 +593,7 @@ public class Save extends ControlSuper {
                 // replace <a class="...></a> by <span class=""></span>
                 // valueStr = replaceABySpan(valueStr, "a");
                 break;
-            default:
+            default :
                 break;
         }
         return valueStr;
@@ -645,6 +645,37 @@ public class Save extends ControlSuper {
 
     public void setCreationItemType(ItemType creationItemType) {
         this.creationItemType = creationItemType;
+    }
+
+    /**
+     * @return the form containing the values passed
+     */
+    protected MultipartForm getForm() {
+        return form;
+    }
+
+    /**
+     * set the from
+     * @param form containing the sended values
+     */
+    protected void setForm(MultipartForm form) {
+        this.form = form;
+    }
+
+    /**
+     * set the name of the repository saving to
+     * @param repository the name of the repository
+     */
+    protected void setRepository(String repository) {
+        this.repository = repository;
+    }
+
+    /**
+     * get the name of thre repository saving to
+     * @return name
+     */
+    protected String getRepository() {
+        return repository;
     }
 
 }
