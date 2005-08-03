@@ -22,7 +22,7 @@
 
         <ant:available classname="com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl" property="java15transformer"/>
         <j:choose>
-          <j:when test="java15transformer">
+          <j:when test="${java15transformer}">
             ${systemScope.setProperty('javax.xml.transform.TransformerFactory','com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl')}
           </j:when>
           <j:otherwise>
