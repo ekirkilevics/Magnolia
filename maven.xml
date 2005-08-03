@@ -17,7 +17,7 @@
     </preGoal>
     <postGoal name="war:webapp">
         <!-- copy the readme file -->
-        <ant:copy file="release/release notes.war.txt" tofile="${maven.war.webapp.dir}/release notes.txt" />
+        <ant:copy file="${release.src}/release notes.war.txt" tofile="${maven.war.webapp.dir}/release notes.txt" />
         <j:set var="instanceName" value="${magnolia.build.instance}" />
 
         <ant:available classname="com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl" property="java15transformer"/>
