@@ -88,12 +88,16 @@ public class AdminTreeUsers extends AdminTreeMVCHandler {
         column2.setDateFormat("yyyy-MM-dd, HH:mm"); //$NON-NLS-1$
         column2.setTitle(msgs.get("tree.users.date")); //$NON-NLS-1$
         column2.setWidth(2);
+        
         tree.addColumn(column0);
-        tree.addColumn(column1);
-        if (Server.isAdmin() || Subscriber.isSubscribersEnabled()) {
-            tree.addColumn(columnIcons);
+        
+        if(!this.isBrowseMode()){
+            tree.addColumn(column1);
+            if (Server.isAdmin() || Subscriber.isSubscribersEnabled()) {
+                tree.addColumn(columnIcons);
+            }
+            tree.addColumn(column2);
         }
-        tree.addColumn(column2);
     }
 
     /*
@@ -160,17 +164,19 @@ public class AdminTreeUsers extends AdminTreeMVCHandler {
             menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
         }
 
-        tree.addMenuItem(menuOpen);
-        tree.addMenuItem(menuNewPage);
+        if (!this.isBrowseMode()) {
+            tree.addMenuItem(menuOpen);
+            tree.addMenuItem(menuNewPage);
 
-        tree.addMenuItem(null); // line
-        tree.addMenuItem(menuDelete);
+            tree.addMenuItem(null); // line
+            tree.addMenuItem(menuDelete);
 
-        tree.addMenuItem(null); // line
-        tree.addMenuItem(menuActivateExcl);
-        tree.addMenuItem(menuDeActivate);
+            tree.addMenuItem(null); // line
+            tree.addMenuItem(menuActivateExcl);
+            tree.addMenuItem(menuDeActivate);
 
-        tree.addMenuItem(null); // line
+            tree.addMenuItem(null); // line
+        }
         tree.addMenuItem(menuRefresh);
     }
 }

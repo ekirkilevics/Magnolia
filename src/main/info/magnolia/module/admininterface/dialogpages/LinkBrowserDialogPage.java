@@ -51,21 +51,8 @@ public class LinkBrowserDialogPage extends DialogPageMVCHandler {
         html.append("</head>"); //$NON-NLS-1$
         html.append("<body class=\"mgnlBgDark\" onload=\"mgnlDialogLinkBrowserResize();\">"); //$NON-NLS-1$
 
-        StringBuffer src = new StringBuffer();
-        src.append(request.getContextPath());
-        src.append("/.magnolia/dialogpages/linkBrowserIFrame.html"); //$NON-NLS-1$
-        src.append("?&amp;mgnlCK=" + new Date().getTime()); //$NON-NLS-1$
-        src.append("&amp;repository=" + repository); //$NON-NLS-1$
-        if (path != null) {
-            src.append("&amp;path=" + path); //$NON-NLS-1$
-        }
-        if (pathOpen != null) {
-            src.append("&amp;pathOpen=" + pathOpen); //$NON-NLS-1$
-        }
-        if (pathSelected != null) {
-            src.append("&amp;pathSelected=" + pathSelected); //$NON-NLS-1$
-        }
-
+        StringBuffer src = getIFrameSrc(request, repository, path, pathOpen, pathSelected);
+        
         html.append("<div id=\"mgnlTreeDiv\" class=\"mgnlDialogLinkBrowserTreeDiv\">"); //$NON-NLS-1$
         html.append("<iframe id=\"mgnlDialogLinkBrowserIFrame\" name=\"mgnlDialogLinkBrowserIFrame\" src=\"" //$NON-NLS-1$
             + src + "\" scrolling=\"no\" frameborder=\"0\" width=\"100%\" height=\"100\"></iframe>"); //$NON-NLS-1$
@@ -76,10 +63,6 @@ public class LinkBrowserDialogPage extends DialogPageMVCHandler {
         // this will call the callback command
         bOk.setOnclick("mgnlDialogLinkBrowserWriteBack()"); //$NON-NLS-1$
 
-        /*
-         * bOk.setOnclick("mgnlDialogLinkBrowserWriteBack('" + destinationControlName + "','" + destinationExtension +
-         * "', " + addcontext + ");");
-         */
         Button bCancel = new Button();
         bCancel.setLabel(MessagesManager.get(request, "buttons.cancel")); //$NON-NLS-1$
         bCancel.setOnclick("window.close();"); //$NON-NLS-1$
@@ -93,5 +76,24 @@ public class LinkBrowserDialogPage extends DialogPageMVCHandler {
         html.append("</body></html>"); //$NON-NLS-1$
 
         out.println(html);
+    }
+
+    private StringBuffer getIFrameSrc(HttpServletRequest request, String repository, String path, String pathOpen, String pathSelected) {
+        StringBuffer src = new StringBuffer();
+        src.append(request.getContextPath());
+        src.append("/.magnolia/adminCentral/extractTree.html"); //$NON-NLS-1$
+        src.append("?&amp;mgnlCK=" + new Date().getTime()); //$NON-NLS-1$
+        src.append("&amp;name=" + repository); //$NON-NLS-1$
+        src.append("&amp;browseMode=true"); //$NON-NLS-1$
+        if (path != null) {
+            src.append("&amp;path=" + path); //$NON-NLS-1$
+        }
+        if (pathOpen != null) {
+            src.append("&amp;pathOpen=" + pathOpen); //$NON-NLS-1$
+        }
+        if (pathSelected != null) {
+            src.append("&amp;pathSelected=" + pathSelected); //$NON-NLS-1$
+        }
+        return src;
     }
 }

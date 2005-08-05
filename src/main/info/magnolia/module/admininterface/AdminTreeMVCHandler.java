@@ -88,6 +88,11 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
     private String displayValue;
 
     private String newPath;
+    
+    /**
+     * Used to display the same tree in the linkbrowser
+     */
+    private boolean browseMode;
 
     /**
      * Override this method if you are not using the same name for the tree and the repository
@@ -100,7 +105,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
     public AdminTreeMVCHandler(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
 
-        tree = new Tree(getRepository(), request);
+        tree = new Tree(name, getRepository(), request);
         path = request.getParameter("path"); //$NON-NLS-1$
         if (StringUtils.isEmpty(path)) {
             path = "/"; //$NON-NLS-1$
@@ -109,6 +114,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         pathOpen = request.getParameter("pathOpen"); //$NON-NLS-1$
         pathSelected = request.getParameter("pathSelected"); //$NON-NLS-1$
 
+        this.setBrowseMode(StringUtils.equals(request.getParameter("browseMode"), "true"));
     }
 
     /**
@@ -350,6 +356,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         boolean snippetMode = mode.equals("snippet"); //$NON-NLS-1$
 
         tree.setJavascriptTree("mgnlTreeControl"); //$NON-NLS-1$
+        tree.setBrowseMode(this.isBrowseMode());
 
         if (!snippetMode) {
             html.append("<html><head>"); //$NON-NLS-1$
@@ -400,6 +407,20 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
 
     protected String getPath() {
         return path;
+    }
+    
+    /**
+     * @return Returns the browseMode.
+     */
+    public boolean isBrowseMode() {
+        return browseMode;
+    }
+    
+    /**
+     * @param browseMode The browseMode to set.
+     */
+    public void setBrowseMode(boolean browseMode) {
+        this.browseMode = browseMode;
     }
 
 }

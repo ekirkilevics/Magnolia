@@ -12,15 +12,11 @@
  */
 package info.magnolia.module.admininterface;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.servlets.MVCServlet;
 import info.magnolia.cms.servlets.MVCServletHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-
 
 /**
  * Main admin interface servlet. Generates the content for the main admincentral iframe.
@@ -39,11 +35,7 @@ public class AdminTreeMVCServlet extends MVCServlet {
      */
     protected MVCServletHandler getHandler(HttpServletRequest request, HttpServletResponse response) {
 
-        String handlerName = request.getParameter("repository"); //$NON-NLS-1$
-
-        if (StringUtils.isEmpty(handlerName)) {
-            handlerName = ContentRepository.WEBSITE;
-        }
+        String handlerName = request.getParameter("name"); //$NON-NLS-1$
 
         return Store.getInstance().getTreeHandler(handlerName, request, response);
     }

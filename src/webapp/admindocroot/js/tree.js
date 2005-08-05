@@ -4,18 +4,31 @@
 
 	var globalCounter=0; //for debugging
 
-
 	//#################
 	//### Tree
+	//### repository: the repository name
+	//### name: the name of the javascript tree
+	//### handlerName: the name of the tree handler
+	//### browseMode: true if the tree is showed in the link browser.
 	//#################
 
-
-	function mgnlTree(repository,path,name,height)
-		{
-		document.write('<div id="'+name+'_'+path+'_DivSub" style="display:none;"></div>');
+	function mgnlTree(repository, path, name, height, handlerName, browseMode) {
+		if(handlerName == null){
+			handlerName = repository;
+		}
+		
+		if(browseMode == null){
+			browseMode = false;
+		}
+		
 		this.repository=repository;
 		this.path=path;
 		this.name=name;
+		this.handlerName = handlerName;
+		this.browseMode = browseMode;
+		mgnlDebug("new mgnlTree", "tree", this);
+		
+		document.write('<div id="'+name+'_'+path+'_DivSub" style="display:none;"></div>');
 		this.divMain=document.getElementById(name+"_"+path+"_DivMain");
 		// this is setted afterward because a cyclic dependency for the conditions
 		this.menu = null;
@@ -70,11 +83,13 @@
 		this.moveDenied=false;
 		this.moveDeniedTimeout=200;
 		this.moveLastMouseoverId=null;
-		}
+	}
 
 
 	mgnlTree.prototype.expandNode = function(path)
 		{
+		mgnlDebug('tree.expandNode','tree');
+		
 		var chunks=path.split("/");
 		var id="";
 
@@ -122,9 +137,6 @@
 		var node=this.getNode(id);
 		node.shift();
 		}
-
-
-
 
 	mgnlTree.prototype.selectNode = function(id)
 		{
@@ -260,7 +272,6 @@
 		tree.resize();
 	}
 
-
 	mgnlTree.prototype.resize = function(columnNumber){
 		//no columnNumber passed: resize all columns (@ resizing window)
 		//columnNumber passed: resize only this column and re-clip the one before (@ resizing column)
@@ -279,8 +290,6 @@
 			//resize columns
 			var quotient=sizeObj.w/this.getColumnsWidth();
 			var sizeObjX=sizeObj;
-
-
 
 			//todo: move to init (tree or column?)!!!
 
@@ -316,8 +325,6 @@
 					}
 				}
 			}
-
-			mgnlDebug("mgnlTree.resize: treeColumnClasses", "tree", treeColumnClasses);
 
 			var left=0;
 			for (var elem in this.columns){
@@ -512,7 +519,7 @@
            	var strDiv ='<form method="post" enctype="multipart/form-data" action="${pageContext.request.contextPath}/.magnolia/mgnl-import/import.html">';
 			strDiv +='<input type="hidden" name="mgnlRepository" value="' + this.repository + '">';
 			strDiv +='<input type="hidden" name="mgnlPath" value="' + this.selectedNode.id + '">';
-			strDiv +='<input type="hidden" name="mgnlRedirect" value="${pageContext.request.contextPath}/.magnolia/adminCentral/extractTree.html?mgnlRepository=' + this.repository + '">';
+			strDiv +='<input type="hidden" name="mgnlRedirect" value="${pageContext.request.contextPath}/.magnolia/adminCentral/extractTree.html?name=' + this.handlerName + '">';
 			strDiv +='<input type="file" name="mgnlFileImport" id="mgnlFileImport" /><br/>';
 			strDiv +='<input type="submit" class="mgnlImportButton" name="importxml" value="' + mgnlMessages.get('js.import.button') + '" />';
 			strDiv +='<input type="reset" class="mgnlImportButton" onclick="document.body.removeChild(this.parentNode.parentNode)" />';
@@ -873,14 +880,6 @@
 
 	mgnlTree.prototype.refresh = function()
 		{
-		/*
-		var href=document.location.href;
-		href=href.substring(0,href.indexOf("?"));
-		href+="?mgnlCK="+mgnlGetCacheKiller();
-		href+="&path="+this.selectedNode.id;
-		href+="&repository="+this.repository;
-		document.location.href=href;
-		*/
 		var rootNode=this.getNode(this.path);
 		var params=new Object();
 		params.forceReload=true;
@@ -1077,7 +1076,8 @@
 			{
 			var paramString = "treeMode=snippet";
 			paramString+="&path="+this.path;
-			paramString+="&repository="+this.repository;
+			paramString+="&name="+this.tree.handlerName;
+			paramString+="&browseMode="+this.tree.browseMode;
 			paramString+="&mgnlCK="+mgnlGetCacheKiller();
 			for (var elem in params)
 				{
@@ -1086,7 +1086,7 @@
 					paramString+="&"+encodeURIComponent(elem)+"="+encodeURIComponent(unescape(params[elem])); //values seems to be passed escaped ...
 					}
 				}
-
+			mgnlDebug("node.httpRequest: paramString: " + paramString, "tree"); 
             // paramters need to be passed in body to allow utf8 encoding (query string is always ISO-88591)
 			httpReq.open("POST",encodeURI(this.url),true);
 			httpReq.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
@@ -1106,9 +1106,6 @@
 		else return;
 		}
 
-
-
-
 	mgnlTreeNode.prototype.shift = function()
 		{
 		var shifter=document.getElementById(this.shifterId);
@@ -1123,6 +1120,7 @@
 
 	mgnlTreeNode.prototype.collapse = function()
 		{
+		mgnlDebug('node.collapse','tree');
 		var divSub=document.getElementById(this.divSubId);
 		if (divSub.style.display!="none")
 			{
@@ -1141,6 +1139,7 @@
 
 	mgnlTreeNode.prototype.expand = function(params)
 		{
+		mgnlDebug('node.expand','tree');
 		/*
 		* params is object of key/value pairs
 		* see mgnlTreeNode.prototype.httpRequest
@@ -1178,7 +1177,6 @@
 
 	mgnlTreeDrawNodes = function (id,treeName)
 		{
-		mgnlDebug('mglnTreeDrawNodes', "tree");
 		var div=document.getElementById(treeName+"_"+id+"_DivSub");
 		var tree=eval(treeName);
 
@@ -1189,6 +1187,10 @@
 		var callBackParams=new Object();
 		callBackParams.id = id;
 		callBackParams.treeName = treeName;
+
+		mgnlDebug('mglnTreeDrawNodes with treeName: ' + treeName, "tree");
+		mgnlDebug('mglnTreeDrawNodes used params', "tree", params);
+		mgnlDebug('mglnTreeDrawNodes used callBackParams', "tree", callBackParams);
 
 		node.httpRequest(params, callBackParams, mgnlTreeDrawNodesCallback);
 

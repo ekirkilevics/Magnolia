@@ -52,6 +52,10 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
         super(name, request, response);
     }
 
+    protected String getRepository() {
+        return ContentRepository.WEBSITE;
+    }
+
     /**
      * @see info.magnolia.module.admininterface.AdminTree#prepareTree()
      */
@@ -61,10 +65,6 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
         tree.setIconOndblclick("mgnlTreeMenuItemOpen(" + tree.getJavascriptTree() + ");"); //$NON-NLS-1$ //$NON-NLS-2$
 
         tree.addItemType(ItemType.CONTENT);
-
-        // to view all nodes uncomment this lines
-        // tree.addItemType(ItemType.NT_CONTENTNODE);
-        // tree.addItemType(ItemType.NT_NODEDATA);
 
         TreeColumn column0 = new TreeColumn(tree.getJavascriptTree(), request);
         column0.setIsLabel(true);
@@ -128,13 +128,17 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
         column3.setDateFormat("yy-MM-dd, HH:mm"); //$NON-NLS-1$
         column3.setWidth(2);
         column3.setTitle(msgs.get("tree.web.date")); //$NON-NLS-1$
+
         tree.addColumn(column0);
-        tree.addColumn(column1);
-        if (Server.isAdmin() || Subscriber.isSubscribersEnabled()) {
-            tree.addColumn(columnIcons);
+
+        if (!this.isBrowseMode()) {
+            tree.addColumn(column1);
+            if (Server.isAdmin() || Subscriber.isSubscribersEnabled()) {
+                tree.addColumn(columnIcons);
+            }
+            tree.addColumn(column2);
+            tree.addColumn(column3);
         }
-        tree.addColumn(column2);
-        tree.addColumn(column3);
     }
 
     /**
@@ -256,26 +260,28 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
         menuExport.addJavascriptCondition("new mgnlTreeMenuItemConditionPermissionWrite(" //$NON-NLS-1$
             + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
 
-        tree.addMenuItem(menuOpen);
-        tree.addMenuItem(menuNewPage);
+        if (!this.isBrowseMode()) {
+            tree.addMenuItem(menuOpen);
+            tree.addMenuItem(menuNewPage);
 
-        tree.addSeparator();
-        tree.addMenuItem(menuDelete);
+            tree.addSeparator();
+            tree.addMenuItem(menuDelete);
 
-        tree.addSeparator();
-        tree.addMenuItem(menuMove);
-        tree.addMenuItem(menuCopy);
+            tree.addSeparator();
+            tree.addMenuItem(menuMove);
+            tree.addMenuItem(menuCopy);
 
-        tree.addSeparator();
-        tree.addMenuItem(menuActivateExcl);
-        tree.addMenuItem(menuActivateIncl);
-        tree.addMenuItem(menuDeActivate);
+            tree.addSeparator();
+            tree.addMenuItem(menuActivateExcl);
+            tree.addMenuItem(menuActivateIncl);
+            tree.addMenuItem(menuDeActivate);
 
-        tree.addSeparator();
-        tree.addMenuItem(menuExport);
-        tree.addMenuItem(menuImport);
+            tree.addSeparator();
+            tree.addMenuItem(menuExport);
+            tree.addMenuItem(menuImport);
 
-        tree.addSeparator();
+            tree.addSeparator();
+        }
         tree.addMenuItem(menuRefresh);
     }
 

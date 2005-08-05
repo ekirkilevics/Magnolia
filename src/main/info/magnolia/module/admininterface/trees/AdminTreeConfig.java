@@ -95,13 +95,17 @@ public class AdminTreeConfig extends AdminTreeMVCHandler {
         column4.setDateFormat("yy-MM-dd, HH:mm"); //$NON-NLS-1$
         column4.setWidth(2);
         column4.setTitle(msgs.get("tree.config.date")); //$NON-NLS-1$
+        
         tree.addColumn(column0);
-        tree.addColumn(column1);
-        tree.addColumn(column2);
-        if (Server.isAdmin() || Subscriber.isSubscribersEnabled()) {
-            tree.addColumn(columnIcons);
+
+        if (!this.isBrowseMode()) {
+            tree.addColumn(column1);
+            tree.addColumn(column2);
+            if (Server.isAdmin() || Subscriber.isSubscribersEnabled()) {
+                tree.addColumn(columnIcons);
+            }
+            tree.addColumn(column4);
         }
-        tree.addColumn(column4);
     }
 
     /**
@@ -236,27 +240,29 @@ public class AdminTreeConfig extends AdminTreeMVCHandler {
         menuExport.addJavascriptCondition("new mgnlTreeMenuItemConditionPermissionWrite(" //$NON-NLS-1$
             + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
 
-        tree.addMenuItem(menuNewPage);
-        tree.addMenuItem(menuNewContentNode);
-        tree.addMenuItem(menuNewNodeData);
+        if (!this.isBrowseMode()) {
+            tree.addMenuItem(menuNewPage);
+            tree.addMenuItem(menuNewContentNode);
+            tree.addMenuItem(menuNewNodeData);
 
-        tree.addSeparator();
-        tree.addMenuItem(menuDelete);
+            tree.addSeparator();
+            tree.addMenuItem(menuDelete);
 
-        tree.addSeparator();
-        tree.addMenuItem(menuCut);
-        tree.addMenuItem(menuCopy);
+            tree.addSeparator();
+            tree.addMenuItem(menuCut);
+            tree.addMenuItem(menuCopy);
 
-        tree.addSeparator();
-        tree.addMenuItem(menuActivateExcl);
-        tree.addMenuItem(menuActivateIncl);
-        tree.addMenuItem(menuDeActivate);
+            tree.addSeparator();
+            tree.addMenuItem(menuActivateExcl);
+            tree.addMenuItem(menuActivateIncl);
+            tree.addMenuItem(menuDeActivate);
 
-        tree.addSeparator();
-        tree.addMenuItem(menuExport);
-        tree.addMenuItem(menuImport);
+            tree.addSeparator();
+            tree.addMenuItem(menuExport);
+            tree.addMenuItem(menuImport);
 
-        tree.addSeparator();
+            tree.addSeparator();
+        }
         tree.addMenuItem(menuRefresh);
     }
 

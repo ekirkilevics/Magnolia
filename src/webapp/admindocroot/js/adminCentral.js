@@ -40,7 +40,7 @@ function mgnlAdminCentralResize()
 		}
 	}
 
-function mgnlAdminCentralSwitchExtractTree(repository,href)
+function mgnlAdminCentralSwitchExtractTree(name,href)
 	{
 	var divExtractTree=document.getElementById("mgnlAdminCentral_ExtractTreeDiv");
 	var divExtractNonTree=document.getElementById("mgnlAdminCentral_ExtractNonTreeDiv");
@@ -62,7 +62,7 @@ function mgnlAdminCentralSwitchExtractTree(repository,href)
 	if (divSuper) divSuper.style.display="none";
 
 	href=mgnlAddParameter(href,"mgnlCK",mgnlGetCacheKiller());
-	href=mgnlAddParameter(href,"repository",repository);
+	href=mgnlAddParameter(href,"name", name);
 	iFrameDoc.location.href = contextPath + href;
 
 	divExtractTree.style.visibility="visible";

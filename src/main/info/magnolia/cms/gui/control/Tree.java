@@ -75,7 +75,7 @@ public class Tree extends ControlSuper {
     private static Logger log = Logger.getLogger(Tree.class);
 
     private String repository;
-
+    
     private String pathOpen;
 
     private String pathCurrent;
@@ -114,17 +114,33 @@ public class Tree extends ControlSuper {
     private boolean snippetMode = true;
 
     private String columnResizer = DOCROOT + "columnResizer.gif"; //$NON-NLS-1$
+    
+    private boolean browseMode;
 
     /**
      * Constructor.
+     * @param name name of the tree (name of the treehandler)
      * @param repository name of the repository (i.e. "website", "users")
      * @param request
      */
-    public Tree(String repository, HttpServletRequest request) {
+    public Tree(String name, String repository, HttpServletRequest request) {
+        this.setName(name);
         this.setRepository(repository);
         this.setRequest(request);
         this.setMenu(new ContextMenu(this.getJavascriptTree()));
     }
+    
+    /**¬
+     * Constructor: the name of the tree is the same as the name of the repository
+     * @param repository
+     * @param request
+     * @deprecated use Tree(name, repository, request) instead
+     */
+    public Tree(String repository, HttpServletRequest request) {
+        this(repository, repository, request);
+    }
+    
+    
 
     public void setRepository(String s) {
         this.repository = s;
@@ -361,7 +377,7 @@ public class Tree extends ControlSuper {
 
     public void deleteNode(String parentPath, String label) {
         try {
-            HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
+            HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository() );
             Content parentNode = hm.getContent(parentPath);
             String path;
             if (!parentPath.equals("/")) { //$NON-NLS-1$
@@ -451,7 +467,7 @@ public class Tree extends ControlSuper {
     public String saveNodeData(String nodeDataName, String value, boolean isMeta) {
         String returnValue = StringUtils.EMPTY;
         try {
-            HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
+            HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository() );
             Content page = hm.getContent(this.getPath());
             if (!isMeta) {
                 NodeData node;
@@ -1054,7 +1070,9 @@ public class Tree extends ControlSuper {
             + this.getRepository() + "','" //$NON-NLS-1$
             + this.getPath() + "','" //$NON-NLS-1$
             + this.getJavascriptTree() + "'," //$NON-NLS-1$
-            + this.getHeight() + ");"); //$NON-NLS-1$
+            + this.getHeight() + "," //$NON-NLS-1$
+            + "'" + this.getName() + "',"
+            + this.isBrowseMode() + ");"); //$NON-NLS-1$
 
         // add columns to tree object
         for (int i = 0; i < this.getColumns().size(); i++) {
@@ -1391,4 +1409,21 @@ public class Tree extends ControlSuper {
     protected void setMenu(ContextMenu menu) {
         this.menu = menu;
     }
+
+    
+    /**
+     * @return Returns the browseMode.
+     */
+    public boolean isBrowseMode() {
+        return browseMode;
+    }
+
+    
+    /**
+     * @param browseMode The browseMode to set.
+     */
+    public void setBrowseMode(boolean browseMode) {
+        this.browseMode = browseMode;
+    }
+
 }

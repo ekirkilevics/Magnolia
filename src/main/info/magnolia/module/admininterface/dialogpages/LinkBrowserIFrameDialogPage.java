@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 
+//import com.obinary.magnolia.module.dms.gui.DMSTreeControl;
+
 
 /**
  * @author Fabrizio Giustina
@@ -251,13 +253,7 @@ public class LinkBrowserIFrameDialogPage extends DialogPageMVCHandler {
             column0.setIsLabel(true);
             column0.setWidth(3);
 
-            // TreeColumn column1 = new TreeColumn(websiteTree.getJavascriptTree(), request);
-            // column1.setName("title");
-            // column1.setTitle(msgs.get("linkbrowser.web.title"));
-            // column1.setWidth(2);
-
             websiteTree.addColumn(column0);
-            // websiteTree.addColumn(column1);
 
             ContextMenuItem menuRefresh = new ContextMenuItem();
             menuRefresh.setLabel(msgs.get("linkbrowser.refresh")); //$NON-NLS-1$
@@ -276,6 +272,58 @@ public class LinkBrowserIFrameDialogPage extends DialogPageMVCHandler {
                     + display + ";\">"); //$NON-NLS-1$
             }
             out.print(websiteTree.getHtml()); // print, not println! because of snippet mode!
+            if (!snippetMode) {
+                out.println("</div>"); //$NON-NLS-1$
+            }
+        }
+
+        // TODO remove this
+        // this is definitly a hack
+        if (repository.equals("dms")) {
+            //DMSTreeControl tree = new DMSTreeControl("dms", request, response); 
+            Tree tree = new Tree("dms", request);
+            // not the new header
+            //tree.setNewDesign(false);
+            
+            // websiteTree.setJavascriptTree("mgnlWebsiteTree");
+            tree.setIconPage("/admindocroot/icons/16/folder.gif");
+            tree.setIconContentNode("/admindocroot/fileIcons/general.gif");
+            
+            tree.setJavascriptTree("mgnlTreeControl"); //$NON-NLS-1$
+            tree.setSnippetMode(snippetMode);
+            tree.setHeight(treeHeight);
+
+            tree.setPath(path);
+
+            tree.setPathOpen(pathOpen);
+            tree.setPathSelected(pathSelected);
+
+            tree.addItemType(ItemType.CONTENT);
+            tree.addItemType(ItemType.CONTENTNODE);
+
+            TreeColumn column0 = new TreeColumn(tree.getJavascriptTree(), request);
+            column0.setIsLabel(true);
+            column0.setWidth(3);
+
+            tree.addColumn(column0);
+
+            ContextMenuItem menuRefresh = new ContextMenuItem();
+            menuRefresh.setLabel(msgs.get("linkbrowser.refresh")); //$NON-NLS-1$
+            menuRefresh.setOnclick(tree.getJavascriptTree() + ".refresh();"); //$NON-NLS-1$
+
+            tree.addMenuItem(menuRefresh);
+
+            String display = "none"; //$NON-NLS-1$
+            if (repository.equals("dms")) {
+                display = "block"; //$NON-NLS-1$
+            }
+
+            if (!snippetMode) {
+                out.println("<div id=" //$NON-NLS-1$
+                    + tree.getJavascriptTree() + "_DivSuper style=\"display:" //$NON-NLS-1$
+                    + display + ";\">"); //$NON-NLS-1$
+            }
+            out.print(tree.getHtml()); // print, not println! because of snippet mode!
             if (!snippetMode) {
                 out.println("</div>"); //$NON-NLS-1$
             }
