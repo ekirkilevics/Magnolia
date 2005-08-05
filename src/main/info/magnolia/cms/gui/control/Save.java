@@ -280,7 +280,7 @@ public class Save extends ControlSuper {
         // checkbox selected
         NodeData data = node.getNodeData(name);
         if (isRichEditValue != ControlSuper.RICHEDIT_NONE) {
-            valueStr = Save.getRichEditValueStr(valueStr, isRichEditValue);
+            valueStr = this.getRichEditValueStr(valueStr, isRichEditValue);
         }
         // actualy encoding does only work for control password
         boolean remove = false;
@@ -568,7 +568,7 @@ public class Save extends ControlSuper {
      * @param isRichEditValue
      * @return todo configurable regexp on save?
      */
-    protected static String getRichEditValueStr(String value, int isRichEditValue) {
+    protected String getRichEditValueStr(String value, int isRichEditValue) {
 
         // encode the internal links to avoid dependences from the contextpath, position of the page
         String valueStr = LinkUtil.convertAbsoluteLinksToUUIDs(value);
