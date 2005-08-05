@@ -12,6 +12,9 @@
  */
 package info.magnolia.cms.util;
 
+import java.util.Map;
+
+import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 
 import javax.servlet.http.HttpServletRequest;
@@ -90,6 +93,46 @@ public class RequestFormUtil {
             param = defaultValue;
         }
         return param;
+    }
+
+    
+    public MultipartForm getFrom() {
+        return from;
+    }
+
+    /* (non-Javadoc)
+     * @see info.magnolia.cms.beans.runtime.MultipartForm#getDocument(java.lang.String)
+     */
+    public Document getDocument(String name) {
+        return from.getDocument(name);
+    }
+
+    /* (non-Javadoc)
+     * @see info.magnolia.cms.beans.runtime.MultipartForm#getDocuments()
+     */
+    public Map getDocuments() {
+        return from.getDocuments();
+    }
+
+    /* (non-Javadoc)
+     * @see info.magnolia.cms.beans.runtime.MultipartForm#getParameters()
+     */
+    public Map getParameters() {
+        return from.getParameters();
+    }
+
+    /* (non-Javadoc)
+     * @see info.magnolia.cms.beans.runtime.MultipartForm#getParameterValues(java.lang.String)
+     */
+    public String[] getParameterValues(String name) {
+        return from.getParameterValues(name);
+    }
+
+    /* (non-Javadoc)
+     * @see info.magnolia.cms.beans.runtime.MultipartForm#removeParameter(java.lang.String)
+     */
+    public void removeParameter(String name) {
+        from.removeParameter(name);
     }
 
 }
