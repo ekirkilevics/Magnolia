@@ -15,7 +15,6 @@ package info.magnolia.cms.servlets;
 import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.Dispatcher;
 import info.magnolia.cms.beans.config.ConfigLoader;
-import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.config.VirtualMap;
 import info.magnolia.cms.beans.runtime.Cache;
 import info.magnolia.cms.core.CacheHandler;
@@ -152,7 +151,7 @@ public class EntryServlet extends HttpServlet {
                     }
 
                     if (!res.isCommitted()) {
-                        res.sendRedirect(req.getContextPath() + Server.get404URI());
+                        res.sendError(HttpServletResponse.SC_NOT_FOUND);
                     }
                     else {
                         log.info("Unable to redirect to 404 page, response is already committed"); //$NON-NLS-1$

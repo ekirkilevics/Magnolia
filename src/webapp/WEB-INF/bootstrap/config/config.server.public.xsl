@@ -20,9 +20,4 @@
 		<sv:value>/.magnolia*</sv:value>
 	</xsl:template>
 
-	<!-- /server/ResourceNotAvailableURIMapping -->
-	<xsl:template match="sv:node[@sv:name='server']/sv:property[@sv:name='ResourceNotAvailableURIMapping']/sv:value">
-		<sv:value>/features.html</sv:value>
-	</xsl:template>
-
 </xsl:stylesheet>

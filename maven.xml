@@ -42,6 +42,10 @@
             <ant:xslt style="src/webapp/WEB-INF/bootstrap/config/config.server.public.xsl"
                 in="src/webapp/WEB-INF/bootstrap/config/config.server.xml"
                 out="${maven.war.webapp.dir}/WEB-INF/bootstrap/config/config.server.xml" />
+            <ant:delete file="${maven.war.webapp.dir}/WEB-INF/bootstrap/config/config.modules.xml" />
+            <ant:xslt style="src/webapp/WEB-INF/bootstrap/config/config.modules.public.xsl"
+                in="src/webapp/WEB-INF/bootstrap/config/config.modules.xml"
+                out="${maven.war.webapp.dir}/WEB-INF/bootstrap/config/config.modules.xml" />
         </j:if>
         <j:if test="${instanceName == 'author'}">
             <ant:echo>changing configuration and bootstrap for author instance</ant:echo>

@@ -13,7 +13,6 @@
 package info.magnolia.cms.servlets;
 
 import info.magnolia.cms.Aggregator;
-import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 
@@ -94,11 +93,11 @@ public class ResourceDispatcher extends HttpServlet {
             }
         }
         if (log.isDebugEnabled()) {
-            log.debug("Redirecting to 404 page \"" + Server.get404URI() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+            log.debug("Resource not found, redirecting request for [" + req.getRequestURI() + "] to 404 URI"); //$NON-NLS-1$
         }
 
         if (!res.isCommitted()) {
-            res.sendRedirect(req.getContextPath() + Server.get404URI());
+            res.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
         else {
             log.info("Unable to redirect to 404 page, response is already committed"); //$NON-NLS-1$
