@@ -150,6 +150,9 @@ public class UserRolesEditIncludeAclDialogPage extends DialogPageMVCHandler {
         for (int i = 0; i < ContentRepository.getAllRepositoryNames().length; i++) {
             writeRepositoryTable(request, response, msgs, out, role, ContentRepository.getAllRepositoryNames()[i]);
         }
+        //out.print("<p>&nbsp;<p>&nbsp;<p>&nbsp;<input type=\"button\" onclick=\"aclChangeRepository('website')\">");
+        out.println("<script>aclChangeRepository('website');</script>"); //$NON-NLS-1$ //$NON-NLS-2$
+
     }
 
     /**
@@ -188,10 +191,6 @@ public class UserRolesEditIncludeAclDialogPage extends DialogPageMVCHandler {
         out.println("<script type=\"text/javascript\">"); //$NON-NLS-1$
         // register the repository
         out.println("aclRepositories[aclRepositories.length]= '" + repository + "';"); //$NON-NLS-1$ //$NON-NLS-2$
-
-        if (repository.equals(ContentRepository.WEBSITE)) {
-            out.println("document.getElementById('acl" + repository + "Div').style.visibility='visible';"); //$NON-NLS-1$ //$NON-NLS-2$
-        }
 
         // make renderer function
         out.println("function acl" + repository + "RenderFunction(cell, prefix, index, object)"); //$NON-NLS-1$ //$NON-NLS-2$

@@ -26,12 +26,14 @@ var aclRepositories = new Array();
 function aclChangeRepository(repository){
 	for(i=0; i<aclRepositories.length; i++){
 		var div = document.getElementById("acl"+aclRepositories[i]+"Div");
-		if(aclRepositories[i]==repository)
-			//div.style.left="10px";
+		if(aclRepositories[i]==repository){
 			div.style.visibility="visible";
-		else
-			//div.style.left="-2000px";
+			div.style.zIndex=1000;
+		}
+		else{
+			div.style.zIndex=-1000;
 			div.style.visibility="hidden";			
+		}
 	}
 }
 

@@ -161,7 +161,12 @@ public class UserRolesEditDialog extends ConfiguredDialog {
                                 accessType = aclValue;
                             }
                             else if (aclName.equals("accessRight")) { //$NON-NLS-1$
-                                accessRight = Long.parseLong(aclValue);
+                            		try{
+                            			accessRight = Long.parseLong(aclValue);
+                            		}
+                            		catch(NumberFormatException e){
+                            			accessRight = 0;
+                            		}
                             }
                         }
 
