@@ -271,7 +271,15 @@ public final class ContentRepository {
         }
     }
 
-    private static void loadRepository(RepositoryMapping map) throws RepositoryNotInitializedException,
+    /**
+     * This method initializes the repository. You must not call this method twice.
+     * @param map
+     * @throws RepositoryNotInitializedException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws ClassNotFoundException
+     */
+    public static void loadRepository(RepositoryMapping map) throws RepositoryNotInitializedException,
         InstantiationException, IllegalAccessException, ClassNotFoundException {
         log.info("System : loading JCR - " + map.getID()); //$NON-NLS-1$
         Provider handlerClass = (Provider) Class.forName(map.getProvider()).newInstance();
