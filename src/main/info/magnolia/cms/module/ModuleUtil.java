@@ -48,6 +48,47 @@ import org.apache.commons.lang.StringUtils;
 public final class ModuleUtil {
 
     /**
+     * used by the installFiles() method
+     * @author philipp
+     */
+    public interface IncludeMatcher {
+
+        /**
+         * @param name
+         * @return true if this file should get installed
+         */
+        boolean match(String name);
+
+        /**
+         * trans from the path from the jar entry name into a real path
+         * @param name
+         * @return the path to which this file should get installed
+         */
+        String transform(String name);
+    }
+
+    /**
+     * install files from a specifig directory
+     * @author philipp
+     */
+    public static class DirectoryIncludeMatcher implements IncludeMatcher {
+
+        private String path;
+
+        public DirectoryIncludeMatcher(String path) {
+            this.path = path;
+        }
+
+        public boolean match(String name) {
+            return name.startsWith(path);
+        }
+
+        public String transform(String name) {
+            return StringUtils.removeStart(name, path);
+        }
+    }
+
+    /**
      * Util has no public constructor
      */
     private ModuleUtil() {
@@ -112,9 +153,9 @@ public final class ModuleUtil {
 
     public static Content createPath(HierarchyManager hm, String path, ItemType type) throws AccessDeniedException,
         PathNotFoundException, RepositoryException {
-        // remove leading / 
+        // remove leading /
         path = StringUtils.removeStart(path, "/");
-        
+
         String[] names = path.split("/"); //$NON-NLS-1$
         Content node = hm.getRoot();
         for (int i = 0; i < names.length; i++) {
@@ -130,11 +171,44 @@ public final class ModuleUtil {
     }
 
     /**
-     * Extracts files of a jar and stores them in the magnolia file structure
-     * @param jar the jar containing the files (jsp, images)
-     * @throws Exception io exception
+     * @param jar
+     * @throws Exception
+     * @deprecated use installFiles(jar, path) or installFiles(jar, matcher)
      */
     public static void installFiles(JarFile jar) throws Exception {
+        IncludeMatcher matcher = new IncludeMatcher() {
+
+            public boolean match(String name) {
+                if (!name.equals("/") //$NON-NLS-1$
+                    && !name.endsWith("/") //$NON-NLS-1$
+                    && !name.startsWith("CH") //$NON-NLS-1$
+                    && !name.startsWith("META-INF") //$NON-NLS-1$
+                    && !name.endsWith(".JAR")) { //$NON-NLS-1$
+                    return true;
+                }
+                return false;
+            }
+
+            public String transform(String name) {
+                return name;
+            }
+        };
+
+        installFiles(jar, matcher);
+    }
+
+    public static void installFiles(JarFile jar, final String path) throws Exception {
+        installFiles(jar, new DirectoryIncludeMatcher(path));
+    }
+
+    /**
+     * Extracts files of a jar and stores them in the magnolia file structure
+     * @param jar the jar containing the files (jsp, images)
+     * @param matcher checks if the file must get installed
+     * @param prefix the prefix to remove from the names
+     * @throws Exception io exception
+     */
+    public static void installFiles(JarFile jar, IncludeMatcher matcher) throws Exception {
 
         String root = null;
         // Try to get root
@@ -159,12 +233,8 @@ public final class ModuleUtil {
             String name = entry.getName().toUpperCase();
 
             // Exclude root, dirs, ch-dir, META-INF-dir and jars
-            if (!name.equals("/") //$NON-NLS-1$
-                && !name.endsWith("/") //$NON-NLS-1$
-                && !name.startsWith("CH") //$NON-NLS-1$
-                && !name.startsWith("META-INF") //$NON-NLS-1$
-                && !name.endsWith(".JAR")) { //$NON-NLS-1$
-                files.put(new File(root, entry.getName()), entry);
+            if (matcher.match(name.toUpperCase())) { //$NON-NLS-1$
+                files.put(new File(root, matcher.transform(name)), entry);
             }
         }
 
