@@ -1127,17 +1127,6 @@ public class Tree extends ControlSuper {
 
     public String getHtmlChildrenOfOneType(Content parentNode, String itemType) {
         StringBuffer html = new StringBuffer();
-        String icon = null;
-        if (itemType.equals(ItemType.CONTENT.getSystemName())) {
-            icon = this.getIconPage();
-        }
-        else if (itemType.equals(ItemType.CONTENTNODE.getSystemName())) {
-            icon = this.getIconContentNode();
-        }
-        else if (itemType.equals(ItemType.NT_NODEDATA)) {
-            icon = this.getIconNodeData();
-        }
-
         try {
             // todo: parentNode - level of this.getPath
             int left = (parentNode.getLevel()) * this.getIndentionWidth();
@@ -1170,6 +1159,7 @@ public class Tree extends ControlSuper {
                 }
                 else {
                     c = (Content) o;
+
                     handle = c.getHandle();
                     if (this.getColumns().size() == 0) {
                         name = c.getName();
@@ -1204,6 +1194,14 @@ public class Tree extends ControlSuper {
                         }
                     }
                 }
+                
+                // get next if this node is not shown
+                if(!showNode(c, d, itemType)){
+                    continue;
+                }
+                
+                String icon = getIcon(c, d, itemType);
+                
                 String idPre = this.javascriptTree + "_" + handle; //$NON-NLS-1$
                 String jsHighlightNode = this.javascriptTree + ".nodeHighlight(this,'" //$NON-NLS-1$
                     + handle + "'," //$NON-NLS-1$
@@ -1386,6 +1384,39 @@ public class Tree extends ControlSuper {
             log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
         }
         return html.toString();
+    }
+
+
+    /**
+     * Override to make special exclusions. The current nodedata or node is passed.
+     * @param node
+     * @param nodedata
+     * @param itemType
+     * @return true if the node is shown
+     */
+    private boolean showNode(Content node, NodeData nodedata, String itemType) {
+        return true;
+    }
+
+    /**
+     * The current nodedata or node is passed
+     * @param nodedata can be null
+     * @param node can be null
+     * @param itemType
+     * @return the icon
+     */
+    protected String getIcon(Content node, NodeData nodedata, String itemType) {
+        String icon = null;
+        if (itemType.equals(ItemType.CONTENT.getSystemName())) {
+            icon = this.getIconPage();
+        }
+        else if (itemType.equals(ItemType.CONTENTNODE.getSystemName())) {
+            icon = this.getIconContentNode();
+        }
+        else if (itemType.equals(ItemType.NT_NODEDATA)) {
+            icon = this.getIconNodeData();
+        }
+        return icon;
     }
 
     /**
