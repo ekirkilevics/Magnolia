@@ -5,7 +5,8 @@ var mgnlDebugOn = false;
 var mgnlDebugContextes = {
 	tree: true,
 	dialog: true,
-	debug: true	
+	acl: true,
+	debug: true
 }
 
 function mgnlRootWindow(current){
