@@ -1,10 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project >
 <project xmlns:j="jelly:core" xmlns:u="jelly:util" xmlns:ant="jelly:ant" default="rebuild-all">
+	<tstamp>
+		<format property="magnolia.currentDate" pattern="MMMM d. yyyy" locale="en"/>
+  	</tstamp>
+
     <goal name="rebuild-all" prereqs="pom,clean,war:war,dist:build" />
     <postGoal name="site">
         <attainGoal name="pdf" />
     </postGoal>
+	
+	<postGoal name="java:jar-resources">
+		<!-- set the current version -->
+        <ant:replace file="${maven.build.dest}/info/magnolia/cms/license/license.xml"
+            token="$${magnolia.version}"
+            value="${pom.currentVersion}" />
+        <ant:replace file="${maven.build.dest}/info/magnolia/cms/license/license.xml"
+            token="$${magnolia.revision}"
+            value="${magnolia.revision} ${magnolia.currentDate}" />  		
+	</postGoal>
+    
     <preGoal name="jar:jar">
         <!-- add tlds to taglib jar -->
         <j:set var="tld.dir" value="${maven.src.dir}/webapp/WEB-INF/taglib" />
@@ -18,6 +33,12 @@
     <postGoal name="war:webapp">
         <!-- copy the readme file -->
         <ant:copy file="${release.src}/release notes.war.txt" tofile="${maven.war.webapp.dir}/release notes.txt" />
+        <ant:replace file="${maven.war.webapp.dir}/release notes.txt"
+            token="$${magnolia.version}"
+            value="${pom.currentVersion}" />
+        <ant:replace file="${maven.war.webapp.dir}/release notes.txt"
+            token="$${magnolia.currentDate}"
+            value="${magnolia.currentDate}" />  
         <j:set var="instanceName" value="${magnolia.build.instance}" />
 
         <ant:available classname="com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl" property="java15transformer"/>
@@ -29,7 +50,7 @@
             ${systemScope.setProperty('javax.xml.transform.TransformerFactory','org.apache.xalan.processor.TransformerFactoryImpl')}
           </j:otherwise>
         </j:choose>
-
+        
         <j:if test="${instanceName == 'public'}">
             <ant:echo>changing configuration and bootstrap for public instance</ant:echo>
             <ant:replace file="${maven.war.webapp.dir}/WEB-INF/web.xml"
@@ -49,6 +70,11 @@
         </j:if>
         <j:if test="${instanceName == 'author'}">
             <ant:echo>changing configuration and bootstrap for author instance</ant:echo>
+            <ant:replace file="${maven.war.webapp.dir}/WEB-INF/web.xml"
+                token="&lt;param-value&gt;magnolia.root&lt;/param-value&gt;"
+                value="&lt;param-value&gt;magnolia.author.root&lt;/param-value&gt;" />
+            <ant:replace file="${maven.war.webapp.dir}/WEB-INF/config/log4j.xml" token="$${magnolia.root}"
+                value="$${magnolia.author.root}" />
             <ant:delete file="${maven.war.webapp.dir}/WEB-INF/bootstrap/config/config.subscribers.xml" />
             <ant:xslt style="src/webapp/WEB-INF/bootstrap/config/config.subscribers.author.xsl"
                 in="src/webapp/WEB-INF/bootstrap/config/config.subscribers.xml"
@@ -149,6 +175,12 @@
         <delete dir="${release.dest}/bundled/tomcat/webapps/tomcat-docs" />
         <copy file="${release.src}/release notes.bundled.txt" tofile="${release.dest}/bundled/release notes.txt"
             overwrite="true" />
+        <ant:replace file="${release.dest}/bundled/release notes.txt"
+            token="$${magnolia.version}"
+            value="${pom.currentVersion}" />
+        <ant:replace file="${release.dest}/bundled/release notes.txt"
+            token="$${magnolia.currentDate}"
+            value="${magnolia.currentDate}" />  
         <copy file="${release.src}/license.bundled.txt" tofile="${release.dest}/bundled/license.txt" overwrite="true" />
         <copy file="${release.src}/server.xml" todir="${release.dest}/bundled/tomcat/conf" overwrite="true" />
         <copy file="${release.src}/server-original.xml" todir="${release.dest}/bundled/tomcat/conf" overwrite="true" />
@@ -188,6 +220,12 @@
         <copy file="${release.src}/license.wars.txt" tofile="${release.dest}/wars/license.txt" overwrite="true" />
         <copy file="${release.src}/release notes.war.txt" tofile="${release.dest}/wars/release notes.txt"
             overwrite="true" />
+        <ant:replace file="${release.dest}/wars/release notes.txt"
+            token="$${magnolia.version}"
+            value="${pom.currentVersion}" />
+        <ant:replace file="${release.dest}/wars/release notes.txt"
+            token="$${magnolia.currentDate}"
+            value="${magnolia.currentDate}" />  
         <zip destfile="${release.dest}/magnolia-${pom.currentVersion}_war_files.zip" basedir="${release.dest}/wars" />
         <zip destfile="${release.dest}/magnolia-${pom.currentVersion}_with_tomcat.zip" basedir="${release.dest}/bundled" />
     </goal>
