@@ -50,7 +50,7 @@
 		src.append("/.magnolia/adminCentral/extractTree.html");
 		src.append("?mgnlCK=");
 		src.append(new Date().getTime());
-		src.append("&amp;repository="+repository);
+		src.append("&amp;name="+repository);
 		if (path!=null) src.append("&amp;path="+path);
 		if (pathOpen!=null) src.append("&amp;pathOpen="+pathOpen);
 		if (pathSelected!=null) src.append("&amp;pathSelected="+pathSelected);
