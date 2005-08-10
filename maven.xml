@@ -157,14 +157,12 @@
     		<j:choose>
     			<echo>${magnolia.build.useSystemTar}</echo>
 	    	    	<j:when test="${magnolia.build.useSystemTar}">
-	    	    		<echo>system</echo>
-	    	    		<!--<exec executable="tar">
+	    	    		<exec executable="tar">
 	    	            <arg line="xvf ${release.dest}/bundled/tomcat.tar"/>
-	    	        </exec>-->
+	    	        </exec>
 	    	    	</j:when>
     			<j:otherwise>
-		    	    		<echo>ant tar</echo>
-	    	    			<!--<untar src="${release.dest}/bundled/tomcat.tar" dest="${release.dest}/bundled" overwrite="true"/>-->
+	    	    			<<untar src="${release.dest}/bundled/tomcat.tar" dest="${release.dest}/bundled" overwrite="true"/>
     			</j:otherwise>
     		</j:choose>
 
