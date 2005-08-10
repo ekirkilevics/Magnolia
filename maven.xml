@@ -202,14 +202,16 @@
         <delete dir="target" />
         <exec executable="${maven.command}">
             <arg value="-Dmagnolia.build.instance=author" />
+            <arg value="-Dmagnolia.revision=${magnolia.revision}" />
             <arg value="-o" />
             <arg value="war" />
         </exec>
         <copy file="target/magnolia.war" tofile="${release.dest}/wars/magnoliaAuthor.war" />
         <delete dir="target" />
         <exec executable="${maven.command}">
-            <arg value="-o" />
             <arg value="-Dmagnolia.build.instance=public" />
+            <arg value="-Dmagnolia.revision=${magnolia.revision}" />
+            <arg value="-o" />
             <arg value="war" />
         </exec>
         <copy file="target/magnolia.war" tofile="${release.dest}/wars/magnoliaPublic.war" />
