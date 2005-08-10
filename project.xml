@@ -6,7 +6,7 @@
     <groupId>info.magnolia</groupId>
     <artifactId>magnolia</artifactId>
     <name>magnolia</name>
-    <currentVersion>2.1-SNAPSHOT</currentVersion>
+    <currentVersion>2.1-RC4</currentVersion>
     <organization>
         <name>Obinary Ltd</name>
         <url>http://www.obinary.com</url>
@@ -60,6 +60,11 @@
             <id>2.1-rc3</id>
             <name>2.1 RC3</name>
             <tag>magnolia2.1-RC3</tag>
+        </version>
+        <version>
+            <id>2.1-rc4</id>
+            <name>2.1 RC4</name>
+            <tag>magnolia2.1-RC4</tag>
         </version>
     </versions>
     <mailingLists>
