@@ -128,8 +128,23 @@
     <goal name="rel-tomcat" prereqs="rel-build, rel-gettomcat">
         <mkdir dir="${release.dest}/bundled" />
         <gunzip src="src/release/tomcat/${release.tomcat.name}.tar.gz" dest="${release.dest}/bundled/tomcat.tar" />
-        <untar src="${release.dest}/bundled/tomcat.tar" dest="${release.dest}/bundled" />
-        <move file="${release.dest}/bundled/${release.tomcat.name}" tofile="${release.dest}/bundled/tomcat" />
+    		<j:choose>
+    			<echo>${magnolia.build.useSystemTar}</echo>
+	    	    	<j:when test="${magnolia.build.useSystemTar}">
+	    	    		<echo>system</echo>
+	    	    		<!--<exec executable="tar">
+	    	            <arg line="xvf ${release.dest}/bundled/tomcat.tar"/>
+	    	        </exec>-->
+	    	    	</j:when>
+    			<j:otherwise>
+		    	    		<echo>ant tar</echo>
+	    	    			<!--<untar src="${release.dest}/bundled/tomcat.tar" dest="${release.dest}/bundled" overwrite="true"/>-->
+    			</j:otherwise>
+    		</j:choose>
+
+        <move todir="${release.dest}/bundled/tomcat" >
+        		<fileset dir="${release.dest}/bundled/${release.tomcat.name}"/>
+        </move>
         <delete file="${release.dest}/bundled/tomcat.tar" />
         <delete dir="${release.dest}/bundled/tomcat/webapps/tomcat-docs" />
         <copy file="${release.src}/release notes.bundled.txt" tofile="${release.dest}/bundled/release notes.txt"
@@ -148,15 +163,21 @@
         </copy>
     </goal>
     <goal name="rel-build" prereqs="rel-clear">
+		<condition property="maven.command" value="maven.bat">
+	      <os family="windows"/>
+		</condition>
+    	    <condition property="maven.command" value="maven">
+	      <os family="unix"/>
+		</condition>
         <delete dir="target" />
-        <exec executable="maven.bat">
+        <exec executable="${maven.command}">
             <arg value="-Dmagnolia.build.instance=author" />
             <arg value="-o" />
             <arg value="war" />
         </exec>
         <copy file="target/magnolia.war" tofile="${release.dest}/wars/magnoliaAuthor.war" />
         <delete dir="target" />
-        <exec executable="maven.bat">
+        <exec executable="${maven.command}">
             <arg value="-o" />
             <arg value="-Dmagnolia.build.instance=public" />
             <arg value="war" />
