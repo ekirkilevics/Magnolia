@@ -25,6 +25,7 @@ public class SaveTest extends TestCase {
      * Test for rich editor cleanup. IE often insert a br at the beginning of a paragraph.
      */
     public void testGetRichEditValueStrCleanExplorerPs() {
-        assertEquals("aaa\n\n  bbb", Save.getRichEditValueStr("<P>aaa</P>\r\n<P><BR>bbb</P>", ControlSuper.RICHEDIT_KUPU));
+        Save save = new Save();
+        assertEquals("aaa\n\n  bbb", save.getRichEditValueStr("<P>aaa</P>\r\n<P><BR>bbb</P>", ControlSuper.RICHEDIT_KUPU));
     }
 }
