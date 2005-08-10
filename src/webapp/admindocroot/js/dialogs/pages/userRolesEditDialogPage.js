@@ -9,6 +9,7 @@ function aclGetPermissionObject(prefix){
 	if(document.getElementById(prefix + "AccessType"))
 		object.accessType=document.getElementById(prefix + "AccessType").value;
 	object.path = document.getElementById(prefix + "Path").value;
+	mgnlDebug("aclGetPermissionObject: prefix = " + prefix, "acl", object);
 	return object;
 }
 

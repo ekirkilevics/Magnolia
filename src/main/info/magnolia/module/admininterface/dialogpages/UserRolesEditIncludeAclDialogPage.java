@@ -150,7 +150,7 @@ public class UserRolesEditIncludeAclDialogPage extends DialogPageMVCHandler {
         for (int i = 0; i < ContentRepository.getAllRepositoryNames().length; i++) {
             writeRepositoryTable(request, response, msgs, out, role, ContentRepository.getAllRepositoryNames()[i]);
         }
-        //out.print("<p>&nbsp;<p>&nbsp;<p>&nbsp;<input type=\"button\" onclick=\"aclChangeRepository('website')\">");
+        // out.print("<p>&nbsp;<p>&nbsp;<p>&nbsp;<input type=\"button\" onclick=\"aclChangeRepository('website')\">");
         out.println("<script>aclChangeRepository('website');</script>"); //$NON-NLS-1$ //$NON-NLS-2$
 
     }
@@ -195,12 +195,13 @@ public class UserRolesEditIncludeAclDialogPage extends DialogPageMVCHandler {
         // make renderer function
         out.println("function acl" + repository + "RenderFunction(cell, prefix, index, object)"); //$NON-NLS-1$ //$NON-NLS-2$
         out.println("{"); //$NON-NLS-1$
+
+        // get some debug informations
+        out.println("mgnlDebug('acl" + repository + "RenderFunction: prefix = ' + prefix, 'acl', object)");
         out.println("cell.innerHTML= '" + getHtmlRowInner(request, dynamicTableName, repository) + "';\n"); //$NON-NLS-1$ //$NON-NLS-2$
         out.println("document.getElementById(prefix + 'AccessType').value = object.accessType;\n"); //$NON-NLS-1$
 
-        if (!repository.equals(ContentRepository.USERS) && !repository.equals(ContentRepository.USER_ROLES)) {
-            out.println("document.getElementById(prefix + 'AccessRight').value = object.accessRight;\n"); //$NON-NLS-1$
-        }
+        out.println("document.getElementById(prefix + 'AccessRight').value = object.accessRight;\n"); //$NON-NLS-1$
 
         out.println("}"); //$NON-NLS-1$
 
