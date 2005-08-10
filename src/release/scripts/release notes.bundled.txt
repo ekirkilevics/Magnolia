@@ -3,8 +3,8 @@
               M A G N O L I A
           Content Management Suite
 
-              July 26th 2005
-           Release Notes v 2.1 RC3 
+              ${magnolia.currentDate}
+           Release Notes v ${magnolia.version} 
 
           http://www.magnolia.info/
 
@@ -36,7 +36,7 @@ Magnolia Package
 The Package contains:
  
  Apache Tomcat 5.0.28
- Magnolia 2.1 RC3
+ Magnolia ${magnolia.version}
  Samples
 
 
@@ -125,7 +125,7 @@ The default username & password are:
 
 
 =============================================== 
-Known Issues in magnolia 2.1 RC3
+Known Issues in magnolia ${magnolia.version}
 =============================================== 
 
 http://www.magnolia.info/en/magnolia/developer/issues.html

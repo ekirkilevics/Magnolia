@@ -3,8 +3,8 @@
               M A G N O L I A
           Content Management Suite
 
-              Jun 26th 2005
-           Release Notes v 2.1 RC3 
+              ${magnolia.currentDate}
+           Release Notes v ${magnolia.version} 
 
           http://www.magnolia.info/
 
@@ -33,7 +33,7 @@ Magnolia Package
 ===============================================
 The Package contains:
 
- Magnolia 2.1 RC3
+ Magnolia ${magnolia.version}
  Samples
 
 =============================================== 
@@ -86,7 +86,7 @@ The default username & password are:
 
 
 =============================================== 
-Known Issues in Magnolia 2.1 RC3
+Known Issues in Magnolia ${magnolia.version}
 =============================================== 
 
 http://www.magnolia.info/en/magnolia/developer/issues.html
@@ -118,7 +118,7 @@ for details on our commercial services regarding
 Magnolia
 
 
-Thanks for using Magnolia 2.1 RC3
+Thanks for using Magnolia ${magnolia.version}
 
 obinary ltd.
 marketing@magnolia.info
