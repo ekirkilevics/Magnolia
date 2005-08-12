@@ -5,7 +5,7 @@
 
 var weekend = [0,6];
 var weekendColor = "#f6f6f6";
-var nullGif="/admindocroot/0.gif";
+var nullGif= contextPath + "/admindocroot/0.gif";
 var buttonEvents="onmousedown=mgnlShiftPushButtonDown(this); onmouseout=mgnlShiftPushButtonOut(this);"
 
 var selectedTime;
@@ -197,10 +197,10 @@ Calendar.prototype.show = function() {
 	// Setup the page...
 	this.wwrite("<html>");
 	this.wwrite("<head><title>Calendar</title>");
-	this.wwrite("<link rel='stylesheet' type='text/css' href='/admindocroot/css/controls.css'>");
-	this.wwrite("<link rel='stylesheet' type='text/css' href='/admindocroot/css/dialogs.css'>");
-	this.wwrite("<link rel='stylesheet' type='text/css' href='/admindocroot/css/calendar.css'>");
-	this.wwrite("<script language='javascript' src=/admindocroot/js/controls.js></script>");
+	this.wwrite("<link rel='stylesheet' type='text/css' href='" + contextPath + "/admindocroot/css/controls.css'>");
+	this.wwrite("<link rel='stylesheet' type='text/css' href='" + contextPath + "/admindocroot/css/dialogs.css'>");
+	this.wwrite("<link rel='stylesheet' type='text/css' href='" + contextPath + "/admindocroot/css/calendar.css'>");
+	this.wwrite("<script language='javascript' src=" + contextPath + "/admindocroot/js/controls.js></script>");
 	this.wwrite("<script language='javascript'>");
 
 	this.wwrite("function saveData() {");
@@ -252,7 +252,7 @@ Calendar.prototype.show = function() {
 
 	this.wwrite("<table width='1%' border='0' cellspacing='0' cellpadding='0'>");
 	this.wwrite("<tr>");
-	this.wwrite("<td><img src="+nullGif+" width=11 height=11></td>");
+	this.wwrite("<td><img src="+nullGif+" width=3 height=11></td>");
 	this.wwrite("<td><img src="+nullGif+" width=231 height=1></td>");
 
 	this.wwrite("<tr><td></td><td>");
