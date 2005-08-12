@@ -15,6 +15,11 @@
 		<sv:value>false</sv:value>
 	</xsl:template>
 
+	<!-- /server/cache/level1/active -->
+	<xsl:template match="sv:node[@sv:name='server']/sv:node[@sv:name='cache']/sv:node[@sv:name='level1']/sv:property[@sv:name='active']/sv:value">
+		<sv:value>true</sv:value>
+	</xsl:template>
+
 	<!-- /server/secureURIList/0001/URI -->
 	<xsl:template match="sv:node[@sv:name='server']/sv:node[@sv:name='secureURIList']/sv:node[@sv:name='0001']/sv:property[@sv:name='URI']/sv:value">
 		<sv:value>/.magnolia*</sv:value>
