@@ -179,7 +179,7 @@ public final class ModuleUtil {
         IncludeMatcher matcher = new IncludeMatcher() {
 
             public boolean match(String name) {
-                if (!name.equals("/") //$NON-NLS-1$
+                if (!name.toUpperCase().equals("/") //$NON-NLS-1$
                     && !name.endsWith("/") //$NON-NLS-1$
                     && !name.startsWith("CH") //$NON-NLS-1$
                     && !name.startsWith("META-INF") //$NON-NLS-1$
@@ -230,10 +230,10 @@ public final class ModuleUtil {
         Enumeration entries = jar.entries();
         while (entries.hasMoreElements()) {
             JarEntry entry = (JarEntry) entries.nextElement();
-            String name = entry.getName().toUpperCase();
+            String name = entry.getName();
 
             // Exclude root, dirs, ch-dir, META-INF-dir and jars
-            if (matcher.match(name.toUpperCase())) { //$NON-NLS-1$
+            if (matcher.match(name)) { //$NON-NLS-1$
                 files.put(new File(root, matcher.transform(name)), entry);
             }
         }
