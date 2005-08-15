@@ -75,7 +75,7 @@ public class Tree extends ControlSuper {
     private static Logger log = Logger.getLogger(Tree.class);
 
     private String repository;
-    
+
     private String pathOpen;
 
     private String pathCurrent;
@@ -114,7 +114,7 @@ public class Tree extends ControlSuper {
     private boolean snippetMode = true;
 
     private String columnResizer = DOCROOT + "columnResizer.gif"; //$NON-NLS-1$
-    
+
     private boolean browseMode;
 
     /**
@@ -129,8 +129,8 @@ public class Tree extends ControlSuper {
         this.setRequest(request);
         this.setMenu(new ContextMenu(this.getJavascriptTree()));
     }
-    
-    /**¬
+
+    /**
      * Constructor: the name of the tree is the same as the name of the repository
      * @param repository
      * @param request
@@ -139,8 +139,6 @@ public class Tree extends ControlSuper {
     public Tree(String repository, HttpServletRequest request) {
         this(repository, repository, request);
     }
-    
-    
 
     public void setRepository(String s) {
         this.repository = s;
@@ -377,7 +375,7 @@ public class Tree extends ControlSuper {
 
     public void deleteNode(String parentPath, String label) {
         try {
-            HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository() );
+            HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
             Content parentNode = hm.getContent(parentPath);
             String path;
             if (!parentPath.equals("/")) { //$NON-NLS-1$
@@ -467,7 +465,7 @@ public class Tree extends ControlSuper {
     public String saveNodeData(String nodeDataName, String value, boolean isMeta) {
         String returnValue = StringUtils.EMPTY;
         try {
-            HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository() );
+            HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
             Content page = hm.getContent(this.getPath());
             if (!isMeta) {
                 NodeData node;
@@ -481,10 +479,10 @@ public class Tree extends ControlSuper {
                 }
                 // todo: share with Contorol.Save
                 switch (type) {
-                    case PropertyType.STRING:
+                    case PropertyType.STRING :
                         node.setValue(value);
                         break;
-                    case PropertyType.BOOLEAN:
+                    case PropertyType.BOOLEAN :
                         if (value.equals("true")) { //$NON-NLS-1$
                             node.setValue(true);
                         }
@@ -492,7 +490,7 @@ public class Tree extends ControlSuper {
                             node.setValue(false);
                         }
                         break;
-                    case PropertyType.DOUBLE:
+                    case PropertyType.DOUBLE :
                         try {
                             node.setValue(Double.valueOf(value).doubleValue());
                         }
@@ -500,7 +498,7 @@ public class Tree extends ControlSuper {
                             node.setValue(0);
                         }
                         break;
-                    case PropertyType.LONG:
+                    case PropertyType.LONG :
                         try {
                             node.setValue(Long.valueOf(value).longValue());
                         }
@@ -508,7 +506,7 @@ public class Tree extends ControlSuper {
                             node.setValue(0);
                         }
                         break;
-                    case PropertyType.DATE:
+                    case PropertyType.DATE :
                         // todo
                         break;
                 }
@@ -541,10 +539,10 @@ public class Tree extends ControlSuper {
             NodeData node = page.createNodeData(nodeDataName);
             if (value != null) {
                 switch (type) {
-                    case PropertyType.STRING:
+                    case PropertyType.STRING :
                         node.setValue(value.getString());
                         break;
-                    case PropertyType.BOOLEAN:
+                    case PropertyType.BOOLEAN :
                         if (value != null && value.getBoolean()) {
                             node.setValue(true);
                         }
@@ -552,7 +550,7 @@ public class Tree extends ControlSuper {
                             node.setValue(false);
                         }
                         break;
-                    case PropertyType.DOUBLE:
+                    case PropertyType.DOUBLE :
                         try {
                             node.setValue(value.getDouble());
                         }
@@ -560,7 +558,7 @@ public class Tree extends ControlSuper {
                             node.setValue(0);
                         }
                         break;
-                    case PropertyType.LONG:
+                    case PropertyType.LONG :
                         try {
                             node.setValue(value.getLong());
                         }
@@ -568,7 +566,7 @@ public class Tree extends ControlSuper {
                             node.setValue(0);
                         }
                         break;
-                    case PropertyType.DATE:
+                    case PropertyType.DATE :
                         // todo
                         break;
                 }
@@ -1071,8 +1069,7 @@ public class Tree extends ControlSuper {
             + this.getPath() + "','" //$NON-NLS-1$
             + this.getJavascriptTree() + "'," //$NON-NLS-1$
             + this.getHeight() + "," //$NON-NLS-1$
-            + "'" + this.getName() + "',"
-            + this.isBrowseMode() + ");"); //$NON-NLS-1$
+            + "'" + this.getName() + "'," + this.isBrowseMode() + ");"); //$NON-NLS-1$
 
         // add columns to tree object
         for (int i = 0; i < this.getColumns().size(); i++) {
@@ -1116,7 +1113,9 @@ public class Tree extends ControlSuper {
             // loop the children of the different item types
             for (int i = 0; i < this.getItemTypes().size(); i++) {
                 String type = (String) this.getItemTypes().get(i);
-                html.append(this.getHtmlChildrenOfOneType(parentNode, type));
+                if (hasSub(parentNode, type)) {
+                    html.append(this.getHtmlChildrenOfOneType(parentNode, type));
+                }
             }
         }
         catch (RepositoryException e) {
@@ -1177,15 +1176,10 @@ public class Tree extends ControlSuper {
                     isActivated = c.getMetaData(MetaData.ACTIVATION_INFO).getIsActivated();
                     for (int i = 0; i < this.getItemTypes().size(); i++) {
                         String type = (String) this.getItemTypes().get(i);
-                        int size = 0;
-                        if (type.equalsIgnoreCase(ItemType.NT_NODEDATA)) {
-                            size = c.getNodeDataCollection().size();
-                        }
-                        else {
-                            size = c.getChildren(type).size();
-                        }
-                        if (size > 0) {
-                            hasSub = true;
+
+                        hasSub = hasSub(c, type);
+
+                        if (hasSub) {
                             if (this.getPathOpen() != null
                                 && (this.getPathOpen().indexOf(handle + "/") == 0 || this.getPathOpen().equals(handle))) { //$NON-NLS-1$
                                 showSub = true;
@@ -1194,14 +1188,14 @@ public class Tree extends ControlSuper {
                         }
                     }
                 }
-                
+
                 // get next if this node is not shown
-                if(!showNode(c, d, itemType)){
+                if (!showNode(c, d, itemType)) {
                     continue;
                 }
-                
+
                 String icon = getIcon(c, d, itemType);
-                
+
                 String idPre = this.javascriptTree + "_" + handle; //$NON-NLS-1$
                 String jsHighlightNode = this.javascriptTree + ".nodeHighlight(this,'" //$NON-NLS-1$
                     + handle + "'," //$NON-NLS-1$
@@ -1386,6 +1380,19 @@ public class Tree extends ControlSuper {
         return html.toString();
     }
 
+    protected boolean hasSub(Content c, String type) {
+        int size = 0;
+        if (type.equalsIgnoreCase(ItemType.NT_NODEDATA)) {
+            size = c.getNodeDataCollection().size();
+        }
+        else {
+            size = c.getChildren(type).size();
+        }
+        if (size > 0) {
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Override to make special exclusions. The current nodedata or node is passed.
@@ -1441,7 +1448,6 @@ public class Tree extends ControlSuper {
         this.menu = menu;
     }
 
-    
     /**
      * @return Returns the browseMode.
      */
@@ -1449,7 +1455,6 @@ public class Tree extends ControlSuper {
         return browseMode;
     }
 
-    
     /**
      * @param browseMode The browseMode to set.
      */
