@@ -4,8 +4,9 @@
 	<tstamp>
 		<format property="magnolia.currentDate" pattern="MMMM d. yyyy" locale="en"/>
   	</tstamp>
+  	
 
-    <goal name="rebuild-all" prereqs="pom,clean,war:war,dist:build" />
+	<goal name="rebuild-all" prereqs="pom,clean,war:war,dist:build" />
     <postGoal name="site">
         <attainGoal name="pdf" />
     </postGoal>
@@ -17,7 +18,7 @@
             value="${pom.currentVersion}" />
         <ant:replace file="${maven.build.dest}/info/magnolia/cms/license/license.xml"
             token="$${magnolia.revision}"
-            value="${magnolia.revision} ${magnolia.currentDate}" />  		
+            value="${magnolia.build.revision} ${magnolia.currentDate}" />  		
 	</postGoal>
     
     <preGoal name="jar:jar">
@@ -30,6 +31,7 @@
             </fileset>
         </ant:copy>
     </preGoal>
+    
     <postGoal name="war:webapp">
         <!-- copy the readme file -->
         <ant:copy file="${release.src}/release notes.war.txt" tofile="${maven.war.webapp.dir}/release notes.txt" />
@@ -39,8 +41,9 @@
         <ant:replace file="${maven.war.webapp.dir}/release notes.txt"
             token="$${magnolia.currentDate}"
             value="${magnolia.currentDate}" />  
-        <j:set var="instanceName" value="${magnolia.build.instance}" />
-
+        <j:set var="instance" value="${magnolia.build.instance}" />
+        <j:set var="cqfs" value="${magnolia.build.cqfs}" />
+  		
         <ant:available classname="com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl" property="java15transformer"/>
         <j:choose>
           <j:when test="${java15transformer}">
@@ -51,7 +54,7 @@
           </j:otherwise>
         </j:choose>
         
-        <j:if test="${instanceName == 'public'}">
+        <j:if test="${instance == 'public'}">
             <ant:echo>changing configuration and bootstrap for public instance</ant:echo>
             <ant:replace file="${maven.war.webapp.dir}/WEB-INF/web.xml"
                 token="&lt;param-value&gt;magnolia.root&lt;/param-value&gt;"
@@ -68,7 +71,8 @@
                 in="src/webapp/WEB-INF/bootstrap/config/config.modules.xml"
                 out="${maven.war.webapp.dir}/WEB-INF/bootstrap/config/config.modules.xml" />
         </j:if>
-        <j:if test="${instanceName == 'author'}">
+        
+        <j:if test="${instance == 'author'}">
             <ant:echo>changing configuration and bootstrap for author instance</ant:echo>
             <ant:replace file="${maven.war.webapp.dir}/WEB-INF/web.xml"
                 token="&lt;param-value&gt;magnolia.root&lt;/param-value&gt;"
@@ -80,7 +84,7 @@
                 in="src/webapp/WEB-INF/bootstrap/config/config.subscribers.xml"
                 out="${maven.war.webapp.dir}/WEB-INF/bootstrap/config/config.subscribers.xml" />
         </j:if>
-        <j:if test="${instanceName != 'dev'}">
+        <j:if test="${cqfs != 'true'}">
             <ant:echo>removing cqfs: using filesystem instead</ant:echo>
             <ant:delete>
                 <ant:fileset dir="${maven.war.webapp.dir}/WEB-INF/lib">
@@ -149,13 +153,12 @@
            <ant:fail unless="tomcat-present" message="Unable to download tomcat distribution. You can manually download tomcat from http://www.apache.org/dist/jakarta/tomcat-5/v5.0.28/bin/${release.tomcat.name}.tar.gz to src/release/tomcat/${release.tomcat.name}.tar.gz" />
           </j:otherwise>
         </j:choose>
-
     </goal>
-    <goal name="rel-tomcat" prereqs="rel-build, rel-gettomcat">
+
+   <goal name="rel-tomcat" prereqs="rel-build, rel-gettomcat">
         <mkdir dir="${release.dest}/bundled" />
         <gunzip src="src/release/tomcat/${release.tomcat.name}.tar.gz" dest="${release.dest}/bundled/tomcat.tar" />
     		<j:choose>
-    			<echo>${magnolia.build.useSystemTar}</echo>
 	    	    	<j:when test="${magnolia.build.useSystemTar}">
 	    	    		<exec executable="tar" dir="${release.dest}/bundled">
 	    	            <arg line="xvf tomcat.tar"/>
@@ -202,7 +205,7 @@
         <delete dir="target" />
         <exec executable="${maven.command}">
             <arg value="-Dmagnolia.build.instance=author" />
-            <arg value="-Dmagnolia.revision=${magnolia.revision}" />
+            <arg value="-Dmagnolia.build.revision=${magnolia.build.revision}" />
             <arg value="-o" />
             <arg value="war" />
         </exec>
@@ -210,7 +213,7 @@
         <delete dir="target" />
         <exec executable="${maven.command}">
             <arg value="-Dmagnolia.build.instance=public" />
-            <arg value="-Dmagnolia.revision=${magnolia.revision}" />
+            <arg value="-Dmagnolia.build.revision=${magnolia.build.revision}" />
             <arg value="-o" />
             <arg value="war" />
         </exec>
