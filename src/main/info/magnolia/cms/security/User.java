@@ -13,35 +13,35 @@
 package info.magnolia.cms.security;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.jaas.principal.Entity;
 
 import java.util.Iterator;
+import java.util.Set;
 
 import javax.jcr.RepositoryException;
+import javax.security.auth.Subject;
 
 
 /**
  * This class wrapps a user content object to provide some nice methods
  * @author philipp
+ * @author Sameer Charles
  * @version $Revision$ ($Author$)
  */
 public class User {
 
     /**
-     * Under this subnodes the assigned roles are saved
-     */
-    private static final String NODE_ROLES = "roles"; //$NON-NLS-1$
+     * user properties
+     * */
+    private Entity userDetails;
 
     /**
-     * the content object
+     * @param subject as created by login module
      */
-    private Content userNode;
-
-    /**
-     * @param userNode the Content object representing this user
-     */
-    public User(Content userNode) {
-        super();
-        this.userNode = userNode;
+    public User(Subject subject) {
+        Set principalSet = subject.getPrincipals(info.magnolia.jaas.principal.Entity.class);
+        Iterator it = principalSet.iterator();
+        this.userDetails = (Entity) it.next();
     }
 
     /**
@@ -50,28 +50,23 @@ public class User {
      * @return true if in role
      */
     public boolean hasRole(String roleName) {
-        try {
-            Content rolesNode = userNode.getContent(NODE_ROLES);
-
-            for (Iterator iter = rolesNode.getChildren().iterator(); iter.hasNext();) {
-                Content node = (Content) iter.next();
-                if (node.getNodeData("path").getString().equals("/" + roleName)) { //$NON-NLS-1$ //$NON-NLS-2$
-                    return true;
-                }
-            }
-            if (rolesNode.hasContent(roleName)) {
-                return true;
-            }
-
-        }
-        catch (RepositoryException e) {
-            // nothing
-        }
-
         return false;
     }
 
+    /**
+     * get user language
+     * @return language string
+     * */
     public String getLanguage() {
-        return userNode.getNodeData("language").getString(); //$NON-NLS-1$
+        return (String) this.userDetails.getProperty(Entity.LANGUAGE); //$NON-NLS-1$
     }
+
+    /**
+     * get user name
+     * @return language string
+     * */
+    public String getName() {
+        return (String) this.userDetails.getProperty(Entity.NAME); //$NON-NLS-1$
+    }
+
 }

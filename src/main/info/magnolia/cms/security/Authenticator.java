@@ -12,19 +12,18 @@
  */
 package info.magnolia.cms.security;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.jaas.callback.CredentialsCallbackHandler;
 
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import javax.security.auth.login.LoginContext;
+import javax.security.auth.login.LoginException;
+import javax.security.auth.Subject;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+
 
 
 /**
@@ -41,17 +40,22 @@ public final class Authenticator {
     /**
      * Session attribute holding the magnolia user id.
      */
-    private static final String ATTRIBUTE_USER_ID = "mgnlUserId"; //$NON-NLS-1$
+    static final String ATTRIBUTE_USER_ID = "mgnlUserId";
 
     /**
      * Session attribute holding the magnolia user password.
      */
-    private static final String ATTRIBUTE_PSWD = "mgnlUserPSWD"; //$NON-NLS-1$
+    static final String ATTRIBUTE_PSWD = "mgnlUserPSWD";
 
     /**
      * Session attribute holding the magnolia user node from the jcr repository.
      */
-    private static final String ATTRIBUTE_USER_NODE = "mgnlUserNode"; //$NON-NLS-1$
+    static final String ATTRIBUTE_USER = "mgnlUser";
+
+    /**
+     * session attribute holding authenticated JAAS subject
+     * */
+    static final String ATTRIBUTE_JAAS_SUBJECT = "mgnlJAASSubject";
 
     /**
      * Utility class, don't instantiate.
@@ -61,64 +65,64 @@ public final class Authenticator {
     }
 
     /**
-     * Authenticate authorization request with the usersRepository.
+     * Authenticate authorization request using JAAS login module as configured
      * @param req as received by the servlet engine
      * @return boolean
      */
     public static boolean authenticate(HttpServletRequest req) {
-        String credentials = req.getHeader("Authorization"); //$NON-NLS-1$
+        String credentials = req.getHeader("Authorization");
         if (StringUtils.isEmpty(credentials) || credentials.length() <= 6) {
             return false;
         }
         credentials = getDecodedCredentials(credentials.substring(6).trim());
         Authenticator.setUserId(credentials, req);
         Authenticator.setPassword(credentials, req);
-        boolean isValid = isValidUser(req);
-        if (!isValid) {
-            req.getSession().invalidate();
+        // first check if user has been authenticated by some other service or container itself
+        if (req.getUserPrincipal() == null) {
+            // JAAS authentication
+            CredentialsCallbackHandler callbackHandler = new CredentialsCallbackHandler(getUserId(req),getPassword(req));
+            try {
+                LoginContext loginContext = new LoginContext("magnolia",callbackHandler);
+                loginContext.login();
+                Subject subject = loginContext.getSubject();
+                req.getSession().setAttribute(ATTRIBUTE_JAAS_SUBJECT, subject);
+            } catch (LoginException le) {
+                log.debug(le);
+                req.getSession().invalidate();
+                return false;
+            }
+        } else {
+            // user already authenticated via JAAS, try to load roles for it
+            String userName = req.getUserPrincipal().getName();
+            CredentialsCallbackHandler callbackHandler = new CredentialsCallbackHandler(userName,getPassword(req));
+            try {
+                LoginContext loginContext = new LoginContext("magnolia_authorization",callbackHandler);
+                loginContext.login();
+                Subject subject = loginContext.getSubject();
+                req.getSession().setAttribute(ATTRIBUTE_JAAS_SUBJECT, subject);
+            } catch (LoginException le) {
+                log.debug(le);
+                req.getSession().invalidate();
+                return false;
+            }
         }
-        return isValid;
+        updateSession(req);
+        return true;
     }
 
     /**
-     * checks is the credentials exist in the repository
-     * @param request current HttpServletRequest
-     * @return boolean
-     */
-    private static boolean isValidUser(HttpServletRequest request) {
-        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USERS);
-        try {
-            String userid = Authenticator.getUserId(request);
-            if (StringUtils.isEmpty(userid)) {
-                return false;
-            }
-            Content userPage = hm.getContent(userid);
-            String encodedPassword = new String(Base64.encodeBase64(Authenticator
-                .getPasswordAsString(request)
-                .getBytes()));
-            String fromRepository = userPage.getNodeData("pswd").getString().trim(); //$NON-NLS-1$
-            String fromBrowser = encodedPassword.trim();
-            if (fromRepository.equalsIgnoreCase(fromBrowser)) {
-                request.getSession().setAttribute(ATTRIBUTE_USER_NODE, userPage);
-
-                // we must set the language because the JSTL will not use our classes
-                String lang = userPage.getNodeData("language").getString(); //$NON-NLS-1$
-                if (StringUtils.isEmpty(lang)) {
-                    lang = MessagesManager.getDefaultLocale().getLanguage();
-                }
-                MessagesManager.setUserLanguage(lang, request.getSession());
-                return true;
-            }
+     * add user properties needed for jstl and user entity object to the session
+     * @param request
+     * */
+    private static void updateSession(HttpServletRequest request) {
+        Subject subject = Authenticator.getSubject(request);
+        User user = new User(subject);
+        request.getSession().setAttribute(ATTRIBUTE_USER, user);
+        String lang = (String) user.getLanguage();
+        if (StringUtils.isEmpty(lang)) {
+            lang = MessagesManager.getDefaultLocale().getLanguage();
         }
-        catch (PathNotFoundException e) {
-            log.info("Unable to locate user [" + Authenticator.getUserId(request) + "], authentication failed"); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-        catch (RepositoryException e) {
-            log.error("Unable to locate user [" //$NON-NLS-1$
-                + Authenticator.getUserId(request) + "], authentication failed due to a " //$NON-NLS-1$
-                + e.getClass().getName(), e);
-        }
-        return false;
+        MessagesManager.setUserLanguage(lang, request.getSession());
     }
 
     /**
@@ -134,7 +138,7 @@ public final class Authenticator {
      * @param request current HttpServletRequest
      */
     private static void setUserId(String decodedCredentials, HttpServletRequest request) {
-        request.getSession().setAttribute(ATTRIBUTE_USER_ID, StringUtils.substringBefore(decodedCredentials, ":")); //$NON-NLS-1$
+        request.getSession().setAttribute(ATTRIBUTE_USER_ID, StringUtils.substringBefore(decodedCredentials, ":"));
     }
 
     /**
@@ -142,7 +146,7 @@ public final class Authenticator {
      * @param decodedCredentials , BASE64Decoded credentials from the request
      */
     private static void setPassword(String decodedCredentials, HttpServletRequest request) {
-        request.getSession().setAttribute(ATTRIBUTE_PSWD, StringUtils.substringAfter(decodedCredentials, ":")); //$NON-NLS-1$
+        request.getSession().setAttribute(ATTRIBUTE_PSWD, StringUtils.substringAfter(decodedCredentials, ":"));
     }
 
     /**
@@ -152,14 +156,18 @@ public final class Authenticator {
     public static String getUserId(HttpServletRequest request) {
         Object userId = request.getSession().getAttribute(ATTRIBUTE_USER_ID);
         if (userId == null) {
-            String credentials = request.getHeader("Authorization"); //$NON-NLS-1$
+            String credentials = request.getHeader("Authorization");
             if (credentials == null) {
-                return "superuser"; //$NON-NLS-1$
+                return "superuser";
             }
-
-            credentials = getDecodedCredentials(credentials.substring(6).trim());
-            Authenticator.setUserId(credentials, request);
-            userId = request.getSession().getAttribute(ATTRIBUTE_USER_ID);
+            try {
+                credentials = getDecodedCredentials(credentials.substring(6).trim());
+                Authenticator.setUserId(credentials, request);
+                userId = request.getSession().getAttribute(ATTRIBUTE_USER_ID);
+            }
+            catch (Exception e) {
+                return "superuser";
+            }
         }
         return (String) userId;
     }
@@ -178,34 +186,10 @@ public final class Authenticator {
 
     /**
      * @param request current HttpServletRequest
-     * @return String password
-     */
-    private static String getPasswordAsString(HttpServletRequest request) {
-        return ((String) request.getSession().getAttribute(ATTRIBUTE_PSWD));
-    }
-
-    /**
-     * @param request current HttpServletRequest
      * @return credentials , as received from the servlet request
      */
     public static String getCredentials(HttpServletRequest request) {
-        return request.getHeader("Authorization"); //$NON-NLS-1$
-    }
-
-    /**
-     * @param request current HttpServletRequest
-     * @return current logged in user page
-     */
-    public static Content getUserPage(HttpServletRequest request) {
-        return (Content) request.getSession().getAttribute(ATTRIBUTE_USER_NODE);
-    }
-
-    /**
-     * @param request current HttpServletRequest
-     * @return the current user object
-     */
-    public static User getUser(HttpServletRequest request) {
-        return new User(getUserPage(request));
+        return request.getHeader("Authorization");
     }
 
     /**
@@ -214,19 +198,16 @@ public final class Authenticator {
      * @return <code>true</code> if the user is authenticated, <code>false</code> otherwise
      */
     public static boolean isAuthenticated(HttpServletRequest request) {
-        // don't force a creation of a new session
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            try {
-                return session.getAttribute(ATTRIBUTE_USER_NODE) != null;
-            }
-            catch (IllegalStateException e) {
-                // can happen if the session has just been invalidated
-                log.debug("IllegalStateException caught"); //$NON-NLS-1$
-                return false;
-            }
-        }
+        Object user = request.getSession().getAttribute(ATTRIBUTE_JAAS_SUBJECT);
+        return !(user == null);
+    }
 
-        return false;
+    /**
+     * Get JAAS authenticated subject
+     * @param request
+     * @return Authenticated JAAS subject
+     * */
+    public static Subject getSubject(HttpServletRequest request) {
+        return (Subject) request.getSession().getAttribute(ATTRIBUTE_JAAS_SUBJECT);
     }
 }

@@ -10,6 +10,8 @@
     <jsp:directive.page import="info.magnolia.cms.core.Content" />
     <jsp:directive.page import="info.magnolia.cms.core.ContentHandler" />
     <jsp:directive.page import="info.magnolia.cms.security.SessionAccessControl" />
+    <jsp:directive.page import="info.magnolia.cms.security.Authenticator" />
+    <jsp:directive.page import="info.magnolia.cms.security.User" />
     <jsp:directive.page import="info.magnolia.cms.beans.config.Server" />
     <jsp:directive.page import="info.magnolia.cms.i18n.MessagesManager" />
     <jsp:directive.page import="java.util.Iterator" />
@@ -94,9 +96,9 @@
 	}
 
 	// get user information
-	Content userPage=SessionAccessControl.getUserNode(request);
-	String userName=userPage.getTitle();
-	if (userName.equals("")) userName=userPage.getName();
+	User user=SessionAccessControl.getUser(request);
+	String userName=user.getName();
+	if (userName.equals("")) userName=Authenticator.getUserId(request);
 
     pageContext.setAttribute("username", userName);
     pageContext.setAttribute("buttons", bs);
