@@ -1,14 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document>
-    <properties>
-        <title>TODO for 2.1 release</title>
-    </properties>
-    <body>
-        <section name="TODO for 2.1 release">
-            <p>
-            </p>
-            
-        </section>
+	<properties>
+		<title>Introduction</title>
+	</properties>
+	<body>
+		<section name="Introduction">
+			<p>Here you find a selection of pages you should read first.</p>
 
-    </body>
+			<subsection name="Usermanual">
+				To understand magnolia from an user perspective read the
+				<a href="magnolia-user-manual.pdf">Usermanual</a>
+				first.
+			</subsection>
+
+			<subsection name="Glossary">
+				<a href="glossary.html">Glossary</a>
+			</subsection>
+
+			<subsection name="Templating">
+				<a href="../qs/00_cover.html">Quickstart</a>
+			</subsection>
+
+			<subsection name="Activation - Subscribers">
+				<p>
+					More detailed informations are given
+					<a href="../config/subscribers.html">here</a>
+				</p>
+			</subsection>
+
+			<subsection name="Wiki">
+				<p>
+					Other informations written by users you will find on our
+					<a href="http://wiki.magnolia.info">Wiki</a>
+				</p>
+			</subsection>
+
+		</section>
+
+	</body>
 </document>

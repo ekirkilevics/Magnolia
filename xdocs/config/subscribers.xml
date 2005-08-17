@@ -1,14 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document>
-    <properties>
-        <title>TODO for 2.1 release</title>
-    </properties>
-    <body>
-        <section name="TODO for 2.1 release">
-            <p>
-            </p>
-            
-        </section>
+	<properties>
+		<title>Subscribers</title>
+	</properties>
+	<body>
+		<section name="Activation">
+			<subsection name="Activation">
+				<p>
+					When someone changes something in the "authoring" instance of the application
+					the change initially won't have any effect on the public instance. In order to
+					take effect on the public "subscriber" instance, the change needs to be
+					"activated" - in a properly configured Magnolia setup this then pushes the
+					changes to the public instance. Virtually every type of node can be activated
+					and pushed to subscriber servers - not just web pages, this is important. When
+					you look at the administration console of the authoring app you'll see a lot of
+					little red lights next to everything, a red light indicates that that particular
+					node is not published, a green light indicates that it has been published (but
+					see below for caveats), and a yellow light indicates that you've changed
+					something since it was last activated and you'll need to activate it again to
+					push the changes to the public server. This is great, except that (at least in
+					the version I'm running) there appears to be no back channel between the public
+					server and the authoring server - this means that is something goes wrong during
+					the publishing process, or the public server is changed in some other way, the
+					authoring server still goes on showing a green light even though the page isn't
+					really published. In my opinion this is a very nasty problem that should be high
+					on a list of features to fix.
+				</p>
+			</subsection>
+			<subsection name="How Activation works">
+				<p>
+					In the Config/subscribers/subscriberConfig section of the authoring app you can
+					set up details of what machines to push changes to when something is activated.
+					You'll normally be pushing activated nodes to your "Public" machine, but
+					presumably one can list several machines in this list for mirroring purposes, or
+					other arcane setups. Editing the node is reasonably self explanatory - you point
+					it at your public server. Nonetheless, I spent several hours unable to work out
+					why nothing would activate as it should (even though the authoring app said it
+					had - see the comments above). Eventually I worked out the answer. When you
+					activate something in the authoring server it uses your username and password to
+					log into the subscribing server to actually do the publishing This means that
+					unless there is a user on the subscribing machine (the public server) with your
+					username and password and privileges then the activation process will fail. The
+					worst part of this is that Magnolia doesn't realise it's failed and carries on
+					showing the node as published. Luckily, since users and roles are nodes jst like
+					any other they can be "activated" too - if you create a new user on the
+					authoring server, remember to "activate" that user so that the users details
+					will be pushed to the subscriber server(s). One thing I really need to stress
+					again, because it was very counterintuitive for me, is that there appears to be
+					NO synchronisation process between the servers - the authoring server merely
+					pushes changes on demand to the subscribing server. This seems to make things
+					extremely brittle - if the authoring server and the public server get out of
+					sync for some reason it's very hard to tell what gone wrong and very hard to fix
+					it. The worst case of this appears to be if you change a users' password and
+					forget to "activate" the change - that user will then be unable to make any
+					changes to the subscriber server (though - again, there is no feedback that
+					anything is going wrong). If the user in question is the superuser very awkward
+					things can result.
+				</p>
+			</subsection>
 
-    </body>
+		</section>
+
+		<section name="Subscribers">
+			<p>
+				Like any system, Magnolia has a number of concepts you should be aware of before you
+				get started with installations.
+				<UL>
+					<LI>
+						usually, Magnolia is set up in such a way that you have one instance running
+						as the authoring system, one as the public system. This provides
+						flexibility, scalability and security.
+					</LI>
+					<LI>
+						if an instance is author or public is determined by a setting in the Config
+						GUI. Setting isAdmin to true will generally let you edit pages etc.. Set it
+						to false for public instances
+					</LI>
+					<LI>
+						to get content from the authoring instance to the public instance(s), you
+						use a mechanism called &quot;activation&quot;, which is executed from the
+						GUI. Activation pushes content from the source instance (the one you are
+						using when you click activate) to its
+						<B>subscribers</B>
+					</LI>
+					<LI>
+						there can be any number of subscribers. Subscribers are configured through
+						the GUI (see config). Usually, there is one subscriber only, called the
+						&quot;public instance&quot;
+
+					</LI>
+					<LI>
+						Magnolia is delivered as a single war file which per default is set up as
+						&quot;authoring&quot;
+					</LI>
+					<LI>to add a public instance, read below.</LI>
+					<LI>
+						you control the public instance from the author environment through means of
+						activating content from the author environment to its subscriber(s)
+					</LI>
+				</UL>
+			</p>
+		</section>
+
+
+	</body>
 </document>

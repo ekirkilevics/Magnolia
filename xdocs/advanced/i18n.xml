@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document>
 	<properties>
-		<title>i18n</title>
+		<title>I18N</title>
 	</properties>
 	<body>
 		<section name="Internationalisation">
@@ -29,11 +29,13 @@
 			<subsection name="JSP">
 				<P>Use the standard fmt JSTL Tags</P>
 				<p>examples:</p>
-				<source><![CDATA[
+				<source>
+					<![CDATA[
 <title><fmt:message key="central.title"/></title>
 
 <fmt:message key="buttons.editfooter" var="label"/>
-<cms:editButton label="${label}" ..]]></source>
+<cms:editButton label="${label}" ..]]>
+				</source>
 			</subsection>
 
 			<subsection name="Java (servlet, beans, ..)">

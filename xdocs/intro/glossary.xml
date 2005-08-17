@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>Glossary</title>
+	</properties>
+	<body>
+		<section name="Glossary">
+			<table>
+				<tr>
+					<th>Term</th>
+					<th>Explanation</th>
+				</tr>
+				<tr>
+					<td>Activation</td>
+					<td>
+						Means of moving content from one ->stage to the next stage. In a 2-stage
+						setup, this is the same as making content public, as the second stage is the
+						public stage.
+					</td>
+				</tr>
+
+
+				<tr>
+					<td>Authoring Environment</td>
+					<td>
+
+						The interface of interaction between the author of content and the Magnolia
+						content management system.
+					</td>
+				</tr>
+
+				<tr>
+					<td>Authoring Instance</td>
+					<td>
+						An instance of Magnolia that is used for authoring content. It provides the
+						->Authoring Environment
+					</td>
+				</tr>
+
+				<tr>
+					<td>Children</td>
+					<td>
+						Inside a Page's content a collection of the sub elements of a content object
+						(i.e. Atoms in a Container). Children of a Page represent the hierarchical
+						sub Pages.
+					</td>
+				</tr>
+				<tr>
+					<td>ContentNode (Former Container and ContainerList)</td>
+					<td>
+						Content object, collection of one or more NodeData or collection of
+						ContentNode
+					</td>
+				</tr>
+				<tr>
+					<td>Container List (Deprecated)</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>Deactivation</td>
+					<td>
+						Means of removing previously activated content from an advanced stage. In a
+						two stage-setup, this is th same as unpublishing content.
+					</td>
+				</tr>
+				<tr>
+					<td>NodeData (Former Atom)</td>
+					<td>Holder of a single content value</td>
+				</tr>
+				<tr>
+					<td>Page</td>
+					<td>
+						Top level content object representing the content of a web document.
+						Consists of Atoms and/or Container Lists.
+					</td>
+				</tr>
+				<tr>
+					<td>Public Environment</td>
+					<td>The published website, running on the ->Public Instance</td>
+				</tr>
+				<tr>
+					<td>Public Instance</td>
+					<td>The instance of Magnolia that runs the ->Public Environment.</td>
+				</tr>
+				<tr>
+					<td>Repository</td>
+					<td>Data storage location</td>
+				</tr>
+				<tr>
+					<td>Role</td>
+					<td>
+						Top level content object representing the information of a Magnolia
+						administration role. Consists of Atoms and/or Container Lists.
+					</td>
+				</tr>
+				<tr>
+					<td>Sender</td>
+					<td>Magnolia instance sending an activation event</td>
+				</tr>
+				<tr>
+					<td>Stage</td>
+					<td>
+						Magnolia supports unlimited staging, and generally has at least 2 stages:
+						the authoring stage and the public stage. Content is moved between different
+						stages by the means of ->activation. The initial stage would be the
+						authoring stage, running on the authoring instance. In a default, 2-stage
+						setup, the second stage will be the public stage, provided by the ->public
+						instance.
+					</td>
+				</tr>
+				<tr>
+					<td>Subscriber</td>
+					<td>
+						A Magnolia instance or any other application receiving an activation event
+						from a Magnolia instance
+					</td>
+				</tr>
+				<tr>
+					<td>Template</td>
+					<td>Presentation logic for Pages, Containers and Atoms</td>
+				</tr>
+				<tr>
+					<td>User</td>
+					<td>
+						Top level content object representing the information of a Magnolia
+						administration user. Consists of Atoms and/or Container Lists.
+					</td>
+				</tr>
+			</table>
+		</section>
+
+	</body>
+</document>

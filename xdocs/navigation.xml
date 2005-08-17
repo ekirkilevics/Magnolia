@@ -8,7 +8,10 @@
             <item name="Wiki" href="http://wiki.magnolia.info" />
         </links>
         <menu name="Documentation">
-            <item name="Introduction" href="/intro/intro.html" />
+            <item name="Introduction" href="/intro/intro.html" >
+                <item name="User Manual" href="/intro/magnolia-user-manual.pdf" />
+                <item name="Glossary" href="/intro/glossary.html" />
+            </item>
             <item name="Build and install" href="/install/intro.html" collapse="true">
                 <item name="Installing" href="/install/install.html" />
                 <item name="Upgrade" href="/install/upgrade.html" />
@@ -19,15 +22,15 @@
             <item name="Configuration" href="/config/config.html" collapse="true">
                 <item name="Public instance" href="/config/public.html" />
                 <item name="Cache" href="/config/cache.html" />
-                <item name="Subscribers" href="/config/subscribers.html" />
+                <item name="Activation - Subscribers" href="/config/subscribers.html" />
                 <item name="web.xml" href="/config/webxml.html" />
                 <item name="One war, multiple configs" href="/config/multiconfig.html" />
             </item>
             <item name="Templating Quickstart" href="/qs/00_cover.html" collapse="true">
                 <item name="1. Introduction" href="/qs/01_introduction.html" />
-                <item name="2. Page Template 1" href="/qs/02_template_advertising.html" />
-                <item name="3. Page Template 2" href="/qs/03_template_building.html" />
-                <item name="4. Page Template 3" href="/qs/04_template_property.html" />
+                <item name="2. Templates 1" href="/qs/02_template_advertising.html" />
+                <item name="3. Templates 2" href="/qs/03_template_building.html" />
+                <item name="4. Templates 3" href="/qs/04_template_property.html" />
                 <item name="5. Paragraphs 1" href="/qs/05_paragraphs.html" />
                 <item name="6. Paragraphs 2" href="/qs/06_paragraphs_dissecting.html" />
                 <item name="7. Paragraphs 3" href="/qs/07_firstparagraph.html" />
