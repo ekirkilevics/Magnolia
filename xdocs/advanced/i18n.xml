@@ -1,14 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document>
-    <properties>
-        <title>TODO for 2.1 release</title>
-    </properties>
-    <body>
-        <section name="TODO for 2.1 release">
-            <p>
-            </p>
-            
-        </section>
+	<properties>
+		<title>i18n</title>
+	</properties>
+	<body>
+		<section name="Internationalisation">
+			<subsection name="Configuration">
+				<p>the configuration is done in Config repository: /server/i18n:</p>
 
-    </body>
+				<UL>
+					<LI>define the application language (change the language node)</LI>
+					<LI>the fall back language is en</LI>
+					<LI>
+						the standard bundle is
+						info.magnolia.module.admininterface.messages_en.properties
+					</LI>
+				</UL>
+			</subsection>
+
+			<subsection name="General">
+				<UL>
+					<LI>We use Propertyfiles</LI>
+					<LI>We use JSTL fmt tags</LI>
+					<LI>Each module has his own messages bundle</LI>
+				</UL>
+			</subsection>
+
+			<subsection name="JSP">
+				<P>Use the standard fmt JSTL Tags</P>
+				<p>examples:</p>
+				<source><![CDATA[
+<title><fmt:message key="central.title"/></title>
+
+<fmt:message key="buttons.editfooter" var="label"/>
+<cms:editButton label="${label}" ..]]></source>
+			</subsection>
+
+			<subsection name="Java (servlet, beans, ..)">
+				<P>
+					Use the MessagesManager.getMessages(request, ...) to get the Messages or
+					MessagesManager.get(request, ....) to get a string. The mechanism will handle
+					the exception if the request is null.
+				</P>
+			</subsection>
+
+			<subsection name="javax.servlet.jsp.jstl.fmt.LocaleSupport">
+				<P>
+					If you can provide a PageContext, you can use the static methods of this class.
+					Our system is behaving like JSTL so you will get the same result.
+				</P>
+			</subsection>
+
+
+			<subsection name="Dialogs, Paragraphs">
+				<P>
+					the labels, .. can define a key which is searched in this order
+					<OL>
+						<LI>
+							info.magnolia.module.admininterface.messages_templating_custom.properties
+						</LI>
+						<LI>info.magnolia.module.admininterface.messages_templating.properties</LI>
+						<LI>if not found return the label (it is not a key)</LI>
+					</OL>
+				</P>
+				<P>
+					The class used in this case is TemplateMessagesUtil providing some static
+					methods.
+				</P>
+			</subsection>
+
+			<subsection name="messages_templating and messages_templating_custom">
+				<P>
+					I separated the strings, because we said that a bundle must be translated fully.
+					in the messages_templating are our delilvered dialog, paragraph strings. If
+					someone needs his own i18n-dialogs he will put the strings in
+					messages_templating_custom. In this way he can have chinese-dialogs without a
+					fully translated chinese-magnolia.
+				</P>
+			</subsection>
+
+			<subsection name="Javascript">
+				<P>
+					Use the Object
+					<code>mgnlMessages.get(key, basename, args[])</code>
+					. basename and args are optional.
+				</P>
+				<p>
+					Keys starting with js. will be added to the mgnlMessages-Object by
+					admintemplate/js/messages.jsp
+				</p>
+			</subsection>
+		</section>
+
+	</body>
 </document>
