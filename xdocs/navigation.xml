@@ -16,8 +16,10 @@
                 <item name="Installing" href="/install/install.html" />
                 <item name="Upgrade" href="/install/upgrade.html" />
                 <item name="Building Magnolia" href="/install/build.html" />
+                <!--
                 <item name="JBoss" href="/install/jboss.html" />
                 <item name="Apache" href="/install/apache.html" />
+                -->
             </item>
             <item name="Configuration" href="/config/config.html" collapse="true">
                 <item name="Public instance" href="/config/public.html" />
@@ -48,9 +50,11 @@
                 <item name="Cms util taglib" href="/tagreference-cms-util-taglib.html" />
             </item>
             <item name="Advanced Topics" href="/advanced/advanced.html" collapse="true">
+                <!--
                 <item name="Custom Dialogs" href="/advanced/customDialogs.html" />
                 <item name="Custom Controls" href="/advanced/customControls.html" />
                 <item name="Custom Modules" href="/advanced/modules.html" />
+                -->
                 <item name="I18N" href="/advanced/i18n.html" />
             </item>
             <item name="API JavaDoc" href="apidocs/index.html" />
