@@ -63,7 +63,7 @@ public class User {
 
     /**
      * get user name
-     * @return language string
+     * @return name string
      * */
     public String getName() {
         return (String) this.userDetails.getProperty(Entity.NAME); //$NON-NLS-1$
