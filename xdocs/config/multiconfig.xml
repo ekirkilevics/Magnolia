@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>One war file, multiple configs</title>
+        <author email="fgiust(at)users.sourceforge.net">Fabrizio Giustina</author>
+    </properties>
+    <body>
+        <section name="One war file, multiple configs">
+            <p>
+                Magnolia 2.1 (from RC3) introduced a new feature that makes customizing one war for author vs. public
+                vs. some other server a bit easier. No need to keep two or more build trees around and in sync anymore.
+            </p>
+            <p>
+                By default it's there, but not enabled. You'll see it as a default folder in
+                <code>WEB-INF/config</code>
+                . In that default folder is a readme.txt that gives some info, but not a lot. First, let me provide that
+                readme here:
+            </p>
+            <source>
+                <![CDATA[
+Default configuration directory used with info.magnolia.cms.servlets.PropertyInitializer.
+
+Using the Magnolia PropertyInitializer you can easily bundle in the same webapp different set of configurations
+which are automatically applied dependending on the server name or the webapp name.
+By default the initializer will try to search for the file in different location with different combination of
+servername and webapp: the default fallback directory will be used if
+no other environment-specific directory has been added.
+
+This is the list of location where the initializer will try to find a configuration file (can be overridden using the
+magnolia.initialization.file context parameter in WEB.xml);
+
+ *     WEB-INF/config/${servername}/${webapp}/magnolia.properties,
+ *     WEB-INF/config/${servername}/magnolia.properties,
+ *     WEB-INF/config/${webapp}/magnolia.properties,
+ *     WEB-INF/config/default/magnolia.properties,
+ *     WEB-INF/config/magnolia.properties
+]]>
+            </source>
+            <p>Now to set it up. That's relatively simple:</p>
+            <ol>
+                <li>
+                    Create a folder under
+                    <code>WEB-INF/config</code>
+                    for each separate config naming them to match the name of the webapp. If you're deploying on
+                    different servers, nest these inside another folder named after your server. For instance if
+                    developing a
+                    <code>magnoliaAuthor</code>
+                    and
+                    <code>magnoliaPublic</code>
+                    config, you'll have folders
+                    <code>/WEB-INF/config/magnoliaAuthor</code>
+                    and
+                    <code>/WEB-INF/config/magnoliaPublic</code>
+                    . If dealing with different servers, it might look like
+                    <code>/WEB-INF/config/server1.com/magnoliaAuthor</code>
+                    and
+                    <code>/WEB-INF/config/server2.com/magnoliaPublic</code>
+                    .
+                </li>
+                <li>
+                    Copy the default folder's contents in to each folder and customize for each separate instance as
+                    needed. One of those things you'll probably want to change consistently is the
+                    <code>magnolia.root.sysproperty</code>
+                    value to something unique. Then change the
+                    <code>log4j.xml</code>
+                    files to match this new value. Finally change the log4j.config value in magnolia.properties to point
+                    to your customized log4j.xml file.
+                </li>
+                <li>
+                    Open web.xml and comment out both the listener section for the standard initializer
+                    <code>info.magnolia.cms.servlets.Initializer</code>
+                    and the following context-param blocks. I would comment at first just to make it easy to role back
+                    if things don't work out right. Delete later when things are working well.
+                </li>
+                <li>
+                    Add the following to your web.xml:
+                    <source>
+                        <![CDATA[
+    <listener>
+      <description>Magnolia Property Initializer</description>
+      <display-name>propertyInitializer</display-name>
+      <listener-class>info.magnolia.cms.servlets.PropertyInitializer</listener-class>
+    </listener>
+
+    <context-param>
+      <param-name>magnolia.initialization.file</param-name>
+      <param-value>
+        WEB-INF/config/${servername}/${webapp}/magnolia.properties,
+        WEB-INF/config/${servername}/magnolia.properties,
+        WEB-INF/config/${webapp}/magnolia.properties,
+        WEB-INF/config/default/magnolia.properties,
+        WEB-INF/config/magnolia.properties
+      </param-value>
+    </context-param>
+]]>
+                    </source>
+                </li>
+                <li>
+                    Save and your done. Deploy and watch the magnolia-debug.log files for any gotchas. It never fails
+                    for me to miss a setting at first and find out about it later when I'm analyzing the logs. Just
+                    change the name of your webapp, deploy, and the config used will change as well.
+                </li>
+            </ol>
+            <p>
+                The list of paths in the magnolia.initialization.file context param above isn't anything magic. Define
+                it as you like, what's shown here is the default used if it was missing. If you aren't deploying against
+                different servers, take out the top two and work with the last three. It'll try in order from first to
+                last until it finds a magnolia.properties file.
+            </p>
+        </section>
+    </body>
+</document>

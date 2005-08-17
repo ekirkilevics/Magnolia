@@ -16,6 +16,7 @@
                 <item name="Cache" href="/config/cache.html" />
                 <item name="Subscribers" href="/config/subscribers.html" />
                 <item name="web.xml" href="/config/webxml.html" />
+                <item name="One war, multiple configs" href="/config/multiconfig.html" />
             </item>
             <item name="Templating Quickstart" href="/qs/00_cover.html" collapse="true">
                 <item name="1. Introduction" href="/qs/01_introduction.html" />
