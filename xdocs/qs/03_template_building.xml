@@ -6,85 +6,113 @@
     <body>
         <section name="3. Building a page template">
             <p>
-            	A Web page is based on a so called "Page Template". In a dynamic world (like a CMS) the Template
-            	consists of a server side script, which is executed and the result is returned to the Client.
-            	The "Quickstart Template" we have created refers to
-            	<source>
-templates/jsp/quickstart/main.jsp
-            	</source>
-            	This path/file has been defined in the previous section. The <code>templates/jsp/quickstart</code> directory 
-            	can contain several "templates" (meaning: several template scripts), since any template can include 
-            	other templates (e.g. <code>main.jsp</code> can include templates like <code>navigation.jsp</code>, 
-            	<code>content.jsp</code>, etc.).
+                A Web page is based on a so called "Page Template". In a dynamic world (like a CMS) the Template
+                consists of a server side script, which is executed and the result is returned to the Client. The
+                "Quickstart Template" we have created refers to
+                <source>templates/jsp/quickstart/main.jsp</source>
+                This path/file has been defined in the previous section. The
+                <code>templates/jsp/quickstart</code>
+                directory can contain several "templates" (meaning: several template scripts), since any template can
+                include other templates (e.g.
+                <code>main.jsp</code>
+                can include templates like
+                <code>navigation.jsp</code>
+                ,
+                <code>content.jsp</code>
+                , etc.).
             </p>
             <p>
-            	<strong>
-            		WARNING: even though this file is in UTF8, be warned that template directories and names 
-            		MUST be in ASCII.
-            	</strong>
+                <strong>
+                    WARNING: even though this file is in UTF8, be warned that template directories and names MUST be in
+                    ASCII.
+                </strong>
             </p>
             <p>
-            	What does a page template look like? First of all, we use JSP to define the layout of the page. Second 
-            	we have defined a number of tags that will make your life easier (more about this later).
+                What does a page template look like? First of all, we use JSP to define the layout of the page. Second
+                we have defined a number of tags that will make your life easier (more about this later).
             </p>
-            <p>
-            	So lets get started. Let us line up that text editor and enter the magic words:
-            </p>
+            <p>So lets get started. Let us line up that text editor and enter the magic words:</p>
             <source>
-<![CDATA[<%@ taglib uri="cms-taglib" prefix="cms" %>
-<%@ taglib uri="cms-util-taglib" prefix="cmsu" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>]]>
-            </source>
-            <p>
-            	This will include the standard JSTL (which we will need later) and the Magnolia tag-libraries.
-            </p>
-            <p>
-            	Now lets start the <code>HTML</code> and <code>HEAD</code>.
-            </p>
-            <source>
-<![CDATA[<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-  <head>
-    <title>
-      <cms:out nodeDataName="title" />
-    </title>
-  </head>]]>
-            </source>
-            <p>
-            	When creating a new Web Page you define a "title" as well. This property is available for every 
-            	Web page you create. We get the content of property "title" with the cms-tag <code>out</code>..
-            </p>
-            <p>
-            	On we move with the <code>BODY</code>:
-            </p>
-            <source>
-<![CDATA[... (continued) ...
-<body bgcolor="#ffffff" >
-    <cms:mainBar paragraph="samplesPageProperties" />
-    <br><h2>Hello World</h2></br>
-  </body>
-</html>]]>     
-	    </source>
-	    <p>
-	    	Let us save the file in the template directory (in this case <code>templates/jsp/quickstart/main.jsp</code>). 
-	    	You will need to create the directory first, as it is completely up to you how you name your templates, 
-	    	and "quickstart" is just an example for the purpose of this tutorial. 
-	    </p>   
-	    <p>
-	    	There is no need to restart Tomcat if you create or change jsp files.<br/>
-	    	Create a new Web page, choose the freshly defined template, and view the result (by clicking on the 
-	    	newly created page). Here we have our first working web page template, containing the Magnolia-specific 
-	    	"Main Bar" and our message to the world.
-	    </p>
-	    <p>
-	    	<img src="../images/qs/03_magnolia_quickstartWebPage.jpg" />
-	    </p>
-	    <p>
-	    	Congratulations! You have just created your first working template in Magnolia.
-	    </p>
-            
-            
-        </section>
+                <![CDATA[
+<jsp:root version="2.0" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:cms="urn:jsptld:cms-taglib"
+    xmlns:cmsu="urn:jsptld:cms-util-taglib" xmlns:c="urn:jsptld:http://java.sun.com/jsp/jstl/core">
 
+</jsp:root>
+                ]]>
+            </source>
+            <p>This will include the standard JSTL (which we will need later) and the Magnolia tag-libraries.</p>
+            <p>
+                <strong>
+                    Sample templates included in the magnolia distribution and snippets in this tutorial make use of the
+                    jsp/xml (also known as jspx) sintax. You are of course free to build your templates using plain,
+                    non-xml, jsp code. For a quick jsp/jspx conversion guide you can take a look at
+                    <a href="http://java.sun.com/products/jsp/syntax/2.0/card20.pdf">
+                        http://java.sun.com/products/jsp/syntax/2.0/card20.pdf
+                    </a>
+                </strong>
+            </p>
+            <p>
+                Now lets start the
+                <code>HTML</code>
+                and
+                <code>HEAD</code>
+                .
+            </p>
+            <source>
+                <![CDATA[
+<jsp:root version="2.0" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:cms="urn:jsptld:cms-taglib"
+    xmlns:cmsu="urn:jsptld:cms-util-taglib" xmlns:c="urn:jsptld:http://java.sun.com/jsp/jstl/core">
+    <jsp:directive.page contentType="text/html; charset=utf-8" />
+    <html>
+      <head>
+        <title>
+          <cms:out nodeDataName="title" />
+        </title>
+      </head>
+    </html>
+</jsp:root>
+]]>
+            </source>
+            <p>
+                When creating a new Web Page you define a "title" as well. This property is available for every Web page
+                you create. We get the content of property "title" with the cms-tag
+                <code>out</code>
+                ...
+            </p>
+            <p>
+                On we move with the
+                <code>body</code>
+                :
+            </p>
+            <source>
+                <![CDATA[
+...
+  </head>
+  <body style="background-color:#fff" >
+    <cms:mainBar paragraph="samplesPageProperties" />
+    <h2>Hello World</h2>
+  </body>
+</html>
+...
+]]>
+            </source>
+            <p>
+                Let us save the file in the template directory (in this case
+                <code>templates/jsp/quickstart/main.jsp</code>
+                ). You will need to create the directory first, as it is completely up to you how you name your
+                templates, and "quickstart" is just an example for the purpose of this tutorial.
+            </p>
+            <p>
+                There is no need to restart Tomcat if you create or change jsp files.
+                <br />
+                Create a new Web page, choose the freshly defined template, and view the result (by clicking on the
+                newly created page). Here we have our first working web page template, containing the Magnolia-specific
+                "Main Bar" and our message to the world.
+            </p>
+            <p>
+                <img src="../images/qs/03_magnolia_quickstartWebPage.jpg" />
+            </p>
+            <p>Congratulations! You have just created your first working template in Magnolia.</p>
+        </section>
     </body>
 </document>
