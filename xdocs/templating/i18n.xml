@@ -1,14 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document>
-    <properties>
-        <title>TODO for 2.1 release</title>
-    </properties>
-    <body>
-        <section name="TODO for 2.1 release">
-            <p>
-            </p>
-            
-        </section>
+	<properties>
+		<title>I18N</title>
+	</properties>
+	<body>
+		<section name="Multi Language Content">
+			<p>
+				Magnolia does not make any guidelines about multi-languages implementations. Common
+				used mechanisms are.
+			</p>
+			
+			<ol>
+				<li>
+					make language trees (/en/.. /de/..). This is useful if you do not have the same
+					content (more often than one thinks in advance).
+				</li>
+				<li>
+					make a tab for each language. name the attributes en_title, de_title. then in
+					the template you are able to get the data dynamically.
+				</li>
+			</ol>
 
-    </body>
+			<p>
+				To make your dialogs itself multi-language capable or to get informations about the
+				i18n mechanism you should go
+				<a href="../advanced/i18n.html">here</a>
+			</p>
+
+		</section>
+
+	</body>
 </document>
