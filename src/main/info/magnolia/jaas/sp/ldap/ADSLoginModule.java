@@ -183,8 +183,8 @@ public class ADSLoginModule extends AbstractLoginModule {
             return;
         }
         try {
-            for (NamingEnumeration enum = attributes.getAll(); enum.hasMore();) {
-                Attribute attribute = (Attribute)enum.next();
+            for (NamingEnumeration enm = attributes.getAll(); enm.hasMore();) {
+                Attribute attribute = (Attribute)enm.next();
                 for (NamingEnumeration e = attribute.getAll();e.hasMore();) {
                     this.attributeMap.setProperty(attribute.getID(), (String) e.next());
                 }
