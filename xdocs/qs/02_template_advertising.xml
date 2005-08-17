@@ -12,7 +12,7 @@
             	select "Config" and browse "Modules/templating/Templates". Right-click on "Templates" and create 
             	a "New Content Node".
             </p>
-            <img src="../images/qs/02_magnolia_createTemplate.jpg"/>
+            <img src="../images/qs/02_magnolia_createTemplate.png"/>
             <p>
             	A new content node named "untitled" will be added. Double-click on "untitled" to change the 
             	content node name and type "quickstart". We will add "properties" to define the Template "quickstart". 
@@ -56,7 +56,7 @@
             <p>
             	Your Template "quickstart" should look like follows:
             </p>
-            	<img src="../images/qs/02_magnolia_quickstartTemplate.jpg" />
+            	<img src="../images/qs/02_magnolia_quickstartTemplate.png" />
             <p>
             	Here is a description of the properties:
             	<table>
@@ -110,7 +110,7 @@
             	If our "Quick Start" template is among the template-selection list, everything is ok.
             </p>
             <p>
-            	<img src="../images/qs/02_magnolia_checkTemplate.jpg" />
+            	<img src="../images/qs/02_magnolia_checkTemplate.png" />
             </p>
             <p>
             	Congratulation! Allthough not yet very exciting, you have configured your first Template!
