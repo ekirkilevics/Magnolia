@@ -5,7 +5,7 @@
 	</properties>
 	<body>
 		<section name="Activation">
-			<subsection name="Activation">
+			<subsection name="About activation">
 				<p>
 					When someone changes something in the "authoring" instance of the application
 					the change initially won't have any effect on the public instance. In order to
@@ -18,13 +18,7 @@
 					node is not published, a green light indicates that it has been published (but
 					see below for caveats), and a yellow light indicates that you've changed
 					something since it was last activated and you'll need to activate it again to
-					push the changes to the public server. This is great, except that (at least in
-					the version I'm running) there appears to be no back channel between the public
-					server and the authoring server - this means that is something goes wrong during
-					the publishing process, or the public server is changed in some other way, the
-					authoring server still goes on showing a green light even though the page isn't
-					really published. In my opinion this is a very nasty problem that should be high
-					on a list of features to fix.
+					push the changes to the public server.
 				</p>
 			</subsection>
 			<subsection name="How Activation works">
@@ -65,40 +59,40 @@
 			<p>
 				Like any system, Magnolia has a number of concepts you should be aware of before you
 				get started with installations.
-				<UL>
-					<LI>
+				<ul>
+					<li>
 						usually, Magnolia is set up in such a way that you have one instance running
 						as the authoring system, one as the public system. This provides
 						flexibility, scalability and security.
-					</LI>
-					<LI>
+					</li>
+					<li>
 						if an instance is author or public is determined by a setting in the Config
 						GUI. Setting isAdmin to true will generally let you edit pages etc.. Set it
 						to false for public instances
-					</LI>
-					<LI>
+					</li>
+					<li>
 						to get content from the authoring instance to the public instance(s), you
 						use a mechanism called &quot;activation&quot;, which is executed from the
 						GUI. Activation pushes content from the source instance (the one you are
 						using when you click activate) to its
-						<B>subscribers</B>
-					</LI>
-					<LI>
+						<strong>subscribers</strong>
+					</li>
+					<li>
 						there can be any number of subscribers. Subscribers are configured through
 						the GUI (see config). Usually, there is one subscriber only, called the
 						&quot;public instance&quot;
 
-					</LI>
-					<LI>
+					</li>
+					<li>
 						Magnolia is delivered as a single war file which per default is set up as
 						&quot;authoring&quot;
-					</LI>
-					<LI>to add a public instance, read below.</LI>
-					<LI>
+					</li>
+					<li>to add a public instance, read below.</li>
+					<li>
 						you control the public instance from the author environment through means of
 						activating content from the author environment to its subscriber(s)
-					</LI>
-				</UL>
+					</li>
+				</ul>
 			</p>
 		</section>
 

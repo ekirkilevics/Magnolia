@@ -4,7 +4,7 @@
 		<title>I18N</title>
 	</properties>
 	<body>
-		<section name="Internationalisation">
+		<section name="Internationalization">
 			<subsection name="Configuration">
 				<p>the configuration is done in Config repository: /server/i18n:</p>
 
@@ -19,11 +19,11 @@
 			</subsection>
 
 			<subsection name="General">
-				<UL>
-					<LI>We use Propertyfiles</LI>
-					<LI>We use JSTL fmt tags</LI>
-					<LI>Each module has his own messages bundle</LI>
-				</UL>
+				<ul>
+					<li>We use Propertyfiles</li>
+					<li>We use JSTL fmt tags</li>
+					<li>Each module has his own messages bundle</li>
+				</ul>
 			</subsection>
 
 			<subsection name="JSP">
