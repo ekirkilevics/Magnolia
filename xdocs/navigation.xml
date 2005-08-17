@@ -25,12 +25,12 @@
             </item>
             <item name="Templating Quickstart" href="/qs/00_cover.html" collapse="true">
                 <item name="1. Introduction" href="/qs/01_introduction.html" />
-                <item name="2. Create a Page Template" href="/qs/02_template_advertising.html" />
-                <item name="3. Building a Page Template" href="/qs/03_template_building.html" />
-                <item name="4. Refining the Page Template" href="/qs/04_template_property.html" />
-                <item name="5. Adding Paragraphs" href="/qs/05_paragraphs.html" />
-                <item name="6. Dissecting Paragraph Templates" href="/qs/06_paragraphs_dissecting.html" />
-                <item name="7. First paragraph" href="/qs/07_firstparagraph.html" />
+                <item name="2. Page Template 1" href="/qs/02_template_advertising.html" />
+                <item name="3. Page Template 2" href="/qs/03_template_building.html" />
+                <item name="4. Page Template 3" href="/qs/04_template_property.html" />
+                <item name="5. Paragraphs 1" href="/qs/05_paragraphs.html" />
+                <item name="6. Paragraphs 2" href="/qs/06_paragraphs_dissecting.html" />
+                <item name="7. Paragraphs 3" href="/qs/07_firstparagraph.html" />
                 <item name="8. Where to go" href="/qs/08_wheretogo.html" />
             </item>
             <item name="Templating" href="/templating/templating.html" collapse="true">

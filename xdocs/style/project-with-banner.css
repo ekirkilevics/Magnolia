@@ -18,10 +18,22 @@ a,a:hover,a:visited,a:active {
 	text-decoration: underline;
 }
 
+h2 {
+	text-transform: capitalize;
+	color: #92b901 !important;
+	font-size: 17px !important;
+}
+
 /* main layout */
 #banner {
-	visibility: hidden;
-	position:absolute;
+	color: #FFA500;
+	border: none;
+	margin: 0 0 0 0;
+	background-color: #fff;
+	background-image: url(../images/magnolia-header.jpg);
+	background-position: right;
+	background-repeat: no-repeat;
+	height: 100px;
 }
 
 #organizationLogo {
@@ -30,6 +42,8 @@ a,a:hover,a:visited,a:active {
 
 #leftColumn {
 	background-color: transparent;
+	position: absolute;
+	top: 140px;
 	left: 20px;
 	width: 180px;
 	margin: 0px;
@@ -38,11 +52,16 @@ a,a:hover,a:visited,a:active {
 }
 
 #bodyColumn {
-	margin-left: 220px;
+	margin: 0 20px 20px 220px;
+	background-color: #fff;
+	padding: 30px;
+	position: relative;
+	background-image: url(../images/magnolia-dotted.png);
+	background-repeat: repeat-y;
 }
 
 #footer div.xright {
-	/*color: #fff;*/
+	color: #fff;
 	margin-right: 10px;
 }
 
@@ -67,8 +86,9 @@ a,a:hover,a:visited,a:active {
 }
 
 #breadcrumbs {
-	visibility: hidden;
-	position:absolute;
+	background-color: #5A8E00;
+	border: none;
+	height: 15px;
 }
 
 #breadcrumbs a {
@@ -78,12 +98,10 @@ a,a:hover,a:visited,a:active {
 }
 
 h2 {
-	text-transform: capitalize;
-	color: #92b901 !important;
-	font-size: 15px !important;
 	border: none;
 	background-color: transparent;
 	padding-left: 0;
+	font-size: 13px;
 	font-weight: bold;
 }
 
@@ -93,6 +111,7 @@ h3 {
 	font-weight: bolder;
 	padding-left: 0;
 	color: #92b901 !important;
+	font-variant: small-caps;
 }
 
 #navcolumn {
