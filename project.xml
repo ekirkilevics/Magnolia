@@ -6,7 +6,7 @@
     <groupId>info.magnolia</groupId>
     <artifactId>magnolia</artifactId>
     <name>magnolia</name>
-    <currentVersion>2.1</currentVersion>
+    <currentVersion>2.2-SNAPSHOT</currentVersion>
     <organization>
         <name>Obinary Ltd</name>
         <url>http://www.obinary.com</url>
