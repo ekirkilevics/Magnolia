@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>Contribution</title>
+	</properties>
+	<body>
+		<section name="Help Wanted!">
+			<p>
+				If you have some time on your hands and like what you see, why not participate and
+				make Magnolia even better.
+			</p>
+			<p>
+				There are many ways you can support us:
+				<a href="../../../en/magnolia/developer/contribute/spread-the-word.html"
+					class="contentLink">
+					spread the word
+				</a>
+				,
+				<a href="../../../en/magnolia/developer/contribute/write-code.html"
+					class="contentLink">
+					write code
+				</a>
+				or simply share time, knowledge or funds with us. We need you!
+				<br />
+				<br />
+				<span style="font-weight: bold;">Answer questions on the mailing lists</span>
+				<br />
+
+				Even if you just got started with Magnolia, you might know more than the guy asking
+				a question. You are very welcome to share your knowledge on our templaters mailing
+				list.
+			</p>
+			<subsection name="Write documentation">
+				<p>
+					If you like to write documentation and have some time on your hands, there are
+					many issues that need documenting. If you have learned something, write it down
+					and share it. No need to get fancy with graphics and stuff. A small how-to in
+					plain text is a good start.
+					<br />
+					<br />
+					If you had to write documentation for your users, your IT department or your
+					grandmom, why not share it with the rest of the Magnolia community. They might
+					have grandmoms, too.
+				</p>
+			</subsection>
+			<subsection name="Translate the Magnolia User Interface">
+				<p>
+					Magnolia will come with an internationalization module. This allows Magnolia to
+					have its user interface in any language you like. Even if you do not have the
+					ambitions to completely translate Magnolia, you might have time to add a couple
+					of translations or correct erraneous ones.
+				</p>
+			</subsection>
+			<subsection name="Report bugs">
+				<p>
+					If you use Magnolia and find a bug, report it. Make sure its a bug (and not
+					simply a configuration issue), check the bug tracker if it has been reported
+					before, and add it to the bug tracker if no one else has done so.
+					<br />
+					<br />
+					If you don't know if something is a bug or a configuration problem, check the
+					mailing list archives for similar problems. If in doubt, post it on the list,
+					and if the general agreement is that its a bug, go add it to the bug tracker.
+					<br />
+					<br />
+					Of course you are also welcome to download the latest code from CVS and test it.
+					Report bugs using the bug tracker.
+					<br />
+					<br />
+					See the feedback page for details on reporting bugs.
+					<br />
+					<br />
+					<b>Other ideas? Let us know!</b>
+					<br />
+					Are you the creative type? Share your wicked ideas of promoting Magnolia with
+					us!
+				</p>
+			</subsection>
+		</section>
+	</body>
+</document>

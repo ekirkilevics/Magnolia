@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>Default Page and 404</title>
+	</properties>
+	<body>
+		<section name="Default Page">
+		<p> You can set the default page to a special url in the config. If the browser calls then the root of the instance it get redirected to this page.
+		<img src="default-page.png" />
+		</p>
+		</section>
+	<section name="404">
+		<p>If the user calls a not existing page the container shows a 404 page and returns the error code 404. You can change this in the web.xml.
+		<source>
+<![CDATA[
+<error-page>
+   <error-code>404</error-code>
+   <location>/home.html</location>
+</error-page>
+]]>
+		</source>
+		</p>
+	</section>
+	</body>
+</document>
