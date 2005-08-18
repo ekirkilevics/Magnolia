@@ -10,7 +10,7 @@
 		</links>
 		<menu name="Documentation">
 			<item name="Introduction" href="/intro/intro.html">
-				<item name="User Manual" href="/intro/magnolia-user-manual.pdf" />
+				<item name="User Manual (pdf)" href="/intro/magnolia-user-manual.pdf" />
 				<item name="Glossary" href="/intro/glossary.html" />
 			</item>
 			<item name="Build and install" href="/install/install.html" collapse="true">
@@ -41,7 +41,7 @@
 				<item name="8. Where to go" href="/qs/08_wheretogo.html" />
 			</item>
 			<item name="Templating" href="/templating/templating.html" collapse="true">
-				<!-- 
+				<!--
 					<item name="Templates" href="/templating/templates.html" />
 					<item name="Paragraphs" href="/templating/paragraphs.html" />
 					<item name="Dialogs" href="/templating/dialogs.html" />
