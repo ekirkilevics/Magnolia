@@ -1,102 +1,95 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="Magnolia">
-	<title>Magnolia</title>
-	<body>
-		<links>
-			<item name="Magnolia community" href="http://www.magnolia.info/en/community.html" />
-			<item name="Magnolia International"
-				href="http://www.magnolia.info/en/international.html" />
-			<item name="Wiki" href="http://wiki.magnolia.info" />
-		</links>
-		<menu name="Documentation">
-			<item name="Home" href="index.html"/>
-			<item name="Build and install" href="/install/install.html" collapse="true">
-				<item name="Installing" href="/install/install.html" />
-				<item name="Upgrade" href="/install/upgrade.html" />
-				<item name="Building Magnolia" href="/install/build.html" />
-				<!--
-					<item name="JBoss" href="/install/jboss.html" />
-					<item name="Apache" href="/install/apache.html" />
-				-->
-			</item>
-			<item name="Templating" href="/templating/templating.html" collapse="true">
-				<item name="Templating Quickstart" href="/qs/00_cover.html" collapse="true">
-					<item name="1. Introduction" href="/qs/01_introduction.html" />
-					<item name="2. Templates 1" href="/qs/02_template_advertising.html" />
-					<item name="3. Templates 2" href="/qs/03_template_building.html" />
-					<item name="4. Templates 3" href="/qs/04_template_property.html" />
-					<item name="5. Paragraphs 1" href="/qs/05_paragraphs.html" />
-					<item name="6. Paragraphs 2" href="/qs/06_paragraphs_dissecting.html" />
-					<item name="7. Paragraphs 3" href="/qs/07_firstparagraph.html" />
-					<item name="8. Where to go" href="/qs/08_wheretogo.html" />
-				</item>
-
-				<!-- 
-					<item name="Templates" href="/templating/templates.html" />
-					<item name="Paragraphs" href="/templating/paragraphs.html" />
-					<item name="Dialogs" href="/templating/dialogs.html" />
-				-->
-				<item name="Controls" href="/templating/controls.html" />
-				<item name="I18N" href="/templating/i18n.html" />
-			</item>
-			<item name="Configuration" href="/config/config.html" collapse="true">
-				<!-- <item name="Public instance" href="/config/public.html" />-->
-				<!-- <item name="Author instance" href="/config/author.html" />-->
-				<item name="Default Page and 404" href="/config/default_404.html" />
-				<item name="Cache" href="/config/cache.html" />
-				<item name="Activation - Subscribers" href="/config/subscribers.html" />
-				<!-- <item name="web.xml" href="/config/webxml.html" /> -->
-				<item name="One war, multiple configs" href="/config/multiconfig.html" />
-			</item>
-
-			<item name="Tag libraries" href="/taglib/intro.html" collapse="true">
-				<item name="Cms taglib" href="/tagreference-cms-taglib.html" />
-				<item name="Cms util taglib" href="/tagreference-cms-util-taglib.html" />
-			</item>
-			<item name="Advanced Topics" href="/advanced/advanced.html" collapse="true">
-				<item name="Custom Dialogs" href="/advanced/customDialogs.html" />
-				<item name="Custom Controls" href="/advanced/customControls.html" />
-				<item name="Custom Modules" href="/advanced/modules.html" />
-				<item name="Customize Menu" href="/advanced/menu.html" />
-				<item name="I18N" href="/advanced/i18n.html" />
-			</item>
-			<item name="API JavaDoc" href="apidocs/index.html" target="_blank" />
-			<item name="Glossary" href="/glossary/glossary.html" />
-		</menu>
-
-		<menu name="Downloadable docs">
-			<item name="User Manual" href="/pdf/magnolia-user-manual.pdf" />
-			<item name="Templater's Quickstart" href="/pdf/magnolia-templaters-quickstart.pdf" />
-			<item name="Developer Documentation" href="/magnolia.pdf" />
-		</menu>
-
-		<menu name="Lists">
-			<item name="User List" href="/lists/user.html" />
-			<item name="Developer List" href="/lists/dev.html" />
-		</menu>
-
-		<menu name="Download">
-			<item name="Releases (sourceforge)"
-				href="http://sourceforge.net/project/showfiles.php?group_id=86297" target="_blank" />
-			<item name="Nightly builds" href="/nightly" />
-		</menu>
-
-		<menu name="Developers">
-			<item name="Coding conventions" href="/developer/coding_conventions.html" />
-			<item name="Eclipse" href="/developer/eclipseWTP.html" />
-		</menu>
-
-		<menu name="Contribute">
-			<item name="Contribute" href="/contribute/contribute.html" collapse="true">
-				<item name="Spread the word" href="/contribute/words.html" />
-				<item name="Write Code" href="/contribute/code.html" />
-				<item name="Contribute License" href="/contribute/license.html" />
-			</item>
-		</menu>
-
-		<menu name="" type="footer">
-			<item name="Sourceforge" href="http://sourceforge.net/projects/magnolia"
-				img="http://sourceforge.net/sflogo.php?group_id=86297&amp;type=8" />
-		</menu>
-	</body>
+    <title>Magnolia</title>
+    <body>
+        <links>
+            <item name="Magnolia community" href="http://www.magnolia.info/en/community.html" />
+            <item name="Magnolia International" href="http://www.magnolia.info/en/international.html" />
+            <item name="Wiki" href="http://wiki.magnolia.info" />
+        </links>
+        <menu name="Documentation">
+            <item name="Home" href="index.html" />
+            <item name="Build and install" href="/install/intro.html" collapse="true">
+                <item name="Tomcat bundle" href="/install/install-budle.html" />
+                <item name="War files" href="/install/install-wars.html" />
+                <item name="Plain new build" href="/install/install-build.html" />
+                <item name="Upgrade" href="/install/upgrade.html" />
+                <item name="Building Magnolia" href="/install/build.html" />
+                <!--
+                    <item name="JBoss" href="/install/jboss.html" />
+                    <item name="Apache" href="/install/apache.html" />
+                -->
+            </item>
+            <item name="Templating" href="/templating/templating.html" collapse="true">
+                <item name="Templating Quickstart" href="/qs/00_cover.html" collapse="true">
+                    <item name="1. Introduction" href="/qs/01_introduction.html" />
+                    <item name="2. Templates 1" href="/qs/02_template_advertising.html" />
+                    <item name="3. Templates 2" href="/qs/03_template_building.html" />
+                    <item name="4. Templates 3" href="/qs/04_template_property.html" />
+                    <item name="5. Paragraphs 1" href="/qs/05_paragraphs.html" />
+                    <item name="6. Paragraphs 2" href="/qs/06_paragraphs_dissecting.html" />
+                    <item name="7. Paragraphs 3" href="/qs/07_firstparagraph.html" />
+                    <item name="8. Where to go" href="/qs/08_wheretogo.html" />
+                </item>
+                <!--
+                    <item name="Templates" href="/templating/templates.html" />
+                    <item name="Paragraphs" href="/templating/paragraphs.html" />
+                    <item name="Dialogs" href="/templating/dialogs.html" />
+                -->
+                <item name="Controls" href="/templating/controls.html" />
+                <item name="I18N" href="/templating/i18n.html" />
+            </item>
+            <item name="Configuration" href="/config/config.html" collapse="true">
+                <!-- <item name="Public instance" href="/config/public.html" />-->
+                <!-- <item name="Author instance" href="/config/author.html" />-->
+                <item name="Default Page and 404" href="/config/default_404.html" />
+                <item name="Cache" href="/config/cache.html" />
+                <item name="Activation - Subscribers" href="/config/subscribers.html" />
+                <!-- <item name="web.xml" href="/config/webxml.html" /> -->
+                <item name="One war, multiple configs" href="/config/multiconfig.html" />
+            </item>
+            <item name="Tag libraries" href="/taglib/intro.html" collapse="true">
+                <item name="Cms taglib" href="/tagreference-cms-taglib.html" />
+                <item name="Cms util taglib" href="/tagreference-cms-util-taglib.html" />
+            </item>
+            <item name="Advanced Topics" href="/advanced/advanced.html" collapse="true">
+                <item name="Custom Dialogs" href="/advanced/customDialogs.html" />
+                <item name="Custom Controls" href="/advanced/customControls.html" />
+                <item name="Custom Modules" href="/advanced/modules.html" />
+                <item name="Customize Menu" href="/advanced/menu.html" />
+                <item name="I18N" href="/advanced/i18n.html" />
+            </item>
+            <item name="API JavaDoc" href="apidocs/index.html" target="_blank" />
+            <item name="Glossary" href="/glossary/glossary.html" />
+        </menu>
+        <menu name="Downloadable docs">
+            <item name="User Manual" href="/pdf/magnolia-user-manual.pdf" />
+            <item name="Templater's Quickstart" href="/pdf/magnolia-templaters-quickstart.pdf" />
+            <item name="Developer Documentation" href="/magnolia.pdf" />
+        </menu>
+        <menu name="Lists">
+            <item name="User List" href="/lists/user.html" />
+            <item name="Developer List" href="/lists/dev.html" />
+        </menu>
+        <menu name="Download">
+            <item name="Releases (sourceforge)" href="http://sourceforge.net/project/showfiles.php?group_id=86297"
+                target="_blank" />
+            <item name="Nightly builds" href="/nightly" />
+        </menu>
+        <menu name="Developers">
+            <item name="Coding conventions" href="/developer/coding_conventions.html" />
+            <item name="Eclipse" href="/developer/eclipseWTP.html" />
+        </menu>
+        <menu name="Contribute">
+            <item name="Contribute" href="/contribute/contribute.html" collapse="true">
+                <item name="Spread the word" href="/contribute/words.html" />
+                <item name="Write Code" href="/contribute/code.html" />
+                <item name="Contribute License" href="/contribute/license.html" />
+            </item>
+        </menu>
+        <menu name="" type="footer">
+            <item name="Sourceforge" href="http://sourceforge.net/projects/magnolia"
+                img="http://sourceforge.net/sflogo.php?group_id=86297&amp;type=8" />
+        </menu>
+    </body>
 </project>
