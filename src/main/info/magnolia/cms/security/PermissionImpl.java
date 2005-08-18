@@ -14,6 +14,7 @@ package info.magnolia.cms.security;
 
 import info.magnolia.cms.util.UrlPattern;
 
+import java.io.Serializable;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -21,9 +22,15 @@ import java.util.Map;
 /**
  * @author Sameer Charles
  */
-public class PermissionImpl implements Permission {
+public class PermissionImpl implements Permission, Serializable {
+
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
 
     private static Map nameStrings = new Hashtable();
+
     static {
         nameStrings.put(new Long(Permission.ADD), Permission.PERMISSION_NAME_ADD);
         nameStrings.put(new Long(Permission.SET), Permission.PERMISSION_NAME_SET);
