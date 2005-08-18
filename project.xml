@@ -568,7 +568,6 @@
     </build>
     <reports>
         <report>maven-changelog-plugin</report>
-        <report>maven-developer-activity-plugin</report>
         <report>maven-file-activity-plugin</report>
         <report>maven-license-plugin</report>
         <report>maven-checkstyle-plugin</report>
