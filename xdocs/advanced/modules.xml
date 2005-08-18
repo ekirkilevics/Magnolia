@@ -1,14 +1,155 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document>
-    <properties>
-        <title>TODO for 2.1 release</title>
-    </properties>
-    <body>
-        <section name="TODO for 2.1 release">
-            <p>
-            </p>
-            
-        </section>
+	<properties>
+		<title>Custom Modules</title>
+	</properties>
+	<body>
+		<section name="Custom Modules">
+			<subsection name="Implement info.magnolia.cms.module.Module">
+				Make an Implementation of the interface info.magnolia.cms.module.Module and
+				implement register() and init() methods.
+			</subsection>
 
-    </body>
+			<subsection name="Registration">
+				<p>We made a module register mechanism (attention there is no uninstall so far)</p>
+				p>
+				<p>
+					cms.module.ModuleFactory.init() walks through all jars in the lib directory (we
+					do not use a special directory, because we fear problems with ClassLoaders and
+					Containers).
+				</p>
+				<p>It checks the Manifest which should look like:</p>
+				<source>
+					<![CDATA[
+Magnolia-Module-Name: dms
+Magnolia-Module-Version: 1.0M1
+Magnolia-Module-Class: com.obinary.magnolia.module.dms.DMSEngine
+]]>
+				</source>
+				<p>
+					On the Module Interface implementing class it calls the method register(). At
+					any startup! So take care that you add you entries once. Use the registerState
+					to control this.
+				</p>
+				<p>Example:</p>
+
+				<source>
+					<![CDATA[
+public void register(String moduleName, String version, Content moduleNode, JarFile jar, int registerState) {
+    try {
+
+        if (true || registerState == Module.REGISTER_STATE_INSTALLATION) {
+            HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
+            HierarchyManager hmRoles = ContentRepository.getHierarchyManager(ContentRepository.USER_ROLES);
+            HierarchyManager hmUsers = ContentRepository.getHierarchyManager(ContentRepository.USERS);
+
+            ModuleUtil.registerProperties(hm, "com.obinary.magnolia.module.dms.config");
+            ModuleUtil.createPath(hmRoles, "dms", ItemType.CONTENT);
+            ModuleUtil.registerProperties(hmRoles, "com.obinary.magnolia.module.dms.roles");
+            ModuleUtil.createPath(hmUsers, "dms", ItemType.CONTENT);
+            ModuleUtil.registerProperties(hmUsers, "com.obinary.magnolia.module.dms.users");
+
+            moveMenuPoint(hm);
+
+            hm.save();
+            hmUsers.save();
+            hmRoles.save();
+
+            // install the files
+            ModuleUtil.installFiles(jar, "dms");
+        }
+    }
+    catch (Exception e) {
+        log.error("can' register dms module", e);
+    }
+}
+    ]]>
+				</source>
+			</subsection>
+
+			<subsection name="ModuleUtil">
+				<p>
+					This util class helps implementing modules. You can create repository entries
+					based on properties-files and install files packaged in the jar (templates,
+					images, ..) .
+				</p>
+				<p>A sanppshot of such a perperty file:</p>
+				<source>
+					<![CDATA[
+######################
+# menu
+######################
+
+modules.adminInterface.Config.menu.dms.label = DMS
+modules.adminInterface.Config.menu.dms.icon = /admindocroot/icons/24/folders.gif
+modules.adminInterface.Config.menu.dms.onclick = mgnlAdminCentralSwitchExtractTree('dms');
+
+######################
+# mapping
+######################
+
+modules.dms.VirtualURIMapping.search.fromURI = /.magnolia/dms/search.html
+modules.dms.VirtualURIMapping.search.toURI = /admintemplates/dms/search.jsp
+
+modules.dms.VirtualURIMapping.uploadzip.fromURI = /.magnolia/dms/uploadzip.html
+modules.dms.VirtualURIMapping.uploadzip.toURI = /admintemplates/dms/uploadzip.jsp
+
+modules.dms.VirtualURIMapping.download.fromURI = /dms/*
+modules.dms.VirtualURIMapping.download.toURI = /admintemplates/dms/download.jsp
+
+modules.dms.VirtualURIMapping.versions.fromURI = /.magnolia/dms/versions.html
+modules.dms.VirtualURIMapping.versions.toURI = /admintemplates/dms/versions.jsp
+
+
+######################
+# templating
+######################
+
+modules.templating.dialogs.dms.searchResult.tabQuery.controlType = tab
+modules.templating.dialogs.dms.searchResult.tabQuery.label = Query
+modules.templating.dialogs.dms.searchResult.tabQuery.query.name = query
+modules.templating.dialogs.dms.searchResult.tabQuery.query.type = String
+modules.templating.dialogs.dms.searchResult.tabQuery.query.label = Query String
+modules.templating.dialogs.dms.searchResult.tabQuery.query.controlType = edit
+modules.templating.dialogs.dms.searchResult.tabQuery.query.rows = 3
+]]>
+				</source>
+				<p>see the JavaDoc for details</p>
+			</subsection>
+
+			<subsection name="Initialization">
+				<p>
+					The ModuleFactory calls the init method when the module should initialize. This
+					is done on startup. The module configuration is provided.
+				</p>
+
+				<p>Example:</p>
+				<source>
+					<![CDATA[
+public void init(ModuleConfig config) {
+    log.info("init dms");
+    // set local store to be accessed via admin interface classes or JSP
+    dmsStore.setStore(config.getLocalStore());
+
+    // register the dms tree
+    adminStore.registerTreeHandler("dms", DMSAdminTree.class); // AdminTreeConfig.class);
+
+    // register the dialogs
+    try {
+        Store.getInstance().registerDialogHandlers(config.getLocalStore().getContent("dialogs"));
+    }
+    catch (Exception e) {
+        log.error("can't register the dms dialogs", e);
+    }
+
+    // init repository
+    loadRepository();
+}
+			]]>
+				</source>
+			</subsection>
+
+		</section>
+
+	</body>
 </document>

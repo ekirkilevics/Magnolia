@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document>
-    <properties>
-        <title>TODO for 2.1 release</title>
-    </properties>
-    <body>
-        <section name="TODO for 2.1 release">
-            <p>
-            </p>
-            
-        </section>
+	<properties>
+		<title>Cache</title>
+	</properties>
+	<body>
+		<section name="Cache">
+			<p>
+			You must define which url's should get cached. You can add as many entries you like.
+				<img src="cache.png" />
+			</p>
 
-    </body>
+		</section>
+
+	</body>
 </document>

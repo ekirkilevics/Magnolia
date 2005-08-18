@@ -1,14 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document>
-    <properties>
-        <title>TODO for 2.1 release</title>
-    </properties>
-    <body>
-        <section name="TODO for 2.1 release">
-            <p>
-            </p>
-            
-        </section>
+	<properties>
+		<title>Controls</title>
+	</properties>
+	<body>
+		<section name="Controls">
+			<p>The available controls are defined in the config at the following path <code>/modules/adminInterface/Config/controls</code><br/>
+			See the samples dialogs to get an impression how they work and how they are configurable. It is also helpfull to create a page with the 'developers' showroom' template.</p>
+			<img src="controls.png"/>
+			<subsection name="fckEdit">
+				<p>
+					The fck editor is very new integrated and not all features are supported from
+					the dialog definition.
+					<br />
 
-    </body>
+					But there are two importent properties available
+				</p>
+				<ul>
+					<li>jsInitFile (startup file)</li>
+					<li>customConfigurationPath (config file)</li>
+				</ul>
+				<p>
+					Both properties are mapped by default to the magnoliaStandard.js files.
+					<br />
+
+					To configure the editor you would make two such custom files in the custom
+					folder and then to point from the dialog definition to them.
+					<br />
+
+					This gives you the possibility to have a template/paragraph wise configuration.
+					<br />
+
+					FCK has a lot of features. We will make some properties like there were for the
+					richEdit control (Kupu). But it is quite easy to make your own configuration
+					file. Look at the original: admindocroot/fckeditor/fckconfig.js
+					<br />
+				</p>
+			</subsection>
+
+			<subsection name="Custom Controls">
+				<p>
+					You find some explanations
+					<a herf="../advanced/customControls.html">here</a>
+				</p>
+			</subsection>
+
+		</section>
+
+	</body>
 </document>

@@ -1,14 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document>
-    <properties>
-        <title>TODO for 2.1 release</title>
-    </properties>
-    <body>
-        <section name="TODO for 2.1 release">
-            <p>
-            </p>
-            
-        </section>
+	<properties>
+		<title>Custom Dialog</title>
+	</properties>
+	<body>
+		<section name="Custom Dialog">
+			<p>Every dialog can have a class property which defines class to instantiate.</p>
 
-    </body>
+			<p>Example:</p>
+			<source>
+				<![CDATA[
+public class DocumentDialog extends ConfiguredDialog {
+
+    private String versionName;
+
+    /**
+     * @param name
+     * @param request
+     * @param response
+     * @param configNode
+     */
+    public DocumentDialog(String name, HttpServletRequest request, HttpServletResponse response, Content configNode) {
+        super(name, request, response, configNode);
+        // get a special parameter
+        versionName = request.getParameter("mgnlVersion");
+    }
+
+
+    /**
+     * Overriden to force creation if the node does not exist
+     */
+    protected Save onPreSave() {
+        Save save = super.onPreSave();
+        save.setCreate(true);
+        save.setCreationItemType(ItemType.CONTENTNODE);
+        return save;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see info.magnolia.module.admininterface.DialogMVCHandler#onPostSave(info.magnolia.cms.gui.control.Save)
+     */
+    protected void onPostSave(Save control) {
+        super.onPostSave(control);
+        Content node = this.getStorageNode();
+		
+		// .. do something after saving
+    }
+
+    /**
+     * do not reload the tree
+     */
+    public void renderHtml(String view) throws IOException {
+        PrintWriter out = response.getWriter();
+
+        // after saving
+        if (view == VIEW_CLOSE_WINDOW) {
+			// .. do some thing special (perhaps make an alert)
+        }
+        // show the created dialog
+        else {
+            super.renderHtml(view);
+        }
+    }
+}
+]]>
+			</source>
+
+		</section>
+
+	</body>
 </document>

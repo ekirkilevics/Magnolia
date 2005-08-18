@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>Menu</title>
+	</properties>
+	<body>
+		<section name="Customize Menu">
+			<p>
+				You can customize the menu easely due changing the configuration. Give read access
+				to users who can see the menupoint.
+				<img src="menu.png" />
+			</p>
+		</section>
+	</body>
+</document>

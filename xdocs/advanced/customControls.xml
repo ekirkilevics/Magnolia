@@ -1,14 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document>
-    <properties>
-        <title>TODO for 2.1 release</title>
-    </properties>
-    <body>
-        <section name="TODO for 2.1 release">
-            <p>
-            </p>
-            
-        </section>
+	<properties>
+		<title>Custom Controls</title>
+	</properties>
+	<body>
+		<section name="Custom Controls">
+			<p>
+				To make a custom control you do the following
+				<ul>
+					<li>
+						Make a subclass from a DialogControl subclass (DialogSelect for example)
+					</li>
+					<li>
+						register in the config under
+						<code>/modules/adminInterface/Config/controls</code>
+					</li>
+					<li>use the new control as all the others ;-)</li>
+				</ul>
+				To access the configuration settings use
+				<code>getConfigValue(name)</code>
+			</p>
+			<p>To make a DropDownBox having special values you would do something like:</p>
+			<source>
+				<![CDATA[
+MySelect extends DialogSelect(){
+	MySelect(...){
+		super(..);
+	}
 
-    </body>
+	setOptions(){
+		for each node found
+			add option to the control;
+	}
+}
+]]>
+			</source>
+		</section>
+	</body>
 </document>
