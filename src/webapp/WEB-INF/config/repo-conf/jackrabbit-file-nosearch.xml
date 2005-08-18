@@ -111,7 +111,7 @@
         (used by the QueryHandler); the class attribute specifies the
         FQN of the class implementing the QueryHandler interface.
     -->
-    <!ELEMENT SearchIndex (param*,FileSystem)>
+    <!ELEMENT SearchIndex (param*,FileSystem?)>
     <!ATTLIST SearchIndex
       class CDATA #REQUIRED>
 

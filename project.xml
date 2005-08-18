@@ -311,7 +311,7 @@
         <dependency>
             <groupId>jackrabbit</groupId>
             <artifactId>jackrabbit-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0-20050818</version>
             <type>jar</type>
             <url>http://incubator.apache.org/jackrabbit</url>
             <properties>
@@ -321,7 +321,7 @@
         <dependency>
             <groupId>jackrabbit</groupId>
             <artifactId>jackrabbit-commons</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0-20050818</version>
             <type>jar</type>
             <url>http://incubator.apache.org/jackrabbit</url>
             <properties>
@@ -331,7 +331,7 @@
         <dependency>
             <groupId>jackrabbit</groupId>
             <artifactId>jackrabbit-core</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0-20050818</version>
             <type>jar</type>
             <url>http://incubator.apache.org/jackrabbit</url>
             <properties>
@@ -413,7 +413,7 @@
         <dependency>
             <groupId>cqfs</groupId>
             <artifactId>cqfs-jackrabbit</artifactId>
-            <version>3.5.6-SNAPSHOT</version>
+            <version>3.5.6-20050818</version>
             <url>http://www.day.com/maven/cqfs/jars/cqfs-jackrabbit-3.5.6-SNAPSHOT.jar</url>
             <properties>
                 <war.bundle>true</war.bundle>
@@ -422,7 +422,7 @@
         <dependency>
             <groupId>cqfs</groupId>
             <artifactId>cqfs</artifactId>
-            <version>3.5.6-SNAPSHOT</version>
+            <version>3.5.6-20050818</version>
             <url>http://www.day.com/maven/cqfs/jars/cqfs-3.5.6-SNAPSHOT.jar</url>
             <properties>
                 <war.bundle>true</war.bundle>
