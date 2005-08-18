@@ -1,49 +1,63 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="Magnolia">
-	<title>Magnolia</title>
-	<body>
-		<menu name="Documentation">
-			<item name="Introduction" href="index.html" />
-			<item name="Build and install" href="/install/install.html">
-				<item name="Installing" href="/install/install.html" />
-				<item name="Upgrade" href="/install/upgrade.html" />
-				<item name="Building Magnolia" href="/install/build.html" />
-			</item>
-			<item name="Templating" href="/templating/templating.html">
-				<item name="Templating Quickstart" href="/qs/00_cover.html">
-					<item name="1. Introduction" href="/qs/01_introduction.html" />
-					<item name="2. Create a Page Template" href="/qs/02_template_advertising.html" />
-					<item name="3. Building a Page Template" href="/qs/03_template_building.html" />
-					<item name="4. Refining the Page Template" href="/qs/04_template_property.html" />
-					<item name="5. Adding Paragraphs" href="/qs/05_paragraphs.html" />
-					<item name="6. Dissecting Paragraph Templates"
-						href="/qs/06_paragraphs_dissecting.html" />
-					<item name="7. First paragraph" href="/qs/07_firstparagraph.html" />
-					<item name="8. Where to go" href="/qs/08_wheretogo.html" />
-				</item>
-				<item name="Controls" href="/templating/controls.html" />
-				<item name="I18N" href="/templating/i18n.html" />
-			</item>
-			<item name="Configuration" href="/config/config.html">
-				<item name="Default Page and 404" href="/config/default_404.html" />
-				<item name="Cache" href="/config/cache.html" />
-				<item name="Activation - Subscribers" href="/config/subscribers.html" />
-				<item name="One war, multiple configs" href="/config/multiconfig.html" />
-			</item>
-			<!-- does not work yet 
-			<item name="Tag libraries" href="/taglib/intro.html" collapse="true">
-				<item name="Cms taglib" href="/tagreference-cms-taglib.html" />
-				<item name="Cms util taglib" href="/tagreference-cms-util-taglib.html" />
-			</item>
-			-->
-			<item name="Advanced Topics" href="/advanced/advanced.html" collapse="true">
-				<item name="Custom Dialogs" href="/advanced/customDialogs.html" />
-				<item name="Custom Controls" href="/advanced/customControls.html" />
-				<item name="Custom Modules" href="/advanced/modules.html" />
-				<item name="Customize Menu" href="/advanced/menu.html" />
-				<item name="I18N" href="/advanced/i18n.html" />
-			</item>
-			<item name="Glossary" href="/glossary/glossary.html" />
-		</menu>
-	</body>
+    <title>Magnolia</title>
+    <body>
+        <menu name="Documentation">
+            <item name="Introduction" href="index.html" />
+            <item name="Build and install" href="/install/intro.html" collapse="true">
+                <item name="Tomcat bundle" href="/install/install-bundle.html" />
+                <item name="War files" href="/install/install-wars.html" />
+                <item name="Nightly build or svn" href="/install/install-build.html" />
+                <item name="Upgrade" href="/install/upgrade.html" />
+                <item name="Building Magnolia" href="/install/build.html" />
+            </item>
+            <item name="Templating" href="/templating/templating.html">
+                <item name="Templating Quickstart" href="/qs/00_cover.html">
+                    <item name="1. Introduction" href="/qs/01_introduction.html" />
+                    <item name="2. Create a Page Template" href="/qs/02_template_advertising.html" />
+                    <item name="3. Building a Page Template" href="/qs/03_template_building.html" />
+                    <item name="4. Refining the Page Template" href="/qs/04_template_property.html" />
+                    <item name="5. Adding Paragraphs" href="/qs/05_paragraphs.html" />
+                    <item name="6. Dissecting Paragraph Templates" href="/qs/06_paragraphs_dissecting.html" />
+                    <item name="7. First paragraph" href="/qs/07_firstparagraph.html" />
+                    <item name="8. Where to go" href="/qs/08_wheretogo.html" />
+                </item>
+                <item name="Controls" href="/templating/controls.html" />
+                <item name="I18N" href="/templating/i18n.html" />
+            </item>
+            <item name="Configuration" href="/config/config.html">
+                <item name="Default Page and 404" href="/config/default_404.html" />
+                <item name="Cache" href="/config/cache.html" />
+                <item name="Activation - Subscribers" href="/config/subscribers.html" />
+                <item name="One war, multiple configs" href="/config/multiconfig.html" />
+            </item>
+            <item name="Tag libraries" href="/taglib/intro.html" collapse="true">
+                <item name="Cms taglib" href="/tagreference-cms-taglib.html" />
+                <item name="Cms util taglib" href="/tagreference-cms-util-taglib.html" />
+            </item>
+            <item name="Advanced Topics" href="/advanced/advanced.html" collapse="true">
+                <item name="Custom Dialogs" href="/advanced/customDialogs.html" />
+                <item name="Custom Controls" href="/advanced/customControls.html" />
+                <item name="Custom Modules" href="/advanced/modules.html" />
+                <item name="Customize Menu" href="/advanced/menu.html" />
+                <item name="I18N" href="/advanced/i18n.html" />
+            </item>
+            <menu name="Lists">
+                <item name="User List" href="/lists/user.html" />
+                <item name="Developer List" href="/lists/dev.html" />
+            </menu>
+            <menu name="Developers">
+                <item name="Coding conventions" href="/developer/coding_conventions.html" />
+                <item name="Eclipse" href="/developer/eclipseWTP.html" />
+            </menu>
+            <menu name="Contribute">
+                <item name="Contribute" href="/contribute/contribute.html" collapse="true">
+                    <item name="Spread the word" href="/contribute/words.html" />
+                    <item name="Write Code" href="/contribute/code.html" />
+                    <item name="Contribute License" href="/contribute/license.html" />
+                </item>
+            </menu>
+            <item name="Glossary" href="/glossary/glossary.html" />
+        </menu>
+    </body>
 </project>

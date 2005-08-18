@@ -1,40 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document>
-	<properties>
-		<title>Custom Modules</title>
-	</properties>
-	<body>
-		<section name="Custom Modules">
-			<subsection name="Implement info.magnolia.cms.module.Module">
-				Make an Implementation of the interface info.magnolia.cms.module.Module and
-				implement register() and init() methods.
-			</subsection>
-
-			<subsection name="Registration">
-				<p>We made a module register mechanism (attention there is no uninstall so far)</p>
-				p>
-				<p>
-					cms.module.ModuleFactory.init() walks through all jars in the lib directory (we
-					do not use a special directory, because we fear problems with ClassLoaders and
-					Containers).
-				</p>
-				<p>It checks the Manifest which should look like:</p>
-				<source>
-					<![CDATA[
+    <properties>
+        <title>Custom Modules</title>
+    </properties>
+    <body>
+        <section name="Custom Modules">
+            <subsection name="Implement info.magnolia.cms.module.Module">
+                Make an Implementation of the interface info.magnolia.cms.module.Module and implement register() and
+                init() methods.
+            </subsection>
+            <subsection name="Registration">
+                <p>We made a module register mechanism (attention there is no uninstall so far)</p>
+                <p>
+                    cms.module.ModuleFactory.init() walks through all jars in the lib directory (we do not use a special
+                    directory, because we fear problems with ClassLoaders and Containers).
+                </p>
+                <p>It checks the Manifest which should look like:</p>
+                <source>
+                    <![CDATA[
 Magnolia-Module-Name: dms
 Magnolia-Module-Version: 1.0M1
 Magnolia-Module-Class: com.obinary.magnolia.module.dms.DMSEngine
 ]]>
-				</source>
-				<p>
-					On the Module Interface implementing class it calls the method register(). At
-					any startup! So take care that you add you entries once. Use the registerState
-					to control this.
-				</p>
-				<p>Example:</p>
-
-				<source>
-					<![CDATA[
+                </source>
+                <p>
+                    On the Module Interface implementing class it calls the method register(). At any startup! So take
+                    care that you add you entries once. Use the registerState to control this.
+                </p>
+                <p>Example:</p>
+                <source>
+                    <![CDATA[
 public void register(String moduleName, String version, Content moduleNode, JarFile jar, int registerState) {
     try {
 
@@ -64,18 +59,16 @@ public void register(String moduleName, String version, Content moduleNode, JarF
     }
 }
     ]]>
-				</source>
-			</subsection>
-
-			<subsection name="ModuleUtil">
-				<p>
-					This util class helps implementing modules. You can create repository entries
-					based on properties-files and install files packaged in the jar (templates,
-					images, ..) .
-				</p>
-				<p>A sanppshot of such a perperty file:</p>
-				<source>
-					<![CDATA[
+                </source>
+            </subsection>
+            <subsection name="ModuleUtil">
+                <p>
+                    This util class helps implementing modules. You can create repository entries based on
+                    properties-files and install files packaged in the jar (templates, images, ..) .
+                </p>
+                <p>A sanppshot of such a perperty file:</p>
+                <source>
+                    <![CDATA[
 ######################
 # menu
 ######################
@@ -113,19 +106,17 @@ modules.templating.dialogs.dms.searchResult.tabQuery.query.label = Query String
 modules.templating.dialogs.dms.searchResult.tabQuery.query.controlType = edit
 modules.templating.dialogs.dms.searchResult.tabQuery.query.rows = 3
 ]]>
-				</source>
-				<p>see the JavaDoc for details</p>
-			</subsection>
-
-			<subsection name="Initialization">
-				<p>
-					The ModuleFactory calls the init method when the module should initialize. This
-					is done on startup. The module configuration is provided.
-				</p>
-
-				<p>Example:</p>
-				<source>
-					<![CDATA[
+                </source>
+                <p>see the JavaDoc for details</p>
+            </subsection>
+            <subsection name="Initialization">
+                <p>
+                    The ModuleFactory calls the init method when the module should initialize. This is done on startup.
+                    The module configuration is provided.
+                </p>
+                <p>Example:</p>
+                <source>
+                    <![CDATA[
 public void init(ModuleConfig config) {
     log.info("init dms");
     // set local store to be accessed via admin interface classes or JSP
@@ -146,10 +137,8 @@ public void init(ModuleConfig config) {
     loadRepository();
 }
 			]]>
-				</source>
-			</subsection>
-
-		</section>
-
-	</body>
+                </source>
+            </subsection>
+        </section>
+    </body>
 </document>

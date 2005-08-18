@@ -13,32 +13,33 @@
                 Servlets.
             </p>
         </section>
-        
         <section name="Introduction">
-			<p>A short summery of what you should read first.</p>
-			
-			<subsection name="Usermanual">
-				<p>To understand magnolia from the user side download the <a href="pdf/magnolia-user-manual.pdf">Usermanual</a>
-				first.</p>
-			</subsection>
-
-			<subsection name="Templating">
-			     <p>To see how a developer can write his templates jump to the<a href="qs/00_cover.html">Templater's Quickstart</a></p> 
-			</subsection>
-
-			<subsection name="Activation - Subscribers">
-	
-				<p>More detailed informations are given <a href="config/subscribers.html">here</a>
-				</p>
-			</subsection>
-
-			<subsection name="Wiki">
-				<p>
-					And last but not least the community documentation
-					<a href="http://wiki.magnolia.info" target="_blank">Wiki</a>
-				</p>
-			</subsection>
-
-		</section>
+            <p>A short summary of what you should read first.</p>
+            <subsection name="Usermanual">
+                <p>
+                    To understand magnolia from the user side download the
+                    <a href="pdf/magnolia-user-manual.pdf">Usermanual</a>
+                    first.
+                </p>
+            </subsection>
+            <subsection name="Templating">
+                <p>
+                    To see how a developer can write his templates jump to the
+                    <a href="qs/00_cover.html">Templater's Quickstart</a>
+                </p>
+            </subsection>
+            <subsection name="Activation - Subscribers">
+                <p>
+                    More detailed informations are given
+                    <a href="config/subscribers.html">here</a>
+                </p>
+            </subsection>
+            <subsection name="Wiki">
+                <p>
+                    And last but not least the community documentation
+                    <a href="http://wiki.magnolia.info" target="_blank">Wiki</a>
+                </p>
+            </subsection>
+        </section>
     </body>
 </document>

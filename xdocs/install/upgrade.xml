@@ -53,16 +53,18 @@ For both the author and public instance:
 - move the "repositories" directory from "magnolia.old" to "magnolia"
 - diff the new and the old magnolia to copy what you need (ignore the repository for that, you will want your existing one)
 
-When updating from an earlier installation, please note that taglib definitions in WEB.xml are no longer needed since jsp 1.1. The
-application server automatically scans jar files in WEB-INF/lib and
-extract all the tlds. To refer to a particular taglib you can simply use the URI exactly as it has been defined in the tld. 
+When updating from an earlier installation, please note that taglib definitions in WEB.xml are no longer needed since jsp 1.1.
+The application server automatically scans jar files in WEB-INF/lib and
+extract all the tlds. To refer to a particular taglib you can simply use the URI exactly as it has been defined in the tld.
 
-The magnolia samples before release 2.0.1 have used a "custom" URI for JSTL instead of the full one. If you have created custom templates by copying magnolia samples or following the quick start guide, you have probably used this URI. 
+The magnolia samples before release 2.0.1 have used a "custom" URI for JSTL instead of the full one.
+If you have created custom templates by copying magnolia samples or following the quick start guide, you have probably used this URI.
 
-Therefore, for people migrating from 2.0 to 2.0.1 you will need to use the correct JSTL URI in your custom templates OR add back the definition in web.xml (deprecated and not suggested).
+Therefore, for people migrating from 2.0 to 2.0.1 you will need to use the correct JSTL URI in your custom templates
+OR add back the definition in web.xml (deprecated and not suggested).
 
 
-The samples of 2.0.1 and have been fixed to contain the standard URI's. 
+The samples of 2.0.1 and have been fixed to contain the standard URI's.
 
 Have fun.
 Boris Kraft
@@ -107,15 +109,10 @@ the magnolia development team
 				</ul>
 				<source>
 					<![CDATA[
- &lt;taglib&gt;
-       &lt;taglib-uri&gt;
-          JSTL
-       &lt;/taglib-uri&gt;
-
-       &lt;taglib-location&gt;
-          /WEB-INF/taglib/c.tld
-       &lt;/taglib-location&gt;
-   &lt;/taglib&gt;
+<taglib>
+  <taglib-uri>JSTL</taglib-uri>
+  <taglib-location>/WEB-INF/taglib/c.tld</taglib-location>
+</taglib>
 ]]>
 				</source>
 

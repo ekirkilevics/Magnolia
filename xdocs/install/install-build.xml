@@ -68,7 +68,7 @@
                     different configuration for the public/admin instances or for development/production servers.
                     Magnolia 2.1 supports a simple way to swith between different configurations automatically, without
                     the need for addictionals build scripts. Look at the
-                    <a href="/config/multiconfig.html">one war, multiple configs</a>
+                    <a href="../config/multiconfig.html">one war, multiple configs</a>
                     topic.
                 </p>
             </subsection>

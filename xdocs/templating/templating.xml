@@ -6,7 +6,9 @@
     <body>
         <section name="Templating">
             <p>
-            To get informations about templates, paragraphs and dialgos please work through the <a href="../qs/00_cover.html">Templater's Quick Start.</a>
+                To get informations about templates, paragraphs and dialogs please walk through the
+                <a href="../qs/00_cover.html">Templater's Quick Start</a>
+                .
             </p>
         </section>
     </body>

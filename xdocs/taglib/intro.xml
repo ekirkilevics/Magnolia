@@ -3,5 +3,21 @@
     <properties>
         <title>Magnolia tag libraries</title>
     </properties>
-    <body></body>
+    <body>
+        <section name="Magnolia tag librarie">
+            <p>
+                Magnolia provides two jsp tag libraries which can be used to build templates:
+                <ul>
+                    <li>
+                        <a href="../tagreference-cms-taglib.html">CMS taglib</a>
+                        , which contains the core magnolia tags
+                    </li>
+                    <li>
+                        <a href="../tagreference-cms-util-taglib.html">CMS util taglib</a>
+                        , which contain some additional utility tags
+                    </li>
+                </ul>
+            </p>
+        </section>
+    </body>
 </document>

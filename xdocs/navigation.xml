@@ -10,15 +10,11 @@
         <menu name="Documentation">
             <item name="Home" href="index.html" />
             <item name="Build and install" href="/install/intro.html" collapse="true">
-                <item name="Tomcat bundle" href="/install/install-budle.html" />
+                <item name="Tomcat bundle" href="/install/install-bundle.html" />
                 <item name="War files" href="/install/install-wars.html" />
-                <item name="Plain new build" href="/install/install-build.html" />
+                <item name="Nightly build or svn" href="/install/install-build.html" />
                 <item name="Upgrade" href="/install/upgrade.html" />
                 <item name="Building Magnolia" href="/install/build.html" />
-                <!--
-                    <item name="JBoss" href="/install/jboss.html" />
-                    <item name="Apache" href="/install/apache.html" />
-                -->
             </item>
             <item name="Templating" href="/templating/templating.html" collapse="true">
                 <item name="Templating Quickstart" href="/qs/00_cover.html" collapse="true">
@@ -63,8 +59,8 @@
             <item name="Glossary" href="/glossary/glossary.html" />
         </menu>
         <menu name="Downloadable docs">
-            <item name="User Manual" href="/pdf/magnolia-user-manual.pdf" />
-            <item name="Templater's Quickstart" href="/pdf/magnolia-templaters-quickstart.pdf" />
+            <item name="User Manual (2.0)" href="/pdf/magnolia-user-manual.pdf" />
+            <item name="Templater's Quickstart (2.0)" href="/pdf/magnolia-templaters-quickstart.pdf" />
             <item name="Developer Documentation" href="/magnolia.pdf" />
         </menu>
         <menu name="Lists">
