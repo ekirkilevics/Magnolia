@@ -34,7 +34,7 @@
                     <li>
                         Add the repository (the url is
                         <code>http://svn.magnolia.info/svn/magnolia</code>
-                        code>)
+                        )
                     </li>
                     <li>
                         click with the right mouse button on the /trunk directory and select "checkout as a project".
