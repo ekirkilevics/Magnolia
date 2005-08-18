@@ -152,6 +152,8 @@ public class JCRAuthorizationModule implements LoginModule {
         Entity user = new Entity();
         String language = this.user.getNodeData("language").getString();
         user.addProperty(Entity.LANGUAGE, language);
+        String name = this.user.getTitle();
+        user.addProperty(Entity.NAME, name);
         // todo, set all basic magnolia user property
         this.subject.getPrincipals().add(user);
     }

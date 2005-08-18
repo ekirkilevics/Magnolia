@@ -183,8 +183,8 @@ public class ADSLoginModule extends AbstractLoginModule {
             return;
         }
         try {
-            for (NamingEnumeration enm = attributes.getAll(); enm.hasMore();) {
-                Attribute attribute = (Attribute)enm.next();
+            for (NamingEnumeration enum = attributes.getAll(); enum.hasMore();) {
+                Attribute attribute = (Attribute)enum.next();
                 for (NamingEnumeration e = attribute.getAll();e.hasMore();) {
                     this.attributeMap.setProperty(attribute.getID(), (String) e.next());
                 }
@@ -256,7 +256,7 @@ public class ADSLoginModule extends AbstractLoginModule {
     }
 
     /**
-     * set access control list from the user, roles and groups
+     * set role based access control list
      * */
     public void setACL() {
         HierarchyManager rolesHierarchy = ContentRepository.getHierarchyManager(ContentRepository.USER_ROLES);
