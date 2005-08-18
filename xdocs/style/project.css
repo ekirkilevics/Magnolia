@@ -20,8 +20,14 @@ a,a:hover,a:visited,a:active {
 
 /* main layout */
 #banner {
-	visibility: hidden;
-	position:absolute;
+	color: #FFA500;
+	border: none;
+	margin: 0 0 0 0;
+	background-color: #fff;
+	background-image: url(../images/magnolia-header.jpg);
+	background-position: right;
+	background-repeat: no-repeat;
+	height: 100px;
 }
 
 #organizationLogo {
@@ -30,6 +36,8 @@ a,a:hover,a:visited,a:active {
 
 #leftColumn {
 	background-color: transparent;
+	position: absolute;
+	top: 140px;
 	left: 20px;
 	width: 180px;
 	margin: 0px;
@@ -38,11 +46,16 @@ a,a:hover,a:visited,a:active {
 }
 
 #bodyColumn {
-	margin-left: 220px;
+	margin: 0 0 20px 220px;
+	background-color: #fff;
+	padding: 30px;
+	position: relative;
+	background-image: url(../images/magnolia-dotted.png);
+	background-repeat: repeat-y;
 }
 
 #footer div.xright {
-	/*color: #fff;*/
+	color: #fff;
 	margin-right: 10px;
 }
 
@@ -67,8 +80,9 @@ a,a:hover,a:visited,a:active {
 }
 
 #breadcrumbs {
-	visibility: hidden;
-	position:absolute;
+	background-color: #5A8E00;
+	border: none;
+	height: 15px;
 }
 
 #breadcrumbs a {
@@ -78,13 +92,14 @@ a,a:hover,a:visited,a:active {
 }
 
 h2 {
-	text-transform: capitalize;
-	color: #92b901 !important;
-	font-size: 15px !important;
 	border: none;
 	background-color: transparent;
 	padding-left: 0;
+	font-size: 13px;
 	font-weight: bold;
+	text-transform: capitalize;
+	color: #92b901 !important;
+	font-size: 17px !important;
 }
 
 h3 {
@@ -97,11 +112,11 @@ h3 {
 
 #navcolumn {
 	padding: 0;
+	overflow: hidden;
 }
 
 #navcolumn ul {
 	margin: 0px 0 3px 0;
-	/*background-image: url(../images/magnolia-dotted.png);*/
 	background-repeat: repeat-x;
 }
 
@@ -111,6 +126,11 @@ h3 {
 	background-repeat: repeat-x;
 	padding: 4px 0 3px 20px;
 	font-size: 11px !important;
+	margin-top: -1px;
+}
+
+#navcolumn ul {
+	margin-bottom: 8px;
 }
 
 #navcolumn li {
@@ -230,11 +250,19 @@ a.newWindow/* */{
     background-image: url(../images/magnolia_newwindow.png) !important;
 }
 table {
-  width: 68%;
+  width: 68%; /* fix for ie 5.x */
 }
 i {content: "\"/*" }
 table {
   width: 100%;
 }
 
+/* remove banner: comment the following lines for the full layout */
+
+#banner, #breadcrumbs {
+	display: none !important;
+}
+#leftColumn {
+	position: relative;
+	top: 0;
 }
