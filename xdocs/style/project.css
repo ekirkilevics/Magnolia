@@ -170,9 +170,13 @@ h3 {
 }
 
 #navcolumn a#poweredBy img {
-	margin: 0 0 0 20px;
+	margin: 0 0 15px 20px;
 	width: 90px;
 	height: 30px;
+}
+#navcolumn #lastPublished {
+    color: #999;
+	margin: 0 0 0 20px;
 }
 
 #navcolumn a:hover {
@@ -263,7 +267,6 @@ table {
 }
 
 /* remove banner: comment the following lines for the full layout */
-
 #banner, #breadcrumbs {
 	display: none !important;
 }
