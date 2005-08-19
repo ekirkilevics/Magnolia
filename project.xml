@@ -311,7 +311,7 @@
         <dependency>
             <groupId>jackrabbit</groupId>
             <artifactId>jackrabbit-api</artifactId>
-            <version>1.0-20050818</version>
+            <version>1.0-20050819.084116</version>
             <type>jar</type>
             <url>http://incubator.apache.org/jackrabbit</url>
             <properties>
@@ -321,7 +321,7 @@
         <dependency>
             <groupId>jackrabbit</groupId>
             <artifactId>jackrabbit-commons</artifactId>
-            <version>1.0-20050818</version>
+            <version>1.0-20050819.084806</version>
             <type>jar</type>
             <url>http://incubator.apache.org/jackrabbit</url>
             <properties>
@@ -331,7 +331,7 @@
         <dependency>
             <groupId>jackrabbit</groupId>
             <artifactId>jackrabbit-core</artifactId>
-            <version>1.0-20050818</version>
+            <version>1.0-20050819.085543</version>
             <type>jar</type>
             <url>http://incubator.apache.org/jackrabbit</url>
             <properties>
