@@ -67,7 +67,7 @@ ${license.ProviderAddress}
 
 
     <div class="framediv"><iframe
-        src="http://www.magnolia.info/en/admincentral/aboutmagnolia.html?magnoliaVersion=${license.VersionNumber}&amp;amp;magnoliaBuild=${license.ImplementationVersion}&amp;amp;serverOS=${license.OSName}&amp;amp;isAdmin=${isadmin}">
+        src="http://www.magnolia.info/en/magnolia/admincentral/aboutmagnolia.html?magnoliaVersion=${license.VersionNumber}&amp;amp;magnoliaBuild=${license.ImplementationVersion}&amp;amp;serverOS=${license.OSName}&amp;amp;isAdmin=${isadmin}">
     </iframe></div>
 
     </body>
