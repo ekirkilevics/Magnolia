@@ -15,7 +15,7 @@ package info.magnolia.module.admininterface;
 /**
  * Runtime Exception thrown when a tree handler can't be instantiated.
  * @author Fabrizio Giustina
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class InvalidTreeHandlerException extends RuntimeException {
 

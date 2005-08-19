@@ -6,7 +6,7 @@ import java.io.File;
 /**
  * Utility methods that can be used in JUnit test cases.
  * @author fgiust
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public final class MagnoliaTestUtils {
 

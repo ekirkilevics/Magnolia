@@ -17,7 +17,7 @@ import junit.framework.TestCase;
 
 /**
  * @author Fabrizio Giustina
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class SaveTest extends TestCase {
 

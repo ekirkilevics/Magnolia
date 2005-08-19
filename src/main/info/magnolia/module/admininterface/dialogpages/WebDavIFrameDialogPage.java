@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Fabrizio Giustina
- * @version $Id: $
+ * @version $Id$
  */
 public class WebDavIFrameDialogPage extends DialogPageMVCHandler {
 

@@ -35,7 +35,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * Handles the tree rendering for the "config" repository.
  * @author Fabrizio Giustina
- * @version $Id: AdminTreeConfig.java 685 2005-05-04 19:23:59Z philipp $
+ * @version $Id$
  */
 public class AdminTreeConfig extends AdminTreeMVCHandler {
 

@@ -18,7 +18,7 @@ import java.io.Serializable;
 /**
  * Pattern interface, used to match URLs.
  * @author Fabrizio Giustina
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public interface UrlPattern extends Serializable {
 

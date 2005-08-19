@@ -32,7 +32,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * Handles the tree rendering for the "roles" repository.
  * @author Fabrizio Giustina
- * @version $Id: AdminTreeRoles.java 685 2005-05-04 19:23:59Z philipp $
+ * @version $Id$
  */
 public class AdminTreeRoles extends AdminTreeMVCHandler {
 

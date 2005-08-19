@@ -36,7 +36,7 @@ import org.apache.log4j.xml.DOMConfigurator;
  * <em>Some ideas and snippets borrowed from the more complex Spring implementation http://www.springframework.org</em>
  * </p>
  * @author Fabrizio Giustina
- * @version $Id: $
+ * @version $Id$
  */
 public abstract class Log4jConfigurer {
 

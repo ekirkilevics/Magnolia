@@ -40,7 +40,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
 /**
  * Bootstrapper: loads content from xml when a magnolia is started with an uninitialized repository.
  * @author Fabrizio Giustina
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public final class Bootstrapper {
 

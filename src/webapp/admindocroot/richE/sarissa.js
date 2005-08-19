@@ -8,7 +8,7 @@
  *
  *****************************************************************************/
 
-// $Id: sarissa.js,v 1.1 2004/04/27 15:32:27 enz Exp $
+// $Id$
 
 // some basic browser detection
 var _SARISSA_IS_IE = (navigator.userAgent.toLowerCase().indexOf("msie") > -1)?true:false;

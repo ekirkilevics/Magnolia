@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Main admin interface servlet. Generates the content for the main admincentral iframe.
  * @author Fabrizio Giustina
- * @version $Id: AdminInterfaceServlet.java 661 2005-05-03 14:10:45Z philipp $
+ * @version $Id$
  */
 public class AdminTreeMVCServlet extends MVCServlet {
 

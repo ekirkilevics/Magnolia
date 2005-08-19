@@ -19,7 +19,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Fabrizio Giustina
- * @version $Id: $
+ * @version $Id$
  */
 public class LinkBrowserDialogPage extends DialogPageMVCHandler {
 

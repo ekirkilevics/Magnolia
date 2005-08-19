@@ -73,7 +73,7 @@ import org.apache.log4j.Logger;
  * @author Yoav Shapira yoavs@apache.org
  * @author Fabrizio Giustina
  * @since 1.3
- * @version $Revision: 1.2 $ ($Author: root $)
+ * @version $Revision$ ($Author$)
  */
 public class Log4jConfigurationServlet extends HttpServlet {
 

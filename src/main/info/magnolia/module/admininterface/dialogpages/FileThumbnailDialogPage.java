@@ -26,7 +26,7 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
 /**
  * @author Fabrizio Giustina
- * @version $Id: $
+ * @version $Id$
  */
 public class FileThumbnailDialogPage extends HttpServlet {
 

@@ -65,7 +65,7 @@ import org.apache.log4j.Logger;
  * </pre>
  *
  * @author Fabrizio Giustina
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class SimpleNavigationTag extends TagSupport {
 

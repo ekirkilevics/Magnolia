@@ -3,7 +3,7 @@ package info.magnolia.cms.gui.misc;
 /**
  * Constants for css class names used by Magnolia.
  * @author Fabrizio Giustina
- * @version $Id: $
+ * @version $Id$
  */
 public final class CssConstants {
 

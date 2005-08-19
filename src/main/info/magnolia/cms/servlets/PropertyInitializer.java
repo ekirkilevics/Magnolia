@@ -102,7 +102,7 @@ import org.apache.log4j.Logger;
  * no other environment-specific directory has been added.
  * </p>
  * @author Fabrizio Giustina
- * @version $Id: PropertyInitializer.java 1110 2005-07-06 15:30:44Z fgiust $
+ * @version $Id$
  */
 public class PropertyInitializer implements ServletContextListener {
 

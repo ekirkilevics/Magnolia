@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
 /**
  * Default implementation of a MVCHandler. Calls the command through reflection.
  * @author Philipp Bracher
- * @version $Id: AdminInterfaceServlet.java 661 2005-05-03 14:10:45Z philipp $
+ * @version $Id$
  */
 public abstract class MVCServletHandlerImpl implements MVCServletHandler {
 

@@ -6,7 +6,7 @@ import junit.framework.TestCase;
 /**
  * Tests for info.magnolia.cms.util.SimpleUrlPattern
  * @author Fabrizio Giustina
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class SimpleUrlPatternTest extends TestCase {
 

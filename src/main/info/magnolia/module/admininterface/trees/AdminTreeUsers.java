@@ -32,7 +32,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * Handles the tree rendering for the "users" repository.
  * @author Fabrizio Giustina
- * @version $Id: AdminTreeUsers.java 685 2005-05-04 19:23:59Z philipp $
+ * @version $Id$
  */
 public class AdminTreeUsers extends AdminTreeMVCHandler {
 

@@ -21,7 +21,7 @@ import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
 /**
  * @author Sameer Charles
  * @author Fabrizio Giustina
- * @version $Revision: 364 $ ($Author: fgiust $)
+ * @version $Revision$ ($Author$)
  */
 public class PublicOnly extends ConditionalTagSupport {
 

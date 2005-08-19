@@ -24,7 +24,7 @@ import com.mockrunner.mock.web.MockServletContext;
 
 /**
  * @author fgiust
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class BootstrapTest extends TestCase {
 

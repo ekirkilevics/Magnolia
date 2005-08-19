@@ -35,7 +35,7 @@
 #   CATALINA_PID    (Optional) Path of the file which should contains the pid
 #                   of catalina startup java process, when start (fork) is used
 #
-# $Id: catalina.sh,v 1.13.2.1 2004/08/21 15:49:49 yoavs Exp $
+# $Id$
 # -----------------------------------------------------------------------------
 
 # OS specific support.  $var _must_ be set to either true or false.

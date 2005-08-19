@@ -34,7 +34,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Fabrizio Giustina
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class SearchResultSnippetTag extends TagSupport {
 

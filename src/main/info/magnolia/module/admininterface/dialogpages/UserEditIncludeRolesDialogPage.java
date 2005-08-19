@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Fabrizio Giustina
- * @version $Id: $
+ * @version $Id$
  */
 public class UserEditIncludeRolesDialogPage extends DialogPageMVCHandler {
 

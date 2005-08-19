@@ -45,7 +45,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
 /**
  * Simple servlet used to import/export data from jcr using the standard jcr import/export features.
  * @author Fabrizio Giustina
- * @version $Id: $
+ * @version $Id$
  */
 public class ImportExportServlet extends HttpServlet {
 
