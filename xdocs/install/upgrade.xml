@@ -5,15 +5,24 @@
 	</properties>
 	<body>
 		<section name="Upgrade">
+			<subsection name="From 2.1RC1 or above to 2.1">
+				<p>
+					Follow the same procedure as described in the section 'From 2.03 to 2.1'. As an
+					alternative you can use the import export feature available since 2.1-RC1.
+				</p>
+			</subsection>
+
 			<subsection name="From 2.03 to 2.1">
 				<p>
 					Be shure that you upgraded your 2.0 installation to 2.03 before you try to
 					migrate.
 					<b>Do not copy repositories!</b>
-					Repositories changed since JCR was not final when we made the 2.0 release and Jackrabbit is not yet final
-					too. <br/>
-					The main steps are: install 2.1, boostrap 2.1, activate old content
-					from the 2.0.3 instance to the new 2.1 instance. The old and the new istance must use different ports. You can change it in the server.xml of the tomcat installation!
+					Repositories changed since JCR was not final when we made the 2.0 release and
+					Jackrabbit is not yet final too.
+					<br />
+					The main steps are: install 2.1, boostrap 2.1, activate old content from the
+					2.0.3 instance to the new 2.1 instance. The old and the new istance must use
+					different ports. You can change it in the server.xml of the tomcat installation!
 					<ol>
 						<li>Install 2.1</li>
 						<li>Start it up. The initialization is done during bootstraping.</li>
