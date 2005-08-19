@@ -1,14 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document>
-    <properties>
-        <title>TODO for 2.1 release</title>
-    </properties>
-    <body>
-        <section name="TODO for 2.1 release">
-            <p>
-            </p>
-            
-        </section>
+	<properties>
+		<title>Public instance</title>
+	</properties>
+	<body>
+		<section name="Public instance">
+			<subsection name="Set admin mode to false">
+				<p>
+					You must set the value of
+					<code>/server/admin</code>
+					to false
+				</p>
+			</subsection>
 
-    </body>
+			<subsection name="Unsecure the content">
+				<p>
+					You must set the value of
+					<code>/server/secureURIList/0001/URI</code>
+					to <code>/.magnolia/*</code>
+					<br />
+					Afterward only the AdminCentra is secured. One can secure content again with addinf other URLS to the config.
+				</p>
+			</subsection>
+
+			<subsection name="Activate cache">
+				<p>
+					You must set the value of
+					<code>/server/cache/level1/active</code>
+					to <code>true</code>
+				</p>
+			</subsection>
+		</section>
+	</body>
 </document>
