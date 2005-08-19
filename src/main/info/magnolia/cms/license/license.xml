@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE License [
     <!ELEMENT License (Meta+)>
     <!ELEMENT Meta (VersionNumber,
@@ -15,18 +15,22 @@
     <!ELEMENT ProviderEmail (#PCDATA)>
     <!ELEMENT ProductDomain (#PCDATA)>
     <!ELEMENT VersionPageHandle (#PCDATA)>]>
-
-
-
 <License>
     <Meta>
         <VersionNumber>${magnolia.version}</VersionNumber>
-        <BuildNumber>${magnolia.revision}</BuildNumber>
+        <BuildNumber>$Rev $</BuildNumber>
         <Provider>obinary ltd</Provider>
-        <ProviderAddress>magnolia organization llc&lt;br/&gt;Binningerstrasse 15 &lt;br/&gt;4051 Basel &lt;br/&gt;Tel +41 61 228 9000&lt;br/&gt;Switzerland</ProviderAddress>
+        <ProviderAddress>
+            <![CDATA[
+Magnolia organization llc
+Binningerstrasse 15
+4051 Basel
+Tel +41 61 228 9000
+Switzerland
+]]>
+        </ProviderAddress>
         <ProviderEmail>info@magnolia.info</ProviderEmail>
         <ProductDomain>www.magnolia.info</ProductDomain>
         <VersionPageHandle>/redirects/version2-1.html</VersionPageHandle>
     </Meta>
-    
 </License>

@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -33,6 +34,11 @@ import org.jdom.input.SAXBuilder;
 public final class LicenseFileExtractor {
 
     public static final String VERSION_NUMBER = "VersionNumber"; //$NON-NLS-1$
+
+    /**
+     * Same as VERSION_NUMBER, but read from the manifest.
+     */
+    public static final String IMPLEMENTATION_VERSION = "ImplementationVersion"; //$NON-NLS-1$
 
     public static final String BUILD_NUMBER = "BuildNumber"; //$NON-NLS-1$
 
@@ -111,6 +117,19 @@ public final class LicenseFileExtractor {
     }
 
     /**
+     * Returns the current magnolia version, read from the jar Manifest. This will return null if classes are not inside
+     * a jar.
+     * @return implementation version, read from the manifest file.
+     */
+    public String getVersionFromManifest() {
+        Package p = this.getClass().getPackage();
+        if (p != null) {
+            return StringUtils.defaultString(p.getImplementationVersion());
+        }
+        return StringUtils.EMPTY;
+    }
+
+    /**
      * load meta element
      */
     private void load(Document document) {
@@ -127,5 +146,8 @@ public final class LicenseFileExtractor {
 
         String osName = System.getProperty("os.name"); //$NON-NLS-1$
         values.put(OS_NAME, osName.replaceAll(" ", "-")); //$NON-NLS-1$ //$NON-NLS-2$
+
+        values.put(IMPLEMENTATION_VERSION, getVersionFromManifest());
+
     }
 }
