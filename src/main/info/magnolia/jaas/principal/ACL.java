@@ -12,30 +12,30 @@
  */
 package info.magnolia.jaas.principal;
 
+import java.io.Serializable;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 
-import java.security.Principal;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.io.Serializable;
 
 /**
  * This class represents access control list as a principal
- *
- * Date: May 31, 2005
- * Time: 2:31:36 PM
- *
- * @author Sameer Charles
- * $Id :$
+ * @author Sameer Charles $Id :$
  */
 public class ACL implements Principal, Serializable {
+
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
 
     private static final String NAME = "acl";
 
     /**
      * properties
-     * */
+     */
     private String name;
 
     private List list;
@@ -46,7 +46,7 @@ public class ACL implements Principal, Serializable {
 
     /**
      * Constructor
-     * */
+     */
     public ACL() {
         this.list = new ArrayList();
     }
@@ -54,7 +54,7 @@ public class ACL implements Principal, Serializable {
     /**
      * Get name given to this principal
      * @return name
-     * */
+     */
     public String getName() {
         if (StringUtils.isEmpty(this.name)) {
             return NAME;
@@ -64,7 +64,7 @@ public class ACL implements Principal, Serializable {
 
     /**
      * Set this principal name
-     * */
+     */
     public void setName(String name) {
         this.name = name;
     }
@@ -72,7 +72,7 @@ public class ACL implements Principal, Serializable {
     /**
      * Get repository ID for which this ACL has been constructed
      * @return repository ID
-     * */
+     */
     public String getRepository() {
         return repository;
     }
@@ -80,7 +80,7 @@ public class ACL implements Principal, Serializable {
     /**
      * Set repository ID for which this ACL will be constructed
      * @param repository
-     * */
+     */
     public void setRepository(String repository) {
         this.repository = repository;
     }
@@ -88,7 +88,7 @@ public class ACL implements Principal, Serializable {
     /**
      * Get workspace ID for which this ACL has been contructed
      * @return workspace ID
-     * */
+     */
     public String getWorkspace() {
         return workspace;
     }
@@ -96,7 +96,7 @@ public class ACL implements Principal, Serializable {
     /**
      * Set workspace ID for which this ACL will be constructed
      * @param workspace
-     * */
+     */
     public void setWorkspace(String workspace) {
         this.workspace = workspace;
     }
@@ -104,16 +104,15 @@ public class ACL implements Principal, Serializable {
     /**
      * add permission in to an existing list
      * @param permission
-     * */
+     */
     public void addPermission(Object permission) {
         this.list.add(permission);
     }
 
     /**
-     * Initialize access control list with provided permissions
-     * it will overwrite any existing permissions set before.
+     * Initialize access control list with provided permissions it will overwrite any existing permissions set before.
      * @param list
-     * */
+     */
     public void setList(List list) {
         this.list.clear();
         this.list.addAll(list);
@@ -121,7 +120,7 @@ public class ACL implements Principal, Serializable {
 
     /**
      * Returns list of permissions for this principal
-     * */
+     */
     public List getList() {
         return this.list;
     }

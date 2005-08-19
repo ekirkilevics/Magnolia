@@ -95,7 +95,7 @@ public class AdminTreeConfig extends AdminTreeMVCHandler {
         column4.setDateFormat("yy-MM-dd, HH:mm"); //$NON-NLS-1$
         column4.setWidth(2);
         column4.setTitle(msgs.get("tree.config.date")); //$NON-NLS-1$
-        
+
         tree.addColumn(column0);
 
         if (!this.isBrowseMode()) {
@@ -111,7 +111,6 @@ public class AdminTreeConfig extends AdminTreeMVCHandler {
     /**
      * @param tree
      * @param request
-     * @param msgs
      */
     protected void prepareContextMenu(Tree tree, HttpServletRequest request) {
         Messages msgs = MessagesManager.getMessages(request);

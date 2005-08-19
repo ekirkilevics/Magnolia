@@ -150,7 +150,7 @@ public class Store {
     /**
      * Register only if not yet an other handler is present
      * @param name
-     * @param class
+     * @param dialogHandler
      */
     public void registerDefaultTreeHandler(String name, Class dialogHandler) {
         if (!this.treeHandlers.containsKey(name)) {
@@ -169,8 +169,7 @@ public class Store {
 
     /**
      * register the dialogs from the config
-     * @param store
-     * @param path
+     * @param defNode
      */
     public void registerDialogHandlers(Content defNode) {
         // read the dialog configuration
@@ -201,8 +200,7 @@ public class Store {
 
     /**
      * register the pages from the config
-     * @param store
-     * @param path
+     * @param defNode
      */
     public void registerDialogPageHandlers(Content defNode) {
         // read the dialog configuration

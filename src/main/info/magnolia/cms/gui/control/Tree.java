@@ -479,10 +479,10 @@ public class Tree extends ControlSuper {
                 }
                 // todo: share with Contorol.Save
                 switch (type) {
-                    case PropertyType.STRING :
+                    case PropertyType.STRING:
                         node.setValue(value);
                         break;
-                    case PropertyType.BOOLEAN :
+                    case PropertyType.BOOLEAN:
                         if (value.equals("true")) { //$NON-NLS-1$
                             node.setValue(true);
                         }
@@ -490,7 +490,7 @@ public class Tree extends ControlSuper {
                             node.setValue(false);
                         }
                         break;
-                    case PropertyType.DOUBLE :
+                    case PropertyType.DOUBLE:
                         try {
                             node.setValue(Double.valueOf(value).doubleValue());
                         }
@@ -498,7 +498,7 @@ public class Tree extends ControlSuper {
                             node.setValue(0);
                         }
                         break;
-                    case PropertyType.LONG :
+                    case PropertyType.LONG:
                         try {
                             node.setValue(Long.valueOf(value).longValue());
                         }
@@ -506,7 +506,7 @@ public class Tree extends ControlSuper {
                             node.setValue(0);
                         }
                         break;
-                    case PropertyType.DATE :
+                    case PropertyType.DATE:
                         // todo
                         break;
                 }
@@ -539,10 +539,10 @@ public class Tree extends ControlSuper {
             NodeData node = page.createNodeData(nodeDataName);
             if (value != null) {
                 switch (type) {
-                    case PropertyType.STRING :
+                    case PropertyType.STRING:
                         node.setValue(value.getString());
                         break;
-                    case PropertyType.BOOLEAN :
+                    case PropertyType.BOOLEAN:
                         if (value != null && value.getBoolean()) {
                             node.setValue(true);
                         }
@@ -550,7 +550,7 @@ public class Tree extends ControlSuper {
                             node.setValue(false);
                         }
                         break;
-                    case PropertyType.DOUBLE :
+                    case PropertyType.DOUBLE:
                         try {
                             node.setValue(value.getDouble());
                         }
@@ -558,7 +558,7 @@ public class Tree extends ControlSuper {
                             node.setValue(0);
                         }
                         break;
-                    case PropertyType.LONG :
+                    case PropertyType.LONG:
                         try {
                             node.setValue(value.getLong());
                         }
@@ -566,7 +566,7 @@ public class Tree extends ControlSuper {
                             node.setValue(0);
                         }
                         break;
-                    case PropertyType.DATE :
+                    case PropertyType.DATE:
                         // todo
                         break;
                 }
@@ -1427,7 +1427,7 @@ public class Tree extends ControlSuper {
     }
 
     /**
-     * @param menuNewFolder
+     * @param item ContextMenuItem
      */
     public void addMenuItem(ContextMenuItem item) {
         menu.addMenuItem(item);

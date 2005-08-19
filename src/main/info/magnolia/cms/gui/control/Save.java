@@ -573,8 +573,8 @@ public class Save extends ControlSuper {
         // encode the internal links to avoid dependences from the contextpath, position of the page
         String valueStr = LinkUtil.convertAbsoluteLinksToUUIDs(value);
         switch (isRichEditValue) {
-            case ControlSuper.RICHEDIT_KUPU :
-            case ControlSuper.RICHEDIT_FCK :
+            case ControlSuper.RICHEDIT_KUPU:
+            case ControlSuper.RICHEDIT_FCK:
                 valueStr = StringUtils.replace(valueStr, "\r\n", " "); //$NON-NLS-1$ //$NON-NLS-2$
                 valueStr = StringUtils.replace(valueStr, "\n", " "); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -593,7 +593,7 @@ public class Save extends ControlSuper {
                 // replace <a class="...></a> by <span class=""></span>
                 // valueStr = replaceABySpan(valueStr, "a");
                 break;
-            default :
+            default:
                 break;
         }
         return valueStr;
@@ -603,7 +603,6 @@ public class Save extends ControlSuper {
     /**
      * @param value
      * @param tagName
-     * @return
      */
     protected static String replacePByBr(final String value, String tagName) {
 

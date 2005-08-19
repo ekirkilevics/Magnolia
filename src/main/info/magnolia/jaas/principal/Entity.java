@@ -12,27 +12,29 @@
  */
 package info.magnolia.jaas.principal;
 
+import java.io.Serializable;
+import java.security.Principal;
+import java.util.Hashtable;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 
-import java.security.Principal;
-import java.io.Serializable;
-import java.util.Map;
-import java.util.Hashtable;
 
 /**
- * Date: May 31, 2005
- * Time: 2:02:56 PM
- *
- * @author Sameer Charles
- * $Id :$
+ * @author Sameer Charles $Id :$
  */
 public class Entity implements Principal, Serializable {
+
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
 
     private static final String DEFAULT_NAME = "person";
 
     /**
      * default properties
-     * */
+     */
     public static final String FULL_NAME = "fullName";
 
     public static final String NAME = "name";
@@ -47,7 +49,7 @@ public class Entity implements Principal, Serializable {
 
     /**
      * properties
-     * */
+     */
     private String name;
 
     private Map properties;
@@ -59,7 +61,7 @@ public class Entity implements Principal, Serializable {
     /**
      * Get name given to this principal
      * @return name
-     * */
+     */
     public String getName() {
         if (StringUtils.isEmpty(this.name)) {
             return DEFAULT_NAME;

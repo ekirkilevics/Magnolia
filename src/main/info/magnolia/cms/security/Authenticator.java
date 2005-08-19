@@ -25,7 +25,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
-
 /**
  * @author Sameer Charles
  * @version 2.0
@@ -54,7 +53,7 @@ public final class Authenticator {
 
     /**
      * session attribute holding authenticated JAAS subject
-     * */
+     */
     static final String ATTRIBUTE_JAAS_SUBJECT = "mgnlJAASSubject";
 
     /**
@@ -80,27 +79,32 @@ public final class Authenticator {
         // first check if user has been authenticated by some other service or container itself
         if (req.getUserPrincipal() == null) {
             // JAAS authentication
-            CredentialsCallbackHandler callbackHandler = new CredentialsCallbackHandler(getUserId(req),getPassword(req));
+            CredentialsCallbackHandler callbackHandler = new CredentialsCallbackHandler(
+                getUserId(req),
+                getPassword(req));
             try {
-                LoginContext loginContext = new LoginContext("magnolia",callbackHandler);
+                LoginContext loginContext = new LoginContext("magnolia", callbackHandler);
                 loginContext.login();
                 Subject subject = loginContext.getSubject();
                 req.getSession().setAttribute(ATTRIBUTE_JAAS_SUBJECT, subject);
-            } catch (LoginException le) {
+            }
+            catch (LoginException le) {
                 log.debug(le);
                 req.getSession().invalidate();
                 return false;
             }
-        } else {
+        }
+        else {
             // user already authenticated via JAAS, try to load roles for it
             String userName = req.getUserPrincipal().getName();
-            CredentialsCallbackHandler callbackHandler = new CredentialsCallbackHandler(userName,getPassword(req));
+            CredentialsCallbackHandler callbackHandler = new CredentialsCallbackHandler(userName, getPassword(req));
             try {
-                LoginContext loginContext = new LoginContext("magnolia_authorization",callbackHandler);
+                LoginContext loginContext = new LoginContext("magnolia_authorization", callbackHandler);
                 loginContext.login();
                 Subject subject = loginContext.getSubject();
                 req.getSession().setAttribute(ATTRIBUTE_JAAS_SUBJECT, subject);
-            } catch (LoginException le) {
+            }
+            catch (LoginException le) {
                 log.debug(le);
                 req.getSession().invalidate();
                 return false;
@@ -113,12 +117,12 @@ public final class Authenticator {
     /**
      * add user properties needed for jstl and user entity object to the session
      * @param request
-     * */
+     */
     private static void updateSession(HttpServletRequest request) {
         Subject subject = Authenticator.getSubject(request);
         User user = new User(subject);
         request.getSession().setAttribute(ATTRIBUTE_USER, user);
-        String lang = (String) user.getLanguage();
+        String lang = user.getLanguage();
         if (StringUtils.isEmpty(lang)) {
             lang = MessagesManager.getDefaultLocale().getLanguage();
         }
@@ -206,7 +210,7 @@ public final class Authenticator {
      * Get JAAS authenticated subject
      * @param request
      * @return Authenticated JAAS subject
-     * */
+     */
     public static Subject getSubject(HttpServletRequest request) {
         return (Subject) request.getSession().getAttribute(ATTRIBUTE_JAAS_SUBJECT);
     }

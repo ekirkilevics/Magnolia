@@ -151,7 +151,6 @@ public class DialogFile extends DialogBox {
     }
 
     /**
-     * @return
      */
     protected File getFileControl() {
         File control = new File(this.getName(), this.getWebsiteNode());

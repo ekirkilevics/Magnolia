@@ -12,13 +12,11 @@
  */
 package info.magnolia.cms.security;
 
-import info.magnolia.cms.core.Content;
 import info.magnolia.jaas.principal.Entity;
 
 import java.util.Iterator;
 import java.util.Set;
 
-import javax.jcr.RepositoryException;
 import javax.security.auth.Subject;
 
 
@@ -32,7 +30,7 @@ public class User {
 
     /**
      * user properties
-     * */
+     */
     private Entity userDetails;
 
     /**
@@ -56,7 +54,7 @@ public class User {
     /**
      * get user language
      * @return language string
-     * */
+     */
     public String getLanguage() {
         return (String) this.userDetails.getProperty(Entity.LANGUAGE); //$NON-NLS-1$
     }
@@ -64,7 +62,7 @@ public class User {
     /**
      * get user name
      * @return name string
-     * */
+     */
     public String getName() {
         return (String) this.userDetails.getProperty(Entity.NAME); //$NON-NLS-1$
     }

@@ -109,7 +109,6 @@ public final class Cache {
      * @param lastModified last modification time (ms from 1970)
      * @param size original size
      * @param compressedSize compressed size
-     * @param lastModified
      */
     public static void addToCachedURIList(String uri, long lastModified, int size, int compressedSize) {
         Cache cacheMap = new Cache();

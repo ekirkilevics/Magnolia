@@ -318,7 +318,6 @@ public class Content extends ContentHandler implements Cloneable {
     /**
      * @param name
      * @param create
-     * @return
      */
     public NodeData getNodeData(String name, boolean create) {
         try {
@@ -651,7 +650,6 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * @param name
-     * @return
      * @throws RepositoryException if an error occurs
      */
     public boolean hasContent(String name) throws RepositoryException {
@@ -660,7 +658,6 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * @param name
-     * @return
      * @throws RepositoryException if an error occurs
      */
     public boolean hasNodeData(String name) throws RepositoryException {

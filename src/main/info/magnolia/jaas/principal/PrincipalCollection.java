@@ -8,18 +8,23 @@ import java.util.Iterator;
 import java.security.Principal;
 import java.io.Serializable;
 
+
 /**
  * Date: Jun 29, 2005
- * @author Sameer Charles
- * $Id :$
+ * @author Sameer Charles $Id :$
  */
-public class PrincipalCollection implements Principal, Serializable  {
+public class PrincipalCollection implements Principal, Serializable {
+
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
 
     private static final String NAME = "PrincipalCollection";
 
     /**
      * collection on principal objects
-     * */
+     */
     private Collection collection = new ArrayList();
 
     private String name;
@@ -27,7 +32,7 @@ public class PrincipalCollection implements Principal, Serializable  {
     /**
      * Get name given to this principal
      * @return name
-     * */
+     */
     public String getName() {
         if (StringUtils.isEmpty(this.name)) {
             return NAME;
@@ -37,7 +42,7 @@ public class PrincipalCollection implements Principal, Serializable  {
 
     /**
      * Set this principal name
-     * */
+     */
     public void setName(String name) {
         this.name = name;
     }
@@ -45,7 +50,7 @@ public class PrincipalCollection implements Principal, Serializable  {
     /**
      * Set collection
      * @param collection
-     * */
+     */
     public void set(Collection collection) {
         this.collection = collection;
     }
@@ -53,7 +58,7 @@ public class PrincipalCollection implements Principal, Serializable  {
     /**
      * Add to collection
      * @param principal to be added to the collection
-     * */
+     */
     public void add(Principal principal) {
         this.collection.add(principal);
     }
@@ -61,14 +66,14 @@ public class PrincipalCollection implements Principal, Serializable  {
     /**
      * Remove from the collection
      * @param principal to be removed from the collection
-     * */
+     */
     public void remove(Principal principal) {
         this.collection.remove(principal);
     }
 
     /**
      * Clear collection
-     * */
+     */
     public void clearAll() {
         this.collection.clear();
     }
@@ -77,7 +82,7 @@ public class PrincipalCollection implements Principal, Serializable  {
      * Check if this collection contains specified object
      * @param principal
      * @return true if the specified object exist in the collection
-     * */
+     */
     public boolean contains(Principal principal) {
         return this.collection.contains(principal);
     }
@@ -86,7 +91,7 @@ public class PrincipalCollection implements Principal, Serializable  {
      * Checks if this collection contains object with the specified name
      * @param name
      * @return true if the collection contains the principal by the specified name
-     * */
+     */
     public boolean contains(String name) {
         if (this.get(name) == null) {
             return false;
@@ -98,7 +103,7 @@ public class PrincipalCollection implements Principal, Serializable  {
      * Get principal associated to the specified name from the collection
      * @param name
      * @return principal object associated to the specified name
-     * */
+     */
     public Principal get(String name) {
         Iterator principalIterator = this.collection.iterator();
         while (principalIterator.hasNext()) {

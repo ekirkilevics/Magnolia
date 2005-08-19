@@ -74,7 +74,6 @@ public final class Paragraph {
 
     /**
      * Adds paragraph definition to ParagraphInfo cache.
-     * @param paragraphs iterator as read from the repository
      */
     public static Paragraph addParagraphToCache(Content c, String startPage) {
 
