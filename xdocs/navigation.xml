@@ -49,6 +49,7 @@
                 <item name="Cms util taglib" href="/tagreference-cms-util-taglib.html" />
             </item>
             <item name="Advanced Topics" href="/advanced/advanced.html" collapse="true">
+                <item name="Export - Import" href="/advanced/export-import.html" />
                 <item name="Custom Dialogs" href="/advanced/customDialogs.html" />
                 <item name="Custom Controls" href="/advanced/customControls.html" />
                 <item name="Custom Modules" href="/advanced/modules.html" />

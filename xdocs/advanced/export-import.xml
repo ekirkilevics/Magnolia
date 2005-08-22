@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>Import - Export</title>
+	</properties>
+	<body>
+		<section name="Import - Export">
+			<p>
+				One should not copy repository files in a running system, since you can look at them
+				as a common database changing at evry time. To make a backup it is saver to export.
+			</p>
+			<p>
+				You can do this using the export import context-menupoints in the tree or you use
+				the import/export servlets. This servlets are the same as thouse used in the tree:
+				<br />
+				<code>/.magnolia/mgnl-export</code>
+				and
+				<code>/.magnolia/mgnl-import</code>
+			</p>
+		</section>
+	</body>
+</document>
