@@ -20,6 +20,7 @@ import info.magnolia.cms.beans.runtime.Cache;
 import info.magnolia.cms.core.CacheHandler;
 import info.magnolia.cms.core.CacheProcess;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.SessionAccessControl;
 
@@ -158,6 +159,10 @@ public class EntryServlet extends HttpServlet {
                     }
                 }
             }
+        }
+        catch (AccessDeniedException e) {
+            // don't log AccessDenied as errors, it can happen...
+            log.warn(e.getMessage());
         }
         catch (RepositoryException e) {
             log.error(e.getMessage(), e);
