@@ -84,7 +84,7 @@ public class DialogEditWithButton extends DialogBox {
             control.setEvent("onchange", this.getConfigValue("onchange")); //$NON-NLS-1$ //$NON-NLS-2$
         }
         this.drawHtmlPre(out);
-        String width = this.getConfigValue("width", "100%"); //$NON-NLS-1$ //$NON-NLS-2$
+        String width = this.getConfigValue("width", "95%"); //$NON-NLS-1$ //$NON-NLS-2$
         out.write("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"" + width + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
         out.write("<tr><td width=\"100%\"  class=\"" + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
         out.write(control.getHtml());

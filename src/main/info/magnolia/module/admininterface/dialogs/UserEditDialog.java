@@ -193,8 +193,8 @@ public class UserEditDialog extends ConfiguredDialog {
         // ######################
 
         // remove existing
-        for (int i = 0; i < ContentRepository.getAllRepositoryNames().length; i++) {
-            String repository = ContentRepository.getAllRepositoryNames()[i];
+        for (int i = 0; i < ContentRepository.getAllRepositoryNames().size(); i++) {
+            String repository = (String) ContentRepository.getAllRepositoryNames().get(i);
             try {
                 user.delete("acl_" + repository); //$NON-NLS-1$
             }

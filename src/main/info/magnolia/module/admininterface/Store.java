@@ -257,4 +257,14 @@ public class Store {
         this.localStore = localStore;
     }
 
+    public void registerTreeHandlers(Content defNode) throws ClassNotFoundException {
+        Collection trees = defNode.getChildren(ItemType.CONTENTNODE.getSystemName());
+        for (Iterator iter = trees.iterator(); iter.hasNext();) {
+            Content tree = (Content) iter.next();
+            String name = tree.getNodeData("name").getString(); //$NON-NLS-1$
+            String className = tree.getNodeData("class").getString(); //$NON-NLS-1$
+            this.registerTreeHandler(name, Class.forName(className));
+        }
+    }
+
 }

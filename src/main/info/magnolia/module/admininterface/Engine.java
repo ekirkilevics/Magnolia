@@ -90,14 +90,8 @@ public class Engine implements Module {
     protected static void registerTrees(Store store) {
         // read the tree configuration
         try {
-            Collection trees = store.getStore().getContent("trees") //$NON-NLS-1$
-                .getChildren(ItemType.CONTENTNODE.getSystemName());
-            for (Iterator iter = trees.iterator(); iter.hasNext();) {
-                Content tree = (Content) iter.next();
-                String name = tree.getNodeData("name").getString(); //$NON-NLS-1$
-                String className = tree.getNodeData("class").getString(); //$NON-NLS-1$
-                store.registerTreeHandler(name, Class.forName(className));
-            }
+            Content defNode = store.getStore().getContent("trees");
+            store.registerTreeHandlers(defNode);
         }
         catch (Exception e) {
             log.warn("can't find trees configuration: will use defaults", e); //$NON-NLS-1$

@@ -71,8 +71,8 @@ public final class Bootstrapper {
 
         log.info("Trying to initialize repositories from [" + bootdir + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 
-        for (int j = 0; j < ContentRepository.getAllRepositoryNames().length; j++) {
-            String repository = ContentRepository.getAllRepositoryNames()[j];
+        for (int j = 0; j < ContentRepository.getAllRepositoryNames().size(); j++) {
+            String repository = (String)ContentRepository.getAllRepositoryNames().get(j);
 
             File xmldir = new File(bootdir, repository);
 

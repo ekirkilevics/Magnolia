@@ -138,7 +138,7 @@ public final class ContentRepository {
     /**
      * holds all repository names as configured in repositories.xml
      */
-    private static String[] repositoryNames;
+    private static List repositoryNames;
 
     /**
      * Utility class, don't instantiate.
@@ -189,8 +189,8 @@ public final class ContentRepository {
      * @throws RepositoryException exception while accessing the repository
      */
     public static boolean checkIfInitialized() throws AccessDeniedException, RepositoryException {
-        for (int j = 0; j < getAllRepositoryNames().length; j++) {
-            String repository = getAllRepositoryNames()[j];
+        for (int j = 0; j < getAllRepositoryNames().size(); j++) {
+            String repository = (String) getAllRepositoryNames().get(j);
             if (log.isDebugEnabled()) {
                 log.debug("Checking [" + repository + "] repository."); //$NON-NLS-1$ //$NON-NLS-2$
             }
@@ -224,7 +224,7 @@ public final class ContentRepository {
         Document document = buildDocument();
         Element root = document.getRootElement();
         Collection repositoryElements = root.getChildren(ContentRepository.ELEMENT_REPOSITORY);
-        ContentRepository.repositoryNames = new String[repositoryElements.size()];
+        ContentRepository.repositoryNames = new ArrayList();
         Iterator children = repositoryElements.iterator();
         int repositoryIndex = 0;
         while (children.hasNext()) {
@@ -233,7 +233,6 @@ public final class ContentRepository {
             String id = element.getAttributeValue(ATTRIBUTE_ID);
             String load = element.getAttributeValue(ATTRIBUTE_LOAD_ON_STARTUP);
             String provider = element.getAttributeValue(ATTRIBUTE_PROVIDER);
-            ContentRepository.repositoryNames[repositoryIndex] = id;
             RepositoryMapping map = new RepositoryMapping();
             map.setID(id);
             map.setName(name);
@@ -287,6 +286,8 @@ public final class ContentRepository {
         Repository repository = handlerClass.getUnderlineRepository();
         ContentRepository.repositories.put(map.getID(), repository);
         ContentRepository.repositoryProviders.put(map.getID(), handlerClass);
+        ContentRepository.repositoryNames.add(map.getID());
+
         if (map.isLoadOnStartup()) {
             /* load hierarchy managers for each workspace */
             Iterator workspaces = map.getWorkspaces().iterator();
@@ -387,7 +388,7 @@ public final class ContentRepository {
      * Gets repository names array as configured in repositories.xml
      * @return repository names
      */
-    public static String[] getAllRepositoryNames() {
+    public static List getAllRepositoryNames() {
         return ContentRepository.repositoryNames;
     }
 

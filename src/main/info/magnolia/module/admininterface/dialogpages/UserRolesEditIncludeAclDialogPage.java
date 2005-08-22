@@ -147,8 +147,8 @@ public class UserRolesEditIncludeAclDialogPage extends DialogPageMVCHandler {
 
         out.print(repositorySelect.getHtml());
         out.print("<p><p/>"); //$NON-NLS-1$
-        for (int i = 0; i < ContentRepository.getAllRepositoryNames().length; i++) {
-            writeRepositoryTable(request, response, msgs, out, role, ContentRepository.getAllRepositoryNames()[i]);
+        for (int i = 0; i < ContentRepository.getAllRepositoryNames().size(); i++) {
+            writeRepositoryTable(request, response, msgs, out, role, (String) ContentRepository.getAllRepositoryNames().get(i));
         }
         // out.print("<p>&nbsp;<p>&nbsp;<p>&nbsp;<input type=\"button\" onclick=\"aclChangeRepository('website')\">");
         out.println("<script>aclChangeRepository('website');</script>"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -286,8 +286,8 @@ public class UserRolesEditIncludeAclDialogPage extends DialogPageMVCHandler {
         repositorySelect.setValue(ContentRepository.WEBSITE);
 
         // loop through the repositories
-        for (int i = 0; i < ContentRepository.getAllRepositoryNames().length; i++) {
-            String name = ContentRepository.getAllRepositoryNames()[i];
+        for (int i = 0; i < ContentRepository.getAllRepositoryNames().size(); i++) {
+            String name = (String) ContentRepository.getAllRepositoryNames().get(i);
             String label = MessagesManager.get(request, "repository." + name); //$NON-NLS-1$
             repositorySelect.setOptions(label, name);
         }

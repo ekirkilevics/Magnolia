@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.text.MessageFormat;
+import java.util.List;
 
 import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.RepositoryException;
@@ -265,14 +266,14 @@ public class ImportExportServlet extends HttpServlet {
             + " <select name=\"" //$NON-NLS-1$
             + PARAM_REPOSITORY + "\">"); //$NON-NLS-1$
 
-        String[] repositories = ContentRepository.getAllRepositoryNames();
-        for (int j = 0; j < repositories.length; j++) {
+        List repositories = ContentRepository.getAllRepositoryNames();
+        for (int j = 0; j < repositories.size(); j++) {
             out.print("<option"); //$NON-NLS-1$
-            if (repository.equals(repositories[j])) {
+            if (repository.equals(repositories.get(j))) {
                 out.print(" selected=\"selected\""); //$NON-NLS-1$
             }
             out.print(">"); //$NON-NLS-1$
-            out.print(repositories[j]);
+            out.print(repositories.get(j));
             out.print("</option>"); //$NON-NLS-1$
         }
         out.println("</select>"); //$NON-NLS-1$
