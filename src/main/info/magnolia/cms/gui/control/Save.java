@@ -29,6 +29,7 @@ import info.magnolia.cms.util.LinkUtil;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
@@ -548,6 +549,9 @@ public class Save extends ControlSuper {
                         second = Integer.parseInt(timeTokens[2]);
                     }
                     date.set(year, month, day, hour, minute, second);
+                    // this is used in the searching
+                    date.set(date.MILLISECOND, 0);
+                    date.setTimeZone(TimeZone.getTimeZone("GMT"));
                 }
                 // todo time zone??
                 catch (Exception e) {
