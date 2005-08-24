@@ -88,7 +88,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
     private String displayValue;
 
     private String newPath;
-    
+
     /**
      * Used to display the same tree in the linkbrowser
      */
@@ -228,7 +228,8 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
 
     public String activate() {
         boolean recursive = (request.getParameter("recursive") != null); //$NON-NLS-1$
-        tree.activateNode(pathSelected, recursive);
+        // by default every CONTENTNODE under the specified CONTENT node is activated
+        tree.activateNode(pathSelected, recursive, true);
         return VIEW_TREE;
     }
 
@@ -408,14 +409,18 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
     protected String getPath() {
         return path;
     }
-    
+
+    protected String getPathSelected() {
+        return pathSelected;
+    }
+
     /**
      * @return Returns the browseMode.
      */
     public boolean isBrowseMode() {
         return browseMode;
     }
-    
+
     /**
      * @param browseMode The browseMode to set.
      */

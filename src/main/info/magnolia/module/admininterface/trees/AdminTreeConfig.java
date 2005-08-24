@@ -265,4 +265,14 @@ public class AdminTreeConfig extends AdminTreeMVCHandler {
         tree.addMenuItem(menuRefresh);
     }
 
+    /**
+     * Do not active sub CONTENTNODES automatically
+     */
+    public String activate() {
+        boolean recursive = (request.getParameter("recursive") != null); //$NON-NLS-1$
+        // do not activate nodes of type CONTENTNODE if recursive is false
+        this.getTree().activateNode(this.getPathSelected(), recursive, false);
+        return VIEW_TREE;
+    }
+
 }

@@ -872,7 +872,7 @@ public class Tree extends ControlSuper {
         return returnValue;
     }
 
-    public void activateNode(String path, boolean recursive) {
+    public void activateNode(String path, boolean recursive, boolean includeContentNodes) {
         // todo: ??? generic -> RequestInterceptor.java
         try {
             HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
@@ -888,7 +888,7 @@ public class Tree extends ControlSuper {
                 deepActivate(syndicator, c, hm);
             }
             else {
-                syndicator.activate(this.getRepository(), StringUtils.EMPTY, path, recursive);
+                syndicator.activate(this.getRepository(), StringUtils.EMPTY, path, recursive, includeContentNodes);
             }
         }
         catch (Exception e) {
@@ -896,9 +896,9 @@ public class Tree extends ControlSuper {
         }
     }
 
-    private void deepActivate(Syndicator syndicator, Content content, HierarchyManager hm) {
+    protected void deepActivate(Syndicator syndicator, Content content, HierarchyManager hm) {
         try {
-            syndicator.activate(this.getRepository(), StringUtils.EMPTY, content.getHandle(), false);
+            syndicator.activate(this.getRepository(), StringUtils.EMPTY, content.getHandle(), false, true);
             Collection children = content.getChildren();
             if (children != null) {
                 Iterator it = children.iterator();

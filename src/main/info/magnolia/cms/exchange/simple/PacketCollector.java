@@ -43,13 +43,13 @@ public final class PacketCollector {
         // unused
     }
 
-    public static Packet getPacket(HierarchyManager hm, String path, boolean recurse) {
+    public static Packet getPacket(HierarchyManager hm, String path, boolean recurse, boolean includeContentNodes) {
         Packet packet = new PacketImpl();
         try {
             Object content = null;
             if (hm.isPage(path)) {
                 Content page = hm.getContent(path);
-                content = new SerializableContent(page, recurse);
+                content = new SerializableContent(page, recurse, includeContentNodes);
             }
             else if (hm.isNodeType(path, ItemType.CONTENTNODE)) {
                 Content contentNode = hm.getContent(path);

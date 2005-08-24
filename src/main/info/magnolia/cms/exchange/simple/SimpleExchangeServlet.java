@@ -48,14 +48,14 @@ import org.apache.log4j.Logger;
  * <p>
  * Version .01 implementation Simple implementation of Exchange interface using serialized objects and binary GET
  * </p>
- *
+ * 
  * <pre>
  * todo -
  * 1. implement incremental delivery
  * 2. concurrent activation
  * 3. context locking
  * </pre>
- *
+ * 
  * @author Sameer Charles
  * @version 2.0
  */
@@ -95,6 +95,8 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
             String page = request.getHeader(Syndicator.PAGE);
             String recursive = request.getHeader(Syndicator.RECURSIVE);
             boolean recurse = BooleanUtils.toBoolean(recursive);
+            boolean includeContentNodes = BooleanUtils.toBooleanDefaultIfNull(BooleanUtils.toBooleanObject(request
+                .getHeader(Syndicator.INCLUDE_CONTENTNODES)), true);
 
             if (ConfigLoader.isConfigured() && (!Listener.isAllowed(request) || !Authenticator.authenticate(request))) {
                 // ignore security is server is not configured
@@ -121,7 +123,7 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
             }
             else if (action.equals(Syndicator.GET)) {
                 String type = request.getHeader(Syndicator.GET_TYPE);
-                get(page, type, recurse, response);
+                get(page, type, recurse, includeContentNodes, response);
             }
             else {
                 throw new UnsupportedOperationException("Method not supported by Exchange protocol - Simple (.01)"); //$NON-NLS-1$
@@ -188,6 +190,13 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
         urlConnection.addRequestProperty(Syndicator.GET_TYPE, Syndicator.GET_TYPE_SERIALIZED_OBJECT);
         urlConnection.addRequestProperty(Syndicator.RECURSIVE, recursive);
         urlConnection.addRequestProperty(Syndicator.OBJECT_TYPE, objectType);
+
+        // add this parameter only if present. this was not present in older versions
+        if (request.getHeader(Syndicator.INCLUDE_CONTENTNODES) != null) {
+            urlConnection.addRequestProperty(Syndicator.INCLUDE_CONTENTNODES, request
+                .getHeader(Syndicator.INCLUDE_CONTENTNODES));
+        }
+
         // Import activated page
         InputStream in = urlConnection.getInputStream();
         try {
@@ -237,9 +246,15 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
     }
 
     /**
+     * @param page
+     * @param type
+     * @param recurse
+     * @param includeContentNodes only relevant if the node is of type CONTENT
+     * @param response
      * @throws Exception
      */
-    private void get(String page, String type, boolean recurse, HttpServletResponse response) throws Exception {
+    private void get(String page, String type, boolean recurse, boolean includeContentNodes,
+        HttpServletResponse response) throws Exception {
         if (type.equalsIgnoreCase(Syndicator.GET_TYPE_BINARY)) {
             // this.getBinary();
             if (log.isDebugEnabled()) {
@@ -268,7 +283,7 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
                 log.debug("Serialized object request for " + page); //$NON-NLS-1$
             }
 
-            Packet packet = PacketCollector.getPacket(this.getHierarchyManager(), page, recurse);
+            Packet packet = PacketCollector.getPacket(this.getHierarchyManager(), page, recurse, includeContentNodes);
             ObjectOutputStream os = new ObjectOutputStream(response.getOutputStream());
             os.writeObject(packet.getBody().getObject());
             os.flush();

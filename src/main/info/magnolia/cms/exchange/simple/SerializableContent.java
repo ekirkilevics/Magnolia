@@ -62,15 +62,31 @@ public class SerializableContent implements Serializable {
 
     private boolean recurse;
 
+    /**
+     * If true, all subnodes of type CONTENTNODE are included
+     */
+    private boolean includeContentNodes;
+
     public SerializableContent() {
+        this.includeContentNodes = true;
     }
 
     public SerializableContent(Content content) {
+        this();
         this.makeSerializable(content);
     }
 
-    public SerializableContent(Content content, boolean recurse) {
+    /**
+     * Serialize a node of type CONTENT
+     * @param content the node to serialize
+     * @param recurse true if also subnodes of type CONTENT gets serialized)
+     * @param includeContentNodes false if no subnodes of type CONTENTNODE should get serialized. If recurse is true,
+     * this is irelevant
+     */
+    public SerializableContent(Content content, boolean recurse, boolean includeContentNodes) {
+        this();
         this.recurse = recurse;
+        this.includeContentNodes = includeContentNodes;
         this.makeSerializable(content);
     }
 
@@ -78,9 +94,11 @@ public class SerializableContent implements Serializable {
         this.setName(content.getName());
         this.metaData = new SerializableMetaData(content.getMetaData());
         this.addNodeDataList(content);
-        this.addContentNodeList(content, true);
+        if (this.recurse || this.includeContentNodes) {
+            this.addContentNodeList(content, true);
+        }
         if (this.recurse) {
-            this.addContentList(content, true);
+            this.addContentList(content, true, true);
         }
     }
 
@@ -135,14 +153,17 @@ public class SerializableContent implements Serializable {
         }
     }
 
-    protected void addContentList(Content content, boolean recurse) {
+    protected void addContentList(Content content, boolean recurse, boolean includeContentNodes) {
         Collection children = content.getChildren(ItemType.CONTENT);
         if (children == null) {
             return;
         }
         Iterator childIterator = children.iterator();
         while (childIterator.hasNext()) {
-            this.contentCollection.add(new SerializableContent((Content) childIterator.next(), recurse));
+            this.contentCollection.add(new SerializableContent(
+                (Content) childIterator.next(),
+                recurse,
+                includeContentNodes));
         }
     }
 }

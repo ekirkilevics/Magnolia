@@ -24,6 +24,8 @@ import info.magnolia.cms.security.SessionAccessControl;
 
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
@@ -64,6 +66,8 @@ public class Syndicator {
 
     public static final String RECURSIVE = "recursive"; //$NON-NLS-1$
 
+    public static final String INCLUDE_CONTENTNODES = "includeContentNodes";
+
     public static final String REMOTE_PORT = "remote-port"; //$NON-NLS-1$
 
     public static final String SENDER_URL = "senderURL"; //$NON-NLS-1$
@@ -93,6 +97,8 @@ public class Syndicator {
 
     private boolean recursive;
 
+    private boolean includeContentNodes;
+
     public Syndicator(HttpServletRequest request) {
         this.request = request;
     }
@@ -106,10 +112,12 @@ public class Syndicator {
      * @param path page to be activated
      * @param recursive
      */
-    public synchronized void activate(String context, String parent, String path, boolean recursive) throws Exception {
+    public synchronized void activate(String context, String parent, String path, boolean recursive,
+        boolean includeContentNodes) throws Exception {
         this.parent = parent;
         this.path = path;
         this.recursive = recursive;
+        this.includeContentNodes = includeContentNodes;
         this.context = context;
         this.activate();
     }
@@ -322,6 +330,8 @@ public class Syndicator {
         }
         connection.addRequestProperty("action", "activate"); //$NON-NLS-1$ //$NON-NLS-2$
         connection.addRequestProperty("recursive", BooleanUtils.toStringTrueFalse(this.recursive)); //$NON-NLS-1$
+        connection.addRequestProperty(Syndicator.INCLUDE_CONTENTNODES, BooleanUtils
+            .toStringTrueFalse(this.includeContentNodes)); //$NON-NLS-1$
 
         String senderURL = subscriber.getSenderURL();
 
@@ -342,10 +352,7 @@ public class Syndicator {
     private void updateActivationDetails() throws RepositoryException {
         HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.request, this.context);
         Content page = hm.getContent(this.path);
-        updateMetaData(page, Syndicator.ACTIVATE);
-        if (this.recursive) {
-            this.updateTree(page, Syndicator.ACTIVATE);
-        }
+        updateMetaData(page, Syndicator.ACTIVATE, this.recursive, this.includeContentNodes);
         page.save();
     }
 
@@ -354,35 +361,19 @@ public class Syndicator {
     private void updateDeActivationDetails() throws RepositoryException {
         HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.request, this.context);
         Content page = hm.getContent(this.path);
-        updateMetaData(page, Syndicator.DE_ACTIVATE);
-        this.updateTree(page, Syndicator.DE_ACTIVATE);
+        updateMetaData(page, Syndicator.DE_ACTIVATE, true, true);
         page.save();
     }
 
     /**
-     * @param startPage
+     * @param node
+     * @param recursive
+     * @param includeContentNodes update all subnodes of type CONTENTNODE. Is irrelevant if recursive is true
      */
-    private void updateTree(Content startPage, String type) {
-        Iterator children = startPage.getChildren().iterator();
-        while (children.hasNext()) {
-            Content page = (Content) children.next();
-            try {
-                updateMetaData(page, type);
-            }
-            catch (AccessDeniedException e) {
-                log.error(e.getMessage(), e);
-            }
-            if (page.hasChildren()) {
-                updateTree(page, type);
-            }
-        }
-    }
-
-    /**
-     * @param page
-     */
-    private void updateMetaData(Content page, String type) throws AccessDeniedException {
-        MetaData md = page.getMetaData(MetaData.ACTIVATION_INFO);
+    private void updateMetaData(Content node, String type, boolean recursive, boolean includeContentNodes)
+        throws AccessDeniedException {
+        // update the passed node
+        MetaData md = node.getMetaData(MetaData.ACTIVATION_INFO);
         if (type.equals(Syndicator.ACTIVATE)) {
             md.setActivated();
         }
@@ -392,5 +383,30 @@ public class Syndicator {
         md.setActivatorId(Authenticator.getUserId(this.request));
         md.setLastActivationActionDate();
         md = null;
+
+        // recursive call
+        if (recursive || includeContentNodes) {
+            Collection children = new ArrayList();
+
+            if (recursive) {
+                children.addAll(node.getChildren(ItemType.CONTENT));
+            }
+
+            // update the metadata of contentnodes too
+            if (recursive || includeContentNodes) {
+                children.addAll(node.getChildren(ItemType.CONTENTNODE));
+            }
+
+            Iterator iter = children.iterator();
+            while (iter.hasNext()) {
+                Content child = (Content) iter.next();
+                try {
+                    updateMetaData(child, type, recursive, includeContentNodes);
+                }
+                catch (AccessDeniedException e) {
+                    log.error(e.getMessage(), e);
+                }
+            }
+        }
     }
 }
