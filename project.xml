@@ -309,36 +309,6 @@
             </properties>
         </dependency>
         <dependency>
-            <groupId>jackrabbit</groupId>
-            <artifactId>jackrabbit-api</artifactId>
-            <version>1.0-20050819.084116</version>
-            <type>jar</type>
-            <url>http://incubator.apache.org/jackrabbit</url>
-            <properties>
-                <war.bundle>true</war.bundle>
-            </properties>
-        </dependency>
-        <dependency>
-            <groupId>jackrabbit</groupId>
-            <artifactId>jackrabbit-commons</artifactId>
-            <version>1.0-20050819.084806</version>
-            <type>jar</type>
-            <url>http://incubator.apache.org/jackrabbit</url>
-            <properties>
-                <war.bundle>true</war.bundle>
-            </properties>
-        </dependency>
-        <dependency>
-            <groupId>jackrabbit</groupId>
-            <artifactId>jackrabbit-core</artifactId>
-            <version>1.0-20050819.085543</version>
-            <type>jar</type>
-            <url>http://incubator.apache.org/jackrabbit</url>
-            <properties>
-                <war.bundle>true</war.bundle>
-            </properties>
-        </dependency>
-        <dependency>
             <groupId>jsr170</groupId>
             <artifactId>jcr</artifactId>
             <version>1.0</version>
@@ -406,6 +376,36 @@
                 <war.bundle>true</war.bundle>
             </properties>
         </dependency>
+        <dependency>
+            <groupId>jackrabbit</groupId>
+            <artifactId>jackrabbit-api</artifactId>
+            <version>1.0-20050827.115227</version>
+            <type>jar</type>
+            <url>http://incubator.apache.org/jackrabbit</url>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
+        </dependency>
+        <dependency>
+            <groupId>jackrabbit</groupId>
+            <artifactId>jackrabbit-commons</artifactId>
+            <version>1.0-20050827.115232</version>
+            <type>jar</type>
+            <url>http://incubator.apache.org/jackrabbit</url>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
+        </dependency>
+        <dependency>
+            <groupId>jackrabbit</groupId>
+            <artifactId>jackrabbit-core</artifactId>
+            <version>1.0-20050827.115425</version>
+            <type>jar</type>
+            <url>http://incubator.apache.org/jackrabbit</url>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
+        </dependency>
         <!--
             cqfs-jackrabbit and cqfs are optional runtime dependencies (an alternative FileSystem implementation);
             commons-logging is a dependency of cqfs
@@ -424,6 +424,27 @@
             <artifactId>cqfs</artifactId>
             <version>3.5.6-20050818</version>
             <url>http://www.day.com/maven/cqfs/jars/cqfs-3.5.6-SNAPSHOT.jar</url>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
+        </dependency>
+        <!--
+            bdb persistence manager, optional
+        -->
+        <dependency>
+            <groupId>jackrabbit</groupId>
+            <artifactId>jackrabbit-bdb</artifactId>
+            <version>1.0-20050827.140444</version>
+            <type>jar</type>
+            <url>http://incubator.apache.org/jackrabbit</url>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
+        </dependency>
+        <dependency>
+            <groupId>berkeleydb</groupId>
+            <artifactId>je</artifactId>
+            <version>1.7.1</version>
             <properties>
                 <war.bundle>true</war.bundle>
             </properties>
@@ -497,7 +518,7 @@
         <dependency>
             <groupId>maven-taglib</groupId>
             <artifactId>maven-taglib-plugin</artifactId>
-            <version>1.3.2</version>
+            <version>1.4</version>
             <type>plugin</type>
             <url>http://maven-taglib.sourceforge.net</url>
             <properties>
