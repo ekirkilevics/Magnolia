@@ -186,7 +186,9 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
     }
 
     protected Save onPreSave() {
-        return new Save(form, request);
+        Save save = new Save(form, request);
+        save.setDialogHandler(this);
+        return save;
     }
 
     protected void onSave(Save control) {
@@ -200,7 +202,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
      * Defines the node/page containing the data editing in this dialog. The default implementation is using the path
      * parameter
      */
-    protected Content getStorageNode() {
+    public Content getStorageNode() {
         if (storageNode == null) {
             try {
                 Content parentContent = hm.getContent(path);
@@ -234,7 +236,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
      * Returns the node with the dialog definition. Default: null
      * @return
      */
-    protected Content getConfigNode() {
+    public Content getConfigNode() {
         return null;
     }
 

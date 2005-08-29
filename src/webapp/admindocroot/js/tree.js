@@ -499,7 +499,7 @@
 			}
 		}
 
-    mgnlTree.prototype.exportNode = function()
+    mgnlTree.prototype.exportNode = function(keepVersions)
 		{
 		var text=mgnlMessages.get('js.tree.exportnode.confirm.text');
 		var title=mgnlMessages.get('js.tree.exportnode.confirm.title', null, [this.selectedNode.id]);
@@ -507,22 +507,30 @@
 		if (mgnlConfirm(text,title))
 			{
 
-		    var url="${pageContext.request.contextPath}/.magnolia/mgnl-export/file.xml?exportxml=true&mgnlRepository=" + this.repository + "&mgnlPath=" + this.selectedNode.id;
+			keepVersions = keepVersions!=null ? keepVersions: false;
+		    var url="${pageContext.request.contextPath}/.magnolia/mgnl-export/file.xml?exportxml=true&mgnlRepository=" + this.repository + "&mgnlPath=" + this.selectedNode.id + "&mgnlKeepVersions=" + keepVersions;
 
 		    location.href=url;
 			}
 		}
 
-    mgnlTree.prototype.importNode = function(link)
+    mgnlTree.prototype.importNode = function(link, keepVersions, uuidBehavior)
 		{
+			keepVersions = keepVersions!=null ? keepVersions: false;
+			// create new uuid
+			uuidBehavior = uuidBehavior!=null ? uuidBehavior: 0;
 
            	var strDiv ='<form method="post" enctype="multipart/form-data" action="${pageContext.request.contextPath}/.magnolia/mgnl-import/import.html">';
 			strDiv +='<input type="hidden" name="mgnlRepository" value="' + this.repository + '">';
 			strDiv +='<input type="hidden" name="mgnlPath" value="' + this.selectedNode.id + '">';
+			strDiv +='<input type="hidden" name="mgnlKeepVersions" id="mgnlKeepVersions" value="'+keepVersions+'"/>';
+			strDiv +='<input type="hidden" name="mgnlUuidBehavior" id="mgnlUuidBehavior" value="'+uuidBehavior+'"/>';
+
 			strDiv +='<input type="hidden" name="mgnlRedirect" value="${pageContext.request.contextPath}/.magnolia/adminCentral/extractTree.html?name=' + this.handlerName + '">';
 			strDiv +='<input type="file" name="mgnlFileImport" id="mgnlFileImport" /><br/>';
+
 			strDiv +='<input type="submit" class="mgnlImportButton" name="importxml" value="' + mgnlMessages.get('js.import.button') + '" />';
-			strDiv +='<input type="reset" class="mgnlImportButton" onclick="document.body.removeChild(this.parentNode.parentNode)" />';
+			strDiv +='<input type="button" class="mgnlImportButton" value="' + mgnlMessages.get('js.import.button.close') + '" onclick="document.body.removeChild(this.parentNode.parentNode)" />';
             strDiv +='</form>';
 
             var resDiv = document.createElement('div');

@@ -116,14 +116,14 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
     /**
      * @see info.magnolia.module.admininterface.DialogMVCHandler#getWesiteNode()
      */
-    protected Content getStorageNode() {
+    public Content getStorageNode() {
         return null;
     }
 
     /**
      * @see info.magnolia.module.admininterface.DialogMVCHandler#getConfigNode()
      */
-    protected Content getConfigNode() {
+    public Content getConfigNode() {
         return null;
     }
 

@@ -20,9 +20,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.text.MessageFormat;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.ImportUUIDBehavior;
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Workspace;
@@ -38,8 +40,12 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
+import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLFilterImpl;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 
@@ -468,40 +474,44 @@ public class ImportExportServlet extends HttpServlet {
 
         try {
             if (keepVersionHistory) {
+                // do not manipulate
                 session.importXML(basepath, stream, importMode);
             }
+
             else {
+                ContentHandler handler = session.getImportContentHandler(basepath, importMode);
 
-                // create a temporary file and save the trimmed xml
-                File strippedFile = File.createTempFile("import", "xml"); //$NON-NLS-1$ //$NON-NLS-2$
-                strippedFile.deleteOnExit();
+                XMLReader filteredReader = new RootFilter(new VersionFilter(XMLReaderFactory
+                    .createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName())));
+                filteredReader.setContentHandler(handler);
 
-                FileOutputStream outstream = new FileOutputStream(strippedFile);
-
-                // use XMLSerializer and a SAXFilter in order to rewrite the file
-                XMLReader reader = new VersionFilter(XMLReaderFactory
-                    .createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName()));
-                reader.setContentHandler(new XMLSerializer(outstream, new OutputFormat()));
-
+                // import it
                 try {
-                    reader.parse(new InputSource(stream));
+                    filteredReader.parse(new InputSource(stream));
                 }
                 finally {
                     stream.close();
                 }
 
-                // return the filtered file as an input stream
-                InputStream filteredStream = new FileInputStream(strippedFile);
-                try {
-                    session.importXML(basepath, filteredStream, importMode);
-                }
-                finally {
-                    try {
-                        filteredStream.close();
+                if (((RootFilter) filteredReader).rootNodeFound) {
+                    String path = basepath;
+                    if (!path.endsWith("/")) {
+                        path += "/";
                     }
-                    catch (Exception e) {
-                        // ignore
+
+                    Node dummyRoot = (Node) session.getItem(path + "jcr:root");
+                    for (Iterator iter = dummyRoot.getNodes(); iter.hasNext();) {
+                        Node child = (Node) iter.next();
+                        // move childs to real root
+
+                        if (session.itemExists(path + child.getName())) {
+                            session.getItem(path + child.getName()).remove();
+                        }
+
+                        session.move(child.getPath(), path + child.getName());
                     }
+                    // delete the dummy node
+                    dummyRoot.remove();
                 }
             }
         }
@@ -542,4 +552,100 @@ public class ImportExportServlet extends HttpServlet {
         return true;
     }
 
+    public static class RootFilter extends XMLFilterImpl {
+
+        // this is true if it is an import of a file containing jcr:root node
+        public boolean rootNodeFound = false;
+
+        private boolean isRootNode = false;
+
+        private boolean isPrimaryTypeProperty = false;
+
+        private boolean isPrimaryTypeValue = false;
+
+        /**
+         * if != 0 we are in the middle of a filtered element.
+         */
+        private int inFilterElement;
+
+        public RootFilter(XMLReader parent) {
+            super(parent);
+        }
+
+        /**
+         * @see org.xml.sax.helpers.XMLFilterImpl#endElement(String, String, String)
+         */
+        public void endElement(String uri, String localName, String qName) throws SAXException {
+
+            if (inFilterElement > 0) {
+                inFilterElement--;
+                return;
+            }
+
+            super.endElement(uri, localName, qName);
+        }
+
+        /**
+         * @see org.xml.sax.helpers.XMLFilterImpl#characters(char[], int, int)
+         */
+        public void characters(char[] ch, int start, int length) throws SAXException {
+            // filter content
+            if (inFilterElement == 0) {
+                // change primary type of root node
+                if (this.isPrimaryTypeValue) {
+                    this.isRootNode = false;
+                    this.isPrimaryTypeProperty = false;
+                    this.isPrimaryTypeValue = false;
+
+                    super.characters("mgnl:content".toCharArray(), 0, "mgnl:content".length());
+                }
+                else {
+                    super.characters(ch, start, length);
+                }
+            }
+        }
+
+        /**
+         * @see org.xml.sax.helpers.XMLFilterImpl#startElement(String, String, String, Attributes)
+         */
+        /*
+         * (non-Javadoc)
+         * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String,
+         * org.xml.sax.Attributes)
+         */
+        public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
+            // filter if already in a version element
+            if (inFilterElement > 0) {
+                inFilterElement++;
+                return;
+            }
+
+            // filter if it is the version store
+            if ("sv:node".equals(qName)) { //$NON-NLS-1$
+                String attName = atts.getValue("sv:name"); //$NON-NLS-1$
+                // remember if there was a root node presend
+                if ("jcr:root".equals(attName)) {
+                    this.rootNodeFound = true;
+                    this.isRootNode = true;
+                    log.info("root import: versions and jcr:system are filtered");
+                }
+
+                if ("jcr:system".equals(attName)) { //$NON-NLS-1$
+                    inFilterElement++;
+                    return;
+                }
+            }
+
+            // change the nodetype of the jcr:root node
+            if (this.isRootNode && "sv:property".equals(qName) && "jcr:primaryType".equals(atts.getValue("sv:name"))) {
+                this.isPrimaryTypeProperty = true;
+            }
+
+            if (this.isPrimaryTypeProperty && "sv:value".equals(qName)) {
+                this.isPrimaryTypeValue = true;
+            }
+
+            super.startElement(uri, localName, qName, atts);
+        }
+    }
 }
