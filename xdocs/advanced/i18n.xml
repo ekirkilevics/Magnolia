@@ -5,6 +5,13 @@
 	</properties>
 	<body>
 		<section name="Internationalization">
+			<p>
+				<b>Attention</b>
+				. This is concerning the general magnolia i18n mechanism. To make your content
+				(paragraphs) multi-language capable you should read
+				<a href="../templating/i18n.html">this</a>
+				first.
+			</p>
 			<subsection name="Configuration">
 				<p>the configuration is done in Config repository: /server/i18n:</p>
 

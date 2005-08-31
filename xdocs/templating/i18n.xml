@@ -9,15 +9,21 @@
 				Magnolia does not make any guidelines about multi-languages implementations. Common
 				used mechanisms are.
 			</p>
-			
+
 			<ol>
 				<li>
 					make language trees (/en/.. /de/..). This is useful if you do not have the same
 					content (more often than one thinks in advance).
 				</li>
 				<li>
-					make a tab for each language. name the attributes en_title, de_title. then in
-					the template you are able to get the data dynamically.
+					make a tab for each language. name the attributes title_en, title_de. In the
+					template you are able then to get the data dynamically. You will use something
+					like
+					<source>
+						<![CDATA[
+<cms:out nodeDataName="title_${language}" />
+						]]>
+					</source>
 				</li>
 			</ol>
 
