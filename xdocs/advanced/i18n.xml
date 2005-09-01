@@ -6,8 +6,8 @@
 	<body>
 		<section name="Internationalization">
 			<p>
-				<b>Attention</b>
-				. This is concerning the general magnolia i18n mechanism. To make your content
+				<b>Attention!</b>
+				This is concerning the general magnolia i18n mechanism. To make your content
 				(paragraphs) multi-language capable you should read
 				<a href="../templating/i18n.html">this</a>
 				first.
@@ -60,7 +60,6 @@
 				</P>
 			</subsection>
 
-
 			<subsection name="Dialogs, Paragraphs">
 				<P>
 					the labels, .. can define a key which is searched in this order
@@ -99,7 +98,32 @@
 					admintemplate/js/messages.jsp
 				</p>
 			</subsection>
-		</section>
 
+			<subsection name="UTF-8 in java properties files">
+				<p>
+					Java properyfiles are encoded in iso-8859-1. this standard does not support
+					special characters. but there is an escaping mechanism to use unicode characters
+					(utf-8) in this propertyfiles.
+					<br />
+					<br />
+					An excample of a french propertyfile:
+					<source>menu.roles=R\u00f4le</source>
+					To make a proper file you can save your native textfile with utf-8 and then
+					transform it into this special java-format. You can use therfore the java tool
+					native2ascii.
+					<source>
+						<![CDATA[
+native2ascii -encoding UTF-8 messages_fr.txt messages_fr.properties
+]]>
+					</source>
+					To get a utf-8 file out of a propertyfile you will use:
+					<source>
+						<![CDATA[
+native2ascii -reverse -encoding UTF-8 messages_fr.properties messages_fr.txt
+]]>
+					</source>
+				</p>
+			</subsection>
+		</section>
 	</body>
 </document>
