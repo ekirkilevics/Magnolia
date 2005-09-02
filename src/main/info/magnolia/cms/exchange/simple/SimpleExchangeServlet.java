@@ -290,7 +290,7 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
         }
     }
 
-    private HierarchyManager getHierarchyManager() throws Exception {
+    protected HierarchyManager getHierarchyManager() throws Exception {
         return this.hierarchyManager;
     }
 

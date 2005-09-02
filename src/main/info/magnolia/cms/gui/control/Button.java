@@ -202,15 +202,15 @@ public class Button extends ControlSuper {
         if (this.getState() == BUTTONSTATE_PUSHED) {
             this.setCssClass(this.getCssClass() + "_PUSHED"); //$NON-NLS-1$
         }
-        html.append(" onclick=\"mgnlShiftPushButtonClick(this);"); //$NON-NLS-1$
 
+        this.setEvent("onclick", "mgnlShiftPushButtonClick(this);"); //$NON-NLS-1$ //$NON-NLS-2$
         if (StringUtils.isNotEmpty(this.getOnclick())) {
-            html.append(this.getOnclick());
+            this.setEvent("onclick", this.getOnclick()); //$NON-NLS-1$
         }
-        html.append("\""); //$NON-NLS-1$
+        this.setEvent("onmousedown", "mgnlShiftPushButtonDown(this);"); //$NON-NLS-1$ //$NON-NLS-2$
+        this.setEvent("onmouseout", "mgnlShiftPushButtonOut(this);"); //$NON-NLS-1$ //$NON-NLS-2$
 
-        html.append(" onmousedown=\"mgnlShiftPushButtonDown(this);\""); //$NON-NLS-1$
-        html.append(" onmouseout=\"mgnlShiftPushButtonOut(this);\""); //$NON-NLS-1$
+        html.append(this.getHtmlEvents());
         html.append(this.getHtmlId());
         html.append(this.getHtmlCssClass());
         html.append(this.getHtmlCssStyles());

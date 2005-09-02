@@ -18,6 +18,9 @@ import java.util.Iterator;
 import java.util.Set;
 
 import javax.security.auth.Subject;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.log4j.Logger;
 
 
 /**
@@ -28,6 +31,8 @@ import javax.security.auth.Subject;
  */
 public class User {
 
+    public static Logger log = Logger.getLogger(User.class);
+    
     /**
      * user properties
      */
@@ -43,18 +48,92 @@ public class User {
     }
 
     /**
+     * TODO: JAAS
      * Is this user in a specified role?
      * @param roleName the name of the role
      * @return true if in role
      */
     public boolean hasRole(String roleName) {
-        return false;
+        throw new UnsupportedOperationException("not implemented with JAAS");
+        //try {
+        //    Content rolesNode = userNode.getContent(NODE_ROLES);
+        //
+        //    for (Iterator iter = rolesNode.getChildren().iterator(); iter.hasNext();) {
+        //        Content node = (Content) iter.next();
+        //        if (node.getNodeData("path").getString().equals("/" + roleName)) { //$NON-NLS-1$ //$NON-NLS-2$
+        //            return true;
+        //        }
+        //    }
+        //    if (rolesNode.hasContent(roleName)) {
+        //        return true;
+        //    }
+        //
+        //}
+        //catch (RepositoryException e) {
+        //    // nothing
+        //}
+        //return false
     }
+
+    /**
+     * TODO: JAAS
+     */
+    public void removeRole(String roleName) {
+        throw new UnsupportedOperationException("not implemented with JAAS");
+
+        //        try {
+        //            Content rolesNode = userNode.getContent(NODE_ROLES);
+        //
+        //            for (Iterator iter = rolesNode.getChildren().iterator(); iter.hasNext();) {
+        //                Content node = (Content) iter.next();
+        //                if (node.getNodeData("path").getString().equals("/" + roleName)) { //$NON-NLS-1$ //$NON-NLS-2$
+        //                    node.delete();
+        //                }
+        //            }
+        //            if (rolesNode.hasContent(roleName)) {
+        //                rolesNode.delete(roleName);
+        //            }
+        //            userNode.save();
+        //        }
+        //        catch (RepositoryException e) {
+        //            log.error("can't remove role from user [" + this.getName() + "]", e );
+        //        }
+                
+    }
+    /**
+     * TODO: JAAS
+     * Adds a role to this user
+     * @param roleName the name of the role
+     * @param request the request. used for security reasons
+     */
+    public void addRole(String roleName){
+        throw new UnsupportedOperationException("not implemented with JAAS");
+        
+        //        try {
+        //            if(!this.hasRole(roleName)){
+        //                Content rolesNode = userNode.getContent(NODE_ROLES);
+        //    
+        //                // used only to get the unique label
+        //                HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USERS);
+        //                if (!rolesNode.hasContent(roleName)) {
+        //                    String nodename = Path.getUniqueLabel(hm, rolesNode.getHandle(), "0");
+        //                    Content node = rolesNode.createContent(nodename, ItemType.CONTENTNODE);
+        //                    node.createNodeData("path").setValue("/" + roleName);
+        //                    userNode.save();
+        //                }
+        //            }
+        //        }
+        //        catch (RepositoryException e) {
+        //            log.error("can't add role to user [" + this.getName() + "]", e );
+        //        }
+    }
+
 
     /**
      * get user language
      * @return language string
      */
+
     public String getLanguage() {
         return (String) this.userDetails.getProperty(Entity.LANGUAGE); //$NON-NLS-1$
     }
@@ -67,4 +146,36 @@ public class User {
         return (String) this.userDetails.getProperty(Entity.NAME); //$NON-NLS-1$
     }
 
+    
+    /**
+     * TODO: JAAS
+     * Returns the current user
+     * @param request
+     * @return the current user
+     */
+    public static User getCurrent(HttpServletRequest request){
+        throw new UnsupportedOperationException("not implemented with JAAS");
+         // return Authenticator.getUser(request);
+    }
+    
+    
+    /**
+     * TODO:JAAS
+     * Find a specific user
+     * @param name the name of the user
+     * @param request the request. used for security reasons
+     * @return the user object
+     */
+    public static User findUser(String name, HttpServletRequest request){
+        throw new UnsupportedOperationException("not implemented with JAAS");
+        //        HierarchyManager hm = SessionAccessControl.getHierarchyManager(request, ContentRepository.USERS);
+        //        
+        //        try {
+        //            return new User(hm.getContent(name));
+        //        }
+        //        catch (Exception e) {
+        //            log.info("can't find user [" + name + "]", e );
+        //            return null;
+        //        }
+    }
 }

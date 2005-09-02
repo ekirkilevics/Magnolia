@@ -341,7 +341,7 @@ public class Out extends TagSupport {
     /**
      *
      */
-    private void display() {
+    protected void display() {
         try {
 
             // @todo //check if multiple values (checkboxes) -> not nodeData but contentNode

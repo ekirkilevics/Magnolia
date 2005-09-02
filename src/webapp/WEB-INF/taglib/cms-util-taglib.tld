@@ -222,8 +222,10 @@
             <name>expandAll</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <type>boolean</type>
-            <description>Sitemap mode</description>
+            <description>Sitemap mode. Can be assigned the "show" value. Only showable
+                pages will be displayed. Any other value will result in displaying all
+                pages
+            </description>
         </attribute>
         <attribute>
             <name>startLevel</name>

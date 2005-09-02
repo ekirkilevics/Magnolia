@@ -80,7 +80,7 @@ public final class ModuleUtil {
         }
 
         public boolean match(String name) {
-            return name.startsWith(path);
+            return name.startsWith(path) && !name.endsWith("/");
         }
 
         public String transform(String name) {

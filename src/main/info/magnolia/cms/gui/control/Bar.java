@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * @author Vinzenz Wyser
@@ -63,16 +65,17 @@ public class Bar extends ControlSuper {
 
     public String getHtml() {
         StringBuffer html = new StringBuffer();
-        String cssClass;
-        if (this.getSmall()) {
-            cssClass = CSSCLASS_CONTROLBARSMALL;
-        }
-        else {
-            cssClass = CSSCLASS_CONTROLBAR;
+        if (StringUtils.isEmpty(this.getCssClass())) {
+            if (this.getSmall()) {
+                this.setCssClass(CSSCLASS_CONTROLBARSMALL);
+            }
+            else {
+                this.setCssClass(CSSCLASS_CONTROLBAR);
+            }
         }
         html.append("<table"); //$NON-NLS-1$
         html.append(this.getHtmlEvents());
-        html.append(" class=\"" + cssClass + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+        html.append(this.getHtmlCssClass());
         if (this.getId() != null) {
             html.append(" id=\"" + this.getId() + "\" cellspacing=\"0\""); //$NON-NLS-1$ //$NON-NLS-2$
         }

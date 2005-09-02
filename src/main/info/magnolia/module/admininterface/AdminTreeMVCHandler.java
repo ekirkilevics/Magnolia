@@ -105,7 +105,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
     public AdminTreeMVCHandler(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
 
-        tree = new Tree(name, getRepository(), request);
+        setTree(new Tree(name, getRepository(), request));
         path = request.getParameter("path"); //$NON-NLS-1$
         if (StringUtils.isEmpty(path)) {
             path = "/"; //$NON-NLS-1$
@@ -180,8 +180,8 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
             createItemType = request.getParameter("createItemType"); //$NON-NLS-1$
         }
 
-        tree.setPath(path);
-        tree.createNode(createItemType);
+        getTree().setPath(path);
+        getTree().createNode(createItemType);
         return VIEW_TREE;
     }
 
@@ -207,7 +207,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         String pathClipboard = request.getParameter("pathClipboard"); //$NON-NLS-1$
         int pasteType = Integer.parseInt(request.getParameter("pasteType")); //$NON-NLS-1$
 
-        newPath = tree.pasteNode(pathClipboard, pathSelected, pasteType, action);
+        newPath = getTree().pasteNode(pathClipboard, pathSelected, pasteType, action);
         if (pasteType == Tree.PASTETYPE_SUB) {
             pathOpen = pathSelected;
         }
@@ -222,19 +222,19 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
 
     public String delete() {
         String deleteNode = request.getParameter("deleteNode"); //$NON-NLS-1$
-        tree.deleteNode(path, deleteNode);
+        getTree().deleteNode(path, deleteNode);
         return VIEW_TREE;
     }
 
     public String activate() {
         boolean recursive = (request.getParameter("recursive") != null); //$NON-NLS-1$
         // by default every CONTENTNODE under the specified CONTENT node is activated
-        tree.activateNode(pathSelected, recursive, true);
+        getTree().activateNode(pathSelected, recursive, true);
         return VIEW_TREE;
     }
 
     public String deactivate() {
-        tree.deActivateNode(pathSelected);
+        getTree().deActivateNode(pathSelected);
         return VIEW_TREE;
     }
 
@@ -244,6 +244,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
      */
     public String saveValue() {
         String saveName = request.getParameter("saveName"); //$NON-NLS-1$
+        Tree tree = getTree();
 
         // value to save is a node data's value (config admin)
         boolean isNodeDataValue = "true".equals(request.getParameter("isNodeDataValue")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -298,7 +299,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
      * @return return the new name (can change if there were not allowed characters passed)
      */
     protected String rename(String value) {
-        return tree.renameNode(value);
+        return getTree().renameNode(value);
     }
 
     /**
@@ -313,8 +314,8 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         if (VIEW_TREE.equals(view) || VIEW_CREATE.equals(view) || VIEW_COPY_MOVE.equals(view)) {
             // if there was a node created we have not to set the pathes
             if (view != VIEW_CREATE) {
-                tree.setPathOpen(pathOpen);
-                tree.setPathSelected(pathSelected);
+                getTree().setPathOpen(pathOpen);
+                getTree().setPathSelected(pathSelected);
             }
 
             // after moving or copying
@@ -355,6 +356,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
     protected void renderTree(StringBuffer html) {
         String mode = StringUtils.defaultString(request.getParameter("treeMode")); //$NON-NLS-1$
         boolean snippetMode = mode.equals("snippet"); //$NON-NLS-1$
+        Tree tree = getTree();
 
         tree.setJavascriptTree("mgnlTreeControl"); //$NON-NLS-1$
         tree.setBrowseMode(this.isBrowseMode());
@@ -375,7 +377,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         tree.setPath(path);
 
         prepareTree(tree, request);
-        prepareContextMenu(tree, request);
+        prepareContextMenu(getTree(), request);
 
         if (!snippetMode) {
             html.append("<div id=\"" + tree.getJavascriptTree() + "_DivSuper\" style=\"display:block;\">"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -398,12 +400,12 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         html.append(new Sources(request.getContextPath()).getHtmlCss());
     }
 
-    protected Tree getTree() {
-        return this.tree;
-    }
-
     protected void setTree(Tree tree) {
         this.tree = tree;
+    }
+
+    protected Tree getTree() {
+        return tree;
     }
 
     protected String getPath() {

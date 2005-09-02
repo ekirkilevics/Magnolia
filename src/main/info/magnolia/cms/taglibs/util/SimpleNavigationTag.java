@@ -42,13 +42,13 @@ import org.apache.log4j.Logger;
  * <li><code>navTitle</code>: a title to use for the navigation menu, if different from the real page title</li>
  * <li><code>accessKey</code>: an optional access key which will be added to the link</li>
  * </ul>
- *
+ * 
  * <pre>
  *   &lt;cmsu:simpleNavigation startLevel="3" />
  * </pre>
- *
+ * 
  * Will output the following:
- *
+ * 
  * <pre>
  *   &lt;ul class="level3">
  *     &lt;li>&lt;a href="...">page 1 name &lt;/a>&lt;/li>
@@ -63,7 +63,7 @@ import org.apache.log4j.Logger;
  *     &lt;li>&lt;a href="...">page 4 name &lt;/a>&lt;/li>
  *   &lt;/ul>
  * </pre>
- *
+ * 
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
@@ -88,6 +88,21 @@ public class SimpleNavigationTag extends TagSupport {
      * Default name for "hide in nav" nodeData.
      */
     public static final String DEFAULT_HIDEINNAV_NODEDATA = "hideInNav"; //$NON-NLS-1$
+
+    /**
+     * Expand all expand all the nodes
+     */
+    public static final String EXPAND_ALL = "all";
+
+    /**
+     * Expand all expand only page that should be displayed in navigation
+     */
+    public static final String EXPAND_SHOW = "show";
+
+    /**
+     * Do not use expand functions
+     */
+    public static final String EXPAND_NONE = "none";
 
     /**
      * Stable serialVersionUID.
@@ -127,7 +142,7 @@ public class SimpleNavigationTag extends TagSupport {
     /**
      * Expand all the nodes (sitemap mode)
      */
-    private boolean expandAll;
+    private String expandAll = EXPAND_NONE;
 
     /**
      * Setter for the <code>startLevel</code> tag attribute.
@@ -170,10 +185,14 @@ public class SimpleNavigationTag extends TagSupport {
     }
 
     /**
-     * @param expandAll The expandAll to set.
+     * @param expandAll The expandAll to set. If the value is different than <code>EXPAND_SHOW</code> then the call
+     * expandAll is set to <code>EXPAND_ALL</code>
      */
-    public void setExpandAll(boolean expandAll) {
-        this.expandAll = expandAll;
+    public void setExpandAll(String expandAll) {
+        if (expandAll.equalsIgnoreCase(EXPAND_SHOW))
+            this.expandAll = expandAll;
+        else
+            this.expandAll = EXPAND_ALL;
     }
 
     /**
@@ -240,7 +259,7 @@ public class SimpleNavigationTag extends TagSupport {
         while (it.hasNext()) {
             Content child = (Content) it.next();
 
-            if (!expandAll) {
+            if (expandAll.equalsIgnoreCase(EXPAND_NONE) || expandAll.equalsIgnoreCase(EXPAND_SHOW)) {
                 if (child
                     .getNodeData(StringUtils.defaultString(this.hideInNav, DEFAULT_HIDEINNAV_NODEDATA))
                     .getBoolean()) {
@@ -265,7 +284,7 @@ public class SimpleNavigationTag extends TagSupport {
             boolean showChildren;
             boolean self = false;
 
-            if (expandAll) {
+            if (!expandAll.equalsIgnoreCase(EXPAND_NONE)) {
                 showChildren = true;
             }
             else {
@@ -349,7 +368,7 @@ public class SimpleNavigationTag extends TagSupport {
      */
     private boolean hasVisibleChildren(Content page) {
         Iterator it = page.getChildren().iterator();
-        if (it.hasNext() && expandAll) {
+        if (it.hasNext() && expandAll.equalsIgnoreCase(EXPAND_ALL)) {
             return true;
         }
         while (it.hasNext()) {
