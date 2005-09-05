@@ -46,8 +46,10 @@
                 <item name="I18N" href="/advanced/i18n.html" />
             </item>
             <menu name="Lists">
-                <item name="User List" href="/lists/user.html" />
-                <item name="Developer List" href="/lists/dev.html" />
+	            <item name="News Letter" href="/lists/news-list.html" />
+    	        <item name="User List" href="/lists/user-list.html" />
+        	    <item name="Developer List" href="/lists/dev-list.html" />
+            	<item name="SVN List" href="/lists/svn-list.html" />
             </menu>
             <menu name="Developers">
                 <item name="Coding conventions" href="/developer/coding_conventions.html" />

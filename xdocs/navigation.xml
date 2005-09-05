@@ -44,10 +44,6 @@
                 <!-- <item name="web.xml" href="/config/webxml.html" /> -->
                 <item name="One war, multiple configs" href="/config/multiconfig.html" />
             </item>
-            <item name="Tag libraries" href="/taglib/intro.html" collapse="true">
-                <item name="Cms taglib" href="/tagreference-cms-taglib.html" />
-                <item name="Cms util taglib" href="/tagreference-cms-util-taglib.html" />
-            </item>
             <item name="Advanced Topics" href="/advanced/advanced.html" collapse="true">
                 <item name="Export - Import" href="/advanced/export-import.html" />
                 <item name="Custom Dialogs" href="/advanced/customDialogs.html" />
@@ -55,6 +51,10 @@
                 <item name="Custom Modules" href="/advanced/modules.html" />
                 <item name="Customize Menu" href="/advanced/menu.html" />
                 <item name="I18N" href="/advanced/i18n.html" />
+            </item>
+            <item name="Tag libraries" href="/taglib/intro.html" collapse="true">
+            <item name="Cms taglib" href="/tagreference-cms-taglib.html" />
+            <item name="Cms util taglib" href="/tagreference-cms-util-taglib.html" />
             </item>
             <item name="API JavaDoc" href="apidocs/index.html" target="_blank" />
             <item name="Glossary" href="/glossary/glossary.html" />
@@ -65,8 +65,10 @@
             <item name="Developer Documentation" href="/magnolia.pdf" />
         </menu>
         <menu name="Lists">
-            <item name="User List" href="/lists/user.html" />
-            <item name="Developer List" href="/lists/dev.html" />
+            <item name="News Letter" href="/lists/news-list.html" />
+            <item name="User List" href="/lists/user-list.html" />
+            <item name="Developer List" href="/lists/dev-list.html" />
+            <item name="SVN List" href="/lists/svn-list.html" />
         </menu>
         <menu name="Download">
             <item name="Releases (sourceforge)" href="http://sourceforge.net/project/showfiles.php?group_id=86297"

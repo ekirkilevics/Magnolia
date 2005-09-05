@@ -5,18 +5,18 @@
         <author email="fgiust(at)users.sourceforge.net">Fabrizio Giustina</author>
     </properties>
     <body>
-        <section name="Installing 2.1 wars distribution">
+        <section name="Installing 2.1 war-file distribution">
             <p>
-                The wars distribution contains 2 war files, magnoliaPublic and magnoliaAdmin, which should be deployed
-                to an existing application server. These two war file are actually identical, except for the different
-                preloaded configuration (the xml filesin the
+                The war-file distribution contains 2 war files, magnoliaPublic and magnoliaAdmin, which you can deploy
+                to an existing application server. The two war files are identical except for the different
+                preloaded configuration (the xml files in the
                 <code>bootstrap</code>
                 directory.
             </p>
             <subsection name="Prerequisites">
                 <p>
                     You will need a servlet container which support the servlets 2.4/jsp 2.0 spec. The suggested server
-                    is Tomcat 5/5.5, you can however choose a different application server
+                    is Tomcat 5/5.5, but you can choose a different application server if you wish.
                 </p>
                 <p>
                     <strong>
@@ -40,7 +40,7 @@
                     which is able to run zipped wars you will need to unpack it manually.
                 </p>
                 <p>
-                    After startin the server, open your favorite browser and go to http://[server name]:[port]/[war
+                    After starting the server, open your favorite browser and go to http://[server name]:[port]/[war
                     name]. That means, for a default installation, http://localhost:8080/magnolia. You should see a
                     login prompt, use
                     <code>superuser</code>

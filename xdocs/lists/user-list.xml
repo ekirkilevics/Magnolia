@@ -12,7 +12,8 @@
             <p>
                 to subscribe send a mail to:
                 <a href="mailto:user-list-subscribe@magnolia.info">user-list-subscribe@magnolia.info</a>
-                to post send mails to:
+			<br />
+                    to post send mails to:
                 <a href="mailto:user-list@magnolia.info">user-list@magnolia.info</a>
                 <ul>
                     <li>
@@ -50,12 +51,16 @@
                         packages are available through partners of the Magnolia partner network.
                     </li>
                 </ul>
-                You can unsubscribe at any time by sending an empty email to
+    		<br />
+			    You can unsubscribe at any time by sending an empty email to
                 <a href="mailto:user-list-off@magnolia.info">user-list-off@magnolia.info</a>
+    		<br />
                 To switch to the DIGEST mode, send an empty email to
                 <a href="mailto:user-list-digest@magnolia.info">user-list-digest@magnolia.info</a>
+    		<br />
                 To switch to the INDEX mode, send an empty email to
                 <a href="mailto:user-list-index@magnolia.info">user-list-index@magnolia.info</a>
+    		<br />
                 For any administrative enquieries, please use
                 <a href="mailto:user-list-request@magnolia.info">user-list-request@magnolia.info</a>
             </p>

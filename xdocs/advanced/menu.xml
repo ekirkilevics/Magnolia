@@ -6,8 +6,9 @@
 	<body>
 		<section name="Customize Menu">
 			<p>
-				You can customize the menu easely due changing the configuration. Give read access
-				to users who can see the menupoint.<br/>
+				You can easely customize the menu through configuration.
+				Simply give read access to users who can see a menu item, or 
+				deny read access if you wish to hide a menu item.<br/>
 				<img src="menu.png" />
 			</p>
 		</section>
