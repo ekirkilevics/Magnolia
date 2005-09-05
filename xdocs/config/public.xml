@@ -19,7 +19,8 @@
 					<code>/server/secureURIList/0001/URI</code>
 					to <code>/.magnolia/*</code>
 					<br />
-					Afterward only the AdminCentra is secured. One can secure content again with addinf other URLS to the config.
+					Afterwards only the AdminCentral is secured. 
+					One can secure content again with adding other URLS to the config.
 				</p>
 			</subsection>
 

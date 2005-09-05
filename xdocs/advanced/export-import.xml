@@ -6,16 +6,25 @@
 	<body>
 		<section name="Import - Export">
 			<p>
-				One should not copy repository files in a running system, since you can look at them
-				as a common database changing at evry time. To make a backup it is saver to export.
+				One should not copy repository files while magnolia is running, 
+				at least not via the file system, since magnolia might be 
+				writing to the repository while you copy it; which would lead 
+				to an inconsistent copy of the repository.
 			</p>
 			<p>
-				You can do this using the export import context-menupoints in the tree or you use
-				the import/export servlets. This servlets are the same as thouse used in the tree:
+				To make a backup at runtime you should export the
+				repository contents. Note that <b>currently only the most recent version 
+				of your data gets imported.</b>
+			</p>
+			<p>
+				You can import and export data using the context-menu in the 
+				navigation tree or you can use the import/export servlets which are used by the tree as well:
 				<br />
 				<code>/.magnolia/mgnl-export</code>
 				and
 				<code>/.magnolia/mgnl-import</code>
+				<br/>
+				<img src="export-import.png" />
 			</p>
 		</section>
 	</body>

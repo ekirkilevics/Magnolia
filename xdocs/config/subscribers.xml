@@ -9,9 +9,12 @@
 				<p>
 					When someone changes something in the "authoring" instance of the application
 					the change initially won't have any effect on the public instance. In order to
-					take effect on the public "subscriber" instance, the change needs to be
+					take effect on the public "subscriber" instance(s), the change needs to be
 					"activated" - in a properly configured Magnolia setup this then pushes the
-					changes to the public instance. Virtually every type of node can be activated
+					changes to the public instance.
+				</p>
+				<p>
+					Virtually every type of node can be activated
 					and pushed to subscriber servers - not just web pages, this is important. When
 					you look at the administration console of the authoring app you'll see a lot of
 					little red lights next to everything, a red light indicates that that particular
@@ -24,21 +27,34 @@
 			<subsection name="How Activation works">
 				<p>
 					In the Config/subscribers/subscriberConfig section of the authoring app you can
-					set up details of what machines to push changes to when something is activated.
-					You'll normally be pushing activated nodes to your "Public" machine, but
-					presumably one can list several machines in this list for mirroring purposes, or
-					other arcane setups. Editing the node is reasonably self explanatory - you point
-					it at your public server. Nonetheless, I spent several hours unable to work out
-					why nothing would activate as it should (even though the authoring app said it
-					had - see the comments above). Eventually I worked out the answer. When you
-					activate something in the authoring server it uses your username and password to
-					log into the subscribing server to actually do the publishing This means that
+					set up details of what machines to activate changes to.
+					You'll normally be pushing activated nodes to the public instance, but
+					one can list several machines in this list for mirroring purposes, or
+					other arcane setups. 
+				</p>
+				<p>
+					Editing the node is reasonably self explanatory - you point
+					it at your public server. Please make sure that activation works after you 
+					have configured a new subscriber. Create a new page, activate it and see if 
+					it shows up where it should (i.e. at the subscribing instance). Watch the logs 
+					if it does not, they will tell you why activation fails.
+					
+					The GUI will make sure that you cannot activate unless an active subscriber is configured, 
+					but <b>Magnolia doesn't double-check if activation has actually worked, 
+					and will show the node as published even if it might have failed. </b>
+				</p>
+				<p>
+					One reason why activation can fail is that you lack the permission 
+					on the subscriber to actually write content where you wish to write it to.
+					<b>When you activate something in the authoring server it uses your username and password to
+					log into the subscribing server to actually do the publishing. </b> This means that
 					unless there is a user on the subscribing machine (the public server) with your
-					username and password and privileges then the activation process will fail. The
-					worst part of this is that Magnolia doesn't realise it's failed and carries on
-					showing the node as published. Luckily, since users and roles are nodes jst like
-					any other they can be "activated" too - if you create a new user on the
-					authoring server, remember to "activate" that user so that the users details
+					username and password and privileges then the activation process will fail silently. 
+				</p>
+				<p>
+					Since users and roles are nodes just like any other they can
+					be "activated" too. If you create a new user on the
+					authoring instance, remember to "activate" that user so that the users details
 					will be pushed to the subscriber server(s). One thing I really need to stress
 					again, because it was very counterintuitive for me, is that there appears to be
 					NO synchronisation process between the servers - the authoring server merely
@@ -47,9 +63,8 @@
 					sync for some reason it's very hard to tell what gone wrong and very hard to fix
 					it. The worst case of this appears to be if you change a users' password and
 					forget to "activate" the change - that user will then be unable to make any
-					changes to the subscriber server (though - again, there is no feedback that
-					anything is going wrong). If the user in question is the superuser very awkward
-					things can result.
+					changes to the subscriber server. 
+					If the user in question is the superuser very awkward things can result.
 				</p>
 			</subsection>
 
