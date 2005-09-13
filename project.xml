@@ -536,6 +536,7 @@
                 <comment>maven plugin needed to generate tag reference documentation page</comment>
             </properties>
         </dependency>
+        <!--
         <dependency>
             <groupId>maven-plugins</groupId>
             <artifactId>maven-findbugs-plugin</artifactId>
@@ -545,6 +546,7 @@
                 <comment>maven plugin for the findbug report.</comment>
             </properties>
         </dependency>
+        -->
         <dependency>
             <groupId>maven</groupId>
             <artifactId>maven-war-plugin</artifactId>
