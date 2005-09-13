@@ -13,7 +13,7 @@
         <logo>images/obinary-logo.png</logo>
     </organization>
     <inceptionYear>1993</inceptionYear>
-    <packageName>info.magnolia</packageName>
+    <package>info.magnolia</package>
     <logo>images/magnolia-logo.png</logo>
     <description>
         Magnolia is a free enterprise class content management system developed by obinary. Magnolia uses the upcoming
