@@ -64,7 +64,7 @@ import org.apache.log4j.Logger;
  * </pre>
  *
  * @author Fabrizio Giustina
- * @since 2.1
+ * @since 2.2
  */
 public class DialogEditWithCustomButtons extends DialogBox {
 
