@@ -176,7 +176,9 @@ public class JCRAuthorizationModule implements LoginModule {
                     Content aclEntry = (Content) it.next();
                     String name = StringUtils.substringAfter(aclEntry.getName(),"acl_");
                     if (!StringUtils.contains(name, "_")) {
-                        name += ("_default"); // default workspace must be added to the name
+                        String defaultWorkspace
+                                = ContentRepository.getDefaultWorkspace(StringUtils.substringBefore(name,"_"));
+                        name += ("_"+defaultWorkspace); // default workspace must be added to the name
                     }
                     ACL acl = ACLFactory.get(name);
                     if (!list.contains(name)) {

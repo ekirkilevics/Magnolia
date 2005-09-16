@@ -1,42 +1,91 @@
-<!DOCTYPE Repositories [
-<!ELEMENT Repositories (Repository)*>
+<!--
+    $Id :$
+-->
+<!DOCTYPE JCR [
+<!ELEMENT Map (#PCDATA)>
+<!ATTLIST Map
+    name CDATA #REQUIRED
+    repositoryName CDATA #REQUIRED>
+<!ELEMENT JCR (RepositoryMapping|Repository)*>
 <!ELEMENT param (#PCDATA)>
 <!ATTLIST param
     name CDATA #REQUIRED
     value CDATA #REQUIRED>
 <!ELEMENT Repository (param|workspace)*>
 <!ATTLIST Repository
-    id ID #REQUIRED
     loadOnStartup CDATA #REQUIRED
     name CDATA #REQUIRED
     provider CDATA #REQUIRED>
 <!ELEMENT workspace (#PCDATA)>
 <!ATTLIST workspace
-    id ID #REQUIRED>
-]>
-<!--
-    @version 2.1
--->
-<Repositories>
+    name CDATA #REQUIRED>
+<!ELEMENT RepositoryMapping (Map)*>
+]><JCR>
+    <!--
+    Repositony name mapping is used internally by the system to search for the defined repository
+    you can have different name defined to a single repository, for instance if you want to use
+    single repository model you can define 4 maps here with the same "repositoryName".
+
+    eg: if you wanna have 2 repository model, repository A for website and config and repository B
+    for users and roles
+
+    <RepositoryMapping>
+        <Map name="website" repositoryName="main" />
+        <Map name="config" repositoryName="main" />
+        <Map name="users" repositoryName="access" />
+        <Map name="userroles" repositoryName="access" />
+    </RepositoryMapping>
+
+    <Repository name="main" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
+        <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-cqfs-search.xml" />
+        <param name="repositoryHome" value="repositories/main" />
+        <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory" />
+        <param name="providerURL" value="localhost" />
+        <param name="bindName" value="mainAuthor" />
+        <workspace name="website" />
+        <workspace name="config" />
+    </Repository>
+
+    <Repository name="access" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
+        <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-cqfs-search.xml" />
+        <param name="repositoryHome" value="repositories/access" />
+        <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory" />
+        <param name="providerURL" value="localhost" />
+        <param name="bindName" value="accessAuthor" />
+        <workspace name="users" />
+        <workspace name="userroles" />
+    </Repository>
+
+    and define workspaces website, config, users and userroles in repository specific config
+
+    -->
+    <RepositoryMapping>
+        <Map name="website" repositoryName="website" />
+        <Map name="config" repositoryName="config" />
+        <Map name="users" repositoryName="users" />
+        <Map name="userroles" repositoryName="userroles" />
+    </RepositoryMapping>
     <!-- magnolia default website repository -->
-    <Repository name="website" id="website" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
+    <Repository name="website" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
         <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-cqfs-search.xml" />
         <param name="repositoryHome" value="repositories/website" />
         <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory" />
         <param name="providerURL" value="localhost" />
         <param name="bindName" value="websiteAuthor" />
         <!--
-            You can define workspaces for this repository, attribute "id" is used to to login to the specified
+            You can define workspaces for this repository, attribute "name" is used to to login to the specified
             workspace, check provider specific configuration file to configure workspaces.
-            WEB-INF/config/repository-configuration.xml
+            WEB-INF/config/repo-conf/??.xml
         -->
         <!--
-            <workspace id="website" />
-            <workspace id="config" />
+        <workspace name="website" />
+        <workspace name="config" />
+        <workspace name="users" />
+        <workspace name="userRoles" />
         -->
     </Repository>
     <!-- magnolia default config repository -->
-    <Repository name="config" id="config" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
+    <Repository name="config" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
         <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-cqfs-nosearch.xml" />
         <param name="repositoryHome" value="repositories/config" />
         <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory" />
@@ -44,7 +93,7 @@
         <param name="bindName" value="configAuthor" />
     </Repository>
     <!-- magnolia user repository -->
-    <Repository name="users" id="users" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
+    <Repository name="users" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
         <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-cqfs-nosearch.xml" />
         <param name="repositoryHome" value="repositories/users" />
         <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory" />
@@ -52,11 +101,11 @@
         <param name="bindName" value="usersAuthor" />
     </Repository>
     <!-- magnolia default user roles repository -->
-    <Repository name="userroles" id="userroles" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
+    <Repository name="userroles" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
         <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-cqfs-nosearch.xml" />
         <param name="repositoryHome" value="repositories/userroles" />
         <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory" />
         <param name="providerURL" value="localhost" />
         <param name="bindName" value="userrolesAuthor" />
     </Repository>
-</Repositories>
+</JCR>

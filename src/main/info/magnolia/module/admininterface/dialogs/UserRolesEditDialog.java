@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import java.util.Iterator;
+
 
 /**
  * @author Fabrizio Giustina
@@ -121,8 +123,9 @@ public class UserRolesEditDialog extends ConfiguredDialog {
         Content role = this.getStorageNode();
 
         // for each repository
-        for (int x = 0; x < ContentRepository.getAllRepositoryNames().size(); x++) {
-            String repository = (String) ContentRepository.getAllRepositoryNames().get(x);
+        Iterator repositoryNames = ContentRepository.getAllRepositoryNames();
+        while (repositoryNames.hasNext()) {
+            String repository = (String) repositoryNames.next();
 
             // ######################
             // # acl

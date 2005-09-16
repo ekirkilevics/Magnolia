@@ -87,6 +87,8 @@ public final class ContentRepository {
      */
     private static final String ELEMENT_REPOSITORY = "Repository"; //$NON-NLS-1$
 
+    private static final String ELEMENT_REPOSITORYMAPPING = "RepositoryMapping"; //$NON-NLS-1$
+
     private static final String ELEMENT_PARAM = "param"; //$NON-NLS-1$
 
     private static final String ELEMENT_WORKSPACE = "workspace"; //$NON-NLS-1$
@@ -103,6 +105,8 @@ public final class ContentRepository {
     private static final String ATTRIBUTE_PROVIDER = "provider"; //$NON-NLS-1$
 
     private static final String ATTRIBUTE_VALUE = "value"; //$NON-NLS-1$
+
+    private static final String ATTRIBUTE_REPOSITORY_NAME = "repositoryName"; //$NON-NLS-1$
 
     /**
      * Magnolia system user.
@@ -133,12 +137,12 @@ public final class ContentRepository {
      * Repositories configuration as defined in repositories mapping file via attribute
      * <code>magnolia.repositories.config</code>.
      */
-    private static Map repositoryMappings = new Hashtable();
+    private static Map repositoryMapping = new Hashtable();
 
     /**
      * holds all repository names as configured in repositories.xml
      */
-    private static List repositoryNames;
+    private static Map repositoryNameMap;
 
     /**
      * Utility class, don't instantiate.
@@ -189,8 +193,9 @@ public final class ContentRepository {
      * @throws RepositoryException exception while accessing the repository
      */
     public static boolean checkIfInitialized() throws AccessDeniedException, RepositoryException {
-        for (int j = 0; j < getAllRepositoryNames().size(); j++) {
-            String repository = (String) getAllRepositoryNames().get(j);
+        Iterator repositoryNames = getAllRepositoryNames();
+        while (repositoryNames.hasNext()) {
+            String repository = (String) repositoryNames.next();
             if (log.isDebugEnabled()) {
                 log.debug("Checking [" + repository + "] repository."); //$NON-NLS-1$ //$NON-NLS-2$
             }
@@ -220,21 +225,23 @@ public final class ContentRepository {
         ContentRepository.init();
     }
 
+    /**
+     * Load repository mappings and params using repositories.xml
+     * @throws Exception
+     * */
     private static void loadRepositories() throws Exception {
         Document document = buildDocument();
         Element root = document.getRootElement();
+        loadRepositoryNameMap(root);
         Collection repositoryElements = root.getChildren(ContentRepository.ELEMENT_REPOSITORY);
-        ContentRepository.repositoryNames = new ArrayList();
         Iterator children = repositoryElements.iterator();
         int repositoryIndex = 0;
         while (children.hasNext()) {
             Element element = (Element) children.next();
             String name = element.getAttributeValue(ATTRIBUTE_NAME);
-            String id = element.getAttributeValue(ATTRIBUTE_ID);
             String load = element.getAttributeValue(ATTRIBUTE_LOAD_ON_STARTUP);
             String provider = element.getAttributeValue(ATTRIBUTE_PROVIDER);
             RepositoryMapping map = new RepositoryMapping();
-            map.setID(id);
             map.setName(name);
             map.setProvider(provider);
             boolean loadOnStartup = BooleanUtils.toBoolean(load);
@@ -252,21 +259,36 @@ public final class ContentRepository {
                 Iterator wspIterator = workspaces.iterator();
                 while (wspIterator.hasNext()) {
                     Element workspace = (Element) wspIterator.next();
-                    String wspID = workspace.getAttributeValue(ATTRIBUTE_ID);
-                    map.addWorkspace(wspID);
+                    String wspName = workspace.getAttributeValue(ATTRIBUTE_NAME);
+                    map.addWorkspace(wspName);
                 }
             }
             else {
                 map.addWorkspace(DEFAULT_WORKSPACE);
             }
-            ContentRepository.repositoryMappings.put(id, map);
+            ContentRepository.repositoryMapping.put(name, map);
             try {
                 loadRepository(map);
             }
             catch (Exception e) {
-                log.error("System : Failed to load JCR \"" + map.getID() + "\" " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
+                log.error("System : Failed to load JCR \"" + map.getName() + "\" " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
             }
             repositoryIndex++;
+        }
+    }
+
+    /**
+     * load repository name mapping
+     * @param root element of repositories.xml
+     * */
+    private static void loadRepositoryNameMap(Element root) {
+        Element repositoryMapping = root.getChild(ContentRepository.ELEMENT_REPOSITORYMAPPING);
+        Iterator children = repositoryMapping.getChildren().iterator();
+        ContentRepository.repositoryNameMap = new Hashtable();
+        while (children.hasNext()) {
+            Element nameMap = (Element) children.next();
+            ContentRepository.repositoryNameMap.put
+                    (nameMap.getAttributeValue(ATTRIBUTE_NAME),nameMap.getAttributeValue(ATTRIBUTE_REPOSITORY_NAME));
         }
     }
 
@@ -280,14 +302,12 @@ public final class ContentRepository {
      */
     public static void loadRepository(RepositoryMapping map) throws RepositoryNotInitializedException,
         InstantiationException, IllegalAccessException, ClassNotFoundException {
-        log.info("System : loading JCR - " + map.getID()); //$NON-NLS-1$
+        log.info("System : loading JCR - " + map.getName()); //$NON-NLS-1$
         Provider handlerClass = (Provider) Class.forName(map.getProvider()).newInstance();
         handlerClass.init(map);
         Repository repository = handlerClass.getUnderlineRepository();
-        ContentRepository.repositories.put(map.getID(), repository);
-        ContentRepository.repositoryProviders.put(map.getID(), handlerClass);
-        ContentRepository.repositoryNames.add(map.getID());
-
+        ContentRepository.repositories.put(map.getName(), repository);
+        ContentRepository.repositoryProviders.put(map.getName(), handlerClass);
         if (map.isLoadOnStartup()) {
             /* load hierarchy managers for each workspace */
             Iterator workspaces = map.getWorkspaces().iterator();
@@ -298,6 +318,13 @@ public final class ContentRepository {
         }
     }
 
+    /**
+     * Load hierarchy manager for the specified repository and workspace
+     * @param repository
+     * @param wspID
+     * @param map
+     * @param provider
+     * */
     private static void loadHierarchyManager(Repository repository, String wspID, RepositoryMapping map,
         Provider provider) {
         try {
@@ -310,7 +337,7 @@ public final class ContentRepository {
             HierarchyManager hierarchyManager = new HierarchyManager(ContentRepository.SYSTEM_USER);
             hierarchyManager.init(session.getRootNode());
             hierarchyManager.setAccessManager(accessManager);
-            ContentRepository.hierarchyManagers.put(map.getID() + "_" + wspID, hierarchyManager); //$NON-NLS-1$
+            ContentRepository.hierarchyManagers.put(map.getName() + "_" + wspID, hierarchyManager); //$NON-NLS-1$
 
             try {
                 QueryManager queryManager = SearchFactory.getAccessControllableQueryManager(hierarchyManager
@@ -320,15 +347,19 @@ public final class ContentRepository {
             }
             catch (RepositoryException e) {
                 // probably no search manager is configured for this workspace
-                log.info("QueryManager not initialized for repository " + map.getID() + ": " + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+                log.info("QueryManager not initialized for repository " + map.getName() + ": " + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
         catch (RepositoryException re) {
-            log.error("System : Failed to initialize hierarchy manager for JCR - " + map.getID()); //$NON-NLS-1$
+            log.error("System : Failed to initialize hierarchy manager for JCR - " + map.getName()); //$NON-NLS-1$
             log.error(re.getMessage(), re);
         }
     }
 
+    /**
+     * Get maximum permission available
+     * @return List of permissions
+     * */
     private static List getSystemPermissions() {
         List acl = new ArrayList();
         UrlPattern p = UrlPattern.MATCH_ALL;
@@ -341,6 +372,7 @@ public final class ContentRepository {
 
     /**
      * Builds JDOM document.
+     * @return document
      * @throws IOException
      * @throws JDOMException
      */
@@ -355,11 +387,33 @@ public final class ContentRepository {
     }
 
     /**
+     * Get mapped repository name
+     * @param name
+     * @return mapped name as in repositories.xml RepositoryMapping element
+     * */
+    private static String getMappedRepositoryName(String name) {
+        return (String) ContentRepository.repositoryNameMap.get(name);
+    }
+
+    /**
+     * Get default workspace name
+     * @return default name if there are no workspaces defined or there is no workspace
+     * present with name "default", otherwise return same name as repository name.
+     * */
+    public static String getDefaultWorkspace(String repositoryId) {
+        Collection workspaces = getRepositoryMapping(repositoryId).getWorkspaces();
+        if (workspaces.contains(repositoryId)) {
+            return repositoryId;
+        }
+        return DEFAULT_WORKSPACE;
+    }
+
+    /**
      * Hierarchy manager as created on startup. Note: this hierarchyManager is created with system rights and has full
      * access on the specified repository.
      */
     public static HierarchyManager getHierarchyManager(String repositoryID) {
-        return getHierarchyManager(repositoryID, DEFAULT_WORKSPACE);
+        return getHierarchyManager(repositoryID, getDefaultWorkspace(repositoryID));
     }
 
     /**
@@ -367,29 +421,30 @@ public final class ContentRepository {
      * access on the specified repository.
      */
     public static HierarchyManager getHierarchyManager(String repositoryID, String workspaceID) {
-        return (HierarchyManager) ContentRepository.hierarchyManagers.get(repositoryID + "_" + workspaceID); //$NON-NLS-1$
+        return (HierarchyManager) ContentRepository.hierarchyManagers.get
+                (getMappedRepositoryName(repositoryID) + "_" + workspaceID); //$NON-NLS-1$
     }
 
     /**
      * Returns repository specified by the <code>repositoryID</code> as configured in repository config.
      */
     public static Repository getRepository(String repositoryID) {
-        return (Repository) ContentRepository.repositories.get(repositoryID);
+        return (Repository) ContentRepository.repositories.get(getMappedRepositoryName(repositoryID));
     }
 
     /**
      * returns repository mapping as configured.
      */
     public static RepositoryMapping getRepositoryMapping(String repositoryID) {
-        return (RepositoryMapping) ContentRepository.repositoryMappings.get(repositoryID);
+        return (RepositoryMapping) ContentRepository.repositoryMapping.get(getMappedRepositoryName(repositoryID));
     }
 
     /**
      * Gets repository names array as configured in repositories.xml
      * @return repository names
      */
-    public static List getAllRepositoryNames() {
-        return ContentRepository.repositoryNames;
+    public static Iterator getAllRepositoryNames() {
+        return ContentRepository.repositoryNameMap.keySet().iterator();
     }
 
 }

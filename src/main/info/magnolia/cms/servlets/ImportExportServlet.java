@@ -271,15 +271,15 @@ public class ImportExportServlet extends HttpServlet {
         out.println(MessagesManager.get(request, "importexport.repository") //$NON-NLS-1$
             + " <select name=\"" //$NON-NLS-1$
             + PARAM_REPOSITORY + "\">"); //$NON-NLS-1$
-
-        List repositories = ContentRepository.getAllRepositoryNames();
-        for (int j = 0; j < repositories.size(); j++) {
+        Iterator repositoryNames = ContentRepository.getAllRepositoryNames();
+        while (repositoryNames.hasNext()) {
+            String name = (String) repositoryNames.next();
             out.print("<option"); //$NON-NLS-1$
-            if (repository.equals(repositories.get(j))) {
+            if (repository.equals(name)) {
                 out.print(" selected=\"selected\""); //$NON-NLS-1$
             }
             out.print(">"); //$NON-NLS-1$
-            out.print(repositories.get(j));
+            out.print(name);
             out.print("</option>"); //$NON-NLS-1$
         }
         out.println("</select>"); //$NON-NLS-1$

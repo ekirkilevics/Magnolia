@@ -35,14 +35,6 @@ public class RepositoryMapping {
         this.name = name;
     }
 
-    public String getID() {
-        return id;
-    }
-
-    public void setID(String id) {
-        this.id = id;
-    }
-
     public String getProvider() {
         return provider;
     }

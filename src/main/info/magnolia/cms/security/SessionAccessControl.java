@@ -73,7 +73,7 @@ public final class SessionAccessControl {
      */
     protected static Session getSession(HttpServletRequest request, String repositoryID) throws LoginException,
         RepositoryException {
-        return getSession(request, repositoryID, DEFAULT_WORKSPACE);
+        return getSession(request, repositoryID, ContentRepository.getDefaultWorkspace(repositoryID));
     }
 
     /**
@@ -103,7 +103,7 @@ public final class SessionAccessControl {
      * @param repositoryID
      */
     public static HierarchyManager getHierarchyManager(HttpServletRequest request, String repositoryID) {
-        return getHierarchyManager(request, repositoryID, DEFAULT_WORKSPACE);
+        return getHierarchyManager(request, repositoryID, ContentRepository.getDefaultWorkspace(repositoryID));
     }
 
     /**
@@ -138,7 +138,7 @@ public final class SessionAccessControl {
      * @param repositoryID
      */
     public static AccessManager getAccessManager(HttpServletRequest request, String repositoryID) {
-        return getAccessManager(request, repositoryID, DEFAULT_WORKSPACE);
+        return getAccessManager(request, repositoryID, ContentRepository.getDefaultWorkspace(repositoryID));
     }
 
     /**
@@ -178,7 +178,7 @@ public final class SessionAccessControl {
      */
     public static QueryManager getQueryManager(HttpServletRequest request, String repositoryID)
         throws RepositoryException {
-        return getQueryManager(request, repositoryID, DEFAULT_WORKSPACE);
+        return getQueryManager(request, repositoryID, ContentRepository.getDefaultWorkspace(repositoryID));
     }
 
     /**
@@ -230,7 +230,7 @@ public final class SessionAccessControl {
      */
     private static void createRepositorySession(HttpServletRequest request, String repositoryID) throws LoginException,
         RepositoryException {
-        createRepositorySession(request, repositoryID, DEFAULT_WORKSPACE);
+        createRepositorySession(request, repositoryID, ContentRepository.getDefaultWorkspace(repositoryID));
     }
 
     /**

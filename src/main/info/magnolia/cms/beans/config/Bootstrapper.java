@@ -20,6 +20,7 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
 
 import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.RepositoryException;
@@ -70,9 +71,9 @@ public final class Bootstrapper {
         System.out.println("\n-----------------------------------------------------------------\n"); //$NON-NLS-1$
 
         log.info("Trying to initialize repositories from [" + bootdir + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-
-        for (int j = 0; j < ContentRepository.getAllRepositoryNames().size(); j++) {
-            String repository = (String)ContentRepository.getAllRepositoryNames().get(j);
+        Iterator repositoryNames = ContentRepository.getAllRepositoryNames();
+        while (repositoryNames.hasNext()) {
+            String repository = (String) repositoryNames.next();
 
             File xmldir = new File(bootdir, repository);
 
