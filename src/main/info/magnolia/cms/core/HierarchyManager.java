@@ -514,4 +514,14 @@ public class HierarchyManager {
         return this.startPage.getSession().hasPendingChanges();
     }
 
+    /**
+     * Refreshes this session
+     * @param keepChanges
+     * @throws RepositoryException
+     * @see javax.jcr.Session#refresh(boolean)
+     * */
+    public void refresh(boolean keepChanges) throws RepositoryException {
+        this.workSpace.getSession().refresh(keepChanges);
+    }
+
 }
