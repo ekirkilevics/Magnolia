@@ -73,24 +73,35 @@ public class ResourceDispatcher extends HttpServlet {
             log.debug("handleResourceRequest, resourceHandle=\"" + resourceHandle + "\""); //$NON-NLS-1$ //$NON-NLS-2$
         }
         if (StringUtils.isNotEmpty(resourceHandle)) {
+            HierarchyManager hm = (HierarchyManager) req.getAttribute(Aggregator.HIERARCHY_MANAGER);
+            InputStream is  = null;
             try {
-                HierarchyManager hm = (HierarchyManager) req.getAttribute(Aggregator.HIERARCHY_MANAGER);
-                InputStream is = getNodedataAstream(resourceHandle, hm, res);
-                if (is != null) {
-                    // todo always send as is, find better way to discover if resource could be compressed
+                is = getNodedataAstream(resourceHandle, hm, res);
+                if (null != is) {
+                    // todo find better way to discover if resource could be compressed, implement as in "cache"
+                    // browsers will always send header saying either it can decompress or not, but
+                    // resources like jpeg which is already compressed should be not be written on
+                    // zipped stream otherwise some browsers takes a long time to render
                     sendUnCompressed(is, res);
                     is.close();
                     return;
                 }
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 // don't log at error level since tomcat tipically throws a
                 // org.apache.catalina.connector.ClientAbortException if the user stops loading the page
                 log.debug("Exception while dispatching resource  " + e.getClass().getName() + ": " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 log.error("Exception while dispatching resource  " + e.getClass().getName() + ": " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
+            } finally {
+                if (null != is) {
+                    try {
+                        is.close();
+                    } catch (IOException e) {
+                        // ignore
+                    }
+                }
             }
+
         }
         if (log.isDebugEnabled()) {
             log.debug("Resource not found, redirecting request for [" + req.getRequestURI() + "] to 404 URI"); //$NON-NLS-1$
