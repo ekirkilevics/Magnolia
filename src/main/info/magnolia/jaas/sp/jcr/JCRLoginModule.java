@@ -33,21 +33,15 @@ import info.magnolia.cms.util.UrlPattern;
 import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
-import info.magnolia.jaas.principal.Entity;
-import info.magnolia.jaas.principal.ACL;
-import info.magnolia.jaas.principal.PrincipalCollection;
-import info.magnolia.jaas.principal.ACLFactory;
+import info.magnolia.jaas.principal.*;
 import info.magnolia.jaas.sp.AbstractLoginModule;
 
 /**
  * This is a default login module for magnolia, it uses initialized repository as
  * defined by the provider interface
  *
- * Date: May 30, 2005
- * Time: 4:42:22 PM
- *
  * @author Sameer Charles
- * $Id :$
+ * @version $Revision$ ($Author$)
  */
 public class JCRLoginModule extends AbstractLoginModule {
 
@@ -56,13 +50,13 @@ public class JCRLoginModule extends AbstractLoginModule {
      * */
     private static Logger log = Logger.getLogger(JCRLoginModule.class);
 
-    private String name;
+    protected String name;
 
-    private char[] pswd;
+    protected char[] pswd;
 
-    private boolean success;
+    protected boolean success;
 
-    private Content user;
+    protected Content user;
 
     public void initialize(Subject subject, CallbackHandler callbackHandler, Map sharedState, Map options) {
         this.subject = subject;
@@ -165,10 +159,12 @@ public class JCRLoginModule extends AbstractLoginModule {
         try {
             Content rolesNode = this.user.getContent("roles");
             Iterator children = rolesNode.getChildren().iterator();
-            PrincipalCollection list = new PrincipalCollection();
+            RoleList roleList = new RoleList();
+            PrincipalCollection principalList = new PrincipalCollection();
             while (children.hasNext()) {
                 Content child = (Content) children.next();
                 String rolePath = child.getNodeData("path").getString();
+                roleList.addRole(rolePath);
                 Content role = rolesHierarchy.getContent(rolePath);
                 Iterator it = role.getChildren(ItemType.CONTENTNODE.getSystemName(),"acl*").iterator();
                 while (it.hasNext()) {
@@ -180,8 +176,8 @@ public class JCRLoginModule extends AbstractLoginModule {
                         name += ("_"+defaultWorkspace); // default workspace must be added to the name
                     }
                     ACL acl = ACLFactory.get(name);
-                    if (!list.contains(name)) {
-                        list.add(acl);
+                    if (!principalList.contains(name)) {
+                        principalList.add(acl);
                     }
                     //add acl
                     Iterator permissionIterator = aclEntry.getChildren().iterator();
@@ -197,9 +193,13 @@ public class JCRLoginModule extends AbstractLoginModule {
                 }
             }
             /**
-             * set principal list
+             * set principal list, a set of info.magnolia.jaas.principal.ACL
              * */
-            this.subject.getPrincipals().add(list);
+            this.subject.getPrincipals().add(principalList);
+            /**
+             * set list of role names, info.magnolia.jaas.principal.RoleList
+             * */
+            this.subject.getPrincipals().add(roleList);
         } catch (RepositoryException re) {
             re.printStackTrace();
         } catch (Exception e) {

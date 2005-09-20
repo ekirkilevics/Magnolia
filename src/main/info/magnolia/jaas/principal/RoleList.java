@@ -14,49 +14,41 @@ package info.magnolia.jaas.principal;
 
 import java.io.Serializable;
 import java.security.Principal;
-import java.util.Hashtable;
-import java.util.Map;
+import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.apache.commons.lang.StringUtils;
 
 
 /**
  * @author Sameer Charles
- * @version $Revision$ ($Author$)
+ * @version $Revision: $ ($Author: $)
  */
-public class Entity implements Principal, Serializable {
+public class RoleList implements Principal, Serializable {
 
     /**
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
 
-    private static final String DEFAULT_NAME = "person";
-
     /**
-     * default properties
-     */
-    public static final String FULL_NAME = "fullName";
-
-    public static final String NAME = "name";
-
-    public static final String EMAIL = "email";
-
-    public static final String LANGUAGE = "language";
-
-    public static final String LOCALE = "locale";
-
-    public static final String ADDRESS_LINE = "address";
+     * default name for this principal
+     * */
+    private static final String DEFAULT_NAME = "roles";
 
     /**
      * properties
      */
     private String name;
 
-    private Map properties;
+    /**
+     * list of names
+     * */
+    private Collection roles;
 
-    public Entity() {
-        this.properties = new Hashtable();
+    public RoleList() {
+        this.roles = new ArrayList();
     }
 
     /**
@@ -70,16 +62,42 @@ public class Entity implements Principal, Serializable {
         return this.name;
     }
 
+    /**
+     * Set principal name
+     * @param name
+     * */
     public void setName(String name) {
         this.name = name;
     }
 
-    public void addProperty(String key, Object value) {
-        this.properties.put(key, value);
+    /**
+     * Add a role name to the list
+     * @param roleName
+     * */
+    public void addRole(String roleName) {
+        this.roles.add(roleName);
     }
 
-    public Object getProperty(String key) {
-        return this.properties.get(key);
+    /**
+     * Gets list of roles as string
+     * @return roles
+     * */
+    public Collection getList() {
+        return this.roles;
+    }
+
+    /**
+     * Checks if the role name exist in this list
+     * */
+    public boolean hasRole(String name) {
+        Iterator listIterator = this.roles.iterator();
+        while (listIterator.hasNext()) {
+            String roleName = (String) listIterator.next();
+            if (StringUtils.equalsIgnoreCase(name, roleName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

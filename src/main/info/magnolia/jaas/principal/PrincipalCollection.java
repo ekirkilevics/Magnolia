@@ -11,7 +11,8 @@ import java.io.Serializable;
 
 /**
  * Date: Jun 29, 2005
- * @author Sameer Charles $Id :$
+ * @author Sameer Charles
+ * @version $Revision$ ($Author$)
  */
 public class PrincipalCollection implements Principal, Serializable {
 

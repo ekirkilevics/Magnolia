@@ -6,11 +6,8 @@ import java.util.Hashtable;
 import java.util.Map;
 
 /**
- * Date: Jun 30, 2005
- * Time: 12:01:35 AM
  * @author Sameer Charles
- *
- * $Id :$
+ * @version $Revision$ ($Author$)
  */
 public class ACLFactory {
 

@@ -22,7 +22,8 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * This class represents access control list as a principal
- * @author Sameer Charles $Id :$
+ * @author Sameer Charles
+ * @version $Revision$ ($Author$)
  */
 public class ACL implements Principal, Serializable {
 

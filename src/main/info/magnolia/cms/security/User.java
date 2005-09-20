@@ -13,6 +13,7 @@
 package info.magnolia.cms.security;
 
 import info.magnolia.jaas.principal.Entity;
+import info.magnolia.jaas.principal.RoleList;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -39,40 +40,29 @@ public class User {
     private Entity userDetails;
 
     /**
+     * user roles
+     * */
+    private RoleList roleList;
+
+    /**
      * @param subject as created by login module
      */
     public User(Subject subject) {
         Set principalSet = subject.getPrincipals(info.magnolia.jaas.principal.Entity.class);
-        Iterator it = principalSet.iterator();
-        this.userDetails = (Entity) it.next();
+        Iterator entityIterator = principalSet.iterator();
+        this.userDetails = (Entity) entityIterator.next();
+        principalSet = subject.getPrincipals(info.magnolia.jaas.principal.RoleList.class);
+        Iterator roleListIterator = principalSet.iterator();
+        this.roleList = (RoleList) roleListIterator.next();
     }
 
     /**
-     * TODO: JAAS
      * Is this user in a specified role?
      * @param roleName the name of the role
      * @return true if in role
      */
     public boolean hasRole(String roleName) {
-        throw new UnsupportedOperationException("not implemented with JAAS");
-        //try {
-        //    Content rolesNode = userNode.getContent(NODE_ROLES);
-        //
-        //    for (Iterator iter = rolesNode.getChildren().iterator(); iter.hasNext();) {
-        //        Content node = (Content) iter.next();
-        //        if (node.getNodeData("path").getString().equals("/" + roleName)) { //$NON-NLS-1$ //$NON-NLS-2$
-        //            return true;
-        //        }
-        //    }
-        //    if (rolesNode.hasContent(roleName)) {
-        //        return true;
-        //    }
-        //
-        //}
-        //catch (RepositoryException e) {
-        //    // nothing
-        //}
-        //return false
+        return this.roleList.hasRole(roleName);
     }
 
     /**
@@ -104,7 +94,6 @@ public class User {
      * TODO: JAAS
      * Adds a role to this user
      * @param roleName the name of the role
-     * @param request the request. used for security reasons
      */
     public void addRole(String roleName){
         throw new UnsupportedOperationException("not implemented with JAAS");
@@ -148,14 +137,12 @@ public class User {
 
     
     /**
-     * TODO: JAAS
      * Returns the current user
      * @param request
      * @return the current user
      */
     public static User getCurrent(HttpServletRequest request){
-        throw new UnsupportedOperationException("not implemented with JAAS");
-         // return Authenticator.getUser(request);
+        return (new User(Authenticator.getSubject(request)));
     }
     
     
