@@ -228,13 +228,13 @@ public class Save extends ControlSuper {
         AccessDeniedException {
 
         String name;
-        int type = type = PropertyType.STRING;
+        int type = PropertyType.STRING;
         int valueType = ControlSuper.VALUETYPE_SINGLE;
         int isRichEditValue = 0;
         int encoding = ControlSuper.ENCODING_NO;
         String[] values = {StringUtils.EMPTY};
         if (StringUtils.contains(saveInfo, ',')) {
-            String[] info = saveInfo.split(","); //$NON-NLS-1$
+            String[] info = StringUtils.split(saveInfo, ',');
             name = info[0];
             if (info.length >= 2) {
                 type = PropertyType.valueFromName(info[1]);
