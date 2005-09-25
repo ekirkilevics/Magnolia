@@ -380,4 +380,30 @@
 ]]>
         </example>
     </tag>
+    <tag>
+        <name>redirect</name>
+        <tag-class>info.magnolia.cms.taglibs.util.RedirectTag</tag-class>
+        <body-content>empty</body-content>
+        <description>
+            Redirects to the first child page. If the server is an authoring instance or magnolia and the preview mode
+            is not active the tag will simply add to the pagecontext a variable named from the var attribute containing
+            the path of the child page.
+        </description>
+        <attribute>
+            <name>var</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                name for the variable which will contain the URL of the page this tag will redirect to
+            </description>
+        </attribute>
+        <example>
+            <![CDATA[
+<cmsu:redirect var="destpage" />
+
+This page has no content and it will redirect to
+<a href="${pageContext.request.contextPath}${destpage}">${destpage}</a> in a public instance.
+]]>
+        </example>
+    </tag>
 </taglib>
