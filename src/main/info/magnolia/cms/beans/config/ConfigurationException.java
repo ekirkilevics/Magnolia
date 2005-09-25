@@ -12,13 +12,13 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.core.BaseException;
+import info.magnolia.cms.core.BaseRuntimeException;
 
 
 /**
  *
  */
-public class ConfigurationException extends BaseException {
+public class ConfigurationException extends BaseRuntimeException {
 
     /**
      * Stable serialVersionUID.

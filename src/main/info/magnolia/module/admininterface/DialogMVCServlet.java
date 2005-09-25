@@ -12,11 +12,14 @@
  */
 package info.magnolia.module.admininterface;
 
+import info.magnolia.cms.beans.config.ConfigurationException;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.servlets.MVCServlet;
 import info.magnolia.cms.servlets.MVCServletHandler;
 import info.magnolia.cms.util.RequestFormUtil;
 import info.magnolia.module.admininterface.dialogs.ConfiguredDialog;
+
+import java.text.MessageFormat;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -82,7 +85,12 @@ public class DialogMVCServlet extends MVCServlet {
         }
 
         if (handler == null) {
-            log.error("no dialog found: " + dialogName); //$NON-NLS-1$
+            log.error(MessageFormat.format("Missing configuration for {0}. Check node {1}{0}", //$NON-NLS-1$
+                new Object[]{dialogName, "/modules/templating/Paragraphs/"})); //$NON-NLS-1$
+
+            throw new ConfigurationException(MessageFormat.format("Missing configuration for {0}. Check node {1}{0}", //$NON-NLS-1$
+                new Object[]{dialogName, "/modules/templating/Paragraphs/"})); //$NON-NLS-1$
+
         }
 
         return handler;
