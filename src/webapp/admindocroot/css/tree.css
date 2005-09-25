@@ -71,7 +71,7 @@ div.mgnlTreeMenuItem,div.mgnlTreeMenuItem_DISABLED {
 }
 
 div.mgnlTreeMenuLine {
-	width: 158;
+	width: 158px;
 	height: 1px;
 	background-color: #999;
 	cursor: default;

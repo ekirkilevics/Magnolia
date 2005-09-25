@@ -89,8 +89,8 @@
 
 #mgnlMoveDivShadow,#mgnlMoveDivDenied,#mgnlMoveDivAllowed {
 	position: absolute;
-	top: -50;
-	left: -50;
+	top: -50px;
+	left: -50px;
 	z-index: 901;
 	visibility: hidden;
 	font-family: Verdana;
