@@ -18,6 +18,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.Resource;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -201,11 +202,22 @@ public class SimpleNavigationTag extends TagSupport {
     public int doEndTag() throws JspException {
         Content activePage = Resource.getActivePage((HttpServletRequest) this.pageContext.getRequest());
         JspWriter out = this.pageContext.getOut();
+
+        Content startPage;
+        try {
+            startPage = activePage.getAncestor(this.startLevel);
+        }
+        catch (RepositoryException e) {
+            log.error(MessageFormat.format(
+                "Unable to load page at startlevel: {0}", new Object[]{e.getClass().getName()})); //$NON-NLS-1$
+            return EVAL_PAGE;
+        }
+
         try {
             if (style != null) {
                 out.println("<span class=\"" + style + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
             }
-            drawChildren(activePage.getAncestor(this.startLevel), activePage, out);
+            drawChildren(startPage, activePage, out);
             if (style != null) {
                 out.println("</span>"); //$NON-NLS-1$
             }
