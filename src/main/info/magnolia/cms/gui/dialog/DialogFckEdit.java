@@ -134,7 +134,8 @@ public class DialogFckEdit extends DialogBox {
         // load the script onece: if there are multiple instances
         if (getRequest().getAttribute("__fcked_loaded") == null) { //$NON-NLS-1$
             out.write("<script type=\"text/javascript\" src=\"" //$NON-NLS-1$
-                + this.getRequest().getContextPath() + "/admindocroot/fckeditor/fckeditor.js\"></script>"); //$NON-NLS-1$
+                + this.getRequest().getContextPath()
+                + "/admindocroot/fckeditor/fckeditor.js\"></script>"); //$NON-NLS-1$
             getRequest().setAttribute("__fcked_loaded", "true"); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
@@ -152,31 +153,43 @@ public class DialogFckEdit extends DialogBox {
         out.write("fckInstance = new FCKeditor( '" + id + "' );"); //$NON-NLS-1$ //$NON-NLS-2$
         out.write("fckInstance.Value = '" + escapeJsValue(value) + "';"); //$NON-NLS-1$ //$NON-NLS-2$
         out.write("fckInstance.BasePath = '" + this.getRequest().getContextPath() + FCKEDIT_PATH + "';"); //$NON-NLS-1$ //$NON-NLS-2$
+
+        if (this.getConfigValue("height", null) != null) { //$NON-NLS-1$
+            out.write("fckInstance.Height = '" + escapeJsValue(this.getConfigValue("height")) + "';"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        }
+
         if (customConfigurationsPath.length() > 0) {
             out.write("fckInstance.Config['CustomConfigurationsPath'] = '" //$NON-NLS-1$
-                + this.getRequest().getContextPath() + customConfigurationsPath + "';"); //$NON-NLS-1$
+                + this.getRequest().getContextPath()
+                + customConfigurationsPath
+                + "';"); //$NON-NLS-1$
         }
         if (jsInitFile.length() > 0) {
             out.write("</script>"); //$NON-NLS-1$
             out.write("<script type=\"text/javascript\" src=\"" //$NON-NLS-1$
-                + this.getRequest().getContextPath() + jsInitFile + "\"></script>\n"); //$NON-NLS-1$
+                + this.getRequest().getContextPath()
+                + jsInitFile
+                + "\"></script>\n"); //$NON-NLS-1$
             out.write("<script type=\"text/javascript\">"); //$NON-NLS-1$
         }
+
         out.write("fckInstance.Create();"); //$NON-NLS-1$
         out.write(var + " = fckInstance;"); //$NON-NLS-1$
         out.write("</script>"); //$NON-NLS-1$
 
         // write the saveInfo for the writting back to the repository
         out.write("<input type='hidden' name='mgnlSaveInfo' value='" //$NON-NLS-1$
-            + id + ",String," //$NON-NLS-1$
-            + ControlSuper.VALUETYPE_SINGLE + "," //$NON-NLS-1$
-            + ControlSuper.RICHEDIT_FCK + "," //$NON-NLS-1$
-            + ControlSuper.ENCODING_NO + "' />"); //$NON-NLS-1$
+            + id
+            + ",String," //$NON-NLS-1$
+            + ControlSuper.VALUETYPE_SINGLE
+            + "," //$NON-NLS-1$
+            + ControlSuper.RICHEDIT_FCK
+            + "," //$NON-NLS-1$
+            + ControlSuper.ENCODING_NO
+            + "' />"); //$NON-NLS-1$
 
         this.drawHtmlPost(out);
 
-        // out.write("</td>");
-        // out.write("</tr>");
     }
 
     /**
@@ -195,7 +208,7 @@ public class DialogFckEdit extends DialogBox {
 
     /**
      * Replacements:
-     * 
+     *
      * <pre>
      * ' -> \'
      * " -> \"
@@ -203,7 +216,7 @@ public class DialogFckEdit extends DialogBox {
      * \n -> \\n
      * \ -> \\
      * </pre>
-     * 
+     *
      * @param src
      * @return escaped js String
      */
