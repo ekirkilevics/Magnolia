@@ -7,12 +7,7 @@
         <section name="Development environment setup using eclipse and WTP">
             <subsection name="Installing eclipse and required plugins">
                 <p>
-                    First of all, you will need to install WTP 0.7 with Eclipse 3.1 and its prerequisites: you can
-                    download a full package from
-                    <a href="http://download.eclipse.org/webtools/downloads/drops/R-0.7-200507290654/">
-                        http://download.eclipse.org/webtools/downloads/drops/R-0.7-200507290654/
-                    </a>
-                    . Note that this how to will not work for previous WTP versions.
+                    First of all, you will need to install <a href="http://www.eclipse.org/downloads/index.php">Eclipse 3.1 </a>. Then you have to install the Eclipse Web Tools Project (WTP) and its prerequisites by following the steps <a href="http://www.eclipse.org/webtools/development/updatesite/updatesite.html">here</a>.
                 </p>
                 <p>
                     Once installed, start Eclipse and install the subversion plugin using the eclipse update manager:
@@ -21,9 +16,8 @@
                         <li>Select "Search for new features to install"</li>
                         <li>Click "New remote site" and add the url http://subclipse.tigris.org/update/</li>
                         <li>Click "New remote site" again and add the url http://tmate.org/svn/</li>
-                        <li>
-                            Check the newly added sites and go on with the installation. You will need to restart
-                            eclipse after done
+                        <li>Check the newly added sites and go on with the installation. You will need to restart
+                            eclipse after it is done.
                         </li>
                     </ol>
                 </p>
@@ -46,20 +40,19 @@
                 Register a 5.5 Tomcat Server runtime
                 <ol>
                     <li>Open the J2EE Perspective</li>
-                    <li>right click in the Server tab</li>
-                    <li>register your tomcat installation</li>
+                    <li>Right click in the Server tab</li>
+                    <li>Register your tomcat installation</li>
                 </ol>
             </subsection>
             <subsection name="Convert the non Java Project to a Dynamic Web Project">
                 <ol>
-                    <li>
-                        register the classpath variable MAVEN_REPO. It must point to the maven repository (Preferences /
+                    <li>Register the classpath variable MAVEN_REPO. It must point to the maven repository (Preferences /
                         Java /Build Path / Classpath variables)
                     </li>
-                    <li>close Eclipse</li>
-                    <li>use the command: maven eclipse</li>
-                    <li>this creates all the project files needed for the WTP plugin</li>
-                    <li>open Eclipse and refresh the project</li>
+                    <li>Close Eclipse</li>
+                    <li>Run the maven eclipse goal in your magnolia directory <code>maven eclipse</code></li>
+                    <li>This creates all the project files needed for the WTP plugin</li>
+                    <li>Open Eclipse and refresh the project</li>
                 </ol>
             </subsection>
             <subsection name="Running the server">
