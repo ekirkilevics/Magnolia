@@ -5,14 +5,34 @@
 		<format property="magnolia.currentDate" pattern="MMMM d. yyyy" locale="en"/>
   	</tstamp>
   	
+  	
+  	<!--
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  	-->
+  	
 
 	<goal name="rebuild-all" prereqs="pom,clean,war:war,dist:build" />
+	
+	
+	<!--
+	this can now be configured as a report, we need to add the pdf-plugin dependency with the needed version
     <postGoal name="site">
         <attainGoal name="pdf" />
     </postGoal>
+    -->
+    
 	
+	
+	<!--
+	    should be removed: check filtering in POM
 	<postGoal name="java:jar-resources">
-		<!-- set the current version -->
         <ant:replace file="${maven.build.dest}/info/magnolia/cms/license/license.xml"
             token="$${magnolia.version}"
             value="${pom.currentVersion}" />
@@ -20,9 +40,15 @@
             token="$${magnolia.revision}"
             value="${magnolia.build.revision} ${magnolia.currentDate}" />  		
 	</postGoal>
+	
+	-->
     
+    <!--
+    todo: remove xslt stuff (switch to propertyconfiguration)
+    temporary disabled
+    -->
     
-    <postGoal name="war:webapp">
+    <postGoal name="warDISABLED:webapp">
         <!-- copy the readme file -->
         <ant:copy file="${release.src}/release notes.war.txt" tofile="${maven.war.webapp.dir}/release notes.txt" />
         <ant:replace file="${maven.war.webapp.dir}/release notes.txt"
@@ -87,6 +113,9 @@
                 token="jackrabbit-cqfs-nosearch.xml" value="jackrabbit-file-nosearch.xml" />
         </j:if>
     </postGoal>
+    
+   
+    
     <goal name="nightly" prereqs="clean,war:war,site:generate,copy-nightly-war,site:sshdeploy"></goal>
     <goal name="copy-nightly-war">
         <ant:copy todir="${maven.build.dir}/docs/nightly">

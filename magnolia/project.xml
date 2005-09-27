@@ -151,12 +151,6 @@
             <includes>
                 <include>**/*Test.java</include>
             </includes>
-            <resources>
-                <resource>
-                    <directory>src/test/resources</directory>
-                    <filtering>false</filtering>
-                </resource>
-            </resources>
         </unitTest>
         <resources>
             <resource>

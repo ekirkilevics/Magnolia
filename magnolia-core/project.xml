@@ -5,7 +5,7 @@
     <id>magnolia-core</id>
     <groupId>info.magnolia</groupId>
     <artifactId>magnolia-core</artifactId>
-    <name>magnolia</name>
+    <name>magnolia-core</name>
     <currentVersion>2.2-SNAPSHOT</currentVersion>
     <organization>
         <name>Obinary Ltd</name>
@@ -542,18 +542,6 @@
             <type>plugin</type>
             <properties>
                 <comment>maven plugin for the findbug report.</comment>
-            </properties>
-        </dependency>
-        <dependency>
-            <groupId>maven</groupId>
-            <artifactId>maven-war-plugin</artifactId>
-            <version>1.7-UNOFFICIAL-1</version>
-            <type>plugin</type>
-            <url>http://magnolia.sourceforge.net/repository/maven/plugins/maven-war-plugin-1.7-UNOFFICIAL-1.jar</url>
-            <properties>
-                <comment>
-                    war plugin: unofficial builds which adds the patch in http://jira.codehaus.org/browse/MPWAR-30
-                </comment>
             </properties>
         </dependency>
         <dependency>
