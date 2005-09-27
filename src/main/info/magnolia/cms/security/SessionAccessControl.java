@@ -16,17 +16,20 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.SearchFactory;
-import info.magnolia.jaas.principal.PrincipalCollection;
 import info.magnolia.jaas.principal.ACL;
+import info.magnolia.jaas.principal.PrincipalCollection;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
-import javax.servlet.http.HttpServletRequest;
 import javax.security.auth.Subject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 
@@ -248,18 +251,25 @@ public final class SessionAccessControl {
 
         // JAAS specific
         Subject subject = Authenticator.getSubject(request);
-        Set principalSet = subject.getPrincipals(info.magnolia.jaas.principal.PrincipalCollection.class);
-        Iterator it = principalSet.iterator();
-        PrincipalCollection principals = (PrincipalCollection) it.next();
-        ACL acl = (ACL) principals.get(repositoryID+"_"+workspaceID);
 
-        /*
-        Content userNode = getUserNode(request);
-        List acl = new ArrayList();
-        updateRolesACL(userNode, acl, repositoryID);
-        */
+        if (subject == null) {
+            log.error("Authenticator.getSubject(request) returned null");
+        }
+
+        List permissionList;
+        if (subject != null) {
+            Set principalSet = subject.getPrincipals(info.magnolia.jaas.principal.PrincipalCollection.class);
+            Iterator it = principalSet.iterator();
+            PrincipalCollection principals = (PrincipalCollection) it.next();
+            ACL acl = (ACL) principals.get(repositoryID + "_" + workspaceID);
+            permissionList = acl.getList();
+        }
+        else {
+            permissionList = new ArrayList(0);
+        }
+
         AccessManagerImpl accessManager = new AccessManagerImpl();
-        accessManager.setPermissionList(acl.getList());
+        accessManager.setPermissionList(permissionList);
         request.getSession().setAttribute(ATTRIBUTE_AM_PREFIX + repositoryID + "_" + workspaceID, accessManager);
     }
 
@@ -291,7 +301,6 @@ public final class SessionAccessControl {
     public static void invalidateUser(HttpServletRequest request) {
         request.getSession().invalidate();
     }
-
 
     /**
      * @param request current HttpServletRequest
