@@ -476,7 +476,10 @@ public class HierarchyManager {
         AccessDeniedException {
         Access.isGranted(this.accessManager, source, Permission.REMOVE);
         Access.isGranted(this.accessManager, destination, Permission.WRITE);
-        this.workSpace.move(source, destination);
+
+        // maem: rather use session because of caching bug. see http://issues.apache.org/jira/browse/JCR-155
+        this.workSpace.getSession().move(source, destination);
+        this.workSpace.getSession().save();
     }
 
     /**
@@ -519,7 +522,7 @@ public class HierarchyManager {
      * @param keepChanges
      * @throws RepositoryException
      * @see javax.jcr.Session#refresh(boolean)
-     * */
+     */
     public void refresh(boolean keepChanges) throws RepositoryException {
         this.workSpace.getSession().refresh(keepChanges);
     }

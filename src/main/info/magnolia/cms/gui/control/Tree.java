@@ -785,7 +785,7 @@ public class Tree extends ControlSuper {
                 // copy
                 hm.copyTo(source, destination);
             }
-            SessionAccessControl.invalidateUser(this.getRequest());
+            // SessionAccessControl.invalidateUser(this.getRequest());
             Content newContent = hm.getContent(destination);
             try {
                 newContent.updateMetaData(this.getRequest());
@@ -860,7 +860,7 @@ public class Tree extends ControlSuper {
                     parent.orderBefore(newLabel, placedBefore);
                 }
             }
-            SessionAccessControl.invalidateUser(this.getRequest());
+            // SessionAccessControl.invalidateUser(this.getRequest());
             Content newPage = hm.getContent(dest);
             returnValue = newLabel;
             newPage.updateMetaData(this.getRequest());
