@@ -13,7 +13,6 @@
         <logo>images/obinary-logo.png</logo>
     </organization>
     <inceptionYear>1993</inceptionYear>
-    <package>info.magnolia</package>
     <logo>images/magnolia-logo.png</logo>
     <description>
         Magnolia is a free enterprise class content management system developed by obinary. Magnolia uses the upcoming
@@ -26,8 +25,8 @@
     <siteAddress>shell.sourceforge.net</siteAddress>
     <siteDirectory>/home/groups/m/ma/magnolia/htdocs</siteDirectory>
     <repository>
-        <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk</connection>
-        <developerConnection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk</developerConnection>
+        <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk/magnolia</connection>
+        <developerConnection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk/magnolia</developerConnection>
         <url>http://svn.magnolia.info/view</url>
     </repository>
     <versions>
@@ -536,17 +535,15 @@
                 <comment>maven plugin needed to generate tag reference documentation page</comment>
             </properties>
         </dependency>
-        <!--
         <dependency>
             <groupId>maven-plugins</groupId>
             <artifactId>maven-findbugs-plugin</artifactId>
-            <version>0.9.1</version>
+            <version>0.9.2</version>
             <type>plugin</type>
             <properties>
                 <comment>maven plugin for the findbug report.</comment>
             </properties>
         </dependency>
-        -->
         <dependency>
             <groupId>maven</groupId>
             <artifactId>maven-war-plugin</artifactId>

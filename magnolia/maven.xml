@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project >
-<project xmlns:j="jelly:core" xmlns:u="jelly:util" xmlns:ant="jelly:ant" default="rebuild-all">
+<project xmlns:j="jelly:core" xmlns:u="jelly:util" xmlns:ant="jelly:ant">
 	<tstamp>
 		<format property="magnolia.currentDate" pattern="MMMM d. yyyy" locale="en"/>
   	</tstamp>
