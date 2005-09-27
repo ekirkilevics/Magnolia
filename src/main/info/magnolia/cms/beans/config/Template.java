@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
 import org.apache.log4j.Logger;
@@ -46,6 +45,8 @@ public class Template {
     private static List visibleTemplates = new ArrayList();
 
     private static Map cachedContent = new Hashtable();
+
+    public static final String DEFAULT_TEMPLATE_PATH_PREFIX = "modules/templating/Templates/";
 
     /**
      * Template name.
@@ -89,18 +90,52 @@ public class Template {
         Template.visibleTemplates.clear();
     }
 
+    /**
+     * Recursive search for content nodes contains template data (looks up subfolders)
+     * @author <a href="mailto:tm@touk.pl">Tomasz Mazan</a>
+     * @param cnt current folder to look for template's nodes
+     * @return collection of template's content nodes from current folder and descendants
+     */
+    private static Collection collectChildren(Content cnt) {
+        // Collect template's content node - children of current node
+        Collection children = cnt.getChildren(ItemType.CONTENTNODE, ContentHandler.SORT_BY_SEQUENCE);
+
+        // Look into subfolders
+        Collection subFolders = cnt.getChildren(ItemType.CONTENT);
+        if ((subFolders != null) && !(subFolders.isEmpty())) {
+
+            Iterator it = subFolders.iterator();
+            while (it.hasNext()) {
+                Content subCnt = (Content) it.next();
+                Collection grandChildren = collectChildren(subCnt);
+
+                if ((grandChildren != null) && !(grandChildren.isEmpty())) {
+                    children.addAll(grandChildren);
+                }
+            }
+
+        }
+
+        return children;
+    }
+
     public static void update(String modulePath) {
         HierarchyManager configHierarchyManager = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
         try {
             log.info("Config : loading Template info - " + modulePath); //$NON-NLS-1$
             Content startPage = configHierarchyManager.getContent(modulePath);
-            Collection children = startPage.getContent("Templates") //$NON-NLS-1$
-                .getChildren(ItemType.CONTENTNODE, ContentHandler.SORT_BY_SEQUENCE);
+
+            // Collection children = startPage.getContent("Templates") //$NON-NLS-1$
+            // .getChildren(ItemType.CONTENTNODE, ContentHandler.SORT_BY_SEQUENCE);
+
+            // It makes possibly to use templates defined within subfolders of /module/templating/Templates
+            Collection children = collectChildren(startPage.getContent("Templates"));
 
             if ((children != null) && !(children.isEmpty())) {
                 Iterator templates = children.iterator();
                 Template.cacheContent(templates);
             }
+
             log.info("Config : Template info loaded - " + modulePath); //$NON-NLS-1$
         }
         catch (RepositoryException re) {
@@ -150,6 +185,28 @@ public class Template {
     }
 
     /**
+     * Method builds String with full path of content node passed as an argument. Search loop stops on first content
+     * node (ancestor) with empty name.
+     * @author <a href="mailto:tm@touk.pl">Tomasz Mazan</a>
+     * @param c current content node
+     * @return full path of <code>c</code> node in repository
+     * @throws RepositoryException
+     */
+    private static String getTemplatePath(Content c) throws RepositoryException {
+        StringBuffer name = new StringBuffer(c.getNodeData("name").getValue().getString());
+
+        Iterator it = c.getAncestors().iterator();
+        while (it.hasNext()) {
+            Content ancestor = (Content) it.next();
+            if (ancestor.getName().equals(""))
+                break;
+            name.insert(0, ancestor.getName() + "/");
+        }
+
+        return name.toString().replaceFirst(DEFAULT_TEMPLATE_PATH_PREFIX, "");
+    }
+
+    /**
      * Adds templates definition to TemplatesInfo cache.
      * @param templates iterator as read from the repository
      * @param visibleTemplates List in with all visible templates will be added
@@ -159,7 +216,9 @@ public class Template {
             Content c = (Content) templates.next();
             try {
                 Template ti = new Template();
+
                 ti.name = c.getNodeData("name").getValue().getString(); //$NON-NLS-1$
+                // ti.name = getTemplatePath(c);
                 ti.path = c.getNodeData("path").getValue().getString(); //$NON-NLS-1$
                 Template.addAlternativePaths(c, ti);
                 ti.type = c.getNodeData("type").getValue().getString(); //$NON-NLS-1$
@@ -167,6 +226,7 @@ public class Template {
                 ti.title = c.getNodeData("title").getString(); //$NON-NLS-1$
                 ti.description = c.getNodeData("description").getString(); //$NON-NLS-1$
                 ti.image = c.getNodeData("image").getString(); //$NON-NLS-1$
+
                 Template.cachedContent.put(ti.name, ti);
                 ti.setLocation(c.getHandle());
                 if (ti.visible) {
@@ -194,12 +254,7 @@ public class Template {
                 ti.alternativePaths.put(c.getNodeData("extension").getString(), c.getNodeData("path").getString()); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
-        catch (PathNotFoundException e) {
-            // ignore, SubTemplates not set
-        }
         catch (RepositoryException re) {
-            log.error("RepositoryException caught while loading alternative templates path configuration: " //$NON-NLS-1$
-                + re.getMessage(), re);
         }
     }
 
@@ -213,7 +268,7 @@ public class Template {
      * </ol>
      * @return TemplateInfo
      */
-    public static Template getInfo(String key) {
+    public static Template getInfo(String key) throws Exception {
         return (Template) Template.cachedContent.get(key);
     }
 
