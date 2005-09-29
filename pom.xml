@@ -118,6 +118,8 @@
   
   <modules>
     <module>magnolia-core</module>
+    <module>magnolia-gui</module>
+    <module>magnolia-module-admininterface</module>
     <module>magnolia-taglib-cms</module>
     <module>magnolia-taglib-utility</module>
     <module>magnolia</module>
