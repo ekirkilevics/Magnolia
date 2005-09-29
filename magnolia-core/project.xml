@@ -571,6 +571,5 @@
     <report>maven-jxr-plugin</report>
     <report>maven-junit-report-plugin</report>
     <report>maven-simian-plugin</report>
-    <report>taglib</report>
   </reports>
 </project>

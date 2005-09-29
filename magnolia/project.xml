@@ -142,6 +142,28 @@
       </properties>
     </dependency>
     <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-taglib-cms</artifactId>
+      <version>2.2-SNAPSHOT</version>
+      <type>jar</type>
+      <url>http://www.magnolia.info</url>
+      <properties>
+        <war.bundle>true</war.bundle>
+        <eclipse.dependency>true</eclipse.dependency>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-taglib-utility</artifactId>
+      <version>2.2-SNAPSHOT</version>
+      <type>jar</type>
+      <url>http://www.magnolia.info</url>
+      <properties>
+        <war.bundle>true</war.bundle>
+        <eclipse.dependency>true</eclipse.dependency>
+      </properties>
+    </dependency>
+    <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
       <version>1.2.9</version>

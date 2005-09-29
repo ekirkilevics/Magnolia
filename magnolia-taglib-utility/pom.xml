@@ -2,8 +2,8 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd ">
   <modelVersion>4.0.0</modelVersion>
   <groupId>info.magnolia</groupId>
-  <artifactId>magnolia-taglib-cms</artifactId>
-  <name>magnolia-core</name>
+  <artifactId>magnolia-taglib-utility</artifactId>
+  <name>magnolia-taglib-utility</name>
   <packaging>jar</packaging>
   <version>2.2-SNAPSHOT</version>
   <organization>
