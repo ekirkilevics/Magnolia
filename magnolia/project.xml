@@ -134,8 +134,6 @@
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
       <version>2.2-SNAPSHOT</version>
-      <type>jar</type>
-      <url>http://www.magnolia.info</url>
       <properties>
         <war.bundle>true</war.bundle>
         <eclipse.dependency>true</eclipse.dependency>
@@ -145,8 +143,6 @@
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-gui</artifactId>
       <version>2.2-SNAPSHOT</version>
-      <type>jar</type>
-      <url>http://www.magnolia.info</url>
       <properties>
         <war.bundle>true</war.bundle>
         <eclipse.dependency>true</eclipse.dependency>
@@ -156,8 +152,6 @@
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-admininterface</artifactId>
       <version>2.2-SNAPSHOT</version>
-      <type>jar</type>
-      <url>http://www.magnolia.info</url>
       <properties>
         <war.bundle>true</war.bundle>
         <eclipse.dependency>true</eclipse.dependency>
@@ -167,8 +161,6 @@
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-taglib-cms</artifactId>
       <version>2.2-SNAPSHOT</version>
-      <type>jar</type>
-      <url>http://www.magnolia.info</url>
       <properties>
         <war.bundle>true</war.bundle>
         <eclipse.dependency>true</eclipse.dependency>
@@ -178,8 +170,6 @@
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-taglib-utility</artifactId>
       <version>2.2-SNAPSHOT</version>
-      <type>jar</type>
-      <url>http://www.magnolia.info</url>
       <properties>
         <war.bundle>true</war.bundle>
         <eclipse.dependency>true</eclipse.dependency>
