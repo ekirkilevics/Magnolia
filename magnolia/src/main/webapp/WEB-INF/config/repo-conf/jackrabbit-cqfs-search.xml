@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
+
     WARNING: cqfs is not free for commercial use. See License.txt in the cqfs-{version}.jar.
     Cqfs is free for test and development.
+
+    In order to use cqfs you will need to add the cqfs-{version}.jar and cqfs-jackrabbit-{version}.jar
+    to WEB-INF/lib. These jars are no more included in the magnolia distribution since version 2.2.
+
 -->
 <!DOCTYPE Repository [
     <!--
