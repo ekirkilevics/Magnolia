@@ -4,7 +4,6 @@ import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.CacheHandler;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.MockCacheRequest;
@@ -73,20 +72,19 @@ public class CacheGeneratorServlet extends HttpServlet {
     private void displayCacheForm(HttpServletRequest request, PrintWriter out) {
 
         out.println("<html><head><title>Magnolia</title>"); //$NON-NLS-1$
-        out.println(new Sources(request.getContextPath()).getHtmlCss());
+        // @todo FIXME! out.println(new Sources(request.getContextPath()).getHtmlCss());
         out.println("</head><body class=\"mgnlBgLight mgnlImportExport\">"); //$NON-NLS-1$
 
         out.println("<h2>"); //$NON-NLS-1$
         out.println(MessagesManager.get(request, "cacheservlet.title")); //$NON-NLS-1$
         out.println("</h2>"); //$NON-NLS-1$
         if (Server.isAdmin())
-            out.println("<h3 style=\"color:red;\">"
-                + MessagesManager.get(request, "cacheservlet.warning")
-                + "</h3>");
+            out.println("<h3 style=\"color:red;\">" + MessagesManager.get(request, "cacheservlet.warning") + "</h3>");
 
         out.println("<form method=\"get\" action=\"\">"); //$NON-NLS-1$
         out.println("<input type=\"submit\" name=\"" //$NON-NLS-1$
-            + CACHE_GENERATE_ACTION + "\" value=\"" //$NON-NLS-1$
+            + CACHE_GENERATE_ACTION
+            + "\" value=\"" //$NON-NLS-1$
             + MessagesManager.get(request, "cacheservlet.generate") //$NON-NLS-1$
             + "\" />"); //$NON-NLS-1$
 

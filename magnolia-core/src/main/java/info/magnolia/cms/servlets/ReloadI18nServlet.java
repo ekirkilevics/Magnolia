@@ -1,6 +1,5 @@
 package info.magnolia.cms.servlets;
 
-import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.MessagesManager;
 
 import java.io.IOException;
@@ -75,7 +74,7 @@ public class ReloadI18nServlet extends HttpServlet {
     private void displayReloadForm(HttpServletRequest request, PrintWriter out) {
 
         out.println("<html><head><title>Magnolia</title>"); //$NON-NLS-1$
-        out.println(new Sources(request.getContextPath()).getHtmlCss());
+        // @todo FIXME! out.println(new Sources(request.getContextPath()).getHtmlCss());
         out.println("</head><body class=\"mgnlBgLight mgnlImportExport\">"); //$NON-NLS-1$
 
         out.println("<h2>"); //$NON-NLS-1$
@@ -84,7 +83,8 @@ public class ReloadI18nServlet extends HttpServlet {
         out.println("<form method=\"post\" action=\"\">"); //$NON-NLS-1$
 
         out.println("<input type=\"submit\" name=\"" //$NON-NLS-1$
-            + PARAM_RELOAD_ACTION + "\" value=\"" //$NON-NLS-1$
+            + PARAM_RELOAD_ACTION
+            + "\" value=\"" //$NON-NLS-1$
             + MessagesManager.get(request, "reloadi18n.action") //$NON-NLS-1$
             + "\" />"); //$NON-NLS-1$
 
