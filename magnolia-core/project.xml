@@ -387,31 +387,17 @@
       </properties>
     </dependency>
     <dependency>
-      <groupId>jackrabbit</groupId>
-      <artifactId>jackrabbit-api</artifactId>
-      <version>1.0-20050827.115227</version>
-      <type>jar</type>
-      <url>http://incubator.apache.org/jackrabbit</url>
+      <groupId>org.apache.jackrabbit</groupId>
+      <artifactId>jackrabbit</artifactId>
+      <version>1.0-20050928.220228-4</version>
       <properties>
         <war.bundle>true</war.bundle>
       </properties>
     </dependency>
     <dependency>
-      <groupId>jackrabbit</groupId>
-      <artifactId>jackrabbit-commons</artifactId>
-      <version>1.0-20050827.115232</version>
-      <type>jar</type>
-      <url>http://incubator.apache.org/jackrabbit</url>
-      <properties>
-        <war.bundle>true</war.bundle>
-      </properties>
-    </dependency>
-    <dependency>
-      <groupId>jackrabbit</groupId>
-      <artifactId>jackrabbit-core</artifactId>
-      <version>1.0-20050827.115425</version>
-      <type>jar</type>
-      <url>http://incubator.apache.org/jackrabbit</url>
+      <groupId>org.apache.jackrabbit</groupId>
+      <artifactId>jackrabbit-bdb</artifactId>
+      <version>1.0-20050928.220303-1</version>
       <properties>
         <war.bundle>true</war.bundle>
       </properties>
@@ -439,16 +425,6 @@
       </properties>
       </dependency>
     -->
-    <dependency>
-      <groupId>jackrabbit</groupId>
-      <artifactId>jackrabbit-bdb</artifactId>
-      <version>1.0-20050827.140444</version>
-      <type>jar</type>
-      <url>http://incubator.apache.org/jackrabbit</url>
-      <properties>
-        <war.bundle>true</war.bundle>
-      </properties>
-    </dependency>
     <dependency>
       <groupId>berkeleydb</groupId>
       <artifactId>je</artifactId>
