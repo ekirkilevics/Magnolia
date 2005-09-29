@@ -135,10 +135,6 @@
       <artifactId>log4j</artifactId>
       <version>1.2.9</version>
       <type>jar</type>
-      <url>http://logging.apache.org/log4j/docs/</url>
-      <properties>
-        <war.bundle>true</war.bundle>
-      </properties>
     </dependency>
     <dependency>
       <groupId>concurrent</groupId>
@@ -228,10 +224,6 @@
       <artifactId>jstl</artifactId>
       <version>1.1.2</version>
       <type>jar</type>
-      <url>http://jakarta.apache.org/taglibs/</url>
-      <properties>
-        <war.bundle>true</war.bundle>
-      </properties>
     </dependency>
     <dependency>
       <groupId>taglibs</groupId>
@@ -323,16 +315,6 @@
       <version>2.1</version>
       <type>jar</type>
       <url>http://jakarta.apache.org/commons/lang</url>
-      <properties>
-        <war.bundle>true</war.bundle>
-      </properties>
-    </dependency>
-    <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
-      <version>1.0.4</version>
-      <type>jar</type>
-      <url>http://jakarta.apache.org/commons/logging</url>
       <properties>
         <war.bundle>true</war.bundle>
       </properties>
