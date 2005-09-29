@@ -185,9 +185,10 @@ public class Engine implements Module {
 
             // @todo inter-module dependency! should this be removed? how to handle this situation?
             if (pi.getDialogContent() != null) {
-                info.magnolia.module.admininterface.Store.getInstance().registerParagraphDialogHandler(
-                    pi.getName(),
-                    pi.getDialogContent());
+                // @todo FIXME!
+                // info.magnolia.module.admininterface.Store.getInstance().registerParagraphDialogHandler(
+                // pi.getName(),
+                // pi.getDialogContent());
             }
         }
     }

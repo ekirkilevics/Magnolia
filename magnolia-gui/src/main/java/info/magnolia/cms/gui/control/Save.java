@@ -26,7 +26,6 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Digester;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.LinkUtil;
-import info.magnolia.module.admininterface.DialogMVCHandler;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -101,10 +100,11 @@ public class Save extends ControlSuper {
      */
     private String repository = ContentRepository.WEBSITE;
 
-    /**
-     * The dialogHandler calling this save control. Can be used in subclasses. Can be null.
-     */
-    private DialogMVCHandler dialogHandler;
+    // @todo FIXME!
+    // /**
+    // * The dialogHandler calling this save control. Can be used in subclasses. Can be null.
+    // */
+    // private DialogMVCHandler dialogHandler;
 
     /**
      * Do not use this without a reason.
@@ -687,20 +687,21 @@ public class Save extends ControlSuper {
         return repository;
     }
 
-    /**
-     * Use this to get configuration information of the dialog
-     * @return the dialog handler
-     */
-    public DialogMVCHandler getDialogHandler() {
-        return dialogHandler;
-    }
-
-    /**
-     * Is used by the handler to pass a reference to the save control
-     * @param handler the current dialog handler
-     */
-    public void setDialogHandler(DialogMVCHandler dialogHandler) {
-        this.dialogHandler = dialogHandler;
-    }
+    // @todo FIXME!
+    // /**
+    // * Use this to get configuration information of the dialog
+    // * @return the dialog handler
+    // */
+    // public DialogMVCHandler getDialogHandler() {
+    // return dialogHandler;
+    // }
+    //
+    // /**
+    // * Is used by the handler to pass a reference to the save control
+    // * @param handler the current dialog handler
+    // */
+    // public void setDialogHandler(DialogMVCHandler dialogHandler) {
+    // this.dialogHandler = dialogHandler;
+    // }
 
 }
