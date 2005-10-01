@@ -20,12 +20,15 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Iterator;
 
 import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.log4j.Logger;
 import org.apache.xml.serialize.OutputFormat;
@@ -89,6 +92,18 @@ public final class Bootstrapper {
                 }
             });
 
+            Arrays.sort(files, new Comparator() {
+
+                public int compare(Object file1, Object file2) {
+
+                    String name1 = StringUtils.substringBeforeLast(((File) file1).getName(), "."); //$NON-NLS-1$
+                    String name2 = StringUtils.substringBeforeLast(((File) file2).getName(), "."); //$NON-NLS-1$
+
+                    // a simple way to detect nested nodes
+                    return name1.length() - name2.length();
+                }
+            });
+
             if (files.length == 0) {
                 log.info("No xml files found in directory [" + repository + "], skipping..."); //$NON-NLS-1$ //$NON-NLS-2$
                 continue;
@@ -108,15 +123,26 @@ public final class Bootstrapper {
                     try {
                         filteredStream = filterVersionsFromFile(xmlfile);
 
-                        log.info("Importing content from " + xmlfile.getName()); //$NON-NLS-1$
-                        session
-                            .importXML("/", filteredStream, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING); //$NON-NLS-1$
+                        String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(StringUtils
+                            .substringBeforeLast(xmlfile.getName(), "."), "."), "."); //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
+
+                        pathName = "/" + StringUtils.replace(pathName, ".", "/");
+
+                        log.info("Importing content from " + xmlfile.getName() + " to path \"" + pathName + "\""); //$NON-NLS-1$
+
+                        session.importXML(
+                            pathName,
+                            filteredStream,
+                            ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING); //$NON-NLS-1$
                     }
                     catch (Exception e) {
                         log.error("Unable to load content from " //$NON-NLS-1$
-                            + xmlfile.getName() + " due to a " //$NON-NLS-1$
-                            + e.getClass().getName() + " Exception: " //$NON-NLS-1$
-                            + e.getMessage() + ". Will try to continue.", e); //$NON-NLS-1$
+                            + xmlfile.getName()
+                            + " due to a " //$NON-NLS-1$
+                            + e.getClass().getName()
+                            + " Exception: " //$NON-NLS-1$
+                            + e.getMessage()
+                            + ". Will try to continue.", e); //$NON-NLS-1$
                     }
                     finally {
                         try {
@@ -135,9 +161,12 @@ public final class Bootstrapper {
                 }
                 catch (RepositoryException e) {
                     log.error("Unable to save changes to the [" //$NON-NLS-1$
-                        + repository + "] repository due to a " //$NON-NLS-1$
-                        + e.getClass().getName() + " Exception: " //$NON-NLS-1$
-                        + e.getMessage() + ". Will try to continue.", e); //$NON-NLS-1$
+                        + repository
+                        + "] repository due to a " //$NON-NLS-1$
+                        + e.getClass().getName()
+                        + " Exception: " //$NON-NLS-1$
+                        + e.getMessage()
+                        + ". Will try to continue.", e); //$NON-NLS-1$
                     continue;
                 }
             }
@@ -147,8 +176,10 @@ public final class Bootstrapper {
                 int needed = Math.max(256, maxMem + 128);
 
                 log.error("Unable to complete bootstrapping: out of memory.\n" //$NON-NLS-1$
-                    + maxMem + "MB were not enough, try to increase the amount of memory available by adding the -Xmx" //$NON-NLS-1$
-                    + needed + " parameter to the server startup script.\n" //$NON-NLS-1$
+                    + maxMem
+                    + "MB were not enough, try to increase the amount of memory available by adding the -Xmx" //$NON-NLS-1$
+                    + needed
+                    + " parameter to the server startup script.\n" //$NON-NLS-1$
                     + "You will need to completely remove the magnolia webapp before trying again"); //$NON-NLS-1$
                 break;
             }
