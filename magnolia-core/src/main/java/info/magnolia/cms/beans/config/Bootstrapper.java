@@ -143,7 +143,7 @@ public final class Bootstrapper {
             }
             catch (OutOfMemoryError e) {
 
-                int maxMem = (int) (Runtime.getRuntime().maxMemory() / 1024);
+                int maxMem = (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024);
                 int needed = Math.max(256, maxMem + 128);
 
                 log.error("Unable to complete bootstrapping: out of memory.\n" //$NON-NLS-1$
