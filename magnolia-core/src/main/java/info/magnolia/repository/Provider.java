@@ -12,34 +12,28 @@
  */
 package info.magnolia.repository;
 
-import java.util.Map;
-
 import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
 import javax.jcr.Workspace;
 
 
 /**
- * Date: Nov 25, 2004 Time: 4:14:11 PM
  * @author Sameer Charles
- * @version 2.1
+ * @author Fabrizio Giustina
+ * @version $Id$
  */
 public interface Provider {
 
     /**
-     * <p>
      * Initializes repository, this depends on the underlying repository implementation. Use any available method to get
-     * the instance of Repository
-     * </p>
+     * the instance of Repository.
      * @param repositoryMapping key value pars as define in repository.xml
      * @throws RepositoryNotInitializedException
      */
     void init(RepositoryMapping repositoryMapping) throws RepositoryNotInitializedException;
 
     /**
-     * <p>
-     * gets the repository instance initialized on init() call
-     * </p>
+     * Gets the repository instance initialized on init() call.
      * @throws RepositoryNotInitializedException if init failed to get repository
      */
     Repository getUnderlineRepository() throws RepositoryNotInitializedException;
@@ -54,9 +48,7 @@ public interface Provider {
     void registerNamespace(String prefix, String uri, Workspace workspace) throws RepositoryException;
 
     /**
-     * <p>
-     * unregister namespace with the repository
-     * </p>
+     * Unregister namespace with the repository.
      * @param prefix as registered previously
      * @param workspace session workspace instance
      * @throws RepositoryException
@@ -64,12 +56,9 @@ public interface Provider {
     void unregisterNamespace(String prefix, Workspace workspace) throws RepositoryException;
 
     /**
-     * <p>
-     * Node type registration is entirely dependent on the implementation. refer JSR-170 specifications
-     * </p>
-     * @param definition key/value pair of nodetype definition, dependent on how repository implementation expose its
-     * methods
+     * Node type registration is entirely dependent on the implementation. Refer JSR-170 specifications.
+     * @param workspace session workspace instance
      * @throws RepositoryException
      */
-    void registerNodeType(Map definition) throws RepositoryException;
+    void registerNodeTypes(Workspace workspace) throws RepositoryException;
 }

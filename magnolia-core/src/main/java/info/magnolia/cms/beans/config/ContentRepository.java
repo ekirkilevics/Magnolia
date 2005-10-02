@@ -153,7 +153,7 @@ public final class ContentRepository {
 
     /**
      * loads all configured repository using ID as Key, as configured in repositories.xml.
-     *
+     * 
      * <pre>
      * &lt;Repository name="website"
      *                id="website"
@@ -228,7 +228,7 @@ public final class ContentRepository {
     /**
      * Load repository mappings and params using repositories.xml
      * @throws Exception
-     * */
+     */
     private static void loadRepositories() throws Exception {
         Document document = buildDocument();
         Element root = document.getRootElement();
@@ -280,15 +280,15 @@ public final class ContentRepository {
     /**
      * load repository name mapping
      * @param root element of repositories.xml
-     * */
+     */
     private static void loadRepositoryNameMap(Element root) {
         Element repositoryMapping = root.getChild(ContentRepository.ELEMENT_REPOSITORYMAPPING);
         Iterator children = repositoryMapping.getChildren().iterator();
         ContentRepository.repositoryNameMap = new Hashtable();
         while (children.hasNext()) {
             Element nameMap = (Element) children.next();
-            ContentRepository.repositoryNameMap.put
-                    (nameMap.getAttributeValue(ATTRIBUTE_NAME),nameMap.getAttributeValue(ATTRIBUTE_REPOSITORY_NAME));
+            ContentRepository.repositoryNameMap.put(nameMap.getAttributeValue(ATTRIBUTE_NAME), nameMap
+                .getAttributeValue(ATTRIBUTE_REPOSITORY_NAME));
         }
     }
 
@@ -324,13 +324,14 @@ public final class ContentRepository {
      * @param wspID
      * @param map
      * @param provider
-     * */
+     */
     private static void loadHierarchyManager(Repository repository, String wspID, RepositoryMapping map,
         Provider provider) {
         try {
             SimpleCredentials sc = new SimpleCredentials(ContentRepository.SYSTEM_USER, ContentRepository.SYSTEM_PSWD);
             Session session = repository.login(sc, wspID);
             provider.registerNamespace(NAMESPACE_PREFIX, NAMESPACE_URI, session.getWorkspace());
+            provider.registerNodeTypes(session.getWorkspace());
             List acl = getSystemPermissions();
             AccessManagerImpl accessManager = new AccessManagerImpl();
             accessManager.setPermissionList(acl);
@@ -359,7 +360,7 @@ public final class ContentRepository {
     /**
      * Get maximum permission available
      * @return List of permissions
-     * */
+     */
     private static List getSystemPermissions() {
         List acl = new ArrayList();
         UrlPattern p = UrlPattern.MATCH_ALL;
@@ -390,16 +391,16 @@ public final class ContentRepository {
      * Get mapped repository name
      * @param name
      * @return mapped name as in repositories.xml RepositoryMapping element
-     * */
+     */
     private static String getMappedRepositoryName(String name) {
         return (String) ContentRepository.repositoryNameMap.get(name);
     }
 
     /**
      * Get default workspace name
-     * @return default name if there are no workspaces defined or there is no workspace
-     * present with name "default", otherwise return same name as repository name.
-     * */
+     * @return default name if there are no workspaces defined or there is no workspace present with name "default",
+     * otherwise return same name as repository name.
+     */
     public static String getDefaultWorkspace(String repositoryId) {
         Collection workspaces = getRepositoryMapping(repositoryId).getWorkspaces();
         if (workspaces.contains(repositoryId)) {
@@ -421,8 +422,8 @@ public final class ContentRepository {
      * access on the specified repository.
      */
     public static HierarchyManager getHierarchyManager(String repositoryID, String workspaceID) {
-        return (HierarchyManager) ContentRepository.hierarchyManagers.get
-                (getMappedRepositoryName(repositoryID) + "_" + workspaceID); //$NON-NLS-1$
+        return (HierarchyManager) ContentRepository.hierarchyManagers.get(getMappedRepositoryName(repositoryID)
+            + "_" + workspaceID); //$NON-NLS-1$
     }
 
     /**

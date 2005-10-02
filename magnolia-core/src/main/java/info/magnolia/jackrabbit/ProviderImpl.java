@@ -1,35 +1,51 @@
 package info.magnolia.jackrabbit;
 
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.config.ShutdownManager;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Path;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
 import info.magnolia.repository.RepositoryNotInitializedException;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.MessageFormat;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.jcr.NamespaceException;
 import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
 import javax.jcr.Workspace;
+import javax.jcr.nodetype.NoSuchNodeTypeException;
+import javax.jcr.nodetype.NodeTypeManager;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.servlet.ServletContextEvent;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import org.apache.commons.lang.SystemUtils;
+import org.apache.jackrabbit.core.RepositoryImpl;
 import org.apache.jackrabbit.core.jndi.RegistryHelper;
+import org.apache.jackrabbit.core.nodetype.InvalidNodeTypeDefException;
+import org.apache.jackrabbit.core.nodetype.NodeTypeDef;
+import org.apache.jackrabbit.core.nodetype.NodeTypeManagerImpl;
+import org.apache.jackrabbit.core.nodetype.NodeTypeRegistry;
+import org.apache.jackrabbit.core.nodetype.xml.NodeTypeReader;
 import org.apache.log4j.Logger;
 
 
 /**
- * Date: Nov 25, 2004 Time: 4:57:02 PM
  * @author Sameer Charles
- * @version 2.1
+ * @author Fabrizio Giustina
+ * @version $Id$
  */
 public class ProviderImpl implements Provider {
 
-    private static Logger log = Logger.getLogger(ProviderImpl.class);
+    protected static Logger log = Logger.getLogger(ProviderImpl.class);
 
     private static final String CONFIG_FILENAME_KEY = "configFile"; //$NON-NLS-1$
 
@@ -41,13 +57,15 @@ public class ProviderImpl implements Provider {
 
     private static final String BIND_NAME_KEY = "bindName"; //$NON-NLS-1$
 
+    private static final String MGNL_NODETYPES = "mgnl_nodetypes.xml"; //$NON-NLS-1$
+
     private RepositoryMapping repositoryMapping;
 
     private Repository repository;
 
-    public ProviderImpl() {
-    }
-
+    /**
+     * @see info.magnolia.repository.Provider#init(info.magnolia.repository.RepositoryMapping)
+     */
     public void init(RepositoryMapping repositoryMapping) throws RepositoryNotInitializedException {
         this.repositoryMapping = repositoryMapping;
         /* connect to repository */
@@ -103,8 +121,39 @@ public class ProviderImpl implements Provider {
             log.error("Unable to initialize repository: " + e.getMessage(), e);
             throw new RepositoryNotInitializedException(e);
         }
+
+        ShutdownManager.addShutdownTask(new ShutdownManager.ShutdownTask() {
+
+            public void execute(ServletContextEvent sce) {
+                log.info("Shutting down repositories");
+
+                Iterator repos = ContentRepository.getAllRepositoryNames();
+
+                while (repos.hasNext()) {
+                    String name = (String) repos.next();
+
+                    try {
+                        HierarchyManager hr = ContentRepository.getHierarchyManager(name);
+                        Repository repo = hr.getWorkspace().getSession().getRepository();
+                        ((RepositoryImpl) repo).shutdown();
+                    }
+                    catch (Throwable e) {
+                        log.warn(MessageFormat.format("Unable to shutdown repository {0}: {1} {2}", new Object[]{
+                            name,
+                            e.getClass().getName(),
+                            e.getMessage()})
+
+                        );
+                    }
+                }
+            }
+        });
+
     }
 
+    /**
+     * @see info.magnolia.repository.Provider#getUnderlineRepository()
+     */
     public Repository getUnderlineRepository() throws RepositoryNotInitializedException {
         if (this.repository == null) {
             throw new RepositoryNotInitializedException("Null repository"); //$NON-NLS-1$
@@ -112,6 +161,9 @@ public class ProviderImpl implements Provider {
         return this.repository;
     }
 
+    /**
+     * @see info.magnolia.repository.Provider#registerNamespace(java.lang.String, java.lang.String, javax.jcr.Workspace)
+     */
     public void registerNamespace(String namespacePrefix, String uri, Workspace workspace) throws RepositoryException {
         try {
             workspace.getNamespaceRegistry().getURI(namespacePrefix);
@@ -123,11 +175,58 @@ public class ProviderImpl implements Provider {
         }
     }
 
+    /**
+     * @see info.magnolia.repository.Provider#unregisterNamespace(java.lang.String, javax.jcr.Workspace)
+     */
     public void unregisterNamespace(String prefix, Workspace workspace) throws RepositoryException {
         workspace.getNamespaceRegistry().unregisterNamespace(prefix);
     }
 
-    public void registerNodeType(Map definition) throws RepositoryException {
-        // todo , dynamic nodetype registry.. for now use custom_nodetypes.xml
+    /**
+     * @see info.magnolia.repository.Provider#registerNodeTypes(javax.jcr.Workspace)
+     */
+    public void registerNodeTypes(Workspace workspace) throws RepositoryException {
+
+        log.info("Registering node types");
+
+        InputStream xml = getClass().getClassLoader().getResourceAsStream(MGNL_NODETYPES);
+
+        NodeTypeDef[] types;
+        try {
+            types = NodeTypeReader.read(xml);
+        }
+        catch (InvalidNodeTypeDefException e) {
+            throw new RepositoryException(e.getMessage(), e);
+        }
+        catch (IOException e) {
+            throw new RepositoryException(e.getMessage(), e);
+        }
+
+        NodeTypeManager ntMgr = workspace.getNodeTypeManager();
+        NodeTypeRegistry ntReg = ((NodeTypeManagerImpl) ntMgr).getNodeTypeRegistry();
+
+        for (int j = 0; j < types.length; j++) {
+            NodeTypeDef def = types[j];
+
+            try {
+                ntReg.getNodeTypeDef(def.getName());
+            }
+            catch (NoSuchNodeTypeException nsne) {
+                log.info(MessageFormat.format("registering nodetype {0}", //$NON-NLS-1$
+                    new Object[]{def.getName()}));
+
+                try {
+                    ntReg.registerNodeType(def);
+                }
+                catch (InvalidNodeTypeDefException e) {
+                    throw new RepositoryException(e.getMessage(), e);
+                }
+                catch (RepositoryException e) {
+                    throw new RepositoryException(e.getMessage(), e);
+                }
+            }
+
+        }
+
     }
 }
