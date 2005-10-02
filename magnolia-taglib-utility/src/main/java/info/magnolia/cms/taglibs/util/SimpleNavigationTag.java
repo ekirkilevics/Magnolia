@@ -18,7 +18,6 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.Resource;
 
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -45,20 +44,20 @@ import org.apache.log4j.Logger;
  * </ul>
  * 
  * <pre>
- *   &lt;cmsu:simpleNavigation startLevel="3" />
+ *   &lt;cmsu:simpleNavigation startLevel="3" style="mystyle"/>
  * </pre>
  * 
  * Will output the following:
  * 
  * <pre>
- *   &lt;ul class="level3">
+ *   &lt;ul class="level3 mystyle">
  *     &lt;li>&lt;a href="...">page 1 name &lt;/a>&lt;/li>
  *     &lt;li>&lt;a href="...">page 2 name &lt;/a>&lt;/li>
- *     &lt;li>&lt;strong>&lt;a href="...">selected page name &lt;/a>&lt;/strong>
- *       &lt;ul class="level3">
+ *     &lt;li class="trail">&lt;a href="...">page 3 name &lt;/a>
+ *       &lt;ul class="level4">
  *         &lt;li>&lt;a href="...">subpage 1 name &lt;/a>&lt;/li>
  *         &lt;li>&lt;a href="...">subpage 2 name &lt;/a>&lt;/li>
- *         &lt;li>&lt;a href="...">subpage 3 name &lt;/a>&lt;/li>
+ *         &lt;li>&lt;strong>&lt;a href="...">selected page name &lt;/a>&lt;/strong>&lt;/li>
  *       &lt;/ul>
  *     &lt;/li>
  *     &lt;li>&lt;a href="...">page 4 name &lt;/a>&lt;/li>
@@ -69,6 +68,31 @@ import org.apache.log4j.Logger;
  * @version $Revision$ ($Author$)
  */
 public class SimpleNavigationTag extends TagSupport {
+
+    /**
+     * Css class added to active page.
+     */
+    private static final String CSS_LI_ACTIVE = "active";
+
+    /**
+     * Css class added to ancestor of the active page.
+     */
+    private static final String CSS_LI_TRAIL = "trail";
+
+    /**
+     * Css class added to leaf pages.
+     */
+    private static final String CSS_LI_LEAF = "leaf"; //$NON-NLS-1$ 
+
+    /**
+     * Css class added to open trees.
+     */
+    private static final String CSS_LI_CLOSED = "closed"; //$NON-NLS-1$ 
+
+    /**
+     * Css class added to closed trees.
+     */
+    private static final String CSS_LI_OPEN = "open"; //$NON-NLS-1$ 
 
     /**
      * Page property: navigation title.
@@ -203,24 +227,12 @@ public class SimpleNavigationTag extends TagSupport {
         Content activePage = Resource.getActivePage((HttpServletRequest) this.pageContext.getRequest());
         JspWriter out = this.pageContext.getOut();
 
-        Content startPage;
-        try {
-            startPage = activePage.getAncestor(this.startLevel);
-        }
-        catch (RepositoryException e) {
-            log.error(MessageFormat.format(
-                "Unable to load page at startlevel: {0}", new Object[]{e.getClass().getName()})); //$NON-NLS-1$
-            return EVAL_PAGE;
+        if (startLevel > endLevel) {
+            endLevel = 0;
         }
 
         try {
-            if (style != null) {
-                out.println("<span class=\"" + style + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
-            }
-            drawChildren(startPage, activePage, out);
-            if (style != null) {
-                out.println("</span>"); //$NON-NLS-1$
-            }
+            drawChildren(activePage.getAncestor(this.startLevel), activePage, out);
         }
         catch (RepositoryException e) {
             log.error("RepositoryException caught while drawing navigation: " + e.getMessage(), e); //$NON-NLS-1$
@@ -259,12 +271,12 @@ public class SimpleNavigationTag extends TagSupport {
             return;
         }
 
-        if (startLevel > endLevel) {
-            endLevel = 0;
-        }
-
         out.print("<ul class=\"level"); //$NON-NLS-1$
         out.print(page.getLevel());
+        if (style != null && page.getLevel() == startLevel) {
+            out.print(" ");
+            out.print(style);
+        }
         out.print("\">"); //$NON-NLS-1$
 
         Iterator it = children.iterator();
@@ -305,7 +317,7 @@ public class SimpleNavigationTag extends TagSupport {
                     // self
                     showChildren = true;
                     self = true;
-                    cssClasses.add("active"); //$NON-NLS-1$
+                    cssClasses.add(CSS_LI_ACTIVE); //$NON-NLS-1$
                 }
                 else {
                     showChildren = (child.getLevel() <= activePage.getAncestors().size() && activePage.getAncestor(
@@ -322,7 +334,12 @@ public class SimpleNavigationTag extends TagSupport {
                 showChildren &= child.getLevel() < endLevel;
             }
 
-            cssClasses.add(hasVisibleChildren(child) ? (showChildren ? "open" : "closed") : "leaf"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            cssClasses.add(hasVisibleChildren(child) ? (showChildren ? CSS_LI_OPEN : CSS_LI_CLOSED) : CSS_LI_LEAF);
+
+            if (child.getLevel() < activePage.getLevel()
+                && activePage.getAncestor(child.getLevel()).getHandle().equals(child.getHandle())) {
+                cssClasses.add(CSS_LI_TRAIL);
+            }
 
             StringBuffer css = new StringBuffer(cssClasses.size() * 10);
             Iterator iterator = cssClasses.iterator();

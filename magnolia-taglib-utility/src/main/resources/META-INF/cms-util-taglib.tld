@@ -245,7 +245,7 @@
             <name>style</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description>The style to apply to this menu</description>
+			<description>The css class to be applied to the first ul.</description>
         </attribute>
         <attribute>
             <name>hideInNav</name>
@@ -267,16 +267,16 @@
         </attribute>
         <example>
             <![CDATA[
-			<cmsu:simpleNavigation startLevel="3" />
+			<cmsu:simpleNavigation startLevel="3" style="mystyle"/>
 			Will output the following:
-			<ul class="level3">
+			<ul class="level3 mystyle">
 				<li><a href="...">page 1 name </a></li>
 				<li><a href="...">page 2 name </a></li>
-				<li><strong><a href="...">selected page name </a></strong>
+				<li class="trail"><a href="...">page 3 name </a>
 					<ul class="level3">
 						<li><a href="...">subpage 1 name </a></li>
 						<li><a href="...">subpage 2 name </a></li>
-						<li><a href="...">subpage 3 name </a></li>
+						<li><strong><a href="...">selected page name </a></strong></li>
 					</ul>
 				</li>
 				<li><a href="...">page 4 name </a></li>
