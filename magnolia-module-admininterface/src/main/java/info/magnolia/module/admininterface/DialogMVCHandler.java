@@ -189,7 +189,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         Save save = new Save(form, request);
 
         // @todo FIXME!
-        // save.setDialogHandler(this);
+        save.setDialogHandler(this);
         return save;
     }
 
@@ -242,8 +242,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
      * @see info.magnolia.cms.servlets.MVCServletHandler#renderHtml(java.lang.String)
      */
     public void renderHtml(String view) throws IOException {
