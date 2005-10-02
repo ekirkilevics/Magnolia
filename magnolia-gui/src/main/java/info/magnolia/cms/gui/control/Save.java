@@ -101,10 +101,10 @@ public class Save extends ControlSuper {
     private String repository = ContentRepository.WEBSITE;
 
     // @todo FIXME!
-    // /**
-    // * The dialogHandler calling this save control. Can be used in subclasses. Can be null.
-    // */
-    // private DialogMVCHandler dialogHandler;
+    /**
+     * The dialogHandler calling this save control. Can be used in subclasses. Can be null.
+     */
+    private Object dialogHandler; // DialogMVCHandler
 
     /**
      * Do not use this without a reason.
@@ -688,20 +688,22 @@ public class Save extends ControlSuper {
     }
 
     // @todo FIXME!
-    // /**
-    // * Use this to get configuration information of the dialog
-    // * @return the dialog handler
-    // */
-    // public DialogMVCHandler getDialogHandler() {
-    // return dialogHandler;
-    // }
-    //
-    // /**
-    // * Is used by the handler to pass a reference to the save control
-    // * @param handler the current dialog handler
-    // */
-    // public void setDialogHandler(DialogMVCHandler dialogHandler) {
-    // this.dialogHandler = dialogHandler;
-    // }
+    /**
+     * Use this to get configuration information of the dialog
+     * @return the dialog handler
+     */
+    public Object getDialogHandler() { // DialogMVCHandler
+
+        return dialogHandler;
+    }
+
+    // @todo FIXME!
+    /**
+     * Is used by the handler to pass a reference to the save control
+     * @param handler the current dialog handler
+     */
+    public void setDialogHandler(Object dialogHandler) { // DialogMVCHandler
+        this.dialogHandler = dialogHandler;
+    }
 
 }
