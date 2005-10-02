@@ -136,7 +136,7 @@ public class ImportExportServlet extends HttpServlet {
         if (request.getParameter(PARAM_EXPORT_ACTION) != null) {
 
             if (checkPermissions(request, repository, basepath, Permission.WRITE)) {
-                executeExport(response, repository, basepath, format, keepVersionHistory);
+                executeExport(request, response, repository, basepath, format, keepVersionHistory);
                 return;
             }
 
@@ -333,7 +333,7 @@ public class ImportExportServlet extends HttpServlet {
         }
 
         if (checkPermissions(request, repository, basepath, Permission.WRITE)) {
-            executeImport(basepath, repository, xmlFile, keepVersionHistory, uuidBehavior);
+            executeImport(request, basepath, repository, xmlFile, keepVersionHistory, uuidBehavior);
         }
         else {
             throw new ServletException(new AccessDeniedException(
@@ -357,6 +357,7 @@ public class ImportExportServlet extends HttpServlet {
 
     /**
      * Actually perform export. The generated file is sent to the client.
+     * @param request HttpServletRequest
      * @param response HttpServletResponse
      * @param repository selected repository
      * @param basepath base path in repository
@@ -364,9 +365,9 @@ public class ImportExportServlet extends HttpServlet {
      * @param keepVersionHistory if <code>false</code> version info will be stripped from the exported document
      * @throws IOException for errors while accessing the servlet output stream
      */
-    private void executeExport(HttpServletResponse response, String repository, String basepath, boolean format,
-        boolean keepVersionHistory) throws IOException {
-        HierarchyManager hr = ContentRepository.getHierarchyManager(repository);
+    private void executeExport(HttpServletRequest request, HttpServletResponse response, String repository,
+        String basepath, boolean format, boolean keepVersionHistory) throws IOException {
+        HierarchyManager hr = SessionAccessControl.getHierarchyManager(request, repository);
         Workspace ws = hr.getWorkspace();
         OutputStream stream = response.getOutputStream();
         response.setContentType("text/xml"); //$NON-NLS-1$
@@ -466,6 +467,7 @@ public class ImportExportServlet extends HttpServlet {
 
     /**
      * Perform import.
+     * @param request HttpServletRequest
      * @param repository selected repository
      * @param basepath base path in repository
      * @param xmlFile uploaded file
@@ -473,9 +475,9 @@ public class ImportExportServlet extends HttpServlet {
      * @param importMode a valid value for ImportUUIDBehavior
      * @see ImportUUIDBehavior
      */
-    private void executeImport(String basepath, String repository, Document xmlFile, boolean keepVersionHistory,
-        int importMode) {
-        HierarchyManager hr = ContentRepository.getHierarchyManager(repository);
+    private void executeImport(HttpServletRequest request, String basepath, String repository, Document xmlFile,
+        boolean keepVersionHistory, int importMode) {
+        HierarchyManager hr = SessionAccessControl.getHierarchyManager(request, repository);
         Workspace ws = hr.getWorkspace();
 
         if (log.isInfoEnabled()) {
