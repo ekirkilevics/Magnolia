@@ -59,9 +59,9 @@ public class UserRolesEditIncludeAclDialogPage extends DialogPageMVCHandler {
         accessRight.setSaveInfo(false);
         accessRight.setName("'+prefix+'AccessRight"); //$NON-NLS-1$
         accessRight.setCssClass("mgnlDialogControlSelect"); //$NON-NLS-1$
-        accessRight.setOptions(msgs.get("roles.permission.readWrite"), Long.toString(PERMISSION_ALL)); //$NON-NLS-1$
-        accessRight.setOptions(msgs.get("roles.permission.readOnly"), Long.toString(PERMISSION_READ)); //$NON-NLS-1$
-        accessRight.setOptions(msgs.get("roles.permission.deny"), Long.toString(PERMISSION_NO)); //$NON-NLS-1$
+        accessRight.setOptions(escapeJs(msgs.get("roles.permission.readWrite")), Long.toString(PERMISSION_ALL)); //$NON-NLS-1$
+        accessRight.setOptions(escapeJs(msgs.get("roles.permission.readOnly")), Long.toString(PERMISSION_READ)); //$NON-NLS-1$
+        accessRight.setOptions(escapeJs(msgs.get("roles.permission.deny")), Long.toString(PERMISSION_NO)); //$NON-NLS-1$
         accessRight.setValue("' + object.accessRight + '"); //$NON-NLS-1$
 
         Select accessType = new Select();
@@ -69,12 +69,12 @@ public class UserRolesEditIncludeAclDialogPage extends DialogPageMVCHandler {
         accessType.setName("'+prefix+'AccessType"); //$NON-NLS-1$
         accessType.setCssClass("mgnlDialogControlSelect"); //$NON-NLS-1$
         if (repository.equals(ContentRepository.WEBSITE)) {
-            accessType.setOptions(msgs.get("roles.edit.thisAndSubPages"), "self"); //$NON-NLS-1$ //$NON-NLS-2$
-            accessType.setOptions(msgs.get("roles.edit.subPages"), "sub"); //$NON-NLS-1$ //$NON-NLS-2$
+            accessType.setOptions(escapeJs(msgs.get("roles.edit.thisAndSubPages")), "self"); //$NON-NLS-1$ //$NON-NLS-2$
+            accessType.setOptions(escapeJs(msgs.get("roles.edit.subPages")), "sub"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         else {
-            accessType.setOptions(msgs.get("roles.edit.thisAndSubNodes"), "self"); //$NON-NLS-1$ //$NON-NLS-2$
-            accessType.setOptions(msgs.get("roles.edit.subNodes"), "sub"); //$NON-NLS-1$ //$NON-NLS-2$
+            accessType.setOptions(escapeJs(msgs.get("roles.edit.thisAndSubNodes")), "self"); //$NON-NLS-1$ //$NON-NLS-2$
+            accessType.setOptions(escapeJs(msgs.get("roles.edit.subNodes")), "sub"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         accessType.setValue("' + object.accessType + '"); //$NON-NLS-1$
 
@@ -86,12 +86,12 @@ public class UserRolesEditIncludeAclDialogPage extends DialogPageMVCHandler {
         path.setCssStyles("width", "100%"); //$NON-NLS-1$ //$NON-NLS-2$
 
         Button choose = new Button();
-        choose.setLabel(msgs.get("buttons.choose")); //$NON-NLS-1$
+        choose.setLabel(escapeJs(msgs.get("buttons.choose"))); //$NON-NLS-1$
         choose.setOnclick("aclChoose(\\''+prefix+'\\',\\'" + repository + "\\');"); //$NON-NLS-1$ //$NON-NLS-2$
         choose.setSmall(small);
 
         Button delete = new Button();
-        delete.setLabel(msgs.get("buttons.delete")); //$NON-NLS-1$
+        delete.setLabel(escapeJs(msgs.get("buttons.delete"))); //$NON-NLS-1$
         delete.setOnclick(dynamicTable + ".del('+index+');"); //$NON-NLS-1$
         delete.setSmall(small);
 
@@ -100,14 +100,18 @@ public class UserRolesEditIncludeAclDialogPage extends DialogPageMVCHandler {
         // tr
         html.append("<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>"); //$NON-NLS-1$
         html.append("<td width=\"1\" class=\"" //$NON-NLS-1$
-            + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">" //$NON-NLS-1$
-            + accessRight.getHtml() + "</td>"); //$NON-NLS-1$
+            + CssConstants.CSSCLASS_EDITWITHBUTTON
+            + "\">" //$NON-NLS-1$
+            + accessRight.getHtml()
+            + "</td>"); //$NON-NLS-1$
         html.append("<td width=\"1\" class=\"mgnlDialogBoxInput\"></td>"); //$NON-NLS-1$
 
         if (!repository.equals(ContentRepository.USERS) && !repository.equals(ContentRepository.USER_ROLES)) {
             html.append("<td width=\"1\" class=\"" //$NON-NLS-1$
-                + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">" //$NON-NLS-1$
-                + accessType.getHtml() + "</td>"); //$NON-NLS-1$
+                + CssConstants.CSSCLASS_EDITWITHBUTTON
+                + "\">" //$NON-NLS-1$
+                + accessType.getHtml()
+                + "</td>"); //$NON-NLS-1$
             html.append("<td width=\"1\"></td>"); //$NON-NLS-1$
         }
         else {
@@ -116,16 +120,22 @@ public class UserRolesEditIncludeAclDialogPage extends DialogPageMVCHandler {
         }
 
         html.append("<td width=\"100%\"class=\"" //$NON-NLS-1$
-            + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">" //$NON-NLS-1$
-            + path.getHtml() + "</td>"); //$NON-NLS-1$
+            + CssConstants.CSSCLASS_EDITWITHBUTTON
+            + "\">" //$NON-NLS-1$
+            + path.getHtml()
+            + "</td>"); //$NON-NLS-1$
         html.append("<td width=\"1\"></td>"); //$NON-NLS-1$
         html.append("<td width=\"1\" class=\"" //$NON-NLS-1$
-            + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">" //$NON-NLS-1$
-            + choose.getHtml() + "</td>"); //$NON-NLS-1$
+            + CssConstants.CSSCLASS_EDITWITHBUTTON
+            + "\">" //$NON-NLS-1$
+            + choose.getHtml()
+            + "</td>"); //$NON-NLS-1$
         html.append("<td width=\"1\"></td>"); //$NON-NLS-1$
         html.append("<td width=\"1\" class=\"" //$NON-NLS-1$
-            + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">" //$NON-NLS-1$
-            + delete.getHtml() + "</td>"); //$NON-NLS-1$
+            + CssConstants.CSSCLASS_EDITWITHBUTTON
+            + "\">" //$NON-NLS-1$
+            + delete.getHtml()
+            + "</td>"); //$NON-NLS-1$
         html.append("</tr></table>"); //$NON-NLS-1$
 
         return html.toString();
@@ -143,7 +153,7 @@ public class UserRolesEditIncludeAclDialogPage extends DialogPageMVCHandler {
         Content role = dialogControl.getWebsiteNode();
 
         // select the repository
-        Select repositorySelect = getReposiotySelect(request);
+        Select repositorySelect = getRepositorySelect(request);
 
         out.print(repositorySelect.getHtml());
         out.print("<p><p/>"); //$NON-NLS-1$
@@ -208,9 +218,12 @@ public class UserRolesEditIncludeAclDialogPage extends DialogPageMVCHandler {
 
         // create the dynamicTable
         out.println(dynamicTableName + " = new MgnlDynamicTable('" //$NON-NLS-1$
-            + tableName + "',document.mgnlFormMain." //$NON-NLS-1$
-            + hiddenFieldName + ", aclGetNewPermissionObject, aclGetPermissionObject, acl" //$NON-NLS-1$
-            + repository + "RenderFunction, null);"); //$NON-NLS-1$
+            + tableName
+            + "',document.mgnlFormMain." //$NON-NLS-1$
+            + hiddenFieldName
+            + ", aclGetNewPermissionObject, aclGetPermissionObject, acl" //$NON-NLS-1$
+            + repository
+            + "RenderFunction, null);"); //$NON-NLS-1$
 
         // add existing acls to table (by js, so the same mechanism as at
         // adding rows can be used)
@@ -260,9 +273,12 @@ public class UserRolesEditIncludeAclDialogPage extends DialogPageMVCHandler {
                     }
 
                     out.println(dynamicTableName + ".add({accessRight:" //$NON-NLS-1$
-                        + accessRight + ",accessType:'" //$NON-NLS-1$
-                        + accessType + "',path:'" //$NON-NLS-1$
-                        + path + "'});"); //$NON-NLS-1$
+                        + accessRight
+                        + ",accessType:'" //$NON-NLS-1$
+                        + accessType
+                        + "',path:'" //$NON-NLS-1$
+                        + path
+                        + "'});"); //$NON-NLS-1$
                 }
             }
         }
@@ -278,7 +294,7 @@ public class UserRolesEditIncludeAclDialogPage extends DialogPageMVCHandler {
      * @param request
      * @return
      */
-    private Select getReposiotySelect(HttpServletRequest request) {
+    private Select getRepositorySelect(HttpServletRequest request) {
         Select repositorySelect = new Select();
         repositorySelect.setName("aclRepository"); //$NON-NLS-1$
         repositorySelect.setCssClass("mgnlDialogControlSelect"); //$NON-NLS-1$
@@ -294,5 +310,9 @@ public class UserRolesEditIncludeAclDialogPage extends DialogPageMVCHandler {
             repositorySelect.setOptions(label, name);
         }
         return repositorySelect;
+    }
+
+    private static String escapeJs(String value) {
+        return StringUtils.replace(value, "'", "\\'");
     }
 }
