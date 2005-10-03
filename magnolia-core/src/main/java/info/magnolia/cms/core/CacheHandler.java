@@ -105,12 +105,13 @@ public class CacheHandler extends Thread {
                     file.delete();
                     log.error(MessageFormat.format("NOT Caching uri [{0}] due to a previous error", //$NON-NLS-1$
                         new Object[]{uri}));
+
+                    // caching failed, return
+                    return;
                 }
-                else {
-                    if (log.isInfoEnabled()) {
-                        log.info(MessageFormat.format("Successfully cached URI [{0}]", //$NON-NLS-1$
-                            new Object[]{uri}));
-                    }
+                if (log.isInfoEnabled()) {
+                    log.info(MessageFormat.format("Successfully cached URI [{0}]", //$NON-NLS-1$
+                        new Object[]{uri}));
                 }
             }
 
@@ -122,8 +123,22 @@ public class CacheHandler extends Thread {
                     gzipFile.createNewFile();
                     out = new FileOutputStream(gzipFile);
                     GZIPOutputStream gzipOut = new GZIPOutputStream(out);
-                    streamURI(uri, gzipOut, request);
+                    boolean success = streamURI(uri, gzipOut, request);
+                    gzipOut.flush();
                     gzipOut.close();
+                    if (!success) {
+                        // don't leave bad or incomplete files!
+                        gzipFile.delete();
+                        log.error(MessageFormat.format("NOT Caching compressed uri [{0}] due to a previous error", //$NON-NLS-1$
+                            new Object[]{uri}));
+
+                        // caching failed, return
+                        return;
+                    }
+                    if (log.isInfoEnabled()) {
+                        log.info(MessageFormat.format("Successfully cached compressed URI [{0}]", //$NON-NLS-1$
+                            new Object[]{uri}));
+                    }
                 }
                 compressedSize = (new Long(gzipFile.length())).intValue();
             }
