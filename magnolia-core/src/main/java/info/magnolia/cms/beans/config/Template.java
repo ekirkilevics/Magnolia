@@ -19,6 +19,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
@@ -226,6 +227,8 @@ public class Template {
                 ti.title = c.getNodeData("title").getString(); //$NON-NLS-1$
                 ti.description = c.getNodeData("description").getString(); //$NON-NLS-1$
                 ti.image = c.getNodeData("image").getString(); //$NON-NLS-1$
+
+                log.info(MessageFormat.format("Registering template [{0}]", new Object[]{ti.name})); //$NON-NLS-1$
 
                 Template.cachedContent.put(ti.name, ti);
                 ti.setLocation(c.getHandle());
