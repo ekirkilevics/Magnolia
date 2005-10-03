@@ -74,8 +74,10 @@ public class Engine implements Module {
             log.error("can't register the admin interface dialogpages", e); //$NON-NLS-1$
         }
 
-        log.info("Init template"); //$NON-NLS-1$
-        Template.init();
+        // alredy in info.magnolia.module.templating.Engine
+        // this could remove all the content if the admininterface module is loaded after the templating one
+        // log.info("Init template"); //$NON-NLS-1$
+        // Template.init();
 
         log.info("Init dialog controls"); //$NON-NLS-1$
         DialogManager.init();
