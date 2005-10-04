@@ -50,7 +50,7 @@ public final class Paragraph {
 
     private String description;
 
-    private Content dialogContent;
+    // private Content dialogContent;
 
     /**
      * constructor
@@ -84,26 +84,6 @@ public final class Paragraph {
         pi.templateType = c.getNodeData("type").getString(); //$NON-NLS-1$
         pi.title = c.getNodeData("title").getString(); //$NON-NLS-1$
         pi.description = c.getNodeData("description").getString(); //$NON-NLS-1$
-        // get remaining from dialog definition
-        try {
-            String dialog = pi.dialogPath;
-            dialog = StringUtils.substringBeforeLast(dialog, "."); //$NON-NLS-1$
-
-            if (dialog.indexOf("/") != 0) { //$NON-NLS-1$
-                dialog = startPage + DIALOGS_DIR + dialog; // dialog: pars/text.xml -> /info/dialogs/pars/text.xml
-            }
-            Content dialogPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(dialog);
-            pi.dialogContent = dialogPage;
-
-            // this is registered in module
-            // classes in info.magnolia.cms.beans.config should NEVER depends from classes in info.magnolia.module!!
-            // Store.getInstance().registerParagraphDialogHandler(pi.name, pi.dialogContent);
-
-        }
-        catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        }
-
         if (log.isDebugEnabled()) {
             log.debug("Registering paragraph [" + pi.name + "]"); //$NON-NLS-1$ //$NON-NLS-2$
         }
@@ -153,12 +133,12 @@ public final class Paragraph {
         return this.description;
     }
 
-    /**
-     * @return Content, Content holding information for the paragraph dialog
-     */
-    public Content getDialogContent() {
-        return this.dialogContent;
-    }
+    // /**
+    // * @return Content, Content holding information for the paragraph dialog
+    // */
+    // public Content getDialogContent() {
+    // return this.dialogContent;
+    // }
 
     /**
      * @see java.lang.Object#toString()
@@ -172,7 +152,6 @@ public final class Paragraph {
             .append("dialogPath", this.dialogPath) //$NON-NLS-1$
             .append("title", this.title) //$NON-NLS-1$
             .append("templatePath", this.templatePath) //$NON-NLS-1$
-            .append("dialogContent", this.dialogContent) //$NON-NLS-1$
             .toString();
     }
 }

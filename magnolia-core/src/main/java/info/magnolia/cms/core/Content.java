@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.Item;
@@ -462,6 +463,23 @@ public class Content extends ContentHandler implements Cloneable {
         }
         // --------------------------------------------------
         return this.getChildren(StringUtils.defaultString(type));
+    }
+
+    // collects all the children nodes, at any level
+    public List collectAllChildren() {
+        List nodes = new ArrayList();
+        return collectAllChildren(nodes, this);
+    }
+
+    // collects all the nodes under a same path
+    private List collectAllChildren(List nodes, Content node) {
+        Collection children = node.getChildren();
+        for (Iterator iter = children.iterator(); iter.hasNext();) {
+            Content child = (Content) iter.next();
+            nodes.add(child);
+            collectAllChildren(nodes, child);
+        }
+        return nodes;
     }
 
     /**

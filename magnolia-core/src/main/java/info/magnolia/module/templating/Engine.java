@@ -181,15 +181,7 @@ public class Engine implements Module {
     private void addParagraphsToCache(Iterator paragraphs) {
         while (paragraphs.hasNext()) {
             Content c = (Content) paragraphs.next();
-            Paragraph pi = Paragraph.addParagraphToCache(c, this.basePath);
-
-            // @todo inter-module dependency! should this be removed? how to handle this situation?
-            if (pi.getDialogContent() != null) {
-                // @todo FIXME!
-                // info.magnolia.module.admininterface.Store.getInstance().registerParagraphDialogHandler(
-                // pi.getName(),
-                // pi.getDialogContent());
-            }
+            Paragraph.addParagraphToCache(c, this.basePath);
         }
     }
 
