@@ -15,7 +15,7 @@
     if (request.getParameter("sendMail")!=null) {
 		StringBuffer body=new StringBuffer();
 		//build and send email
-		Iterator it=Resource.getActivePage(request).getContentNode("mainColumnParagraphs").getChildren().iterator();
+		Iterator it=Resource.getActivePage(request).getContent("mainColumnParagraphs").getChildren().iterator();
 		while (it.hasNext()) {
 			Content node=(Content) it.next();
 			if (request.getParameterValues(node.getName())!=null) {
