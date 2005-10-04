@@ -12,6 +12,7 @@
  */
 package info.magnolia.module.admininterface;
 
+import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.admininterface.dialogs.ParagraphEditDialog;
@@ -20,6 +21,7 @@ import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -61,9 +63,60 @@ public class Store {
     protected Store() {
     }
 
+    /**
+     * This registers the dialog handler for a paragraph.
+     */
+    public void registerParagraphDialogHandler(String name, Content dialogContent) {
+        try {
+            Class handler = ParagraphEditDialog.class;
+
+            String className = dialogContent.getNodeData("class").getString(); //$NON-NLS-1$
+            if (StringUtils.isNotEmpty(className)) {
+                try {
+                    handler = Class.forName(className);
+                }
+                catch (ClassNotFoundException e) {
+                    log.error("registering paragraph: class [" + className + "] not found", e); //$NON-NLS-1$ //$NON-NLS-2$
+                }
+            }
+
+            registerDialogHandler(name, handler, dialogContent);
+        }
+        catch (Exception e) {
+            log.error("can't register handle for dialog [" + name + "]", e); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+    }
+
+    public void registerDialogHandler(String name, Class dialogHandler) {
+        registerDialogHandler(name, dialogHandler, null);
+    }
+
+    public void registerDialogHandler(String name, Class dialogHandler, Content configNode) {
+        log.info("Registering dialog handler [" + name + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+        dialogHandlers.put(name, new Object[]{dialogHandler, configNode});
+    }
+
     public DialogMVCHandler getDialogHandler(String name, HttpServletRequest request, HttpServletResponse response) {
 
         Object[] handlerConfig = (Object[]) dialogHandlers.get(name);
+
+        if (handlerConfig == null) {
+            // @todo FIXME!!!
+            // the parameter "name" should be the dialog path, not the paragraph name
+            // This is a quick patch to get the dialog name from the paragraph name, but we should modify the
+            // tags to look for the paragraph description and generate the javascript with the dialog name
+            Paragraph par = Paragraph.getInfo(name);
+            if (par != null) {
+                if (par.getDialogPath() != null) {
+                    log
+                        .warn("Looking for a dialog using the paragraph name instead of the dialog name. Dialog path changed to "
+                            + par.getDialogPath()
+                            + ". Please fix me!");
+                    handlerConfig = (Object[]) dialogHandlers.get(par.getDialogPath());
+
+                }
+            }
+        }
 
         if (handlerConfig == null) {
             throw new InvalidDialogHandlerException(name);
@@ -158,13 +211,14 @@ public class Store {
         }
     }
 
-    public void registerDialogHandler(String name, Class dialogHandler) {
-        registerDialogHandler(name, dialogHandler, null);
-    }
+    public void registerParagraphDialogHandlers(Content modulesTemplatingDialogsRoot) {
+        List dialogs = modulesTemplatingDialogsRoot.collectAllChildren();
+        for (Iterator iter = dialogs.iterator(); iter.hasNext();) {
+            Content dialog = (Content) iter.next();
+            String name = StringUtils.substringAfter(dialog.getHandle(), "/modules/templating/dialogs/");
 
-    public void registerDialogHandler(String name, Class dialogHandler, Content configNode) {
-        log.info("Registering dialog handler [" + name + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-        dialogHandlers.put(name, new Object[]{dialogHandler, configNode});
+            registerParagraphDialogHandler(name, dialog);
+        }
     }
 
     /**
@@ -173,6 +227,8 @@ public class Store {
      */
     public void registerDialogHandlers(Content defNode) {
         // read the dialog configuration
+
+        log.info("registerDialogHandlers in " + defNode.getHandle());
         try {
             Collection dialogs = defNode.getChildren(ItemType.CONTENT.getSystemName());
             dialogs.addAll(defNode.getChildren(ItemType.CONTENTNODE.getSystemName()));
@@ -221,30 +277,6 @@ public class Store {
         }
         catch (Exception e) {
             log.warn("can't find dialogpages configuration", e); //$NON-NLS-1$
-        }
-    }
-
-    /**
-     * This registers the dialog handler for a paragraph.
-     */
-    public void registerParagraphDialogHandler(String name, Content dialogContent) {
-        try {
-            Class handler = ParagraphEditDialog.class;
-
-            String className = dialogContent.getNodeData("class").getString(); //$NON-NLS-1$
-            if (StringUtils.isNotEmpty(className)) {
-                try {
-                    handler = Class.forName(className);
-                }
-                catch (ClassNotFoundException e) {
-                    log.error("registering paragraph: class [" + className + "] not found", e); //$NON-NLS-1$ //$NON-NLS-2$
-                }
-            }
-
-            registerDialogHandler(name, handler, dialogContent);
-        }
-        catch (Exception e) {
-            log.error("can't register handle for dialog [" + name + "]", e); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 

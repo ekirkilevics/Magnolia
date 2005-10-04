@@ -13,9 +13,7 @@
 package info.magnolia.module.admininterface;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.gui.dialog.DialogManager;
 import info.magnolia.cms.module.Module;
 import info.magnolia.cms.module.ModuleConfig;
@@ -25,8 +23,6 @@ import info.magnolia.module.admininterface.trees.AdminTreeRoles;
 import info.magnolia.module.admininterface.trees.AdminTreeUsers;
 import info.magnolia.module.admininterface.trees.AdminTreeWebsite;
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.jar.JarFile;
 
 import javax.jcr.RepositoryException;
@@ -68,16 +64,27 @@ public class Engine implements Module {
         }
 
         try {
+            store.registerParagraphDialogHandlers(ContentRepository
+                .getHierarchyManager(ContentRepository.CONFIG)
+                .getContent("/modules/templating/dialogs")); //$NON-NLS-1$
+        }
+        catch (Exception e) {
+            log.error("can't register the templating dialogs", e); //$NON-NLS-1$
+        }
+
+        try {
+            store.registerDialogHandlers(store.getStore().getContent("dialogs")); //$NON-NLS-1$
+        }
+        catch (Exception e) {
+            log.error("can't register the admin interface dialogs", e); //$NON-NLS-1$
+        }
+
+        try {
             store.registerDialogPageHandlers(store.getStore().getContent("dialogpages")); //$NON-NLS-1$
         }
         catch (Exception e) {
             log.error("can't register the admin interface dialogpages", e); //$NON-NLS-1$
         }
-
-        // alredy in info.magnolia.module.templating.Engine
-        // this could remove all the content if the admininterface module is loaded after the templating one
-        // log.info("Init template"); //$NON-NLS-1$
-        // Template.init();
 
         log.info("Init dialog controls"); //$NON-NLS-1$
         DialogManager.init();
