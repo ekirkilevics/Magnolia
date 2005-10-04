@@ -16,18 +16,18 @@
 		if(handlerName == null){
 			handlerName = repository;
 		}
-		
+
 		if(browseMode == null){
 			browseMode = false;
 		}
-		
+
 		this.repository=repository;
 		this.path=path;
 		this.name=name;
 		this.handlerName = handlerName;
 		this.browseMode = browseMode;
 		mgnlDebug("new mgnlTree", "tree", this);
-		
+
 		document.write('<div id="'+name+'_'+path+'_DivSub" style="display:none;"></div>');
 		this.divMain=document.getElementById(name+"_"+path+"_DivMain");
 		// this is setted afterward because a cyclic dependency for the conditions
@@ -89,7 +89,7 @@
 	mgnlTree.prototype.expandNode = function(path)
 		{
 		mgnlDebug('tree.expandNode','tree');
-		
+
 		var chunks=path.split("/");
 		var id="";
 
@@ -508,7 +508,7 @@
 			{
 
 			keepVersions = keepVersions!=null ? keepVersions: false;
-		    var url="${pageContext.request.contextPath}/.magnolia/mgnl-export/file.xml?exportxml=true&mgnlRepository=" + this.repository + "&mgnlPath=" + this.selectedNode.id + "&mgnlKeepVersions=" + keepVersions;
+		    var url="${pageContext.request.contextPath}/.magnolia/mgnl-export/file.xml?exportxml=true&mgnlFormat=true&mgnlRepository=" + this.repository + "&mgnlPath=" + this.selectedNode.id + "&mgnlKeepVersions=" + keepVersions;
 
 		    location.href=url;
 			}
@@ -1094,7 +1094,7 @@
 					paramString+="&"+encodeURIComponent(elem)+"="+encodeURIComponent(unescape(params[elem])); //values seems to be passed escaped ...
 					}
 				}
-			mgnlDebug("node.httpRequest: paramString: " + paramString, "tree"); 
+			mgnlDebug("node.httpRequest: paramString: " + paramString, "tree");
             // paramters need to be passed in body to allow utf8 encoding (query string is always ISO-88591)
 			httpReq.open("POST",encodeURI(this.url),true);
 			httpReq.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
