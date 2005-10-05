@@ -16,12 +16,10 @@ import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.codec.binary.Base64;
 
-import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.callback.*;
 import javax.jcr.RepositoryException;
 import javax.jcr.PathNotFoundException;
-import java.util.Map;
 import java.util.Iterator;
 import java.io.IOException;
 
@@ -57,13 +55,6 @@ public class JCRLoginModule extends AbstractLoginModule {
     protected boolean success;
 
     protected Content user;
-
-    public void initialize(Subject subject, CallbackHandler callbackHandler, Map sharedState, Map options) {
-        this.subject = subject;
-        this.callbackHandler = callbackHandler;
-        this.sharedState = sharedState;
-        this.options = options;
-    }
 
     /**
      * Authenticate against magnolia/jcr user repository
@@ -170,12 +161,20 @@ public class JCRLoginModule extends AbstractLoginModule {
                 while (it.hasNext()) {
                     Content aclEntry = (Content) it.next();
                     String name = StringUtils.substringAfter(aclEntry.getName(),"acl_");
+                    ACL acl = new ACL();
                     if (!StringUtils.contains(name, "_")) {
                         String defaultWorkspace
                                 = ContentRepository.getDefaultWorkspace(StringUtils.substringBefore(name,"_"));
+                        acl.setRepository(name);
+                        acl.setWorkspace(defaultWorkspace);
                         name += ("_"+defaultWorkspace); // default workspace must be added to the name
+                    } else {
+                        String[] tokens = StringUtils.split(name,"_");
+                        acl.setRepository(tokens[0]);
+                        acl.setRepository(tokens[1]);
                     }
-                    ACL acl = ACLFactory.get(name);
+                    acl.setName(name);
+
                     if (!principalList.contains(name)) {
                         principalList.add(acl);
                     }
