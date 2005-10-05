@@ -419,6 +419,8 @@ public class Tree extends ControlSuper {
      * Creates a new node (either <code>NodeData</code> or <code>Content</code>) with
      * the specified name (<tt>label</tt>) and type. The node will be saved only if
      * <tt>save</tt>.
+     * NOTE: the node will be saved upon any subsequent calls to Session.save
+     * Follow: http://jira.magnolia.info/browse/MAGNOLIA-554
      *
      * @param label new node name
      * @param itemType new node type
