@@ -404,11 +404,27 @@ public class Tree extends ControlSuper {
         }
     }
 
+    /**
+     * Creates an <em>untitled</em> new node.
+     * The node will not be persisted, until he gets a name. The flow is createNode and
+     * the save will happen upon renameNode.
+     *
+     * @param itemType
+     * */
     public void createNode(String itemType) {
-        this.createNode("untitled", itemType); //$NON-NLS-1$
+        this.createNode("untitled", itemType, false); //$NON-NLS-1$
     }
 
-    public void createNode(String label, String itemType) {
+    /**
+     * Creates a new node (either <code>NodeData</code> or <code>Content</code>) with
+     * the specified name (<tt>label</tt>) and type. The node will be saved only if
+     * <tt>save</tt>.
+     *
+     * @param label new node name
+     * @param itemType new node type
+     * @param save <tt>true</tt> for immediately saving the node; <tt>false</tt> otherwise
+     * */
+    public void createNode(String label, String itemType, boolean save) {
         try {
             HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
             Content parentNode = hm.getContent(this.getPath());
@@ -455,7 +471,9 @@ public class Tree extends ControlSuper {
                     }
                 }
             }
-            parentNode.save();
+            if (save) {
+                parentNode.save();
+            }
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -822,9 +840,8 @@ public class Tree extends ControlSuper {
             if (hm.isExist(dest)) {
                 newLabel = Path.getUniqueLabel(hm, parentPath, newLabel);
                 dest = parentPath + "/" + newLabel; //$NON-NLS-1$
+                this.deActivateNode(this.getPath()); // BUGFIX: MAGNOLIA-554
             }
-
-            this.deActivateNode(this.getPath());
 
             if (log.isInfoEnabled()) {
                 log.info("Moving node from " + this.getPath() + " to " + dest); //$NON-NLS-1$ //$NON-NLS-2$
