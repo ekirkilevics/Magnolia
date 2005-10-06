@@ -224,7 +224,7 @@ public class SimpleNavigationTag extends TagSupport {
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag() throws JspException {
-        Content activePage = Resource.getActivePage((HttpServletRequest) this.pageContext.getRequest());
+        Content activePage = Resource.getCurrentActivePage((HttpServletRequest) this.pageContext.getRequest());
         JspWriter out = this.pageContext.getOut();
 
         if (startLevel > endLevel) {
