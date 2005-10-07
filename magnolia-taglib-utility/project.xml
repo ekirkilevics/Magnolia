@@ -2,85 +2,23 @@
 <project xmlns="http://maven.apache.org/POM/3.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/3.0.0 http://maven.apache.org/maven-v3_0_0.xsd ">
   <pomVersion>3</pomVersion>
-  <id>magnolia-taglib-utility</id>
+  <extend>../project.xml</extend>
   <groupId>info.magnolia</groupId>
   <artifactId>magnolia-taglib-utility</artifactId>
   <name>magnolia-taglib-utility</name>
   <currentVersion>2.2-SNAPSHOT</currentVersion>
-  <organization>
-    <name>Obinary Ltd</name>
-    <url>http://www.obinary.com</url>
-    <logo>images/obinary-logo.png</logo>
-  </organization>
-  <inceptionYear>1993</inceptionYear>
-  <logo>images/magnolia-logo.png</logo>
   <description>
     Magnolia is a free enterprise class content management system developed by obinary. Magnolia uses the upcoming
     standard API for java content repositories (JCR) to access its content. It has an easy to use web-browser interface,
     a clear API and a useful custom tag library for easy templating in JSP and Servlets.
   </description>
-  <shortDescription>Magnolia Content Management Suite</shortDescription>
-  <url>http://magnolia.sourceforge.net</url>
-  <issueTrackingUrl>http://jira.magnolia.info/browse/MAGNOLIA</issueTrackingUrl>
-  <siteAddress>shell.sourceforge.net</siteAddress>
-  <siteDirectory>/home/groups/m/ma/magnolia/htdocs</siteDirectory>
-  <repository>
-    <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk/magnolia-core</connection>
-    <developerConnection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk/magnolia-core</developerConnection>
-    <url>http://svn.magnolia.info/view</url>
-  </repository>
-  
-  <developers>
-    <developer>
-      <name>Boris Kraft</name>
-      <id>bkraft</id>
-      <email>boris.kraft(at)obinary.com</email>
-      <organization>obinary</organization>
-      <timezone>+1</timezone>
-    </developer>
-    <developer>
-      <name>Pascal Mangold</name>
-      <id>pmangold</id>
-      <email>pascal.mangold(at)obinary.com</email>
-      <organization>obinary</organization>
-      <timezone>+1</timezone>
-    </developer>
-    <developer>
-      <name>Sameer Charles</name>
-      <id>scharles</id>
-      <email>sameer.charles(at)obinary.com</email>
-      <organization>obinary</organization>
-      <timezone>+1</timezone>
-    </developer>
-    <developer>
-      <name>Vinzenz Wyser</name>
-      <id>vwyser</id>
-      <email>vinzenz.wyser(at)obinary.com</email>
-      <organization>obinary</organization>
-      <timezone>+1</timezone>
-    </developer>
-    <developer>
-      <name>Fabrizio Giustina</name>
-      <id>fgiust</id>
-      <email>fgiust(at)users.sourceforge.net</email>
-      <organization>openmind</organization>
-      <timezone>+1</timezone>
-    </developer>
-    <developer>
-      <name>Philipp Bracher</name>
-      <id>philipp</id>
-      <email>philipp.bracher(at)obinary.com</email>
-      <organization>obinary</organization>
-      <timezone>+1</timezone>
-    </developer>
-  </developers>
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
       <version>2.2-SNAPSHOT</version>
       <type>jar</type>
-       <properties>
+      <properties>
         <eclipse.dependency>true</eclipse.dependency>
       </properties>
     </dependency>

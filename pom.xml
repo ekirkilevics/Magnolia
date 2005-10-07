@@ -118,6 +118,7 @@
   
   <modules>
     <module>magnolia-core</module>
+    <module>magnolia-jaas</module>
     <module>magnolia-gui</module>
     <module>magnolia-module-admininterface</module>
     <module>magnolia-taglib-cms</module>
