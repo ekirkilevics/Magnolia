@@ -42,7 +42,25 @@
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-exchange-simple</artifactId>
+      <version>2.2-SNAPSHOT</version>
+      <properties>
+        <war.bundle>true</war.bundle>
+        <eclipse.dependency>true</eclipse.dependency>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-admininterface</artifactId>
+      <version>2.2-SNAPSHOT</version>
+      <properties>
+        <war.bundle>true</war.bundle>
+        <eclipse.dependency>true</eclipse.dependency>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-module-templating</artifactId>
       <version>2.2-SNAPSHOT</version>
       <properties>
         <war.bundle>true</war.bundle>
