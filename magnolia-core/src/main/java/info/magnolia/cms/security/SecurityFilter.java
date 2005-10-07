@@ -10,15 +10,10 @@
  * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.filters;
+package info.magnolia.cms.security;
 
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.security.Authenticator;
-import info.magnolia.cms.security.Listener;
-import info.magnolia.cms.security.Lock;
-import info.magnolia.cms.security.SecureURI;
-import info.magnolia.cms.security.SessionAccessControl;
 
 import java.io.IOException;
 
