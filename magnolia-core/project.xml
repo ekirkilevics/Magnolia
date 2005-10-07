@@ -129,11 +129,6 @@
       <version>1.4.3</version>
     </dependency>
     <dependency>
-      <groupId>excalibur-sourceresolve</groupId>
-      <artifactId>excalibur-sourceresolve</artifactId>
-      <version>20020820</version>
-    </dependency>
-    <dependency>
       <groupId>jstl</groupId>
       <artifactId>jstl</artifactId>
       <version>1.1.2</version>
@@ -182,11 +177,6 @@
       <groupId>xerces</groupId>
       <artifactId>xercesImpl</artifactId>
       <version>2.6.2</version>
-    </dependency>
-    <dependency>
-      <groupId>slide</groupId>
-      <artifactId>webdavlib</artifactId>
-      <version>2.0</version>
     </dependency>
     <dependency>
       <!-- to be removed after the test of the commons-fileupload filter -->
