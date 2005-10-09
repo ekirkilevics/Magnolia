@@ -1,36 +1,39 @@
 // form; check for mandatory fields
 function checkMandatories(formName,alertText)
-	{
-	var theForm=document[formName];
-	var m=theForm.mgnlMandatory;
-	var i=0;
-	var ok=true;
-	if (m)
-		{
-		if (!m[0])
-			{
-			var tmp=m;
-			m=new Object();
-			m[0]=tmp;
-			}
-		while (m[i])
-			{
-			var name=m[i].value;
+    {
+    var theForm=document[formName];
+    var m=theForm.mgnlMandatory;
+    var i=0;
+    var ok=true;
+    if (m)
+        {
+        if (!m[0])
+            {
+            var tmp=m;
+            m=new Object();
+            m[0]=tmp;
+            }
+        while (m[i])
+            {
+            var name=m[i].value;
             var type;
+            var mgnlField;
+            if(document.all) mgnlField=theForm(name);
+            else mgnlField=theForm[name];
 
-			if (theForm[name].type) type=theForm[name].type;
-            else if (theForm[name][0] && theForm[name][0].type) type=theForm[name][0].type
+            if (mgnlField.type) type=mgnlField.type;
+            else if (mgnlField[0] && mgnlField[0].type) type=mgnlField[0].type
 
-			switch (type)
-				{
-				case "select-one":
-					if (theForm[name].selectedIndex==0) ok=false;
-					break;
+            switch (type)
+                {
+                case "select-one":
+                    if (mgnlField.selectedIndex==0) ok=false;
+                    break;
                 case "checkbox":
                 case "radio":
                     var obj=new Object();
-                    if (!theForm[name][0]) obj[0]=theForm[name];
-                    else obj=theForm[name];
+                    if (!mgnlField[0]) obj[0]=mgnlField;
+                    else obj=mgnlField;
                     var okSmall=false;
                     var ii=0;
                     while (obj[ii])
@@ -44,23 +47,18 @@ function checkMandatories(formName,alertText)
                         }
                     if (!okSmall) ok=false;
                     break;
-				default:
-					if (!theForm[name].value) ok=false;
-				}
-			if (!ok)
-				{
-				while (alertText.indexOf("<br>")!=-1)
-					{
-					alertText=alertText.replace("<br>","\n");
-					}
-				alert(alertText);
-				if (!theForm[name][0]) theForm[name].focus();
-				return false;
-				}
-			i++;
-			}
-		}
-	//if (ok)	theForm.submit();
-	if (ok) return true;
-	else return false;
-	}
+                default:
+                    if (!mgnlField.value) ok=false;
+                }
+            if (!ok)
+                {
+                alert(alertText);
+                if (!mgnlField[0]) mgnlField.focus();
+                return false;
+                }
+            i++;
+            }
+        }
+    if (ok) return true;
+    else return false;
+    }
