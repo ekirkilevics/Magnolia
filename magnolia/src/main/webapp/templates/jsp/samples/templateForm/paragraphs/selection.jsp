@@ -9,17 +9,17 @@
     <div class="formelement">
 
       <c:if test="${!empty(par.title)}">
-         <label for="${par.name}">
+         <label for="${contentObj.name}">
            ${par.title}
            <c:if test="${par.mandatory}">*</c:if>
-           <input type="hidden" name="mgnlMandatory" value="${par.name}" />
+           <input type="hidden" name="mgnlMandatory" value="${contentObj.name}" />
          </label>
       </c:if>
 
 
       <c:choose>
         <c:when test="${par.type eq 'select'}">
-          <select name="${par.name}" id="${par.name}">
+          <select name="${contentObj.name}">
             <c:forTokens items="${par.values}" var="option" delims="${newline}">
               <option value="${option}">${option}</option>
             </c:forTokens>
@@ -27,7 +27,7 @@
         </c:when>
         <c:otherwise>
             <c:forTokens items="${par.values}" var="option" delims="${newline}">
-              <input name="${par.name}" type="${par.type}" class="${par.type}" value="${option}" />${option}<br/>
+              <input name="${contentObj.name}" type="${par.type}" class="${par.type}" value="${option}" />${option}<br/>
             </c:forTokens>
         </c:otherwise>
       </c:choose>
