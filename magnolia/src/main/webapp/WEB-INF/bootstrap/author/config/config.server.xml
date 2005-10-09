@@ -29,7 +29,7 @@
     <sv:value/>
   </sv:property>
   <sv:property sv:name="admin" sv:type="String">
-    <sv:value>false</sv:value>
+    <sv:value>true</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:created" sv:type="Date">
     <sv:value>2005-10-09T12:38:07.589+02:00</sv:value>
@@ -45,8 +45,8 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>nt:unstructured</sv:value>
       </sv:property>
-      <sv:property sv:name="lastmodified" sv:type="Date">
-        <sv:value>2005-10-09T12:46:08.721+02:00</sv:value>
+      <sv:property sv:name="lastmodified" sv:type="String">
+        <sv:value>2005-03-19T23:21:24.621+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="Data" sv:type="String">
         <sv:value>MetaData</sv:value>

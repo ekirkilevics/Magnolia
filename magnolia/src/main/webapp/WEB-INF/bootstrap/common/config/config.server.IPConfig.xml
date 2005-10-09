@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sv:node sv:name="IPConfig" xmlns:jcr="http://www.jcp.org/jcr/1.0"
+  xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
+  xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:rep="internal"
+  xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:fn="http://www.w3.org/2004/10/xpath-functions"
+  xmlns:sv="http://www.jcp.org/jcr/sv/1.0"
+  xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0" xmlns="">
+  <sv:property sv:name="jcr:primaryType" sv:type="Name">
+    <sv:value>mgnl:contentNode</sv:value>
+  </sv:property>
+  <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+    <sv:value>mix:versionable</sv:value>
+  </sv:property>
+  <sv:property sv:name="jcr:uuid" sv:type="String">
+    <sv:value>59222798-f044-4929-97f5-9559df8482be</sv:value>
+  </sv:property>
+  <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+    <sv:value>true</sv:value>
+  </sv:property>
+  <sv:property sv:name="jcr:created" sv:type="Date">
+    <sv:value>2005-10-09T12:38:07.629+02:00</sv:value>
+  </sv:property>
+  <sv:node sv:name="MetaData">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>nt:file</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2005-10-09T12:38:07.629+02:00</sv:value>
+    </sv:property>
+    <sv:node sv:name="jcr:content">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+      <sv:property sv:name="lastmodified" sv:type="String">
+        <sv:value>2004-11-02T15:34:13.998+01:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="sequenceposition" sv:type="String">
+        <sv:value>1099406054051000</sv:value>
+      </sv:property>
+      <sv:property sv:name="creationdate" sv:type="String">
+        <sv:value>2004-11-02T15:34:13.992+01:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="0001">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>be9c3e08-5b62-41c1-87c5-97782bc8bf9a</sv:value>
+    </sv:property>
+    <sv:property sv:name="IP" sv:type="String">
+      <sv:value>*</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2005-10-09T12:38:07.629+02:00</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:file</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2005-10-09T12:38:07.629+02:00</sv:value>
+      </sv:property>
+      <sv:node sv:name="jcr:content">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>nt:unstructured</sv:value>
+        </sv:property>
+        <sv:property sv:name="lastmodified" sv:type="String">
+          <sv:value>2004-11-02T15:34:14.085+01:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="Data" sv:type="String">
+          <sv:value>MetaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="authorid" sv:type="String">
+          <sv:value>superuser</sv:value>
+        </sv:property>
+        <sv:property sv:name="sequenceposition" sv:type="String">
+          <sv:value>1099406054123000</sv:value>
+        </sv:property>
+        <sv:property sv:name="creationdate" sv:type="String">
+          <sv:value>2004-11-02T15:34:14.081+01:00</sv:value>
+        </sv:property>
+      </sv:node>
+    </sv:node>
+    <sv:node sv:name="Access">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:contentNode</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+        <sv:value>mix:versionable</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>6741d6c1-aceb-4c27-b612-7bd8895e53b6</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2005-10-09T12:38:07.629+02:00</sv:value>
+      </sv:property>
+      <sv:node sv:name="MetaData">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>nt:file</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2005-10-09T12:38:07.629+02:00</sv:value>
+        </sv:property>
+        <sv:node sv:name="jcr:content">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:unstructured</sv:value>
+          </sv:property>
+          <sv:property sv:name="lastmodified" sv:type="String">
+            <sv:value>2004-11-02T15:34:14.244+01:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="Data" sv:type="String">
+            <sv:value>MetaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="authorid" sv:type="String">
+            <sv:value>superuser</sv:value>
+          </sv:property>
+          <sv:property sv:name="sequenceposition" sv:type="String">
+            <sv:value>1099406054307000</sv:value>
+          </sv:property>
+          <sv:property sv:name="creationdate" sv:type="String">
+            <sv:value>2004-11-02T15:34:14.227+01:00</sv:value>
+          </sv:property>
+        </sv:node>
+      </sv:node>
+      <sv:node sv:name="0001">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:contentNode</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+          <sv:value>mix:versionable</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>3d209efb-ad9c-4c0d-bdf6-5b891aad443b</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2005-10-09T12:38:07.639+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="Method" sv:type="String">
+          <sv:value>GET</sv:value>
+        </sv:property>
+        <sv:node sv:name="MetaData">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:file</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2005-10-09T12:38:07.639+02:00</sv:value>
+          </sv:property>
+          <sv:node sv:name="jcr:content">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+              <sv:value>nt:unstructured</sv:value>
+            </sv:property>
+            <sv:property sv:name="lastmodified" sv:type="String">
+              <sv:value>2004-11-02T15:34:14.354+01:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="Data" sv:type="String">
+              <sv:value>MetaData</sv:value>
+            </sv:property>
+            <sv:property sv:name="authorid" sv:type="String">
+              <sv:value>superuser</sv:value>
+            </sv:property>
+            <sv:property sv:name="sequenceposition" sv:type="String">
+              <sv:value>1099406054359000</sv:value>
+            </sv:property>
+            <sv:property sv:name="creationdate" sv:type="String">
+              <sv:value>2004-11-02T15:34:14.349+01:00</sv:value>
+            </sv:property>
+          </sv:node>
+        </sv:node>
+      </sv:node>
+      <sv:node sv:name="0002">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:contentNode</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+          <sv:value>mix:versionable</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>73152312-b0c8-4e7b-9344-194837a751ae</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2005-10-09T12:38:07.639+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="Method" sv:type="String">
+          <sv:value>POST</sv:value>
+        </sv:property>
+        <sv:node sv:name="MetaData">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:file</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2005-10-09T12:38:07.639+02:00</sv:value>
+          </sv:property>
+          <sv:node sv:name="jcr:content">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+              <sv:value>nt:unstructured</sv:value>
+            </sv:property>
+            <sv:property sv:name="lastmodified" sv:type="String">
+              <sv:value>2004-11-02T15:34:14.421+01:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="Data" sv:type="String">
+              <sv:value>MetaData</sv:value>
+            </sv:property>
+            <sv:property sv:name="authorid" sv:type="String">
+              <sv:value>superuser</sv:value>
+            </sv:property>
+            <sv:property sv:name="sequenceposition" sv:type="String">
+              <sv:value>1099406054427000</sv:value>
+            </sv:property>
+            <sv:property sv:name="creationdate" sv:type="String">
+              <sv:value>2004-11-02T15:34:14.416+01:00</sv:value>
+            </sv:property>
+          </sv:node>
+        </sv:node>
+      </sv:node>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name=".activationInfo">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>nt:file</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2005-10-09T12:38:07.639+02:00</sv:value>
+    </sv:property>
+    <sv:node sv:name="jcr:content">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+      <sv:property sv:name="Data" sv:type="String">
+        <sv:value>.activationInfo</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+</sv:node>
