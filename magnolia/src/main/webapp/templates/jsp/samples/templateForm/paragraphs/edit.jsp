@@ -1,36 +1,26 @@
-<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:cms="urn:jsptld:cms-taglib"
+<jsp:root version="2.0" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:cms="urn:jsptld:cms-taglib"
     xmlns:cmsu="urn:jsptld:cms-util-taglib" xmlns:c="urn:jsptld:http://java.sun.com/jsp/jstl/core">
-    <jsp:directive.page import="info.magnolia.cms.util.Resource" />
-<jsp:scriptlet>
-<![CDATA[
 
+    <cms:setNode var="par"/>
+    <div class="formelement">
 
-	String title=Resource.getLocalContentNode(request).getNodeData("title").getString();
-	String name=Resource.getLocalContentNode(request).getName();
-	if (!title.equals("")) {
-		out.print("<h2>"+title);
-		if (Resource.getLocalContentNode(request).getNodeData("mandatory").getBoolean()) {
-			out.println("*");
-			out.println("<input type=\"hidden\" name=\"mgnlMandatory\" value=\""+name+"\" />");
-		}
-		out.println("</h2>");
-	}
+      <c:if test="${!empty(par.title)}">
+         <label for="${par.name}">
+           ${par.title}
+           <c:if test="${par.mandatory}">*</c:if>
+           <input type="hidden" name="mgnlMandatory" value="${par.name}" />
+         </label>
+      </c:if>
 
+      <c:choose>
+        <c:when test="${par.rows eq 1}">
+          <input type="text" name="${par.name}" id="${par.name}" class="text" /><br/>
+        </c:when>
+        <c:otherwise>
+          <textarea name="${par.name}" id="${par.name}" rows="${par.rows}"><!--  --></textarea>
+        </c:otherwise>
+      </c:choose>
 
-	long rows=Resource.getLocalContentNode(request).getNodeData("rows").getLong();
+    </div>
 
-	if (rows==1) {
-		out.println("<input type=\"text\" name=\""+name+"\" class=\"text\" /><br/>");
-	}
-	else {
-		out.println("<textarea name=\""+name+"\" rows=\""+rows+"\" cols=\"300\"></textarea>");
-	}
-]]>
-</jsp:scriptlet>
 </jsp:root>
-
-
-
-
-
-

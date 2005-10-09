@@ -1,10 +1,9 @@
-<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:cms="urn:jsptld:cms-taglib"
+<jsp:root version="2.0" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:cms="urn:jsptld:cms-taglib"
     xmlns:cmsu="urn:jsptld:cms-util-taglib" xmlns:c="urn:jsptld:http://java.sun.com/jsp/jstl/core">
-    <cms:ifNotEmpty nodeDataName="buttonText">
-        <c:set var="buttonText">
-            <cms:out nodeDataName="buttonText" />
-        </c:set>
-    </cms:ifNotEmpty>
-    <input class="submit" type="submit" value="${buttonText}" />
-</jsp:root>
 
+    <cms:setNode var="par" />
+    <div class="formelement">
+      <input class="submit" type="submit" value="${par.buttonText}" />
+    </div>
+
+</jsp:root>
