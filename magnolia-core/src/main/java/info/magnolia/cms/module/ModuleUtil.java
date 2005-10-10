@@ -16,12 +16,15 @@ import info.magnolia.cms.beans.config.ModuleLoader;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.AccessDeniedException;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -38,6 +41,16 @@ import javax.jcr.RepositoryException;
 
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.jdom.Comment;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.Namespace;
+import org.jdom.input.SAXBuilder;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
+import org.jdom.xpath.XPath;
 
 
 /**
@@ -46,6 +59,12 @@ import org.apache.commons.lang.StringUtils;
  * @version $Revision$ ($Author$)
  */
 public final class ModuleUtil {
+    
+    /**
+     * Logger
+     */
+    
+    private static Logger log = Logger.getLogger(ModuleUtil.class);
 
     /**
      * used by the installFiles() method
@@ -320,5 +339,144 @@ public final class ModuleUtil {
         register.createContent("initParams", ItemType.CONTENTNODE); //$NON-NLS-1$
         return node;
     }
+    
+    public static void registerServlet( String name, String className, String[] urlPatterns, String comment) throws JDOMException, IOException {
+        // get the web.xml
+        File source = new File(Path.getAppRootDir() + "/WEB-INF/web.xml");
+        if (!source.exists()) {
+            throw new FileNotFoundException("Failed to locate web.xml " //$NON-NLS-1$
+                + source.getAbsolutePath());
+        }
+        SAXBuilder builder = new SAXBuilder();
+        Document doc = builder.build(source);
+        
+        // check if there already registered
+        
+        XPath xpath = XPath.newInstance("/webxml:web-app/webxml:servlet[webxml:servlet-name='"+name+"']");
+        // must add the namespace and use it: there is no default namespace elsewise
+        xpath.addNamespace("webxml", doc.getRootElement().getNamespace().getURI());
+        Element node = (Element) xpath.selectSingleNode(doc);
+            
+        if (node == null) {
+            log.info("register servlet "  + name);
+            
+            // make a nice comment
+            doc.getRootElement().addContent(new Comment(comment));
+            
+            // the same name space must be used
+            Namespace ns = doc.getRootElement().getNamespace();
+            
+            node = new Element("servlet", ns);
+            node.addContent(new Element("servlet-name", ns).addContent(name));
+            node.addContent(new Element("servlet-class", ns).addContent(className));
+            doc.getRootElement().addContent(node);
+        }
+        else{
+            log.info("servlet "  + name + " allready registered");
+        }
+        for (int i = 0; i < urlPatterns.length; i++) {
+            String urlPattern = urlPatterns[i];
+            registerServletMapping(doc, name, urlPattern, comment);
+        }
+        
+        XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
+        outputter.output(doc, new FileWriter(source));
+    }
+
+    public static void registerServletMapping(Document doc, String name, String urlPattern, String comment) throws JDOMException {
+        XPath xpath = XPath.newInstance("/webxml:web-app/webxml:servlet-mapping[webxml:servlet-name='"+name+"' and webxml:url-pattern='"+urlPattern+"']");
+        // must add the namespace and use it: there is no default namespace elsewise
+        xpath.addNamespace("webxml", doc.getRootElement().getNamespace().getURI());
+        Element node = (Element) xpath.selectSingleNode(doc);
+            
+        if (node == null) {
+            log.info("register servlet "  + name);
+            
+            // make a nice comment
+            doc.getRootElement().addContent(new Comment(comment));
+            
+            // the same name space must be used
+            Namespace ns = doc.getRootElement().getNamespace();
+            
+            // create the mapping
+            node = new Element("servlet-mapping", ns);
+            node.addContent(new Element("servlet-name", ns).addContent(name));
+            node.addContent(new Element("url-pattern", ns).addContent(urlPattern));
+            doc.getRootElement().addContent(node);
+        }
+        else{
+            log.info("servlet "  + name + " allready registered");
+        }
+    }
+
+    public static void registerRepository(String name) {
+        try {
+            File source = Path.getRepositoriesConfigFile();
+            if (!source.exists()) {
+                throw new FileNotFoundException("Failed to locate magnolia repositories config file at " //$NON-NLS-1$
+                    + source.getAbsolutePath());
+            }
+            SAXBuilder builder = new SAXBuilder();
+            Document doc = builder.build(source);
+
+            // check if there
+            Element node = (Element) XPath.selectSingleNode(doc, "/Repositories/Repository[@name='dms']");
+            if (node == null) {
+                // create
+                node = new Element("Repository");
+
+                String provider = ((Element) XPath.selectSingleNode(doc, "/Repositories/Repository[@name='website']"))
+                    .getAttributeValue("provider");
+                String configFile = ((Element) XPath.selectSingleNode(
+                    doc,
+                    "/Repositories/Repository[@name='website']/param[@name='configFile']")).getAttributeValue("value");
+                String repositoryHome = ((Element) XPath.selectSingleNode(
+                    doc,
+                    "/Repositories/Repository[@name='website']/param[@name='repositoryHome']"))
+                    .getAttributeValue("value");
+                repositoryHome = StringUtils.substringBeforeLast(repositoryHome, "/") + "/" + name;
+                String contextFactoryClass = ((Element) XPath.selectSingleNode(
+                    doc,
+                    "/Repositories/Repository[@name='website']/param[@name='contextFactoryClass']"))
+                    .getAttributeValue("value");
+                String providerURL = ((Element) XPath.selectSingleNode(
+                    doc,
+                    "/Repositories/Repository[@name='website']/param[@name='providerURL']")).getAttributeValue("value");
+                String bindName = ((Element) XPath.selectSingleNode(
+                    doc,
+                    "/Repositories/Repository[@name='website']/param[@name='bindName']")).getAttributeValue("value");
+                bindName = StringUtils.replace(bindName, "website", name);
+
+                node.setAttribute("name", name);
+                node.setAttribute("id", name);
+                node.setAttribute("loadOnStartup", "true");
+                node.setAttribute("provider", provider);
+
+                node.addContent(new Element("param").setAttribute("name", "configFile").setAttribute(
+                    "value",
+                    configFile));
+                node.addContent(new Element("param").setAttribute("name", "repositoryHome").setAttribute(
+                    "value",
+                    repositoryHome));
+                node.addContent(new Element("param").setAttribute("name", "contextFactoryClass").setAttribute(
+                    "value",
+                    contextFactoryClass));
+                node.addContent(new Element("param").setAttribute("name", "providerURL").setAttribute(
+                    "value",
+                    providerURL));
+                node.addContent(new Element("param").setAttribute("name", "bindName").setAttribute("value", bindName));
+
+                doc.getRootElement().addContent(node);
+
+                // save it
+                XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
+                outputter.output(doc, new FileWriter(source));
+            }
+        }
+        catch (Exception e) {
+            log.error("can't register repository", e);
+        }
+    }
+
 
 }
