@@ -1214,20 +1214,29 @@ callback
 
 		var div=document.getElementById(treeName+"_"+id+"_DivSub");
 		var tree=eval(treeName);
-
+		
         if (div) div.innerHTML=html;
 
-		if (id==tree.path)
-			{
+		if (id==tree.path){
 			//reset tree
 			tree.nodes=new Object();
 			tree.selectedNode=tree.getNode(tree.path);
 			tree.clipboardNode=null;
 			tree.clipboardMethod=null;
-			}
+		}
 
 		var selectPath=params.pathSelected;
 		var selectNodePattern='<input type="hidden" id="mgnlSelectNode" value="';
+		var messagePattern='<input type="hidden" id="mgnlMessage" value="';
+
+		// check if alert message was sent back
+		if (html.indexOf(messagePattern) != -1){
+			var start = html.indexOf(messagePattern);
+			var end = html.indexOf("\" />", start);
+			var msg = html.slice(start + messagePattern.length, end);
+			alert(msg);
+		}
+		
 		if (html.indexOf(selectNodePattern)==0)
 			{
 			mgnlDebug('mgnlTreeDrawNodesCallback', "tree");
