@@ -31,9 +31,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.sun.corba.se.internal.iiop.MessageMediator;
-import com.sun.corba.se.internal.iiop.messages.Message;
-
 
 /**
  * this class wrapes the tree control. The AdminInterfaceServlet instantiates a subclass. To build your own tree you
@@ -78,10 +75,10 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
     protected static final String VIEW_COPY_MOVE = "copymove"; //$NON-NLS-1$
 
     /**
-     * Log 
+     * Log
      */
-    private static Logger log = Logger.getLogger(AdminTreeMVCHandler.class); 
-    
+    private static Logger log = Logger.getLogger(AdminTreeMVCHandler.class);
+
     /**
      * name of the tree (not the repository)
      */
@@ -245,7 +242,9 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         }
         catch (Exception e) {
             log.error("can't activate", e);
-            AlertUtil.setMessage(MessagesManager.get(request, "tree.error.activate") + " " +AlertUtil.getExceptionMessage(e), request);
+            AlertUtil.setMessage(MessagesManager.get(request, "tree.error.activate")
+                + " "
+                + AlertUtil.getExceptionMessage(e), request);
         }
         return VIEW_TREE;
     }
@@ -256,7 +255,9 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         }
         catch (Exception e) {
             log.error("can't deactivate", e);
-            AlertUtil.setMessage(MessagesManager.get(request, "tree.error.deactivate") + " " + AlertUtil.getExceptionMessage(e), request);
+            AlertUtil.setMessage(MessagesManager.get(request, "tree.error.deactivate")
+                + " "
+                + AlertUtil.getExceptionMessage(e), request);
         }
         return VIEW_TREE;
     }
@@ -347,11 +348,12 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
                 // NOTE: tree.js checks for this pattern; adapt it there, if any changes are made here
                 html.append("<input type=\"hidden\" id=\"mgnlSelectNode\" value=\"" + newPath + "\" />"); //$NON-NLS-1$ //$NON-NLS-2$
             }
-            
-            if(AlertUtil.isMessageSet(request)){
-                html.append("<input type=\"hidden\" id=\"mgnlMessage\" value=\"" + AlertUtil.getMessage(request) + "\" />"); //$NON-NLS-1$ //$NON-NLS-2$
+
+            if (AlertUtil.isMessageSet(request)) {
+                html
+                    .append("<input type=\"hidden\" id=\"mgnlMessage\" value=\"" + AlertUtil.getMessage(request) + "\" />"); //$NON-NLS-1$ //$NON-NLS-2$
             }
-            
+
             renderTree(html);
         }
 
