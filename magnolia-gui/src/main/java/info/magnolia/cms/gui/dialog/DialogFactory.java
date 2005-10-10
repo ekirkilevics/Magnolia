@@ -34,25 +34,14 @@ import org.apache.log4j.Logger;
 public final class DialogFactory {
 
     /**
-     * Registered dialogs.
+     * Registered controls.
      */
-    private static Map dialogs = new HashMap();
+    private static Map controls = new HashMap();
 
     /**
      * Logger.
      */
     private static Logger log = Logger.getLogger(DialogFactory.class);
-
-    /*
-     * we moved this to the config repository static { // register magnolia default dialogs registerDialog("edit",
-     * DialogEdit.class); registerDialog("richEdit", DialogRichedit.class); registerDialog("tab", DialogTab.class);
-     * registerDialog("buttonSet", DialogButtonSet.class); registerDialog("button", DialogButton.class);
-     * registerDialog("static", DialogStatic.class); registerDialog("file", DialogFile.class); registerDialog("link",
-     * DialogLink.class); registerDialog("date", DialogDate.class); registerDialog("radio", DialogButtonSet.class);
-     * registerDialog("checkbox", DialogButtonSet.class); registerDialog("checkboxSwitch", DialogButtonSet.class);
-     * registerDialog("select", DialogSelect.class); registerDialog("password", DialogPassword.class);
-     * registerDialog("include", DialogInclude.class); registerDialog("webDAV", DialogWebDAV.class); }
-     */
 
     /**
      * Utility class, don't instantiate.
@@ -73,7 +62,7 @@ public final class DialogFactory {
 
         log.info("Registering control [" + name + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 
-        dialogs.put(name, dialogClass);
+        controls.put(name, dialogClass);
     }
 
     /**
@@ -87,7 +76,7 @@ public final class DialogFactory {
         Content websiteNode, Content configNode) throws RepositoryException {
         String controlType = configNode.getNodeData("controlType").getString(); //$NON-NLS-1$
 
-        Class dialogClass = (Class) dialogs.get(controlType);
+        Class dialogClass = (Class) controls.get(controlType);
 
         if (dialogClass == null) {
             throw new IllegalArgumentException("Unknown dialog type: \"" + controlType + "\""); //$NON-NLS-1$ //$NON-NLS-2$
@@ -181,4 +170,38 @@ public final class DialogFactory {
         return dialog;
     }
 
+    /**
+     * Get a instance by the control type name. Those name class mappings are configured in the admin interface
+     * configuration.
+     * @param request
+     * @param response
+     * @param websiteNode the node holding the data (can be null)
+     * @param configNode the node holding the configuration (can be null)
+     * @param controlType the name of the control
+     * @return the conrol
+     * @throws RepositoryException
+     */
+    public static DialogInterface getDialogControlInstanceByName(HttpServletRequest request, HttpServletResponse response,
+        Content websiteNode, Content configNode, String controlType) throws RepositoryException {
+        
+        Class dialogClass = (Class) controls.get(controlType);
+
+        if (dialogClass == null) {
+            throw new IllegalArgumentException("Unknown dialog type: \"" + controlType + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
+        DialogInterface dialog = null;
+        try {
+            dialog = (DialogInterface) dialogClass.newInstance();
+        }
+        catch (Exception e) {
+            // should never happen
+            throw new NestableRuntimeException("Unable to instantiate " //$NON-NLS-1$
+                + dialogClass + " due to: InstantiationException - " //$NON-NLS-1$
+                + e.getMessage());
+        }
+        
+        dialog.init(request, response, websiteNode, configNode);
+        return dialog;
+    }
 }

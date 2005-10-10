@@ -188,6 +188,8 @@ public class Save extends ControlSuper {
                     // node does not exist -> create
                     if (nodeName.equals("mgnlNew")) { //$NON-NLS-1$
                         nodeName = Path.getUniqueLabel(hm, nodeCollection.getHandle(), "0"); //$NON-NLS-1$
+                        // this value can get used later on to find this node
+                        this.setNodeName(nodeName);
                     }
                     node = nodeCollection.createContent(nodeName, ItemType.CONTENTNODE);
                     node.createNodeData("paragraph").setValue(this.getParagraph()); //$NON-NLS-1$

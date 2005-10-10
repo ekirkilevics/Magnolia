@@ -81,6 +81,10 @@ public abstract class DialogSuper implements DialogInterface {
      */
     private List options = new ArrayList();
 
+    /**
+     * The id is used to make the controls unic. Used by the javascripts. This is not a configurable value. See method
+     * set and getName().
+     */
     private String id = "mgnlControl"; //$NON-NLS-1$
 
     private String value;
@@ -169,10 +173,19 @@ public abstract class DialogSuper implements DialogInterface {
         this.setConfig("saveInfo", b); //$NON-NLS-1$
     }
 
+    /**
+     * Set the name of this control. This is not the same value as the id setted by the parent. In common this value is
+     * setted in the dialog configuration.
+     * @param the name
+     */
     public void setName(String s) {
         this.setConfig("name", s); //$NON-NLS-1$
     }
 
+    /**
+     * Return the configured name of this control (not the id).
+     * @return the name
+     */
     public String getName() {
         return this.getConfigValue("name"); //$NON-NLS-1$
     }
@@ -243,7 +256,7 @@ public abstract class DialogSuper implements DialogInterface {
         // do nothing
     }
 
-    protected DialogSuper getParent() {
+    public DialogSuper getParent() {
         return this.parent;
     }
 
@@ -251,12 +264,31 @@ public abstract class DialogSuper implements DialogInterface {
         this.topParent = top;
     }
 
-    protected DialogSuper getTopParent() {
+    public DialogSuper getTopParent() {
         return this.topParent;
     }
 
-    protected List getSubs() {
+    public List getSubs() {
         return this.subs;
+    }
+
+    /**
+     * Find a control by its name
+     * @param name the name of the control to find
+     * @return the found control or null
+     */
+    public DialogSuper getSub(String name) {
+        for (Iterator iter = subs.iterator(); iter.hasNext();) {
+            Object control = iter.next();
+
+            // could be an implementation of DialogInterface only
+            if (control instanceof DialogSuper) {
+                if (StringUtils.equals(((DialogSuper) control).getName(), name)) {
+                    return (DialogSuper) control;
+                }
+            }
+        }
+        return null;
     }
 
     protected HttpServletResponse getResponse() {
@@ -270,23 +302,23 @@ public abstract class DialogSuper implements DialogInterface {
         this.websiteNode = null;
     }
 
-    protected String getId() {
+    public String getId() {
         return this.id;
     }
 
-    protected String getLabel() {
+    public String getLabel() {
         return this.getConfigValue("label", StringUtils.EMPTY); //$NON-NLS-1$
     }
 
-    protected String getDescription() {
+    public String getDescription() {
         return this.getConfigValue("description", StringUtils.EMPTY); //$NON-NLS-1$
     }
 
-    protected List getOptions() {
+    public List getOptions() {
         return this.options;
     }
 
-    protected List getValues() {
+    public List getValues() {
         if (this.getWebsiteNode() == null) {
             return this.values;
         }
@@ -306,7 +338,10 @@ public abstract class DialogSuper implements DialogInterface {
 
     }
 
-    protected void setSessionAttribute() {
+    /**
+     * This method sets a control into the session
+     */
+    public void setSessionAttribute() {
         String name = SESSION_ATTRIBUTENAME_DIALOGOBJECT + "_" + this.getName() + "_" + new Date().getTime(); //$NON-NLS-1$ //$NON-NLS-2$
         this.setConfig(SESSION_ATTRIBUTENAME_DIALOGOBJECT, name);
         HttpServletRequest request = this.getRequest();

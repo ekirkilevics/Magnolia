@@ -891,54 +891,38 @@ public class Tree extends ControlSuper {
         return returnValue;
     }
 
-    public void activateNode(String path, boolean recursive, boolean includeContentNodes) {
-        // todo: ??? generic -> RequestInterceptor.java
-        try {
-            HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
-            Content c = null;
-            if (hm.isPage(path)) {
-                c = hm.getContent(path);
-            }
-            else {
-                c = hm.getContent(path);
-            }
-            Syndicator syndicator = new Syndicator(this.getRequest());
-            if (recursive) {
-                deepActivate(syndicator, c, hm);
-            }
-            else {
-                syndicator.activate(this.getRepository(), StringUtils.EMPTY, path, recursive, includeContentNodes);
-            }
+    public void activateNode(String path, boolean recursive, boolean includeContentNodes) throws Exception {
+        HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
+        Content c = null;
+        if (hm.isPage(path)) {
+            c = hm.getContent(path);
         }
-        catch (Exception e) {
-            log.error(e.getMessage(), e);
+        else {
+            c = hm.getContent(path);
+        }
+        Syndicator syndicator = new Syndicator(this.getRequest());
+        if (recursive) {
+            deepActivate(syndicator, c, hm);
+        }
+        else {
+            syndicator.activate(this.getRepository(), StringUtils.EMPTY, path, recursive, includeContentNodes);
         }
     }
 
-    protected void deepActivate(Syndicator syndicator, Content content, HierarchyManager hm) {
-        try {
-            syndicator.activate(this.getRepository(), StringUtils.EMPTY, content.getHandle(), false, true);
-            Collection children = content.getChildren();
-            if (children != null) {
-                Iterator it = children.iterator();
-                while (it.hasNext()) {
-                    deepActivate(syndicator, (Content) it.next(), hm);
-                }
+    protected void deepActivate(Syndicator syndicator, Content content, HierarchyManager hm) throws Exception {
+        syndicator.activate(this.getRepository(), StringUtils.EMPTY, content.getHandle(), false, true);
+        Collection children = content.getChildren();
+        if (children != null) {
+            Iterator it = children.iterator();
+            while (it.hasNext()) {
+                deepActivate(syndicator, (Content) it.next(), hm);
             }
-        }
-        catch (Exception e) {
-            log.error(e.getMessage(), e);
         }
     }
 
-    public void deActivateNode(String path) {
-        try {
-            Syndicator syndicator = new Syndicator(this.getRequest());
-            syndicator.deActivate(this.getRepository(), path);
-        }
-        catch (Exception e) {
-            log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
-        }
+    public void deActivateNode(String path) throws Exception {
+        Syndicator syndicator = new Syndicator(this.getRequest());
+        syndicator.deActivate(this.getRepository(), path);
     }
 
     public String getHtml() {
