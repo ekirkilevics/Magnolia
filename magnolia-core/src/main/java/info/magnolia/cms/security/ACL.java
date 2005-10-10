@@ -10,120 +10,68 @@
  * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.jaas.principal;
+package info.magnolia.cms.security;
 
-import java.io.Serializable;
 import java.security.Principal;
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-
-
 /**
- * This class represents access control list as a principal
+ *
  * @author Sameer Charles
- * @version $Revision$ ($Author$)
+ * @version $Revision: $ ($Author: $)
  */
-public class ACL implements Principal, Serializable {
-
-    /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
-
-    private static final String NAME = "acl";
-
-    /**
-     * properties
-     */
-    private String name;
-
-    private List list;
-
-    private String repository;
-
-    private String workspace;
-
-    /**
-     * Constructor
-     */
-    public ACL() {
-        this.list = new ArrayList();
-    }
+public interface ACL extends Principal, Serializable {
 
     /**
      * Get name given to this principal
      * @return name
      */
-    public String getName() {
-        if (StringUtils.isEmpty(this.name)) {
-            return NAME;
-        }
-        return this.name;
-    }
-
+    public String getName();
     /**
      * Set this principal name
      */
-    public void setName(String name) {
-        this.name = name;
-    }
+    public void setName(String name);
 
     /**
      * Get repository ID for which this ACL has been constructed
      * @return repository ID
      */
-    public String getRepository() {
-        return repository;
-    }
+    public String getRepository();
 
     /**
      * Set repository ID for which this ACL will be constructed
      * @param repository
      */
-    public void setRepository(String repository) {
-        this.repository = repository;
-    }
+    public void setRepository(String repository);
 
     /**
      * Get workspace ID for which this ACL has been contructed
      * @return workspace ID
      */
-    public String getWorkspace() {
-        return workspace;
-    }
+    public String getWorkspace();
 
     /**
      * Set workspace ID for which this ACL will be constructed
      * @param workspace
      */
-    public void setWorkspace(String workspace) {
-        this.workspace = workspace;
-    }
+    public void setWorkspace(String workspace);
 
     /**
      * add permission in to an existing list
      * @param permission
      */
-    public void addPermission(Object permission) {
-        this.list.add(permission);
-    }
+    public void addPermission(Object permission);
 
     /**
      * Initialize access control list with provided permissions it will overwrite any existing permissions set before.
      * @param list
      */
-    public void setList(List list) {
-        this.list.clear();
-        this.list.addAll(list);
-    }
+    public void setList(List list);
 
     /**
      * Returns list of permissions for this principal
      */
-    public List getList() {
-        return this.list;
-    }
+    public List getList();
 
 }

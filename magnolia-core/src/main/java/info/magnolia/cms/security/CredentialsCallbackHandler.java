@@ -10,7 +10,7 @@
  * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.jaas.callback;
+package info.magnolia.cms.security;
 
 import org.apache.log4j.Logger;
 
@@ -22,7 +22,7 @@ import java.io.IOException;
  * Time: 4:45:21 PM
  *
  * @author Sameer Charles
- * $Id :$
+ * @version $Revision$ ($Author$)
  */
 public class CredentialsCallbackHandler implements CallbackHandler {
 

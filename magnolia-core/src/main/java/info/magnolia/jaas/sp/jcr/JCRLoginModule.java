@@ -31,6 +31,8 @@ import info.magnolia.cms.util.UrlPattern;
 import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
+import info.magnolia.cms.security.PrincipalCollection;
+import info.magnolia.cms.security.ACL;
 import info.magnolia.jaas.principal.*;
 import info.magnolia.jaas.sp.AbstractLoginModule;
 
@@ -133,11 +135,11 @@ public class JCRLoginModule extends AbstractLoginModule {
      * set user details
      * */
     public void setEntity() {
-        Entity user = new Entity();
+        EntityImpl user = new EntityImpl();
         String language = this.user.getNodeData("language").getString();
-        user.addProperty(Entity.LANGUAGE, language);
+        user.addProperty(EntityImpl.LANGUAGE, language);
         String name = this.user.getTitle();
-        user.addProperty(Entity.NAME, name);
+        user.addProperty(EntityImpl.NAME, name);
         // todo, set all basic magnolia user property
         this.subject.getPrincipals().add(user);
     }
@@ -150,8 +152,8 @@ public class JCRLoginModule extends AbstractLoginModule {
         try {
             Content rolesNode = this.user.getContent("roles");
             Iterator children = rolesNode.getChildren().iterator();
-            RoleList roleList = new RoleList();
-            PrincipalCollection principalList = new PrincipalCollection();
+            RoleListImpl roleList = new RoleListImpl();
+            PrincipalCollection principalList = new PrincipalCollectionImpl();
             while (children.hasNext()) {
                 Content child = (Content) children.next();
                 String rolePath = child.getNodeData("path").getString();
@@ -161,7 +163,7 @@ public class JCRLoginModule extends AbstractLoginModule {
                 while (it.hasNext()) {
                     Content aclEntry = (Content) it.next();
                     String name = StringUtils.substringAfter(aclEntry.getName(),"acl_");
-                    ACL acl = new ACL();
+                    ACL acl = new ACLImpl();
                     if (!StringUtils.contains(name, "_")) {
                         String defaultWorkspace
                                 = ContentRepository.getDefaultWorkspace(StringUtils.substringBefore(name,"_"));

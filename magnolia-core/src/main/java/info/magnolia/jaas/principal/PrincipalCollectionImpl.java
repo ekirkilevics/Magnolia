@@ -6,7 +6,8 @@ import java.util.Collection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.security.Principal;
-import java.io.Serializable;
+
+import info.magnolia.cms.security.PrincipalCollection;
 
 
 /**
@@ -14,7 +15,7 @@ import java.io.Serializable;
  * @author Sameer Charles
  * @version $Revision$ ($Author$)
  */
-public class PrincipalCollection implements Principal, Serializable {
+public class PrincipalCollectionImpl implements PrincipalCollection {
 
     /**
      * Stable serialVersionUID.

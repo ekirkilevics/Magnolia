@@ -12,20 +12,19 @@
  */
 package info.magnolia.jaas.principal;
 
-import java.io.Serializable;
-import java.security.Principal;
 import java.util.Collection;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.apache.commons.lang.StringUtils;
+import info.magnolia.cms.security.RoleList;
 
 
 /**
  * @author Sameer Charles
  * @version $Revision: $ ($Author: $)
  */
-public class RoleList implements Principal, Serializable {
+public class RoleListImpl implements RoleList {
 
     /**
      * Stable serialVersionUID.
@@ -47,7 +46,7 @@ public class RoleList implements Principal, Serializable {
      * */
     private Collection roles;
 
-    public RoleList() {
+    public RoleListImpl() {
         this.roles = new ArrayList();
     }
 

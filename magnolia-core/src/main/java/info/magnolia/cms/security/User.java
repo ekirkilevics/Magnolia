@@ -12,9 +12,6 @@
  */
 package info.magnolia.cms.security;
 
-import info.magnolia.jaas.principal.Entity;
-import info.magnolia.jaas.principal.RoleList;
-
 import java.util.Iterator;
 import java.util.Set;
 
@@ -48,10 +45,10 @@ public class User {
      * @param subject as created by login module
      */
     public User(Subject subject) {
-        Set principalSet = subject.getPrincipals(info.magnolia.jaas.principal.Entity.class);
+        Set principalSet = subject.getPrincipals(Entity.class);
         Iterator entityIterator = principalSet.iterator();
         this.userDetails = (Entity) entityIterator.next();
-        principalSet = subject.getPrincipals(info.magnolia.jaas.principal.RoleList.class);
+        principalSet = subject.getPrincipals(RoleList.class);
         Iterator roleListIterator = principalSet.iterator();
         this.roleList = (RoleList) roleListIterator.next();
     }

@@ -12,19 +12,18 @@
  */
 package info.magnolia.jaas.principal;
 
-import java.io.Serializable;
-import java.security.Principal;
 import java.util.Hashtable;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import info.magnolia.cms.security.Entity;
 
 
 /**
  * @author Sameer Charles
  * @version $Revision$ ($Author$)
  */
-public class Entity implements Principal, Serializable {
+public class EntityImpl implements Entity {
 
     /**
      * Stable serialVersionUID.
@@ -34,28 +33,13 @@ public class Entity implements Principal, Serializable {
     private static final String DEFAULT_NAME = "person";
 
     /**
-     * default properties
-     */
-    public static final String FULL_NAME = "fullName";
-
-    public static final String NAME = "name";
-
-    public static final String EMAIL = "email";
-
-    public static final String LANGUAGE = "language";
-
-    public static final String LOCALE = "locale";
-
-    public static final String ADDRESS_LINE = "address";
-
-    /**
      * properties
      */
     private String name;
 
     private Map properties;
 
-    public Entity() {
+    public EntityImpl() {
         this.properties = new Hashtable();
     }
 

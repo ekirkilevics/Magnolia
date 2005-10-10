@@ -16,8 +16,6 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.SearchFactory;
-import info.magnolia.jaas.principal.ACL;
-import info.magnolia.jaas.principal.PrincipalCollection;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -258,7 +256,7 @@ public final class SessionAccessControl {
 
         List permissionList;
         if (subject != null) {
-            Set principalSet = subject.getPrincipals(info.magnolia.jaas.principal.PrincipalCollection.class);
+            Set principalSet = subject.getPrincipals(PrincipalCollection.class);
             Iterator it = principalSet.iterator();
             PrincipalCollection principals = (PrincipalCollection) it.next();
             ACL acl = (ACL) principals.get(repositoryID + "_" + workspaceID);

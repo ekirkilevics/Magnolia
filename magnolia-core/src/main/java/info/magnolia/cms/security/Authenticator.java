@@ -13,7 +13,6 @@
 package info.magnolia.cms.security;
 
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.jaas.callback.CredentialsCallbackHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.security.auth.login.LoginContext;
