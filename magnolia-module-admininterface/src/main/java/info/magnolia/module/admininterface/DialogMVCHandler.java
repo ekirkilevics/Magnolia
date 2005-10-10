@@ -187,9 +187,6 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
 
     protected Save onPreSave() {
         Save save = new Save(form, request);
-
-        // @todo FIXME!
-        save.setDialogHandler(this);
         return save;
     }
 
