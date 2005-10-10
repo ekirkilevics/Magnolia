@@ -83,7 +83,8 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
      */
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String context = request.getHeader(Syndicator.WORKING_CONTEXT);
-
+        String resultHeader = Syndicator.ACTIVATION_FAILED;
+        String statusMessage = "";
         log.debug("SimpleExchange.doGet()"); //$NON-NLS-1$
 
         try {
@@ -128,16 +129,26 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
             else {
                 throw new UnsupportedOperationException("Method not supported by Exchange protocol - Simple (.01)"); //$NON-NLS-1$
             }
+            resultHeader = Syndicator.ACTIVATION_SUCCESSFUL;
         }
         catch (OutOfMemoryError e) {
             Runtime rt = Runtime.getRuntime();
             log.error("---------\nOutOfMemoryError caught during activation. Total memory = " //$NON-NLS-1$
                 + rt.totalMemory() + ", free memory = " //$NON-NLS-1$
                 + rt.freeMemory() + "\n---------"); //$NON-NLS-1$
-
+            statusMessage = e.getMessage();
+        }
+        catch(PathNotFoundException e){
+            log.error(e.getMessage(), e);
+            statusMessage = "Parent not found (not yet activated): " + e.getMessage();
         }
         catch (Throwable e) {
             log.error(e.getMessage(), e);
+            statusMessage = e.getMessage();
+        }
+        finally {
+            response.setHeader(Syndicator.ACTIVATION_ATTRIBUTE_STATUS, resultHeader);
+            response.setHeader(Syndicator.ACTIVATION_ATTRIBUTE_MESSAGE, statusMessage);
         }
     }
 
@@ -212,6 +223,7 @@ public class SimpleExchangeServlet extends HttpServlet implements SingleThreadMo
         catch (Exception e) {
             log.error("Failed to de-serialize - " + page); //$NON-NLS-1$
             log.error(e.getMessage(), e);
+            throw e;
         }
         Lock.setSystemLock();
         CacheHandler.flushCache();
