@@ -23,6 +23,7 @@ import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.gui.misc.Icon;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 
 import javax.jcr.PropertyType;
@@ -30,6 +31,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
 
 
 /**
@@ -38,6 +41,10 @@ import org.apache.commons.lang.StringUtils;
  * @version $Id$
  */
 public class AdminTreeConfig extends AdminTreeMVCHandler {
+    /**
+     * Logger
+     */
+    private static Logger log = Logger.getLogger(AdminTreeConfig.class);
 
     /**
      * @param name
@@ -267,7 +274,16 @@ public class AdminTreeConfig extends AdminTreeMVCHandler {
     public String activate() {
         boolean recursive = (request.getParameter("recursive") != null); //$NON-NLS-1$
         // do not activate nodes of type CONTENTNODE if recursive is false
-        this.getTree().activateNode(this.getPathSelected(), recursive, false);
+        try {
+            this.getTree().activateNode(this.getPathSelected(), recursive, false);
+        }
+        catch (Exception e) {
+            log.error("can't activate", e);
+            AlertUtil.setMessage(MessagesManager.get(request, "tree.error.activate")
+                + " "
+                + AlertUtil.getExceptionMessage(e), request);
+        }
+
         return VIEW_TREE;
     }
 

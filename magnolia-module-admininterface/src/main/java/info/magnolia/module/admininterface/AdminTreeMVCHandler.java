@@ -19,7 +19,9 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.gui.misc.Spacer;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.servlets.MVCServletHandlerImpl;
+import info.magnolia.cms.util.AlertUtil;
 
 import java.io.IOException;
 
@@ -27,6 +29,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import com.sun.corba.se.internal.iiop.MessageMediator;
+import com.sun.corba.se.internal.iiop.messages.Message;
 
 
 /**
@@ -71,6 +77,11 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
 
     protected static final String VIEW_COPY_MOVE = "copymove"; //$NON-NLS-1$
 
+    /**
+     * Log 
+     */
+    private static Logger log = Logger.getLogger(AdminTreeMVCHandler.class); 
+    
     /**
      * name of the tree (not the repository)
      */
@@ -229,12 +240,24 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
     public String activate() {
         boolean recursive = (request.getParameter("recursive") != null); //$NON-NLS-1$
         // by default every CONTENTNODE under the specified CONTENT node is activated
-        getTree().activateNode(pathSelected, recursive, true);
+        try {
+            getTree().activateNode(pathSelected, recursive, true);
+        }
+        catch (Exception e) {
+            log.error("can't activate", e);
+            AlertUtil.setMessage(MessagesManager.get(request, "tree.error.activate") + " " +AlertUtil.getExceptionMessage(e), request);
+        }
         return VIEW_TREE;
     }
 
     public String deactivate() {
-        getTree().deActivateNode(pathSelected);
+        try {
+            getTree().deActivateNode(pathSelected);
+        }
+        catch (Exception e) {
+            log.error("can't deactivate", e);
+            AlertUtil.setMessage(MessagesManager.get(request, "tree.error.deactivate") + " " + AlertUtil.getExceptionMessage(e), request);
+        }
         return VIEW_TREE;
     }
 
@@ -324,7 +347,11 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
                 // NOTE: tree.js checks for this pattern; adapt it there, if any changes are made here
                 html.append("<input type=\"hidden\" id=\"mgnlSelectNode\" value=\"" + newPath + "\" />"); //$NON-NLS-1$ //$NON-NLS-2$
             }
-
+            
+            if(AlertUtil.isMessageSet(request)){
+                html.append("<input type=\"hidden\" id=\"mgnlMessage\" value=\"" + AlertUtil.getMessage(request) + "\" />"); //$NON-NLS-1$ //$NON-NLS-2$
+            }
+            
             renderTree(html);
         }
 
