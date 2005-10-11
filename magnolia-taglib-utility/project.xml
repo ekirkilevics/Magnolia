@@ -58,6 +58,13 @@
       <version>1.1.2</version>
       <type>jar</type>
     </dependency>
+    <dependency>
+      <groupId>maven-taglib</groupId>
+      <artifactId>maven-taglib-plugin</artifactId>
+      <version>1.4.1</version>
+      <type>plugin</type>
+      <url>http://maven-taglib.sourceforge.net</url>
+    </dependency>
   </dependencies>
   <build>
     <nagEmailAddress>dummy-mail@for-test.magnolia</nagEmailAddress>
