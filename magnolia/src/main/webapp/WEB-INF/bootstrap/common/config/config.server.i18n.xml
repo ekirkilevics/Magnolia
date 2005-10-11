@@ -99,6 +99,9 @@
     <sv:property sv:name="ja" sv:type="String">
       <sv:value>ja</sv:value>
     </sv:property>
+    <sv:property sv:name="es" sv:type="String">
+      <sv:value>es</sv:value>
+    </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2005-10-09T12:38:07.719+02:00</sv:value>
     </sv:property>
