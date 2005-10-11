@@ -55,20 +55,16 @@
     <dependency>
       <groupId>org.apache.jackrabbit</groupId>
       <artifactId>jackrabbit</artifactId>
-      <version>1.0-20051011.141304-6</version>
     </dependency>
     <dependency>
       <groupId>org.apache.jackrabbit</groupId>
       <artifactId>jackrabbit-bdb</artifactId>
-      <version>1.0-20050928.220303-1</version>
     </dependency>
     <!-- build/test dependencies -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
       <scope>test</scope>
-      <!-- commons-lang 2.1 pom need to be fixed (scope:compile) -->
     </dependency>
     <dependency>
       <groupId>httpunit</groupId>

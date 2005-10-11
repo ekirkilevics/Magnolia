@@ -171,14 +171,9 @@
       <version>0.3.1</version>
     </dependency>
     <dependency>
-      <groupId>maven-taglib</groupId>
-      <artifactId>maven-taglib-plugin</artifactId>
-      <version>1.4</version>
-      <type>plugin</type>
-      <url>http://maven-taglib.sourceforge.net</url>
-      <properties>
-        <comment>maven plugin needed to generate tag reference documentation page</comment>
-      </properties>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>1.1</version>
     </dependency>
     <dependency>
       <groupId>maven-plugins</groupId>

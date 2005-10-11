@@ -12,9 +12,8 @@
   </organization>
   <inceptionYear>1993</inceptionYear>
   <description>
-    Magnolia is a free enterprise class content management system developed by obinary. Magnolia uses the upcoming
-    standard API for java content repositories (JCR) to access its content. It has an easy to use web-browser interface,
-    a clear API and a useful custom tag library for easy templating in JSP and Servlets.
+    Magnolia is a free enterprise class content management system developed by obinary based on the standard API for
+    java content repositories (JCR).
   </description>
   <url>http://magnolia.sourceforge.net</url>
   <issueManagement>
@@ -25,9 +24,13 @@
     <site>
       <id>magnolia</id>
       <name>magnolia</name>
-      <url>shell.sourceforge.net</url>
-      <!-- <siteDirectory>/home/groups/m/ma/magnolia/htdocs</siteDirectory> -->
+      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/</url>
     </site>
+    <downloadUrl>http://prdownloads.sourceforge.net/magnolia</downloadUrl>
+    <repository>
+      <id>magnolia</id>
+      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/m2repo</url>
+    </repository>
   </distributionManagement>
   <scm>
     <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk</connection>
@@ -119,7 +122,7 @@
         <directory>src/main/resources</directory>
       </resource>
     </resources>
-    <plugins>  
+    <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -151,9 +154,8 @@
           </buildcommands>
         </configuration>
       </plugin>
-    </plugins>  
+    </plugins>
   </build>
-  
   <reporting>
     <plugins>
       <plugin>
@@ -168,13 +170,165 @@
       <url>http://magnolia.sourceforge.net/m2repo</url>
     </repository>
   </repositories>
-  
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>3.8.1</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.jackrabbit</groupId>
+        <artifactId>jackrabbit</artifactId>
+        <version>1.0-20051011.141304-6</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.jackrabbit</groupId>
+        <artifactId>jackrabbit-bdb</artifactId>
+        <version>1.0-20050928.220303-1</version>
+      </dependency>
+      <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>1.2.9</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-httpclient</groupId>
+        <artifactId>commons-httpclient</artifactId>
+        <version>3.0-rc3</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-collections</groupId>
+        <artifactId>commons-collections</artifactId>
+        <version>3.1</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>1.3</version>
+      </dependency>
+      <dependency>
+        <groupId>jdom</groupId>
+        <artifactId>jdom</artifactId>
+        <version>1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>jstl</groupId>
+        <artifactId>jstl</artifactId>
+        <version>1.1.2</version>
+      </dependency>
+      <dependency>
+        <groupId>taglibs</groupId>
+        <artifactId>standard</artifactId>
+        <version>1.1.2</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>servlet-api</artifactId>
+        <version>2.4</version>
+      </dependency>
+      <dependency>
+        <groupId>geronimo-spec</groupId>
+        <artifactId>geronimo-spec-jsp</artifactId>
+        <version>2.0-rc4</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.mail</groupId>
+        <artifactId>mail</artifactId>
+        <version>1.3.1</version>
+      </dependency>
+      <dependency>
+        <groupId>jsr170</groupId>
+        <artifactId>jcr</artifactId>
+        <version>1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-lang</groupId>
+        <artifactId>commons-lang</artifactId>
+        <version>2.1</version>
+      </dependency>
+      <dependency>
+        <groupId>xerces</groupId>
+        <artifactId>xercesImpl</artifactId>
+        <version>2.6.2</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-fileupload</groupId>
+        <artifactId>commons-fileupload</artifactId>
+        <version>1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>jug</groupId>
+        <artifactId>jug</artifactId>
+        <version>1.1.2</version>
+      </dependency>
+      <dependency>
+        <groupId>slide</groupId>
+        <artifactId>webdavlib</artifactId>
+        <version>2.0</version>
+      </dependency>
+      <dependency>
+        <groupId>excalibur-sourceresolve</groupId>
+        <artifactId>excalibur-sourceresolve</artifactId>
+        <version>20020820</version>
+      </dependency>
+      <dependency>
+        <groupId>httpunit</groupId>
+        <artifactId>httpunit</artifactId>
+        <version>1.6</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>nekohtml</groupId>
+        <artifactId>nekohtml</artifactId>
+        <version>0.9.1</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>rhino</groupId>
+        <artifactId>js</artifactId>
+        <version>1.5R4.1</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>tomcat</groupId>
+        <artifactId>jasper-compiler</artifactId>
+        <version>5.5.9</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>tomcat</groupId>
+        <artifactId>jasper-runtime</artifactId>
+        <version>5.5.9</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>commons-el</groupId>
+        <artifactId>commons-el</artifactId>
+        <version>1.0</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>mockrunner</groupId>
+        <artifactId>mockrunner</artifactId>
+        <version>0.3.1</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   <modules>
     <module>magnolia-core</module>
     <module>magnolia-jaas</module>
     <module>magnolia-gui</module>
     <module>magnolia-exchange-simple</module>
     <module>magnolia-module-admininterface</module>
+    <module>magnolia-module-templating</module>
     <module>magnolia-taglib-cms</module>
     <module>magnolia-taglib-utility</module>
     <module>magnolia</module>
