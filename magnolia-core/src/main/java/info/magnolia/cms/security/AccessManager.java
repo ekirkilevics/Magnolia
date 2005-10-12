@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * @author Sameer Charles
- * @version 2.01
+ * @version $Revision$ ($Author$)
  */
 public interface AccessManager {
 
