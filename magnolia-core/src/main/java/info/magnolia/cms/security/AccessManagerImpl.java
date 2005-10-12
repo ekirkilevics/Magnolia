@@ -69,7 +69,7 @@ public class AccessManagerImpl implements AccessManager {
                 if (patternLength == l && (permission < p.getPermissions())) {
                     permission = p.getPermissions();
                 }
-                else if (patternLength <= l) {
+                else if (patternLength < l) {
                     patternLength = l;
                     permission = p.getPermissions();
                 }
