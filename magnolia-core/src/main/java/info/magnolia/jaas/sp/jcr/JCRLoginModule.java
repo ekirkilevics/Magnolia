@@ -163,23 +163,30 @@ public class JCRLoginModule extends AbstractLoginModule {
                 while (it.hasNext()) {
                     Content aclEntry = (Content) it.next();
                     String name = StringUtils.substringAfter(aclEntry.getName(),"acl_");
-                    ACL acl = new ACLImpl();
+                    ACL acl;
+                    String repositoryName = "";
+                    String workspaceName = "";
                     if (!StringUtils.contains(name, "_")) {
-                        String defaultWorkspace
+                        workspaceName
                                 = ContentRepository.getDefaultWorkspace(StringUtils.substringBefore(name,"_"));
-                        acl.setRepository(name);
-                        acl.setWorkspace(defaultWorkspace);
-                        name += ("_"+defaultWorkspace); // default workspace must be added to the name
+                        repositoryName = name;
+                        name += ("_"+workspaceName); // default workspace must be added to the name
                     } else {
                         String[] tokens = StringUtils.split(name,"_");
-                        acl.setRepository(tokens[0]);
-                        acl.setRepository(tokens[1]);
+                        repositoryName = tokens[0];
+                        workspaceName = tokens[1];
+                    }
+                    // get the existing acl object if created before with some other role
+                    if (!principalList.contains(name)) {
+                        acl = new ACLImpl();
+                        principalList.add(acl);
+                    } else {
+                        acl = (ACL) principalList.get(name);
                     }
                     acl.setName(name);
+                    acl.setRepository(repositoryName);
+                    acl.setWorkspace(workspaceName);
 
-                    if (!principalList.contains(name)) {
-                        principalList.add(acl);
-                    }
                     //add acl
                     Iterator permissionIterator = aclEntry.getChildren().iterator();
                     while (permissionIterator.hasNext()) {
