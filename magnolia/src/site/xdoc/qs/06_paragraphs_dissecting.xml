@@ -37,14 +37,14 @@
 <![CDATA[Config/modules/templating/dialogs/samples/mainColumn/textImage]]>
             </source>
             <p>
-            	<img src="../images/qs/06_magnolia_textImageDialogConfig.png" />
+            	<img src="../resources/qs/06_magnolia_textImageDialogConfig.png" />
             </p>
             <p>
             	The top level of a dialog definition consists of the available tabs. Each tab can hold any number 
             	of properties, and will be rendered in the dialog box as shown below:
             </p>
             <p>
-            	<img src="../images/qs/06_magnolia_textImageDialog.png" />
+            	<img src="../resources/qs/06_magnolia_textImageDialog.png" />
             </p>
             <p>
             	If we take a closer look at one of the tabs, we note that below the content node we find two data nodes 
@@ -55,7 +55,7 @@
             	At the same level the available properties for that tab are defined as shown in the next screenshot:
             </p>
             <p>
-            	<img src="../images/qs/06_magnolia_textImageDialogProperties.png" />
+            	<img src="../resources/qs/06_magnolia_textImageDialogProperties.png" />
             </p>
             <p>
             	The properties work the same way we have already encountered the for the page properties, i.e. we 

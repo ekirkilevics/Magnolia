@@ -49,7 +49,7 @@
             	Edit the page title in the "Page Properties" (using the "mainBar" button "Properties").
             </p>
             <p>
-            	<img src="../images/qs/05_magnolia_HelloAgain.png" />
+            	<img src="../resources/qs/05_magnolia_HelloAgain.png" />
             </p>
 
             <p>
@@ -80,13 +80,13 @@
             	with a single new-button on it.
             </p>
             <p>
-            	<img src="../images/qs/05_magnolia_WebPageWithNewBar.png" />
+            	<img src="../resources/qs/05_magnolia_WebPageWithNewBar.png" />
             </p>
             <p>
             	Click on the "New" button to get the paragraph dialog:
             </p>
             <p>
-            	<img src="../images/qs/05_magnolia_samplesTextImageDialog.png" />
+            	<img src="../resources/qs/05_magnolia_samplesTextImageDialog.png" />
             </p>
             <p>
             	Enter some information, save and - you will see nothing, as we still have to include the content
@@ -139,7 +139,7 @@
             	Your page now will look something like the following (provided you have added some text and image):
             </p>
             <p>
-            	<img src="../images/qs/05_magnolia_WebPageWithSampleTextImage.png" />
+            	<img src="../resources/qs/05_magnolia_WebPageWithSampleTextImage.png" />
             </p>
             <p>
             	Now you can already add as many paragraphs as you want, move them around and delete them.

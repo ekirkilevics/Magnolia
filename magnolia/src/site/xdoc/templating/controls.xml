@@ -7,7 +7,7 @@
 		<section name="Controls">
 			<p>The available controls are defined in the config at the following path <code>/modules/adminInterface/Config/controls</code><br/>
 			See the samples dialogs to get an impression how they work and how they are configurable. It is also helpfull to create a page with the 'developers' showroom' template.</p>
-			<img src="../images/controls.png"/>
+			<img src="../resources/controls.png"/>
 			<subsection name="fckEdit">
 				<p>
 					The fck editor is very new integrated and not all features are supported from

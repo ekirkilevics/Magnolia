@@ -12,7 +12,7 @@
                 web-browser interface, a clear API and a useful custom tag library for easy templating in JSP and
                 Servlets.
             </p>
-            <img src="./images/overview-small.jpg" width="435" height="295" alt="Magnolia interface overview" />
+            <img src="./resources/overview-small.jpg" width="435" height="295" alt="Magnolia interface overview" />
         </section>
         <section name="Introduction">
             <p>A short summary of what you should read first.</p>
