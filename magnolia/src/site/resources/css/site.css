@@ -267,6 +267,7 @@ table {
 }
 
 /* remove banner: comment the following lines for the full layout */
+/*
 #banner, #breadcrumbs {
 	display: none !important;
 }
@@ -274,3 +275,4 @@ table {
 	position: relative;
 	top: 0;
 }
+*/
