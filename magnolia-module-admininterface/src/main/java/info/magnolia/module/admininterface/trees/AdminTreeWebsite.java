@@ -52,10 +52,6 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
         super(name, request, response);
     }
 
-    protected String getRepository() {
-        return ContentRepository.WEBSITE;
-    }
-
     /**
      * @see info.magnolia.module.admininterface.AdminTree#prepareTree()
      */
