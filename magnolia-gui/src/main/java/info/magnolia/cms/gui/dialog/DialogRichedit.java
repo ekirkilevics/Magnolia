@@ -25,7 +25,6 @@ import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.gui.misc.Spacer;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.i18n.TemplateMessagesUtil;
 import info.magnolia.cms.util.LinkUtil;
 
 import java.io.IOException;
@@ -139,7 +138,7 @@ public class DialogRichedit extends DialogBox {
                 SelectOption option = new SelectOption(null, value);
                 if (n.getNodeData("label").isExist()) { //$NON-NLS-1$
                     String label = n.getNodeData("label").getString(); //$NON-NLS-1$
-                    label = TemplateMessagesUtil.get(this.getRequest(), label);
+                    label = this.getMessage(label);
                     option.setLabel(label);
                 }
                 if (n.getNodeData("selected").getBoolean()) { //$NON-NLS-1$

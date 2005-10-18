@@ -13,7 +13,6 @@
 package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.gui.misc.CssConstants;
-import info.magnolia.cms.i18n.TemplateMessagesUtil;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -77,10 +76,10 @@ public class DialogBox extends DialogSuper {
         if (this.getBoxType() == BOXTYPE_2COLS) {
             out.write("<td width=\"1%\" class=\"" + CssConstants.CSSCLASS_BOXLABEL + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
             // write the label
-            out.write(TemplateMessagesUtil.get(this.getRequest(), this.getLabel()));
+            out.write(this.getMessage(this.getLabel()));
             if (StringUtils.isNotEmpty(this.getConfigValue("labelDescription"))) { //$NON-NLS-1$
                 String desc = this.getConfigValue("labelDescription"); //$NON-NLS-1$
-                desc = TemplateMessagesUtil.get(this.getRequest(), desc);
+                desc = this.getMessage(desc);
                 out.write("<div class=\"" + CssConstants.CSSCLASS_DESCRIPTION + "\">" + desc + "</div>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             }
             out.write("</td>"); //$NON-NLS-1$
@@ -96,13 +95,13 @@ public class DialogBox extends DialogSuper {
             if (StringUtils.isNotEmpty(this.getLabel())) {
                 out.write("<div class=\"" //$NON-NLS-1$
                     + CssConstants.CSSCLASS_BOXLABEL + "\">" //$NON-NLS-1$
-                    + TemplateMessagesUtil.get(this.getRequest(), this.getLabel()) + "</div>"); //$NON-NLS-1$
+                    + this.getMessage(this.getLabel()) + "</div>"); //$NON-NLS-1$
             }
             if (StringUtils.isNotEmpty(this.getConfigValue("labelDescription"))) { //$NON-NLS-1$
                 String desc = this.getConfigValue("labelDescription"); //$NON-NLS-1$
                 out.write("<div class=\"" //$NON-NLS-1$
                     + CssConstants.CSSCLASS_DESCRIPTION + "\">" //$NON-NLS-1$
-                    + TemplateMessagesUtil.get(this.getRequest(), desc) + "</div>"); //$NON-NLS-1$
+                    + this.getMessage(desc) + "</div>"); //$NON-NLS-1$
             }
         }
     }
@@ -117,7 +116,7 @@ public class DialogBox extends DialogSuper {
         // use div to force a new line
         if (StringUtils.isNotEmpty(this.getDescription())) {
             String desc = this.getDescription();
-            desc = TemplateMessagesUtil.get(this.getRequest(), desc);
+            desc = this.getMessage(desc);
             return "<div class=\"" + CssConstants.CSSCLASS_DESCRIPTION + "\">" + desc + "</div>"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
 

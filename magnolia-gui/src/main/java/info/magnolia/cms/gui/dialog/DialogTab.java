@@ -14,7 +14,6 @@ package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.misc.CssConstants;
-import info.magnolia.cms.i18n.TemplateMessagesUtil;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -40,7 +39,7 @@ public class DialogTab extends DialogSuper {
         // add tab button to tab set
         if (StringUtils.isNotEmpty(this.getLabel())) {
             Button control = new Button();
-            control.setLabel(TemplateMessagesUtil.get(this.getRequest(), this.getLabel()));
+            control.setLabel(this.getMessage(this.getLabel()));
             control.setOnclick("mgnlDialogShiftTab('" + parentId + "','" + id + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             this.getParent().addOption(control);
         }

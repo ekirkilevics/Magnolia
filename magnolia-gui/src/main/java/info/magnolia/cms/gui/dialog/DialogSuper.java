@@ -16,6 +16,9 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentHandler;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.i18n.TemplateMessagesUtil;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -41,6 +44,8 @@ import org.apache.log4j.Logger;
  * @version 2.0
  */
 public abstract class DialogSuper implements DialogInterface {
+
+    private static final String I18N_BASENAME_PROPERTY = "i18nBasename";
 
     public static final String SESSION_ATTRIBUTENAME_DIALOGOBJECT = "mgnlSessionAttribute"; //$NON-NLS-1$
 
@@ -97,6 +102,12 @@ public abstract class DialogSuper implements DialogInterface {
     private DialogSuper parent;
 
     private DialogSuper topParent;
+
+    /**
+     * Used if this control has its own message bundle defined or if this is the dialog object itself. Use getMessages
+     * method to get the object for a control.
+     */
+    private Messages messages;
 
     /**
      */
@@ -407,6 +418,53 @@ public abstract class DialogSuper implements DialogInterface {
 
     private void setParent(DialogSuper parent) {
         this.parent = parent;
+    }
+
+    /**
+     * Get the Messages object for this dialog/control. It checks first if there was a bundle defined
+     * <code>i18nBasename</code>, then it tries to find the parent with the first definition.
+     * @return
+     */
+    protected Messages getMessages() {
+        if (messages == null) {
+            // if this is the root
+            if(this.getParent() == null){
+                messages = MessagesManager.getMessages(request, TemplateMessagesUtil.CUSTOM_BASENAME);
+                messages.setFallBackMessages(MessagesManager.getMessages(request, TemplateMessagesUtil.DEFAULT_BASENAME));
+            }
+            else{
+                // try to get it from the control nearest to the root
+                messages = this.getParent().getMessages();
+            }
+            // if this control defines a bundle (basename in the terms of jstl)
+            String basename = this.getConfigValue(I18N_BASENAME_PROPERTY);
+            if(StringUtils.isNotEmpty(basename)){
+                // extend the chain with this bundle
+                Messages myMessages = MessagesManager.getMessages(this.getRequest(), basename);
+                myMessages.setFallBackMessages(messages);
+                messages = myMessages;
+            }
+        }
+        return messages;
+    }
+
+    /**
+     * Get the message.
+     * @param key key
+     * @return message
+     */
+    public String getMessage(String key) {
+        return this.getMessages().getWithDefault(key, key);
+    }
+
+    /**
+     * Get the message with replacement strings. Use the {nr} syntax
+     * @param key key
+     * @param args replacement strings
+     * @return message
+     */
+    public String getMessage(String key, Object[] args) {
+        return this.getMessages().getWithDefault(key, args, key);
     }
 
 }
