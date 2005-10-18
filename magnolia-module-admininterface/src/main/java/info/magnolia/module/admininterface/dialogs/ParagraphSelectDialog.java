@@ -94,6 +94,7 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
                 Paragraph paragraphInfo = Paragraph.getInfo(pars[i]);
                 Button button = new Button(c1.getName(), paragraphInfo.getName());
                 StringBuffer label = new StringBuffer();
+                // TODO enable an invidual message bundle for each paragraph
                 label.append("<strong>" //$NON-NLS-1$
                     + TemplateMessagesUtil.get(request, paragraphInfo.getTitle()) + "</strong><br />"); //$NON-NLS-1$
                 label.append(TemplateMessagesUtil.get(request, paragraphInfo.getDescription()));

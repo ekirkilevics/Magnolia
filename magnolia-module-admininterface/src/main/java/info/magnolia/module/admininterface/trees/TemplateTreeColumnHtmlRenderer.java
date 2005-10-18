@@ -23,7 +23,7 @@ import javax.jcr.RepositoryException;
 
 
 /**
- * @author joshu
+ * @author philipp
  */
 public class TemplateTreeColumnHtmlRenderer implements TreeColumnHtmlRenderer {
 
@@ -33,6 +33,7 @@ public class TemplateTreeColumnHtmlRenderer implements TreeColumnHtmlRenderer {
     public String renderHtml(TreeColumn treeColumn, Content content) {
         String templateName = content.getMetaData().getTemplate();
         String strKey = this.findTemplateKey(templateName);
+        // TODO enable an individual message bundle for the templates 
         return TemplateMessagesUtil.get(treeColumn.getRequest(), strKey);
     }
 

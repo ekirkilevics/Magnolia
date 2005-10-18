@@ -108,6 +108,7 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
         while (templates.hasNext()) {
             Template template = (Template) templates.next();
             String title = template.getTitle();
+            // TODO enable an induvidual message bundel for the template title
             title = TemplateMessagesUtil.get(request, title);
             title = Messages.javaScriptString(title);
             templateSelect.setOptions(title, template.getName());
