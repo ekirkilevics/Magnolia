@@ -17,9 +17,6 @@ import info.magnolia.cms.core.Content;
 import java.util.Hashtable;
 import java.util.Map;
 
-import javax.jcr.RepositoryException;
-
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 

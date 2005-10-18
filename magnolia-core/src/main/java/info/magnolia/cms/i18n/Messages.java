@@ -56,6 +56,11 @@ public class Messages {
      * The current bundle. Subclasses will overwrite getBundle()
      */
     private ResourceBundle bundle;
+    
+    /**
+     * Take the message from this object if not found in this instance. One can create a chain.
+     */
+    private Messages fallBackMessages;
 
     /**
      * Used by sublcasses. Do not use without knowledge
@@ -116,6 +121,9 @@ public class Messages {
             return getBundle().getString(key);
         }
         catch (MissingResourceException e) {
+            if(this.hasFallBackMessages()){
+                return this.getFallBackMessages().get(key);
+            }
             return "???" + key + "???"; //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
@@ -139,7 +147,7 @@ public class Messages {
     public String getWithDefault(String key, String defaultMsg) {
         String msg;
         try {
-            msg = getBundle().getString(key);
+            msg = get(key);
             if (msg.startsWith("???")) { //$NON-NLS-1$
                 msg = defaultMsg;
             }
@@ -245,5 +253,17 @@ public class Messages {
             log.error("Error while cleaning messages ..."); //$NON-NLS-1$
             throw e;
         }
+    }
+    
+    public Messages getFallBackMessages() {
+        return fallBackMessages;
+    }
+    
+    public void setFallBackMessages(Messages fallBackMessages) {
+        this.fallBackMessages = fallBackMessages;
+    }
+    
+    public boolean hasFallBackMessages(){
+        return this.fallBackMessages != null;
     }
 }

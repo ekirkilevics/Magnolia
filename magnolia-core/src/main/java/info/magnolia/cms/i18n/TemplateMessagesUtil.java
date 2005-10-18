@@ -18,10 +18,12 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * This class helps to get the messages used in templates (paragraphs, dialogs, ..). First it make a lookup in
  * messages_templating_custom and then in messages_templating..<br>
- * If a string is not found it returns directly the key without ?
+ * If a string is not found it returns directly the key without ?<p>
+ * This class is depricated use the fallBackMessages property of the Message class to make chains.
  * @author philipp
+ * @deprecated
  */
-public final class TemplateMessagesUtil {
+public final class TemplateMessagesUtil{
 
     /**
      * Use this basename if the string is not found in the custom basename
