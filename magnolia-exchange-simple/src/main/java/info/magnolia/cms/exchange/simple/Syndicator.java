@@ -83,17 +83,16 @@ public class Syndicator {
     public static final String GET_TYPE_SERIALIZED_OBJECT = "serializedObject"; //$NON-NLS-1$
 
     /**
-     * return status values
-     * all simple activation headers start from sa_
-     * */
+     * return status values all simple activation headers start from sa_
+     */
     public static final String ACTIVATION_SUCCESSFUL = "sa_success"; //$NON-NLS-1$
-    
+
     public static final String ACTIVATION_FAILED = "sa_failed"; //$NON-NLS-1$
 
     public static final String ACTIVATION_ATTRIBUTE_STATUS = "sa_attribute_status"; //$NON-NLS-1$
 
     public static final String ACTIVATION_ATTRIBUTE_MESSAGE = "sa_attribute_message"; //$NON-NLS-1$
-    
+
     /**
      * Logger.
      */
@@ -199,7 +198,7 @@ public class Syndicator {
         URLConnection urlConnection = url.openConnection();
         this.addActivationHeaders(urlConnection, subscriber);
         String status = urlConnection.getHeaderField(Syndicator.ACTIVATION_ATTRIBUTE_STATUS);
-        
+
         // check if the activation failed
         if (StringUtils.equals(status, Syndicator.ACTIVATION_FAILED)) {
             String message = urlConnection.getHeaderField(Syndicator.ACTIVATION_ATTRIBUTE_MESSAGE);
@@ -263,7 +262,7 @@ public class Syndicator {
     }
 
     /**
-     * @throws Exception 
+     * @throws Exception
      */
     private synchronized void deActivate() throws Exception {
         Enumeration en = Subscriber.getList();
@@ -272,17 +271,10 @@ public class Syndicator {
             if (!si.isActive()) {
                 continue;
             }
-            try {
-                if (log.isDebugEnabled()) {
-                    log.debug("Removing [ " + this.path + " ] from [ " + si.getAddress() + " ]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                }
-                deActivate(si);
+            if (log.isDebugEnabled()) {
+                log.debug("Removing [ " + this.path + " ] from [ " + si.getAddress() + " ]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             }
-            catch (Exception e) {
-                log.error("Failed to remove [ " + this.path + " ] from [ " + si.getAddress() + " ]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                log.error(e.getMessage(), e);
-                throw e;
-            }
+            deActivate(si);
         }
     }
 
