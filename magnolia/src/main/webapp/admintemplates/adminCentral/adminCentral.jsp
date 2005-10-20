@@ -97,8 +97,8 @@
 
 	// get user information
 	User user=SessionAccessControl.getUser(request);
-	String userName=user.getName();
-	if (userName.equals("")) userName=Authenticator.getUserId(request);
+	String userName = "";
+    if (user==null || (userName = user.getName()).equals("")) userName=Authenticator.getUserId(request);
 
     pageContext.setAttribute("username", userName);
     pageContext.setAttribute("buttons", bs);
