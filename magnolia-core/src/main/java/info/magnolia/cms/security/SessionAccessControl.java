@@ -250,20 +250,13 @@ public final class SessionAccessControl {
         // JAAS specific
         Subject subject = Authenticator.getSubject(request);
 
-        if (subject == null) {
-            log.error("Authenticator.getSubject(request) returned null");
-        }
-
-        List permissionList;
+        List permissionList = null;
         if (subject != null) {
             Set principalSet = subject.getPrincipals(PrincipalCollection.class);
             Iterator it = principalSet.iterator();
             PrincipalCollection principals = (PrincipalCollection) it.next();
             ACL acl = (ACL) principals.get(repositoryID + "_" + workspaceID);
             permissionList = acl.getList();
-        }
-        else {
-            permissionList = new ArrayList(0);
         }
 
         AccessManagerImpl accessManager = new AccessManagerImpl();
