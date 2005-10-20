@@ -831,8 +831,21 @@ public class Tree extends ControlSuper {
                 dest = parentPath + "/" + newLabel; //$NON-NLS-1$
             }
 
-            this.deActivateNode(this.getPath());
-
+            // do not deactivate node datas
+            if (!hm.isNodeData(this.getPath())) {
+                // try to deactivate
+                try {
+                    this.deActivateNode(this.getPath());
+                }
+                catch (Exception e) {
+                    //this is an error if the node is marked as activated
+                    Content node = hm.getContent(this.getPath());
+                    if(node.getMetaData().getIsActivated()){
+                        log.error("Can't deactivate during renaming" , e);
+                    }
+                }
+            }
+            
             if (log.isInfoEnabled()) {
                 log.info("Moving node from " + this.getPath() + " to " + dest); //$NON-NLS-1$ //$NON-NLS-2$
             }
@@ -874,7 +887,7 @@ public class Tree extends ControlSuper {
             newPage.save();
         }
         catch (Exception e) {
-            log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+            log.error("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
         }
         return returnValue;
     }
