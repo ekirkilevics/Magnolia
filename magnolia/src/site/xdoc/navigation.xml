@@ -36,8 +36,10 @@
                 <item name="I18N" href="/templating/i18n.html" />
             </item>
             <item name="Configuration" href="/config/config.html" collapse="true">
-                <item name="Public instance" href="/config/public.html" />
-                <item name="Author instance" href="/config/author.html" />
+            		<item name="Concept of Instances" href="/config/instances.html" />
+                <item name="Public Instance" href="/config/public.html" />
+                <item name="Author Instance" href="/config/author.html" />
+                <item name="Configure Subscribers" href="/config/config_subscribers.html" />
                 <item name="Default Page and 404" href="/config/default_404.html" />
                 <item name="Cache" href="/config/cache.html" />
                 <item name="Activation - Subscribers" href="/config/subscribers.html" />
