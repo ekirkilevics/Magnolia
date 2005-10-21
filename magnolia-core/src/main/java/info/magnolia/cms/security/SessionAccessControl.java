@@ -256,7 +256,11 @@ public final class SessionAccessControl {
             Iterator it = principalSet.iterator();
             PrincipalCollection principals = (PrincipalCollection) it.next();
             ACL acl = (ACL) principals.get(repositoryID + "_" + workspaceID);
-            permissionList = acl.getList();
+            if (acl != null) {
+                permissionList = acl.getList();
+            } else {
+                permissionList = new ArrayList(); // no permissions assigned to this workspace
+            }
         }
 
         AccessManagerImpl accessManager = new AccessManagerImpl();
