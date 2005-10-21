@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+    <properties>
+        <title>Configure Subscribers</title>
+    </properties>
+    <body>
+    	<section name="Configure Subscribers">
+    		<p>
+    			Bascially, configuring a Subscribers means defining the connection (IP-Address, Port, etc.) to the
+    			Magnolia instance you want to push the content to.<br/>
+    			When activating a content node, Magnolia checks the available <b>active</b> subscribers and uses their
+    			settings to copy the content node accordingly.<br/>
+
+    			To configure a Subscriber switch to "<code>Config/subscribers/SubscriberConfig</code>". There you will
+    			see a predefined Subscriber "<code>0001</code>", which Magnolia has prepared for you. You can now either
+    			modify this subscriber or create a new one. Let us look at the properties:
+    		</p>    		
+   			<subsection name="Subscriber Content Node (e.g. '0001')">
+	    		<p>
+	    			The first predefined Subscriber "Content Node" is labeled "0001". But you are free to use different labels,
+	    			you are not obliged to continue with "0002", etc.
+	    			<hr/>
+	    			<h4>Subscriber Property "active"</h4>
+	    			<table>
+	    				<tr>
+	    					<th>Value</th>
+	    					<th>Description</th>
+	    				</tr>
+	            <tr>
+		       	    <td><b>true</b></td>
+	            	<td>Magnolia will try to push ("activate") the selected content node(s) to the defined repository</td>
+	            </tr>
+	            <tr>
+	            	<td><b>false</b></td>
+	            	<td>Magnolia will ignore this Subscriber</td>
+	            </tr>
+	          </table>
+	          <hr/>
+	          <h4>Subscriber Property "address"</h4>
+	          This is the IP address of the other instance (e.g. Public instance). The address points to the 
+	          Web application context. So if for example you dropped a magnolia.war file into your Tomcat
+	          <code>/webapp</code> folder and renamed it to "magnoliaPublic.war", your Subscriber address value
+	          will have to point to this Web application context ("www.myDomain.com:8080/magnoliaPublic").<br/>
+	          Note: The address has <b>*no*</b> leading "http://" and the port number (e.g. 8080) is the port your
+	          Tomcat server is listening to.
+	          <hr/>
+	          <h4>Subscriber Property "senderURL"</h4>
+	          This URL is the address of the current instance. The subscriber instance uses this sender URL to call back
+	          when needed. It is the URL pointing to the context of this Magnolia instance (usually the "Author"
+	          instance).
+	          <hr/>
+	          <h4>Subscriber Property "protocol"</h4>
+	          For the time being the only protocol used to activate content is "<code>http</code>". So the value needed
+	          is "http".
+	          <hr/>
+	          <h4>Subscriber Property "requestConfirmation"</h4>
+	          You can set the value to "false". This property is currently not in use.
+	          <hr/>
+    			</p>
+   			</subsection>
+   			<subsection name="Context Content Node 'context'">
+   				<p>
+   					An intersting feature is the possibility of clustering node trees, of which nodes can be activated using
+   					this subscriber. This allows you to have several projects in one Magnolia instance.<br/>
+   					E.g. you have "Project A" and "Project B". "A" starts with <code>/projA</code> and "B" with
+   					<code>/projB</code>. Each project is published on different servers. So you have Subscriber "0001" for
+   					Project "A" and Subscriber "0002" for Project "B". Now you can use the "context" settings to define
+   					the context for each Subscriber. This way you can avoid that activating a node pushes it to both instances. 
+   					<h4>Define the Context</h4>
+   					You start defining the "<code>Context</code>" by adding a new Content Node to the Subscriber (e.g. a 
+   					child node "Context" of Subscriber "0001").<br/>
+   					You can define one or more contexts for each repository. Therefore you start by adding a content node for
+   					each repository:
+   					<ul>
+   						<li>Website Repository: label the context node <b>website</b></li>
+   						<li>Config Repository:	label the context node <b>config</b></li>
+   						<li>Users Repository: label the context node <b>users</b></li>
+   						<li>User Roles Repository: label the context node <b>userroles</b></li>
+   					</ul>
+   					Your context configuration should start to look as follows:<p/>
+   					<img src="./images/context_tree.png" /><br/>
+   				</p>
+   			</subsection>
+   			<subsection name="Repository Context Content Node">
+   				<p>
+   					For each repository you can define a set of context paths. To do so simply create a new content node
+   					(e.g. "0001"). This content node will have one property to define the context path.<br/>
+   					So if you want to define more than one cluster, just add additional content nodes (e.g. "0002", "0003",
+   					etc.).<p/>
+   					<img src="./images/website_context_tree.png" /><br/>
+   					<h4>Repository Context Property "subscribedURI"</h4>
+   					This is the property where you define the context path (e.g. "<code>/projA</code>").<br/>
+   					So when activating a Web page, Magnolia checks for active subscribers, then checks the Web site context
+   					and if the handle is within the glob, it gets activated.
+   				</p>
+   			</subsection>
+    	</section>
+    </body>
+</document>

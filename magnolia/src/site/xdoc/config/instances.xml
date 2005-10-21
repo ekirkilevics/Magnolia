@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+    <properties>
+        <title>Concept of Instances</title>
+    </properties>
+    <body>
+    	<section name="The Concept of Instances">
+    		<p>
+    		To understand how Magnolia has to be setup, it is important to understand the concept of instances.<br/>
+    		As you may have heard or read, you need to run a so called "Author" and a "Public" instance. Understanding
+    		why there are two or more instances helps you understand the "Activation process" a lot better.
+    		</p>
+    		
+    		<subsection name="1. Why two Instances?">
+    			<p>
+    				There are three major reasons, why Magnolia usually uses two different instances:
+    				<ol>
+    					<li>Separate development from production</li>
+    					<li>Security: Keep the development instance behind the Firewall, while production can be in the DMZ</li>
+    					<li>Performance: The Public instance has no Authoring environment and other performance related overhead</li>
+    				</ol>
+    			</p>
+    			<p>
+    				Therefore each Magnolia instance is a Web application (has it's own .war file) and can be dropped into the
+    				Web server's /webapp folder easily. 
+    			</p>
+    		</subsection>
+
+    		<subsection name="2. What is Activation?">
+    			<p>
+    				Knowing now that you develop and add content in the "Author" instance and the Internet world enjoys your
+    				"hors-d'oeuvre" coming from the public instance, you have to think about some little things.<br/>
+    				<b>No</b>, you do not have to write TWO different scripts (one for each instance).<br/>
+    				<b>Yes</b>, you have to make sure that your scripts and content are "pushed" over to the "Public" instance.
+    			</p>
+    			<p>
+    				Once you have developed your Web application and Authors have added the according content, you have
+    				to make the result visible to the Public. That's where the so called "Activation process" comes in.<br/>
+    				"Activation" means that you "copy" content from one repository to the other. That's all.So you don't
+    				have to worry about the repositories and protocols.<br/>
+    				<b>But since your scripts are NOT in the repository, you will have to copy them manually to the Public instance.</b><br/>
+    				Remember: Your scripts are used to create the response to the browser, so your scripts have to be in each
+    				instance you plan to use.
+    			</p>
+    			<p>
+    				Please read '<a href="subscribers.html">Activation - Subscribers</a>' carefully. 
+    				It's full of interesting information around "Activation".
+    			</p>
+    		</subsection>
+    	</section>
+    </body>
+</document>
