@@ -302,7 +302,7 @@ public final class SessionAccessControl {
      * @return the current user object
      */
     public static User getUser(HttpServletRequest request) {
-        return (User) request.getSession().getAttribute(Authenticator.ATTRIBUTE_USER);
+        return UserManagerFactory.getUserManager().getCurrent(request);
     }
 
     /**

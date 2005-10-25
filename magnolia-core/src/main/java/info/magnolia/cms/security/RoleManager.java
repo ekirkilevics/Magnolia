@@ -12,20 +12,31 @@
  */
 package info.magnolia.cms.security;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 
  * @author philipp
  * @version $Revision$ ($Author$)
  *
  */
-public interface Role {
+public interface RoleManager {
+    /**
+     * Get a specifig role
+     * @param name
+     * @param request
+     * @return the role object
+     * @throws UnsupportedOperationException
+     */
+    public Role getRole(String name, HttpServletRequest request) throws UnsupportedOperationException;
 
-    public abstract String getName();
-
-    public abstract void addPermission(String repository, String path, long permission);
-
-    public abstract void removePermission(String repository, String path);
-
-    public abstract void removePermission(String repository, String path, long permission);
+    /**
+     * Get the specifig role without any security restrictions
+     * @param name
+     * @param request
+     * @return the role object
+     * @throws UnsupportedOperationException
+     */
+    public Role getRole(String name) throws UnsupportedOperationException;
 
 }

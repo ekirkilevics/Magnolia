@@ -12,20 +12,25 @@
  */
 package info.magnolia.cms.security;
 
+
 /**
- * 
+ * Get the current role manager.
  * @author philipp
  * @version $Revision$ ($Author$)
  *
  */
-public interface Role {
+public class RoleManagerFactory {
+    private static RoleManager instance;
 
-    public abstract String getName();
-
-    public abstract void addPermission(String repository, String path, long permission);
-
-    public abstract void removePermission(String repository, String path);
-
-    public abstract void removePermission(String repository, String path, long permission);
-
+    /**
+     * Returns the current RoleManager. Depends on the configuration.
+     * @return
+     */
+    public static RoleManager getRoleManager() {
+        // TODO use the configuration
+        if (instance == null) {
+            instance = new MgnlRoleManager();
+        }
+        return instance;
+    }
 }

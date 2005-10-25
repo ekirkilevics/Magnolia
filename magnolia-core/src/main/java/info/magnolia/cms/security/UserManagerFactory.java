@@ -13,19 +13,22 @@
 package info.magnolia.cms.security;
 
 /**
- * 
  * @author philipp
  * @version $Revision$ ($Author$)
- *
  */
-public interface Role {
+public class UserManagerFactory {
 
-    public abstract String getName();
+    private static UserManager instance;
 
-    public abstract void addPermission(String repository, String path, long permission);
-
-    public abstract void removePermission(String repository, String path);
-
-    public abstract void removePermission(String repository, String path, long permission);
-
+    /**
+     * Returns the current UserManager. Depends on the configuration.
+     * @return
+     */
+    public static UserManager getUserManager() {
+        // TODO use the configuration
+        if (instance == null) {
+            instance = new MgnlUserManager();
+        }
+        return instance;
+    }
 }

@@ -119,7 +119,7 @@ public final class Authenticator {
      */
     private static void updateSession(HttpServletRequest request) {
         Subject subject = Authenticator.getSubject(request);
-        User user = new User(subject);
+        User user = new JAASUser(subject);
         request.getSession().setAttribute(ATTRIBUTE_USER, user);
         String lang = user.getLanguage();
         if (StringUtils.isEmpty(lang)) {
