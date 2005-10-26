@@ -94,7 +94,7 @@ public final class Authenticator {
             }
         }
         else {
-            // user already authenticated via JAAS, try to load roles for it
+            // user already authenticated via JAAS, try to load roles for it via configured authorization module
             String userName = req.getUserPrincipal().getName();
             CredentialsCallbackHandler callbackHandler = new CredentialsCallbackHandler(userName, getPassword(req));
             try {
@@ -118,10 +118,9 @@ public final class Authenticator {
      * @param request
      */
     private static void updateSession(HttpServletRequest request) {
-        Subject subject = Authenticator.getSubject(request);
-        User user = new JAASUser(subject);
-        request.getSession().setAttribute(ATTRIBUTE_USER, user);
-        String lang = user.getLanguage();
+        UserManagerFactory.getUserManager().setCurrent(request);
+        // set user language to be used by message manager
+        String lang = UserManagerFactory.getUserManager().getCurrent(request).getLanguage();
         if (StringUtils.isEmpty(lang)) {
             lang = MessagesManager.getDefaultLocale().getLanguage();
         }

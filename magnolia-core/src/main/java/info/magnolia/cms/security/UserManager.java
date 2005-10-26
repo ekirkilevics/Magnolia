@@ -32,6 +32,12 @@ public interface UserManager {
     public User getCurrent(HttpServletRequest request);
 
     /**
+     * Set current user
+     * @param request
+     */
+    public void setCurrent(HttpServletRequest request);
+
+    /**
      * Find a specific user. Not all implementations will support this method.
      * @param name the name of the user
      * @param request the request. used for security reasons

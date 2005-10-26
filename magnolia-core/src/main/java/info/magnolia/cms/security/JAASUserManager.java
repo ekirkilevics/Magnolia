@@ -29,7 +29,28 @@ public class JAASUserManager implements UserManager {
      * @see info.magnolia.cms.security.UserManager#getCurrent(javax.servlet.http.HttpServletRequest)
      */
     public User getCurrent(HttpServletRequest request) {
-        return (new JAASUser(Authenticator.getSubject(request)));
+        User user = (User) request.getSession().getAttribute(Authenticator.ATTRIBUTE_USER);
+        if (user == null) {
+            // first check if session is authenticated, if yet this is a false call and try to
+            // set current user again
+            if (SessionAccessControl.isSecuredSession(request)) {
+                this.setCurrent(request);
+            }
+            // if setCurrent failed for some reason or user does not exist
+            if ((user = (User)request.getSession().getAttribute(Authenticator.ATTRIBUTE_USER)) == null) {
+                user = new DummyUser();
+            }
+        }
+        return user;
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see info.magnolia.cms.security.UserManager#setCurrent(javax.servlet.http.HttpServletRequest)
+     */
+    public void setCurrent(HttpServletRequest request) {
+        JAASUser user = new JAASUser(Authenticator.getSubject(request));
+        request.getSession().setAttribute(Authenticator.ATTRIBUTE_USER, user);
     }
 
     /*
