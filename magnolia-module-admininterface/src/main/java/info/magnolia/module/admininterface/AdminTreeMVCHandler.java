@@ -16,6 +16,7 @@ package info.magnolia.module.admininterface;
 import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.beans.config.Subscriber;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.exchange.simple.ActivationException;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.gui.misc.Spacer;
@@ -25,6 +26,7 @@ import info.magnolia.cms.util.AlertUtil;
 
 import java.io.IOException;
 
+import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -197,25 +199,45 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
      * Copy a node
      */
     public String copy() {
-        return copyOrMove(Tree.ACTION_COPY);
+        try {
+            copyOrMove(Tree.ACTION_COPY);
+        }
+        catch (Exception e) {
+            log.error("can't copy", e);
+            AlertUtil.setMessage(MessagesManager.get(request, "tree.error.copy")
+                + " "
+                + AlertUtil.getExceptionMessage(e), request);
+        }
+        return VIEW_COPY_MOVE;
     }
 
     /**
      * Move a node
      */
     public String move() {
-        return copyOrMove(Tree.ACTION_MOVE);
+        try {
+            copyOrMove(Tree.ACTION_MOVE);
+        }
+        catch (Exception e) {
+            log.error("can't move", e);
+            AlertUtil.setMessage(MessagesManager.get(request, "tree.error.move")
+                + " "
+                + AlertUtil.getExceptionMessage(e), request);
+        }
+        return VIEW_COPY_MOVE;
+
     }
 
     /**
      * @param action
-     * @return
+     * @throws RepositoryException
+     * @throws ActivationException
      */
-    private String copyOrMove(int action) {
+    private void copyOrMove(int action) throws ActivationException, RepositoryException {
         String pathClipboard = request.getParameter("pathClipboard"); //$NON-NLS-1$
         int pasteType = Integer.parseInt(request.getParameter("pasteType")); //$NON-NLS-1$
-
         newPath = getTree().pasteNode(pathClipboard, pathSelected, pasteType, action);
+
         if (pasteType == Tree.PASTETYPE_SUB) {
             pathOpen = pathSelected;
         }
@@ -225,12 +247,19 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         }
 
         pathSelected = null;
-        return VIEW_COPY_MOVE;
     }
 
     public String delete() {
         String deleteNode = request.getParameter("deleteNode"); //$NON-NLS-1$
-        getTree().deleteNode(path, deleteNode);
+        try {
+            getTree().deleteNode(path, deleteNode);
+        }
+        catch (Exception e) {
+            log.error("can't delete", e);
+            AlertUtil.setMessage(MessagesManager.get(request, "tree.error.delete")
+                + " "
+                + AlertUtil.getExceptionMessage(e), request);
+        }
         return VIEW_TREE;
     }
 
@@ -323,7 +352,16 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
      * @return return the new name (can change if there were not allowed characters passed)
      */
     protected String rename(String value) {
-        return getTree().renameNode(value);
+        try {
+            return getTree().renameNode(value);
+        }
+        catch (Exception e) {
+            log.error("can't rename", e);
+            AlertUtil.setMessage(MessagesManager.get(request, "tree.error.rename")
+                + " "
+                + AlertUtil.getExceptionMessage(e), request);
+        }
+        return StringUtils.EMPTY;
     }
 
     /**
@@ -334,6 +372,11 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
      */
     public void renderHtml(String view) throws IOException {
         StringBuffer html = new StringBuffer(500);
+
+        // an alert can happen if there were deactivation problems during a renaming
+        if (AlertUtil.isMessageSet(request)) {
+            html.append("<input type=\"hidden\" id=\"mgnlMessage\" value=\"" + AlertUtil.getMessage(request) + "\" />"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
 
         if (VIEW_TREE.equals(view) || VIEW_CREATE.equals(view) || VIEW_COPY_MOVE.equals(view)) {
             // if there was a node created we have not to set the pathes
@@ -347,11 +390,6 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
                 // pass new path to tree.js for selecting the newly created node
                 // NOTE: tree.js checks for this pattern; adapt it there, if any changes are made here
                 html.append("<input type=\"hidden\" id=\"mgnlSelectNode\" value=\"" + newPath + "\" />"); //$NON-NLS-1$ //$NON-NLS-2$
-            }
-
-            if (AlertUtil.isMessageSet(request)) {
-                html
-                    .append("<input type=\"hidden\" id=\"mgnlMessage\" value=\"" + AlertUtil.getMessage(request) + "\" />"); //$NON-NLS-1$ //$NON-NLS-2$
             }
 
             renderTree(html);
