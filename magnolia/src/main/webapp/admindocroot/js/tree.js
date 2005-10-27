@@ -481,7 +481,7 @@
 		{
 		var text=mgnlMessages.get('js.tree.deletenode.confirm.text', null, [this.selectedNode.id]);
 		var title=mgnlMessages.get('js.tree.deletenode.confirm.title');
-		if (mgnlConfirm(text,title))
+		if (!this.selectedNode.isActivated || mgnlConfirm(text,title))
 			{
 			var parentNode=this.getNode(this.selectedNode.parentId);
 			var deleteNode=this.selectedNode.label;
@@ -563,91 +563,82 @@
 		divMain.style.textDecoration="line-through";
 		}
 
-	mgnlTree.prototype.pasteNode = function(id,pasteType,permissionWrite,lineDivId)
-		{
-		if (mgnlTreeMoveNode && permissionWrite)
-			{
-			if (this.clipboardMethod==0 && id.indexOf(this.clipboardNode.id)==0 && pasteType!=0)
-				{
+	mgnlTree.prototype.pasteNode = function(id,pasteType,permissionWrite,lineDivId){
+		if (mgnlTreeMoveNode && permissionWrite){
+			if (this.clipboardMethod==0 && id.indexOf(this.clipboardNode.id)==0 && pasteType!=0){
 				//move into itself is not possible
 				mgnlAlert(mgnlMessages.get('js.tree.pastenode.itself'));
-				}
-		    else if (this.clipboardMethod==1 && id.indexOf(this.clipboardNode.id)==0 && pasteType!=0)
-                {
+			}
+		    else if (this.clipboardMethod==1 && id.indexOf(this.clipboardNode.id)==0 && pasteType!=0){
                 //move into itself is not possible
                 mgnlAlert(mgnlMessages.get('js.tree.pastenode.itself'));
-                }
-			else
-				{
-				if (lineDivId)
-					{
-					//for last line on root level
-					var lineDiv=document.getElementById(lineDivId);
-					lineDiv.style.backgroundImage="";
+             }
+			else{
+				// confirm deactivation
+				
+				var text=mgnlMessages.get('js.tree.movenode.confirm.text', null, [this.selectedNode.id]);
+				var title=mgnlMessages.get('js.tree.movenode.confirm.title');
+				if (!this.getNode(id).isActivated || mgnlConfirm(text,title)){
+					if (lineDivId){
+						//for last line on root level
+						var lineDiv=document.getElementById(lineDivId);
+						lineDiv.style.backgroundImage="";
 					}
-				this.moveReset();
-
-				this.selectedNode=this.getNode(id);
-				var parentPath=this.selectedNode.id.substring(0,this.selectedNode.id.lastIndexOf("/"));
-				if (parentPath=="") parentPath="/";
-
-				var pathToReload;
-				if (this.clipboardMethod==0)
-					{
-					//paste after cut
-					if (this.clipboardNode.id.indexOf(parentPath)==0)
-						{
-						 //e.g. sort inside a directory or paste into sister: reload selected
-						 pathToReload=parentPath;
+					this.moveReset();
+	
+					this.selectedNode=this.getNode(id);
+					var parentPath=this.selectedNode.id.substring(0,this.selectedNode.id.lastIndexOf("/"));
+					if (parentPath=="") parentPath="/";
+	
+					var pathToReload;
+					if (this.clipboardMethod==0){
+						//paste after cut
+						if (this.clipboardNode.id.indexOf(parentPath)==0){
+							 //e.g. sort inside a directory or paste into sister: reload selected
+							 pathToReload=parentPath;
 						}
-					else
-						{
-						//no hokums, reload root
-						pathToReload=this.path;
+						else{
+							//no hokums, reload root
+							pathToReload=this.path;
 						}
 					}
-				else
-					{
-					//paste after copy
-					if (pasteType==2)
-						{
-						//Tree.PASTETYPE_SUB: reload selected
-						pathToReload=this.selectedNode.id;
-
-						var shifter=document.getElementById(this.selectedNode.shifterId);
-						if (shifter)
-							{
-							var src=shifter.src;
-							src=src.replace("EMPTY","COLLAPSE");
-							src=src.replace("EXPAND","COLLAPSE");
-							shifter.src=src;
+					else{
+						//paste after copy
+						if (pasteType==2){
+							//Tree.PASTETYPE_SUB: reload selected
+							pathToReload=this.selectedNode.id;
+	
+							var shifter=document.getElementById(this.selectedNode.shifterId);
+							if (shifter){
+								var src=shifter.src;
+								src=src.replace("EMPTY","COLLAPSE");
+								src=src.replace("EXPAND","COLLAPSE");
+								shifter.src=src;
 							}
-
 						}
-					else
-						{
-						//reload parent of selected
-						pathToReload=parentPath;
+						else {
+							//reload parent of selected
+							pathToReload=parentPath;
 						}
 					}
-
-				var nodeToReload=this.getNode(pathToReload);
-
-				var params=new Object();
-				params.forceReload=true;
-				params.treeAction=this.clipboardMethod;
-				params.pathClipboard=this.clipboardNode.id;
-				params.pathSelected=this.selectedNode.id;
-				params.pasteType=pasteType;
-
-				nodeToReload.expand(params);
-
+	
+					var nodeToReload=this.getNode(pathToReload);
+	
+					var params=new Object();
+					params.forceReload=true;
+					params.treeAction=this.clipboardMethod;
+					params.pathClipboard=this.clipboardNode.id;
+					params.pathSelected=this.selectedNode.id;
+					params.pasteType=pasteType;
+	
+					nodeToReload.expand(params);
 				}
+			}
 			this.clipboardNode=null;
 			this.clipboardMethod=null;
 			this.moveReset();
-			}
 		}
+	}
 
 	mgnlTree.prototype.moveNode = function(x,y)
 		{
@@ -933,7 +924,11 @@
 		var tree=eval(treeName);
 		var isLabel=params.isLabel;
 
+
 		if (html=="") html=tree.strings.empty;
+
+		html = mgnlAlertCallbackMessage(html);
+		
 		document.getElementById(lastEditedHtmlObjectId).innerHTML=html;
 
 		if (isLabel)
@@ -1225,17 +1220,10 @@ callback
 			tree.clipboardMethod=null;
 		}
 
+		html = mgnlAlertCallbackMessage(html);
+
 		var selectPath=params.pathSelected;
 		var selectNodePattern='<input type="hidden" id="mgnlSelectNode" value="';
-		var messagePattern='<input type="hidden" id="mgnlMessage" value="';
-
-		// check if alert message was sent back
-		if (html.indexOf(messagePattern) != -1){
-			var start = html.indexOf(messagePattern);
-			var end = html.indexOf("\" />", start);
-			var msg = html.slice(start + messagePattern.length, end);
-			alert(msg);
-		}
 		
 		if (html.indexOf(selectNodePattern)==0)
 			{
@@ -1264,3 +1252,16 @@ callback
 
 }
 
+	function mgnlAlertCallbackMessage(html){
+		var messagePattern='<input type="hidden" id="mgnlMessage" value="';
+
+		// check if alert message was sent back
+		if (html.indexOf(messagePattern) != -1){
+			var start = html.indexOf(messagePattern);
+			var end = html.indexOf("\" />", start);
+			var msg = html.slice(start + messagePattern.length, end);
+			alert(msg);
+			html = html.slice(end);
+		}
+		return html;
+	}
