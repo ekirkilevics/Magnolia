@@ -22,6 +22,8 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.SessionAccessControl;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -122,9 +124,11 @@ public class Syndicator {
      * @param parent parent under which this page will be activated
      * @param path page to be activated
      * @param recursive
+     * @throws RepositoryException 
+     * @throws ActivationException 
      */
     public synchronized void activate(String context, String parent, String path, boolean recursive,
-        boolean includeContentNodes) throws Exception {
+        boolean includeContentNodes) throws ActivationException, RepositoryException  {
         this.parent = parent;
         this.path = path;
         this.recursive = recursive;
@@ -153,9 +157,11 @@ public class Syndicator {
     }
 
     /**
+     * @throws RepositoryException 
+     * @throws ActivationException 
      * @deprecated use activate(String context, String parent, String path, boolean recursive) instead
      */
-    public synchronized void activate(String parent, String path, boolean recursive) throws Exception {
+    public synchronized void activate(String parent, String path, boolean recursive) throws ActivationException, RepositoryException{
         this.parent = parent;
         this.path = path;
         this.recursive = recursive;
@@ -164,9 +170,10 @@ public class Syndicator {
     }
 
     /**
-     * @throws Exception
+     * @throws RepositoryException 
+     * @throws ActivationException 
      */
-    private synchronized void activate() throws Exception {
+    private synchronized void activate() throws ActivationException, RepositoryException {
         Enumeration en = Subscriber.getList();
         while (en.hasMoreElements()) {
             Subscriber si = (Subscriber) en.nextElement();
@@ -180,9 +187,8 @@ public class Syndicator {
      * <p>
      * send activation request only if subscribed to the activated URI
      * </p>
-     * @throws Exception
      */
-    private synchronized void activate(Subscriber subscriber) throws Exception {
+    private synchronized void activate(Subscriber subscriber) throws ActivationException, RepositoryException {
         if (!isSubscribed(subscriber)) {
             if (log.isDebugEnabled()) {
                 log.debug("Exchange : subscriber [ " + subscriber.getName() + " ] is not subscribed to " + this.path); //$NON-NLS-1$ //$NON-NLS-2$
@@ -194,19 +200,33 @@ public class Syndicator {
             log.debug("Exchange : user [ " + Authenticator.getUserId(this.request) + " ]"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         String handle = getActivationURL(subscriber);
-        URL url = new URL(handle);
-        URLConnection urlConnection = url.openConnection();
-        this.addActivationHeaders(urlConnection, subscriber);
-        String status = urlConnection.getHeaderField(Syndicator.ACTIVATION_ATTRIBUTE_STATUS);
+        try {
+            URL url = new URL(handle);
+            URLConnection urlConnection = url.openConnection();
+            this.addActivationHeaders(urlConnection, subscriber);
+            String status = urlConnection.getHeaderField(Syndicator.ACTIVATION_ATTRIBUTE_STATUS);
 
-        // check if the activation failed
-        if (StringUtils.equals(status, Syndicator.ACTIVATION_FAILED)) {
-            String message = urlConnection.getHeaderField(Syndicator.ACTIVATION_ATTRIBUTE_MESSAGE);
-            throw new ActivationException("Message received from subscriber: " + message);
+            // check if the activation failed
+            if (StringUtils.equals(status, Syndicator.ACTIVATION_FAILED)) {
+                String message = urlConnection.getHeaderField(Syndicator.ACTIVATION_ATTRIBUTE_MESSAGE);
+                throw new ActivationException("Message received from subscriber: " + message);
+            }
+            urlConnection.getContent();
+            log.info("Exchange : activation request received by " + subscriber.getName()); //$NON-NLS-1$
+            updateActivationDetails();
         }
-        urlConnection.getContent();
-        log.info("Exchange : activation request received by " + subscriber.getName()); //$NON-NLS-1$
-        updateActivationDetails();
+        catch (ActivationException e) {
+            throw e;
+        }
+        catch (MalformedURLException e) {
+            throw new ActivationException("Wrong URL for subscriber " + subscriber  + "[" + handle + "]");
+        }
+        catch (IOException e) {
+            throw new ActivationException("Was not able to send the activation request [" +  handle + "]: " + e.getMessage());
+        }
+        catch (RepositoryException e) {
+            throw e;
+        }
     }
 
     private boolean isSubscribed(Subscriber subscriber) {
@@ -230,9 +250,10 @@ public class Syndicator {
     /**
      * @param path , to deactivate
      * @param context
-     * @throws Exception
+     * @throws RepositoryException 
+     * @throws ActivationException 
      */
-    public synchronized void deActivate(String context, String path) throws Exception {
+    public synchronized void deActivate(String context, String path) throws ActivationException, RepositoryException{
         this.path = path;
         this.context = context;
         this.deActivate();
@@ -262,9 +283,10 @@ public class Syndicator {
     }
 
     /**
-     * @throws Exception
+     * @throws RepositoryException 
+     * @throws ActivationException 
      */
-    private synchronized void deActivate() throws Exception {
+    private synchronized void deActivate() throws ActivationException, RepositoryException{
         Enumeration en = Subscriber.getList();
         while (en.hasMoreElements()) {
             Subscriber si = (Subscriber) en.nextElement();
@@ -278,19 +300,26 @@ public class Syndicator {
         }
     }
 
-    /**
-     * @throws Exception
-     */
-    private synchronized void deActivate(Subscriber subscriber) throws Exception {
+    private synchronized void deActivate(Subscriber subscriber) throws ActivationException, RepositoryException {
         if (!isSubscribed(subscriber)) {
             return;
         }
         String handle = getDeactivationURL(subscriber);
-        URL url = new URL(handle);
-        URLConnection urlConnection = url.openConnection();
-        this.addDeactivationHeaders(urlConnection);
-        urlConnection.getContent();
-        updateDeActivationDetails();
+        try {
+            URL url = new URL(handle);
+            URLConnection urlConnection = url.openConnection();
+            this.addDeactivationHeaders(urlConnection);
+            urlConnection.getContent();
+            updateDeActivationDetails();
+        }
+        catch (MalformedURLException e) {
+            throw new ActivationException("Wrong URL for subscriber " + subscriber  + "[" + handle + "]");
+        }
+        catch (IOException e) {
+            throw new ActivationException("Was not able to send the deactivation request [" +  handle + "]: " + e.getMessage());        }
+        catch (RepositoryException e) {
+            throw e;
+        }
     }
 
     /**
