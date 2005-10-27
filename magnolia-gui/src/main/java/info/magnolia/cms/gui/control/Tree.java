@@ -21,8 +21,10 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.exchange.simple.ActivationException;
 import info.magnolia.cms.exchange.simple.Syndicator;
 import info.magnolia.cms.gui.misc.Spacer;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.MetaDataUtil;
@@ -33,6 +35,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
@@ -118,6 +121,11 @@ public class Tree extends ControlSuper {
     private boolean browseMode;
 
     /**
+     * Use the getter method to access this HierarchyManager.
+     */
+    private HierarchyManager hm;
+
+    /**
      * Constructor.
      * @param name name of the tree (name of the treehandler)
      * @param repository name of the repository (i.e. "website", "users")
@@ -128,6 +136,7 @@ public class Tree extends ControlSuper {
         this.setRepository(repository);
         this.setRequest(request);
         this.setMenu(new ContextMenu(this.getJavascriptTree()));
+        this.setHierarchyManager(SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository()));
     }
 
     /**
@@ -373,35 +382,24 @@ public class Tree extends ControlSuper {
         return this.columnResizer;
     }
 
-    public void deleteNode(String parentPath, String label) {
-        try {
-            HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
-            Content parentNode = hm.getContent(parentPath);
-            String path;
-            if (!parentPath.equals("/")) { //$NON-NLS-1$
-                path = parentPath + "/" + label; //$NON-NLS-1$
-            }
-            else {
-                path = "/" + label; //$NON-NLS-1$
-            }
-            this.deActivateNode(path);
-            parentNode.delete(label);
-            parentNode.save();
+    public void deleteNode(String parentPath, String label) throws ActivationException, RepositoryException {
+        Content parentNode = getHierarchyManager().getContent(parentPath);
+        String path;
+        if (!parentPath.equals("/")) { //$NON-NLS-1$
+            path = parentPath + "/" + label; //$NON-NLS-1$
         }
-        catch (Exception e) {
-            log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+        else {
+            path = "/" + label; //$NON-NLS-1$
         }
+        this.deActivateNode(path);
+        parentNode.delete(label);
+        parentNode.save();
     }
 
-    public void deleteNode(String path) {
-        try {
-            String parentPath = StringUtils.substringBeforeLast(path, "/"); //$NON-NLS-1$
-            String label = StringUtils.substringAfterLast(path, "/"); //$NON-NLS-1$
-            deleteNode(parentPath, label);
-        }
-        catch (Exception e) {
-            log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
-        }
+    public void deleteNode(String path) throws Exception {
+        String parentPath = StringUtils.substringBeforeLast(path, "/"); //$NON-NLS-1$
+        String label = StringUtils.substringAfterLast(path, "/"); //$NON-NLS-1$
+        deleteNode(parentPath, label);
     }
 
     public void createNode(String itemType) {
@@ -417,21 +415,20 @@ public class Tree extends ControlSuper {
      **/
     public void createNode(String label, String itemType) {
         try {
-            HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
-            Content parentNode = hm.getContent(this.getPath());
+            Content parentNode = getHierarchyManager().getContent(this.getPath());
             String slash = "/"; //$NON-NLS-1$
             boolean isRoot = false;
             if (this.getPath().equals("/")) { //$NON-NLS-1$
                 isRoot = true;
                 slash = StringUtils.EMPTY;
             }
-            if (hm.isExist(this.getPath() + slash + label)) {
+            if (getHierarchyManager().isExist(this.getPath() + slash + label)) {
                 // todo: bugfix getUniqueLabel???
                 if (!isRoot) {
-                    label = Path.getUniqueLabel(hm, this.getPath(), label);
+                    label = Path.getUniqueLabel(getHierarchyManager(), this.getPath(), label);
                 }
                 else {
-                    label = Path.getUniqueLabel(hm, StringUtils.EMPTY, label);
+                    label = Path.getUniqueLabel(getHierarchyManager(), StringUtils.EMPTY, label);
                 }
             }
             if (itemType.equals(ItemType.NT_NODEDATA)) {
@@ -472,8 +469,7 @@ public class Tree extends ControlSuper {
     public String saveNodeData(String nodeDataName, String value, boolean isMeta) {
         String returnValue = StringUtils.EMPTY;
         try {
-            HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
-            Content page = hm.getContent(this.getPath());
+            Content page = getHierarchyManager().getContent(this.getPath());
             if (!isMeta) {
                 NodeData node;
                 int type = PropertyType.STRING;
@@ -536,8 +532,7 @@ public class Tree extends ControlSuper {
 
     public String saveNodeDataType(String nodeDataName, int type) {
         try {
-            HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
-            Content page = hm.getContent(this.getPath());
+            Content page = getHierarchyManager().getContent(this.getPath());
             Value value = null;
             if (page.getNodeData(nodeDataName).isExist()) {
                 value = page.getNodeData(nodeDataName).getValue();
@@ -589,7 +584,8 @@ public class Tree extends ControlSuper {
         return StringUtils.EMPTY;
     }
 
-    public String pasteNode(String pathOrigin, String pathSelected, int pasteType, int action) {
+    public String pasteNode(String pathOrigin, String pathSelected, int pasteType, int action)
+        throws ActivationException, RepositoryException {
         // todo: proper doc
         // todo: ??? generic -> RequestInterceptor.java
         // move and copy of nodes works as copy/cut - paste (remaining of the very first prototype)
@@ -624,8 +620,7 @@ public class Tree extends ControlSuper {
         else if (pasteType == PASTETYPE_LAST) {
             // LAST only available for sorting inside the same directory
             try {
-                HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
-                Content touchedContent = hm.getContent(pathOrigin);
+                Content touchedContent = getHierarchyManager().getContent(pathOrigin);
                 touchedContent.getMetaData().setSequencePosition();
                 return touchedContent.getHandle();
             }
@@ -635,7 +630,6 @@ public class Tree extends ControlSuper {
         }
         else {
             try {
-                HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
                 // PASTETYPE_ABOVE | PASTETYPE_BELOW
 
                 String pathSelectedParent = StringUtils.substringBeforeLast(pathSelected, "/"); //$NON-NLS-1$
@@ -656,10 +650,12 @@ public class Tree extends ControlSuper {
                 }
                 else {
                     // sort only (move inside the same directory)
-                    touchedContent = hm.getContent(pathOrigin);
+                    touchedContent = getHierarchyManager().getContent(pathOrigin);
+                    // do deactivate (since ordering is different in public now)
+                    this.deActivateNode(pathOrigin);
                 }
-                Content parentContent = hm.getContent(pathSelectedParent);
-                Content selectedContent = hm.getContent(pathSelected);
+                Content parentContent = getHierarchyManager().getContent(pathSelectedParent);
+                Content selectedContent = getHierarchyManager().getContent(pathSelected);
 
                 // *
                 // set sequence position (average of selected and above resp. below)
@@ -763,154 +759,131 @@ public class Tree extends ControlSuper {
         }
     }
 
-    public Content copyMoveNode(String source, String destination, boolean move) {
+    public Content copyMoveNode(String source, String destination, boolean move) throws ActivationException,
+        RepositoryException {
         // todo: ??? generic -> RequestInterceptor.java
-        try {
-            HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
-            if (hm.isExist(destination)) {
-                String parentPath = StringUtils.substringBeforeLast(destination, "/"); //$NON-NLS-1$
-                String label = StringUtils.substringAfterLast(destination, "/"); //$NON-NLS-1$
-                label = Path.getUniqueLabel(hm, parentPath, label);
-                destination = parentPath + "/" + label; //$NON-NLS-1$
+        if (getHierarchyManager().isExist(destination)) {
+            String parentPath = StringUtils.substringBeforeLast(destination, "/"); //$NON-NLS-1$
+            String label = StringUtils.substringAfterLast(destination, "/"); //$NON-NLS-1$
+            label = Path.getUniqueLabel(getHierarchyManager(), parentPath, label);
+            destination = parentPath + "/" + label; //$NON-NLS-1$
+        }
+        if (move) {
+            if (destination.indexOf(source + "/") == 0) { //$NON-NLS-1$
+                // todo: disable this possibility in javascript
+                // move source into destinatin not possible
+                return null;
             }
-            if (move) {
-                if (destination.indexOf(source + "/") == 0) { //$NON-NLS-1$
-                    // todo: disable this possibility in javascript
-                    // move source into destinatin not possible
-                    return null;
-                }
-                this.deActivateNode(source);
-                try {
-                    hm.moveTo(source, destination);
-                }
-                catch (Exception e) {
-                    // try to move below node data
-                    return null;
-                }
-            }
-            else {
-                // copy
-                hm.copyTo(source, destination);
-            }
-            // SessionAccessControl.invalidateUser(this.getRequest());
-            Content newContent = hm.getContent(destination);
+            this.deActivateNode(source);
             try {
-                newContent.updateMetaData(this.getRequest());
-                newContent.getMetaData().setSequencePosition();
-                newContent.getMetaData(MetaData.ACTIVATION_INFO).setUnActivated();
+                getHierarchyManager().moveTo(source, destination);
             }
             catch (Exception e) {
-                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+                // try to move below node data
+                return null;
             }
-            newContent.save();
-            return newContent;
+        }
+        else {
+            // copy
+            getHierarchyManager().copyTo(source, destination);
+        }
+        // SessionAccessControl.invalidateUser(this.getRequest());
+        Content newContent = getHierarchyManager().getContent(destination);
+        try {
+            newContent.updateMetaData(this.getRequest());
+            newContent.getMetaData().setSequencePosition();
+            newContent.getMetaData(MetaData.ACTIVATION_INFO).setUnActivated();
         }
         catch (Exception e) {
             log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
         }
-        return null;
+        newContent.save();
+        return newContent;
     }
 
-    public void moveNode(String source, String destination) {
+    public void moveNode(String source, String destination) throws ActivationException, RepositoryException {
         this.copyMoveNode(source, destination, true);
     }
 
-    public void copyNode(String source, String destination) {
+    public void copyNode(String source, String destination) throws ActivationException, RepositoryException {
         this.copyMoveNode(source, destination, false);
     }
 
-    public String renameNode(String newLabel) {
+    public String renameNode(String newLabel) throws AccessDeniedException, ActivationException, PathNotFoundException,
+        RepositoryException {
         String returnValue = StringUtils.EMPTY;
-        try {
-            HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
-            String parentPath = StringUtils.substringBeforeLast(this.getPath(), "/"); //$NON-NLS-1$
-            newLabel = Path.getValidatedLabel(newLabel);
-            String dest = parentPath + "/" + newLabel; //$NON-NLS-1$
-            if (hm.isExist(dest)) {
-                newLabel = Path.getUniqueLabel(hm, parentPath, newLabel);
-                dest = parentPath + "/" + newLabel; //$NON-NLS-1$
-            }
+        String parentPath = StringUtils.substringBeforeLast(this.getPath(), "/"); //$NON-NLS-1$
+        newLabel = Path.getValidatedLabel(newLabel);
+        String dest = parentPath + "/" + newLabel; //$NON-NLS-1$
+        if (getHierarchyManager().isExist(dest)) {
+            newLabel = Path.getUniqueLabel(getHierarchyManager(), parentPath, newLabel);
+            dest = parentPath + "/" + newLabel; //$NON-NLS-1$
+        }
+        this.deActivateNode(this.getPath());
 
-            // do not deactivate node datas
-            if (!hm.isNodeData(this.getPath())) {
-                // try to deactivate
-                try {
-                    this.deActivateNode(this.getPath());
-                }
-                catch (Exception e) {
-                    //this is an error if the node is marked as activated
-                    Content node = hm.getContent(this.getPath());
-                    if(node.getMetaData().getIsActivated()){
-                        log.error("Can't deactivate during renaming" , e);
+        if (log.isInfoEnabled()) {
+            log.info("Moving node from " + this.getPath() + " to " + dest); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        if (getHierarchyManager().isNodeData(this.getPath())) {
+            Content parentPage = getHierarchyManager().getContent(parentPath);
+            NodeData newNodeData = parentPage.createNodeData(newLabel);
+            NodeData existingNodeData = getHierarchyManager().getNodeData(this.getPath());
+            newNodeData.setValue(existingNodeData.getString());
+            existingNodeData.delete();
+            dest = parentPath;
+        }
+        else {
+            // we can't rename a node. we must move
+            // we must place the node at the same position
+            Content current = getHierarchyManager().getContent(this.getPath());
+            Content parent = current.getParent();
+            String placedBefore = null;
+            for (Iterator iter = parent.getChildren(current.getNodeType().getName()).iterator(); iter.hasNext();) {
+                Content child = (Content) iter.next();
+                if (child.getHandle().equals(this.getPath())) {
+                    if (iter.hasNext()) {
+                        child = (Content) iter.next();
+                        placedBefore = child.getName();
                     }
                 }
             }
-            
-            if (log.isInfoEnabled()) {
-                log.info("Moving node from " + this.getPath() + " to " + dest); //$NON-NLS-1$ //$NON-NLS-2$
-            }
-            if (hm.isNodeData(this.getPath())) {
-                Content parentPage = hm.getContent(parentPath);
-                NodeData newNodeData = parentPage.createNodeData(newLabel);
-                NodeData existingNodeData = hm.getNodeData(this.getPath());
-                newNodeData.setValue(existingNodeData.getString());
-                existingNodeData.delete();
-                dest = parentPath;
-            }
-            else {
-                // we can't rename a node. we must move
-                // we must place the node at the same position
-                Content current = hm.getContent(this.getPath());
-                Content parent = current.getParent();
-                String placedBefore = null;
-                for (Iterator iter = parent.getChildren(current.getNodeType().getName()).iterator(); iter.hasNext();) {
-                    Content child = (Content) iter.next();
-                    if (child.getHandle().equals(this.getPath())) {
-                        if (iter.hasNext()) {
-                            child = (Content) iter.next();
-                            placedBefore = child.getName();
-                        }
-                    }
-                }
 
-                hm.moveTo(this.getPath(), dest);
+            getHierarchyManager().moveTo(this.getPath(), dest);
 
-                // now set at the same place as before
-                if (placedBefore != null) {
-                    parent.orderBefore(newLabel, placedBefore);
-                }
+            // now set at the same place as before
+            if (placedBefore != null) {
+                parent.orderBefore(newLabel, placedBefore);
             }
-            // SessionAccessControl.invalidateUser(this.getRequest());
-            Content newPage = hm.getContent(dest);
-            returnValue = newLabel;
-            newPage.updateMetaData(this.getRequest());
-            newPage.save();
         }
-        catch (Exception e) {
-            log.error("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
-        }
+        // SessionAccessControl.invalidateUser(this.getRequest());
+        Content newPage = getHierarchyManager().getContent(dest);
+        returnValue = newLabel;
+        newPage.updateMetaData(this.getRequest());
+        newPage.save();
+
         return returnValue;
     }
 
-    public void activateNode(String path, boolean recursive, boolean includeContentNodes) throws Exception {
-        HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
+    public void activateNode(String path, boolean recursive, boolean includeContentNodes) throws ActivationException,
+        RepositoryException {
         Content c = null;
-        if (hm.isPage(path)) {
-            c = hm.getContent(path);
+        if (getHierarchyManager().isPage(path)) {
+            c = getHierarchyManager().getContent(path);
         }
         else {
-            c = hm.getContent(path);
+            c = getHierarchyManager().getContent(path);
         }
         Syndicator syndicator = new Syndicator(this.getRequest());
         if (recursive) {
-            deepActivate(syndicator, c, hm);
+            deepActivate(syndicator, c, getHierarchyManager());
         }
         else {
             syndicator.activate(this.getRepository(), StringUtils.EMPTY, path, recursive, includeContentNodes);
         }
     }
 
-    protected void deepActivate(Syndicator syndicator, Content content, HierarchyManager hm) throws Exception {
+    protected void deepActivate(Syndicator syndicator, Content content, HierarchyManager hm)
+        throws ActivationException, RepositoryException {
         syndicator.activate(this.getRepository(), StringUtils.EMPTY, content.getHandle(), false, true);
         Collection children = content.getChildren();
         if (children != null) {
@@ -921,7 +894,11 @@ public class Tree extends ControlSuper {
         }
     }
 
-    public void deActivateNode(String path) throws Exception {
+    public void deActivateNode(String path) throws ActivationException, RepositoryException {
+        // do not deactivate node datas
+        if (getHierarchyManager().isNodeData(path)) {
+            return;
+        }
         Syndicator syndicator = new Syndicator(this.getRequest());
         syndicator.deActivate(this.getRepository(), path);
     }
@@ -1010,8 +987,7 @@ public class Tree extends ControlSuper {
         html.append("</div>"); //$NON-NLS-1$
         boolean permissionWrite = true;
         try {
-            HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
-            Content root = hm.getContent(this.getPath());
+            Content root = getHierarchyManager().getContent(this.getPath());
             permissionWrite = root.isGranted(info.magnolia.cms.security.Permission.WRITE);
         }
         catch (RepositoryException e) {
@@ -1110,10 +1086,9 @@ public class Tree extends ControlSuper {
 
     public String getHtmlChildren() {
         StringBuffer html = new StringBuffer();
-        HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
         Content parentNode = null;
         try {
-            parentNode = hm.getContent(this.getPathCurrent());
+            parentNode = getHierarchyManager().getContent(this.getPathCurrent());
             // loop the children of the different item types
             for (int i = 0; i < this.getItemTypes().size(); i++) {
                 String type = (String) this.getItemTypes().get(i);
@@ -1465,5 +1440,18 @@ public class Tree extends ControlSuper {
     public void setBrowseMode(boolean browseMode) {
         this.browseMode = browseMode;
     }
-
+    
+    /**
+     * @return the current HierarchyManager
+     */
+    private HierarchyManager getHierarchyManager() {
+        return hm;
+    }
+    
+    /**
+     * @param hm The HierarchyManager to set.
+     */
+    private void setHierarchyManager(HierarchyManager hm) {
+        this.hm = hm;
+    }
 }
