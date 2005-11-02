@@ -33,7 +33,7 @@ Generating documentation
 
 +--------------------------------+
 
-/magnolia-project > mvn site
+/magnolia-project > mvn site:site
 
 +--------------------------------+
 
@@ -57,6 +57,35 @@ Creating configuration for eclipse/WTP
  WARNING: the current release of the m2 eclipse plugin has a critical bug in the generation of .wtpmodules files for
  web projects, so dependencies in the "magnolia" project will be missing.
  A new release should be out in a short time.
+
+
+
+Deploying the magnolia site to sourceforge [developers only]
+
++--------------------------------+
+
+/magnolia-project > mvn site:deploy
+
++--------------------------------+
+
+ Before running this goal you will need to add a server configuration in your home/.m2/settings.xml
+
++--------------------------------+
+<settings>
+  ...
+  <servers>
+    <server>
+      <id>magnolia</id>
+      <username>[your sourceforge username]</username>
+      <privateKey>[path to rsa key]</privateKey>
+      <passphrase>[optional passphrase]</passphrase>
+    </server>
+  </servers>
+</settings>
++--------------------------------+
+
+ Currently the mvn-generated site is deployed to {{{http://magnolia.sourceforge.net/m2site/}}} for testing
+
 
 
 Deploy
