@@ -5,7 +5,7 @@
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
     <version>2.2-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
+    <relativePath>../magnolia-project/pom.xml</relativePath>
   </parent>
   <artifactId>magnolia-core</artifactId>
   <name>magnolia-core</name>

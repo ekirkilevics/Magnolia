@@ -5,7 +5,7 @@
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
     <version>2.2-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
+    <relativePath>../magnolia-project/pom.xml</relativePath>
   </parent>
   <artifactId>magnolia-taglib-utility</artifactId>
   <name>magnolia-taglib-utility</name>
@@ -20,9 +20,8 @@
   <reporting>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
+        <groupId>net.sf.maventaglib</groupId>
         <artifactId>maven-taglib-plugin</artifactId>
-        <version>2.0-beta-1-SNAPSHOT</version>
       </plugin>
     </plugins>
   </reporting>
