@@ -1,0 +1,74 @@
+                                        ---------------------------------------------------
+                                          useful Maven 2 goals for working with Magnolia
+                                        ---------------------------------------------------
+                                                       Fabrizio Giustina
+                                        ---------------------------------------------------
+                                                          03/11/2005
+                                        ---------------------------------------------------
+
+
+Intro
+
+ The root project for a multiproject build is "magnolia-project".
+ Running a goal in the magnolia-project directory will execute the same goal for any other module.
+ magnolia-project also contains all the documentation published to the magnolia website.
+
+
+
+Build
+
++--------------------------------+
+
+/magnolia-project > mvn install
+
++--------------------------------+
+
+ Run mvn install from magnolia-project. All the modules will be built as separate jars and then assembled into
+ the magnolia web application (/magnolia/target/magnolia-[version].war
+
+
+
+Generating documentation
+
+
++--------------------------------+
+
+/magnolia-project > mvn site
+
++--------------------------------+
+
+ Run mvn site from magnolia-project. This will generate the documentation for each modules into the target/site
+ directory. The most useful documentation can be found directly into the magnolia-project/target/site directory.
+
+ WARNING: at this moment maven 2 doesn't aggregate documentation from multiple modules.
+ This means that modules need to be linked manually in site.xml and deployed separately.
+
+
+
+Creating configuration for eclipse/WTP
+
+
++--------------------------------+
+
+/magnolia-project > mvn -DdownloadSources=true eclipse:eclipse
+
++--------------------------------+
+
+ WARNING: the current release of the m2 eclipse plugin has a critical bug in the generation of .wtpmodules files for
+ web projects, so dependencies in the "magnolia" project will be missing.
+ A new release should be out in a short time.
+
+
+Deploy
+
+ to do
+
+
+Release
+
+ to do
+
+
+
+
+
