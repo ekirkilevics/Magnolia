@@ -50,8 +50,9 @@ import org.doomdark.uuid.UUIDGenerator;
 
 
 /**
+ * todo  - refactor all getChildren methods, use getChildren(ContentFilter)
  * @author Sameer Charles
- * @version $Revision $ ($Author $)
+ * @version $Revision$ ($Author$)
  */
 public class Content extends ContentHandler implements Cloneable {
 
@@ -443,8 +444,38 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
+     * Get a collection containing child nodes which satisfies the given filter
+     * @param filter
+     * @return Collection of content objects
+     * */
+    public Collection getChildren(ContentFilter filter) {
+        Collection children = new ArrayList();
+        try {
+            NodeIterator nodeIterator = this.node.getNodes();
+            while (nodeIterator.hasNext()) {
+                Node subNode = (Node) nodeIterator.next();
+                try {
+                    Content content = new Content(subNode, this.accessManager);
+                    if (filter.accept(content)) {
+                        children.add(content);
+                    }
+                }
+                catch (PathNotFoundException e) {
+                    log.error(e);
+                }
+                catch (AccessDeniedException e) {
+                    // ignore, simply wont add content in a list
+                }
+            }
+        } catch (RepositoryException re) {
+            log.error(re);
+        }
+        return children;
+    }
+
+    /**
      * gets a Collection containing all child nodes of the same NodeType as "this" object.
-     * @return Collection of content nodes
+     * @return Collection of content objects
      */
     public Collection getChildren() {
         String type = null;
@@ -1148,5 +1179,20 @@ public class Content extends ContentHandler implements Cloneable {
      */
     private void addUUID() throws RepositoryException {
         this.node.setProperty(PROPERTY_UUID, UUIDGenerator.getInstance().generateTimeBasedUUID().toString());
+    }
+
+
+    /**
+     * Implement this interface to be used as node filter by getChildren()
+     * */
+    public interface ContentFilter {
+
+        /**
+         * Test if this content should be included in a resultant collection
+         * @param content
+         * @return if true this will be a part of collection
+         * */
+        public boolean accept(Content content);
+
     }
 }
