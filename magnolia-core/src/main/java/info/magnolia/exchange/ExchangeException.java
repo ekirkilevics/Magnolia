@@ -35,11 +35,11 @@ public class ExchangeException extends BaseException {
         super(message);
     }
 
-    public ExchangeException(String message, Exception cause) {
+    public ExchangeException(String message, Throwable cause) {
         super(message, (cause instanceof ExchangeException) ? ((ExchangeException) cause).getCause() : cause);
     }
 
-    public ExchangeException(Exception root) {
+    public ExchangeException(Throwable root) {
         super(root);
     }
 }
