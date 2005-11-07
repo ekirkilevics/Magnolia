@@ -15,6 +15,7 @@ package info.magnolia.cms.taglibs;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.gui.misc.FileProperties;
+import info.magnolia.cms.util.LinkUtil;
 import info.magnolia.cms.util.Resource;
 
 import java.util.Collection;
@@ -36,14 +37,14 @@ import org.apache.log4j.Logger;
  * Since JSTL doesn't allow calling a method like <code>Content.getNodeData(String)</code> the <code>Content</code>
  * is wrapped into a <code>NodeMapWrapper</code> which exposes NodeData using a map interface. This tag can be useful
  * in similar situations:
- * 
+ *
  * <pre>
  * &lt;cms:setNode var="currentNode"/>
  * &lt;c:if test="${!empty currentNode.title}">
  *   &lt;c:out value="${currentNode.title}"/>
  * &lt;/c:if>
  * </pre>
- * 
+ *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
@@ -275,7 +276,7 @@ public class SetNode extends TagSupport {
                 value = props.getProperty(StringUtils.EMPTY);
             }
             else {
-                value = nodeData.getString();
+                value = LinkUtil.convertUUIDsToAbsoluteLinks(nodeData.getString());
             }
             return value;
         }
