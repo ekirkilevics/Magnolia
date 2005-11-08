@@ -15,6 +15,7 @@ package info.magnolia.cms.util;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.search.QueryManager;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,6 +23,7 @@ import java.util.regex.Pattern;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -51,6 +53,11 @@ public final class LinkUtil {
         + "repository:\\{[^\\}]*\\}," // has value website unless we support it //$NON-NLS-1$
         + "workspace:\\{[^\\}]*\\}," // has value default unless we support it //$NON-NLS-1$
         + "path:\\{([^\\}]*)\\}\\}\\}"); //$NON-NLS-1$
+
+    /**
+     * Logger.
+     */
+    private static Logger log = Logger.getLogger(LinkUtil.class);
 
     /**
      * Transforms all the links to the magnolia format. Used during storing.
@@ -130,16 +137,26 @@ public final class LinkUtil {
      * @return path
      */
     public static String makeAbsolutePathFromUUID(String uuid) {
-        try {
+
+        QueryManager qmanager = hm.getQueryManager();
+
+        if (qmanager != null) {
             // this uses magnolia uuid
-            return Search.getContentByUUID(hm.getQueryManager(), uuid).getHandle();
+            Content content = Search.getContentByUUID(qmanager, uuid);
 
             // this uses the jcr uuid
-            // return hm.getContentByUUID(uuid).getHandle();
+            // content = hm.getContentByUUID(uuid);
+
+            if (content != null) {
+                return content.getHandle();
+            }
         }
-        catch (Exception e) {
-            return uuid;
+        else {
+            log.info("SearchManager not configured for website repositoy, unable to generate absolute path for UUID ["
+                + uuid
+                + "]");
         }
+        return null;
     }
 
     /**
