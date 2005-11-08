@@ -78,7 +78,7 @@
    						<li>User Roles Repository: label the context node <b>userroles</b></li>
    					</ul>
    					Your context configuration should start to look as follows:<p/>
-   					<img src="./images/context_tree.png" /><br/>
+   					<img src="../images/context_tree.png" /><br/>
    				</p>
    			</subsection>
    			<subsection name="Repository Context Content Node">
@@ -87,7 +87,7 @@
    					(e.g. "0001"). This content node will have one property to define the context path.<br/>
    					So if you want to define more than one cluster, just add additional content nodes (e.g. "0002", "0003",
    					etc.).<p/>
-   					<img src="./images/website_context_tree.png" /><br/>
+   					<img src="../images/website_context_tree.png" /><br/>
    					<h4>Repository Context Property "subscribedURI"</h4>
    					This is the property where you define the context path (e.g. "<code>/projA</code>").<br/>
    					So when activating a Web page, Magnolia checks for active subscribers, then checks the Web site context

@@ -1,0 +1,478 @@
+                             --------------------
+                             Magnolia User manual
+                                  ----------
+                                      -
+                                   --------
+                                  08/11/2205
+
+Introduction
+~~~~~~~~~~~~
+
+* 1.1 What is Magnolia CMS
+
+ Magnolia CMS is an easy to use content management system, which is developed for keeping web site content up to date –
+ for content editors this means no need to worry about layout and design consistency or web technology.
+
+* 1.2 Audience of this manual
+
+ This user manual is addressed to content editors. Content editors are responsible for creation and maintenance of the
+ contents (web pages with texts, images, news, downloadable files) of a web site.
+
+
+Structuring pages and editing web content
+~~~~~~~~~~~~
+
+2.1 How to log into the system
+
+ For working with Magnolia, you need an Internet connection and a web- browser - it is not necessary to install any
+ administration software on your computer.
+
+ To access the authoring system you will receive a web address from your system administrator, together with user and
+ password information to log into the system.
+
+ To get access to the Magnolia System, the following steps need to be taken:
+
+  1. Open your web-browser and make sure an Internet connection is established.
+
+   2. Go to the authoring environment URL (ask your system administrator for this web-address).
+
+  3. Fill in the user and password prompt.
+
+  4. After logging in to the system, you will see the AdminCentral window.
+
+ The following web browsers are tested and recommended for using the Magnolia Administration interface:
+
+*----------------------------------------------+------------+-----------+------------+
+| Browser name and version                     | MS Windows |   MacOSX  | Unix/Linux |
+*----------------------------------------------+------------+-----------+------------+
+| Firefox 1.0                                  | compliant  | compliant | compliant  |
+*----------------------------------------------+------------+-----------+------------+
+| Netscape 7                                   | compliant  | compliant | compliant  |
+*----------------------------------------------+------------+-----------+------------+
+| Internet Explorer 6                          | compliant  |           |            |
+*----------------------------------------------+------------+-----------+------------+
+| Safari 1.2                                   |   |   Works with some limitations | |
+*----------------------------------------------+------------+-----------+------------+
+
+
+
+
+
+    2.2 AdminCentral - working with website structure The AdminCentral allows you to set up the Site Tree of your website. It represents the hierarchical structure of the pages in the web site
+    (corresponding to the hierarchical structure of the web site navigation). Changes to the web-site structure are made in the AdminCentral.
+
+    In the left section, choose "Website", to work with the pages of the website. If you log in, the Website section is selected by default.
+
+    Every page, with its properties, is shown in a separate line. The active page, i.e. the page, which is currently selected, appears in a grey bar. Pages containing sub-pages have a +/- in front - after clicking the + , the sub-pages of the section will appear.
+
+    For each page, you can enter a page name and a page title, you see the activation status of the page, you may choose a page template type, and you see the last modification date.
+
+
+
+
+
+
+    AdminCentral window
+
+    2.3 Working with the web site structure and pages Note: because most of Magnolia functionalities are accessible by the right mouse button, it is strongly recommended to use a mouse with two buttons.
+
+    2.3.1 Creating a page
+    To create a new page, press the right mouse button and select "New Page". A new page named "untitled" is created. To create a new sub page, first mark the parent page, which shall contain the new page. To create a page on top level of the website, open the context menu without marking another page.
+
+    Page name
+    To edit the name of the page, double-click on the text "untitled" and enter a page name. For the page name you may only use characters a-z, A-Z,
+    0-9, _ (underscore) and - (dash).
+
+    The name of the page will appear in the browser address (URL) of the
+    site, for example if you name a page "home", the web address of this page will be http://www.magnolia.info/home.html.
+    On one hierarchical site level the page name must be unique.
+
+
+    User Manual for Magnolia 2
+    www.magnolia.info 4/14
+
+
+
+
+    Saving changes in Magnolia AdminCentral
+    To save changes in the AdminCentral, hit the [enter] key or simply click somewhere outside the text field. To discard a change, hit the [escape] key.
+
+    Hints for naming a page
+    As a general rule, the page name should correspond with the page title. In the following situations you need to pay special attention when naming a page:
+
+    1. If the page name shall contain more than one word. Solution: Use dashes to connect words.
+    Example: if the page is named "Moon & Stars", name the page label "moonandstars" or  "moon-and-stars".
+    If you enter "moon and stars" the empty spaces are automatically replaced by dashes.
+
+    2. If the word of your page name contains special characters, you must replace them by standard characters. Special characters are not allowed in a Magnolia page name - a special character in the page title will be automatically be replaced by one or two dashes in the page name.
+    Example: page name "España" will automatically create a page label "Espa-a". To avoid this, you should type "espana" as page name.
+
+    Page title
+    In Page title field, put the page name you wish to appear in the website navigation. To enter the title of the page, double-click the page in the title column, and enter a title. The title may consist of one or more words; upper and lower case characters and special characters are allowed.
+
+    2.3.2 Delete a page
+    To delete a page within the web site tree, mark the page you wish to delete, open the context menu with the right mouse button, choose
+    „delete“ in the context menu, and confirm the popup security message. Please note that the delete function cannot be undone. Before deleting a page, which is activated (for activation see Chapter 3), you will be asked to deactivate the page.
+
+    2.3.3 Copy or move a page
+    To copy (or move) a page within the web site tree, mark the page you wish to copy, open the context menu with the right mouse button, and choose
+    “Copy page“ (resp. “Move page”) in the context menu. Then choose the target position in the website tree, where you want to copy or move the page to. A horizontal line will help you positioning the page properly. If you drop the page onto another page, it will become a sub page of the other page. If you drop the page at the horizontal line, the new (or moved) page will be created between the two pages between which the horizontal line appears.
+    copy page and select destination
+
+    2.3.4 Activate a page
+    For activation and deactivation please refer to Chapter 3 on activation.
+
+    2.3.5 Refresh
+    To refresh all information within the AdminCentral window, select „refresh“ in the context menu. After refreshing, all names, activation status of pages, etc. will reflect the current data status. Due to the browser based web-interface, data updates are, from time to time, not displayed at once.
+
+    2.4 Page template
+    What is a template?
+    A template contains the definition of the webpage layout, or of parts of the page. The page template contains the basic page layout and page-specific functionality. For example:
+
+    Name Description
+    page with two columns
+    page with three columns
+    navigation column at the left side, and main content column in the middle
+    navigation column at the left side, main content column in the middle, additional content column at the right side
+    Web form page a page which contains a web form
+
+
+
+    Choose a page template
+    Before you start to edit the page content itself, choose the proper page template type which fits for your needs:
+
+
+
+
+
+
+    page template selection
+
+    The kind and number of templates available depends on the design of your website. Therefore cannot be explained here in detail
+
+    2.5 Editing content in a page
+    After creating and naming a page, and choosing a page template, you wish to insert text and images into the page. To edit the page, open the page, either by double-clicking the page icon to open the page, or alternatively, open the context menu of this page with the right mouse button, and select "Open page". A new browser window with the page will open. The page will look like your website, but in addition contains various green toolbars for creating and editing content.
+
+
+
+
+
+
+    Page editing window
+
+    2.5.1 Page properties
+    Note: on page and paragraph level, your system may have more, less or different templating options, depending on the design and functionality which is implemented for your specific web site.  This manual describes the Magnolia demo website with basic templating options.
+
+    On top of the page editing window, you find the following buttons:
+
+    Button Function
+    Preview Allows you to view the page without the editing bars.
+    AdminCentral Opens a new AdminCentral window, with the current page selected.
+    Properties: General page properties, meta tag properties
+
+
+
+
+
+
+
+    Page properties  - General properties:
+
+
+
+
+
+
+
+
+
+
+
+    General page properties window
+
+    In the General properties window, you have the following options:
+
+    * The Main title contains the page title, which has been entered in the AdminCentral.
+    * If the Navigation title is left empty, the main title is used in the navigation per default. If the navigation should show another text as the main title, you may add another text. If you have a navigation title with three or four words, which will need two lines in the navigation, you may put the line break where it is appropriate.
+    * You may hide a page in the navigation by selecting „Do not show this page in the navigation“.
+    * If the Content title is left empty, the main title appears as content title (usually below the header image and above the content) per default. If the content title should show another text as the main title, you may add another text here. The content title can be longer and more descriptive than the main title and the navigation title.
+    * If you want to replace the default Header image on top of the page, you may upload another image here. Please note that the image size must match the exact header image size.
+
+    Page Properties: Meta
+    Here you may enter a description of the page, and the keywords of the page. This may help your site to achieve good rankings in search engines.
+
+
+
+
+
+    User Manual for Magnolia 2
+    www.magnolia.info 8/14
+
+
+
+
+    2.5.2 Adding content to a page:
+
+    Text and Image paragraph
+    In the page editing window, in the green edit bar, select "new" to create a new content paragraph.
+    Select the template called "text and image paragraph". Enter a title in the title field, and a text into the text field, and then click save.
+
+    If you insert text that has been created in a text editor like MS Word, use the “Clean copy/paste” functionality, to avoid inserting formatting information, which may mess up the web content. Please note that this functionality is not available in browsers that are not affected by this problem.
+
+    If you wish to place an image besides the text, open the paragraph and switch from the "Text" tab to the "Image" tab on top of the Magnolia edit dialog window. Click the "browse" button to search and upload an image from your computer onto the page. If you wish, you may change the image file name, and you may insert an alternative text, which is assigned to the image.
+
+    Under the tab "Paragraph properties" you control the way, how one paragraph is visually separated from its previous paragraph, and from the following paragraph. In most cases, the default settings will be suitable.
+
+
+
+
+
+    Text editing window
+
+    Working with the Rich Text Editor
+    In the text field you have several standard text formatting options: bold and italic text format, and numbered and bulleted lists. Their usage is like in usual text editing tools.
+
+
+
+
+
+
+    User Manual for Magnolia 2
+    www.magnolia.info 9/14
+
+
+
+
+    Working with Links
+    A linking tool helps if you wish one or more words within the text:
+
+    1. Select the text that shall be linked.
+    2. Enter a link into the link field, or use the internal link browser, and set the options according to the following table:
+
+    Usage Format of link Target of link
+    External link: http://www.abc.com new browser window
+    Internal link: /en/page.html same browser window
+    Email link: name@abc.com Email link
+
+    3. Click "apply link”. Please note that in some browsers the marked text seems to be deselected.
+
+    To un-link a text, select the linked text and click the "Remove link" button, then click “apply”. To update an existing link, select the linked text in the text field. The current linking appears. Change the link and click “apply”
+
+    Download paragraph
+    The download paragraph allows you to integrate downloadable files, i.e. PDFs, into your page. You may enter a text, which appears as a linked text, and you may alter the name of the downloadable file.
+
+    Table paragraph
+    The table paragraph allows you to insert data in table format out of a table editor such as Microsoft Excel. Mark and copy the table cells in Excel, and simply copy and paste it into the table field.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    User Manual for Magnolia 2
+    www.magnolia.info 10/14
+
+
+
+
+
+    3 Activation process
+
+    3.1 Instances of Magnolia
+    A magnolia web site is normally running on two stages (Magnolia application instances, technically speaking). The authoring stage is used for making changes and updates on pages and structure of the web site. The public stage serves the contents of the web site to the visitors on the Internet.
+
+    This setup enables you to make changes to pages and structure of your website in the authoring environment, to test and review these changes thoroughly, or have them reviewed by someone else - and to release, or
+    “activate", these changes for the public once the change and review cycle is completed.
+
+    To make a new page or updates on an existing page visible on the Public
+    Instance, you need to activate the respective page(s).
+
+    3.2 Activation status color scheme
+    The pages AdminCentral show a color scheme to give you an overview of the activation status of the pages.
+
+    Color Meaning
+    green the page has been activated before, and therefore is visible on the public instance. The page content and settings on author and public instance are the same.
+    yellow             the page has been activated before, and therefore is visible on the public instance. But the page has been changed after the last activation.
+    red             the page is not activated (i.e. e. visible) on the public instance.
+
+
+
+    3.3 How to activate and deactivate pages
+
+    3.3.1 Activate a single page
+    To activate a page, go to the AdminCentral and select the page. In the context menu, which is opened with the right mouse button, select
+    "Activate this page". After activating a page, the activation status turns to green. Use the color scheme to help you find the pages you changed
+    (yellow), or which are not yet activated at all (red).
+
+    3.3.2 Activate a page and all its sub pages
+    To activate a page and all its sub pages, select a page that has sub pages, then click “Activate incl. sub pages", and confirm. With this command, you may activate whole branches of the website, or the whole website. Please note that this may take several moments, depending on the size of your website.
+
+    3.3.3 Deactivate a page
+    If you want to remove a page from the public instance, select the page and click "deactivate". After successfully deactivating, this page, and all its sub pages, will be marked with activation status “red”.
+
+
+
+
+    User Manual for Magnolia 2
+    www.magnolia.info 11/14
+
+
+
+
+
+    4 User right settings
+    If you wish to give new users access to the Magnolia system, create a new user and assign the appropriate roles to this user. To be able to create
+    new users and roles, you need sufficient user rights) for your own user you use for logging into Magnolia.
+
+    4.1 Creating users
+    To create a user, go to the Users section in AdminCentral, click the right mouse button in the main window, and select "New user". Enter a user name (use only a-z, A-Z, 0-9, _ and -), and the full name of the user. When this is done, select the user, click the right mouse button and select
+    "Edit user". The user name must be a unique name within the system. For logging in to Magnolia, the user needs to know the user name and the password.
+
+
+
+    User properties window
+
+    In the “edit user” screen, you have the following options:
+
+    * Enter or change the full name of the user.
+    * Enter a password. You are asked to enter it twice, to avoid typing mistakes
+    * If you select "User administrator", the user is allowed to create or edit users.
+    * If you select "Role administrator", the user is allowed to create and edit roles.
+
+
+
+
+
+
+
+    * If you select "Config administrator", the user is allowed to make magnolia configurations1
+    * To grant the user editing rights on one or more web site sections, assign the appropriate Role (or roles) to the user. A role defines, on which page or branch of the website the users with this role may edit content.
+    After you have set all user properties, save the “edit user“ window.
+
+    If you want to allow the user to activate content from the authoring to the public instance, you must activate the user. Make sure that the user's roles have been activated as well.
+
+    4.2 Creating roles
+    To be able to grant editing rights to a user, it is necessary to create an appropriate role.
+
+    To create a role, go to the Roles section, click the right mouse button in the main window, and select "New role". Enter a role name (use only  a-z,
+    0-9, _ and -) and a full role name. When this is done, select the role, click the right mouse button and select "Edit role...".
+
+    Role properties
+    You may add a comment on the role's purpose.
+
+    Access control list
+    In the access control list you can define different access to areas of the website. Each role needs at least one access control definition.
+    To define an access control, click "Choose..." and select the page to which you want to give access, and confirm. To add another access control, click
+    "add".
+
+    4.3 Restricting and granting user access to pages
+    To allow or forbid user access to certain pages in the Website,  the proper access controls need to be defined in the role settings. A role without any access controls forbids access to all pages.
+
+    If you want to allow access to the whole website, simply create an access control with "read/write" and "selected page and sub pages" selected, and with a forward-slash (/) in the path field.
+
+    The following sample access control lists illustrate how you can grant or deny user access.
+
+
+
+
+
+    1  the config options of Magnolia are not part of this manual, because they are not needed for content editing.
+
+
+
+
+    Team Alpha
+    Team Alpha can make changes on all pages of the website.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    Team Alpha role settings
+
+    Team Gamma
+    Team Gamma can edit content only on the level of the page named
+    "feedback", and its sub pages.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    Team Gamma role settings
+
+    Team Ypsilion
+    Team Ypsilon may edit all pages on the website, except on the page
+    "help" and its sub pages, to which access is forbidden.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    Team Ypsilon role settings

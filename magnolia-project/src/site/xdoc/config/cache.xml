@@ -7,7 +7,7 @@
 		<section name="Cache">
 			<p>
 			You must define which url's should get cached. You can add as many entries you like.<br/>
-				<img src="images/cache.png" />
+				<img src="../images/cache.png" />
 			</p>
 
 		</section>

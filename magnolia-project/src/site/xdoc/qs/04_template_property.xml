@@ -85,7 +85,7 @@ Config/modules/templating/dialogs/quickstart/pageProperties]]>
                     defining properties of the dialog. Let us add a data node for the background color of our page.
                 </p>
                 <p>
-                    <img src="images/qs/04_magnolia_quickstartPageProperties.png" />
+                    <img src="../images/qs/04_magnolia_quickstartPageProperties.png" />
                 </p>
                 <p>
                     Thus we have a custom dialog for page properties that allows us to store our desired background
@@ -106,7 +106,7 @@ and change name and dialogPath]]>
                     </source>
                 </p>
                 <p>
-                    <img src="images/qs/04_magnolia_quickstartParagraphPageProperties.png" />
+                    <img src="../images/qs/04_magnolia_quickstartParagraphPageProperties.png" />
                 </p>
             </subsection>
             <subsection name="4.3 Adapt the Page Template">
@@ -139,7 +139,7 @@ with
                     page, we will have a nice greyish-blue background.
                 </p>
                 <p>
-                    <img src="images/qs/04_magnolia_quickstartWebPageBackground.png" />
+                    <img src="../images/qs/04_magnolia_quickstartWebPageBackground.png" />
                 </p>
                 <p>
                     The

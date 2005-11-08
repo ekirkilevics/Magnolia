@@ -12,7 +12,7 @@
             	This what we will get:
             </p>
             <p>
-            	<img src="images/qs/07_magnolia_ExtendedTextOutput.png" />
+            	<img src="../images/qs/07_magnolia_ExtendedTextOutput.png" />
             </p>
             <p>
             	Copy the page properties dialog
@@ -31,7 +31,7 @@ Config/modules/templating/dialogs/quickstart/extendedText]]>
             	and change it to <code>extendedText</code>.
             </p>
             <p>
-            	<img src="images/qs/07_magnolia_pageProperties0.png" />
+            	<img src="../images/qs/07_magnolia_pageProperties0.png" />
             </p>
             <p>
             	(Alternatively we can create the structure from scratch).
@@ -42,7 +42,7 @@ Config/modules/templating/dialogs/quickstart/extendedText]]>
             	renaming the entries to match the following screenshot:
             </p>
             <p>
-            	<img src="images/qs/07_magnolia_ExtendedTextDialogDefinition.png" />
+            	<img src="../images/qs/07_magnolia_ExtendedTextDialogDefinition.png" />
             </p>
             <p>
             	Now we need to add a paragraph definition:
@@ -55,7 +55,7 @@ Config/modules/templating/dialogs/quickstart/extendedText]]>
             	result should look as follows:
             </p>
             <p>
-            	<img src="images/qs/07_magnolia_ExtendedTextParagraph.png" />
+            	<img src="../images/qs/07_magnolia_ExtendedTextParagraph.png" />
             </p>
             <p>
             	Now define the rendering in <code>html</code> by providing the jsp-file
@@ -99,7 +99,7 @@ to
             	custom paragraph!
             </p>
             <p>
-            	<img src="images/qs/07_magnolia_ExtendedTextDialog.png" />
+            	<img src="../images/qs/07_magnolia_ExtendedTextDialog.png" />
             </p>
             <p>
             	Remember that we customized only one (the author-) instance in this tutorial. To make your changes
