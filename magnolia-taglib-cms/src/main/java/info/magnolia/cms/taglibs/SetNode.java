@@ -210,7 +210,7 @@ public class SetNode extends TagSupport {
      * @author fgiust
      * @version $Revision$ ($Author$)
      */
-    public static class NodeMapWrapper implements Map {
+    public class NodeMapWrapper implements Map {
 
         /**
          * The wrapped Content.
@@ -276,7 +276,8 @@ public class SetNode extends TagSupport {
                 value = props.getProperty(StringUtils.EMPTY);
             }
             else {
-                value = LinkUtil.convertUUIDsToAbsoluteLinks(nodeData.getString());
+                value = LinkUtil.convertUUIDsToRelativeLinks(nodeData.getString(), Resource
+                    .getActivePage((HttpServletRequest) pageContext.getRequest()));
             }
             return value;
         }

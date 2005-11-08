@@ -363,7 +363,8 @@ public class Out extends TagSupport {
                     value = nodeData.getString(this.getLineBreak());
                 }
                 // replace internal links
-                value = LinkUtil.convertUUIDsToRelativeLinks(value, this.getCurrentActivePage());
+                value = LinkUtil.convertUUIDsToRelativeLinks(value, Resource
+                    .getActivePage((HttpServletRequest) pageContext.getRequest())); // static actpage
             }
             JspWriter out = pageContext.getOut();
             try {
