@@ -58,17 +58,19 @@
         <item name="I18N" href="/advanced/i18n.html" />
       </item>
       <item name="Tag libraries" href="/taglib/intro.html" collapse="true">
-        <item name="Cms taglib" href="/tagreference-cms-taglib.html" />
-        <item name="Cms util taglib" href="/tagreference-cms-util-taglib.html" />
+        <item name="Cms taglib" href="/magnolia-taglib-cms/tagreference.html" />
+        <item name="Cms util taglib" href="/magnolia-taglib-utility/tagreference.html" />
       </item>
       <item name="API JavaDoc" href="apidocs/index.html" target="_blank" />
       <item name="Glossary" href="/glossary/glossary.html" />
     </menu>
-    <menu name="Downloadable docs">
+    <!--
+      <menu name="Downloadable docs">
       <item name="User Manual (2.0)" href="/pdf/magnolia-user-manual.pdf" />
       <item name="Templater's Quickstart (2.0)" href="/pdf/magnolia-templaters-quickstart.pdf" />
       <item name="Developer Documentation" href="/magnolia.pdf" />
-    </menu>
+      </menu>
+    -->
     <menu name="Lists">
       <item name="News Letter" href="/lists/news-list.html" />
       <item name="User List" href="/lists/user-list.html" />
@@ -78,7 +80,7 @@
     <menu name="Download">
       <item name="Releases (sourceforge)" href="http://sourceforge.net/project/showfiles.php?group_id=86297"
         target="_blank" />
-      <item name="Nightly builds" href="/nightly" />
+      <!-- <item name="Nightly builds" href="/nightly" />-->
     </menu>
     <menu name="Developers">
       <item name="Maven goals" href="/developer/mavengoals.html" />
@@ -91,6 +93,17 @@
         <item name="Write Code" href="/contribute/code.html" />
         <item name="Contribute License" href="/contribute/license.html" />
       </item>
+    </menu>
+    <menu name="Modules">
+      <item name="core" href="/magnolia-core/index.html" />
+      <item name="exhange-simple" href="/magnolia-exchange-simple/index.html" />
+      <item name="gui" href="/magnolia-gui/index.html" />
+      <item name="jaas" href="/magnolia-jaas/index.html" />
+      <item name="admin interface" href="/magnolia-module-admininterface/index.html" />
+      <item name="templating" href="/magnolia-module-templating/index.html" />
+      <item name="cms taglib" href="/magnolia-taglib-cms/index.html" />
+      <item name="utility taglib" href="/magnolia-taglib-utility/index.html" />
+      <item name="webapp" href="/magnolia/index.html" />
     </menu>
     ${reports}
     <menu name="" type="footer">
