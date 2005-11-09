@@ -21,6 +21,11 @@
       <artifactId>servlet-api</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>geronimo-spec</groupId>
+      <artifactId>geronimo-spec-jsp</artifactId>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
   <reporting>
     <plugins>
