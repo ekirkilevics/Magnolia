@@ -47,6 +47,21 @@ Generating documentation
 
 Creating configuration for eclipse/WTP
 
+ WARNING: the current release of the m2 eclipse plugin has a critical bug in the generation of .wtpmodules files for
+ web projects, so dependencies in the "magnolia" project will be missing.
+ At the moment you will have to download and compile the eclipse plugin from svn for it to work, so follow this steps:
+
++--------------------------------+
+
+svn checkout http://svn.apache.org/repos/asf/maven/components/trunk/maven-plugins/maven-eclipse-plugin maven-eclipse-plugin
+
+cd maven-eclipse-plugin
+
+mvn install
+
++--------------------------------+
+
+ Now you should have a working copy of the eclipse plugin installed. Run the following for configuring magnolia
 
 +--------------------------------+
 
@@ -54,9 +69,7 @@ Creating configuration for eclipse/WTP
 
 +--------------------------------+
 
- WARNING: the current release of the m2 eclipse plugin has a critical bug in the generation of .wtpmodules files for
- web projects, so dependencies in the "magnolia" project will be missing.
- A new release should be out in a short time.
+
 
 
 
