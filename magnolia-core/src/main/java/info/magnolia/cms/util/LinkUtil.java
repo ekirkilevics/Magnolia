@@ -118,7 +118,7 @@ public final class LinkUtil {
             String absolutePath = LinkUtil.makeAbsolutePathFromUUID(uuid);
 
             // can't find the uuid
-            if (absolutePath.equals(uuid)) {
+            if (absolutePath == null) {
                 absolutePath = matcher.group(2);
             }
 
