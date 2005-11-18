@@ -14,9 +14,9 @@ package info.magnolia.cms.beans.runtime;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 
 
@@ -182,14 +182,7 @@ public class Document {
      * Delete the file, taking care of closing an open input stream
      */
     public void delete() {
-        if (this.inputStream != null) {
-            try {
-                this.inputStream.close();
-            }
-            catch (IOException e) {
-                // ignore
-            }
-        }
+        IOUtils.closeQuietly(inputStream);
         this.file.delete();
     }
 }

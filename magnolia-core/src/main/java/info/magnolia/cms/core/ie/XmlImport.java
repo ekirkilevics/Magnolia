@@ -34,6 +34,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -101,14 +102,7 @@ public class XmlImport implements ImportHandler {
             log.error(e.getMessage(), e);
         }
         finally {
-            if (inStream != null) {
-                try {
-                    inStream.close();
-                }
-                catch (IOException e) {
-                    // ignore
-                }
-            }
+            IOUtils.closeQuietly(inStream);
         }
     }
 

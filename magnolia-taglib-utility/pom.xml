@@ -22,8 +22,8 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>geronimo-spec</groupId>
-      <artifactId>geronimo-spec-jsp</artifactId>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jsp-api</artifactId>
       <scope>provided</scope>
     </dependency>
   </dependencies>

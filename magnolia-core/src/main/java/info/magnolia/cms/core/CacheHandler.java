@@ -32,6 +32,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -99,7 +100,7 @@ public class CacheHandler extends Thread {
                 out = new FileOutputStream(file);
                 boolean success = streamURI(uri, out, request);
                 out.flush();
-                out.close();
+                IOUtils.closeQuietly(out);
                 if (!success) {
                     // don't leave bad or incomplete files!
                     file.delete();
@@ -125,7 +126,7 @@ public class CacheHandler extends Thread {
                     GZIPOutputStream gzipOut = new GZIPOutputStream(out);
                     boolean success = streamURI(uri, gzipOut, request);
                     gzipOut.flush();
-                    gzipOut.close();
+                    IOUtils.closeQuietly(gzipOut);
                     if (!success) {
                         // don't leave bad or incomplete files!
                         gzipFile.delete();
@@ -148,14 +149,7 @@ public class CacheHandler extends Thread {
             log.error(e.getMessage(), e);
         }
         finally {
-            if (out != null) {
-                try {
-                    out.close();
-                }
-                catch (IOException e) {
-                    // ignore
-                }
-            }
+            IOUtils.closeQuietly(out);
             Cache.removeFromInProcessURIList(repositoryURI);
         }
     }
@@ -337,14 +331,7 @@ public class CacheHandler extends Thread {
             }
         }
         finally {
-            if (fin != null) {
-                try {
-                    fin.close();
-                }
-                catch (IOException e) {
-                    // ignore
-                }
-            }
+            IOUtils.closeQuietly(fin);
         }
         return true;
     }
@@ -374,7 +361,7 @@ public class CacheHandler extends Thread {
             os.write(buffer, 0, read);
         }
         os.flush();
-        os.close();
+        IOUtils.closeQuietly(os);
     }
 
     /**

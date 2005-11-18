@@ -32,6 +32,7 @@ import java.util.zip.ZipOutputStream;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.doomdark.uuid.UUIDGenerator;
 
@@ -87,8 +88,8 @@ public class PackageExport implements ExportHandler {
             outStream.write(buffer, 0, read);
         }
         outStream.flush();
-        outStream.close();
-        is.close();
+        IOUtils.closeQuietly(outStream);
+        IOUtils.closeQuietly(is);
         zipper.getZipFile().delete();
     }
 
@@ -126,7 +127,7 @@ public class PackageExport implements ExportHandler {
                 this.outputStream.setLevel(9);
                 this.addTextContent();
                 this.addBinaryContent(this.content);
-                this.outputStream.close();
+                IOUtils.closeQuietly(this.outputStream);
             }
             catch (IOException e) {
                 log.error(e.getMessage());

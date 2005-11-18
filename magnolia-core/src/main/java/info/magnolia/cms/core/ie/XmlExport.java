@@ -29,6 +29,7 @@ import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
@@ -199,7 +200,7 @@ public class XmlExport implements ExportHandler {
                         while ((is.read(buffer)) > 0) {
                             stringBuffer.append(new String(buffer));
                         }
-                        is.close();
+                        IOUtils.closeQuietly(is);
                     }
                     catch (Exception e) {
                         System.out.println(e);

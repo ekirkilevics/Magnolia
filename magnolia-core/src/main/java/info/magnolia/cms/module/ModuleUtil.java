@@ -40,6 +40,7 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.collections.map.ListOrderedMap;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.jdom.Comment;
@@ -59,11 +60,11 @@ import org.jdom.xpath.XPath;
  * @version $Revision$ ($Author$)
  */
 public final class ModuleUtil {
-    
+
     /**
      * Logger
      */
-    
+
     private static Logger log = Logger.getLogger(ModuleUtil.class);
 
     /**
@@ -147,8 +148,8 @@ public final class ModuleUtil {
             }
             line = lines.readLine();
         }
-        lines.close();
-        stream.close();
+        IOUtils.closeQuietly(lines);
+        IOUtils.closeQuietly(stream);
         registerProperties(hm, map);
     }
 
@@ -302,12 +303,7 @@ public final class ModuleUtil {
                 }
             }
             finally {
-                try {
-                    out.close();
-                }
-                catch (Exception e) {
-                    // nothing
-                }
+                IOUtils.closeQuietly(out);
             }
         }
     }
@@ -339,8 +335,9 @@ public final class ModuleUtil {
         register.createContent("initParams", ItemType.CONTENTNODE); //$NON-NLS-1$
         return node;
     }
-    
-    public static void registerServlet( String name, String className, String[] urlPatterns, String comment) throws JDOMException, IOException {
+
+    public static void registerServlet(String name, String className, String[] urlPatterns, String comment)
+        throws JDOMException, IOException {
         // get the web.xml
         File source = new File(Path.getAppRootDir() + "/WEB-INF/web.xml");
         if (!source.exists()) {
@@ -349,63 +346,68 @@ public final class ModuleUtil {
         }
         SAXBuilder builder = new SAXBuilder();
         Document doc = builder.build(source);
-        
+
         // check if there already registered
-        
-        XPath xpath = XPath.newInstance("/webxml:web-app/webxml:servlet[webxml:servlet-name='"+name+"']");
+
+        XPath xpath = XPath.newInstance("/webxml:web-app/webxml:servlet[webxml:servlet-name='" + name + "']");
         // must add the namespace and use it: there is no default namespace elsewise
         xpath.addNamespace("webxml", doc.getRootElement().getNamespace().getURI());
         Element node = (Element) xpath.selectSingleNode(doc);
-            
+
         if (node == null) {
-            log.info("register servlet "  + name);
-            
+            log.info("register servlet " + name);
+
             // make a nice comment
             doc.getRootElement().addContent(new Comment(comment));
-            
+
             // the same name space must be used
             Namespace ns = doc.getRootElement().getNamespace();
-            
+
             node = new Element("servlet", ns);
             node.addContent(new Element("servlet-name", ns).addContent(name));
             node.addContent(new Element("servlet-class", ns).addContent(className));
             doc.getRootElement().addContent(node);
         }
-        else{
-            log.info("servlet "  + name + " allready registered");
+        else {
+            log.info("servlet " + name + " allready registered");
         }
         for (int i = 0; i < urlPatterns.length; i++) {
             String urlPattern = urlPatterns[i];
             registerServletMapping(doc, name, urlPattern, comment);
         }
-        
+
         XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
         outputter.output(doc, new FileWriter(source));
     }
 
-    public static void registerServletMapping(Document doc, String name, String urlPattern, String comment) throws JDOMException {
-        XPath xpath = XPath.newInstance("/webxml:web-app/webxml:servlet-mapping[webxml:servlet-name='"+name+"' and webxml:url-pattern='"+urlPattern+"']");
+    public static void registerServletMapping(Document doc, String name, String urlPattern, String comment)
+        throws JDOMException {
+        XPath xpath = XPath.newInstance("/webxml:web-app/webxml:servlet-mapping[webxml:servlet-name='"
+            + name
+            + "' and webxml:url-pattern='"
+            + urlPattern
+            + "']");
         // must add the namespace and use it: there is no default namespace elsewise
         xpath.addNamespace("webxml", doc.getRootElement().getNamespace().getURI());
         Element node = (Element) xpath.selectSingleNode(doc);
-            
+
         if (node == null) {
-            log.info("register servlet "  + name);
-            
+            log.info("register servlet " + name);
+
             // make a nice comment
             doc.getRootElement().addContent(new Comment(comment));
-            
+
             // the same name space must be used
             Namespace ns = doc.getRootElement().getNamespace();
-            
+
             // create the mapping
             node = new Element("servlet-mapping", ns);
             node.addContent(new Element("servlet-name", ns).addContent(name));
             node.addContent(new Element("url-pattern", ns).addContent(urlPattern));
             doc.getRootElement().addContent(node);
         }
-        else{
-            log.info("servlet "  + name + " allready registered");
+        else {
+            log.info("servlet " + name + " allready registered");
         }
     }
 
@@ -477,6 +479,5 @@ public final class ModuleUtil {
             log.error("can't register repository", e);
         }
     }
-
 
 }

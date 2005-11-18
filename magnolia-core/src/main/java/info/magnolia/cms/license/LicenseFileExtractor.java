@@ -12,13 +12,13 @@
  */
 package info.magnolia.cms.license;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
@@ -105,14 +105,7 @@ public final class LicenseFileExtractor {
             log.error(e.getMessage(), e);
         }
         finally {
-            if (in != null) {
-                try {
-                    in.close();
-                }
-                catch (IOException e) {
-                    // ignore
-                }
-            }
+            IOUtils.closeQuietly(in);
         }
     }
 

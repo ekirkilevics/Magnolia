@@ -181,12 +181,17 @@
       <dependency>
         <groupId>org.apache.jackrabbit</groupId>
         <artifactId>jackrabbit</artifactId>
-        <version>1.0-20051011.141304-6</version>
+        <version>1.0-20051116.235521-7</version>
       </dependency>
       <dependency>
         <groupId>org.apache.jackrabbit</groupId>
         <artifactId>jackrabbit-bdb</artifactId>
-        <version>1.0-20050928.220303-1</version>
+        <version>1.0-20051117.000801-2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.jackrabbit</groupId>
+        <artifactId>jackrabbit-textfilters</artifactId>
+        <version>1.0-20051117.001422-1</version>
       </dependency>
       <dependency>
         <groupId>log4j</groupId>
@@ -196,7 +201,7 @@
       <dependency>
         <groupId>commons-httpclient</groupId>
         <artifactId>commons-httpclient</artifactId>
-        <version>3.0-rc3</version>
+        <version>3.0-rc4</version>
       </dependency>
       <dependency>
         <groupId>commons-collections</groupId>
@@ -214,7 +219,7 @@
         <version>1.0</version>
       </dependency>
       <dependency>
-        <groupId>jstl</groupId>
+        <groupId>javax.servlet</groupId>
         <artifactId>jstl</artifactId>
         <version>1.1.2</version>
       </dependency>
@@ -229,9 +234,9 @@
         <version>2.4</version>
       </dependency>
       <dependency>
-        <groupId>geronimo-spec</groupId>
-        <artifactId>geronimo-spec-jsp</artifactId>
-        <version>2.0-rc4</version>
+        <groupId>javax.servlet</groupId>
+        <artifactId>jsp-api</artifactId>
+        <version>2.0</version>
       </dependency>
       <dependency>
         <groupId>javax.mail</groupId>
@@ -247,6 +252,11 @@
         <groupId>commons-lang</groupId>
         <artifactId>commons-lang</artifactId>
         <version>2.1</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-logging</groupId>
+        <artifactId>commons-logging</artifactId>
+        <version>1.0.4</version>
       </dependency>
       <dependency>
         <groupId>xerces</groupId>
@@ -277,6 +287,16 @@
         <groupId>excalibur-sourceresolve</groupId>
         <artifactId>excalibur-sourceresolve</artifactId>
         <version>20020820</version>
+      </dependency>
+      <dependency>
+        <groupId>net.sourceforge.openutils</groupId>
+        <artifactId>openutils-log4j</artifactId>
+        <version>1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <version>1.0-beta9</version>
       </dependency>
       <dependency>
         <groupId>httpunit</groupId>

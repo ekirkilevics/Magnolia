@@ -17,6 +17,10 @@
       <artifactId>log4j</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+    </dependency>
+    <dependency>
       <groupId>commons-httpclient</groupId>
       <artifactId>commons-httpclient</artifactId>
     </dependency>
@@ -33,7 +37,7 @@
       <artifactId>jdom</artifactId>
     </dependency>
     <dependency>
-      <groupId>jstl</groupId>
+      <groupId>javax.servlet</groupId>
       <artifactId>jstl</artifactId>
     </dependency>
     <dependency>
@@ -46,8 +50,8 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>geronimo-spec</groupId>
-      <artifactId>geronimo-spec-jsp</artifactId>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jsp-api</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>

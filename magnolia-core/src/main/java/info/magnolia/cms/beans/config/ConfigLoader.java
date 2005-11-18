@@ -119,16 +119,23 @@ public class ConfigLoader {
         else {
             log.warn("Repositories are not initialized (no content found)."); //$NON-NLS-1$
 
-            String bootdir = SystemProperty.getProperty(SystemProperty.MAGNOLIA_BOOTSTRAP_ROOTDIR);
-            if (StringUtils.isEmpty(bootdir)) {
+            String bootdirProperty = SystemProperty.getProperty(SystemProperty.MAGNOLIA_BOOTSTRAP_ROOTDIR);
+            if (StringUtils.isEmpty(bootdirProperty)) {
                 enterListeningMode();
                 return;
             }
 
             bootstrapping = true;
 
+            String[] bootDirs = StringUtils.split(bootdirProperty);
+
+            // converts to absolute paths
+            for (int j = 0; j < bootDirs.length; j++) {
+                bootDirs[j] = Path.getAbsoluteFileSystemPath(bootDirs[j]);
+            }
+
             // a bootstrap directory is configured, trying to initialize repositories
-            Bootstrapper.bootstrapRepositories(Path.getAbsoluteFileSystemPath(bootdir));
+            Bootstrapper.bootstrapRepositories(bootDirs);
         }
 
         log.info("Init virtualMap"); //$NON-NLS-1$

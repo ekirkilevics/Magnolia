@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 
@@ -92,7 +93,7 @@ public class Spool extends HttpServlet {
                 os.write(buffer, 0, read);
             }
             os.flush();
-            os.close();
+            IOUtils.closeQuietly(os);
         }
         catch (IOException e) {
             // only log at debug level, tomcat usually throws a ClientAbortException anytime the user stop loading the
@@ -101,12 +102,7 @@ public class Spool extends HttpServlet {
             return false;
         }
         finally {
-            try {
-                in.close();
-            }
-            catch (Exception e) {
-                // ignore
-            }
+            IOUtils.closeQuietly(in);
         }
         return true;
     }

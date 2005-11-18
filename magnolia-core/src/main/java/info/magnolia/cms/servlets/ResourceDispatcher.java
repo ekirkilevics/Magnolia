@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -74,7 +75,7 @@ public class ResourceDispatcher extends HttpServlet {
         }
         if (StringUtils.isNotEmpty(resourceHandle)) {
             HierarchyManager hm = (HierarchyManager) req.getAttribute(Aggregator.HIERARCHY_MANAGER);
-            InputStream is  = null;
+            InputStream is = null;
             try {
                 is = getNodedataAstream(resourceHandle, hm, res);
                 if (null != is) {
@@ -83,25 +84,21 @@ public class ResourceDispatcher extends HttpServlet {
                     // resources like jpeg which is already compressed should be not be written on
                     // zipped stream otherwise some browsers takes a long time to render
                     sendUnCompressed(is, res);
-                    is.close();
+                    IOUtils.closeQuietly(is);
                     return;
                 }
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 // don't log at error level since tomcat tipically throws a
                 // org.apache.catalina.connector.ClientAbortException if the user stops loading the page
                 log.debug("Exception while dispatching resource  " + e.getClass().getName() + ": " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
-            } catch (Exception e) {
-                log.error("Exception while dispatching resource  " + e.getClass().getName() + ": " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
-            } finally {
-                if (null != is) {
-                    try {
-                        is.close();
-                    } catch (IOException e) {
-                        // ignore
-                    }
-                }
             }
-
+            catch (Exception e) {
+                log.error("Exception while dispatching resource  " + e.getClass().getName() + ": " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
+            }
+            finally {
+                IOUtils.closeQuietly(is);
+            }
         }
         if (log.isDebugEnabled()) {
             log.debug("Resource not found, redirecting request for [" + req.getRequestURI() + "] to 404 URI"); //$NON-NLS-1$
@@ -146,7 +143,7 @@ public class ResourceDispatcher extends HttpServlet {
             gzos.flush();
         }
         finally {
-            gzos.close();
+            IOUtils.closeQuietly(gzos);
         }
     }
 
@@ -164,7 +161,7 @@ public class ResourceDispatcher extends HttpServlet {
             os.write(buffer, 0, read);
         }
         os.flush();
-        os.close();
+        IOUtils.closeQuietly(os);
     }
 
     /**

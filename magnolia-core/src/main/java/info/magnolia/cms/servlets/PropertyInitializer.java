@@ -18,7 +18,6 @@ import info.magnolia.logging.Log4jConfigurer;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -29,6 +28,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -216,12 +216,7 @@ public class PropertyInitializer implements ServletContextListener {
                 log.fatal(e.getMessage(), e);
             }
             finally {
-                try {
-                    fileStream.close();
-                }
-                catch (IOException e) {
-                    // ignore
-                }
+                IOUtils.closeQuietly(fileStream);
             }
             return;
 
