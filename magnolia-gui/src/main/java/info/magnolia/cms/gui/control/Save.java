@@ -220,7 +220,7 @@ public class Save extends ControlSuper {
      * @throws RepositoryException exception
      * @throws AccessDeniedException no access
      */
-    private void processSaveInfo(Content node, String saveInfo) throws PathNotFoundException, RepositoryException,
+    protected void processSaveInfo(Content node, String saveInfo) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
 
         String name;
@@ -274,14 +274,13 @@ public class Save extends ControlSuper {
      * @throws RepositoryException exception
      * @throws AccessDeniedException exception
      */
-    private void processCommon(Content node, String name, int type, int isRichEditValue, int encoding, String[] values)
+    protected void processCommon(Content node, String name, int type, int isRichEditValue, int encoding, String[] values)
         throws PathNotFoundException, RepositoryException, AccessDeniedException {
         String valueStr = StringUtils.EMPTY;
         if (values != null) {
             valueStr = values[0]; // values is null when the expected field would not exis, e.g no
         }
         // checkbox selected
-        NodeData data = node.getNodeData(name);
         if (isRichEditValue != ControlSuper.RICHEDIT_NONE) {
             valueStr = this.getRichEditValueStr(valueStr, isRichEditValue);
         }
@@ -310,24 +309,61 @@ public class Save extends ControlSuper {
             }
         }
         if (remove) {
-            // remove node if already exists
-            if (data.isExist()) {
-                node.deleteNodeData(name);
-            }
+            processRemoveCommon(node, name, type, isRichEditValue, encoding, values);
         }
         else if (write) {
             Value value = this.getValue(valueStr, type);
-            if (value != null) {
-                if (data.isExist()) {
-                    data.setValue(value);
-                }
-                else {
-                    node.createNodeData(name, value);
-                }
-            }
+            
+            processWriteCommon(node, name, value);
         }
     }
 
+    /**
+     * Remove the specified property on the node.
+     * 
+     * @param node the node
+     * @param name the property name
+     * @param type the property type
+     * @param isRichEditValue is it a return value of a richt edit field
+     * @param encoding must we encode (base64)
+     * @param values all values belonging to this field
+     * 
+     * @throws PathNotFoundException thrown if the property name does not correspond to a
+     *  valid property name
+     * @throws RepositoryException thrown if other repository exception is thrown 
+     */
+    protected void processRemoveCommon(Content node, String name, int type, int isRichEditValue, int encoding, String[] values) 
+        throws PathNotFoundException, RepositoryException {
+        NodeData data = node.getNodeData(name);
+    
+        if (data.isExist()) {
+            node.deleteNodeData(name);
+        }
+    }
+
+    /**
+     * Writes a property value.
+     * 
+     * @param node the node
+     * @param name the property name to be written
+     * @param value the value of the property
+     * @throws AccessDeniedException thrown if the write access is not granted
+     * @throws RepositoryException thrown if other repository exception is thrown
+     */
+    protected void processWriteCommon(Content node, String name, Value value) 
+        throws AccessDeniedException, RepositoryException {
+        NodeData data = node.getNodeData(name);
+        
+        if (null != value) {
+            if (data.isExist()) {
+                data.setValue(value);
+            }
+            else {
+                node.createNodeData(name, value);
+            }
+        }
+    }
+    
     /**
      * @param node
      * @param name
@@ -337,7 +373,7 @@ public class Save extends ControlSuper {
      * @throws PathNotFoundException
      * @throws AccessDeniedException
      */
-    private void processMultiple(Content node, String name, int type, String[] values) throws RepositoryException,
+    protected void processMultiple(Content node, String name, int type, String[] values) throws RepositoryException,
         PathNotFoundException, AccessDeniedException {
         // remove entire content node and (re-)write each
         try {
@@ -371,7 +407,7 @@ public class Save extends ControlSuper {
      * @throws RepositoryException
      * @throws AccessDeniedException
      */
-    private void processBinary(Content node, String name) throws PathNotFoundException, RepositoryException,
+    protected void processBinary(Content node, String name) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
         Document doc = getForm().getDocument(name);
         if (doc == null && getForm().getParameter(name + "_" + File.REMOVE) != null) { //$NON-NLS-1$
