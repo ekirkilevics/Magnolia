@@ -588,7 +588,7 @@ public class Save extends ControlSuper {
                     }
                     date.set(year, month, day, hour, minute, second);
                     // this is used in the searching
-                    date.set(date.MILLISECOND, 0);
+                    date.set(Calendar.MILLISECOND, 0);
                     date.setTimeZone(TimeZone.getTimeZone("GMT"));
                 }
                 // todo time zone??

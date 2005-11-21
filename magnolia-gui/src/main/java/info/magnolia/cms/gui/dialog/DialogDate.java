@@ -12,7 +12,6 @@
  */
 package info.magnolia.cms.gui.dialog;
 
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.i18n.MessagesManager;
 
 import java.text.SimpleDateFormat;
@@ -20,9 +19,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 
 /**
