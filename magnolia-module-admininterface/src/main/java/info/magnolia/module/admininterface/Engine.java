@@ -73,13 +73,6 @@ public class Engine implements Module {
         }
 
         try {
-            store.registerDialogHandlers(store.getStore().getContent("dialogs")); //$NON-NLS-1$
-        }
-        catch (Exception e) {
-            log.error("can't register the admin interface dialogs", e); //$NON-NLS-1$
-        }
-
-        try {
             store.registerDialogPageHandlers(store.getStore().getContent("dialogpages")); //$NON-NLS-1$
         }
         catch (Exception e) {
