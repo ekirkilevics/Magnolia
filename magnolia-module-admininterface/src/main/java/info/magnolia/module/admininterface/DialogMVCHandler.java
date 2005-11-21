@@ -148,18 +148,18 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
 
         try {
             dialog = createDialog(configNode, storageNode);
+            
+            dialog.setConfig("dialog", getName()); //$NON-NLS-1$
+            dialog.setConfig("path", path); //$NON-NLS-1$
+            dialog.setConfig("nodeCollection", nodeCollectionName); //$NON-NLS-1$
+            dialog.setConfig("node", nodeName); //$NON-NLS-1$
+            dialog.setConfig("richE", richE); //$NON-NLS-1$
+            dialog.setConfig("richEPaste", richEPaste); //$NON-NLS-1$
+            dialog.setConfig("repository", repository); //$NON-NLS-1$
         }
         catch (RepositoryException e) {
             log.error("can't instantiate dialog", e); //$NON-NLS-1$
         }
-
-        dialog.setConfig("dialog", getName()); //$NON-NLS-1$
-        dialog.setConfig("path", path); //$NON-NLS-1$
-        dialog.setConfig("nodeCollection", nodeCollectionName); //$NON-NLS-1$
-        dialog.setConfig("node", nodeName); //$NON-NLS-1$
-        dialog.setConfig("richE", richE); //$NON-NLS-1$
-        dialog.setConfig("richEPaste", richEPaste); //$NON-NLS-1$
-        dialog.setConfig("repository", repository); //$NON-NLS-1$
 
         return VIEW_SHOW_DIALOG;
     }
