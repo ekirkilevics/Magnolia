@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Vinzenz Wyser
- * @version 2.0
+ * @version $Revision$ ($Author$)
  */
 public class DialogDate extends DialogEditWithButton {
 
@@ -38,11 +38,13 @@ public class DialogDate extends DialogEditWithButton {
     }
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(HttpServletRequest, HttpServletResponse, Content, Content)
+     * Customize the dialog.
+     * 
+     * @see info.magnolia.cms.gui.dialog.DialogEditWithButton#doBeforeDrawHtml()
      */
-    public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
-        throws RepositoryException {
-        super.init(request, response, websiteNode, configNode);
+    protected void doBeforeDrawHtml() {
+        super.doBeforeDrawHtml();
+        
         // set buttonlabel in config
         this.getButton().setLabel(MessagesManager.get(getRequest(), "dialog.date.select")); //$NON-NLS-1$
         this.getButton().setSaveInfo(false);
@@ -65,5 +67,4 @@ public class DialogDate extends DialogEditWithButton {
         // check this!
         this.setConfig("type", this.getConfigValue("type", PropertyType.TYPENAME_DATE)); //$NON-NLS-1$ //$NON-NLS-2$
     }
-
 }

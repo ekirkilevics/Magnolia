@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Vinzenz Wyser
- * @version 2.0
+ * @version $Revision$ ($Author$)
  */
 public class DialogLink extends DialogEditWithButton {
 
@@ -34,11 +34,12 @@ public class DialogLink extends DialogEditWithButton {
     }
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(HttpServletRequest, HttpServletResponse, Content, Content)
+     * Customize the dialog.
+     * @see info.magnolia.cms.gui.dialog.DialogEditWithButton#doBeforeDrawHtml()
      */
-    public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
-        throws RepositoryException {
-        super.init(request, response, websiteNode, configNode);
+    protected void doBeforeDrawHtml() {
+        super.doBeforeDrawHtml();
+        
         String extension = this.getConfigValue("extension"); //$NON-NLS-1$
         String label = MessagesManager.get(this.getRequest(), "dialog.link.internal"); //$NON-NLS-1$
         this.getButton().setLabel(label);
@@ -46,6 +47,6 @@ public class DialogLink extends DialogEditWithButton {
         String repository = this.getConfigValue("repository", ContentRepository.WEBSITE); //$NON-NLS-1$
         this.getButton().setOnclick(
             "mgnlDialogLinkOpenBrowser('" + this.getName() + "','" + repository + "','" + extension + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-    }
 
+    }
 }

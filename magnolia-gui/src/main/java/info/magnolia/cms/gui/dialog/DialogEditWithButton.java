@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Vinzenz Wyser
- * @version 2.0
+ * @version $Revision$ ($Author$)
  */
 public class DialogEditWithButton extends DialogBox {
 
@@ -71,6 +71,8 @@ public class DialogEditWithButton extends DialogBox {
      * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(Writer)
      */
     public void drawHtml(Writer out) throws IOException {
+        doBeforeDrawHtml();
+        
         Edit control = new Edit(this.getName(), this.getValue());
         control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING)); //$NON-NLS-1$
         if (this.getConfigValue("saveInfo").equals("false")) { //$NON-NLS-1$ //$NON-NLS-2$
@@ -99,5 +101,11 @@ public class DialogEditWithButton extends DialogBox {
         out.write("</td></tr></table>"); //$NON-NLS-1$
 
         this.drawHtmlPost(out);
+    }
+    
+    /**
+     * A hook method for lazy configuration of the widget.
+     */
+    protected void doBeforeDrawHtml() {
     }
 }
