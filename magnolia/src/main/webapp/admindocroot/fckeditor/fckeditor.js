@@ -1,4 +1,4 @@
-/*
+﻿/*
  * FCKeditor - The text editor for internet
  * Copyright (C) 2003-2005 Frederico Caldeira Knabben
  * 
@@ -7,6 +7,8 @@
  * 
  * For further information visit:
  * 		http://www.fckeditor.net/
+ * 
+ * "Support Open Source software. What about a donation today?"
  * 
  * File Name: fckeditor.js
  * 	This is the integration file for JavaScript.
@@ -31,6 +33,7 @@ var FCKeditor = function( instanceName, width, height, toolbarSet, value )
 	this.BasePath		= '/fckeditor/' ;
 	this.CheckBrowser	= true ;
 	this.DisplayErrors	= true ;
+	this.EnableSafari	= false ;		// This is a temporary property, while Safari support is under development.
 
 	this.Config			= new Object() ;
 
@@ -113,9 +116,9 @@ FCKeditor.prototype._GetConfigHtml = function()
 
 FCKeditor.prototype._GetIFrameHtml = function()
 {
-	// MAGNOLIA changed to the .original file: it uses the _source directory
-	// var sLink = this.BasePath + 'editor/fckeditor.original.html?InstanceName=' + this.InstanceName ;
-	var sLink = this.BasePath + 'editor/fckeditor.html?InstanceName=' + this.InstanceName ;
+	var sFile = (/fcksource=true/i).test( window.top.location.search ) ? 'fckeditor.original.html' : 'fckeditor.html' ;
+
+	var sLink = this.BasePath + 'editor/' + sFile + '?InstanceName=' + this.InstanceName ;
 	if (this.ToolbarSet) sLink += '&Toolbar=' + this.ToolbarSet ;
 
 	return '<iframe id="' + this.InstanceName + '___Frame" src="' + sLink + '" width="' + this.Width + '" height="' + this.Height + '" frameborder="no" scrolling="no"></iframe>' ;
@@ -134,6 +137,9 @@ FCKeditor.prototype._IsCompatibleBrowser = function()
 	// Gecko
 	else if ( navigator.product == "Gecko" && navigator.productSub >= 20030210 )
 		return true ;
+	// Safari
+	else if ( this.EnableSafari && sAgent.indexOf( 'safari' ) != -1 )
+		return ( sAgent.match( /safari\/(\d+)/ )[1] >= 312 ) ;	// Build must be at least 312 (1.3)
 	else
 		return false ;
 }
