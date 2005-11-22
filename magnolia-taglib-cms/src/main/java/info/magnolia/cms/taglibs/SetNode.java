@@ -185,7 +185,8 @@ public class SetNode extends TagSupport {
 
         // set attribute
         if (contentNode != null) {
-            pageContext.setAttribute(this.var, new NodeMapWrapper(contentNode), this.scope);
+            pageContext.setAttribute(this.var, new NodeMapWrapper(contentNode, Resource
+                .getActivePage((HttpServletRequest) pageContext.getRequest())), this.scope);
         }
         else {
             pageContext.removeAttribute(this.var);
@@ -218,11 +219,17 @@ public class SetNode extends TagSupport {
         private Content wrappedNode;
 
         /**
+         * Static active page, needed for links.
+         */
+        private Content actPage;
+
+        /**
          * Instantiates a new NodeMapWrapper for the given node.
          * @param node Content node
          */
-        public NodeMapWrapper(Content node) {
-            wrappedNode = node;
+        public NodeMapWrapper(Content node, Content actPage) {
+            this.wrappedNode = node;
+            this.actPage = actPage;
         }
 
         /**
@@ -276,8 +283,7 @@ public class SetNode extends TagSupport {
                 value = props.getProperty(StringUtils.EMPTY);
             }
             else {
-                value = LinkUtil.convertUUIDsToRelativeLinks(nodeData.getString(), Resource
-                    .getActivePage((HttpServletRequest) pageContext.getRequest()));
+                value = LinkUtil.convertUUIDsToRelativeLinks(nodeData.getString(), this.actPage);
             }
             return value;
         }
