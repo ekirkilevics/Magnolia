@@ -12,309 +12,338 @@
  */
 package info.magnolia.cms.exchange.simple;
 
-import info.magnolia.cms.beans.config.ConfigLoader;
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.CacheHandler;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.security.Authenticator;
-import info.magnolia.cms.security.Listener;
-import info.magnolia.cms.security.Lock;
-import info.magnolia.cms.security.SecureURI;
-import info.magnolia.cms.security.SessionAccessControl;
-import info.magnolia.exchange.ExchangeException;
-import info.magnolia.exchange.Packet;
+import org.apache.log4j.Logger;
+import org.jdom.input.SAXBuilder;
+import org.jdom.Element;
+import org.doomdark.uuid.UUIDGenerator;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.URL;
-import java.net.URLConnection;
-
-import javax.jcr.PathNotFoundException;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.SingleThreadModel;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
+import javax.jcr.*;
+import java.io.IOException;
+import java.util.Iterator;
 
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
+import info.magnolia.cms.beans.config.ConfigLoader;
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.runtime.MultipartForm;
+import info.magnolia.cms.beans.runtime.Document;
+import info.magnolia.cms.security.Listener;
+import info.magnolia.cms.security.Authenticator;
+import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.security.SessionAccessControl;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.util.Resource;
+import info.magnolia.cms.exchange.ExchangeException;
+import info.magnolia.cms.exchange.Rule;
 
 /**
- * <p>
- * Version .01 implementation Simple implementation of Exchange interface using serialized objects and binary GET
- * </p>
- * 
- * <pre>
- * todo -
- * 1. implement incremental delivery
- * 2. concurrent activation
- * 3. context locking
- * </pre>
- * 
+ *
  * @author Sameer Charles
- * @version 2.0
+ * @version $Revision$ ($Author$)
  */
-public class SimpleExchangeServlet extends HttpServlet implements SingleThreadModel {
+public class SimpleExchangeServlet extends HttpServlet {
 
     /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
-
-    private static final String DEFAULT_ENCODING = "UTF-8"; //$NON-NLS-1$
-
-    /**
-     * Logger.
-     */
+     * Logger
+     * */
     private static Logger log = Logger.getLogger(SimpleExchangeServlet.class);
-
-    private transient HierarchyManager hierarchyManager;
 
     /**
      * @param request
      * @param response
-     * @throws ServletException
-     * @throws IOException
+     * @throws javax.servlet.ServletException
+     * @throws java.io.IOException
      */
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String context = request.getHeader(Syndicator.WORKING_CONTEXT);
-        String resultHeader = Syndicator.ACTIVATION_FAILED;
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String statusMessage = "";
-        log.debug("SimpleExchange.doGet()"); //$NON-NLS-1$
-
+        String status = "";
         try {
-            response.setContentType("text/plain"); //$NON-NLS-1$
-            response.setCharacterEncoding(DEFAULT_ENCODING);
-            // this.handleActivationRequest();
-
-            String action = request.getHeader(Syndicator.ACTION);
-            String page = request.getHeader(Syndicator.PAGE);
-            String recursive = request.getHeader(Syndicator.RECURSIVE);
-            boolean recurse = BooleanUtils.toBoolean(recursive);
-            boolean includeContentNodes = BooleanUtils.toBooleanDefaultIfNull(BooleanUtils.toBooleanObject(request
-                .getHeader(Syndicator.INCLUDE_CONTENTNODES)), true);
-
-            if (ConfigLoader.isConfigured() && (!Listener.isAllowed(request) || !Authenticator.authenticate(request))) {
-                // ignore security is server is not configured
-                return;
-            }
-
-            if (ConfigLoader.isConfigured()) {
-                this.hierarchyManager = SessionAccessControl.getHierarchyManager(request, context);
-            }
-            else {
-                this.hierarchyManager = ContentRepository.getHierarchyManager(context);
-            }
-
-            // @todo getHierarchyManager() should not return null without throwing an exception
-            if (this.hierarchyManager == null) {
-                throw new ExchangeException("HierarchyManager is not configured for " + context); //$NON-NLS-1$
-            }
-
-            if (action.equals(Syndicator.ACTIVATE)) {
-                activate(request);
-            }
-            else if (action.equals(Syndicator.DE_ACTIVATE)) {
-                deactivate(request);
-            }
-            else if (action.equals(Syndicator.GET)) {
-                String type = request.getHeader(Syndicator.GET_TYPE);
-                get(page, type, recurse, includeContentNodes, response);
-            }
-            else {
-                throw new UnsupportedOperationException("Method not supported by Exchange protocol - Simple (.01)"); //$NON-NLS-1$
-            }
-            resultHeader = Syndicator.ACTIVATION_SUCCESSFUL;
-        }
-        catch (OutOfMemoryError e) {
+            receive(request);
+            status = SimpleSyndicator.ACTIVATION_SUCCESSFUL;
+        } catch (OutOfMemoryError e) {
             Runtime rt = Runtime.getRuntime();
             log.error("---------\nOutOfMemoryError caught during activation. Total memory = " //$NON-NLS-1$
                 + rt.totalMemory() + ", free memory = " //$NON-NLS-1$
                 + rt.freeMemory() + "\n---------"); //$NON-NLS-1$
             statusMessage = e.getMessage();
-        }
-        catch(PathNotFoundException e){
+            status = SimpleSyndicator.ACTIVATION_FAILED;
+        } catch(PathNotFoundException e){
             log.error(e.getMessage(), e);
             statusMessage = "Parent not found (not yet activated): " + e.getMessage();
-        }
-        catch (Throwable e) {
+            status = SimpleSyndicator.ACTIVATION_FAILED;
+        } catch (Throwable e) {
             log.error(e.getMessage(), e);
             statusMessage = e.getMessage();
+            status = SimpleSyndicator.ACTIVATION_FAILED;
+        } finally {
+            response.setHeader(SimpleSyndicator.ACTIVATION_ATTRIBUTE_STATUS, status);
+            response.setHeader(SimpleSyndicator.ACTIVATION_ATTRIBUTE_MESSAGE, statusMessage);
         }
-        finally {
-            response.setHeader(Syndicator.ACTIVATION_ATTRIBUTE_STATUS, resultHeader);
-            response.setHeader(Syndicator.ACTIVATION_ATTRIBUTE_MESSAGE, statusMessage);
-        }
+
     }
 
     /**
      * @param request
      * @param response
-     * @throws ServletException
-     * @throws IOException
+     * @throws javax.servlet.ServletException
+     * @throws java.io.IOException
      */
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         doGet(request, response);
     }
 
     /**
-     * @throws Exception
-     */
-    public void activate(HttpServletRequest request) throws Exception {
-
-        String page = request.getHeader(Syndicator.PAGE);
-
-        if (log.isDebugEnabled()) {
-            log.debug("Exchange : update request received for " + page); //$NON-NLS-1$
+     * handle activate or deactivate request
+     * @param request
+     * @throws Exception if fails to update
+     * */
+    private synchronized void receive(HttpServletRequest request)
+            throws Exception {
+        String action = request.getHeader(SimpleSyndicator.ACTION);
+        if (action.equalsIgnoreCase(SimpleSyndicator.ACTIVATE)) {
+            update(request);
+        } else if (action.equalsIgnoreCase(SimpleSyndicator.DE_ACTIVATE)) {
+            remove(request);
+        } else {
+            throw new UnsupportedOperationException("Method not supported : "+action);
         }
-
-        String parent = request.getHeader(Syndicator.PARENT);
-        String objectType = request.getHeader(Syndicator.OBJECT_TYPE);
-        String recursive = request.getHeader(Syndicator.RECURSIVE);
-        String senderContext = request.getHeader(Syndicator.SENDER_CONTEXT);
-        String context = request.getHeader(Syndicator.WORKING_CONTEXT);
-
-        String protocol = getProtocolName(request);
-        String host = request.getRemoteHost();
-        String remotePort = request.getHeader(Syndicator.REMOTE_PORT);
-        String senderURL = request.getHeader(Syndicator.SENDER_URL);
-
-        if (StringUtils.isEmpty(senderURL)) {
-            senderURL = protocol + "://" + host + ":" + remotePort; //$NON-NLS-1$ //$NON-NLS-2$
-        }
-
-        String handle = StringUtils.defaultString(senderContext) + "/" + Syndicator.DEFAULT_HANDLER; //$NON-NLS-1$
-
-        URL url = new URL(senderURL + handle);
-        String credentials = request.getHeader("Authorization"); //$NON-NLS-1$
-        URLConnection urlConnection = url.openConnection();
-        urlConnection.setRequestProperty("Authorization", credentials); //$NON-NLS-1$
-        urlConnection.addRequestProperty(Syndicator.ACTION, Syndicator.GET);
-        urlConnection.addRequestProperty(Syndicator.WORKING_CONTEXT, context);
-        urlConnection.addRequestProperty(Syndicator.PAGE, page);
-        urlConnection.addRequestProperty(Syndicator.PARENT, parent);
-        urlConnection.addRequestProperty(Syndicator.GET_TYPE, Syndicator.GET_TYPE_SERIALIZED_OBJECT);
-        urlConnection.addRequestProperty(Syndicator.RECURSIVE, recursive);
-        urlConnection.addRequestProperty(Syndicator.OBJECT_TYPE, objectType);
-
-        // add this parameter only if present. this was not present in older versions
-        if (request.getHeader(Syndicator.INCLUDE_CONTENTNODES) != null) {
-            urlConnection.addRequestProperty(Syndicator.INCLUDE_CONTENTNODES, request
-                .getHeader(Syndicator.INCLUDE_CONTENTNODES));
-        }
-
-        // Import activated page
-        InputStream in = urlConnection.getInputStream();
-        try {
-            ObjectInputStream objectInputStream = new ObjectInputStream(in);
-            Object sc = objectInputStream.readObject();
-            // deserialize received object
-            ContentWriter contentWriter = new ContentWriter(this.getHierarchyManager(), context, senderURL
-                + StringUtils.defaultString(senderContext)
-                + "/" //$NON-NLS-1$
-                + Syndicator.DEFAULT_HANDLER, request);
-            contentWriter.writeObject(parent, sc);
-        }
-        catch (Exception e) {
-            log.error("Failed to de-serialize - " + page); //$NON-NLS-1$
-            log.error(e.getMessage(), e);
-            throw e;
-        }
-        Lock.setSystemLock();
-        CacheHandler.flushCache();
-        Lock.resetSystemLock();
+        // Everything went well
+        log.info("Activation succeeded");
     }
 
     /**
-     * @throws Exception
-     */
-    public void deactivate(HttpServletRequest request) throws Exception {
+     * handle update (activate) request
+     * @param request
+     * @throws Exception if fails to update
+     * */
+    private synchronized void update(HttpServletRequest request)
+            throws Exception {
+        validateRequest(request);
+        MultipartForm data = Resource.getPostedForm(request);
+        if (data != null) {
+            String repositoryName = request.getHeader(SimpleSyndicator.REPOSITORY_NAME);
+            String workspaceName = request.getHeader(SimpleSyndicator.WORKSPACE_NAME);
+            String parentPath = request.getHeader(SimpleSyndicator.PARENT_PATH);
+            String resourceFileName = request.getHeader(SimpleSyndicator.RESOURCE_MAPPING_FILE);
+            HierarchyManager hm =
+                    SessionAccessControl.getHierarchyManager(request, repositoryName, workspaceName);
+            Document resourceDocument =
+                    data.getDocument(resourceFileName);
+            SAXBuilder builder = new SAXBuilder();
+            org.jdom.Document jdomDocument = builder.build(resourceDocument.getStream());
+            Element topContentElement = jdomDocument.getRootElement().getChild("File");
+            String newPath = "";
+            if (parentPath.equals("/"))
+                newPath = parentPath+topContentElement.getAttributeValue("name");
+            else
+                newPath = parentPath+"/"+topContentElement.getAttributeValue("name");
 
-        String page = request.getHeader(Syndicator.PAGE);
-        if (log.isDebugEnabled()) {
-            log.debug("Exchange : remove request received for " + page); //$NON-NLS-1$
-        }
-        HierarchyManager hm = this.getHierarchyManager();
-
-        try {
-            hm.delete(page);
-            hm.save();
-            CacheHandler.flushCache();
-            SecureURI.delete(page);
-            SecureURI.delete(page + "/*"); //$NON-NLS-1$
-        }
-        catch (PathNotFoundException e) {
-            // ok, the node simply doesn't exist on the public instance, maybe it has never been activated
-            // don't log any error
-            if (log.isDebugEnabled()) {
-                log.debug("Unable to deactivate node " + page + ": " + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+            if (hm.isExist(newPath)) {
+                String ruleString = request.getHeader(SimpleSyndicator.CONTENT_FILTER_RULE);
+                Rule rule = new Rule(ruleString,",");
+                RuleBasedContentFilter filter = new RuleBasedContentFilter(rule);
+                Content content = hm.getContent(newPath);
+                // remove all child nodes
+                this.removeChildren(content, filter);
+                // import all child nodes
+                this.importOnExisting(topContentElement, data, hm, content);
+            } else {
+                importFresh(topContentElement, data, hm, parentPath);
             }
+            resourceDocument.delete();
         }
     }
 
     /**
-     * @param page
-     * @param type
-     * @param recurse
-     * @param includeContentNodes only relevant if the node is of type CONTENT
-     * @param response
-     * @throws Exception
-     */
-    private void get(String page, String type, boolean recurse, boolean includeContentNodes,
-        HttpServletResponse response) throws Exception {
-        if (type.equalsIgnoreCase(Syndicator.GET_TYPE_BINARY)) {
-            // this.getBinary();
-            if (log.isDebugEnabled()) {
-                log.debug("Binary request for " + page); //$NON-NLS-1$
-            }
-            HierarchyManager hm = this.getHierarchyManager();
+     * Copy all properties from source to destination
+     * @param source
+     * @param destination
+     * */
+    private void copyProperties(Content source, Content destination) throws RepositoryException {
+        // first remove all existing properties at the destination
+        // will be different with incremental activation
+        Iterator nodeDataIterator = destination.getNodeDataCollection().iterator();
+        while (nodeDataIterator.hasNext()) {
+            NodeData nodeData = (NodeData) nodeDataIterator.next();
+            nodeData.delete();
+        }
+        // copy all properties
+        nodeDataIterator = source.getNodeDataCollection().iterator();
+        while (nodeDataIterator.hasNext()) {
+            NodeData nodeData = (NodeData) nodeDataIterator.next();
+            destination.createNodeData(nodeData.getName(), nodeData.getValue());
+        }
+    }
+
+    /**
+     * remove children
+     * @param content whose children to be deleted
+     * @param filter content filter
+     * */
+    private void removeChildren(Content content, Content.ContentFilter filter) {
+        Iterator children = content.getChildren(filter).iterator();
+        // remove sub nodes using the same filter used by the sender to collect
+        // this will make sure there is no existing nodes of the same type
+        while (children.hasNext()) {
+            Content child = (Content) children.next();
             try {
-                InputStream is = hm.getNodeData(page).getValue().getStream();
-                ServletOutputStream os = response.getOutputStream();
-                byte[] buffer = new byte[8192];
-                int read = 0;
-                while ((read = is.read(buffer)) > 0) {
-                    os.write(buffer, 0, read);
-                }
-                os.flush();
-                os.close();
+                child.delete();
+            } catch (Exception e) {
+                log.error("Failed to remove "+child.getHandle()+" | "+e.getMessage());
             }
-            catch (PathNotFoundException e) {
-                log.error("Unable to spool " + page); //$NON-NLS-1$
-                throw new PathNotFoundException(e.getMessage());
+        }
+    }
+
+    /**
+     * import on non existing tree
+     * @param topContentElement
+     * @param data
+     * @param hierarchyManager
+     * @param parentPath
+     * @throws ExchangeException
+     * @throws RepositoryException
+     * */
+    private synchronized void importFresh(Element topContentElement,
+                                          MultipartForm data,
+                                          HierarchyManager hierarchyManager,
+                                          String parentPath)
+            throws ExchangeException, RepositoryException {
+        try {
+            importResource(data,
+                    topContentElement,
+                    hierarchyManager.getWorkspace().getSession(),
+                    parentPath);
+            hierarchyManager.save();
+        } catch (Exception e) {
+            hierarchyManager.refresh(false); // revert all transient changes made in this session till now.
+            log.error(e);
+            throw new ExchangeException("Activation failed | " + e.getMessage());
+        }
+    }
+    
+    /**
+     * import on existing content, making sure that content which is not sent stays as is
+     * @param topContentElement
+     * @param data
+     * @param hierarchyManager
+     * @param existingContent
+     * @throws ExchangeException
+     * @throws RepositoryException
+     * */
+    private synchronized void importOnExisting(Element topContentElement,
+                                               MultipartForm data,
+                                               HierarchyManager hierarchyManager,
+                                               Content existingContent)
+            throws ExchangeException, RepositoryException {
+        Iterator fileListIterator = topContentElement.getChildren("File").iterator();
+        try {
+            while (fileListIterator.hasNext()) {
+                Element fileElement = (Element) fileListIterator.next();
+                importResource(data,
+                        fileElement,
+                        hierarchyManager.getWorkspace().getSession(),
+                        existingContent.getHandle());
             }
+            // get properties for top level node
+            String uuid = UUIDGenerator.getInstance().generateTimeBasedUUID().toString();
+            hierarchyManager.createContent("/",uuid,ItemType.CONTENTNODE.toString());
+            String fileName = topContentElement.getAttributeValue("resourceId");
+            hierarchyManager.getWorkspace().getSession().importXML("/"+uuid,
+                    data.getDocument(fileName).getStream(),
+                    ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
+            Content tmpContent = hierarchyManager.getContent("/"+uuid+"/"+topContentElement.getAttributeValue("name"));
+            copyProperties(tmpContent, existingContent);
+            hierarchyManager.delete("/"+uuid);
+            hierarchyManager.save();
+        } catch (Exception e) {
+            hierarchyManager.refresh(false); // revert all transient changes made in this session till now.
+            log.error(e);
+            throw new ExchangeException("Activation failed | " + e.getMessage());
+        }
+    }
+    
+    /**
+     * import documents
+     * @param data as sent
+     * @param resourceElement parent file element
+     * */
+    private synchronized void importResource(MultipartForm data, 
+                                             Element resourceElement, 
+                                             Session jcrSession,
+                                             String parentPath) throws Exception {
+
+        String name = resourceElement.getAttributeValue("name");
+        String fileName = resourceElement.getAttributeValue("resourceId");
+        // do actual import
+        jcrSession.importXML(parentPath,
+                data.getDocument(fileName).getStream(),
+                ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
+        // remove temp file
+        data.getDocument(fileName).delete();
+        Iterator fileListIterator = resourceElement.getChildren("File").iterator();
+        // parent path
+        if (parentPath.equals("/")) {
+            parentPath = ""; // remove / if its a root
+        }
+        parentPath += ("/"+name);
+        while (fileListIterator.hasNext()) {
+            Element fileElement = (Element) fileListIterator.next();
+            importResource(data, fileElement, jcrSession, parentPath);
+        }
+    }
+
+    /**
+     * handle remove (de-activate) request
+     * @param request
+     * @throws Exception if fails to update
+     * */
+    private synchronized void remove(HttpServletRequest request)
+            throws Exception {
+        validateRequest(request);
+        String path = request.getHeader(SimpleSyndicator.PATH);
+        if (log.isDebugEnabled()) {
+            log.debug("Exchange : remove request received for " + path);
+        }
+        HierarchyManager hm = getHierarchyManager(request);
+        try {
+            hm.delete(path);
+            hm.save();
+        } catch (PathNotFoundException e) {
+            if (log.isDebugEnabled()) {
+                log.debug("Unable to delete node " + path + ": " + e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Check if the request is valid
+     * @param request
+     * @throws AccessDeniedException
+     * */
+    private void validateRequest(HttpServletRequest request) throws AccessDeniedException {
+        if (ConfigLoader.isConfigured() && (!Listener.isAllowed(request) || !Authenticator.authenticate(request))) {
+            throw new AccessDeniedException("Either server not configured or user is not valid");
+        }
+    }
+
+    /**
+     * get hierarchy manager
+     * */
+    private HierarchyManager getHierarchyManager(HttpServletRequest request) {
+        String repositoryName = request.getHeader(SimpleSyndicator.REPOSITORY_NAME);
+        String workspaceName = request.getHeader(SimpleSyndicator.WORKSPACE_NAME);
+        if (ConfigLoader.isConfigured()) {
+            return SessionAccessControl.getHierarchyManager(request, repositoryName, workspaceName);
         }
         else {
-            // this.getSerializedObject(); // default type, supporting magnolia 1.1
-            if (log.isDebugEnabled()) {
-                log.debug("Serialized object request for " + page); //$NON-NLS-1$
-            }
-
-            Packet packet = PacketCollector.getPacket(this.getHierarchyManager(), page, recurse, includeContentNodes);
-            ObjectOutputStream os = new ObjectOutputStream(response.getOutputStream());
-            os.writeObject(packet.getBody().getObject());
-            os.flush();
+            return ContentRepository.getHierarchyManager(repositoryName, workspaceName);
         }
-    }
-
-    protected HierarchyManager getHierarchyManager() throws Exception {
-        return this.hierarchyManager;
-    }
-
-    protected String getOperatedHandle(HttpServletRequest request) {
-        return request.getHeader(Syndicator.PAGE);
-    }
-
-    /**
-     * Exclude version number.
-     */
-    private String getProtocolName(HttpServletRequest request) {
-        String protocol = request.getProtocol();
-        return StringUtils.substringBeforeLast(protocol, "/"); //$NON-NLS-1$
     }
 }

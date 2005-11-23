@@ -10,31 +10,35 @@
  * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.exchange.simple;
+package info.magnolia.cms.exchange;
 
 import info.magnolia.cms.core.BaseException;
+import org.apache.commons.lang.StringUtils;
 
 
 /**
  * @author Sameer Charles
- * @version 2.0
  */
-public class SerializationException extends BaseException {
+public class ExchangeException extends BaseException {
 
     /**
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
 
-    public SerializationException(String message) {
+    public ExchangeException() {
+        super(StringUtils.EMPTY);
+    }
+
+    public ExchangeException(String message) {
         super(message);
     }
 
-    public SerializationException(String message, Exception cause) {
-        super(message, (cause instanceof SerializationException) ? ((SerializationException) cause).getCause() : cause);
+    public ExchangeException(String message, Throwable cause) {
+        super(message, (cause instanceof ExchangeException) ? ((ExchangeException) cause).getCause() : cause);
     }
 
-    public SerializationException(Exception root) {
+    public ExchangeException(Throwable root) {
         super(root);
     }
 }
