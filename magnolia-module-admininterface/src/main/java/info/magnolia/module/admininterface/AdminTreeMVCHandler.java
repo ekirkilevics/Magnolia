@@ -16,7 +16,7 @@ package info.magnolia.module.admininterface;
 import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.beans.config.Subscriber;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.exchange.simple.ActivationException;
+import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.gui.misc.Spacer;
@@ -231,9 +231,9 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
     /**
      * @param action
      * @throws RepositoryException
-     * @throws ActivationException
+     * @throws ExchangeException
      */
-    private void copyOrMove(int action) throws ActivationException, RepositoryException {
+    private void copyOrMove(int action) throws ExchangeException, RepositoryException {
         String pathClipboard = request.getParameter("pathClipboard"); //$NON-NLS-1$
         int pasteType = Integer.parseInt(request.getParameter("pasteType")); //$NON-NLS-1$
         newPath = getTree().pasteNode(pathClipboard, pathSelected, pasteType, action);
