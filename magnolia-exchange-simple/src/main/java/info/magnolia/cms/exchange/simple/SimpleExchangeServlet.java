@@ -138,12 +138,15 @@ public class SimpleExchangeServlet extends HttpServlet {
                     data.getDocument(resourceFileName);
             SAXBuilder builder = new SAXBuilder();
             org.jdom.Document jdomDocument = builder.build(resourceDocument.getStream());
-            Element topContentElement = jdomDocument.getRootElement().getChild("File");
+            Element topContentElement =
+                    jdomDocument.getRootElement().getChild(SimpleSyndicator.RESOURCE_MAPPING_FILE_ELEMENT);
             String newPath = "";
             if (parentPath.equals("/"))
-                newPath = parentPath+topContentElement.getAttributeValue("name");
+                newPath =
+                        parentPath+topContentElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_NAME_ATTRIBUTE);
             else
-                newPath = parentPath+"/"+topContentElement.getAttributeValue("name");
+                newPath =
+                        parentPath+"/"+topContentElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_NAME_ATTRIBUTE);
 
             if (hm.isExist(newPath)) {
                 String ruleString = request.getHeader(SimpleSyndicator.CONTENT_FILTER_RULE);
@@ -242,7 +245,10 @@ public class SimpleExchangeServlet extends HttpServlet {
                                                HierarchyManager hierarchyManager,
                                                Content existingContent)
             throws ExchangeException, RepositoryException {
-        Iterator fileListIterator = topContentElement.getChildren("File").iterator();
+        Iterator fileListIterator =
+                topContentElement.getChildren(SimpleSyndicator.RESOURCE_MAPPING_FILE_ELEMENT).iterator();
+        String uuid = UUIDGenerator.getInstance().generateTimeBasedUUID().toString();
+        String transientStore = "/" + uuid;
         try {
             while (fileListIterator.hasNext()) {
                 Element fileElement = (Element) fileListIterator.next();
@@ -251,16 +257,17 @@ public class SimpleExchangeServlet extends HttpServlet {
                         hierarchyManager.getWorkspace().getSession(),
                         existingContent.getHandle());
             }
-            // get properties for top level node
-            String uuid = UUIDGenerator.getInstance().generateTimeBasedUUID().toString();
+            // use temporary transient store to extract top level node and copy properties
             hierarchyManager.createContent("/",uuid,ItemType.CONTENTNODE.toString());
-            String fileName = topContentElement.getAttributeValue("resourceId");
-            hierarchyManager.getWorkspace().getSession().importXML("/"+uuid,
+            String fileName = topContentElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_ID_ATTRIBUTE);
+            hierarchyManager.getWorkspace().getSession().importXML(transientStore,
                     data.getDocument(fileName).getStream(),
                     ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
-            Content tmpContent = hierarchyManager.getContent("/"+uuid+"/"+topContentElement.getAttributeValue("name"));
+            Content tmpContent = hierarchyManager.getContent(transientStore
+                    +"/"
+                    +topContentElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_NAME_ATTRIBUTE));
             copyProperties(tmpContent, existingContent);
-            hierarchyManager.delete("/"+uuid);
+            hierarchyManager.delete(transientStore);
             hierarchyManager.save();
         } catch (Exception e) {
             hierarchyManager.refresh(false); // revert all transient changes made in this session till now.
@@ -273,21 +280,24 @@ public class SimpleExchangeServlet extends HttpServlet {
      * import documents
      * @param data as sent
      * @param resourceElement parent file element
+     * @param jcrSession
+     * @param parentPath
+     * @throws Exception
      * */
     private synchronized void importResource(MultipartForm data, 
                                              Element resourceElement, 
                                              Session jcrSession,
                                              String parentPath) throws Exception {
 
-        String name = resourceElement.getAttributeValue("name");
-        String fileName = resourceElement.getAttributeValue("resourceId");
+        String name = resourceElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_NAME_ATTRIBUTE);
+        String fileName = resourceElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_ID_ATTRIBUTE);
         // do actual import
         jcrSession.importXML(parentPath,
                 data.getDocument(fileName).getStream(),
                 ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
         // remove temp file
         data.getDocument(fileName).delete();
-        Iterator fileListIterator = resourceElement.getChildren("File").iterator();
+        Iterator fileListIterator = resourceElement.getChildren(SimpleSyndicator.RESOURCE_MAPPING_FILE_ELEMENT).iterator();
         // parent path
         if (parentPath.equals("/")) {
             parentPath = ""; // remove / if its a root
@@ -335,6 +345,7 @@ public class SimpleExchangeServlet extends HttpServlet {
 
     /**
      * get hierarchy manager
+     * @param request
      * */
     private HierarchyManager getHierarchyManager(HttpServletRequest request) {
         String repositoryName = request.getHeader(SimpleSyndicator.REPOSITORY_NAME);

@@ -75,6 +75,26 @@ public class SimpleSyndicator implements Syndicator {
     public static final String RESOURCE_MAPPING_FILE = "mgnlExchangeResourceMappingFile";
 
     /**
+     * resource file, File element
+     * */
+    public static final String RESOURCE_MAPPING_FILE_ELEMENT = "File";
+
+    /**
+     * resource file, name attribute
+     * */
+    public static final String RESOURCE_MAPPING_NAME_ATTRIBUTE = "name";
+
+    /**
+     * resource file, resourceId attribute
+     * */
+    public static final String RESOURCE_MAPPING_ID_ATTRIBUTE = "resourceId";
+
+    /**
+     * resource file, root element
+     * */
+    public static final String RESOURCE_MAPPING_ROOT_ELEMENT = "Resources";
+
+    /**
      * Action
      * */
     public static final String ACTION = "mgnlExchangeAction";
@@ -457,7 +477,7 @@ public class SimpleSyndicator implements Syndicator {
 
 
         Document document = new Document();
-        Element root = new Element("Resources");
+        Element root = new Element(RESOURCE_MAPPING_ROOT_ELEMENT);
         document.setRootElement(root);
         this.addResources(
                 root,
@@ -497,15 +517,15 @@ public class SimpleSyndicator implements Syndicator {
         /**
          * nt:file node type has mandatory sub nodes
          * */
-        if (content.isNodeType("nt:file")) {
+        if (content.isNodeType(ItemType.NT_FILE)) {
             session.exportSystemView(content.getHandle(), outputStream, false, false);
         } else {
             session.exportSystemView(content.getHandle(), outputStream, false, true);
         }
         // add file entry in mapping.xml
-        Element element = new Element("File");
-        element.setAttribute("name",content.getName());
-        element.setAttribute("resourceId",file.getName());
+        Element element = new Element(RESOURCE_MAPPING_FILE_ELEMENT);
+        element.setAttribute(RESOURCE_MAPPING_NAME_ATTRIBUTE,content.getName());
+        element.setAttribute(RESOURCE_MAPPING_ID_ATTRIBUTE,file.getName());
         resourceElement.addContent(element);
         // add this file element as resource in activation content
         activationContent.addFile(file.getName(), file);
