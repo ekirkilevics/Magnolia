@@ -21,8 +21,9 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.exchange.simple.ActivationException;
-import info.magnolia.cms.exchange.simple.Syndicator;
+import info.magnolia.cms.exchange.simple.SimpleSyndicator;
+import info.magnolia.cms.exchange.Rule;
+import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.gui.misc.Spacer;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Authenticator;
@@ -31,7 +32,6 @@ import info.magnolia.cms.util.MetaDataUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -382,7 +382,7 @@ public class Tree extends ControlSuper {
         return this.columnResizer;
     }
 
-    public void deleteNode(String parentPath, String label) throws ActivationException, RepositoryException {
+    public void deleteNode(String parentPath, String label) throws ExchangeException, RepositoryException {
         Content parentNode = getHierarchyManager().getContent(parentPath);
         String path;
         if (!parentPath.equals("/")) { //$NON-NLS-1$
@@ -585,7 +585,7 @@ public class Tree extends ControlSuper {
     }
 
     public String pasteNode(String pathOrigin, String pathSelected, int pasteType, int action)
-        throws ActivationException, RepositoryException {
+        throws ExchangeException, RepositoryException {
         // todo: proper doc
         // todo: ??? generic -> RequestInterceptor.java
         // move and copy of nodes works as copy/cut - paste (remaining of the very first prototype)
@@ -759,7 +759,7 @@ public class Tree extends ControlSuper {
         }
     }
 
-    public Content copyMoveNode(String source, String destination, boolean move) throws ActivationException,
+    public Content copyMoveNode(String source, String destination, boolean move) throws ExchangeException,
         RepositoryException {
         // todo: ??? generic -> RequestInterceptor.java
         if (getHierarchyManager().isExist(destination)) {
@@ -801,15 +801,15 @@ public class Tree extends ControlSuper {
         return newContent;
     }
 
-    public void moveNode(String source, String destination) throws ActivationException, RepositoryException {
+    public void moveNode(String source, String destination) throws ExchangeException, RepositoryException {
         this.copyMoveNode(source, destination, true);
     }
 
-    public void copyNode(String source, String destination) throws ActivationException, RepositoryException {
+    public void copyNode(String source, String destination) throws ExchangeException, RepositoryException {
         this.copyMoveNode(source, destination, false);
     }
 
-    public String renameNode(String newLabel) throws AccessDeniedException, ActivationException, PathNotFoundException,
+    public String renameNode(String newLabel) throws AccessDeniedException, ExchangeException, PathNotFoundException,
         RepositoryException {
         String returnValue = StringUtils.EMPTY;
         String parentPath = StringUtils.substringBeforeLast(this.getPath(), "/"); //$NON-NLS-1$
@@ -864,8 +864,8 @@ public class Tree extends ControlSuper {
         return returnValue;
     }
 
-    public void activateNode(String path, boolean recursive, boolean includeContentNodes) throws ActivationException,
-        RepositoryException {
+    public void activateNode(String path, boolean recursive, boolean includeContentNodes)
+            throws ExchangeException, RepositoryException {
         Content c = null;
         if (getHierarchyManager().isPage(path)) {
             c = getHierarchyManager().getContent(path);
@@ -873,34 +873,43 @@ public class Tree extends ControlSuper {
         else {
             c = getHierarchyManager().getContent(path);
         }
-        Syndicator syndicator = new Syndicator(this.getRequest());
+        /**
+         * Here rule defines which content types to collect, its a resposibility of the caller ro set
+         * this, it will be different in every hierarchy, for instance
+         * - in website tree recursive activation : rule will allow mgnl:contentNode, mgnl:content and nt:file
+         * - in website tree non-recursive activation : rule will allow mgnl:contentNode and nt:file only
+         * */
+        Rule rule = new Rule();
+        rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
+        rule.addAllowType(ItemType.NT_FILE);
         if (recursive) {
-            deepActivate(syndicator, c, getHierarchyManager());
+            rule.addAllowType(ItemType.CONTENT.getSystemName());
         }
-        else {
-            syndicator.activate(this.getRepository(), StringUtils.EMPTY, path, recursive, includeContentNodes);
+        SimpleSyndicator syndicator = new SimpleSyndicator(this.getRequest(),
+                this.getRepository(),
+                ContentRepository.getDefaultWorkspace(this.getRepository()),
+                rule);
+
+        String parentPath = StringUtils.substringBeforeLast(path,"/");
+        if (StringUtils.isEmpty(parentPath)) {
+            parentPath = "/";
         }
+        syndicator.activate(parentPath, path);
     }
 
-    protected void deepActivate(Syndicator syndicator, Content content, HierarchyManager hm)
-        throws ActivationException, RepositoryException {
-        syndicator.activate(this.getRepository(), StringUtils.EMPTY, content.getHandle(), false, true);
-        Collection children = content.getChildren();
-        if (children != null) {
-            Iterator it = children.iterator();
-            while (it.hasNext()) {
-                deepActivate(syndicator, (Content) it.next(), hm);
-            }
-        }
-    }
-
-    public void deActivateNode(String path) throws ActivationException, RepositoryException {
+    public void deActivateNode(String path) throws ExchangeException, RepositoryException {
         // do not deactivate node datas
         if (getHierarchyManager().isNodeData(path)) {
             return;
         }
-        Syndicator syndicator = new Syndicator(this.getRequest());
-        syndicator.deActivate(this.getRepository(), path);
+        Rule rule = new Rule();
+        rule.addAllowType("mgnl:contentNode");
+        rule.addAllowType("nt:file");
+        SimpleSyndicator syndicator = new SimpleSyndicator(this.getRequest(),
+                this.getRepository(),
+                ContentRepository.getDefaultWorkspace(this.getRepository()),
+                rule);
+        syndicator.deActivate(path);
     }
 
     public String getHtml() {
