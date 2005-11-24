@@ -82,6 +82,8 @@ public class DialogWebDAV extends DialogBox {
 
     private WebdavResource davConnection;
 
+    private HttpServletRequest frameRequest;
+
     /**
      * Empty constructor should only be used by DialogFactory.
      */
@@ -95,6 +97,16 @@ public class DialogWebDAV extends DialogBox {
         throws RepositoryException {
         super.init(request, response, websiteNode, configNode);
         initIconExtensions();
+        setConfigValues();
+    }
+
+    private void setConfigValues() {
+        this.setHost(getConfigValue("host"));
+        this.setPort(getConfigValue("port","80"));
+        this.setDirectory(getConfigValue("directory"));
+        this.setUser(getConfigValue("user"));
+        this.setPassword(getConfigValue("password"));
+        this.setProtocol(getConfigValue("protocol"));
     }
 
     public void setHost(String s) {
@@ -103,6 +115,14 @@ public class DialogWebDAV extends DialogBox {
 
     public String getHost() {
         return this.host;
+    }
+
+    public void setFrameRequest(HttpServletRequest request) {
+        this.frameRequest = request;
+    }
+
+    public HttpServletRequest getFrameRequest() {
+        return this.frameRequest;
     }
 
     public void setPort(String s) {
@@ -260,6 +280,7 @@ public class DialogWebDAV extends DialogBox {
         }
 
         this.setDescription(MessagesManager.get(this.getRequest(), "dialog.webdav.connectedTo") //$NON-NLS-1$
+            +"  "
             + this.getProtocol() + "://" //$NON-NLS-1$
             + this.getHost() + ":" //$NON-NLS-1$
             + this.getPort() + this.getDirectory() + "<br />" //$NON-NLS-1$
@@ -318,7 +339,7 @@ public class DialogWebDAV extends DialogBox {
             out.write(" style=\"height:" + this.getConfigValue("height") + ";\")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
         out.write(" frameborder=\"0\""); //$NON-NLS-1$
-        out.write(" src=\"/.magnolia/dialogpages/webDAVIFrame.html?" //$NON-NLS-1$
+        out.write(" src=\""+this.getRequest().getContextPath()+"/.magnolia/webdav/webDAVIFrame.html?" //$NON-NLS-1$
             + SESSION_ATTRIBUTENAME_DIALOGOBJECT + "=" //$NON-NLS-1$
             + this.getConfigValue(SESSION_ATTRIBUTENAME_DIALOGOBJECT) + "&mgnlCK=" //$NON-NLS-1$
             + new Date().getTime() + "\""); //$NON-NLS-1$
@@ -355,8 +376,8 @@ public class DialogWebDAV extends DialogBox {
                 }
             }
             out.write("<html><head>"); //$NON-NLS-1$
-            out.write(new Sources(this.getRequest().getContextPath()).getHtmlCss());
-            out.write(new Sources(this.getRequest().getContextPath()).getHtmlJs());
+            out.write(new Sources(this.getFrameRequest().getContextPath()).getHtmlCss());
+            out.write(new Sources(this.getFrameRequest().getContextPath()).getHtmlJs());
             String parentDirectory = StringUtils.EMPTY;
             if (!this.getDirectory().equals(dir)) {
                 parentDirectory = this.getSubDirectory().substring(0, this.getSubDirectory().length() - 1); // get rid
@@ -451,7 +472,7 @@ public class DialogWebDAV extends DialogBox {
             i = drawHtmlList(out, fileListAS, i);
             if (i == 1) {
                 out.write("<tr><td colspan=\"3\"></td><td colspan=\"3\"><em>" //$NON-NLS-1$
-                    + MessagesManager.get(this.getRequest(), "dialog.webdav.directoryIsEmpty") //$NON-NLS-1$
+                    + MessagesManager.get(this.getFrameRequest(), "dialog.webdav.directoryIsEmpty") //$NON-NLS-1$
                     + "</em></td></tr>"); //$NON-NLS-1$
             }
             out.write("</table>"); //$NON-NLS-1$
@@ -463,7 +484,6 @@ public class DialogWebDAV extends DialogBox {
     }
 
     public int drawHtmlList(Writer out, List as, int i) throws IOException {
-
         boolean alt = (i % 2 == 0);
 
         // todo: better sorting
@@ -473,6 +493,7 @@ public class DialogWebDAV extends DialogBox {
             Map properties = (Hashtable) it.next();
             String displayType = (String) properties.get("displayType"); //$NON-NLS-1$
             String name = (String) properties.get("name"); //$NON-NLS-1$
+
             if (!alt) {
                 out.write("<tr>"); //$NON-NLS-1$
             }
@@ -514,7 +535,7 @@ public class DialogWebDAV extends DialogBox {
                     }
                 }
                 if (checked) {
-                    out.write(MessagesManager.get(this.getRequest(), "dialog.webdav.checked")); //$NON-NLS-1$
+                    out.write(MessagesManager.get(this.getFrameRequest(), "dialog.webdav.checked")); //$NON-NLS-1$
                 }
                 out.write(" />"); //$NON-NLS-1$
             }
@@ -532,7 +553,7 @@ public class DialogWebDAV extends DialogBox {
             }
             out.write("<td>"); //$NON-NLS-1$
             out.write("<img src=\"" //$NON-NLS-1$
-                + this.getRequest().getContextPath() + iconPath + "\" border=\"0\" id=\"" //$NON-NLS-1$
+                + this.getFrameRequest().getContextPath() + iconPath + "\" border=\"0\" id=\"" //$NON-NLS-1$
                 + idIcon + "\">"); //$NON-NLS-1$
             out.write("</td>"); //$NON-NLS-1$
             out.write("<td width=\"100%\">"); //$NON-NLS-1$
@@ -618,9 +639,14 @@ public class DialogWebDAV extends DialogBox {
             properties.put("sizeStringUnit", StringUtils.EMPTY); //$NON-NLS-1$
         }
         else {
-            String[] size = this.getFileSizeString((String) properties.get("size")).split(" "); //$NON-NLS-1$ //$NON-NLS-2$
-            properties.put("sizeStringValue", size[0]); //$NON-NLS-1$
-            properties.put("sizeStringUnit", size[1]); //$NON-NLS-1$
+            String[] size = StringUtils.split(this.getFileSizeString((String) properties.get("size")), " ");
+            if (size.length == 2) {
+                properties.put("sizeStringValue", size[0]); //$NON-NLS-1$
+                properties.put("sizeStringUnit", size[1]); //$NON-NLS-1$
+            } else {
+                properties.put("sizeStringValue", "0"); //$NON-NLS-1$
+                properties.put("sizeStringUnit", "bytes"); //$NON-NLS-1$
+            }
         }
         return properties;
     }
@@ -629,23 +655,24 @@ public class DialogWebDAV extends DialogBox {
         int bytes = (new Integer(fileSize)).intValue();
         int size = (bytes / 1024);
         if (size == 0) {
-            return (bytes + " " + MessagesManager.get(this.getRequest(), "file.bytes")); //$NON-NLS-1$ //$NON-NLS-2$
+            return (bytes + " bytes"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         else if (size >= 1024) {
-            return ((size / 1024) + " " + MessagesManager.get(this.getRequest(), "file.mb")); //$NON-NLS-1$ //$NON-NLS-2$
+            return ((size / 1024) + " mb"); //$NON-NLS-1$ //$NON-NLS-2$
         }
-        return (size + " " + MessagesManager.get(this.getRequest(), "file.kb")); //$NON-NLS-1$ //$NON-NLS-2$
+        return (size + " kb"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     public String getFormattedDate(String date, String format) {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
 
         try {
-            Date x = DateFormat.getDateTimeInstance().parse(date);
-            return sdf.format(x);
+            return sdf.parse(date).toString();
+            //Date x = DateFormat.getDateTimeInstance().parse(date);
+            //return sdf.format(x);
         }
         catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.debug(e.getMessage(), e);
             return date;
         }
     }
