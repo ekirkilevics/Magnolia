@@ -903,8 +903,8 @@ public class Tree extends ControlSuper {
             return;
         }
         Rule rule = new Rule();
-        rule.addAllowType("mgnl:contentNode");
-        rule.addAllowType("nt:file");
+        rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
+        rule.addAllowType(ItemType.NT_FILE);
         SimpleSyndicator syndicator = new SimpleSyndicator(this.getRequest(),
                 this.getRepository(),
                 ContentRepository.getDefaultWorkspace(this.getRepository()),
