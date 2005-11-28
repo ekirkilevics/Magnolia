@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 import javax.jcr.*;
+import javax.jcr.lock.LockException;
 import java.io.IOException;
 import java.util.Iterator;
 
@@ -33,10 +34,7 @@ import info.magnolia.cms.security.Listener;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.SessionAccessControl;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.core.*;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Rule;
@@ -47,6 +45,11 @@ import info.magnolia.cms.exchange.Rule;
  * @version $Revision$ ($Author$)
  */
 public class SimpleExchangeServlet extends HttpServlet {
+
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
 
     /**
      * Logger
@@ -64,7 +67,10 @@ public class SimpleExchangeServlet extends HttpServlet {
         String statusMessage = "";
         String status = "";
         try {
+            applyLock(request);
             receive(request);
+            // remove cached files if successful
+            CacheHandler.flushCache();
             status = SimpleSyndicator.ACTIVATION_SUCCESSFUL;
         } catch (OutOfMemoryError e) {
             Runtime rt = Runtime.getRuntime();
@@ -73,7 +79,7 @@ public class SimpleExchangeServlet extends HttpServlet {
                 + rt.freeMemory() + "\n---------"); //$NON-NLS-1$
             statusMessage = e.getMessage();
             status = SimpleSyndicator.ACTIVATION_FAILED;
-        } catch(PathNotFoundException e){
+        } catch(PathNotFoundException e) {
             log.error(e.getMessage(), e);
             statusMessage = "Parent not found (not yet activated): " + e.getMessage();
             status = SimpleSyndicator.ACTIVATION_FAILED;
@@ -82,6 +88,7 @@ public class SimpleExchangeServlet extends HttpServlet {
             statusMessage = e.getMessage();
             status = SimpleSyndicator.ACTIVATION_FAILED;
         } finally {
+            cleanUp(request);
             response.setHeader(SimpleSyndicator.ACTIVATION_ATTRIBUTE_STATUS, status);
             response.setHeader(SimpleSyndicator.ACTIVATION_ATTRIBUTE_MESSAGE, statusMessage);
         }
@@ -127,13 +134,10 @@ public class SimpleExchangeServlet extends HttpServlet {
             throws Exception {
         validateRequest(request);
         MultipartForm data = Resource.getPostedForm(request);
-        if (data != null) {
-            String repositoryName = request.getHeader(SimpleSyndicator.REPOSITORY_NAME);
-            String workspaceName = request.getHeader(SimpleSyndicator.WORKSPACE_NAME);
+        if (null != data) {
             String parentPath = request.getHeader(SimpleSyndicator.PARENT_PATH);
             String resourceFileName = request.getHeader(SimpleSyndicator.RESOURCE_MAPPING_FILE);
-            HierarchyManager hm =
-                    SessionAccessControl.getHierarchyManager(request, repositoryName, workspaceName);
+            HierarchyManager hm = getHierarchyManager(request);
             Document resourceDocument =
                     data.getDocument(resourceFileName);
             SAXBuilder builder = new SAXBuilder();
@@ -147,7 +151,7 @@ public class SimpleExchangeServlet extends HttpServlet {
             else
                 newPath =
                         parentPath+"/"+topContentElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_NAME_ATTRIBUTE);
-
+            // lock this hierarchy
             if (hm.isExist(newPath)) {
                 String ruleString = request.getHeader(SimpleSyndicator.CONTENT_FILTER_RULE);
                 Rule rule = new Rule(ruleString,",");
@@ -160,7 +164,7 @@ public class SimpleExchangeServlet extends HttpServlet {
             } else {
                 importFresh(topContentElement, data, hm, parentPath);
             }
-            resourceDocument.delete();
+            //resourceDocument.delete();
         }
     }
 
@@ -169,7 +173,7 @@ public class SimpleExchangeServlet extends HttpServlet {
      * @param source
      * @param destination
      * */
-    private void copyProperties(Content source, Content destination) throws RepositoryException {
+    private synchronized void copyProperties(Content source, Content destination) throws RepositoryException {
         // first remove all existing properties at the destination
         // will be different with incremental activation
         Iterator nodeDataIterator = destination.getNodeDataCollection().iterator();
@@ -190,7 +194,7 @@ public class SimpleExchangeServlet extends HttpServlet {
      * @param content whose children to be deleted
      * @param filter content filter
      * */
-    private void removeChildren(Content content, Content.ContentFilter filter) {
+    private synchronized void removeChildren(Content content, Content.ContentFilter filter) {
         Iterator children = content.getChildren(filter).iterator();
         // remove sub nodes using the same filter used by the sender to collect
         // this will make sure there is no existing nodes of the same type
@@ -296,7 +300,7 @@ public class SimpleExchangeServlet extends HttpServlet {
                 data.getDocument(fileName).getStream(),
                 ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
         // remove temp file
-        data.getDocument(fileName).delete();
+        //data.getDocument(fileName).delete();
         Iterator fileListIterator = resourceElement.getChildren(SimpleSyndicator.RESOURCE_MAPPING_FILE_ELEMENT).iterator();
         // parent path
         if (parentPath.equals("/")) {
@@ -357,4 +361,68 @@ public class SimpleExchangeServlet extends HttpServlet {
             return ContentRepository.getHierarchyManager(repositoryName, workspaceName);
         }
     }
+
+    /**
+     * cleans temporary store and removes any locks set
+     * @param request
+     * */
+    private void cleanUp(HttpServletRequest request) {
+        MultipartForm data = Resource.getPostedForm(request);
+        if (null != data) {
+            Iterator keys = data.getDocuments().keySet().iterator();
+            while (keys.hasNext()) {
+                String key = (String) keys.next();
+                data.getDocument(key).delete();
+            }
+        }
+        String action = request.getHeader(SimpleSyndicator.ACTION);
+        String path = "";
+        if (action.equalsIgnoreCase(SimpleSyndicator.ACTIVATE)) {
+            path = request.getHeader(SimpleSyndicator.PARENT_PATH);
+        } else if (action.equalsIgnoreCase(SimpleSyndicator.DE_ACTIVATE)) {
+            path = request.getHeader(SimpleSyndicator.PATH);
+        }
+        try {
+            Content content = getHierarchyManager(request).getContent(path);
+            if (content.isLocked()) {
+                content.unlock();
+            }
+        } catch (LockException le) {
+            // either repository does not support locking OR this node never locked
+            log.debug(le.getMessage());
+        } catch (RepositoryException re) {
+            // should never come here
+            log.debug(re);
+        }
+    }
+
+    /**
+     * apply lock
+     * @param request
+     * */
+    private void applyLock(HttpServletRequest request) throws ExchangeException {
+        String action = request.getHeader(SimpleSyndicator.ACTION);
+        String path = "";
+        if (action.equalsIgnoreCase(SimpleSyndicator.ACTIVATE)) {
+            path = request.getHeader(SimpleSyndicator.PARENT_PATH);
+        } else if (action.equalsIgnoreCase(SimpleSyndicator.DE_ACTIVATE)) {
+            path = request.getHeader(SimpleSyndicator.PATH);
+        }
+        try {
+            Content content = getHierarchyManager(request).getContent(path);
+            if (content.isLocked()) {
+                throw new ExchangeException("Operation not permitted, "+path+" is locked");
+            } else {
+                // get a new deep lock
+                content.lock(true, true);
+            }
+        } catch (LockException le) {
+            // either repository does not support locking OR this node never locked
+            log.debug(le.getMessage());
+        } catch (RepositoryException re) {
+            // should never come here
+            log.debug(re);
+        }
+    }
+
 }
