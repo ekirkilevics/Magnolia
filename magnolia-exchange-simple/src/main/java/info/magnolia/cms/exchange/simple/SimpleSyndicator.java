@@ -179,11 +179,16 @@ public class SimpleSyndicator implements Syndicator {
             throws ExchangeException, RepositoryException  {
         this.parent = parent;
         this.path = path;
+        ActivationContent activationContent = null;
         try {
-            ActivationContent activationContent = this.collect();
+            activationContent = this.collect();
             this.activate(activationContent);
+            this.updateActivationDetails();
         } catch (Exception e) {
             throw new ExchangeException(e);
+        } finally {
+            log.debug("Cleaning temporary files");
+            cleanTemporaryStore(activationContent);
         }
     }
 
@@ -203,20 +208,24 @@ public class SimpleSyndicator implements Syndicator {
             throws ExchangeException, RepositoryException {
         this.parent = parent;
         this.path = path;
+        ActivationContent activationContent = null;
         try {
-            ActivationContent activationContent = this.collect();
+            activationContent = this.collect();
             this.activate(subscriber, activationContent);
+            this.updateActivationDetails();
         } catch (Exception e) {
             throw new ExchangeException(e);
+        } finally {
+            log.debug("Cleaning temporary files");
+            cleanTemporaryStore(activationContent);
         }
     }
 
     /**
-     * @throws RepositoryException 
      * @throws ExchangeException
      */
     private synchronized void activate(ActivationContent activationContent)
-            throws ExchangeException, RepositoryException {
+            throws ExchangeException {
         Enumeration en = Subscriber.getList();
         while (en.hasMoreElements()) {
             Subscriber si = (Subscriber) en.nextElement();
@@ -227,14 +236,16 @@ public class SimpleSyndicator implements Syndicator {
     }
 
     /**
-     * <p>
-     * send activation request only if subscribed to the activated URI
-     * </p>
+     * Send activation request if subscribed to the activated URI
+     * @param subscriber
+     * @param activationContent
+     * @throws ExchangeException
      */
-    private synchronized void activate(Subscriber subscriber, ActivationContent activationContent) throws ExchangeException, RepositoryException {
+    private synchronized void activate(Subscriber subscriber, ActivationContent activationContent)
+            throws ExchangeException {
         if (!isSubscribed(subscriber)) {
             if (log.isDebugEnabled()) {
-                log.debug("Exchange : subscriber [ " + subscriber.getName() + " ] is not subscribed to " + this.path); //$NON-NLS-1$ //$NON-NLS-2$
+                log.debug("Exchange : subscriber [ " + subscriber.getName() + " ] is not subscribed to " + this.path);
             }
             return;
         }
@@ -259,22 +270,14 @@ public class SimpleSyndicator implements Syndicator {
             }
             urlConnection.getContent();
             log.info("Exchange : activation request received by " + subscriber.getName()); //$NON-NLS-1$
-
-            updateActivationDetails();
-            log.debug("Cleaning temporary files");
-            cleanTemporaryStore(activationContent);
-        }
-        catch (ExchangeException e) {
+        } catch (ExchangeException e) {
             throw e;
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             throw new ExchangeException("Incorrect URL for subscriber " + subscriber  + "[" + handle + "]");
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new ExchangeException("Not able to send the activation request [" +  handle + "]: " + e.getMessage());
-        }
-        catch (RepositoryException e) {
-            throw e;
+        } catch (Exception e) {
+            throw new ExchangeException(e);
         }
     }
 
@@ -283,9 +286,16 @@ public class SimpleSyndicator implements Syndicator {
      * @param activationContent
      * */
     private void cleanTemporaryStore(ActivationContent activationContent) {
+        if (activationContent == null) {
+            log.debug("Clean temporary store - nothing to do");
+            return;
+        }
         Iterator keys = activationContent.getFiles().keySet().iterator();
         while (keys.hasNext()) {
             String key = (String) keys.next();
+            if (log.isDebugEnabled()) {
+                log.debug("Removing temporary file - "+key);
+            }
             activationContent.getFile(key).delete();
         }
     }
