@@ -18,6 +18,7 @@ import info.magnolia.cms.exchange.ExchangeException;
 import java.net.URLConnection;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
@@ -48,9 +49,12 @@ public class Transporter {
      * http form multipart form post
      * @param connection
      * @param activationContent
+     * @throws ExchangeException
      * */
     public static void transport(URLConnection connection, ActivationContent activationContent)
             throws ExchangeException {
+        FileInputStream fis = null;
+        DataOutputStream outStream = null;
         try {
             byte[] buffer = new byte[BUFFER_SIZE];
             connection.setDoOutput(true);
@@ -59,15 +63,14 @@ public class Transporter {
             connection.setRequestProperty("Content-type","multipart/form-data; boundary=" + BOUNDARY);
             connection.setRequestProperty("Cache-Control", "no-cache");
 
-            DataOutputStream outStream = new DataOutputStream(connection.getOutputStream());
+            outStream = new DataOutputStream(connection.getOutputStream());
             outStream.writeBytes("--" + BOUNDARY + "\r\n");
 
             // set all resources from activationContent
             Iterator fileNameIterator = activationContent.getFiles().keySet().iterator();
-            int controlName = 1;
             while (fileNameIterator.hasNext()) {
                 String fileName = (String) fileNameIterator.next();
-                FileInputStream fis = new FileInputStream(activationContent.getFile(fileName));
+                fis = new FileInputStream(activationContent.getFile(fileName));
                 outStream.writeBytes("content-disposition: form-data; name=\"" + fileName + "\"; filename=\""
                 + fileName + "\"\r\n");
                 outStream.writeBytes("content-type: application/octet-stream" + "\r\n\r\n");
@@ -81,7 +84,6 @@ public class Transporter {
                     }
                 }
                 fis.close();
-                controlName++;
                 outStream.writeBytes("\r\n" + "--" + BOUNDARY + "\r\n");
             }
             outStream.flush();
@@ -89,6 +91,21 @@ public class Transporter {
             log.debug("Activation content sent as multipart/form-data");
         } catch (Exception e) {
             throw new ExchangeException("Simple exchange transport failed",e);
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    log.error(e);
+                }
+            }
+            if (outStream != null) {
+                try {
+                    outStream.close();
+                } catch (IOException e) {
+                    log.error(e);
+                }
+            }
         }
 
     }
