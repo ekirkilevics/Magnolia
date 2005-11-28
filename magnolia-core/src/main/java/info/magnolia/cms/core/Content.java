@@ -1167,10 +1167,21 @@ public class Content extends ContentHandler implements Cloneable {
      * Returns true if this node holds a lock; otherwise returns false. To hold a lock means that this node has actually
      * had a lock placed on it specifically, as opposed to just having a lock apply to it due to a deep lock held by a
      * node above.
+     * @return a boolean
      * @throws RepositoryException if an error occurs
      */
     public boolean holdsLock() throws RepositoryException {
         return this.node.holdsLock();
+    }
+
+    /**
+     * Returns true if this node is locked either as a result of a lock held by this node or by a deep lock
+     * on a node above this node; otherwise returns false.
+     * @return a boolean
+     * @throws RepositoryException if an error occurs
+     * */
+    public boolean isLocked() throws RepositoryException {
+        return this.node.isLocked();
     }
 
     /**
