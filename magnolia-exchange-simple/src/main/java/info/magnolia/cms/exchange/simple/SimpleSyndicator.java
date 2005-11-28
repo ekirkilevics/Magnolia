@@ -300,6 +300,11 @@ public class SimpleSyndicator implements Syndicator {
         }
     }
 
+    /**
+     * Check if this subscriber is subscribed to this uri
+     * @param subscriber
+     * @return a boolean
+     * */
     private boolean isSubscribed(Subscriber subscriber) {
         boolean isSubscribed = false;
         List subscribedURIList = subscriber.getContext(this.repositoryName);
@@ -327,6 +332,7 @@ public class SimpleSyndicator implements Syndicator {
             throws ExchangeException, RepositoryException {
         this.path = path;
         this.doDeActivate();
+        updateDeActivationDetails();
     }
 
     /**
@@ -339,13 +345,13 @@ public class SimpleSyndicator implements Syndicator {
             throws ExchangeException, RepositoryException {
         this.path = path;
         this.doDeActivate(subscriber);
+        updateDeActivationDetails();
     }
 
     /**
-     * @throws RepositoryException 
      * @throws ExchangeException
      */
-    private synchronized void doDeActivate() throws ExchangeException, RepositoryException{
+    private synchronized void doDeActivate() throws ExchangeException {
         Enumeration en = Subscriber.getList();
         while (en.hasMoreElements()) {
             Subscriber si = (Subscriber) en.nextElement();
@@ -359,7 +365,12 @@ public class SimpleSyndicator implements Syndicator {
         }
     }
 
-    private synchronized void doDeActivate(Subscriber subscriber) throws ExchangeException, RepositoryException {
+    /**
+     * deactivate from a specified subscriber
+     * @param subscriber
+     * @throws ExchangeException
+     * */
+    private synchronized void doDeActivate(Subscriber subscriber) throws ExchangeException {
         if (!isSubscribed(subscriber)) {
             return;
         }
@@ -369,26 +380,30 @@ public class SimpleSyndicator implements Syndicator {
             URLConnection urlConnection = url.openConnection();
             this.addDeactivationHeaders(urlConnection);
             urlConnection.getContent();
-            updateDeActivationDetails();
         }
         catch (MalformedURLException e) {
             throw new ExchangeException("Incorrect URL for subscriber " + subscriber  + "[" + handle + "]");
         }
         catch (IOException e) {
             throw new ExchangeException("Not able to send the deactivation request [" +  handle + "]: " + e.getMessage());        }
-        catch (RepositoryException e) {
-            throw e;
+        catch (Exception e) {
+            throw new ExchangeException(e);
         }
     }
 
     /**
-     *
+     * get deactivation URL
+     * @param subscriberInfo
      */
     private String getDeactivationURL(Subscriber subscriberInfo) {
         String handle = subscriberInfo.getProtocol() + "://" + subscriberInfo.getAddress() + "/" + DEFAULT_HANDLER; //$NON-NLS-1$ //$NON-NLS-2$
         return handle;
     }
 
+    /**
+     * add deactivation request header fields
+     * @param connection
+     * */
     private void addDeactivationHeaders(URLConnection connection) {
         connection.setRequestProperty(AUTHORIZATION, Authenticator.getCredentials(this.request));
         connection.addRequestProperty(REPOSITORY_NAME, this.repositoryName);
@@ -398,6 +413,8 @@ public class SimpleSyndicator implements Syndicator {
     }
 
     /**
+     * Get activation URL
+     * @param subscriberInfo
      * @return activation handle
      */
     private String getActivationURL(Subscriber subscriberInfo) {
@@ -420,7 +437,8 @@ public class SimpleSyndicator implements Syndicator {
     }
 
     /**
-     *
+     * Update activation meta data
+     * @throws RepositoryException
      */
     private void updateActivationDetails() throws RepositoryException {
         HierarchyManager hm =
@@ -431,6 +449,8 @@ public class SimpleSyndicator implements Syndicator {
     }
 
     /**
+     * Update de-activation meta data
+     * @throws RepositoryException
      */
     private void updateDeActivationDetails() throws RepositoryException {
         HierarchyManager hm =
