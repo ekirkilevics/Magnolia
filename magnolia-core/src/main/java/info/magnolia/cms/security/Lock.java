@@ -22,20 +22,33 @@ import org.apache.log4j.Logger;
 
 
 /**
+ * This class is a utility class and does not impose any security rules
+ * Its a responsibility of the caller to set and check for lock to meet specific needs  
+ *
  * @author Sameer Charles
- * @version 2.0
+ * @version $Revision:$ ($Author:$)
  */
 public final class Lock {
 
-    private static final String SESSION_LOCK = "magnolia:sessionLock"; //$NON-NLS-1$
-
+    /**
+     * Logger
+     * */
     private static Logger log = Logger.getLogger(Lock.class);
 
+    /**
+     * Session lock attribute
+     * */
+    private static final String SESSION_LOCK = "mgnlSessionLock"; //$NON-NLS-1$
+
+    /**
+     * System wide lock
+     * */
     private static boolean isSystemLocked;
 
+    /**
+     * System wide lock creation time
+     * */
     private static Date lockSetDate;
-
-    private static Map lockedHierarchyList = new Hashtable();
 
     /**
      * Utility class, don't instantiate.
@@ -44,6 +57,10 @@ public final class Lock {
         // unused
     }
 
+    /**
+     * Set session based lock
+     * @param request
+     * */
     public static void setSessionLock(HttpServletRequest request) {
         log.info("Session lock enabled for user ( " //$NON-NLS-1$
             + Authenticator.getUserId(request) + " ) on " //$NON-NLS-1$
@@ -51,6 +68,11 @@ public final class Lock {
         request.getSession().setAttribute(SESSION_LOCK, (new Date()).toString());
     }
 
+    /**
+     * returns true if this session is locked
+     * @param request
+     * @return a boolean
+     * */
     public static boolean isSessionLocked(HttpServletRequest request) {
         if (request.getSession().getAttribute(Lock.SESSION_LOCK) != null) {
             return true;
@@ -58,39 +80,58 @@ public final class Lock {
         return false;
     }
 
-    public static void setHierarchyLock(String path) {
-        Lock.lockedHierarchyList.put(path, ""); //$NON-NLS-1$
+    /**
+     * reset session lock
+     * @param request
+     * */
+    public static void resetSessionLock(HttpServletRequest request) {
+        if (!Lock.isSessionLocked(request)) {
+            log.debug("No Lock found to reset"); //$NON-NLS-1$
+        }
+        else {
+            log.debug("Resetting session lock"); //$NON-NLS-1$
+            Lock.isSystemLocked = false;
+        }
+        request.getSession().removeAttribute(Lock.SESSION_LOCK);
     }
 
-    public static void resetHierarchyLock(String path) {
-        Lock.lockedHierarchyList.remove(path);
-    }
-
-    public static boolean isHierarchyLocked(String path) {
-        return (Lock.lockedHierarchyList.get(path) != null);
-    }
-
+    /**
+     * Set system wide lock
+     * */
     public static void setSystemLock() {
         if (Lock.isSystemLocked()) {
-            log.info("System lock exist, created on " + Lock.lockSetDate.toString()); //$NON-NLS-1$
+            if (log.isDebugEnabled()) {
+                log.debug("System lock exist, created on " + Lock.lockSetDate.toString()); //$NON-NLS-1$
+            }
         }
         else {
             Lock.isSystemLocked = true;
             Lock.lockSetDate = new Date();
-            log.info("New System lock created on " + Lock.lockSetDate.toString() + " )"); //$NON-NLS-1$ //$NON-NLS-2$
+            if (log.isDebugEnabled()) {
+                log.debug("New System lock created on " + Lock.lockSetDate.toString() + " )"); //$NON-NLS-1$
+            }
         }
     }
 
+    /**
+     * Reset system wide lock
+     * */
     public static void resetSystemLock() {
         if (!Lock.isSystemLocked()) {
-            log.info("No Lock found to reset"); //$NON-NLS-1$
+            log.debug("No Lock found to reset"); //$NON-NLS-1$
         }
         else {
-            log.info("Resetting system lock created on " + Lock.lockSetDate.toString()); //$NON-NLS-1$
+            if (log.isDebugEnabled()) {
+                log.debug("Resetting system lock created on " + Lock.lockSetDate.toString()); //$NON-NLS-1$
+            }
             Lock.isSystemLocked = false;
         }
     }
 
+    /**
+     * Return true if system is locked
+     * @return a boolean
+     * */
     public static boolean isSystemLocked() {
         return Lock.isSystemLocked;
     }
