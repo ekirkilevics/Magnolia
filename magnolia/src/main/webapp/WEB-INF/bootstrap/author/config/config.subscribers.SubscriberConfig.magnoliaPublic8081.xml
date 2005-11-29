@@ -21,39 +21,33 @@
     <sv:value>true</sv:value>
   </sv:property>
   <sv:property sv:name="active" sv:type="String">
-    <sv:value>true</sv:value>
-  </sv:property>
-  <sv:property sv:name="address" sv:type="String">
-    <sv:value>localhost:8081/magnoliaPublic</sv:value>
-  </sv:property>
-  <sv:property sv:name="senderURL" sv:type="String">
-    <sv:value>http://localhost:8081/magnolia</sv:value>
+    <sv:value>false</sv:value>
   </sv:property>
   <sv:property sv:name="protocol" sv:type="String">
     <sv:value>http</sv:value>
   </sv:property>
-  <sv:property sv:name="jcr:created" sv:type="Date">
-    <sv:value>2005-10-09T12:38:07.809+02:00</sv:value>
+  <sv:property sv:name="address" sv:type="String">
+    <sv:value>localhost:8081/magnoliaPublic</sv:value>
   </sv:property>
-  <sv:property sv:name="requestConfirmation" sv:type="String">
-    <sv:value>false</sv:value>
+  <sv:property sv:name="jcr:created" sv:type="Date">
+    <sv:value>2005-11-29T10:22:54.663+01:00</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>nt:file</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2005-10-09T12:38:07.809+02:00</sv:value>
+      <sv:value>2005-11-29T10:22:54.663+01:00</sv:value>
     </sv:property>
     <sv:node sv:name="jcr:content">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>nt:unstructured</sv:value>
       </sv:property>
+      <sv:property sv:name="lastmodified" sv:type="Date">
+        <sv:value>2005-11-29T18:29:44.842+01:00</sv:value>
+      </sv:property>
       <sv:property sv:name="Data" sv:type="String">
         <sv:value>MetaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="lastmodified" sv:type="Date">
-        <sv:value>2005-10-09T12:41:01.819+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="authorid" sv:type="String">
         <sv:value>superuser</sv:value>
@@ -61,11 +55,11 @@
       <sv:property sv:name="sequenceposition" sv:type="String">
         <sv:value>1099406091334000</sv:value>
       </sv:property>
-      <sv:property sv:name="creationdate" sv:type="String">
-        <sv:value>2004-11-02T15:34:51.322+01:00</sv:value>
-      </sv:property>
       <sv:property sv:name="title" sv:type="String">
         <sv:value/>
+      </sv:property>
+      <sv:property sv:name="creationdate" sv:type="String">
+        <sv:value>2004-11-02T15:34:51.322+01:00</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
@@ -83,24 +77,24 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2005-10-09T12:38:07.809+02:00</sv:value>
+      <sv:value>2005-11-29T10:22:54.665+01:00</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>nt:file</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2005-10-09T12:38:07.809+02:00</sv:value>
+        <sv:value>2005-11-29T10:22:54.666+01:00</sv:value>
       </sv:property>
       <sv:node sv:name="jcr:content">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>nt:unstructured</sv:value>
         </sv:property>
-        <sv:property sv:name="Data" sv:type="String">
-          <sv:value>MetaData</sv:value>
-        </sv:property>
         <sv:property sv:name="lastmodified" sv:type="String">
           <sv:value>2004-11-02T15:34:51.457+01:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="Data" sv:type="String">
+          <sv:value>MetaData</sv:value>
         </sv:property>
         <sv:property sv:name="authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -108,11 +102,11 @@
         <sv:property sv:name="sequenceposition" sv:type="String">
           <sv:value>1099406091465000</sv:value>
         </sv:property>
-        <sv:property sv:name="creationdate" sv:type="String">
-          <sv:value>2004-11-02T15:34:51.450+01:00</sv:value>
-        </sv:property>
         <sv:property sv:name="title" sv:type="String">
           <sv:value/>
+        </sv:property>
+        <sv:property sv:name="creationdate" sv:type="String">
+          <sv:value>2004-11-02T15:34:51.450+01:00</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
@@ -130,24 +124,24 @@
         <sv:value>true</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2005-10-09T12:38:07.809+02:00</sv:value>
+        <sv:value>2005-11-29T10:22:54.668+01:00</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>nt:file</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:created" sv:type="Date">
-          <sv:value>2005-10-09T12:38:07.809+02:00</sv:value>
+          <sv:value>2005-11-29T10:22:54.669+01:00</sv:value>
         </sv:property>
         <sv:node sv:name="jcr:content">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
             <sv:value>nt:unstructured</sv:value>
           </sv:property>
-          <sv:property sv:name="Data" sv:type="String">
-            <sv:value>MetaData</sv:value>
-          </sv:property>
           <sv:property sv:name="lastmodified" sv:type="String">
             <sv:value>2004-11-02T15:34:51.713+01:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="Data" sv:type="String">
+            <sv:value>MetaData</sv:value>
           </sv:property>
           <sv:property sv:name="authorid" sv:type="String">
             <sv:value>superuser</sv:value>
@@ -155,11 +149,11 @@
           <sv:property sv:name="sequenceposition" sv:type="String">
             <sv:value>1099406091720000</sv:value>
           </sv:property>
-          <sv:property sv:name="creationdate" sv:type="String">
-            <sv:value>2004-11-02T15:34:51.705+01:00</sv:value>
-          </sv:property>
           <sv:property sv:name="title" sv:type="String">
             <sv:value/>
+          </sv:property>
+          <sv:property sv:name="creationdate" sv:type="String">
+            <sv:value>2004-11-02T15:34:51.705+01:00</sv:value>
           </sv:property>
         </sv:node>
       </sv:node>
@@ -180,24 +174,24 @@
           <sv:value>/</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:created" sv:type="Date">
-          <sv:value>2005-10-09T12:38:07.809+02:00</sv:value>
+          <sv:value>2005-11-29T10:22:54.671+01:00</sv:value>
         </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
             <sv:value>nt:file</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:created" sv:type="Date">
-            <sv:value>2005-10-09T12:38:07.809+02:00</sv:value>
+            <sv:value>2005-11-29T10:22:54.671+01:00</sv:value>
           </sv:property>
           <sv:node sv:name="jcr:content">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
               <sv:value>nt:unstructured</sv:value>
             </sv:property>
-            <sv:property sv:name="Data" sv:type="String">
-              <sv:value>MetaData</sv:value>
-            </sv:property>
             <sv:property sv:name="lastmodified" sv:type="String">
               <sv:value>2005-02-11T21:30:48.187+01:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="Data" sv:type="String">
+              <sv:value>MetaData</sv:value>
             </sv:property>
             <sv:property sv:name="authorid" sv:type="String">
               <sv:value>superuser</sv:value>
@@ -205,13 +199,63 @@
             <sv:property sv:name="sequenceposition" sv:type="String">
               <sv:value>1099406091823000</sv:value>
             </sv:property>
-            <sv:property sv:name="creationdate" sv:type="String">
-              <sv:value>2004-11-02T15:34:51.809+01:00</sv:value>
-            </sv:property>
             <sv:property sv:name="title" sv:type="String">
               <sv:value/>
             </sv:property>
+            <sv:property sv:name="creationdate" sv:type="String">
+              <sv:value>2004-11-02T15:34:51.809+01:00</sv:value>
+            </sv:property>
           </sv:node>
+        </sv:node>
+        <sv:node sv:name=".activationInfo">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:file</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2005-11-29T10:26:15.296+01:00</sv:value>
+          </sv:property>
+          <sv:node sv:name="jcr:content">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+              <sv:value>nt:unstructured</sv:value>
+            </sv:property>
+            <sv:property sv:name="Data" sv:type="String">
+              <sv:value>.activationInfo</sv:value>
+            </sv:property>
+            <sv:property sv:name="lastaction" sv:type="Date">
+              <sv:value>2005-11-29T18:29:08.601+01:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="activatorid" sv:type="String">
+              <sv:value>superuser</sv:value>
+            </sv:property>
+            <sv:property sv:name="activated" sv:type="Boolean">
+              <sv:value>false</sv:value>
+            </sv:property>
+          </sv:node>
+        </sv:node>
+      </sv:node>
+      <sv:node sv:name=".activationInfo">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>nt:file</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2005-11-29T10:26:15.286+01:00</sv:value>
+        </sv:property>
+        <sv:node sv:name="jcr:content">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:unstructured</sv:value>
+          </sv:property>
+          <sv:property sv:name="Data" sv:type="String">
+            <sv:value>.activationInfo</sv:value>
+          </sv:property>
+          <sv:property sv:name="lastaction" sv:type="Date">
+            <sv:value>2005-11-29T18:29:08.597+01:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="activatorid" sv:type="String">
+            <sv:value>superuser</sv:value>
+          </sv:property>
+          <sv:property sv:name="activated" sv:type="Boolean">
+            <sv:value>false</sv:value>
+          </sv:property>
         </sv:node>
       </sv:node>
     </sv:node>
@@ -229,24 +273,24 @@
         <sv:value>true</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2005-10-09T12:38:07.809+02:00</sv:value>
+        <sv:value>2005-11-29T10:22:54.673+01:00</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>nt:file</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:created" sv:type="Date">
-          <sv:value>2005-10-09T12:38:07.809+02:00</sv:value>
+          <sv:value>2005-11-29T10:22:54.674+01:00</sv:value>
         </sv:property>
         <sv:node sv:name="jcr:content">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
             <sv:value>nt:unstructured</sv:value>
           </sv:property>
-          <sv:property sv:name="Data" sv:type="String">
-            <sv:value>MetaData</sv:value>
-          </sv:property>
           <sv:property sv:name="lastmodified" sv:type="String">
             <sv:value>2004-11-02T15:34:51.962+01:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="Data" sv:type="String">
+            <sv:value>MetaData</sv:value>
           </sv:property>
           <sv:property sv:name="authorid" sv:type="String">
             <sv:value>superuser</sv:value>
@@ -254,11 +298,11 @@
           <sv:property sv:name="sequenceposition" sv:type="String">
             <sv:value>1099406091973000</sv:value>
           </sv:property>
-          <sv:property sv:name="creationdate" sv:type="String">
-            <sv:value>2004-11-02T15:34:51.956+01:00</sv:value>
-          </sv:property>
           <sv:property sv:name="title" sv:type="String">
             <sv:value/>
+          </sv:property>
+          <sv:property sv:name="creationdate" sv:type="String">
+            <sv:value>2004-11-02T15:34:51.956+01:00</sv:value>
           </sv:property>
         </sv:node>
       </sv:node>
@@ -279,24 +323,24 @@
           <sv:value>/</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:created" sv:type="Date">
-          <sv:value>2005-10-09T12:38:07.809+02:00</sv:value>
+          <sv:value>2005-11-29T10:22:54.676+01:00</sv:value>
         </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
             <sv:value>nt:file</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:created" sv:type="Date">
-            <sv:value>2005-10-09T12:38:07.809+02:00</sv:value>
+            <sv:value>2005-11-29T10:22:54.677+01:00</sv:value>
           </sv:property>
           <sv:node sv:name="jcr:content">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
               <sv:value>nt:unstructured</sv:value>
             </sv:property>
-            <sv:property sv:name="Data" sv:type="String">
-              <sv:value>MetaData</sv:value>
-            </sv:property>
             <sv:property sv:name="lastmodified" sv:type="String">
               <sv:value>2005-02-11T21:30:52.943+01:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="Data" sv:type="String">
+              <sv:value>MetaData</sv:value>
             </sv:property>
             <sv:property sv:name="authorid" sv:type="String">
               <sv:value>superuser</sv:value>
@@ -304,13 +348,63 @@
             <sv:property sv:name="sequenceposition" sv:type="String">
               <sv:value>1099406092200000</sv:value>
             </sv:property>
-            <sv:property sv:name="creationdate" sv:type="String">
-              <sv:value>2004-11-02T15:34:52.186+01:00</sv:value>
-            </sv:property>
             <sv:property sv:name="title" sv:type="String">
               <sv:value/>
             </sv:property>
+            <sv:property sv:name="creationdate" sv:type="String">
+              <sv:value>2004-11-02T15:34:52.186+01:00</sv:value>
+            </sv:property>
           </sv:node>
+        </sv:node>
+        <sv:node sv:name=".activationInfo">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:file</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2005-11-29T10:26:15.314+01:00</sv:value>
+          </sv:property>
+          <sv:node sv:name="jcr:content">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+              <sv:value>nt:unstructured</sv:value>
+            </sv:property>
+            <sv:property sv:name="Data" sv:type="String">
+              <sv:value>.activationInfo</sv:value>
+            </sv:property>
+            <sv:property sv:name="lastaction" sv:type="Date">
+              <sv:value>2005-11-29T18:29:08.615+01:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="activatorid" sv:type="String">
+              <sv:value>superuser</sv:value>
+            </sv:property>
+            <sv:property sv:name="activated" sv:type="Boolean">
+              <sv:value>false</sv:value>
+            </sv:property>
+          </sv:node>
+        </sv:node>
+      </sv:node>
+      <sv:node sv:name=".activationInfo">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>nt:file</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2005-11-29T10:26:15.307+01:00</sv:value>
+        </sv:property>
+        <sv:node sv:name="jcr:content">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:unstructured</sv:value>
+          </sv:property>
+          <sv:property sv:name="Data" sv:type="String">
+            <sv:value>.activationInfo</sv:value>
+          </sv:property>
+          <sv:property sv:name="lastaction" sv:type="Date">
+            <sv:value>2005-11-29T18:29:08.612+01:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="activatorid" sv:type="String">
+            <sv:value>superuser</sv:value>
+          </sv:property>
+          <sv:property sv:name="activated" sv:type="Boolean">
+            <sv:value>false</sv:value>
+          </sv:property>
         </sv:node>
       </sv:node>
     </sv:node>
@@ -328,24 +422,24 @@
         <sv:value>true</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2005-10-09T12:38:07.809+02:00</sv:value>
+        <sv:value>2005-11-29T10:22:54.678+01:00</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>nt:file</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:created" sv:type="Date">
-          <sv:value>2005-10-09T12:38:07.809+02:00</sv:value>
+          <sv:value>2005-11-29T10:22:54.679+01:00</sv:value>
         </sv:property>
         <sv:node sv:name="jcr:content">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
             <sv:value>nt:unstructured</sv:value>
           </sv:property>
-          <sv:property sv:name="Data" sv:type="String">
-            <sv:value>MetaData</sv:value>
-          </sv:property>
           <sv:property sv:name="lastmodified" sv:type="String">
             <sv:value>2004-11-02T15:34:52.332+01:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="Data" sv:type="String">
+            <sv:value>MetaData</sv:value>
           </sv:property>
           <sv:property sv:name="authorid" sv:type="String">
             <sv:value>superuser</sv:value>
@@ -353,11 +447,11 @@
           <sv:property sv:name="sequenceposition" sv:type="String">
             <sv:value>1099406092340000</sv:value>
           </sv:property>
-          <sv:property sv:name="creationdate" sv:type="String">
-            <sv:value>2004-11-02T15:34:52.247+01:00</sv:value>
-          </sv:property>
           <sv:property sv:name="title" sv:type="String">
             <sv:value/>
+          </sv:property>
+          <sv:property sv:name="creationdate" sv:type="String">
+            <sv:value>2004-11-02T15:34:52.247+01:00</sv:value>
           </sv:property>
         </sv:node>
       </sv:node>
@@ -378,24 +472,24 @@
           <sv:value>/</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:created" sv:type="Date">
-          <sv:value>2005-10-09T12:38:07.809+02:00</sv:value>
+          <sv:value>2005-11-29T10:22:54.681+01:00</sv:value>
         </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
             <sv:value>nt:file</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:created" sv:type="Date">
-            <sv:value>2005-10-09T12:38:07.809+02:00</sv:value>
+            <sv:value>2005-11-29T10:22:54.682+01:00</sv:value>
           </sv:property>
           <sv:node sv:name="jcr:content">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
               <sv:value>nt:unstructured</sv:value>
             </sv:property>
-            <sv:property sv:name="Data" sv:type="String">
-              <sv:value>MetaData</sv:value>
-            </sv:property>
             <sv:property sv:name="lastmodified" sv:type="String">
               <sv:value>2005-02-11T21:30:59.944+01:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="Data" sv:type="String">
+              <sv:value>MetaData</sv:value>
             </sv:property>
             <sv:property sv:name="authorid" sv:type="String">
               <sv:value>superuser</sv:value>
@@ -403,13 +497,63 @@
             <sv:property sv:name="sequenceposition" sv:type="String">
               <sv:value>1099406092472000</sv:value>
             </sv:property>
-            <sv:property sv:name="creationdate" sv:type="String">
-              <sv:value>2004-11-02T15:34:52.432+01:00</sv:value>
-            </sv:property>
             <sv:property sv:name="title" sv:type="String">
               <sv:value/>
             </sv:property>
+            <sv:property sv:name="creationdate" sv:type="String">
+              <sv:value>2004-11-02T15:34:52.432+01:00</sv:value>
+            </sv:property>
           </sv:node>
+        </sv:node>
+        <sv:node sv:name=".activationInfo">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:file</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2005-11-29T10:26:15.333+01:00</sv:value>
+          </sv:property>
+          <sv:node sv:name="jcr:content">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+              <sv:value>nt:unstructured</sv:value>
+            </sv:property>
+            <sv:property sv:name="Data" sv:type="String">
+              <sv:value>.activationInfo</sv:value>
+            </sv:property>
+            <sv:property sv:name="lastaction" sv:type="Date">
+              <sv:value>2005-11-29T18:29:08.630+01:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="activatorid" sv:type="String">
+              <sv:value>superuser</sv:value>
+            </sv:property>
+            <sv:property sv:name="activated" sv:type="Boolean">
+              <sv:value>false</sv:value>
+            </sv:property>
+          </sv:node>
+        </sv:node>
+      </sv:node>
+      <sv:node sv:name=".activationInfo">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>nt:file</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2005-11-29T10:26:15.324+01:00</sv:value>
+        </sv:property>
+        <sv:node sv:name="jcr:content">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:unstructured</sv:value>
+          </sv:property>
+          <sv:property sv:name="Data" sv:type="String">
+            <sv:value>.activationInfo</sv:value>
+          </sv:property>
+          <sv:property sv:name="lastaction" sv:type="Date">
+            <sv:value>2005-11-29T18:29:08.624+01:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="activatorid" sv:type="String">
+            <sv:value>superuser</sv:value>
+          </sv:property>
+          <sv:property sv:name="activated" sv:type="Boolean">
+            <sv:value>false</sv:value>
+          </sv:property>
         </sv:node>
       </sv:node>
     </sv:node>
@@ -427,24 +571,24 @@
         <sv:value>true</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2005-10-09T12:38:07.809+02:00</sv:value>
+        <sv:value>2005-11-29T10:22:54.684+01:00</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>nt:file</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:created" sv:type="Date">
-          <sv:value>2005-10-09T12:38:07.809+02:00</sv:value>
+          <sv:value>2005-11-29T10:22:54.684+01:00</sv:value>
         </sv:property>
         <sv:node sv:name="jcr:content">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
             <sv:value>nt:unstructured</sv:value>
           </sv:property>
-          <sv:property sv:name="Data" sv:type="String">
-            <sv:value>MetaData</sv:value>
-          </sv:property>
           <sv:property sv:name="lastmodified" sv:type="String">
             <sv:value>2004-11-08T13:50:22.765+01:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="Data" sv:type="String">
+            <sv:value>MetaData</sv:value>
           </sv:property>
           <sv:property sv:name="authorid" sv:type="String">
             <sv:value>superuser</sv:value>
@@ -452,11 +596,11 @@
           <sv:property sv:name="sequenceposition" sv:type="String">
             <sv:value>1099918222784000</sv:value>
           </sv:property>
-          <sv:property sv:name="creationdate" sv:type="String">
-            <sv:value>2004-11-08T13:50:22.757+01:00</sv:value>
-          </sv:property>
           <sv:property sv:name="title" sv:type="String">
             <sv:value/>
+          </sv:property>
+          <sv:property sv:name="creationdate" sv:type="String">
+            <sv:value>2004-11-08T13:50:22.757+01:00</sv:value>
           </sv:property>
         </sv:node>
       </sv:node>
@@ -477,24 +621,24 @@
           <sv:value>/</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:created" sv:type="Date">
-          <sv:value>2005-10-09T12:38:07.809+02:00</sv:value>
+          <sv:value>2005-11-29T10:22:54.686+01:00</sv:value>
         </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
             <sv:value>nt:file</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:created" sv:type="Date">
-            <sv:value>2005-10-09T12:38:07.819+02:00</sv:value>
+            <sv:value>2005-11-29T10:22:54.687+01:00</sv:value>
           </sv:property>
           <sv:node sv:name="jcr:content">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
               <sv:value>nt:unstructured</sv:value>
             </sv:property>
-            <sv:property sv:name="Data" sv:type="String">
-              <sv:value>MetaData</sv:value>
-            </sv:property>
             <sv:property sv:name="lastmodified" sv:type="String">
               <sv:value>2005-02-11T21:31:06.052+01:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="Data" sv:type="String">
+              <sv:value>MetaData</sv:value>
             </sv:property>
             <sv:property sv:name="authorid" sv:type="String">
               <sv:value>superuser</sv:value>
@@ -502,13 +646,63 @@
             <sv:property sv:name="sequenceposition" sv:type="String">
               <sv:value>1099918231657000</sv:value>
             </sv:property>
-            <sv:property sv:name="creationdate" sv:type="String">
-              <sv:value>2004-11-08T13:50:31.631+01:00</sv:value>
-            </sv:property>
             <sv:property sv:name="title" sv:type="String">
               <sv:value/>
             </sv:property>
+            <sv:property sv:name="creationdate" sv:type="String">
+              <sv:value>2004-11-08T13:50:31.631+01:00</sv:value>
+            </sv:property>
           </sv:node>
+        </sv:node>
+        <sv:node sv:name=".activationInfo">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:file</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2005-11-29T10:26:15.350+01:00</sv:value>
+          </sv:property>
+          <sv:node sv:name="jcr:content">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+              <sv:value>nt:unstructured</sv:value>
+            </sv:property>
+            <sv:property sv:name="Data" sv:type="String">
+              <sv:value>.activationInfo</sv:value>
+            </sv:property>
+            <sv:property sv:name="lastaction" sv:type="Date">
+              <sv:value>2005-11-29T18:29:08.640+01:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="activatorid" sv:type="String">
+              <sv:value>superuser</sv:value>
+            </sv:property>
+            <sv:property sv:name="activated" sv:type="Boolean">
+              <sv:value>false</sv:value>
+            </sv:property>
+          </sv:node>
+        </sv:node>
+      </sv:node>
+      <sv:node sv:name=".activationInfo">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>nt:file</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2005-11-29T10:26:15.343+01:00</sv:value>
+        </sv:property>
+        <sv:node sv:name="jcr:content">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:unstructured</sv:value>
+          </sv:property>
+          <sv:property sv:name="Data" sv:type="String">
+            <sv:value>.activationInfo</sv:value>
+          </sv:property>
+          <sv:property sv:name="lastaction" sv:type="Date">
+            <sv:value>2005-11-29T18:29:08.637+01:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="activatorid" sv:type="String">
+            <sv:value>superuser</sv:value>
+          </sv:property>
+          <sv:property sv:name="activated" sv:type="Boolean">
+            <sv:value>false</sv:value>
+          </sv:property>
         </sv:node>
       </sv:node>
     </sv:node>
@@ -517,7 +711,7 @@
         <sv:value>nt:file</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2005-10-09T12:38:07.819+02:00</sv:value>
+        <sv:value>2005-11-29T10:22:54.688+01:00</sv:value>
       </sv:property>
       <sv:node sv:name="jcr:content">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -525,6 +719,15 @@
         </sv:property>
         <sv:property sv:name="Data" sv:type="String">
           <sv:value>.activationInfo</sv:value>
+        </sv:property>
+        <sv:property sv:name="lastaction" sv:type="Date">
+          <sv:value>2005-11-29T18:29:08.593+01:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="activatorid" sv:type="String">
+          <sv:value>superuser</sv:value>
+        </sv:property>
+        <sv:property sv:name="activated" sv:type="Boolean">
+          <sv:value>false</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
@@ -534,7 +737,7 @@
       <sv:value>nt:file</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2005-10-09T12:38:07.819+02:00</sv:value>
+      <sv:value>2005-11-29T10:22:54.689+01:00</sv:value>
     </sv:property>
     <sv:node sv:name="jcr:content">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -542,6 +745,15 @@
       </sv:property>
       <sv:property sv:name="Data" sv:type="String">
         <sv:value>.activationInfo</sv:value>
+      </sv:property>
+      <sv:property sv:name="lastaction" sv:type="Date">
+        <sv:value>2005-11-29T18:29:08.588+01:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="activatorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="activated" sv:type="Boolean">
+        <sv:value>false</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
