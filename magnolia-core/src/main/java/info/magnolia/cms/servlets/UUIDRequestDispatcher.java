@@ -79,7 +79,6 @@ public class UUIDRequestDispatcher extends HttpServlet {
             RequestDispatcher dispatcher = request.getRequestDispatcher(handle);
             dispatcher.forward(request, response);
         } catch (Exception e) {
-            e.printStackTrace();
             log.error("Failed to retrieve content for UUID : "+uuid +" , "+ e.getMessage());
             log.debug(e);
         }
