@@ -46,7 +46,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.doomdark.uuid.UUIDGenerator;
 
 
 /**
@@ -60,11 +59,6 @@ public class Content extends ContentHandler implements Cloneable {
      * Logger.
      */
     private static Logger log = Logger.getLogger(Content.class);
-
-    /**
-     * UUID property added on creation of object
-     */
-    private static final String PROPERTY_UUID = "mgnl:uuid"; //$NON-NLS-1$
 
     /**
      * Wrapped jcr node.
@@ -148,7 +142,6 @@ public class Content extends ContentHandler implements Cloneable {
         this.setPath(path);
         this.setRootNode(rootNode);
         this.node = this.rootNode.addNode(this.path, contentType);
-        this.addUUID();
         this.setAccessManager(manager);
         this.addMixin(ItemType.MIX_VERSIONABLE);
     }
@@ -795,6 +788,7 @@ public class Content extends ContentHandler implements Cloneable {
      * get a handle representing path relative to the content repository with the default extension
      * @return String representing path (handle) of the content
      * @throws RepositoryException if an error occurs
+     * @deprecated content should not care how its rendered and what's the extension
      */
     public String getHandleWithDefaultExtension() throws PathNotFoundException, RepositoryException {
         return (this.node.getPath() + "." + Server.getDefaultExtension()); //$NON-NLS-1$
@@ -1190,15 +1184,6 @@ public class Content extends ContentHandler implements Cloneable {
     public boolean isLocked() throws RepositoryException {
         return this.node.isLocked();
     }
-
-    /**
-     * Add a UUID property to the existing node
-     * @throws RepositoryException
-     */
-    private void addUUID() throws RepositoryException {
-        this.node.setProperty(PROPERTY_UUID, UUIDGenerator.getInstance().generateTimeBasedUUID().toString());
-    }
-
 
     /**
      * Implement this interface to be used as node filter by getChildren()
