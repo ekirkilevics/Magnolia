@@ -1086,7 +1086,14 @@ public class Content extends ContentHandler implements Cloneable {
      * @return uuid
      */
     public String getUUID() {
-        return this.getNodeData(PROPERTY_UUID).getString();
+        try {
+            return this.node.getUUID();
+        } catch (UnsupportedOperationException e) {
+            log.error(e.getMessage());
+        } catch (RepositoryException re) {
+            log.error(re);
+        }
+        return StringUtils.EMPTY;
     }
 
     /**
