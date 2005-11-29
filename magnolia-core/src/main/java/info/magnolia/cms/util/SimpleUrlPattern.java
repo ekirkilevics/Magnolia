@@ -33,12 +33,12 @@ public final class SimpleUrlPattern implements UrlPattern {
     /**
      * Regexp pattern used for the simple keyword <code>*</code>
      */
-    private static final String MULTIPLE_CHAR_PATTERN = "[\\p{L}[a-z[A-Z[0-9[!\"#$%&'()*+,-./:; <=>?@\\^_`{|}~]]]]]*"; //$NON-NLS-1$
-
+    private static final String MULTIPLE_CHAR_PATTERN = "[\\p{L}[a-z[A-Z[0-9[!\"#$%&'()*+,-./:; <=>?@\\^_`{|}~\\[\\]]]]]]*"; //$NON-NLS-1$
+    
     /**
      * Regexp pattern used for the simple keyword <code>?</code>
      */
-    private static final String SINGLE_CHAR_PATTERN = "[\\p{L}[a-z[A-Z[0-9[!\"#$%&'()*+,-./:; <=>?@\\^_`{|}~]]]]]?"; //$NON-NLS-1$
+    private static final String SINGLE_CHAR_PATTERN = "[\\p{L}[a-z[A-Z[0-9[!\"#$%&'()*+,-./:; <=>?@\\^_`{|}~\\[\\]]]]]]?"; //$NON-NLS-1$
 
     /**
      * Regexp pattern used in match().
