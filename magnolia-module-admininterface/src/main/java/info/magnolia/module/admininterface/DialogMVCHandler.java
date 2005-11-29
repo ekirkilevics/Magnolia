@@ -100,7 +100,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
 
     protected RequestFormUtil params;
 
-    private Content storageNode;
+    protected Content storageNode;
 
     /**
      * Initialize the used parameters: path, nodeCollectionName, nodeName, ..
