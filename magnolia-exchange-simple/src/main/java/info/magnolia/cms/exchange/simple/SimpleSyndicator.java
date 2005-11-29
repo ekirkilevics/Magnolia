@@ -13,19 +13,28 @@
 package info.magnolia.cms.exchange.simple;
 
 import info.magnolia.cms.beans.config.Subscriber;
-import info.magnolia.cms.core.*;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MetaData;
+import info.magnolia.cms.core.Path;
+import info.magnolia.cms.exchange.ActivationContent;
+import info.magnolia.cms.exchange.ExchangeException;
+import info.magnolia.cms.exchange.Rule;
+import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.SessionAccessControl;
-import info.magnolia.cms.exchange.*;
 
-import java.io.IOException;
-import java.io.FileOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -33,8 +42,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.jdom.Element;
 import org.jdom.Document;
+import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
 
 
