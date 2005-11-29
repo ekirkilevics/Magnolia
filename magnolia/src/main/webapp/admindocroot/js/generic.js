@@ -190,20 +190,29 @@ function mgnlRemoveParameter(href,name)
 	var tmp=href.split("?");
 
 	var newHref=tmp[0];
-	if (tmp[1])
-		{
+	var query= new Array();
+	if (tmp[1]) {
 		var paramObj=tmp[1].split("&");
 
-		for (var i=0;i<paramObj.length;i++)
-			{
-			if (paramObj[i].indexOf(name+"=")!=0)
-				{
-				if (i==0) newHref+="?";
-				else newHref+="&";
-				newHref+=paramObj[i];
-				}
+		for (var i=0;i<paramObj.length;i++) {
+			if (paramObj[i].indexOf(name+"=")!=0) {
+					query.push(paramObj[i]);
 			}
 		}
-	return newHref;
 	}
+		
+	if(query.length > 0) {
+		newHref += "?";
+			
+		for(var i=0; i < query.length; i++) {
+			newHref += query[i];
+				
+			if(i + 1 < query.length) {
+				newHref += "&";
+			}
+		}
+	}
+	
+	return newHref;
+}
 
