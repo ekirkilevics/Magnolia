@@ -104,7 +104,7 @@ public class DialogDialog extends DialogSuper {
     public void drawCssSources(Writer out) throws IOException {
         Iterator it = this.getCssSources().iterator();
         while (it.hasNext()) {
-            out.write("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + it.next() + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
+            out.write("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + it.next() + "\"/>"); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
@@ -130,14 +130,15 @@ public class DialogDialog extends DialogSuper {
         // out.write(" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">");
 
         out.write("<html>"); //$NON-NLS-1$
+        out.write("<head>"); //$NON-NLS-1$
         this.drawHtmlPreSubsHead(out);
+        out.write("</head>"); //$NON-NLS-1$
         out.write("<body class=\"mgnlDialogBody\" onload=\"mgnlDialogInit();\">"); //$NON-NLS-1$
         this.drawHtmlPreSubsForm(out);
         this.drawHtmlPreSubsTabSet(out);
     }
 
     protected void drawHtmlPreSubsHead(Writer out) throws IOException {
-        out.write("<head>"); //$NON-NLS-1$
         out.write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>"); // kupu //$NON-NLS-1$
         out.write("<script type=\"text/javascript\">"); //$NON-NLS-1$
         out.write("window.resizeTo(" //$NON-NLS-1$
@@ -159,7 +160,6 @@ public class DialogDialog extends DialogSuper {
         out.write("</script>"); //$NON-NLS-1$
         this.drawJavascriptSources(out);
         this.drawCssSources(out);
-        out.write("</head>"); //$NON-NLS-1$
     }
 
     protected void drawHtmlPreSubsForm(Writer out) throws IOException {
