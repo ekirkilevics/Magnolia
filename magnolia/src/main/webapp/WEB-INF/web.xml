@@ -107,6 +107,10 @@
     <servlet-name>log4j</servlet-name>
     <servlet-class>it.openutils.log4j.Log4jConfigurationServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>uuidRequestDispatcher</servlet-name>
+    <servlet-class>info.magnolia.cms.servlets.UUIDRequestDispatcher</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>magnolia</servlet-name>
     <url-pattern>/</url-pattern>
@@ -170,6 +174,10 @@
   <servlet-mapping>
     <servlet-name>log4j</servlet-name>
     <url-pattern>/.magnolia/log4j/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>uuidRequestDispatcher</servlet-name>
+    <url-pattern>/uuid/*</url-pattern>
   </servlet-mapping>
   <listener>
     <description>Magnolia Property Initializer</description>
