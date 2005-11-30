@@ -35,12 +35,14 @@ import java.net.URLConnection;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.zip.GZIPOutputStream;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -551,16 +553,17 @@ public class SimpleSyndicator implements Syndicator {
             throws IOException, RepositoryException {
 
         File file = File.createTempFile("exchange"+content.getName(),"",Path.getTempDirectory());
-        FileOutputStream outputStream = new FileOutputStream(file);
+        GZIPOutputStream gzipOutputStream = new GZIPOutputStream(new FileOutputStream(file));
 
         /**
          * nt:file node type has mandatory sub nodes
          * */
         if (content.isNodeType(ItemType.NT_FILE)) {
-            session.exportSystemView(content.getHandle(), outputStream, false, false);
+            session.exportSystemView(content.getHandle(), gzipOutputStream, false, false);
         } else {
-            session.exportSystemView(content.getHandle(), outputStream, false, true);
+            session.exportSystemView(content.getHandle(), gzipOutputStream, false, true);
         }
+        IOUtils.closeQuietly(gzipOutputStream);
         // add file entry in mapping.xml
         Element element = new Element(RESOURCE_MAPPING_FILE_ELEMENT);
         element.setAttribute(RESOURCE_MAPPING_NAME_ATTRIBUTE,content.getName());
