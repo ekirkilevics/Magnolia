@@ -312,9 +312,7 @@ public class Save extends ControlSuper {
             processRemoveCommon(node, name, type, isRichEditValue, encoding, values);
         }
         else if (write) {
-            Value value = this.getValue(valueStr, type);
-            
-            processWriteCommon(node, name, value);
+            processWriteCommon(node, name, valueStr, type);
         }
     }
 
@@ -350,8 +348,10 @@ public class Save extends ControlSuper {
      * @throws AccessDeniedException thrown if the write access is not granted
      * @throws RepositoryException thrown if other repository exception is thrown
      */
-    protected void processWriteCommon(Content node, String name, Value value) 
+    protected void processWriteCommon(Content node, String name, String valueStr, int type) 
         throws AccessDeniedException, RepositoryException {
+        Value value = this.getValue(valueStr, type);
+        
         NodeData data = node.getNodeData(name);
         
         if (null != value) {
@@ -595,12 +595,24 @@ public class Save extends ControlSuper {
                 catch (Exception e) {
                     // ignore, it sets the current date / time
                 }
-                value = value = valueFactory.createValue(date);
+                value = valueFactory.createValue(date);
             }
             catch (Exception e) {
                 log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
             }
         }
+        else if (type == PropertyType.REFERENCE) {
+            try {
+                Node referencedNode = hm.getWorkspace().getSession().getNodeByUUID(valueStr);
+                
+                value = valueFactory.createValue(referencedNode);
+            }
+            catch(RepositoryException re) {
+                log.debug("Cannot retrieve the referenced node by UUID: " + valueStr,
+                          re);
+            }
+        }
+        
         return value;
     }
 
