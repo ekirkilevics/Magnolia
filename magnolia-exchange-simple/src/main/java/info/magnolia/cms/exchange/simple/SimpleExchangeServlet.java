@@ -13,6 +13,7 @@
 package info.magnolia.cms.exchange.simple;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.io.IOUtils;
 import org.jdom.input.SAXBuilder;
 import org.jdom.Element;
 import org.doomdark.uuid.UUIDGenerator;
@@ -24,7 +25,9 @@ import javax.servlet.ServletException;
 import javax.jcr.*;
 import javax.jcr.lock.LockException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Iterator;
+import java.util.zip.GZIPInputStream;
 
 import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.ContentRepository;
@@ -138,10 +141,11 @@ public class SimpleExchangeServlet extends HttpServlet {
             String parentPath = request.getHeader(SimpleSyndicator.PARENT_PATH);
             String resourceFileName = request.getHeader(SimpleSyndicator.RESOURCE_MAPPING_FILE);
             HierarchyManager hm = getHierarchyManager(request);
-            Document resourceDocument =
-                    data.getDocument(resourceFileName);
+            Document resourceDocument = data.getDocument(resourceFileName);
             SAXBuilder builder = new SAXBuilder();
-            org.jdom.Document jdomDocument = builder.build(resourceDocument.getStream());
+            InputStream documentInputStream = resourceDocument.getStream();
+            org.jdom.Document jdomDocument = builder.build(documentInputStream);
+            IOUtils.closeQuietly(documentInputStream);
             Element topContentElement =
                     jdomDocument.getRootElement().getChild(SimpleSyndicator.RESOURCE_MAPPING_FILE_ELEMENT);
             String newPath = "";
@@ -164,7 +168,6 @@ public class SimpleExchangeServlet extends HttpServlet {
             } else {
                 importFresh(topContentElement, data, hm, parentPath);
             }
-            //resourceDocument.delete();
         }
     }
 
@@ -264,9 +267,11 @@ public class SimpleExchangeServlet extends HttpServlet {
             // use temporary transient store to extract top level node and copy properties
             hierarchyManager.createContent("/",uuid,ItemType.CONTENTNODE.toString());
             String fileName = topContentElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_ID_ATTRIBUTE);
+            GZIPInputStream inputStream = new GZIPInputStream(data.getDocument(fileName).getStream());
             hierarchyManager.getWorkspace().getSession().importXML(transientStore,
-                    data.getDocument(fileName).getStream(),
+                    inputStream,
                     ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
+            IOUtils.closeQuietly(inputStream);
             Content tmpContent = hierarchyManager.getContent(transientStore
                     +"/"
                     +topContentElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_NAME_ATTRIBUTE));
@@ -296,11 +301,11 @@ public class SimpleExchangeServlet extends HttpServlet {
         String name = resourceElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_NAME_ATTRIBUTE);
         String fileName = resourceElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_ID_ATTRIBUTE);
         // do actual import
+        GZIPInputStream inputStream = new GZIPInputStream(data.getDocument(fileName).getStream());
         jcrSession.importXML(parentPath,
-                data.getDocument(fileName).getStream(),
+                inputStream,
                 ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
-        // remove temp file
-        //data.getDocument(fileName).delete();
+        IOUtils.closeQuietly(inputStream);
         Iterator fileListIterator = resourceElement.getChildren(SimpleSyndicator.RESOURCE_MAPPING_FILE_ELEMENT).iterator();
         // parent path
         if (parentPath.equals("/")) {
