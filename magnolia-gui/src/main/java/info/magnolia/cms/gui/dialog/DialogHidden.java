@@ -38,7 +38,10 @@ public class DialogHidden extends DialogBox {
         if (this.getConfigValue("saveInfo").equals("false")) { //$NON-NLS-1$ //$NON-NLS-2$
             control.setSaveInfo(false);
         }
-
+        if (this.getConfigValue("type", null) != null) { //$NON-NLS-1$
+            control.setType(this.getConfigValue("type"));
+        }
+        
         out.write(control.getHtml());
     }
 }
