@@ -402,8 +402,8 @@ public class Tree extends ControlSuper {
         deleteNode(parentPath, label);
     }
 
-    public void createNode(String itemType) {
-        this.createNode("untitled", itemType); //$NON-NLS-1$
+    public String createNode(String itemType) {
+        return this.createNode("untitled", itemType); //$NON-NLS-1$
     }
 
     /**
@@ -413,7 +413,8 @@ public class Tree extends ControlSuper {
      * @param label new node name
      * @param itemType new node type
      **/
-    public void createNode(String label, String itemType) {
+    public String createNode(String label, String itemType) {
+        String name = label;
         try {
             Content parentNode = getHierarchyManager().getContent(this.getPath());
             String slash = "/"; //$NON-NLS-1$
@@ -425,22 +426,22 @@ public class Tree extends ControlSuper {
             if (getHierarchyManager().isExist(this.getPath() + slash + label)) {
                 // todo: bugfix getUniqueLabel???
                 if (!isRoot) {
-                    label = Path.getUniqueLabel(getHierarchyManager(), this.getPath(), label);
+                    name = Path.getUniqueLabel(getHierarchyManager(), this.getPath(), label);
                 }
                 else {
-                    label = Path.getUniqueLabel(getHierarchyManager(), StringUtils.EMPTY, label);
+                    name = Path.getUniqueLabel(getHierarchyManager(), StringUtils.EMPTY, label);
                 }
             }
             if (itemType.equals(ItemType.NT_NODEDATA)) {
-                parentNode.createNodeData(label);
+                parentNode.createNodeData(name);
             }
             else {
                 Content newNode;
                 if (itemType.equals(ItemType.CONTENT.getSystemName())) {
-                    newNode = parentNode.createContent(label);
+                    newNode = parentNode.createContent(name);
                 }
                 else {
-                    newNode = parentNode.createContent(label, ItemType.CONTENTNODE);
+                    newNode = parentNode.createContent(name, ItemType.CONTENTNODE);
                 }
                 newNode.getMetaData().setAuthorId(Authenticator.getUserId(this.getRequest()));
                 newNode.getMetaData().setCreationDate();
@@ -463,7 +464,10 @@ public class Tree extends ControlSuper {
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
+            name = ""; // reset the name, so that you can check if the node was created
         }
+        
+        return name;
     }
 
     public String saveNodeData(String nodeDataName, String value, boolean isMeta) {
