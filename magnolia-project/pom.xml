@@ -274,6 +274,11 @@
         <version>1.1</version>
       </dependency>
       <dependency>
+        <groupId>commons-discovery</groupId>
+        <artifactId>commons-discovery</artifactId>
+        <version>0.2</version>
+      </dependency>
+      <dependency>
         <groupId>jug</groupId>
         <artifactId>jug</artifactId>
         <version>1.1.2</version>
