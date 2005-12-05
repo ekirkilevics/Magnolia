@@ -13,8 +13,12 @@
 package info.magnolia.cms.security;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
 
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
@@ -44,7 +48,7 @@ public class MgnlRoleManager implements RoleManager {
         HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USER_ROLES);
         return getRole(name, hm);
     }
-    
+
     /**
      * @param name
      * @param hm
@@ -56,6 +60,36 @@ public class MgnlRoleManager implements RoleManager {
         }
         catch (Exception e) {
             log.info("can't find role [" + name + "]", e);
+            return null;
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see info.magnolia.cms.security.RoleManager#createRole(java.lang.String)
+     */
+    public Role createRole(String name) throws UnsupportedOperationException {
+        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USER_ROLES);
+        return createRole(name, hm);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see info.magnolia.cms.security.RoleManager#createRole(java.lang.String, javax.servlet.http.HttpServletRequest)
+     */
+    public Role createRole(String name, HttpServletRequest request) throws UnsupportedOperationException {
+        HierarchyManager hm = SessionAccessControl.getHierarchyManager(request, ContentRepository.USER_ROLES);
+        return createRole(name, hm);
+    }
+
+    private Role createRole(String name, HierarchyManager hm) throws UnsupportedOperationException{
+        try {
+            Content node = hm.createContent("/", name, ItemType.CONTENT.getSystemName());
+            node.save();
+            return new MgnlRole(node);
+        }
+        catch (Exception e) {
+            log.error("can't create role [" + name + "]", e);
             return null;
         }
     }

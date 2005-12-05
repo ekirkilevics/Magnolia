@@ -66,4 +66,24 @@ public interface UserManager {
      * @throws UnsupportedOperationException
      */
     public Collection getAllUsers() throws UnsupportedOperationException;
+    
+    /**
+     * Creates a user
+     * @param name user name
+     * @param pw password
+     * @return the new user object
+     * @throws UnsupportedOperationException
+     */
+    public User createUser(String name, String pw, HttpServletRequest request) throws UnsupportedOperationException;
+    
+    /**
+     * Creates a user without security restrictions
+     * @param name user name
+     * @param pw password
+     * @return the new user object
+     * @throws UnsupportedOperationException
+     */
+    public User createUser(String name, String pw) throws UnsupportedOperationException;
+
+
 }

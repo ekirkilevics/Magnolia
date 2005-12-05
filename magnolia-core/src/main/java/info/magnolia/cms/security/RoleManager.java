@@ -22,6 +22,24 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface RoleManager {
     /**
+     * Create a role withour any security restrictions.
+     * @param name
+     * @return the new role
+     * @throws UnsupportedOperationException
+     * @throws Exception 
+     */
+    public Role createRole(String name) throws UnsupportedOperationException, Exception;
+
+    /**
+     * Create a role
+     * @param name name of the role
+     * @param request
+     * @return the new role
+     * @throws UnsupportedOperationException
+     */
+    public Role createRole(String name, HttpServletRequest request) throws UnsupportedOperationException, Exception;
+
+    /**
      * Get a specifig role
      * @param name
      * @param request

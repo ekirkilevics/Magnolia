@@ -12,25 +12,31 @@
  */
 package info.magnolia.cms.security;
 
+import info.magnolia.cms.util.FactoryUtil;
+
 
 /**
- * Get the current role manager.
+ * Get the current role or user manager.
  * @author philipp
  * @version $Revision$ ($Author$)
  *
  */
-public class RoleManagerFactory {
-    private static RoleManager instance;
+public class Security {
 
     /**
      * Returns the current RoleManager. Depends on the configuration.
      * @return
      */
     public static RoleManager getRoleManager() {
-        // TODO use the configuration
-        if (instance == null) {
-            instance = new MgnlRoleManager();
-        }
-        return instance;
+        return (RoleManager) FactoryUtil.getSingleton(RoleManager.class);
     }
+
+    /**
+     * Returns the current UserManager. Depends on the configuration.
+     * @return
+     */
+    public static UserManager getUserManager() {
+        return (UserManager) FactoryUtil.getSingleton(UserManager.class);
+    }
+
 }

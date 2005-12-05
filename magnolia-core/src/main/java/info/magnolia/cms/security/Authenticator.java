@@ -118,9 +118,9 @@ public final class Authenticator {
      * @param request
      */
     private static void updateSession(HttpServletRequest request) {
-        UserManagerFactory.getUserManager().setCurrent(request);
+        Security.getUserManager().setCurrent(request);
         // set user language to be used by message manager
-        String lang = UserManagerFactory.getUserManager().getCurrent(request).getLanguage();
+        String lang = Security.getUserManager().getCurrent(request).getLanguage();
         if (StringUtils.isEmpty(lang)) {
             lang = MessagesManager.getDefaultLocale().getLanguage();
         }

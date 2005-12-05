@@ -37,7 +37,7 @@ public class JAASUserManager implements UserManager {
                 this.setCurrent(request);
             }
             // if setCurrent failed for some reason or user does not exist
-            if ((user = (User)request.getSession().getAttribute(Authenticator.ATTRIBUTE_USER)) == null) {
+            if ((user = (User) request.getSession().getAttribute(Authenticator.ATTRIBUTE_USER)) == null) {
                 user = new DummyUser();
             }
         }
@@ -82,6 +82,23 @@ public class JAASUserManager implements UserManager {
      * @see info.magnolia.cms.security.UserManager#getAllUsers(javax.servlet.http.HttpServletRequest)
      */
     public Collection getAllUsers(HttpServletRequest request) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("not implemented with JAAS");
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see info.magnolia.cms.security.UserManager#createUser(java.lang.String, java.lang.String,
+     * javax.servlet.http.HttpServletRequest)
+     */
+    public User createUser(String name, String pw, HttpServletRequest request) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("not implemented with JAAS");
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see info.magnolia.cms.security.UserManager#createUser(java.lang.String, java.lang.String)
+     */
+    public User createUser(String name, String pw) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("not implemented with JAAS");
     }
 }

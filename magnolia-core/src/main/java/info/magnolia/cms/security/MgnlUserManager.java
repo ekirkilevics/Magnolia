@@ -24,6 +24,7 @@ import info.magnolia.cms.core.ItemType;
 import javax.jcr.PathNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 
 
@@ -39,7 +40,7 @@ public class MgnlUserManager implements UserManager {
     /**
      * Do not instantiate it!
      */
-    protected MgnlUserManager() {
+    public MgnlUserManager() {
     }
 
     /*
@@ -83,6 +84,7 @@ public class MgnlUserManager implements UserManager {
         }
     }
 
+   
     /*
      * (non-Javadoc)
      * @see info.magnolia.cms.security.UserManager#findUser(java.lang.String, javax.servlet.http.HttpServletRequest)
@@ -150,5 +152,45 @@ public class MgnlUserManager implements UserManager {
         }
         return users;
     }
+
+    /* (non-Javadoc)
+     * @see info.magnolia.cms.security.UserManager#createUser(java.lang.String, java.lang.String, javax.servlet.http.HttpServletRequest)
+     */
+    public User createUser(String name, String pw, HttpServletRequest request) throws UnsupportedOperationException {
+        HierarchyManager hm = SessionAccessControl.getHierarchyManager(request, ContentRepository.USERS);
+        return createUser(name, pw, hm);
+
+    }
+
+    /* (non-Javadoc)
+     * @see info.magnolia.cms.security.UserManager#createUser(java.lang.String, java.lang.String)
+     */
+    public User createUser(String name, String pw) throws UnsupportedOperationException {
+        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USERS);
+        return createUser(name, pw, hm);
+    }
+
+    /**
+     * @param name
+     * @param pw
+     * @param hm
+     * @return
+     */
+    private User createUser(String name, String pw, HierarchyManager hm) {
+        try {
+            Content node = null;
+            node = hm.createContent("/", name, ItemType.CONTENT.getSystemName());
+            node.getNodeData("name", true).setValue(name);
+            node.getNodeData("pswd", true).setValue(new String(Base64.encodeBase64(pw.getBytes())));
+            node.getNodeData("language", true).setValue("en");
+            node.save();
+            return new MgnlUser(node);
+        }
+        catch (Exception e) {
+            log.info("can't create user [" + name + "]", e);
+            return null;
+        }
+    }
+    
 
 }
