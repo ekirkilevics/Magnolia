@@ -24,6 +24,7 @@ import info.magnolia.cms.core.Path;
 import info.magnolia.cms.exchange.simple.SimpleSyndicator;
 import info.magnolia.cms.exchange.Rule;
 import info.magnolia.cms.exchange.ExchangeException;
+import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.gui.misc.Spacer;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Authenticator;
@@ -877,12 +878,32 @@ public class Tree extends ControlSuper {
         else {
             c = getHierarchyManager().getContent(path);
         }
-        /**
+        
+        String parentPath = StringUtils.substringBeforeLast(path,"/");
+        if (StringUtils.isEmpty(parentPath)) {
+            parentPath = "/";
+        }
+
+        Syndicator syndicator = getActivationSyndicator(path, recursive, includeContentNodes);
+        syndicator.activate(parentPath, path);
+    }
+
+    /**
+     * Create the <code>Syndicator</code> to activate the specified path.
+     * 
+     * @param path node path to be activated
+     * @param recursive flag if the activation should work recursively
+     * @param includeContentNodes flag if the activation should consider ContentNodes
+     * 
+     * @return the <code>Syndicator</code> used to activate
+     */
+    protected Syndicator getActivationSyndicator(String path, boolean recursive, boolean includeContentNodes) {
+        /*
          * Here rule defines which content types to collect, its a resposibility of the caller ro set
          * this, it will be different in every hierarchy, for instance
          * - in website tree recursive activation : rule will allow mgnl:contentNode, mgnl:content and nt:file
          * - in website tree non-recursive activation : rule will allow mgnl:contentNode and nt:file only
-         * */
+         */
         Rule rule = new Rule();
         rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
         rule.addAllowType(ItemType.NT_FILE);
@@ -893,19 +914,27 @@ public class Tree extends ControlSuper {
                 this.getRepository(),
                 ContentRepository.getDefaultWorkspace(this.getRepository()),
                 rule);
-
-        String parentPath = StringUtils.substringBeforeLast(path,"/");
-        if (StringUtils.isEmpty(parentPath)) {
-            parentPath = "/";
-        }
-        syndicator.activate(parentPath, path);
+        return syndicator;
     }
-
+    
     public void deActivateNode(String path) throws ExchangeException, RepositoryException {
         // do not deactivate node datas
         if (getHierarchyManager().isNodeData(path)) {
             return;
         }
+        
+        Syndicator syndicator = getDeactivationSyndicator(path);
+        syndicator.deActivate(path);
+    }
+
+    /**
+     * Create the <code>Syndicator</code> to deactivate the specified path.
+     * 
+     * @param path node path to be deactivated
+     * 
+     * @return the <code>Syndicator</code> used to deactivate
+     */
+    protected Syndicator getDeactivationSyndicator(String path) {
         Rule rule = new Rule();
         rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
         rule.addAllowType(ItemType.NT_FILE);
@@ -913,9 +942,10 @@ public class Tree extends ControlSuper {
                 this.getRepository(),
                 ContentRepository.getDefaultWorkspace(this.getRepository()),
                 rule);
-        syndicator.deActivate(path);
+        
+        return syndicator;
     }
-
+    
     public String getHtml() {
         StringBuffer html = new StringBuffer();
         if (!this.getSnippetMode()) {
