@@ -13,13 +13,10 @@
 package info.magnolia.cms.security;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
-
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 
@@ -39,24 +36,9 @@ public class MgnlRoleManager implements RoleManager {
     protected MgnlRoleManager() {
     }
 
-    public Role getRole(String name, HttpServletRequest request) throws UnsupportedOperationException {
-        HierarchyManager hm = SessionAccessControl.getHierarchyManager(request, ContentRepository.USER_ROLES);
-        return getRole(name, hm);
-    }
-
-    public Role getRole(String name) throws UnsupportedOperationException {
-        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USER_ROLES);
-        return getRole(name, hm);
-    }
-
-    /**
-     * @param name
-     * @param hm
-     * @return
-     */
-    private Role getRole(String name, HierarchyManager hm) {
+    public Role getRole(String name) {
         try {
-            return new MgnlRole(hm.getContent(name));
+            return new MgnlRole(getHierarchyManager().getContent(name));
         }
         catch (Exception e) {
             log.info("can't find role [" + name + "]", e);
@@ -64,27 +46,9 @@ public class MgnlRoleManager implements RoleManager {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see info.magnolia.cms.security.RoleManager#createRole(java.lang.String)
-     */
-    public Role createRole(String name) throws UnsupportedOperationException {
-        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USER_ROLES);
-        return createRole(name, hm);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see info.magnolia.cms.security.RoleManager#createRole(java.lang.String, javax.servlet.http.HttpServletRequest)
-     */
-    public Role createRole(String name, HttpServletRequest request) throws UnsupportedOperationException {
-        HierarchyManager hm = SessionAccessControl.getHierarchyManager(request, ContentRepository.USER_ROLES);
-        return createRole(name, hm);
-    }
-
-    private Role createRole(String name, HierarchyManager hm) throws UnsupportedOperationException{
+    public Role createRole(String name){
         try {
-            Content node = hm.createContent("/", name, ItemType.CONTENT.getSystemName());
+            Content node = getHierarchyManager().createContent("/", name, ItemType.CONTENT.getSystemName());
             node.save();
             return new MgnlRole(node);
         }
@@ -92,5 +56,12 @@ public class MgnlRoleManager implements RoleManager {
             log.error("can't create role [" + name + "]", e);
             return null;
         }
+    }
+    
+    /**
+     * return the role HierarchyManager
+     */
+    protected HierarchyManager getHierarchyManager() {
+        return MgnlContext.getHierarchyManager(ContentRepository.USER_ROLES);
     }
 }

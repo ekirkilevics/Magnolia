@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -47,16 +48,29 @@ public class MgnlUserManager implements UserManager {
      * (non-Javadoc)
      * @see info.magnolia.cms.security.UserManager#getCurrent(javax.servlet.http.HttpServletRequest)
      */
-    public User getCurrent(HttpServletRequest request) {
+    public User getCurrent() {
+        HttpServletRequest request = MgnlContext.getRequest();
         User user = (User) request.getSession().getAttribute(Authenticator.ATTRIBUTE_USER);
         if (user == null) {
             // first check if session is authenticated, if yet this is a false call and try to
             // set current user again
             if (SessionAccessControl.isSecuredSession(request)) {
-                this.setCurrent(request);
+                String name = Authenticator.getUserId(request);
+
+                Content node;
+                try {
+                    node = getHierarchyManager().getContent(name);
+                    this.setCurrent(new MgnlUser(node));
+                }
+                catch (PathNotFoundException e) {
+                    log.error("user not registered in magnolia itself [" + name + "]");
+                }
+                catch (Exception e) {
+                    log.error("can't get jcr-node of current user", e);
+                }
             }
             // if setCurrent failed for some reason or user does not exist
-            if ((user = (User)request.getSession().getAttribute(Authenticator.ATTRIBUTE_USER)) == null) {
+            if ((user = (User) request.getSession().getAttribute(Authenticator.ATTRIBUTE_USER)) == null) {
                 user = new DummyUser();
             }
         }
@@ -67,51 +81,18 @@ public class MgnlUserManager implements UserManager {
      * (non-Javadoc)
      * @see info.magnolia.cms.security.UserManager#setCurrent(javax.servlet.http.HttpServletRequest)
      */
-    public void setCurrent(HttpServletRequest request) {
-        String name = Authenticator.getUserId(request);
-        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USERS);
-
-        Content node;
-        try {
-            node = hm.getContent(name);
-            request.getSession().setAttribute(Authenticator.ATTRIBUTE_USER, new MgnlUser(node));
-        }
-        catch (PathNotFoundException e) {
-            log.error("user not registered in magnolia itself [" + name + "]");
-        }
-        catch (Exception e) {
-            log.error("can't get jcr-node of current user", e);
-        }
-    }
-
-   
-    /*
-     * (non-Javadoc)
-     * @see info.magnolia.cms.security.UserManager#findUser(java.lang.String, javax.servlet.http.HttpServletRequest)
-     */
-    public User getUser(String name, HttpServletRequest request) throws UnsupportedOperationException {
-        HierarchyManager hm = SessionAccessControl.getHierarchyManager(request, ContentRepository.USERS);
-        return getUser(name, hm);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see info.magnolia.cms.security.UserManager#getUser(java.lang.String)
-     */
-    public User getUser(String name) throws UnsupportedOperationException {
-        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USERS);
-        return getUser(name, hm);
+    public void setCurrent(User user) {
+        MgnlContext.getSession().setAttribute(Authenticator.ATTRIBUTE_USER, user);
     }
 
     /**
-     * Get the user object form the passed HierarchyManager.
+     * Get the user object
      * @param name
-     * @param hm
      * @return the user object
      */
-    private User getUser(String name, HierarchyManager hm) {
+    public User getUser(String name) {
         try {
-            return new MgnlUser(hm.getContent(name));
+            return new MgnlUser(getHierarchyManager().getContent(name));
         }
         catch (Exception e) {
             log.info("can't find user [" + name + "]", e);
@@ -119,30 +100,13 @@ public class MgnlUserManager implements UserManager {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see info.magnolia.cms.security.UserManager#getAllUsers()
-     */
-    public Collection getAllUsers() throws UnsupportedOperationException {
-        return getAllUsers(ContentRepository.getHierarchyManager(ContentRepository.USERS));
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see info.magnolia.cms.security.UserManager#getAllUsers(javax.servlet.http.HttpServletRequest)
-     */
-    public Collection getAllUsers(HttpServletRequest request) throws UnsupportedOperationException {
-        return getAllUsers(SessionAccessControl.getHierarchyManager(request, ContentRepository.USERS));
-    }
-
     /**
-     * @param hm
-     * @return
+     * All users
      */
-    private Collection getAllUsers(HierarchyManager hm) {
+    public Collection getAllUsers() {
         Collection users = new ArrayList();
         try {
-            Collection nodes = hm.getRoot().getChildren(ItemType.CONTENT);
+            Collection nodes = getHierarchyManager().getRoot().getChildren(ItemType.CONTENT);
             for (Iterator iter = nodes.iterator(); iter.hasNext();) {
                 users.add(new MgnlUser((Content) iter.next()));
             }
@@ -153,33 +117,15 @@ public class MgnlUserManager implements UserManager {
         return users;
     }
 
-    /* (non-Javadoc)
-     * @see info.magnolia.cms.security.UserManager#createUser(java.lang.String, java.lang.String, javax.servlet.http.HttpServletRequest)
-     */
-    public User createUser(String name, String pw, HttpServletRequest request) throws UnsupportedOperationException {
-        HierarchyManager hm = SessionAccessControl.getHierarchyManager(request, ContentRepository.USERS);
-        return createUser(name, pw, hm);
-
-    }
-
-    /* (non-Javadoc)
-     * @see info.magnolia.cms.security.UserManager#createUser(java.lang.String, java.lang.String)
-     */
-    public User createUser(String name, String pw) throws UnsupportedOperationException {
-        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USERS);
-        return createUser(name, pw, hm);
-    }
-
     /**
      * @param name
      * @param pw
-     * @param hm
-     * @return
+     * @return the created User
      */
-    private User createUser(String name, String pw, HierarchyManager hm) {
+    public User createUser(String name, String pw) {
         try {
             Content node = null;
-            node = hm.createContent("/", name, ItemType.CONTENT.getSystemName());
+            node = getHierarchyManager().createContent("/", name, ItemType.CONTENT.getSystemName());
             node.getNodeData("name", true).setValue(name);
             node.getNodeData("pswd", true).setValue(new String(Base64.encodeBase64(pw.getBytes())));
             node.getNodeData("language", true).setValue("en");
@@ -191,6 +137,12 @@ public class MgnlUserManager implements UserManager {
             return null;
         }
     }
-    
+
+    /**
+     * return the user HierarchyManager
+     */
+    protected HierarchyManager getHierarchyManager() {
+        return MgnlContext.getHierarchyManager(ContentRepository.USERS);
+    }
 
 }

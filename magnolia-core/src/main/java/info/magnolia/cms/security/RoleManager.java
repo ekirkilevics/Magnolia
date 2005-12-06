@@ -12,8 +12,6 @@
  */
 package info.magnolia.cms.security;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * 
  * @author philipp
@@ -29,24 +27,6 @@ public interface RoleManager {
      * @throws Exception 
      */
     public Role createRole(String name) throws UnsupportedOperationException, Exception;
-
-    /**
-     * Create a role
-     * @param name name of the role
-     * @param request
-     * @return the new role
-     * @throws UnsupportedOperationException
-     */
-    public Role createRole(String name, HttpServletRequest request) throws UnsupportedOperationException, Exception;
-
-    /**
-     * Get a specifig role
-     * @param name
-     * @param request
-     * @return the role object
-     * @throws UnsupportedOperationException
-     */
-    public Role getRole(String name, HttpServletRequest request) throws UnsupportedOperationException;
 
     /**
      * Get the specifig role without any security restrictions

@@ -13,6 +13,7 @@
 package info.magnolia.cms.security;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.SearchFactory;
@@ -301,8 +302,8 @@ public final class SessionAccessControl {
      * @param request current HttpServletRequest
      * @return the current user object
      */
-    public static User getUser(HttpServletRequest request) {
-        return Security.getUserManager().getCurrent(request);
+    public static User getUser() {
+        return MgnlContext.getUser();
     }
 
     /**

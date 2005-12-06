@@ -14,8 +14,6 @@ package info.magnolia.cms.security;
 
 import java.util.Collection;
 
-import javax.servlet.http.HttpServletRequest;
-
 
 /**
  * Used to get the current or other User objects.
@@ -26,27 +24,17 @@ public interface UserManager {
 
     /**
      * Returns the current user
-     * @param request
      * @return the current user
      */
-    public User getCurrent(HttpServletRequest request);
+    public User getCurrent();
 
     /**
-     * Set current user
-     * @param request
+     * Set the current user
      */
-    public void setCurrent(HttpServletRequest request);
-
+    public void setCurrent(User user);
+    
     /**
      * Find a specific user. Not all implementations will support this method.
-     * @param name the name of the user
-     * @param request the request. used for security reasons
-     * @return the user object
-     */
-    public User getUser(String name, HttpServletRequest request) throws UnsupportedOperationException;
-
-    /**
-     * Find a specific user without security restrictions.
      * @param name the name of the user
      * @return the user object
      */
@@ -54,28 +42,11 @@ public interface UserManager {
 
     /**
      * Get all users.
-     * @param request
      * @return collection of User objects
      * @throws UnsupportedOperationException
      */
-    public Collection getAllUsers(HttpServletRequest request) throws UnsupportedOperationException;
-
-    /**
-     * Get all users without any security restrictions.
-     * @return
-     * @throws UnsupportedOperationException
-     */
     public Collection getAllUsers() throws UnsupportedOperationException;
-    
-    /**
-     * Creates a user
-     * @param name user name
-     * @param pw password
-     * @return the new user object
-     * @throws UnsupportedOperationException
-     */
-    public User createUser(String name, String pw, HttpServletRequest request) throws UnsupportedOperationException;
-    
+
     /**
      * Creates a user without security restrictions
      * @param name user name

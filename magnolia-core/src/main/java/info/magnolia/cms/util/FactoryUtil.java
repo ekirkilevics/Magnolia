@@ -43,7 +43,7 @@ public class FactoryUtil {
 
     }
 
-    public static Object getInstancen(Class interf) {
+    public static Object getInstance(Class interf) {
         try {
             return new DiscoverClass().newInstance(interf, props);
         }
@@ -54,7 +54,6 @@ public class FactoryUtil {
     }
 
     public static Object getSingleton(Class interf) {
-        System.out.println(interf.getName() + ":" + props.getProperty(interf.getName()));
         return DiscoverSingleton.find(interf, props);
     }
 
