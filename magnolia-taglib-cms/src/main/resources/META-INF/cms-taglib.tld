@@ -327,7 +327,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
         <attribute>
             <name>contentNodeName</name>
             <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
+            <rtexprvalue>true</rtexprvalue>
             <description>the name of the contentNode (i.e. paragraph) you wish to show</description>
         </attribute>
         <attribute>
