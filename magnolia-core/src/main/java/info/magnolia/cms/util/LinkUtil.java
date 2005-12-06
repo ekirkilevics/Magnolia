@@ -15,8 +15,11 @@ package info.magnolia.cms.util;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryManager;
+import info.magnolia.cms.core.search.QueryResult;
 
+import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -92,10 +95,16 @@ public final class LinkUtil {
         Matcher matcher = uuidPattern.matcher(str);
         StringBuffer res = new StringBuffer();
         while (matcher.find()) {
+            String absolutePath = null;
             String uuid = matcher.group(1);
-            String absolutePath = LinkUtil.makeAbsolutePathFromUUID(uuid);
+
+            if (StringUtils.isNotEmpty(uuid)) {
+                absolutePath = LinkUtil.makeAbsolutePathFromUUID(uuid);
+            }
+
             // can't find the uuid
-            if (absolutePath.equals(uuid)) {
+            if (StringUtils.isEmpty(absolutePath)) {
+                log.error("Was not able to get the page by jcr:uuid nor by mgnl:uuid. Will use the saved path");
                 absolutePath = matcher.group(2);
             }
             matcher.appendReplacement(res, absolutePath + ".html"); //$NON-NLS-1$
@@ -114,12 +123,19 @@ public final class LinkUtil {
         Matcher matcher = uuidPattern.matcher(str);
         StringBuffer res = new StringBuffer();
         while (matcher.find()) {
+            String absolutePath = null;
             String uuid = matcher.group(1);
-            String absolutePath = LinkUtil.makeAbsolutePathFromUUID(uuid);
+
+            if (StringUtils.isNotEmpty(uuid)) {
+                absolutePath = LinkUtil.makeAbsolutePathFromUUID(uuid);
+            }
 
             // can't find the uuid
-            if (absolutePath == null) {
+            if (StringUtils.isEmpty(absolutePath)) {
                 absolutePath = matcher.group(2);
+                log.error("Was not able to get the page by jcr:uuid nor by mgnl:uuid. Will use the saved path ["
+                    + absolutePath
+                    + "]");
             }
 
             // to relative path
@@ -137,24 +153,33 @@ public final class LinkUtil {
      * @return path
      */
     public static String makeAbsolutePathFromUUID(String uuid) {
+        Content content = null;
 
-        QueryManager qmanager = hm.getQueryManager();
+        // first use the jcr:uuid (since 2.2)
+        try {
+            content = hm.getContentByUUID(uuid);
+        }
 
-        if (qmanager != null) {
-            // this uses magnolia uuid
-            Content content = Search.getContentByUUID(qmanager, uuid);
+        // then the old mgnl:uuid
+        catch (Exception e) {
+            log.error("Was not able to get the page by the jcr:uuid. will try the old mgnl:uuid");
 
-            // this uses the jcr uuid
-            // content = hm.getContentByUUID(uuid);
+            QueryManager qmanager = hm.getQueryManager();
 
-            if (content != null) {
-                return content.getHandle();
+            if (qmanager != null) {
+                // this uses magnolia uuid
+                content = getContentByMgnlUUID(qmanager, uuid);
+            }
+            else {
+                log
+                    .info("SearchManager not configured for website repositoy, unable to generate absolute path for UUID ["
+                        + uuid
+                        + "]");
             }
         }
-        else {
-            log.info("SearchManager not configured for website repositoy, unable to generate absolute path for UUID ["
-                + uuid
-                + "]");
+
+        if (content != null) {
+            return content.getHandle();
         }
         return null;
     }
@@ -210,4 +235,29 @@ public final class LinkUtil {
      */
     private LinkUtil() {
     }
+
+    /**
+     * Used for old content
+     * @param queryManager
+     * @param uuid
+     * @return
+     * @deprecated
+     */
+    private static Content getContentByMgnlUUID(QueryManager queryManager, String uuid) {
+        try {
+            String statement = "SELECT * FROM nt:base where mgnl:uuid like '" + uuid + "'"; //$NON-NLS-1$ //$NON-NLS-2$
+            Query q = queryManager.createQuery(statement, Query.SQL);
+            QueryResult result = q.execute();
+            Iterator it = result.getContent().iterator();
+            while (it.hasNext()) {
+                Content foundObject = (Content) it.next();
+                return foundObject;
+            }
+        }
+        catch (RepositoryException e) {
+            log.error(e);
+        }
+        return null;
+    }
+
 }
