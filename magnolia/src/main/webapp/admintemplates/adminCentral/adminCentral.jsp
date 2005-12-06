@@ -18,6 +18,7 @@
     <jsp:directive.page import="info.magnolia.cms.core.ItemType" />
 
     <jsp:directive.page contentType="text/html; charset=UTF-8" />
+<jsp:directive.page import="info.magnolia.cms.beans.runtime.MgnlContext"/>
     <!--<jsp:text>
         <![CDATA[<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> ]]>
@@ -46,16 +47,16 @@
 	boolean first = true;
 
 	// this is a workaround for the AdminCentral button in the page edit dialog
-    if(pathSelected!= null &amp;&amp; pathSelected!=""){
+    if(pathSelected!= null <![CDATA[&&]]> pathSelected!=""){
 	    StringBuffer src=new StringBuffer();
 		src.append(request.getContextPath());
 		src.append("/.magnolia/adminCentral/extractTree.html");
 		src.append("?mgnlCK=");
 		src.append(new Date().getTime());
-		src.append("&amp;name="+repository);
-		if (path!=null) src.append("&amp;path="+path);
-		if (pathOpen!=null) src.append("&amp;pathOpen="+pathOpen);
-		if (pathSelected!=null) src.append("&amp;pathSelected="+pathSelected);
+		<![CDATA[src.append("&name="+repository);]]>
+		<![CDATA[if (path!=null) src.append("&path="+path);]]>
+		<![CDATA[if (pathOpen!=null) src.append("&pathOpen="+pathOpen);]]>
+		<![CDATA[if (pathSelected!=null) src.append("&pathSelected="+pathSelected);]]>
 		iFrameSrc = src.toString();
 	}
 
@@ -96,14 +97,14 @@
 	}
 
 	// get user information
-	User user=SessionAccessControl.getUser(request);
+	User user=MgnlContext.getUser();
 	String userName = "";
     if (user==null || (userName = user.getName()).equals("")) userName=Authenticator.getUserId(request);
 
     pageContext.setAttribute("username", userName);
     pageContext.setAttribute("buttons", bs);
     pageContext.setAttribute("firstOnClick", firstOnClick);
-    pageContext.setAttribute("iFrameSrc", iFrameSrc);
+    pageContext.setAttribute("iFrameSrc", iFrameSrc); 
 
 
 </jsp:scriptlet>
@@ -134,7 +135,7 @@
         id="mgnlAdminCentral_ExtractNonTreeIFrame" src="" scrolling="auto" style="border: none; width:100%; height:100%"
         frameborder="0"><![CDATA[ <!-- a comment here is needed for the correct rendering of the iframe tag -->]]></iframe></div>
     <SCRIPT type="text/javascript">
-    	${firstOnClick}
+    	${firstOnClick} 
     </SCRIPT>
     </body>
     </html>
