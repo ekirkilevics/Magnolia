@@ -1487,7 +1487,7 @@ public class Tree extends ControlSuper {
     /**
      * @return the current HierarchyManager
      */
-    private HierarchyManager getHierarchyManager() {
+    public HierarchyManager getHierarchyManager() {
         return hm;
     }
     

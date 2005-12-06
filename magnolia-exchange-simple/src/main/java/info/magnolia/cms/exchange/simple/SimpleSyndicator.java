@@ -146,19 +146,19 @@ public class SimpleSyndicator implements Syndicator {
      */
     private static Logger log = Logger.getLogger(SimpleSyndicator.class);
 
-    private HttpServletRequest request;
+    protected HttpServletRequest request;
 
-    private String repositoryName;
+    protected String repositoryName;
 
-    private String workspaceName;
+    protected String workspaceName;
 
-    private String parent;
+    protected String parent;
 
-    private String path;
+    protected String path;
 
-    private Content.ContentFilter contentFilter;
+    protected Content.ContentFilter contentFilter;
 
-    private Rule contentFilterRule;
+    protected Rule contentFilterRule;
 
     /**
      * @param request
