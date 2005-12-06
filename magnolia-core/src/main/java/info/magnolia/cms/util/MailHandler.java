@@ -66,7 +66,7 @@ public class MailHandler {
             message.setRecipients(Message.RecipientType.CC, this.getCcList());
             message.setSubject(subject);
 
-            message.setContent(body, "text/plain");
+            message.setContent(body, "text/plain; charset=UTF-8");
             message.setHeader("Content-Type", "text/plain; charset=UTF-8");
 
             Transport.send(message);
