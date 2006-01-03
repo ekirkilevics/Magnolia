@@ -187,7 +187,8 @@ public class CacheHandler extends Thread {
         if (StringUtils.isEmpty(domain)) {
             domain = getAppURL(request);
         }
-
+        // if misconfigured or webapp is configured as root
+        domain = StringUtils.removeEnd(domain, "/");
         try {
             URL url = new URL(domain + uri);
             if (log.isDebugEnabled()) {
@@ -279,16 +280,9 @@ public class CacheHandler extends Thread {
      * any request parameter, else it wont write anything on the output stream.
      * @param request HttpServletRequest
      * @param response HttpServletResponse
-     * @throws IOException
      * @return <code>true</code> is successful
      */
     public static boolean streamFromCache(HttpServletRequest request, HttpServletResponse response) {
-
-        // by now don't cache anything if server is admin
-        // if (Server.isAdmin()) {
-        // return false;
-        // }
-
         // make sure not to stream anything from cache if it's a POST request or if it has parameters
         if (request.getMethod().toLowerCase().equals("post") || !request.getParameterMap().isEmpty()) { //$NON-NLS-1$
             return false;
