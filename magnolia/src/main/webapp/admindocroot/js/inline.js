@@ -39,7 +39,11 @@ function mgnlDeleteNode(path,paragraphName,nodeName)
 		href=mgnlAddParameter(href,"mgnlIntercept","NODE_DELETE");
 
 		href=mgnlRemoveParameter(href,"mgnlPath");
-		href=mgnlAddParameter(href,"mgnlPath",path+"/"+paragraphName+"/"+nodeName);
+		if (paragraphName == "") {
+    		href=mgnlAddParameter(href,"mgnlPath",path+"/"+nodeName);
+		} else {
+    		href=mgnlAddParameter(href,"mgnlPath",path+"/"+paragraphName+"/"+nodeName);
+		}
 
 		window.location.href=href;
 		}
