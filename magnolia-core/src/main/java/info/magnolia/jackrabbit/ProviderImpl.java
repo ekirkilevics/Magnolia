@@ -24,6 +24,7 @@ import javax.jcr.nodetype.NodeTypeManager;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.naming.NameNotFoundException;
 import javax.servlet.ServletContextEvent;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 
@@ -74,7 +75,6 @@ public class ProviderImpl implements Provider {
         configFile = Path.getAbsoluteFileSystemPath(configFile);
         String repositoryHome = (String) params.get(REPOSITORY_HOME_KEY);
         repositoryHome = Path.getAbsoluteFileSystemPath(repositoryHome);
-
         if (log.isInfoEnabled()) {
             log.info("Loading repository at " + repositoryHome + " (config file: " + configFile + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
@@ -106,8 +106,17 @@ public class ProviderImpl implements Provider {
 
         try {
             InitialContext ctx = new InitialContext(env);
-            RegistryHelper.registerRepository(ctx, bindName, configFile, repositoryHome, true);
-            this.repository = (Repository) ctx.lookup(bindName);
+            // first try to find the existing object if any
+            try {
+                this.repository = (Repository) ctx.lookup(bindName);
+            } catch (NameNotFoundException ne) {
+                if (log.isDebugEnabled()) {
+                    log.debug("No JNDI bound Repository found with name - "+bindName
+                            +" , trying to initialize a new Repository");
+                }
+                RegistryHelper.registerRepository(ctx, bindName, configFile, repositoryHome, true);
+                this.repository = (Repository) ctx.lookup(bindName);
+            }
         }
         catch (NamingException e) {
             log.error("Unable to initialize repository: " + e.getMessage(), e);
