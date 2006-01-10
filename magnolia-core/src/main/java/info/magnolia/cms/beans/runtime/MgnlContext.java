@@ -12,18 +12,15 @@
  */
 package info.magnolia.cms.beans.runtime;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.security.Security;
-import info.magnolia.cms.security.SessionAccessControl;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.User;
-import info.magnolia.cms.util.FactoryUtil;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import info.magnolia.cms.security.AccessManager;
 
 import org.apache.log4j.Logger;
+
+import java.util.Map;
 
 
 /**
@@ -47,48 +44,12 @@ public class MgnlContext {
     /**
      * The thread local variable holding the current context
      */
-    private static ThreadLocal context = new ThreadLocal();
-
-    private HttpServletRequest request;
-
-    private HttpServletResponse response;
-
-    private HttpSession session;
+    private static ThreadLocal localContext = new ThreadLocal();
 
     /**
      * Do not instantiate this class. The constructor must be public to use discovery
      */
     public MgnlContext() {
-
-    }
-
-    /**
-     * Called in the filter to initialize the current context
-     * @param newRequest The incoming http request
-     * @param newResponse The outgoing http reply
-     */
-    public void init(HttpServletRequest request, HttpServletResponse response) {
-        this.request = request;
-        this.response = response;
-        this.session = request.getSession(true);
-    }
-
-    public static HttpSession getSession() {
-        return MgnlContext.getInstance().session;
-    }
-
-    /**
-     * @return Returns the request.
-     */
-    public static HttpServletRequest getRequest() {
-        return getInstance().request;
-    }
-
-    /**
-     * @return Returns the response.
-     */
-    public static HttpServletResponse getResponse() {
-        return getInstance().response;
     }
 
     /**
@@ -96,33 +57,158 @@ public class MgnlContext {
      * @return the current user
      */
     public static User getUser() {
-        return Security.getUserManager().getCurrent();
+        return getInstance().getuser();
     }
 
     /**
-     * Make it easier to get the HierarchyManager independent of the presence of a request.
-     */
-    public static HierarchyManager getHierarchyManager(String repository) {
-        HttpServletRequest request = getRequest();
-        if (request != null) {
-            return SessionAccessControl.getHierarchyManager(request, repository);
-        }
-        else {
-            return ContentRepository.getHierarchyManager(repository);
-        }
+     * Set current user
+     * @param user
+     * */
+    public static void setUser(User user) {
+        getInstance().setUser(user);
     }
 
     /**
-     * Get the current context of the system. Uses the FactoryUtil
+     * Get hierarchy manager initialized for this user
+     * @param repositoryId
+     * @return hierarchy manager
+     * */
+    public static HierarchyManager getHierarchyManager(String repositoryId) {
+        return getInstance().getHierarchyManager(repositoryId);
+    }
+
+    /**
+     * Get hierarchy manager initialized for this user
+     * @param repositoryId
+     * @param workspaceId
+     * @return hierarchy manager
+     * */
+    public static HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
+        return getInstance().getHierarchyManager(repositoryId, workspaceId);
+    }
+
+    /**
+     * Get access manager for the specified repository on default workspace
+     * @param repositoryId
+     * @return access manager
+     * */
+    public static AccessManager getAccessManager(String repositoryId) {
+        return getInstance().getAccessManager(repositoryId);
+    }
+
+    /**
+     * Get access manager for the specified repository on the specified workspace
+     * @param repositoryId
+     * @param workspaceId
+     * @return access manager
+     * */
+    public static AccessManager getAccessManager(String repositoryId, String workspaceId) {
+        return getInstance().getAccessManager(repositoryId, workspaceId);
+    }
+
+    /**
+     * Get QueryManager created for this user on the specified repository
+     * @param repositoryId
+     * @return query manager
+     * */
+    public static QueryManager getQueryManager(String repositoryId) {
+        return getInstance().getQueryManager(repositoryId);
+    }
+
+    /**
+     * Get QueryManager created for this user on the specified repository and workspace
+     * @param repositoryId
+     * @param workspaceId
+     * @return query manager
+     * */
+    public static QueryManager getQueryManager(String repositoryId, String workspaceId) {
+        return getInstance().getQueryManager(repositoryId, workspaceId);
+    }
+
+    /**
+     * Get currently active page
+     * @return content object
+     * */
+    public static Content getActivePage() {
+        return getInstance().getActivePage();
+    }
+
+    /**
+     * Get aggregated file, its used from image templates to manipulate
+     * @return file object
+     * */
+    public static File getFile() {
+        return getInstance().getFile();
+    }
+
+    /**
+     * Get form object assembled by <code>MultipartRequestFilter</code>
+     * @return multipart form object
+     * */
+    public static MultipartForm getPostedForm() {
+        return getInstance().getPostedForm();
+    }
+
+    /**
+     * Get parameter value as string
+     * @param name
+     * @return parameter value
+     * */
+    public static String getParameter(String name) {
+        return getInstance().getParameter(name);
+    }
+
+    /**
+     * Get parameter value as string
+     * @return parameter values
+     * */
+    public static Map getParameters() {
+        return getInstance().getParameters();
+    }
+
+    /**
+     * Set attribute value, scope of the attribute is defined
+     * @param name is used as a key
+     * @param value
+     * */
+    public static void setAttribute(String name, Object value) {
+        getInstance().setAttribute(name, value);
+    }
+
+    /**
+     * Set attribute value, scope of the attribute is defined
+     * @param name is used as a key
+     * @param value
+     * @param scope , highest level of scope from which this attribute is visible
+     * */
+    public static void setAttribute(String name, Object value, int scope) {
+        getInstance().setAttribute(name, value, scope);
+    }
+
+    /**
+     * Get attribute value
+     * @param name to which value is associated to
+     * @return attribute value
+     * */
+    public static Object getAttribute(String name) {
+        return getInstance().getAttribute(name);
+    }
+
+
+    /**
+     * Set context implementation instance
+     * @param context
+     * */
+    public static void setInstance(Context context) {
+        localContext.set(context);
+    }
+
+    /**
+     * Get the current context of this thread
      * @return the context
      */
-    public static MgnlContext getInstance() {
-        MgnlContext ctx = (MgnlContext) context.get();
-        if (ctx == null) {
-            ctx = (MgnlContext) FactoryUtil.getInstance(MgnlContext.class);
-            context.set(ctx);
-        }
-        return ctx;
+    public static Context getInstance() {
+        return (Context) localContext.get();
     }
 
 }

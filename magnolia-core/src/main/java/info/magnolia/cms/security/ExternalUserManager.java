@@ -17,6 +17,7 @@ import info.magnolia.cms.beans.runtime.MgnlContext;
 import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.security.auth.Subject;
 
 
 /**
@@ -26,40 +27,25 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class ExternalUserManager implements UserManager {
 
-    /*
-     * (non-Javadoc)
-     * @see info.magnolia.cms.security.UserManager#getCurrent(javax.servlet.http.HttpServletRequest)
-     */
-    public User getCurrent() {
-        HttpServletRequest request = MgnlContext.getRequest();
-        User user = (User) request.getSession().getAttribute(Authenticator.ATTRIBUTE_USER);
-        if (user == null) {
-            // first check if session is authenticated, if yet this is a false call and try to
-            // set current user again
-            if (SessionAccessControl.isSecuredSession(request)) {
-                this.setCurrent(new JAASUser(Authenticator.getSubject(request)));
-            }
-            // if setCurrent failed for some reason or user does not exist
-            if ((user = (User) request.getSession().getAttribute(Authenticator.ATTRIBUTE_USER)) == null) {
-                user = new DummyUser();
-            }
-        }
-        return user;
-    }
-
-    public void setCurrent(User user) {
-        MgnlContext.getSession().setAttribute(Authenticator.ATTRIBUTE_USER, user);
-    }
-
     public User getUser(String name) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("not implemented with JAAS");
+        throw new UnsupportedOperationException("not implemented yet");
     }
 
     public Collection getAllUsers() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("not implemented with JAAS");
+        throw new UnsupportedOperationException("not implemented yet");
     }
 
     public User createUser(String name, String pw) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("not implemented with JAAS");
+        throw new UnsupportedOperationException("not implemented yet");
+    }
+
+    /**
+     * Initialize new user using JAAS authenticated/authorized subject
+     *
+     * @param subject
+     * @throws UnsupportedOperationException
+     */
+    public User getUserObject(Subject subject) throws UnsupportedOperationException {
+        return new ExternalUser(subject);
     }
 }

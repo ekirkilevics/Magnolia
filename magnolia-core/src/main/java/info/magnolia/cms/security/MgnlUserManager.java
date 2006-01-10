@@ -15,15 +15,15 @@ package info.magnolia.cms.security;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 
 import javax.jcr.PathNotFoundException;
-import javax.servlet.http.HttpServletRequest;
+import javax.security.auth.Subject;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
@@ -42,47 +42,6 @@ public class MgnlUserManager implements UserManager {
      * Do not instantiate it!
      */
     public MgnlUserManager() {
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see info.magnolia.cms.security.UserManager#getCurrent(javax.servlet.http.HttpServletRequest)
-     */
-    public User getCurrent() {
-        HttpServletRequest request = MgnlContext.getRequest();
-        User user = (User) request.getSession().getAttribute(Authenticator.ATTRIBUTE_USER);
-        if (user == null) {
-            // first check if session is authenticated, if yet this is a false call and try to
-            // set current user again
-            if (SessionAccessControl.isSecuredSession(request)) {
-                String name = Authenticator.getUserId(request);
-
-                Content node;
-                try {
-                    node = getHierarchyManager().getContent(name);
-                    this.setCurrent(new MgnlUser(node));
-                }
-                catch (PathNotFoundException e) {
-                    log.error("user not registered in magnolia itself [" + name + "]");
-                }
-                catch (Exception e) {
-                    log.error("can't get jcr-node of current user", e);
-                }
-            }
-            // if setCurrent failed for some reason or user does not exist
-            if ((user = (User) request.getSession().getAttribute(Authenticator.ATTRIBUTE_USER)) == null) {
-                user = new DummyUser();
-            }
-        }
-        return user;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see info.magnolia.cms.security.UserManager#setCurrent(javax.servlet.http.HttpServletRequest)
-     */
-    public void setCurrent(User user) {
-        MgnlContext.getSession().setAttribute(Authenticator.ATTRIBUTE_USER, user);
     }
 
     /**
@@ -139,10 +98,37 @@ public class MgnlUserManager implements UserManager {
     }
 
     /**
+     * Initialize new user using JAAS authenticated/authorized subject
+     *
+     * @param subject
+     * @throws UnsupportedOperationException
+     */
+    public User getUserObject(Subject subject) throws UnsupportedOperationException {
+        User user = null;
+        Set principalSet = subject.getPrincipals(Entity.class);
+        Iterator entityIterator = principalSet.iterator();
+        Entity userDetails = (Entity) entityIterator.next();
+        String name = (String) userDetails.getProperty(Entity.NAME);
+        try {
+            Content node = getHierarchyManager().getContent(name);
+            user = new MgnlUser(node);
+        } catch (PathNotFoundException e) {
+            log.error("user not registered in magnolia itself [" + name + "]");
+        } catch (Exception e) {
+            log.error("can't get jcr-node of current user", e);
+        }
+        if (user == null) {
+            user = new DummyUser();
+        }
+
+        return user;
+    }
+
+    /**
      * return the user HierarchyManager
      */
     protected HierarchyManager getHierarchyManager() {
-        return MgnlContext.getHierarchyManager(ContentRepository.USERS);
+        return ContentRepository.getHierarchyManager(ContentRepository.USERS);
     }
 
 }

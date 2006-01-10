@@ -13,6 +13,7 @@
 package info.magnolia.cms.security;
 
 import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.security.auth.login.LoginContext;
@@ -75,6 +76,7 @@ public final class Authenticator {
         credentials = getDecodedCredentials(credentials.substring(6).trim());
         Authenticator.setUserId(credentials, req);
         Authenticator.setPassword(credentials, req);
+        Subject subject;
         // first check if user has been authenticated by some other service or container itself
         if (req.getUserPrincipal() == null) {
             // JAAS authentication
@@ -84,7 +86,7 @@ public final class Authenticator {
             try {
                 LoginContext loginContext = new LoginContext("magnolia", callbackHandler);
                 loginContext.login();
-                Subject subject = loginContext.getSubject();
+                subject = loginContext.getSubject();
                 req.getSession().setAttribute(ATTRIBUTE_JAAS_SUBJECT, subject);
             }
             catch (LoginException le) {
@@ -100,7 +102,7 @@ public final class Authenticator {
             try {
                 LoginContext loginContext = new LoginContext("magnolia_authorization", callbackHandler);
                 loginContext.login();
-                Subject subject = loginContext.getSubject();
+                subject = loginContext.getSubject();
                 req.getSession().setAttribute(ATTRIBUTE_JAAS_SUBJECT, subject);
             }
             catch (LoginException le) {
@@ -109,17 +111,19 @@ public final class Authenticator {
                 return false;
             }
         }
-        updateSession(req);
+        updateSession(req, subject);
         return true;
     }
 
     /**
      * add user properties needed for jstl and user entity object to the session
+     * todo this should not be in Authenticator, setting user properties or authorization details
+     * does not belong here
      * @param request
      */
-    private static void updateSession(HttpServletRequest request) {
+    private static void updateSession(HttpServletRequest request, Subject subject) {
         // set user language to be used by message manager
-        String lang = Security.getUserManager().getCurrent().getLanguage();
+        String lang = Security.getUserManager().getUserObject(subject).getLanguage();
         if (StringUtils.isEmpty(lang)) {
             lang = MessagesManager.getDefaultLocale().getLanguage();
         }

@@ -17,12 +17,12 @@ import info.magnolia.cms.Dispatcher;
 import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.VirtualMap;
 import info.magnolia.cms.beans.runtime.Cache;
+import info.magnolia.cms.beans.runtime.WebContextImpl;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.CacheHandler;
 import info.magnolia.cms.core.CacheProcess;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.security.SessionAccessControl;
+import info.magnolia.cms.security.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -123,6 +123,10 @@ public class EntryServlet extends HttpServlet {
                         return; // if success return
                     }
                 }
+                // Initialize magnolia context
+                WebContextImpl context = new WebContextImpl(req);
+                MgnlContext.setInstance(context);
+                MgnlContext.setUser(Security.getUserManager().getUserObject(Authenticator.getSubject(req)));
                 if (redirect(req, res)) {
 
                     // it's a valid request cache it
@@ -132,7 +136,6 @@ public class EntryServlet extends HttpServlet {
                     return;
                 }
                 intercept(req, res);
-
                 // aggregate content
                 Aggregator aggregator = new Aggregator(req, res);
                 boolean success = aggregator.collect();

@@ -21,6 +21,7 @@ import info.magnolia.cms.core.Path;
 import java.util.Iterator;
 
 import javax.jcr.RepositoryException;
+
 import org.apache.log4j.Logger;
 
 
@@ -100,7 +101,6 @@ public class MgnlUser implements User {
     /**
      * Adds a role to this user
      * @param roleName the name of the role
-     * @param request the request. used for security reasons
      */
     public void addRole(String roleName) {
         try {

@@ -12,6 +12,7 @@
  */
 package info.magnolia.cms.security;
 
+import javax.security.auth.Subject;
 import java.util.Collection;
 
 
@@ -22,17 +23,6 @@ import java.util.Collection;
  */
 public interface UserManager {
 
-    /**
-     * Returns the current user
-     * @return the current user
-     */
-    public User getCurrent();
-
-    /**
-     * Set the current user
-     */
-    public void setCurrent(User user);
-    
     /**
      * Find a specific user. Not all implementations will support this method.
      * @param name the name of the user
@@ -56,5 +46,11 @@ public interface UserManager {
      */
     public User createUser(String name, String pw) throws UnsupportedOperationException;
 
+    /**
+     * Initialize new user using JAAS authenticated/authorized subject
+     * @param subject
+     * @throws UnsupportedOperationException
+     * */
+    public User getUserObject(Subject subject) throws UnsupportedOperationException;
 
 }

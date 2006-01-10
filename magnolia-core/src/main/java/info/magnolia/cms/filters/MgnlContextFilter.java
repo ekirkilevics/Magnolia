@@ -13,6 +13,7 @@
 package info.magnolia.cms.filters;
 
 import info.magnolia.cms.beans.runtime.MgnlContext;
+import info.magnolia.cms.beans.runtime.WebContextImpl;
 
 import java.io.IOException;
 
@@ -37,8 +38,9 @@ public class MgnlContextFilter implements Filter {
     public void init(FilterConfig conf) throws ServletException {
     }
 
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        MgnlContext.getInstance().init((HttpServletRequest)request, (HttpServletResponse)response);
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+        // unused
         chain.doFilter(request, response);
     }
 

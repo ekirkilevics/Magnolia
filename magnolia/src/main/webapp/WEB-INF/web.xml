@@ -23,12 +23,6 @@
   </filter>
   <filter>
     <description></description>
-    <display-name>MgnlContextFilter</display-name>
-    <filter-name>MgnlContextFilter</filter-name>
-    <filter-class>info.magnolia.cms.filters.MgnlContextFilter</filter-class>
-  </filter>
-  <filter>
-    <description></description>
     <display-name>SecurityFilter</display-name>
     <filter-name>SecurityFilter</filter-name>
     <filter-class>info.magnolia.cms.security.SecurityFilter</filter-class>
@@ -39,10 +33,6 @@
   </filter-mapping>
   <filter-mapping>
     <filter-name>MultipartRequestFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>MgnlContextFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
   <filter-mapping>
