@@ -22,7 +22,7 @@ import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.exchange.simple.SimpleSyndicator;
-import info.magnolia.cms.exchange.Rule;
+import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.gui.misc.Spacer;

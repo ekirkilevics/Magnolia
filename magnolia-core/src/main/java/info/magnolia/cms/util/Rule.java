@@ -10,7 +10,7 @@
  * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.exchange;
+package info.magnolia.cms.util;
 
 import org.apache.commons.lang.StringUtils;
 

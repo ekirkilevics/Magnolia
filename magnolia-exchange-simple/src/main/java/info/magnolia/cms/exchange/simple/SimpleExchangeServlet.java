@@ -40,7 +40,8 @@ import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.core.*;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.cms.exchange.ExchangeException;
-import info.magnolia.cms.exchange.Rule;
+import info.magnolia.cms.util.Rule;
+import info.magnolia.cms.util.RuleBasedContentFilter;
 
 /**
  *
