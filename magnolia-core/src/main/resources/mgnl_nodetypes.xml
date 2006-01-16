@@ -70,7 +70,7 @@
         <supertypes>
             <supertype>nt:hierarchyNode</supertype>
         </supertypes>
-        <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="VERSION" protected="false" sameNameSiblings="true">
+        <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="true">
             <requiredPrimaryTypes>
                 <requiredPrimaryType>nt:hierarchyNode</requiredPrimaryType>
             </requiredPrimaryTypes>
@@ -81,7 +81,7 @@
         <supertypes>
             <supertype>nt:hierarchyNode</supertype>
         </supertypes>
-        <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="VERSION" protected="false" sameNameSiblings="true">
+        <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="true">
             <requiredPrimaryTypes>
                 <requiredPrimaryType>nt:hierarchyNode</requiredPrimaryType>
             </requiredPrimaryTypes>
