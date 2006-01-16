@@ -153,6 +153,7 @@ public class ConfigLoader {
             Subscriber.init();
             Cache.init();
             MIMEMapping.init();
+            VersionConfig.init();
             setConfigured(true);
             log.info("Configuration loaded!"); //$NON-NLS-1$
         }

@@ -140,7 +140,7 @@ public final class Server {
 
     /**
      * Register an event listener: reload server configuration when something changes.
-     * @todo split reloading of base server configuration and secure URI list
+     * todo split reloading of base server configuration and secure URI list
      */
     private static void registerEventListener() {
 

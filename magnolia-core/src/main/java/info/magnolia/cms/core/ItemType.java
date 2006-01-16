@@ -89,9 +89,19 @@ public final class ItemType implements Serializable {
     public static final ItemType CONTENTNODE = new ItemType("mgnl:contentNode"); //$NON-NLS-1$
 
     /**
+     * "mgnl:contentNode"
+     */
+    public static final ItemType SYSTEM = new ItemType("mgnl:system"); //$NON-NLS-1$
+
+    /**
      * "jcr:content"
      */
     public static final ItemType JCR_CONTENT = new ItemType("jcr:content"); //$NON-NLS-1$
+
+    /**
+     * jcr:frozenNode
+     */
+    public static final ItemType JCR_FROZENNODE = new ItemType("jcr:frozenNode");
 
     /**
      * Stable serialVersionUID.

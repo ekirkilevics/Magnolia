@@ -882,6 +882,7 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * evaluate primary node type of the associated Node of this object
+     * @param type
      */
     public boolean isNodeType(String type) {
         try {
@@ -909,7 +910,6 @@ public class Content extends ContentHandler implements Cloneable {
      * @throws VersionException if the specified <code>versionName</code> does not exist in this node's version
      * history
      * @throws RepositoryException if an error occurs
-     * @see javax.jcr.Node#restore(String, boolean)
      */
     public void restore(String versionName, boolean removeExisting) throws VersionException,
         UnsupportedRepositoryOperationException, RepositoryException {
@@ -922,7 +922,6 @@ public class Content extends ContentHandler implements Cloneable {
      * @param removeExisting
      * @throws VersionException if the specified <code>version</code> is not part of this node's version history
      * @throws RepositoryException if an error occurs
-     * @see javax.jcr.Node#restore(javax.jcr.version.Version, boolean)
      */
     public void restore(Version version, boolean removeExisting) throws VersionException,
         UnsupportedRepositoryOperationException, RepositoryException {
@@ -936,7 +935,6 @@ public class Content extends ContentHandler implements Cloneable {
      * @param removeExisting
      * @throws VersionException if the specified <code>version</code> is not part of this node's version history
      * @throws RepositoryException if an error occurs
-     * @see javax.jcr.Node#restore(javax.jcr.version.Version, String, boolean)
      */
     public void restore(Version version, String relPath, boolean removeExisting) throws VersionException,
         UnsupportedRepositoryOperationException, RepositoryException {
@@ -950,7 +948,6 @@ public class Content extends ContentHandler implements Cloneable {
      * @throws VersionException if the specified <code>versionLabel</code> does not exist in this node's version
      * history
      * @throws RepositoryException if an error occurs
-     * @see javax.jcr.Node#restoreByLabel(String, boolean)
      */
     public void restoreByLabel(String versionLabel, boolean removeExisting) throws VersionException,
         UnsupportedRepositoryOperationException, RepositoryException {
@@ -959,6 +956,7 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * add version leaving the node checked out
+     * @throws UnsupportedRepositoryOperationException
      * @throws RepositoryException if an error occurs
      */
     public Version addVersion() throws UnsupportedRepositoryOperationException, RepositoryException {
@@ -971,7 +969,7 @@ public class Content extends ContentHandler implements Cloneable {
      * @return checked in version
      * @throws RepositoryException if an error occurs
      */
-    public Version checkIn() throws UnsupportedRepositoryOperationException, RepositoryException {
+    protected Version checkIn() throws UnsupportedRepositoryOperationException, RepositoryException {
         return this.node.checkin();
     }
 
@@ -979,7 +977,7 @@ public class Content extends ContentHandler implements Cloneable {
      * check out for further write operations
      * @throws RepositoryException if an error occurs
      */
-    public void checkOut() throws UnsupportedRepositoryOperationException, RepositoryException {
+    protected void checkOut() throws UnsupportedRepositoryOperationException, RepositoryException {
         this.node.checkout();
     }
 
