@@ -85,9 +85,9 @@ public class MgnlUserManager implements UserManager {
         try {
             Content node = null;
             node = getHierarchyManager().createContent("/", name, ItemType.CONTENT.getSystemName());
-            node.getNodeData("name", true).setValue(name);
-            node.getNodeData("pswd", true).setValue(new String(Base64.encodeBase64(pw.getBytes())));
-            node.getNodeData("language", true).setValue("en");
+            node.createNodeData("name").setValue(name);
+            node.createNodeData("pswd").setValue(new String(Base64.encodeBase64(pw.getBytes())));
+            node.createNodeData("language").setValue("en");
             node.save();
             return new MgnlUser(node);
         }
