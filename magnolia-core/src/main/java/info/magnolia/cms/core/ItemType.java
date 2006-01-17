@@ -47,6 +47,11 @@ public final class ItemType implements Serializable {
     public static final String NT_FILE = "nt:file"; //$NON-NLS-1$
 
     /**
+     * Node type: resource
+     */
+    public static final String NT_RESOURCE = "nt:resource"; //$NON-NLS-1$
+
+    /**
      * Mixin: node has access control.
      */
     public static final String MIX_ACCESSCONTROLLABLE = "mix:accessControllable"; //$NON-NLS-1$
@@ -66,6 +71,16 @@ public final class ItemType implements Serializable {
      * @deprecated use ItemType.CONTENT
      */
     public static final String NT_CONTENT = "mgnl:content"; //$NON-NLS-1$
+
+    /**
+     * jcr:frozenNode
+     */
+    public static final String JCR_FROZENNODE = "jcr:frozenNode";
+
+    /**
+     * jcr:data
+     */
+    public static final String JCR_DATA = "jcr:data";
 
     /**
      * Magnolia content node.
@@ -97,11 +112,6 @@ public final class ItemType implements Serializable {
      * "jcr:content"
      */
     public static final ItemType JCR_CONTENT = new ItemType("jcr:content"); //$NON-NLS-1$
-
-    /**
-     * jcr:frozenNode
-     */
-    public static final ItemType JCR_FROZENNODE = new ItemType("jcr:frozenNode");
 
     /**
      * Stable serialVersionUID.

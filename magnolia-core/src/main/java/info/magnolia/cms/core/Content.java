@@ -26,15 +26,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.jcr.Item;
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.Property;
-import javax.jcr.PropertyIterator;
-import javax.jcr.RepositoryException;
-import javax.jcr.UnsupportedRepositoryOperationException;
-import javax.jcr.Value;
+import javax.jcr.*;
 import javax.jcr.lock.Lock;
 import javax.jcr.lock.LockException;
 import javax.jcr.nodetype.NodeType;
@@ -380,7 +372,22 @@ public class Content extends ContentHandler implements Cloneable {
      */
     public NodeData createNodeData(String name) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
-        return (new NodeData(this.node, name, true, this.accessManager));
+        return (new NodeData(this.node, name, PropertyType.STRING ,true, this.accessManager));
+    }
+
+    /**
+     * create top level NodeData object
+     * @param name to be created
+     * @param type propertyType
+     * @return NodeData requested <code>NodeData</code> object
+     * @throws PathNotFoundException
+     * @throws RepositoryException if an error occurs
+     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
+     * operation
+     */
+    public NodeData createNodeData(String name, int type) throws PathNotFoundException, RepositoryException,
+        AccessDeniedException {
+        return (new NodeData(this.node, name, type, true, this.accessManager));
     }
 
     /**

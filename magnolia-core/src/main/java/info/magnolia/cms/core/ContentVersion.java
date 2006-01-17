@@ -12,8 +12,6 @@
  */
 package info.magnolia.cms.core;
 
-import org.apache.log4j.Logger;
-
 import javax.jcr.RepositoryException;
 import javax.jcr.version.VersionHistory;
 import javax.jcr.version.Version;
@@ -45,7 +43,7 @@ public class ContentVersion extends Content {
      * @throws RepositoryException
      * */
     private void init() throws RepositoryException {
-        this.setNode(this.state.getNode(ItemType.JCR_FROZENNODE.getSystemName()));
+        this.setNode(this.state.getNode(ItemType.JCR_FROZENNODE));
     }
 
     /**

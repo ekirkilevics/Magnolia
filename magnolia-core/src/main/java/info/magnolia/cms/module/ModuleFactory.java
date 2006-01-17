@@ -127,7 +127,7 @@ public final class ModuleFactory {
                                     // call register: this is always done not only during the first startup
                                     module.register(moduleName, version, moduleNode, jar, registerState);
                                     if (registerState == Module.REGISTER_STATE_NEW_VERSION) {
-                                        moduleNode.getNodeData("version", true).setValue(version); //$NON-NLS-1$
+                                        moduleNode.createNodeData("version").setValue(version); //$NON-NLS-1$
                                     }
                                     modulesNode.save();
                                 }

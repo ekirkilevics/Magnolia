@@ -12,16 +12,12 @@
  */
 package info.magnolia.cms.core;
 
-import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
@@ -52,6 +48,11 @@ public class NodeData extends ContentHandler {
     private Property property;
 
     /**
+     * Wrapped javax.jcr.Node for nt:resource type
+     * */
+    private Node node;
+
+    /**
      * Empty constructor. Should NEVER be used for standard use, test only.
      */
     protected NodeData() {
@@ -59,39 +60,44 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * Constructor. Create atom object to work-on based on existing <code>NodeData</code>
+     * Constructor. Create nodeData object to work-on based on existing <code>Property</code>
+     * or <code>nt:resource</code>
      * @param workingNode current active <code>Node</code>
      * @param name <code>NodeData</code> name to be retrieved
+     * @param manager Access manager to be used for this object
      */
-    public NodeData(Node workingNode, String name, AccessManager manager)
+    protected NodeData(Node workingNode, String name, AccessManager manager)
         throws PathNotFoundException,
         RepositoryException,
         AccessDeniedException {
         Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.READ);
-        this.property = workingNode.getProperty(name);
+        this.init(workingNode, name);
         this.setAccessManager(manager);
     }
 
     /**
-     * Constructor. Creates a new initialized NodeData of default type <strong>String </strong>
+     * Constructor. Creates a new initialized NodeData of given type
      * @param workingNode current active <code>Node</code>
      * @param name <code>NodeData</code> name to be created
+     * @param type
+     * @param createNew if true create a new Item
+     * @param manager Access manager to be used for this object
      * @throws PathNotFoundException
      * @throws RepositoryException
      */
-    public NodeData(Node workingNode, String name, boolean createNew, AccessManager manager)
+    protected NodeData(Node workingNode, String name, int type, boolean createNew, AccessManager manager)
         throws PathNotFoundException,
         RepositoryException,
         AccessDeniedException {
-        this.setAccessManager(manager);
         if (createNew) {
             Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
-            this.property = workingNode.setProperty(name, StringUtils.EMPTY);
+            this.init(workingNode, name, type, null);
         }
         else {
             Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.READ);
-            this.property = workingNode.getProperty(name);
+            this.init(workingNode, name);
         }
+        this.setAccessManager(manager);
     }
 
     /**
@@ -102,12 +108,12 @@ public class NodeData extends ContentHandler {
      * @throws PathNotFoundException
      * @throws RepositoryException
      */
-    public NodeData(Node workingNode, String name, Value value, AccessManager manager)
+    protected NodeData(Node workingNode, String name, Value value, AccessManager manager)
         throws PathNotFoundException,
         RepositoryException,
         AccessDeniedException {
         Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
-        this.property = workingNode.setProperty(name, value, value.getType());
+        this.init(workingNode, name, value.getType(), value);
         this.setAccessManager(manager);
     }
 
@@ -135,6 +141,54 @@ public class NodeData extends ContentHandler {
         this.property = property;
         Access.isGranted(manager, Path.getAbsolutePath(this.property.getPath()), Permission.READ);
         this.setAccessManager(manager);
+    }
+
+    /**
+     * create a new nt:resource node
+     * @param workingNode
+     * @param name
+     * @param type
+     * @param value
+     * */
+    private void init(Node workingNode, String name, int type, Value value)
+        throws PathNotFoundException,
+        RepositoryException,
+        AccessDeniedException {
+        if (PropertyType.BINARY == type) {
+            this.node = workingNode.addNode(name, ItemType.NT_RESOURCE);
+            if (null == value) {
+                this.property = this.node.setProperty(ItemType.JCR_DATA, StringUtils.EMPTY);
+            } else {
+                this.property = this.node.setProperty(ItemType.JCR_DATA, value, value.getType());
+            }
+        } else {
+            if (null == value) {
+                this.property = workingNode.setProperty(name, StringUtils.EMPTY);
+            } else {
+                this.property = workingNode.setProperty(name, value, value.getType());
+            }
+        }
+    }
+
+    /**
+     * initialize this object based on existing property or nt:resource node
+     * @param workingNode
+     * @param name
+     * @throws RepositoryException
+     * */
+    private void init(Node workingNode, String name)
+        throws PathNotFoundException,
+        RepositoryException,
+        AccessDeniedException {
+        try {
+            this.property = workingNode.getProperty(name);
+        } catch (PathNotFoundException e) {
+            if (workingNode.hasNode(name)) {
+                // this node data should wrap nt:resource
+                this.node = workingNode.getNode(name);
+                this.property = this.node.getProperty(ItemType.JCR_DATA);
+            }
+        }
     }
 
     /**
@@ -285,6 +339,10 @@ public class NodeData extends ContentHandler {
      */
     public String getName() {
         try {
+            // check if its a nt:resource
+            if (null != this.node) {
+                return this.node.getName();
+            }
             return this.property.getName();
         }
         catch (Exception e) {
@@ -409,6 +467,9 @@ public class NodeData extends ContentHandler {
      */
     public String getHandle() {
         try {
+            if (null != this.node) {
+                return this.node.getPath();
+            }
             return this.property.getPath();
         }
         catch (RepositoryException e) {
@@ -416,70 +477,6 @@ public class NodeData extends ContentHandler {
             log.error(e.getMessage(), e);
             return StringUtils.EMPTY;
         }
-    }
-
-    /**
-     * get a handle representing path relative to the content repository with the default extension
-     * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
-     * @return String representing path (handle) of the content
-     */
-    public String getHandleWithDefaultExtension() throws PathNotFoundException, RepositoryException {
-        return (this.property.getPath() + "." + Server.getDefaultExtension()); //$NON-NLS-1$
-    }
-
-    /**
-     * get parent content object
-     * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
-     * @return Content representing parent node
-     */
-    public Content getParent() throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return (new Content(this.property.getParent(), this.accessManager));
-    }
-
-    /**
-     * get absolute parent object starting from the root node
-     * @param digree level at which the requested node exist, relative to the ROOT node
-     * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
-     * @return Content representing parent node
-     */
-    public Content getAncestor(int digree) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        if (digree > this.getLevel()) {
-            throw new PathNotFoundException();
-        }
-        return (new Content(this.property.getAncestor(digree), this.accessManager));
-    }
-
-    /**
-     * Convenience method for taglib
-     * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
-     * @return Content representing node on level 0
-     */
-    public Collection getAncestors() throws PathNotFoundException, RepositoryException {
-        List allAncestors = new ArrayList();
-        int level = this.getLevel();
-        while (level != 0) {
-            try {
-                allAncestors.add(new Content(this.property.getAncestor(--level), this.accessManager));
-            }
-            catch (AccessDeniedException e) {
-                // valid
-            }
-        }
-        return allAncestors;
-    }
-
-    /**
-     * get node level from the ROOT node : FIXME implement getDepth in javax.jcr
-     * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
-     * @return level at which current node exist, relative to the ROOT node
-     */
-    public int getLevel() throws PathNotFoundException, RepositoryException {
-        return this.property.getPath().split("/").length - 1; //$NON-NLS-1$
     }
 
     /**
