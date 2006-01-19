@@ -423,7 +423,6 @@ public class Save extends ControlSuper {
         else {
             NodeData data = null;
             if (doc != null) {
-                System.out.println("document not null");
                 data = node.getNodeData(name);
                 if (!data.isExist()) {
                     data = node.createNodeData(name, PropertyType.BINARY);
@@ -431,20 +430,17 @@ public class Save extends ControlSuper {
                         log.debug("creating under - " + node.getHandle()); //$NON-NLS-1$
                         log.debug("creating node data for binary store - " + name); //$NON-NLS-1$
                     }
-                    System.out.println("creating node data for binary store - " + name);
                 }
                 data.setValue(doc.getStream());
                 log.debug("Node data updated"); //$NON-NLS-1$
             }
             if (data != null) {
-                System.out.println("data not null");
                 String fileName = getForm().getParameter(name + "_" + FileProperties.PROPERTY_FILENAME); //$NON-NLS-1$
                 if (fileName == null || fileName.equals(StringUtils.EMPTY)) {
                     fileName = doc.getFileName();
                 }
                 data.setAttribute(FileProperties.PROPERTY_FILENAME, fileName);
                 if (doc != null) {
-                    System.out.println("start setting attibutes");
                     data.setAttribute(FileProperties.PROPERTY_CONTENTTYPE, doc.getType());
 
                     Calendar value = new GregorianCalendar(TimeZone.getDefault());
