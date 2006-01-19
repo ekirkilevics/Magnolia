@@ -13,8 +13,7 @@
 package info.magnolia.cms.gui.misc;
 
 import info.magnolia.cms.core.Content;
-
-import javax.jcr.RepositoryException;
+import info.magnolia.cms.core.NodeData;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -28,7 +27,11 @@ public class FileProperties {
 
     public static final String PROPERTIES_CONTENTNODE = "properties"; //$NON-NLS-1$
 
-    public static final String PROPERTY_CONTENTTYPE = "contentType"; //$NON-NLS-1$
+    public static final String PROPERTY_CONTENTTYPE = "jcr:mimeType"; //$NON-NLS-1$
+
+    public static final String PROPERTY_ENCODING = "jcr:encoding"; //$NON-NLS-1$
+
+    public static final String PROPERTY_LASTMODIFIES = "jcr:lastModified"; //$NON-NLS-1$
 
     public static final String PROPERTY_SIZE = "size"; //$NON-NLS-1$
 
@@ -48,7 +51,7 @@ public class FileProperties {
 
     public static final String NAME_WITHOUT_EXTENSION = "nameWithoutExtension"; // report2004 //$NON-NLS-1$
 
-    public static final String CONTENT_TYPE = "contentType"; // application/pdf //$NON-NLS-1$
+    public static final String CONTENT_TYPE = "jcr:mimeType"; // application/pdf //$NON-NLS-1$
 
     public static final String TEMPLATE = "template"; // ((according to dialog)) //$NON-NLS-1$
 
@@ -116,88 +119,83 @@ public class FileProperties {
 
     public String getProperty(String property) {
         String value = StringUtils.EMPTY;
-        try {
-            Content props = this.getContent().getContent(this.nodeDataName + "_" + PROPERTIES_CONTENTNODE); //$NON-NLS-1$
-            String filename = props.getNodeData(PROPERTY_FILENAME).getString();
-            String ext = props.getNodeData(PROPERTY_EXTENSION).getString();
-            String fullName = filename;
-            String fullExt = StringUtils.EMPTY;
-            if (StringUtils.isNotEmpty(ext)) {
-                fullExt = "." + ext; //$NON-NLS-1$
-                fullName += fullExt;
-            }
-            if (property.equals(EXTENSION)) {
-                value = ext;
-            }
-            else if (property.equals(EXTENSION_LOWER_CASE)) {
-                value = ext.toLowerCase();
-            }
-            else if (property.equals(EXTENSION_UPPER_CASE)) {
-                value = ext.toUpperCase();
-            }
-            else if (property.equals(NAME_WITHOUT_EXTENSION)) {
-                value = filename;
-            }
-            else if (property.equals(CONTENT_TYPE)) {
-                value = props.getNodeData(PROPERTY_CONTENTTYPE).getString();
-            }
-            else if (property.equals(TEMPLATE)) {
-                value = props.getNodeData(PROPERTY_TEMPLATE).getString();
-            }
-            else if (property.equals(HANDLE)) {
-                value = this.getContent().getHandle() + "/" + this.getNodeDataName(); //$NON-NLS-1$
-            }
-            else if (property.equals(NAME)) {
-                value = fullName;
-            }
-            else if (property.equals(PATH_WITHOUT_NAME)) {
-                value = this.getContent().getHandle() + "/" + this.getNodeDataName() + fullExt; //$NON-NLS-1$
-            }
-            else if (property.equals(SIZE_BYTES)) {
-                value = props.getNodeData(PROPERTY_SIZE).getString();
-            }
-            else if (property.equals(SIZE_KB)) {
-                double size = props.getNodeData(PROPERTY_SIZE).getLong();
-                String sizeStr;
+        NodeData props = this.getContent().getNodeData(this.nodeDataName);
+        String filename = props.getAttribute(PROPERTY_FILENAME);
+        String ext = props.getAttribute(PROPERTY_EXTENSION);
+        String fullName = filename;
+        String fullExt = StringUtils.EMPTY;
+        if (StringUtils.isNotEmpty(ext)) {
+            fullExt = "." + ext; //$NON-NLS-1$
+            fullName += fullExt;
+        }
+        if (property.equals(EXTENSION)) {
+            value = ext;
+        }
+        else if (property.equals(EXTENSION_LOWER_CASE)) {
+            value = ext.toLowerCase();
+        }
+        else if (property.equals(EXTENSION_UPPER_CASE)) {
+            value = ext.toUpperCase();
+        }
+        else if (property.equals(NAME_WITHOUT_EXTENSION)) {
+            value = filename;
+        }
+        else if (property.equals(CONTENT_TYPE)) {
+            value = props.getAttribute(PROPERTY_CONTENTTYPE);
+        }
+        else if (property.equals(TEMPLATE)) {
+            value = props.getAttribute(PROPERTY_TEMPLATE);
+        }
+        else if (property.equals(HANDLE)) {
+            value = this.getContent().getHandle() + "/" + this.getNodeDataName(); //$NON-NLS-1$
+        }
+        else if (property.equals(NAME)) {
+            value = fullName;
+        }
+        else if (property.equals(PATH_WITHOUT_NAME)) {
+            value = this.getContent().getHandle() + "/" + this.getNodeDataName() + fullExt; //$NON-NLS-1$
+        }
+        else if (property.equals(SIZE_BYTES)) {
+            value = props.getAttribute(PROPERTY_SIZE);
+        }
+        else if (property.equals(SIZE_KB)) {
+            double size = Long.parseLong(props.getAttribute(PROPERTY_SIZE));
+            String sizeStr;
+            size = size / 1024;
+            sizeStr = Double.toString(size);
+            sizeStr = sizeStr.substring(0, sizeStr.indexOf(".") + 2); //$NON-NLS-1$
+            value = sizeStr;
+        }
+        else if (property.equals(SIZE_MB)) {
+            double size = Long.parseLong(props.getAttribute(PROPERTY_SIZE));
+            String sizeStr;
+            size = size / (1024 * 1024);
+            sizeStr = Double.toString(size);
+            sizeStr = sizeStr.substring(0, sizeStr.indexOf(".") + 2); //$NON-NLS-1$
+            value = sizeStr;
+        }
+        else if (property.equals(SIZE)) {
+            double size = Long.parseLong(props.getAttribute(PROPERTY_SIZE));
+            String unit = "bytes";
+            String sizeStr;
+            if (size >= 1000) {
                 size = size / 1024;
-                sizeStr = Double.toString(size);
-                sizeStr = sizeStr.substring(0, sizeStr.indexOf(".") + 2); //$NON-NLS-1$
-                value = sizeStr;
-            }
-            else if (property.equals(SIZE_MB)) {
-                double size = props.getNodeData(PROPERTY_SIZE).getLong();
-                String sizeStr;
-                size = size / (1024 * 1024);
-                sizeStr = Double.toString(size);
-                sizeStr = sizeStr.substring(0, sizeStr.indexOf(".") + 2); //$NON-NLS-1$
-                value = sizeStr;
-            }
-            else if (property.equals(SIZE)) {
-                double size = props.getNodeData(PROPERTY_SIZE).getLong();
-                String unit = "bytes";
-                String sizeStr;
+                unit = "KB";
                 if (size >= 1000) {
                     size = size / 1024;
-                    unit = "KB";
-                    if (size >= 1000) {
-                        size = size / 1024;
-                        unit = "MB";
-                    }
-                    sizeStr = Double.toString(size);
-                    sizeStr = sizeStr.substring(0, sizeStr.indexOf(".") + 2); //$NON-NLS-1$
+                    unit = "MB";
                 }
-                else {
-                    sizeStr = Double.toString(size);
-                    sizeStr = sizeStr.substring(0, sizeStr.indexOf(".")); //$NON-NLS-1$
-                }
-                value = sizeStr + " " + unit; //$NON-NLS-1$
+                sizeStr = Double.toString(size);
+                sizeStr = sizeStr.substring(0, sizeStr.indexOf(".") + 2); //$NON-NLS-1$
             }
-            else { // property.equals(PATH|null|""|any other value)
-                value = this.getContent().getHandle() + "/" + this.getNodeDataName() + "/" + fullName; //$NON-NLS-1$ //$NON-NLS-2$
+            else {
+                sizeStr = Double.toString(size);
+                sizeStr = sizeStr.substring(0, sizeStr.indexOf(".")); //$NON-NLS-1$
             }
+            value = sizeStr + " " + unit; //$NON-NLS-1$
         }
-        catch (RepositoryException e) {
-            log.info("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+        else { // property.equals(PATH|null|""|any other value)
+            value = this.getContent().getHandle() + "/" + this.getNodeDataName() + "/" + fullName; //$NON-NLS-1$ //$NON-NLS-2$
         }
         return value;
     }

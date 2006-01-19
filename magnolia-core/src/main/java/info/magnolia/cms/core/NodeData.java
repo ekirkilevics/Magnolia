@@ -119,14 +119,15 @@ public class NodeData extends ContentHandler {
 
     /**
      * Constructor. Creates a new initialized NodeData
-     * @param node <code>Node</code> holding this property
-     * @deprecated
+     * @param node <code>Node</code> of type nt:resource
      */
     public NodeData(Node node, AccessManager manager)
         throws PathNotFoundException,
         RepositoryException,
         AccessDeniedException {
         Access.isGranted(manager, Path.getAbsolutePath(node.getPath()), Permission.READ);
+        this.node = node;
+        this.property = this.node.getProperty(ItemType.JCR_DATA);
         this.setAccessManager(manager);
     }
 
@@ -156,9 +157,7 @@ public class NodeData extends ContentHandler {
         AccessDeniedException {
         if (PropertyType.BINARY == type) {
             this.node = workingNode.addNode(name, ItemType.NT_RESOURCE);
-            if (null == value) {
-                this.property = this.node.setProperty(ItemType.JCR_DATA, StringUtils.EMPTY);
-            } else {
+            if (null != value) {
                 this.property = this.node.setProperty(ItemType.JCR_DATA, value, value.getType());
             }
         } else {
@@ -410,7 +409,11 @@ public class NodeData extends ContentHandler {
      */
     public void setValue(InputStream value) throws RepositoryException, AccessDeniedException {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
-        this.property.setValue(value);
+        if (this.property == null && this.node != null) {
+            this.property = this.node.setProperty(ItemType.JCR_DATA, value);
+        } else {
+            this.property.setValue(value);
+        }
     }
 
     /**
@@ -451,6 +454,64 @@ public class NodeData extends ContentHandler {
     public void setValue(Value value) throws RepositoryException, AccessDeniedException {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
         this.property.setValue(value);
+    }
+
+    /**
+     * set attribute, available only if NodeData is of type <code>Binary</code>
+     * @param name
+     * @param value
+     * @throws RepositoryException
+     * @throws AccessDeniedException
+     * @throws UnsupportedOperationException if its not a Binary type
+     * */
+    public void setAttribute(String name, String value)
+        throws RepositoryException,
+        AccessDeniedException,
+        UnsupportedOperationException {
+        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        if (null == this.node) {
+            throw new UnsupportedOperationException("Attributes are only supported for BINARY type");
+        }
+        System.out.println("Setting attibute : "+name+" |  value : "+value);
+        this.node.setProperty(name, value);
+    }
+
+    /**
+     * set attribute, available only if NodeData is of type <code>Binary</code>
+     * @param name
+     * @param value
+     * @throws RepositoryException
+     * @throws AccessDeniedException
+     * @throws UnsupportedOperationException if its not a Binary type
+     * */
+    public void setAttribute(String name, Calendar value)
+        throws RepositoryException,
+        AccessDeniedException,
+        UnsupportedOperationException {
+        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        if (null == this.node) {
+            throw new UnsupportedOperationException("Attributes are only supported for BINARY type");
+        }
+        this.node.setProperty(name, value);
+    }
+
+    /**
+     * get attribute, available only if NodeData is of type <code>Binary</code>
+     * @param name
+     * @return string value
+     * */
+    public String getAttribute(String name) {
+        if (null == this.node) {
+            return "";
+        }
+        try {
+            return this.node.getProperty(name).getString();
+        } catch (RepositoryException re) {
+            if (log.isDebugEnabled()) {
+                log.debug("Attribute [ "+name+" ] not set");
+            }
+            return "";
+        }
     }
 
     /**
@@ -509,7 +570,11 @@ public class NodeData extends ContentHandler {
      */
     public void delete() throws RepositoryException {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.property.getPath()), Permission.REMOVE);
-        this.property.remove();
+        if (null != this.node) {
+            this.node.remove();
+        } else {
+            this.property.remove();
+        }
     }
 
     /**

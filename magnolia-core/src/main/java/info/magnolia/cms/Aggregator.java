@@ -24,6 +24,7 @@ import java.text.MessageFormat;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
+import javax.jcr.PropertyType;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -67,8 +68,6 @@ public class Aggregator {
 
     private Content requestedPage;
 
-    private Content subContentNode;
-
     private NodeData requestedData;
 
     private HierarchyManager hierarchyManager;
@@ -103,14 +102,6 @@ public class Aggregator {
      */
     private void getRequestedContent(int type) throws PathNotFoundException, RepositoryException {
         this.requestedData = this.hierarchyManager.getNodeData(this.uri);
-        try {
-            this.subContentNode = this.hierarchyManager.getContent(this.uri + "_properties"); //$NON-NLS-1$
-        }
-        catch (PathNotFoundException e) {
-            if (log.isDebugEnabled()) {
-                log.debug("Path not found: " + e.getMessage()); //$NON-NLS-1$
-            }
-        }
     }
 
     /**
@@ -168,7 +159,7 @@ public class Aggregator {
      */
     private void setRequestReceiver(int type) {
         try {
-            String templateName = this.subContentNode.getNodeData("nodeDataTemplate").getString(); //$NON-NLS-1$
+            String templateName = this.requestedData.getAttribute("nodeDataTemplate"); //$NON-NLS-1$
             if (StringUtils.isEmpty(templateName)) {
                 this.setRequestReceiver(true);
                 return;
@@ -223,9 +214,9 @@ public class Aggregator {
             this.request.setAttribute(Aggregator.ACTPAGE, this.requestedPage);
             this.request.setAttribute(Aggregator.CURRENT_ACTPAGE, this.requestedPage);
         }
-        if ((this.requestedData != null) && (this.subContentNode != null)) {
+        if ((this.requestedData != null) && (this.requestedData.getType() == PropertyType.BINARY)) {
             File file = new File();
-            file.setProperties(this.subContentNode);
+            file.setProperties(this.requestedData);
             file.setNodeData(this.requestedData);
             this.request.setAttribute(Aggregator.FILE, file);
         }

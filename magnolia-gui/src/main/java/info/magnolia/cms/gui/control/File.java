@@ -41,15 +41,26 @@ public class File extends ControlSuper {
 
     private String nodeDataTemplate;
 
-    public File() {
+    /**
+     * Package private constructor
+     * */
+    File() {
     }
 
+    /**
+     * @param name
+     * @param value
+     * */
     public File(String name, String value) {
         super(name, value);
     }
 
-    public File(String name, Content websiteNode) {
-        super(name, websiteNode);
+    /**
+     * @param name
+     * @param content
+     * */
+    public File(String name, Content content) {
+        super(name, content);
     }
 
     public void setCssClassFileName(String s) {
@@ -194,19 +205,16 @@ public class File extends ControlSuper {
      */
     protected String getPropertyString(String propertyName) throws RepositoryException {
         if (this.getWebsiteNode() != null) {
-            Content contentNode = getPropertyNode();
-            if (contentNode != null) {
-                NodeData nodeData = contentNode.getNodeData(propertyName);
-                if (nodeData != null) {
-                    return nodeData.getString();
-                }
+            NodeData nodeData = getPropertyNode();
+            if (nodeData != null) {
+                return nodeData.getAttribute(propertyName);
             }
         }
 
         return StringUtils.EMPTY;
     }
 
-    protected Content getPropertyNode() throws RepositoryException {
-        return this.getWebsiteNode().getContent(this.getName() + "_" + FileProperties.PROPERTIES_CONTENTNODE); //$NON-NLS-1$
+    protected NodeData getPropertyNode() throws RepositoryException {
+        return this.getWebsiteNode().getNodeData(this.getName());
     }
 }

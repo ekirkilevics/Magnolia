@@ -345,7 +345,7 @@ public class Save extends ControlSuper {
      * 
      * @param node the node
      * @param name the property name to be written
-     * @param value the value of the property
+     * @param valueStr the value of the property
      * @throws AccessDeniedException thrown if the write access is not granted
      * @throws RepositoryException thrown if other repository exception is thrown
      */
@@ -413,12 +413,6 @@ public class Save extends ControlSuper {
         Document doc = getForm().getDocument(name);
         if (doc == null && getForm().getParameter(name + "_" + File.REMOVE) != null) { //$NON-NLS-1$
             try {
-                node.delete(name + "_" + FileProperties.PROPERTIES_CONTENTNODE); //$NON-NLS-1$
-            }
-            catch (RepositoryException re) {
-                log.debug("Exception caught: " + re.getMessage(), re); //$NON-NLS-1$
-            }
-            try {
                 node.deleteNodeData(name);
             }
             catch (RepositoryException re) {
@@ -427,76 +421,43 @@ public class Save extends ControlSuper {
 
         }
         else {
-            Content propNode = null;
-            try {
-                propNode = node.getContent(name + "_" + FileProperties.PROPERTIES_CONTENTNODE); //$NON-NLS-1$
-            }
-            catch (RepositoryException re) {
-                try {
-                    if (doc != null) {
-                        propNode = node.createContent(name + "_" + FileProperties.PROPERTIES_CONTENTNODE, //$NON-NLS-1$
-                            ItemType.CONTENTNODE);
-                    }
-                }
-                catch (RepositoryException re2) {
-                    log.debug("Exception caught: " + re2.getMessage(), re2); //$NON-NLS-1$
-                }
-            }
+            NodeData data = null;
             if (doc != null) {
-                NodeData data = node.getNodeData(name);
+                System.out.println("document not null");
+                data = node.getNodeData(name);
                 if (!data.isExist()) {
-                    data = node.createNodeData(name);
+                    data = node.createNodeData(name, PropertyType.BINARY);
                     if (log.isDebugEnabled()) {
                         log.debug("creating under - " + node.getHandle()); //$NON-NLS-1$
                         log.debug("creating node data for binary store - " + name); //$NON-NLS-1$
                     }
+                    System.out.println("creating node data for binary store - " + name);
                 }
                 data.setValue(doc.getStream());
                 log.debug("Node data updated"); //$NON-NLS-1$
             }
-            if (propNode != null) {
-                NodeData propData;
+            if (data != null) {
+                System.out.println("data not null");
                 String fileName = getForm().getParameter(name + "_" + FileProperties.PROPERTY_FILENAME); //$NON-NLS-1$
                 if (fileName == null || fileName.equals(StringUtils.EMPTY)) {
                     fileName = doc.getFileName();
                 }
-                propData = propNode.getNodeData(FileProperties.PROPERTY_FILENAME);
-                if (!propData.isExist()) {
-                    propData = propNode.createNodeData(FileProperties.PROPERTY_FILENAME);
-                }
-                propData.setValue(fileName);
+                data.setAttribute(FileProperties.PROPERTY_FILENAME, fileName);
                 if (doc != null) {
-                    propData = propNode.getNodeData(FileProperties.PROPERTY_CONTENTTYPE);
-                    if (!propData.isExist()) {
-                        propData = propNode.createNodeData(FileProperties.PROPERTY_CONTENTTYPE);
-                    }
-                    propData.setValue(doc.getType());
-                    propData = propNode.getNodeData(FileProperties.PROPERTY_SIZE);
-                    if (!propData.isExist()) {
-                        propData = propNode.createNodeData(FileProperties.PROPERTY_SIZE);
-                    }
-                    propData.setValue(doc.getLength());
-                    propData = propNode.getNodeData(FileProperties.PROPERTY_EXTENSION);
-                    if (!propData.isExist()) {
-                        propData = propNode.createNodeData(FileProperties.PROPERTY_EXTENSION);
-                    }
-                    propData.setValue(doc.getExtension());
+                    System.out.println("start setting attibutes");
+                    data.setAttribute(FileProperties.PROPERTY_CONTENTTYPE, doc.getType());
+
+                    Calendar value = new GregorianCalendar(TimeZone.getDefault());
+                    data.setAttribute(FileProperties.PROPERTY_LASTMODIFIES, value);
+
+                    data.setAttribute(FileProperties.PROPERTY_SIZE, Long.toString(doc.getLength()));
+
+                    data.setAttribute(FileProperties.PROPERTY_EXTENSION, doc.getExtension());
+
                     String template = getForm().getParameter(name + "_" + FileProperties.PROPERTY_TEMPLATE); //$NON-NLS-1$
-                    if (StringUtils.isNotEmpty(template)) {
-                        propData = propNode.getNodeData(FileProperties.PROPERTY_TEMPLATE);
-                        if (!propData.isExist()) {
-                            propData = propNode.createNodeData(FileProperties.PROPERTY_TEMPLATE);
-                        }
-                        propData.setValue(template);
-                    }
-                    else {
-                        try {
-                            propNode.deleteNodeData(FileProperties.PROPERTY_TEMPLATE);
-                        }
-                        catch (PathNotFoundException e) {
-                            log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
-                        }
-                    }
+
+                    data.setAttribute(FileProperties.PROPERTY_TEMPLATE, template);
+
                     doc.delete();
                 }
             }

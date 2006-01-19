@@ -178,8 +178,7 @@ public class ResourceDispatcher extends HttpServlet {
             NodeData atom = hm.getNodeData(path);
             if (atom != null) {
                 if (atom.getType() == PropertyType.BINARY) {
-                    NodeData size = hm.getNodeData(path + "_properties/size"); //$NON-NLS-1$
-                    int sizeInBytes = (new Long(size.getLong())).intValue();
+                    int sizeInBytes = (new Long(atom.getAttribute("size")).intValue());
                     res.setContentLength(sizeInBytes);
                 }
 

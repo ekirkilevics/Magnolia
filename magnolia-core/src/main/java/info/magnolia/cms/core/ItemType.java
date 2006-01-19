@@ -49,7 +49,7 @@ public final class ItemType implements Serializable {
     /**
      * Node type: resource
      */
-    public static final String NT_RESOURCE = "nt:resource"; //$NON-NLS-1$
+    public static final String NT_RESOURCE = "mgnl:resource"; //$NON-NLS-1$
 
     /**
      * Mixin: node has access control.

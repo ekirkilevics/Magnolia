@@ -83,9 +83,15 @@
         </supertypes>
         <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="true">
             <requiredPrimaryTypes>
-                <requiredPrimaryType>nt:hierarchyNode</requiredPrimaryType>
+                <requiredPrimaryType>nt:base</requiredPrimaryType>
             </requiredPrimaryTypes>
         </childNodeDefinition>
+        <propertyDefinition name="*" requiredType="undefined" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
+    </nodeType>
+    <nodeType name="mgnl:resource" isMixin="false" hasOrderableChildNodes="false" primaryItemName="jcr:data">
+        <supertypes>
+            <supertype>nt:resource</supertype>
+        </supertypes>
         <propertyDefinition name="*" requiredType="undefined" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
     </nodeType>
 </nodeTypes>

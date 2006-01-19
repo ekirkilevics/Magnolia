@@ -28,8 +28,6 @@ public class File {
 
     private NodeData data;
 
-    private Content properties;
-
     private String extension;
 
     private String fileName;
@@ -40,18 +38,12 @@ public class File {
 
     private int size;
 
-    public Content getProperties() {
-        return properties;
-    }
-
-    public void setProperties(Content properties) {
-        this.properties = properties;
-
-        this.setNodeDataTemplate(this.properties.getNodeData("nodeDataTemplate").getString()); //$NON-NLS-1$
-        this.setExtension(this.properties.getNodeData("extension").getString()); //$NON-NLS-1$
-        this.setFileName(this.properties.getNodeData("fileName").getString()); //$NON-NLS-1$
-        this.setContentType(this.properties.getNodeData("contentType").getString()); //$NON-NLS-1$
-        Integer size = new Integer(this.properties.getNodeData("size").getString()); //$NON-NLS-1$
+    public void setProperties(NodeData properties) {
+        this.setNodeDataTemplate(properties.getAttribute("nodeDataTemplate")); //$NON-NLS-1$
+        this.setExtension(properties.getAttribute("extension")); //$NON-NLS-1$
+        this.setFileName(properties.getAttribute("fileName")); //$NON-NLS-1$
+        this.setContentType(properties.getAttribute("contentType")); //$NON-NLS-1$
+        Integer size = new Integer(properties.getAttribute("size")); //$NON-NLS-1$
         this.setSize(size.intValue());
 
     }

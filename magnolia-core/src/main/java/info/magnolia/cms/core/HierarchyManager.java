@@ -433,19 +433,22 @@ public class HierarchyManager {
      */
     public boolean isNodeData(String path) throws AccessDeniedException {
         Access.isGranted(this.accessManager, path, Permission.READ);
-
+        boolean result = false;
         String nodePath = getNodePath(path);
         if (StringUtils.isEmpty(nodePath)) {
             return false;
         }
-
         try {
-            return this.startPage.hasProperty(nodePath);
+            result = this.startPage.hasProperty(nodePath);
+            if (!result) {
+                // check if its a nt:resource
+                result = this.startPage.hasProperty(nodePath+"/"+ItemType.JCR_DATA);
+            }
         }
         catch (RepositoryException e) {
             // ignore, no property
         }
-        return false;
+        return result;
     }
 
     /**

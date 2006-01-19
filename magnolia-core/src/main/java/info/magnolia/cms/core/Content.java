@@ -427,7 +427,11 @@ public class Content extends ContentHandler implements Cloneable {
      * @throws RepositoryException if an error occurs
      */
     public void deleteNodeData(String name) throws PathNotFoundException, RepositoryException {
-        this.node.getProperty(name).remove();
+        if (this.node.hasNode(name)) {
+            this.node.getNode(name).remove();
+        } else {
+            this.node.getProperty(name).remove();
+        }
     }
 
     /**
@@ -649,6 +653,8 @@ public class Content extends ContentHandler implements Cloneable {
         catch (RepositoryException re) {
             log.error(re);
         }
+        // add nt:resource nodes
+        children.addAll(this.getChildren(ItemType.NT_RESOURCE));
         return children;
     }
 
@@ -679,6 +685,8 @@ public class Content extends ContentHandler implements Cloneable {
         catch (RepositoryException re) {
             log.error(re);
         }
+        // add nt:resource nodes
+        children.addAll(this.getChildren(ItemType.NT_RESOURCE, namePattern));
         return children;
     }
 
