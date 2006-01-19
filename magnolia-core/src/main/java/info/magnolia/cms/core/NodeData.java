@@ -472,7 +472,6 @@ public class NodeData extends ContentHandler {
         if (null == this.node) {
             throw new UnsupportedOperationException("Attributes are only supported for BINARY type");
         }
-        System.out.println("Setting attibute : "+name+" |  value : "+value);
         this.node.setProperty(name, value);
     }
 
