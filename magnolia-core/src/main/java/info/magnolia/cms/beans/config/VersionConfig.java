@@ -56,7 +56,7 @@ public class VersionConfig {
     /**
      * maximum number of version index
      * */
-    private static long maxVersions;
+    private static long maxVersions = 0;
 
     /**
      * Initialize bean
@@ -77,7 +77,8 @@ public class VersionConfig {
             maxVersions = startPage.getNodeData(MAX_VERSION_INDEX).getLong();
 
         } catch (RepositoryException re) {
-            log.error("Config: Failed to load version config or its not defined - " + re.getMessage(), re);
+            log.error("Config: Failed to load version config or its not defined - " + re.getMessage();
+            log.debug(re);
         }
 
     }
