@@ -77,7 +77,7 @@ public class VersionConfig {
             maxVersions = startPage.getNodeData(MAX_VERSION_INDEX).getLong();
 
         } catch (RepositoryException re) {
-            log.error("Config: Failed to load version config or its not defined - " + re.getMessage();
+            log.error("Config: Failed to load version config or its not defined - " + re.getMessage());
             log.debug(re);
         }
 
