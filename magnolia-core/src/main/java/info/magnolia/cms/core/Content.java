@@ -25,6 +25,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TreeSet;
 
 import javax.jcr.*;
 import javax.jcr.lock.Lock;
@@ -453,7 +454,27 @@ public class Content extends ContentHandler implements Cloneable {
      * @return Collection of content objects
      * */
     public Collection getChildren(ContentFilter filter) {
-        Collection children = new ArrayList();
+        return getChildren(filter, null);
+    }
+
+    /**
+     * Get a collection containing child nodes which satisfies the given filter. 
+     * The returned collection is ordered according to the passed in criteria.
+     * 
+     * @param filter filter for the child nodes
+     * @param orderCriteria ordering for the selected child nodes; if <tt>null</tt>
+     *  than no particular order of the child nodes
+     * @return Collection of content objects
+     * */
+    public Collection getChildren(ContentFilter filter, Comparator orderCriteria) {
+        Collection children = null;
+        if (orderCriteria == null) {
+            children = new ArrayList();
+        }
+        else {
+            children = new TreeSet(orderCriteria);
+        }
+
         try {
             NodeIterator nodeIterator = this.node.getNodes();
             while (nodeIterator.hasNext()) {
@@ -474,9 +495,10 @@ public class Content extends ContentHandler implements Cloneable {
         } catch (RepositoryException re) {
             log.error(re);
         }
+        
         return children;
     }
-
+    
     /**
      * gets a Collection containing all child nodes of the same NodeType as "this" object.
      * @return Collection of content objects
