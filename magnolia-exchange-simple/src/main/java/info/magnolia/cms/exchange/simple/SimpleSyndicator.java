@@ -416,7 +416,7 @@ public class SimpleSyndicator implements Syndicator {
      * add deactivation request header fields
      * @param connection
      * */
-    private void addDeactivationHeaders(URLConnection connection) {
+    protected void addDeactivationHeaders(URLConnection connection) {
         connection.setRequestProperty(AUTHORIZATION, Authenticator.getCredentials(this.request));
         connection.addRequestProperty(REPOSITORY_NAME, this.repositoryName);
         connection.addRequestProperty(WORKSPACE_NAME, this.workspaceName);
@@ -439,7 +439,7 @@ public class SimpleSyndicator implements Syndicator {
      * @param connection
      * @param activationContent
      * */
-    private void addActivationHeaders(URLConnection connection, ActivationContent activationContent) {
+    protected void addActivationHeaders(URLConnection connection, ActivationContent activationContent) {
         Iterator headerKeys = activationContent.getProperties().keySet().iterator();
         while (headerKeys.hasNext()) {
             String key = (String) headerKeys.next();
