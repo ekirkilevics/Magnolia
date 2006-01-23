@@ -26,6 +26,7 @@ import javax.jcr.*;
 import javax.jcr.lock.LockException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.zip.GZIPInputStream;
 
@@ -36,6 +37,8 @@ import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.security.Listener;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.security.PermissionImpl;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.core.*;
 import info.magnolia.cms.util.Resource;
@@ -71,6 +74,7 @@ public class SimpleExchangeServlet extends HttpServlet {
         String statusMessage = "";
         String status = "";
         try {
+            validateRequest(request);
             applyLock(request);
             receive(request);
             // remove cached files if successful
@@ -136,7 +140,6 @@ public class SimpleExchangeServlet extends HttpServlet {
      * */
     private synchronized void update(HttpServletRequest request)
             throws Exception {
-        validateRequest(request);
         MultipartForm data = Resource.getPostedForm(request);
         if (null != data) {
             String parentPath = request.getHeader(SimpleSyndicator.PARENT_PATH);
@@ -173,10 +176,11 @@ public class SimpleExchangeServlet extends HttpServlet {
     }
 
     /**
-     * Copy all properties from source to destination
-     * @param source
-     * @param destination
-     * */
+     * Copy all properties from source to destination (by cleaning the old properties).
+     * 
+     * @param source the content node to be copied
+     * @param destination the destination node
+     */
     private synchronized void copyProperties(Content source, Content destination) throws RepositoryException {
         // first remove all existing properties at the destination
         // will be different with incremental activation
@@ -185,11 +189,26 @@ public class SimpleExchangeServlet extends HttpServlet {
             NodeData nodeData = (NodeData) nodeDataIterator.next();
             nodeData.delete();
         }
+        
         // copy all properties
+        Node destinationNode= destination.getJCRNode();
         nodeDataIterator = source.getNodeDataCollection().iterator();
         while (nodeDataIterator.hasNext()) {
             NodeData nodeData = (NodeData) nodeDataIterator.next();
-            destination.createNodeData(nodeData.getName(), nodeData.getValue());
+            Property property = nodeData.getJCRProperty();
+            if (property.getDefinition().isMultiple()) {
+                if(destination.isGranted(Permission.WRITE)) {
+                    destinationNode.setProperty(nodeData.getName(),
+                                                property.getValues());
+                }
+                else {
+                    throw new AccessDeniedException(
+                            "User not allowed to " + Permission.PERMISSION_NAME_WRITE + " at [" + nodeData.getHandle() + "]"); //$NON-NLS-1$ $NON-NLS-2$ $NON-NLS-3$
+                }
+            }
+            else {
+                destination.createNodeData(nodeData.getName(), nodeData.getValue());
+            }                
         }
     }
 
@@ -326,7 +345,6 @@ public class SimpleExchangeServlet extends HttpServlet {
      * */
     private synchronized void remove(HttpServletRequest request)
             throws Exception {
-        validateRequest(request);
         String path = request.getHeader(SimpleSyndicator.PATH);
         if (log.isDebugEnabled()) {
             log.debug("Exchange : remove request received for " + path);
