@@ -212,8 +212,6 @@ public class EntryServlet extends HttpServlet {
         String uri = this.getURIMap(request);
         if (StringUtils.isNotEmpty(uri)) {
             try {
-                // first reset the existing URI attribute
-                Path.resetURI(request);
                 request.getRequestDispatcher(uri).forward(request, response);
             }
             catch (Exception e) {
