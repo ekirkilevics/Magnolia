@@ -122,24 +122,11 @@ public final class Path {
      * @return request URI without servlet context
      */
     public static String getURI(HttpServletRequest req) {
-        String uri = (String) req.getAttribute(ATTRIBUTE_URI);
-        if (StringUtils.isEmpty(uri)) {
-            // add to request avoiding unnecessary decoding
-            uri = getDecodedURI(req);
-            req.setAttribute(ATTRIBUTE_URI, uri);
-        }
-        return uri;
+        return getDecodedURI(req);
     }
 
     public static String getOriginalURI(HttpServletRequest req) {
         return (String) req.getAttribute(JAVAX_FORWARD_SERVLET_PATH);
-    }
-
-    /**
-     * Resets the existing URI request attribute
-     */
-    public static void resetURI(HttpServletRequest req) {
-        req.removeAttribute(ATTRIBUTE_URI);
     }
 
     /**
