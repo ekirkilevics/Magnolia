@@ -258,7 +258,7 @@ public class Save extends ControlSuper {
                 processMultiple(node, name, type, values);
             }
             else {
-                processCommon(node, name, type, isRichEditValue, encoding, values);
+                processCommon(node, name, type, valueType, isRichEditValue, encoding, values);
             }
         }
     }
@@ -268,6 +268,7 @@ public class Save extends ControlSuper {
      * @param node node where the data must be stored
      * @param name name of the field
      * @param type type
+     * @param valueType internal value type (according to ControlSuper)
      * @param isRichEditValue is it a return value of a richt edit field
      * @param encoding must we encode (base64)
      * @param values all values belonging to this field
@@ -275,7 +276,7 @@ public class Save extends ControlSuper {
      * @throws RepositoryException exception
      * @throws AccessDeniedException exception
      */
-    protected void processCommon(Content node, String name, int type, int isRichEditValue, int encoding, String[] values)
+    protected void processCommon(Content node, String name, int type, int valueType, int isRichEditValue, int encoding, String[] values)
         throws PathNotFoundException, RepositoryException, AccessDeniedException {
         String valueStr = StringUtils.EMPTY;
         if (values != null) {
