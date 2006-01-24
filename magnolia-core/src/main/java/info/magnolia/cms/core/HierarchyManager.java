@@ -260,6 +260,35 @@ public class HierarchyManager {
     }
 
     /**
+     * Like getContent() but creates the node if not yet existing. Attention save is not called!
+     * @param path the path of the node
+     * @param create true if the node should get created
+     * @param type the node type of the created node
+     * @return the node
+     * @throws AccessDeniedException
+     * @throws RepositoryException
+     */
+    public Content getContent(String path, boolean create, ItemType type) throws AccessDeniedException,
+        RepositoryException {
+        Content node = null;
+        try {
+            node = getContent(path);
+        }
+        catch (PathNotFoundException e) {
+            if (create) {
+               node = this.createContent(
+                    StringUtils.substringBeforeLast(path, "/"), 
+                    StringUtils.substringAfterLast(path, "/"),
+                    type.toString());
+            }
+            else {
+                throw e;
+            }
+        }
+        return node;
+    }
+
+    /**
      * get content node object of the requested URI
      * @param path of the content (container / containerlist) to be initialized
      * @return ContentNode
@@ -497,6 +526,11 @@ public class HierarchyManager {
         Access.isGranted(this.accessManager, source, Permission.READ);
         Access.isGranted(this.accessManager, destination, Permission.WRITE);
         this.workSpace.copy(source, destination);
+        
+        if(this.workSpace.getSession().hasPendingChanges()){
+            this.workSpace.getSession().refresh(false);
+            log.debug("copy: the session has pending changes but should not. will refresh");
+        }
     }
 
     /**
