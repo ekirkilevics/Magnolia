@@ -12,6 +12,7 @@
  */
 package info.magnolia.cms.util;
 
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.NodeData;
 
 import java.util.Date;
@@ -110,4 +111,25 @@ public class NodeDataUtil {
         }
 
     }
+    
+    /**
+     * Simple method to get strings like configuration informations
+     * @param repository
+     * @param path
+     * @return
+     */
+    public static String getString(String repository, String path){
+        return getString(repository, path, null);
+    }
+
+    public static String getString(String repository, String path, String defaultValue){
+        try{
+            return MgnlContext.getHierarchyManager(repository).getNodeData(path).toString();
+        }
+        catch(Exception e){
+            return defaultValue;
+        }
+    }
+    
+    
 }
