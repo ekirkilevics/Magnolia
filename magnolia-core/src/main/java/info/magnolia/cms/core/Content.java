@@ -332,7 +332,7 @@ public class Content extends ContentHandler implements Cloneable {
      * @param name
      * @param create
      */
-    protected NodeData getNodeData(String name, boolean create) {
+    public NodeData getNodeData(String name, boolean create) {
         try {
             return (new NodeData(this.node, name, this.accessManager));
         }
