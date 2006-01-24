@@ -251,14 +251,14 @@ function mgnlDialogLinkBrowserResize()
 function mgnlDialogLinkBrowserWriteBack(){
 	var iFrameDoc=mgnlGetIFrameDocument('mgnlDialogLinkBrowserIFrame');
 	var addressBar=iFrameDoc.getElementById("mgnlTreeControlAddressBar");
-	
+
 	// this should be allway the case
 	if(window.top.mgnlCallBackCommand){
 		mgnlDebug("mgnlDialogLinkBrowserWriteBack: calling callback function", "dialog");
 		window.top.mgnlCallBackCommand.callback(addressBar.value);
 	}
 	
-	window.close();
+	window.top.close();
 }
 
 
