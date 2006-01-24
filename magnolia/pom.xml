@@ -53,6 +53,10 @@
       <version>2.2-SNAPSHOT</version>
     </dependency>
     <dependency>
+      <groupId>getahead</groupId>
+      <artifactId>dwr</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.apache.jackrabbit</groupId>
       <artifactId>jackrabbit</artifactId>
     </dependency>
@@ -68,6 +72,8 @@
       <groupId>net.sourceforge.openutils</groupId>
       <artifactId>openutils-log4j</artifactId>
     </dependency>
+    
+    
     <!-- build/test dependencies -->
     <dependency>
       <groupId>junit</groupId>
