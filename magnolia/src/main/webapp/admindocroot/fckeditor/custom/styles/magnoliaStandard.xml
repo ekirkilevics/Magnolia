@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+To see a better example look at the original fckstyles.xml.
+-->
+<Styles>
+	<Style name="Page Title" element="h1">
+	</Style>
+	<Style name="Title" element="h2">
+		<!-- <Attribute name="class" value="head1"/> -->
+	</Style>
+	<Style name="Subtitle" element="h3">
+		<Attribute name="style" value="font-size: 13px;color: #666666;margin-top: 5px;font-weight: normal;"/>
+	</Style>
+	<Style name="Subsubtitle" element="h4">
+		<!-- <Attribute name="style" value="font-size: 11px;color: black;margin-top: 5px;font-weight: bold;"/> -->
+	</Style>
+	<Style name="Green text" element="span">
+		<Attribute name="style" value="color: rgb(94,146,1);"/>
+	</Style>
+	
+</Styles>

@@ -1,1 +1,2 @@
 fckInstance.ToolbarSet = 'MagnoliaStandard';
+

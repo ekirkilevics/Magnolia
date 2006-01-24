@@ -1,1 +1,0 @@
-fckInstance.ToolbarSet = 'basic';

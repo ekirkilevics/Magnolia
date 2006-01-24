@@ -20,34 +20,49 @@
  * 		Frederico Caldeira Knabben (fredck@fckeditor.net)
  */
 
-body
-{
-	font-family: Arial, Verdana, Sans-Serif;
-	font-size: 12px;
+body {
+    background-color: #fff;
 	padding: 5px 5px 5px 5px;
 	margin: 0px;
 	border-style: none;
 	background-color: white;
 }
 
-.Bold
-{
-	font-weight: bold;
+body,p,div,h1,h2,td,ul,li {
+    font-family: Verdana, sans-serif;
+    color: #000;
+    font-size: 11px;
+    vertical-align: top;
+    line-height: 17px;
 }
 
-.Title
-{
-	font-weight: bold;
-	font-size: 18px;
-	color: #cc3300;
+h1 {
+    font-size: 13px;
+    font-weight: bolder;
+    color: #993333;
 }
 
-.Code
-{
-	border: #8b4513 1px solid;
-	padding-right: 5px;
-	padding-left: 5px;
-	color: #000066;
-	font-family: 'Courier New' , Monospace;
-	background-color: #ff9933;
+h2 {
+    font-size: 16px;
+    color: #666666;
+    margin-top: 10px;
+    font-weight: normal;
+}
+
+h3 {
+    font-size: 13px;
+    color: #666666;
+    margin-top: 5px;
+    font-weight: normal;
+}
+
+h4 {
+    font-size: 11px;
+    color: black;
+    margin-top: 3px;
+    font-weight: bold;
+}
+
+a {
+    color: black;
 }
