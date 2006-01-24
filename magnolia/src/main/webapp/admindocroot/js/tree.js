@@ -578,7 +578,8 @@
 				
 				var text=mgnlMessages.get('js.tree.movenode.confirm.text', null, [this.selectedNode.id]);
 				var title=mgnlMessages.get('js.tree.movenode.confirm.title');
-				if (!this.getNode(id).isActivated || mgnlConfirm(text,title)){
+
+				if (!this.getNode(id).isActivated || this.clipboardMethod==1 || mgnlConfirm(text,title)){
 					if (lineDivId){
 						//for last line on root level
 						var lineDiv=document.getElementById(lineDivId);
