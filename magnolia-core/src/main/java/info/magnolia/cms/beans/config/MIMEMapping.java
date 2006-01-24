@@ -152,7 +152,9 @@ public final class MIMEMapping {
     public static String getMIMEType(HttpServletRequest request) {
         String extension = (String) request.getAttribute(Aggregator.EXTENSION);
         if (StringUtils.isEmpty(extension)) {
-            extension = StringUtils.substringAfterLast(request.getRequestURI(), "."); //$NON-NLS-1$
+            // the . could be in the middle of the url
+            extension = StringUtils.substringAfterLast(request.getRequestURI(), "/");
+            extension = StringUtils.substringAfterLast(extension, "."); //$NON-NLS-1$
             if (StringUtils.isEmpty(extension)) {
                 extension = Server.getDefaultExtension();
             }
