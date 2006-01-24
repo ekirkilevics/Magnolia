@@ -65,7 +65,7 @@ public class LinkBrowserDialogPage extends DialogPageMVCHandler {
 
         Button bCancel = new Button();
         bCancel.setLabel(MessagesManager.get(request, "buttons.cancel")); //$NON-NLS-1$
-        bCancel.setOnclick("window.close();"); //$NON-NLS-1$
+        bCancel.setOnclick("window.top.close();"); //$NON-NLS-1$
 
         html.append("<div class=\"" + CssConstants.CSSCLASS_TABSETSAVEBAR + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
         html.append(bOk.getHtml());
