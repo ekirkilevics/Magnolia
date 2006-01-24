@@ -42,7 +42,7 @@ import org.apache.log4j.Logger;
 
 
 /**
- * todo  - refactor all getChildren methods, use getChildren(ContentFilter)
+ * todo - refactor all getChildren methods, use getChildren(ContentFilter)
  * @author Sameer Charles
  * @version $Revision$ ($Author$)
  */
@@ -210,6 +210,31 @@ public class Content extends ContentHandler implements Cloneable {
      */
     public Content getContent(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         return (new Content(this.node, name, this.accessManager));
+    }
+
+    /**
+     * Like getContent but creates the node if not existing. 
+     * @param name
+     * @param create true if the node is created 
+     * @param contentType the type of the created node
+     * @return
+     * @throws AccessDeniedException
+     * @throws RepositoryException
+     */
+    public Content getContent(String name, boolean create, ItemType contentType) throws AccessDeniedException,RepositoryException {
+        Content node = null;
+        try {
+            node = this.getContent(name);
+        }
+        catch (PathNotFoundException e) {
+            if(create){
+                node = this.createContent(name, contentType);
+            }
+            else{
+                throw e;
+            }
+        }
+        return node;
     }
 
     /**
@@ -452,7 +477,7 @@ public class Content extends ContentHandler implements Cloneable {
      * Get a collection containing child nodes which satisfies the given filter
      * @param filter
      * @return Collection of content objects
-     * */
+     */
     public Collection getChildren(ContentFilter filter) {
         return getChildren(filter, null);
     }
@@ -492,7 +517,8 @@ public class Content extends ContentHandler implements Cloneable {
                     // ignore, simply wont add content in a list
                 }
             }
-        } catch (RepositoryException re) {
+        }
+        catch (RepositoryException re) {
             log.error(re);
         }
         
@@ -1229,7 +1255,7 @@ public class Content extends ContentHandler implements Cloneable {
          * Test if this content should be included in a resultant collection
          * @param content
          * @return if true this will be a part of collection
-         * */
+         */
         public boolean accept(Content content);
 
     }
