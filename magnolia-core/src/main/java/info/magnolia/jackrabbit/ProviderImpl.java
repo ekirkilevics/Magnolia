@@ -1,8 +1,6 @@
 package info.magnolia.jackrabbit;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ShutdownManager;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Path;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
@@ -12,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.jcr.NamespaceException;
@@ -23,13 +20,12 @@ import javax.jcr.nodetype.NoSuchNodeTypeException;
 import javax.jcr.nodetype.NodeTypeManager;
 import javax.naming.Context;
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.naming.NameNotFoundException;
+import javax.naming.NamingException;
 import javax.servlet.ServletContextEvent;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import org.apache.commons.lang.SystemUtils;
-import org.apache.jackrabbit.core.RepositoryImpl;
 import org.apache.jackrabbit.core.jndi.RegistryHelper;
 import org.apache.jackrabbit.core.nodetype.InvalidNodeTypeDefException;
 import org.apache.jackrabbit.core.nodetype.NodeTypeDef;
