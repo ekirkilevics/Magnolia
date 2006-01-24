@@ -111,6 +111,37 @@
     <servlet-name>uuidRequestDispatcher</servlet-name>
     <servlet-class>info.magnolia.cms.servlets.UUIDRequestDispatcher</servlet-class>
   </servlet>
+    <!--  used for fckeditor inline images and files -->
+  <servlet>
+    <servlet-name>FCKEditorSimpleUploadServlet</servlet-name>
+    <servlet-class>info.magnolia.cms.gui.fckeditor.FCKEditorSimpleUploadServlet</servlet-class>
+    <init-param>
+      <param-name>AllowedExtensionsFile</param-name>
+	  <param-value></param-value>
+    </init-param>
+    <init-param>
+      <param-name>DeniedExtensionsFile</param-name>
+      <param-value>php|php3|php5|phtml|asp|aspx|ascx|jsp|cfm|cfc|pl|bat|exe|dll|reg|cgi</param-value>
+    </init-param>
+    <init-param>
+      <param-name>AllowedExtensionsImage</param-name>
+      <param-value>jpg|gif|jpeg|png|bmp</param-value>
+    </init-param>
+    <init-param>
+      <param-name>DeniedExtensionsImage</param-name>
+      <param-value></param-value>
+    </init-param>
+    <init-param>
+      <param-name>AllowedExtensionsFlash</param-name>
+      <param-value>swf|fla</param-value>
+    </init-param>
+    <init-param>
+      <param-name>DeniedExtensionsFlash</param-name>
+      <param-value></param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  
   <servlet-mapping>
     <servlet-name>magnolia</servlet-name>
     <url-pattern>/</url-pattern>
@@ -183,6 +214,10 @@
   <servlet-mapping>
     <servlet-name>uuidRequestDispatcher</servlet-name>
     <url-pattern>/uuid/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>FCKEditorSimpleUploadServlet</servlet-name>
+	<url-pattern>/.magnolia/fckeditor/upload</url-pattern>
   </servlet-mapping>
   <listener>
     <description>Magnolia Property Initializer</description>
