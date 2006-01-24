@@ -15,9 +15,11 @@ package info.magnolia.cms.beans.runtime;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.Serializable;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -25,7 +27,12 @@ import org.apache.commons.lang.StringUtils;
  * @author Sameer Charles
  * @version 1.1
  */
-public class Document {
+public class Document implements Serializable {
+    
+    /**
+     * Logger
+     */
+    public static Logger log = Logger.getLogger(Document.class);
 
     /**
      * request parameter name.
@@ -55,13 +62,27 @@ public class Document {
     /**
      * A reference to the file input stream.
      */
-    private FileInputStream inputStream;
+    transient private FileInputStream inputStream;
 
     /**
      * package private constructor
      */
     Document() {
     }
+    
+    /**
+     * Used to create a document pased on a existing file.
+     * @param file
+     * @param type
+     */
+    public Document(java.io.File file, String type ){
+        String fileName = file.getName();
+        this.setFile(file);
+        this.setType(type);
+        this.setExtention(StringUtils.substringAfterLast(fileName, "."));
+        this.setFileName(StringUtils.substringBeforeLast(fileName, "."));
+    }
+
 
     /**
      * Sets the parameter name
@@ -184,5 +205,5 @@ public class Document {
     public void delete() {
         IOUtils.closeQuietly(inputStream);
         this.file.delete();
-    }
+    }   
 }
