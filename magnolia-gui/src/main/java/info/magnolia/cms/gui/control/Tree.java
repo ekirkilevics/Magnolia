@@ -33,6 +33,8 @@ import info.magnolia.cms.util.MetaDataUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -1153,7 +1155,14 @@ public class Tree extends ControlSuper {
             int left = (parentNode.getLevel()) * this.getIndentionWidth();
             Iterator it;
             if (itemType.equalsIgnoreCase(ItemType.NT_NODEDATA)) {
-                it = parentNode.getNodeDataCollection().iterator();
+                List nodeDatas = new ArrayList(parentNode.getNodeDataCollection());
+                // order them alphabetically
+                Collections.sort(nodeDatas, new Comparator(){
+                    public int compare(Object arg0, Object arg1) {
+                        return ((NodeData)arg0).getName().compareTo(((NodeData)arg1).getName());
+                    };
+                });
+                it = nodeDatas.iterator();
             }
             else {
                 it = parentNode.getChildren(itemType, ContentHandler.SORT_BY_SEQUENCE).iterator();
