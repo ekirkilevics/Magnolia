@@ -12,7 +12,10 @@
  */
 package info.magnolia.module.admininterface.trees;
 
+import java.util.Iterator;
+
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.gui.control.TreeColumn;
@@ -20,6 +23,8 @@ import info.magnolia.cms.gui.control.TreeColumnHtmlRenderer;
 import info.magnolia.cms.i18n.TemplateMessagesUtil;
 
 import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -39,13 +44,13 @@ public class TemplateTreeColumnHtmlRenderer implements TreeColumnHtmlRenderer {
 
     private String findTemplateKey(String templateName) {
         HierarchyManager configHierarchyManager = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
-        try {
-            Content template = configHierarchyManager.getContent("modules/templating/Templates/" + templateName); //$NON-NLS-1$
-            return template.getTitle();
+        for (Iterator iter = Template.getAvailableTemplates(); iter.hasNext();) {
+            Template template = (Template) iter.next();
+            if(StringUtils.equals(templateName, template.getName())){
+                return template.getTitle();
+            }
         }
-        catch (RepositoryException e) {
-            return templateName;
-        }
+        return templateName;
     }
 
 }
