@@ -83,7 +83,7 @@ public class AdminTreeConfig extends AdminTreeMVCHandler {
         typeSelect.setName(tree.getJavascriptTree() + TreeColumn.EDIT_NAMEADDITION);
         typeSelect.setSaveInfo(false);
         typeSelect.setCssClass(TreeColumn.EDIT_CSSCLASS_SELECT);
-        typeSelect.setEvent("onblur", tree.getJavascriptTree() + TreeColumn.EDIT_JSSAVE); //$NON-NLS-1$
+        typeSelect.setEvent("onblur", tree.getJavascriptTree() + ".saveNodeData(this.value,this.options[this.selectedIndex].text)"); //$NON-NLS-1$
         typeSelect.setOptions(PropertyType.TYPENAME_STRING, Integer.toString(PropertyType.STRING));
         typeSelect.setOptions(PropertyType.TYPENAME_BOOLEAN, Integer.toString(PropertyType.BOOLEAN));
         typeSelect.setOptions(PropertyType.TYPENAME_LONG, Integer.toString(PropertyType.LONG));
