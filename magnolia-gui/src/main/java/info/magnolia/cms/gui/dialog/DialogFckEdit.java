@@ -12,12 +12,16 @@
  */
 package info.magnolia.cms.gui.dialog;
 
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.ControlSuper;
+import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.LinkUtil;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
@@ -29,10 +33,78 @@ import org.apache.log4j.Logger;
 
 /**
  * An Magnolia dialog for the universal usage and configuration of the fckeditor. Credits for FCKEditor:
- * http://www.fckeditor.net/
+ * http://www.fckeditor.net/<p/> The fckEditor is mainly configured in javascript files. Those files are configured
+ * with the following attributes.
+ * <ul>
+ * <li>jsInitFile</li>
+ * <li>customConfigurationPath</li>
+ * </ul>
+ * Where the default values are:
+ * <ul>
+ * <li>/admindocroot/fckeditor/custom/init/magnoliaStandard.js</li>
+ * <li>/admindocroot/fckeditor/custom/config/magnoliaStandard.js</li>
+ * </ul>
+ * To make live simple we provide some attributes to configure the control in the magnolia configuration instead within
+ * the javascript files. <table>
+ * <tr>
+ * <td>css</td>
+ * <td>The css file to use. Default is /admindocroot/fckeditor/custom/css/magnoliaStandard.css </td>
+ * </tr>
+ * <tr>
+ * <td>height</td>
+ * <td>The height of the editor.</td>
+ * </tr>
+ * <tr>
+ * <td>tables</td>
+ * <td>The table editing features are available if true</td>
+ * </tr>
+ * <tr>
+ * <td>lists</td>
+ * <td>The list features are available if true</td>
+ * </tr>
+ * <tr>
+ * <td>aligment</td>
+ * <td>The aligment features are available if true</td>
+ * </tr>
+ * <tr>
+ * <td>images</td>
+ * <td>The image editing features including upload are available if true</td>
+ * </tr>
+ * <tr>
+ * <td>fileUpload</td>
+ * <td>The file upload features is enabled if true</td>
+ * </tr>
+ * <tr>
+ * <td>styles</td>
+ * <td>Defines the xml file defining the used styles. See
+ * http://wiki.fckeditor.net/Developer%27s_Guide/Configuration/Styles for details</td>
+ * </tr>
+ * <tr>
+ * <td>templates</td>
+ * <td>Defines the xml file defining the used templates. See
+ * http://wiki.fckeditor.net/Developer%27s_Guide/Configuration/Templates for details</td>
+ * </tr>
+ * <tr>
+ * <td>fonts</td>
+ * <td>A semicolon separated list of font names.</td>
+ * </tr>
+ * <tr>
+ * <td>fontSizes</td>
+ * <td>A semicolon separated list of font sizes</td>
+ * </tr>
+ * <tr>
+ * <tr>
+ * <td>colors</td>
+ * <td>A comma separated list of colors. hex values without #.</td>
+ * </tr>
+ * <tr>
+ * <td>source</td>
+ * <td>Show the source button</td>
+ * </tr>
+ * </table>
  * @author bert schulzki
  * @author Fabrizio Giustina
- * @version 1.0 11.10.2004
+ * @version
  */
 public class DialogFckEdit extends DialogBox {
 
@@ -47,6 +119,11 @@ public class DialogFckEdit extends DialogBox {
     public static final String FCKEDIT_PATH = "/admindocroot/fckeditor/"; //$NON-NLS-1$
 
     /**
+     * Used to make sure that the javascript files are loaded only once
+     */
+    private static final String ATTRIBUTE_FCKED_LOADED = "info.magnolia.cms.gui.dialog.fckedit.loaded";
+
+    /**
      * This parameter defines the startup script. This parameter is searched in the dialog configuration.
      */
     public static final String PARAM_JS_INIT_FILE = "jsInitFile"; //$NON-NLS-1$
@@ -54,27 +131,62 @@ public class DialogFckEdit extends DialogBox {
     /**
      * This parameter defines the configuration script
      */
-    public static final String PARAM_CUSTOM_CONFIGURATION_PATH = "customConfigurationPath"; //$NON-NLS-1$
+    public static final String PARAM_CUSTOM_CONFIGURATION_PATH = "jsConfigFile"; //$NON-NLS-1$
+
+    public static final String PARAM_CSS = "css"; //$NON-NLS-1$
+
+    public static final String PARAM_HEIGHT = "height"; //$NON-NLS-1$
+
+    public static final String PARAM_TABLES = "tables"; //$NON-NLS-1$
+
+    private static final String PARAM_LISTS = "lists";
+
+    private static final String PARAM_ALIGNMENT = "alignment";
+
+    public static final String PARAM_IMAGES = "images"; //$NON-NLS-1$
+
+    public static final String PARAM_STYLES = "styles"; //$NON-NLS-1$
+
+    public static final String PARAM_TEMPLATES = "templates"; //$NON-NLS-1$
+
+    public static final String PARAM_FONTS = "fonts"; //$NON-NLS-1$
+
+    public static final String PARAM_FONT_SIZES = "fontSizes"; //$NON-NLS-1$
+
+    private static final String PARAM_COLORS = "colors";
+
+    public static final String PARAM_SOURCE = "source"; //$NON-NLS-1$
 
     /**
-     * If jsInitFile is not defined
+     * Default falues
      */
     public static final String PARAM_JS_INIT_FILE_DEFAULT = "/admindocroot/fckeditor/custom/init/magnoliaStandard.js"; //$NON-NLS-1$
 
-    /**
-     * If customConfigurationPath is not defined
-     */
     public static final String PARAM_CUSTOM_CONFIGURATION_PATH_DEFAULT = "/admindocroot/fckeditor/custom/config/magnoliaStandard.js"; //$NON-NLS-1$
 
-    /**
-     * the configuration script name
-     */
-    private String customConfigurationsPath = PARAM_CUSTOM_CONFIGURATION_PATH_DEFAULT;
+    public static final String PARAM_CSS_DEFAULT = "/admindocroot/fckeditor/custom/css/magnoliaStandard.css"; //$NON-NLS-1$
 
-    /**
-     * the initialization script name
-     */
-    private String jsInitFile = PARAM_JS_INIT_FILE_DEFAULT;
+    public static final String PARAM_HEIGHT_DEFAULT = ""; //$NON-NLS-1$
+
+    public static final String PARAM_TABLES_DEFAULT = "false"; //$NON-NLS-1$
+
+    public static final String PARAM_IMAGES_DEFAULT = "false"; //$NON-NLS-1$
+
+    public static final String PARAM_STYLES_DEFAULT = ""; //$NON-NLS-1$
+
+    public static final String PARAM_TEMPLATES_DEFAULT = ""; //$NON-NLS-1$
+
+    public static final String PARAM_FONTS_DEFAULT = ""; //$NON-NLS-1$
+
+    public static final String PARAM_FONT_SIZES_DEFAULT = ""; //$NON-NLS-1$
+
+    public static final String PARAM_SOURCE_DEFAULT = "false"; //$NON-NLS-1$
+
+    private static final String PARAM_COLORS_DEFAULT = "";
+
+    private static final String PARAM_LISTS_DEFAULT = "true";
+
+    private static final String PARAM_ALIGNMENT_DEFAULT = "false";
 
     /**
      * Empty constructor should only be used by DialogFactory.
@@ -94,49 +206,31 @@ public class DialogFckEdit extends DialogBox {
     }
 
     /**
-     * @param name script name
-     */
-    public void setCustomConfigurationPath(String name) {
-        if (name != null) {
-            customConfigurationsPath = name;
-        }
-    }
-
-    /**
-     * @param name init file
-     */
-    public void setJSInitFile(String name) {
-        if (name != null) {
-            jsInitFile = name;
-        }
-    }
-
-    /**
      * @see info.magnolia.cms.gui.dialog.DialogInterface#init(HttpServletRequest, HttpServletResponse, Content, Content)
      */
     public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
         throws RepositoryException {
         super.init(request, response, websiteNode, configNode);
-        String jsInitFile = this.getConfigValue(PARAM_JS_INIT_FILE, PARAM_JS_INIT_FILE_DEFAULT);
-        String customConfigurationPath = this.getConfigValue(
-            PARAM_CUSTOM_CONFIGURATION_PATH,
-            PARAM_CUSTOM_CONFIGURATION_PATH_DEFAULT);
-        this.setJSInitFile(jsInitFile);
-        this.setCustomConfigurationPath(customConfigurationPath);
     }
 
     /**
      * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(Writer)
      */
     public void drawHtml(Writer out) throws IOException {
+        // get the config values
+        String jsInitFile = this.getConfigValue(PARAM_JS_INIT_FILE, PARAM_JS_INIT_FILE_DEFAULT);
+        String customConfigurationPath = this.getConfigValue(
+            PARAM_CUSTOM_CONFIGURATION_PATH,
+            this.getConfigValue("customConfigurationPath",PARAM_CUSTOM_CONFIGURATION_PATH_DEFAULT));
+        String height = this.getConfigValue(PARAM_HEIGHT, PARAM_HEIGHT_DEFAULT);
+
         this.drawHtmlPre(out);
 
         // load the script onece: if there are multiple instances
-        if (getRequest().getAttribute("__fcked_loaded") == null) { //$NON-NLS-1$
+        if (getRequest().getAttribute(ATTRIBUTE_FCKED_LOADED) == null) { //$NON-NLS-1$
             out.write("<script type=\"text/javascript\" src=\"" //$NON-NLS-1$
-                + this.getRequest().getContextPath()
-                + "/admindocroot/fckeditor/fckeditor.js\"></script>"); //$NON-NLS-1$
-            getRequest().setAttribute("__fcked_loaded", "true"); //$NON-NLS-1$ //$NON-NLS-2$
+                + this.getRequest().getContextPath() + "/admindocroot/fckeditor/fckeditor.js\"></script>"); //$NON-NLS-1$
+            getRequest().setAttribute(ATTRIBUTE_FCKED_LOADED, "true"); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         String id = getName();
@@ -147,76 +241,149 @@ public class DialogFckEdit extends DialogBox {
 
         String var = getVarName();
         String value = convertToView(getValue());
-        value = LinkUtil.convertUUIDsToAbsoluteLinks(value);
         out.write("<script type=\"text/javascript\">"); //$NON-NLS-1$
+
+        // make the configuration accessible to the config javascript
+        writeMgnlFCKConfig(out, id);
+
         out.write("var " + var + " = null;"); //$NON-NLS-1$ //$NON-NLS-2$
         out.write("fckInstance = new FCKeditor( '" + id + "' );"); //$NON-NLS-1$ //$NON-NLS-2$
         out.write("fckInstance.Value = '" + escapeJsValue(value) + "';"); //$NON-NLS-1$ //$NON-NLS-2$
         out.write("fckInstance.BasePath = '" + this.getRequest().getContextPath() + FCKEDIT_PATH + "';"); //$NON-NLS-1$ //$NON-NLS-2$
 
-        if (this.getConfigValue("height", null) != null) { //$NON-NLS-1$
+        if (StringUtils.isNotEmpty(height)) { //$NON-NLS-1$
             out.write("fckInstance.Height = '" + escapeJsValue(this.getConfigValue("height")) + "';"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
 
-        if (customConfigurationsPath.length() > 0) {
+        // now set the custom configuration path
+        if (StringUtils.isNotEmpty(customConfigurationPath)) {
             out.write("fckInstance.Config['CustomConfigurationsPath'] = '" //$NON-NLS-1$
-                + this.getRequest().getContextPath()
-                + customConfigurationsPath
-                + "';"); //$NON-NLS-1$
+                + this.getRequest().getContextPath() + customConfigurationPath + "';"); //$NON-NLS-1$
         }
+
+        // here we pass the parameters to the custom configuration file --> via
+        // javascript
+
+        // start the initfile
         if (jsInitFile.length() > 0) {
             out.write("</script>"); //$NON-NLS-1$
             out.write("<script type=\"text/javascript\" src=\"" //$NON-NLS-1$
-                + this.getRequest().getContextPath()
-                + jsInitFile
-                + "\"></script>\n"); //$NON-NLS-1$
+                + this.getRequest().getContextPath() + jsInitFile + "\"></script>\n"); //$NON-NLS-1$
             out.write("<script type=\"text/javascript\">"); //$NON-NLS-1$
         }
 
+        // finaly create the editor
         out.write("fckInstance.Create();"); //$NON-NLS-1$
         out.write(var + " = fckInstance;"); //$NON-NLS-1$
         out.write("</script>"); //$NON-NLS-1$
 
-        // write the saveInfo for the writting back to the repository
+        // write the saveInfo for the writing back to the repository
         out.write("<input type='hidden' name='mgnlSaveInfo' value='" //$NON-NLS-1$
-            + id
-            + ",String," //$NON-NLS-1$
-            + ControlSuper.VALUETYPE_SINGLE
-            + "," //$NON-NLS-1$
-            + ControlSuper.RICHEDIT_FCK
-            + "," //$NON-NLS-1$
-            + ControlSuper.ENCODING_NO
-            + "' />"); //$NON-NLS-1$
+            + id + ",String," //$NON-NLS-1$
+            + ControlSuper.VALUETYPE_SINGLE + "," //$NON-NLS-1$
+            + ControlSuper.RICHEDIT_FCK + "," //$NON-NLS-1$
+            + ControlSuper.ENCODING_NO + "' />"); //$NON-NLS-1$
 
         this.drawHtmlPost(out);
+    }
 
+    private void writeMgnlFCKConfig(Writer out, String id) throws IOException {
+        String css = this.getConfigValue(PARAM_CSS, PARAM_CSS_DEFAULT);
+        String fonts = this.getConfigValue(PARAM_FONTS, PARAM_FONTS_DEFAULT);
+        String fontSizes = this.getConfigValue(PARAM_FONT_SIZES, PARAM_FONT_SIZES_DEFAULT);
+        String colors = this.getConfigValue(PARAM_COLORS, PARAM_COLORS_DEFAULT);
+        String styles = this.getConfigValue(PARAM_STYLES, PARAM_STYLES_DEFAULT);
+        String templates = this.getConfigValue(PARAM_TEMPLATES, PARAM_TEMPLATES_DEFAULT);
+
+        String lists = this.getConfigValue(PARAM_LISTS, PARAM_LISTS_DEFAULT);
+        String alignment = this.getConfigValue(PARAM_ALIGNMENT, PARAM_ALIGNMENT_DEFAULT);
+        String tables = this.getConfigValue(PARAM_TABLES, PARAM_TABLES_DEFAULT);
+        String images = this.getConfigValue(PARAM_IMAGES, PARAM_IMAGES_DEFAULT);
+        String source = this.getConfigValue(PARAM_SOURCE, PARAM_SOURCE_DEFAULT);
+
+        // create the the holder of the editors configs if not yet done
+        out.write("if( window.MgnlFCKConfigs == null)\n");
+        out.write("    window.MgnlFCKConfigs = new Object();\n");
+
+        // add the config for this editor
+
+        out.write("MgnlFCKConfigs." + id + " = new Object();\n");
+        // string values
+        out.write("MgnlFCKConfigs."
+            + id
+            + ".language = '"
+            + MgnlContext.getUser().getLanguage()
+            + "';\n");
+        out.write("MgnlFCKConfigs." + id + ".contextPath = '" + getRequest().getContextPath() + "';\n");
+
+        out.write("MgnlFCKConfigs." + id + ".repository = '" + getTopParent().getConfigValue("repository") + "';\n");
+        out.write("MgnlFCKConfigs." + id + ".path = '" + getTopParent().getConfigValue("path") + "';\n");
+        out.write("MgnlFCKConfigs." + id + ".nodeCollection = '" + getTopParent().getConfigValue("nodeCollection")+ "';\n");
+        out.write("MgnlFCKConfigs." + id + ".node = '" + getTopParent().getConfigValue("node") + "';\n");
+        
+        out.write("MgnlFCKConfigs." + id + ".css = '" + css + "';\n");
+        out.write("MgnlFCKConfigs." + id + ".fonts = '" + fonts + "';\n");
+        out.write("MgnlFCKConfigs." + id + ".fontSizes = '" + fontSizes + "';\n");
+        out.write("MgnlFCKConfigs." + id + ".colors = '" + colors + "';\n");
+        out.write("MgnlFCKConfigs." + id + ".styles = '" + styles + "';\n");
+        out.write("MgnlFCKConfigs." + id + ".templates = '" + templates + "';\n");
+
+        // boolean values
+        out.write("MgnlFCKConfigs." + id + ".lists = " + lists + ";\n");
+        out.write("MgnlFCKConfigs." + id + ".alignment = " + alignment + ";\n");
+        out.write("MgnlFCKConfigs." + id + ".tables = " + tables + ";\n");
+        out.write("MgnlFCKConfigs." + id + ".images = " + images + ";\n");
+        out.write("MgnlFCKConfigs." + id + ".source = " + source + ";\n");
     }
 
     /**
      * @param value
      * @return
      */
-    private static String convertToView(String value) {
+    private String convertToView(String value) {
         String tmp = value;
         if (tmp != null) {
             tmp = tmp.replaceAll("\r\n", "<br />"); //$NON-NLS-1$ //$NON-NLS-2$
             tmp = tmp.replaceAll("\n", "<br />"); //$NON-NLS-1$ //$NON-NLS-2$
-            return tmp;
+            
+            value = LinkUtil.convertUUIDsToAbsoluteLinks(value);
+            
+            Pattern imagePattern = Pattern.compile("(<(a|img)[^>]+(src|href)[ ]*=[ ]*\")([^\"]*)(\"[^>]*>)"); //$NON-NLS-1$
+
+            Matcher matcher = imagePattern.matcher(value);
+            StringBuffer res = new StringBuffer();
+            while (matcher.find()) {
+                String src = matcher.group(4);
+                
+                // process only internal and relative links
+                if(!Pattern.matches("^\\w*://.*", src) && !src.startsWith("/")){
+                    String link = 
+                        this.getRequest().getContextPath() +
+                        this.getTopParent().getConfigValue("path") + "/" +
+                        StringUtils.substringAfter(src, "/");
+
+                    matcher.appendReplacement(res, "$1" + link + "$5"); //$NON-NLS-1$
+                }
+            }
+            matcher.appendTail(res);
+            return res.toString();
         }
+        
+        
         return StringUtils.EMPTY;
     }
 
     /**
      * Replacements:
-     *
+     * 
      * <pre>
-     * ' -> \'
-     * " -> \"
-     * \r\n -> \\r\\n
-     * \n -> \\n
-     * \ -> \\
+     *               ' -&gt; \'
+     *               &quot; -&gt; \&quot;
+     *               \r\n -&gt; \\r\\n
+     *               \n -&gt; \\n
+     *               \ -&gt; \\
      * </pre>
-     *
+     * 
      * @param src
      * @return escaped js String
      */
