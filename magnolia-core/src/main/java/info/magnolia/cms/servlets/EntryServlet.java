@@ -18,12 +18,16 @@ import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.VirtualMap;
 import info.magnolia.cms.beans.runtime.Cache;
 import info.magnolia.cms.beans.runtime.Context;
-import info.magnolia.cms.beans.runtime.WebContextImpl;
 import info.magnolia.cms.beans.runtime.MgnlContext;
+import info.magnolia.cms.beans.runtime.WebContextImpl;
 import info.magnolia.cms.core.CacheHandler;
 import info.magnolia.cms.core.CacheProcess;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.security.*;
+import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.security.Authenticator;
+import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.security.Security;
+import info.magnolia.cms.security.SessionAccessControl;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -125,11 +129,9 @@ public class EntryServlet extends HttpServlet {
                     }
                 }
                 
-                initializeContext(req);
                 // Initialize magnolia context
-//                WebContextImpl context = new WebContextImpl(req);
-//                MgnlContext.setInstance(context);
-//                MgnlContext.setUser(Security.getUserManager().getUserObject(Authenticator.getSubject(req)));
+                initializeContext(req);
+
                 if (redirect(req, res)) {
 
                     // it's a valid request cache it
