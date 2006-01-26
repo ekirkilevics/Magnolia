@@ -17,6 +17,7 @@ import info.magnolia.cms.Dispatcher;
 import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.VirtualMap;
 import info.magnolia.cms.beans.runtime.Cache;
+import info.magnolia.cms.beans.runtime.Context;
 import info.magnolia.cms.beans.runtime.WebContextImpl;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.CacheHandler;
@@ -123,10 +124,12 @@ public class EntryServlet extends HttpServlet {
                         return; // if success return
                     }
                 }
+                
+                initializeContext(req);
                 // Initialize magnolia context
-                WebContextImpl context = new WebContextImpl(req);
-                MgnlContext.setInstance(context);
-                MgnlContext.setUser(Security.getUserManager().getUserObject(Authenticator.getSubject(req)));
+//                WebContextImpl context = new WebContextImpl(req);
+//                MgnlContext.setInstance(context);
+//                MgnlContext.setUser(Security.getUserManager().getUserObject(Authenticator.getSubject(req)));
                 if (redirect(req, res)) {
 
                     // it's a valid request cache it
@@ -185,6 +188,22 @@ public class EntryServlet extends HttpServlet {
         doGet(req, res);
     }
 
+    /**
+     * Initialize Magnolia context. 
+     * It creates a context and initialize the user only if these do not exist yet.
+     * 
+     * <b>Note</b>: the implementation may get changed 
+     * @param request the current request
+     */
+    protected void initializeContext(HttpServletRequest request) {
+        if (MgnlContext.getInstance() == null) {
+            Context ctx = new WebContextImpl(request);
+            ctx.setUser(Security.getUserManager().getUserObject(
+                    Authenticator.getSubject(request)));
+            MgnlContext.setInstance(ctx);
+        }
+    }
+    
     /**
      * Uses access manager to authorise this request.
      * @param req HttpServletRequest as received by the service method
