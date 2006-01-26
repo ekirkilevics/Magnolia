@@ -62,6 +62,11 @@ public class Breadcrumb extends TagSupport {
     private boolean excludeCurrent;
 
     /**
+     * Output as link. (default: true)
+     */
+    private boolean link = true;
+    
+    /**
      * Setter for the <code>delimeter</code> tag attribute.
      * @param delimiter delimeter between links
      */
@@ -89,6 +94,14 @@ public class Breadcrumb extends TagSupport {
     }
 
     /**
+     * Setter for <code>link</code>.
+     * @param link if <code>true</code> all pages are linked to.
+     */
+    public void setLink(boolean link) {
+        this.link = link;
+    }
+    
+    /**
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
     public int doStartTag() throws JspException {
@@ -108,12 +121,16 @@ public class Breadcrumb extends TagSupport {
                 if (i != this.startLevel) {
                     out.print(StringUtils.defaultString(this.delimiter, " > ")); //$NON-NLS-1$
                 }
-                out.print("<a href=\""); //$NON-NLS-1$
-                out.print(request.getContextPath());
-                out.print(actpage.getAncestor(i).getHandleWithDefaultExtension());
-                out.print("\">"); //$NON-NLS-1$
+                if(this.link) {
+                    out.print("<a href=\""); //$NON-NLS-1$
+                    out.print(request.getContextPath());
+                    out.print(actpage.getAncestor(i).getHandleWithDefaultExtension());
+                    out.print("\">"); //$NON-NLS-1$
+                }
                 out.print(actpage.getAncestor(i).getTitle());
-                out.print("</a>"); //$NON-NLS-1$
+                if(this.link) {
+                    out.print("</a>"); //$NON-NLS-1$
+                }
             }
         }
         catch (RepositoryException e) {
@@ -133,6 +150,7 @@ public class Breadcrumb extends TagSupport {
         this.startLevel = 1;
         this.delimiter = null;
         this.excludeCurrent = false;
+        this.link = true;
         super.release();
     }
 

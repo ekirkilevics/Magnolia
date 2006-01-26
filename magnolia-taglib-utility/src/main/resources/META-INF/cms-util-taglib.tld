@@ -159,6 +159,13 @@
             <type>boolean</type>
             <description>exclude the current (active) page from the breadcrumb. Defaults to false</description>
         </attribute>
+        <attribute>
+            <name>link</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
+            <description>Create links to pages. Defaults to true</description>
+        </attribute>
     </tag>
     <tag>
         <name>fileSrc</name>
