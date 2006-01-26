@@ -14,11 +14,12 @@ package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.i18n.MessagesManager;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 import javax.jcr.PropertyType;
+
+import org.apache.commons.lang.time.DateFormatUtils;
 
 
 /**
@@ -55,9 +56,10 @@ public class DialogDate extends DialogEditWithButton {
         this.setConfig("onchange", "mgnlDialogDatePatternCheck(this,'" + pattern + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         if (this.getWebsiteNode() != null && this.getWebsiteNode().getNodeData(this.getName()).isExist()) {
             Calendar valueCalendar = this.getWebsiteNode().getNodeData(this.getName()).getDate();
+            
             Date valueDate = valueCalendar.getTime();
-            SimpleDateFormat sdf = new SimpleDateFormat(format);
-            this.setValue(sdf.format(valueDate));
+            
+            this.setValue(DateFormatUtils.formatUTC(valueDate, format));
             this.clearWebsiteNode(); // workaround so the value is taken... hm, pfusch
         }
         // check this!

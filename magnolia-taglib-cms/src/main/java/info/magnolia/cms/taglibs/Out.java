@@ -30,6 +30,7 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 
 
@@ -381,19 +382,17 @@ public class Out extends TagSupport {
 
     // @todo: place in another package to make it availbable globaly -> NodeData?
     public String getDateFormatted(Date date) {
-
         if (date == null) {
             return StringUtils.EMPTY;
         }
-        SimpleDateFormat formatter;
+        
         String lang = this.getDateLanguage();
         if (lang == null) {
-            formatter = new SimpleDateFormat(this.getDatePattern());
+            return DateFormatUtils.formatUTC(date, this.getDatePattern());
         }
         else {
-            formatter = new SimpleDateFormat(this.getDatePattern(), new Locale(lang));
+            return DateFormatUtils.formatUTC(date, this.getDatePattern(), new Locale(lang));
         }
-        return formatter.format(date);
     }
 
     public String getFilePropertyValue() {
