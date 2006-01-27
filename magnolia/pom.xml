@@ -69,6 +69,10 @@
       <artifactId>jackrabbit-textfilters</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.apache.derby</groupId>
+      <artifactId>derby</artifactId>
+    </dependency>
+    <dependency>
       <groupId>net.sourceforge.openutils</groupId>
       <artifactId>openutils-log4j</artifactId>
     </dependency>

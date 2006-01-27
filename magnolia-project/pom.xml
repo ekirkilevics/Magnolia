@@ -181,17 +181,22 @@
       <dependency>
         <groupId>org.apache.jackrabbit</groupId>
         <artifactId>jackrabbit</artifactId>
-        <version>1.0-20051116.235521-7</version>
+        <version>1.0-20060115.155604-8</version>
       </dependency>
       <dependency>
         <groupId>org.apache.jackrabbit</groupId>
         <artifactId>jackrabbit-bdb</artifactId>
-        <version>1.0-20051117.000801-2</version>
+        <version>1.0-20060115.160157-3</version>
       </dependency>
       <dependency>
         <groupId>org.apache.jackrabbit</groupId>
         <artifactId>jackrabbit-textfilters</artifactId>
-        <version>1.0-20051117.001422-1</version>
+        <version>1.0-20060115.160640-2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.derby</groupId>
+        <artifactId>derby</artifactId>
+        <version>10.1.1.0</version>
       </dependency>
       <dependency>
         <groupId>log4j</groupId>
