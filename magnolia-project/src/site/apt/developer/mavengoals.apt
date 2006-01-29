@@ -47,25 +47,14 @@ Generating documentation
 
 Creating configuration for eclipse/WTP
 
- WARNING: the current release of the m2 eclipse plugin has a critical bug in the generation of .wtpmodules files for
- web projects, so dependencies in the "magnolia" project will be missing.
- At the moment you will have to download and compile the eclipse plugin from svn for it to work, so follow this steps:
+ Run the following command for configuring magnolia. You will need the maven eclipse plugin version 2.1 installed.
+ You can use "R7" or "1.0" for the wtpversion parameter, depending of the version of WTP you are using (be sure to check
+ the eclipse plugin documentation for more details, and read the warning about the 1.0 release of WTP, which will not
+ work properly)
 
 +--------------------------------+
 
-svn checkout http://svn.apache.org/repos/asf/maven/components/trunk/maven-plugins/maven-eclipse-plugin maven-eclipse-plugin
-
-cd maven-eclipse-plugin
-
-mvn install
-
-+--------------------------------+
-
- Now you should have a working copy of the eclipse plugin installed. Run the following for configuring magnolia
-
-+--------------------------------+
-
-/magnolia-project > mvn -DdownloadSources=true eclipse:eclipse
+/magnolia-project > mvn -Dwtpversion=1.0 -DdownloadSources=true eclipse:eclipse
 
 +--------------------------------+
 
@@ -103,12 +92,34 @@ Deploying the magnolia site to sourceforge [developers only]
 
 Deploy
 
- to do
++--------------------------------+
+
+/magnolia-project > mvn deploy
+
++--------------------------------+
 
 
 Release
 
- to do
+ Prepare a release (WARNING: the current version of the release plugin doesn't properly handle the magnolia project layout!):
+
++--------------------------------+
+
+/magnolia-project > mvn release:prepare
+
++--------------------------------+
+
+ This will update versions in POMs and tag the release in subversion.
+
+ To deploy a release:
+
++--------------------------------+
+
+/magnolia-project > mvn release:perform
+
++--------------------------------+
+
+ This will checkout a clean copy, build it and deploy jars, wars, sources and javadocs to the repository at sourceforge
 
 
 
