@@ -65,7 +65,7 @@ public class ProviderImpl implements Provider {
      */
     public void init(RepositoryMapping repositoryMapping) throws RepositoryNotInitializedException {
         checkXmlSettings();
-        
+
         this.repositoryMapping = repositoryMapping;
         /* connect to repository */
         Map params = this.repositoryMapping.getParameters();
@@ -88,10 +88,12 @@ public class ProviderImpl implements Provider {
             // first try to find the existing object if any
             try {
                 this.repository = (Repository) ctx.lookup(bindName);
-            } catch (NameNotFoundException ne) {
+            }
+            catch (NameNotFoundException ne) {
                 if (log.isDebugEnabled()) {
-                    log.debug("No JNDI bound Repository found with name - "+bindName
-                            +" , trying to initialize a new Repository");
+                    log.debug("No JNDI bound Repository found with name - "
+                        + bindName
+                        + " , trying to initialize a new Repository");
                 }
                 RegistryHelper.registerRepository(ctx, bindName, configFile, repositoryHome, true);
                 this.repository = (Repository) ctx.lookup(bindName);
@@ -119,15 +121,17 @@ public class ProviderImpl implements Provider {
                     Context ctx = new InitialContext(env);
                     RegistryHelper.unregisterRepository(ctx, bindName);
                 }
-                catch(NamingException ne) {
-                    log.warn(MessageFormat.format("Unable to shutdown repository {0}: {1} {2}", 
-                                new Object[]{bindName, ne.getClass().getName(), ne.getMessage()}),
-                            ne);
+                catch (NamingException ne) {
+                    log.warn(MessageFormat.format("Unable to shutdown repository {0}: {1} {2}", new Object[]{
+                        bindName,
+                        ne.getClass().getName(),
+                        ne.getMessage()}), ne);
                 }
                 catch (Throwable e) {
-                    log.warn(MessageFormat.format("Failed to shutdown repository {0}: {1} {2}", 
-                                new Object[]{bindName, e.getClass().getName(), e.getMessage()}),
-                            e);
+                    log.warn(MessageFormat.format("Failed to shutdown repository {0}: {1} {2}", new Object[]{
+                        bindName,
+                        e.getClass().getName(),
+                        e.getMessage()}), e);
                 }
             }
         });
@@ -211,26 +215,25 @@ public class ProviderImpl implements Provider {
 
         }
     }
-    
+
     /**
-     * WORKAROUND for tomcat 5.0/jdk 1.5 problem
-     * tomcat\common\endorsed contains an xml-apis.jar needed by tomcat and loaded before all xmsl stuff present in
-     * the jdk (1.4 naming problem). In the xml-apis.jar file the TransformerFactoryImpl is set to
-     * "org.apache.xalan.processor.TransformerFactoryImpl" instead of
-     * "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl".
-     * solution: remove the file xml-apis.jar from the directory OR manually change the
-     * javax.xml.transform.TransformerFactory system property
-     */ 
+     * WORKAROUND for tomcat 5.0/jdk 1.5 problem tomcat\common\endorsed contains an xml-apis.jar needed by tomcat and
+     * loaded before all xmsl stuff present in the jdk (1.4 naming problem). In the xml-apis.jar file the
+     * TransformerFactoryImpl is set to "org.apache.xalan.processor.TransformerFactoryImpl" instead of
+     * "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl". solution: remove the file xml-apis.jar
+     * from the directory OR manually change the javax.xml.transform.TransformerFactory system property
+     */
     protected void checkXmlSettings() {
         if (SystemUtils.isJavaVersionAtLeast(1.5f)
-                && !"com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl".equals(
-                        System.getProperty("javax.xml.transform.TransformerFactory"))) {
+            && "org.apache.xalan.processor.TransformerFactoryImpl".equals(System
+                .getProperty("javax.xml.transform.TransformerFactory"))) {
 
             log.info("Java 1.5 detected, setting system property \"javax.xml.transform.TransformerFactory\" to "
-                    + "\"com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl\"");
+                + "\"com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl\"");
+
             System.setProperty(
-                    "javax.xml.transform.TransformerFactory",
-                    "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
+                "javax.xml.transform.TransformerFactory",
+                "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
         }
     }
 }
