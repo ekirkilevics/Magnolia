@@ -148,6 +148,7 @@
             <param name="maxMergeDocs" value="100000" />
             <param name="mergeFactor" value="10" />
             <param name="bufferSize" value="10" />
+            <param name="textFilterClasses" value="org.apache.jackrabbit.core.query.MsExcelTextFilter,org.apache.jackrabbit.core.query.MsPowerPointTextFilter,org.apache.jackrabbit.core.query.MsWordTextFilter,org.apache.jackrabbit.core.query.PdfTextFilter" />
         </SearchIndex>
     </Workspace>
     <Versioning rootPath="${rep.home}/version">
