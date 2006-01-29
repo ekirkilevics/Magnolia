@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 
 
@@ -178,8 +179,11 @@ public class ResourceDispatcher extends HttpServlet {
             NodeData atom = hm.getNodeData(path);
             if (atom != null) {
                 if (atom.getType() == PropertyType.BINARY) {
-                    int sizeInBytes = (new Long(atom.getAttribute("size")).intValue());
-                    res.setContentLength(sizeInBytes);
+
+                    String sizeString = atom.getAttribute("size"); //$NON-NLS-1$
+                    if (NumberUtils.isNumber(sizeString)) {
+                        res.setContentLength(Integer.parseInt(sizeString));
+                    }
                 }
 
                 Value value = atom.getValue();
