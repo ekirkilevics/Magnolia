@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.servlets;
@@ -32,7 +32,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -51,7 +52,7 @@ public class ResourceDispatcher extends HttpServlet {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(ResourceDispatcher.class);
+    private static Logger log = LoggerFactory.getLogger(ResourceDispatcher.class);
 
     /**
      * @param req HttpServletRequest as given by the servlet container

@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.module.admininterface.dialogs;
@@ -34,7 +34,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -46,7 +47,7 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(ParagraphSelectDialog.class);
+    private static Logger log = LoggerFactory.getLogger(ParagraphSelectDialog.class);
 
     private String paragraph = StringUtils.EMPTY;
 
@@ -96,7 +97,8 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
                 StringBuffer label = new StringBuffer();
                 // TODO enable an invidual message bundle for each paragraph
                 label.append("<strong>" //$NON-NLS-1$
-                    + TemplateMessagesUtil.get(request, paragraphInfo.getTitle()) + "</strong><br />"); //$NON-NLS-1$
+                    + TemplateMessagesUtil.get(request, paragraphInfo.getTitle())
+                    + "</strong><br />"); //$NON-NLS-1$
                 label.append(TemplateMessagesUtil.get(request, paragraphInfo.getDescription()));
                 label.append("<br /><br />"); //$NON-NLS-1$
                 button.setLabel(label.toString());

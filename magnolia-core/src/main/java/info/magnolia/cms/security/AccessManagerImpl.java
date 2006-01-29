@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.security;
@@ -33,7 +33,7 @@ public class AccessManagerImpl implements AccessManager {
      * @param path
      * @param permissions
      * @return true if the given path has this permissions
-     * */
+     */
     public boolean isGranted(String path, long permissions) {
         if (StringUtils.isEmpty(path)) {
             return (getPermissions("/") & permissions) == permissions; //$NON-NLS-1$
@@ -44,18 +44,17 @@ public class AccessManagerImpl implements AccessManager {
     /**
      * Set list of permissions for this access manager
      * @param permissions list of values assigned to this access manager
-     * */
+     */
     public void setPermissionList(List permissions) {
         this.userPermissions = permissions;
     }
 
     /**
      * Get permissions assigned to the given path.
-     *
      * @param path
      * @see info.magnolia.cms.security.Permission
      * @return highest permission assigned to this path
-     * */
+     */
     public long getPermissions(String path) {
         if (userPermissions == null) {
             return Permission.ALL;

@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.servlets;
@@ -24,7 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -42,7 +43,7 @@ public class Spool extends HttpServlet {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(Spool.class);
+    private static Logger log = LoggerFactory.getLogger(Spool.class);
 
     /**
      * This makes browser and proxy caches work more effectively, reducing the load on server and network resources.

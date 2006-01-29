@@ -13,14 +13,15 @@ import info.magnolia.cms.gui.dialog.DialogInclude;
 import info.magnolia.cms.gui.dialog.DialogStatic;
 import info.magnolia.cms.gui.dialog.DialogTab;
 
+import java.util.Iterator;
+
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
-import java.util.Iterator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -29,7 +30,7 @@ import java.util.Iterator;
  */
 public class UserRolesEditDialog extends ConfiguredDialog {
 
-    protected static Logger log = Logger.getLogger("roles dialog"); //$NON-NLS-1$
+    protected static Logger log = LoggerFactory.getLogger("roles dialog"); //$NON-NLS-1$
 
     /**
      * Stable serialVersionUID.
@@ -164,12 +165,12 @@ public class UserRolesEditDialog extends ConfiguredDialog {
                                 accessType = aclValue;
                             }
                             else if (aclName.equals("accessRight")) { //$NON-NLS-1$
-                            		try{
-                            			accessRight = Long.parseLong(aclValue);
-                            		}
-                            		catch(NumberFormatException e){
-                            			accessRight = 0;
-                            		}
+                                try {
+                                    accessRight = Long.parseLong(aclValue);
+                                }
+                                catch (NumberFormatException e) {
+                                    accessRight = 0;
+                                }
                             }
                         }
 

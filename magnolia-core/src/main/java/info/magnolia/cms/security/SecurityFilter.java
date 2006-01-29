@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.security;
@@ -26,7 +26,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -38,7 +39,7 @@ public class SecurityFilter implements Filter {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(SecurityFilter.class);
+    private static Logger log = LoggerFactory.getLogger(SecurityFilter.class);
 
     /**
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)

@@ -7,22 +7,22 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.security;
 
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.security.auth.Subject;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
-import javax.security.auth.Subject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -34,7 +34,7 @@ public final class Authenticator {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(Authenticator.class);
+    private static Logger log = LoggerFactory.getLogger(Authenticator.class);
 
     /**
      * Session attribute holding the magnolia user id.
@@ -90,7 +90,7 @@ public final class Authenticator {
                 req.getSession().setAttribute(ATTRIBUTE_JAAS_SUBJECT, subject);
             }
             catch (LoginException le) {
-                log.debug(le);
+                log.debug("Exception caught", le);
                 req.getSession().invalidate();
                 return false;
             }
@@ -106,7 +106,7 @@ public final class Authenticator {
                 req.getSession().setAttribute(ATTRIBUTE_JAAS_SUBJECT, subject);
             }
             catch (LoginException le) {
-                log.debug(le);
+                log.debug("Exception caught", le);
                 req.getSession().invalidate();
                 return false;
             }
@@ -116,9 +116,8 @@ public final class Authenticator {
     }
 
     /**
-     * add user properties needed for jstl and user entity object to the session
-     * todo this should not be in Authenticator, setting user properties or authorization details
-     * does not belong here
+     * add user properties needed for jstl and user entity object to the session todo this should not be in
+     * Authenticator, setting user properties or authorization details does not belong here
      * @param request
      */
     private static void updateSession(HttpServletRequest request, Subject subject) {

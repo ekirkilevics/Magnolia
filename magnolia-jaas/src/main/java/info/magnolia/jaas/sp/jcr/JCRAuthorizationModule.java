@@ -7,22 +7,23 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.jaas.sp.jcr;
 
-import org.apache.log4j.Logger;
-import javax.jcr.RepositoryException;
-import javax.jcr.PathNotFoundException;
-
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.HierarchyManager;
+
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
- * This is a default login module for magnolia, it uses initialized repository as
- * defined by the provider interface
- *
+ * This is a default login module for magnolia, it uses initialized repository as defined by the provider interface
  * @author Sameer Charles
  * @version $Revision$ ($Author$)
  */
@@ -30,8 +31,8 @@ public class JCRAuthorizationModule extends JCRLoginModule {
 
     /**
      * Logger
-     * */
-    private static Logger log = Logger.getLogger(JCRAuthorizationModule.class);
+     */
+    private static Logger log = LoggerFactory.getLogger(JCRAuthorizationModule.class);
 
     /**
      * checks if the user exist in the repository
@@ -42,10 +43,12 @@ public class JCRAuthorizationModule extends JCRLoginModule {
         try {
             this.user = hm.getContent(this.name);
             return true;
-        } catch (PathNotFoundException pe) {
+        }
+        catch (PathNotFoundException pe) {
             pe.printStackTrace();
             log.info("Unable to locate user [" + this.name + "], authentication failed");
-        } catch (RepositoryException re) {
+        }
+        catch (RepositoryException re) {
             re.printStackTrace();
             log.error("Unable to locate user ["
                 + this.name

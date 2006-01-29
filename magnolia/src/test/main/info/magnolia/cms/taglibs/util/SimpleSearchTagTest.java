@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.taglibs.util;
@@ -19,7 +19,7 @@ import org.apache.commons.lang.math.RandomUtils;
 import org.apache.jackrabbit.core.query.xpath.TokenMgrError;
 import org.apache.jackrabbit.core.query.xpath.XPathQueryBuilder;
 import org.apache.jackrabbit.name.NamespaceResolver;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger; import org.slf4j.LoggerFactory;
 
 
 /**
@@ -31,7 +31,7 @@ public class SimpleSearchTagTest extends TestCase {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(SimpleSearchTagTest.class);
+    private static Logger log = LoggerFactory.getLogger(SimpleSearchTagTest.class);
 
     /**
      * Test for GenerateXPathQuery(). Uses Jackrabbit internal XPathQueryBuilder in order to validate the query.

@@ -7,7 +7,7 @@ import junit.framework.TestCase;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.SystemUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger; import org.slf4j.LoggerFactory;
 
 import com.meterware.servletunit.ServletRunner;
 
@@ -27,7 +27,7 @@ public abstract class HttpUnitTestCase extends TestCase {
     /**
      * logger.
      */
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     /**
      * HttpUnit ServletRunner.

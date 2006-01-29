@@ -31,7 +31,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -43,7 +44,7 @@ public class UserEditDialog extends ConfiguredDialog {
     /**
      * Logger.
      */
-    protected static Logger log = Logger.getLogger(UserEditDialog.class);
+    protected static Logger log = LoggerFactory.getLogger(UserEditDialog.class);
 
     /**
      * Stable serialVersionUID.

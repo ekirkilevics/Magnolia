@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.core;
@@ -30,7 +30,8 @@ import javax.jcr.Workspace;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -43,7 +44,7 @@ public class HierarchyManager {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(HierarchyManager.class);
+    private static Logger log = LoggerFactory.getLogger(HierarchyManager.class);
 
     /**
      * root of this hierarchy
@@ -276,10 +277,9 @@ public class HierarchyManager {
         }
         catch (PathNotFoundException e) {
             if (create) {
-               node = this.createContent(
-                    StringUtils.substringBeforeLast(path, "/"), 
-                    StringUtils.substringAfterLast(path, "/"),
-                    type.toString());
+                node = this.createContent(StringUtils.substringBeforeLast(path, "/"), StringUtils.substringAfterLast(
+                    path,
+                    "/"), type.toString());
             }
             else {
                 throw e;
@@ -428,7 +428,7 @@ public class HierarchyManager {
             isExist = this.workSpace.getSession().itemExists(path);
         }
         catch (RepositoryException re) {
-            log.error(re);
+            log.error("Exception caught", re);
         }
         return isExist;
     }
@@ -443,7 +443,7 @@ public class HierarchyManager {
         }
         catch (RepositoryException re) {
             log.error(re.getMessage());
-            log.debug(re);
+            log.debug(re.getMessage(), re);
         }
         return false;
     }
@@ -471,7 +471,7 @@ public class HierarchyManager {
             result = this.startPage.hasProperty(nodePath);
             if (!result) {
                 // check if its a nt:resource
-                result = this.startPage.hasProperty(nodePath+"/"+ItemType.JCR_DATA);
+                result = this.startPage.hasProperty(nodePath + "/" + ItemType.JCR_DATA);
             }
         }
         catch (RepositoryException e) {
@@ -526,8 +526,8 @@ public class HierarchyManager {
         Access.isGranted(this.accessManager, source, Permission.READ);
         Access.isGranted(this.accessManager, destination, Permission.WRITE);
         this.workSpace.copy(source, destination);
-        
-        if(this.workSpace.getSession().hasPendingChanges()){
+
+        if (this.workSpace.getSession().hasPendingChanges()) {
             this.workSpace.getSession().refresh(false);
             log.debug("copy: the session has pending changes but should not. will refresh");
         }

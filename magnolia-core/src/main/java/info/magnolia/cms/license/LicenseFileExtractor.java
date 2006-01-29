@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.license;
@@ -20,10 +20,11 @@ import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -63,7 +64,7 @@ public final class LicenseFileExtractor {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(LicenseFileExtractor.class);
+    private static Logger log = LoggerFactory.getLogger(LicenseFileExtractor.class);
 
     private static LicenseFileExtractor license = new LicenseFileExtractor();
 

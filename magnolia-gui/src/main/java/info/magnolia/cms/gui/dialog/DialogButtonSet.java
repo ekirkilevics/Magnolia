@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.gui.dialog;
@@ -33,7 +33,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -45,7 +46,7 @@ public class DialogButtonSet extends DialogBox {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(DialogButtonSet.class);
+    private static Logger log = LoggerFactory.getLogger(DialogButtonSet.class);
 
     private int buttonType = ControlSuper.BUTTONTYPE_RADIO;
 
@@ -61,7 +62,8 @@ public class DialogButtonSet extends DialogBox {
         List options = new ArrayList();
         try {
             Iterator it = configNode.getContent("options") //$NON-NLS-1$
-                .getChildren(ItemType.CONTENTNODE.getSystemName(), ContentHandler.SORT_BY_SEQUENCE).iterator();
+                .getChildren(ItemType.CONTENTNODE.getSystemName(), ContentHandler.SORT_BY_SEQUENCE)
+                .iterator();
             while (it.hasNext()) {
                 Content n = ((Content) it.next());
                 String value = n.getNodeData("value").getString(); //$NON-NLS-1$
@@ -201,7 +203,8 @@ public class DialogButtonSet extends DialogBox {
                 }
                 if (item == itemsPerCol) {
                     b.setHtmlPost(control.getButtonHtmlPost() + "</table></td><td class=\"" //$NON-NLS-1$
-                        + CssConstants.CSSCLASS_BUTTONSETINTERCOL + "\"></td>"); //$NON-NLS-1$
+                        + CssConstants.CSSCLASS_BUTTONSETINTERCOL
+                        + "\"></td>"); //$NON-NLS-1$
                     item = 1;
                 }
                 else {

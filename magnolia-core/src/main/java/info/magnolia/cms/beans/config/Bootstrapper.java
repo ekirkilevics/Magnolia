@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  */
 package info.magnolia.cms.beans.config;
 
@@ -34,9 +34,10 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.apache.log4j.Logger;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -55,7 +56,7 @@ public final class Bootstrapper {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(Bootstrapper.class);
+    private static Logger log = LoggerFactory.getLogger(Bootstrapper.class);
 
     /**
      * don't instantiate
@@ -161,9 +162,12 @@ public final class Bootstrapper {
                     }
                     catch (Exception e) {
                         log.error("Unable to load content from " //$NON-NLS-1$
-                            + xmlfile.getName() + " due to a " //$NON-NLS-1$
-                            + e.getClass().getName() + " Exception: " //$NON-NLS-1$
-                            + e.getMessage() + ". Will try to continue.", e); //$NON-NLS-1$
+                            + xmlfile.getName()
+                            + " due to a " //$NON-NLS-1$
+                            + e.getClass().getName()
+                            + " Exception: " //$NON-NLS-1$
+                            + e.getMessage()
+                            + ". Will try to continue.", e); //$NON-NLS-1$
                     }
                     finally {
                         if (filteredFile != null) {
@@ -180,9 +184,12 @@ public final class Bootstrapper {
                 }
                 catch (RepositoryException e) {
                     log.error("Unable to save changes to the [" //$NON-NLS-1$
-                        + repository + "] repository due to a " //$NON-NLS-1$
-                        + e.getClass().getName() + " Exception: " //$NON-NLS-1$
-                        + e.getMessage() + ". Will try to continue.", e); //$NON-NLS-1$
+                        + repository
+                        + "] repository due to a " //$NON-NLS-1$
+                        + e.getClass().getName()
+                        + " Exception: " //$NON-NLS-1$
+                        + e.getMessage()
+                        + ". Will try to continue.", e); //$NON-NLS-1$
                     continue;
                 }
             }
@@ -192,8 +199,10 @@ public final class Bootstrapper {
                 int needed = Math.max(256, maxMem + 128);
 
                 log.error("Unable to complete bootstrapping: out of memory.\n" //$NON-NLS-1$
-                    + maxMem + "MB were not enough, try to increase the amount of memory available by adding the -Xmx" //$NON-NLS-1$
-                    + needed + " parameter to the server startup script.\n" //$NON-NLS-1$
+                    + maxMem
+                    + "MB were not enough, try to increase the amount of memory available by adding the -Xmx" //$NON-NLS-1$
+                    + needed
+                    + " parameter to the server startup script.\n" //$NON-NLS-1$
                     + "You will need to completely remove the magnolia webapp before trying again"); //$NON-NLS-1$
                 break;
             }

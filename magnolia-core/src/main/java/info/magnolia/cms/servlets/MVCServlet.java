@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.servlets;
@@ -19,7 +19,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -38,7 +39,7 @@ public abstract class MVCServlet extends HttpServlet {
      */
     private static final long serialVersionUID = 222L;
 
-    private static Logger log = Logger.getLogger(MVCServlet.class);
+    private static Logger log = LoggerFactory.getLogger(MVCServlet.class);
 
     /**
      * @see HttpServlet#doPost(HttpServletRequest,HttpServletResponse)

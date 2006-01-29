@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.gui.dialog;
@@ -63,7 +63,8 @@ public class DialogPassword extends DialogBox {
                 "mgnlDialogPasswordVerify('" + this.getName() + "')"); //$NON-NLS-1$ //$NON-NLS-2$
             // todo: verification on submit; think about
             out.write("<div class=\"" //$NON-NLS-1$
-                + CssConstants.CSSCLASS_DESCRIPTION + "\">" //$NON-NLS-1$
+                + CssConstants.CSSCLASS_DESCRIPTION
+                + "\">" //$NON-NLS-1$
                 + MessagesManager.get(this.getRequest(), "dialog.password.verify") //$NON-NLS-1$
                 + "</div>"); //$NON-NLS-1$
             out.write(control2.getHtml());

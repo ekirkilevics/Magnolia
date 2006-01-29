@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.module.admininterface.trees;
@@ -88,10 +88,10 @@ public class AdminTreeUsers extends AdminTreeMVCHandler {
         column2.setDateFormat("yyyy-MM-dd, HH:mm"); //$NON-NLS-1$
         column2.setTitle(msgs.get("tree.users.date")); //$NON-NLS-1$
         column2.setWidth(2);
-        
+
         tree.addColumn(column0);
-        
-        if(!this.isBrowseMode()){
+
+        if (!this.isBrowseMode()) {
             tree.addColumn(column1);
             if (Server.isAdmin() || Subscriber.isSubscribersEnabled()) {
                 tree.addColumn(columnIcons);
@@ -111,44 +111,52 @@ public class AdminTreeUsers extends AdminTreeMVCHandler {
         menuOpen.setLabel(msgs.get("tree.users.menu.edit")); //$NON-NLS-1$
         menuOpen.setIcon(request.getContextPath() + "/admindocroot/icons/16/pawn_glass_yellow.gif"); //$NON-NLS-1$
         menuOpen.setOnclick("mgnlTreeMenuOpenDialog(" //$NON-NLS-1$
-            + tree.getJavascriptTree() + ",'.magnolia/dialogs/useredit.html');"); //$NON-NLS-1$
+            + tree.getJavascriptTree()
+            + ",'.magnolia/dialogs/useredit.html');"); //$NON-NLS-1$
         menuOpen.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
-            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+            + tree.getJavascriptTree()
+            + ")"); //$NON-NLS-1$
         ContextMenuItem menuNewPage = new ContextMenuItem();
         menuNewPage.setLabel(msgs.get("tree.users.menu.new")); //$NON-NLS-1$
         menuNewPage.setIcon(request.getContextPath() + "/admindocroot/icons/16/pawn_glass_yellow_add.gif"); //$NON-NLS-1$
         menuNewPage.setOnclick(tree.getJavascriptTree() + ".createRootNode('" //$NON-NLS-1$
-            + ItemType.CONTENT.getSystemName() + "');"); //$NON-NLS-1$
+            + ItemType.CONTENT.getSystemName()
+            + "');"); //$NON-NLS-1$
         ContextMenuItem menuDelete = new ContextMenuItem();
         menuDelete.setLabel(msgs.get("tree.users.menu.delete")); //$NON-NLS-1$
         menuDelete.setIcon(request.getContextPath() + "/admindocroot/icons/16/delete2.gif"); //$NON-NLS-1$
         menuDelete.setOnclick(tree.getJavascriptTree() + ".deleteNode();"); //$NON-NLS-1$
         menuDelete.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
-            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+            + tree.getJavascriptTree()
+            + ")"); //$NON-NLS-1$
         ContextMenuItem menuMove = new ContextMenuItem();
         menuMove.setLabel(msgs.get("tree.users.menu.move")); //$NON-NLS-1$
         menuMove.setIcon(request.getContextPath() + "/admindocroot/icons/16/up_down.gif"); //$NON-NLS-1$
         menuMove.setOnclick(tree.getJavascriptTree() + ".cutNode();"); //$NON-NLS-1$
         menuMove.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
-            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+            + tree.getJavascriptTree()
+            + ")"); //$NON-NLS-1$
         ContextMenuItem menuCopy = new ContextMenuItem();
         menuCopy.setLabel(msgs.get("tree.users.menu.copy")); //$NON-NLS-1$
         menuCopy.setIcon(request.getContextPath() + "/admindocroot/icons/16/copy.gif"); //$NON-NLS-1$
         menuCopy.setOnclick(tree.getJavascriptTree() + ".copyNode();"); //$NON-NLS-1$
         menuCopy.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
-            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+            + tree.getJavascriptTree()
+            + ")"); //$NON-NLS-1$
         ContextMenuItem menuActivateExcl = new ContextMenuItem();
         menuActivateExcl.setLabel(msgs.get("tree.users.menu.activate")); //$NON-NLS-1$
         menuActivateExcl.setIcon(request.getContextPath() + "/admindocroot/icons/16/arrow_right_green.gif"); //$NON-NLS-1$
         menuActivateExcl.setOnclick(tree.getJavascriptTree() + ".activateNode(" + Tree.ACTION_ACTIVATE + ",false);"); //$NON-NLS-1$ //$NON-NLS-2$
         menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
-            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+            + tree.getJavascriptTree()
+            + ")"); //$NON-NLS-1$
         ContextMenuItem menuDeActivate = new ContextMenuItem();
         menuDeActivate.setLabel(msgs.get("tree.users.menu.deactivate")); //$NON-NLS-1$
         menuDeActivate.setIcon(request.getContextPath() + "/admindocroot/icons/16/arrow_left_red.gif"); //$NON-NLS-1$
         menuDeActivate.setOnclick(tree.getJavascriptTree() + ".deActivateNode(" + Tree.ACTION_DEACTIVATE + ");"); //$NON-NLS-1$ //$NON-NLS-2$
         menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
-            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+            + tree.getJavascriptTree()
+            + ")"); //$NON-NLS-1$
         ContextMenuItem menuRefresh = new ContextMenuItem();
         menuRefresh.setLabel(msgs.get("tree.menu.refresh")); //$NON-NLS-1$
         menuRefresh.setIcon(request.getContextPath() + "/admindocroot/icons/16/refresh.gif"); //$NON-NLS-1$

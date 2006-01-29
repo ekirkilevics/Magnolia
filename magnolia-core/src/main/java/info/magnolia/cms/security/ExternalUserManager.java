@@ -7,16 +7,13 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.security;
 
-import info.magnolia.cms.beans.runtime.MgnlContext;
-
 import java.util.Collection;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.security.auth.Subject;
 
 
@@ -41,7 +38,6 @@ public class ExternalUserManager implements UserManager {
 
     /**
      * Initialize new user using JAAS authenticated/authorized subject
-     *
      * @param subject
      * @throws UnsupportedOperationException
      */

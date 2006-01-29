@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.util;
@@ -20,7 +20,8 @@ import java.util.Date;
 import javax.jcr.PropertyType;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -32,7 +33,7 @@ public class NodeDataUtil {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(NodeDataUtil.class);
+    private static Logger log = LoggerFactory.getLogger(NodeDataUtil.class);
 
     NodeData nodeData;
 
@@ -80,7 +81,7 @@ public class NodeDataUtil {
                     Date valueDate = nodeData.getDate().getTime();
                     return new DateUtil().getFormattedDate(valueDate, dateFormat);
                 case (PropertyType.BINARY):
-                // ???
+                    // ???
                 default:
                     return StringUtils.EMPTY;
             }
@@ -111,25 +112,24 @@ public class NodeDataUtil {
         }
 
     }
-    
+
     /**
      * Simple method to get strings like configuration informations
      * @param repository
      * @param path
      * @return
      */
-    public static String getString(String repository, String path){
+    public static String getString(String repository, String path) {
         return getString(repository, path, null);
     }
 
-    public static String getString(String repository, String path, String defaultValue){
-        try{
+    public static String getString(String repository, String path, String defaultValue) {
+        try {
             return MgnlContext.getHierarchyManager(repository).getNodeData(path).toString();
         }
-        catch(Exception e){
+        catch (Exception e) {
             return defaultValue;
         }
     }
-    
-    
+
 }

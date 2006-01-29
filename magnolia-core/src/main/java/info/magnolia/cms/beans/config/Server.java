@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.beans.config;
@@ -28,7 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -42,7 +43,7 @@ public final class Server {
     /**
      * Logger.
      */
-    protected static Logger log = Logger.getLogger(Server.class);
+    protected static Logger log = LoggerFactory.getLogger(Server.class);
 
     private static Map cachedContent = new Hashtable();
 
@@ -139,8 +140,8 @@ public final class Server {
     }
 
     /**
-     * Register an event listener: reload server configuration when something changes.
-     * todo split reloading of base server configuration and secure URI list
+     * Register an event listener: reload server configuration when something changes. todo split reloading of base
+     * server configuration and secure URI list
      */
     private static void registerEventListener() {
 
@@ -165,7 +166,10 @@ public final class Server {
                     }
                 }
             }, Event.PROPERTY_ADDED | Event.PROPERTY_CHANGED | Event.PROPERTY_REMOVED, "/" + CONFIG_PAGE, //$NON-NLS-1$
-                false, null, null, false);
+                false,
+                null,
+                null,
+                false);
         }
         catch (RepositoryException e) {
             log.error("Unable to add event listeners for server", e); //$NON-NLS-1$

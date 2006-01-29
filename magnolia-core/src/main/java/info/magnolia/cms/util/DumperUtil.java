@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 
@@ -27,7 +27,9 @@ import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * Used to dump 1:1 repository content. The level defines how deep the recursion should go.
@@ -35,8 +37,8 @@ import org.apache.log4j.Logger;
  * @version $Revision$ ($Author$)
  */
 public class DumperUtil {
-    private static Logger log = Logger.getLogger(DumperUtil.class);
-    
+
+    private static Logger log = LoggerFactory.getLogger(DumperUtil.class);
 
     public static String dump(Content content) {
         return dump(content, 1);
@@ -49,20 +51,20 @@ public class DumperUtil {
      * @return
      */
     public static String dump(Content content, int level) {
-        if(content == null){
+        if (content == null) {
             return "";
         }
 
         StringWriter str = new StringWriter();
-       try {
-           PrintWriter writer = new PrintWriter(str);
-           dump(content.getJCRNode(), level, writer);
-           writer.flush();
-       }
-       catch (RepositoryException e) {
-           log.error("can't dump", e);
-       }
-       return str.toString();
+        try {
+            PrintWriter writer = new PrintWriter(str);
+            dump(content.getJCRNode(), level, writer);
+            writer.flush();
+        }
+        catch (RepositoryException e) {
+            log.error("can't dump", e);
+        }
+        return str.toString();
     }
 
     /**
@@ -72,7 +74,7 @@ public class DumperUtil {
      * @param out
      */
     public static void dump(Content content, int level, PrintStream out) {
-        if(content == null){
+        if (content == null) {
             return;
         }
         try {
@@ -84,7 +86,7 @@ public class DumperUtil {
             log.error("can't dump", e);
         }
     }
-    
+
     /**
      * Dump this node to a stream.
      * @param content
@@ -93,7 +95,7 @@ public class DumperUtil {
     public static void dump(Content content, PrintStream out) {
         dump(content, 1, out);
     }
-    
+
     /**
      * Dump a JCR Node to a Writer.
      * @param n
@@ -116,7 +118,7 @@ public class DumperUtil {
                     out.println(values[i].getString());
                 }
             }
-            else if(p.getType() == PropertyType.BINARY){
+            else if (p.getType() == PropertyType.BINARY) {
                 out.print("Binary");
             }
             else {
@@ -134,7 +136,7 @@ public class DumperUtil {
             }
         }
     }
-    
+
     /**
      * Dump only this JCR-Node to a writer.
      * @param n

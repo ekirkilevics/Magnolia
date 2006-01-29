@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.gui.dialog;
@@ -15,7 +15,6 @@ package info.magnolia.cms.gui.dialog;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.ControlSuper;
-import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.LinkUtil;
 
 import java.io.IOException;
@@ -28,7 +27,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -111,7 +111,7 @@ public class DialogFckEdit extends DialogBox {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(DialogFckEdit.class);
+    private static Logger log = LoggerFactory.getLogger(DialogFckEdit.class);
 
     /**
      * The new .BasePath of the editor
@@ -219,9 +219,9 @@ public class DialogFckEdit extends DialogBox {
     public void drawHtml(Writer out) throws IOException {
         // get the config values
         String jsInitFile = this.getConfigValue(PARAM_JS_INIT_FILE, PARAM_JS_INIT_FILE_DEFAULT);
-        String customConfigurationPath = this.getConfigValue(
-            PARAM_CUSTOM_CONFIGURATION_PATH,
-            this.getConfigValue("customConfigurationPath",PARAM_CUSTOM_CONFIGURATION_PATH_DEFAULT));
+        String customConfigurationPath = this.getConfigValue(PARAM_CUSTOM_CONFIGURATION_PATH, this.getConfigValue(
+            "customConfigurationPath",
+            PARAM_CUSTOM_CONFIGURATION_PATH_DEFAULT));
         String height = this.getConfigValue(PARAM_HEIGHT, PARAM_HEIGHT_DEFAULT);
 
         this.drawHtmlPre(out);
@@ -229,7 +229,8 @@ public class DialogFckEdit extends DialogBox {
         // load the script onece: if there are multiple instances
         if (getRequest().getAttribute(ATTRIBUTE_FCKED_LOADED) == null) { //$NON-NLS-1$
             out.write("<script type=\"text/javascript\" src=\"" //$NON-NLS-1$
-                + this.getRequest().getContextPath() + "/admindocroot/fckeditor/fckeditor.js\"></script>"); //$NON-NLS-1$
+                + this.getRequest().getContextPath()
+                + "/admindocroot/fckeditor/fckeditor.js\"></script>"); //$NON-NLS-1$
             getRequest().setAttribute(ATTRIBUTE_FCKED_LOADED, "true"); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
@@ -258,7 +259,9 @@ public class DialogFckEdit extends DialogBox {
         // now set the custom configuration path
         if (StringUtils.isNotEmpty(customConfigurationPath)) {
             out.write("fckInstance.Config['CustomConfigurationsPath'] = '" //$NON-NLS-1$
-                + this.getRequest().getContextPath() + customConfigurationPath + "';"); //$NON-NLS-1$
+                + this.getRequest().getContextPath()
+                + customConfigurationPath
+                + "';"); //$NON-NLS-1$
         }
 
         // here we pass the parameters to the custom configuration file --> via
@@ -268,7 +271,9 @@ public class DialogFckEdit extends DialogBox {
         if (jsInitFile.length() > 0) {
             out.write("</script>"); //$NON-NLS-1$
             out.write("<script type=\"text/javascript\" src=\"" //$NON-NLS-1$
-                + this.getRequest().getContextPath() + jsInitFile + "\"></script>\n"); //$NON-NLS-1$
+                + this.getRequest().getContextPath()
+                + jsInitFile
+                + "\"></script>\n"); //$NON-NLS-1$
             out.write("<script type=\"text/javascript\">"); //$NON-NLS-1$
         }
 
@@ -279,10 +284,14 @@ public class DialogFckEdit extends DialogBox {
 
         // write the saveInfo for the writing back to the repository
         out.write("<input type='hidden' name='mgnlSaveInfo' value='" //$NON-NLS-1$
-            + id + ",String," //$NON-NLS-1$
-            + ControlSuper.VALUETYPE_SINGLE + "," //$NON-NLS-1$
-            + ControlSuper.RICHEDIT_FCK + "," //$NON-NLS-1$
-            + ControlSuper.ENCODING_NO + "' />"); //$NON-NLS-1$
+            + id
+            + ",String," //$NON-NLS-1$
+            + ControlSuper.VALUETYPE_SINGLE
+            + "," //$NON-NLS-1$
+            + ControlSuper.RICHEDIT_FCK
+            + "," //$NON-NLS-1$
+            + ControlSuper.ENCODING_NO
+            + "' />"); //$NON-NLS-1$
 
         this.drawHtmlPost(out);
     }
@@ -309,18 +318,18 @@ public class DialogFckEdit extends DialogBox {
 
         out.write("MgnlFCKConfigs." + id + " = new Object();\n");
         // string values
-        out.write("MgnlFCKConfigs."
-            + id
-            + ".language = '"
-            + MgnlContext.getUser().getLanguage()
-            + "';\n");
+        out.write("MgnlFCKConfigs." + id + ".language = '" + MgnlContext.getUser().getLanguage() + "';\n");
         out.write("MgnlFCKConfigs." + id + ".contextPath = '" + getRequest().getContextPath() + "';\n");
 
         out.write("MgnlFCKConfigs." + id + ".repository = '" + getTopParent().getConfigValue("repository") + "';\n");
         out.write("MgnlFCKConfigs." + id + ".path = '" + getTopParent().getConfigValue("path") + "';\n");
-        out.write("MgnlFCKConfigs." + id + ".nodeCollection = '" + getTopParent().getConfigValue("nodeCollection")+ "';\n");
+        out.write("MgnlFCKConfigs."
+            + id
+            + ".nodeCollection = '"
+            + getTopParent().getConfigValue("nodeCollection")
+            + "';\n");
         out.write("MgnlFCKConfigs." + id + ".node = '" + getTopParent().getConfigValue("node") + "';\n");
-        
+
         out.write("MgnlFCKConfigs." + id + ".css = '" + css + "';\n");
         out.write("MgnlFCKConfigs." + id + ".fonts = '" + fonts + "';\n");
         out.write("MgnlFCKConfigs." + id + ".fontSizes = '" + fontSizes + "';\n");
@@ -345,22 +354,22 @@ public class DialogFckEdit extends DialogBox {
         if (tmp != null) {
             tmp = tmp.replaceAll("\r\n", "<br />"); //$NON-NLS-1$ //$NON-NLS-2$
             tmp = tmp.replaceAll("\n", "<br />"); //$NON-NLS-1$ //$NON-NLS-2$
-            
+
             value = LinkUtil.convertUUIDsToAbsoluteLinks(value);
-            
+
             Pattern imagePattern = Pattern.compile("(<(a|img)[^>]+(src|href)[ ]*=[ ]*\")([^\"]*)(\"[^>]*>)"); //$NON-NLS-1$
 
             Matcher matcher = imagePattern.matcher(value);
             StringBuffer res = new StringBuffer();
             while (matcher.find()) {
                 String src = matcher.group(4);
-                
+
                 // process only internal and relative links
-                if(!Pattern.matches("^\\w*://.*", src) && !src.startsWith("/")){
-                    String link = 
-                        this.getRequest().getContextPath() +
-                        this.getTopParent().getConfigValue("path") + "/" +
-                        StringUtils.substringAfter(src, "/");
+                if (!Pattern.matches("^\\w*://.*", src) && !src.startsWith("/")) {
+                    String link = this.getRequest().getContextPath()
+                        + this.getTopParent().getConfigValue("path")
+                        + "/"
+                        + StringUtils.substringAfter(src, "/");
 
                     matcher.appendReplacement(res, "$1" + link + "$5"); //$NON-NLS-1$
                 }
@@ -368,8 +377,7 @@ public class DialogFckEdit extends DialogBox {
             matcher.appendTail(res);
             return res.toString();
         }
-        
-        
+
         return StringUtils.EMPTY;
     }
 

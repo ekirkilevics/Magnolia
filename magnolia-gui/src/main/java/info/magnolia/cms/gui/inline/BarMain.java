@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.gui.inline;
@@ -247,9 +247,12 @@ public class BarMain extends Bar {
                     this.setSmall(false);
                     if (this.getOverlay()) {
                         out.println("<div class=\"mgnlMainbar\" style=\"top:" //$NON-NLS-1$
-                            + top + "px;left:" //$NON-NLS-1$
-                            + left + "px;width:" //$NON-NLS-1$
-                            + this.getWidth() + ";\">"); //$NON-NLS-1$
+                            + top
+                            + "px;left:" //$NON-NLS-1$
+                            + left
+                            + "px;width:" //$NON-NLS-1$
+                            + this.getWidth()
+                            + ";\">"); //$NON-NLS-1$
                     }
                     out.println(this.getHtml());
                     if (this.getOverlay()) {

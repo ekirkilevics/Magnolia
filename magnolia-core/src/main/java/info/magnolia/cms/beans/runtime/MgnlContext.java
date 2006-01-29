@@ -7,20 +7,21 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.beans.runtime;
 
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
-import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.AccessManager;
-
-import org.apache.log4j.Logger;
+import info.magnolia.cms.security.User;
 
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -39,7 +40,7 @@ public class MgnlContext {
     /**
      * Logger
      */
-    public static Logger log = Logger.getLogger(MgnlContext.class);
+    public static Logger log = LoggerFactory.getLogger(MgnlContext.class);
 
     /**
      * The thread local variable holding the current context
@@ -63,7 +64,7 @@ public class MgnlContext {
     /**
      * Set current user
      * @param user
-     * */
+     */
     public static void setUser(User user) {
         getInstance().setUser(user);
     }
@@ -72,7 +73,7 @@ public class MgnlContext {
      * Get hierarchy manager initialized for this user
      * @param repositoryId
      * @return hierarchy manager
-     * */
+     */
     public static HierarchyManager getHierarchyManager(String repositoryId) {
         return getInstance().getHierarchyManager(repositoryId);
     }
@@ -82,7 +83,7 @@ public class MgnlContext {
      * @param repositoryId
      * @param workspaceId
      * @return hierarchy manager
-     * */
+     */
     public static HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
         return getInstance().getHierarchyManager(repositoryId, workspaceId);
     }
@@ -91,7 +92,7 @@ public class MgnlContext {
      * Get access manager for the specified repository on default workspace
      * @param repositoryId
      * @return access manager
-     * */
+     */
     public static AccessManager getAccessManager(String repositoryId) {
         return getInstance().getAccessManager(repositoryId);
     }
@@ -101,7 +102,7 @@ public class MgnlContext {
      * @param repositoryId
      * @param workspaceId
      * @return access manager
-     * */
+     */
     public static AccessManager getAccessManager(String repositoryId, String workspaceId) {
         return getInstance().getAccessManager(repositoryId, workspaceId);
     }
@@ -110,7 +111,7 @@ public class MgnlContext {
      * Get QueryManager created for this user on the specified repository
      * @param repositoryId
      * @return query manager
-     * */
+     */
     public static QueryManager getQueryManager(String repositoryId) {
         return getInstance().getQueryManager(repositoryId);
     }
@@ -120,7 +121,7 @@ public class MgnlContext {
      * @param repositoryId
      * @param workspaceId
      * @return query manager
-     * */
+     */
     public static QueryManager getQueryManager(String repositoryId, String workspaceId) {
         return getInstance().getQueryManager(repositoryId, workspaceId);
     }
@@ -128,7 +129,7 @@ public class MgnlContext {
     /**
      * Get currently active page
      * @return content object
-     * */
+     */
     public static Content getActivePage() {
         return getInstance().getActivePage();
     }
@@ -136,7 +137,7 @@ public class MgnlContext {
     /**
      * Get aggregated file, its used from image templates to manipulate
      * @return file object
-     * */
+     */
     public static File getFile() {
         return getInstance().getFile();
     }
@@ -144,7 +145,7 @@ public class MgnlContext {
     /**
      * Get form object assembled by <code>MultipartRequestFilter</code>
      * @return multipart form object
-     * */
+     */
     public static MultipartForm getPostedForm() {
         return getInstance().getPostedForm();
     }
@@ -153,7 +154,7 @@ public class MgnlContext {
      * Get parameter value as string
      * @param name
      * @return parameter value
-     * */
+     */
     public static String getParameter(String name) {
         return getInstance().getParameter(name);
     }
@@ -161,7 +162,7 @@ public class MgnlContext {
     /**
      * Get parameter value as string
      * @return parameter values
-     * */
+     */
     public static Map getParameters() {
         return getInstance().getParameters();
     }
@@ -170,7 +171,7 @@ public class MgnlContext {
      * Set attribute value, scope of the attribute is defined
      * @param name is used as a key
      * @param value
-     * */
+     */
     public static void setAttribute(String name, Object value) {
         getInstance().setAttribute(name, value);
     }
@@ -180,7 +181,7 @@ public class MgnlContext {
      * @param name is used as a key
      * @param value
      * @param scope , highest level of scope from which this attribute is visible
-     * */
+     */
     public static void setAttribute(String name, Object value, int scope) {
         getInstance().setAttribute(name, value, scope);
     }
@@ -189,16 +190,15 @@ public class MgnlContext {
      * Get attribute value
      * @param name to which value is associated to
      * @return attribute value
-     * */
+     */
     public static Object getAttribute(String name) {
         return getInstance().getAttribute(name);
     }
 
-
     /**
      * Set context implementation instance
      * @param context
-     * */
+     */
     public static void setInstance(Context context) {
         localContext.set(context);
     }

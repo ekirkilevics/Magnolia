@@ -7,17 +7,18 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.jaas.principal;
 
-import java.util.Collection;
+import info.magnolia.cms.security.RoleList;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 
 import org.apache.commons.lang.StringUtils;
-import info.magnolia.cms.security.RoleList;
 
 
 /**
@@ -33,7 +34,7 @@ public class RoleListImpl implements RoleList {
 
     /**
      * default name for this principal
-     * */
+     */
     private static final String DEFAULT_NAME = "roles";
 
     /**
@@ -43,7 +44,7 @@ public class RoleListImpl implements RoleList {
 
     /**
      * list of names
-     * */
+     */
     private Collection roles;
 
     public RoleListImpl() {
@@ -64,7 +65,7 @@ public class RoleListImpl implements RoleList {
     /**
      * Set principal name
      * @param name
-     * */
+     */
     public void setName(String name) {
         this.name = name;
     }
@@ -72,7 +73,7 @@ public class RoleListImpl implements RoleList {
     /**
      * Add a role name to the list
      * @param roleName
-     * */
+     */
     public void addRole(String roleName) {
         this.roles.add(roleName);
     }
@@ -80,14 +81,14 @@ public class RoleListImpl implements RoleList {
     /**
      * Gets list of roles as string
      * @return roles
-     * */
+     */
     public Collection getList() {
         return this.roles;
     }
 
     /**
      * Checks if the role name exist in this list
-     * */
+     */
     public boolean hasRole(String name) {
         Iterator listIterator = this.roles.iterator();
         while (listIterator.hasNext()) {

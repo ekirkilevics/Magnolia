@@ -7,22 +7,21 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.security;
 
-import java.security.Principal;
 import java.io.Serializable;
+import java.security.Principal;
 import java.util.Collection;
 
+
 /**
- *
  * @author Sameer Charles
  * @version $Revision: $ ($Author: $)
  */
 public interface PrincipalCollection extends Principal, Serializable {
-
 
     public String getName();
 
@@ -74,5 +73,5 @@ public interface PrincipalCollection extends Principal, Serializable {
      * @return principal object associated to the specified name
      */
     public Principal get(String name);
-    
+
 }

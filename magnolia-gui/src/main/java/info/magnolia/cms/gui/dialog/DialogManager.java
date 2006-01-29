@@ -6,7 +6,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.gui.dialog;
@@ -27,7 +27,8 @@ import javax.jcr.observation.EventListener;
 import javax.jcr.observation.ObservationManager;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -39,7 +40,7 @@ public final class DialogManager {
     /**
      * Logger.
      */
-    protected static Logger log = Logger.getLogger(DialogManager.class);
+    protected static Logger log = LoggerFactory.getLogger(DialogManager.class);
 
     /**
      * Config node name: "controls".
@@ -167,9 +168,12 @@ public final class DialogManager {
 
                 if (StringUtils.isEmpty(classNodeData) || StringUtils.isEmpty(nameNodeData)) {
                     log.warn("Config : Can't add custom control with name [" //$NON-NLS-1$
-                        + nameNodeData + "] and class [" //$NON-NLS-1$
-                        + classNodeData + "] specified in node [" //$NON-NLS-1$
-                        + controlNode.getName() + "]"); //$NON-NLS-1$
+                        + nameNodeData
+                        + "] and class [" //$NON-NLS-1$
+                        + classNodeData
+                        + "] specified in node [" //$NON-NLS-1$
+                        + controlNode.getName()
+                        + "]"); //$NON-NLS-1$
 
                     continue;
                 }
@@ -185,7 +189,8 @@ public final class DialogManager {
 
                 if (!DialogInterface.class.isAssignableFrom(controlClass)) {
                     log.error("Config : Invalid class specified for control [" //$NON-NLS-1$
-                        + nameNodeData + "]: does not implement DialogInterface"); //$NON-NLS-1$
+                        + nameNodeData
+                        + "]: does not implement DialogInterface"); //$NON-NLS-1$
                     continue;
                 }
 
@@ -196,7 +201,8 @@ public final class DialogManager {
         }
         catch (RepositoryException e) {
             log.error("Config : Failed to load dialog controls configuration - " //$NON-NLS-1$
-                + ADMIN_CONFIG_NODE_NAME + "/" //$NON-NLS-1$
+                + ADMIN_CONFIG_NODE_NAME
+                + "/" //$NON-NLS-1$
                 + DIALOGCONTROLS_CONFIG_NAME, e);
         }
 

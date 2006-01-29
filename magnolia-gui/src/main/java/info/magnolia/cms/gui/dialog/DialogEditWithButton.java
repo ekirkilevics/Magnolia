@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.gui.dialog;
@@ -72,7 +72,7 @@ public class DialogEditWithButton extends DialogBox {
      */
     public void drawHtml(Writer out) throws IOException {
         doBeforeDrawHtml();
-        
+
         Edit control = new Edit(this.getName(), this.getValue());
         control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING)); //$NON-NLS-1$
         if (this.getConfigValue("saveInfo").equals("false")) { //$NON-NLS-1$ //$NON-NLS-2$
@@ -102,7 +102,7 @@ public class DialogEditWithButton extends DialogBox {
 
         this.drawHtmlPost(out);
     }
-    
+
     /**
      * A hook method for lazy configuration of the widget.
      */

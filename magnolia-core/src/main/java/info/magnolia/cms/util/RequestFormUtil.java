@@ -7,18 +7,18 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.util;
+
+import info.magnolia.cms.beans.runtime.Document;
+import info.magnolia.cms.beans.runtime.MultipartForm;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
-
-import info.magnolia.cms.beans.runtime.Document;
-import info.magnolia.cms.beans.runtime.MultipartForm;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -99,28 +99,27 @@ public class RequestFormUtil {
         }
         return param;
     }
-    
+
     /**
-     * 
      * @param request
      * @param charset
      * @return decoded value
      */
-    public static String getURLParameterDecoded(HttpServletRequest request, String name, String charset){
+    public static String getURLParameterDecoded(HttpServletRequest request, String name, String charset) {
         return (String) getURLParametersDecoded(request, charset).get(name);
     }
-    
+
     /**
      * The url is not always properly decoded. This method does the job.
      * @param request
      * @param charset
      * @return decoded map of all values
      */
-    public static Map getURLParametersDecoded(HttpServletRequest request, String charset){
+    public static Map getURLParametersDecoded(HttpServletRequest request, String charset) {
         Map map = new HashMap();
         String[] params = request.getQueryString().split("&");
         for (int i = 0; i < params.length; i++) {
-            String name =  StringUtils.substringBefore(params[i], "=");
+            String name = StringUtils.substringBefore(params[i], "=");
             String value = StringUtils.substringAfter(params[i], "=");
             try {
                 value = URLDecoder.decode(value, charset);
@@ -133,40 +132,44 @@ public class RequestFormUtil {
         return map;
     }
 
-    
     public MultipartForm getFrom() {
         return from;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see info.magnolia.cms.beans.runtime.MultipartForm#getDocument(java.lang.String)
      */
     public Document getDocument(String name) {
         return from.getDocument(name);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see info.magnolia.cms.beans.runtime.MultipartForm#getDocuments()
      */
     public Map getDocuments() {
         return from.getDocuments();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see info.magnolia.cms.beans.runtime.MultipartForm#getParameters()
      */
     public Map getParameters() {
         return from.getParameters();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see info.magnolia.cms.beans.runtime.MultipartForm#getParameterValues(java.lang.String)
      */
     public String[] getParameterValues(String name) {
         return from.getParameterValues(name);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see info.magnolia.cms.beans.runtime.MultipartForm#removeParameter(java.lang.String)
      */
     public void removeParameter(String name) {

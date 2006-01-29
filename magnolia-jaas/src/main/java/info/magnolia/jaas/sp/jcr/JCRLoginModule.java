@@ -7,39 +7,46 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.jaas.sp.jcr;
 
-import org.apache.log4j.Logger;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.codec.binary.Base64;
-
-import javax.security.auth.login.LoginException;
-import javax.security.auth.callback.*;
-import javax.jcr.RepositoryException;
-import javax.jcr.PathNotFoundException;
-import java.util.Iterator;
-import java.io.IOException;
-
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.util.UrlPattern;
-import info.magnolia.cms.util.SimpleUrlPattern;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.security.ACL;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
 import info.magnolia.cms.security.PrincipalCollection;
-import info.magnolia.cms.security.ACL;
-import info.magnolia.jaas.principal.*;
+import info.magnolia.cms.util.SimpleUrlPattern;
+import info.magnolia.cms.util.UrlPattern;
+import info.magnolia.jaas.principal.ACLImpl;
+import info.magnolia.jaas.principal.EntityImpl;
+import info.magnolia.jaas.principal.PrincipalCollectionImpl;
+import info.magnolia.jaas.principal.RoleListImpl;
 import info.magnolia.jaas.sp.AbstractLoginModule;
 
+import java.io.IOException;
+import java.util.Iterator;
+
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.NameCallback;
+import javax.security.auth.callback.PasswordCallback;
+import javax.security.auth.callback.UnsupportedCallbackException;
+import javax.security.auth.login.LoginException;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 /**
- * This is a default login module for magnolia, it uses initialized repository as
- * defined by the provider interface
- *
+ * This is a default login module for magnolia, it uses initialized repository as defined by the provider interface
  * @author Sameer Charles
  * @version $Revision$ ($Author$)
  */
@@ -47,8 +54,8 @@ public class JCRLoginModule extends AbstractLoginModule {
 
     /**
      * Logger
-     * */
-    private static Logger log = Logger.getLogger(JCRLoginModule.class);
+     */
+    private static Logger log = LoggerFactory.getLogger(JCRLoginModule.class);
 
     protected String name;
 
@@ -60,10 +67,10 @@ public class JCRLoginModule extends AbstractLoginModule {
 
     /**
      * Authenticate against magnolia/jcr user repository
-     * */
+     */
     public boolean login() throws LoginException {
-        if(this.callbackHandler == null)
-            throw new LoginException( "Error: no CallbackHandler available for JCRLoginModule");
+        if (this.callbackHandler == null)
+            throw new LoginException("Error: no CallbackHandler available for JCRLoginModule");
 
         Callback[] callbacks = new Callback[2];
         callbacks[0] = new NameCallback("name");
@@ -72,13 +79,15 @@ public class JCRLoginModule extends AbstractLoginModule {
         this.success = false;
         try {
             this.callbackHandler.handle(callbacks);
-            this.name = ((NameCallback)callbacks[0]).getName();
-            this.pswd = ((PasswordCallback)callbacks[1]).getPassword();
+            this.name = ((NameCallback) callbacks[0]).getName();
+            this.pswd = ((PasswordCallback) callbacks[1]).getPassword();
             this.success = this.isValidUser();
-        } catch (IOException ioe) {
-            log.debug(ioe);
+        }
+        catch (IOException ioe) {
+            log.debug("Exception caught", ioe);
             throw new LoginException(ioe.toString());
-        } catch (UnsupportedCallbackException ce) {
+        }
+        catch (UnsupportedCallbackException ce) {
             log.debug(ce.getMessage(), ce);
             throw new LoginException(ce.getCallback().toString() + " not available");
         }
@@ -88,7 +97,7 @@ public class JCRLoginModule extends AbstractLoginModule {
 
     /**
      * Update subject with ACL and other properties
-     * */
+     */
     public boolean commit() throws LoginException {
         if (!this.success)
             return false;
@@ -118,10 +127,12 @@ public class JCRLoginModule extends AbstractLoginModule {
                 return true;
             }
             return false;
-        } catch (PathNotFoundException pe) {
+        }
+        catch (PathNotFoundException pe) {
             pe.printStackTrace();
             log.info("Unable to locate user [" + this.name + "], authentication failed");
-        } catch (RepositoryException re) {
+        }
+        catch (RepositoryException re) {
             re.printStackTrace();
             log.error("Unable to locate user ["
                 + this.name
@@ -133,7 +144,7 @@ public class JCRLoginModule extends AbstractLoginModule {
 
     /**
      * set user details
-     * */
+     */
     public void setEntity() {
         EntityImpl user = new EntityImpl();
         String language = this.user.getNodeData("language").getString();
@@ -146,7 +157,7 @@ public class JCRLoginModule extends AbstractLoginModule {
 
     /**
      * set access control list from the user, roles and groups
-     * */
+     */
     public void setACL() {
         HierarchyManager rolesHierarchy = ContentRepository.getHierarchyManager(ContentRepository.USER_ROLES);
         try {
@@ -159,20 +170,20 @@ public class JCRLoginModule extends AbstractLoginModule {
                 String rolePath = child.getNodeData("path").getString();
                 roleList.addRole(rolePath);
                 Content role = rolesHierarchy.getContent(rolePath);
-                Iterator it = role.getChildren(ItemType.CONTENTNODE.getSystemName(),"acl*").iterator();
+                Iterator it = role.getChildren(ItemType.CONTENTNODE.getSystemName(), "acl*").iterator();
                 while (it.hasNext()) {
                     Content aclEntry = (Content) it.next();
-                    String name = StringUtils.substringAfter(aclEntry.getName(),"acl_");
+                    String name = StringUtils.substringAfter(aclEntry.getName(), "acl_");
                     ACL acl;
                     String repositoryName = "";
                     String workspaceName = "";
                     if (!StringUtils.contains(name, "_")) {
-                        workspaceName
-                                = ContentRepository.getDefaultWorkspace(StringUtils.substringBefore(name,"_"));
+                        workspaceName = ContentRepository.getDefaultWorkspace(StringUtils.substringBefore(name, "_"));
                         repositoryName = name;
-                        name += ("_"+workspaceName); // default workspace must be added to the name
-                    } else {
-                        String[] tokens = StringUtils.split(name,"_");
+                        name += ("_" + workspaceName); // default workspace must be added to the name
+                    }
+                    else {
+                        String[] tokens = StringUtils.split(name, "_");
                         repositoryName = tokens[0];
                         workspaceName = tokens[1];
                     }
@@ -180,14 +191,15 @@ public class JCRLoginModule extends AbstractLoginModule {
                     if (!principalList.contains(name)) {
                         acl = new ACLImpl();
                         principalList.add(acl);
-                    } else {
+                    }
+                    else {
                         acl = (ACL) principalList.get(name);
                     }
                     acl.setName(name);
                     acl.setRepository(repositoryName);
                     acl.setWorkspace(workspaceName);
 
-                    //add acl
+                    // add acl
                     Iterator permissionIterator = aclEntry.getChildren().iterator();
                     while (permissionIterator.hasNext()) {
                         Content map = (Content) permissionIterator.next();
@@ -202,15 +214,17 @@ public class JCRLoginModule extends AbstractLoginModule {
             }
             /**
              * set principal list, a set of info.magnolia.jaas.principal.ACL
-             * */
+             */
             this.subject.getPrincipals().add(principalList);
             /**
              * set list of role names, info.magnolia.jaas.principal.RoleList
-             * */
+             */
             this.subject.getPrincipals().add(roleList);
-        } catch (RepositoryException re) {
+        }
+        catch (RepositoryException re) {
             re.printStackTrace();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
 

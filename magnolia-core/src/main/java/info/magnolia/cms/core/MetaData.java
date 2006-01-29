@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.core;
@@ -29,7 +29,8 @@ import javax.jcr.nodetype.ConstraintViolationException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -74,7 +75,7 @@ public class MetaData {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(MetaData.class);
+    private static Logger log = LoggerFactory.getLogger(MetaData.class);
 
     /**
      * meta data node
@@ -467,11 +468,11 @@ public class MetaData {
                 this.node.setProperty(name, value);
             }
             catch (RepositoryException re) {
-                log.error(re);
+                log.error("Exception caught", re);
             }
         }
         catch (RepositoryException re) {
-            log.error(re);
+            log.error("Exception caught", re);
             throw new AccessDeniedException(re.getMessage());
         }
         catch (NullPointerException e) {
@@ -496,11 +497,11 @@ public class MetaData {
                 this.node.setProperty(name, value);
             }
             catch (RepositoryException re) {
-                log.error(re);
+                log.error("Exception caught", re);
             }
         }
         catch (RepositoryException re) {
-            log.error(re);
+            log.error("Exception caught", re);
             throw new AccessDeniedException(re.getMessage());
         }
         catch (NullPointerException e) {
@@ -525,11 +526,11 @@ public class MetaData {
                 this.node.setProperty(name, value);
             }
             catch (RepositoryException re) {
-                log.error(re);
+                log.error("Exception caught", re);
             }
         }
         catch (RepositoryException re) {
-            log.error(re);
+            log.error("Exception caught", re);
             throw new AccessDeniedException(re.getMessage());
         }
         catch (NullPointerException e) {
@@ -554,11 +555,11 @@ public class MetaData {
                 this.node.setProperty(name, value);
             }
             catch (RepositoryException re) {
-                log.error(re);
+                log.error("Exception caught", re);
             }
         }
         catch (RepositoryException re) {
-            log.error(re);
+            log.error("Exception caught", re);
             throw new AccessDeniedException(re.getMessage());
         }
         catch (NullPointerException e) {

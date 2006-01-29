@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.gui.control;
@@ -89,7 +89,9 @@ public class TreeColumnHtmlRendererImpl implements TreeColumnHtmlRenderer {
         if (treeColumn.getIconsPermission()) {
             if (!content.isGranted(info.magnolia.cms.security.Permission.WRITE)) {
                 html.append("<img src=\"" //$NON-NLS-1$
-                    + treeColumn.getRequest().getContextPath() + Tree.ICONDOCROOT + "pen_blue_canceled.gif\" />"); //$NON-NLS-1$
+                    + treeColumn.getRequest().getContextPath()
+                    + Tree.ICONDOCROOT
+                    + "pen_blue_canceled.gif\" />"); //$NON-NLS-1$
             }
         }
         return html.toString();

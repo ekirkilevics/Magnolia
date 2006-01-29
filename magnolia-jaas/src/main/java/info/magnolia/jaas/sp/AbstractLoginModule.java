@@ -1,20 +1,18 @@
 package info.magnolia.jaas.sp;
 
-import javax.security.auth.spi.LoginModule;
-import javax.security.auth.Subject;
-import javax.security.auth.login.LoginException;
-import javax.security.auth.callback.*;
 import java.util.Map;
 
+import javax.security.auth.Subject;
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.login.LoginException;
+import javax.security.auth.spi.LoginModule;
+
+
 /**
- * Date: Aug 10, 2005
- * Time: 5:47:36 PM
- *
- * @author Sameer Charles
- * $Id :$
+ * Date: Aug 10, 2005 Time: 5:47:36 PM
+ * @author Sameer Charles $Id :$
  */
 public abstract class AbstractLoginModule implements LoginModule {
-
 
     public Subject subject;
 
@@ -33,19 +31,17 @@ public abstract class AbstractLoginModule implements LoginModule {
 
     /**
      * Authenticate against magnolia/jcr user repository
-     * */
+     */
     public abstract boolean login() throws LoginException;
 
     /**
      * Update subject with ACL and other properties
-     * */
+     */
     public abstract boolean commit() throws LoginException;
-
 
     public boolean abort() throws LoginException {
         return this.release();
     }
-
 
     public boolean logout() throws LoginException {
         return this.release();
@@ -53,7 +49,7 @@ public abstract class AbstractLoginModule implements LoginModule {
 
     /**
      * Releases all associated memory
-     * */
+     */
     public abstract boolean release();
 
     /**
@@ -64,12 +60,12 @@ public abstract class AbstractLoginModule implements LoginModule {
 
     /**
      * set user details
-     * */
+     */
     public abstract void setEntity();
 
     /**
      * set access control list from the user, roles and groups
-     * */
+     */
     public abstract void setACL();
 
 }

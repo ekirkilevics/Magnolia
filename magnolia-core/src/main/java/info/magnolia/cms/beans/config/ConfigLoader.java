@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.beans.config;
@@ -26,7 +26,8 @@ import javax.jcr.RepositoryException;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -39,7 +40,7 @@ public class ConfigLoader {
     /**
      * Logger.
      */
-    protected static Logger log = Logger.getLogger(ConfigLoader.class);
+    protected static Logger log = LoggerFactory.getLogger(ConfigLoader.class);
 
     /**
      * Is this magnolia istance configured?
@@ -109,7 +110,7 @@ public class ConfigLoader {
             initialized = ContentRepository.checkIfInitialized();
         }
         catch (RepositoryException re) {
-            log.fatal("Unable to initialize repositories. Magnolia can't start.", re); //$NON-NLS-1$
+            log.error("Unable to initialize repositories. Magnolia can't start.", re); //$NON-NLS-1$
             return;
         }
 
@@ -176,8 +177,10 @@ public class ConfigLoader {
         System.out.println("Version number : " + license.get(LicenseFileExtractor.VERSION_NUMBER)); //$NON-NLS-1$
         System.out.println("Build          : " + license.get(LicenseFileExtractor.BUILD_NUMBER)); //$NON-NLS-1$
         System.out.println("Provider       : " //$NON-NLS-1$
-            + license.get(LicenseFileExtractor.PROVIDER) + " (" //$NON-NLS-1$
-            + license.get(LicenseFileExtractor.PRIVIDER_EMAIL) + ")"); //$NON-NLS-1$
+            + license.get(LicenseFileExtractor.PROVIDER)
+            + " (" //$NON-NLS-1$
+            + license.get(LicenseFileExtractor.PRIVIDER_EMAIL)
+            + ")"); //$NON-NLS-1$
     }
 
     /**

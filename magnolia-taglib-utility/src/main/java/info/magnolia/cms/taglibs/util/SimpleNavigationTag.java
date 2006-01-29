@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.taglibs.util;
@@ -32,7 +32,8 @@ import javax.servlet.jsp.tagext.TagSupport;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -137,7 +138,7 @@ public class SimpleNavigationTag extends TagSupport {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(SimpleNavigationTag.class);
+    private static Logger log = LoggerFactory.getLogger(SimpleNavigationTag.class);
 
     /**
      * Start level.

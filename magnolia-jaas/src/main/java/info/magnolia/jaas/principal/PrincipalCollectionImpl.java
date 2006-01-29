@@ -1,13 +1,13 @@
 package info.magnolia.jaas.principal;
 
-import org.apache.commons.lang.StringUtils;
-
-import java.util.Collection;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.security.Principal;
-
 import info.magnolia.cms.security.PrincipalCollection;
+
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**

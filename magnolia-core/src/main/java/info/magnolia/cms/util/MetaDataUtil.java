@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.util;
@@ -18,7 +18,8 @@ import info.magnolia.cms.core.MetaData;
 import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -30,7 +31,7 @@ public class MetaDataUtil {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(MetaDataUtil.class);
+    private static Logger log = LoggerFactory.getLogger(MetaDataUtil.class);
 
     private Content content;
 

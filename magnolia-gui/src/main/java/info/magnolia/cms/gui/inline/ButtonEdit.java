@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.gui.inline;
@@ -66,11 +66,16 @@ public class ButtonEdit extends Button {
         // todo: dynamic repository
         String repository = ContentRepository.WEBSITE;
         this.setOnclick("mgnlOpenDialog('" //$NON-NLS-1$
-            + this.getPath() + "','" //$NON-NLS-1$
-            + nodeCollectionName + "','" //$NON-NLS-1$
-            + nodeName + "','" //$NON-NLS-1$
-            + this.getParagraph() + "','" //$NON-NLS-1$
-            + repository + "');"); //$NON-NLS-1$
+            + this.getPath()
+            + "','" //$NON-NLS-1$
+            + nodeCollectionName
+            + "','" //$NON-NLS-1$
+            + nodeName
+            + "','" //$NON-NLS-1$
+            + this.getParagraph()
+            + "','" //$NON-NLS-1$
+            + repository
+            + "');"); //$NON-NLS-1$
     }
 
     public String getLabel() {

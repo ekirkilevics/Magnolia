@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.gui.control;
@@ -21,7 +21,8 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -35,7 +36,7 @@ public class File extends ControlSuper {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(File.class);
+    private static Logger log = LoggerFactory.getLogger(File.class);
 
     private String cssClassFileName;
 
@@ -43,14 +44,14 @@ public class File extends ControlSuper {
 
     /**
      * Package private constructor
-     * */
+     */
     File() {
     }
 
     /**
      * @param name
      * @param value
-     * */
+     */
     public File(String name, String value) {
         super(name, value);
     }
@@ -58,7 +59,7 @@ public class File extends ControlSuper {
     /**
      * @param name
      * @param content
-     * */
+     */
     public File(String name, Content content) {
         super(name, content);
     }

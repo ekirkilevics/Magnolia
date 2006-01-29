@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.gui.dialog;
@@ -22,7 +22,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -41,7 +42,7 @@ public final class DialogFactory {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(DialogFactory.class);
+    private static Logger log = LoggerFactory.getLogger(DialogFactory.class);
 
     /**
      * Utility class, don't instantiate.
@@ -89,13 +90,15 @@ public final class DialogFactory {
         catch (InstantiationException e) {
             // should never happen
             throw new NestableRuntimeException("Unable to instantiate " //$NON-NLS-1$
-                + dialogClass + " due to: InstantiationException - " //$NON-NLS-1$
+                + dialogClass
+                + " due to: InstantiationException - " //$NON-NLS-1$
                 + e.getMessage());
         }
         catch (IllegalAccessException e) {
             // should never happen
             throw new NestableRuntimeException("Unable to instantiate " //$NON-NLS-1$
-                + dialogClass + " due to: IllegalAccessException - " //$NON-NLS-1$
+                + dialogClass
+                + " due to: IllegalAccessException - " //$NON-NLS-1$
                 + e.getMessage());
         }
 
@@ -181,9 +184,10 @@ public final class DialogFactory {
      * @return the conrol
      * @throws RepositoryException
      */
-    public static DialogInterface getDialogControlInstanceByName(HttpServletRequest request, HttpServletResponse response,
-        Content websiteNode, Content configNode, String controlType) throws RepositoryException {
-        
+    public static DialogInterface getDialogControlInstanceByName(HttpServletRequest request,
+        HttpServletResponse response, Content websiteNode, Content configNode, String controlType)
+        throws RepositoryException {
+
         Class dialogClass = (Class) controls.get(controlType);
 
         if (dialogClass == null) {
@@ -197,10 +201,11 @@ public final class DialogFactory {
         catch (Exception e) {
             // should never happen
             throw new NestableRuntimeException("Unable to instantiate " //$NON-NLS-1$
-                + dialogClass + " due to: InstantiationException - " //$NON-NLS-1$
+                + dialogClass
+                + " due to: InstantiationException - " //$NON-NLS-1$
                 + e.getMessage());
         }
-        
+
         dialog.init(request, response, websiteNode, configNode);
         return dialog;
     }

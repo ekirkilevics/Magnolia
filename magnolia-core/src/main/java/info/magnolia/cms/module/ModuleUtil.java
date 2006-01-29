@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.module;
@@ -42,7 +42,6 @@ import javax.jcr.RepositoryException;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.jdom.Comment;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -52,6 +51,8 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -65,7 +66,7 @@ public final class ModuleUtil {
      * Logger
      */
 
-    private static Logger log = Logger.getLogger(ModuleUtil.class);
+    private static Logger log = LoggerFactory.getLogger(ModuleUtil.class);
 
     /**
      * used by the installFiles() method

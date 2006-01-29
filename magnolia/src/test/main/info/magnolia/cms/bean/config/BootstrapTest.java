@@ -17,7 +17,7 @@ import javax.jcr.RepositoryException;
 import junit.framework.TestCase;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger; import org.slf4j.LoggerFactory;
 
 import com.mockrunner.mock.web.MockServletContext;
 
@@ -31,7 +31,7 @@ public class BootstrapTest extends TestCase {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(BootstrapTest.class);
+    private static Logger log = LoggerFactory.getLogger(BootstrapTest.class);
 
     /**
      * Test bootstrap from files. This test can be easily used as a target for profiling the repository initialization

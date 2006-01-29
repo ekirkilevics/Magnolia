@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.security;
@@ -18,7 +18,8 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -28,7 +29,7 @@ import org.apache.log4j.Logger;
  */
 public class MgnlRoleManager implements RoleManager {
 
-    public static Logger log = Logger.getLogger(MgnlRoleManager.class);
+    public static Logger log = LoggerFactory.getLogger(MgnlRoleManager.class);
 
     /**
      * Do not instantiate it!
@@ -46,7 +47,7 @@ public class MgnlRoleManager implements RoleManager {
         }
     }
 
-    public Role createRole(String name){
+    public Role createRole(String name) {
         try {
             Content node = getHierarchyManager().createContent("/", name, ItemType.CONTENT.getSystemName());
             node.save();
@@ -57,7 +58,7 @@ public class MgnlRoleManager implements RoleManager {
             return null;
         }
     }
-    
+
     /**
      * return the role HierarchyManager
      */

@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.security;
@@ -30,7 +30,8 @@ import javax.jcr.SimpleCredentials;
 import javax.security.auth.Subject;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -39,7 +40,7 @@ import org.apache.log4j.Logger;
  */
 public final class SessionAccessControl {
 
-    private static Logger log = Logger.getLogger(SessionAccessControl.class);
+    private static Logger log = LoggerFactory.getLogger(SessionAccessControl.class);
 
     private static final String ATTRIBUTE_REPOSITORY_SESSION_PREFIX = "mgnlRepositorySession_";
 
@@ -259,7 +260,8 @@ public final class SessionAccessControl {
             ACL acl = (ACL) principals.get(repositoryID + "_" + workspaceID);
             if (acl != null) {
                 permissionList = acl.getList();
-            } else {
+            }
+            else {
                 permissionList = new ArrayList(); // no permissions assigned to this workspace
             }
         }

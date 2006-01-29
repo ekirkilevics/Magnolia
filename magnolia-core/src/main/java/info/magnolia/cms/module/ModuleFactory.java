@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.module;
@@ -31,7 +31,8 @@ import java.util.jar.Manifest;
 
 import javax.jcr.PathNotFoundException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -50,7 +51,7 @@ public final class ModuleFactory {
     /**
      * Logger
      */
-    private static Logger log = Logger.getLogger(ModuleFactory.class);
+    private static Logger log = LoggerFactory.getLogger(ModuleFactory.class);
 
     /**
      * Instantiate a module once.
@@ -70,8 +71,8 @@ public final class ModuleFactory {
             log.info("Finished loading module jars"); //$NON-NLS-1$
         }
         catch (Exception e) {
-            log.fatal("Failed to load the module jar"); //$NON-NLS-1$
-            log.fatal(e.getMessage(), e);
+            log.error("Failed to load the module jar"); //$NON-NLS-1$
+            log.error(e.getMessage(), e);
             throw new ConfigurationException(e.getMessage());
         }
     }
@@ -142,7 +143,8 @@ public final class ModuleFactory {
                                             break;
                                         default:
                                             log.error("error during registering an already installed module [" //$NON-NLS-1$
-                                                + moduleName + "]", e); //$NON-NLS-1$
+                                                + moduleName
+                                                + "]", e); //$NON-NLS-1$
                                             break;
                                     }
                                 }

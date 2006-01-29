@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.security;
@@ -19,7 +19,6 @@ import info.magnolia.cms.util.FactoryUtil;
  * Get the current role or user manager.
  * @author philipp
  * @version $Revision$ ($Author$)
- *
  */
 public class Security {
 

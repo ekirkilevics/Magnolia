@@ -85,7 +85,8 @@ public class ReloadI18nServlet extends HttpServlet {
         out.println("<form method=\"post\" action=\"\">"); //$NON-NLS-1$
 
         out.println("<input type=\"submit\" name=\"" //$NON-NLS-1$
-            + PARAM_RELOAD_ACTION + "\" value=\"" //$NON-NLS-1$
+            + PARAM_RELOAD_ACTION
+            + "\" value=\"" //$NON-NLS-1$
             + MessagesManager.get(request, "reloadi18n.action") //$NON-NLS-1$
             + "\" />"); //$NON-NLS-1$
 

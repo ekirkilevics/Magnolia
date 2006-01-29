@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.gui.dialog;
@@ -164,7 +164,8 @@ public class DialogDialog extends DialogSuper {
 
     protected void drawHtmlPreSubsForm(Writer out) throws IOException {
         out.write("<form action=\"" //$NON-NLS-1$
-            + this.getAction() + "\" name=\"mgnlFormMain\" method=\"post\" enctype=\"multipart/form-data\">"); //$NON-NLS-1$
+            + this.getAction()
+            + "\" name=\"mgnlFormMain\" method=\"post\" enctype=\"multipart/form-data\">"); //$NON-NLS-1$
         out.write(new Hidden("mgnlDialog", this.getConfigValue("dialog"), false).getHtml()); //$NON-NLS-1$ //$NON-NLS-2$
         out.write(new Hidden("mgnlRepository", this.getConfigValue("repository"), false).getHtml()); //$NON-NLS-1$ //$NON-NLS-2$
         out.write(new Hidden("mgnlPath", this.getConfigValue("path"), false).getHtml()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -199,7 +200,8 @@ public class DialogDialog extends DialogSuper {
         String id = this.getId();
         out.write("<div class=\"" + CssConstants.CSSCLASS_TABSETBUTTONBAR + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
         out.write("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\"><tr><td  class=\"" //$NON-NLS-1$
-            + CssConstants.CSSCLASS_TABSETBUTTONBAR + "\">"); //$NON-NLS-1$
+            + CssConstants.CSSCLASS_TABSETBUTTONBAR
+            + "\">"); //$NON-NLS-1$
         if (this.getOptions().size() != 0) {
             ButtonSet control = new ButtonSet();
             ((Button) this.getOptions().get(0)).setState(ControlSuper.BUTTONSTATE_PUSHED);

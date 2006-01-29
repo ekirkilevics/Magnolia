@@ -76,8 +76,6 @@
       <groupId>net.sourceforge.openutils</groupId>
       <artifactId>openutils-log4j</artifactId>
     </dependency>
-    
-    
     <!-- build/test dependencies -->
     <dependency>
       <groupId>junit</groupId>

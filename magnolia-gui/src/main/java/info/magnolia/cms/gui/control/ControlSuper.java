@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.gui.control;
@@ -404,11 +404,16 @@ public class ControlSuper implements ControlInterface {
             html.append("<input type=\"hidden\""); //$NON-NLS-1$
             html.append(" name=\"mgnlSaveInfo\""); //$NON-NLS-1$
             html.append(" value=\"" //$NON-NLS-1$
-                + this.getName() + "," //$NON-NLS-1$
-                + PropertyType.nameFromValue(this.getType()) + "," //$NON-NLS-1$
-                + this.getValueType() + "," //$NON-NLS-1$
-                + this.getIsRichEditValue() + "," //$NON-NLS-1$
-                + this.getEncoding() + "\""); //$NON-NLS-1$
+                + this.getName()
+                + "," //$NON-NLS-1$
+                + PropertyType.nameFromValue(this.getType())
+                + "," //$NON-NLS-1$
+                + this.getValueType()
+                + "," //$NON-NLS-1$
+                + this.getIsRichEditValue()
+                + "," //$NON-NLS-1$
+                + this.getEncoding()
+                + "\""); //$NON-NLS-1$
             html.append(" />"); //$NON-NLS-1$
         }
         return html.toString();

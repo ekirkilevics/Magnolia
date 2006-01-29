@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.beans.config;
@@ -35,7 +35,8 @@ import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -46,7 +47,7 @@ public final class ModuleLoader {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(ModuleLoader.class);
+    private static Logger log = LoggerFactory.getLogger(ModuleLoader.class);
 
     /**
      * magnolia module specific keywords
@@ -81,8 +82,8 @@ public final class ModuleLoader {
             log.info("Finished loading modules"); //$NON-NLS-1$
         }
         catch (Exception e) {
-            log.fatal("Failed to initialize module loader"); //$NON-NLS-1$
-            log.fatal(e.getMessage(), e);
+            log.error("Failed to initialize module loader"); //$NON-NLS-1$
+            log.error(e.getMessage(), e);
             throw new ConfigurationException(e.getMessage());
         }
     }
@@ -121,7 +122,8 @@ public final class ModuleLoader {
             thisModule.setInitParameters(getInitParameters(moduleConfig.getContent("initParams"))); //$NON-NLS-1$
             /* add local store */
             LocalStore store = LocalStore.getInstance(CONFIG_PAGE + "/" //$NON-NLS-1$
-                + module.getName() + "/" //$NON-NLS-1$
+                + module.getName()
+                + "/" //$NON-NLS-1$
                 + CONFIG_NODE_LOCAL_STORE);
             thisModule.setLocalStore(store.getStore());
             try {
@@ -136,15 +138,15 @@ public final class ModuleLoader {
 
             }
             catch (InstantiationException ie) {
-                log.fatal("Module : [ " + moduleConfig.getNodeData("moduleName").getString() + " ] failed to load"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                log.fatal(ie.getMessage());
+                log.error("Module : [ " + moduleConfig.getNodeData("moduleName").getString() + " ] failed to load"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                log.error(ie.getMessage());
             }
             catch (IllegalAccessException ae) {
-                log.fatal(ae.getMessage());
+                log.error(ae.getMessage());
             }
         }
         catch (Exception e) {
-            log.fatal("can't initialize module " + module.getHandle(), e); //$NON-NLS-1$
+            log.error("can't initialize module " + module.getHandle(), e); //$NON-NLS-1$
         }
     }
 

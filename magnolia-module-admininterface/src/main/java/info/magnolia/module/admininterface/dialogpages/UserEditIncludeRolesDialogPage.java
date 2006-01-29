@@ -21,7 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -33,7 +34,7 @@ public class UserEditIncludeRolesDialogPage extends DialogPageMVCHandler {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(UserEditIncludeRolesDialogPage.class);
+    private static Logger log = LoggerFactory.getLogger(UserEditIncludeRolesDialogPage.class);
 
     public UserEditIncludeRolesDialogPage(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
@@ -73,12 +74,16 @@ public class UserEditIncludeRolesDialogPage extends DialogPageMVCHandler {
             + "\" type=\"text\" style=\"width:100%;\" value=\"'+path+'\" /></td>"); //$NON-NLS-1$
         html.append("<td width=\"1\"></td>"); //$NON-NLS-1$
         html.append("<td width=\"1\" class=\"" //$NON-NLS-1$
-            + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">" //$NON-NLS-1$
-            + choose.getHtml() + "</td>"); //$NON-NLS-1$
+            + CssConstants.CSSCLASS_EDITWITHBUTTON
+            + "\">" //$NON-NLS-1$
+            + choose.getHtml()
+            + "</td>"); //$NON-NLS-1$
         html.append("<td width=\"1\"></td>"); //$NON-NLS-1$
         html.append("<td width=\"1\" class=\"" //$NON-NLS-1$
-            + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">" //$NON-NLS-1$
-            + delete.getHtml() + "</td>"); //$NON-NLS-1$
+            + CssConstants.CSSCLASS_EDITWITHBUTTON
+            + "\">" //$NON-NLS-1$
+            + delete.getHtml()
+            + "</td>"); //$NON-NLS-1$
 
         html.append("</tr></table>"); //$NON-NLS-1$
 

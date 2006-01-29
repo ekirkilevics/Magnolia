@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.taglibs;
@@ -29,7 +29,8 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -37,14 +38,14 @@ import org.apache.log4j.Logger;
  * Since JSTL doesn't allow calling a method like <code>Content.getNodeData(String)</code> the <code>Content</code>
  * is wrapped into a <code>NodeMapWrapper</code> which exposes NodeData using a map interface. This tag can be useful
  * in similar situations:
- *
+ * 
  * <pre>
  * &lt;cms:setNode var="currentNode"/>
  * &lt;c:if test="${!empty currentNode.title}">
  *   &lt;c:out value="${currentNode.title}"/>
  * &lt;/c:if>
  * </pre>
- *
+ * 
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
@@ -53,7 +54,7 @@ public class SetNode extends TagSupport {
     /**
      * Logger.
      */
-    protected static final Logger log = Logger.getLogger(SetNode.class);
+    protected static final Logger log = LoggerFactory.getLogger(SetNode.class);
 
     /**
      * Stable serialVersionUID.

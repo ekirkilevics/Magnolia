@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.beans.runtime;
@@ -19,7 +19,8 @@ import java.io.Serializable;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -28,11 +29,11 @@ import org.apache.log4j.Logger;
  * @version 1.1
  */
 public class Document implements Serializable {
-    
+
     /**
      * Logger
      */
-    public static Logger log = Logger.getLogger(Document.class);
+    public static Logger log = LoggerFactory.getLogger(Document.class);
 
     /**
      * request parameter name.
@@ -69,20 +70,19 @@ public class Document implements Serializable {
      */
     Document() {
     }
-    
+
     /**
      * Used to create a document pased on a existing file.
      * @param file
      * @param type
      */
-    public Document(java.io.File file, String type ){
+    public Document(java.io.File file, String type) {
         String fileName = file.getName();
         this.setFile(file);
         this.setType(type);
         this.setExtention(StringUtils.substringAfterLast(fileName, "."));
         this.setFileName(StringUtils.substringBeforeLast(fileName, "."));
     }
-
 
     /**
      * Sets the parameter name
@@ -205,5 +205,5 @@ public class Document implements Serializable {
     public void delete() {
         IOUtils.closeQuietly(inputStream);
         this.file.delete();
-    }   
+    }
 }

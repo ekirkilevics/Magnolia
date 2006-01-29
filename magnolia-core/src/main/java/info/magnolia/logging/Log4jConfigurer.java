@@ -91,7 +91,8 @@ public abstract class Log4jConfigurer {
                 }
                 catch (MalformedURLException e) {
                     log("Unable to initialize Log4J from [" //$NON-NLS-1$
-                        + log4jFileName + "], got a MalformedURLException: " //$NON-NLS-1$
+                        + log4jFileName
+                        + "], got a MalformedURLException: " //$NON-NLS-1$
                         + e.getMessage());
                     return;
                 }

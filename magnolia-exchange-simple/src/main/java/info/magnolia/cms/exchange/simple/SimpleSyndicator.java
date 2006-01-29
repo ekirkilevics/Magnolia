@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.exchange.simple;
@@ -20,12 +20,12 @@ import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.exchange.ActivationContent;
 import info.magnolia.cms.exchange.ExchangeException;
-import info.magnolia.cms.util.Rule;
-import info.magnolia.cms.util.RuleBasedContentFilter;
 import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.SessionAccessControl;
+import info.magnolia.cms.util.Rule;
+import info.magnolia.cms.util.RuleBasedContentFilter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -42,12 +42,13 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -58,77 +59,77 @@ public class SimpleSyndicator implements Syndicator {
 
     /**
      * activation handler servlet name as mapped in web descriptor
-     * */
+     */
     public static final String DEFAULT_HANDLER = "ActivationHandler"; //$NON-NLS-1$
 
     /**
      * parent path
-     * */
+     */
     public static final String PARENT_PATH = "mgnlExchangeParentPath";
 
     /**
      * activated/deactivated path
-     * */
+     */
     public static final String PATH = "mgnlExchangePath";
 
     /**
      * repository name
-     * */
+     */
     public static final String REPOSITORY_NAME = "mgnlExchangeRepositoryName";
 
     /**
      * workspace name
-     * */
+     */
     public static final String WORKSPACE_NAME = "mgnlExchangeWorkspaceName";
 
     /**
      * resource reading sequence
-     * */
+     */
     public static final String RESOURCE_MAPPING_FILE = "mgnlExchangeResourceMappingFile";
 
     /**
      * resource file, File element
-     * */
+     */
     public static final String RESOURCE_MAPPING_FILE_ELEMENT = "File";
 
     /**
      * resource file, name attribute
-     * */
+     */
     public static final String RESOURCE_MAPPING_NAME_ATTRIBUTE = "name";
 
     /**
      * resource file, resourceId attribute
-     * */
+     */
     public static final String RESOURCE_MAPPING_ID_ATTRIBUTE = "resourceId";
 
     /**
      * resource file, root element
-     * */
+     */
     public static final String RESOURCE_MAPPING_ROOT_ELEMENT = "Resources";
 
     /**
      * Action
-     * */
+     */
     public static final String ACTION = "mgnlExchangeAction";
 
     /**
      * possible value for attribute "ACTION"
-     * */
+     */
     public static final String ACTIVATE = "activate"; //$NON-NLS-1$
 
     /**
      * possible value for attribute "ACTION"
-     * */
+     */
     public static final String DE_ACTIVATE = "deactivate"; //$NON-NLS-1$
 
     /**
      * request authorization exception
-     * */
+     */
     public static final String AUTHORIZATION = "Authorization";
 
     /**
      * attribute rule
-     * */
+     */
     public static final String CONTENT_FILTER_RULE = "mgnlExchangeFilterRule";
 
     /**
@@ -145,7 +146,7 @@ public class SimpleSyndicator implements Syndicator {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(SimpleSyndicator.class);
+    private static Logger log = LoggerFactory.getLogger(SimpleSyndicator.class);
 
     protected HttpServletRequest request;
 
@@ -166,11 +167,8 @@ public class SimpleSyndicator implements Syndicator {
      * @param repositoryName repository ID
      * @param workspaceName workspace ID
      * @param rule content filter rule
-     * */
-    public SimpleSyndicator(HttpServletRequest request,
-                      String repositoryName,
-                      String workspaceName,
-                      Rule rule) {
+     */
+    public SimpleSyndicator(HttpServletRequest request, String repositoryName, String workspaceName, Rule rule) {
         this.request = request;
         this.contentFilter = new RuleBasedContentFilter(rule);
         this.contentFilterRule = rule;
@@ -187,8 +185,7 @@ public class SimpleSyndicator implements Syndicator {
      * @throws RepositoryException
      * @throws ExchangeException
      */
-    public synchronized void activate(String parent, String path)
-            throws ExchangeException, RepositoryException  {
+    public synchronized void activate(String parent, String path) throws ExchangeException, RepositoryException {
         this.parent = parent;
         this.path = path;
         ActivationContent activationContent = null;
@@ -196,9 +193,11 @@ public class SimpleSyndicator implements Syndicator {
             activationContent = this.collect();
             this.activate(activationContent);
             this.updateActivationDetails();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new ExchangeException(e);
-        } finally {
+        }
+        finally {
             log.debug("Cleaning temporary files");
             cleanTemporaryStore(activationContent);
         }
@@ -214,10 +213,8 @@ public class SimpleSyndicator implements Syndicator {
      * @throws RepositoryException
      * @throws ExchangeException
      */
-    public synchronized void activate(Subscriber subscriber,
-                                      String parent,
-                                      String path)
-            throws ExchangeException, RepositoryException {
+    public synchronized void activate(Subscriber subscriber, String parent, String path) throws ExchangeException,
+        RepositoryException {
         this.parent = parent;
         this.path = path;
         ActivationContent activationContent = null;
@@ -225,9 +222,11 @@ public class SimpleSyndicator implements Syndicator {
             activationContent = this.collect();
             this.activate(subscriber, activationContent);
             this.updateActivationDetails();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new ExchangeException(e);
-        } finally {
+        }
+        finally {
             log.debug("Cleaning temporary files");
             cleanTemporaryStore(activationContent);
         }
@@ -236,8 +235,7 @@ public class SimpleSyndicator implements Syndicator {
     /**
      * @throws ExchangeException
      */
-    private synchronized void activate(ActivationContent activationContent)
-            throws ExchangeException {
+    private synchronized void activate(ActivationContent activationContent) throws ExchangeException {
         Enumeration en = Subscriber.getList();
         while (en.hasMoreElements()) {
             Subscriber si = (Subscriber) en.nextElement();
@@ -254,7 +252,7 @@ public class SimpleSyndicator implements Syndicator {
      * @throws ExchangeException
      */
     private synchronized void activate(Subscriber subscriber, ActivationContent activationContent)
-            throws ExchangeException {
+        throws ExchangeException {
         if (!isSubscribed(subscriber)) {
             if (log.isDebugEnabled()) {
                 log.debug("Exchange : subscriber [ " + subscriber.getName() + " ] is not subscribed to " + this.path);
@@ -282,13 +280,17 @@ public class SimpleSyndicator implements Syndicator {
             }
             urlConnection.getContent();
             log.info("Exchange : activation request received by " + subscriber.getName()); //$NON-NLS-1$
-        } catch (ExchangeException e) {
+        }
+        catch (ExchangeException e) {
             throw e;
-        } catch (MalformedURLException e) {
-            throw new ExchangeException("Incorrect URL for subscriber " + subscriber  + "[" + handle + "]");
-        } catch (IOException e) {
-            throw new ExchangeException("Not able to send the activation request [" +  handle + "]: " + e.getMessage());
-        } catch (Exception e) {
+        }
+        catch (MalformedURLException e) {
+            throw new ExchangeException("Incorrect URL for subscriber " + subscriber + "[" + handle + "]");
+        }
+        catch (IOException e) {
+            throw new ExchangeException("Not able to send the activation request [" + handle + "]: " + e.getMessage());
+        }
+        catch (Exception e) {
             throw new ExchangeException(e);
         }
     }
@@ -296,7 +298,7 @@ public class SimpleSyndicator implements Syndicator {
     /**
      * cleans temporary store
      * @param activationContent
-     * */
+     */
     private void cleanTemporaryStore(ActivationContent activationContent) {
         if (activationContent == null) {
             log.debug("Clean temporary store - nothing to do");
@@ -306,7 +308,7 @@ public class SimpleSyndicator implements Syndicator {
         while (keys.hasNext()) {
             String key = (String) keys.next();
             if (log.isDebugEnabled()) {
-                log.debug("Removing temporary file - "+key);
+                log.debug("Removing temporary file - " + key);
             }
             activationContent.getFile(key).delete();
         }
@@ -316,7 +318,7 @@ public class SimpleSyndicator implements Syndicator {
      * Check if this subscriber is subscribed to this uri
      * @param subscriber
      * @return a boolean
-     * */
+     */
     private boolean isSubscribed(Subscriber subscriber) {
         boolean isSubscribed = false;
         List subscribedURIList = subscriber.getContext(this.repositoryName);
@@ -340,8 +342,7 @@ public class SimpleSyndicator implements Syndicator {
      * @throws RepositoryException
      * @throws ExchangeException
      */
-    public synchronized void deActivate(String path)
-            throws ExchangeException, RepositoryException {
+    public synchronized void deActivate(String path) throws ExchangeException, RepositoryException {
         this.path = path;
         this.doDeActivate();
         updateDeActivationDetails();
@@ -353,8 +354,8 @@ public class SimpleSyndicator implements Syndicator {
      * @throws RepositoryException
      * @throws ExchangeException
      */
-    public synchronized void deActivate(Subscriber subscriber, String path)
-            throws ExchangeException, RepositoryException {
+    public synchronized void deActivate(Subscriber subscriber, String path) throws ExchangeException,
+        RepositoryException {
         this.path = path;
         this.doDeActivate(subscriber);
         updateDeActivationDetails();
@@ -381,7 +382,7 @@ public class SimpleSyndicator implements Syndicator {
      * deactivate from a specified subscriber
      * @param subscriber
      * @throws ExchangeException
-     * */
+     */
     private synchronized void doDeActivate(Subscriber subscriber) throws ExchangeException {
         if (!isSubscribed(subscriber)) {
             return;
@@ -394,10 +395,11 @@ public class SimpleSyndicator implements Syndicator {
             urlConnection.getContent();
         }
         catch (MalformedURLException e) {
-            throw new ExchangeException("Incorrect URL for subscriber " + subscriber  + "[" + handle + "]");
+            throw new ExchangeException("Incorrect URL for subscriber " + subscriber + "[" + handle + "]");
         }
         catch (IOException e) {
-            throw new ExchangeException("Not able to send the deactivation request [" +  handle + "]: " + e.getMessage());        }
+            throw new ExchangeException("Not able to send the deactivation request [" + handle + "]: " + e.getMessage());
+        }
         catch (Exception e) {
             throw new ExchangeException(e);
         }
@@ -415,7 +417,7 @@ public class SimpleSyndicator implements Syndicator {
     /**
      * add deactivation request header fields
      * @param connection
-     * */
+     */
     protected void addDeactivationHeaders(URLConnection connection) {
         connection.setRequestProperty(AUTHORIZATION, Authenticator.getCredentials(this.request));
         connection.addRequestProperty(REPOSITORY_NAME, this.repositoryName);
@@ -438,7 +440,7 @@ public class SimpleSyndicator implements Syndicator {
      * add request headers needed for this activation
      * @param connection
      * @param activationContent
-     * */
+     */
     protected void addActivationHeaders(URLConnection connection, ActivationContent activationContent) {
         Iterator headerKeys = activationContent.getProperties().keySet().iterator();
         while (headerKeys.hasNext()) {
@@ -453,8 +455,10 @@ public class SimpleSyndicator implements Syndicator {
      * @throws RepositoryException
      */
     private void updateActivationDetails() throws RepositoryException {
-        HierarchyManager hm =
-                SessionAccessControl.getHierarchyManager(this.request, this.repositoryName, this.workspaceName);
+        HierarchyManager hm = SessionAccessControl.getHierarchyManager(
+            this.request,
+            this.repositoryName,
+            this.workspaceName);
         Content page = hm.getContent(this.path);
         updateMetaData(page, SimpleSyndicator.ACTIVATE);
         page.save();
@@ -465,8 +469,10 @@ public class SimpleSyndicator implements Syndicator {
      * @throws RepositoryException
      */
     private void updateDeActivationDetails() throws RepositoryException {
-        HierarchyManager hm =
-                SessionAccessControl.getHierarchyManager(this.request, this.repositoryName, this.workspaceName);
+        HierarchyManager hm = SessionAccessControl.getHierarchyManager(
+            this.request,
+            this.repositoryName,
+            this.workspaceName);
         Content page = hm.getContent(this.path);
         updateMetaData(page, SimpleSyndicator.DE_ACTIVATE);
         page.save();
@@ -476,8 +482,7 @@ public class SimpleSyndicator implements Syndicator {
      * @param node
      * @param type (activate / deactivate)
      */
-    private void updateMetaData(Content node, String type)
-        throws AccessDeniedException {
+    private void updateMetaData(Content node, String type) throws AccessDeniedException {
         // update the passed node
         MetaData md = node.getMetaData(MetaData.ACTIVATION_INFO);
         if (type.equals(SimpleSyndicator.ACTIVATE)) {
@@ -497,17 +502,14 @@ public class SimpleSyndicator implements Syndicator {
 
     }
 
-
-
     /**
      * Collect Activation content
      * @throws Exception
-     * */
+     */
     private ActivationContent collect() throws Exception {
         ActivationContent activationContent = new ActivationContent();
-        HierarchyManager hm = SessionAccessControl.getHierarchyManager(request,
-                this.repositoryName,
-                this.workspaceName);
+        HierarchyManager hm = SessionAccessControl
+            .getHierarchyManager(request, this.repositoryName, this.workspaceName);
         // add global properties true for this path/hierarchy
         activationContent.addProperty(PARENT_PATH, this.parent);
         activationContent.addProperty(WORKSPACE_NAME, this.workspaceName);
@@ -517,18 +519,16 @@ public class SimpleSyndicator implements Syndicator {
         activationContent.addProperty(CONTENT_FILTER_RULE, this.contentFilterRule.toString());
         activationContent.addProperty(AUTHORIZATION, Authenticator.getCredentials(this.request));
 
-
         Document document = new Document();
         Element root = new Element(RESOURCE_MAPPING_ROOT_ELEMENT);
         document.setRootElement(root);
         this.addResources(
-                root,
-                hm.getWorkspace().getSession(),
-                hm.getContent(path),
-                this.contentFilter,
-                activationContent
-                );
-        File resourceFile = File.createTempFile("resources","",Path.getTempDirectory());
+            root,
+            hm.getWorkspace().getSession(),
+            hm.getContent(path),
+            this.contentFilter,
+            activationContent);
+        File resourceFile = File.createTempFile("resources", "", Path.getTempDirectory());
         XMLOutputter outputter = new XMLOutputter();
         outputter.output(document, new FileOutputStream(resourceFile));
         // add resource file to the list
@@ -545,30 +545,27 @@ public class SimpleSyndicator implements Syndicator {
      * @param activationContent
      * @throws IOException
      * @throws RepositoryException
-     * */
-    private void addResources(Element resourceElement,
-                              Session session,
-                              Content content,
-                              Content.ContentFilter filter,
-                              ActivationContent activationContent)
-            throws IOException, RepositoryException {
+     */
+    private void addResources(Element resourceElement, Session session, Content content, Content.ContentFilter filter,
+        ActivationContent activationContent) throws IOException, RepositoryException {
 
-        File file = File.createTempFile("exchange"+content.getName(),"",Path.getTempDirectory());
+        File file = File.createTempFile("exchange" + content.getName(), "", Path.getTempDirectory());
         GZIPOutputStream gzipOutputStream = new GZIPOutputStream(new FileOutputStream(file));
 
         /**
          * nt:file node type has mandatory sub nodes
-         * */
+         */
         if (content.isNodeType(ItemType.NT_FILE)) {
             session.exportSystemView(content.getHandle(), gzipOutputStream, false, false);
-        } else {
+        }
+        else {
             session.exportSystemView(content.getHandle(), gzipOutputStream, false, true);
         }
         IOUtils.closeQuietly(gzipOutputStream);
         // add file entry in mapping.xml
         Element element = new Element(RESOURCE_MAPPING_FILE_ELEMENT);
-        element.setAttribute(RESOURCE_MAPPING_NAME_ATTRIBUTE,content.getName());
-        element.setAttribute(RESOURCE_MAPPING_ID_ATTRIBUTE,file.getName());
+        element.setAttribute(RESOURCE_MAPPING_NAME_ATTRIBUTE, content.getName());
+        element.setAttribute(RESOURCE_MAPPING_ID_ATTRIBUTE, file.getName());
         resourceElement.addContent(element);
         // add this file element as resource in activation content
         activationContent.addFile(file.getName(), file);

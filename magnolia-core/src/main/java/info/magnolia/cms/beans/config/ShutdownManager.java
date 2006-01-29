@@ -8,7 +8,8 @@ import java.util.List;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -22,7 +23,7 @@ public class ShutdownManager implements ServletContextListener {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(ShutdownManager.class);
+    private static Logger log = LoggerFactory.getLogger(ShutdownManager.class);
 
     /**
      * List of <code>ShutdownManager.ShutdownTask</code>s which will be executed when the web application is stopped.

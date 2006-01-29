@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.taglibs;
@@ -19,7 +19,6 @@ import info.magnolia.cms.util.LinkUtil;
 import info.magnolia.cms.util.Resource;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -31,7 +30,8 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -48,7 +48,7 @@ public class Out extends TagSupport {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(Out.class);
+    private static Logger log = LoggerFactory.getLogger(Out.class);
 
     private static final String DEFAULT_LINEBREAK = "<br />"; //$NON-NLS-1$
 
@@ -385,7 +385,7 @@ public class Out extends TagSupport {
         if (date == null) {
             return StringUtils.EMPTY;
         }
-        
+
         String lang = this.getDateLanguage();
         if (lang == null) {
             return DateFormatUtils.formatUTC(date, this.getDatePattern());

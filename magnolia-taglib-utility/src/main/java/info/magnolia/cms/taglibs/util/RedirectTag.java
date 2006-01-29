@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.taglibs.util;
@@ -25,7 +25,8 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -38,7 +39,7 @@ import org.apache.log4j.Logger;
  * A typical requirement is to have pages with no content which will simply redirect to a child page: using this tag you
  * can easily build a "redirect" template and use it for empty pages:
  * </p>
- *
+ * 
  * <pre>
  *                         Title                    Template               Mod. Date
  * -----------------------^----------------^-------^----------------------^---------------
@@ -47,7 +48,7 @@ import org.apache.log4j.Logger;
  *     + home             Home page        o       home                    05-01-01
  *
  * </pre>
- *
+ * 
  * <p>
  * This tag should be put <strong>before</strong> any other tag or include in the page, since response should not be
  * committed yet for it to work.
@@ -55,20 +56,19 @@ import org.apache.log4j.Logger;
  * <p>
  * Example:
  * </p>
- *
+ * 
  * <pre>
  * &lt;cmsu:redirect var="destpage" />
  *
  * This page has no content and it will redirect to
  * &lt;a href="${pageContext.request.contextPath}${destpage}">${destpage}&lt;/a> in a public instance.
  * </pre>
- *
+ * 
  * @author Fabrizio Giustina
  * @version $Id$
  * @since 2.2
  */
-public class RedirectTag extends BodyTagSupport
-{
+public class RedirectTag extends BodyTagSupport {
 
     /**
      * Stable serialVersionUID.
@@ -78,7 +78,7 @@ public class RedirectTag extends BodyTagSupport
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(RedirectTag.class);
+    private static Logger log = LoggerFactory.getLogger(RedirectTag.class);
 
     /**
      * Name for the variable which will contain the URL of the page this tag will redirect to.
@@ -89,35 +89,28 @@ public class RedirectTag extends BodyTagSupport
      * Setter for the <code>var</code> tag parameter.
      * @param var Name for the variable which will contain the URL of the page this tag will redirect to
      */
-    public void setVar(String var)
-    {
+    public void setVar(String var) {
         this.var = var;
     }
 
     /**
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
-    public int doStartTag() throws JspException
-    {
+    public int doStartTag() throws JspException {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         String location = getRedirectLocation(request);
-        if (!Server.isAdmin() || Resource.showPreview(request))
-        {
+        if (!Server.isAdmin() || Resource.showPreview(request)) {
 
-            if (location != null)
-            {
-                try
-                {
+            if (location != null) {
+                try {
                     ((HttpServletResponse) pageContext.getResponse()).sendRedirect(request.getContextPath() + location);
                 }
-                catch (IOException e)
-                {
+                catch (IOException e) {
                     log.error("Could not redirect to first child HTML page: " + e.getMessage()); //$NON-NLS-1$
                 }
             }
         }
-        else if (StringUtils.isNotBlank(var))
-        {
+        else if (StringUtils.isNotBlank(var)) {
             request.setAttribute(var, location);
         }
         return super.doStartTag();
@@ -126,8 +119,7 @@ public class RedirectTag extends BodyTagSupport
     /**
      * @see javax.servlet.jsp.tagext.Tag#release()
      */
-    public void release()
-    {
+    public void release() {
         this.var = null;
         super.release();
     }
@@ -137,12 +129,10 @@ public class RedirectTag extends BodyTagSupport
      * @param request The HTTP request.
      * @return A URI if a child page is available, or null.
      */
-    private String getRedirectLocation(HttpServletRequest request)
-    {
+    private String getRedirectLocation(HttpServletRequest request) {
         Content page = Resource.getActivePage(request);
         Iterator it = page.getChildren().iterator();
-        if (it.hasNext())
-        {
+        if (it.hasNext()) {
             Content c = (Content) it.next();
             return c.getHandle() + '.' + Server.getDefaultExtension();
         }

@@ -7,26 +7,28 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.servlets;
 
-import org.apache.log4j.Logger;
-import org.apache.commons.lang.StringUtils;
-
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
-import javax.servlet.RequestDispatcher;
-import java.io.IOException;
-
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Path;
 
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 /**
- *
  * @author Sameer Charles
  * @version $Revision: 1831 $ ($Author: scharles $)
  */
@@ -34,22 +36,22 @@ public class UUIDRequestDispatcher extends HttpServlet {
 
     /**
      * Logger
-     * */
-    private static Logger log = Logger.getLogger(UUIDRequestDispatcher.class);
+     */
+    private static Logger log = LoggerFactory.getLogger(UUIDRequestDispatcher.class);
 
     /**
      * repository name parameter
-     * */
+     */
     public static final String ATTRIBUTE_REPOSITRY_NAME = "mgnlRepositoryName";
 
     /**
      * workspace name parameter
-     * */
+     */
     public static final String ATTRIBUTE_WORKSPACE_NAME = "mgnlWorkspaceName";
 
     /**
      * uuid
-     * */
+     */
     public static final String ATTRIBUTE_UUID = "mgnlUUID";
 
     /**
@@ -58,8 +60,7 @@ public class UUIDRequestDispatcher extends HttpServlet {
      * @throws javax.servlet.ServletException
      * @throws java.io.IOException
      */
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String repositoryName = request.getParameter(ATTRIBUTE_REPOSITRY_NAME);
         String workspaceName = request.getParameter(ATTRIBUTE_WORKSPACE_NAME);
         String uuid = request.getParameter(ATTRIBUTE_UUID);
@@ -71,20 +72,20 @@ public class UUIDRequestDispatcher extends HttpServlet {
             workspaceName = ContentRepository.getDefaultWorkspace(repositoryName);
         }
         try {
-            String handle =
-                    ContentRepository.getHierarchyManager(
-                            repositoryName,
-                            workspaceName).getContentByUUID(uuid).getHandle();
+            String handle = ContentRepository
+                .getHierarchyManager(repositoryName, workspaceName)
+                .getContentByUUID(uuid)
+                .getHandle();
             handle = (handle + "." + extension);
             RequestDispatcher dispatcher = request.getRequestDispatcher(handle);
             dispatcher.forward(request, response);
-        } catch (Exception e) {
-            log.error("Failed to retrieve content for UUID : "+uuid +" , "+ e.getMessage());
-            log.debug(e);
+        }
+        catch (Exception e) {
+            log.error("Failed to retrieve content for UUID : " + uuid + " , " + e.getMessage());
+            log.debug("Exception caught", e);
         }
 
     }
-
 
     /**
      * @param request
@@ -92,10 +93,8 @@ public class UUIDRequestDispatcher extends HttpServlet {
      * @throws javax.servlet.ServletException
      * @throws java.io.IOException
      */
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
     }
-
 
 }

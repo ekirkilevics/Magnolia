@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.gui.dialog;
@@ -89,13 +89,16 @@ public class DialogFile extends DialogBox {
         String htmlControlBrowse = control.getHtmlBrowse();
         StringBuffer htmlControlFileName = new StringBuffer();
         htmlControlFileName.append("<span class=\"" //$NON-NLS-1$
-            + CssConstants.CSSCLASS_DESCRIPTION + "\">" //$NON-NLS-1$
+            + CssConstants.CSSCLASS_DESCRIPTION
+            + "\">" //$NON-NLS-1$
             + MessagesManager.get(this.getRequest(), "dialog.file.filename") //$NON-NLS-1$
             + "</span>"); //$NON-NLS-1$
         htmlControlFileName.append(Spacer.getHtml(1, 1));
         htmlControlFileName.append(control.getHtmlFileName() + "<span id=\"" //$NON-NLS-1$
-            + this.getName() + "_fileNameExtension\">." //$NON-NLS-1$
-            + control.getExtension() + "</span>"); //$NON-NLS-1$
+            + this.getName()
+            + "_fileNameExtension\">." //$NON-NLS-1$
+            + control.getExtension()
+            + "</span>"); //$NON-NLS-1$
         String htmlContentEmpty = htmlControlBrowse + Spacer.getHtml(0, 0) + htmlControlFileName;
         out.write("<div id=\"" + this.getName() + "_contentDiv\" style=\"width:100%;\">"); //$NON-NLS-1$ //$NON-NLS-2$
         boolean exists = false;
@@ -118,8 +121,11 @@ public class DialogFile extends DialogBox {
                 // class=\""+CSSCLASS_FILEIMAGE+"\">");
                 // tmp workaround: resize in html ...
                 out.write("<img width=\"150\" src=\"" //$NON-NLS-1$
-                    + this.getRequest().getContextPath() + control.getHandle() + "\" class=\"" //$NON-NLS-1$
-                    + CssConstants.CSSCLASS_FILEIMAGE + "\">"); //$NON-NLS-1$
+                    + this.getRequest().getContextPath()
+                    + control.getHandle()
+                    + "\" class=\"" //$NON-NLS-1$
+                    + CssConstants.CSSCLASS_FILEIMAGE
+                    + "\">"); //$NON-NLS-1$
                 out.write("</td><td>"); //$NON-NLS-1$
             }
             out.write(htmlControlFileName.toString());
@@ -129,8 +135,11 @@ public class DialogFile extends DialogBox {
                 out.write(Spacer.getHtml(0, 0));
                 out.write("<a href=" + this.getRequest().getContextPath() + control.getPath() + " target=\"_blank\">"); //$NON-NLS-1$ //$NON-NLS-2$
                 out.write("<img src=\"" //$NON-NLS-1$
-                    + this.getRequest().getContextPath() + iconPath + "\" class=\"" //$NON-NLS-1$
-                    + CssConstants.CSSCLASS_FILEICON + "\" border=\"0\">"); //$NON-NLS-1$
+                    + this.getRequest().getContextPath()
+                    + iconPath
+                    + "\" class=\"" //$NON-NLS-1$
+                    + CssConstants.CSSCLASS_FILEICON
+                    + "\" border=\"0\">"); //$NON-NLS-1$
                 out.write(control.getFileName() + "." + control.getExtension() + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$
             }
             out.write(Spacer.getHtml(12, 12));
@@ -140,8 +149,10 @@ public class DialogFile extends DialogBox {
             }
             out.write("</div>"); //$NON-NLS-1$
             out.write("<div style=\"position:absolute;top:-500;left:-500;visibility:hidden;\"><textarea id=\"" //$NON-NLS-1$
-                + this.getName() + "_contentEmpty\">" //$NON-NLS-1$
-                + htmlContentEmpty + "</textarea></div>"); //$NON-NLS-1$
+                + this.getName()
+                + "_contentEmpty\">" //$NON-NLS-1$
+                + htmlContentEmpty
+                + "</textarea></div>"); //$NON-NLS-1$
         }
         control.setSaveInfo(true);
         out.write(control.getHtmlSaveInfo());

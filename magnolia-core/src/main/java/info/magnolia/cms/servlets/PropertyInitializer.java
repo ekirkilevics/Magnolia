@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.servlets;
@@ -31,7 +31,8 @@ import javax.servlet.ServletContextListener;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -48,7 +49,7 @@ import org.apache.log4j.Logger;
  * <p>
  * If no <code>magnolia.initialization.file</code> context parameter is set, the following default is assumed:
  * </p>
- *
+ * 
  * <pre>
  * &lt;context-param>
  *   &lt;param-name>magnolia.initialization.file&lt;/param-name>
@@ -61,7 +62,7 @@ import org.apache.log4j.Logger;
  *   &lt;/param-value>
  * &lt;/context-param>
  * </pre>
- *
+ * 
  * The following parameters are needed in the properties file:
  * <dl>
  * <dt>magnolia.cache.startdir</dt>
@@ -114,7 +115,7 @@ public class PropertyInitializer implements ServletContextListener {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(PropertyInitializer.class);
+    private static Logger log = LoggerFactory.getLogger(PropertyInitializer.class);
 
     /**
      * Context parameter name.
@@ -197,7 +198,7 @@ public class PropertyInitializer implements ServletContextListener {
             }
             catch (FileNotFoundException e1) {
 
-                log.fatal(MessageFormat.format("Configuration file not found with path [{0}]", //$NON-NLS-1$
+                log.error(MessageFormat.format("Configuration file not found with path [{0}]", //$NON-NLS-1$
                     new Object[]{initFile.getAbsolutePath()}));
                 return;
             }
@@ -213,7 +214,7 @@ public class PropertyInitializer implements ServletContextListener {
                 new ConfigLoader(context, envProperties);
             }
             catch (Exception e) {
-                log.fatal(e.getMessage(), e);
+                log.error(e.getMessage(), e);
             }
             finally {
                 IOUtils.closeQuietly(fileStream);
@@ -223,7 +224,7 @@ public class PropertyInitializer implements ServletContextListener {
         }
 
         log
-            .fatal(MessageFormat
+            .error(MessageFormat
                 .format(
                     "No configuration found using location list {0}. [servername] is [{1}], [webapp] is [{2}] and base path is [{3}]", //$NON-NLS-1$
                     new Object[]{ArrayUtils.toString(propertiesLocation), servername, webapp, rootPath}));

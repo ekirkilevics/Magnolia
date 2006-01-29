@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.util;
@@ -26,7 +26,8 @@ import java.util.regex.Pattern;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -60,7 +61,7 @@ public final class LinkUtil {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(LinkUtil.class);
+    private static Logger log = LoggerFactory.getLogger(LinkUtil.class);
 
     /**
      * Transforms all the links to the magnolia format. Used during storing.
@@ -76,11 +77,13 @@ public final class LinkUtil {
             String uuid = makeUUIDFromAbsolutePath(path);
             matcher.appendReplacement(res, "$1\\${link:{" //$NON-NLS-1$
                 + "uuid:{" //$NON-NLS-1$
-                + uuid + "}," //$NON-NLS-1$
+                + uuid
+                + "}," //$NON-NLS-1$
                 + "repository:{website}," //$NON-NLS-1$
                 + "workspace:{default}," //$NON-NLS-1$
                 + "path:{" //$NON-NLS-1$
-                + path + "}}}$3"); //$NON-NLS-1$
+                + path
+                + "}}}$3"); //$NON-NLS-1$
         }
         matcher.appendTail(res);
         return res.toString();
@@ -255,7 +258,7 @@ public final class LinkUtil {
             }
         }
         catch (RepositoryException e) {
-            log.error(e);
+            log.error("Exception caught", e);
         }
         return null;
     }

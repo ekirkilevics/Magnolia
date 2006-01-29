@@ -7,48 +7,48 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.util;
 
-import org.apache.commons.lang.StringUtils;
-
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+
 
 /**
- * This class defines the rules to be used by the activation content aggregator
- * this is simply a collection of node types
- *
+ * This class defines the rules to be used by the activation content aggregator this is simply a collection of node
+ * types
  * @author Sameer Charles
  * @version $Revision: 1633 $ ($Author: scharles $)
  */
 public class Rule {
 
-
     /**
      * list of node types allowed
-     * */
+     */
     private List allowedTypes = new ArrayList();
 
     /**
      * reverse rule
-     * */
+     */
     private boolean reverse = false;
 
     /**
      * Default
-     * */
-    public Rule () {}
+     */
+    public Rule() {
+    }
 
     /**
      * generate list from string array
      * @param allowedTypes
-     * */
-    public Rule (String[] allowedTypes) {
-        for (int index=0; index<allowedTypes.length; index++) {
+     */
+    public Rule(String[] allowedTypes) {
+        for (int index = 0; index < allowedTypes.length; index++) {
             this.addAllowType(allowedTypes[index]);
         }
     }
@@ -57,10 +57,10 @@ public class Rule {
      * generate list from the string
      * @param allowedTypes
      * @param separator
-     * */
-    public Rule (String allowedTypes, String separator) {
+     */
+    public Rule(String allowedTypes, String separator) {
         String[] types = StringUtils.split(allowedTypes, separator);
-        for (int index=0; index<types.length; index++) {
+        for (int index = 0; index < types.length; index++) {
             this.addAllowType(types[index]);
         }
     }
@@ -68,7 +68,7 @@ public class Rule {
     /**
      * add to allow list
      * @param nodeType
-     * */
+     */
     public void addAllowType(String nodeType) {
         if (nodeType != null) {
             this.allowedTypes.add(nodeType);
@@ -78,7 +78,7 @@ public class Rule {
     /**
      * remove from allow list
      * @param nodeType
-     * */
+     */
     public void removeAllowType(String nodeType) {
         if (nodeType != null) {
             this.allowedTypes.remove(nodeType);
@@ -89,14 +89,15 @@ public class Rule {
      * is allowed
      * @param nodeType
      * @return true if given nodeType is allowed
-     * */
+     */
     public boolean isAllowed(String nodeType) {
         if (this.reverse) {
             if (this.allowedTypes.contains(nodeType)) {
                 return false;
             }
             return true;
-        } else if (this.allowedTypes.contains(nodeType)) {
+        }
+        else if (this.allowedTypes.contains(nodeType)) {
             return true;
         }
         return false;
@@ -105,10 +106,10 @@ public class Rule {
     /**
      * get a string representation of this rule
      * @return string representation
-     * */
+     */
     public String toString() {
         StringBuffer buffer = new StringBuffer();
-        Iterator typeIterator =  this.allowedTypes.iterator();
+        Iterator typeIterator = this.allowedTypes.iterator();
         while (typeIterator.hasNext()) {
             buffer.append((String) typeIterator.next());
             buffer.append(",");
@@ -118,7 +119,7 @@ public class Rule {
 
     /**
      * set reverse
-     * */
+     */
     public void reverse() {
         this.reverse = true;
     }

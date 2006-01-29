@@ -10,7 +10,8 @@ import java.io.PrintWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -31,7 +32,7 @@ public class RichEditorIFrameDialogPage extends DialogPageMVCHandler {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(RichEditorIFrameDialogPage.class);
+    private static Logger log = LoggerFactory.getLogger(RichEditorIFrameDialogPage.class);
 
     protected void draw(HttpServletRequest request, HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
@@ -44,7 +45,8 @@ public class RichEditorIFrameDialogPage extends DialogPageMVCHandler {
         }
         else {
             log.error("DialogRichedit not found in session with name [" //$NON-NLS-1$
-                + request.getParameter(DialogSuper.SESSION_ATTRIBUTENAME_DIALOGOBJECT) + "]"); //$NON-NLS-1$
+                + request.getParameter(DialogSuper.SESSION_ATTRIBUTENAME_DIALOGOBJECT)
+                + "]"); //$NON-NLS-1$
         }
     }
 

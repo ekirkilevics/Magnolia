@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.gui.dialog;
@@ -51,10 +51,14 @@ public class DialogLine {
             pre = "<td colspan=\"" + colspanAfterLine + "\"></td>"; //$NON-NLS-1$ //$NON-NLS-2$
         }
         return "<tr>" //$NON-NLS-1$
-            + pre + "<td colspan=\"" //$NON-NLS-1$
-            + colspanLine + "\" class=\"" //$NON-NLS-1$
-            + CssConstants.CSSCLASS_BOXLINE + "\"></td>" //$NON-NLS-1$
-            + post + "</tr>"; //$NON-NLS-1$
+            + pre
+            + "<td colspan=\"" //$NON-NLS-1$
+            + colspanLine
+            + "\" class=\"" //$NON-NLS-1$
+            + CssConstants.CSSCLASS_BOXLINE
+            + "\"></td>" //$NON-NLS-1$
+            + post
+            + "</tr>"; //$NON-NLS-1$
     }
 
     public String getHtml(String width) {

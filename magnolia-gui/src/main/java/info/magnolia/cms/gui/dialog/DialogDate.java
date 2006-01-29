@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.gui.dialog;
@@ -36,12 +36,11 @@ public class DialogDate extends DialogEditWithButton {
 
     /**
      * Customize the dialog.
-     * 
      * @see info.magnolia.cms.gui.dialog.DialogEditWithButton#doBeforeDrawHtml()
      */
     protected void doBeforeDrawHtml() {
         super.doBeforeDrawHtml();
-        
+
         // set buttonlabel in config
         this.getButton().setLabel(MessagesManager.get(getRequest(), "dialog.date.select")); //$NON-NLS-1$
         this.getButton().setSaveInfo(false);
@@ -56,9 +55,9 @@ public class DialogDate extends DialogEditWithButton {
         this.setConfig("onchange", "mgnlDialogDatePatternCheck(this,'" + pattern + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         if (this.getWebsiteNode() != null && this.getWebsiteNode().getNodeData(this.getName()).isExist()) {
             Calendar valueCalendar = this.getWebsiteNode().getNodeData(this.getName()).getDate();
-            
+
             Date valueDate = valueCalendar.getTime();
-            
+
             this.setValue(DateFormatUtils.formatUTC(valueDate, format));
             this.clearWebsiteNode(); // workaround so the value is taken... hm, pfusch
         }

@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.beans.config;
@@ -26,7 +26,8 @@ import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -38,7 +39,7 @@ public final class Subscriber {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(Subscriber.class);
+    private static Logger log = LoggerFactory.getLogger(Subscriber.class);
 
     private static final String START_PAGE = "subscribers"; //$NON-NLS-1$
 

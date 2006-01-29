@@ -52,10 +52,11 @@ public class LinkBrowserDialogPage extends DialogPageMVCHandler {
         html.append("<body class=\"mgnlBgDark\" onload=\"mgnlDialogLinkBrowserResize();\">"); //$NON-NLS-1$
 
         StringBuffer src = getIFrameSrc(request, repository, path, pathOpen, pathSelected);
-        
+
         html.append("<div id=\"mgnlTreeDiv\" class=\"mgnlDialogLinkBrowserTreeDiv\">"); //$NON-NLS-1$
         html.append("<iframe id=\"mgnlDialogLinkBrowserIFrame\" name=\"mgnlDialogLinkBrowserIFrame\" src=\"" //$NON-NLS-1$
-            + src + "\" scrolling=\"no\" frameborder=\"0\" width=\"100%\" height=\"100\"></iframe>"); //$NON-NLS-1$
+            + src
+            + "\" scrolling=\"no\" frameborder=\"0\" width=\"100%\" height=\"100\"></iframe>"); //$NON-NLS-1$
         html.append("</div>"); //$NON-NLS-1$
 
         Button bOk = new Button();
@@ -78,7 +79,8 @@ public class LinkBrowserDialogPage extends DialogPageMVCHandler {
         out.println(html);
     }
 
-    private StringBuffer getIFrameSrc(HttpServletRequest request, String repository, String path, String pathOpen, String pathSelected) {
+    private StringBuffer getIFrameSrc(HttpServletRequest request, String repository, String path, String pathOpen,
+        String pathSelected) {
         StringBuffer src = new StringBuffer();
         src.append(request.getContextPath());
         src.append("/.magnolia/adminCentral/extractTree.html"); //$NON-NLS-1$

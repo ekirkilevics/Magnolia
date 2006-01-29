@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.i18n;
@@ -18,12 +18,13 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * This class helps to get the messages used in templates (paragraphs, dialogs, ..). First it make a lookup in
  * messages_templating_custom and then in messages_templating..<br>
- * If a string is not found it returns directly the key without ?<p>
+ * If a string is not found it returns directly the key without ?
+ * <p>
  * This class is depricated use the fallBackMessages property of the Message class to make chains.
  * @author philipp
  * @deprecated
  */
-public final class TemplateMessagesUtil{
+public final class TemplateMessagesUtil {
 
     /**
      * Use this basename if the string is not found in the custom basename

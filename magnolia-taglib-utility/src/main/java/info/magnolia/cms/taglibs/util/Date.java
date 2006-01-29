@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.taglibs.util;
@@ -24,7 +24,8 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -39,7 +40,7 @@ public class Date extends TagSupport {
      */
     private static final long serialVersionUID = 222L;
 
-    private static Logger log = Logger.getLogger(Date.class);
+    private static Logger log = LoggerFactory.getLogger(Date.class);
 
     private String pattern = "yyyy.MM.dd - HH:mm:ss"; //$NON-NLS-1$
 

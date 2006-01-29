@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.util;
@@ -34,7 +34,7 @@ public final class SimpleUrlPattern implements UrlPattern {
      * Regexp pattern used for the simple keyword <code>*</code>
      */
     private static final String MULTIPLE_CHAR_PATTERN = "[\\p{L}[a-z[A-Z[0-9[!\"#$%&'()*+,-./:; <=>?@\\^_`{|}~\\[\\]]]]]]*"; //$NON-NLS-1$
-    
+
     /**
      * Regexp pattern used for the simple keyword <code>?</code>
      */

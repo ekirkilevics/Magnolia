@@ -19,7 +19,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -38,7 +39,7 @@ public class CacheGeneratorServlet extends HttpServlet {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(CacheGeneratorServlet.class);
+    private static Logger log = LoggerFactory.getLogger(CacheGeneratorServlet.class);
 
     /**
      * access the MessagesManager and ask him to reload the bundles

@@ -22,7 +22,7 @@ import org.apache.commons.httpclient.methods.multipart.FilePart;
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger; import org.slf4j.LoggerFactory;
 
 import com.mockrunner.mock.web.MockFilterChain;
 import com.mockrunner.mock.web.MockHttpServletRequest;
@@ -39,7 +39,7 @@ public class MultipartRequestFilterTest extends TestCase {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(MultipartRequestFilterTest.class);
+    private static Logger log = LoggerFactory.getLogger(MultipartRequestFilterTest.class);
 
     private Filter filter;
 

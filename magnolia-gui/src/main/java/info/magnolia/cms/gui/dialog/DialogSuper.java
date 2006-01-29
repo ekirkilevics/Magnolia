@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.gui.dialog;
@@ -36,7 +36,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -54,7 +55,7 @@ public abstract class DialogSuper implements DialogInterface {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(DialogSuper.class);
+    private static Logger log = LoggerFactory.getLogger(DialogSuper.class);
 
     /**
      * Current request.
@@ -428,17 +429,18 @@ public abstract class DialogSuper implements DialogInterface {
     protected Messages getMessages() {
         if (messages == null) {
             // if this is the root
-            if(this.getParent() == null){
+            if (this.getParent() == null) {
                 messages = MessagesManager.getMessages(request, TemplateMessagesUtil.CUSTOM_BASENAME);
-                messages.setFallBackMessages(MessagesManager.getMessages(request, TemplateMessagesUtil.DEFAULT_BASENAME));
+                messages.setFallBackMessages(MessagesManager
+                    .getMessages(request, TemplateMessagesUtil.DEFAULT_BASENAME));
             }
-            else{
+            else {
                 // try to get it from the control nearest to the root
                 messages = this.getParent().getMessages();
             }
             // if this control defines a bundle (basename in the terms of jstl)
             String basename = this.getConfigValue(I18N_BASENAME_PROPERTY);
-            if(StringUtils.isNotEmpty(basename)){
+            if (StringUtils.isNotEmpty(basename)) {
                 // extend the chain with this bundle
                 Messages myMessages = MessagesManager.getMessages(this.getRequest(), basename);
                 myMessages.setFallBackMessages(messages);

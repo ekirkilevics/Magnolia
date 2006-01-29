@@ -7,18 +7,19 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.util;
 
-import java.util.Properties;
-
 import info.magnolia.cms.core.SystemProperty;
+
+import java.util.Properties;
 
 import org.apache.commons.discovery.tools.DiscoverClass;
 import org.apache.commons.discovery.tools.DiscoverSingleton;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -30,7 +31,7 @@ public class FactoryUtil {
     /**
      * Logger.
      */
-    protected static Logger log = Logger.getLogger(FactoryUtil.class);
+    protected static Logger log = LoggerFactory.getLogger(FactoryUtil.class);
 
     private static Properties props = new Properties();
 

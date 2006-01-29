@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 
@@ -20,7 +20,8 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -35,7 +36,7 @@ public class Messages {
     /**
      * The log4j logger
      */
-    private static Logger log = Logger.getLogger(Messages.class);
+    private static Logger log = LoggerFactory.getLogger(Messages.class);
 
     /**
      * Name of the javascript object used to make the messages public to the javascripts
@@ -56,7 +57,7 @@ public class Messages {
      * The current bundle. Subclasses will overwrite getBundle()
      */
     private ResourceBundle bundle;
-    
+
     /**
      * Take the message from this object if not found in this instance. One can create a chain.
      */
@@ -121,7 +122,7 @@ public class Messages {
             return getBundle().getString(key);
         }
         catch (MissingResourceException e) {
-            if(this.hasFallBackMessages()){
+            if (this.hasFallBackMessages()) {
                 return this.getFallBackMessages().get(key);
             }
             return "???" + key + "???"; //$NON-NLS-1$ //$NON-NLS-2$
@@ -254,16 +255,16 @@ public class Messages {
             throw e;
         }
     }
-    
+
     public Messages getFallBackMessages() {
         return fallBackMessages;
     }
-    
+
     public void setFallBackMessages(Messages fallBackMessages) {
         this.fallBackMessages = fallBackMessages;
     }
-    
-    public boolean hasFallBackMessages(){
+
+    public boolean hasFallBackMessages() {
         return this.fallBackMessages != null;
     }
 }

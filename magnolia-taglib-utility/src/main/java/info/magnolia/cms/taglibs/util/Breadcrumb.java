@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.taglibs.util;
@@ -25,7 +25,8 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -44,7 +45,7 @@ public class Breadcrumb extends TagSupport {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(Breadcrumb.class);
+    private static Logger log = LoggerFactory.getLogger(Breadcrumb.class);
 
     /**
      * Delimeter between links.
@@ -65,7 +66,7 @@ public class Breadcrumb extends TagSupport {
      * Output as link. (default: true)
      */
     private boolean link = true;
-    
+
     /**
      * Setter for the <code>delimeter</code> tag attribute.
      * @param delimiter delimeter between links
@@ -100,7 +101,7 @@ public class Breadcrumb extends TagSupport {
     public void setLink(boolean link) {
         this.link = link;
     }
-    
+
     /**
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
@@ -121,14 +122,14 @@ public class Breadcrumb extends TagSupport {
                 if (i != this.startLevel) {
                     out.print(StringUtils.defaultString(this.delimiter, " > ")); //$NON-NLS-1$
                 }
-                if(this.link) {
+                if (this.link) {
                     out.print("<a href=\""); //$NON-NLS-1$
                     out.print(request.getContextPath());
                     out.print(actpage.getAncestor(i).getHandleWithDefaultExtension());
                     out.print("\">"); //$NON-NLS-1$
                 }
                 out.print(actpage.getAncestor(i).getTitle());
-                if(this.link) {
+                if (this.link) {
                     out.print("</a>"); //$NON-NLS-1$
                 }
             }

@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.exchange.simple;
@@ -15,13 +15,15 @@ package info.magnolia.cms.exchange.simple;
 import info.magnolia.cms.exchange.ActivationContent;
 import info.magnolia.cms.exchange.ExchangeException;
 
-import java.net.URLConnection;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URLConnection;
 import java.util.Iterator;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * Class responsible to transport activation content
@@ -32,17 +34,17 @@ public class Transporter {
 
     /**
      * Logger
-     * */
-    private static Logger log = Logger.getLogger(Transporter.class);
+     */
+    private static Logger log = LoggerFactory.getLogger(Transporter.class);
 
     /**
      * content boundary
-     * */
+     */
     private static final String BOUNDARY = "mgnlExchange-cfc93688d385";
 
     /**
      * max buffer size
-     * */
+     */
     private static final int BUFFER_SIZE = 1024;
 
     /**
@@ -50,9 +52,9 @@ public class Transporter {
      * @param connection
      * @param activationContent
      * @throws ExchangeException
-     * */
+     */
     public static void transport(URLConnection connection, ActivationContent activationContent)
-            throws ExchangeException {
+        throws ExchangeException {
         FileInputStream fis = null;
         DataOutputStream outStream = null;
         try {
@@ -60,7 +62,7 @@ public class Transporter {
             connection.setDoOutput(true);
             connection.setDoInput(true);
             connection.setUseCaches(false);
-            connection.setRequestProperty("Content-type","multipart/form-data; boundary=" + BOUNDARY);
+            connection.setRequestProperty("Content-type", "multipart/form-data; boundary=" + BOUNDARY);
             connection.setRequestProperty("Cache-Control", "no-cache");
 
             outStream = new DataOutputStream(connection.getOutputStream());
@@ -71,8 +73,11 @@ public class Transporter {
             while (fileNameIterator.hasNext()) {
                 String fileName = (String) fileNameIterator.next();
                 fis = new FileInputStream(activationContent.getFile(fileName));
-                outStream.writeBytes("content-disposition: form-data; name=\"" + fileName + "\"; filename=\""
-                + fileName + "\"\r\n");
+                outStream.writeBytes("content-disposition: form-data; name=\""
+                    + fileName
+                    + "\"; filename=\""
+                    + fileName
+                    + "\"\r\n");
                 outStream.writeBytes("content-type: application/octet-stream" + "\r\n\r\n");
                 while (true) {
                     synchronized (buffer) {
@@ -89,21 +94,25 @@ public class Transporter {
             outStream.flush();
             outStream.close();
             log.debug("Activation content sent as multipart/form-data");
-        } catch (Exception e) {
-            throw new ExchangeException("Simple exchange transport failed",e);
-        } finally {
+        }
+        catch (Exception e) {
+            throw new ExchangeException("Simple exchange transport failed", e);
+        }
+        finally {
             if (fis != null) {
                 try {
                     fis.close();
-                } catch (IOException e) {
-                    log.error(e);
+                }
+                catch (IOException e) {
+                    log.error("Exception caught", e);
                 }
             }
             if (outStream != null) {
                 try {
                     outStream.close();
-                } catch (IOException e) {
-                    log.error(e);
+                }
+                catch (IOException e) {
+                    log.error("Exception caught", e);
                 }
             }
         }

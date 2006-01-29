@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.gui.control;
@@ -87,14 +87,19 @@ public class ContextMenu extends ControlSuper {
                 String id = getName() + "_MenuItem" + i; //$NON-NLS-1$
                 item.setId(id);
                 menuJavascript.append(getName() + ".menuItems[" //$NON-NLS-1$
-                    + counter + "]=new mgnlContextMenuItem('" //$NON-NLS-1$
-                    + id + "');\n"); //$NON-NLS-1$
+                    + counter
+                    + "]=new mgnlContextMenuItem('" //$NON-NLS-1$
+                    + id
+                    + "');\n"); //$NON-NLS-1$
                 menuJavascript.append(getName() + ".menuItems[" + counter + "].conditions=new Object();"); //$NON-NLS-1$ //$NON-NLS-2$
                 for (int cond = 0; cond < item.getJavascriptConditions().size(); cond++) {
                     menuJavascript.append(getName() + ".menuItems[" //$NON-NLS-1$
-                        + counter + "].conditions[" //$NON-NLS-1$
-                        + cond + "]=" //$NON-NLS-1$
-                        + item.getJavascriptCondition(cond) + ";"); //$NON-NLS-1$
+                        + counter
+                        + "].conditions[" //$NON-NLS-1$
+                        + cond
+                        + "]=" //$NON-NLS-1$
+                        + item.getJavascriptCondition(cond)
+                        + ";"); //$NON-NLS-1$
                 }
                 html.append(item.getHtml());
                 counter++;

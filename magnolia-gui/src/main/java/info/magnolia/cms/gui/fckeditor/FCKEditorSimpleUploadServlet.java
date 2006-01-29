@@ -27,7 +27,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.gui.fckeditor;
@@ -48,8 +48,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
 import org.doomdark.uuid.UUIDGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -63,7 +64,7 @@ public class FCKEditorSimpleUploadServlet extends HttpServlet {
 
     private static final long serialVersionUID = -8512828615271068088L;
 
-    private static Logger log = Logger.getLogger(FCKEditorSimpleUploadServlet.class);
+    private static Logger log = LoggerFactory.getLogger(FCKEditorSimpleUploadServlet.class);
 
     private static Hashtable allowedExtensions;
 
@@ -122,12 +123,14 @@ public class FCKEditorSimpleUploadServlet extends HttpServlet {
                     + "/fckeditor/"
                     + uuid));
                 doc.delete();
-                
+
                 // the document will now point to the copied file
                 doc = new Document(new File(Path.getTempDirectoryPath()
                     + "/fckeditor/"
-                    + uuid + "/" + doc.getFile().getName()), doc.getType());
-                
+                    + uuid
+                    + "/"
+                    + doc.getFile().getName()), doc.getType());
+
                 // save it to the session
                 FCKEditorTmpFiles.addDocument(request, doc, uuid);
 
@@ -161,8 +164,6 @@ public class FCKEditorSimpleUploadServlet extends HttpServlet {
         out.flush();
         out.close();
     }
-
-
 
     /**
      * Helper function to convert the configuration string to an ArrayList.

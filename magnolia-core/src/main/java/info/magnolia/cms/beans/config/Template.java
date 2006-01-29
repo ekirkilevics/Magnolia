@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.beans.config;
@@ -29,7 +29,8 @@ import java.util.Map;
 
 import javax.jcr.RepositoryException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -41,7 +42,7 @@ public class Template {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(Template.class);
+    private static Logger log = LoggerFactory.getLogger(Template.class);
 
     private static List visibleTemplates = new ArrayList();
 
@@ -237,7 +238,7 @@ public class Template {
                 }
             }
             catch (RepositoryException re) {
-                log.fatal("Failed to cache TemplateInfo"); //$NON-NLS-1$
+                log.error("Failed to cache TemplateInfo"); //$NON-NLS-1$
             }
         }
     }

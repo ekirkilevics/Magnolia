@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.gui.control;
@@ -21,16 +21,16 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.exchange.simple.SimpleSyndicator;
-import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Syndicator;
+import info.magnolia.cms.exchange.simple.SimpleSyndicator;
 import info.magnolia.cms.gui.misc.Spacer;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.MetaDataUtil;
 import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.cms.util.Rule;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,7 +45,8 @@ import javax.jcr.Value;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -78,7 +79,7 @@ public class Tree extends ControlSuper {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(Tree.class);
+    private static Logger log = LoggerFactory.getLogger(Tree.class);
 
     private String repository;
 
@@ -410,12 +411,11 @@ public class Tree extends ControlSuper {
     }
 
     /**
-     * Creates a new node (either <code>NodeData</code> or <code>Content</code>) with
-     * the specified name (<tt>label</tt>) and type.
-     *
+     * Creates a new node (either <code>NodeData</code> or <code>Content</code>) with the specified name (<tt>label</tt>)
+     * and type.
      * @param label new node name
      * @param itemType new node type
-     **/
+     */
     public String createNode(String label, String itemType) {
         String name = label;
         try {
@@ -469,7 +469,7 @@ public class Tree extends ControlSuper {
             log.error(e.getMessage(), e);
             name = ""; // reset the name, so that you can check if the node was created
         }
-        
+
         return name;
     }
 
@@ -871,8 +871,8 @@ public class Tree extends ControlSuper {
         return returnValue;
     }
 
-    public void activateNode(String path, boolean recursive, boolean includeContentNodes)
-            throws ExchangeException, RepositoryException {
+    public void activateNode(String path, boolean recursive, boolean includeContentNodes) throws ExchangeException,
+        RepositoryException {
         Content c = null;
         if (getHierarchyManager().isPage(path)) {
             c = getHierarchyManager().getContent(path);
@@ -880,8 +880,8 @@ public class Tree extends ControlSuper {
         else {
             c = getHierarchyManager().getContent(path);
         }
-        
-        String parentPath = StringUtils.substringBeforeLast(path,"/");
+
+        String parentPath = StringUtils.substringBeforeLast(path, "/");
         if (StringUtils.isEmpty(parentPath)) {
             parentPath = "/";
         }
@@ -892,19 +892,17 @@ public class Tree extends ControlSuper {
 
     /**
      * Create the <code>Syndicator</code> to activate the specified path.
-     * 
      * @param path node path to be activated
      * @param recursive flag if the activation should work recursively
      * @param includeContentNodes flag if the activation should consider ContentNodes
-     * 
      * @return the <code>Syndicator</code> used to activate
      */
     protected Syndicator getActivationSyndicator(String path, boolean recursive, boolean includeContentNodes) {
         /*
-         * Here rule defines which content types to collect, its a resposibility of the caller ro set
-         * this, it will be different in every hierarchy, for instance
-         * - in website tree recursive activation : rule will allow mgnl:contentNode, mgnl:content and nt:file
-         * - in website tree non-recursive activation : rule will allow mgnl:contentNode and nt:file only
+         * Here rule defines which content types to collect, its a resposibility of the caller ro set this, it will be
+         * different in every hierarchy, for instance - in website tree recursive activation : rule will allow
+         * mgnl:contentNode, mgnl:content and nt:file - in website tree non-recursive activation : rule will allow
+         * mgnl:contentNode and nt:file only
          */
         Rule rule = new Rule();
         rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
@@ -912,42 +910,36 @@ public class Tree extends ControlSuper {
         if (recursive) {
             rule.addAllowType(ItemType.CONTENT.getSystemName());
         }
-        SimpleSyndicator syndicator = new SimpleSyndicator(this.getRequest(),
-                this.getRepository(),
-                ContentRepository.getDefaultWorkspace(this.getRepository()),
-                rule);
+        SimpleSyndicator syndicator = new SimpleSyndicator(this.getRequest(), this.getRepository(), ContentRepository
+            .getDefaultWorkspace(this.getRepository()), rule);
         return syndicator;
     }
-    
+
     public void deActivateNode(String path) throws ExchangeException, RepositoryException {
         // do not deactivate node datas
         if (getHierarchyManager().isNodeData(path)) {
             return;
         }
-        
+
         Syndicator syndicator = getDeactivationSyndicator(path);
         syndicator.deActivate(path);
     }
 
     /**
      * Create the <code>Syndicator</code> to deactivate the specified path.
-     * 
      * @param path node path to be deactivated
-     * 
      * @return the <code>Syndicator</code> used to deactivate
      */
     protected Syndicator getDeactivationSyndicator(String path) {
         Rule rule = new Rule();
         rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
         rule.addAllowType(ItemType.NT_FILE);
-        SimpleSyndicator syndicator = new SimpleSyndicator(this.getRequest(),
-                this.getRepository(),
-                ContentRepository.getDefaultWorkspace(this.getRepository()),
-                rule);
-        
+        SimpleSyndicator syndicator = new SimpleSyndicator(this.getRequest(), this.getRepository(), ContentRepository
+            .getDefaultWorkspace(this.getRepository()), rule);
+
         return syndicator;
     }
-    
+
     public String getHtml() {
         StringBuffer html = new StringBuffer();
         if (!this.getSnippetMode()) {
@@ -980,16 +972,23 @@ public class Tree extends ControlSuper {
 
         // resizer
         html.append("<div id=\"" //$NON-NLS-1$
-            + this.getJavascriptTree() + "_ColumnResizerDiv\" style=\"position:absolute;top:-50px;z-index:500;\">"); //$NON-NLS-1$
+            + this.getJavascriptTree()
+            + "_ColumnResizerDiv\" style=\"position:absolute;top:-50px;z-index:500;\">"); //$NON-NLS-1$
         for (int i = 1; i < this.getColumns().size(); i++) {
             // div around image: ie and safari do not allow drag of images
             // todo: fix bad behaviour in mozilla: resizer "turns blue" when selecting
             html.append("<div onmousedown=\"" //$NON-NLS-1$
-                + this.getJavascriptTree() + ".dragColumnStart(this," //$NON-NLS-1$
-                + i + ");\" id=\"" //$NON-NLS-1$
-                + this.getJavascriptTree() + "ColumnResizer" //$NON-NLS-1$
-                + i + "\" style=\"position:relative;left:-1000px;background-image:url(" //$NON-NLS-1$
-                + this.getRequest().getContextPath() + this.getColumnResizer() + ");display:inline;\">"); //$NON-NLS-1$
+                + this.getJavascriptTree()
+                + ".dragColumnStart(this," //$NON-NLS-1$
+                + i
+                + ");\" id=\"" //$NON-NLS-1$
+                + this.getJavascriptTree()
+                + "ColumnResizer" //$NON-NLS-1$
+                + i
+                + "\" style=\"position:relative;left:-1000px;background-image:url(" //$NON-NLS-1$
+                + this.getRequest().getContextPath()
+                + this.getColumnResizer()
+                + ");display:inline;\">"); //$NON-NLS-1$
             // use resizer gif to get exact size
             html.append("<img src=\"" //$NON-NLS-1$
                 + this.getRequest().getContextPath()
@@ -1000,13 +999,17 @@ public class Tree extends ControlSuper {
         html.append("</div>"); //$NON-NLS-1$
         // column header
         html.append("<div id=\"" //$NON-NLS-1$
-            + this.getJavascriptTree() + "_ColumnHeader\" style=\"position:absolute;top:-50px;z-index:480;\">"); //$NON-NLS-1$
+            + this.getJavascriptTree()
+            + "_ColumnHeader\" style=\"position:absolute;top:-50px;z-index:480;\">"); //$NON-NLS-1$
         for (int i = 0; i < this.getColumns().size(); i++) {
             TreeColumn tc = this.getColumns(i);
             html.append("<span class=\"mgnlTreeColumn " //$NON-NLS-1$
-                + this.getJavascriptTree() + "CssClassColumn" //$NON-NLS-1$
-                + i + "\"><span class=\"mgnlTreeHeader\">" //$NON-NLS-1$
-                + tc.getTitle() + "<!-- ie --></span></span>"); //$NON-NLS-1$
+                + this.getJavascriptTree()
+                + "CssClassColumn" //$NON-NLS-1$
+                + i
+                + "\"><span class=\"mgnlTreeHeader\">" //$NON-NLS-1$
+                + tc.getTitle()
+                + "<!-- ie --></span></span>"); //$NON-NLS-1$
         }
         html.append("</div>"); //$NON-NLS-1$
 
@@ -1016,11 +1019,16 @@ public class Tree extends ControlSuper {
             + this.getHeight()
             + "px;background-color:#333333;z-index:490;\"></div>"); //$NON-NLS-1$
         html.append("<div id=\"" //$NON-NLS-1$
-            + this.getJavascriptTree() + "_" //$NON-NLS-1$
-            + this.getPath() + "_DivMain\" onclick=\"" //$NON-NLS-1$
-            + this.getJavascriptTree() + ".mainDivReset();\" oncontextmenu=\"" //$NON-NLS-1$
-            + this.getJavascriptTree() + ".menuShow(event);return false;\" class=\"mgnlTreeDiv\" style=\"height:" //$NON-NLS-1$
-            + this.getHeight() + "px;\">"); //$NON-NLS-1$
+            + this.getJavascriptTree()
+            + "_" //$NON-NLS-1$
+            + this.getPath()
+            + "_DivMain\" onclick=\"" //$NON-NLS-1$
+            + this.getJavascriptTree()
+            + ".mainDivReset();\" oncontextmenu=\"" //$NON-NLS-1$
+            + this.getJavascriptTree()
+            + ".menuShow(event);return false;\" class=\"mgnlTreeDiv\" style=\"height:" //$NON-NLS-1$
+            + this.getHeight()
+            + "px;\">"); //$NON-NLS-1$
         html.append(Spacer.getHtml(8, 8));
         // html.append("<div id=\""+this.getJavascriptTree()+"_"+this.getPath()+"_DivSub\" style=\"display:none;\">";
         html.append("<div id=\"" + this.getJavascriptTree() + "_" + this.getPath() + "_DivSub\">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -1044,16 +1052,26 @@ public class Tree extends ControlSuper {
         String lineId = this.getJavascriptTree() + "_" + this.getPath() + "_LineInter"; //$NON-NLS-1$ //$NON-NLS-2$
 
         html.append("<div id=\"" //$NON-NLS-1$
-            + lineId + "\" class=\"mgnlTreeLineInter mgnlLineEnabled\" onmouseover=\"" //$NON-NLS-1$
-            + this.javascriptTree + ".moveNodeHighlightLine('" //$NON-NLS-1$
-            + lineId + "');\" onmouseout=\"" //$NON-NLS-1$
-            + this.javascriptTree + ".moveNodeResetLine('" //$NON-NLS-1$
-            + lineId + "');\" onmousedown=\"" //$NON-NLS-1$
-            + this.javascriptTree + ".pasteNode('" //$NON-NLS-1$
-            + this.getPath() + "'," //$NON-NLS-1$
-            + Tree.PASTETYPE_SUB + "," //$NON-NLS-1$
-            + Boolean.toString(permissionWrite) + ",'" //$NON-NLS-1$
-            + lineId + "');\" ></div>"); //$NON-NLS-1$
+            + lineId
+            + "\" class=\"mgnlTreeLineInter mgnlLineEnabled\" onmouseover=\"" //$NON-NLS-1$
+            + this.javascriptTree
+            + ".moveNodeHighlightLine('" //$NON-NLS-1$
+            + lineId
+            + "');\" onmouseout=\"" //$NON-NLS-1$
+            + this.javascriptTree
+            + ".moveNodeResetLine('" //$NON-NLS-1$
+            + lineId
+            + "');\" onmousedown=\"" //$NON-NLS-1$
+            + this.javascriptTree
+            + ".pasteNode('" //$NON-NLS-1$
+            + this.getPath()
+            + "'," //$NON-NLS-1$
+            + Tree.PASTETYPE_SUB
+            + "," //$NON-NLS-1$
+            + Boolean.toString(permissionWrite)
+            + ",'" //$NON-NLS-1$
+            + lineId
+            + "');\" ></div>"); //$NON-NLS-1$
 
         html.append(new Hidden(this.getJavascriptTree() + "_" + this.getPath() + "_PermissionWrite", Boolean //$NON-NLS-1$ //$NON-NLS-2$
             .toString(permissionWrite), false).getHtml());
@@ -1089,25 +1107,38 @@ public class Tree extends ControlSuper {
         // initialize js tree object
         html.append("<script type=\"text/javascript\">"); //$NON-NLS-1$
         html.append("var " //$NON-NLS-1$
-            + this.getJavascriptTree() + "=new mgnlTree('" //$NON-NLS-1$
-            + this.getRepository() + "','" //$NON-NLS-1$
-            + this.getPath() + "','" //$NON-NLS-1$
-            + this.getJavascriptTree() + "'," //$NON-NLS-1$
-            + this.getHeight() + "," //$NON-NLS-1$
+            + this.getJavascriptTree()
+            + "=new mgnlTree('" //$NON-NLS-1$
+            + this.getRepository()
+            + "','" //$NON-NLS-1$
+            + this.getPath()
+            + "','" //$NON-NLS-1$
+            + this.getJavascriptTree()
+            + "'," //$NON-NLS-1$
+            + this.getHeight()
+            + "," //$NON-NLS-1$
             + "'" + this.getName() + "'," + this.isBrowseMode() + ");"); //$NON-NLS-1$
 
         // add columns to tree object
         for (int i = 0; i < this.getColumns().size(); i++) {
             TreeColumn tc = this.getColumns(i);
             html.append(this.getJavascriptTree() + ".columns[" //$NON-NLS-1$
-                + i + "]=new mgnlTreeColumn(" //$NON-NLS-1$
-                + tc.getWidth() + ",'" //$NON-NLS-1$
-                + tc.getHtmlEdit() + "','" //$NON-NLS-1$
-                + tc.getName() + "'," //$NON-NLS-1$
-                + tc.getIsMeta() + "," //$NON-NLS-1$
-                + tc.getIsLabel() + "," //$NON-NLS-1$
-                + tc.getIsNodeDataValue() + "," //$NON-NLS-1$
-                + tc.getIsNodeDataType() + ");"); //$NON-NLS-1$
+                + i
+                + "]=new mgnlTreeColumn(" //$NON-NLS-1$
+                + tc.getWidth()
+                + ",'" //$NON-NLS-1$
+                + tc.getHtmlEdit()
+                + "','" //$NON-NLS-1$
+                + tc.getName()
+                + "'," //$NON-NLS-1$
+                + tc.getIsMeta()
+                + "," //$NON-NLS-1$
+                + tc.getIsLabel()
+                + "," //$NON-NLS-1$
+                + tc.getIsNodeDataValue()
+                + "," //$NON-NLS-1$
+                + tc.getIsNodeDataType()
+                + ");"); //$NON-NLS-1$
         }
         html.append("mgnlTreeControls['" + this.getJavascriptTree() + "']=" + this.getJavascriptTree() + ";\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         // js is not run on remote request
@@ -1157,9 +1188,10 @@ public class Tree extends ControlSuper {
             if (itemType.equalsIgnoreCase(ItemType.NT_NODEDATA)) {
                 List nodeDatas = new ArrayList(parentNode.getNodeDataCollection());
                 // order them alphabetically
-                Collections.sort(nodeDatas, new Comparator(){
+                Collections.sort(nodeDatas, new Comparator() {
+
                     public int compare(Object arg0, Object arg1) {
-                        return ((NodeData)arg0).getName().compareTo(((NodeData)arg1).getName());
+                        return ((NodeData) arg0).getName().compareTo(((NodeData) arg1).getName());
                     };
                 });
                 it = nodeDatas.iterator();
@@ -1229,13 +1261,18 @@ public class Tree extends ControlSuper {
 
                 String idPre = this.javascriptTree + "_" + handle; //$NON-NLS-1$
                 String jsHighlightNode = this.javascriptTree + ".nodeHighlight(this,'" //$NON-NLS-1$
-                    + handle + "'," //$NON-NLS-1$
-                    + Boolean.toString(permissionWrite) + ");"; //$NON-NLS-1$
+                    + handle
+                    + "'," //$NON-NLS-1$
+                    + Boolean.toString(permissionWrite)
+                    + ");"; //$NON-NLS-1$
                 String jsResetNode = this.javascriptTree + ".nodeReset(this,'" + handle + "');"; //$NON-NLS-1$ //$NON-NLS-2$
                 String jsSelectNode = this.javascriptTree + ".selectNode('" //$NON-NLS-1$
-                    + handle + "'," //$NON-NLS-1$
-                    + Boolean.toString(permissionWrite) + ",'" //$NON-NLS-1$
-                    + itemType + "');"; //$NON-NLS-1$
+                    + handle
+                    + "'," //$NON-NLS-1$
+                    + Boolean.toString(permissionWrite)
+                    + ",'" //$NON-NLS-1$
+                    + itemType
+                    + "');"; //$NON-NLS-1$
                 String jsExpandNode;
                 if (this.getDrawShifter()) {
                     jsExpandNode = this.javascriptTree + ".expandNode('" + handle + "');"; //$NON-NLS-1$ //$NON-NLS-2$
@@ -1255,29 +1292,40 @@ public class Tree extends ControlSuper {
                 // try to avoid blank images, setting js actions on divs should be ok
                 if (permissionWriteParent) {
                     html.append("<div id=\"" //$NON-NLS-1$
-                        + idPre + "_LineInter\" class=\"mgnlTreeLineInter mgnlLineEnabled\" onmouseover=\"" //$NON-NLS-1$
-                        + jsHighlightLine + "\" onmouseout=\"" //$NON-NLS-1$
-                        + jsResetLine + "\" onmousedown=\"" //$NON-NLS-1$
-                        + this.javascriptTree + ".pasteNode('" //$NON-NLS-1$
-                        + handle + "'," //$NON-NLS-1$
-                        + Tree.PASTETYPE_ABOVE + ",true);\" ></div>"); //$NON-NLS-1$
+                        + idPre
+                        + "_LineInter\" class=\"mgnlTreeLineInter mgnlLineEnabled\" onmouseover=\"" //$NON-NLS-1$
+                        + jsHighlightLine
+                        + "\" onmouseout=\"" //$NON-NLS-1$
+                        + jsResetLine
+                        + "\" onmousedown=\"" //$NON-NLS-1$
+                        + this.javascriptTree
+                        + ".pasteNode('" //$NON-NLS-1$
+                        + handle
+                        + "'," //$NON-NLS-1$
+                        + Tree.PASTETYPE_ABOVE
+                        + ",true);\" ></div>"); //$NON-NLS-1$
                 }
                 else {
                     html.append("<div id=\"" //$NON-NLS-1$
-                        + idPre + "_LineInter\" class=\"mgnlTreeLineInter mgnlLineDisabled\"></div>"); //$NON-NLS-1$
+                        + idPre
+                        + "_LineInter\" class=\"mgnlTreeLineInter mgnlLineDisabled\"></div>"); //$NON-NLS-1$
                 }
 
                 html.append("<div id=\"" //$NON-NLS-1$
-                    + idPre + "_DivMain\" style=\"position:relative;top:0;left:0;width:100%;height:18px;\">"); //$NON-NLS-1$
+                    + idPre
+                    + "_DivMain\" style=\"position:relative;top:0;left:0;width:100%;height:18px;\">"); //$NON-NLS-1$
                 html.append("&nbsp;"); // do not remove! //$NON-NLS-1$
                 int paddingLeft = left;
                 if (paddingLeft < 0) {
                     paddingLeft = 0;
                 }
                 html.append("<span id=\"" //$NON-NLS-1$
-                    + idPre + "_Column0Outer\" class=\"mgnlTreeColumn " //$NON-NLS-1$
-                    + this.javascriptTree + "CssClassColumn0\" style=\"padding-left:" //$NON-NLS-1$
-                    + paddingLeft + "px;\">"); //$NON-NLS-1$
+                    + idPre
+                    + "_Column0Outer\" class=\"mgnlTreeColumn " //$NON-NLS-1$
+                    + this.javascriptTree
+                    + "CssClassColumn0\" style=\"padding-left:" //$NON-NLS-1$
+                    + paddingLeft
+                    + "px;\">"); //$NON-NLS-1$
                 if (this.getDrawShifter()) {
                     String shifter = StringUtils.EMPTY;
                     if (hasSub) {
@@ -1299,26 +1347,44 @@ public class Tree extends ControlSuper {
                     }
                     if (StringUtils.isNotEmpty(shifter)) {
                         html.append("<img id=\"" //$NON-NLS-1$
-                            + idPre + "_Shifter\" onmousedown=\"" //$NON-NLS-1$
-                            + this.javascriptTree + ".shifterDown('" //$NON-NLS-1$
-                            + handle + "');\" onmouseout=\"" //$NON-NLS-1$
-                            + this.javascriptTree + ".shifterOut();\" class=\"mgnlTreeShifter\" src=\"" //$NON-NLS-1$
-                            + this.getRequest().getContextPath() + shifter + "\" />"); //$NON-NLS-1$
+                            + idPre
+                            + "_Shifter\" onmousedown=\"" //$NON-NLS-1$
+                            + this.javascriptTree
+                            + ".shifterDown('" //$NON-NLS-1$
+                            + handle
+                            + "');\" onmouseout=\"" //$NON-NLS-1$
+                            + this.javascriptTree
+                            + ".shifterOut();\" class=\"mgnlTreeShifter\" src=\"" //$NON-NLS-1$
+                            + this.getRequest().getContextPath()
+                            + shifter
+                            + "\" />"); //$NON-NLS-1$
                     }
                 }
                 html.append("<span id=" //$NON-NLS-1$
-                    + idPre + "_Name onmouseover=\"" //$NON-NLS-1$
-                    + jsHighlightNode + "\" onmouseout=\"" //$NON-NLS-1$
-                    + jsResetNode + "\" onmousedown=\"" //$NON-NLS-1$
-                    + jsSelectNode + this.javascriptTree + ".pasteNode('" //$NON-NLS-1$
-                    + handle + "'," //$NON-NLS-1$
-                    + Tree.PASTETYPE_SUB + "," //$NON-NLS-1$
-                    + permissionWrite + ");\">"); //$NON-NLS-1$
+                    + idPre
+                    + "_Name onmouseover=\"" //$NON-NLS-1$
+                    + jsHighlightNode
+                    + "\" onmouseout=\"" //$NON-NLS-1$
+                    + jsResetNode
+                    + "\" onmousedown=\"" //$NON-NLS-1$
+                    + jsSelectNode
+                    + this.javascriptTree
+                    + ".pasteNode('" //$NON-NLS-1$
+                    + handle
+                    + "'," //$NON-NLS-1$
+                    + Tree.PASTETYPE_SUB
+                    + "," //$NON-NLS-1$
+                    + permissionWrite
+                    + ");\">"); //$NON-NLS-1$
                 if (StringUtils.isNotEmpty(icon)) {
                     html.append("<img id=\"" //$NON-NLS-1$
-                        + idPre + "_Icon\" class=\"mgnlTreeIcon\" src=\"" //$NON-NLS-1$
-                        + this.getRequest().getContextPath() + icon + "\" onmousedown=\"" //$NON-NLS-1$
-                        + jsExpandNode + "\""); //$NON-NLS-1$
+                        + idPre
+                        + "_Icon\" class=\"mgnlTreeIcon\" src=\"" //$NON-NLS-1$
+                        + this.getRequest().getContextPath()
+                        + icon
+                        + "\" onmousedown=\"" //$NON-NLS-1$
+                        + jsExpandNode
+                        + "\""); //$NON-NLS-1$
                     if (this.getIconOndblclick() != null) {
                         html.append(" ondblclick=\"" + this.getIconOndblclick() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
                     }
@@ -1362,16 +1428,24 @@ public class Tree extends ControlSuper {
                     tc.setEvent("onmouseout", jsResetNode, true); //$NON-NLS-1$
                     tc.setEvent("onmousedown", jsSelectNode, true); //$NON-NLS-1$
                     html.append("<span class=\"mgnlTreeColumn " //$NON-NLS-1$
-                        + this.javascriptTree + "CssClassColumn" //$NON-NLS-1$
-                        + i + "\"><span id=\"" //$NON-NLS-1$
-                        + idPre + "_Column" //$NON-NLS-1$
-                        + i + "Main\"" //$NON-NLS-1$
-                        + tc.getHtmlCssClass() + tc.getHtmlEvents());
+                        + this.javascriptTree
+                        + "CssClassColumn" //$NON-NLS-1$
+                        + i
+                        + "\"><span id=\"" //$NON-NLS-1$
+                        + idPre
+                        + "_Column" //$NON-NLS-1$
+                        + i
+                        + "Main\"" //$NON-NLS-1$
+                        + tc.getHtmlCssClass()
+                        + tc.getHtmlEvents());
                     if (permissionWrite && StringUtils.isNotEmpty(tc.getHtmlEdit())) {
                         html.append(" ondblclick=\"" //$NON-NLS-1$
-                            + this.javascriptTree + ".editNodeData(this,'" //$NON-NLS-1$
-                            + handle + "'," //$NON-NLS-1$
-                            + i + ");\""); //$NON-NLS-1$
+                            + this.javascriptTree
+                            + ".editNodeData(this,'" //$NON-NLS-1$
+                            + handle
+                            + "'," //$NON-NLS-1$
+                            + i
+                            + ");\""); //$NON-NLS-1$
                     }
                     html.append(">" + str + "</span></span>"); //$NON-NLS-1$ //$NON-NLS-2$
                 }
@@ -1492,14 +1566,14 @@ public class Tree extends ControlSuper {
     public void setBrowseMode(boolean browseMode) {
         this.browseMode = browseMode;
     }
-    
+
     /**
      * @return the current HierarchyManager
      */
     public HierarchyManager getHierarchyManager() {
         return hm;
     }
-    
+
     /**
      * @param hm The HierarchyManager to set.
      */

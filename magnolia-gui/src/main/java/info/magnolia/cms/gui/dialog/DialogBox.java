@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.gui.dialog;
@@ -94,14 +94,18 @@ public class DialogBox extends DialogSuper {
             out.write("<td width=\"100%\" colspan=\"2\" class=\"" + CssConstants.CSSCLASS_BOXLABEL + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
             if (StringUtils.isNotEmpty(this.getLabel())) {
                 out.write("<div class=\"" //$NON-NLS-1$
-                    + CssConstants.CSSCLASS_BOXLABEL + "\">" //$NON-NLS-1$
-                    + this.getMessage(this.getLabel()) + "</div>"); //$NON-NLS-1$
+                    + CssConstants.CSSCLASS_BOXLABEL
+                    + "\">" //$NON-NLS-1$
+                    + this.getMessage(this.getLabel())
+                    + "</div>"); //$NON-NLS-1$
             }
             if (StringUtils.isNotEmpty(this.getConfigValue("labelDescription"))) { //$NON-NLS-1$
                 String desc = this.getConfigValue("labelDescription"); //$NON-NLS-1$
                 out.write("<div class=\"" //$NON-NLS-1$
-                    + CssConstants.CSSCLASS_DESCRIPTION + "\">" //$NON-NLS-1$
-                    + this.getMessage(desc) + "</div>"); //$NON-NLS-1$
+                    + CssConstants.CSSCLASS_DESCRIPTION
+                    + "\">" //$NON-NLS-1$
+                    + this.getMessage(desc)
+                    + "</div>"); //$NON-NLS-1$
             }
         }
     }

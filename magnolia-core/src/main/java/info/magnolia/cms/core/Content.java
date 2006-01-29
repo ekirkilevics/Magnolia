@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.core;
@@ -27,7 +27,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
 
-import javax.jcr.*;
+import javax.jcr.Item;
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.Property;
+import javax.jcr.PropertyIterator;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
+import javax.jcr.UnsupportedRepositoryOperationException;
+import javax.jcr.Value;
 import javax.jcr.lock.Lock;
 import javax.jcr.lock.LockException;
 import javax.jcr.nodetype.NodeType;
@@ -38,7 +47,8 @@ import javax.jcr.version.VersionIterator;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -51,7 +61,7 @@ public class Content extends ContentHandler implements Cloneable {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(Content.class);
+    private static Logger log = LoggerFactory.getLogger(Content.class);
 
     /**
      * Wrapped jcr node.
@@ -213,24 +223,25 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
-     * Like getContent but creates the node if not existing. 
+     * Like getContent but creates the node if not existing.
      * @param name
-     * @param create true if the node is created 
+     * @param create true if the node is created
      * @param contentType the type of the created node
      * @return
      * @throws AccessDeniedException
      * @throws RepositoryException
      */
-    public Content getContent(String name, boolean create, ItemType contentType) throws AccessDeniedException,RepositoryException {
+    public Content getContent(String name, boolean create, ItemType contentType) throws AccessDeniedException,
+        RepositoryException {
         Content node = null;
         try {
             node = this.getContent(name);
         }
         catch (PathNotFoundException e) {
-            if(create){
+            if (create) {
                 node = this.createContent(name, contentType);
             }
-            else{
+            else {
                 throw e;
             }
         }
@@ -398,7 +409,7 @@ public class Content extends ContentHandler implements Cloneable {
      */
     public NodeData createNodeData(String name) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
-        return (new NodeData(this.node, name, PropertyType.STRING ,true, this.accessManager));
+        return (new NodeData(this.node, name, PropertyType.STRING, true, this.accessManager));
     }
 
     /**
@@ -455,7 +466,8 @@ public class Content extends ContentHandler implements Cloneable {
     public void deleteNodeData(String name) throws PathNotFoundException, RepositoryException {
         if (this.node.hasNode(name)) {
             this.node.getNode(name).remove();
-        } else {
+        }
+        else {
             this.node.getProperty(name).remove();
         }
     }
@@ -483,14 +495,13 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
-     * Get a collection containing child nodes which satisfies the given filter. 
-     * The returned collection is ordered according to the passed in criteria.
-     * 
+     * Get a collection containing child nodes which satisfies the given filter. The returned collection is ordered
+     * according to the passed in criteria.
      * @param filter filter for the child nodes
-     * @param orderCriteria ordering for the selected child nodes; if <tt>null</tt>
-     *  than no particular order of the child nodes
+     * @param orderCriteria ordering for the selected child nodes; if <tt>null</tt> than no particular order of the
+     * child nodes
      * @return Collection of content objects
-     * */
+     */
     public Collection getChildren(ContentFilter filter, Comparator orderCriteria) {
         Collection children = null;
         if (orderCriteria == null) {
@@ -511,7 +522,7 @@ public class Content extends ContentHandler implements Cloneable {
                     }
                 }
                 catch (PathNotFoundException e) {
-                    log.error(e);
+                    log.error("Exception caught", e);
                 }
                 catch (AccessDeniedException e) {
                     // ignore, simply wont add content in a list
@@ -519,12 +530,12 @@ public class Content extends ContentHandler implements Cloneable {
             }
         }
         catch (RepositoryException re) {
-            log.error(re);
+            log.error("Exception caught", re);
         }
-        
+
         return children;
     }
-    
+
     /**
      * gets a Collection containing all child nodes of the same NodeType as "this" object.
      * @return Collection of content objects
@@ -537,7 +548,7 @@ public class Content extends ContentHandler implements Cloneable {
         }
         catch (RepositoryException re) {
             log.error(re.getMessage());
-            log.debug(re);
+            log.debug(re.getMessage(), re);
         }
         // @todo workaround
         // fix all getChildren calls from the root node
@@ -667,7 +678,7 @@ public class Content extends ContentHandler implements Cloneable {
                 }
             }
             catch (PathNotFoundException e) {
-                log.error(e);
+                log.error("Exception caught", e);
             }
             catch (AccessDeniedException e) {
                 // ignore, simply wont add content in a list
@@ -691,7 +702,7 @@ public class Content extends ContentHandler implements Cloneable {
                     }
                 }
                 catch (PathNotFoundException e) {
-                    log.error(e);
+                    log.error("Exception caught", e);
                 }
                 catch (AccessDeniedException e) {
                     // ignore, simply wont add content in a list
@@ -699,7 +710,7 @@ public class Content extends ContentHandler implements Cloneable {
             }
         }
         catch (RepositoryException re) {
-            log.error(re);
+            log.error("Exception caught", re);
         }
         // add nt:resource nodes
         children.addAll(this.getChildren(ItemType.NT_RESOURCE));
@@ -723,7 +734,7 @@ public class Content extends ContentHandler implements Cloneable {
                     children.add(new NodeData(property, this.accessManager));
                 }
                 catch (PathNotFoundException e) {
-                    log.error(e);
+                    log.error("Exception caught", e);
                 }
                 catch (AccessDeniedException e) {
                     // ignore, simply wont add content in a list
@@ -731,7 +742,7 @@ public class Content extends ContentHandler implements Cloneable {
             }
         }
         catch (RepositoryException re) {
-            log.error(re);
+            log.error("Exception caught", re);
         }
         // add nt:resource nodes
         children.addAll(this.getChildren(ItemType.NT_RESOURCE, namePattern));
@@ -953,7 +964,7 @@ public class Content extends ContentHandler implements Cloneable {
         }
         catch (RepositoryException re) {
             log.error(re.getMessage());
-            log.debug(re);
+            log.debug(re.getMessage(), re);
         }
         return false;
     }
@@ -1143,10 +1154,12 @@ public class Content extends ContentHandler implements Cloneable {
     public String getUUID() {
         try {
             return this.node.getUUID();
-        } catch (UnsupportedOperationException e) {
+        }
+        catch (UnsupportedOperationException e) {
             log.error(e.getMessage());
-        } catch (RepositoryException re) {
-            log.error(re);
+        }
+        catch (RepositoryException re) {
+            log.error("Exception caught", re);
         }
         return StringUtils.EMPTY;
     }
@@ -1237,18 +1250,18 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
-     * Returns true if this node is locked either as a result of a lock held by this node or by a deep lock
-     * on a node above this node; otherwise returns false.
+     * Returns true if this node is locked either as a result of a lock held by this node or by a deep lock on a node
+     * above this node; otherwise returns false.
      * @return a boolean
      * @throws RepositoryException if an error occurs
-     * */
+     */
     public boolean isLocked() throws RepositoryException {
         return this.node.isLocked();
     }
 
     /**
      * Implement this interface to be used as node filter by getChildren()
-     * */
+     */
     public interface ContentFilter {
 
         /**

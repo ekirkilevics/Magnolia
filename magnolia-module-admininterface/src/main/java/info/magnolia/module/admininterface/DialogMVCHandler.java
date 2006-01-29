@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.module.admininterface;
@@ -34,7 +34,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -48,7 +49,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(DialogMVCHandler.class);
+    private static Logger log = LoggerFactory.getLogger(DialogMVCHandler.class);
 
     /*
      * Commands
@@ -148,7 +149,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
 
         try {
             dialog = createDialog(configNode, storageNode);
-            
+
             dialog.setConfig("dialog", getName()); //$NON-NLS-1$
             dialog.setConfig("path", path); //$NON-NLS-1$
             dialog.setConfig("nodeCollection", nodeCollectionName); //$NON-NLS-1$
@@ -260,7 +261,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
                 dialog.drawHtml(out);
             }
             catch (IOException e) {
-                log.error(e);
+                log.error("Exception caught", e);
             }
         }
     }

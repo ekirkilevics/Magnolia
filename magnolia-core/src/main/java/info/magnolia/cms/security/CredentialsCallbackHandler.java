@@ -7,20 +7,26 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.security;
 
-import org.apache.log4j.Logger;
-
-import javax.security.auth.callback.*;
 import java.io.IOException;
 
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.callback.NameCallback;
+import javax.security.auth.callback.PasswordCallback;
+import javax.security.auth.callback.TextOutputCallback;
+import javax.security.auth.callback.UnsupportedCallbackException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 /**
- * Date: May 30, 2005
- * Time: 4:45:21 PM
- *
+ * Date: May 30, 2005 Time: 4:45:21 PM
  * @author Sameer Charles
  * @version $Revision$ ($Author$)
  */
@@ -28,17 +34,18 @@ public class CredentialsCallbackHandler implements CallbackHandler {
 
     /**
      * Logger
-     * */
-    private static Logger log = Logger.getLogger(CredentialsCallbackHandler.class);
+     */
+    private static Logger log = LoggerFactory.getLogger(CredentialsCallbackHandler.class);
 
     private String name;
 
     private char[] pswd;
-    
+
     /**
      * default constructor required by java security framework
-     * */
-    public CredentialsCallbackHandler() {}
+     */
+    public CredentialsCallbackHandler() {
+    }
 
     public CredentialsCallbackHandler(String name, char[] pswd) {
         this.name = name;
@@ -47,14 +54,16 @@ public class CredentialsCallbackHandler implements CallbackHandler {
 
     /**
      * handle name and password callback which must be set while constructing this handler
-     * */
+     */
     public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
-        for (int i=0; i < callbacks.length; i++) {
+        for (int i = 0; i < callbacks.length; i++) {
             if (callbacks[i] instanceof NameCallback) {
                 ((NameCallback) callbacks[i]).setName(this.name);
-            } else if (callbacks[i] instanceof PasswordCallback) {
+            }
+            else if (callbacks[i] instanceof PasswordCallback) {
                 ((PasswordCallback) callbacks[i]).setPassword(this.pswd);
-            } else if (callbacks[i] instanceof TextOutputCallback) {
+            }
+            else if (callbacks[i] instanceof TextOutputCallback) {
                 TextOutputCallback outputCallback = (TextOutputCallback) callbacks[i];
                 switch (outputCallback.getMessageType()) {
                     case TextOutputCallback.INFORMATION:
@@ -68,8 +77,8 @@ public class CredentialsCallbackHandler implements CallbackHandler {
                         break;
                     default:
                         if (log.isDebugEnabled()) {
-                            log.debug("Unsupported message type : "+outputCallback.getMessageType());
-                            log.debug("Message : "+outputCallback.getMessage());
+                            log.debug("Unsupported message type : " + outputCallback.getMessageType());
+                            log.debug("Message : " + outputCallback.getMessage());
                         }
                 }
             }

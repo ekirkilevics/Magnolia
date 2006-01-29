@@ -7,38 +7,38 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.exchange;
 
-import java.util.Map;
-import java.util.Hashtable;
 import java.io.File;
+import java.util.Hashtable;
+import java.util.Map;
+
 
 /**
  * This class holds all content needed to be activated
- *
  * @author Sameer Charles
  * @version $Revision: 1633 $ ($Author: scharles $)
- * */
+ */
 public class ActivationContent {
 
     /**
      * File list
-     * */
+     */
     private Map fileList = new Hashtable();
 
     /**
      * properties
-     * */
+     */
     private Map properties = new Hashtable();
 
     /**
      * add file
      * @param resourceId
      * @param file
-     * */
+     */
     public void addFile(String resourceId, File file) {
         this.fileList.put(resourceId, file);
     }
@@ -47,7 +47,7 @@ public class ActivationContent {
      * get file
      * @param resourceId
      * @return file
-     * */
+     */
     public File getFile(String resourceId) {
         return (File) this.fileList.get(resourceId);
     }
@@ -55,7 +55,7 @@ public class ActivationContent {
     /**
      * remove file
      * @param resourceId
-     * */
+     */
     public void removeFile(String resourceId) {
         this.fileList.remove(resourceId);
     }
@@ -63,7 +63,7 @@ public class ActivationContent {
     /**
      * get all files
      * @return file list
-     * */
+     */
     public Map getFiles() {
         return this.fileList;
     }
@@ -72,7 +72,7 @@ public class ActivationContent {
      * add property
      * @param key
      * @param value
-     * */
+     */
     public void addProperty(String key, String value) {
         if (value == null)
             value = "";
@@ -83,7 +83,7 @@ public class ActivationContent {
      * get property
      * @param key
      * @return property value
-     * */
+     */
     public String getproperty(String key) {
         return (String) this.properties.get(key);
     }
@@ -91,7 +91,7 @@ public class ActivationContent {
     /**
      * remove property
      * @param key
-     * */
+     */
     public void removeProperty(String key) {
         this.properties.remove(key);
     }
@@ -99,9 +99,8 @@ public class ActivationContent {
     /**
      * get property list
      * @return all properties
-     * */
+     */
     public Map getProperties() {
         return this.properties;
     }
 }
-

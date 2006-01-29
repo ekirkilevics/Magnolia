@@ -7,26 +7,27 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.security;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Set;
+
 import javax.jcr.PathNotFoundException;
 import javax.security.auth.Subject;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -36,7 +37,7 @@ import org.apache.log4j.Logger;
  */
 public class MgnlUserManager implements UserManager {
 
-    public static Logger log = Logger.getLogger(MgnlUserManager.class);
+    public static Logger log = LoggerFactory.getLogger(MgnlUserManager.class);
 
     /**
      * Do not instantiate it!
@@ -99,7 +100,6 @@ public class MgnlUserManager implements UserManager {
 
     /**
      * Initialize new user using JAAS authenticated/authorized subject
-     *
      * @param subject
      * @throws UnsupportedOperationException
      */
@@ -112,9 +112,11 @@ public class MgnlUserManager implements UserManager {
         try {
             Content node = getHierarchyManager().getContent(name);
             user = new MgnlUser(node);
-        } catch (PathNotFoundException e) {
+        }
+        catch (PathNotFoundException e) {
             log.error("user not registered in magnolia itself [" + name + "]");
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("can't get jcr-node of current user", e);
         }
         if (user == null) {

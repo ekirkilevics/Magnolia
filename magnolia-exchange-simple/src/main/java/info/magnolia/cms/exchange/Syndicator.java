@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.exchange;
@@ -16,8 +16,8 @@ import info.magnolia.cms.beans.config.Subscriber;
 
 import javax.jcr.RepositoryException;
 
+
 /**
- *
  * @author Sameer Charles
  * @version $Revision: 1633 $ ($Author: scharles $)
  */
@@ -44,16 +44,15 @@ public interface Syndicator {
      * @throws RepositoryException
      * @throws ExchangeException
      */
-    public void activate(Subscriber subscriber, String parent, String path)
-            throws ExchangeException, RepositoryException;
+    public void activate(Subscriber subscriber, String parent, String path) throws ExchangeException,
+        RepositoryException;
 
     /**
      * @param path , to deactivate
      * @throws RepositoryException
      * @throws ExchangeException
      */
-    public void deActivate(String path)
-            throws ExchangeException, RepositoryException;
+    public void deActivate(String path) throws ExchangeException, RepositoryException;
 
     /**
      * @param path , to deactivate
@@ -61,7 +60,6 @@ public interface Syndicator {
      * @throws RepositoryException
      * @throws ExchangeException
      */
-    public void deActivate(Subscriber subscriber, String path)
-            throws ExchangeException, RepositoryException;
+    public void deActivate(Subscriber subscriber, String path) throws ExchangeException, RepositoryException;
 
 }

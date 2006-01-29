@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.gui.dialog;
@@ -46,9 +46,12 @@ public class DialogTab extends DialogSuper {
         // add tab to js object
         out.write("<script type=\"text/javascript\">"); //$NON-NLS-1$
         out.write("mgnlControlSets['" //$NON-NLS-1$
-            + parentId + "'].items[mgnlControlSets['" //$NON-NLS-1$
-            + parentId + "'].items.length]='" //$NON-NLS-1$
-            + id + "';"); //$NON-NLS-1$
+            + parentId
+            + "'].items[mgnlControlSets['" //$NON-NLS-1$
+            + parentId
+            + "'].items.length]='" //$NON-NLS-1$
+            + id
+            + "';"); //$NON-NLS-1$
         out.write("</script>"); //$NON-NLS-1$
         // tab page
         out.write("<div id=\"" + id + "_div\" class=\"" + CssConstants.CSSCLASS_TAB + "\">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

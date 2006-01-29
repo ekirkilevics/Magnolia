@@ -32,7 +32,8 @@ import org.apache.jackrabbit.core.nodetype.NodeTypeDef;
 import org.apache.jackrabbit.core.nodetype.NodeTypeManagerImpl;
 import org.apache.jackrabbit.core.nodetype.NodeTypeRegistry;
 import org.apache.jackrabbit.core.nodetype.xml.NodeTypeReader;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -42,7 +43,7 @@ import org.apache.log4j.Logger;
  */
 public class ProviderImpl implements Provider {
 
-    protected static Logger log = Logger.getLogger(ProviderImpl.class);
+    protected static Logger log = LoggerFactory.getLogger(ProviderImpl.class);
 
     private static final String CONFIG_FILENAME_KEY = "configFile"; //$NON-NLS-1$
 

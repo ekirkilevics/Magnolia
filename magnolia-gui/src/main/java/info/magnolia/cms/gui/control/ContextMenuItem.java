@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.gui.control;
@@ -62,8 +62,10 @@ public class ContextMenuItem extends ControlSuper {
     public String getHtml() {
         StringBuffer html = new StringBuffer();
         html.append("<div class=\"mgnlTreeMenuItem\" id=\"" //$NON-NLS-1$
-            + this.getId() + "\" onclick=\"" //$NON-NLS-1$
-            + this.getJavascriptMenuName() + ".hide();"); //$NON-NLS-1$
+            + this.getId()
+            + "\" onclick=\"" //$NON-NLS-1$
+            + this.getJavascriptMenuName()
+            + ".hide();"); //$NON-NLS-1$
         if (StringUtils.isNotEmpty(this.onclick)) {
             html.append(this.onclick);
         }
@@ -71,14 +73,19 @@ public class ContextMenuItem extends ControlSuper {
         String label = this.getLabel();
         if (StringUtils.isNotEmpty(this.getIcon())) {
             label = "<img src=\"" //$NON-NLS-1$
-                + this.getIcon() + "\"> <span style=\"position:relative;top:-3px\">" //$NON-NLS-1$
-                + label + "</span>"; //$NON-NLS-1$
+                + this.getIcon()
+                + "\"> <span style=\"position:relative;top:-3px\">" //$NON-NLS-1$
+                + label
+                + "</span>"; //$NON-NLS-1$
         }
 
         html.append("\" onmouseover=\"" //$NON-NLS-1$
-            + this.getJavascriptMenuName() + ".menuItemHighlight(this);\"  onmouseout=\"" //$NON-NLS-1$
-            + this.getJavascriptMenuName() + ".menuItemReset(this);\">" //$NON-NLS-1$
-            + label + "</div>"); //$NON-NLS-1$
+            + this.getJavascriptMenuName()
+            + ".menuItemHighlight(this);\"  onmouseout=\"" //$NON-NLS-1$
+            + this.getJavascriptMenuName()
+            + ".menuItemReset(this);\">" //$NON-NLS-1$
+            + label
+            + "</div>"); //$NON-NLS-1$
         return html.toString();
     }
 

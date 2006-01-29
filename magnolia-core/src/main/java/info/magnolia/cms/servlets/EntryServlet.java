@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.servlets;
@@ -48,7 +48,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -73,7 +74,7 @@ public class EntryServlet extends HttpServlet {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(EntryServlet.class);
+    private static Logger log = LoggerFactory.getLogger(EntryServlet.class);
 
     /**
      * The default request interceptor path, defined in web.xml.
@@ -128,7 +129,7 @@ public class EntryServlet extends HttpServlet {
                         return; // if success return
                     }
                 }
-                
+
                 // Initialize magnolia context
                 initializeContext(req);
 
@@ -156,7 +157,8 @@ public class EntryServlet extends HttpServlet {
                 else {
                     if (log.isDebugEnabled()) {
                         log.debug("Resource not found, redirecting request for [" //$NON-NLS-1$
-                            + req.getRequestURI() + "] to 404 URI"); //$NON-NLS-1$
+                            + req.getRequestURI()
+                            + "] to 404 URI"); //$NON-NLS-1$
                     }
 
                     if (!res.isCommitted()) {
@@ -191,21 +193,18 @@ public class EntryServlet extends HttpServlet {
     }
 
     /**
-     * Initialize Magnolia context. 
-     * It creates a context and initialize the user only if these do not exist yet.
-     * 
-     * <b>Note</b>: the implementation may get changed 
+     * Initialize Magnolia context. It creates a context and initialize the user only if these do not exist yet. <b>Note</b>:
+     * the implementation may get changed
      * @param request the current request
      */
     protected void initializeContext(HttpServletRequest request) {
         if (MgnlContext.getInstance() == null) {
             Context ctx = new WebContextImpl(request);
-            ctx.setUser(Security.getUserManager().getUserObject(
-                    Authenticator.getSubject(request)));
+            ctx.setUser(Security.getUserManager().getUserObject(Authenticator.getSubject(request)));
             MgnlContext.setInstance(ctx);
         }
     }
-    
+
     /**
      * Uses access manager to authorise this request.
      * @param req HttpServletRequest as received by the service method

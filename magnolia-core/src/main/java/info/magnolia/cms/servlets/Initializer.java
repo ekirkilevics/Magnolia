@@ -7,7 +7,7 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.servlets;
@@ -23,7 +23,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -81,7 +82,7 @@ public class Initializer implements ServletContextListener {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(Initializer.class);
+    private static Logger log = LoggerFactory.getLogger(Initializer.class);
 
     /**
      * <p>
@@ -111,7 +112,7 @@ public class Initializer implements ServletContextListener {
             new ConfigLoader(context, parameters);
         }
         catch (Exception e) {
-            log.fatal(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
     }
 
