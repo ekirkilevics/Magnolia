@@ -12,12 +12,13 @@
  */
 package info.magnolia.cms.beans.runtime;
 
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 
 import java.io.InputStream;
 
 import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.math.NumberUtils;
 
 
 /**
@@ -43,8 +44,11 @@ public class File {
         this.setExtension(properties.getAttribute("extension")); //$NON-NLS-1$
         this.setFileName(properties.getAttribute("fileName")); //$NON-NLS-1$
         this.setContentType(properties.getAttribute("contentType")); //$NON-NLS-1$
-        Integer size = new Integer(properties.getAttribute("size")); //$NON-NLS-1$
-        this.setSize(size.intValue());
+
+        String sizeString = properties.getAttribute("size"); //$NON-NLS-1$
+        if (NumberUtils.isNumber(sizeString)) {
+            this.setSize(Integer.parseInt(sizeString));
+        }
 
     }
 
