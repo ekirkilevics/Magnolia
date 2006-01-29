@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Magnolia">
-  <title>Magnolia</title>
   <bannerLeft>
     <name>Magnolia</name>
-    <src>images/magnolia-logo.png</src>
+    <src>http://magnolia.sf.net/22/images/magnolia-logo.png</src>
     <href>http://magnolia.sourceforge.net</href>
   </bannerLeft>
   <body>
@@ -95,17 +94,82 @@
       </item>
     </menu>
     <menu name="Modules">
-      <item name="core" href="/magnolia-core/index.html" />
-      <item name="exhange-simple" href="/magnolia-exchange-simple/index.html" />
-      <item name="gui" href="/magnolia-gui/index.html" />
-      <item name="jaas" href="/magnolia-jaas/index.html" />
-      <item name="admin interface" href="/magnolia-module-admininterface/index.html" />
-      <item name="templating" href="/magnolia-module-templating/index.html" />
-      <item name="cms taglib" href="/magnolia-taglib-cms/index.html" />
-      <item name="utility taglib" href="/magnolia-taglib-utility/index.html" />
-      <item name="webapp" href="/magnolia/index.html" />
+      <item name="core" href="/magnolia-core/index.html" collapse="true">
+        <item name="Dependencies" href="/magnolia-core/dependencies.html" />
+        <item name="Javadoc" href="/magnolia-core/apidocs/index.html" />
+        <item name="Checkstyle" href="/magnolia-core/checkstyle.html" />
+        <item name="PMD" href="/magnolia-core/pmd.html" />
+        <item name="Maven Surefire Report" href="/magnolia-core/surefire-report.html" />
+        <item name="Source Xref" href="/magnolia-core/jxr.html" />
+        <item name="JDepend Report" href="/magnolia-core/jdepend-report.html" />
+      </item>
+      <item name="exhange-simple" href="/magnolia-exchange-simple/index.html" collapse="true">
+        <item name="Dependencies" href="/magnolia-exchange-simple/dependencies.html" />
+        <item name="Javadoc" href="/magnolia-exchange-simple/apidocs/index.html" />
+        <item name="Checkstyle" href="/magnolia-exchange-simple/checkstyle.html" />
+        <item name="PMD" href="/magnolia-exchange-simple/pmd.html" />
+        <item name="Maven Surefire Report" href="/magnolia-exchange-simple/surefire-report.html" />
+        <item name="Source Xref" href="/magnolia-exchange-simple/jxr.html" />
+        <item name="JDepend Report" href="/magnolia-exchange-simple/jdepend-report.html" />
+      </item>
+      <item name="gui" href="/magnolia-gui/index.html" collapse="true">
+        <item name="Dependencies" href="/magnolia-gui/dependencies.html" />
+        <item name="Javadoc" href="/magnolia-gui/apidocs/index.html" />
+        <item name="Checkstyle" href="/magnolia-gui/checkstyle.html" />
+        <item name="PMD" href="/magnolia-gui/pmd.html" />
+        <item name="Maven Surefire Report" href="/magnolia-gui/surefire-report.html" />
+        <item name="Source Xref" href="/magnolia-gui/jxr.html" />
+        <item name="JDepend Report" href="/magnolia-gui/jdepend-report.html" />
+      </item>
+      <item name="jaas" href="/magnolia-jaas/index.html" collapse="true">
+        <item name="Dependencies" href="/magnolia-jaas/dependencies.html" />
+        <item name="Javadoc" href="/magnolia-jaas/apidocs/index.html" />
+        <item name="Checkstyle" href="/magnolia-jaas/checkstyle.html" />
+        <item name="PMD" href="/magnolia-jaas/pmd.html" />
+        <item name="Maven Surefire Report" href="/magnolia-jaas/surefire-report.html" />
+        <item name="Source Xref" href="/magnolia-jaas/jxr.html" />
+        <item name="JDepend Report" href="/magnolia-jaas/jdepend-report.html" />
+      </item>
+      <item name="admin interface" href="/magnolia-module-admininterface/index.html" collapse="true">
+        <item name="Dependencies" href="/magnolia-module-admininterface/dependencies.html" />
+        <item name="Javadoc" href="/magnolia-module-admininterface/apidocs/index.html" />
+        <item name="Checkstyle" href="/magnolia-module-admininterface/checkstyle.html" />
+        <item name="PMD" href="/magnolia-module-admininterface/pmd.html" />
+        <item name="Maven Surefire Report" href="/magnolia-module-admininterface/surefire-report.html" />
+        <item name="Source Xref" href="/magnolia-module-admininterface/jxr.html" />
+        <item name="JDepend Report" href="/magnolia-module-admininterface/jdepend-report.html" />
+      </item>
+      <item name="templating" href="/magnolia-module-templating/index.html" collapse="true">
+        <item name="Dependencies" href="/magnolia-module-templating/dependencies.html" />
+        <item name="Javadoc" href="/magnolia-module-templating/apidocs/index.html" />
+        <item name="Checkstyle" href="/magnolia-module-templating/checkstyle.html" />
+        <item name="PMD" href="/magnolia-module-templating/pmd.html" />
+        <item name="Maven Surefire Report" href="/magnolia-module-templating/surefire-report.html" />
+        <item name="Source Xref" href="/magnolia-module-templating/jxr.html" />
+        <item name="JDepend Report" href="/magnolia-module-templating/jdepend-report.html" />
+      </item>
+      <item name="cms taglib" href="/magnolia-taglib-cms/index.html" collapse="true">
+        <item name="Javadoc" href="/magnolia-taglib-cms/apidocs/index.html" />
+        <item name="Checkstyle" href="/magnolia-taglib-cms/checkstyle.html" />
+        <item name="PMD" href="/magnolia-taglib-cms/pmd.html" />
+        <item name="Source Xref" href="/magnolia-taglib-cms/jxr.html" />
+        <item name="Tag library validation" href="/magnolia-taglib-cms/taglibvalidation.html" />
+        <item name="Tag reference" href="/magnolia-taglib-cms/tagreference.html" />
+        <item name="Taglibdoc documentation" href="/magnolia-taglib-cms/tlddoc/index.html" />
+      </item>
+      <item name="utility taglib" href="/magnolia-taglib-utility/index.html" collapse="true">
+        <item name="Javadoc" href="/magnolia-taglib-utility/apidocs/index.html" />
+        <item name="Checkstyle" href="/magnolia-taglib-utility/checkstyle.html" />
+        <item name="PMD" href="/magnolia-taglib-utility/pmd.html" />
+        <item name="Source Xref" href="/magnolia-taglib-utility/jxr.html" />
+        <item name="Tag library validation" href="/magnolia-taglib-utility/taglibvalidation.html" />
+        <item name="Tag reference" href="/magnolia-taglib-utility/tagreference.html" />
+        <item name="Taglibdoc documentation" href="/magnolia-taglib-utility/tlddoc/index.html" />
+      </item>
+      <item name="webapp" href="/magnolia/index.html" collapse="true">
+        <item name="Dependencies" href="/magnolia/dependencies.html" />
+      </item>
     </menu>
-    ${reports}
     <menu name="" type="footer">
       <item name="Sourceforge" href="http://sourceforge.net/projects/magnolia"
         img="http://sourceforge.net/sflogo.php?group_id=86297&amp;type=8" />
