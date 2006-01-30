@@ -187,6 +187,9 @@ public class NodeData extends ContentHandler {
                 this.node = workingNode.getNode(name);
                 this.property = this.node.getProperty(ItemType.JCR_DATA);
             }
+            else{
+                throw e;
+            }
         }
     }
 
