@@ -160,7 +160,7 @@ public class Include extends BodyTagSupport {
             String jspPage = this.path;
 
             if (jspPage == null) {
-                String paragraphName = content.getNodeData("paragraph").getString(); //$NON-NLS-1$
+                String paragraphName = content.getMetaData().getTemplate();
                 Paragraph paragraph = Paragraph.getInfo(paragraphName);
 
                 if (paragraph == null) {
@@ -170,7 +170,6 @@ public class Include extends BodyTagSupport {
                     jspPage = paragraph.getTemplatePath();
                 }
             }
-
             if (jspPage != null) {
                 pageContext.include(jspPage);
             }

@@ -169,8 +169,7 @@ public class Save {
 
             // this value can get used later on to find this node
             this.setNodeName(node.getName());
-
-            node.getNodeData("paragraph", true).setValue(this.getParagraph()); //$NON-NLS-1$
+            node.getMetaData().setTemplate(this.getParagraph());
 
             // update meta data (e.g. last modified) of this paragraph and the page
             node.updateMetaData(request);
@@ -375,7 +374,6 @@ public class Save {
      * @param name name of the field
      * @param type type
      * @param valueType internal value type (according to ControlSuper)
-     * @param isRichEditValue is it a return value of a richt edit field
      * @param encoding must we encode (base64)
      * @param values all values belonging to this field
      * @throws PathNotFoundException exception
@@ -764,7 +762,6 @@ public class Save {
     /**
      * Returns the page. The page is created if not yet existing depending on the property create
      * @param hm
-     * @param path path to the page
      * @return the node
      * @throws RepositoryException
      * @throws AccessDeniedException
@@ -800,8 +797,6 @@ public class Save {
      * @param hm
      * @param rootNode the node containing the saving node. If both the nodeCollectionName and the nodeName are empty
      * this is the returned node.
-     * @param nodeCollectionName the nodelist containing the node. Can be empty.
-     * @param nodeName the name of the node. Can be empty.
      * @return the node to which the content is saved
      * @throws AccessDeniedException
      * @throws RepositoryException

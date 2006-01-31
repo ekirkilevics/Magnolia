@@ -18,13 +18,10 @@ import info.magnolia.cms.security.Permission;
 
 import java.io.InputStream;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.ArrayList;
 
-import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.Property;
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
-import javax.jcr.Value;
+import javax.jcr.*;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -61,8 +58,8 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * Constructor. Create nodeData object to work-on based on existing <code>Property</code> or
-     * <code>nt:resource</code>
+     * Constructor. Create nodeData object to work-on based on existing <code>Property</code>
+     * or <code>nt:resource</code>
      * @param workingNode current active <code>Node</code>
      * @param name <code>NodeData</code> name to be retrieved
      * @param manager Access manager to be used for this object
@@ -151,20 +148,20 @@ public class NodeData extends ContentHandler {
      * @param name
      * @param type
      * @param value
-     */
-    private void init(Node workingNode, String name, int type, Value value) throws PathNotFoundException,
-        RepositoryException, AccessDeniedException {
+     * */
+    private void init(Node workingNode, String name, int type, Value value)
+        throws PathNotFoundException,
+        RepositoryException,
+        AccessDeniedException {
         if (PropertyType.BINARY == type) {
             this.node = workingNode.addNode(name, ItemType.NT_RESOURCE);
             if (null != value) {
                 this.property = this.node.setProperty(ItemType.JCR_DATA, value, value.getType());
             }
-        }
-        else {
+        } else {
             if (null == value) {
                 this.property = workingNode.setProperty(name, StringUtils.EMPTY);
-            }
-            else {
+            } else {
                 this.property = workingNode.setProperty(name, value, value.getType());
             }
         }
@@ -175,19 +172,19 @@ public class NodeData extends ContentHandler {
      * @param workingNode
      * @param name
      * @throws RepositoryException
-     */
-    private void init(Node workingNode, String name) throws PathNotFoundException, RepositoryException,
+     * */
+    private void init(Node workingNode, String name)
+        throws PathNotFoundException,
+        RepositoryException,
         AccessDeniedException {
         try {
             this.property = workingNode.getProperty(name);
-        }
-        catch (PathNotFoundException e) {
+        } catch (PathNotFoundException e) {
             if (workingNode.hasNode(name)) {
                 // this node data should wrap nt:resource
                 this.node = workingNode.getNode(name);
                 this.property = this.node.getProperty(ItemType.JCR_DATA);
-            }
-            else{
+            } else {
                 throw e;
             }
         }
@@ -414,8 +411,7 @@ public class NodeData extends ContentHandler {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
         if (this.property == null && this.node != null) {
             this.property = this.node.setProperty(ItemType.JCR_DATA, value);
-        }
-        else {
+        } else {
             this.property.setValue(value);
         }
     }
@@ -467,8 +463,10 @@ public class NodeData extends ContentHandler {
      * @throws RepositoryException
      * @throws AccessDeniedException
      * @throws UnsupportedOperationException if its not a Binary type
-     */
-    public void setAttribute(String name, String value) throws RepositoryException, AccessDeniedException,
+     * */
+    public void setAttribute(String name, String value)
+        throws RepositoryException,
+        AccessDeniedException,
         UnsupportedOperationException {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
         if (null == this.node) {
@@ -484,8 +482,10 @@ public class NodeData extends ContentHandler {
      * @throws RepositoryException
      * @throws AccessDeniedException
      * @throws UnsupportedOperationException if its not a Binary type
-     */
-    public void setAttribute(String name, Calendar value) throws RepositoryException, AccessDeniedException,
+     * */
+    public void setAttribute(String name, Calendar value)
+        throws RepositoryException,
+        AccessDeniedException,
         UnsupportedOperationException {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
         if (null == this.node) {
@@ -498,20 +498,40 @@ public class NodeData extends ContentHandler {
      * get attribute, available only if NodeData is of type <code>Binary</code>
      * @param name
      * @return string value
-     */
+     * */
     public String getAttribute(String name) {
         if (null == this.node) {
             return "";
         }
         try {
             return this.node.getProperty(name).getString();
-        }
-        catch (RepositoryException re) {
+        } catch (RepositoryException re) {
             if (log.isDebugEnabled()) {
-                log.debug("Attribute [ " + name + " ] not set");
+                log.debug("Attribute [ "+name+" ] not set");
             }
             return "";
         }
+    }
+
+    /**
+     * get all attribute names
+     * @throws RepositoryException
+     * @return collection of attrubute names
+     * */
+    public Collection getAttributeNames() throws RepositoryException {
+        Collection names = new ArrayList();
+        if (this.node == null) {
+            log.debug("Attributes are only supported for BINARY type");
+            return names;
+        }
+        PropertyIterator properties = this.node.getProperties();
+        while (properties.hasNext()) {
+            String name = properties.nextProperty().getName();
+            if (!name.equalsIgnoreCase(ItemType.JCR_DATA)) {
+                names.add(name);
+            }
+        }
+        return names;
     }
 
     /**
@@ -572,8 +592,7 @@ public class NodeData extends ContentHandler {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.property.getPath()), Permission.REMOVE);
         if (null != this.node) {
             this.node.remove();
-        }
-        else {
+        } else {
             this.property.remove();
         }
     }

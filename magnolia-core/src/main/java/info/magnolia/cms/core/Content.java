@@ -342,6 +342,7 @@ public class Content extends ContentHandler implements Cloneable {
     /**
      * @param name
      * @param create
+     * @deprecated use createNodeData or getNodeData
      */
     public NodeData getNodeData(String name, boolean create) {
         try {
@@ -577,21 +578,41 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
-     * Get collection of specified content type.
+     * @deprecated use JCR ordering
+     * @param contentType
+     * @param sortCriteria
+     * @return Collection of content nodes
+     * */
+    public Collection getChildren(String contentType, int sortCriteria) {
+        return this.getChildren(contentType);
+    }
+
+    /**
+     * @deprecated use JCR ordering
+     * @param contentType
+     * @param sortCriteria
+     * @return Collection of content nodes
+     * */
+    public Collection getChildren(ItemType contentType, int sortCriteria) {
+        return this.getChildren(contentType);
+    }
+
+    /**
+     * Get collection of specified content type
      * @param contentType JCR node type as configured
      * @return Collection of content nodes
      */
     public Collection getChildren(String contentType) {
-        return this.getChildren(contentType, ContentHandler.IGNORE_SORT);
+        return this.getChildren(contentType, "*"); //$NON-NLS-1$
     }
 
     /**
-     * Get collection of specified content type.
+     * Get collection of specified content type
      * @param contentType ItemType
      * @return Collection of content nodes
      */
     public Collection getChildren(ItemType contentType) {
-        return this.getChildren(contentType.getSystemName(), ContentHandler.IGNORE_SORT);
+        return this.getChildren(contentType.getSystemName());
     }
 
     /**
@@ -601,64 +622,14 @@ public class Content extends ContentHandler implements Cloneable {
      * @return Collection of content nodes
      */
     public Collection getChildren(String contentType, String namePattern) {
-        return this.getChildren(contentType, namePattern, ContentHandler.IGNORE_SORT);
-    }
-
-    /**
-     * Get collection of specified content type
-     * @param contentType JCR node type as configured
-     * @param sortCriteria which can be either ContentHandler.SORT_BY_SEQUENCE , ContentHandler.SORT_BY_DATE or
-     * ContentHandler.SORT_BY_NAME
-     * @return Collection of content nodes
-     */
-    public Collection getChildren(String contentType, int sortCriteria) {
-        return this.getChildren(contentType, "*", sortCriteria); //$NON-NLS-1$
-    }
-
-    /**
-     * Get collection of specified content type
-     * @param contentType ItemType
-     * @param sortCriteria which can be either ContentHandler.SORT_BY_SEQUENCE , ContentHandler.SORT_BY_DATE or
-     * ContentHandler.SORT_BY_NAME
-     * @return Collection of content nodes
-     */
-    public Collection getChildren(ItemType contentType, int sortCriteria) {
-        return this.getChildren(contentType.getSystemName(), sortCriteria);
-    }
-
-    /**
-     * Get collection of specified content type.
-     * @param contentType JCR node type as configured
-     * @param namePattern
-     * @param sortCriteria which can be either ContentHandler.SORT_BY_SEQUENCE , ContentHandler.SORT_BY_DATE or
-     * ContentHandler.SORT_BY_NAME
-     * @return Collection of content nodes
-     */
-    public Collection getChildren(String contentType, String namePattern, int sortCriteria) {
         Collection children = new ArrayList();
         try {
             children = this.getChildContent(contentType, namePattern);
-            children = sort(children, sortCriteria);
         }
         catch (RepositoryException e) {
             log.error(e.getMessage(), e);
         }
         return children;
-    }
-
-    /**
-     * @param collection Collection of content nodes
-     * @param sortCriteria
-     * @return
-     */
-    private Collection sort(Collection collection, int sortCriteria) {
-        if (sortCriteria == ContentHandler.SORT_BY_DATE) {
-            return sortByDate(collection);
-        }
-        else if (sortCriteria == ContentHandler.SORT_BY_SEQUENCE) {
-            return sortBySequence(collection);
-        }
-        return collection;
     }
 
     /**
@@ -708,12 +679,12 @@ public class Content extends ContentHandler implements Cloneable {
                     // ignore, simply wont add content in a list
                 }
             }
+            // add nt:resource nodes
+            children.addAll(this.getBinaryProperties("*"));
         }
         catch (RepositoryException re) {
             log.error("Exception caught", re);
         }
-        // add nt:resource nodes
-        children.addAll(this.getChildren(ItemType.NT_RESOURCE));
         return children;
     }
 
@@ -740,12 +711,37 @@ public class Content extends ContentHandler implements Cloneable {
                     // ignore, simply wont add content in a list
                 }
             }
+            // add nt:resource nodes
+            children.addAll(this.getBinaryProperties(namePattern));
         }
         catch (RepositoryException re) {
             log.error("Exception caught", re);
         }
-        // add nt:resource nodes
-        children.addAll(this.getChildren(ItemType.NT_RESOURCE, namePattern));
+        return children;
+    }
+
+    /**
+     * @param namePattern
+     * @return
+     * @throws RepositoryException if an error occurs
+     */
+    private Collection getBinaryProperties(String namePattern) throws RepositoryException {
+        Collection children = new ArrayList();
+        NodeIterator nodeIterator = this.node.getNodes(namePattern);
+        while (nodeIterator.hasNext()) {
+            Node subNode = (Node) nodeIterator.next();
+            try {
+                if (subNode.isNodeType(ItemType.NT_RESOURCE)) {
+                    children.add(new NodeData(subNode, this.accessManager));
+                }
+            }
+            catch (PathNotFoundException e) {
+                log.error(e.getMessage(), e);
+            }
+            catch (AccessDeniedException e) {
+                // ignore, simply wont add content in a list
+            }
+        }
         return children;
     }
 

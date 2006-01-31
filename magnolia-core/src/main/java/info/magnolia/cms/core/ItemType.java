@@ -52,6 +52,11 @@ public final class ItemType implements Serializable {
     public static final String NT_RESOURCE = "mgnl:resource"; //$NON-NLS-1$
 
     /**
+     * Node type: metadata
+     */
+    public static final String NT_METADATA = "mgnl:metaData"; //$NON-NLS-1$
+
+    /**
      * Mixin: node has access control.
      */
     public static final String MIX_ACCESSCONTROLLABLE = "mix:accessControllable"; //$NON-NLS-1$

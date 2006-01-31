@@ -134,7 +134,7 @@ public class EditBar extends TagSupport {
         if (this.paragraph == null) {
             Content contentParagraph = Resource.getLocalContentNode((HttpServletRequest) this.pageContext.getRequest());
             if (contentParagraph != null) {
-                bar.setParagraph(contentParagraph.getNodeData("paragraph").getString()); //$NON-NLS-1$
+                bar.setParagraph(contentParagraph.getMetaData().getTemplate());
             }
         }
         else {

@@ -57,7 +57,6 @@ public class Tree extends ControlSuper {
 
     public static final String DOCROOT = "/admindocroot/controls/tree/"; //$NON-NLS-1$
 
-    // todo: global; where?
     public static final String ICONDOCROOT = "/admindocroot/icons/16/"; //$NON-NLS-1$
 
     public static final int ACTION_MOVE = 0;
@@ -671,7 +670,7 @@ public class Tree extends ControlSuper {
 
                 String selectedType = ItemType.NT_NODEDATA;
                 String touchedType = ItemType.NT_NODEDATA;
-                Iterator it1 = parentContent.getChildren(ItemType.CONTENT, ContentHandler.SORT_BY_SEQUENCE).iterator();
+                Iterator it1 = parentContent.getChildren(ItemType.CONTENT).iterator();
                 while (it1.hasNext()) {
                     Content c = (Content) it1.next();
                     if (c.getHandle().equals(selectedContent.getHandle())) {
@@ -682,7 +681,7 @@ public class Tree extends ControlSuper {
                     }
                 }
                 Iterator it2 = parentContent
-                    .getChildren(ItemType.CONTENTNODE, ContentHandler.SORT_BY_SEQUENCE)
+                    .getChildren(ItemType.CONTENTNODE)
                     .iterator();
                 while (it2.hasNext()) {
                     Content c = (Content) it2.next();
@@ -700,7 +699,7 @@ public class Tree extends ControlSuper {
                 long posAbove = 0;
                 long posBelow = 0;
                 long posFirst = 0;
-                Iterator it = parentContent.getChildren(touchedType, ContentHandler.SORT_BY_SEQUENCE).iterator();
+                Iterator it = parentContent.getChildren(touchedType).iterator();
                 boolean first = true;
                 while (it.hasNext()) {
                     Content c = (Content) it.next();
@@ -1197,7 +1196,7 @@ public class Tree extends ControlSuper {
                 it = nodeDatas.iterator();
             }
             else {
-                it = parentNode.getChildren(itemType, ContentHandler.SORT_BY_SEQUENCE).iterator();
+                it = parentNode.getChildren(itemType).iterator();
             }
             while (it.hasNext()) {
                 Object o = it.next();
