@@ -34,7 +34,7 @@ public class MgnlRoleManager implements RoleManager {
     /**
      * Do not instantiate it!
      */
-    protected MgnlRoleManager() {
+    public MgnlRoleManager() {
     }
 
     public Role getRole(String name) {
