@@ -52,7 +52,6 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * todo - refactor all getChildren methods, use getChildren(ContentFilter)
  * @author Sameer Charles
  * @version $Revision$ ($Author$)
  */
@@ -342,7 +341,7 @@ public class Content extends ContentHandler implements Cloneable {
     /**
      * @param name
      * @param create
-     * @deprecated use createNodeData or getNodeData
+     * @deprecated use createNodeData or getNodeData(String name)
      */
     public NodeData getNodeData(String name, boolean create) {
         try {
@@ -722,7 +721,7 @@ public class Content extends ContentHandler implements Cloneable {
 
     /**
      * @param namePattern
-     * @return
+     * @return nodeData collection
      * @throws RepositoryException if an error occurs
      */
     private Collection getBinaryProperties(String namePattern) throws RepositoryException {
@@ -797,45 +796,6 @@ public class Content extends ContentHandler implements Cloneable {
         }
         catch (Exception e) {
             log.error(e.getMessage());
-        }
-        return contentCollection;
-    }
-
-    /**
-     * Gets a Collection containing all child nodes at the current level+1 level
-     * @param contentCollection collection of content nodes
-     * @return sorted collection
-     */
-    public Collection sortBySequence(Collection contentCollection) {
-        try {
-            if (contentCollection == null) {
-                return contentCollection;
-            }
-            Collections.sort((List) contentCollection, new Comparator() {
-
-                public int compare(Object o0, Object o1) {
-                    try {
-                        long pos0 = (((Content) o0).getMetaData().getSequencePosition());
-                        long pos1 = (((Content) o1).getMetaData().getSequencePosition());
-                        String s0 = "0"; //$NON-NLS-1$
-                        String s1 = "0"; //$NON-NLS-1$
-                        if (pos0 > pos1) {
-                            s0 = "1"; //$NON-NLS-1$
-                        }
-                        else if (pos0 < pos1) {
-                            s1 = "1"; //$NON-NLS-1$
-                        }
-                        return s0.compareTo(s1);
-                    }
-                    catch (Exception e) {
-                        return 0;
-                    }
-                }
-
-            });
-        }
-        catch (Exception e) {
-            log.error(e.getMessage(), e);
         }
         return contentCollection;
     }
@@ -1068,6 +1028,16 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
+     * get content view over the jcr version object
+     * @param version
+     * @return version object wrapped in ContentVersion
+     * @see ContentVersion
+     * */
+    public ContentVersion getVersionPreview(Version version) throws RepositoryException {
+        return new ContentVersion(version);
+    }
+
+    /**
      * Persists all changes to the repository if validation succeds
      * @throws RepositoryException if an error occurs
      */
@@ -1107,7 +1077,7 @@ public class Content extends ContentHandler implements Cloneable {
     public void delete(String path) throws RepositoryException {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.node.getPath(), path), Permission.REMOVE);
         if (this.isNodeData(path)) {
-            this.node.getProperty(path).remove();
+            this.getNodeData(path).delete();
         }
         else {
             this.node.getNode(path).remove();
@@ -1125,13 +1095,18 @@ public class Content extends ContentHandler implements Cloneable {
      */
     public boolean isNodeData(String path) throws AccessDeniedException, RepositoryException {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.node.getPath(), path), Permission.READ);
+        boolean result = false;
         try {
-            return this.node.hasProperty(path);
+            result = this.node.hasProperty(path);
+            if (!result) {
+                // check if its a nt:resource
+                result = this.node.hasProperty(path + "/" + ItemType.JCR_DATA);
+            }
         }
         catch (RepositoryException e) {
             log.debug("isNodeData(): " + e.getMessage()); //$NON-NLS-1$
         }
-        return false;
+        return result;
     }
 
     /**
