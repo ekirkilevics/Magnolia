@@ -177,7 +177,7 @@ public class MetaData {
             return this.node.getName();
         }
         catch (NullPointerException e) {
-            log.debug("MetaData has not beed created or this node does not support MetaData"); //$NON-NLS-1$
+            log.debug("MetaData has not been created or this node does not support MetaData"); //$NON-NLS-1$
         }
         catch (RepositoryException e) {
             log.error(e.getMessage(), e);
@@ -287,7 +287,7 @@ public class MetaData {
         }
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
-                log.debug("MetaData has not beed created or this node does not support MetaData"); //$NON-NLS-1$
+                log.debug("MetaData has not been created or this node does not support MetaData"); //$NON-NLS-1$
                 log.debug("cannot get property - " + SEQUENCE_POS); //$NON-NLS-1$
             }
         }
@@ -467,7 +467,7 @@ public class MetaData {
         }
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
-                log.debug("MetaData has not beed created or this node does not support MetaData"); //$NON-NLS-1$
+                log.debug("MetaData has not been created or this node does not support MetaData"); //$NON-NLS-1$
                 log.debug("cannot set property - " + name); //$NON-NLS-1$
             }
         }
@@ -497,7 +497,7 @@ public class MetaData {
         }
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
-                log.debug("MetaData has not beed created or this node does not support MetaData"); //$NON-NLS-1$
+                log.debug("MetaData has not been created or this node does not support MetaData"); //$NON-NLS-1$
                 log.debug("cannot set property - " + name); //$NON-NLS-1$
             }
         }
@@ -527,7 +527,7 @@ public class MetaData {
         }
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
-                log.debug("MetaData has not beed created or this node does not support MetaData"); //$NON-NLS-1$
+                log.debug("MetaData has not been created or this node does not support MetaData"); //$NON-NLS-1$
                 log.debug("cannot set property - " + name); //$NON-NLS-1$
             }
         }
@@ -557,7 +557,7 @@ public class MetaData {
         }
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
-                log.debug("MetaData has not beed created or this node does not support MetaData"); //$NON-NLS-1$
+                log.debug("MetaData has not been created or this node does not support MetaData"); //$NON-NLS-1$
                 log.debug("cannot set property - " + name); //$NON-NLS-1$
             }
         }
@@ -587,7 +587,7 @@ public class MetaData {
         }
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
-                log.debug("MetaData has not beed created or this node does not support MetaData"); //$NON-NLS-1$
+                log.debug("MetaData has not been created or this node does not support MetaData"); //$NON-NLS-1$
                 log.debug("cannot set property - " + name); //$NON-NLS-1$
             }
         }
@@ -611,7 +611,7 @@ public class MetaData {
         }
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
-                log.debug("MetaData has not beed created or this node does not support MetaData"); //$NON-NLS-1$
+                log.debug("MetaData has not been created or this node does not support MetaData"); //$NON-NLS-1$
                 log.debug("cannot get property - " + name); //$NON-NLS-1$
             }
         }
@@ -636,7 +636,7 @@ public class MetaData {
         }
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
-                log.debug("MetaData has not beed created or this node does not support MetaData"); //$NON-NLS-1$
+                log.debug("MetaData has not been created or this node does not support MetaData"); //$NON-NLS-1$
                 log.debug("cannot get property - " + name); //$NON-NLS-1$
             }
         }
@@ -661,7 +661,7 @@ public class MetaData {
         }
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
-                log.debug("MetaData has not beed created or this node does not support MetaData"); //$NON-NLS-1$
+                log.debug("MetaData has not been created or this node does not support MetaData"); //$NON-NLS-1$
                 log.debug("cannot get property - " + name); //$NON-NLS-1$
             }
         }
@@ -686,7 +686,7 @@ public class MetaData {
         }
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
-                log.debug("MetaData has not beed created or this node does not support MetaData"); //$NON-NLS-1$
+                log.debug("MetaData has not been created or this node does not support MetaData"); //$NON-NLS-1$
                 log.debug("cannot get property - " + name); //$NON-NLS-1$
             }
         }
@@ -713,7 +713,7 @@ public class MetaData {
         }
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
-                log.debug("MetaData has not beed created or this node does not support MetaData"); //$NON-NLS-1$
+                log.debug("MetaData has not been created or this node does not support MetaData"); //$NON-NLS-1$
                 log.debug("cannot get property - " + name); //$NON-NLS-1$
             }
         }
