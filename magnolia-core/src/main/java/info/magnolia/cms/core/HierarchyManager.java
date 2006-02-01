@@ -220,7 +220,6 @@ public class HierarchyManager {
         md.setModificationDate();
         md.setAuthorId(this.userID);
         md.setTitle(StringUtils.EMPTY);
-        md.setSequencePosition();
     }
 
     /**
@@ -336,7 +335,7 @@ public class HierarchyManager {
         Content pageToBeFound = null;
         try {
             if (page.hasChildren()) {
-                Collection children = page.getChildren(ItemType.CONTENT.getSystemName(), ContentHandler.SORT_BY_NAME);
+                Collection children = page.getChildren(ItemType.CONTENT.getSystemName());
                 Iterator iterator = children.iterator();
                 while (iterator.hasNext()) {
                     Content child = (Content) iterator.next();
@@ -368,7 +367,7 @@ public class HierarchyManager {
      */
     public void delete(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         if (this.isNodeData(path)) {
-            this.startPage.getProperty(makeRelative(path)).remove();
+            this.getNodeData(makeRelative(path)).delete();
         }
         else {
             this.startPage.getNode(makeRelative(path)).remove();
