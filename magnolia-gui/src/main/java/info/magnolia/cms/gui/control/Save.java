@@ -169,7 +169,9 @@ public class Save {
 
             // this value can get used later on to find this node
             this.setNodeName(node.getName());
-            node.getMetaData().setTemplate(this.getParagraph());
+            if(StringUtils.isEmpty(node.getMetaData().getTemplate())){
+                node.getMetaData().setTemplate(this.getParagraph());
+            }
 
             // update meta data (e.g. last modified) of this paragraph and the page
             node.updateMetaData(request);
@@ -807,7 +809,7 @@ public class Save {
 
         // get or create nodeCollection
         Content nodeCollection = null;
-        if (this.getNodeCollectionName() != null) {
+        if (StringUtils.isNotEmpty(this.getNodeCollectionName())) {
             try {
                 nodeCollection = rootNode.getContent(this.getNodeCollectionName());
             }
@@ -824,7 +826,7 @@ public class Save {
         }
 
         // get or create node
-        if (this.getNodeName() != null) {
+        if (StringUtils.isNotEmpty(this.getNodeName())) {
             try {
                 node = nodeCollection.getContent(this.getNodeName());
             }
