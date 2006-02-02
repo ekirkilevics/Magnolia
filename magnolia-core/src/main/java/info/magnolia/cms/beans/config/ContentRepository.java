@@ -333,9 +333,7 @@ public final class ContentRepository {
             Session session = repository.login(sc, wspID);
             provider.registerNamespace(NAMESPACE_PREFIX, NAMESPACE_URI, session.getWorkspace());
             provider.registerNodeTypes(session.getWorkspace());
-            List acl = getSystemPermissions();
-            AccessManagerImpl accessManager = new AccessManagerImpl();
-            accessManager.setPermissionList(acl);
+            AccessManagerImpl accessManager = getAccessManager();
             HierarchyManager hierarchyManager = new HierarchyManager(ContentRepository.SYSTEM_USER);
             hierarchyManager.init(session.getRootNode());
             hierarchyManager.setAccessManager(accessManager);
@@ -356,6 +354,17 @@ public final class ContentRepository {
             log.error("System : Failed to initialize hierarchy manager for JCR - " + map.getName()); //$NON-NLS-1$
             log.error(re.getMessage(), re);
         }
+    }
+
+    /**
+     * Configures and returns a AccessManager with system permissions
+     * @return The system AccessManager
+     */
+    public static AccessManagerImpl getAccessManager() {
+        List acl = getSystemPermissions();
+        AccessManagerImpl accessManager = new AccessManagerImpl();
+        accessManager.setPermissionList(acl);
+        return accessManager;
     }
 
     /**

@@ -78,7 +78,7 @@ public class WebContextImpl implements Context {
      * @return User
      * @see info.magnolia.cms.security.User
      */
-    public User getuser() {
+    public User getUser() {
         return this.user;
     }
 

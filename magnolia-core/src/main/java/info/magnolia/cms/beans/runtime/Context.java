@@ -56,7 +56,7 @@ public interface Context {
      * @return User
      * @see info.magnolia.cms.security.User
      */
-    public User getuser();
+    public User getUser();
 
     /**
      * Get hierarchy manager initialized for this user

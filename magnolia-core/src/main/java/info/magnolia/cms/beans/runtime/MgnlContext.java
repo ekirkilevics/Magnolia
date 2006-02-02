@@ -58,7 +58,7 @@ public class MgnlContext {
      * @return the current user
      */
     public static User getUser() {
-        return getInstance().getuser();
+        return getInstance().getUser();
     }
 
     /**
