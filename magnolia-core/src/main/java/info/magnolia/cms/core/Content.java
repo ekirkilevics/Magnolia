@@ -1012,6 +1012,43 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
+     * Returns true if this node is either
+     * <ul>
+     * <li/>versionable and currently checked-out,
+     * <li/>non-versionable and its nearest versionable ancestor is checked-out or
+     * <li/>non-versionable and it has no versionable ancestor.
+     * </ul>
+     * Returns false if this node is either
+     * <ul>
+     * <li/>versionable and currently checked-in or
+     * <li/>non-versionable and its nearest versionable ancestor is checked-in.
+     * </ul>
+     *
+     * @throws RepositoryException
+     * @return true if the node is checked out
+     * */
+    public boolean isCheckedOut() throws RepositoryException {
+        return this.node.isCheckedOut();
+    }
+
+    /**
+     * Returns <code>true</code> if this <code>Item</code> has been saved but has subsequently
+     * been modified through the current session and therefore the state of this item as recorded
+     * in the session differs from the state of this item as saved. Within a transaction,
+     * <code>isModified</code> on an <code>Item</code> may return <code>false</code> (because the
+     * <code>Item</code> has been saved since the modification) even if the modification in question
+     * is not in persistent storage (because the transaction has not yet been committed).
+     * <p>
+     * Note that in level 1 (that is, read-only) implementations,
+     * this method will always return <code>false</code>.
+     *
+     * @return <code>true</code> if this item is modified; <code>false</code> otherwise.
+     * */
+    public boolean isModified() {
+        return this.node.isModified();
+    }
+
+    /**
      * @return version history
      * @throws RepositoryException if an error occurs
      */
