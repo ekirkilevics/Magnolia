@@ -1075,6 +1075,16 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
+     * get content view over the jcr version object
+     * @param versionName
+     * @return version object wrapped in ContentVersion
+     * @see ContentVersion
+     * */
+    public ContentVersion getVersionPreview(String versionName) throws RepositoryException {
+        return new ContentVersion(this.getVersionHistory().getVersion(versionName));
+    }
+
+    /**
      * Persists all changes to the repository if validation succeds
      * @throws RepositoryException if an error occurs
      */
