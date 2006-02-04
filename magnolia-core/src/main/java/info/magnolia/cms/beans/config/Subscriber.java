@@ -226,7 +226,7 @@ public final class Subscriber {
      */
     public List getContext(String name) {
         if (this.context.get(name) == null) {
-            return null;
+            return new ArrayList();
         }
         return (ArrayList) this.context.get(name);
     }
