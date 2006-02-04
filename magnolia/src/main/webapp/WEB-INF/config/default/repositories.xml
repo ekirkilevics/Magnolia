@@ -47,7 +47,7 @@
     </Repository>
 
     <Repository name="access" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
-        <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-bdb-search.xml" />
+        <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-derby-search.xml" />
         <param name="repositoryHome" value="repositories/access" />
         <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory" />
         <param name="providerURL" value="localhost" />
@@ -67,7 +67,7 @@
     </RepositoryMapping>
     <!-- magnolia default website repository -->
     <Repository name="website" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
-        <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-bdb-search.xml" />
+        <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-derby-search.xml" />
         <param name="repositoryHome" value="repositories/website" />
         <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory" />
         <param name="providerURL" value="localhost" />
@@ -86,7 +86,7 @@
     </Repository>
     <!-- magnolia default config repository -->
     <Repository name="config" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
-        <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-bdb-nosearch.xml" />
+        <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-derby-nosearch.xml" />
         <param name="repositoryHome" value="repositories/config" />
         <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory" />
         <param name="providerURL" value="localhost" />
@@ -94,7 +94,7 @@
     </Repository>
     <!-- magnolia user repository -->
     <Repository name="users" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
-        <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-bdb-nosearch.xml" />
+        <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-derby-nosearch.xml" />
         <param name="repositoryHome" value="repositories/users" />
         <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory" />
         <param name="providerURL" value="localhost" />
@@ -102,7 +102,7 @@
     </Repository>
     <!-- magnolia default user roles repository -->
     <Repository name="userroles" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
-        <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-bdb-nosearch.xml" />
+        <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-derby-nosearch.xml" />
         <param name="repositoryHome" value="repositories/userroles" />
         <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory" />
         <param name="providerURL" value="localhost" />
