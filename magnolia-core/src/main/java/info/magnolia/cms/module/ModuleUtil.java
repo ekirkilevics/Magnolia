@@ -31,6 +31,7 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.jar.JarEntry;
@@ -337,8 +338,32 @@ public final class ModuleUtil {
         return node;
     }
 
+    /**
+     * Register a servlet in the web.xml. The code checks if the servlet already exists
+     * @param name
+     * @param className
+     * @param urlPatterns
+     * @param comment
+     * @throws JDOMException
+     * @throws IOException
+     */
     public static void registerServlet(String name, String className, String[] urlPatterns, String comment)
         throws JDOMException, IOException {
+        registerServlet(name, className, urlPatterns, comment, null);
+    }
+
+    /**
+     * Register a servlet in the web.xml including init parameters. The code checks if the servlet already exists
+     * @param name
+     * @param className
+     * @param urlPatterns
+     * @param comment
+     * @param initParams
+     * @throws JDOMException
+     * @throws IOException
+     */
+    public static void registerServlet(String name, String className, String[] urlPatterns, String comment,
+        Hashtable initParams) throws JDOMException, IOException {
         // get the web.xml
         File source = new File(Path.getAppRootDir() + "/WEB-INF/web.xml");
         if (!source.exists()) {
@@ -367,6 +392,19 @@ public final class ModuleUtil {
             node = new Element("servlet", ns);
             node.addContent(new Element("servlet-name", ns).addContent(name));
             node.addContent(new Element("servlet-class", ns).addContent(className));
+
+            if (initParams != null && !(initParams.isEmpty())) {
+                Enumeration params = initParams.keys();
+                while (params.hasMoreElements()) {
+                    String paramName = params.nextElement().toString();
+                    String paramValue = (String) initParams.get(paramName);
+                    Element initParam = new Element("init-param", ns);
+                    initParam.addContent(new Element("param-name", ns).addContent(paramName));
+                    initParam.addContent(new Element("param-value", ns).addContent(paramValue));
+                    node.addContent(initParam);
+                }
+            }
+
             doc.getRootElement().addContent(node);
         }
         else {
@@ -421,40 +459,40 @@ public final class ModuleUtil {
             }
             SAXBuilder builder = new SAXBuilder();
             Document doc = builder.build(source);
-
+            
             // check if there
-            Element node = (Element) XPath.selectSingleNode(doc, "/Repositories/Repository[@name='dms']");
+            Element node = (Element) XPath.selectSingleNode(doc, "/JCR/Repository[@name='" + name + "']");
             if (node == null) {
                 // create
                 node = new Element("Repository");
-
-                String provider = ((Element) XPath.selectSingleNode(doc, "/Repositories/Repository[@name='website']"))
+    
+                String provider = ((Element) XPath.selectSingleNode(doc, "/JCR/Repository[@name='website']"))
                     .getAttributeValue("provider");
                 String configFile = ((Element) XPath.selectSingleNode(
                     doc,
-                    "/Repositories/Repository[@name='website']/param[@name='configFile']")).getAttributeValue("value");
+                    "/JCR/Repository[@name='website']/param[@name='configFile']")).getAttributeValue("value");
                 String repositoryHome = ((Element) XPath.selectSingleNode(
                     doc,
-                    "/Repositories/Repository[@name='website']/param[@name='repositoryHome']"))
+                    "/JCR/Repository[@name='website']/param[@name='repositoryHome']"))
                     .getAttributeValue("value");
                 repositoryHome = StringUtils.substringBeforeLast(repositoryHome, "/") + "/" + name;
                 String contextFactoryClass = ((Element) XPath.selectSingleNode(
                     doc,
-                    "/Repositories/Repository[@name='website']/param[@name='contextFactoryClass']"))
+                    "/JCR/Repository[@name='website']/param[@name='contextFactoryClass']"))
                     .getAttributeValue("value");
                 String providerURL = ((Element) XPath.selectSingleNode(
                     doc,
-                    "/Repositories/Repository[@name='website']/param[@name='providerURL']")).getAttributeValue("value");
+                    "/JCR/Repository[@name='website']/param[@name='providerURL']")).getAttributeValue("value");
                 String bindName = ((Element) XPath.selectSingleNode(
                     doc,
-                    "/Repositories/Repository[@name='website']/param[@name='bindName']")).getAttributeValue("value");
+                    "/JCR/Repository[@name='website']/param[@name='bindName']")).getAttributeValue("value");
                 bindName = StringUtils.replace(bindName, "website", name);
-
+    
                 node.setAttribute("name", name);
                 node.setAttribute("id", name);
                 node.setAttribute("loadOnStartup", "true");
                 node.setAttribute("provider", provider);
-
+    
                 node.addContent(new Element("param").setAttribute("name", "configFile").setAttribute(
                     "value",
                     configFile));
@@ -468,9 +506,15 @@ public final class ModuleUtil {
                     "value",
                     providerURL));
                 node.addContent(new Element("param").setAttribute("name", "bindName").setAttribute("value", bindName));
-
+    
                 doc.getRootElement().addContent(node);
-
+    
+                // make the mapping
+                node = new Element("Map");
+                node.setAttribute("name", name).setAttribute("repositoryName", name);
+                // add it
+                doc.getRootElement().getChild("RepositoryMapping").addContent(node);
+                
                 // save it
                 XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
                 outputter.output(doc, new FileWriter(source));
@@ -480,5 +524,4 @@ public final class ModuleUtil {
             log.error("can't register repository", e);
         }
     }
-
 }
