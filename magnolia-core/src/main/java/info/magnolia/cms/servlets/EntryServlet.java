@@ -16,6 +16,7 @@ import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.Dispatcher;
 import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.VirtualMap;
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.Cache;
 import info.magnolia.cms.beans.runtime.Context;
 import info.magnolia.cms.beans.runtime.MgnlContext;
@@ -24,10 +25,7 @@ import info.magnolia.cms.core.CacheHandler;
 import info.magnolia.cms.core.CacheProcess;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.security.Security;
-import info.magnolia.cms.security.SessionAccessControl;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -118,6 +116,8 @@ public class EntryServlet extends HttpServlet {
         }
 
         try {
+            // Initialize magnolia context
+            initializeContext(req);
             if (isAuthorized(req, res)) {
 
                 // allowCaching allows users to plug-in application specific logic
@@ -129,9 +129,6 @@ public class EntryServlet extends HttpServlet {
                         return; // if success return
                     }
                 }
-
-                // Initialize magnolia context
-                initializeContext(req);
 
                 if (redirect(req, res)) {
 
@@ -212,9 +209,9 @@ public class EntryServlet extends HttpServlet {
      * @throws IOException can be thrown when the servlet is unable to write to the response stream
      */
     protected boolean isAuthorized(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        if (SessionAccessControl.getAccessManager(req) != null) {
+        if (MgnlContext.getAccessManager(ContentRepository.WEBSITE) != null) {
             String path = StringUtils.substringBefore(Path.getURI(req), "."); //$NON-NLS-1$
-            if (!SessionAccessControl.getAccessManager(req).isGranted(path, Permission.READ)) {
+            if (!MgnlContext.getAccessManager(ContentRepository.WEBSITE).isGranted(path, Permission.READ)) {
                 res.sendError(HttpServletResponse.SC_FORBIDDEN);
             }
         }
