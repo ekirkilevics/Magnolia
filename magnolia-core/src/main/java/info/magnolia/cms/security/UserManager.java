@@ -15,6 +15,7 @@ package info.magnolia.cms.security;
 import java.util.Collection;
 
 import javax.security.auth.Subject;
+import javax.security.auth.login.LoginException;
 
 
 /**
@@ -54,4 +55,11 @@ public interface UserManager {
      */
     public User getUserObject(Subject subject) throws UnsupportedOperationException;
 
+    /**
+     * Authenticate and initialize user using jaas magnolia login module
+     * @param userId
+     * @param pswd
+     * @throws UnsupportedOperationException
+     */
+    public User getUserObject(String userId, char[] pswd) throws UnsupportedOperationException, LoginException;
 }
