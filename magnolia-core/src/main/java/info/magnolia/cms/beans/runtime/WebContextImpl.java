@@ -58,9 +58,10 @@ public class WebContextImpl implements Context {
     private HttpSession httpSession;
 
     /**
+     * package private
      * @param request
      */
-    public WebContextImpl(HttpServletRequest request) {
+    WebContextImpl(HttpServletRequest request) {
         this.request = request;
         this.httpSession = request.getSession();
     }
