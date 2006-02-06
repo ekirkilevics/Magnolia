@@ -26,7 +26,6 @@ import java.util.Map;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,16 +53,10 @@ public class WebContextImpl implements Context {
     private HttpServletRequest request;
 
     /**
-     * http session
-     */
-    private HttpSession httpSession;
-
-    /**
      * @param request
      */
     public WebContextImpl(HttpServletRequest request) {
         this.request = request;
-        this.httpSession = request.getSession();
         this.setUser(Security.getUserManager().getUserObject(Authenticator.getSubject(request)));
     }
 
@@ -217,7 +210,7 @@ public class WebContextImpl implements Context {
                 this.request.setAttribute(name, value);
                 break;
             case SESSION_SCOPE:
-                this.httpSession.setAttribute(name, value);
+                this.request.getSession().setAttribute(name, value);
                 break;
             case APPLICATION_SCOPE:
                 try {
@@ -244,7 +237,7 @@ public class WebContextImpl implements Context {
     public Object getAttribute(String name) {
         Object value = this.request.getAttribute(name);
         if (null == value) {
-            value = this.httpSession.getAttribute(name);
+            value = this.request.getSession().getAttribute(name);
         }
         return value;
     }
