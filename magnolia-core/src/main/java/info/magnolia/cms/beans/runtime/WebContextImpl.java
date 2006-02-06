@@ -18,7 +18,6 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.security.User;
 
 import java.util.Map;
@@ -88,7 +87,7 @@ public class WebContextImpl implements Context {
      * @return hierarchy manager
      */
     public HierarchyManager getHierarchyManager(String repositoryId) {
-        return SessionAccessControl.getHierarchyManager(this.request, repositoryId);
+        return SessionStore.getHierarchyManager(this.request, repositoryId);
     }
 
     /**
@@ -98,7 +97,7 @@ public class WebContextImpl implements Context {
      * @return hierarchy manager
      */
     public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
-        return SessionAccessControl.getHierarchyManager(this.request, repositoryId, workspaceId);
+        return SessionStore.getHierarchyManager(this.request, repositoryId, workspaceId);
     }
 
     /**
@@ -107,7 +106,7 @@ public class WebContextImpl implements Context {
      * @return access manager
      */
     public AccessManager getAccessManager(String repositoryId) {
-        return SessionAccessControl.getAccessManager(this.request, repositoryId);
+        return SessionStore.getAccessManager(this.request, repositoryId);
     }
 
     /**
@@ -117,7 +116,7 @@ public class WebContextImpl implements Context {
      * @return access manager
      */
     public AccessManager getAccessManager(String repositoryId, String workspaceId) {
-        return SessionAccessControl.getAccessManager(this.request, repositoryId, workspaceId);
+        return SessionStore.getAccessManager(this.request, repositoryId, workspaceId);
     }
 
     /**
@@ -127,7 +126,7 @@ public class WebContextImpl implements Context {
      */
     public QueryManager getQueryManager(String repositoryId) {
         try {
-            return SessionAccessControl.getQueryManager(this.request, repositoryId);
+            return SessionStore.getQueryManager(this.request, repositoryId);
         }
         catch (RepositoryException re) {
             log.error(re.getMessage());
@@ -144,7 +143,7 @@ public class WebContextImpl implements Context {
      */
     public QueryManager getQueryManager(String repositoryId, String workspaceId) {
         try {
-            return SessionAccessControl.getQueryManager(this.request, repositoryId, workspaceId);
+            return SessionStore.getQueryManager(this.request, repositoryId, workspaceId);
         }
         catch (RepositoryException re) {
             log.error(re.getMessage());
