@@ -41,7 +41,12 @@ public class SystemContextImpl implements Context {
      * To get and set the attributes for this context
      */
     protected Map scopes = new HashMap();
-        
+
+    /**
+     * this instance
+     * */
+    private static SystemContextImpl thisInstance = new SystemContextImpl();
+
     /**
      * package private
      * Init the scopes
@@ -51,7 +56,15 @@ public class SystemContextImpl implements Context {
         scopes.put(new Integer(Context.SESSION_SCOPE), new HashMap());
         scopes.put(new Integer(Context.APPLICATION_SCOPE), new HashMap());
     }
-    
+
+    /**
+     * get this instance
+     * @return SystemContextImpl instance
+     * */
+    protected static SystemContextImpl getInstance() {
+        return thisInstance;
+    }
+
     public void setUser(User user) {
         this.user = user;
     }
