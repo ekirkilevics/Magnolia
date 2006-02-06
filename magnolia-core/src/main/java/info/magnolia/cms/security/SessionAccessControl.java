@@ -13,7 +13,6 @@
 package info.magnolia.cms.security;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.SearchFactory;
@@ -94,6 +93,8 @@ public final class SessionAccessControl {
      * manager if not exist.
      * @see SessionAccessControl#DEFAULT_REPOSITORY
      * @param request
+     * @deprecated use MgnlContext.getHierarchyManager
+     * @see info.magnolia.cms.beans.runtime.MgnlContext
      */
     public static HierarchyManager getHierarchyManager(HttpServletRequest request) {
         return getHierarchyManager(request, DEFAULT_REPOSITORY);
@@ -104,6 +105,8 @@ public final class SessionAccessControl {
      * manager if not exist.
      * @param request
      * @param repositoryID
+     * @deprecated use MgnlContext.getHierarchyManager
+     * @see info.magnolia.cms.beans.runtime.MgnlContext
      */
     public static HierarchyManager getHierarchyManager(HttpServletRequest request, String repositoryID) {
         return getHierarchyManager(request, repositoryID, ContentRepository.getDefaultWorkspace(repositoryID));
@@ -114,6 +117,8 @@ public final class SessionAccessControl {
      * manager if not exist.
      * @param request
      * @param repositoryID
+     * @deprecated use MgnlContext.getHierarchyManager
+     * @see info.magnolia.cms.beans.runtime.MgnlContext
      */
     public static HierarchyManager getHierarchyManager(HttpServletRequest request, String repositoryID,
         String workspaceID) {
@@ -130,6 +135,8 @@ public final class SessionAccessControl {
     /**
      * gets AccessManager for the current user session for the default repository and workspace
      * @param request
+     * @deprecated use MgnlContext.getAccessManager()
+     * @see info.magnolia.cms.beans.runtime.MgnlContext
      */
     public static AccessManager getAccessManager(HttpServletRequest request) {
         return getAccessManager(request, DEFAULT_REPOSITORY);
@@ -139,6 +146,8 @@ public final class SessionAccessControl {
      * gets AccessManager for the current user session for the specified repository default workspace
      * @param request
      * @param repositoryID
+     * @deprecated use MgnlContext.getAccessManager()
+     * @see info.magnolia.cms.beans.runtime.MgnlContext
      */
     public static AccessManager getAccessManager(HttpServletRequest request, String repositoryID) {
         return getAccessManager(request, repositoryID, ContentRepository.getDefaultWorkspace(repositoryID));
@@ -149,6 +158,8 @@ public final class SessionAccessControl {
      * @param request
      * @param repositoryID
      * @param workspaceID
+     * @deprecated use MgnlContext.getAccessManager()
+     * @see info.magnolia.cms.beans.runtime.MgnlContext
      */
     public static AccessManager getAccessManager(HttpServletRequest request, String repositoryID, String workspaceID) {
 
@@ -169,6 +180,8 @@ public final class SessionAccessControl {
     /**
      * Gets access controlled query manager
      * @param request
+     * @deprecated MgnlContext.getQueryManager()
+     * @see info.magnolia.cms.beans.runtime.MgnlContext
      */
     public static QueryManager getQueryManager(HttpServletRequest request) throws RepositoryException {
         return getQueryManager(request, DEFAULT_REPOSITORY);
@@ -178,6 +191,8 @@ public final class SessionAccessControl {
      * Gets access controlled query manager
      * @param request
      * @param repositoryID
+     * @deprecated MgnlContext.getQueryManager()
+     * @see info.magnolia.cms.beans.runtime.MgnlContext
      */
     public static QueryManager getQueryManager(HttpServletRequest request, String repositoryID)
         throws RepositoryException {
@@ -189,6 +204,8 @@ public final class SessionAccessControl {
      * @param request
      * @param repositoryID
      * @param workspaceID
+     * @deprecated MgnlContext.getQueryManager()
+     * @see info.magnolia.cms.beans.runtime.MgnlContext
      */
     public static QueryManager getQueryManager(HttpServletRequest request, String repositoryID, String workspaceID)
         throws RepositoryException {
@@ -222,6 +239,7 @@ public final class SessionAccessControl {
     /**
      * create user ticket and set ACL (user + group) in the session
      * @param request
+     * @deprecated
      */
     public static void createSession(HttpServletRequest request) throws LoginException, RepositoryException {
         createRepositorySession(request, DEFAULT_REPOSITORY);
@@ -287,6 +305,7 @@ public final class SessionAccessControl {
     /**
      * @param request
      * @return true is user has a valid session
+     * @deprecated use Authenticator.isAuthenticated(HttpServletRequest)
      */
     public static boolean isSecuredSession(HttpServletRequest request) {
         return Authenticator.isAuthenticated(request);
@@ -295,30 +314,10 @@ public final class SessionAccessControl {
     /**
      * invalidates user session
      * @param request
+     * @deprecated user HttpServletRequest.getSession.invalidate()
      */
     public static void invalidateUser(HttpServletRequest request) {
         request.getSession().invalidate();
     }
 
-    /**
-     * @param request current HttpServletRequest
-     * @return the current user object
-     */
-    public static User getUser() {
-        return MgnlContext.getUser();
-    }
-
-    /**
-     * logout user (as in request) from the specified repository session
-     * @param request
-     * @param repositoryID
-     */
-    public static void logout(HttpServletRequest request, String repositoryID) {
-        try {
-            getSession(request, repositoryID).logout();
-        }
-        catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        }
-    }
 }
