@@ -13,7 +13,6 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.beans.runtime.MgnlContext;
-import info.magnolia.cms.beans.runtime.SystemContextImpl;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.i18n.MessagesManager;
@@ -142,7 +141,7 @@ public class ConfigLoader {
         }
         
         log.info("Set system context"); //$NON-NLS-1$
-        MgnlContext.setInstance(new SystemContextImpl());
+        MgnlContext.setInstance(MgnlContext.getSystemContext());
         
         log.info("Init virtualMap"); //$NON-NLS-1$
         VirtualMap.init();
