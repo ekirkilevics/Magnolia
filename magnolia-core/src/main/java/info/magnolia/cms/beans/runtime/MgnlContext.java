@@ -211,4 +211,11 @@ public class MgnlContext {
         return (Context) localContext.get();
     }
 
+    /**
+     * Get magnolia system context, Note : this context have full rights over all repositories/ workspaces
+     * @return system context
+     * */
+    public static Context getSystemContext() {
+        return SystemContextImpl.getInstance();
+    }
 }
