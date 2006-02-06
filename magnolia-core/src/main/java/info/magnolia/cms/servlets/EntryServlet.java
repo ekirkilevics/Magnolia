@@ -200,7 +200,6 @@ public class EntryServlet extends HttpServlet {
     protected void initializeContext(HttpServletRequest request) {
         if (MgnlContext.getInstance() == null) {
             Context ctx = new WebContextImpl(request);
-            ctx.setUser(Security.getUserManager().getUserObject(Authenticator.getSubject(request)));
             MgnlContext.setInstance(ctx);
         }
     }

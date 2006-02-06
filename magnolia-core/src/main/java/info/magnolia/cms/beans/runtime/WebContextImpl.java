@@ -18,6 +18,8 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessManager;
+import info.magnolia.cms.security.Authenticator;
+import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.User;
 
 import java.util.Map;
@@ -62,6 +64,7 @@ public class WebContextImpl implements Context {
     public WebContextImpl(HttpServletRequest request) {
         this.request = request;
         this.httpSession = request.getSession();
+        this.setUser(Security.getUserManager().getUserObject(Authenticator.getSubject(request)));
     }
 
     /**
