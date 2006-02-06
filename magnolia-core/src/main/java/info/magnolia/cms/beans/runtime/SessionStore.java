@@ -63,6 +63,8 @@ final class SessionStore {
     /**
      * Gets the ticket creted while login, creates a new ticket if not existing.
      * @param request
+     * @throws LoginException
+     * @throws RepositoryException
      */
     protected static Session getSession(HttpServletRequest request) throws LoginException, RepositoryException {
         return getSession(request, DEFAULT_REPOSITORY);
@@ -72,6 +74,8 @@ final class SessionStore {
      * Gets the ticket creted while login, creates a new ticket if not existing.
      * @param request
      * @param repositoryID
+     * @throws LoginException
+     * @throws RepositoryException
      */
     protected static Session getSession(HttpServletRequest request, String repositoryID) throws LoginException,
         RepositoryException {
@@ -82,6 +86,9 @@ final class SessionStore {
      * Gets the ticket creted while login, creates a new ticket if not existing .
      * @param request
      * @param repositoryID
+     * @param workspaceID
+     * @throws LoginException
+     * @throws RepositoryException
      */
     protected static Session getSession(HttpServletRequest request, String repositoryID, String workspaceID)
         throws LoginException, RepositoryException {
@@ -113,6 +120,7 @@ final class SessionStore {
      * manager if not exist.
      * @param request
      * @param repositoryID
+     * @param workspaceID
      */
     protected static HierarchyManager getHierarchyManager(HttpServletRequest request, String repositoryID,
         String workspaceID) {
@@ -168,6 +176,7 @@ final class SessionStore {
     /**
      * Gets access controlled query manager
      * @param request
+     * @throws RepositoryException
      */
     protected static QueryManager getQueryManager(HttpServletRequest request) throws RepositoryException {
         return getQueryManager(request, DEFAULT_REPOSITORY);
@@ -177,6 +186,7 @@ final class SessionStore {
      * Gets access controlled query manager
      * @param request
      * @param repositoryID
+     * @throws RepositoryException
      */
     protected static QueryManager getQueryManager(HttpServletRequest request, String repositoryID)
         throws RepositoryException {
@@ -188,6 +198,7 @@ final class SessionStore {
      * @param request
      * @param repositoryID
      * @param workspaceID
+     * @throws RepositoryException
      */
     protected static QueryManager getQueryManager(HttpServletRequest request, String repositoryID, String workspaceID)
         throws RepositoryException {
@@ -206,6 +217,14 @@ final class SessionStore {
         return queryManager;
     }
 
+    /**
+     * Get repository session
+     * @param request
+     * @param repositoryID
+     * @param workspaceID
+     * @throws LoginException
+     * @throws RepositoryException
+     * */
     protected static Session getRepositorySession(HttpServletRequest request, String repositoryID, String workspaceID)
         throws LoginException, RepositoryException {
         Object ticket = request.getSession().getAttribute(
@@ -221,6 +240,8 @@ final class SessionStore {
     /**
      * create user ticket and set ACL (user + group) in the session
      * @param request
+     * @throws LoginException
+     * @throws RepositoryException
      */
     protected static void createSession(HttpServletRequest request) throws LoginException, RepositoryException {
         createRepositorySession(request, DEFAULT_REPOSITORY);
@@ -229,6 +250,9 @@ final class SessionStore {
     /**
      * create user ticket and set ACL (user + group) in the session
      * @param request
+     * @param repositoryID
+     * @throws LoginException
+     * @throws RepositoryException
      */
     protected static void createRepositorySession(HttpServletRequest request, String repositoryID) throws LoginException,
         RepositoryException {
@@ -238,6 +262,10 @@ final class SessionStore {
     /**
      * create user ticket and set ACL (user + group) in the session
      * @param request
+     * @param repositoryID
+     * @param workspaceID
+     * @throws LoginException
+     * @throws RepositoryException
      */
     private static void createRepositorySession(HttpServletRequest request, String repositoryID, String workspaceID)
         throws LoginException, RepositoryException {
@@ -270,6 +298,12 @@ final class SessionStore {
         request.getSession().setAttribute(ATTRIBUTE_AM_PREFIX + repositoryID + "_" + workspaceID, accessManager);
     }
 
+    /**
+     * create hierarchy manager for the specified repository and workspace
+     * @param request
+     * @param repositoryID
+     * @param workspaceID
+     * */
     private static void createHierarchyManager(HttpServletRequest request, String repositoryID, String workspaceID) {
         HierarchyManager hm = new HierarchyManager(Authenticator.getUserId(request));
         try {
@@ -283,40 +317,4 @@ final class SessionStore {
         }
     }
 
-    /**
-     * @param request
-     * @return true is user has a valid session
-     */
-    protected static boolean isSecuredSession(HttpServletRequest request) {
-        return Authenticator.isAuthenticated(request);
-    }
-
-    /**
-     * invalidates user session
-     * @param request
-     */
-    protected static void invalidateUser(HttpServletRequest request) {
-        request.getSession().invalidate();
-    }
-
-    /**
-     * @return the current user object
-     */
-    protected static User getUser() {
-        return MgnlContext.getUser();
-    }
-
-    /**
-     * logout user (as in request) from the specified repository session
-     * @param request
-     * @param repositoryID
-     */
-    protected static void logout(HttpServletRequest request, String repositoryID) {
-        try {
-            getSession(request, repositoryID).logout();
-        }
-        catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        }
-    }
 }
