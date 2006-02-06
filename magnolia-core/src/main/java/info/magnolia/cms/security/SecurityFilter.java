@@ -82,7 +82,7 @@ public class SecurityFilter implements Filter {
             res.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
             return false;
         }
-        else if (SessionAccessControl.isSecuredSession(req)) {
+        else if (Authenticator.isAuthenticated(req)) {
             return true;
         }
         else if (SecureURI.isProtected(Path.getURI(req))) {
@@ -108,7 +108,7 @@ public class SecurityFilter implements Filter {
                 response.setHeader("WWW-Authenticate", "BASIC realm=\"" + Server.getBasicRealm() + "\""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
                 // invalidate previous session
-                SessionAccessControl.invalidateUser(request);
+                request.getSession().invalidate();
                 return false;
             }
         }
