@@ -43,9 +43,10 @@ public class SystemContextImpl implements Context {
     protected Map scopes = new HashMap();
         
     /**
+     * package private
      * Init the scopes
      */
-    public SystemContextImpl() {
+    SystemContextImpl() {
         scopes.put(new Integer(Context.REQUEST_SCOPE), new HashMap());
         scopes.put(new Integer(Context.SESSION_SCOPE), new HashMap());
         scopes.put(new Integer(Context.APPLICATION_SCOPE), new HashMap());
