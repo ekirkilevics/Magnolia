@@ -13,12 +13,13 @@
 package info.magnolia.cms;
 
 import info.magnolia.cms.beans.config.Template;
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.File;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.security.SessionAccessControl;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
@@ -118,7 +119,7 @@ public class Aggregator {
      */
     public boolean collect() throws PathNotFoundException, RepositoryException {
         boolean success = true;
-        this.hierarchyManager = SessionAccessControl.getHierarchyManager(this.request);
+        this.hierarchyManager = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
         this.parseURI();
         if (this.hierarchyManager.isNodeData(this.uri)) {
             this.getRequestedContent(Aggregator.ATOM);
