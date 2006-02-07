@@ -13,17 +13,12 @@
 package info.magnolia.cms.servlets;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentHandler;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.Resource;
-
-import java.util.Iterator;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
@@ -39,6 +34,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @version 2.0
+ * @version $Revision$ ($Author$)
  */
 public class RequestInterceptor extends HttpServlet {
 
@@ -98,7 +94,7 @@ public class RequestInterceptor extends HttpServlet {
         if (repository == null) {
             repository = ContentRepository.WEBSITE;
         }
-        HierarchyManager hm = SessionAccessControl.getHierarchyManager(request, repository);
+        HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
         if (action.equals(ACTION_PREVIEW)) {
             // preview mode (button in main bar)
             String preview = request.getParameter(Resource.MGNL_PREVIEW_ATTRIBUTE);
@@ -130,36 +126,12 @@ public class RequestInterceptor extends HttpServlet {
                 String pathSelected = request.getParameter(PARAM_PATH_SELECTED);
                 String pathSortAbove = request.getParameter(PARAM_PATH_SORT_ABOVE);
                 String pathParent = StringUtils.substringBeforeLast(pathSelected, "/"); //$NON-NLS-1$
-                Iterator it = hm.getContent(pathParent).getChildren(
-                    ItemType.CONTENTNODE.getSystemName(),
-                    ContentHandler.SORT_BY_SEQUENCE).iterator();
-                long seqPos0 = 0;
-                long seqPos1 = 0;
-                while (it.hasNext()) {
-                    Content c = (Content) it.next();
-                    if (c.getHandle().equals(pathSortAbove)) {
-                        seqPos1 = c.getMetaData().getSequencePosition();
-                        break;
-                    }
-                    seqPos0 = c.getMetaData().getSequencePosition();
+                String srcName = StringUtils.substringAfterLast(pathSelected, "/");
+                String destName = StringUtils.substringAfterLast(pathSortAbove, "/");
+                if (StringUtils.equalsIgnoreCase(destName,"mgnlNew")) {
+                    destName = null;
                 }
-                Content nodeSelected = hm.getContent(pathSelected);
-                if (seqPos0 == 0) {
-                    // move to first position -> 1000*coefficient above seqPos1 (old first)
-                    nodeSelected
-                        .getMetaData()
-                        .setSequencePosition(seqPos1 - (MetaData.SEQUENCE_POS_COEFFICIENT * 1000));
-                }
-                else if (seqPos1 == 0) {
-                    // move to last position (pathSortAbove not found)
-                    nodeSelected.getMetaData().setSequencePosition();
-                }
-                else {
-                    // move between two paragraphs
-                    nodeSelected.getMetaData().setSequencePosition((seqPos0 + seqPos1) / 2);
-                }
-
-                this.updatePageMetaData(request, hm);
+                hm.getContent(pathParent).orderBefore(srcName, destName);
                 hm.save();
             }
             catch (RepositoryException e) {
