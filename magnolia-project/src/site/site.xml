@@ -60,7 +60,6 @@
         <item name="Cms taglib" href="/magnolia-taglib-cms/tagreference.html" />
         <item name="Cms util taglib" href="/magnolia-taglib-utility/tagreference.html" />
       </item>
-      <item name="API JavaDoc" href="apidocs/index.html" target="_blank" />
       <item name="Glossary" href="/glossary/glossary.html" />
     </menu>
     <!--
