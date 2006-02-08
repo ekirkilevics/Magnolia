@@ -129,11 +129,9 @@ public class JCRLoginModule extends AbstractLoginModule {
             return false;
         }
         catch (PathNotFoundException pe) {
-            pe.printStackTrace();
             log.info("Unable to locate user [" + this.name + "], authentication failed");
         }
         catch (RepositoryException re) {
-            re.printStackTrace();
             log.error("Unable to locate user ["
                 + this.name
                 + "], authentication failed due to a "
@@ -222,10 +220,10 @@ public class JCRLoginModule extends AbstractLoginModule {
             this.subject.getPrincipals().add(roleList);
         }
         catch (RepositoryException re) {
-            re.printStackTrace();
+            log.debug(re.getMessage(), re);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            log.debug(e.getMessage(), e);
         }
 
     }
