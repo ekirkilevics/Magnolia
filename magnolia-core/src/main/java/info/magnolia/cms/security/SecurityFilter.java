@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -42,10 +43,25 @@ public class SecurityFilter implements Filter {
     private static Logger log = LoggerFactory.getLogger(SecurityFilter.class);
 
     /**
+     * filter config login form
+     * */
+    private static final String LOGIN_FORM = "LoginForm";
+
+    /**
+     * filter config unsecured URI
+     * */
+    private static final String UNSECURED_URI = "UnsecuredPath";
+
+    /**
+     * filter config
+     * */
+    private FilterConfig filterConfig;
+
+    /**
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
      */
     public void init(FilterConfig filterConfig) throws ServletException {
-        // unused
+        this.filterConfig = filterConfig;
     }
 
     /**
@@ -103,12 +119,14 @@ public class SecurityFilter implements Filter {
      */
     private boolean authenticate(HttpServletRequest request, HttpServletResponse response) {
         try {
+            if (Path.getURI(request).startsWith(this.filterConfig.getInitParameter(UNSECURED_URI))) {
+                return true;
+            }
             if (!Authenticator.authenticate(request)) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.setHeader("WWW-Authenticate", "BASIC realm=\"" + Server.getBasicRealm() + "\""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
                 // invalidate previous session
                 request.getSession().invalidate();
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                request.getRequestDispatcher(this.filterConfig.getInitParameter(LOGIN_FORM)).include(request, response);
                 return false;
             }
         }
