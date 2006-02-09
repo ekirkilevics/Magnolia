@@ -26,6 +26,20 @@
     <display-name>SecurityFilter</display-name>
     <filter-name>SecurityFilter</filter-name>
     <filter-class>info.magnolia.cms.security.SecurityFilter</filter-class>
+    <init-param>
+      <!--
+      @todo find a better way to do this, its here simply to support login form
+      since at this time user is not authenticated and login form is unable to
+      access any resources from the server
+      NOTE : this will override config/server/SecureURIList
+      -->
+      <param-name>UnsecuredPath</param-name>
+      <param-value>/docroot</param-value>
+    </init-param>
+    <init-param>
+      <param-name>LoginForm</param-name>
+      <param-value>/admintemplates/adminCentral/login.jsp</param-value>
+    </init-param>
   </filter>
   <filter-mapping>
     <filter-name>ContentTypeFilter</filter-name>
