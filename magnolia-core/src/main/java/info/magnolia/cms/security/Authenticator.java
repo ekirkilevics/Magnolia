@@ -57,6 +57,16 @@ public final class Authenticator {
     static final String ATTRIBUTE_JAAS_SUBJECT = "mgnlJAASSubject";
 
     /**
+     * request parameter user id
+     * */
+    public static final String PARAMETER_USER_ID = "mgnlUserId";
+
+    /**
+     * request parameter password
+     * */
+    public static final String PARAMETER_PSWD = "mgnlUserPSWD";
+
+    /**
      * Utility class, don't instantiate.
      */
     private Authenticator() {
@@ -71,11 +81,15 @@ public final class Authenticator {
     public static boolean authenticate(HttpServletRequest req) {
         String credentials = req.getHeader("Authorization");
         if (StringUtils.isEmpty(credentials) || credentials.length() <= 6) {
-            return false;
+            // check for form based login request
+            if (StringUtils.isNotEmpty(req.getParameter(PARAMETER_USER_ID))) {
+                setFormAuthProperties(req);
+            } else {
+                return false;
+            }
+        } else {
+            setBasicAuthProperties(credentials, req);
         }
-        credentials = getDecodedCredentials(credentials.substring(6).trim());
-        Authenticator.setUserId(credentials, req);
-        Authenticator.setPassword(credentials, req);
         Subject subject;
         // first check if user has been authenticated by some other service or container itself
         if (req.getUserPrincipal() == null) {
@@ -116,6 +130,30 @@ public final class Authenticator {
     }
 
     /**
+     * set basic authentication properties
+     * @param credentials
+     * @param request
+     * */
+    private static void setBasicAuthProperties(String credentials, HttpServletRequest request) {
+        credentials = getDecodedCredentials(credentials.substring(6).trim());
+        Authenticator.setUserId(StringUtils.substringBefore(credentials, ":"), request);
+        Authenticator.setPassword(StringUtils.substringAfter(credentials, ":"), request);
+    }
+
+    /**
+     * set form authentication properties
+     * @param request
+     * */
+    private static void setFormAuthProperties(HttpServletRequest request) {
+        Authenticator.setUserId(request.getParameter(PARAMETER_USER_ID), request);
+        String pswd = request.getParameter(PARAMETER_PSWD);
+        if (pswd == null) {
+            pswd = "";
+        }
+        Authenticator.setPassword(pswd, request);
+    }
+
+    /**
      * add user properties needed for jstl and user entity object to the session todo this should not be in
      * Authenticator, setting user properties or authorization details does not belong here
      * @param request
@@ -138,19 +176,19 @@ public final class Authenticator {
     }
 
     /**
-     * @param decodedCredentials , BASE64Decoded credentials from the request
+     * @param userName
      * @param request current HttpServletRequest
      */
-    private static void setUserId(String decodedCredentials, HttpServletRequest request) {
-        request.getSession().setAttribute(ATTRIBUTE_USER_ID, StringUtils.substringBefore(decodedCredentials, ":"));
+    private static void setUserId(String userName, HttpServletRequest request) {
+        request.getSession().setAttribute(ATTRIBUTE_USER_ID, userName);
     }
 
     /**
      * @param request current HttpServletRequest
-     * @param decodedCredentials , BASE64Decoded credentials from the request
+     * @param pswd
      */
-    private static void setPassword(String decodedCredentials, HttpServletRequest request) {
-        request.getSession().setAttribute(ATTRIBUTE_PSWD, StringUtils.substringAfter(decodedCredentials, ":"));
+    private static void setPassword(String pswd, HttpServletRequest request) {
+        request.getSession().setAttribute(ATTRIBUTE_PSWD, pswd);
     }
 
     /**
