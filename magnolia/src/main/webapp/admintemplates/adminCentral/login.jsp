@@ -14,7 +14,7 @@ String referer = contextPath + Path.getURI(request);
 <head>
 	<title>Magnolia Login Form</title>
 	<link rel="STYLESHEET" type="text/css" href="${pageContext.request.contextPath}/admindocroot/loginForm/login.css" />
-	<script src="unsecured/md5.js" type="text/javascript"></script>
+	<script src="${pageContext.request.contextPath}/admindocroot/loginForm/md5.js" type="text/javascript"></script>
 	<script type="text/javascript">
 	function crypt() {
 		// crypt
@@ -45,7 +45,7 @@ String referer = contextPath + Path.getURI(request);
 
 			<label for="submit">&nbsp;</label>
 			<!-- <input id="submit" type="button" value="login" class="button" onclick="Javascript:crypt();" /><br /> -->
-			<input id="submit" type="button" value="login" class="button" /><br />
+			<input id="submit" type="submit" value="login" class="button" /><br />
 			<input  name="passwordMD5" type="hidden" />
 		</form>
 		</div>
