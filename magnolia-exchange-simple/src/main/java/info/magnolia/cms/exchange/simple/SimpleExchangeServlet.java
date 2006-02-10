@@ -14,8 +14,7 @@ package info.magnolia.cms.exchange.simple;
 
 import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.runtime.Document;
-import info.magnolia.cms.beans.runtime.MultipartForm;
+import info.magnolia.cms.beans.runtime.*;
 import info.magnolia.cms.core.CacheHandler;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -26,7 +25,6 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.Listener;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
@@ -83,6 +81,7 @@ public class SimpleExchangeServlet extends HttpServlet {
         String status = "";
         try {
             validateRequest(request);
+            initializeContext(request);
             applyLock(request);
             receive(request);
             // remove cached files if successful
@@ -366,6 +365,18 @@ public class SimpleExchangeServlet extends HttpServlet {
     }
 
     /**
+     * Initialize Magnolia context. It creates a context and initialize the user only if these do not exist yet. <b>Note</b>:
+     * the implementation may get changed
+     * @param request the current request
+     */
+    protected void initializeContext(HttpServletRequest request) {
+        if (MgnlContext.getInstance() == null) {
+            Context ctx = new WebContextImpl(request);
+            MgnlContext.setInstance(ctx);
+        }
+    }
+
+    /**
      * Check if the request is valid
      * @param request
      * @throws AccessDeniedException
@@ -384,7 +395,7 @@ public class SimpleExchangeServlet extends HttpServlet {
         String repositoryName = request.getHeader(SimpleSyndicator.REPOSITORY_NAME);
         String workspaceName = request.getHeader(SimpleSyndicator.WORKSPACE_NAME);
         if (ConfigLoader.isConfigured()) {
-            return SessionAccessControl.getHierarchyManager(request, repositoryName, workspaceName);
+            return MgnlContext.getHierarchyManager(repositoryName, workspaceName);
         }
 
         return ContentRepository.getHierarchyManager(repositoryName, workspaceName);
