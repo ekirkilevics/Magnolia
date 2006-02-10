@@ -13,6 +13,7 @@
 package info.magnolia.cms.exchange.simple;
 
 import info.magnolia.cms.beans.config.Subscriber;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -23,7 +24,6 @@ import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Authenticator;
-import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
 
@@ -455,8 +455,7 @@ public class SimpleSyndicator implements Syndicator {
      * @throws RepositoryException
      */
     private void updateActivationDetails() throws RepositoryException {
-        HierarchyManager hm = SessionAccessControl.getHierarchyManager(
-            this.request,
+        HierarchyManager hm = MgnlContext.getHierarchyManager(
             this.repositoryName,
             this.workspaceName);
         Content page = hm.getContent(this.path);
@@ -469,8 +468,7 @@ public class SimpleSyndicator implements Syndicator {
      * @throws RepositoryException
      */
     private void updateDeActivationDetails() throws RepositoryException {
-        HierarchyManager hm = SessionAccessControl.getHierarchyManager(
-            this.request,
+        HierarchyManager hm = MgnlContext.getHierarchyManager(
             this.repositoryName,
             this.workspaceName);
         Content page = hm.getContent(this.path);
@@ -484,7 +482,7 @@ public class SimpleSyndicator implements Syndicator {
      */
     private void updateMetaData(Content node, String type) throws AccessDeniedException {
         // update the passed node
-        MetaData md = node.getMetaData(MetaData.ACTIVATION_INFO);
+        MetaData md = node.getMetaData();
         if (type.equals(SimpleSyndicator.ACTIVATE)) {
             md.setActivated();
         }
@@ -508,8 +506,8 @@ public class SimpleSyndicator implements Syndicator {
      */
     private ActivationContent collect() throws Exception {
         ActivationContent activationContent = new ActivationContent();
-        HierarchyManager hm = SessionAccessControl
-            .getHierarchyManager(request, this.repositoryName, this.workspaceName);
+        HierarchyManager hm = MgnlContext
+            .getHierarchyManager(this.repositoryName, this.workspaceName);
         // add global properties true for this path/hierarchy
         activationContent.addProperty(PARENT_PATH, this.parent);
         activationContent.addProperty(WORKSPACE_NAME, this.workspaceName);
