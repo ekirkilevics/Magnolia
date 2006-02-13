@@ -27,6 +27,11 @@
     <filter-name>SecurityFilter</filter-name>
     <filter-class>info.magnolia.cms.security.SecurityFilter</filter-class>
     <init-param>
+      <param-name>AuthType</param-name>
+      <!-- <param-value>Basic</param-value> -->
+      <param-value>Form</param-value>
+    </init-param>
+    <init-param>
       <!--
       @todo find a better way to do this, its here simply to support login form
       since at this time user is not authenticated and login form is unable to
