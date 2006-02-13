@@ -590,6 +590,7 @@ public class Tree extends ControlSuper {
         return StringUtils.EMPTY;
     }
 
+    /*
     public String pasteNode(String pathOrigin, String pathSelected, int pasteType, int action)
         throws ExchangeException, RepositoryException {
         // todo: proper doc
@@ -764,6 +765,77 @@ public class Tree extends ControlSuper {
             }
         }
     }
+    */
+
+    public String pasteNode(String pathOrigin, String pathSelected,
+			int pasteType, int action) throws ExchangeException,
+			RepositoryException {
+		boolean move = false;
+		if (action == ACTION_MOVE) {
+			move = true;
+		}
+		String label = StringUtils.substringAfterLast(pathOrigin, "/"); //$NON-NLS-1$
+		String slash = "/"; //$NON-NLS-1$
+		if (pathSelected.equals("/")) { //$NON-NLS-1$
+			slash = StringUtils.EMPTY;
+		}
+		String destination = pathSelected + slash + label;
+		if (pasteType == PASTETYPE_SUB && action != ACTION_COPY
+				&& destination.equals(pathOrigin)) {
+			// drag node to parent node: move to last position
+			pasteType = PASTETYPE_LAST;
+		}
+		if (pasteType == PASTETYPE_SUB) {
+			destination = pathSelected + slash + label;
+			Content touchedContent = this.copyMoveNode(pathOrigin, destination,
+					move);
+			if (touchedContent == null) {
+				return StringUtils.EMPTY;
+			}
+			return touchedContent.getHandle();
+
+		} else if (pasteType == PASTETYPE_LAST) {
+			// LAST only available for sorting inside the same directory
+			try {
+				Content touchedContent = getHierarchyManager().getContent(
+						pathOrigin);
+				touchedContent.getMetaData().setSequencePosition();
+				return touchedContent.getHandle();
+			} catch (RepositoryException re) {
+				return StringUtils.EMPTY;
+			}
+		} else {
+			try {
+				// PASTETYPE_ABOVE | PASTETYPE_BELOW
+				String nameSelected = StringUtils.substringAfterLast(
+						pathSelected, "/"); //$NON-NLS-1$
+				String nameOrigin = StringUtils.substringAfterLast(pathOrigin,
+						"/"); //$NON-NLS-1$
+				Content tomove = getHierarchyManager().getContent(pathOrigin);
+				Content selected = getHierarchyManager().getContent(
+						pathSelected);
+				if (tomove.getParent().getUUID().equals(
+						selected.getParent().getUUID())) {
+					tomove.getParent().orderBefore(nameOrigin, nameSelected);
+					tomove.getParent().save();
+				} else {
+					String newOrigin = selected.getParent().getHandle() + "/"
+							+ nameOrigin;
+					getHierarchyManager().moveTo(pathOrigin, newOrigin);
+					Content newNode = getHierarchyManager().getContent(
+							newOrigin);
+					if (pasteType == PASTETYPE_ABOVE)
+						newNode.getParent().orderBefore(nameOrigin,
+								nameSelected);
+				}
+				return tomove.getHandle();
+			} catch (RepositoryException re) {
+				re.printStackTrace();
+				log.error("Problem when pasting node", re);
+				return StringUtils.EMPTY;
+			}
+		}
+	}
 
     public Content copyMoveNode(String source, String destination, boolean move) throws ExchangeException,
         RepositoryException {
