@@ -12,8 +12,8 @@
  */
 package info.magnolia.cms.security;
 
-import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.beans.config.Server;
 
 import java.io.IOException;
 
@@ -51,6 +51,21 @@ public class SecurityFilter implements Filter {
      * filter config unsecured URI
      * */
     private static final String UNSECURED_URI = "UnsecuredPath";
+
+    /**
+     * Authentication type
+     * */
+    private static final String AUTH_TYPE = "AuthType";
+
+    /**
+     * Authentication type Basic
+     * */
+    private static final String AUTH_TYPE_BASIC = "Basic";
+
+    /**
+     * Authentication type form based
+     * */
+    private static final String AUTH_TYPE_FORM = "Form";
 
     /**
      * filter config
@@ -126,7 +141,12 @@ public class SecurityFilter implements Filter {
                 // invalidate previous session
                 request.getSession().invalidate();
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                request.getRequestDispatcher(this.filterConfig.getInitParameter(LOGIN_FORM)).include(request, response);
+                if (StringUtils.equalsIgnoreCase(this.filterConfig.getInitParameter(AUTH_TYPE),AUTH_TYPE_BASIC)) {
+                    response.setHeader("WWW-Authenticate", "BASIC realm=\"" + Server.getBasicRealm() + "\"");
+                } else {
+                    request.getRequestDispatcher(
+                            this.filterConfig.getInitParameter(LOGIN_FORM)).include(request, response);
+                }
                 return false;
             }
         }
