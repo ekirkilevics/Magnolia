@@ -412,10 +412,14 @@ public final class ContentRepository {
      * otherwise return same name as repository name.
      */
     public static String getDefaultWorkspace(String repositoryId) {
-        Collection workspaces = getRepositoryMapping(repositoryId).getWorkspaces();
+        RepositoryMapping mapping = getRepositoryMapping(repositoryId);
+        if (mapping == null) {
+            return DEFAULT_WORKSPACE;
+        }
+        Collection workspaces = mapping.getWorkspaces();
         if (workspaces.contains(repositoryId)) {
             return repositoryId;
-        }
+        } 
         return DEFAULT_WORKSPACE;
     }
 
