@@ -202,7 +202,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 		} catch (Exception e) {
 			Log.error("owfe", e);
 			log.error("exception:" + e);
-			return null;
+			return ret.iterator();
 		}
 	}
 
