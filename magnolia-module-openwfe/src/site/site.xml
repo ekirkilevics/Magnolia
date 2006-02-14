@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Magnolia Workflow Integratino">
+	<title>Magnolia</title>
+	<bannerLeft>
+		<name>Magnolia</name>
+		<src>images/magnolia-logo.png</src>
+		<href>http://magnolia.sourceforge.net</href>
+	</bannerLeft>
+	<body>
+		<links>
+			<item name="Magnolia community" href="http://www.magnolia.info/en/community.html" />
+			<item name="Magnolia International" href="http://www.magnolia.info/en/international.html" />
+			<item name="OpenWFE" href="http://web.openwfe.org" />
+			<item name="Wiki" href="http://wiki.magnolia.info" />
+		</links>
+		<menu name="Documentation">
+			<item name="Overview" href="overview.html"/>
+			<item name="OpenWFE Integration" href="integration_openWFE.html"/>
+			<item name="Magnolia Integration" href="integration_magnolia.html"/>
+			<item name="Workflow API" href="api.html"/>
+			<item name="Test Cases" href="test.html"/>
+			<item name="Timeframe" href="timeframe.html"/>
+			<item name="About" href="about.html"/>
+		</menu>
+	</body>
+</project>

@@ -1,0 +1,681 @@
+Overview
+
+  This document describes how we will integrate the openWFE work flow system into Magnolia
+
+* Goals
+
+    * introduce workflow into magnolia
+
+    * easy to use workflow api
+
+    * flexible architecture (Commands)
+
+    * remote access (XML-RPC)
+
+    * easy to use GUI: inbox, flow designer
+    
+* Summary    
+  
+[mindmaps/overview.png] Mindmap
+
+	The numbers in the diagram above represents the different priorities, where 1 is for highest priority.
+  
+*-----+------+
+ OpenWFE Integration | Embed OpenWfe engine as a module into Magnolia, everything is persisted into the JCR repository.
+*-----*------*
+ Magnolia Integration | This goes through define OpenWfe module, which is then going to be embeded on specific instances of Magnolia. The thoughest part is going to refactor Magnolia a bit into command based execution, so that those commands can then be used atomically from within flow processes. GUI in the first place will just show the concept and won't be the GUI included and used inside Magnolia.
+*-----*------*
+ Workflow API | Expose a clean API that can be locally or remotely accessed to access workflow items and actions. All the actions should be available remotely (including standard Magnolia actions) and we will surely use an XML-RPC implementation.
+*-----*------*
+ Test and usecases | This section includes typical workflow usage within Magnolia. We should validate the concept presented in the other sections with simple examples using regression testing.
+*-----*------*
+
+
+*Introduction
+
+  The utilmate goal is to have ubiquitous workflow - if you create a user, its a workflow. If you delete a page, its a workflow. Activation is a workflow etc - this allows you to add custom agents to do whatever you like.
+  In the first place, we will focus on simple flows.
+
+** An example given: activation
+
+    * previous activation is replaced by new mechanism
+
+    * to activate means to start the activation workflow
+
+    * the standard activation workflow simply works in one step, i.e. the flow is automatically launched and all it does is actually publish the page (to the destination defined via new surround syndication(SM) feature)
+
+    * to have a more interesting example, the standard edit/review/publish workflow could be implemented
+
+
+
+**About Inboxes and work items
+
+  An inbox (worklist monitor) is available for all users displaying their workitems.
+
+  To "proceed" a workitem means that the engine will take care to move a workitem from one worklist to the next (probably displayed for a different user)
+
+  the work item describes details like what/who/when
+
+  The client application (Magnolia) is responsible to know what to do with a certain work item. In general, this will mean that the work item contains information about which page is involved; and we can visit that page to edit or review it by clicking on some link.
+
+  in general, the client app is responsible to ensure that a work item can only be proceeded if valid (validation is done by the client). Example: if we define that some metadata has to be filled out for a certain page to be proceeded, then this test should be performed by the client (the template).
+
+  work items can be moved to other participants by delegation or proceeding or canceling them.
+  Benefits
+
+    * the integration of workflow is seamless
+
+    * GUI-wise, can be done with little overhead. There is a remote API that can be used by any kind of GUI, whether AJAX or Flash.
+
+    * flexible to display other work items (Magnolia as part of a business process management suite)
+
+    * workflow can be highly customized, e.g. with agents (automatic participants) that index the page; create reports, send emails ... you name it.
+
+
+*OpenWFE
+
+  We will use www.openWFE.org http://www.openWFE.org/ to implement workflow. You can do <anything> with it. It support all workflow design patterns directly {{http://tmitwww.tm.tue.nl/research/patterns/}} and its openWFE-implementation: {{http://www.openwfe.org/docbook/build/ch07.html}}, has a distributed architecture and lets you run your own agents - automatic participants in the flow.
+
+* Architecture Overview
+
+
+[graphics/overview.jpg] Overview
+
+  * the OpenWFE Engine is embedded into a dedicated Magnolia instance, and not started externally.
+
+  * other magnolias / applications can communicate to that instance through the XML-RPC interface.
+
+  * the Engine persists its data into the JCR store used by magnolia
+
+
+  []
+
+[graphics/architecture.jpg] Architecture
+
+  * a command layer is providing commands
+
+  * the commands are configurable
+
+  * the commands are using the APIs
+
+
+OpenWFE Integration
+
+[mindmaps/integration_openWFE.png] Mindmap
+
+* Initialization
+
+  The initialization is done as described in the chapter 11 of the OpenWFE documentation: {{http://www.openwfe.org/docbook/build/ch11.html}}
+
+* Persistence
+
+** Overview
+
+     The main goal of {persitency} here is to achieve common data source for any kind of information,
+     either its run time data or business data shared by many applications.
+     For OpenWFE we have chosen JCR stores instead of native file system xml store.
+
+** Types of storage used by OpenWFE
+
+    * WorkItem store is a database for all workflow item objects.
+
+    * Expression store is a database for all flow Expressions (run data).
+
+** Implementation
+
+    [[1]] JCRWorkItemStorage
+
+      JCRWorkItem store implements openWFE work item store interface (openwfe.org.worklist.store.WorkItemStorage).
+
+      See {{{http://www.openwfe.org/javadoc/openwfe/org/worklist/store/WorkItemStorage.html}WorkItemStorage interface}}
+
+      This implemantation will allow storage of InFlowWorkItems for specified store. It should allow retrieving
+      InFlowWorkItems via FlowExpressionId and a full text search on its attributes in a given store.
+      In order to achieve this it would be best to define JCR node type "wfe:workItem" which will hold all attributes
+      of this InFlowWorkItem as JCR properties.
+
+        * Content structure in JCR would look like:
+
+-----------------------------------------------
+
+    JCR WorkSpace (Store)
+
+        NODE (wfe:workItem)
+
+            PROPERTY (String) ID
+
+            PROPERTY (String) attribute1
+
+            PROPERTY (String) attribute2
+
+            PROPERTY ......
+
+        NODE (wfe:workItem)
+
+            PROPERTY (String) ID
+
+            .....
+
+        NODE (wfe:workItem)
+
+            .....
+
+-----------------------------------------------
+
+        * Node type definition:
+
+-----------------------------------------------
+
+    <nodeType name="wfe:workItem" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
+
+        <supertypes>
+
+            <supertype>nt:hierarchyNode</supertype>
+
+        </supertypes>
+
+        <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" 
+        onParentVersion="VERSION" protected="false" sameNameSiblings="true">
+
+            <requiredPrimaryTypes>
+
+                <requiredPrimaryType>nt:hierarchyNode</requiredPrimaryType>
+
+            </requiredPrimaryTypes>
+
+        </childNodeDefinition>
+
+        <propertyDefinition name="*" requiredType="undefined" autoCreated="false" mandatory="false" 
+        onParentVersion="COPY" protected="false" multiple="false"/>
+
+    </nodeType>
+
+-----------------------------------------------
+
+    [[2]] JCRExpressionStore
+
+    Implement openWFE expression/ run-data store interface (openwfe.org.engine.expool.ExpressionStore).
+
+    See {{{http://www.openwfe.org/javadoc/openwfe/org/engine/expool/ExpressionStore.html}ExpressionStore interface}}
+
+    It has a similar implementation as WorkItem store, It should allow storing and retrieval of FlowExpression based on either
+    class type of the expression or FlowExpressionId.
+
+        * Content structure in JCR would look like:
+
+-----------------------------------------------
+
+    JCR WorkSpace (Expressions)
+
+        NODE (wfe:expression)
+
+            PROPERTY (String) ID
+
+            PROPERTY (Binary) expression [either serialized object or extracted XML]
+
+        NODE (wfe:expression)
+
+            PROPERTY (String) ID
+
+            .....
+
+        NODE (wfe:expression)
+
+            .....
+
+-----------------------------------------------
+
+        * Node type definition:
+
+-----------------------------------------------
+
+    <hierarchy element as wfe:workItem />
+
+-----------------------------------------------
+
+    [[3]] JCRPersistedEngine
+
+    Implement openwfe.org.embed.engine.Engine to use JCRWorkItemStore and JCRExpressionStore
+    there is an existing file system persistent engine which we can take as a basis.
+
+    See {{{http://www.openwfe.org/javadoc/openwfe/org/embed/impl/engine/FsPersistedEngine.html}FsPersistedEngine implementation}}
+
+
+* Participants
+
+	A {participant} in the sense of OpenWFE is a piece of code responsible to handle a workitem. 
+We register the magnolia users and roles as participants, which makes it simple to define workflows. To use <agents> we register the commands too.
+This is solved with a general participant mapping.
+
+    * One participant for the mappings 
+    
+        * role-* 
+
+        * user-*
+
+        * group-*
+
+        * commands-*
+        
+* Implementation
+
+      Implement openwfe.org.embed.engine.EmbeddedParticipant which will be mapped to all participants as defined above
+
+      See {{{http://www.openwfe.org/javadoc/openwfe/org/embed/engine/EmbeddedParticipant.html}EmbeddedParticipant interface}}
+
+      See {{{http://www.openwfe.org/javadoc/openwfe/org/engine/participants/Participant.html}Participant interface}}
+
+      This embedded participant will be registered by the engine (JCRPersistedEngine) via registerParticipant(), main
+      method in this interface is "public void consume({{{http://www.openwfe.org/javadoc/openwfe/org/engine/workitem/WorkItem.html}WorkItem}} wi)"
+      which will be used by the JCRPersistedEngine to transmit work items.
+
+
+* WorkItem
+
+  A WorkItem in the context of magnolia has always those attributes
+
+*---------------+--------------------------------------------------------+
+|assignee       | One can assign a WorkItem to a specifig user           |
+*---------------+--------------------------------------------------------+
+|participant    | The name of the participant (used to build the inbox)  |
+*---------------+--------------------------------------------------------+
+|referencedData | A reference to the document referenced by this document|
+*---------------+--------------------------------------------------------+
+|dialog         | The mangolia edit dialog to edit the item              |
+*---------------+--------------------------------------------------------+
+
+
+* Launching
+
+  In the default configuration the activation command is defined to use the ActivateCommand, which is activating the node using the magnolia api directly. If a user likes to change this he will change the configuration so that the activation command points to the class LaunchWorflowCommand. This command takes the parameters of the passed context and creates a WorkItem. The it launches the workflow defined by the parameter flow. From now on the WorkItems <travels> around until it get to the point in the flow definition where the participant is <command-activate>. The participant will use a catalog to get the activate command and call it finally passing the WorkItemContext. 
+
+
+* Flow Definitions
+
+  In the first place, we will put the xml files into the filesystem. When we move those files to the repository, then we need to have a page to upload and make them available for edition.
+  The flow definition must be available as URLs for creation of {{{http://www.openwfe.org/javadoc/openwfe/org/engine/workitem/LaunchItem.html}LaunchItem}} object.
+
+* Configuration
+
+  Since it is embedded, there is no configuration used. We use the default setup with only one participant and JCR persistency. Security is handled by Magnolia and not by OpenWFE.
+  Configuration if needed is done in the config repository, under the modules path.
+  
+
+
+
+Magnolia Integration
+
+
+
+[mindmaps/integration_magnolia.png] Mindmap
+
+
+
+
+*Module
+
+  To create a magnolia module one will do
+ 
+  * create a subclass of Engine (this object is created and initialized by the system)
+
+  * create a subclass of Store (this object we keep the configuration)
+
+  * make a jar with a manifest (in the manifest the Engine class is defined)
+
+  More information is found {{{http://magnolia.sourceforge.net/advanced/modules.html}here}}.
+
+  The best practice is to start with the module magnolia-templating from the {{{http://svn.magnolia.info/view/magnolia/trunk/}svn trunk}}. This module is very small and already working together with maven 2. During the development process it's easy to make a dummy jar containing only the manifest and to expose the classes into the WEB-INF/classes directory.
+
+
+
+*Priority
+
+  The first things we want is to get Activation and de-activation. 
+  A simpler approach could be that we replace the activate method in the {{{http://magnolia.sourceforge.net/apidocs/info/magnolia/module/admininterface/AdminTreeMVCHandler.html#activate()}AdminTreeMVCHandler}} class to always use a flow. The simplest flow would be to actually call the activation mechanism as is.
+  The following commands section describe a more extensible and professional framework for building commands.
+
+
+
+*Commands
+
+[graphics/commands.jpg] Diagram
+
+  Many of the action accessible from the admin central should actually converted to Command classes within the Magnolia code.
+
+  To do this in a proper way we must do the following:
+
+   [[1]] Extract the code from the current classes to Commands
+
+
+   [[1]] Those commands must be replaceable (plugable) like the trees are now in the config.
+
+
+   [[1]] A command must be a the same time an <OpenWFE agent>. So it should be possible to use any command like activation in a workflow. This is done by the participant map command-*.
+
+
+   [[1]] A context wraps a request or a workitem holding the parameters for the command, so that a command is executable from a the GUI or by the Workflow Engine.
+
+
+** Commons Chain
+
+  As a base we will use Commons Chain from Apache; please read http://jakarta.apache.org/commons/chain/cookbook.html
+
+
+** Contextes
+
+  The Context is actually only a Map with put and get methods. With this contexts it's possible to call the same commands from different places.
+
+*---+---+
+|Magnolia Context | This context wraps parameters given in the configuration. This gives the possibility to define parameters like which workflow the Launch command should launch. Those parameters can get overwritten by passing the parameter for example in a XML-RPC request.
+*---+---+
+|XMLRPCContext| This wraps a XML-RPC request
+*---+---+
+|WorkItemContext| This wraps a WorkItem
+*---+---+
+
+** Configuration
+
+  The configuration is not done in the xml file like in the default commons implementation. Instead the configuration is done in the magnolia config tree. In the admin module each tree can define it's own commands. Spoken in the words of commons chain: each tree has it's own catalog.
+
+[images/integration_magnolia/configuration.png] Configuration Snapshot
+
+** CommandsAdminTree
+  
+  CommandsAdminTree is a subclass of AdminTreeMVCHandler. The methods active, delete, rename, move ,.. are using the commands definition instead of there own implementation.
+
+
+*GUI
+
+	This is of low priority, but a proof of concept GUI should be written.
+
+[mindmaps/gui.png] Mindmap
+
+
+** Inbox
+
+  Every user has a personal inbox as also every group has one. The interface is similar to the one of the DMS Search. If the user opens his inbox he sees also all items in the inbox of groups he belongs to. There should be a possibility to replace the query used to build the inbox content of each user.
+
+  One can filter and sort the inbox by this crierias:
+
+    * Priority
+
+
+    * Inbox (user, group)
+
+
+    * Type (page, document, ..)
+
+
+    * Date (creation, modification)
+
+  For each type on can define a contextmenu. At least those points are available:
+
+
+    * Proceed
+
+
+    * Reject
+
+
+    * Assign
+
+
+    * Edit Item (to edit the work item)
+
+  The edit will call a contoller and pass the workitem to it. This controller will decide (make use of the workitem) which kind of edit dialog will show up.
+
+  Click on an item just like in the OpenWFE webclient application brings a dialog, the magnolia way:
+
+    [[1]] On one side, a graphic representation of the current status of the flow. (same as sample without all the arguments scaring users!) Should contains comments, documents, dates and affected users ...
+   
+    [[1]] On the other side, a list of properties and variables, just like the webclient is presenting them.
+
+
+    [[1]] The history, also in the manner it is displayed in the webclient.
+
+
+    [[1]] A list of actions: Proceed, Refuse, Save, Cancel ...
+
+  The superuser can see all items currently in a workflow.
+
+
+** Launch a Workflow
+
+  Currently the workflows are started automatically. This happens for example if the activation command is replaced by a workflow command. If one needs an other mechanism a developer must add a menupoint to the contextmenu of the tree. Since we provide an easy to use magnolia workflow API this should not be a complicated task.
+
+
+
+** Asignees
+
+  If a workitem is in the inbox of a group, one can asign a user as the reponsible on.
+
+
+
+** Context Menu
+
+  We do not yet change the context menu of the website tree or others. If there must be done some interaction on a workflow item it is done in the inbox.
+
+
+
+** Webpages
+
+  There is nothing special to say about webpages. For the time being one is able to replace the activation command with a workflow enabled activation command. In futre versions there will be a broader support. But a developer is able to use the workflow more wider and can interoduce it also for other actions. This will be more easier after we changed the GUI architecture, which is planed.
+
+
+
+
+** Flow Designer
+
+  For the time being there won't be a flow designer. But after the first integration is done we will provide a linear flow designer first. In this designer one can:
+
+    * define N steps
+
+
+    * assign for each step a participant (user, gourp, role, agent)
+
+
+    * on each step one can proceed or reject
+
+
+
+
+
+
+* Groups
+
+  Currently magnolia does only support users and roles. But it is very useful to have groups too. In the context of defining workflow this is a kind of a must. To support groups we must do the following
+
+    * create group "repository" like for users and roles
+
+
+    * create the needed dialog (like role assignment)
+
+
+    * update magnolia 2.2 JAAS implementation
+
+  The groups do not support any additional ACL. They are only used to group users.
+
+
+* Security
+
+  Workflow does not interfare with system permissions but core system must respect workflow restrictions. For instance if node 'A' is under workflow 'W1', no user should be able to edit this node unless that user is a part of W1, even if user has full access on this node. This restriction is mandatory for GUI but we are not sure yet if we should enforce this in core API.
+
+
+** Disadvantages of not enforcing workflow restrictions in core
+
+  [[1]] If you access repository from webDAV interface you can never make sure if someone is editing a node which is going through a workflow. 2. magnolia allows you to share content between different pages/nodes, templates can even allow editing of content which does not belong to the given page. I this scenario you can easily breach workflow restrictions if its not enforced in core API.
+
+
+
+
+** Advantages of enforcing workflow restrictions in core
+
+  [[1]] Access to the repository from various sources webDAV/RMI/API calls will be safe and according to magnolia access control together with workflow restrictions.
+
+API
+
+[mindmaps/api.png] Mindmap
+
+  We will provide an easy to use workflow API for magnolia. This is based in part on the  {{{http://web.openwfe.org/display/openwfe/OpenWFE+REST+Interface}REST interface}} already proposed by OpenWFE and also the {{{http://www.openwfe.org/javadoc/openwfe/org/wlactions/package-summary.html}Javadoc of the Wl actions}}.
+
+
+*{Workflow} set of remotely accessible commands
+
+	Here is a possible, non-exhaustive list of commands for the workflow.
+
+*-----+------+
+ StartWorkSession  | Initiating your work session with the OpenWFE server
+*-----*------*
+ EndWorkSession | Terminate your work session with the OpenWFE server.
+*-----*------*
+GetStoreNames | Retrieve the list of stores available
+*-----*------*
+ GetHeaders | Retrieves workitem headers from an OpenWFE store
+*-----*------*
+FindFlowInstance | Locate all instances of a given flow
+*-----*------*
+GetWorkItem | Retrieve an OpenWFE workitem
+*-----*------*
+GetAndLockWorkItem | Retrieves and then locks a given workitem
+*-----*------*
+ReleaseWorkItem | Remove the lock from a workitem
+*-----*------*
+SaveWorkItem | Save changes to a locked workitem
+*-----*------*
+ ForwardWorkItem | Forward a workitem to the next participant in the flow
+*-----*------*
+ListLaunchables | Retrieve a list of flows you can launch
+*-----*------*
+Launch | Start a new flow using a flow definition.
+*-----*------*
+CheckPermission | An action that allows interfaces to determine if edit or delegate buttons are appropriate for a given Subject (user) .
+*-----*------*
+Delegate| The action of saving a (potentially) modified WI in a store .
+*-----*------*
+CountWorkItems | counting workitems in a store .
+*-----*------*
+DelegateToParticipant | Delegate the item to another participant.
+*-----*------*
+
+
+
+*Magnolia set of remotely accessible commands
+
+	Taken so far from the following class: {{{http://magnolia.sourceforge.net/apidocs/info/magnolia/module/admininterface/AdminTreeMVCHandler.html}Magnolia TreeHandler}}
+
+*-----+------+
+Activate | Activate a node
+*-----*------*
+Create | Create a new node in the website
+*-----*------*
+Deactivate | Remove a node from the registered public instances
+*-----*------*
+Delete | Delete a page or a paragraph. Should maybe call a move node, where the target path is some kind of trash.
+*-----*------*
+Move | Move a node from one path to another one.
+*-----*------*
+Copy| Copy a node from a path to another path
+*-----*------*
+Save | Save all the changes in the session.
+*-----*------*
+Revert | Revert all changes in the session.
+*-----*------*
+
+	Maybe there should be something more specific about users, pages, paragraphs ? or that should be part of a wrapping API ...
+
+
+Test Cases
+
+[mindmaps/test.png] Mindmap
+  
+
+*Overview of things Macnica is interested in: 
+
+
+    * Time based publishing/unpublishing
+
+    * Email notification after certain steps in the workflow
+    
+    * Email based approvement process
+    
+    * Confirmation of action
+    
+    * Approval of steps of commands
+    
+    * GUI will be flash-based
+   
+*Notes about regression testing
+
+ Regression testing should actually be written before the code, based on interfaces. Allow to verify that what we implemented is exactly what we expected in the first place.
+   
+*Test cases to be used as validation of concept
+ 
+ The following test cases will have to be implemented into JUnit regression test cases
+ 
+**Edit/Review/Publish
+ 
+[testcases/testcase1.png] Edit/Review/Publish
+ 
+ 
+**Time-based publishing un-publishing
+ 
+[testcases/testcase2.png] Time-based publishing
+
+Timeframe 
+
+*by date
+
+*-----+------+
+ Beginning of december | Engine Integration and configuration, group repository, Workflow Remote Access as defined in the api section, Start regression testing 
+*-----*------*
+ Mid-december | Persistency of flow in JCR, Regression testing in place.
+*-----*------*
+ Early Next year | Web-based Workflow design
+*-----*------*
+Later next year | Web-interface in magnolia
+*-----*------*
+Sometimes | Magnolia based on commands
+*-----*------*
+
+
+*by magnolia release
+
+*-----+------+
+ Magnolia 2.2 | Embed OpenWfe as a module, and allow Remote Access to flow API
+*-----*------*
+ Magnolia 3.0 | Workflow interface along with tree re-engineering. Web-based design of flow.
+*-----*------*
+
+*by ordered tasks
+
+**Proof of concept (6 man#weeks)
+
+*-----+------+
+Embed the engine | Create a magnolia module called workflow with the openWfe
+*-----+------+
+JCR Persistency | Persist into a separate JCR repository (workflow) the following: workitem store and expression store as described in {{integration_openWFE.html#persitency}}
+*-----+------+
+Create participants | Mapping defined into the openwfe section. {{integration_openWFE.html#participant}}, embedded participant will be registered by the engine. Ask {{{mailto:john@openwfe.org}John}}
+*-----+------+
+Workflow Inbox | Use JCR queries to create the Inbox.  
+*-----+------+
+Proof of concept | Create activate remote XML-RPC call that sends an email to see if this is working. (Activate actually starts a flow based on a flow definition)
+*-----+------+
+
+**Finish implementation (6 man#weeks)
+
+*-----+------+
+Extend the AdminTreeMVCHandler | With common code from the above as a start to refactor into commands.
+*-----+------+
+Remote Interface | Create the other XML-RPC calls as described in {{api.html#Workflow}}
+*-----+------+
+Commands | Using Commons Chains to define command mapping 
+*-----+------+
+Magnolia Remote Commands | Create a handler to expose the magnolia commands as XML-RPC calls.
+*-----+------+
+
+**GUI Specific (x weeks)
+
+*-----+------+
+Integrate GUI into Magnolia | Workflow inbox, and set of actions.
+*-----+------+

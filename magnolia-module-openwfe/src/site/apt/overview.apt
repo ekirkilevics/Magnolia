@@ -1,0 +1,99 @@
+Overview
+
+  This document describes how we will integrate the openWFE work flow system into Magnolia
+
+* Goals
+
+    * introduce workflow into magnolia
+
+    * easy to use workflow api
+
+    * flexible architecture (Commands)
+
+    * remote access (XML-RPC)
+
+    * easy to use GUI: inbox, flow designer
+    
+* Summary    
+  
+[mindmaps/overview.png] Mindmap
+
+	The numbers in the diagram above represents the different priorities, where 1 is for highest priority.
+  
+*-----+------+
+ OpenWFE Integration | Embed OpenWfe engine as a module into Magnolia, everything is persisted into the JCR repository.
+*-----*------*
+ Magnolia Integration | This goes through define OpenWfe module, which is then going to be embeded on specific instances of Magnolia. The thoughest part is going to refactor Magnolia a bit into command based execution, so that those commands can then be used atomically from within flow processes. GUI in the first place will just show the concept and won't be the GUI included and used inside Magnolia.
+*-----*------*
+ Workflow API | Expose a clean API that can be locally or remotely accessed to access workflow items and actions. All the actions should be available remotely (including standard Magnolia actions) and we will surely use an XML-RPC implementation.
+*-----*------*
+ Test and usecases | This section includes typical workflow usage within Magnolia. We should validate the concept presented in the other sections with simple examples using regression testing.
+*-----*------*
+
+
+*Introduction
+
+  The utilmate goal is to have ubiquitous workflow - if you create a user, its a workflow. If you delete a page, its a workflow. Activation is a workflow etc - this allows you to add custom agents to do whatever you like.
+  In the first place, we will focus on simple flows.
+
+** An example given: activation
+
+    * previous activation is replaced by new mechanism
+
+    * to activate means to start the activation workflow
+
+    * the standard activation workflow simply works in one step, i.e. the flow is automatically launched and all it does is actually publish the page
+
+    * to have a more interesting example, the standard edit/review/publish workflow could be implemented
+
+
+
+**About Inboxes and work items
+
+  An inbox (worklist monitor) is available for all users displaying their workitems.
+
+  To "proceed" a workitem means that the engine will take care to move a workitem from one worklist to the next (probably displayed for a different user)
+
+  the work item describes details like what/who/when
+
+  The client application (Magnolia) is responsible to know what to do with a certain work item. In general, this will mean that the work item contains information about which page is involved; and we can visit that page to edit or review it by clicking on some link.
+
+  in general, the client app is responsible to ensure that a work item can only be proceeded if valid (validation is done by the client). Example: if we define that some metadata has to be filled out for a certain page to be proceeded, then this test should be performed by the client (the template).
+
+  work items can be moved to other participants by delegation or proceeding or canceling them.
+  Benefits
+
+    * the integration of workflow is seamless
+
+    * GUI-wise, can be done with little overhead. There is a remote API that can be used by any kind of GUI, whether AJAX or Flash.
+
+    * flexible to display other work items (Magnolia as part of a business process management suite)
+
+    * workflow can be highly customized, e.g. with agents (automatic participants) that index the page; create reports, send emails ... you name it.
+
+
+*OpenWFE
+
+  We will use www.openWFE.org http://www.openWFE.org/ to implement workflow. You can do <anything> with it. It support all workflow design patterns directly {{http://tmitwww.tm.tue.nl/research/patterns/}} and its openWFE-implementation: {{http://www.openwfe.org/docbook/build/ch07.html}}, has a distributed architecture and lets you run your own agents - automatic participants in the flow.
+
+* Architecture Overview
+
+
+[graphics/overview.jpg] Overview
+
+  * the OpenWFE Engine is embedded into a dedicated Magnolia instance, and not started externally.
+
+  * other magnolias / applications can communicate to that instance through the XML-RPC interface.
+
+  * the Engine persists its data into the JCR store used by magnolia
+
+
+  []
+
+[graphics/architecture.jpg] Architecture
+
+  * a command layer is providing commands
+
+  * the commands are configurable
+
+  * the commands are using the APIs

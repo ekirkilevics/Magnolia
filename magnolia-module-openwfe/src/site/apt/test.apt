@@ -1,0 +1,37 @@
+Test Cases
+
+[mindmaps/test.png] Mindmap
+  
+
+*Overview of things Macnica is interested in: 
+
+
+    * Time based publishing/unpublishing
+
+    * Email notification after certain steps in the workflow
+    
+    * Email based approvement process
+    
+    * Confirmation of action
+    
+    * Approval of steps of commands
+    
+    * GUI will be flash-based
+   
+*Notes about regression testing
+
+ Regression testing should actually be written before the code, based on interfaces. Allow to verify that what we implemented is exactly what we expected in the first place.
+   
+*Test cases to be used as validation of concept
+ 
+ The following test cases will have to be implemented into JUnit regression test cases
+ 
+**Edit/Review/Publish
+ 
+[testcases/testcase1.png] Edit/Review/Publish
+ 
+ 
+**Time-based publishing un-publishing
+ 
+[testcases/testcase2.png] Time-based publishing
+

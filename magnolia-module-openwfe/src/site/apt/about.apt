@@ -1,0 +1,28 @@
+Building the documentation
+
+* How to build the site
+
+  Make sure that you are using maven 2
+
+---
+mvn site
+---
+
+* APT Format Documentation
+{{http://maven.apache.org/guides/mini/guide-apt-format.html}}
+
+* How to print the hole documentation
+  
+  [[1]] First you must create one apt out off all the document parts. Make sure that each subdocument has some additional blank lines at the end of the document.
+
+---
+cd src/site/apt 
+cat overview.apt integration_openWFE.apt integration_magnolia.apt api.apt test.apt timeframe.apt > all.apt
+cd ../../.. ; mvn site
+---
+
+  [[2]] Then build it as usual
+
+  [[3]] Use this link to get the {{{all.html}document}} 
+
+

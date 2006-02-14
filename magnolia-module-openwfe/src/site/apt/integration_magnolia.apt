@@ -1,0 +1,211 @@
+
+
+Magnolia Integration
+
+
+
+[mindmaps/integration_magnolia.png] Mindmap
+
+
+
+
+*Module
+
+  To create a magnolia module one will do
+ 
+  * create a subclass of Engine (this object is created and initialized by the system)
+
+  * create a subclass of Store (this object we keep the configuration)
+
+  * make a jar with a manifest (in the manifest the Engine class is defined)
+
+  More information is found {{{http://magnolia.sourceforge.net/advanced/modules.html}here}}.
+
+  The best practice is to start with the module magnolia-templating from the {{{http://svn.magnolia.info/view/magnolia/trunk/}svn trunk}}. This module is very small and already working together with maven 2. During the development process it's easy to make a dummy jar containing only the manifest and to expose the classes into the WEB-INF/classes directory.
+
+
+
+*Priority
+
+  The first things we want is to get Activation and de-activation. 
+  A simpler approach could be that we replace the activate method in the {{{http://magnolia.sourceforge.net/apidocs/info/magnolia/module/admininterface/AdminTreeMVCHandler.html#activate()}AdminTreeMVCHandler}} class to always use a flow. The simplest flow would be to actually call the activation mechanism as is.
+  The following commands section describe a more extensible and professional framework for building commands.
+
+
+
+*Commands
+
+[graphics/commands.jpg] Diagram
+
+  Many of the action accessible from the admin central should actually converted to Command classes within the Magnolia code.
+
+  To do this in a proper way we must do the following:
+
+   [[1]] Extract the code from the current classes to Commands
+
+
+   [[1]] Those commands must be replaceable (plugable) like the trees are now in the config.
+
+
+   [[1]] A command must be a the same time an <OpenWFE agent>. So it should be possible to use any command like activation in a workflow. This is done by the participant map command-*.
+
+
+   [[1]] A context wraps a request or a workitem holding the parameters for the command, so that a command is executable from a the GUI or by the Workflow Engine.
+
+
+** Commons Chain
+
+  As a base we will use Commons Chain from Apache; please read http://jakarta.apache.org/commons/chain/cookbook.html
+
+
+** Contextes
+
+  The Context is actually only a Map with put and get methods. With this contexts it's possible to call the same commands from different places.
+
+*---+---+
+|Magnolia Context | This context wraps parameters given in the configuration. This gives the possibility to define parameters like which workflow the Launch command should launch. Those parameters can get overwritten by passing the parameter for example in a XML-RPC request.
+*---+---+
+|XMLRPCContext| This wraps a XML-RPC request
+*---+---+
+|WorkItemContext| This wraps a WorkItem
+*---+---+
+
+** Configuration
+
+  The configuration is not done in the xml file like in the default commons implementation. Instead the configuration is done in the magnolia config tree. In the admin module each tree can define it's own commands. Spoken in the words of commons chain: each tree has it's own catalog.
+
+[images/integration_magnolia/configuration.png] Configuration Snapshot
+
+** CommandsAdminTree
+  
+  CommandsAdminTree is a subclass of AdminTreeMVCHandler. The methods active, delete, rename, move ,.. are using the commands definition instead of there own implementation.
+
+
+*GUI
+
+	This is of low priority, but a proof of concept GUI should be written.
+
+[mindmaps/gui.png] Mindmap
+
+
+** Inbox
+
+  Every user has a personal inbox as also every group has one. The interface is similar to the one of the DMS Search. If the user opens his inbox he sees also all items in the inbox of groups he belongs to. There should be a possibility to replace the query used to build the inbox content of each user.
+
+  One can filter and sort the inbox by this crierias:
+
+    * Priority
+
+
+    * Inbox (user, group)
+
+
+    * Type (page, document, ..)
+
+
+    * Date (creation, modification)
+
+  For each type on can define a contextmenu. At least those points are available:
+
+
+    * Proceed
+
+
+    * Reject
+
+
+    * Assign
+
+
+    * Edit Item (to edit the work item)
+
+  The edit will call a contoller and pass the workitem to it. This controller will decide (make use of the workitem) which kind of edit dialog will show up.
+
+  Click on an item just like in the OpenWFE webclient application brings a dialog, the magnolia way:
+
+    [[1]] On one side, a graphic representation of the current status of the flow. (same as sample without all the arguments scaring users!) Should contains comments, documents, dates and affected users ...
+   
+    [[1]] On the other side, a list of properties and variables, just like the webclient is presenting them.
+
+
+    [[1]] The history, also in the manner it is displayed in the webclient.
+
+
+    [[1]] A list of actions: Proceed, Refuse, Save, Cancel ...
+
+  The superuser can see all items currently in a workflow.
+
+
+** Launch a Workflow
+
+  Currently the workflows are started automatically. This happens for example if the activation command is replaced by a workflow command. If one needs an other mechanism a developer must add a menupoint to the contextmenu of the tree. Since we provide an easy to use magnolia workflow API this should not be a complicated task.
+
+
+
+** Asignees
+
+  If a workitem is in the inbox of a group, one can asign a user as the reponsible on.
+
+
+
+** Context Menu
+
+  We do not yet change the context menu of the website tree or others. If there must be done some interaction on a workflow item it is done in the inbox.
+
+
+
+** Webpages
+
+  There is nothing special to say about webpages. For the time being one is able to replace the activation command with a workflow enabled activation command. In futre versions there will be a broader support. But a developer is able to use the workflow more wider and can interoduce it also for other actions. This will be more easier after we changed the GUI architecture, which is planed.
+
+
+
+
+** Flow Designer
+
+  For the time being there won't be a flow designer. But after the first integration is done we will provide a linear flow designer first. In this designer one can:
+
+    * define N steps
+
+
+    * assign for each step a participant (user, gourp, role, agent)
+
+
+    * on each step one can proceed or reject
+
+
+
+
+
+
+* Groups
+
+  Currently magnolia does only support users and roles. But it is very useful to have groups too. In the context of defining workflow this is a kind of a must. To support groups we must do the following
+
+    * create group "repository" like for users and roles
+
+
+    * create the needed dialog (like role assignment)
+
+
+    * update magnolia 2.2 JAAS implementation
+
+  The groups do not support any additional ACL. They are only used to group users.
+
+
+* Security
+
+  Workflow does not interfare with system permissions but core system must respect workflow restrictions. For instance if node 'A' is under workflow 'W1', no user should be able to edit this node unless that user is a part of W1, even if user has full access on this node. This restriction is mandatory for GUI but we are not sure yet if we should enforce this in core API.
+
+
+** Disadvantages of not enforcing workflow restrictions in core
+
+  [[1]] If you access repository from webDAV interface you can never make sure if someone is editing a node which is going through a workflow. 2. magnolia allows you to share content between different pages/nodes, templates can even allow editing of content which does not belong to the given page. I this scenario you can easily breach workflow restrictions if its not enforced in core API.
+
+
+
+
+** Advantages of enforcing workflow restrictions in core
+
+  [[1]] Access to the repository from various sources webDAV/RMI/API calls will be safe and according to magnolia access control together with workflow restrictions.
+

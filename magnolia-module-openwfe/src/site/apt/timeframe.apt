@@ -1,0 +1,58 @@
+Timeframe 
+
+*by date
+
+*-----+------+
+ Beginning of december | Engine Integration and configuration, group repository, Workflow Remote Access as defined in the api section, Start regression testing 
+*-----*------*
+ Mid-december | Persistency of flow in JCR, Regression testing in place.
+*-----*------*
+ Early Next year | Web-based Workflow design
+*-----*------*
+Later next year | Web-interface in magnolia
+*-----*------*
+Sometimes | Magnolia based on commands
+*-----*------*
+
+
+*by magnolia release
+
+*-----+------+
+ Magnolia 2.2 | Embed OpenWfe as a module, and allow Remote Access to flow API
+*-----*------*
+ Magnolia 3.0 | Workflow interface along with tree re-engineering. Web-based design of flow.
+*-----*------*
+
+*by ordered tasks
+
+**Proof of concept (6 man#weeks)
+
+*-----+------+
+Embed the engine | Create a magnolia module called workflow with the openWfe
+*-----+------+
+JCR Persistency | Persist into a separate JCR repository (workflow) the following: workitem store and expression store as described in {{integration_openWFE.html#persitency}}
+*-----+------+
+Create participants | Mapping defined into the openwfe section. {{integration_openWFE.html#participant}}, embedded participant will be registered by the engine. Ask {{{mailto:john@openwfe.org}John}}
+*-----+------+
+Workflow Inbox | Use JCR queries to create the Inbox.  
+*-----+------+
+Proof of concept | Create activate remote XML-RPC call that sends an email to see if this is working. (Activate actually starts a flow based on a flow definition)
+*-----+------+
+
+**Finish implementation (6 man#weeks)
+
+*-----+------+
+Extend the AdminTreeMVCHandler | With common code from the above as a start to refactor into commands.
+*-----+------+
+Remote Interface | Create the other XML-RPC calls as described in {{api.html#Workflow}}
+*-----+------+
+Commands | Using Commons Chains to define command mapping 
+*-----+------+
+Magnolia Remote Commands | Create a handler to expose the magnolia commands as XML-RPC calls.
+*-----+------+
+
+**GUI Specific (x weeks)
+
+*-----+------+
+Integrate GUI into Magnolia | Workflow inbox, and set of actions.
+*-----+------+

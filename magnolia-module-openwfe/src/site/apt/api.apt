@@ -1,0 +1,72 @@
+API
+
+[mindmaps/api.png] Mindmap
+
+  We will provide an easy to use workflow API for magnolia. This is based in part on the  {{{http://web.openwfe.org/display/openwfe/OpenWFE+REST+Interface}REST interface}} already proposed by OpenWFE and also the {{{http://www.openwfe.org/javadoc/openwfe/org/wlactions/package-summary.html}Javadoc of the Wl actions}}.
+
+
+*{Workflow} set of remotely accessible commands
+
+	Here is a possible, non-exhaustive list of commands for the workflow.
+
+*-----+------+
+ StartWorkSession  | Initiating your work session with the OpenWFE server
+*-----*------*
+ EndWorkSession | Terminate your work session with the OpenWFE server.
+*-----*------*
+GetStoreNames | Retrieve the list of stores available
+*-----*------*
+ GetHeaders | Retrieves workitem headers from an OpenWFE store
+*-----*------*
+FindFlowInstance | Locate all instances of a given flow
+*-----*------*
+GetWorkItem | Retrieve an OpenWFE workitem
+*-----*------*
+GetAndLockWorkItem | Retrieves and then locks a given workitem
+*-----*------*
+ReleaseWorkItem | Remove the lock from a workitem
+*-----*------*
+SaveWorkItem | Save changes to a locked workitem
+*-----*------*
+ ForwardWorkItem | Forward a workitem to the next participant in the flow
+*-----*------*
+ListLaunchables | Retrieve a list of flows you can launch
+*-----*------*
+Launch | Start a new flow using a flow definition.
+*-----*------*
+CheckPermission | An action that allows interfaces to determine if edit or delegate buttons are appropriate for a given Subject (user) .
+*-----*------*
+Delegate| The action of saving a (potentially) modified WI in a store .
+*-----*------*
+CountWorkItems | counting workitems in a store .
+*-----*------*
+DelegateToParticipant | Delegate the item to another participant.
+*-----*------*
+
+
+
+*Magnolia set of remotely accessible commands
+
+	Taken so far from the following class: {{{http://magnolia.sourceforge.net/apidocs/info/magnolia/module/admininterface/AdminTreeMVCHandler.html}Magnolia TreeHandler}}
+
+*-----+------+
+Activate | Activate a node
+*-----*------*
+Create | Create a new node in the website
+*-----*------*
+Deactivate | Remove a node from the registered public instances
+*-----*------*
+Delete | Delete a page or a paragraph. Should maybe call a move node, where the target path is some kind of trash.
+*-----*------*
+Move | Move a node from one path to another one.
+*-----*------*
+Copy| Copy a node from a path to another path
+*-----*------*
+Save | Save all the changes in the session.
+*-----*------*
+Revert | Revert all changes in the session.
+*-----*------*
+
+	Maybe there should be something more specific about users, pages, paragraphs ? or that should be part of a wrapping API ...
+
+

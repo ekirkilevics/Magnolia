@@ -1,0 +1,204 @@
+
+
+OpenWFE Integration
+
+[mindmaps/integration_openWFE.png] Mindmap
+
+* Initialization
+
+  The initialization is done as described in the chapter 11 of the OpenWFE documentation: {{http://www.openwfe.org/docbook/build/ch11.html}}
+
+* Persistence
+
+** Overview
+
+     The main goal of {persitency} here is to achieve common data source for any kind of information,
+     either its run time data or business data shared by many applications.
+     For OpenWFE we have chosen JCR stores instead of native file system xml store.
+
+** Types of storage used by OpenWFE
+
+    * WorkItem store is a database for all workflow item objects.
+
+    * Expression store is a database for all flow Expressions (run data).
+
+** Implementation
+
+    [[1]] JCRWorkItemStorage
+
+      JCRWorkItem store implements openWFE work item store interface (openwfe.org.worklist.store.WorkItemStorage).
+
+      See {{{http://www.openwfe.org/javadoc/openwfe/org/worklist/store/WorkItemStorage.html}WorkItemStorage interface}}
+
+      This implemantation will allow storage of InFlowWorkItems for specified store. It should allow retrieving
+      InFlowWorkItems via FlowExpressionId and a full text search on its attributes in a given store.
+      In order to achieve this it would be best to define JCR node type "wfe:workItem" which will hold all attributes
+      of this InFlowWorkItem as JCR properties.
+
+        * Content structure in JCR would look like:
+
+-----------------------------------------------
+
+    JCR WorkSpace (Store)
+
+        NODE (wfe:workItem)
+
+            PROPERTY (String) ID
+
+            PROPERTY (String) attribute1
+
+            PROPERTY (String) attribute2
+
+            PROPERTY ......
+
+        NODE (wfe:workItem)
+
+            PROPERTY (String) ID
+
+            .....
+
+        NODE (wfe:workItem)
+
+            .....
+
+-----------------------------------------------
+
+        * Node type definition:
+
+-----------------------------------------------
+
+    <nodeType name="wfe:workItem" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
+
+        <supertypes>
+
+            <supertype>nt:hierarchyNode</supertype>
+
+        </supertypes>
+
+        <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" 
+        onParentVersion="VERSION" protected="false" sameNameSiblings="true">
+
+            <requiredPrimaryTypes>
+
+                <requiredPrimaryType>nt:hierarchyNode</requiredPrimaryType>
+
+            </requiredPrimaryTypes>
+
+        </childNodeDefinition>
+
+        <propertyDefinition name="*" requiredType="undefined" autoCreated="false" mandatory="false" 
+        onParentVersion="COPY" protected="false" multiple="false"/>
+
+    </nodeType>
+
+-----------------------------------------------
+
+    [[2]] JCRExpressionStore
+
+    Implement openWFE expression/ run-data store interface (openwfe.org.engine.expool.ExpressionStore).
+
+    See {{{http://www.openwfe.org/javadoc/openwfe/org/engine/expool/ExpressionStore.html}ExpressionStore interface}}
+
+    It has a similar implementation as WorkItem store, It should allow storing and retrieval of FlowExpression based on either
+    class type of the expression or FlowExpressionId.
+
+        * Content structure in JCR would look like:
+
+-----------------------------------------------
+
+    JCR WorkSpace (Expressions)
+
+        NODE (wfe:expression)
+
+            PROPERTY (String) ID
+
+            PROPERTY (Binary) expression [either serialized object or extracted XML]
+
+        NODE (wfe:expression)
+
+            PROPERTY (String) ID
+
+            .....
+
+        NODE (wfe:expression)
+
+            .....
+
+-----------------------------------------------
+
+        * Node type definition:
+
+-----------------------------------------------
+
+    <hierarchy element as wfe:workItem />
+
+-----------------------------------------------
+
+    [[3]] JCRPersistedEngine
+
+    Implement openwfe.org.embed.engine.Engine to use JCRWorkItemStore and JCRExpressionStore
+    there is an existing file system persistent engine which we can take as a basis.
+
+    See {{{http://www.openwfe.org/javadoc/openwfe/org/embed/impl/engine/FsPersistedEngine.html}FsPersistedEngine implementation}}
+
+
+* Participants
+
+	A {participant} in the sense of OpenWFE is a piece of code responsible to handle a workitem. 
+We register the magnolia users and roles as participants, which makes it simple to define workflows. To use <agents> we register the commands too.
+This is solved with a general participant mapping.
+
+    * One participant for the mappings 
+    
+        * role-* 
+
+        * user-*
+
+        * group-*
+
+        * commands-*
+        
+* Implementation
+
+      Implement openwfe.org.embed.engine.EmbeddedParticipant which will be mapped to all participants as defined above
+
+      See {{{http://www.openwfe.org/javadoc/openwfe/org/embed/engine/EmbeddedParticipant.html}EmbeddedParticipant interface}}
+
+      See {{{http://www.openwfe.org/javadoc/openwfe/org/engine/participants/Participant.html}Participant interface}}
+
+      This embedded participant will be registered by the engine (JCRPersistedEngine) via registerParticipant(), main
+      method in this interface is "public void consume({{{http://www.openwfe.org/javadoc/openwfe/org/engine/workitem/WorkItem.html}WorkItem}} wi)"
+      which will be used by the JCRPersistedEngine to transmit work items.
+
+
+* WorkItem
+
+  A WorkItem in the context of magnolia has always those attributes
+
+*---------------+--------------------------------------------------------+
+|assignee       | One can assign a WorkItem to a specifig user           |
+*---------------+--------------------------------------------------------+
+|participant    | The name of the participant (used to build the inbox)  |
+*---------------+--------------------------------------------------------+
+|referencedData | A reference to the document referenced by this document|
+*---------------+--------------------------------------------------------+
+|dialog         | The mangolia edit dialog to edit the item              |
+*---------------+--------------------------------------------------------+
+
+
+* Launching
+
+  In the default configuration the activation command is defined to use the ActivateCommand, which is activating the node using the magnolia api directly. If a user likes to change this he will change the configuration so that the activation command points to the class LaunchWorflowCommand. This command takes the parameters of the passed context and creates a WorkItem. The it launches the workflow defined by the parameter flow. From now on the WorkItems <travels> around until it get to the point in the flow definition where the participant is <command-activate>. The participant will use a catalog to get the activate command and call it finally passing the WorkItemContext. 
+
+
+* Flow Definitions
+
+  In the first place, we will put the xml files into the filesystem. When we move those files to the repository, then we need to have a page to upload and make them available for edition.
+  The flow definition must be available as URLs for creation of {{{http://www.openwfe.org/javadoc/openwfe/org/engine/workitem/LaunchItem.html}LaunchItem}} object.
+
+* Configuration
+
+  Since it is embedded, there is no configuration used. We use the default setup with only one participant and JCR persistency. Security is handled by Magnolia and not by OpenWFE.
+  Configuration if needed is done in the config repository, under the modules path.
+  
+
