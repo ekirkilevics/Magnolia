@@ -1,0 +1,115 @@
+package info.magnolia.module.owfe;
+
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.jcr.ValueFactory;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+
+import com.ns.log.Log;
+
+/**
+ * Servlet implementation class for Servlet: FlowDef
+ * 
+ */
+public class FlowDefServlet extends javax.servlet.http.HttpServlet implements
+		javax.servlet.Servlet {
+	/**
+	 * Logger
+	 */
+	private static Logger log = Logger.getLogger(FlowDefServlet.class);
+
+	/*
+	 * (non-Java-doc)
+	 * 
+	 * @see javax.servlet.http.HttpServlet#HttpServlet()
+	 */
+	public FlowDefServlet() {
+		super();
+	}
+
+	/*
+	 * (non-Java-doc)
+	 * 
+	 * @see javax.servlet.http.HttpServlet#doGet(HttpServletRequest request,
+	 *      HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+
+		String flowName = request.getParameter("name");
+
+		if (flowName == null) {
+			response
+					.getWriter()
+					.println(
+							"<form action=\"FlowDefUpload\" method=\"post\">"
+									+ "<textArea  cols=\"80\" rows=\"25\"  name=\"flow\">"
+									+ "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
+									+ "<process-definition xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://www.openwfe.org/flowdef_r1.5.0.xsd\" name=\"docflow\" revision=\"1.0\">"
+									+ "<description language=\"default\">This just the complete flow definition of docflow process.</description>"
+									+ "<sequence>"
+									+ "<participant ref=\"a\" />"
+									+ "</sequence>"
+									+ "</process-definition>"
+									+ "</textArea>"
+									+ "<br><input type=\"submit\"></input>"
+									+ "</form>"
+									+ "<p><a href=\"FlowDef?name=*\">List all flows</a>");
+			return;
+		}
+		if (flowName.equalsIgnoreCase("*")) // list all flow
+		{
+			List list = new JCRFlowDefinition().getFlows(request);
+			for (int i = 0; i < list.size(); i++) {
+				response.getWriter().println("<table>");
+				response.getWriter().println(
+						"<tr><td><a href=\"" + list.get(i) + "\">");
+				response.getWriter().println(list.get(i));
+				response.getWriter().println("</a></td></tr>");
+				response.getWriter().println("</table>");
+			}
+
+		} else {
+
+			// get flow by name
+			Content flowdef = new JCRFlowDefinition().findFlowDef(flowName);
+			if (flowdef == null) {
+				log.error("can not find flow definition for " + flowName);
+				log.error("add one for testing");
+				// try {
+				// new JCRFlowDefinition().addFlow(flowName);
+				// } catch (Exception e) {
+				// log.error("add flow failed", e);
+				// }
+				return;
+			} else {
+				response.getWriter().println(
+						flowdef.getNodeData("value").getString());
+			}
+		}
+
+	}
+
+	/*
+	 * (non-Java-doc)
+	 * 
+	 * @see javax.servlet.http.HttpServlet#doPost(HttpServletRequest request,
+	 *      HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+	}
+}
