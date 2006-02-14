@@ -39,6 +39,8 @@ public class MgnlUser implements User {
      * Under this subnodes the assigned roles are saved
      */
     private static final String NODE_ROLES = "roles"; //$NON-NLS-1$
+    
+    private static final String NODE_GROUPS = "groups"; //$NON-NLS-1$
 
     /**
      * the content object
@@ -51,6 +53,34 @@ public class MgnlUser implements User {
     protected MgnlUser(Content userNode) {
         this.userNode = userNode;
     }
+    
+    /**
+     * Is this user in a specified role?
+     * @param roleName the name of the role
+     * @return true if in role
+     */
+    public boolean inGroup(String groupName) {
+        try {
+            Content rolesNode = userNode.getContent(NODE_GROUPS);
+
+            for (Iterator iter = rolesNode.getChildren().iterator(); iter.hasNext();) {
+                Content node = (Content) iter.next();
+                if (node.getNodeData("path").getString().equals("/" + groupName)) { //$NON-NLS-1$ //$NON-NLS-2$
+                    return true;
+                }
+            }
+            if (rolesNode.hasContent(groupName)) {
+                return true;
+            }
+
+        }
+        catch (RepositoryException e) {
+            // nothing
+        }
+
+        return false;
+    }
+    
 
     /**
      * Is this user in a specified role?

@@ -55,6 +55,17 @@ public final class ItemType implements Serializable {
      * Node type: metadata
      */
     public static final String NT_METADATA = "mgnl:metaData"; //$NON-NLS-1$
+    
+    /**
+     * "wfe:workItem"
+     */
+    public static final ItemType WORKITEM = new ItemType("workItem");
+    
+    
+    /**
+     * "wfe:expression"
+     */
+    public static final ItemType EXPRESSION = new ItemType("expression"); //$NON-NLS-1$
 
     /**
      * Mixin: node has access control.
