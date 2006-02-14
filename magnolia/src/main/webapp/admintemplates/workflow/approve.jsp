@@ -39,6 +39,6 @@ else
 	out.println("<h3>activation failed.</h3>");
 %>
 <br>
-<a href="inbox.jsp"> back to inbox </a>
+<a href="/irbridge/templates/jsp/irbridge/_workflow/inbox.jsp"> back to inbox </a>
 </body>
 </html>

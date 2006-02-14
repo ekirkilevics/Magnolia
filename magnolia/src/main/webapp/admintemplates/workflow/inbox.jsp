@@ -41,7 +41,7 @@ out.println(wi.getDispatchTime());
 </font>
 </td>
 <td>
-<form action="save.jsp" method="get">
+<form action="/irbridge/templates/jsp/irbridge/_workflow/save.jsp" method="get">
 <input type="hidden" name="eid" value="<%=id%>">
 <%
 
@@ -71,7 +71,7 @@ while (it.hasNext())
 </form>
 </td>
  
-<td><a href="approve.jsp?eid=<%=id %>">approve</a>  <a href="reject.jsp?eid=<%=id %>">reject</a></tr>
+<td><a href="/irbridge/templates/jsp/irbridge/_workflow/approve.jsp?eid=<%=id %>">approve</a>  <a href="/irbridge/templates/jsp/irbridge/_workflow/reject.jsp?eid=<%=id %>">reject</a></tr>
 <%}} %>
 </br>
 </table>

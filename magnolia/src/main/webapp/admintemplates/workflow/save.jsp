@@ -18,10 +18,15 @@ if (eid == null)
 }
 else 
 	out.println("expression id = " + eid);
-
+String[] names = request.getParameterValues("attributeName");
+String[] values = request.getParameterValues("value");
+for (int i = 0; i < names.length; i++){
+	out.println(names[i]+"=");
+	out.println(values[i]+"<br>");
+}
 boolean result = true;
 try{
-	owfeBean.rejectActivation(eid);
+	owfeBean.updateWorkItem(eid, names, values);
 }
 catch (Exception e)
 {
@@ -35,11 +40,11 @@ catch (Exception e)
 <br>
 <%
 if (result)
-	out.println("<h3>Reject succeded.</h3>");
+	out.println("<h3>save succeded.</h3>");
 else
-	out.println("<h3>Reject failed.</h3>");
+	out.println("<h3>save failed.</h3>");
 %>
 <br>
-<a href="inbox.jsp"> back to inbox </a>
+<a href="/irbridge/templates/jsp/irbridge/_workflow/inbox.jsp"> back to inbox </a>
 </body>
 </html>
