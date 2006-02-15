@@ -64,7 +64,10 @@
         <Map name="config" repositoryName="config" />
         <Map name="users" repositoryName="users" />
         <Map name="userroles" repositoryName="userroles" />
+        <Map name="usergroups" repositoryName="usergroups"/>
+        <Map name="owfe" repositoryName="owfe"/>
     </RepositoryMapping>
+    
     <!-- magnolia default website repository -->
     <Repository name="website" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
         <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-derby-search.xml" />
@@ -100,6 +103,14 @@
         <param name="providerURL" value="localhost" />
         <param name="bindName" value="usersAuthor" />
     </Repository>
+	<!--  magnolia groups repository -->
+	<Repository name="usergroups" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
+        <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-derby-nosearch.xml" />
+        <param name="repositoryHome" value="repositories/groups" />
+        <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory" />
+        <param name="providerURL" value="localhost" />
+        <param name="bindName" value="usergroupsAuthor" />
+    </Repository>
     <!-- magnolia default user roles repository -->
     <Repository name="userroles" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
         <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-derby-nosearch.xml" />
@@ -108,15 +119,9 @@
         <param name="providerURL" value="localhost" />
         <param name="bindName" value="userrolesAuthor" />
     </Repository>
-    <Repository name="usergroups" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
-        <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-bdb-nosearch.xml" />
-        <param name="repositoryHome" value="repositories/usergroups" />
-        <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory" />
-        <param name="providerURL" value="localhost" />
-    	<param name="bindName" value="usergroupsAuthor" />
-    </Repository>
+    <!-- workflow module -->
     <Repository name="owfe" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
-        <param name="configFile" value="WEB-INF/config/repo-conf/owfe.xml" />
+        <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-derby-search.xml" />
         <param name="repositoryHome" value="repositories/owfe" />
         <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory" />
         <param name="providerURL" value="localhost" />
