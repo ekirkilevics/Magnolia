@@ -3,11 +3,8 @@ import openwfe.org.ServiceException;
 import openwfe.org.embed.impl.engine.FsPersistedEngine;
 import openwfe.org.embed.impl.engine.PersistedEngine;
 import openwfe.org.engine.Definitions;
-import openwfe.org.engine.impl.expool.XmlExpressionStore;
 import openwfe.org.engine.participants.Participant;
 import openwfe.org.engine.participants.ParticipantMap;
-
-import com.ns.log.Log;
 
 
 /**
@@ -30,7 +27,7 @@ public class JCRPersistedEngine extends PersistedEngine {
 		ParticipantMap pm = Definitions.getParticipantMap(getContext());
 		if (pm == null)
 		{
-			Log.error("owfe", "get particiaptn failed");
+			log.error( "get participant failed, the map retrieved was null for:"+name);
 			return null;
 		}
 		return pm.get(name);

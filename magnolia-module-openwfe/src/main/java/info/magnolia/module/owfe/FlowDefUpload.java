@@ -1,20 +1,12 @@
 package info.magnolia.module.owfe;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ItemType;
-
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-
-import com.ns.log.Log;
 
 /**
  * Servlet implementation class for Servlet: FlowDefUpload

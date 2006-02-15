@@ -6,8 +6,6 @@ import openwfe.org.engine.workitem.WorkItem;
 
 import org.apache.log4j.Logger;
 
-import com.ns.log.Log;
-
 public class MgnlParticipant extends AbstractEmbeddedParticipant{
 	  /**
      * Logger
@@ -19,17 +17,15 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant{
 	public MgnlParticipant() throws Exception{
 		
 		super();
-		Log.trace("owfe", "MgnlParticipant()");
 		storage = new JCRWorkItemAPI();
-		Log.trace("owfe", "storage = " + storage);
+		log.debug("storage = " + storage);
 		// TODO Auto-generated constructor stub
 	}
 
 	public MgnlParticipant(String arg0) throws Exception{
 		super(arg0);
-		Log.trace("owfe", "MgnlParticipant()");
 		storage = new JCRWorkItemAPI();
-		Log.trace("owfe", "storage = " + storage);
+		log.debug("storage = " + storage);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -50,7 +46,7 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant{
 		}
 		else
 		{
-			Log.trace("owfe", "storage = " + storage);
+			log.debug("storage = " + storage);
 			storage.storeWorkItem("", (InFlowWorkItem)wi);
 		}
 		

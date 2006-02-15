@@ -7,8 +7,6 @@ import javax.jcr.Repository;
 
 import org.apache.log4j.Logger;
 
-import com.ns.log.Log;
-
 public class OWFEEngine{
 	/**
 	 * Logger.
@@ -22,7 +20,7 @@ public class OWFEEngine{
 	OWFEEngine() throws Exception
 	{	
 		wfEngine = new JCRPersistedEngine();
-		Log.log("owfe", "create worklist...");
+		log.debug("create worklist...");
 
 		//JCRWorkList wl_pl = new JCRWorkList("project-leader");	
 		//OWFEEngine.getEngine().registerParticipant(wl_pl);
@@ -38,7 +36,7 @@ public class OWFEEngine{
 	
 	static public Repository getOWFERepository() {
 		Repository repo = ContentRepository.getRepository(REPO_OWFE);
-		Log.trace("get repository for " + REPO_OWFE + "=" + repo);
+		log.info("get repository for " + REPO_OWFE + "=" + repo);
 		return repo;
 	}
 	
@@ -50,7 +48,7 @@ public class OWFEEngine{
 		else
 			 hm = ContentRepository
 			.getHierarchyManager(REPO_OWFE);
-		Log.trace("get HierarchyManager for " + REPO_OWFE + "=" + hm);
+		log.info("get HierarchyManager for " + REPO_OWFE + "=" + hm);
 		return hm;
 	}
 

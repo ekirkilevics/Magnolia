@@ -4,7 +4,6 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.NodeData;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -14,23 +13,17 @@ import java.util.List;
 
 import javax.jcr.ValueFactory;
 
-import org.jdom.Document;
-import org.jdom.Element;
-
 import openwfe.org.ApplicationContext;
 import openwfe.org.ServiceException;
-import openwfe.org.engine.expressions.FlowExpression;
 import openwfe.org.engine.expressions.FlowExpressionId;
-import openwfe.org.engine.workitem.Attribute;
 import openwfe.org.engine.workitem.InFlowWorkItem;
-import openwfe.org.engine.workitem.StringAttribute;
-import openwfe.org.engine.workitem.StringMapAttribute;
 import openwfe.org.worklist.impl.store.AbstractStorage;
 import openwfe.org.worklist.store.StoreException;
 import openwfe.org.xml.XmlCoder;
 import openwfe.org.xml.XmlUtils;
 
-import com.ns.log.Log;
+import org.jdom.Document;
+import org.jdom.Element;
 
 //public class JCRWorkItemStore implements WorkItemStorage {
 public class JCRWorkItemStorage extends AbstractStorage {
@@ -87,7 +80,6 @@ public class JCRWorkItemStorage extends AbstractStorage {
 			// @fix it
 			return c.size();
 		} catch (Exception e) {
-			Log.error("owfe", e);
 			log.error("exception:" + e);
 			throw new StoreException(e.toString());
 		}
@@ -129,7 +121,6 @@ public class JCRWorkItemStorage extends AbstractStorage {
 
 			return ret;
 		} catch (Exception e) {
-			Log.error("owfe", e);
 			log.error("exception:" + e);
 			throw new StoreException(e.toString());
 		}
@@ -154,7 +145,6 @@ public class JCRWorkItemStorage extends AbstractStorage {
 				}
 			}
 		} catch (Exception e) {
-			Log.error("owfe", e);
 			log.error("exception:" + e);
 			throw new StoreException(e.toString());
 		}
@@ -164,8 +154,8 @@ public class JCRWorkItemStorage extends AbstractStorage {
 	public InFlowWorkItem retrieveWorkItem(final String storeName,
 			final FlowExpressionId fei) throws StoreException {
 		InFlowWorkItem wi = null;
-		Log.trace("owfe", "starting retrieve work item. this = " + this);
-		Log.trace("owfe", "retrieve work item for ID = "
+		log.debug("starting retrieve work item. this = " + this);
+		log.debug("retrieve work item for ID = "
 				+ fei.toParseableString());
 		// String fileName = determineFileName(storeName, fei, false);
 		//
@@ -186,7 +176,7 @@ public class JCRWorkItemStorage extends AbstractStorage {
 	public static InFlowWorkItem loadWorkItem(Content ct) throws Exception{
 		InFlowWorkItem wi = null;
 		InputStream s = ct.getNodeData("value").getStream();
-		Log.trace("owfe", "retrieve work item: value = " + s.toString());
+		log.debug("retrieve work item: value = " + s.toString());
 		final org.jdom.input.SAXBuilder builder = new org.jdom.input.SAXBuilder();
 		Document doc = builder.build(s);
 		wi = (InFlowWorkItem) XmlCoder.decode(doc);
@@ -194,10 +184,8 @@ public class JCRWorkItemStorage extends AbstractStorage {
 		Iterator itt = wi.getAttributes().alphaStringIterator();
 		while (itt.hasNext()) {
 			Object o = itt.next();
-			Log.trace("owfe", o);
 			String name1 = (String) o;
-			Log.trace("owfe", name1 + "=" + wi.getAttribute(name1).toString());
-
+			log.debug(name1 + "=" + wi.getAttribute(name1).toString());
 		}
 		return wi;
 	}
@@ -226,7 +214,6 @@ public class JCRWorkItemStorage extends AbstractStorage {
 			}
 
 		} catch (Exception e) {
-			Log.error("owfe", e);
 			log.error("exception:" + e);
 		}
 		return null;
@@ -235,7 +222,7 @@ public class JCRWorkItemStorage extends AbstractStorage {
 	                               
 	public boolean checkContentWithEID(Content ct, FlowExpressionId eid){
 		String cid = ct.getNodeData("ID").getString();
-		Log.trace("owfe", "checkContentWithEID: ID = " + cid);
+		log.debug("checkContentWithEID: ID = " + cid);
 		FlowExpressionId id = null;
 		
 		id = FlowExpressionId.fromParseableString(cid);
@@ -260,14 +247,14 @@ public class JCRWorkItemStorage extends AbstractStorage {
 
 			ValueFactory vf = newc.getJCRNode().getSession().getValueFactory();
 			String sId = wi.getLastExpressionId().toParseableString();
-			Log.trace("owfe", "store work item: ID = " + sId);
+			log.debug("store work item: ID = " + sId);
 			newc.createNodeData("ID", vf.createValue(sId));
 			// convert to xml string
 			Element encoded = XmlCoder.encode(wi);
 			final org.jdom.Document doc = new org.jdom.Document(encoded);
 			String s = XmlUtils.toString(doc, null);
 			newc.createNodeData("value", vf.createValue(s));
-			Log.trace("owfe", "store work item: value=" + s);
+			log.debug("store work item: value=" + s);
 			/*
 			 * // store all attributes StringMapAttribute sma =
 			 * wi.getAttributes(); Iterator it = sma.alphaStringIterator();
@@ -278,7 +265,6 @@ public class JCRWorkItemStorage extends AbstractStorage {
 			 */
 			hm.save();
 		} catch (Exception e) {
-			Log.error("owfe", e);
 			log.error("exception:" + e);
 			throw new StoreException(e.toString());
 		}

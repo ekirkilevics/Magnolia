@@ -25,8 +25,6 @@ import openwfe.org.xml.XmlUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 
-import com.ns.log.Log;
-
 public class JCRExpressionStore extends AbstractExpressionStore {
 
 	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger
@@ -67,7 +65,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 			// set expressionId as attribte id
 			ValueFactory vf = ct.getJCRNode().getSession().getValueFactory();
 			String value = fe.getId().toParseableString();
-			Log.trace("id_value=" + value);
+			log.debug("id_value=" + value);
 			ct.createNodeData("ID", vf.createValue(value));
 
 			// convert to xml string
@@ -80,7 +78,6 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 			hm.save();
 
 		} catch (Exception e) {
-			Log.error("owfe", e);
 			log.error("exception:" + e);
 		}
 
@@ -106,7 +103,6 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 			catch(Exception e){ // in case any invalid expression, just delete it
 				ct.delete();
 				hm.save();
-				Log.error("owfe", e);
 				log.error("exception:" + e);
 				continue;
 			}
@@ -119,7 +115,6 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 			}
 
 		} catch (Exception e) {
-			Log.error("owfe", e);
 			log.error("exception:" + e);
 		}
 
@@ -144,7 +139,6 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 					id =  FlowExpressionId.fromParseableString(sid);
 				}catch(Exception e){
 					log.error("parse expresion id failed", e);
-					Log.error("owfe", e);
 					ct.delete();
 					hm.save();
 					continue;
@@ -163,7 +157,6 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 			
 
 		} catch (Exception e) {
-			Log.error("owfe", e);
 			log.error("exception:" + e);
 		}
 		throw new PoolException("can not get this expression (id=" + s_fei + ")");
@@ -200,7 +193,6 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 			return ret.iterator();
 
 		} catch (Exception e) {
-			Log.error("owfe", e);
 			log.error("exception:" + e);
 			return ret.iterator();
 		}
@@ -213,7 +205,6 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 			// @fix it
 			return c.size();
 		} catch (Exception e) {
-			Log.error("owfe", e);
 			log.error("exception:" + e);
 			return 0;
 		}

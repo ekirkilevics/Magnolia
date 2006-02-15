@@ -46,11 +46,6 @@
 			<version>1.6.1</version>
 		</dependency>
 		<dependency>
-			<groupId>nsj</groupId>
-			<artifactId>nsj</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
 			<groupId>openwfe</groupId>
 			<artifactId>openwfe-applic</artifactId>
 			<version>1.6.1</version>
@@ -86,16 +81,4 @@
 			<version>2.0</version>
 		</dependency>
 	</dependencies>
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
-					<optimize>true</optimize>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 </project>

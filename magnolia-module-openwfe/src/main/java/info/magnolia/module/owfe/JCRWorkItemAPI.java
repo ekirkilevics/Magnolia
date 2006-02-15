@@ -13,8 +13,6 @@ import java.util.List;
 
 import javax.jcr.ValueFactory;
 
-import openwfe.org.ApplicationContext;
-import openwfe.org.ServiceException;
 import openwfe.org.engine.expressions.FlowExpressionId;
 import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.worklist.store.StoreException;
@@ -24,7 +22,6 @@ import openwfe.org.xml.XmlUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 
-import com.ns.log.Log;
 
 public class JCRWorkItemAPI {
 
@@ -68,7 +65,6 @@ public class JCRWorkItemAPI {
 			// @fix it
 			return c.size();
 		} catch (Exception e) {
-			Log.error("owfe", e);
 			log.error("exception:" + e);
 			throw new StoreException(e.toString());
 		}
@@ -103,7 +99,6 @@ public class JCRWorkItemAPI {
 
 			return ret;
 		} catch (Exception e) {
-			Log.error("owfe", e);
 			log.error("exception:" + e);
 			throw new StoreException(e.toString());
 		}
@@ -127,7 +122,6 @@ public class JCRWorkItemAPI {
 				}
 			}
 		} catch (Exception e) {
-			Log.error("owfe", e);
 			log.error("exception:" + e);
 			throw new StoreException(e.toString());
 		}
@@ -137,8 +131,8 @@ public class JCRWorkItemAPI {
 	public InFlowWorkItem retrieveWorkItem(final String storeName,
 			final FlowExpressionId fei) throws StoreException {
 		InFlowWorkItem wi = null;
-		Log.trace("owfe", "starting retrieve work item. this = " + this);
-		Log.trace("owfe", "retrieve work item for ID = "
+		log.debug( "starting retrieve work item. this = " + this);
+		log.debug("retrieve work item for ID = "
 				+ fei.toParseableString());
 		// String fileName = determineFileName(storeName, fei, false);
 		//
@@ -159,7 +153,7 @@ public class JCRWorkItemAPI {
 	public static InFlowWorkItem loadWorkItem(Content ct) throws Exception {
 		InFlowWorkItem wi = null;
 		InputStream s = ct.getNodeData("value").getStream();
-		Log.trace("owfe", "retrieve work item: value = " + s.toString());
+		log.debug("retrieve work item: value = " + s.toString());
 		final org.jdom.input.SAXBuilder builder = new org.jdom.input.SAXBuilder();
 		Document doc = builder.build(s);
 		wi = (InFlowWorkItem) XmlCoder.decode(doc);
@@ -167,10 +161,8 @@ public class JCRWorkItemAPI {
 		Iterator itt = wi.getAttributes().alphaStringIterator();
 		while (itt.hasNext()) {
 			Object o = itt.next();
-			Log.trace("owfe", o);
 			String name1 = (String) o;
-			Log.trace("owfe", name1 + "=" + wi.getAttribute(name1).toString());
-
+			log.debug(name1 + "=" + wi.getAttribute(name1).toString());
 		}
 		return wi;
 	}
@@ -198,7 +190,6 @@ public class JCRWorkItemAPI {
 			}
 
 		} catch (Exception e) {
-			Log.error("owfe", e);
 			log.error("exception:" + e);
 		}
 		return null;
@@ -207,7 +198,7 @@ public class JCRWorkItemAPI {
 
 	public boolean checkContentWithEID(Content ct, FlowExpressionId eid) {
 		String cid = ct.getNodeData("ID").getString();
-		Log.trace("owfe", "checkContentWithEID: ID = " + cid);
+		log.debug("checkContentWithEID: ID = " + cid);
 		FlowExpressionId id = null;
 
 		id = FlowExpressionId.fromParseableString(cid);
@@ -232,14 +223,14 @@ public class JCRWorkItemAPI {
 
 			ValueFactory vf = newc.getJCRNode().getSession().getValueFactory();
 			String sId = wi.getLastExpressionId().toParseableString();
-			Log.trace("owfe", "store work item: ID = " + sId);
+			log.debug("store work item: ID = " + sId);
 			newc.createNodeData("ID", vf.createValue(sId));
 			// convert to xml string
 			Element encoded = XmlCoder.encode(wi);
 			final org.jdom.Document doc = new org.jdom.Document(encoded);
 			String s = XmlUtils.toString(doc, null);
 			newc.createNodeData("value", vf.createValue(s));
-			Log.trace("owfe", "store work item: value=" + s);
+			log.debug("store work item: value=" + s);
 			/*
 			 * // store all attributes StringMapAttribute sma =
 			 * wi.getAttributes(); Iterator it = sma.alphaStringIterator();
@@ -250,7 +241,6 @@ public class JCRWorkItemAPI {
 			 */
 			hm.save();
 		} catch (Exception e) {
-			Log.error("owfe", e);
 			log.error("exception:" + e);
 			throw new StoreException(e.toString());
 		}

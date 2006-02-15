@@ -25,8 +25,6 @@ import openwfe.org.engine.workitem.WorkItem;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.ns.log.Log;
-
 public class OWFEBean {
 	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger
 	.getLogger(OWFEBean.class.getName());
@@ -50,7 +48,7 @@ public class OWFEBean {
 		MgnlUser user = (MgnlUser)new MgnlUserManager().getUser(userName);
 		
 		String pName = wi.getParticipantName();
-		Log.trace("owfe", "participant name = " + pName + "(" + pName.substring(5) + ")");
+		log.debug("participant name = " + pName + "(" + pName.substring(5) + ")");
 		if (pName.startsWith("command-")){
 			return false;
 		}else		if (pName.startsWith("user-")){
@@ -85,8 +83,8 @@ public class OWFEBean {
 	 * @throws Exception
 	 */
 	public List getWorkItems(String userName) throws Exception{
-		Log.trace("owfe", "enter getWorkItems");
-		Log.trace("owfe", "user name = " + userName);
+		log.debug("enter getWorkItems");
+		log.debug("user name = " + userName);
 		ArrayList list = new ArrayList();
 		HierarchyManager hm = OWFEEngine.getOWFEHierarchyManager("Store");
 		Content root = hm.getRoot();
@@ -100,16 +98,15 @@ public class OWFEBean {
 				InFlowWorkItem wi = JCRWorkItemStorage.loadWorkItem(ct);
 				if (checkPariticipant(wi, userName)){	// if belong to this user
 					list.add(wi);
-					Log.trace("found one workitem for user" + userName);
+					log.debug("found one workitem for user" + userName);
 				}
 			}
-			Log.trace("owfe", "enter getWorkItems");
+			log.debug("enter getWorkItems");
 			return list;
 		} catch (Exception e) {			
 			log.error("exception:" + e);
-			Log.error("owfe", e);
 		}
-		Log.trace("owfe", "leave getWorkItems");
+		log.debug("leave getWorkItems");
 		return list;
 		
 	}
@@ -127,24 +124,21 @@ public class OWFEBean {
 			throws Exception {	
 		HierarchyManager hm = OWFEEngine.getOWFEHierarchyManager("Store");
 		Content root = hm.getRoot();
-		ArrayList ret = new ArrayList();
 		try {		
 			Collection c = root.getChildren(ItemType.WORKITEM);
-			int i = 0;
 			Iterator it = c.iterator();
 			while (it.hasNext()) {
 				Content ct = (Content) it.next();				
 				InFlowWorkItem _wi = JCRWorkItemStorage.loadWorkItem(ct);
-				Log.trace("_eid =" + wi.getLastExpressionId());
+				log.info("_eid =" + wi.getLastExpressionId());
 				if (_wi.getLastExpressionId().equals(wi.getLastExpressionId())) {
 					ct.delete();
 					hm.save();
-					Log.trace("owfe", "work item removed");
+					log.debug("work item removed");
 				}
 			}
 		} catch (Exception e) {			
 			log.error("exception:" + e);	
-			Log.error("owfe", e);
 		}
 	}
 	
@@ -162,13 +156,12 @@ public class OWFEBean {
 		try{
 			OWFEEngine.getEngine().reply(if_wi);
 		}catch(Exception e){
-			Log.error("owfe", e);
 			removeWorkItem(if_wi);
 		}
 		removeWorkItem(if_wi);
 		
 		// do activation
-		Log.trace("owfe", "attribute=" + if_wi.getAttribute("pathSelected"));
+		log.debug("attribute=" + if_wi.getAttribute("pathSelected"));
 		String path = ((StringAttribute) if_wi.getAttribute("pathSelected"))
 				.toString();
 		boolean recursive = ((StringAttribute) if_wi
@@ -182,13 +175,13 @@ public class OWFEBean {
 //
 //		HierarchyManager hm = ContentRepository
 //				.getHierarchyManager(WEBSITE_REPOSITORY);
-//		Log.trace("get HierarchyManager for " + WEBSITE_REPOSITORY + "=" + hm);
+//		log.info("get HierarchyManager for " + WEBSITE_REPOSITORY + "=" + hm);
 //		return hm;
 //	}
 
 	private Repository getRepository() {
 		Repository repo = ContentRepository.getRepository(WEBSITE_REPOSITORY);
-		Log.trace("get repository for " + WEBSITE_REPOSITORY + "=" + repo);
+		log.info("get repository for " + WEBSITE_REPOSITORY + "=" + repo);
 		return repo;
 	}
 
@@ -243,13 +236,13 @@ public class OWFEBean {
 		try{
 			OWFEEngine.getEngine().reply(if_wi);
 		}catch(Exception e){
-			Log.error("owfe", e);
+			log.error("Error while accessing the workflow engine",e);
 			removeWorkItem(if_wi);
 		}
 		removeWorkItem(if_wi);
 		
 		
-		Log.trace("owfe", "work item removed.");
+		log.debug("work item removed.");
 		// send mail to developer
 	}
 //

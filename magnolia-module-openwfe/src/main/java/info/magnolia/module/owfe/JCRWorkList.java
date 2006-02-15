@@ -3,10 +3,8 @@ package info.magnolia.module.owfe;
 import openwfe.org.Service;
 import openwfe.org.ServiceException;
 import openwfe.org.embed.impl.worklist.AbstractWorklist;
-import openwfe.org.embed.impl.worklist.InMemoryWorklist;
 import openwfe.org.engine.workitem.WorkItem;
 import openwfe.org.worklist.WorkListException;
-import openwfe.org.worklist.impl.store.InMemoryWorkItemStorage;
 import openwfe.org.worklist.store.WorkItemStorage;
 
 public class JCRWorkList extends AbstractWorklist {
@@ -19,7 +17,6 @@ public class JCRWorkList extends AbstractWorklist {
 		this(participantName, participantName);
 	}
 
-	@Override
 	public void consume(WorkItem wi) throws Exception {
 		log.info("enter consume()..");
 		String parName = wi.getAttributes().get("__participant__").toString();

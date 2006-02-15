@@ -43,7 +43,6 @@ import javax.jcr.observation.ObservationManager;
 
 import org.apache.log4j.Logger;
 
-import com.ns.log.Log;
 
 /**
  * Module "templating" main class.
@@ -138,18 +137,14 @@ public class Engine implements Module {
 		log.info("****************************************");
 		log.info("Module: " + this.moduleName); //$NON-NLS-1$
 		log.info(this.moduleName + ": starting OpenWFE"); //$NON-NLS-1$
-		HierarchyManager hm = null;
 		try {
-			Log.set("magflow.log", true, true, true, true, 1000, 0, false,
-					0);
-			Log.log("owfe", "create owfe engine ...");
+			log.debug( "create owfe engine ...");
 			new OWFEEngine();// .run();
-			Log.log("owfe", "create owfe engine ok.");
+			log.debug( "create owfe engine ok.");
 		
 
 		} catch (Exception e) {
-			e.printStackTrace();
-			Log.error("owfe", e);
+			log.error("An exception arised when creating the engine",e);
 		}
 
 		log.info(this.moduleName + ": start OpenWFE OK."); //$NON-NLS-1$      
