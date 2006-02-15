@@ -978,6 +978,7 @@ public class Tree extends ControlSuper {
         Rule rule = new Rule();
         rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
         rule.addAllowType(ItemType.NT_FILE);
+        rule.addAllowType(ItemType.NT_RESOURCE);
         if (recursive) {
             rule.addAllowType(ItemType.CONTENT.getSystemName());
         }
