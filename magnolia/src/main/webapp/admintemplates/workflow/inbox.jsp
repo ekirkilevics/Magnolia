@@ -1,12 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<%@ page import = "info.magnolia.module.owfe.OWFEEngine,java.util.Iterator,openwfe.org.engine.workitem.WorkItem,openwfe.org.engine.workitem.InFlowWorkItem, openwfe.org.engine.expressions.FlowExpressionId,openwfe.org.engine.workitem.StringMapAttribute, com.ns.log.Log" %>
+<%@ page import = "info.magnolia.module.owfe.OWFEEngine,java.util.Iterator,openwfe.org.engine.workitem.WorkItem,openwfe.org.engine.workitem.InFlowWorkItem, openwfe.org.engine.expressions.FlowExpressionId,openwfe.org.engine.workitem.StringMapAttribute" %>
 <jsp:useBean id ="owfeBean" scope="application" class="info.magnolia.module.owfe.OWFEBean" />  
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
- <link rel="stylesheet" href="style.css" type="text/css" />
+ <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/admindocroot/css/workflow.css" />
+    
 <title>Inbox</title>
 </head>
 <body>
@@ -14,34 +15,33 @@
 <%
 int size = owfeBean.getWorkItemsNumber(request);
 %>
-Inbox for project lead (<%=size%> work items)
-<table border=1 >
+<table class="nicetable">
 
-<tr align="center"><b><td>index</td><td>FlowExpressionId</td><td>Dispatch time</td><td>Attributes</b></td><td>action</td></tr>
+<tr>
+<th class="nicetableheader">index</th>
+<th class="nicetableheader">FlowExpressionId</th>
+<th class="nicetableheader">Dispatch time</th>
+<th class="nicetableheader">Attributes</th>
+<th class="nicetableheader">action</th>
+</tr>
 <%
-
-
 for (int i = 0; i < size; i++){ 
 InFlowWorkItem wi = (InFlowWorkItem)owfeBean.getWorkItem(request, i);
 if (wi != null){
 String id = wi.getLastExpressionId().toParseableString();
 %>
-<tr><td>
+<tr class="nicetablerow"><td>
 <%=i %></td>
 
 <td width="30">
-<font size=2>
 <%=id %>
-</font>
 <td width="30">
-<font size=2>
 <%
 out.println(wi.getDispatchTime());
 %>
-</font>
 </td>
 <td>
-<form action="/irbridge/templates/jsp/irbridge/_workflow/save.jsp" method="get">
+<form action="/.magnolia/save.html" method="get">
 <input type="hidden" name="eid" value="<%=id%>">
 <%
 
@@ -52,11 +52,9 @@ Iterator it = map.alphaStringIterator();
 while (it.hasNext())
 {
 	String name = (String)it.next();
-	Log.trace("web", "attribute name = " + name);
 	if (name.equals("__definition__"))
 		continue;
-	String value = (String)wi.getAttribute(name).toString();
-	Log.trace("web", "attribute value = " + value);	
+	String value = (String)wi.getAttribute(name).toString();	
 	%>
 	 
 	<%=name%><input type="hidden" name="attributeName" value="<%=name%>"/>
@@ -71,9 +69,8 @@ while (it.hasNext())
 </form>
 </td>
  
-<td><a href="/irbridge/templates/jsp/irbridge/_workflow/approve.jsp?eid=<%=id %>">approve</a>  <a href="/irbridge/templates/jsp/irbridge/_workflow/reject.jsp?eid=<%=id %>">reject</a></tr>
+<td><a href="/.magnolia/approve.html?eid=<%=id %>">approve</a>  <a href="/.magnolia/reject.html?eid=<%=id %>">reject</a></tr>
 <%}} %>
-</br>
 </table>
 
 

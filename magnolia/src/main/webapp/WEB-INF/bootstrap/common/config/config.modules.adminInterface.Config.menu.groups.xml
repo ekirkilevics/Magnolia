@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sv:node sv:name="inbox" xmlns:jcr="http://www.jcp.org/jcr/1.0"
+<sv:node sv:name="groups" xmlns:jcr="http://www.jcp.org/jcr/1.0"
   xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
   xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:rep="internal"
   xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
@@ -14,26 +14,35 @@
     <sv:value>mix:versionable</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:uuid" sv:type="String">
-    <sv:value>e9fe23f7-f08c-45d2-81dc-3b84add35173</sv:value>
+    <sv:value>1f143094-7166-496a-be5d-3fe1d4df7eec</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
     <sv:value>true</sv:value>
   </sv:property>
-  <sv:property sv:name="toURI" sv:type="String">
-    <sv:value>/templates/jsp/irbridge/_workflow/inbox.jsp</sv:value>
+  <sv:property sv:name="icon" sv:type="String">
+    <sv:value>/admindocroot/icons/24/groups.jpg</sv:value>
+  </sv:property>
+  <sv:property sv:name="onclick" sv:type="String">
+    <sv:value>mgnlAdminCentralSwitchExtractTree('groups')</sv:value>
+  </sv:property>
+  <sv:property sv:name="label" sv:type="String">
+    <sv:value>menu.groups</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:created" sv:type="Date">
-    <sv:value>2006-02-13T20:06:42.024+08:00</sv:value>
-  </sv:property>
-  <sv:property sv:name="fromURI" sv:type="String">
-    <sv:value>/.magnolia/inbox.html</sv:value>
+    <sv:value>2006-02-15T11:21:39.239+09:00</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
+    <sv:property sv:name="mgnl:authorid" sv:type="String">
+      <sv:value>superuser</sv:value>
+    </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-02-13T20:06:42.024+08:00</sv:value>
+      <sv:value>2006-02-15T11:21:39.239+09:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+      <sv:value>2006-02-16T10:47:51.980+09:00</sv:value>
     </sv:property>
   </sv:node>
 </sv:node>
