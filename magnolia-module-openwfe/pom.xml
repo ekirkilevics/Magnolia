@@ -48,7 +48,7 @@
 		<dependency>
 			<groupId>openwfe</groupId>
 			<artifactId>openwfe-applic</artifactId>
-			<version>1.6.1</version>
+			<version>1.6.2pre2</version>
 		</dependency>
 		<dependency>
 			<groupId>jaxen</groupId>
@@ -68,17 +68,17 @@
 		<dependency>
 			<groupId>openwfe</groupId>
 			<artifactId>openwfe-embed</artifactId>
-			<version>1.6.1</version>
+			<version>1.6.2pre2</version>
 		</dependency>
 		<dependency>
 			<groupId>openwfe</groupId>
 			<artifactId>openwfe-worklist</artifactId>
-			<version>1.6.1</version>
+			<version>1.6.2pre2</version>
 		</dependency>
 		<dependency>
 			<groupId>openwfe</groupId>
 			<artifactId>openwfe-worklist-actions</artifactId>
-			<version>1.6.1</version>
+			<version>1.6.2pre2</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
