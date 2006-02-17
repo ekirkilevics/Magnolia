@@ -85,25 +85,25 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
     /**
      * name of the tree (not the repository)
      */
-    private Tree tree;
+    protected Tree tree;
 
-    private String path;
+    protected String path;
 
-    private String pathOpen;
+    protected String pathOpen;
 
-    private String pathSelected;
+    protected String pathSelected;
 
     /**
      * Used to pass the saved value to the view
      */
-    private String displayValue;
+    protected String displayValue;
 
-    private String newPath;
+    protected String newPath;
 
     /**
      * Used to display the same tree in the linkbrowser
      */
-    private boolean browseMode;
+    protected boolean browseMode;
 
     /**
      * Override this method if you are not using the same name for the tree and the repository
