@@ -115,6 +115,7 @@
         <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory" />
         <param name="providerURL" value="localhost" />
         <param name="bindName" value="owfeAuthor" />
+        <workspace name="owfe" />
         <workspace name="Store" />
         <workspace name="Expressions" />
         <workspace name="flowdef" />
