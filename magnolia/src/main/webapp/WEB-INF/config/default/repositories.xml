@@ -99,7 +99,7 @@
     <!-- magnolia user repository -->
     <Repository name="user" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
         <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-derby-nosearch.xml" />
-        <param name="repositoryHome" value="repositories/users" />
+        <param name="repositoryHome" value="repositories/user" />
         <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory" />
         <param name="providerURL" value="localhost" />
         <param name="bindName" value="usersAuthor" />
