@@ -51,7 +51,7 @@ String referer = contextPath + Path.getURI(request);
 		</div>
 	</div>
 
-	<div id="copyright">&copy; Copyright 2000-2006 obinary ag, Basel, Switzerland ? All rights reserved.</div>
+	<div id="copyright">&copy; Copyright 2000-2006 obinary ag, Basel, Switzerland • All rights reserved.</div>
 
 </div>
 
