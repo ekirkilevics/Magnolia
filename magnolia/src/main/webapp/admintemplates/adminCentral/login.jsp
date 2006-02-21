@@ -16,16 +16,38 @@ String referer = contextPath + Path.getURI(request);
 	<link rel="STYLESHEET" type="text/css" href="${pageContext.request.contextPath}/admindocroot/loginForm/login.css" />
 	<script src="${pageContext.request.contextPath}/admindocroot/loginForm/md5.js" type="text/javascript"></script>
 	<script type="text/javascript">
-	function crypt() {
-		// crypt
-		input = document.loginForm.password.value;
-		hash = hex_md5( input );
-		document.loginForm.passwordMD5.value = hash;
-		// BLANK OUT PASSWORD
-		document.loginForm.password.value = "";
-		// SUBMIT FORM
-		//document.logonform.submit();
+		function submit() {
+			// crypt
+			//input = document.loginForm.password.value;
+			//hash = hex_md5( input );
+			//document.loginForm.passwordMD5.value = hash;
+			// BLANK OUT PASSWORD
+			///document.loginForm.password.value = "";
+			// SUBMIT FORM
+			document.loginForm.submit();
 		}
+		
+		// methods copied from magnolia admin central (here not accessible)
+		function mgnlIsKeyEnter(event){
+			if (window.event && window.event.keyCode == 13) 
+				return true;
+			else if 
+				(navigator.appName=="Netscape" && event.which==13) return true;
+			else 
+				return false;
+		}
+		
+		document.onkeypress = function(e){
+			if(mgnlIsKeyEnter(e)){
+				submit();
+			}
+		}
+		
+		onload = function(){
+			document.loginForm.username.focus();
+		}
+
+		
 </script>
 </head>
 
@@ -43,9 +65,9 @@ String referer = contextPath + Path.getURI(request);
 			<label for="pasword">Password</label>
 			<input id="pasword" name="mgnlUserPSWD" type="password" /><br />
 
-			<label for="submit">&nbsp;</label>
+			<label for="submitButton">&nbsp;</label>
 			<!-- <input id="submit" type="button" value="login" class="button" onclick="Javascript:crypt();" /><br /> -->
-			<input id="submit" type="submit" value="login" class="button" /><br />
+			<input id="submitButton" type="button" value="login" class="button" onclick="submit();" /><br />
 			<input  name="passwordMD5" type="hidden" />
 		</form>
 		</div>
