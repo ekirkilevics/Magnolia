@@ -10,11 +10,9 @@ import java.io.*;
 import java.text.MessageFormat;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Iterator;
 
-import javax.jcr.NamespaceException;
-import javax.jcr.Repository;
-import javax.jcr.RepositoryException;
-import javax.jcr.Workspace;
+import javax.jcr.*;
 import javax.jcr.nodetype.NoSuchNodeTypeException;
 import javax.jcr.nodetype.NodeTypeManager;
 import javax.naming.Context;
@@ -32,6 +30,7 @@ import org.apache.jackrabbit.core.nodetype.NodeTypeDef;
 import org.apache.jackrabbit.core.nodetype.NodeTypeManagerImpl;
 import org.apache.jackrabbit.core.nodetype.NodeTypeRegistry;
 import org.apache.jackrabbit.core.nodetype.xml.NodeTypeReader;
+import org.apache.jackrabbit.core.WorkspaceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -101,6 +100,7 @@ public class ProviderImpl implements Provider {
                 RegistryHelper.registerRepository(ctx, bindName, configFile, repositoryHome, true);
                 this.repository = (Repository) ctx.lookup(bindName);
             }
+            this.validateWorkspaces();
         }
         catch (NamingException e) {
             log.error("Unable to initialize repository: " + e.getMessage(), e);
@@ -253,4 +253,32 @@ public class ProviderImpl implements Provider {
                 "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
         }
     }
+
+    /**
+     * checks if all workspaces are present according to the repository mapping,
+     * creates any missing workspace
+     * */
+    private void validateWorkspaces() throws RepositoryException {
+        // check if all workspaces are present
+        SimpleCredentials credentials = new SimpleCredentials("admin","admin".toCharArray());
+        Session jcrSession = this.repository.login(credentials);
+        WorkspaceImpl defaultWorkspace = (WorkspaceImpl) jcrSession.getWorkspace();
+        String[] workspaceNames = defaultWorkspace.getAccessibleWorkspaceNames();
+        Iterator configuredNames = repositoryMapping.getWorkspaces().iterator();
+        while (configuredNames.hasNext()) {
+            String name = (String) configuredNames.next();
+            // check if its available
+            boolean available = false;
+            for (int index=0; index < workspaceNames.length; index++) {
+                if (name.equalsIgnoreCase(workspaceNames[index])) {
+                    available = true;
+                }
+            }
+            if (!available) {
+                // create an empty workspace
+                defaultWorkspace.createWorkspace(name);
+            }
+        }
+    }
+
 }
