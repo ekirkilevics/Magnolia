@@ -1236,6 +1236,35 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
+     * places a lock on this object
+     * @param isDeep if true this lock will apply to this node and all its descendants; if false, it applies only to
+     * this node.
+     * @param isSessionScoped if true, this lock expires with the current session; if false it expires when explicitly
+     * or automatically unlocked for some other reason.
+     * @param yieldFor number of milliseconds for which this method will try to get a lock
+     * @return A Lock object containing a lock token.
+     * @throws LockException if this node is already locked or <code>isDeep</code> is true and a descendant node of
+     * this node already holds a lock.
+     * @throws RepositoryException if an error occurs
+     * @see javax.jcr.Node#lock(boolean, boolean)
+     */
+    public Lock lock(boolean isDeep, boolean isSessionScoped, long yieldFor) throws LockException, RepositoryException {
+        long finalTime = System.currentTimeMillis() + yieldFor;
+        LockException lockException = null;
+        while (System.currentTimeMillis() <= finalTime) {
+            try {
+                return this.node.lock(isDeep, isSessionScoped);
+            } catch (LockException e) {
+                // its not an exception yet, still got time
+                lockException = e;
+            }
+            Thread.yield();
+        }
+        // could not get lock
+        throw lockException;
+    }
+
+    /**
      * Returns the Lock object that applies to this node. This may be either a lock on this node itself or a deep lock
      * on a node above this node.
      * @throws LockException If no lock applies to this node, a LockException is thrown.
