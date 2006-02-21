@@ -103,6 +103,7 @@
         <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory" />
         <param name="providerURL" value="localhost" />
         <param name="bindName" value="usersAuthor" />
+        <workspace name="user" />
         <workspace name="users" />
         <workspace name="userroles" />
         <workspace name="usergroups" />
