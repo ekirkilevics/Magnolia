@@ -93,4 +93,13 @@ public class ExternalUser implements User {
     public String getName() {
         return (String) this.userDetails.getProperty(Entity.NAME); //$NON-NLS-1$
     }
+
+    /**
+     * get user password
+     *
+     * @return password string
+     */
+    public String getPassword() {
+        return (String) this.userDetails.getProperty(Entity.PASSWORD);
+    }
 }
