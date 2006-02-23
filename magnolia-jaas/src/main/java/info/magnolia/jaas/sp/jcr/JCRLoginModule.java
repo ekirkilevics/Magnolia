@@ -16,10 +16,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.security.ACL;
-import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.security.PermissionImpl;
-import info.magnolia.cms.security.PrincipalCollection;
+import info.magnolia.cms.security.*;
 import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.cms.util.UrlPattern;
 import info.magnolia.jaas.principal.ACLImpl;
@@ -146,10 +143,10 @@ public class JCRLoginModule extends AbstractLoginModule {
     public void setEntity() {
         EntityImpl user = new EntityImpl();
         String language = this.user.getNodeData("language").getString();
-        user.addProperty(EntityImpl.LANGUAGE, language);
+        user.addProperty(Entity.LANGUAGE, language);
         String name = this.user.getTitle();
-        user.addProperty(EntityImpl.NAME, name);
-        // todo, set all basic magnolia user property
+        user.addProperty(Entity.NAME, name);
+        user.addProperty(Entity.PASSWORD, new String(this.pswd));
         this.subject.getPrincipals().add(user);
     }
 
