@@ -195,10 +195,10 @@ public class EntryServlet extends HttpServlet {
      * @param request the current request
      */
     protected void initializeContext(HttpServletRequest request) {
-        if (MgnlContext.getInstance() == null) {
+        //if (MgnlContext.getInstance() == null) {
             Context ctx = new WebContextImpl(request);
             MgnlContext.setInstance(ctx);
-        }
+        //}
     }
 
     /**
