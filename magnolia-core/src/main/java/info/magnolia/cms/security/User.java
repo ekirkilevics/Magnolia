@@ -50,4 +50,10 @@ public interface User {
      */
     public abstract String getName();
 
+    /**
+     * get user password
+     * @return password string
+     * */
+    public abstract String getPassword();
+
 }
