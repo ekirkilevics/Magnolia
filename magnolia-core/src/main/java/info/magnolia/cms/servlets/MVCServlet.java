@@ -97,10 +97,10 @@ public abstract class MVCServlet extends HttpServlet {
         response.setContentType("text/html; charset=UTF-8"); //$NON-NLS-1$
         
         // initialize the context
-        if (MgnlContext.getInstance() == null) {
-            Context ctx = new WebContextImpl(request);
-            MgnlContext.setInstance(ctx);
-        }
+        
+        Context ctx = new WebContextImpl(request);
+        MgnlContext.setInstance(ctx);
+        
 
         MVCServletHandler handler = getHandler(request, response);
 
