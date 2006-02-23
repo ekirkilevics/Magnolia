@@ -14,6 +14,7 @@ package info.magnolia.cms.gui.control;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.Template;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ContentHandler;
 import info.magnolia.cms.core.HierarchyManager;
@@ -982,7 +983,7 @@ public class Tree extends ControlSuper {
         if (recursive) {
             rule.addAllowType(ItemType.CONTENT.getSystemName());
         }
-        SimpleSyndicator syndicator = new SimpleSyndicator(this.getRequest(), this.getRepository(), ContentRepository
+        SimpleSyndicator syndicator = new SimpleSyndicator(MgnlContext.getUser(), this.getRepository(), ContentRepository
             .getDefaultWorkspace(this.getRepository()), rule);
         return syndicator;
     }
@@ -1006,7 +1007,7 @@ public class Tree extends ControlSuper {
         Rule rule = new Rule();
         rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
         rule.addAllowType(ItemType.NT_FILE);
-        SimpleSyndicator syndicator = new SimpleSyndicator(this.getRequest(), this.getRepository(), ContentRepository
+        SimpleSyndicator syndicator = new SimpleSyndicator(MgnlContext.getUser(), this.getRepository(), ContentRepository
             .getDefaultWorkspace(this.getRepository()), rule);
 
         return syndicator;
