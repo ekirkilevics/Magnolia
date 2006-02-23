@@ -24,6 +24,7 @@ import javax.jcr.RepositoryException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.commons.codec.binary.Base64;
 
 
 /**
@@ -159,6 +160,16 @@ public class MgnlUser implements User {
      */
     public String getName() {
         return this.userNode.getName();
+    }
+
+    /**
+     * get user password
+     *
+     * @return password string
+     */
+    public String getPassword() {
+        String pswd = this.userNode.getNodeData("pswd").getString().trim();
+        return new String(Base64.decodeBase64(pswd.getBytes()));
     }
 
     /**
