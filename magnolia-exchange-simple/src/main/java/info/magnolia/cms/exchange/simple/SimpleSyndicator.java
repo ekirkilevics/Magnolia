@@ -24,6 +24,7 @@ import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Authenticator;
+import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
 
@@ -40,10 +41,10 @@ import java.util.zip.GZIPOutputStream;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.codec.binary.Base64;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
@@ -148,8 +149,6 @@ public class SimpleSyndicator implements Syndicator {
      */
     private static Logger log = LoggerFactory.getLogger(SimpleSyndicator.class);
 
-    protected HttpServletRequest request;
-
     protected String repositoryName;
 
     protected String workspaceName;
@@ -162,14 +161,20 @@ public class SimpleSyndicator implements Syndicator {
 
     protected Rule contentFilterRule;
 
+    protected User user;
+
+    private String basicCredentials;
+
     /**
-     * @param request
+     * @param user
      * @param repositoryName repository ID
      * @param workspaceName workspace ID
      * @param rule content filter rule
      */
-    public SimpleSyndicator(HttpServletRequest request, String repositoryName, String workspaceName, Rule rule) {
-        this.request = request;
+    public SimpleSyndicator(User user, String repositoryName, String workspaceName, Rule rule) {
+        this.user = user;
+        this.basicCredentials = "Basic "+ new String(Base64.encodeBase64
+                ((this.user.getName()+":"+this.user.getPassword()).getBytes()));
         this.contentFilter = new RuleBasedContentFilter(rule);
         this.contentFilterRule = rule;
         this.repositoryName = repositoryName;
@@ -261,7 +266,7 @@ public class SimpleSyndicator implements Syndicator {
         }
         if (log.isDebugEnabled()) {
             log.debug("Exchange : sending activation request to " + subscriber.getName()); //$NON-NLS-1$
-            log.debug("Exchange : user [ " + Authenticator.getUserId(this.request) + " ]"); //$NON-NLS-1$ //$NON-NLS-2$
+            log.debug("Exchange : user [ " + this.user.getName() + " ]"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         String handle = getActivationURL(subscriber);
         try {
@@ -419,7 +424,7 @@ public class SimpleSyndicator implements Syndicator {
      * @param connection
      */
     protected void addDeactivationHeaders(URLConnection connection) {
-        connection.setRequestProperty(AUTHORIZATION, Authenticator.getCredentials(this.request));
+        connection.setRequestProperty(AUTHORIZATION, this.basicCredentials);
         connection.addRequestProperty(REPOSITORY_NAME, this.repositoryName);
         connection.addRequestProperty(WORKSPACE_NAME, this.workspaceName);
         connection.addRequestProperty(PATH, this.path);
@@ -489,7 +494,7 @@ public class SimpleSyndicator implements Syndicator {
         else {
             md.setUnActivated();
         }
-        md.setActivatorId(Authenticator.getUserId(this.request));
+        md.setActivatorId(this.user.getName());
         md.setLastActivationActionDate();
 
         Iterator children = node.getChildren(this.contentFilter).iterator();
@@ -515,7 +520,7 @@ public class SimpleSyndicator implements Syndicator {
         activationContent.addProperty(RESOURCE_MAPPING_FILE, "resources.xml");
         activationContent.addProperty(ACTION, ACTIVATE);
         activationContent.addProperty(CONTENT_FILTER_RULE, this.contentFilterRule.toString());
-        activationContent.addProperty(AUTHORIZATION, Authenticator.getCredentials(this.request));
+        activationContent.addProperty(AUTHORIZATION, this.basicCredentials);
 
         Document document = new Document();
         Element root = new Element(RESOURCE_MAPPING_ROOT_ELEMENT);
