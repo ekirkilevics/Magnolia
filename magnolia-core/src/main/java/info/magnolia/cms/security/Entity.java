@@ -37,6 +37,8 @@ public interface Entity extends Principal, Serializable {
 
     public static final String ADDRESS_LINE = "address";
 
+    public static final String PASSWORD = "password";
+
     public String getName();
 
     public void setName(String name);
