@@ -1,13 +1,15 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-<%@ page import = "info.magnolia.module.owfe.OWFEEngine,java.util.Iterator,openwfe.org.engine.workitem.WorkItem,openwfe.org.engine.workitem.InFlowWorkItem, openwfe.org.engine.expressions.FlowExpressionId,openwfe.org.engine.workitem.StringMapAttribute" %>
+
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="openwfe.org.engine.workitem.InFlowWorkItem" %>
+<%@ page import="openwfe.org.engine.workitem.StringMapAttribute" %>
+<%@ page import="java.util.Iterator" %>
+
 <jsp:useBean id ="owfeBean" scope="application" class="info.magnolia.module.owfe.OWFEBean" />  
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
  <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/admindocroot/css/workflow.css" />
-    
 <title>Inbox</title>
 </head>
 <body>
@@ -41,7 +43,7 @@ out.println(wi.getDispatchTime());
 %>
 </td>
 <td>
-<form action="/.magnolia/save.html" method="get">
+<form action="${pageContext.request.contextPath}/.magnolia/save.html" method="get">
 <input type="hidden" name="eid" value="<%=id%>">
 <%
 
@@ -69,7 +71,7 @@ while (it.hasNext())
 </form>
 </td>
  
-<td><a href="/.magnolia/approve.html?eid=<%=id %>">approve</a>  <a href="/.magnolia/reject.html?eid=<%=id %>">reject</a></tr>
+<td><a href="${pageContext.request.contextPath}/.magnolia/approve.html?eid=<%=id %>">approve</a>  <a href="${pageContext.request.contextPath}/.magnolia/reject.html?eid=<%=id %>">reject</a></tr>
 <%}} %>
 </table>
 
