@@ -200,6 +200,7 @@ public class SimpleSyndicator implements Syndicator {
             this.updateActivationDetails();
         }
         catch (Exception e) {
+        	    log.error("Activation failed for path:"+((path!=null)?path:"[null]"),e);
             throw new ExchangeException(e);
         }
         finally {
