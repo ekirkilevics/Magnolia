@@ -8,6 +8,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.exchange.simple.SimpleSyndicator;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.security.MgnlUserManager;
+import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.Rule;
 
 import java.util.ArrayList;
@@ -208,7 +209,7 @@ public class OWFEBean {
 		if (recursive) {
 			rule.addAllowType(ItemType.CONTENT.getSystemName());
 		}
-		SimpleSyndicator syndicator = new SimpleSyndicator(request,
+		SimpleSyndicator syndicator = new SimpleSyndicator(MgnlContext.getUser(),
 				WEBSITE_REPOSITORY, ContentRepository
 						.getDefaultWorkspace(WEBSITE_REPOSITORY), rule);
 
