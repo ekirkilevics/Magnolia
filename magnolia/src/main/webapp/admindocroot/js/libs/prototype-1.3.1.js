@@ -24,7 +24,6 @@ var Class = {
 }
 
 var Abstract = new Object();
-
 Object.extend = function(destination, source) {
   for (property in source) {
     destination[property] = source[property];
