@@ -186,7 +186,7 @@ public class Store {
 
         Class treeHandlerClass = (Class) treeHandlers.get(name);
         if (treeHandlerClass == null) {
-            throw new InvalidDialogHandlerException(name);
+            throw new InvalidTreeHandlerException(name);
         }
 
         try {
