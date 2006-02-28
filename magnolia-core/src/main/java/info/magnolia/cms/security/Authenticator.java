@@ -12,8 +12,6 @@
  */
 package info.magnolia.cms.security;
 
-import info.magnolia.cms.i18n.MessagesManager;
-
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
@@ -125,7 +123,6 @@ public final class Authenticator {
                 return false;
             }
         }
-        updateSession(req, subject);
         return true;
     }
 
@@ -151,20 +148,6 @@ public final class Authenticator {
             pswd = "";
         }
         Authenticator.setPassword(pswd, request);
-    }
-
-    /**
-     * add user properties needed for jstl and user entity object to the session todo this should not be in
-     * Authenticator, setting user properties or authorization details does not belong here
-     * @param request
-     */
-    private static void updateSession(HttpServletRequest request, Subject subject) {
-        // set user language to be used by message manager
-        String lang = Security.getUserManager().getUserObject(subject).getLanguage();
-        if (StringUtils.isEmpty(lang)) {
-            lang = MessagesManager.getDefaultLocale().getLanguage();
-        }
-        MessagesManager.setUserLanguage(lang, request.getSession());
     }
 
     /**
