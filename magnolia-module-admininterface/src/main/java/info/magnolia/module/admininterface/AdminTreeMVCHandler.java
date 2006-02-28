@@ -434,9 +434,9 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
             html.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>"); //$NON-NLS-1$
             renderHeaderIncludes(html);
             html.append("<title>Magnolia</title>"); //$NON-NLS-1$
+            html.append("<script>window.onresize = mgnlTreeResize;</script>"); //$NON-NLS-1$
             html.append("</head>"); //$NON-NLS-1$
             html.append("<body class=\"mgnlBgDark\" onload=\"" + tree.getJavascriptTree() + ".resizeOnload();\" >"); //$NON-NLS-1$ //$NON-NLS-2$
-            html.append(Spacer.getHtml(20, 20));
         }
 
         tree.setSnippetMode(snippetMode);
