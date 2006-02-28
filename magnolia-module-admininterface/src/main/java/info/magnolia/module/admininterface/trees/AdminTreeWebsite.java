@@ -16,6 +16,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.config.Subscriber;
 import info.magnolia.cms.beans.config.Template;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.gui.control.ContextMenuItem;
@@ -64,6 +65,7 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
 
         TreeColumn column0 = new TreeColumn(tree.getJavascriptTree(), request);
         column0.setIsLabel(true);
+        column0.setTitle(msgs.get("tree.web.page"));
         column0.setWidth(3);
         if (Server.isAdmin()) {
             column0.setHtmlEdit();
@@ -102,9 +104,7 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
         templateSelect.setEvent("onchange", tree.getJavascriptTree() //$NON-NLS-1$
             + ".saveNodeData(this.value,this.options[this.selectedIndex].text)"); //$NON-NLS-1$
 
-        Iterator templates = Template.getAvailableTemplates(SessionAccessControl.getAccessManager(
-            request,
-            ContentRepository.CONFIG));
+        Iterator templates = Template.getAvailableTemplates(MgnlContext.getAccessManager(ContentRepository.CONFIG));
         while (templates.hasNext()) {
             Template template = (Template) templates.next();
             String title = template.getTitle();
