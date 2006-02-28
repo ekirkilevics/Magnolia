@@ -192,11 +192,7 @@
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>AdminTreeServlet</servlet-name>
-    <url-pattern>/admintemplates/adminCentral/extractTree.jsp</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>AdminTreeServlet</servlet-name>
-    <url-pattern>/adminCentral/extractTree</url-pattern>
+    <url-pattern>/.magnolia/trees/*</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>ImportExportServlet</servlet-name>
