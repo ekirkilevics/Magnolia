@@ -140,13 +140,6 @@ public class DialogDialog extends DialogSuper {
 
     protected void drawHtmlPreSubsHead(Writer out) throws IOException {
         out.write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>"); // kupu //$NON-NLS-1$
-        out.write("<script type=\"text/javascript\">"); //$NON-NLS-1$
-        out.write("window.resizeTo(" //$NON-NLS-1$
-            + this.getConfigValue("width", DIALOGSIZE_NORMAL_WIDTH) //$NON-NLS-1$
-            + "," //$NON-NLS-1$
-            + this.getConfigValue("height", DIALOGSIZE_NORMAL_HEIGHT) //$NON-NLS-1$
-            + ");"); //$NON-NLS-1$
-        out.write("</script>"); //$NON-NLS-1$
         out.write("<title>" //$NON-NLS-1$
             + this.getConfigValue("label", MessagesManager.get(getRequest(), "dialog.editTitle")) //$NON-NLS-1$ //$NON-NLS-2$
             + "</title>"); //$NON-NLS-1$
@@ -157,7 +150,15 @@ public class DialogDialog extends DialogSuper {
         out.write("var mgnlRichEditors=new Array();"); // will be extended at each richEdit control //$NON-NLS-1$
         out.write("var kupu = null;"); //$NON-NLS-1$
         out.write("var kupuui = null;"); //$NON-NLS-1$
+
+        out.write("window.onresize = eventHandlerOnResize;"); //$NON-NLS-1$
+        out.write("window.resizeTo(" //$NON-NLS-1$
+            + this.getConfigValue("width", DIALOGSIZE_NORMAL_WIDTH) //$NON-NLS-1$
+            + "," //$NON-NLS-1$
+            + this.getConfigValue("height", DIALOGSIZE_NORMAL_HEIGHT) //$NON-NLS-1$
+            + ");"); //$NON-NLS-1$
         out.write("</script>"); //$NON-NLS-1$
+
         this.drawJavascriptSources(out);
         this.drawCssSources(out);
     }
