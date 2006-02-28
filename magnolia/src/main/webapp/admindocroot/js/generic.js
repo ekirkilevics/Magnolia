@@ -3,7 +3,6 @@
 ### generic, magnolia independant methods
 ################################### */
 
-
 /**
  * Simple shortcut for document.getElementById()
  */
@@ -90,30 +89,22 @@ function mgnlGetMousePos(event)
 ################################### */
 
 
-function mgnlIsKeyEnter(event)
-	{
+function mgnlIsKeyEnter(event){
 	return mgnlIsKey(event,13);
-	}
+}
 
-function mgnlIsKeyEscape(event)
-	{
+function mgnlIsKeyEscape(event){
 	return mgnlIsKey(event,27);
-	}
+}
 
-function mgnlIsKey(event,keyCode)
-	{
-	if (window.event && window.event.keyCode == keyCode) return true;
-	else if (navigator.appName=="Netscape" && event.which==keyCode) return true;
-	else return false;
-	}
-
-function mgnlWhichKey(event)
-	{
-	if (window.event && window.event.keyCode) alert(window.event.keyCode);
-	else if (navigator.appName=="Netscape" && event.which==keyCode) alert(event.which);
-	}
-
-
+function mgnlIsKey(event,keyCode){
+	if (window.event && window.event.keyCode == keyCode) 
+		return true;
+	else if 
+		(navigator.appName=="Netscape" && event.which==keyCode) return true;
+	else 
+		return false;
+}
 
 function mgnlGetWindowSize()
 	{
