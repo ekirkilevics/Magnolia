@@ -27,6 +27,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Digester;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.LinkUtil;
+import info.magnolia.cms.util.ExclusiveWrite;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -157,40 +158,42 @@ public class Save {
      * Uses the mgnlSageInfo parameters to save the data.
      */
     public void save() {
-        String[] saveInfos = getForm().getParameterValues("mgnlSaveInfo"); // name,type,propertyOrNode //$NON-NLS-1$
-        String path = this.getPath();
-        HttpServletRequest request = this.getRequest();
+        synchronized(ExclusiveWrite.getInstance()) {
+            String[] saveInfos = getForm().getParameterValues("mgnlSaveInfo"); // name,type,propertyOrNode //$NON-NLS-1$
+            String path = this.getPath();
+            HttpServletRequest request = this.getRequest();
 
-        HierarchyManager hm = SessionAccessControl.getHierarchyManager(request, this.getRepository());
-        try {
-            // get the node to save
-            Content page = this.getPageNode(hm);
-            Content node = this.getSaveNode(hm, page);
+            HierarchyManager hm = SessionAccessControl.getHierarchyManager(request, this.getRepository());
+            try {
+                // get the node to save
+                Content page = this.getPageNode(hm);
+                Content node = this.getSaveNode(hm, page);
 
-            // this value can get used later on to find this node
-            this.setNodeName(node.getName());
-            if(StringUtils.isEmpty(node.getMetaData().getTemplate())){
-                node.getMetaData().setTemplate(this.getParagraph());
+                // this value can get used later on to find this node
+                this.setNodeName(node.getName());
+                if(StringUtils.isEmpty(node.getMetaData().getTemplate())){
+                    node.getMetaData().setTemplate(this.getParagraph());
+                }
+
+                // update meta data (e.g. last modified) of this paragraph and the page
+                node.updateMetaData(request);
+                page.updateMetaData(request);
+
+                // loop all saveInfo controls; saveInfo format: name, type, valueType(single|multiple, )
+                for (int i = 0; i < saveInfos.length; i++) {
+                    String saveInfo = saveInfos[i];
+                    processSaveInfo(node, saveInfo);
+                }
+                if (log.isDebugEnabled()) {
+                    log.debug("Saving - " + path); //$NON-NLS-1$
+                }
+                hm.save();
             }
-
-            // update meta data (e.g. last modified) of this paragraph and the page
-            node.updateMetaData(request);
-            page.updateMetaData(request);
-
-            // loop all saveInfo controls; saveInfo format: name, type, valueType(single|multiple, )
-            for (int i = 0; i < saveInfos.length; i++) {
-                String saveInfo = saveInfos[i];
-                processSaveInfo(node, saveInfo);
+            catch (RepositoryException re) {
+                log.error(re.getMessage(), re);
             }
-            if (log.isDebugEnabled()) {
-                log.debug("Saving - " + path); //$NON-NLS-1$
-            }
-            hm.save();
+            this.removeSessionAttributes();
         }
-        catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        }
-        this.removeSessionAttributes();
     }
 
     /**
