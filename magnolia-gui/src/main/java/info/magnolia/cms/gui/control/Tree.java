@@ -29,6 +29,8 @@ import info.magnolia.cms.gui.misc.Spacer;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.SessionAccessControl;
+import info.magnolia.cms.util.FreeMarkerUtil;
+import info.magnolia.cms.util.JSPIncludeUtil;
 import info.magnolia.cms.util.MetaDataUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.Rule;
@@ -36,8 +38,10 @@ import info.magnolia.cms.util.Rule;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
@@ -140,7 +144,8 @@ public class Tree extends ControlSuper {
         this.setRepository(repository);
         this.setRequest(request);
         this.setMenu(new ContextMenu(this.getJavascriptTree()));
-        this.setHierarchyManager(SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository()));
+        
+        this.setHierarchyManager(MgnlContext.getHierarchyManager(this.getRepository()));
     }
 
     /**
@@ -591,183 +596,6 @@ public class Tree extends ControlSuper {
         return StringUtils.EMPTY;
     }
 
-    /*
-    public String pasteNode(String pathOrigin, String pathSelected, int pasteType, int action)
-        throws ExchangeException, RepositoryException {
-        // todo: proper doc
-        // todo: ??? generic -> RequestInterceptor.java
-        // move and copy of nodes works as copy/cut - paste (remaining of the very first prototype)
-        // "Copy node" copies a node to the "clipboard" (clipboard object of the js tree object)
-        // "Move node" copies a node to the "clipboard", setting clipboardMethod "cut"
-        // select a node after copy or cut triggers Tree.pasteNode
-        // action: clipboardMethod (copy or move)
-        // pasteType: above, below, last position, as sub node
-        boolean move = false;
-        if (action == ACTION_MOVE) {
-            move = true;
-        }
-        String label = StringUtils.substringAfterLast(pathOrigin, "/"); //$NON-NLS-1$
-        String slash = "/"; //$NON-NLS-1$
-        if (pathSelected.equals("/")) { //$NON-NLS-1$
-            slash = StringUtils.EMPTY;
-        }
-        String destination = pathSelected + slash + label;
-        if (pasteType == PASTETYPE_SUB && action != ACTION_COPY && destination.equals(pathOrigin)) {
-            // drag node to parent node: move to last position
-            pasteType = PASTETYPE_LAST;
-        }
-        if (pasteType == PASTETYPE_SUB) {
-            destination = pathSelected + slash + label;
-            Content touchedContent = this.copyMoveNode(pathOrigin, destination, move);
-            if (touchedContent == null) {
-                return StringUtils.EMPTY;
-            }
-            return touchedContent.getHandle();
-
-        }
-        else if (pasteType == PASTETYPE_LAST) {
-            // LAST only available for sorting inside the same directory
-            try {
-                Content touchedContent = getHierarchyManager().getContent(pathOrigin);
-                touchedContent.getMetaData().setSequencePosition();
-                return touchedContent.getHandle();
-            }
-            catch (RepositoryException re) {
-                return StringUtils.EMPTY;
-            }
-        }
-        else {
-            try {
-                // PASTETYPE_ABOVE | PASTETYPE_BELOW
-
-                String pathSelectedParent = StringUtils.substringBeforeLast(pathSelected, "/"); //$NON-NLS-1$
-                String pathOriginParent = StringUtils.substringBeforeLast(pathOrigin, "/"); //$NON-NLS-1$
-                if (StringUtils.isEmpty(pathSelectedParent)) {
-                    slash = StringUtils.EMPTY;
-                    pathSelectedParent = "/"; //$NON-NLS-1$
-                }
-                if (StringUtils.isEmpty(pathOriginParent)) {
-                    pathOriginParent = "/"; //$NON-NLS-1$
-                }
-                Content touchedContent = null;
-                // *
-                // (copy node) or (move node if source and destination differ in parent directory)
-                if (action == ACTION_COPY || !pathSelectedParent.equals(pathOriginParent)) {
-                    destination = pathSelectedParent + slash + label;
-                    touchedContent = this.copyMoveNode(pathOrigin, destination, move);
-                }
-                else {
-                    // sort only (move inside the same directory)
-                    touchedContent = getHierarchyManager().getContent(pathOrigin);
-                    // do deactivate (since ordering is different in public now)
-                    this.deActivateNode(pathOrigin);
-                }
-                Content parentContent = getHierarchyManager().getContent(pathSelectedParent);
-                Content selectedContent = getHierarchyManager().getContent(pathSelected);
-
-                // *
-                // set sequence position (average of selected and above resp. below)
-                // todo: !!!!!!!!
-                // how to find out type of node?
-
-                String selectedType = ItemType.NT_NODEDATA;
-                String touchedType = ItemType.NT_NODEDATA;
-                Iterator it1 = parentContent.getChildren(ItemType.CONTENT).iterator();
-                while (it1.hasNext()) {
-                    Content c = (Content) it1.next();
-                    if (c.getHandle().equals(selectedContent.getHandle())) {
-                        selectedType = ItemType.CONTENT.getSystemName();
-                    }
-                    if (c.getHandle().equals(touchedContent.getHandle())) {
-                        touchedType = ItemType.CONTENT.getSystemName();
-                    }
-                }
-                Iterator it2 = parentContent
-                    .getChildren(ItemType.CONTENTNODE)
-                    .iterator();
-                while (it2.hasNext()) {
-                    Content c = (Content) it2.next();
-                    if (c.getHandle().equals(selectedContent.getHandle())) {
-                        selectedType = ItemType.CONTENTNODE.getSystemName();
-                    }
-                    if (c.getHandle().equals(touchedContent.getHandle())) {
-                        touchedType = ItemType.CONTENTNODE.getSystemName();
-                    }
-                }
-                if (touchedType.equals(ItemType.NT_NODEDATA)) {
-                    return StringUtils.EMPTY; // sorting not possible
-                }
-                long posSelected = selectedContent.getMetaData().getSequencePosition();
-                long posAbove = 0;
-                long posBelow = 0;
-                long posFirst = 0;
-                Iterator it = parentContent.getChildren(touchedType).iterator();
-                boolean first = true;
-                while (it.hasNext()) {
-                    Content c = (Content) it.next();
-                    if (first) {
-                        posFirst = c.getMetaData().getSequencePosition();
-                        first = false;
-                    }
-                    if (c.getHandle().equals(selectedContent.getHandle())) {
-                        if (it.hasNext()) {
-                            Content nextC = (Content) it.next();
-                            posBelow = nextC.getMetaData().getSequencePosition();
-                        }
-                        break;
-                    }
-
-                    posAbove = c.getMetaData().getSequencePosition();
-
-                }
-                if (!touchedType.equals(selectedType)) {
-                    if (touchedType.equals(ItemType.CONTENTNODE.getSystemName())
-                        && selectedType.equals(ItemType.CONTENT.getSystemName())) {
-                        // move at first position
-                        // (tried to move a content node around a page)
-                        pasteType = PASTETYPE_ABOVE;
-                        posAbove = posFirst;
-                    }
-                    else {
-                        // move to last position
-                        // (tried to move a page around a content node or node data
-                        // tried to move a content around a node data
-                        pasteType = PASTETYPE_BELOW;
-                        posBelow = 0;
-                    }
-                }
-                long posTouched;
-                if (pasteType == PASTETYPE_ABOVE) {
-                    if (posAbove == 0) {
-                        posTouched = posSelected - (MetaData.SEQUENCE_POS_COEFFICIENT * 1000); // first position in
-                    }
-                    // directory ->
-                    // 1000*coefficient
-                    // above first
-                    else {
-                        posTouched = (posAbove + posSelected) / 2;
-                    }
-                }
-                else {
-                    if (posBelow == 0) {
-                        posTouched = 0; // last position in directory -> timestamp (passing 0)
-                    }
-                    else {
-                        posTouched = (posBelow + posSelected) / 2;
-                    }
-                }
-                touchedContent.getMetaData().setSequencePosition(posTouched);
-                touchedContent.updateMetaData(this.getRequest());
-                touchedContent.save();
-                return touchedContent.getHandle();
-            }
-            catch (RepositoryException re) {
-                return StringUtils.EMPTY;
-            }
-        }
-    }
-    */
-
     public String pasteNode(String pathOrigin, String pathSelected,
 			int pasteType, int action) throws ExchangeException,
 			RepositoryException {
@@ -1007,9 +835,8 @@ public class Tree extends ControlSuper {
         Rule rule = new Rule();
         rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
         rule.addAllowType(ItemType.NT_FILE);
-        SimpleSyndicator syndicator = new SimpleSyndicator(MgnlContext.getUser(), this.getRepository(), ContentRepository
+        SimpleSyndicator syndicator = new SimpleSyndicator(this.getRequest(), this.getRepository(), ContentRepository
             .getDefaultWorkspace(this.getRepository()), rule);
-
         return syndicator;
     }
 
@@ -1027,90 +854,43 @@ public class Tree extends ControlSuper {
     }
 
     public String getHtmlHeader() {
-
-        StringBuffer html = new StringBuffer();
-
-        // write css definitions
-        // @todo style is not valid in body!
-        html.append("<style type=\"text/css\">"); //$NON-NLS-1$
-        int numberOfColumns = this.getColumns().size();
-        if (numberOfColumns == 0) {
-            numberOfColumns = 1;
+        
+        StringBuffer str = new StringBuffer();
+        try {
+            HttpServletRequest request = getRequest();
+            Map params = populateTemplateParameters();
+            str.append(FreeMarkerUtil.process("info/magnolia/cms/gui/control/TreeHeader.html", params));
         }
-        for (int i = 0; i < numberOfColumns; i++) {
-            html.append("." + this.getJavascriptTree() + "CssClassColumn" + i); //$NON-NLS-1$ //$NON-NLS-2$
-            html.append("\n{position:absolute;left:0px;clip:rect(0 0 100 0);cursor:default;}\n"); //$NON-NLS-1$
+        catch (Exception e) {
+            log.error("can't render tree header", e);
         }
-        html.append("</style>\n\n"); //$NON-NLS-1$
 
-        // resizer
-        html.append("<div id=\"" //$NON-NLS-1$
-            + this.getJavascriptTree()
-            + "_ColumnResizerDiv\" style=\"position:absolute;top:-50px;z-index:500;\">"); //$NON-NLS-1$
-        for (int i = 1; i < this.getColumns().size(); i++) {
-            // div around image: ie and safari do not allow drag of images
-            // todo: fix bad behaviour in mozilla: resizer "turns blue" when selecting
-            html.append("<div onmousedown=\"" //$NON-NLS-1$
-                + this.getJavascriptTree()
-                + ".dragColumnStart(this," //$NON-NLS-1$
-                + i
-                + ");\" id=\"" //$NON-NLS-1$
-                + this.getJavascriptTree()
-                + "ColumnResizer" //$NON-NLS-1$
-                + i
-                + "\" style=\"position:relative;left:-1000px;background-image:url(" //$NON-NLS-1$
-                + this.getRequest().getContextPath()
-                + this.getColumnResizer()
-                + ");display:inline;\">"); //$NON-NLS-1$
-            // use resizer gif to get exact size
-            html.append("<img src=\"" //$NON-NLS-1$
-                + this.getRequest().getContextPath()
-                + this.getColumnResizer()
-                + "\" alt=\"\" style=\"visibility:hidden;\" />"); //$NON-NLS-1$
-            html.append("</div>"); //$NON-NLS-1$
-        }
-        html.append("</div>"); //$NON-NLS-1$
-        // column header
-        html.append("<div id=\"" //$NON-NLS-1$
-            + this.getJavascriptTree()
-            + "_ColumnHeader\" style=\"position:absolute;top:-50px;z-index:480;\">"); //$NON-NLS-1$
-        for (int i = 0; i < this.getColumns().size(); i++) {
-            TreeColumn tc = this.getColumns(i);
-            html.append("<span class=\"mgnlTreeColumn " //$NON-NLS-1$
-                + this.getJavascriptTree()
-                + "CssClassColumn" //$NON-NLS-1$
-                + i
-                + "\"><span class=\"mgnlTreeHeader\">" //$NON-NLS-1$
-                + tc.getTitle()
-                + "<!-- ie --></span></span>"); //$NON-NLS-1$
-        }
-        html.append("</div>"); //$NON-NLS-1$
-
-        html.append("<div id=\"" //$NON-NLS-1$
-            + this.getJavascriptTree()
-            + "_ColumnResizerLine\" style=\"position:absolute;top:0px;left:-100px;visibility:hidden;width:1px;height:" //$NON-NLS-1$
-            + this.getHeight()
-            + "px;background-color:#333333;z-index:490;\"></div>"); //$NON-NLS-1$
-        html.append("<div id=\"" //$NON-NLS-1$
-            + this.getJavascriptTree()
-            + "_" //$NON-NLS-1$
-            + this.getPath()
-            + "_DivMain\" onclick=\"" //$NON-NLS-1$
-            + this.getJavascriptTree()
-            + ".mainDivReset();\" oncontextmenu=\"" //$NON-NLS-1$
-            + this.getJavascriptTree()
-            + ".menuShow(event);return false;\" class=\"mgnlTreeDiv\" style=\"height:" //$NON-NLS-1$
-            + this.getHeight()
-            + "px;\">"); //$NON-NLS-1$
-        html.append(Spacer.getHtml(8, 8));
-        // html.append("<div id=\""+this.getJavascriptTree()+"_"+this.getPath()+"_DivSub\" style=\"display:none;\">";
-        html.append("<div id=\"" + this.getJavascriptTree() + "_" + this.getPath() + "_DivSub\">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        return html.toString();
+        return str.toString();
     }
 
     public String getHtmlFooter() {
         StringBuffer html = new StringBuffer();
         html.append("</div>"); //$NON-NLS-1$
+        
+        Map params = populateTemplateParameters();
+        
+        // include the tree footer / menu divs
+        html.append(FreeMarkerUtil.process("info/magnolia/cms/gui/control/TreeFooter.html", params));
+
+        // include the Footer Bar
+        if(!this.isBrowseMode()){
+            html.append(FreeMarkerUtil.process("info/magnolia/cms/gui/control/FunctionsBar.html", params));
+        }
+        // include the Address bar
+        else{
+            html.append(FreeMarkerUtil.process("info/magnolia/cms/gui/control/TreeAddressBar.html", params));
+        }
+        html.append(FreeMarkerUtil.process("info/magnolia/cms/gui/control/TreeJavascript.html", params));
+
+        return html.toString();
+    }
+
+    protected Map populateTemplateParameters() {
         boolean permissionWrite = true;
         try {
             Content root = getHierarchyManager().getContent(this.getPath());
@@ -1124,109 +904,20 @@ public class Tree extends ControlSuper {
         // line to place a very last position
         String lineId = this.getJavascriptTree() + "_" + this.getPath() + "_LineInter"; //$NON-NLS-1$ //$NON-NLS-2$
 
-        html.append("<div id=\"" //$NON-NLS-1$
-            + lineId
-            + "\" class=\"mgnlTreeLineInter mgnlLineEnabled\" onmouseover=\"" //$NON-NLS-1$
-            + this.javascriptTree
-            + ".moveNodeHighlightLine('" //$NON-NLS-1$
-            + lineId
-            + "');\" onmouseout=\"" //$NON-NLS-1$
-            + this.javascriptTree
-            + ".moveNodeResetLine('" //$NON-NLS-1$
-            + lineId
-            + "');\" onmousedown=\"" //$NON-NLS-1$
-            + this.javascriptTree
-            + ".pasteNode('" //$NON-NLS-1$
-            + this.getPath()
-            + "'," //$NON-NLS-1$
-            + Tree.PASTETYPE_SUB
-            + "," //$NON-NLS-1$
-            + Boolean.toString(permissionWrite)
-            + ",'" //$NON-NLS-1$
-            + lineId
-            + "');\" ></div>"); //$NON-NLS-1$
-
-        html.append(new Hidden(this.getJavascriptTree() + "_" + this.getPath() + "_PermissionWrite", Boolean //$NON-NLS-1$ //$NON-NLS-2$
-            .toString(permissionWrite), false).getHtml());
-        html.append("</div>"); //$NON-NLS-1$
-        // address bar
-        String pathOpen = this.getPathOpen();
-        if (pathOpen == null) {
-            pathOpen = StringUtils.EMPTY;
+        // prepare the data for the templates
+        Map params = new HashMap();
+        params.put("tree", this);
+        params.put("PASTETYPE_SUB", new Integer(this.PASTETYPE_SUB));
+        params.put("DOCROOT", this.DOCROOT);
+        params.put("lineId", lineId);
+        params.put("permissionWrite", new Boolean(permissionWrite));
+        params.put("columns", this.getColumns());
+        params.put("menu", this.getMenu());
+        params.put("treeCssClass", "mgnlTreeDiv");
+        if(this.isBrowseMode()){
+            params.put("treeCssClass", "mgnlTreeBrowseModeDiv mgnlTreeDiv");
         }
-
-        html.append(Spacer.getHtml(3, 3));
-        html.append("\n\n\n\n\n\n\n\n<input id=\"" //$NON-NLS-1$
-            + this.getJavascriptTree()
-            + "AddressBar\" type=\"text\" onkeydown=\"if (mgnlIsKeyEnter(event)) " //$NON-NLS-1$
-            + this.getJavascriptTree()
-            + ".expandNode(this.value);\" class=\"mgnlDialogControlEdit\" style=\"width:100%;\" value=\"" //$NON-NLS-1$
-            + pathOpen
-            + "\" />\n\n\n\n"); //$NON-NLS-1$
-
-        // shadow for moving pages
-        html.append("<div id=\""); //$NON-NLS-1$
-        html.append(this.getJavascriptTree());
-        html.append("_MoveShadow\" "); //$NON-NLS-1$
-        html.append("style=\"position:absolute;top:0px;left:0px;visibility:hidden;background-color:#fff;\"></div>"); //$NON-NLS-1$
-
-        // "move denied"
-        html.append("<img src=\"" //$NON-NLS-1$
-            + this.getRequest().getContextPath()
-            + Tree.DOCROOT
-            + "move_denied.gif\" id=\"" //$NON-NLS-1$
-            + this.getJavascriptTree()
-            + "_MoveDenied\" style=\"position:absolute;top:0px;left:0px;visibility:hidden;\" />"); //$NON-NLS-1$
-        // initialize js tree object
-        html.append("<script type=\"text/javascript\">"); //$NON-NLS-1$
-        html.append("var " //$NON-NLS-1$
-            + this.getJavascriptTree()
-            + "=new mgnlTree('" //$NON-NLS-1$
-            + this.getRepository()
-            + "','" //$NON-NLS-1$
-            + this.getPath()
-            + "','" //$NON-NLS-1$
-            + this.getJavascriptTree()
-            + "'," //$NON-NLS-1$
-            + this.getHeight()
-            + "," //$NON-NLS-1$
-            + "'" + this.getName() + "'," + this.isBrowseMode() + ");"); //$NON-NLS-1$
-
-        // add columns to tree object
-        for (int i = 0; i < this.getColumns().size(); i++) {
-            TreeColumn tc = this.getColumns(i);
-            html.append(this.getJavascriptTree() + ".columns[" //$NON-NLS-1$
-                + i
-                + "]=new mgnlTreeColumn(" //$NON-NLS-1$
-                + tc.getWidth()
-                + ",'" //$NON-NLS-1$
-                + tc.getHtmlEdit()
-                + "','" //$NON-NLS-1$
-                + tc.getName()
-                + "'," //$NON-NLS-1$
-                + tc.getIsMeta()
-                + "," //$NON-NLS-1$
-                + tc.getIsLabel()
-                + "," //$NON-NLS-1$
-                + tc.getIsNodeDataValue()
-                + "," //$NON-NLS-1$
-                + tc.getIsNodeDataType()
-                + ");"); //$NON-NLS-1$
-        }
-        html.append("mgnlTreeControls['" + this.getJavascriptTree() + "']=" + this.getJavascriptTree() + ";\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        // js is not run on remote request
-        html.append(this.getJavascriptTree() + ".selectNode('" + this.getPathSelected() + "');"); //$NON-NLS-1$ //$NON-NLS-2$
-        html.append("</script>"); //$NON-NLS-1$
-
-        // contextmenu
-        if (menu.getMenuItems().size() != 0) {
-            html.append(menu.getHtml());
-        }
-
-        // register menu
-        html.append("<script>" + this.getJavascriptTree() + ".menu = " + menu.getName() + "</script>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-        return html.toString();
+        return params;
     }
 
     public String getHtmlBranch() {
@@ -1388,9 +1079,9 @@ public class Tree extends ControlSuper {
                     + idPre
                     + "_DivMain\" style=\"position:relative;top:0;left:0;width:100%;height:18px;\">"); //$NON-NLS-1$
                 html.append("&nbsp;"); // do not remove! //$NON-NLS-1$
-                int paddingLeft = left;
-                if (paddingLeft < 0) {
-                    paddingLeft = 0;
+                int paddingLeft = left + 8;
+                if (paddingLeft < 8) {
+                    paddingLeft = 8;
                 }
                 html.append("<span id=\"" //$NON-NLS-1$
                     + idPre
@@ -1618,7 +1309,7 @@ public class Tree extends ControlSuper {
         menu.addMenuItem(null);
     }
 
-    protected ContextMenu getMenu() {
+    public ContextMenu getMenu() {
         return this.menu;
     }
 
