@@ -30,11 +30,15 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * @author philipp bracher This calss is doing the same thing as javax.servlet.jsp.jastl.fmt.LocalSupport. LocalSupport
- * is using the PageContext which is not avaiable in Servlets, but the most classes do know the request-object and can
- * deliver it to this class. With this class you get the string stricly under the same rules as JSTL does. The most of
- * the code is the same as in the jstl classes. If you are able to pass a PageContext you will use
- * javax.servlet.jsp.jastl.fmt.LocalSupport. Endusers will use the MessageManager to resolve messages.
+ * Deprecated!
+ * <p>
+ * This calss is doing the same thing as javax.servlet.jsp.jastl.fmt.LocalSupport. LocalSupport is using the PageContext
+ * which is not avaiable in Servlets, but the most classes do know the request-object and can deliver it to this class.
+ * With this class you get the string stricly under the same rules as JSTL does. The most of the code is the same as in
+ * the jstl classes. If you are able to pass a PageContext you will use javax.servlet.jsp.jastl.fmt.LocalSupport.
+ * Endusers will use the MessageManager to resolve messages.
+ * @author philipp bracher
+ * @deprecated
  */
 
 public class ContextMessages extends Messages {
@@ -93,7 +97,7 @@ public class ContextMessages extends Messages {
      * @param basename the name of the bundle
      */
     protected ContextMessages(HttpServletRequest req, String basename) {
-        this.setBasename(basename);
+        this.basename=basename;
         loc = getLocalizationContext(req, basename);
     }
 
@@ -104,7 +108,7 @@ public class ContextMessages extends Messages {
      * @param locale use this local to get the strings
      */
     protected ContextMessages(HttpServletRequest req, String basename, Locale locale) {
-        this.setBasename(basename);
+        this.basename = basename;
         loc = getLocalizationContext(req, basename, locale);
     }
 
@@ -471,13 +475,13 @@ public class ContextMessages extends Messages {
      */
     private static Object get(HttpServletRequest req, String name, int scope) {
         switch (scope) {
-            case PageContext.REQUEST_SCOPE:
+            case PageContext.REQUEST_SCOPE :
                 return req.getAttribute(name + REQUEST_SCOPE_SUFFIX);
-            case PageContext.SESSION_SCOPE:
+            case PageContext.SESSION_SCOPE :
                 return get(req.getSession(), name);
-            case PageContext.APPLICATION_SCOPE:
+            case PageContext.APPLICATION_SCOPE :
                 return req.getSession().getServletContext().getAttribute(name + APPLICATION_SCOPE_SUFFIX);
-            default:
+            default :
                 throw new IllegalArgumentException("unknown scope"); //$NON-NLS-1$
         }
     }
@@ -504,12 +508,4 @@ public class ContextMessages extends Messages {
         }
         return ret;
     }
-
-    /**
-     * Reload bundles
-     */
-    public void reloadBundles() throws Exception {
-        reloadBundle(loc.getResourceBundle());
-    }
-
 }

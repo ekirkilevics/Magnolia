@@ -32,11 +32,7 @@ import org.slf4j.LoggerFactory;
  */
 
 public class Messages {
-
-    /**
-     * The log4j logger
-     */
-    private static Logger log = LoggerFactory.getLogger(Messages.class);
+    Logger log = LoggerFactory.getLogger(Messages.class);
 
     /**
      * Name of the javascript object used to make the messages public to the javascripts
@@ -46,12 +42,12 @@ public class Messages {
     /**
      * The name of the bundle
      */
-    private String basename;
+    protected String basename = MessagesManager.DEFAULT_BASENAME;
 
     /**
      * The current locale
      */
-    private Locale locale;
+    protected Locale locale;
 
     /**
      * The current bundle. Subclasses will overwrite getBundle()
@@ -68,14 +64,6 @@ public class Messages {
      */
     protected Messages() {
 
-    }
-
-    /**
-     * @param basename the name of the bundle
-     */
-    protected Messages(String basename) {
-        this.locale = Locale.getDefault();
-        this.basename = basename;
     }
 
     /**
@@ -99,17 +87,7 @@ public class Messages {
      * @return current basename
      */
     public String getBasename() {
-        if (basename == null) {
-            return MessagesManager.DEFAULT_BASENAME;
-        }
         return basename;
-    }
-
-    /**
-     * @param basename set the name of the bundle
-     */
-    protected void setBasename(String basename) {
-        this.basename = basename;
     }
 
     /**
@@ -215,31 +193,21 @@ public class Messages {
         return bundle;
     }
 
-    /**
-     * return the bundle for the provided basename
-     * @param basename basename
-     * @return bundle
-     */
-    public ResourceBundle getBundle(String basename) {
-        return ResourceBundle.getBundle(basename, getLocale());
+    public Messages getFallBackMessages() {
+        return fallBackMessages;
     }
 
-    /**
-     * Get the bundle for a defined local
-     * @param basename basename
-     * @param locale locale
-     * @return bundle
-     */
-    public ResourceBundle getBundle(String basename, Locale locale) {
-        return ResourceBundle.getBundle(basename, getLocale());
+    public void setFallBackMessages(Messages fallBackMessages) {
+        this.fallBackMessages = fallBackMessages;
     }
 
-    public void reloadBundles() throws Exception {
-        reloadBundle(getBundle());
+    public boolean hasFallBackMessages() {
+        return this.fallBackMessages != null;
     }
-
-    protected void reloadBundle(ResourceBundle bund) throws Exception {
+    
+    public void reload() throws Exception {
         try {
+            ResourceBundle bund = this.getBundle();
             Class klass = bund.getClass().getSuperclass();
             Field field;
             field = klass.getDeclaredField("cacheList"); //$NON-NLS-1$
@@ -256,15 +224,4 @@ public class Messages {
         }
     }
 
-    public Messages getFallBackMessages() {
-        return fallBackMessages;
-    }
-
-    public void setFallBackMessages(Messages fallBackMessages) {
-        this.fallBackMessages = fallBackMessages;
-    }
-
-    public boolean hasFallBackMessages() {
-        return this.fallBackMessages != null;
-    }
 }
