@@ -55,24 +55,25 @@
 
 		this.columns=new Array();
 
-		this.columnResizerDiv=document.getElementById(name+"_ColumnResizerDiv");
+		//this.columnResizerDiv=document.getElementById(name+"_ColumnResizerDiv");
 		this.columnResizerLine=document.getElementById(name+"_ColumnResizerLine");
 		this.columnHeaderDiv=document.getElementById(name+"_ColumnHeader");
 
 		this.height=height;
 
-		this.paddingLeft=8;
-		this.paddingRight=8;
+		this.paddingLeft=0;
+		this.paddingRight=0;
 		this.paddingTop=0;
 		this.paddingBottom=0;
 		this.columnResizerGifWidthHalf=4;
 		this.columnResizerGifWidth=9;
 		this.columnSpacing=8;
-		this.columnMinimumWidth=50;
+		this.columnMinimumWidth=20;
 
 		this.colors=new Object();
-		this.colors.nodeHighlight="#F0F2E6";
-		this.colors.nodeSelected="#e0e0e0";
+		this.colors.nodeHighlight="#EDF2FA";
+		
+		this.colors.nodeSelected="#D1E1ED";
 
 		this.strings=new Object();
 		this.strings.saving=mgnlMessages.get('js.tree.saving');
@@ -155,7 +156,8 @@
 				divMainSelected.style.textDecoration="";
 				}
 			divMain.style.backgroundColor=this.colors.nodeSelected;
-			this.addressBar.value=id;
+			if(this.addressBar)
+				this.addressBar.value=id;
 		    this.selectedNode=sNode;
 		    }
 		}
@@ -178,7 +180,7 @@
 		if (!mgnlDragTreeColumn)
 			{
 			var line=this.columnResizerLine;
-			line.style.left=mgnlGetPosX(this.divMain)-this.paddingLeft+parseInt(resizerGif.style.left)+this.columnResizerGifWidthHalf+resizerNumber*this.columnResizerGifWidth-1;
+			line.style.left=mgnlGetPosX(resizerGif) + 5;
 			line.style.visibility="visible";
 			line.style.top=mgnlGetPosY(this.divMain);
 			line.style.height=parseInt(this.divMain.style.height)+1;
@@ -192,57 +194,58 @@
 			}
 		}
 
-
-
-	mgnlTree.prototype.dragColumnStop = function()
-		{
+	mgnlTree.prototype.dragColumnStop = function(e){
 		//todo: resize edit control!
 
 		mgnlDragTreeColumn=false;
 		this.columnResizerLine.style.visibility="hidden";
 
-		var tmp=this.columnResizerGif.id;
-		var columnNumber=tmp.replace(this.name+"ColumnResizer",""); //mgnlTreeControlColumnResizer2 -> 2
-
 		var lastLeft=0;
-		var resizeAll=false;
-		for (var i=0;i<this.columns.length-1;i++)
-			{
+		// true if more than one chanaged
+		var resizeAll=true;
+
+		// loop over all columns
+		// the resizer gif is already at the new position
+		for (var i=0;i<this.columns.length-1;i++) {
+			// get the gif div
 			var colReGif=document.getElementById(this.name+"ColumnResizer"+(i+1));
-			//var left=parseInt(colReGif.style.left)-this.columnResizerGifWidth+this.columnSpacing;
-			var left=parseInt(colReGif.style.left)+((i-2)*this.columnResizerGifWidthHalf)-2;
-			if (left<lastLeft+this.columnMinimumWidth)
-				{
-				left=lastLeft+this.columnMinimumWidth+this.columnSpacing;
+
+			// get the position of the middle  of this resizre
+			var left=parseInt(colReGif.style.left)+5;
+			// if a column is smaller than the minimal width
+			if (left<lastLeft+this.columnMinimumWidth) {
+				left=lastLeft+this.columnMinimumWidth;
 				resizeAll=true;
-				}
+			}
+			
+			// clac the width of this column
 			var w=left-lastLeft;
 			this.columns[i].width=w;
 			lastLeft=left;
 
-			if (i==this.columns.length-2)
-				{
+			// if the last column is smaller than the the minimal width 
+			if (i==this.columns.length-2) {
 				var w=parseInt(this.divMain.style.width)-left;
-           		if (w<this.columnMinimumWidth)
-           			{
+           		if (w<this.columnMinimumWidth) {
            			w=this.columnMinimumWidth;
            			resizeAll=true;
-           			}
+           		}
 				this.columns[i+1].width=w;
-				}
 			}
-
-		if (resizeAll) this.resize();
-		else this.resize(columnNumber);
 		}
+		
+		if (resizeAll) 
+			this.resize();
+		else 
+			this.resize(this.columnResizerNumber);
+	}
 
 
 	mgnlTree.prototype.dragColumn = function(x,y)
 		{
 		//todo: stop at next dragger
-		this.columnResizerGif.style.left=x+1-mgnlGetPosX(this.divMain)-this.columnResizerGifWidthHalf-(this.columnResizerGifWidth*(this.columnResizerNumber-1));
-		//this.columnResizerLine.style.left=x-this.paddingLeft;
-		this.columnResizerLine.style.left=x+1;
+		this.columnResizerGif.style.left=x-this.columnResizerGifWidthHalf-2;
+		this.columnResizerLine.style.left=x-1;
 		}
 
 	mgnlTree.prototype.getColumnsWidth = function()
@@ -275,24 +278,29 @@
 	mgnlTree.prototype.resize = function(columnNumber){
 		//no columnNumber passed: resize all columns (@ resizing window)
 		//columnNumber passed: resize only this column and re-clip the one before (@ resizing column)
-
+	
 		if (this.divMain){
 			var sizeObj=mgnlGetWindowSize();
-
+	
 			//resize tree div
 		    var agent=navigator.userAgent.toLowerCase();
 		    //todo: to be tested!
-		    if (agent.indexOf("msie")!=-1) this.divMain.style.width=sizeObj.w;
-			else this.divMain.style.width=sizeObj.w-this.paddingLeft-this.paddingRight-2;
-
-			this.divMain.style.height=sizeObj.h-49;
-
+		    if (agent.indexOf("msie")!=-1) 
+		    		this.divMain.style.width=sizeObj.w;
+			else 
+				this.divMain.style.width=sizeObj.w-this.paddingLeft-this.paddingRight-2;
+	
+			if(this.browseMode)
+				this.divMain.style.height=sizeObj.h - 50;
+			else
+				this.divMain.style.height=sizeObj.h - 68;
+				
 			//resize columns
 			var quotient=sizeObj.w/this.getColumnsWidth();
 			var sizeObjX=sizeObj;
-
+	
 			//todo: move to init (tree or column?)!!!
-
+	
 			//rules property differs in browsers
 			var rulesKey;
 			if (document.all){
@@ -302,21 +310,19 @@
 				rulesKey="cssRules";
 			}
 			mgnlDebug("mgnlTree.resize: running with rules: " + rulesKey, "tree");
-
+	
 			// for each stylesheet included
 			var treeColumnClasses=new Object();
-			//for (var elem0 in document.styleSheets) //does not work in firebird 0.8, safari 1.2
-			// internal styles seems to be always in last styleSheets, therefor top down
+
 			//to do: define break point!
 			for (var elem0 = document.styleSheets.length-1; elem0>=0; elem0--) {
 				mgnlDebug("mgnlTree.resize: styleSheets[elem0].href = " + document.styleSheets[elem0].href, "tree");
-
-                var rules=document.styleSheets[elem0][rulesKey];
+	
+	            var rules=document.styleSheets[elem0][rulesKey];
 				mgnlDebug("mgnlTree.resize: rules", "tree", rules);
-
+	
 				//for (var elem1 in rule) //does not work in firebird 0.8, safari 1.2
 				for (var elem1=0; elem1<rules.length; elem1++){
-					//mgnlDebug("mgnlTree.resize: rules[elem1]", "tree", rules[elem1]);
 
 					var cssClass=rules[elem1].selectorText;
 					// in safar 1.3 the selectorText is in lower case
@@ -325,38 +331,44 @@
 					}
 				}
 			}
-
+	
+			mgnlDebug("mgnlTree.resize: treeColumnClasses", "tree", treeColumnClasses);
+	
 			var left=0;
 			for (var elem in this.columns){
-				//var cssClassObj=this.columns[elem].cssClass;
 				// in safari is it lowercase
 				var cssClass="."+this.name.toLowerCase()+"cssclasscolumn"+elem;
 				var cssClassObj=treeColumnClasses[cssClass];
 				var columnWidth=parseInt(this.columns[elem].width*quotient);
-				var columnWidthWithoutSpacing=columnWidth-this.columnSpacing;
 				//resize columne (by setting the left and clip attribute of its css class
 				if (cssClassObj){
 					if (!columnNumber || elem==columnNumber){
 						cssClassObj.style.left=left;
 					}
 					if (!columnNumber || elem==columnNumber || elem==columnNumber-1){
-						cssClassObj.style.clip="rect(0 "+columnWidthWithoutSpacing+" 100 0)";
+						cssClassObj.style.clip="rect(0 " + (columnWidth-8) + " 100 0)";
 					}
 					this.columns[elem].width=columnWidth;
+					
 				}
+
 				//place the column resizer
 				var columnResizer=document.getElementById(this.name+"ColumnResizer"+elem);
-				this.columnResizerDiv.style.top=mgnlGetPosY(this.divMain)-2;
-				this.columnResizerDiv.style.left=mgnlGetPosX(this.divMain);
+				var columnResizerLine=document.getElementById(this.name+"ColumnLine"+elem);
 
-				this.columnHeaderDiv.style.top=mgnlGetPosY(this.divMain)-18;
-				this.columnHeaderDiv.style.left=mgnlGetPosX(this.divMain)+this.paddingLeft;
 				if (columnResizer){
-					if (!columnNumber || elem==columnNumber){
-						var offsetResizerWidthSum=(elem-1)*(this.columnResizerGifWidth); //position is relative!
-						columnResizer.style.left=left-offsetResizerWidthSum+this.columnResizerGifWidthHalf+1+parseInt(elem);
-                    }
+					if (!columnNumber || elem==columnNumber){	
+						columnResizer.style.left=left-this.columnResizerGifWidthHalf-1;
+	                 }
 				}
+
+				if (columnResizerLine){
+					if (!columnNumber || elem==columnNumber){	
+						columnResizerLine.style.left=left;
+						columnResizerLine.style.height=this.divMain.style.height;
+	                 }
+				}
+
 				left+=columnWidth;
 			}
 		}
@@ -526,7 +538,7 @@
 			strDiv +='<input type="hidden" name="mgnlKeepVersions" id="mgnlKeepVersions" value="'+keepVersions+'"/>';
 			strDiv +='<input type="hidden" name="mgnlUuidBehavior" id="mgnlUuidBehavior" value="'+uuidBehavior+'"/>';
 
-			strDiv +='<input type="hidden" name="mgnlRedirect" value="${pageContext.request.contextPath}/.magnolia/adminCentral/extractTree.html?name=' + this.handlerName + '">';
+			strDiv +='<input type="hidden" name="mgnlRedirect" value="${pageContext.request.contextPath}/.magnolia/trees/' + this.handlerName + '.html">';
 			strDiv +='<input type="file" name="mgnlFileImport" id="mgnlFileImport" /><br/>';
 
 			strDiv +='<input type="submit" class="mgnlImportButton" name="importxml" value="' + mgnlMessages.get('js.import.button') + '" />';
@@ -1026,10 +1038,11 @@
 		this.divSubId=this.idPre+"_DivSub";
 		this.iconId=this.idPre+"_Icon";
 		this.labelId=this.idPre+"_Column0Main";
-
-        this.url=document.location.href.substring(0,document.location.href.indexOf("?"));
-		}
-
+		if(document.location.href.indexOf("?")!=-1)
+        		this.url=document.location.href.substring(0,document.location.href.indexOf("?"));
+		else
+			this.url=document.location.href;
+	}
 
 	mgnlTreeNode.prototype.getHttpRequest = function()
 		{
@@ -1080,7 +1093,6 @@
 			{
 			var paramString = "treeMode=snippet";
 			paramString+="&path="+this.path;
-			paramString+="&name="+this.tree.handlerName;
 			paramString+="&browseMode="+this.tree.browseMode;
 			paramString+="&mgnlCK="+mgnlGetCacheKiller();
 			for (var elem in params)
@@ -1092,6 +1104,7 @@
 				}
 			mgnlDebug("node.httpRequest: paramString: " + paramString, "tree");
             // paramters need to be passed in body to allow utf8 encoding (query string is always ISO-88591)
+            	mgnlDebug("node.httpRequest: url: " + this.url, "tree");
 			httpReq.open("POST",encodeURI(this.url),true);
 			httpReq.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
 
