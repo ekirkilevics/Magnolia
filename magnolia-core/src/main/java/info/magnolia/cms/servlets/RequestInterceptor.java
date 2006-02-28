@@ -19,6 +19,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.Resource;
+import info.magnolia.cms.util.ExclusiveWrite;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
@@ -88,54 +89,55 @@ public class RequestInterceptor extends HttpServlet {
      * could be called from here once this action finishes, it will continue loading the requested page.
      */
     public void doGet(HttpServletRequest request, HttpServletResponse response) {
-
         String action = request.getParameter(EntryServlet.INTERCEPT);
         String repository = request.getParameter(PARAM_REPOSITORY);
         if (repository == null) {
             repository = ContentRepository.WEBSITE;
         }
         HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
-        if (action.equals(ACTION_PREVIEW)) {
-            // preview mode (button in main bar)
-            String preview = request.getParameter(Resource.MGNL_PREVIEW_ATTRIBUTE);
-            if (preview != null) {
-                if (BooleanUtils.toBoolean(preview)) {
-                    request.getSession().setAttribute(Resource.MGNL_PREVIEW_ATTRIBUTE, Boolean.TRUE);
+        synchronized(ExclusiveWrite.getInstance()) {
+            if (action.equals(ACTION_PREVIEW)) {
+                // preview mode (button in main bar)
+                String preview = request.getParameter(Resource.MGNL_PREVIEW_ATTRIBUTE);
+                if (preview != null) {
+                    if (BooleanUtils.toBoolean(preview)) {
+                        request.getSession().setAttribute(Resource.MGNL_PREVIEW_ATTRIBUTE, Boolean.TRUE);
+                    }
+                    else {
+                        request.getSession().removeAttribute(Resource.MGNL_PREVIEW_ATTRIBUTE);
+                    }
                 }
-                else {
-                    request.getSession().removeAttribute(Resource.MGNL_PREVIEW_ATTRIBUTE);
+            }
+            else if (action.equals(ACTION_NODE_DELETE)) {
+                // delete paragraph
+                try {
+                    String path = request.getParameter(PARAM_PATH);
+                    // deactivate
+                    updatePageMetaData(request, hm);
+                    hm.delete(path);
+                    hm.save();
+                }
+                catch (RepositoryException e) {
+                    log.error("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
                 }
             }
-        }
-        else if (action.equals(ACTION_NODE_DELETE)) {
-            // delete paragraph
-            try {
-                String path = request.getParameter(PARAM_PATH);
-                // deactivate
-                updatePageMetaData(request, hm);
-                hm.delete(path);
-                hm.save();
-            }
-            catch (RepositoryException e) {
-                log.error("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
-            }
-        }
-        else if (action.equals(ACTION_NODE_SORT)) {
-            // sort paragrpahs
-            try {
-                String pathSelected = request.getParameter(PARAM_PATH_SELECTED);
-                String pathSortAbove = request.getParameter(PARAM_PATH_SORT_ABOVE);
-                String pathParent = StringUtils.substringBeforeLast(pathSelected, "/"); //$NON-NLS-1$
-                String srcName = StringUtils.substringAfterLast(pathSelected, "/");
-                String destName = StringUtils.substringAfterLast(pathSortAbove, "/");
-                if (StringUtils.equalsIgnoreCase(destName,"mgnlNew")) {
-                    destName = null;
+            else if (action.equals(ACTION_NODE_SORT)) {
+                // sort paragrpahs
+                try {
+                    String pathSelected = request.getParameter(PARAM_PATH_SELECTED);
+                    String pathSortAbove = request.getParameter(PARAM_PATH_SORT_ABOVE);
+                    String pathParent = StringUtils.substringBeforeLast(pathSelected, "/"); //$NON-NLS-1$
+                    String srcName = StringUtils.substringAfterLast(pathSelected, "/");
+                    String destName = StringUtils.substringAfterLast(pathSortAbove, "/");
+                    if (StringUtils.equalsIgnoreCase(destName,"mgnlNew")) {
+                        destName = null;
+                    }
+                    hm.getContent(pathParent).orderBefore(srcName, destName);
+                    hm.save();
                 }
-                hm.getContent(pathParent).orderBefore(srcName, destName);
-                hm.save();
-            }
-            catch (RepositoryException e) {
-                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+                catch (RepositoryException e) {
+                    log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+                }
             }
         }
     }
