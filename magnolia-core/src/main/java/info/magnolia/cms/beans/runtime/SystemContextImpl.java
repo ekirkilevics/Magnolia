@@ -17,7 +17,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.security.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,13 +29,8 @@ import org.apache.commons.lang.NotImplementedException;
  * @version $Revision$ ($Author$)
  *
  */
-public class SystemContextImpl implements Context {
+public class SystemContextImpl extends ContextImpl {
 
-    /**
-     * The user used in this context
-     */
-    protected User user;
-    
     /**
      * To get and set the attributes for this context
      */
@@ -65,56 +59,16 @@ public class SystemContextImpl implements Context {
         return thisInstance;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public User getUser() {
-        return this.user;
-    }
-
-    public HierarchyManager getHierarchyManager(String repositoryId) {
-        return ContentRepository.getHierarchyManager(repositoryId);
-    }
-
     public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
         return ContentRepository.getHierarchyManager(repositoryId, workspaceId);
-    }
-
-    public AccessManager getAccessManager(String repositoryId) {
-        return ContentRepository.getAccessManager();
     }
 
     public AccessManager getAccessManager(String repositoryId, String workspaceId) {
         return ContentRepository.getAccessManager();
     }
 
-    public QueryManager getQueryManager(String repositoryId) {
-        return this.getHierarchyManager(repositoryId).getQueryManager();
-    }
-
     public QueryManager getQueryManager(String repositoryId, String workspaceId) {
         return this.getHierarchyManager(repositoryId, workspaceId).getQueryManager();
-    }
-
-    public Content getActivePage() {
-        throw new NotImplementedException("this method is not available in the system context");
-    }
-
-    public File getFile() {
-        throw new NotImplementedException("this method is not available in the system context");
-    }
-
-    public MultipartForm getPostedForm() {
-        throw new NotImplementedException("this method is not available in the system context");
-    }
-
-    public String getParameter(String name) {
-        throw new NotImplementedException("this method is not available in the system context");
-    }
-
-    public Map getParameters() {
-        throw new NotImplementedException("this method is not available in the system context");
     }
 
     public void setAttribute(String name, Object value) {
@@ -140,5 +94,4 @@ public class SystemContextImpl implements Context {
         }
         return val;
     }
-
 }
