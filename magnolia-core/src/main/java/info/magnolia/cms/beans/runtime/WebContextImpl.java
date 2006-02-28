@@ -20,12 +20,13 @@ import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.Security;
-import info.magnolia.cms.security.User;
 
+import java.util.Locale;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.jstl.core.Config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,17 +36,12 @@ import org.slf4j.LoggerFactory;
  * @author Sameer Charles
  * @version $Revision $ ($Author $)
  */
-public class WebContextImpl implements Context {
+public class WebContextImpl extends ContextImpl implements WebContext{
 
     /**
      * Logger
      */
     private static Logger log = LoggerFactory.getLogger(WebContextImpl.class);
-
-    /**
-     * user attached to this context
-     */
-    private User user;
 
     /**
      * http request
@@ -61,31 +57,13 @@ public class WebContextImpl implements Context {
     }
 
     /**
-     * Set user instance for this context
-     * @param user
+     * Make the language available for JSTL 
      */
-    public void setUser(User user) {
-        this.user = user;
+    public void setLocale(Locale locale) {
+        super.setLocale(locale);
+        this.setAttribute(Config.FMT_LOCALE + ".session", locale.getLanguage(), Context.SESSION_SCOPE); //$NON-NLS-1$
     }
-
-    /**
-     * Get exiting logged in user instance
-     * @return User
-     * @see info.magnolia.cms.security.User
-     */
-    public User getUser() {
-        return this.user;
-    }
-
-    /**
-     * Get hierarchy manager initialized for this user
-     * @param repositoryId
-     * @return hierarchy manager
-     */
-    public HierarchyManager getHierarchyManager(String repositoryId) {
-        return SessionStore.getHierarchyManager(this.request, repositoryId);
-    }
-
+    
     /**
      * Get hierarchy manager initialized for this user
      * @param repositoryId
@@ -97,15 +75,6 @@ public class WebContextImpl implements Context {
     }
 
     /**
-     * Get access manager for the specified repository on default workspace
-     * @param repositoryId
-     * @return access manager
-     */
-    public AccessManager getAccessManager(String repositoryId) {
-        return SessionStore.getAccessManager(this.request, repositoryId);
-    }
-
-    /**
      * Get access manager for the specified repository on the specified workspace
      * @param repositoryId
      * @param workspaceId
@@ -113,22 +82,6 @@ public class WebContextImpl implements Context {
      */
     public AccessManager getAccessManager(String repositoryId, String workspaceId) {
         return SessionStore.getAccessManager(this.request, repositoryId, workspaceId);
-    }
-
-    /**
-     * Get QueryManager created for this user on the specified repository
-     * @param repositoryId
-     * @return query manager
-     */
-    public QueryManager getQueryManager(String repositoryId) {
-        try {
-            return SessionStore.getQueryManager(this.request, repositoryId);
-        }
-        catch (RepositoryException re) {
-            log.error(re.getMessage());
-            log.debug("Exception caught", re);
-            return null;
-        }
     }
 
     /**
@@ -240,6 +193,19 @@ public class WebContextImpl implements Context {
             value = this.request.getSession().getAttribute(name);
         }
         return value;
+    }
+
+    
+    /**
+     * Avoid the call to this method where ever possible.
+     * @return Returns the request.
+     */
+    public HttpServletRequest getRequest() {
+        return this.request;
+    }
+
+    public String getContextPath() {
+        return this.request.getContextPath();
     }
 
 }
