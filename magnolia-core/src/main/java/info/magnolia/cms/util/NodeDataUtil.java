@@ -13,11 +13,16 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.beans.runtime.MgnlContext;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.security.AccessDeniedException;
 
 import java.util.Date;
 
+import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -123,13 +128,90 @@ public class NodeDataUtil {
         return getString(repository, path, null);
     }
 
+    /**
+     * Get the string or the empty string if not existing
+     * @param node
+     * @param name
+     * @return a string 
+     */
+    public static String getString(Content node, String name) {
+        return getString(node, name, "");
+    }
+    
+    /**
+     * You can define a default value if not found
+     * @param repository
+     * @param path
+     * @param defaultValue
+     * @return the string
+     */
     public static String getString(String repository, String path, String defaultValue) {
         try {
-            return MgnlContext.getHierarchyManager(repository).getNodeData(path).toString();
+            return MgnlContext.getHierarchyManager(repository).getNodeData(path).getString();
         }
         catch (Exception e) {
             return defaultValue;
         }
     }
 
+    /**
+     * You can define a default value if not found
+     * @param node
+     * @param name
+     * @param defaultValue
+     * @return the string
+     */
+    public static String getString(Content node, String name, String defaultValue) {
+        try{
+            if(node.hasNodeData(name)){
+                return node.getNodeData(name).getString();
+            }
+            else{
+                return defaultValue;
+            }
+        }
+        catch(Exception e){
+            return defaultValue;
+        }
+    }
+    
+    /**
+     * If the NodeData does not exist yet, just create it.
+     * @param node
+     * @param name
+     * @return the found or created NodeData
+     * @throws AccessDeniedException
+     * @throws PathNotFoundException
+     * @throws RepositoryException
+     */
+    public static NodeData getOrCreate(Content node, String name) throws AccessDeniedException, PathNotFoundException, RepositoryException{
+        if(node.hasNodeData(name)){
+            return node.getNodeData(name);
+        }
+        else{
+            return node.createNodeData(name);
+        }
+    }
+
+    /**
+     * Uses the i18n mechanism to translate the message if the resulting string is a key 
+     * @param node
+     * @param string
+     * @return the i18n string
+     */
+    public static Object getI18NString(Content node, String str) {
+        String key = getString(node, str);
+        return MessagesManager.getWithDefault(key,key);
+    }
+    
+    /**
+     * Uses the i18n mechanism to translate the message if the resulting string is a key 
+     */    
+    public static Object getI18NString(Content node, String str, String basename) {
+        String key = getString(node, str);
+        return MessagesManager.getMessages(basename).getWithDefault(key,key);
+    }
+    
+    
+    
 }
