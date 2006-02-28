@@ -1,40 +1,17 @@
 body.mgnlAdminMain {
-	background-image: url(../adminCentral/magnoliaLogo.gif);
-	background-position: 32px 17px;
+	background-image: url(../images/magnoliaLogo.gif);
+	background-position: 20px 17px;
 	background-repeat: no-repeat;
 }
 
-.mgnlAdminCentralButton,.mgnlAdminCentralButton_PUSHED {
-	margin-bottom: 4px;
-	font-size: 11px;
-	height: 30px;
-	text-align: left;
-	padding-left: 5px;
-	padding-top: 5px;
-	font-family: Verdana, sans-serif;
-	color: #000;
-	cursor: default;
-}
-
-.mgnlAdminCentralButtonTransparent,.mgnlAdminCentralButtonTransparentSmall
-	{
-	background: transparent;
-}
-
-.mgnlAdminCentralButton_PUSHED {
-	background-color: #e0e0e0;
-}
-
-div.mgnlAdminCentralButtonsDiv {
+div.mgnlAdminCentralMenuDiv {
 	position: absolute;
 	left: 20px;
-	top: 101px;
+	top: 60px;
 	height: 400px;
 	width: 165px;
 	overflow: auto;
 	visibility: visible;
-	padding-top: 3px;
-	padding-bottom: 4px;
 	border-style: solid;
 	border-width: 1px;
 	border-top-color: #999;
@@ -43,19 +20,10 @@ div.mgnlAdminCentralButtonsDiv {
 	border-right-color: #ccc;
 }
 
-div.mgnlAdminCentralExtractTreeDiv {
+div.mgnlAdminCentralContentDiv {
 	position: absolute;
-	left: 200px;
-	top: 80px;
-	width: 800px;
-	height: 400px;
-	display: block;
-}
-
-div.mgnlAdminCentralExtractNonTreeDiv {
-	position: absolute;
-	left: 200px;
-	top: 101px;
+	left: 205px;
+	top: 60px;
 	width: 800px;
 	height: 400px;
 	visibility: hidden;
