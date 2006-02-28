@@ -57,12 +57,12 @@ public class ReloadI18nServlet extends HttpServlet {
 
     private void executeReload(HttpServletRequest request, PrintWriter out) {
         try {
-            MessagesManager.getMessages(request, null, MessagesManager.getDefaultLocale()).reloadBundles();
+            MessagesManager.reloadBundles();
             out
-                .println(MessagesManager.get(request, "reloadi18n.reloaded") + ":" + new SimpleDateFormat().format(new Date()) + "<br><br>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                .println(MessagesManager.get("reloadi18n.reloaded") + ":" + new SimpleDateFormat().format(new Date()) + "<br><br>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
         catch (Exception e) {
-            out.println(MessagesManager.get(request, "reloadi18n.error") + "<br/><br/>"); //$NON-NLS-1$ //$NON-NLS-2$
+            out.println(MessagesManager.get("reloadi18n.error") + "<br/><br/>"); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
     }
@@ -80,14 +80,14 @@ public class ReloadI18nServlet extends HttpServlet {
         out.println("</head><body class=\"mgnlBgLight mgnlImportExport\">"); //$NON-NLS-1$
 
         out.println("<h2>"); //$NON-NLS-1$
-        out.println(MessagesManager.get(request, "reloadi18n.title")); //$NON-NLS-1$
+        out.println(MessagesManager.get("reloadi18n.title")); //$NON-NLS-1$
         out.println("</h2>"); //$NON-NLS-1$
         out.println("<form method=\"post\" action=\"\">"); //$NON-NLS-1$
 
         out.println("<input type=\"submit\" name=\"" //$NON-NLS-1$
             + PARAM_RELOAD_ACTION
             + "\" value=\"" //$NON-NLS-1$
-            + MessagesManager.get(request, "reloadi18n.action") //$NON-NLS-1$
+            + MessagesManager.get("reloadi18n.action") //$NON-NLS-1$
             + "\" />"); //$NON-NLS-1$
 
         out.println("</form></body></html>"); //$NON-NLS-1$
