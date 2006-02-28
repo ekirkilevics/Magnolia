@@ -217,10 +217,10 @@ public class JCRLoginModule extends AbstractLoginModule {
             this.subject.getPrincipals().add(roleList);
         }
         catch (RepositoryException re) {
-            log.debug(re.getMessage(), re);
+            log.error(re.getMessage(), re);
         }
         catch (Exception e) {
-            log.debug(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
 
     }
