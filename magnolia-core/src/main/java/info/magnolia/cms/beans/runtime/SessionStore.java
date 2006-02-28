@@ -97,27 +97,7 @@ final class SessionStore {
 
     /**
      * Gets hierarchy manager for the default repository using session ticket. Creates a new ticket and hierarchy
-     * manager if not exist.
-     * @see SessionStore#DEFAULT_REPOSITORY
-     * @param request
-     */
-    protected static HierarchyManager getHierarchyManager(HttpServletRequest request) {
-        return getHierarchyManager(request, DEFAULT_REPOSITORY);
-    }
-
-    /**
-     * Gets hierarchy manager for the default repository using session ticket. Creates a new ticket and hierarchy
-     * manager if not exist.
-     * @param request
-     * @param repositoryID
-     */
-    protected static HierarchyManager getHierarchyManager(HttpServletRequest request, String repositoryID) {
-        return getHierarchyManager(request, repositoryID, ContentRepository.getDefaultWorkspace(repositoryID));
-    }
-
-    /**
-     * Gets hierarchy manager for the default repository using session ticket. Creates a new ticket and hierarchy
-     * manager if not exist.
+     * manager if not exist. Use MgnlContext if possible.
      * @param request
      * @param repositoryID
      * @param workspaceID
@@ -135,24 +115,8 @@ final class SessionStore {
     }
 
     /**
-     * gets AccessManager for the current user session for the default repository and workspace
-     * @param request
-     */
-    protected static AccessManager getAccessManager(HttpServletRequest request) {
-        return getAccessManager(request, DEFAULT_REPOSITORY);
-    }
-
-    /**
-     * gets AccessManager for the current user session for the specified repository default workspace
-     * @param request
-     * @param repositoryID
-     */
-    protected static AccessManager getAccessManager(HttpServletRequest request, String repositoryID) {
-        return getAccessManager(request, repositoryID, ContentRepository.getDefaultWorkspace(repositoryID));
-    }
-
-    /**
-     * gets AccessManager for the current user session for the specified repository and workspace
+     * gets AccessManager for the current user session for the specified repository and workspace. Use MgnlContext if
+     * possible
      * @param request
      * @param repositoryID
      * @param workspaceID
@@ -174,27 +138,7 @@ final class SessionStore {
     }
 
     /**
-     * Gets access controlled query manager
-     * @param request
-     * @throws RepositoryException
-     */
-    protected static QueryManager getQueryManager(HttpServletRequest request) throws RepositoryException {
-        return getQueryManager(request, DEFAULT_REPOSITORY);
-    }
-
-    /**
-     * Gets access controlled query manager
-     * @param request
-     * @param repositoryID
-     * @throws RepositoryException
-     */
-    protected static QueryManager getQueryManager(HttpServletRequest request, String repositoryID)
-        throws RepositoryException {
-        return getQueryManager(request, repositoryID, ContentRepository.getDefaultWorkspace(repositoryID));
-    }
-
-    /**
-     * Gets access controlled query manager
+     * Gets access controlled query manager. Use MgnlContext if possible.
      * @param request
      * @param repositoryID
      * @param workspaceID
@@ -224,7 +168,7 @@ final class SessionStore {
      * @param workspaceID
      * @throws LoginException
      * @throws RepositoryException
-     * */
+     */
     protected static Session getRepositorySession(HttpServletRequest request, String repositoryID, String workspaceID)
         throws LoginException, RepositoryException {
         Object ticket = request.getSession().getAttribute(
@@ -254,8 +198,8 @@ final class SessionStore {
      * @throws LoginException
      * @throws RepositoryException
      */
-    protected static void createRepositorySession(HttpServletRequest request, String repositoryID) throws LoginException,
-        RepositoryException {
+    protected static void createRepositorySession(HttpServletRequest request, String repositoryID)
+        throws LoginException, RepositoryException {
         createRepositorySession(request, repositoryID, ContentRepository.getDefaultWorkspace(repositoryID));
     }
 
@@ -303,7 +247,7 @@ final class SessionStore {
      * @param request
      * @param repositoryID
      * @param workspaceID
-     * */
+     */
     private static void createHierarchyManager(HttpServletRequest request, String repositoryID, String workspaceID) {
         HierarchyManager hm = new HierarchyManager(Authenticator.getUserId(request));
         try {
