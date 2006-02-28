@@ -12,14 +12,13 @@
  */
 package info.magnolia.cms.beans.runtime;
 
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
+import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.User;
 
-import java.util.Map;
-
+import java.util.Locale;
 
 /**
  * This interface defines all the methods which should be implemented by any configured magnolia context, implementing
@@ -57,6 +56,17 @@ public interface Context {
      * @see info.magnolia.cms.security.User
      */
     public User getUser();
+
+    /**
+     * @param locale
+     */
+    public void setLocale(Locale locale);
+
+    /**
+     * Get the current locale
+     * @return
+     */
+    public Locale getLocale();
 
     /**
      * Get hierarchy manager initialized for this user
@@ -104,37 +114,6 @@ public interface Context {
     public QueryManager getQueryManager(String repositoryId, String workspaceId);
 
     /**
-     * Get currently active page
-     * @return content object
-     */
-    public Content getActivePage();
-
-    /**
-     * Get aggregated file, its used from image templates to manipulate
-     * @return file object
-     */
-    public File getFile();
-
-    /**
-     * Get form object assembled by <code>MultipartRequestFilter</code>
-     * @return multipart form object
-     */
-    public MultipartForm getPostedForm();
-
-    /**
-     * Get parameter value as string
-     * @param name
-     * @return parameter value
-     */
-    public String getParameter(String name);
-
-    /**
-     * Get parameter value as string
-     * @return parameter values
-     */
-    public Map getParameters();
-
-    /**
      * Set attribute value, scope of the attribute is defined
      * @param name is used as a key
      * @param value
@@ -155,4 +134,18 @@ public interface Context {
      * @return attribute value
      */
     public Object getAttribute(String name);
+
+    /**
+     * Get the default messages. It uses the locale set on this context
+     * @return
+     */
+    public Messages getMessages();
+
+    /**
+     * Get the messages of the named bundle. It uses the locale set on this context
+     * @param basename name of the bundle
+     * @return
+     */
+    public Messages getMessages(String basename);
+
 }

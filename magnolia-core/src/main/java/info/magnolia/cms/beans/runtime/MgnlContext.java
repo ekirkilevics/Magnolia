@@ -15,9 +15,11 @@ package info.magnolia.cms.beans.runtime;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
+import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.User;
 
+import java.util.Locale;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -61,6 +63,30 @@ public class MgnlContext {
         return getInstance().getUser();
     }
 
+    /**
+     * Set the locale for the current context.
+     * @param locale
+     */
+    public static void setLocale(Locale locale) {
+        getInstance().setLocale(locale);
+     }
+
+    /**
+     * Get the contexts locale object
+     * @return the current locale
+     */
+    public static Locale getLocale() {
+       return getInstance().getLocale();
+    }
+    
+    public static Messages getMessages(){
+        return getInstance().getMessages();
+    }
+
+    public static Messages getMessages(String basename){
+        return getInstance().getMessages(basename);
+    }
+    
     /**
      * Set current user
      * @param user
@@ -131,7 +157,11 @@ public class MgnlContext {
      * @return content object
      */
     public static Content getActivePage() {
-        return getInstance().getActivePage();
+        Context ctx = getInstance();
+        if(ctx instanceof WebContext){
+            return ((WebContext)ctx).getActivePage();
+        }
+        return null;
     }
 
     /**
@@ -139,7 +169,11 @@ public class MgnlContext {
      * @return file object
      */
     public static File getFile() {
-        return getInstance().getFile();
+        Context ctx = getInstance();
+        if(ctx instanceof WebContext){
+            return ((WebContext)ctx).getFile();
+        }
+        return null;
     }
 
     /**
@@ -147,7 +181,11 @@ public class MgnlContext {
      * @return multipart form object
      */
     public static MultipartForm getPostedForm() {
-        return getInstance().getPostedForm();
+        Context ctx = getInstance();
+        if(ctx instanceof WebContext){
+            return ((WebContext)ctx).getPostedForm();
+        }
+        return null;
     }
 
     /**
@@ -156,7 +194,12 @@ public class MgnlContext {
      * @return parameter value
      */
     public static String getParameter(String name) {
-        return getInstance().getParameter(name);
+        Context ctx = getInstance();
+        if(ctx instanceof WebContext){
+            return ((WebContext)ctx).getParameter(name);
+        }
+        return null;
+
     }
 
     /**
@@ -164,7 +207,22 @@ public class MgnlContext {
      * @return parameter values
      */
     public static Map getParameters() {
-        return getInstance().getParameters();
+        Context ctx = getInstance();
+        if(ctx instanceof WebContext){
+            return ((WebContext)ctx).getParameters();
+        }
+        return null;
+    }
+ 
+    /**
+     * @return the context path
+     */
+    public static String getContextPath() {
+        Context ctx = getInstance();
+        if(ctx instanceof WebContext){
+            return ((WebContext)ctx).getContextPath();
+        }
+        return "";
     }
 
     /**
