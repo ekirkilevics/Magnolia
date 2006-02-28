@@ -165,7 +165,7 @@ function mgnlResetUp(evt)
 	{
 	if (mgnlDragTreeColumn)
 		{
-		mgnlDragTreeColumn_Tree.dragColumnStop();
+		mgnlDragTreeColumn_Tree.dragColumnStop(evt);
 		}
 	}
 
@@ -262,10 +262,9 @@ function mgnlOpenTreeBrowser(pathSelected, pathOpen, repository, width, height, 
 	if (repository) src+="&repository="+repository;
 	var w=window.open(src,"mgnlTreeBrowser","width="+width+",height="+height+",resizable=yes,status=yes,scrollbars=no");
 
-	if (w){
-		mgnlDebug("register call back function", "dialog");
-		w.mgnlCallBackCommand = callBackCommand;
-	}
+	mgnlDebug("register call back function", "dialog");
+	// we can't set this on the opened window since this is lost in safari
+	window.mgnlCallBackCommand = callBackCommand;
 }
 
 function mgnlOpenTreeBrowserWithControl(control,pathSelected,pathOpen,repository,extension,width,height,addcontext){
@@ -374,6 +373,5 @@ function eventHandlerOnResize(e)
 	mgnlDialogResizeTabs();
 	mgnlDialogLinkBrowserResize();
 	mgnlTreeResize();
-	mgnlAdminCentralResize();
 	}
-window.onresize = eventHandlerOnResize;
+
