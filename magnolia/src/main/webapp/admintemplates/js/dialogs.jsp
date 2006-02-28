@@ -1,5 +1,7 @@
 <%@ page contentType="text/javascript; charset=utf-8" %>
 
+var contextPath = '${pageContext.request.contextPath}';
+
 <%@ include file="../../admindocroot/js/dialogs/dialogs.js" %>
 <%@ include file="../../admindocroot/js/dialogs/acl.js" %>
 <%@ include file="../../admindocroot/js/dialogs/calendar.js" %>
