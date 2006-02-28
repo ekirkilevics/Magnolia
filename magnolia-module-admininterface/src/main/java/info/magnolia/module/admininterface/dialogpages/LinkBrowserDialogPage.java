@@ -83,9 +83,8 @@ public class LinkBrowserDialogPage extends DialogPageMVCHandler {
         String pathSelected) {
         StringBuffer src = new StringBuffer();
         src.append(request.getContextPath());
-        src.append("/.magnolia/adminCentral/extractTree.html"); //$NON-NLS-1$
+        src.append("/.magnolia/trees/" + repository + ".html"); //$NON-NLS-1$
         src.append("?&amp;mgnlCK=" + new Date().getTime()); //$NON-NLS-1$
-        src.append("&amp;name=" + repository); //$NON-NLS-1$
         src.append("&amp;browseMode=true"); //$NON-NLS-1$
         if (path != null) {
             src.append("&amp;path=" + path); //$NON-NLS-1$
