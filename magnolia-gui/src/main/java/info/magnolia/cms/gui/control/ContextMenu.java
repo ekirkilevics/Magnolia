@@ -74,15 +74,34 @@ public class ContextMenu extends ControlSuper {
      */
     public String getHtml() {
         StringBuffer html = new StringBuffer();
-        StringBuffer menuJavascript = new StringBuffer();
         html.append("<div id=\"" + getName() + "_DivMenu\" class=\"mgnlTreeMenu\" >"); //$NON-NLS-1$ //$NON-NLS-2$
         int counter = 0;
+
         for (int i = 0; i < this.getMenuItems().size(); i++) {
             ContextMenuItem item = this.getMenuItem(i);
             if (item == null) {
                 html.append("<div class=\"mgnlTreeMenuLine\"><!-- ie --></div>"); //$NON-NLS-1$
             }
             else {
+                item.setJavascriptMenuName(getName());
+                String id = getName() + "_MenuItem" + i; //$NON-NLS-1$
+                item.setId(id);
+                html.append(item.getHtml());
+                counter++;
+            }
+        }
+        
+        html.append("</div>"); //$NON-NLS-1$
+        return html.toString();
+    }
+    
+    public String getJavascript() {
+        StringBuffer menuJavascript = new StringBuffer();
+        menuJavascript.append("var " + getName() + "= new mgnlContextMenu('" + getName() + "');");
+        int counter = 0;
+        for (int i = 0; i < this.getMenuItems().size(); i++) {
+            ContextMenuItem item = this.getMenuItem(i);
+            if (item != null) {
                 item.setJavascriptMenuName(getName());
                 String id = getName() + "_MenuItem" + i; //$NON-NLS-1$
                 item.setId(id);
@@ -101,16 +120,10 @@ public class ContextMenu extends ControlSuper {
                         + item.getJavascriptCondition(cond)
                         + ";"); //$NON-NLS-1$
                 }
-                html.append(item.getHtml());
                 counter++;
             }
         }
-        html.append("</div>"); //$NON-NLS-1$
-
-        html.append("<script type=\"text/javascript\">"); //$NON-NLS-1$
-        html.append("var " + getName() + "= new mgnlContextMenu('" + getName() + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        html.append(menuJavascript);
-        html.append("</script>"); //$NON-NLS-1$
-        return html.toString();
+        
+        return menuJavascript.toString();
     }
 }
