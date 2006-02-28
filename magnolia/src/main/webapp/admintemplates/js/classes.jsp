@@ -54,12 +54,20 @@
 		classes.put(def.name, def);
 	}
 	
+	// write first the runtime
 	Definition runtime = (Definition) classes.get("mgnl.Runtime");
 	out.println(runtime.content);
 	runtime.proceed = true;
 	
+%>
+
+MgnlRuntime.loadingOn=false; 
+
+<%	
 	for(Iterator iter = classes.keySet().iterator(); iter.hasNext(); ){
 		String className = (String) iter.next();
 		process(className, out);
 	}
 %>
+
+MgnlRuntime.loadingOn=true;
