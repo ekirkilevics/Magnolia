@@ -48,7 +48,7 @@ public final class LinkUtil {
     /**
      * Pattern to find a link
      */
-    private static Pattern linkPattern = Pattern.compile("(<a[^>]+href[ ]*=[ ]*\")(/[^\"]*).html(\"[^>]*>)"); //$NON-NLS-1$
+    private static Pattern linkPattern = Pattern.compile("(<a[^>]+href[ ]*=[ ]*\")(/[^\"]*).html((#[^\"]*)?\"[^>]*>)"); //$NON-NLS-1$
 
     /**
      * Pattern to find a magnolia formatted link
