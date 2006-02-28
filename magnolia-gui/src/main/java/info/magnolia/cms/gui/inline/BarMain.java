@@ -182,7 +182,7 @@ public class BarMain extends Bar {
     public void setButtonSiteAdmin(String path) {
         Button b = new Button();
         b.setLabel(MessagesManager.getMessages(getRequest()).get("buttons.admincentral")); //$NON-NLS-1$
-        b.setOnclick("mgnlOpenAdminCentral('" + path + "');"); //$NON-NLS-1$ //$NON-NLS-2$
+        b.setOnclick("MgnlAdminCentral.showTree('website','" + path + "');"); //$NON-NLS-1$ //$NON-NLS-2$
         this.setButtonSiteAdmin(b);
     }
 
