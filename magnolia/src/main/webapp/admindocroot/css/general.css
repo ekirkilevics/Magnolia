@@ -1,5 +1,5 @@
 .mgnlBgDark,body.mgnlDialogBody {
-	background-color: #F0F2E6;
+	background-color: #FAFBF4;
 }
 
 .mgnlBgDark {
@@ -7,9 +7,8 @@
 	padding: 0;
 }
 
-.mgnlBgLight,div.mgnlDialogTab,div.mgnlTreeDiv,.mgnlTreeMenu,.mgnlAdminCentralButtonsDiv
-	{
-	background-color: #FAFBF4;
+.mgnlBgLight,div.mgnlDialogTab,div.mgnlTreeDiv,.mgnlTreeMenu,.mgnlAdminCentralMenuDiv{
+	background-color: white;
 }
 
 .mgnlText {
