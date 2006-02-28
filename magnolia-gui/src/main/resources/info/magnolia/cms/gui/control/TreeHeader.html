@@ -1,0 +1,75 @@
+<style type="text/css">
+	.mgnlTreeColumnLine {
+		width:1px;
+		background-color: #D8EFB6;
+		position: absolute;
+		left:10px;
+		height:100px;
+		z-index: 1;
+	}
+	
+	.mgnlTreeColumnResizer{
+		position:absolute;
+		left:-1000px;
+		background-image:url(${contextPath}/admindocroot/controls/list/headerDelimiterGreen.gif);
+		height:20;
+		width:9;
+		z-index: 1;
+		cursor: e-resize;
+	}
+	
+	.mgnlTreeHeaderBackground{
+		border-left: 1px #999999 solid;
+		border-right: 1px #CCCCCC solid;
+		position: relative;
+		z-index:460;
+		background-image:url(${contextPath}/admindocroot/controls/list/headerBackgroundGreen.gif);
+		background-repeat: repeat;
+		height:20
+	}
+
+	<#list 0..(columns?size-1) as i>
+	    .${tree.javascriptTree}CssClassColumn${i}{
+	        position:absolute;
+	        left:0px;
+	        clip:rect(0 0 100 0);
+	        cursor:default;
+			padding-left:8px;
+	    }
+	</#list>
+	
+	
+</style>
+
+<!-- background image -->
+<div class="mgnlTreeHeaderBackground">
+
+<!-- delimiters -->
+	<!-- move icons -->
+	<#list 1..(columns?size-1) as i>
+		<div onmousedown="${tree.javascriptTree}.dragColumnStart(this,${i});" class="mgnlTreeColumnResizer" id="${tree.javascriptTree}ColumnResizer${i}"></div>
+	</#list>
+
+	<!-- column title -->
+	<#list 0..(columns?size-1) as i>
+		<div id="${tree.javascriptTree}ColumnHeader${i}" class="${tree.javascriptTree} mgnlTreeHeader ${tree.javascriptTree}CssClassColumn${i}">${tree.getColumns()[i].title}<!-- ie --></div>
+	</#list>
+
+</div>
+
+<!-- column resizer line -->
+<div id="${tree.javascriptTree}_ColumnResizerLine" style="position:absolute;top:0px;left:-100px;visibility:hidden;width:1px;height:${tree.height}px;background-color:#333333;z-index:490;">
+</div>
+
+<!-- content -->
+<div id="${tree.javascriptTree}_${tree.path}_DivMain" onclick="${tree.javascriptTree}.mainDivReset();" oncontextmenu="${tree.javascriptTree}.menuShow(event);return false;" class="${treeCssClass}">
+
+	<#if (columns?size > 1)>
+		<#list 1..(columns?size-1) as i>
+			<div id="${tree.javascriptTree}ColumnLine${i}" class="mgnlTreeColumnLine"> </div>
+		</#list>
+	</#if>
+	
+	<div class="mgnlDialogSpacer" style="height:8px;width:8px;" ><!-- ie --></div>
+
+	<div id="mgnlTreeControl_${tree.path}_DivSub">
