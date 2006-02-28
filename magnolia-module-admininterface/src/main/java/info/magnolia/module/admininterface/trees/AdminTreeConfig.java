@@ -57,7 +57,7 @@ public class AdminTreeConfig extends AdminTreeMVCHandler {
     }
 
     protected void prepareTree(Tree tree, HttpServletRequest request) {
-        Messages msgs = MessagesManager.getMessages(request);
+        Messages msgs = MessagesManager.getMessages();
 
         tree.setIconPage(Tree.ICONDOCROOT + "folder_cubes.gif"); //$NON-NLS-1$
 
