@@ -451,7 +451,13 @@ public final class ContentRepository {
      * returns repository mapping as configured.
      */
     public static RepositoryMapping getRepositoryMapping(String repositoryID) {
-        return (RepositoryMapping) ContentRepository.repositoryMapping.get(getMappedRepositoryName(repositoryID));
+        if(ContentRepository.repositoryMapping.containsKey(getMappedRepositoryName(repositoryID))){
+            return (RepositoryMapping) ContentRepository.repositoryMapping.get(getMappedRepositoryName(repositoryID));
+        }
+        else{
+            log.warn("no mapping for the repository [" + repositoryID + "]");
+            return null;
+        }
     }
 
     /**
