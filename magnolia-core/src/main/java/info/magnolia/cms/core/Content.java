@@ -335,13 +335,42 @@ public class Content extends ContentHandler implements Cloneable {
      */
 
     public NodeData getNodeData(String name) {
-        return getNodeData(name, false);
+        try {
+            return (new NodeData(this.node, name, this.accessManager));
+        }
+        catch (PathNotFoundException e) {
+            if (log.isDebugEnabled()) {
+                String nodepath = null;
+                try {
+                    nodepath = this.node.getPath();
+                }
+                catch (RepositoryException e1) {
+                    // ignore, debug only
+                }
+                if (log.isDebugEnabled()) {
+                    log.debug("Path not found for property [" + name + "] in node " + nodepath); //$NON-NLS-1$ //$NON-NLS-2$
+                }
+            }
+
+            return (new NodeData());
+        }
+        catch (RepositoryException re) {
+            String nodepath = null;
+            try {
+                nodepath = this.node.getPath();
+            }
+            catch (RepositoryException e1) {
+                // ignore, debug only
+            }
+            log.warn("Repository exception while trying to read property [" + name + "] for node " + nodepath, re); //$NON-NLS-1$ //$NON-NLS-2$
+            return (new NodeData());
+        }
     }
 
     /**
      * @param name
      * @param create
-     * @deprecated use createNodeData or getNodeData(String name)
+     * @deprecated use NodeDataUtil.getOrCreate(name)
      */
     public NodeData getNodeData(String name, boolean create) {
         try {
@@ -944,6 +973,7 @@ public class Content extends ContentHandler implements Cloneable {
     public void restore(String versionName, boolean removeExisting) throws VersionException,
         UnsupportedRepositoryOperationException, RepositoryException {
         this.node.restore(versionName, removeExisting);
+        this.checkOut();
     }
 
     /**
@@ -956,6 +986,7 @@ public class Content extends ContentHandler implements Cloneable {
     public void restore(Version version, boolean removeExisting) throws VersionException,
         UnsupportedRepositoryOperationException, RepositoryException {
         this.node.restore(version, removeExisting);
+        this.checkOut();
     }
 
     /**
@@ -969,6 +1000,7 @@ public class Content extends ContentHandler implements Cloneable {
     public void restore(Version version, String relPath, boolean removeExisting) throws VersionException,
         UnsupportedRepositoryOperationException, RepositoryException {
         this.node.restore(version, relPath, removeExisting);
+        this.checkOut();
     }
 
     /**
@@ -1070,7 +1102,7 @@ public class Content extends ContentHandler implements Cloneable {
      * @return version object wrapped in ContentVersion
      * @see ContentVersion
      * */
-    public ContentVersion getVersionPreview(Version version) throws RepositoryException {
+    public ContentVersion getVersionedContent(Version version) throws RepositoryException {
         return new ContentVersion(version);
     }
 
@@ -1080,7 +1112,7 @@ public class Content extends ContentHandler implements Cloneable {
      * @return version object wrapped in ContentVersion
      * @see ContentVersion
      * */
-    public ContentVersion getVersionPreview(String versionName) throws RepositoryException {
+    public ContentVersion getVersionedContent(String versionName) throws RepositoryException {
         return new ContentVersion(this.getVersionHistory().getVersion(versionName));
     }
 
