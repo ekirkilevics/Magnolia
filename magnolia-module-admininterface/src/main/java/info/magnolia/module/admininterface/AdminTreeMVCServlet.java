@@ -18,6 +18,8 @@ import info.magnolia.cms.servlets.MVCServletHandler;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * Main admin interface servlet. Generates the content for the main admincentral iframe.
@@ -35,8 +37,8 @@ public class AdminTreeMVCServlet extends MVCServlet {
      * @see info.magnolia.cms.servlets.MVCServlet#getHandler(javax.servlet.http.HttpServletRequest)
      */
     protected MVCServletHandler getHandler(HttpServletRequest request, HttpServletResponse response) {
-
-        String handlerName = request.getParameter("name"); //$NON-NLS-1$
+        String handlerName = request.getRequestURI();
+        handlerName = StringUtils.replaceOnce(StringUtils.substringAfterLast(handlerName, "/trees/"), ".html", StringUtils.EMPTY);
 
         return Store.getInstance().getTreeHandler(handlerName, request, response);
     }
