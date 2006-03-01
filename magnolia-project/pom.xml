@@ -429,6 +429,7 @@
     <module>../magnolia-module-openwfe</module>
     <module>../magnolia-taglib-cms</module>
     <module>../magnolia-taglib-utility</module>
+    <module>../magnolia-fckeditor</module>
     <module>../magnolia</module>
   </modules>
 </project>

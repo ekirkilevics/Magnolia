@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
-    http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
-  version="2.4" id="WebApp">
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee     http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" version="2.4" id="WebApp">
   <description>Magnolia</description>
   <display-name>magnolia</display-name>
   <filter>
-    <description></description>
     <display-name>ContentTypeFilter</display-name>
     <filter-name>ContentTypeFilter</filter-name>
     <filter-class>info.magnolia.cms.filters.ContentTypeFilter</filter-class>
   </filter>
   <filter>
-    <description></description>
     <display-name>MultipartRequestFilter</display-name>
     <filter-name>MultipartRequestFilter</filter-name>
     <filter-class>info.magnolia.cms.filters.MultipartRequestFilter</filter-class>
@@ -22,7 +17,6 @@
     </init-param>
   </filter>
   <filter>
-    <description></description>
     <display-name>SecurityFilter</display-name>
     <filter-name>SecurityFilter</filter-name>
     <filter-class>info.magnolia.cms.security.SecurityFilter</filter-class>
@@ -33,10 +27,10 @@
     </init-param>
     <init-param>
       <!--
-      @todo find a better way to do this, its here simply to support login form
-      since at this time user is not authenticated and login form is unable to
-      access any resources from the server
-      NOTE : this will override config/server/SecureURIList
+        @todo find a better way to do this, its here simply to support login form
+        since at this time user is not authenticated and login form is unable to
+        access any resources from the server
+        NOTE : this will override config/server/SecureURIList
       -->
       <param-name>UnsecuredPath</param-name>
       <param-value>/admindocroot/loginForm</param-value>
@@ -101,6 +95,12 @@
     <servlet-class>info.magnolia.cms.servlets.Spool</servlet-class>
   </servlet>
   <servlet>
+    <description>Classpath Spool servlet</description>
+    <display-name>classpathspool</display-name>
+    <servlet-name>classpathspool</servlet-name>
+    <servlet-class>info.magnolia.cms.servlets.ClasspathSpool</servlet-class>
+  </servlet>
+  <servlet>
     <description>Handles the magnolia dialogs (those with the magnolia controls)</description>
     <servlet-name>DialogServlet</servlet-name>
     <servlet-class>info.magnolia.module.admininterface.DialogMVCServlet</servlet-class>
@@ -130,13 +130,13 @@
     <servlet-name>uuidRequestDispatcher</servlet-name>
     <servlet-class>info.magnolia.cms.servlets.UUIDRequestDispatcher</servlet-class>
   </servlet>
-    <!--  used for fckeditor inline images and files -->
+  <!--  used for fckeditor inline images and files -->
   <servlet>
     <servlet-name>FCKEditorSimpleUploadServlet</servlet-name>
     <servlet-class>info.magnolia.cms.gui.fckeditor.FCKEditorSimpleUploadServlet</servlet-class>
     <init-param>
       <param-name>AllowedExtensionsFile</param-name>
-	  <param-value></param-value>
+      <param-value></param-value>
     </init-param>
     <init-param>
       <param-name>DeniedExtensionsFile</param-name>
@@ -160,7 +160,6 @@
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
-  
   <servlet-mapping>
     <servlet-name>magnolia</servlet-name>
     <url-pattern>/</url-pattern>
@@ -176,6 +175,10 @@
   <servlet-mapping>
     <servlet-name>ActivationHandler</servlet-name>
     <url-pattern>/ActivationHandler</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>classpathspool</servlet-name>
+    <url-pattern>/.resources/*</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>Spool</servlet-name>
@@ -221,6 +224,12 @@
   <servlet-mapping>
     <servlet-name>CacheServlet</servlet-name>
     <url-pattern>/.magnolia/cash-all/*</url-pattern>
+    <!-- old typo -->
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>CacheServlet</servlet-name>
+    <url-pattern>/.magnolia/cache-all/*</url-pattern>
+    <!--  good one -->
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>log4j</servlet-name>
@@ -232,7 +241,7 @@
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>FCKEditorSimpleUploadServlet</servlet-name>
-	<url-pattern>/.magnolia/fckeditor/upload</url-pattern>
+    <url-pattern>/.magnolia/fckeditor/upload</url-pattern>
   </servlet-mapping>
   <listener>
     <description>Magnolia Property Initializer</description>
@@ -245,11 +254,9 @@
   </context-param>
   <context-param>
     <param-name>magnolia.initialization.file</param-name>
-    <param-value>
-      WEB-INF/config/${servername}/${webapp}/magnolia.properties, WEB-INF/config/${servername}/magnolia.properties,
+    <param-value>WEB-INF/config/${servername}/${webapp}/magnolia.properties, WEB-INF/config/${servername}/magnolia.properties,
       WEB-INF/config/${webapp}/magnolia.properties, WEB-INF/config/default/magnolia.properties,
-      WEB-INF/config/magnolia.properties
-    </param-value>
+      WEB-INF/config/magnolia.properties</param-value>
   </context-param>
   <listener>
     <description>ShutdownManager</description>
@@ -266,3 +273,4 @@
     <location>/admintemplates/error.jsp</location>
   </error-page>
 </web-app>
+
