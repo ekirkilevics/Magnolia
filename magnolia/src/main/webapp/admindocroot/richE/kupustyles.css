@@ -12,10 +12,6 @@
 
 
 div.kupu-fulleditor {
-  //font-family: Verdana, "Lucida Grande", Helvetica, Arial, sans-serif;
-  //border: solid 3px ButtonHighlight;
-  //margin: 0.2em;
-  //height: 100%;
   margin-right:15px;
 }
 
@@ -91,7 +87,7 @@ div.kupu-editorframe {
 
 
 div.kupu-toolboxes {
-  float: right;	
+  float: right;
   border: solid 2px ButtonFace;
   height: 100%;
   width: 19.4em;
@@ -111,8 +107,8 @@ div.kupu-toolbox h1 {
   font-size: 1.1em;
 }
 
-div.kupu-toolbox-label, span.kupu-toolbox-searchterm, 
-input.kupu-toolbox-st, button.kupu-toolbox-action, 
+div.kupu-toolbox-label, span.kupu-toolbox-searchterm,
+input.kupu-toolbox-st, button.kupu-toolbox-action,
 div.kupu-toolbox-results {
   margin-left: 0.2em;
   margin-right: 0.2em;
@@ -131,7 +127,7 @@ div.kupu-toolbox-results {
   display: none;
 }
 
-div.kupu-toolbox table#kupu-toolbox-addtable input, 
+div.kupu-toolbox table#kupu-toolbox-addtable input,
 div.kupu-toolbox table#kupu-toolbox-edittable input {
   width: 20px;
 }
@@ -162,12 +158,3 @@ textarea#kupu-properties-description {
   width: 22em;
 }
 
-div.kupu-toolboxes table#kupu-properties input, table#kupu-toolbox-linktable input,
-div.kupu-toolbox input, table#kupu-properties textarea#kupu-properties-description {
- # font-family: Verdana, "Lucida Grande", Helvetica, Arial, sans-serif;
- # font-size: 0.8em;
-}
-
-input#kupu-link-input, input#kupu-image-input {
-  //width: 22em;
-}
