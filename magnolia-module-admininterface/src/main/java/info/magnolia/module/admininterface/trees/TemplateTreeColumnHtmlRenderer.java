@@ -12,10 +12,8 @@
  */
 package info.magnolia.module.admininterface.trees;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.gui.control.TreeColumnHtmlRenderer;
 import info.magnolia.cms.i18n.TemplateMessagesUtil;
@@ -37,11 +35,10 @@ public class TemplateTreeColumnHtmlRenderer implements TreeColumnHtmlRenderer {
         String templateName = content.getMetaData().getTemplate();
         String strKey = this.findTemplateKey(templateName);
         // TODO enable an individual message bundle for the templates
-        return TemplateMessagesUtil.get(treeColumn.getRequest(), strKey);
+        return TemplateMessagesUtil.getMessages().get(strKey);
     }
 
     private String findTemplateKey(String templateName) {
-        HierarchyManager configHierarchyManager = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
         for (Iterator iter = Template.getAvailableTemplates(); iter.hasNext();) {
             Template template = (Template) iter.next();
             if (StringUtils.equals(templateName, template.getName())) {

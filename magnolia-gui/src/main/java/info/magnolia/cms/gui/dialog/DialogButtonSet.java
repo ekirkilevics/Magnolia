@@ -13,7 +13,6 @@
 package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentHandler;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.ButtonSet;
@@ -62,7 +61,7 @@ public class DialogButtonSet extends DialogBox {
         List options = new ArrayList();
         try {
             Iterator it = configNode.getContent("options") //$NON-NLS-1$
-                .getChildren(ItemType.CONTENTNODE.getSystemName(), ContentHandler.SORT_BY_SEQUENCE)
+                .getChildren(ItemType.CONTENTNODE.getSystemName())
                 .iterator();
             while (it.hasNext()) {
                 Content n = ((Content) it.next());

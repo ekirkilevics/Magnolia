@@ -22,7 +22,6 @@ import javax.servlet.http.HttpServletRequest;
  * <p>
  * This class is depricated use the fallBackMessages property of the Message class to make chains.
  * @author philipp
- * @deprecated
  */
 public final class TemplateMessagesUtil {
 
@@ -43,10 +42,23 @@ public final class TemplateMessagesUtil {
     }
 
     /**
+     * Get the messages for the templates
+     * @return
+     */
+    public static Messages getMessages() {
+        Messages messages = MessagesManager.getMessages(TemplateMessagesUtil.CUSTOM_BASENAME);
+        messages
+            .setFallBackMessages(MessagesManager.getMessages(TemplateMessagesUtil.DEFAULT_BASENAME))
+            .setFallBackMessages(MessagesManager.getMessages());
+        return messages;
+    }
+
+    /**
      * Get the message.
      * @param request request
      * @param key key
      * @return message
+     * @deprecated
      */
     public static String get(HttpServletRequest request, String key) {
         String msg = MessagesManager.getMessages(request, DEFAULT_BASENAME).getWithDefault(key, key);
@@ -63,6 +75,7 @@ public final class TemplateMessagesUtil {
      * @param key key
      * @param args replacement strings
      * @return message
+     * @deprecated
      */
     public static String get(HttpServletRequest request, String key, Object[] args) {
         String msg = MessagesManager.getMessages(request, DEFAULT_BASENAME).getWithDefault(key, args, key);

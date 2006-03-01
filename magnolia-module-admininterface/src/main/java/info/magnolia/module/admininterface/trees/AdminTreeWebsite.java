@@ -26,7 +26,6 @@ import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.TemplateMessagesUtil;
-import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 
 import java.util.Iterator;
@@ -57,8 +56,8 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
      * @see info.magnolia.module.admininterface.AdminTree#prepareTree()
      */
     protected void prepareTree(Tree tree, HttpServletRequest request) {
-        Messages msgs = MessagesManager.getMessages(request);
-
+        Messages msgs = MessagesManager.getMessages();
+                
         tree.setIconOndblclick("mgnlTreeMenuItemOpen(" + tree.getJavascriptTree() + ");"); //$NON-NLS-1$ //$NON-NLS-2$
 
         tree.addItemType(ItemType.CONTENT);
@@ -105,11 +104,11 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
             + ".saveNodeData(this.value,this.options[this.selectedIndex].text)"); //$NON-NLS-1$
 
         Iterator templates = Template.getAvailableTemplates(MgnlContext.getAccessManager(ContentRepository.CONFIG));
+        Messages templateMsgs = TemplateMessagesUtil.getMessages();
         while (templates.hasNext()) {
             Template template = (Template) templates.next();
             String title = template.getTitle();
-            // TODO enable an induvidual message bundel for the template title
-            title = TemplateMessagesUtil.get(request, title);
+            title = templateMsgs.get(title);
             title = Messages.javaScriptString(title);
             templateSelect.setOptions(title, template.getName());
         }
@@ -143,7 +142,7 @@ public class AdminTreeWebsite extends AdminTreeMVCHandler {
      * javax.servlet.http.HttpServletRequest)
      */
     protected void prepareContextMenu(Tree tree, HttpServletRequest request) {
-        Messages msgs = MessagesManager.getMessages(request);
+        Messages msgs = MessagesManager.getMessages();
         ContextMenuItem menuOpen = new ContextMenuItem();
         menuOpen.setLabel(msgs.get("tree.web.menu.open")); //$NON-NLS-1$
         menuOpen.setIcon(request.getContextPath() + "/admindocroot/icons/16/document_plain_earth.gif"); //$NON-NLS-1$

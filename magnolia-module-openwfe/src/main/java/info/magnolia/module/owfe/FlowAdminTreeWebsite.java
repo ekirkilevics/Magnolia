@@ -56,7 +56,7 @@ public class FlowAdminTreeWebsite extends FlowAdminTreeMVCHandler {
      * @see info.magnolia.module.admininterface.AdminTree#prepareTree()
      */
     protected void prepareTree(Tree tree, HttpServletRequest request) {
-        Messages msgs = MessagesManager.getMessages(request);
+        Messages msgs = MessagesManager.getMessages();
 
         tree.setIconOndblclick("mgnlTreeMenuItemOpen(" + tree.getJavascriptTree() + ");"); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -143,7 +143,7 @@ public class FlowAdminTreeWebsite extends FlowAdminTreeMVCHandler {
      * javax.servlet.http.HttpServletRequest)
      */
     protected void prepareContextMenu(Tree tree, HttpServletRequest request) {
-        Messages msgs = MessagesManager.getMessages(request);
+        Messages msgs = MessagesManager.getMessages();
         ContextMenuItem menuOpen = new ContextMenuItem();
         menuOpen.setLabel(msgs.get("tree.web.menu.open")); //$NON-NLS-1$
         menuOpen.setIcon(request.getContextPath() + "/admindocroot/icons/16/document_plain_earth.gif"); //$NON-NLS-1$

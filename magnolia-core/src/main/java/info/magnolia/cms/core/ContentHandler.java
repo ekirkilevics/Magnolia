@@ -27,11 +27,19 @@ public abstract class ContentHandler implements Cloneable {
      * Constants for getChildren method
      */
     public static final int SORT_BY_DATE = 1;
-
+    
     public static final int SORT_BY_NAME = 2;
-
+    
+    /**
+     * JCR ordering is used by default
+     * @deprecated
+     */
     public static final int SORT_BY_SEQUENCE = 3;
 
+    /**
+     * JCR ordering is used by default
+     * @deprecated
+     */
     public static final int IGNORE_SORT = -1;
 
     /**

@@ -43,7 +43,7 @@ public class WebDavIFrameDialogPage extends DialogPageMVCHandler {
             dav.drawHtmlList(out);
         }
         else {
-            out.println("<i>" + MessagesManager.get(request, "webdav.error") + "</i>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            out.println("<i>" + MessagesManager.get("webdav.error") + "</i>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
 
     }

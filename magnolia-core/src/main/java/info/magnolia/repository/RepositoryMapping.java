@@ -14,8 +14,6 @@ public class RepositoryMapping {
 
     private String name;
 
-    private String id;
-
     private String provider;
 
     private boolean loadOnStartup;

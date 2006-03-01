@@ -12,10 +12,11 @@
  */
 package info.magnolia.cms.taglibs.util;
 
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryResult;
-import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.Resource;
 
 import java.text.MessageFormat;
@@ -163,7 +164,7 @@ public class SimpleSearchTag extends TagSupport {
 
         Query q;
         try {
-            q = SessionAccessControl.getQueryManager((HttpServletRequest) this.pageContext.getRequest()).createQuery(
+            q = MgnlContext.getQueryManager(ContentRepository.WEBSITE).createQuery(
                 queryString,
                 "xpath"); //$NON-NLS-1$
 

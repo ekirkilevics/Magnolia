@@ -51,7 +51,7 @@ public class AdminTreeUsers extends AdminTreeMVCHandler {
      * javax.servlet.http.HttpServletRequest)
      */
     protected void prepareTree(Tree tree, HttpServletRequest request) {
-        Messages msgs = MessagesManager.getMessages(request);
+        Messages msgs = MessagesManager.getMessages();
 
         tree.setDrawShifter(false);
         // context path is already added by Tree
@@ -106,7 +106,7 @@ public class AdminTreeUsers extends AdminTreeMVCHandler {
      * javax.servlet.http.HttpServletRequest)
      */
     protected void prepareContextMenu(Tree tree, HttpServletRequest request) {
-        Messages msgs = MessagesManager.getMessages(request);
+        Messages msgs = MessagesManager.getMessages();
         ContextMenuItem menuOpen = new ContextMenuItem();
         menuOpen.setLabel(msgs.get("tree.users.menu.edit")); //$NON-NLS-1$
         menuOpen.setIcon(request.getContextPath() + "/admindocroot/icons/16/pawn_glass_yellow.gif"); //$NON-NLS-1$

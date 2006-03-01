@@ -57,7 +57,22 @@ public abstract class ContextImpl implements Context {
         return this.user;
     }
 
+    /**
+     * If not yet set try to get the locale of the user. Else
+     * use the locale of the system context
+     * @see info.magnolia.cms.beans.runtime.Context#getLocale()
+     */
     public Locale getLocale() {
+        if(locale == null){
+            User user = this.getUser();
+            if(user != null){
+                locale = new Locale(user.getLanguage());
+            }
+            if(locale == null){
+                locale = MgnlContext.getSystemContext().getLocale();
+            }
+        }
+        
         return locale;
     }
 

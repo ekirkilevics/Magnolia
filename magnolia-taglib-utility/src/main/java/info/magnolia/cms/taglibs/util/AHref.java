@@ -12,11 +12,12 @@
  */
 package info.magnolia.cms.taglibs.util;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.Resource;
 
 import java.io.IOException;
@@ -184,7 +185,7 @@ public class AHref extends BodyTagSupport {
             Content startPage;
             try {
                 startPage = Resource.getCurrentActivePage(req).getAncestor(this.level);
-                HierarchyManager hm = SessionAccessControl.getHierarchyManager(req);
+                HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
                 Content resultPage = hm.getPage(startPage.getHandle(), this.templateName);
                 this.writeLink(resultPage.getHandle());
             }
@@ -210,9 +211,7 @@ public class AHref extends BodyTagSupport {
                     out.print(this.preHref);
                 }
                 out.print(path);
-                if (SessionAccessControl
-                    .getHierarchyManager((HttpServletRequest) pageContext.getRequest())
-                    .isPage(path)) {
+                if (MgnlContext.getHierarchyManager(ContentRepository.WEBSITE).isPage(path)) {
                     out.print("."); //$NON-NLS-1$
                     out.print(Server.getDefaultExtension());
                 }

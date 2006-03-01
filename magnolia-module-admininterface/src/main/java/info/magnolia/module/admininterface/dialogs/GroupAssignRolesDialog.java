@@ -14,8 +14,6 @@ import info.magnolia.cms.gui.dialog.DialogStatic;
 import info.magnolia.cms.gui.dialog.DialogTab;
 import info.magnolia.cms.security.Permission;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.Iterator;
 
 import javax.jcr.RepositoryException;

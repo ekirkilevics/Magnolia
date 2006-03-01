@@ -79,7 +79,7 @@ public class ButtonEdit extends Button {
     }
 
     public String getLabel() {
-        return MessagesManager.getWithDefault(getRequest(), label, label);
+        return MessagesManager.getWithDefault(label, label);
     }
 
     public void setLabel(String s) {

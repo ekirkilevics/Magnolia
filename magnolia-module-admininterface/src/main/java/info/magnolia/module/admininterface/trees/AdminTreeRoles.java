@@ -47,7 +47,7 @@ public class AdminTreeRoles extends AdminTreeMVCHandler {
 
     protected void prepareTree(Tree tree, HttpServletRequest request) {
 
-        Messages msgs = MessagesManager.getMessages(request);
+        Messages msgs = MessagesManager.getMessages();
 
         tree.setDrawShifter(false);
 
@@ -103,7 +103,7 @@ public class AdminTreeRoles extends AdminTreeMVCHandler {
      * javax.servlet.http.HttpServletRequest)
      */
     protected void prepareContextMenu(Tree tree, HttpServletRequest request) {
-        Messages msgs = MessagesManager.getMessages(request);
+        Messages msgs = MessagesManager.getMessages();
 
         ContextMenuItem menuOpen = new ContextMenuItem();
         menuOpen.setLabel(msgs.get("tree.roles.menu.edit")); //$NON-NLS-1$

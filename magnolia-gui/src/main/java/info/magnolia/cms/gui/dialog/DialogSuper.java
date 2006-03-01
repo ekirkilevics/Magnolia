@@ -13,7 +13,6 @@
 package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentHandler;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.Messages;
@@ -392,7 +391,7 @@ public abstract class DialogSuper implements DialogInterface {
         }
         this.config = config;
 
-        Iterator it = configNodeParent.getChildren(ItemType.CONTENTNODE, ContentHandler.SORT_BY_SEQUENCE).iterator();
+        Iterator it = configNodeParent.getChildren(ItemType.CONTENTNODE).iterator();
         while (it.hasNext()) {
             Content configNode = (Content) it.next();
             String controlType = configNode.getNodeData("controlType").getString(); //$NON-NLS-1$
@@ -430,9 +429,7 @@ public abstract class DialogSuper implements DialogInterface {
         if (messages == null) {
             // if this is the root
             if (this.getParent() == null) {
-                messages = MessagesManager.getMessages(request, TemplateMessagesUtil.CUSTOM_BASENAME);
-                messages.setFallBackMessages(MessagesManager
-                    .getMessages(request, TemplateMessagesUtil.DEFAULT_BASENAME));
+                messages = TemplateMessagesUtil.getMessages();
             }
             else {
                 // try to get it from the control nearest to the root
@@ -442,7 +439,7 @@ public abstract class DialogSuper implements DialogInterface {
             String basename = this.getConfigValue(I18N_BASENAME_PROPERTY);
             if (StringUtils.isNotEmpty(basename)) {
                 // extend the chain with this bundle
-                Messages myMessages = MessagesManager.getMessages(this.getRequest(), basename);
+                Messages myMessages = MessagesManager.getMessages(basename);
                 myMessages.setFallBackMessages(messages);
                 messages = myMessages;
             }

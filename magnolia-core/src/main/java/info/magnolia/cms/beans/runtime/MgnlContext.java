@@ -79,7 +79,7 @@ public class MgnlContext {
      * @return the current locale
      */
     public static Locale getLocale() {
-       return getInstance().getLocale();
+        return getInstance().getLocale();
     }
     
     public static Messages getMessages(){

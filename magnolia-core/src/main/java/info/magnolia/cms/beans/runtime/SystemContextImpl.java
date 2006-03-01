@@ -13,16 +13,12 @@
 package info.magnolia.cms.beans.runtime;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.util.FactoryUtil;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.commons.lang.NotImplementedException;
 
 /**
  * This is the system context using the not secured HierarchyManagers.

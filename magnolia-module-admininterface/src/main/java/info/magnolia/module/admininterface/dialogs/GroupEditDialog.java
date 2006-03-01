@@ -23,17 +23,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 
-
-
-
 /**
- * 
  * @author jackie
- *
  */
 public class GroupEditDialog extends ConfiguredDialog {
 
-	  /**
+    /**
      * Logger.
      */
     protected static Logger log = Logger.getLogger(UserEditDialog.class);
@@ -44,14 +39,6 @@ public class GroupEditDialog extends ConfiguredDialog {
     private static final long serialVersionUID = 222L;
 
     private static final String NODE_GROUPUSERS = "users"; //$NON-NLS-1$
-
- //   private static final String NODE_ACLROLES = "acl_userroles"; //$NON-NLS-1$
-    
-    private static final String NODE_GROUPROLES = "acl_grouproles"; //$NON-NLS-1$
-
-    private static final String NODE_ROLES = "roles"; //$NON-NLS-1$
-
-    private static final String NODE_ACLCONFIG = "acl_config"; //$NON-NLS-1$
 
     /*
      * (non-Javadoc)
@@ -116,7 +103,7 @@ public class GroupEditDialog extends ConfiguredDialog {
         desc.setLabel("Description"); //$NON-NLS-1$
         tab.addSub(desc);
         tab.addSub(spacer);
-        
+
         DialogInclude users = DialogFactory.getDialogIncludeInstance(request, response, storageNode, null);
         users.setLabel("users"); //$NON-NLS-1$
         users.setName("aclRolesRepository"); //$NON-NLS-1$
@@ -128,7 +115,7 @@ public class GroupEditDialog extends ConfiguredDialog {
         addUser.setConfig("lineSemi", true); //$NON-NLS-1$
         addUser.setConfig("onclick", "mgnlAclAdd(true,-1);"); //$NON-NLS-1$ //$NON-NLS-2$
         tab.addSub(addUser);
-               
+
         dialog.setConfig("saveOnclick", "mgnlAclFormSubmit(true);"); //$NON-NLS-1$ //$NON-NLS-2$
         return dialog;
     }
@@ -151,7 +138,7 @@ public class GroupEditDialog extends ConfiguredDialog {
         while (repositoryNames.hasNext()) {
             String repository = (String) repositoryNames.next();
             try {
-            	group.delete("acl_" + repository); //$NON-NLS-1$
+                group.delete("acl_" + repository); //$NON-NLS-1$
             }
             catch (RepositoryException re) {
                 // new user
@@ -161,25 +148,13 @@ public class GroupEditDialog extends ConfiguredDialog {
         // rewrite
         try {
 
-            Content groupUsers;
-
-//            groupUsers = group.createContent(NODE_GROUPUSERS, ItemType.CONTENTNODE);
-
-            //group.createContent(NODE_GROUPROLES, ItemType.CONTENTNODE);
-            //group.createContent(NODE_ACLCONFIG, ItemType.CONTENTNODE);
-
-//            // give user permission to read and edit himself
-//            Content u3 = groupUsers.createContent("0", ItemType.CONTENTNODE); //$NON-NLS-1$
-//            u3.createNodeData("path").setValue(group.getHandle() + "/*"); //$NON-NLS-1$ //$NON-NLS-2$
-//            u3.createNodeData("permissions").setValue(Permission.ALL); //$NON-NLS-1$
-
             // ######################
             // # groups
             // ######################
             // remove existing
             try {
-            	// delete "users" node under "groups" node
-            	group.delete(NODE_GROUPUSERS);
+                // delete "users" node under "groups" node
+                group.delete(NODE_GROUPUSERS);
             }
             catch (RepositoryException re) {
                 // roles node did not exist yet
@@ -193,12 +168,12 @@ public class GroupEditDialog extends ConfiguredDialog {
 
             for (int i = 0; i < usersValue.length; i++) {
                 try {
-                	// create node "<newlabel>" with attribute paht=">user>" under node "users"
+                    // create node "<newlabel>" with attribute paht=">user>" under node "users"
                     String newLabel = Path.getUniqueLabel(hm, users.getHandle(), "0"); //$NON-NLS-1$
                     Content r = users.createContent(newLabel, ItemType.CONTENTNODE);
                     r.createNodeData("path").setValue(usersValue[i]); //$NON-NLS-1$
                     // add gourp reference to user's repository
-                    addGroupForUser(group.getJCRNode().getPath(), usersValue[i]);                    
+                    addGroupForUser(group.getJCRNode().getPath(), usersValue[i]);
                 }
                 catch (Exception e) {
                     log.error(e.getMessage(), e);
@@ -206,37 +181,35 @@ public class GroupEditDialog extends ConfiguredDialog {
             }
 
             hm.save();
-            
-            
-        
+
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
         }
     }
 
-    private void addGroupForUser(String groupId, String userId) throws Exception{
-    	log.debug("group id = " + groupId + ", User Id = " + userId);
-    	try{
-        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USERS);
-        
-        // get node "user"
-        Content user = hm.getContent(userId);
-        
-        // get "groups" node under node "user"
-        Content groups = user.getContent("groups");
-        if (groups == null)// create it if no exist
-        	user.createContent("groups");
-        
-        // create <groupid> under node "groups"
-        groups.createContent(groupId, ItemType.CONTENTNODE);
-        
-        hm.save();
-        
-    	}catch (Exception e){    		
-    		log.error("can not add group reference to user.", e);
-    	}
+    private void addGroupForUser(String groupId, String userId) throws Exception {
+        log.debug("group id = " + groupId + ", User Id = " + userId);
+        try {
+            HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USERS);
+
+            // get node "user"
+            Content user = hm.getContent(userId);
+
+            // get "groups" node under node "user"
+            Content groups = user.getContent("groups");
+            if (groups == null)// create it if no exist
+                user.createContent("groups");
+
+            // create <groupid> under node "groups"
+            groups.createContent(groupId, ItemType.CONTENTNODE);
+
+            hm.save();
+
+        }
+        catch (Exception e) {
+            log.error("can not add group reference to user.", e);
+        }
     }
-    
 
 }

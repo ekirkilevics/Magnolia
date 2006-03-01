@@ -13,7 +13,6 @@
 package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.i18n.MessagesManager;
 
 
 /**
@@ -36,7 +35,7 @@ public class DialogLink extends DialogEditWithButton {
         super.doBeforeDrawHtml();
 
         String extension = this.getConfigValue("extension"); //$NON-NLS-1$
-        String label = MessagesManager.get(this.getRequest(), "dialog.link.internal"); //$NON-NLS-1$
+        String label = this.getMessage( "dialog.link.internal"); //$NON-NLS-1$
         this.getButton().setLabel(label);
         this.getButton().setSaveInfo(false);
         String repository = this.getConfigValue("repository", ContentRepository.WEBSITE); //$NON-NLS-1$

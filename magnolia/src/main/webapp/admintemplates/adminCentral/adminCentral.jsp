@@ -11,11 +11,9 @@
     <jsp:directive.page import="info.magnolia.cms.gui.control.ControlSuper" />
     <jsp:directive.page import="info.magnolia.cms.core.Content" />
     <jsp:directive.page import="info.magnolia.cms.core.ContentHandler" />
-    <jsp:directive.page import="info.magnolia.cms.security.SessionAccessControl" />
     <jsp:directive.page import="info.magnolia.cms.security.Authenticator" />
     <jsp:directive.page import="info.magnolia.cms.security.User" />
     <jsp:directive.page import="info.magnolia.cms.beans.config.Server" />
-    <jsp:directive.page import="info.magnolia.cms.i18n.MessagesManager" />
     <jsp:directive.page import="java.util.Iterator" />
     <jsp:directive.page import="info.magnolia.cms.core.ItemType" />
 	<jsp:directive.page import="info.magnolia.cms.beans.runtime.MgnlContext"/>

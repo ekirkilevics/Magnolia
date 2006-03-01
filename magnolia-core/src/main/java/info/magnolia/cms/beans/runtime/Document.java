@@ -31,6 +31,11 @@ import org.slf4j.LoggerFactory;
 public class Document implements Serializable {
 
     /**
+     * Generated id
+     */
+    private static final long serialVersionUID = -1183373762999086707L;
+
+    /**
      * Logger
      */
     public static Logger log = LoggerFactory.getLogger(Document.class);

@@ -1,6 +1,7 @@
 package info.magnolia.module.admininterface.dialogs;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
@@ -138,7 +139,7 @@ public class UserEditDialog extends ConfiguredDialog {
             if (StringUtils.isNotEmpty(locale.getCountry())) {
                 code += "_" + locale.getCountry(); //$NON-NLS-1$
             }
-            String name = locale.getDisplayName(MessagesManager.getCurrentLocale(request));
+            String name = locale.getDisplayName(MgnlContext.getLocale());
             SelectOption option = new SelectOption(name, code);
             options.add(option);
         }

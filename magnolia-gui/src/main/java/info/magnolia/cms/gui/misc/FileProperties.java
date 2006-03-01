@@ -16,8 +16,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -87,11 +85,6 @@ public class FileProperties {
      * size and unit depending of size in bytes, KB, or MB: <code>257.3</code>
      */
     public static final String SIZE = "size"; //$NON-NLS-1$
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(FileProperties.class);
 
     private Content content;
 

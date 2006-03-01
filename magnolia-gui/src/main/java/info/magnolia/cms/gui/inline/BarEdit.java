@@ -120,7 +120,7 @@ public class BarEdit extends Bar {
      */
     public void setButtonMove(String nodeCollectionName, String nodeName) {
         Button b = new Button();
-        b.setLabel(MessagesManager.getMessages(getRequest()).get("buttons.move")); //$NON-NLS-1$
+        b.setLabel(MessagesManager.get("buttons.move")); //$NON-NLS-1$
         // sets the id of the bar
         this.setId(nodeCollectionName + "__" + nodeName); //$NON-NLS-1$
         b.setOnclick("mgnlMoveNodeStart('" + nodeCollectionName + "','" + nodeName + "','" + this.getId() + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
@@ -149,7 +149,7 @@ public class BarEdit extends Bar {
      */
     public void setButtonDelete(String path, String nodeCollectionName, String nodeName) {
         Button b = new Button();
-        b.setLabel(MessagesManager.getMessages(getRequest()).get("buttons.delete")); //$NON-NLS-1$
+        b.setLabel(MessagesManager.get("buttons.delete")); //$NON-NLS-1$
         b.setOnclick("mgnlDeleteNode('" + path + "','" + nodeCollectionName + "','" + nodeName + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         this.setButtonDelete(b);
     }

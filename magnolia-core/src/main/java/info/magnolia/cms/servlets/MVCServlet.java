@@ -12,10 +12,8 @@
  */
 package info.magnolia.cms.servlets;
 
-import info.magnolia.cms.beans.runtime.Context;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.beans.runtime.WebContext;
-import info.magnolia.cms.beans.runtime.WebContextImpl;
 import info.magnolia.cms.util.FactoryUtil;
 
 import java.io.IOException;

@@ -63,11 +63,6 @@ public class SecurityFilter implements Filter {
     private static final String AUTH_TYPE_BASIC = "Basic";
 
     /**
-     * Authentication type form based
-     * */
-    private static final String AUTH_TYPE_FORM = "Form";
-
-    /**
      * filter config
      * */
     private FilterConfig filterConfig;

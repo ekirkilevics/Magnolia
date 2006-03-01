@@ -5,7 +5,6 @@
     <jsp:directive.page import="info.magnolia.cms.util.Resource" />
     <jsp:directive.page import="info.magnolia.cms.core.HierarchyManager" />
     <jsp:directive.page import="info.magnolia.cms.core.Content" />
-    <jsp:directive.page import="info.magnolia.cms.security.SessionAccessControl" />
     <jsp:directive.page import="javax.jcr.RepositoryException" />
 <jsp:scriptlet>
 <![CDATA[

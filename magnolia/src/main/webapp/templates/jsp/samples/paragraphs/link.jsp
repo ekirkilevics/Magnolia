@@ -5,7 +5,8 @@
     <jsp:directive.page import="info.magnolia.cms.util.Resource" />
     <jsp:directive.page import="info.magnolia.cms.core.HierarchyManager" />
     <jsp:directive.page import="info.magnolia.cms.core.Content" />
-    <jsp:directive.page import="info.magnolia.cms.security.SessionAccessControl" />
+    <jsp:directive.page import="info.magnolia.cms.beans.config.ContentRepository" />
+    <jsp:directive.page import="info.magnolia.cms.beans.runtime.MgnlContext" />
     <jsp:directive.page import="javax.jcr.RepositoryException" />
 <jsp:scriptlet>
 <![CDATA[
@@ -32,7 +33,7 @@
 			else {
 				try {
 					// get title of linked page
-					HierarchyManager hm=SessionAccessControl.getHierarchyManager(request);
+					HierarchyManager hm=MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
 					Content destinationPage=hm.getContent(link);
 					html.append(destinationPage.getNodeData("title").getString());
 				}

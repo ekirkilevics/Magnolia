@@ -13,7 +13,6 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentHandler;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.AccessManager;
@@ -100,7 +99,7 @@ public class Template {
      */
     private static Collection collectChildren(Content cnt) {
         // Collect template's content node - children of current node
-        Collection children = cnt.getChildren(ItemType.CONTENTNODE, ContentHandler.SORT_BY_SEQUENCE);
+        Collection children = cnt.getChildren(ItemType.CONTENTNODE);
 
         // Look into subfolders
         Collection subFolders = cnt.getChildren(ItemType.CONTENT);
@@ -126,9 +125,6 @@ public class Template {
         try {
             log.info("Config : loading Template info - " + modulePath); //$NON-NLS-1$
             Content startPage = configHierarchyManager.getContent(modulePath);
-
-            // Collection children = startPage.getContent("Templates") //$NON-NLS-1$
-            // .getChildren(ItemType.CONTENTNODE, ContentHandler.SORT_BY_SEQUENCE);
 
             // It makes possibly to use templates defined within subfolders of /module/templating/Templates
             Collection children = collectChildren(startPage.getContent("Templates"));
@@ -184,28 +180,6 @@ public class Template {
         if (templates != null) {
             addTemplatesToCache(templates, Template.visibleTemplates);
         }
-    }
-
-    /**
-     * Method builds String with full path of content node passed as an argument. Search loop stops on first content
-     * node (ancestor) with empty name.
-     * @author <a href="mailto:tm@touk.pl">Tomasz Mazan</a>
-     * @param c current content node
-     * @return full path of <code>c</code> node in repository
-     * @throws RepositoryException
-     */
-    private static String getTemplatePath(Content c) throws RepositoryException {
-        StringBuffer name = new StringBuffer(c.getNodeData("name").getValue().getString());
-
-        Iterator it = c.getAncestors().iterator();
-        while (it.hasNext()) {
-            Content ancestor = (Content) it.next();
-            if (ancestor.getName().equals(""))
-                break;
-            name.insert(0, ancestor.getName() + "/");
-        }
-
-        return name.toString().replaceFirst(DEFAULT_TEMPLATE_PATH_PREFIX, "");
     }
 
     /**

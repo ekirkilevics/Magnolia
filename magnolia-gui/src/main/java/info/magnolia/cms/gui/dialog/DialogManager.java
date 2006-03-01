@@ -13,7 +13,6 @@ package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentHandler;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 
@@ -152,9 +151,7 @@ public final class DialogManager {
                 return;
             }
 
-            Iterator iterator = configNode
-                .getChildren(ItemType.CONTENTNODE, ContentHandler.SORT_BY_SEQUENCE)
-                .iterator();
+            Iterator iterator = configNode.getChildren(ItemType.CONTENTNODE).iterator();
 
             while (iterator.hasNext()) {
                 Content controlNode = (Content) iterator.next();

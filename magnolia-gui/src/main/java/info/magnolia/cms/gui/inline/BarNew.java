@@ -77,7 +77,7 @@ public class BarNew extends Bar {
      */
     public void setButtonNew(String path, String nodeCollectionName, String nodeName, String paragraph) {
         Button b = new Button();
-        b.setLabel(MessagesManager.getMessages(getRequest()).get("buttons.new")); //$NON-NLS-1$
+        b.setLabel(MessagesManager.getMessages().get("buttons.new")); //$NON-NLS-1$
         // todo: dynamic repository
         String repository = ContentRepository.WEBSITE;
         // if there are multiple paragraphs show the selectParagraph dialog

@@ -34,8 +34,6 @@ public final class Path {
 
     private static final String ENCODING_DEFAULT = "UTF-8"; //$NON-NLS-1$
 
-    private static final String ATTRIBUTE_URI = "mgnl_decodedURI"; //$NON-NLS-1$
-
     private static final String JAVAX_FORWARD_SERVLET_PATH = "javax.servlet.forward.servlet_path"; //$NON-NLS-1$
 
     /**

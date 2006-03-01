@@ -99,8 +99,6 @@ public final class ContentRepository {
      */
     private static final String ATTRIBUTE_NAME = "name"; //$NON-NLS-1$
 
-    private static final String ATTRIBUTE_ID = "id"; //$NON-NLS-1$
-
     private static final String ATTRIBUTE_LOAD_ON_STARTUP = "loadOnStartup"; //$NON-NLS-1$
 
     private static final String ATTRIBUTE_PROVIDER = "provider"; //$NON-NLS-1$

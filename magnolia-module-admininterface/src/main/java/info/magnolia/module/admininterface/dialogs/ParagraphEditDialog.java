@@ -63,11 +63,8 @@ public class ParagraphEditDialog extends ConfiguredDialog {
             return null;
         }
 
-        String dialogPath = para.getDialogPath();
-
         // @todo FIXME! this should return the dialog node
         return null;
-        // return para.getDialogPath();
     }
 
     /**

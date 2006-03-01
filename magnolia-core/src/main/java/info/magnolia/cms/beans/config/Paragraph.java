@@ -32,8 +32,6 @@ public final class Paragraph {
      */
     private static Logger log = LoggerFactory.getLogger(Paragraph.class);
 
-    private static final String DIALOGS_DIR = "/dialogs/"; //$NON-NLS-1$
-
     private static Map cachedContent = new Hashtable();
 
     private String name;

@@ -60,12 +60,12 @@ public class LinkBrowserDialogPage extends DialogPageMVCHandler {
         html.append("</div>"); //$NON-NLS-1$
 
         Button bOk = new Button();
-        bOk.setLabel(MessagesManager.get(request, "buttons.ok")); //$NON-NLS-1$
+        bOk.setLabel(MessagesManager.get("buttons.ok")); //$NON-NLS-1$
         // this will call the callback command
         bOk.setOnclick("mgnlDialogLinkBrowserWriteBack()"); //$NON-NLS-1$
 
         Button bCancel = new Button();
-        bCancel.setLabel(MessagesManager.get(request, "buttons.cancel")); //$NON-NLS-1$
+        bCancel.setLabel(MessagesManager.get("buttons.cancel")); //$NON-NLS-1$
         bCancel.setOnclick("window.top.close();"); //$NON-NLS-1$
 
         html.append("<div class=\"" + CssConstants.CSSCLASS_TABSETSAVEBAR + "\">"); //$NON-NLS-1$ //$NON-NLS-2$

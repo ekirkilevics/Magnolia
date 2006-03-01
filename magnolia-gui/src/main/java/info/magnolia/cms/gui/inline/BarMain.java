@@ -113,7 +113,7 @@ public class BarMain extends Bar {
      */
     public void setButtonProperties(String path, String paragraph) {
         ButtonEdit b = new ButtonEdit(this.getRequest());
-        b.setLabel(MessagesManager.getMessages(getRequest()).get("buttons.properties")); //$NON-NLS-1$
+        b.setLabel(MessagesManager.get("buttons.properties")); //$NON-NLS-1$
         b.setPath(path);
         b.setParagraph(paragraph);
         b.setDefaultOnclick(this.getRequest());
@@ -135,7 +135,7 @@ public class BarMain extends Bar {
      */
     public void setButtonPreview() {
         Button b = new Button();
-        String str = MessagesManager.getMessages(this.getRequest()).get("buttons.preview"); //$NON-NLS-1$
+        String str = MessagesManager.get("buttons.preview"); //$NON-NLS-1$
         b.setLabel("&laquo; " + str); //$NON-NLS-1$
         b.setOnclick("mgnlPreview(true);"); //$NON-NLS-1$
         this.setButtonPreview(b);
@@ -181,7 +181,7 @@ public class BarMain extends Bar {
      */
     public void setButtonSiteAdmin(String path) {
         Button b = new Button();
-        b.setLabel(MessagesManager.getMessages(getRequest()).get("buttons.admincentral")); //$NON-NLS-1$
+        b.setLabel(MessagesManager.get("buttons.admincentral")); //$NON-NLS-1$
         b.setOnclick("MgnlAdminCentral.showTree('website','" + path + "');"); //$NON-NLS-1$ //$NON-NLS-2$
         this.setButtonSiteAdmin(b);
     }

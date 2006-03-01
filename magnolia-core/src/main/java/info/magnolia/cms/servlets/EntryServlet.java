@@ -492,6 +492,7 @@ public class EntryServlet extends HttpServlet {
 
         /**
          * Throws UnsupportedOperationException.
+         * @deprecated
          * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdFromUrl()
          */
         public boolean isRequestedSessionIdFromUrl() {
@@ -740,6 +741,7 @@ public class EntryServlet extends HttpServlet {
 
         /**
          * Throws UnsupportedOperationException.
+         * @deprecated
          * @see javax.servlet.ServletRequest#getRealPath(java.lang.String)
          */
         public String getRealPath(String s) {

@@ -197,8 +197,9 @@ public class Messages {
         return fallBackMessages;
     }
 
-    public void setFallBackMessages(Messages fallBackMessages) {
+    public Messages setFallBackMessages(Messages fallBackMessages) {
         this.fallBackMessages = fallBackMessages;
+        return fallBackMessages;
     }
 
     public boolean hasFallBackMessages() {

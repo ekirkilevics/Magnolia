@@ -13,9 +13,10 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.Aggregator;
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.Resource;
 
 import javax.jcr.RepositoryException;
@@ -96,7 +97,7 @@ public class LoadPage extends BodyTagSupport {
             Content startPage;
             try {
                 startPage = Resource.getCurrentActivePage(req).getAncestor(this.level);
-                HierarchyManager hm = SessionAccessControl.getHierarchyManager(req);
+                HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
                 newActpage = hm.getPage(startPage.getHandle(), this.templateName);
             }
             catch (RepositoryException e) {
@@ -106,7 +107,7 @@ public class LoadPage extends BodyTagSupport {
         }
         else if (StringUtils.isNotEmpty(this.path)) {
             try {
-                newActpage = SessionAccessControl.getHierarchyManager(req).getContent(this.path);
+                newActpage = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE).getContent(this.path);
             }
             catch (Exception e) {
                 log.error(e.getMessage());

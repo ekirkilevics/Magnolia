@@ -3,11 +3,12 @@
     <jsp:directive.page contentType="text/html; charset=utf-8" />
 
     <jsp:directive.page import="info.magnolia.cms.core.search.Query" />
-    <jsp:directive.page import="info.magnolia.cms.security.SessionAccessControl" />
     <jsp:directive.page import="info.magnolia.cms.core.search.QueryResult" />
     <jsp:directive.page import="java.util.Iterator" />
     <jsp:directive.page import="info.magnolia.cms.core.NodeData" />
     <jsp:directive.page import="info.magnolia.cms.core.Content" />
+<jsp:directive.page import="info.magnolia.cms.beans.runtime.MgnlContext"/>
+<jsp:directive.page import="info.magnolia.cms.beans.config.ContentRepository"/>
 
 
     <jsp:text>
@@ -54,7 +55,7 @@
 			                <jsp:scriptlet>
 			                    String sql = request.getParameter("sql");
 			                    String language = request.getParameter("language");
-				                Query q = SessionAccessControl.getQueryManager(request).createQuery(sql, language);
+				                Query q = MgnlContext.getQueryManager(ContentRepository.WEBSITE).createQuery(sql, language);
 				                QueryResult result = q.execute();
 				                pageContext.setAttribute("result", result.getContent("mgnl:content").iterator());
 			                </jsp:scriptlet>

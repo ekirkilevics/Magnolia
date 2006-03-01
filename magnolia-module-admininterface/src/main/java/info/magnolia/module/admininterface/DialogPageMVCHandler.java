@@ -67,7 +67,7 @@ public abstract class DialogPageMVCHandler extends MVCServletHandlerImpl {
 
         form = Resource.getPostedForm(request);
         params = new RequestFormUtil(request, form);
-        msgs = MessagesManager.getMessages(request);
+        msgs = MessagesManager.getMessages();
     }
 
     /*

@@ -1,5 +1,17 @@
 package info.magnolia.module.admininterface.dialogpages;
 
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.runtime.MgnlContext;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.gui.control.Button;
+import info.magnolia.cms.gui.control.Hidden;
+import info.magnolia.cms.gui.dialog.DialogSuper;
+import info.magnolia.cms.gui.misc.CssConstants;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.module.admininterface.DialogPageMVCHandler;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Iterator;
@@ -10,18 +22,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.gui.control.Button;
-import info.magnolia.cms.gui.control.Hidden;
-import info.magnolia.cms.gui.dialog.DialogSuper;
-import info.magnolia.cms.gui.misc.CssConstants;
-import info.magnolia.cms.i18n.Messages;
-import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.security.SessionAccessControl;
-import info.magnolia.module.admininterface.DialogPageMVCHandler;
 
 public class GroupEditRolesIncludeDialogPage extends DialogPageMVCHandler  {
 
@@ -42,7 +42,7 @@ public class GroupEditRolesIncludeDialogPage extends DialogPageMVCHandler  {
 
     private static String getHtmlRowInner(HttpServletRequest request) {
         boolean small = true;
-        Messages msgs = MessagesManager.getMessages(request);
+        Messages msgs = MessagesManager.getMessages();
 
         Button choose = new Button();
         choose.setLabel(msgs.get("buttons.choose")); //$NON-NLS-1$
@@ -110,7 +110,7 @@ public class GroupEditRolesIncludeDialogPage extends DialogPageMVCHandler  {
                 String path = c.getNodeData("path").getString(); //$NON-NLS-1$
                 String name = StringUtils.EMPTY;
 
-                HierarchyManager hm = SessionAccessControl.getHierarchyManager(request, ContentRepository.USER_ROLES);
+                HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.USER_ROLES);
                 Content role = null;
                 try {
                 	role = hm.getContent(path);

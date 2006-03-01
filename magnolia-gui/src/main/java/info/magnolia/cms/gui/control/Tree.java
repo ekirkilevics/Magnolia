@@ -18,14 +18,12 @@ import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Authenticator;
-import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.FreeMarkerUtil;
 import info.magnolia.cms.util.MetaDataUtil;
@@ -60,6 +58,8 @@ public class Tree extends ControlSuper {
     public static final String DOCROOT = "/admindocroot/controls/tree/"; //$NON-NLS-1$
 
     public static final String ICONDOCROOT = "/admindocroot/icons/16/"; //$NON-NLS-1$
+    
+    public static final String ITEM_TYPE_NODEDATA = "mgnl:nodeData";
 
     public static final int ACTION_MOVE = 0;
 
@@ -437,7 +437,7 @@ public class Tree extends ControlSuper {
                     name = Path.getUniqueLabel(getHierarchyManager(), StringUtils.EMPTY, label);
                 }
             }
-            if (itemType.equals(ItemType.NT_NODEDATA)) {
+            if (itemType.equals(ITEM_TYPE_NODEDATA)) {
                 parentNode.createNodeData(name);
             }
             else {
@@ -451,13 +451,11 @@ public class Tree extends ControlSuper {
                 newNode.getMetaData().setAuthorId(Authenticator.getUserId(this.getRequest()));
                 newNode.getMetaData().setCreationDate();
                 newNode.getMetaData().setModificationDate();
-                newNode.getMetaData().setSequencePosition();
                 // todo: default template
                 // now tmp: first template of list is taken...
                 if (this.getRepository().equals(ContentRepository.WEBSITE)
                     && itemType.equals(ItemType.CONTENT.getSystemName())) {
-                    Iterator templates = Template.getAvailableTemplates(SessionAccessControl.getAccessManager(this
-                        .getRequest(), ContentRepository.CONFIG));
+                    Iterator templates = Template.getAvailableTemplates(MgnlContext.getAccessManager(ContentRepository.CONFIG));
                     while (templates.hasNext()) {
                         Template template = (Template) templates.next();
                         newNode.getMetaData().setTemplate(template.getName());
@@ -625,7 +623,6 @@ public class Tree extends ControlSuper {
 			try {
 				Content touchedContent = getHierarchyManager().getContent(
 						pathOrigin);
-				touchedContent.getMetaData().setSequencePosition();
 				return touchedContent.getHandle();
 			} catch (RepositoryException re) {
 				return StringUtils.EMPTY;
@@ -695,8 +692,7 @@ public class Tree extends ControlSuper {
         Content newContent = getHierarchyManager().getContent(destination);
         try {
             newContent.updateMetaData(this.getRequest());
-            newContent.getMetaData().setSequencePosition();
-            newContent.getMetaData(MetaData.ACTIVATION_INFO).setUnActivated();
+            newContent.getMetaData().setUnActivated();
         }
         catch (Exception e) {
             log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
@@ -770,13 +766,6 @@ public class Tree extends ControlSuper {
 
     public void activateNode(String path, boolean recursive, boolean includeContentNodes) throws ExchangeException,
         RepositoryException {
-        Content c = null;
-        if (getHierarchyManager().isPage(path)) {
-            c = getHierarchyManager().getContent(path);
-        }
-        else {
-            c = getHierarchyManager().getContent(path);
-        }
 
         String parentPath = StringUtils.substringBeforeLast(path, "/");
         if (StringUtils.isEmpty(parentPath)) {
@@ -858,7 +847,6 @@ public class Tree extends ControlSuper {
         
         StringBuffer str = new StringBuffer();
         try {
-            HttpServletRequest request = getRequest();
             Map params = populateTemplateParameters();
             str.append(FreeMarkerUtil.process("info/magnolia/cms/gui/control/TreeHeader.html", params));
         }
@@ -908,8 +896,8 @@ public class Tree extends ControlSuper {
         // prepare the data for the templates
         Map params = new HashMap();
         params.put("tree", this);
-        params.put("PASTETYPE_SUB", new Integer(this.PASTETYPE_SUB));
-        params.put("DOCROOT", this.DOCROOT);
+        params.put("PASTETYPE_SUB", new Integer(Tree.PASTETYPE_SUB));
+        params.put("DOCROOT", Tree.DOCROOT);
         params.put("lineId", lineId);
         params.put("permissionWrite", new Boolean(permissionWrite));
         params.put("columns", this.getColumns());
@@ -950,7 +938,7 @@ public class Tree extends ControlSuper {
             // todo: parentNode - level of this.getPath
             int left = (parentNode.getLevel()) * this.getIndentionWidth();
             Iterator it;
-            if (itemType.equalsIgnoreCase(ItemType.NT_NODEDATA)) {
+            if (itemType.equalsIgnoreCase(ITEM_TYPE_NODEDATA)) {
                 List nodeDatas = new ArrayList(parentNode.getNodeDataCollection());
                 // order them alphabetically
                 Collections.sort(nodeDatas, new Comparator() {
@@ -975,7 +963,7 @@ public class Tree extends ControlSuper {
                 boolean isActivated = false;
                 boolean permissionWrite = false;
                 boolean permissionWriteParent = false;
-                if (itemType.equals(ItemType.NT_NODEDATA)) {
+                if (itemType.equals(ITEM_TYPE_NODEDATA)) {
                     d = (NodeData) o;
                     handle = d.getHandle();
                     name = d.getName();
@@ -1001,7 +989,7 @@ public class Tree extends ControlSuper {
                     if (c.getAncestor(c.getLevel() - 1).isGranted(info.magnolia.cms.security.Permission.WRITE)) {
                         permissionWriteParent = true;
                     }
-                    isActivated = c.getMetaData(MetaData.ACTIVATION_INFO).getIsActivated();
+                    isActivated = c.getMetaData().getIsActivated();
                     for (int i = 0; i < this.getItemTypes().size(); i++) {
                         String type = (String) this.getItemTypes().get(i);
 
@@ -1168,7 +1156,7 @@ public class Tree extends ControlSuper {
                 for (int i = 1; i < this.getColumns().size(); i++) {
                     String str = StringUtils.EMPTY;
                     TreeColumn tc = this.getColumns(i);
-                    if (!itemType.equals(ItemType.NT_NODEDATA)) {
+                    if (!itemType.equals(ITEM_TYPE_NODEDATA)) {
                         // content node ItemType.NT_CONTENTNODE and ItemType.NT_CONTENT
                         if (!tc.getIsNodeDataType() && !tc.getIsNodeDataValue()) {
                             tc.setWebsiteNode(c);
@@ -1252,7 +1240,7 @@ public class Tree extends ControlSuper {
 
     protected boolean hasSub(Content c, String type) {
         int size = 0;
-        if (type.equalsIgnoreCase(ItemType.NT_NODEDATA)) {
+        if (type.equalsIgnoreCase(ITEM_TYPE_NODEDATA)) {
             size = c.getNodeDataCollection().size();
         }
         else {
@@ -1290,7 +1278,7 @@ public class Tree extends ControlSuper {
         else if (itemType.equals(ItemType.CONTENTNODE.getSystemName())) {
             icon = this.getIconContentNode();
         }
-        else if (itemType.equals(ItemType.NT_NODEDATA)) {
+        else if (itemType.equals(ITEM_TYPE_NODEDATA)) {
             icon = this.getIconNodeData();
         }
         return icon;

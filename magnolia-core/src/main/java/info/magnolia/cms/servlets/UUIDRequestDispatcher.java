@@ -35,6 +35,11 @@ import org.slf4j.LoggerFactory;
 public class UUIDRequestDispatcher extends HttpServlet {
 
     /**
+     * Generated
+     */
+    private static final long serialVersionUID = 1725760548580236125L;
+
+    /**
      * Logger
      */
     private static Logger log = LoggerFactory.getLogger(UUIDRequestDispatcher.class);

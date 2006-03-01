@@ -14,6 +14,7 @@ package info.magnolia.cms.gui.control;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.Document;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -25,9 +26,8 @@ import info.magnolia.cms.gui.fckeditor.FCKEditorTmpFiles;
 import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Digester;
-import info.magnolia.cms.security.SessionAccessControl;
-import info.magnolia.cms.util.LinkUtil;
 import info.magnolia.cms.util.ExclusiveWrite;
+import info.magnolia.cms.util.LinkUtil;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -163,7 +163,7 @@ public class Save {
             String path = this.getPath();
             HttpServletRequest request = this.getRequest();
 
-            HierarchyManager hm = SessionAccessControl.getHierarchyManager(request, this.getRepository());
+            HierarchyManager hm = MgnlContext.getHierarchyManager(this.getRepository());
             try {
                 // get the node to save
                 Content page = this.getPageNode(hm);
@@ -318,7 +318,7 @@ public class Save {
     private String updateLinks(Content node, String name, String valueStr) throws AccessDeniedException,
         RepositoryException, PathNotFoundException {
         // process the images and uploaded files
-        HierarchyManager hm = SessionAccessControl.getHierarchyManager(request, this.getRepository());
+        HierarchyManager hm = MgnlContext.getHierarchyManager(this.getRepository());
 
         Pattern imagePattern = Pattern.compile("(<(a|img)[^>]+(href|src)[ ]*=[ ]*\")([^\"]*)(\"[^>]*>)");
         Pattern uuidPattern = Pattern.compile(request.getContextPath() + "/tmp/fckeditor/([^/]*)/[^\"]*");
@@ -569,7 +569,7 @@ public class Save {
      * @return the value
      */
     public Value getValue(long l) {
-        HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
+        HierarchyManager hm = MgnlContext.getHierarchyManager(this.getRepository());
         ValueFactory valueFactory;
         try {
             valueFactory = hm.getWorkspace().getSession().getValueFactory();
@@ -590,7 +590,7 @@ public class Save {
 
         ValueFactory valueFactory = null;
 
-        HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.getRequest(), this.getRepository());
+        HierarchyManager hm = MgnlContext.getHierarchyManager(this.getRepository());
         try {
             valueFactory = hm.getWorkspace().getSession().getValueFactory();
         }
@@ -839,7 +839,6 @@ public class Save {
                     this.setNodeName(Path.getUniqueLabel(hm, nodeCollection.getHandle(), "0")); //$NON-NLS-1$
                 }
                 node = nodeCollection.createContent(this.getNodeName(), ItemType.CONTENTNODE);
-                node.getMetaData().setSequencePosition();
             }
         }
         else {

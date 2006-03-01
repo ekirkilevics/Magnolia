@@ -3,12 +3,12 @@ package info.magnolia.cms.servlets;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.Bootstrapper.VersionFilter;
 import info.magnolia.cms.beans.runtime.Document;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.Resource;
 
 import java.io.File;
@@ -169,7 +169,7 @@ public class ImportExportServlet extends HttpServlet {
         out.println("</head><body class=\"mgnlBgLight mgnlImportExport\">"); //$NON-NLS-1$
 
         out.println("<h2>"); //$NON-NLS-1$
-        out.println(MessagesManager.get(request, "importexport.export")); //$NON-NLS-1$
+        out.println(MessagesManager.get("importexport.export")); //$NON-NLS-1$
         out.println("</h2>"); //$NON-NLS-1$
         out.println("<form method=\"get\" action=\"\">"); //$NON-NLS-1$
 
@@ -181,7 +181,7 @@ public class ImportExportServlet extends HttpServlet {
         out.println("<input type=\"submit\" name=\"" //$NON-NLS-1$
             + PARAM_EXPORT_ACTION
             + "\" value=\"" //$NON-NLS-1$
-            + MessagesManager.get(request, "importexport.export") //$NON-NLS-1$
+            + MessagesManager.get("importexport.export") //$NON-NLS-1$
             + "\" />"); //$NON-NLS-1$
 
         out.println("</form></body></html>"); //$NON-NLS-1$
@@ -200,14 +200,14 @@ public class ImportExportServlet extends HttpServlet {
         out.println("</head><body class=\"mgnlBgLight mgnlImportExport\">"); //$NON-NLS-1$
 
         out.println("<h2>"); //$NON-NLS-1$
-        out.println(MessagesManager.get(request, "importexport.import")); //$NON-NLS-1$
+        out.println(MessagesManager.get("importexport.import")); //$NON-NLS-1$
         out.println("</h2>"); //$NON-NLS-1$
         out.println("<form method=\"post\" action=\"\" enctype=\"multipart/form-data\">"); //$NON-NLS-1$
 
         writeRepositoryField(request, out, repository);
         writeBasePathField(request, out, basepath);
         writeKeepVersionField(request, out);
-        out.println(MessagesManager.get(request, "importexport.file") //$NON-NLS-1$
+        out.println(MessagesManager.get("importexport.file") //$NON-NLS-1$
             + " <input type=\"file\" name=\"" + PARAM_FILE + "\" /><br/>"); //$NON-NLS-1$//$NON-NLS-2$
 
         out.println("<input type=\"radio\" name=\"" //$NON-NLS-1$
@@ -215,7 +215,7 @@ public class ImportExportServlet extends HttpServlet {
             + "\" value=\"" //$NON-NLS-1$
             + ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW
             + "\">"); //$NON-NLS-1$
-        out.println(MessagesManager.get(request, "importexport.createnew")); //$NON-NLS-1$
+        out.println(MessagesManager.get("importexport.createnew")); //$NON-NLS-1$
         out.println("<br/>"); //$NON-NLS-1$
 
         out.println("<input type=\"radio\" name=\"" //$NON-NLS-1$
@@ -223,7 +223,7 @@ public class ImportExportServlet extends HttpServlet {
             + "\" value=\"" //$NON-NLS-1$
             + ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING
             + "\">"); //$NON-NLS-1$
-        out.println(MessagesManager.get(request, "importexport.removeexisting")); //$NON-NLS-1$
+        out.println(MessagesManager.get("importexport.removeexisting")); //$NON-NLS-1$
         out.println("<br/>"); //$NON-NLS-1$
 
         out.println("<input type=\"radio\" name=\"" //$NON-NLS-1$
@@ -231,13 +231,13 @@ public class ImportExportServlet extends HttpServlet {
             + "\" value=\"" //$NON-NLS-1$
             + ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING
             + "\">"); //$NON-NLS-1$
-        out.println(MessagesManager.get(request, "importexport.replaceexisting")); //$NON-NLS-1$
+        out.println(MessagesManager.get("importexport.replaceexisting")); //$NON-NLS-1$
         out.println("<br/>"); //$NON-NLS-1$
 
         out.println("<input type=\"submit\" name=\"" //$NON-NLS-1$
             + PARAM_EXPORT_ACTION
             + "\" value=\"" //$NON-NLS-1$
-            + MessagesManager.get(request, "importexport.import") //$NON-NLS-1$
+            + MessagesManager.get("importexport.import") //$NON-NLS-1$
             + "\" />"); //$NON-NLS-1$
 
         out.println("</form></body></html>"); //$NON-NLS-1$
@@ -248,7 +248,7 @@ public class ImportExportServlet extends HttpServlet {
      * @param basepath
      */
     private void writeBasePathField(HttpServletRequest request, PrintWriter out, String basepath) {
-        out.println(MessagesManager.get(request, "importexport.basepath") //$NON-NLS-1$
+        out.println(MessagesManager.get("importexport.basepath") //$NON-NLS-1$
             + " <input name=\"" //$NON-NLS-1$
             + PARAM_PATH
             + "\" value=\"" //$NON-NLS-1$
@@ -260,7 +260,7 @@ public class ImportExportServlet extends HttpServlet {
      * @param out
      */
     private void writeKeepVersionField(HttpServletRequest request, PrintWriter out) {
-        out.println(MessagesManager.get(request, "importexport.keepversions") //$NON-NLS-1$
+        out.println(MessagesManager.get("importexport.keepversions") //$NON-NLS-1$
             + " <input name=\"" //$NON-NLS-1$
             + PARAM_KEEPVERSIONS
             + "\" value=\"true\" type=\"checkbox\"/><br/>"); //$NON-NLS-1$
@@ -270,7 +270,7 @@ public class ImportExportServlet extends HttpServlet {
      * @param out
      */
     private void writeFormatField(HttpServletRequest request, PrintWriter out) {
-        out.println(MessagesManager.get(request, "importexport.format") //$NON-NLS-1$
+        out.println(MessagesManager.get("importexport.format") //$NON-NLS-1$
             + " <input name=\"" //$NON-NLS-1$
             + PARAM_FORMAT
             + "\" value=\"true\" type=\"checkbox\"/><br/>"); //$NON-NLS-1$
@@ -281,7 +281,7 @@ public class ImportExportServlet extends HttpServlet {
      * @param repository
      */
     private void writeRepositoryField(HttpServletRequest request, PrintWriter out, String repository) {
-        out.println(MessagesManager.get(request, "importexport.repository") //$NON-NLS-1$
+        out.println(MessagesManager.get("importexport.repository") //$NON-NLS-1$
             + " <select name=\"" //$NON-NLS-1$
             + PARAM_REPOSITORY
             + "\">"); //$NON-NLS-1$
@@ -369,7 +369,7 @@ public class ImportExportServlet extends HttpServlet {
      */
     private void executeExport(HttpServletRequest request, HttpServletResponse response, String repository,
         String basepath, boolean format, boolean keepVersionHistory) throws IOException {
-        HierarchyManager hr = SessionAccessControl.getHierarchyManager(request, repository);
+        HierarchyManager hr = MgnlContext.getHierarchyManager(repository);
         Workspace ws = hr.getWorkspace();
         OutputStream stream = response.getOutputStream();
         response.setContentType("text/xml"); //$NON-NLS-1$
@@ -468,7 +468,7 @@ public class ImportExportServlet extends HttpServlet {
      */
     private void executeImport(HttpServletRequest request, String basepath, String repository, Document xmlFile,
         boolean keepVersionHistory, int importMode) {
-        HierarchyManager hr = SessionAccessControl.getHierarchyManager(request, repository);
+        HierarchyManager hr = MgnlContext.getHierarchyManager(repository);
         Workspace ws = hr.getWorkspace();
 
         if (log.isInfoEnabled()) {
@@ -545,8 +545,8 @@ public class ImportExportServlet extends HttpServlet {
      */
     protected boolean checkPermissions(HttpServletRequest request, String repository, String basePath,
         long permissionType) {
-        if (SessionAccessControl.getAccessManager(request, repository) != null) {
-            if (!SessionAccessControl.getAccessManager(request).isGranted(basePath, permissionType)) {
+        if (MgnlContext.getAccessManager(repository) != null) {
+            if (!MgnlContext.getAccessManager(ContentRepository.WEBSITE).isGranted(basePath, permissionType)) {
                 return false;
             }
         }

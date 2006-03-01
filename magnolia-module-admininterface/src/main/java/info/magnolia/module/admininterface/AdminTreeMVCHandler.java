@@ -15,11 +15,9 @@ package info.magnolia.module.admininterface;
 
 import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.beans.config.Subscriber;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.misc.Sources;
-import info.magnolia.cms.gui.misc.Spacer;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.servlets.MVCServletHandlerImpl;
 import info.magnolia.cms.util.AlertUtil;
@@ -187,7 +185,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
      * @return
      */
     public String createNode() {
-        String createItemType = ItemType.NT_NODEDATA;
+        String createItemType = Tree.ITEM_TYPE_NODEDATA;
         if (request.getParameter("createItemType") != null) { //$NON-NLS-1$
             createItemType = request.getParameter("createItemType"); //$NON-NLS-1$
         }
@@ -210,7 +208,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         }
         catch (Exception e) {
             log.error("can't copy", e);
-            AlertUtil.setMessage(MessagesManager.get(request, "tree.error.copy")
+            AlertUtil.setMessage(MessagesManager.get("tree.error.copy")
                 + " "
                 + AlertUtil.getExceptionMessage(e), request);
         }
@@ -228,7 +226,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         }
         catch (Exception e) {
             log.error("can't move", e);
-            AlertUtil.setMessage(MessagesManager.get(request, "tree.error.move")
+            AlertUtil.setMessage(MessagesManager.get("tree.error.move")
                 + " "
                 + AlertUtil.getExceptionMessage(e), request);
         }
@@ -266,7 +264,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         }
         catch (Exception e) {
             log.error("can't delete", e);
-            AlertUtil.setMessage(MessagesManager.get(request, "tree.error.delete")
+            AlertUtil.setMessage(MessagesManager.get("tree.error.delete")
                 + " "
                 + AlertUtil.getExceptionMessage(e), request);
         }
@@ -281,7 +279,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         }
         catch (Exception e) {
             log.error("can't activate", e);
-            AlertUtil.setMessage(MessagesManager.get(request, "tree.error.activate")
+            AlertUtil.setMessage(MessagesManager.get("tree.error.activate")
                 + " "
                 + AlertUtil.getExceptionMessage(e), request);
         }
@@ -294,7 +292,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         }
         catch (Exception e) {
             log.error("can't deactivate", e);
-            AlertUtil.setMessage(MessagesManager.get(request, "tree.error.deactivate")
+            AlertUtil.setMessage(MessagesManager.get("tree.error.deactivate")
                 + " "
                 + AlertUtil.getExceptionMessage(e), request);
         }
@@ -373,7 +371,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         }
         catch (Exception e) {
             log.error("can't rename", e);
-            AlertUtil.setMessage(MessagesManager.get(request, "tree.error.rename")
+            AlertUtil.setMessage(MessagesManager.get("tree.error.rename")
                 + " "
                 + AlertUtil.getExceptionMessage(e), request);
         }

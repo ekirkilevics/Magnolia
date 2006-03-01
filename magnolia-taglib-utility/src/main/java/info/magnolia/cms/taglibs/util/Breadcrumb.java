@@ -12,6 +12,7 @@
  */
 package info.magnolia.cms.taglibs.util;
 
+import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.Resource;
 
@@ -125,7 +126,7 @@ public class Breadcrumb extends TagSupport {
                 if (this.link) {
                     out.print("<a href=\""); //$NON-NLS-1$
                     out.print(request.getContextPath());
-                    out.print(actpage.getAncestor(i).getHandleWithDefaultExtension());
+                    out.print(actpage.getAncestor(i).getHandle() + "." + Server.getDefaultExtension());
                     out.print("\">"); //$NON-NLS-1$
                 }
                 out.print(actpage.getAncestor(i).getTitle());

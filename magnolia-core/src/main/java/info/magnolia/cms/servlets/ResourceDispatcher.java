@@ -18,7 +18,6 @@ import info.magnolia.cms.core.NodeData;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.zip.GZIPOutputStream;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
@@ -113,40 +112,6 @@ public class ResourceDispatcher extends HttpServlet {
             log.info("Unable to redirect to 404 page, response is already committed"); //$NON-NLS-1$
         }
 
-    }
-
-    /**
-     * Returns true if the request sender accepts GZIP compressed data.
-     * @param request HttpServletRequest
-     * @return <code>true</code> if the client accepts gzip encoding
-     */
-    private boolean canCompress(HttpServletRequest request) {
-        String encoding = request.getHeader("Accept-Encoding"); //$NON-NLS-1$
-        if (encoding != null) {
-            return (encoding.toLowerCase().indexOf("gzip") > -1); //$NON-NLS-1$
-        }
-        return false;
-    }
-
-    /**
-     * Send data as GZIP output stream ;)
-     * @param is Input stream for the resource
-     * @param res HttpServletResponse as received by the service method
-     * @throws IOException standard servlet exception
-     */
-    private void sendCompressed(InputStream is, HttpServletResponse res) throws IOException {
-        res.setHeader("Content-Encoding", "gzip"); //$NON-NLS-1$ //$NON-NLS-2$
-        GZIPOutputStream gzos = new GZIPOutputStream(res.getOutputStream());
-        try {
-            int bit;
-            while ((bit = is.read()) != -1) {
-                gzos.write(bit);
-            }
-            gzos.flush();
-        }
-        finally {
-            IOUtils.closeQuietly(gzos);
-        }
     }
 
     /**

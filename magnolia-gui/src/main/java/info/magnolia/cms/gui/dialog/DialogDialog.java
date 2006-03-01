@@ -141,7 +141,7 @@ public class DialogDialog extends DialogSuper {
     protected void drawHtmlPreSubsHead(Writer out) throws IOException {
         out.write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>"); // kupu //$NON-NLS-1$
         out.write("<title>" //$NON-NLS-1$
-            + this.getConfigValue("label", MessagesManager.get(getRequest(), "dialog.editTitle")) //$NON-NLS-1$ //$NON-NLS-2$
+            + this.getConfigValue("label", MessagesManager.get("dialog.editTitle")) //$NON-NLS-1$ //$NON-NLS-2$
             + "</title>"); //$NON-NLS-1$
         out.write(new Sources(this.getRequest().getContextPath()).getHtmlJs());
         out.write(new Sources(this.getRequest().getContextPath()).getHtmlCss());
@@ -221,7 +221,7 @@ public class DialogDialog extends DialogSuper {
     }
 
     protected void drawHtmlPostSubsButtons(Writer out) throws IOException {
-        Messages msgs = MessagesManager.getMessages(getRequest());
+        Messages msgs = MessagesManager.getMessages();
 
         out.write("<div class=\"" + CssConstants.CSSCLASS_TABSETSAVEBAR + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
 

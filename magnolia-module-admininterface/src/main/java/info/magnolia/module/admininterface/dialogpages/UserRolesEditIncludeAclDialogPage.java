@@ -53,7 +53,7 @@ public class UserRolesEditIncludeAclDialogPage extends DialogPageMVCHandler {
 
     private static String getHtmlRowInner(HttpServletRequest request, String dynamicTable, String repository) {
         boolean small = true;
-        Messages msgs = MessagesManager.getMessages(request);
+        Messages msgs = MessagesManager.getMessages();
 
         Select accessRight = new Select();
         accessRight.setSaveInfo(false);
@@ -147,7 +147,7 @@ public class UserRolesEditIncludeAclDialogPage extends DialogPageMVCHandler {
      */
     protected void draw(HttpServletRequest request, HttpServletResponse response) throws Exception {
         PrintWriter out = response.getWriter();
-        Messages msgs = MessagesManager.getMessages(request);
+        Messages msgs = MessagesManager.getMessages();
 
         DialogSuper dialogControl = (DialogSuper) request.getAttribute("dialogObject"); //$NON-NLS-1$
         Content role = dialogControl.getWebsiteNode();
@@ -306,7 +306,7 @@ public class UserRolesEditIncludeAclDialogPage extends DialogPageMVCHandler {
         Iterator repositoryNames = ContentRepository.getAllRepositoryNames();
         while (repositoryNames.hasNext()) {
             String name = (String) repositoryNames.next();
-            String label = MessagesManager.get(request, "repository." + name); //$NON-NLS-1$
+            String label = MessagesManager.get("repository." + name); //$NON-NLS-1$
             repositorySelect.setOptions(label, name);
         }
         return repositorySelect;

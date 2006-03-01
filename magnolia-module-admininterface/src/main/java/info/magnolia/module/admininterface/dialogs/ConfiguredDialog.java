@@ -13,9 +13,9 @@
 package info.magnolia.module.admininterface.dialogs;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.module.admininterface.DialogMVCHandler;
 
 import java.lang.reflect.Constructor;
@@ -60,7 +60,7 @@ public class ConfiguredDialog extends DialogMVCHandler {
             return null;
         }
 
-        HierarchyManager hm = SessionAccessControl.getHierarchyManager(request, ContentRepository.CONFIG);
+        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
         try {
             return hm.getContent(name);
         }

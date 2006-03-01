@@ -64,7 +64,7 @@ public class TreeColumnHtmlRendererImpl implements TreeColumnHtmlRenderer {
     private String getHtmlIcons(TreeColumn treeColumn, Content content) {
         StringBuffer html = new StringBuffer();
         if (treeColumn.getIconsActivation()) {
-            MetaData activationMetaData = content.getMetaData(MetaData.ACTIVATION_INFO);
+            MetaData activationMetaData = content.getMetaData();
             MetaData generalMetaData = content.getMetaData();
             boolean isActivated = activationMetaData.getIsActivated();
             Calendar actionDate = activationMetaData.getLastActionDate();

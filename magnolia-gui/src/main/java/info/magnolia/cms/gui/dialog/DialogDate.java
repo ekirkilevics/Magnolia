@@ -42,7 +42,7 @@ public class DialogDate extends DialogEditWithButton {
         super.doBeforeDrawHtml();
 
         // set buttonlabel in config
-        this.getButton().setLabel(MessagesManager.get(getRequest(), "dialog.date.select")); //$NON-NLS-1$
+        this.getButton().setLabel(MessagesManager.get("dialog.date.select")); //$NON-NLS-1$
         this.getButton().setSaveInfo(false);
         this.getButton().setOnclick(
             "mgnlDialogOpenCalendar('" + this.getName() + "'," + this.getConfigValue("time", "false") + ");"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
@@ -59,7 +59,6 @@ public class DialogDate extends DialogEditWithButton {
             Date valueDate = valueCalendar.getTime();
 
             this.setValue(DateFormatUtils.formatUTC(valueDate, format));
-            this.clearWebsiteNode(); // workaround so the value is taken... hm, pfusch
         }
         // check this!
         this.setConfig("type", this.getConfigValue("type", PropertyType.TYPENAME_DATE)); //$NON-NLS-1$ //$NON-NLS-2$

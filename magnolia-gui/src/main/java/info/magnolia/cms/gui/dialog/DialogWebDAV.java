@@ -277,11 +277,11 @@ public class DialogWebDAV extends DialogBox {
                 + "</a>"; //$NON-NLS-1$
         }
         else {
-            showPath = "<i>" + MessagesManager.get(this.getRequest(), "dialog.webdav.noSelection") + "</i>"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            showPath = "<i>" + MessagesManager.get("dialog.webdav.noSelection") + "</i>"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             showIcon = NULLGIF;
         }
 
-        this.setDescription(MessagesManager.get(this.getRequest(), "dialog.webdav.connectedTo") //$NON-NLS-1$
+        this.setDescription(MessagesManager.get("dialog.webdav.connectedTo") //$NON-NLS-1$
             + "  "
             + this.getProtocol()
             + "://" //$NON-NLS-1$
@@ -326,21 +326,21 @@ public class DialogWebDAV extends DialogBox {
         out.write(Spacer.getHtml(12, 12));
         Button home = new Button();
         home.setSaveInfo(false);
-        home.setLabel(MessagesManager.get(this.getRequest(), "dialog.webdav.home")); //$NON-NLS-1$
+        home.setLabel(MessagesManager.get("dialog.webdav.home")); //$NON-NLS-1$
         home.setOnclick("mgnlDialogDAVBrowse('" //$NON-NLS-1$
             + this.getName()
             + "_iFrame','homeDirectory')"); //$NON-NLS-1$
         out.write(home.getHtml());
         Button refresh = new Button();
         refresh.setSaveInfo(false);
-        refresh.setLabel(MessagesManager.get(this.getRequest(), "dialog.webdav.refresh")); //$NON-NLS-1$
+        refresh.setLabel(MessagesManager.get("dialog.webdav.refresh")); //$NON-NLS-1$
         refresh.setOnclick("mgnlDialogDAVBrowse('" + this.getName() //$NON-NLS-1$
             + "_iFrame','refreshDirectory')"); //$NON-NLS-1$
         out.write(refresh.getHtml());
         Button up = new Button();
         up.setSaveInfo(false);
         up.setId(this.getName() + "_upDiv"); //$NON-NLS-1$
-        up.setLabel(MessagesManager.get(this.getRequest(), "dialog.webdav.parentdirectory")); //$NON-NLS-1$
+        up.setLabel(MessagesManager.get("dialog.webdav.parentdirectory")); //$NON-NLS-1$
         up.setOnclick("mgnlDialogDAVBrowse('" //$NON-NLS-1$
             + this.getName()
             + "_iFrame','parentDirectory')"); //$NON-NLS-1$
@@ -494,7 +494,7 @@ public class DialogWebDAV extends DialogBox {
             i = drawHtmlList(out, fileListAS, i);
             if (i == 1) {
                 out.write("<tr><td colspan=\"3\"></td><td colspan=\"3\"><em>" //$NON-NLS-1$
-                    + MessagesManager.get(this.getFrameRequest(), "dialog.webdav.directoryIsEmpty") //$NON-NLS-1$
+                    + MessagesManager.get("dialog.webdav.directoryIsEmpty") //$NON-NLS-1$
                     + "</em></td></tr>"); //$NON-NLS-1$
             }
             out.write("</table>"); //$NON-NLS-1$
@@ -561,7 +561,7 @@ public class DialogWebDAV extends DialogBox {
                     }
                 }
                 if (checked) {
-                    out.write(MessagesManager.get(this.getFrameRequest(), "dialog.webdav.checked")); //$NON-NLS-1$
+                    out.write(MessagesManager.get("dialog.webdav.checked")); //$NON-NLS-1$
                 }
                 out.write(" />"); //$NON-NLS-1$
             }

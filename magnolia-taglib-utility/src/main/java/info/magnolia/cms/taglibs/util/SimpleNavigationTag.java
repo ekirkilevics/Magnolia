@@ -13,7 +13,6 @@
 package info.magnolia.cms.taglibs.util;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentHandler;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.Resource;
 
@@ -266,7 +265,7 @@ public class SimpleNavigationTag extends TagSupport {
      */
     private void drawChildren(Content page, Content activePage, JspWriter out) throws IOException, RepositoryException {
 
-        Collection children = page.getChildren(ItemType.CONTENT, ContentHandler.SORT_BY_SEQUENCE);
+        Collection children = page.getChildren(ItemType.CONTENT);
 
         if (children.size() == 0) {
             return;

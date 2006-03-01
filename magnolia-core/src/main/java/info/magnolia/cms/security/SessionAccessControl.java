@@ -51,8 +51,6 @@ public final class SessionAccessControl {
 
     private static final String DEFAULT_REPOSITORY = ContentRepository.WEBSITE;
 
-    private static final String DEFAULT_WORKSPACE = ContentRepository.DEFAULT_WORKSPACE;
-
     /**
      * Utility class, don't instantiate.
      */

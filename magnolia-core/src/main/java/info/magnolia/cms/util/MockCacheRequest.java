@@ -137,6 +137,10 @@ public class MockCacheRequest implements HttpServletRequest {
         return request.isRequestedSessionIdFromURL();
     }
 
+    /**
+     * @deprecated
+     * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdFromUrl()
+     */
     public boolean isRequestedSessionIdFromUrl() {
         return request.isRequestedSessionIdFromUrl();
     }
@@ -241,10 +245,13 @@ public class MockCacheRequest implements HttpServletRequest {
     }
 
     public RequestDispatcher getRequestDispatcher(String arg0) {
-        // TODO Auto-generated method stub
         return null;
     }
 
+    /**
+     * @deprecated
+     * @see javax.servlet.ServletRequest#getRealPath(java.lang.String)
+     */
     public String getRealPath(String arg0) {
         return request.getRealPath(arg0);
     }

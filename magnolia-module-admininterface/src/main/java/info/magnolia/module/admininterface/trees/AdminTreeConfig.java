@@ -63,7 +63,7 @@ public class AdminTreeConfig extends AdminTreeMVCHandler {
 
         tree.addItemType(ItemType.CONTENT.getSystemName());
         tree.addItemType(ItemType.CONTENTNODE.getSystemName());
-        tree.addItemType(ItemType.NT_NODEDATA);
+        tree.addItemType(Tree.ITEM_TYPE_NODEDATA);
         TreeColumn column0 = new TreeColumn(tree.getJavascriptTree(), request);
         column0.setWidth(1);
         column0.setHtmlEdit();
@@ -122,7 +122,7 @@ public class AdminTreeConfig extends AdminTreeMVCHandler {
      * @param request
      */
     protected void prepareContextMenu(Tree tree, HttpServletRequest request) {
-        Messages msgs = MessagesManager.getMessages(request);
+        Messages msgs = MessagesManager.getMessages();
 
         ContextMenuItem menuNewPage = new ContextMenuItem();
         menuNewPage.setLabel("<img src=\"" //$NON-NLS-1$
@@ -160,7 +160,7 @@ public class AdminTreeConfig extends AdminTreeMVCHandler {
             + "\"> <span style=\"position:relative;top:-3px;\">" //$NON-NLS-1$
             + msgs.get("tree.config.menu.newNodeData") //$NON-NLS-1$
             + "</span>"); //$NON-NLS-1$
-        menuNewNodeData.setOnclick(tree.getJavascriptTree() + ".createNode('" + ItemType.NT_NODEDATA + "');"); //$NON-NLS-1$ //$NON-NLS-2$
+        menuNewNodeData.setOnclick(tree.getJavascriptTree() + ".createNode('" + Tree.ITEM_TYPE_NODEDATA + "');"); //$NON-NLS-1$ //$NON-NLS-2$
         menuNewNodeData.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotNodeData(" //$NON-NLS-1$
             + tree.getJavascriptTree()
             + ")"); //$NON-NLS-1$
@@ -300,7 +300,7 @@ public class AdminTreeConfig extends AdminTreeMVCHandler {
         }
         catch (Exception e) {
             log.error("can't activate", e);
-            AlertUtil.setMessage(MessagesManager.get(request, "tree.error.activate")
+            AlertUtil.setMessage(MessagesManager.get("tree.error.activate")
                 + " "
                 + AlertUtil.getExceptionMessage(e), request);
         }

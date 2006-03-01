@@ -1,8 +1,9 @@
 package info.magnolia.module.admininterface.dialogpages;
 
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.security.SessionAccessControl;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -50,7 +51,7 @@ public class FileThumbnailDialogPage extends HttpServlet {
         String src = request.getParameter("src"); //$NON-NLS-1$
         String size = request.getParameter("size"); //$NON-NLS-1$
 
-        HierarchyManager hm = SessionAccessControl.getHierarchyManager(request);
+        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
 
         InputStream in = null;
 

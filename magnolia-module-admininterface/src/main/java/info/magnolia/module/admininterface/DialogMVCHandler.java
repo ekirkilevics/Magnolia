@@ -13,6 +13,7 @@
 package info.magnolia.module.admininterface;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -21,7 +22,6 @@ import info.magnolia.cms.gui.dialog.DialogDialog;
 import info.magnolia.cms.gui.dialog.DialogFactory;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.servlets.MVCServletHandlerImpl;
 import info.magnolia.cms.util.RequestFormUtil;
 import info.magnolia.cms.util.Resource;
@@ -125,8 +125,8 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         richEPaste = params.getParameter("mgnlRichEPaste"); //$NON-NLS-1$
         repository = params.getParameter("mgnlRepository", getRepository()); //$NON-NLS-1$
 
-        hm = SessionAccessControl.getHierarchyManager(request, repository);
-        msgs = MessagesManager.getMessages(request);
+        hm = MgnlContext.getHierarchyManager(repository);
+        msgs = MessagesManager.getMessages();
     }
 
     /*

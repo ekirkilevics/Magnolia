@@ -16,7 +16,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.File;
 import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.gui.misc.Spacer;
-import info.magnolia.cms.i18n.MessagesManager;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -91,7 +90,7 @@ public class DialogFile extends DialogBox {
         htmlControlFileName.append("<span class=\"" //$NON-NLS-1$
             + CssConstants.CSSCLASS_DESCRIPTION
             + "\">" //$NON-NLS-1$
-            + MessagesManager.get(this.getRequest(), "dialog.file.filename") //$NON-NLS-1$
+            + getMessage("dialog.file.filename") //$NON-NLS-1$
             + "</span>"); //$NON-NLS-1$
         htmlControlFileName.append(Spacer.getHtml(1, 1));
         htmlControlFileName.append(control.getHtmlFileName() + "<span id=\"" //$NON-NLS-1$

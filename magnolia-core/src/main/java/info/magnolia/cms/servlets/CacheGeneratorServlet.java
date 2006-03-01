@@ -1,11 +1,12 @@
 package info.magnolia.cms.servlets;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.CacheHandler;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.MockCacheRequest;
 
 import java.io.IOException;
@@ -13,7 +14,6 @@ import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Iterator;
 
-import javax.jcr.Workspace;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -51,12 +51,10 @@ public class CacheGeneratorServlet extends HttpServlet {
         }
         else {
             try {
-                HierarchyManager hm = SessionAccessControl.getHierarchyManager(request);
-                Workspace ws = hm.getWorkspace();
+                HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
                 cachePage(hm.getRoot(), request);
                 cachePage(hm.getRoot(), request);
-                response.getWriter().write(MessagesManager.get(request, "cacheservlet.success"));
-
+                response.getWriter().write(MessagesManager.get("cacheservlet.success"));
             }
             catch (Exception e) {
                 throw new ServletException(e);
@@ -77,16 +75,16 @@ public class CacheGeneratorServlet extends HttpServlet {
         out.println("</head><body class=\"mgnlBgLight mgnlImportExport\">"); //$NON-NLS-1$
 
         out.println("<h2>"); //$NON-NLS-1$
-        out.println(MessagesManager.get(request, "cacheservlet.title")); //$NON-NLS-1$
+        out.println(MessagesManager.get("cacheservlet.title")); //$NON-NLS-1$
         out.println("</h2>"); //$NON-NLS-1$
         if (Server.isAdmin())
-            out.println("<h3 style=\"color:red;\">" + MessagesManager.get(request, "cacheservlet.warning") + "</h3>");
+            out.println("<h3 style=\"color:red;\">" + MessagesManager.get("cacheservlet.warning") + "</h3>");
 
         out.println("<form method=\"get\" action=\"\">"); //$NON-NLS-1$
         out.println("<input type=\"submit\" name=\"" //$NON-NLS-1$
             + CACHE_GENERATE_ACTION
             + "\" value=\"" //$NON-NLS-1$
-            + MessagesManager.get(request, "cacheservlet.generate") //$NON-NLS-1$
+            + MessagesManager.get("cacheservlet.generate") //$NON-NLS-1$
             + "\" />"); //$NON-NLS-1$
 
         out.println("</form></body></html>"); //$NON-NLS-1$
@@ -94,11 +92,9 @@ public class CacheGeneratorServlet extends HttpServlet {
 
     private void cachePage(Content page, HttpServletRequest request) {
         Collection children = page.getChildren();
-        String rootURL = "http://" + request.getRemoteAddr() + request.getContextPath() + "/";
         Iterator iter = children.iterator();
         while (iter.hasNext()) {
             Content item = (Content) iter.next();
-            String node = item.getName();
             MockCacheRequest mock = new MockCacheRequest(request, item);
             CacheHandler.cacheURI(mock);
             if (log.isDebugEnabled())
