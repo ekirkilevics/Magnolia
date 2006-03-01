@@ -23,7 +23,6 @@ import info.magnolia.cms.exchange.ActivationContent;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;

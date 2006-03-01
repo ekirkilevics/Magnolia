@@ -18,6 +18,7 @@ import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.User;
+import info.magnolia.cms.util.FactoryUtil;
 
 import java.util.Locale;
 import java.util.Map;
@@ -44,6 +45,8 @@ public class MgnlContext {
      */
     public static Logger log = LoggerFactory.getLogger(MgnlContext.class);
 
+    private static SystemContext systemContext = (SystemContext) FactoryUtil.getInstance(SystemContext.class);
+    
     /**
      * The thread local variable holding the current context
      */
@@ -274,6 +277,6 @@ public class MgnlContext {
      * @return system context
      * */
     public static Context getSystemContext() {
-        return SystemContextImpl.getInstance();
+        return systemContext;
     }
 }

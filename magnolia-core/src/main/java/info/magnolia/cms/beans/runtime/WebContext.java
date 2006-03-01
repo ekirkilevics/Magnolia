@@ -16,6 +16,8 @@ import info.magnolia.cms.core.Content;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 
 /**
  * @author Philipp Bracher
@@ -23,6 +25,12 @@ import java.util.Map;
  *
  */
 public interface WebContext extends Context {
+    
+    /**
+     * Method used to initialize the context
+     */
+    public void init(HttpServletRequest request);
+    
     /**
      * Get currently active page
      * @return content object

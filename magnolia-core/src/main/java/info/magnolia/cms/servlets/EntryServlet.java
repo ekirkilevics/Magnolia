@@ -18,14 +18,14 @@ import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.VirtualMap;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.Cache;
-import info.magnolia.cms.beans.runtime.Context;
 import info.magnolia.cms.beans.runtime.MgnlContext;
-import info.magnolia.cms.beans.runtime.WebContextImpl;
+import info.magnolia.cms.beans.runtime.WebContext;
 import info.magnolia.cms.core.CacheHandler;
 import info.magnolia.cms.core.CacheProcess;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.util.FactoryUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -195,7 +195,8 @@ public class EntryServlet extends HttpServlet {
      * @param request the current request
      */
     protected void initializeContext(HttpServletRequest request) {
-        Context ctx = new WebContextImpl(request);
+        WebContext ctx = (WebContext)FactoryUtil.getInstance(WebContext.class);
+        ctx.init(request);
         MgnlContext.setInstance(ctx);
     }
 

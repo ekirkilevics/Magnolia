@@ -14,7 +14,9 @@ package info.magnolia.cms.servlets;
 
 import info.magnolia.cms.beans.runtime.Context;
 import info.magnolia.cms.beans.runtime.MgnlContext;
+import info.magnolia.cms.beans.runtime.WebContext;
 import info.magnolia.cms.beans.runtime.WebContextImpl;
+import info.magnolia.cms.util.FactoryUtil;
 
 import java.io.IOException;
 
@@ -97,8 +99,8 @@ public abstract class MVCServlet extends HttpServlet {
         response.setContentType("text/html; charset=UTF-8"); //$NON-NLS-1$
         
         // initialize the context
-        
-        Context ctx = new WebContextImpl(request);
+        WebContext ctx = (WebContext) FactoryUtil.getInstance(WebContext.class);
+        ctx.init(request);
         MgnlContext.setInstance(ctx);
         
 

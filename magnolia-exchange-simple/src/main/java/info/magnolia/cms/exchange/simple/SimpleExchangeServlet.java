@@ -25,6 +25,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.Listener;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
@@ -370,10 +371,9 @@ public class SimpleExchangeServlet extends HttpServlet {
      * @param request the current request
      */
     protected void initializeContext(HttpServletRequest request) {
-        if (MgnlContext.getInstance() == null) {
-            Context ctx = new WebContextImpl(request);
-            MgnlContext.setInstance(ctx);
-        }
+        WebContext ctx = (WebContext)FactoryUtil.getInstance(WebContext.class);
+        ctx.init(request);
+        MgnlContext.setInstance(ctx);
     }
 
     /**

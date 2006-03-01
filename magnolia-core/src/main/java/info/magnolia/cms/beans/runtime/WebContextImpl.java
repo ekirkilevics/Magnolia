@@ -20,6 +20,7 @@ import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.Security;
+import info.magnolia.cms.security.User;
 
 import java.util.Locale;
 import java.util.Map;
@@ -49,13 +50,31 @@ public class WebContextImpl extends ContextImpl implements WebContext{
     private HttpServletRequest request;
 
     /**
-     * @param request
+     * Use init to initialize the object
      */
-    public WebContextImpl(HttpServletRequest request) {
+    public WebContextImpl() {
+    }
+    
+    /**
+     * @see info.magnolia.cms.beans.runtime.WebContext#inti(javax.servlet.http.HttpServletRequest)
+     */
+    public void init(HttpServletRequest request) {
         this.request = request;
-        this.setUser(Security.getUserManager().getUserObject(Authenticator.getSubject(request)));
     }
 
+    /**
+     * Create the subject on demand
+     * @see info.magnolia.cms.beans.runtime.ContextImpl#getUser()
+     */
+    public User getUser() {
+        User user = super.getUser();
+        if(user == null){
+            user = Security.getUserManager().getUserObject(Authenticator.getSubject(request));
+            this.setUser(user);
+        }
+        return user;
+    }
+    
     /**
      * Make the language available for JSTL 
      */

@@ -17,6 +17,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessManager;
+import info.magnolia.cms.util.FactoryUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +30,7 @@ import org.apache.commons.lang.NotImplementedException;
  * @version $Revision$ ($Author$)
  *
  */
-public class SystemContextImpl extends ContextImpl {
+public class SystemContextImpl extends ContextImpl implements SystemContext {
 
     /**
      * To get and set the attributes for this context
@@ -37,26 +38,13 @@ public class SystemContextImpl extends ContextImpl {
     protected Map scopes = new HashMap();
 
     /**
-     * this instance
-     * */
-    private static SystemContextImpl thisInstance = new SystemContextImpl();
-
-    /**
-     * package private
+     * DON'T CREATE AN OBJECT. The SystemContext is set by magnolia system itself.
      * Init the scopes
      */
-    SystemContextImpl() {
+    public SystemContextImpl() {
         scopes.put(new Integer(Context.REQUEST_SCOPE), new HashMap());
         scopes.put(new Integer(Context.SESSION_SCOPE), new HashMap());
         scopes.put(new Integer(Context.APPLICATION_SCOPE), new HashMap());
-    }
-
-    /**
-     * get this instance
-     * @return SystemContextImpl instance
-     * */
-    protected static SystemContextImpl getInstance() {
-        return thisInstance;
     }
 
     public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
