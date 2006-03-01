@@ -16,7 +16,6 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ContentHandler;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
@@ -24,13 +23,11 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Syndicator;
-import info.magnolia.cms.exchange.simple.SimpleSyndicator;
-import info.magnolia.cms.gui.misc.Spacer;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.SessionAccessControl;
+import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.FreeMarkerUtil;
-import info.magnolia.cms.util.JSPIncludeUtil;
 import info.magnolia.cms.util.MetaDataUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.Rule;
@@ -811,8 +808,11 @@ public class Tree extends ControlSuper {
         if (recursive) {
             rule.addAllowType(ItemType.CONTENT.getSystemName());
         }
-        SimpleSyndicator syndicator = new SimpleSyndicator(MgnlContext.getUser(), this.getRepository(), ContentRepository
+
+        Syndicator syndicator = (Syndicator) FactoryUtil.getInstance(Syndicator.class);
+        syndicator.init(MgnlContext.getUser(), this.getRepository(), ContentRepository
             .getDefaultWorkspace(this.getRepository()), rule);
+
         return syndicator;
     }
 
@@ -835,7 +835,8 @@ public class Tree extends ControlSuper {
         Rule rule = new Rule();
         rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
         rule.addAllowType(ItemType.NT_FILE);
-        SimpleSyndicator syndicator = new SimpleSyndicator(MgnlContext.getUser(), this.getRepository(), ContentRepository
+        Syndicator syndicator = (Syndicator) FactoryUtil.getInstance(Syndicator.class);
+        syndicator.init(MgnlContext.getUser(), this.getRepository(), ContentRepository
             .getDefaultWorkspace(this.getRepository()), rule);
         return syndicator;
     }

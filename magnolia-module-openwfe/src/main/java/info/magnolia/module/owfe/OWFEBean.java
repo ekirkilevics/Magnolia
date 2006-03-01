@@ -5,10 +5,10 @@ import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.exchange.simple.SimpleSyndicator;
+import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.security.MgnlUserManager;
-import info.magnolia.cms.security.User;
+import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.Rule;
 
 import java.util.ArrayList;
@@ -71,13 +71,10 @@ public class OWFEBean {
 	 * @return
 	 */
 	public String getUsername(HttpServletRequest request){
-		//User user = SessionAccessControl.getUser(request);
-		//User user = SessionAccessControl.getUser();
-		//return user.getName(); 
 		return MgnlContext.getUser().getName();
-		//return "superuser";
 	}
-	/**
+
+    /**
 	 * get all work items for the user
 	 * @param userName
 	 * @return
@@ -172,14 +169,6 @@ public class OWFEBean {
 		// send mail to developer
 	}
 
-//	private HierarchyManager getHierarchyManager() {
-//
-//		HierarchyManager hm = ContentRepository
-//				.getHierarchyManager(WEBSITE_REPOSITORY);
-//		log.info("get HierarchyManager for " + WEBSITE_REPOSITORY + "=" + hm);
-//		return hm;
-//	}
-
 	private Repository getRepository() {
 		Repository repo = ContentRepository.getRepository(WEBSITE_REPOSITORY);
 		log.info("get repository for " + WEBSITE_REPOSITORY + "=" + repo);
@@ -209,9 +198,10 @@ public class OWFEBean {
 		if (recursive) {
 			rule.addAllowType(ItemType.CONTENT.getSystemName());
 		}
-		SimpleSyndicator syndicator = new SimpleSyndicator(MgnlContext.getUser(),
-				WEBSITE_REPOSITORY, ContentRepository
-						.getDefaultWorkspace(WEBSITE_REPOSITORY), rule);
+        
+        Syndicator syndicator = (Syndicator) FactoryUtil.getInstance(Syndicator.class);
+        syndicator.init(MgnlContext.getUser(), WEBSITE_REPOSITORY, ContentRepository
+            .getDefaultWorkspace(WEBSITE_REPOSITORY), rule);
 
 		String parentPath = StringUtils.substringBeforeLast(path, "/");
 		if (StringUtils.isEmpty(parentPath)) {

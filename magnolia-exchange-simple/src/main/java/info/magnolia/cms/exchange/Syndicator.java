@@ -13,6 +13,8 @@
 package info.magnolia.cms.exchange;
 
 import info.magnolia.cms.beans.config.Subscriber;
+import info.magnolia.cms.security.User;
+import info.magnolia.cms.util.Rule;
 
 import javax.jcr.RepositoryException;
 
@@ -22,6 +24,15 @@ import javax.jcr.RepositoryException;
  * @version $Revision: 1633 $ ($Author: scharles $)
  */
 public interface Syndicator {
+    
+    /**
+     * Set up the syndicator
+     * @param user the user to use for the conection to the subscriber
+     * @param repositoryName the repository to transmit
+     * @param workspaceName the workspace to transmit
+     * @param rule the rules defining which nodes to transmit (node types)
+     */
+    public void init(User user, String repositoryName, String workspaceName, Rule rule);
 
     /**
      * <p>
