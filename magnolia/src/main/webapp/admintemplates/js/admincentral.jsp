@@ -1,6 +1,6 @@
 <%@ page contentType="text/javascript; charset=utf-8" %>
 
-var contextPath = '${pageContext.request.contextPath}';
+var contextPath = '<%= request.getContextPath() %>';
 
 
 <%@ include file="../../admindocroot/js/debug.js" %>
