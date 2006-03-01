@@ -78,7 +78,7 @@ public final class Bootstrapper {
         System.out.println("Trying to initialize repositories from [" + ArrayUtils.toString(bootdirs) + "]"); //$NON-NLS-1$ //$NON-NLS-2$
         System.out.println("\n-----------------------------------------------------------------\n"); //$NON-NLS-1$
 
-        log.info("Trying to initialize repositories from [" + ArrayUtils.toString(bootdirs) + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+        log.info("Trying to initialize repositories from [{}]", ArrayUtils.toString(bootdirs)); //$NON-NLS-1$ //$NON-NLS-2$
 
         Iterator repositoryNames = ContentRepository.getAllRepositoryNames();
         while (repositoryNames.hasNext()) {
@@ -115,11 +115,11 @@ public final class Bootstrapper {
             }
 
             if (xmlfileset.isEmpty()) {
-                log.info("No xml files found in directory [" + repository + "], skipping..."); //$NON-NLS-1$ //$NON-NLS-2$
+                log.info("No xml files found in directory [{}], skipping...", repository); //$NON-NLS-1$
                 continue;
             }
 
-            log.info("Trying to import content from " + xmlfileset.size() + " files..."); //$NON-NLS-1$ //$NON-NLS-2$
+            log.info("Trying to import content from {} files...", Integer.toString(xmlfileset.size())); //$NON-NLS-1$
 
             HierarchyManager hr = ContentRepository.getHierarchyManager(repository);
             Session session = hr.getWorkspace().getSession();
@@ -152,8 +152,7 @@ public final class Bootstrapper {
 
                         pathName = "/" + StringUtils.replace(pathName, ".", "/");
 
-                        log
-                            .info("Importing content from " + xmlfile.getAbsolutePath() + " to path \"" + pathName + "\""); //$NON-NLS-1$
+                        log.info("Importing content from {} to path {}", xmlfile.getAbsolutePath(), pathName); //$NON-NLS-1$
 
                         session.importXML(
                             pathName,
@@ -175,39 +174,38 @@ public final class Bootstrapper {
                         }
                         IOUtils.closeQuietly(filteredStream);
                     }
+
+                    try {
+                        session.save();
+                    }
+                    catch (RepositoryException e) {
+                        log.error("Unable to save changes to the [" //$NON-NLS-1$
+                            + repository
+                            + "] repository due to a " //$NON-NLS-1$
+                            + e.getClass().getName()
+                            + " Exception: " //$NON-NLS-1$
+                            + e.getMessage()
+                            + ". Will try to continue.", e); //$NON-NLS-1$
+                        continue;
+                    }
+
                 }
 
-                log.info("Saving changes to [" + repository + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-
-                try {
-                    session.save();
-                }
-                catch (RepositoryException e) {
-                    log.error("Unable to save changes to the [" //$NON-NLS-1$
-                        + repository
-                        + "] repository due to a " //$NON-NLS-1$
-                        + e.getClass().getName()
-                        + " Exception: " //$NON-NLS-1$
-                        + e.getMessage()
-                        + ". Will try to continue.", e); //$NON-NLS-1$
-                    continue;
-                }
             }
             catch (OutOfMemoryError e) {
 
                 int maxMem = (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024);
                 int needed = Math.max(256, maxMem + 128);
 
-                log.error("Unable to complete bootstrapping: out of memory.\n" //$NON-NLS-1$
-                    + maxMem
-                    + "MB were not enough, try to increase the amount of memory available by adding the -Xmx" //$NON-NLS-1$
-                    + needed
-                    + " parameter to the server startup script.\n" //$NON-NLS-1$
-                    + "You will need to completely remove the magnolia webapp before trying again"); //$NON-NLS-1$
+                log
+                    .error(
+                        "Unable to complete bootstrapping: out of memory.\n" //$NON-NLS-1$
+                            + "{} MB were not enough, try to increase the amount of memory available by adding the -Xmx{}m parameter to the server startup script.\n" //$NON-NLS-1$
+                            + "You will need to completely remove the magnolia webapp before trying again", Integer.toString(maxMem), Integer.toString(needed)); //$NON-NLS-1$
                 break;
             }
 
-            log.info("Repository [" + repository + "] has been initialized."); //$NON-NLS-1$ //$NON-NLS-2$
+            log.info("Repository [{}] has been initialized.", repository); //$NON-NLS-1$
 
         }
     }
