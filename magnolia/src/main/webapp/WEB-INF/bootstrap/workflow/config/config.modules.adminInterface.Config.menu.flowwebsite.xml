@@ -23,7 +23,7 @@
     <sv:value>/admindocroot/icons/24/earth.gif</sv:value>
   </sv:property>
   <sv:property sv:name="onclick" sv:type="String">
-    <sv:value>mgnlAdminCentralSwitchExtractTree('website')</sv:value>
+    <sv:value>MgnlAdminCentral.showTree('website')</sv:value>
   </sv:property>
   <sv:property sv:name="label" sv:type="String">
     <sv:value>FlowWebsite</sv:value>

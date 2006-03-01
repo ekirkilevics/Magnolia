@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sv:node sv:name="menu" xmlns:jcr="http://www.jcp.org/jcr/1.0"
+<sv:node sv:name="bpn" xmlns:jcr="http://www.jcp.org/jcr/1.0"
   xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
   xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:rep="internal"
   xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
@@ -8,16 +8,25 @@
   xmlns:sv="http://www.jcp.org/jcr/sv/1.0"
   xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0" xmlns="">
   <sv:property sv:name="jcr:primaryType" sv:type="Name">
-    <sv:value>mgnl:content</sv:value>
+    <sv:value>mgnl:contentNode</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
     <sv:value>mix:versionable</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:uuid" sv:type="String">
-    <sv:value>8793b579-4efb-425d-919a-888dfe5879fa</sv:value>
+    <sv:value>ac0bcb77-e719-471f-9119-d68a4e10dd64</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
     <sv:value>true</sv:value>
+  </sv:property>
+  <sv:property sv:name="icon" sv:type="String">
+    <sv:value>/admindocroot/icons/24/bpn.gif</sv:value>
+  </sv:property>
+  <sv:property sv:name="onclick" sv:type="String">
+    <sv:value>MgnlAdminCentral.showContent('http://www.magnolia.info/en/magnolia/products/business-process-navigator/admincentral-info.html')</sv:value>
+  </sv:property>
+  <sv:property sv:name="label" sv:type="String">
+    <sv:value>menu.bpn</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:created" sv:type="Date">
     <sv:value>2006-03-01T19:35:21.944+01:00</sv:value>
@@ -35,17 +44,14 @@
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-01T19:35:21.944+01:00</sv:value>
     </sv:property>
-    <sv:property sv:name="mgnl:title" sv:type="String">
-      <sv:value/>
-    </sv:property>
     <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-      <sv:value>1116269143332000</sv:value>
+      <sv:value>1000000000000030</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-      <sv:value>2005-05-16T20:45:43.331+02:00</sv:value>
+      <sv:value>2005-05-16T20:46:43.549+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2005-05-16T20:45:48.595+02:00</sv:value>
+      <sv:value>2006-02-17T16:31:59.234+01:00</sv:value>
     </sv:property>
   </sv:node>
 </sv:node>
