@@ -103,11 +103,11 @@ public class Include extends BodyTagSupport {
      * @param name name of attribute to pass with the include
      * @param value value of attribute to pass with the include
      */
-    public void setAttribute(String name, String value) {
+    public void setAttribute(String name, Object value) {
         if (attributes == null) {
             attributes = new ArrayList();
         }
-        String[] attributesArray = new String[]{name, value};
+        Object[] attributesArray = new Object[]{name, value};
         attributes.add(attributesArray);
     }
 
@@ -119,8 +119,8 @@ public class Include extends BodyTagSupport {
         if ((attributes != null) && (attributes.size() > 0)) {
             Iterator i = attributes.iterator();
             while (i.hasNext()) {
-                String[] s = (String[]) i.next();
-                req.setAttribute(s[0], s[1]);
+                Object[] s = (Object[]) i.next();
+                req.setAttribute((String) s[0], s[1]);
             }
         }
         return SKIP_BODY;
@@ -198,8 +198,8 @@ public class Include extends BodyTagSupport {
         if ((attributes != null) && (attributes.size() > 0)) {
             Iterator i = attributes.iterator();
             while (i.hasNext()) {
-                String[] s = (String[]) i.next();
-                req.removeAttribute(s[0]);
+                Object[] s = (Object[]) i.next();
+                req.removeAttribute((String) s[0]);
             }
         }
         attributes = null;

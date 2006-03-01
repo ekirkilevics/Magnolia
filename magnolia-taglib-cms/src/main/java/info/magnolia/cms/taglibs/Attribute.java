@@ -30,7 +30,7 @@ public class Attribute extends TagSupport {
     /**
      * Value of the attribute
      */
-    private String value;
+    private Object value;
 
     /**
      * Name of the attribute.
@@ -47,7 +47,7 @@ public class Attribute extends TagSupport {
     /**
      * @param value value of the attribute
      */
-    public void setValue(String value) {
+    public void setValue(Object value) {
         this.value = value;
     }
 
