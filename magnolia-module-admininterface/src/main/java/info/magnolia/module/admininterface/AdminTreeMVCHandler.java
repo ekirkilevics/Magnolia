@@ -23,6 +23,7 @@ import info.magnolia.cms.gui.misc.Spacer;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.servlets.MVCServletHandlerImpl;
 import info.magnolia.cms.util.AlertUtil;
+import info.magnolia.cms.util.ExclusiveWrite;
 
 import java.io.IOException;
 
@@ -192,7 +193,9 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         }
 
         getTree().setPath(path);
-        getTree().createNode(createItemType);
+        synchronized(ExclusiveWrite.getInstance()) {
+            getTree().createNode(createItemType);
+        }
         return VIEW_TREE;
     }
 
@@ -201,7 +204,9 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
      */
     public String copy() {
         try {
-            copyOrMove(Tree.ACTION_COPY);
+            synchronized(ExclusiveWrite.getInstance()) {
+                copyOrMove(Tree.ACTION_COPY);
+            }
         }
         catch (Exception e) {
             log.error("can't copy", e);
@@ -217,7 +222,9 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
      */
     public String move() {
         try {
-            copyOrMove(Tree.ACTION_MOVE);
+            synchronized(ExclusiveWrite.getInstance()) {
+                copyOrMove(Tree.ACTION_MOVE);
+            }
         }
         catch (Exception e) {
             log.error("can't move", e);
@@ -253,7 +260,9 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
     public String delete() {
         String deleteNode = request.getParameter("deleteNode"); //$NON-NLS-1$
         try {
-            getTree().deleteNode(path, deleteNode);
+            synchronized(ExclusiveWrite.getInstance()) {
+                getTree().deleteNode(path, deleteNode);
+            }
         }
         catch (Exception e) {
             log.error("can't delete", e);
@@ -327,10 +336,14 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         }
         else if (isNodeDataType) {
             int type = Integer.valueOf(value).intValue();
-            displayValue = tree.saveNodeDataType(saveName, type);
+            synchronized(ExclusiveWrite.getInstance()) {
+                displayValue = tree.saveNodeDataType(saveName, type);
+            }
         }
         else {
-            displayValue = tree.saveNodeData(saveName, value, isMeta);
+            synchronized(ExclusiveWrite.getInstance()) {
+                displayValue = tree.saveNodeData(saveName, value, isMeta);
+            }
         }
 
         // if there was a displayValue passed show it instead of the written value
@@ -354,7 +367,9 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
      */
     protected String rename(String value) {
         try {
-            return getTree().renameNode(value);
+            synchronized(ExclusiveWrite.getInstance()) {
+                return getTree().renameNode(value);
+            }
         }
         catch (Exception e) {
             log.error("can't rename", e);
@@ -368,7 +383,6 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
     /**
      * Render the tree depending on the view name.
      * @param view
-     * @return
      * @throws IOException
      */
     public void renderHtml(String view) throws IOException {
