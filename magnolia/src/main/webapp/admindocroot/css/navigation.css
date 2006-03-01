@@ -1,96 +1,93 @@
 /** to be removed and set at original-place **/
 div.mgnlAdminCentralButtonsDiv {
-	margin: 0;
-	padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 /** navigation styles **/
 a.mgnlNavigationText {
-	color: black;
-	font-size: 11px;
-	text-align: left;
-	font-family: Verdana, sans-serif;
-	text-decoration: none;
+    color: black;
+    font-size: 11px;
+    text-align: left;
+    font-family: Verdana, sans-serif;
+    text-decoration: none;
 }
 div.mgnlNavigationBox {
-	margin: 3px;
-	cursor: default;
+    margin: 3px;
+    cursor: default;
 }
 div.mgnlNavigationWrapper1 {
-	width: 100%;
-	margin-bottom: 3px;
+    width: 100%;
+    margin-bottom: 3px;
 }
 table.mgnlNavigation1Active {
-	height: 30px;
-	width: 100%;
-	background-color: #ADCADF;
-	background-image: url(../controls/navigation/mgnlNavigationBgActive.gif);
-	background-repeat: repeat-x;
-	cursor: pointer;
+    height: 30px;
+    width: 100%;
+    background-color: #ADCADF;
+    background-image: url(../controls/navigation/mgnlNavigationBgActive.gif);
+    background-repeat: repeat-x;
+    cursor: pointer;
 }
 table.mgnlNavigation1Hover {
-	height: 30px;
-	width: 100%;
-	background-color: #C4D9E8;
-	background-image: url(../controls/navigation/mgnlNavigationBgHover.gif);
-	background-repeat: repeat-x;
-	cursor: pointer;
+    height: 30px;
+    width: 100%;
+    background-color: #C4D9E8;
+    background-image: url(../controls/navigation/mgnlNavigationBgHover.gif);
+    background-repeat: repeat-x;
+    cursor: pointer;
 }
 table.mgnlNavigation1Inactive {
-	height: 30px;
-	width: 100%;
-	background-color: #CDE8A6;
-	background-image: url(../controls/navigation/mgnlNavigationBgInactive.gif);
-	background-repeat: repeat-x;
-	cursor: pointer;
+    height: 30px;
+    width: 100%;
+    background-color: #CDE8A6;
+    background-image: url(../controls/navigation/mgnlNavigationBgInactive.gif);
+    background-repeat: repeat-x;
+    cursor: pointer;
 }
 table.mgnlNavigation2Active {
-	height: 24px;
-	width: 100%;
-	background-color: #ADCADF;
-	background-image: url(../controls/navigation/mgnlNavigationBgActive.gif);
-	background-repeat: repeat-x;
-	cursor: pointer;
+    height: 24px;
+    width: 100%;
+    background-color: #ADCADF;
+    background-image: url(../controls/navigation/mgnlNavigationBgActive.gif);
+    background-repeat: repeat-x;
+    cursor: pointer;
 }
 table.mgnlNavigation2Hover {
-	height: 24px;
-	width: 100%;
-	background-color: #C4D9E8;
-	background-image: url(../controls/navigation/mgnlNavigationBgHover.gif);
-	background-repeat: repeat-x;
-	cursor: pointer;
+    height: 24px;
+    width: 100%;
+    background-color: #C4D9E8;
+    background-image: url(../controls/navigation/mgnlNavigationBgHover.gif);
+    background-repeat: repeat-x;
+    cursor: pointer;
 }
 table.mgnlNavigation2Inactive {
-	height: 24px;
-	width: 100%;
-	cursor: pointer;
+    height: 24px;
+    width: 100%;
+    cursor: pointer;
 }
 img.mgnlNavigation1Arrow { margin: 0 6px 0 2px; vertical-align: middle; }
 td.mgnlNavigation1Cell {
-	background-repeat: no-repeat;
-	background-position: 2px 2px;
-	padding-left: 30px;
+    background-repeat: no-repeat;
+    background-position: 2px 2px;
+    padding-left: 30px;
 }
 td.mgnlNavigation2Cell {
-	background-repeat: no-repeat;
-	background-position: 5px 2px;
-	padding-left: 30px;
+    background-repeat: no-repeat;
+    background-position: 5px 2px;
+    padding-left: 30px;
 }
 div.mgnlNavigationWrapper2Active {
-	border-bottom: 1px solid #ADCADF;
-	border-right: 1px solid #ADCADF;
-	border-left: 1px solid #ADCADF;
-	_width: 100%;
+    border-bottom: 1px solid #ADCADF;
+    border-right: 1px solid #ADCADF;
+    border-left: 1px solid #ADCADF;
 }
 div.mgnlNavigationWrapper2Hover {
-	border-bottom: 1px solid #C4D9E8;
-	border-right: 1px solid #C4D9E8;
-	border-left: 1px solid #C4D9E8;
-	_width: 100%;
+    border-bottom: 1px solid #C4D9E8;
+    border-right: 1px solid #C4D9E8;
+    border-left: 1px solid #C4D9E8;
 }
 div.mgnlNavigationWrapper2Inactive {
-	border-bottom: 1px solid #CDE8A6;
-	border-right: 1px solid #CDE8A6;
-	border-left: 1px solid #CDE8A6;
-	_width: 100%;
+    border-bottom: 1px solid #CDE8A6;
+    border-right: 1px solid #CDE8A6;
+    border-left: 1px solid #CDE8A6;
 }
