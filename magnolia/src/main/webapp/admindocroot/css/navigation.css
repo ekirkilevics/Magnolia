@@ -80,14 +80,20 @@ div.mgnlNavigationWrapper2Active {
     border-bottom: 1px solid #ADCADF;
     border-right: 1px solid #ADCADF;
     border-left: 1px solid #ADCADF;
+    width: auto !important;
+    width: 100%;
 }
 div.mgnlNavigationWrapper2Hover {
     border-bottom: 1px solid #C4D9E8;
     border-right: 1px solid #C4D9E8;
     border-left: 1px solid #C4D9E8;
+    width: auto !important;
+    width: 100%;
 }
 div.mgnlNavigationWrapper2Inactive {
     border-bottom: 1px solid #CDE8A6;
     border-right: 1px solid #CDE8A6;
     border-left: 1px solid #CDE8A6;
+    width: auto !important;
+    width: 100%;
 }
