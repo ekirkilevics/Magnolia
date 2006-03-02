@@ -32,9 +32,9 @@ public class DialogBox extends DialogSuper {
 
     public static final int BOXTYPE_1COL = 1;
 
-    public static final String ICONS_GENERAL = "general.gif"; //$NON-NLS-1$
+    public static final String ICONS_GENERAL = "general.png"; //$NON-NLS-1$
 
-    public static final String ICONS_FOLDER = "folder.gif"; //$NON-NLS-1$
+    public static final String ICONS_FOLDER = "folder.png"; //$NON-NLS-1$
 
     public static final String ICONS_PATH = "/.resources/file-icons/"; //$NON-NLS-1$
 
@@ -132,17 +132,17 @@ public class DialogBox extends DialogSuper {
         getIconExtensions().put("eps", StringUtils.EMPTY); //$NON-NLS-1$
         getIconExtensions().put("gif", StringUtils.EMPTY); //$NON-NLS-1$
         getIconExtensions().put("jpg", StringUtils.EMPTY); //$NON-NLS-1$
-        getIconExtensions().put("jpeg", ICONS_PATH + "jpg.gif"); //$NON-NLS-1$ //$NON-NLS-2$
+        getIconExtensions().put("jpeg", ICONS_PATH + "jpg.png"); //$NON-NLS-1$ //$NON-NLS-2$
         getIconExtensions().put("pdf", StringUtils.EMPTY); //$NON-NLS-1$
         getIconExtensions().put("ppt", StringUtils.EMPTY); //$NON-NLS-1$
         getIconExtensions().put("tif", StringUtils.EMPTY); //$NON-NLS-1$
-        getIconExtensions().put("tiff", ICONS_PATH + "tif.gif"); //$NON-NLS-1$ //$NON-NLS-2$
+        getIconExtensions().put("tiff", ICONS_PATH + "tif.png"); //$NON-NLS-1$ //$NON-NLS-2$
         getIconExtensions().put("xls", StringUtils.EMPTY); //$NON-NLS-1$
         getIconExtensions().put("zip", StringUtils.EMPTY); //$NON-NLS-1$
     }
 
     public String getIconPath(String name) {
-        // name might be name (e.g. "bla.gif") or extension (e.g. "gif")
+        // name might be name (e.g. "bla.png") or extension (e.g. "png")
         String iconPath = ICONS_PATH + ICONS_GENERAL;
         String ext;
         if (name.indexOf(".") != -1) { //$NON-NLS-1$
@@ -154,7 +154,7 @@ public class DialogBox extends DialogSuper {
         if (getIconExtensions().containsKey(ext)) {
             iconPath = (String) getIconExtensions().get(ext);
             if (StringUtils.isEmpty(iconPath)) {
-                iconPath = ICONS_PATH + ext + ".gif"; //$NON-NLS-1$
+                iconPath = ICONS_PATH + ext + ".png"; //$NON-NLS-1$
             }
         }
         return iconPath;
