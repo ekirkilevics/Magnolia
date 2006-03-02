@@ -23,7 +23,7 @@
     <sv:value>/admindocroot/icons/24/inbox.jpg</sv:value>
   </sv:property>
   <sv:property sv:name="onclick" sv:type="String">
-    <sv:value>MgnlAdminCentral.showContent('.magnolia/inbox.html')</sv:value>
+    <sv:value>MgnlAdminCentral.showContent('/.magnolia/inbox.html')</sv:value>
   </sv:property>
   <sv:property sv:name="label" sv:type="String">
     <sv:value>Inbox</sv:value>
