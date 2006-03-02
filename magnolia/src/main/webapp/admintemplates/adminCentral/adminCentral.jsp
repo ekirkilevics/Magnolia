@@ -19,16 +19,16 @@
     <jsp:directive.page import="info.magnolia.cms.beans.runtime.MgnlContext"/>
     <jsp:directive.page import="info.magnolia.module.admininterface.Navigation"/>
     <jsp:directive.page import="org.apache.commons.lang.StringUtils"/>
-    
+
     <jsp:scriptlet>
             // create the menu
             Navigation navigation = new Navigation("/modules/adminInterface/Config/menu", "mgnlNavigation");
-    
+
             // get the current username
         User user=MgnlContext.getUser();
         String userName = "";
         if (user==null || (userName = user.getName()).equals("")) userName=Authenticator.getUserId(request);
-    
+
         pageContext.setAttribute("navigation", navigation);
         pageContext.setAttribute("username", userName);
 
@@ -43,34 +43,34 @@
             <title><fmt:message key="central.title" /></title>
 
             <link rel="shortcut icon" href="${pageContext.request.contextPath}/admindocroot/favicon.ico" type="image/x-icon" />
-        <link rel="stylesheet" type="text/css" href="/magnolia/admindocroot/css/admin-all.css"/>
+            <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/admindocroot/css/admin-all.css"/>
 
         <!--  keep the old javascripts -->
-        <script type="text/javascript" src="/magnolia/admintemplates/js/admincentral.jsp"><!-- --></script>
-        
-            <script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/admintemplates/js/admincentral.jsp"><!-- --></script>
+
+            <script type="text/javascript">
                 importClass("mgnl.admininterface.AdminCentral");
                 importClass("mgnl.admininterface.Navigation");
-    
+
             var mgnlNavigation;
             var mgnlAdminCentral;
-            
+
             function configureNavigation(){
                 ${navigation.javascript}
             }
-            
+
             // init the system
                 onload = function(){
                     // start the admin central
                     mgnlAdminCentral = new MgnlAdminCentral();
-                    
+
                     // create and configure the navigation
                     mgnlNavigation = new MgnlNavigation();
                     configureNavigation();
-                    
+
                     // init navigation
                     mgnlNavigation.create('mgnlAdminCentralMenuDiv');
-                    
+
                     // call the onload method
                 if(opener <![CDATA[&&]]> opener.MgnlAdminCentral <![CDATA[&&]]> opener.MgnlAdminCentral.onOpenedInNewWindow){
                     opener.MgnlAdminCentral.onOpenedInNewWindow(mgnlAdminCentral);
@@ -79,7 +79,7 @@
                         // call the frist menupoint with a link
                         mgnlNavigation.activate('${navigation.firstId}', true);
                 }
-                
+
                     // resize
                     mgnlAdminCentral.resize();
 
@@ -90,7 +90,7 @@
     </head>
 
     <body class="mgnlBgDark mgnlAdminMain">
-    <!-- 
+    <!--
     <div style="position:absolute;top:3px;right:20px;" class="mgnlText"><fmt:message key="central.loggedInAs">
         <fmt:param value="${username}" />
     </fmt:message></div>
@@ -103,7 +103,7 @@
         }
     </jsp:scriptlet>
     -->
-    
+
     <!-- Menu -->
     <div id="mgnlAdminCentralMenuDiv" class="mgnlAdminCentralMenuDiv">
         <div class="mgnlAdminCentralMenu">
@@ -118,11 +118,11 @@
     </div>
 
     <!-- Scrolled content like the about or other included pages -->
-    
+
     <div id="mgnlAdminCentralScrolledContentDiv" class="mgnlAdminCentralContentDiv"><iframe
         id="mgnlAdminCentralScrolledContentIFrame" src="" style="border: none; width:100%; height:100%"
         frameborder="0"><![CDATA[ <!-- a comment here is needed for the correct rendering of the iframe tag -->]]></iframe></div>
-    
+
     </body>
     </html>
 </jsp:root>
