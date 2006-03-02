@@ -24,7 +24,6 @@ import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 import javax.jcr.observation.ObservationManager;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -146,19 +145,19 @@ public final class Server {
     }
 
     private static void addToUnsecureList(Content node) {
-    	  if (node == null) {
-              return;
-          }
-          Iterator childIterator = node.getChildren().iterator();
-          while (childIterator.hasNext()) {
-              Content sub = (Content) childIterator.next();
-              String uri = sub.getNodeData("URI").getString(); //$NON-NLS-1$
-              log.warn("Adding new unsecure uri:"+uri);
-              SecureURI.addUnsecure(uri);
-          }
-	}
+        if (node == null) {
+            return;
+        }
+        Iterator childIterator = node.getChildren().iterator();
+        while (childIterator.hasNext()) {
+            Content sub = (Content) childIterator.next();
+            String uri = sub.getNodeData("URI").getString(); //$NON-NLS-1$
+            log.warn("Adding new unsecure uri:" + uri);
+            SecureURI.addUnsecure(uri);
+        }
+    }
 
-	/**
+    /**
      * Register an event listener: reload server configuration when something changes. todo split reloading of base
      * server configuration and secure URI list
      */
@@ -289,22 +288,4 @@ public final class Server {
         return ((Boolean) Server.cachedContent.get("visibleToObinary")).booleanValue(); //$NON-NLS-1$
     }
 
-    /**
-     * @see Cache#isCacheable()
-     * @return true if the pages could be cached
-     * @deprecated
-     */
-    public static boolean isCacheable() {
-        return Cache.isCacheable();
-    }
-
-    /**
-     * @param request HttpServletRequest
-     * @return true if the requested URI can be added to cache
-     * @deprecated
-     * @see Cache#isCacheable(javax.servlet.http.HttpServletRequest)
-     */
-    public static boolean isCacheable(HttpServletRequest request) {
-        return Cache.isCacheable(request);
-    }
 }
