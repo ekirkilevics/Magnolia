@@ -36,7 +36,7 @@ public class DialogBox extends DialogSuper {
 
     public static final String ICONS_FOLDER = "folder.gif"; //$NON-NLS-1$
 
-    public static final String ICONS_PATH = "/admindocroot/fileIcons/"; //$NON-NLS-1$
+    public static final String ICONS_PATH = "/.resources/file-icons/"; //$NON-NLS-1$
 
     private static Map iconExtensions = new Hashtable();
 
