@@ -164,6 +164,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
 
         // editet any value directly in the columns?
         if (request.getParameter("saveName") != null //$NON-NLS-1$
+            || request.getParameter("saveValue") != null
             // value to save is a node data's value (config admin)
             || "true".equals(request.getParameter("isNodeDataValue")) //$NON-NLS-1$ //$NON-NLS-2$
             // value to save is a node data's type (config admin)
