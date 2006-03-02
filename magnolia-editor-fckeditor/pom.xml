@@ -7,7 +7,7 @@
     <version>2.2-SNAPSHOT</version>
     <relativePath>../magnolia-project/pom.xml</relativePath>
   </parent>
-  <artifactId>magnolia-fckeditor</artifactId>
-  <name>magnolia-fckeditor</name>
+  <artifactId>magnolia-editor-fckeditor</artifactId>
+  <name>magnolia-editor-fckeditor</name>
   <packaging>jar</packaging>
 </project>
