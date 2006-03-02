@@ -12,8 +12,8 @@
  */
 package info.magnolia.cms.security;
 
-import info.magnolia.cms.core.Path;
 import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.core.Path;
 
 import java.io.IOException;
 
@@ -26,9 +26,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -103,30 +103,33 @@ public class SecurityFilter implements Filter {
      * @return boolean <code>true</code> if access to the resource is allowed
      * @throws IOException can be thrown when the servlet is unable to write to the response stream
      */
-    protected boolean isAllowed(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        if (Lock.isSystemLocked()) {
-            res.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
-            return false;
-        }
-        else if (Authenticator.isAuthenticated(req)) {
-            return true;
-        }
-        else if (SecureURI.isProtected(Path.getURI(req))) {
-            return authenticate(req, res);
-        }
-        else if (!Listener.isAllowed(req)) {
-            res.sendError(HttpServletResponse.SC_FORBIDDEN);
-            return false;
-        }
-        return true;
-    }
+    protected boolean isAllowed(HttpServletRequest req, HttpServletResponse res)
+			throws IOException {
+		if (Lock.isSystemLocked()) {
+			res.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+			return false;
+		} else if (Authenticator.isAuthenticated(req)) {
+			return true;
+		} else if (SecureURI.isUnsecure(Path.getURI(req)))
+			return true;
+		else if (SecureURI.isProtected(Path.getURI(req))) {
+			return authenticate(req, res);
+		} else if (!Listener.isAllowed(req)) {
+			res.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return false;
+		}
+		return true;
+	}
 
     /**
-     * Authenticate on basic headers.
-     * @param request HttpServletRequest
-     * @param response HttpServletResponst
-     * @return <code>true</code> if the user is authenticated
-     */
+	 * Authenticate on basic headers.
+	 * 
+	 * @param request
+	 *            HttpServletRequest
+	 * @param response
+	 *            HttpServletResponst
+	 * @return <code>true</code> if the user is authenticated
+	 */
     private boolean authenticate(HttpServletRequest request, HttpServletResponse response) {
         try {
             if (Path.getURI(request).startsWith(this.filterConfig.getInitParameter(UNSECURED_URI))) {
@@ -152,5 +155,5 @@ public class SecurityFilter implements Filter {
 
         return true;
     }
-
+    
 }

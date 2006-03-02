@@ -137,9 +137,28 @@ public final class Server {
             log.error(re.getMessage(), re);
         }
 
+        try {
+            addToUnsecureList(page.getContent("unsecureURIList")); //$NON-NLS-1$
+        }
+        catch (RepositoryException re) {
+            log.error(re.getMessage(), re);
+        }
     }
 
-    /**
+    private static void addToUnsecureList(Content node) {
+    	  if (node == null) {
+              return;
+          }
+          Iterator childIterator = node.getChildren().iterator();
+          while (childIterator.hasNext()) {
+              Content sub = (Content) childIterator.next();
+              String uri = sub.getNodeData("URI").getString(); //$NON-NLS-1$
+              log.warn("Adding new unsecure uri:"+uri);
+              SecureURI.addUnsecure(uri);
+          }
+	}
+
+	/**
      * Register an event listener: reload server configuration when something changes. todo split reloading of base
      * server configuration and secure URI list
      */
@@ -213,7 +232,7 @@ public final class Server {
         while (childIterator.hasNext()) {
             Content sub = (Content) childIterator.next();
             String uri = sub.getNodeData("URI").getString(); //$NON-NLS-1$
-            SecureURI.add(uri);
+            SecureURI.addSecure(uri);
         }
     }
 
