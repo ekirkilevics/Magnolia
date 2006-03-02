@@ -1,9 +1,9 @@
-	<!-- line for moving to the bottom -->
-	<div id="${lineId}" class="mgnlTreeLineInter mgnlLineEnabled" onmouseover="${tree.javascriptTree}.moveNodeHighlightLine('${lineId}');" onmouseout="${tree.javascriptTree}.moveNodeResetLine('${lineId}');"
-		onmousedown="${tree.javascriptTree}.pasteNode('${tree.path}',${PASTETYPE_SUB},${permissionWrite?string},'${lineId}');"></div>
-	
-	<!-- do we have write permission on the root? -->
-	<input type="hidden" name="${tree.javascriptTree}_${tree.path}_PermissionWrite" id="${tree.javascriptTree}_${tree.path}_PermissionWrite" value="${permissionWrite?string}" />
+     <!-- line for moving to the bottom -->
+    <div id="${lineId}" class="mgnlTreeLineInter mgnlLineEnabled" onmouseover="${tree.javascriptTree}.moveNodeHighlightLine('${lineId}');" onmouseout="${tree.javascriptTree}.moveNodeResetLine('${lineId}');"
+        onmousedown="${tree.javascriptTree}.pasteNode('${tree.path}',${PASTETYPE_SUB},${permissionWrite?string},'${lineId}');"></div>
+    
+    <!-- do we have write permission on the root? -->
+    <input type="hidden" name="${tree.javascriptTree}_${tree.path}_PermissionWrite" id="${tree.javascriptTree}_${tree.path}_PermissionWrite" value="${permissionWrite?string}" />
 
 <!--  close the div opened in the header -->
 </div>
@@ -15,6 +15,6 @@
 
 <!-- menu divs -->
 <#if menu?exists && (menu.menuItems?size >0)>
-	${menu.html}
+    ${menu.html}
 </#if>
 
