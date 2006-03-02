@@ -53,7 +53,9 @@ public final class Path {
 
     public static File getCacheDirectory() {
         String path = SystemProperty.getProperty(SystemProperty.MAGNOLIA_CACHE_STARTDIR);
-        return isAbsolute(path) ? new File(path) : new File(Path.getAppRootDir(), path);
+        File dir = isAbsolute(path) ? new File(path) : new File(Path.getAppRootDir(), path);
+        dir.mkdirs();
+        return dir;
     }
 
     /**
@@ -66,7 +68,9 @@ public final class Path {
 
     public static File getTempDirectory() {
         String path = SystemProperty.getProperty(SystemProperty.MAGNOLIA_UPLOAD_TMPDIR);
-        return isAbsolute(path) ? new File(path) : new File(Path.getAppRootDir(), path);
+        File dir = isAbsolute(path) ? new File(path) : new File(Path.getAppRootDir(), path);
+        dir.mkdirs();
+        return dir;
     }
 
     /**
