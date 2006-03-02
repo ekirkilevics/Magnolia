@@ -59,7 +59,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/html.gif</sv:value>
+      <sv:value>/.resources/file-icons/html.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:24:59.560+01:00</sv:value>
@@ -108,7 +108,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/js.gif</sv:value>
+      <sv:value>/.resources/file-icons/js.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:24:59.572+01:00</sv:value>
@@ -203,7 +203,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/pdf.gif</sv:value>
+      <sv:value>/.resources/file-icons/pdf.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:24:59.584+01:00</sv:value>
@@ -298,7 +298,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/ppt.gif</sv:value>
+      <sv:value>/.resources/file-icons/ppt.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:24:59.595+01:00</sv:value>
@@ -347,7 +347,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/xlw.gif</sv:value>
+      <sv:value>/.resources/file-icons/xlw.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:24:59.601+01:00</sv:value>
@@ -396,7 +396,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/xls.gif</sv:value>
+      <sv:value>/.resources/file-icons/xls.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:24:59.623+01:00</sv:value>
@@ -445,7 +445,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/dot.gif</sv:value>
+      <sv:value>/.resources/file-icons/dot.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:24:59.630+01:00</sv:value>
@@ -494,7 +494,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/doc.gif</sv:value>
+      <sv:value>/.resources/file-icons/doc.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:24:59.634+01:00</sv:value>
@@ -543,7 +543,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/swf.gif</sv:value>
+      <sv:value>/.resources/file-icons/swf.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:24:59.644+01:00</sv:value>
@@ -638,7 +638,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/pot.gif</sv:value>
+      <sv:value>/.resources/file-icons/pot.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:24:59.683+01:00</sv:value>
@@ -687,7 +687,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/txt.gif</sv:value>
+      <sv:value>/.resources/file-icons/txt.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:24:59.700+01:00</sv:value>
@@ -736,7 +736,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/jpg.gif</sv:value>
+      <sv:value>/.resources/file-icons/jpg.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:24:59.707+01:00</sv:value>
@@ -785,7 +785,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/jpeg.gif</sv:value>
+      <sv:value>/.resources/file-icons/jpeg.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:24:59.711+01:00</sv:value>
@@ -834,7 +834,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/gif.gif</sv:value>
+      <sv:value>/.resources/file-icons/gif.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:24:59.718+01:00</sv:value>
@@ -883,7 +883,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/css.gif</sv:value>
+      <sv:value>/.resources/file-icons/css.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:24:59.725+01:00</sv:value>
@@ -932,7 +932,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/htm.gif</sv:value>
+      <sv:value>/.resources/file-icons/htm.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:24:59.730+01:00</sv:value>
@@ -981,7 +981,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/xml.gif</sv:value>
+      <sv:value>/.resources/file-icons/xml.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:24:59.738+01:00</sv:value>
@@ -1076,7 +1076,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/ico.gif</sv:value>
+      <sv:value>/.resources/file-icons/ico.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:24:59.753+01:00</sv:value>
@@ -1125,7 +1125,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/png.gif</sv:value>
+      <sv:value>/.resources/file-icons/png.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:24:59.757+01:00</sv:value>
@@ -1242,7 +1242,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/ai.gif</sv:value>
+      <sv:value>/.resources/file-icons/ai.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:24:59.771+01:00</sv:value>
@@ -1279,7 +1279,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/aif.gif</sv:value>
+      <sv:value>/.resources/file-icons/aif.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:24:59.783+01:00</sv:value>
@@ -1350,7 +1350,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/aiff.gif</sv:value>
+      <sv:value>/.resources/file-icons/aiff.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:24:59.796+01:00</sv:value>
@@ -1387,7 +1387,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/asf.gif</sv:value>
+      <sv:value>/.resources/file-icons/asf.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:24:59.808+01:00</sv:value>
@@ -1526,7 +1526,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/avi.gif</sv:value>
+      <sv:value>/.resources/file-icons/avi.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:24:59.829+01:00</sv:value>
@@ -1665,7 +1665,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/bin.gif</sv:value>
+      <sv:value>/.resources/file-icons/bin.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:24:59.862+01:00</sv:value>
@@ -1702,7 +1702,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/bmp.gif</sv:value>
+      <sv:value>/.resources/file-icons/bmp.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:24:59.866+01:00</sv:value>
@@ -1875,7 +1875,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/class.gif</sv:value>
+      <sv:value>/.resources/file-icons/class.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:24:59.888+01:00</sv:value>
@@ -2422,7 +2422,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/eps.gif</sv:value>
+      <sv:value>/.resources/file-icons/eps.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.028+01:00</sv:value>
@@ -2527,7 +2527,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/exe.gif</sv:value>
+      <sv:value>/.resources/file-icons/exe.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.058+01:00</sv:value>
@@ -2666,7 +2666,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/gz.gif</sv:value>
+      <sv:value>/.resources/file-icons/gz.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.101+01:00</sv:value>
@@ -2805,7 +2805,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/hqx.gif</sv:value>
+      <sv:value>/.resources/file-icons/hqx.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.124+01:00</sv:value>
@@ -3250,7 +3250,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/lzh.gif</sv:value>
+      <sv:value>/.resources/file-icons/lzh.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.228+01:00</sv:value>
@@ -3423,7 +3423,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/mdb.gif</sv:value>
+      <sv:value>/.resources/file-icons/mdb.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.261+01:00</sv:value>
@@ -3562,7 +3562,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/mid.gif</sv:value>
+      <sv:value>/.resources/file-icons/mid.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.312+01:00</sv:value>
@@ -3667,7 +3667,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/mp2.gif</sv:value>
+      <sv:value>/.resources/file-icons/mp2.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.331+01:00</sv:value>
@@ -3704,7 +3704,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/mp3.gif</sv:value>
+      <sv:value>/.resources/file-icons/mp3.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.354+01:00</sv:value>
@@ -3809,7 +3809,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/mpeg.gif</sv:value>
+      <sv:value>/.resources/file-icons/mpeg.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.368+01:00</sv:value>
@@ -3846,7 +3846,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/mpg.gif</sv:value>
+      <sv:value>/.resources/file-icons/mpg.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.372+01:00</sv:value>
@@ -3883,7 +3883,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/mpp.gif</sv:value>
+      <sv:value>/.resources/file-icons/mpp.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.378+01:00</sv:value>
@@ -4702,7 +4702,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/pps.gif</sv:value>
+      <sv:value>/.resources/file-icons/pps.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.519+01:00</sv:value>
@@ -4841,7 +4841,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/qt.gif</sv:value>
+      <sv:value>/.resources/file-icons/qt.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.552+01:00</sv:value>
@@ -4878,7 +4878,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/ra.gif</sv:value>
+      <sv:value>/.resources/file-icons/ra.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.556+01:00</sv:value>
@@ -4915,7 +4915,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/ram.gif</sv:value>
+      <sv:value>/.resources/file-icons/ram.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.560+01:00</sv:value>
@@ -5020,7 +5020,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/rmi.gif</sv:value>
+      <sv:value>/.resources/file-icons/rmi.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.598+01:00</sv:value>
@@ -5091,7 +5091,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/rtf.gif</sv:value>
+      <sv:value>/.resources/file-icons/rtf.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.618+01:00</sv:value>
@@ -5128,7 +5128,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/rtx.gif</sv:value>
+      <sv:value>/.resources/file-icons/rtx.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.623+01:00</sv:value>
@@ -5403,7 +5403,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/snd.gif</sv:value>
+      <sv:value>/.resources/file-icons/snd.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.665+01:00</sv:value>
@@ -5746,7 +5746,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/tar.gif</sv:value>
+      <sv:value>/.resources/file-icons/tar.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.723+01:00</sv:value>
@@ -5919,7 +5919,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/tgz.gif</sv:value>
+      <sv:value>/.resources/file-icons/tgz.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.744+01:00</sv:value>
@@ -5956,7 +5956,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/tif.gif</sv:value>
+      <sv:value>/.resources/file-icons/tif.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.749+01:00</sv:value>
@@ -5993,7 +5993,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/tiff.gif</sv:value>
+      <sv:value>/.resources/file-icons/tiff.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.753+01:00</sv:value>
@@ -6268,7 +6268,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/wav.gif</sv:value>
+      <sv:value>/.resources/file-icons/wav.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.783+01:00</sv:value>
@@ -6407,7 +6407,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/wmf.gif</sv:value>
+      <sv:value>/.resources/file-icons/wmf.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.798+01:00</sv:value>
@@ -6478,7 +6478,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/wri.gif</sv:value>
+      <sv:value>/.resources/file-icons/wri.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.805+01:00</sv:value>
@@ -6651,7 +6651,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/xla.gif</sv:value>
+      <sv:value>/.resources/file-icons/xla.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.822+01:00</sv:value>
@@ -6688,7 +6688,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/xlc.gif</sv:value>
+      <sv:value>/.resources/file-icons/xlc.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.826+01:00</sv:value>
@@ -6725,7 +6725,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/xlm.gif</sv:value>
+      <sv:value>/.resources/file-icons/xlm.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.831+01:00</sv:value>
@@ -6762,7 +6762,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/xlt.gif</sv:value>
+      <sv:value>/.resources/file-icons/xlt.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.848+01:00</sv:value>
@@ -6901,7 +6901,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/z.gif</sv:value>
+      <sv:value>/.resources/file-icons/z.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.884+01:00</sv:value>
@@ -6938,7 +6938,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/zip.gif</sv:value>
+      <sv:value>/.resources/file-icons/zip.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.887+01:00</sv:value>
@@ -6975,7 +6975,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/aac.gif</sv:value>
+      <sv:value>/.resources/file-icons/aac.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.891+01:00</sv:value>
@@ -7012,7 +7012,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/arc.gif</sv:value>
+      <sv:value>/.resources/file-icons/arc.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.894+01:00</sv:value>
@@ -7049,7 +7049,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/arj.gif</sv:value>
+      <sv:value>/.resources/file-icons/arj.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.907+01:00</sv:value>
@@ -7086,7 +7086,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/asp.gif</sv:value>
+      <sv:value>/.resources/file-icons/asp.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.910+01:00</sv:value>
@@ -7123,7 +7123,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/b64.gif</sv:value>
+      <sv:value>/.resources/file-icons/b64.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.914+01:00</sv:value>
@@ -7160,7 +7160,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/bat.gif</sv:value>
+      <sv:value>/.resources/file-icons/bat.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.918+01:00</sv:value>
@@ -7197,7 +7197,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/bhx.gif</sv:value>
+      <sv:value>/.resources/file-icons/bhx.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.921+01:00</sv:value>
@@ -7234,7 +7234,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/cab.gif</sv:value>
+      <sv:value>/.resources/file-icons/cab.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.927+01:00</sv:value>
@@ -7271,7 +7271,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/com.gif</sv:value>
+      <sv:value>/.resources/file-icons/com.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.930+01:00</sv:value>
@@ -7308,7 +7308,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/fla.gif</sv:value>
+      <sv:value>/.resources/file-icons/fla.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.934+01:00</sv:value>
@@ -7345,7 +7345,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/indd.gif</sv:value>
+      <sv:value>/.resources/file-icons/indd.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.937+01:00</sv:value>
@@ -7382,7 +7382,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/ini.gif</sv:value>
+      <sv:value>/.resources/file-icons/ini.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.941+01:00</sv:value>
@@ -7419,7 +7419,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/java.gif</sv:value>
+      <sv:value>/.resources/file-icons/java.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.944+01:00</sv:value>
@@ -7456,7 +7456,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/list.gif</sv:value>
+      <sv:value>/.resources/file-icons/list.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.947+01:00</sv:value>
@@ -7493,7 +7493,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/log.gif</sv:value>
+      <sv:value>/.resources/file-icons/log.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.950+01:00</sv:value>
@@ -7530,7 +7530,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/midi.gif</sv:value>
+      <sv:value>/.resources/file-icons/midi.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.954+01:00</sv:value>
@@ -7567,7 +7567,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/mim.gif</sv:value>
+      <sv:value>/.resources/file-icons/mim.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.986+01:00</sv:value>
@@ -7604,7 +7604,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/moov.gif</sv:value>
+      <sv:value>/.resources/file-icons/moov.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.993+01:00</sv:value>
@@ -7641,7 +7641,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/mp4.gif</sv:value>
+      <sv:value>/.resources/file-icons/mp4.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:00.996+01:00</sv:value>
@@ -7678,7 +7678,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/mpt.gif</sv:value>
+      <sv:value>/.resources/file-icons/mpt.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.000+01:00</sv:value>
@@ -7715,7 +7715,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/mpv.gif</sv:value>
+      <sv:value>/.resources/file-icons/mpv.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.007+01:00</sv:value>
@@ -7752,7 +7752,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/mpx.gif</sv:value>
+      <sv:value>/.resources/file-icons/mpx.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.010+01:00</sv:value>
@@ -7789,7 +7789,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/pct.gif</sv:value>
+      <sv:value>/.resources/file-icons/pct.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.026+01:00</sv:value>
@@ -7826,7 +7826,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/pcx.gif</sv:value>
+      <sv:value>/.resources/file-icons/pcx.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.030+01:00</sv:value>
@@ -7863,7 +7863,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/php.gif</sv:value>
+      <sv:value>/.resources/file-icons/php.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.034+01:00</sv:value>
@@ -7900,7 +7900,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/pic.gif</sv:value>
+      <sv:value>/.resources/file-icons/pic.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.038+01:00</sv:value>
@@ -7937,7 +7937,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/pict.gif</sv:value>
+      <sv:value>/.resources/file-icons/pict.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.042+01:00</sv:value>
@@ -7974,7 +7974,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/pkg.gif</sv:value>
+      <sv:value>/.resources/file-icons/pkg.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.045+01:00</sv:value>
@@ -8011,7 +8011,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/pl.gif</sv:value>
+      <sv:value>/.resources/file-icons/pl.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.048+01:00</sv:value>
@@ -8048,7 +8048,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/ppa.gif</sv:value>
+      <sv:value>/.resources/file-icons/ppa.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.054+01:00</sv:value>
@@ -8085,7 +8085,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/ppc.gif</sv:value>
+      <sv:value>/.resources/file-icons/ppc.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.059+01:00</sv:value>
@@ -8122,7 +8122,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/psd.gif</sv:value>
+      <sv:value>/.resources/file-icons/psd.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.063+01:00</sv:value>
@@ -8159,7 +8159,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/pwc.gif</sv:value>
+      <sv:value>/.resources/file-icons/pwc.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.066+01:00</sv:value>
@@ -8196,7 +8196,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/rem.gif</sv:value>
+      <sv:value>/.resources/file-icons/rem.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.071+01:00</sv:value>
@@ -8233,7 +8233,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/rmp.gif</sv:value>
+      <sv:value>/.resources/file-icons/rmp.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.076+01:00</sv:value>
@@ -8270,7 +8270,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/sdp.gif</sv:value>
+      <sv:value>/.resources/file-icons/sdp.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.082+01:00</sv:value>
@@ -8307,7 +8307,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/sgml.gif</sv:value>
+      <sv:value>/.resources/file-icons/sgml.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.086+01:00</sv:value>
@@ -8344,7 +8344,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/shtml.gif</sv:value>
+      <sv:value>/.resources/file-icons/shtml.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.089+01:00</sv:value>
@@ -8381,7 +8381,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/smil.gif</sv:value>
+      <sv:value>/.resources/file-icons/smil.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.092+01:00</sv:value>
@@ -8418,7 +8418,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/sys.gif</sv:value>
+      <sv:value>/.resources/file-icons/sys.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.096+01:00</sv:value>
@@ -8455,7 +8455,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/taz.gif</sv:value>
+      <sv:value>/.resources/file-icons/taz.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.102+01:00</sv:value>
@@ -8492,7 +8492,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/text.gif</sv:value>
+      <sv:value>/.resources/file-icons/text.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.105+01:00</sv:value>
@@ -8529,7 +8529,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/tz.gif</sv:value>
+      <sv:value>/.resources/file-icons/tz.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.109+01:00</sv:value>
@@ -8566,7 +8566,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/uu.gif</sv:value>
+      <sv:value>/.resources/file-icons/uu.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.114+01:00</sv:value>
@@ -8603,7 +8603,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/uue.gif</sv:value>
+      <sv:value>/.resources/file-icons/uue.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.118+01:00</sv:value>
@@ -8640,7 +8640,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/wmv.gif</sv:value>
+      <sv:value>/.resources/file-icons/wmv.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.124+01:00</sv:value>
@@ -8677,7 +8677,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/word.gif</sv:value>
+      <sv:value>/.resources/file-icons/word.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.128+01:00</sv:value>
@@ -8714,7 +8714,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/wp.gif</sv:value>
+      <sv:value>/.resources/file-icons/wp.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.132+01:00</sv:value>
@@ -8751,7 +8751,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/wp5.gif</sv:value>
+      <sv:value>/.resources/file-icons/wp5.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.135+01:00</sv:value>
@@ -8788,7 +8788,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/wp6.gif</sv:value>
+      <sv:value>/.resources/file-icons/wp6.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.138+01:00</sv:value>
@@ -8825,7 +8825,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/wpd.gif</sv:value>
+      <sv:value>/.resources/file-icons/wpd.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.154+01:00</sv:value>
@@ -8862,7 +8862,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/xl.gif</sv:value>
+      <sv:value>/.resources/file-icons/xl.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.158+01:00</sv:value>
@@ -8899,7 +8899,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/xlb.gif</sv:value>
+      <sv:value>/.resources/file-icons/xlb.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.162+01:00</sv:value>
@@ -8936,7 +8936,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/xld.gif</sv:value>
+      <sv:value>/.resources/file-icons/xld.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.166+01:00</sv:value>
@@ -8973,7 +8973,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/xlk.gif</sv:value>
+      <sv:value>/.resources/file-icons/xlk.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.169+01:00</sv:value>
@@ -9010,7 +9010,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/xll.gif</sv:value>
+      <sv:value>/.resources/file-icons/xll.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.172+01:00</sv:value>
@@ -9047,7 +9047,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/xlv.gif</sv:value>
+      <sv:value>/.resources/file-icons/xlv.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.176+01:00</sv:value>
@@ -9084,7 +9084,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/fileIcons/xxe.gif</sv:value>
+      <sv:value>/.resources/file-icons/xxe.png</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-02T15:25:01.179+01:00</sv:value>
