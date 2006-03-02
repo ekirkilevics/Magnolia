@@ -8,7 +8,7 @@ var MgnlFCKConfig = window.parent.MgnlFCKConfigs[FCK.Name];
 FCKConfig.EditorAreaCSS = MgnlFCKConfig.contextPath + MgnlFCKConfig.css;
 
 // ower skin
-FCKConfig.SkinPath = MgnlFCKConfig.contextPath + "/admindocroot/fckeditor/custom/skin/";
+FCKConfig.SkinPath = MgnlFCKConfig.contextPath + "/.resources/fckeditor/custom/skin/";
 
 // i18n
 FCKConfig.AutoDetectLanguage	= false ;
@@ -106,7 +106,7 @@ FCKConfig.ImageDlgHideAdvanced	= true ;
 FCKConfig.FlashDlgHideAdvanced	= false ;
 
 FCKConfig.LinkBrowser = true ;
-FCKConfig.LinkBrowserURL = MgnlFCKConfig.contextPath + "/admindocroot/fckeditor/custom/editor/filemanager/browser/default/browser.html?contextPath=" + MgnlFCKConfig.contextPath;
+FCKConfig.LinkBrowserURL = MgnlFCKConfig.contextPath + "/.resources/fckeditor/custom/editor/filemanager/browser/default/browser.html?contextPath=" + MgnlFCKConfig.contextPath;
 
 FCKConfig.ImageBrowser = false ;
 

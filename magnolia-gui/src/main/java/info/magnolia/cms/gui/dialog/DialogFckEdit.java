@@ -116,7 +116,7 @@ public class DialogFckEdit extends DialogBox {
     /**
      * The new .BasePath of the editor
      */
-    public static final String FCKEDIT_PATH = "/admindocroot/fckeditor/"; //$NON-NLS-1$
+    public static final String FCKEDIT_PATH = "/.resources/fckeditor/"; //$NON-NLS-1$
 
     /**
      * Used to make sure that the javascript files are loaded only once
@@ -160,11 +160,11 @@ public class DialogFckEdit extends DialogBox {
     /**
      * Default falues
      */
-    public static final String PARAM_JS_INIT_FILE_DEFAULT = "/admindocroot/fckeditor/custom/init/magnoliaStandard.js"; //$NON-NLS-1$
+    public static final String PARAM_JS_INIT_FILE_DEFAULT = "/.resources/fckeditor/custom/init/magnoliaStandard.js"; //$NON-NLS-1$
 
-    public static final String PARAM_CUSTOM_CONFIGURATION_PATH_DEFAULT = "/admindocroot/fckeditor/custom/config/magnoliaStandard.js"; //$NON-NLS-1$
+    public static final String PARAM_CUSTOM_CONFIGURATION_PATH_DEFAULT = "/.resources/fckeditor/custom/config/magnoliaStandard.js"; //$NON-NLS-1$
 
-    public static final String PARAM_CSS_DEFAULT = "/admindocroot/fckeditor/custom/css/magnoliaStandard.css"; //$NON-NLS-1$
+    public static final String PARAM_CSS_DEFAULT = "/.resources/fckeditor/custom/css/magnoliaStandard.css"; //$NON-NLS-1$
 
     public static final String PARAM_HEIGHT_DEFAULT = ""; //$NON-NLS-1$
 
@@ -230,7 +230,7 @@ public class DialogFckEdit extends DialogBox {
         if (getRequest().getAttribute(ATTRIBUTE_FCKED_LOADED) == null) { //$NON-NLS-1$
             out.write("<script type=\"text/javascript\" src=\"" //$NON-NLS-1$
                 + this.getRequest().getContextPath()
-                + "/admindocroot/fckeditor/fckeditor.js\"></script>"); //$NON-NLS-1$
+                + "/.resources/fckeditor/fckeditor.js\"></script>"); //$NON-NLS-1$
             getRequest().setAttribute(ATTRIBUTE_FCKED_LOADED, "true"); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
@@ -383,7 +383,7 @@ public class DialogFckEdit extends DialogBox {
 
     /**
      * Replacements:
-     * 
+     *
      * <pre>
      *               ' -&gt; \'
      *               &quot; -&gt; \&quot;
@@ -391,7 +391,7 @@ public class DialogFckEdit extends DialogBox {
      *               \n -&gt; \\n
      *               \ -&gt; \\
      * </pre>
-     * 
+     *
      * @param src
      * @return escaped js String
      */
