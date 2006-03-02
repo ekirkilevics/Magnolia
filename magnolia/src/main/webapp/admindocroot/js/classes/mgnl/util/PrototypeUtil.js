@@ -16,22 +16,22 @@
   */
   
  classDef("mgnl.util.PrototypeUtil",{
- 	/**
- 	 * Add the properties from src to dest.<b> 
- 	 * <code> extend(obj.prototype, myOtherParent) </code>
- 	 * @parma dst the target
- 	 * @parma src the object whichs properties will get copied to dst
- 	 * @parma overwrite true if existing properties get overwritten (default is true)
- 	 */
- 	extend: function(dst, src, overwrite){
- 		// default is false
- 		overwrite = overwrite?overwrite: false;
- 		
- 		for(name in src){
- 			if(overwrite || dst[name] == null){
- 				dst[name] = src[name];
- 			}
- 		}
- 		return dst;
- 	}
+    /**
+     * Add the properties from src to dest.<b> 
+     * <code> extend(obj.prototype, myOtherParent) </code>
+     * @parma dst the target
+     * @parma src the object whichs properties will get copied to dst
+     * @parma overwrite true if existing properties get overwritten (default is true)
+     */
+    extend: function(dst, src, overwrite){
+        // default is false
+        overwrite = overwrite?overwrite: false;
+        
+        for(name in src){
+            if(overwrite || dst[name] == null){
+                dst[name] = src[name];
+            }
+        }
+        return dst;
+    }
  });

@@ -2,10 +2,10 @@
     xmlns:cmsu="urn:jsptld:cms-util-taglib" xmlns:c="urn:jsptld:http://java.sun.com/jsp/jstl/core">
     <cms:contentNodeIterator contentNodeCollectionName="rightColumnParagraphs">
         <div style="clear:both;">
-	        <cms:adminOnly>
-	            <cms:editBar />
-	        </cms:adminOnly>
-	        <cms:includeTemplate />
+            <cms:adminOnly>
+                <cms:editBar />
+            </cms:adminOnly>
+            <cms:includeTemplate />
         </div>
     </cms:contentNodeIterator>
 

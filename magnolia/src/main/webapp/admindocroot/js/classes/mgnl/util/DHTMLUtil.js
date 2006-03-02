@@ -20,7 +20,7 @@ classDef("mgnl.util.DHTMLUtil", {
     /**
      * Returns the an object containing a .w and .h property
      */
-    getWindowSize: function()	{
+    getWindowSize: function()   {
         var obj=new Object();
         if( typeof (window.innerWidth) == 'number' ){
             //Non-IE

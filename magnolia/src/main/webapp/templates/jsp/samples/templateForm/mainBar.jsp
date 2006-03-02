@@ -9,37 +9,37 @@
     <!-- main bar of form template -->
     <jsp:scriptlet>
 
-	Content currentPage=Resource.getActivePage(request);
+    Content currentPage=Resource.getActivePage(request);
 
-	BarMain bar=new BarMain(request);
+    BarMain bar=new BarMain(request);
 
-	//path is needed for the links of the buttons
-	bar.setPath(currentPage.getHandle());
+    //path is needed for the links of the buttons
+    bar.setPath(currentPage.getHandle());
 
-	//"paragraph" specifies the paragraph evoked by the "Properties" button
-	bar.setParagraph("samplesPageProperties");
+    //"paragraph" specifies the paragraph evoked by the "Properties" button
+    bar.setParagraph("samplesPageProperties");
 
-	// initialize the default buttons (preview, site admin, properties)
-	// note: buttons are not placed through init (see below)
-	bar.setDefaultButtons();
+    // initialize the default buttons (preview, site admin, properties)
+    // note: buttons are not placed through init (see below)
+    bar.setDefaultButtons();
 
-	// to overwrite single properties of the default buttons, use getButtonXXX() methods:
-	bar.getButtonProperties().setLabel("Page properties");
-
-
-	//add customized buttons to the main bar
-	Button fProps=new Button();
-	fProps.setLabel("Form properties");
-	fProps.setOnclick("mgnlOpenDialog('"+Resource.getActivePage(request).getHandle()+"','','','samplesFormProperties','"+ContentRepository.WEBSITE+"')");
-	bar.setButtonsRight(fProps);
+    // to overwrite single properties of the default buttons, use getButtonXXX() methods:
+    bar.getButtonProperties().setLabel("Page properties");
 
 
-	// places the preview and the site admin button to the very left and the properties button to the very right
-	bar.placeDefaultButtons();
+    //add customized buttons to the main bar
+    Button fProps=new Button();
+    fProps.setLabel("Form properties");
+    fProps.setOnclick("mgnlOpenDialog('"+Resource.getActivePage(request).getHandle()+"','','','samplesFormProperties','"+ContentRepository.WEBSITE+"')");
+    bar.setButtonsRight(fProps);
 
 
-	//draw the main bar
-	bar.drawHtml(out);
+    // places the preview and the site admin button to the very left and the properties button to the very right
+    bar.placeDefaultButtons();
+
+
+    //draw the main bar
+    bar.drawHtml(out);
 
 </jsp:scriptlet>
 </jsp:root>

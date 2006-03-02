@@ -12,29 +12,29 @@
 String eid = request.getParameter("eid");
 if (eid == null)
 {
-	out.println("error: the eid = null");
+    out.println("error: the eid = null");
 }
 else 
-	out.println("expression id = " + eid);
+    out.println("expression id = " + eid);
 
 boolean result = true;
 try{
-	owfeBean.rejectActivation(eid);
+    owfeBean.rejectActivation(eid);
 }
 catch (Exception e)
 {
-	out.println("<pre>");
-	e.printStackTrace(); 
-	result = false;
-	out.println("</pre>");
+    out.println("<pre>");
+    e.printStackTrace(); 
+    result = false;
+    out.println("</pre>");
 }
 %>
 <br>
 <%
 if (result)
-	out.println("<h3>Reject succeded.</h3>");
+    out.println("<h3>Reject succeded.</h3>");
 else
-	out.println("<h3>Reject failed.</h3>");
+    out.println("<h3>Reject failed.</h3>");
 %>
 <br>
 <a href="${pageContext.request.contextPath}/.magnolia/inbox.html"> back to inbox </a>

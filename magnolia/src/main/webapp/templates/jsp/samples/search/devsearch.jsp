@@ -24,14 +24,14 @@
             <div id="contentDivMainColumn">
                 <c:import url="/templates/jsp/samples/global/columnMain.jsp" />
 
-				<c:choose>
-					<c:when test="${!empty(param.sql)}">
-						<c:set var="formvalue" value="${param.sql}" />
-					</c:when>
-					<c:otherwise>
-						<c:set var="formvalue" value="SELECT * FROM nt:base where jcr:path like '/%' and title like '%'" />
-					</c:otherwise>
-				</c:choose>
+                <c:choose>
+                    <c:when test="${!empty(param.sql)}">
+                        <c:set var="formvalue" value="${param.sql}" />
+                    </c:when>
+                    <c:otherwise>
+                        <c:set var="formvalue" value="SELECT * FROM nt:base where jcr:path like '/%' and title like '%'" />
+                    </c:otherwise>
+                </c:choose>
 
                 <form name="mgnlsearch" action="">
                   <textarea id="sql" name="sql" cols="40" rows="10">${formvalue}</textarea>
@@ -48,41 +48,41 @@
 
                 <c:if test="${!empty(param.sql)}">
 
-	                <h1>Search results for:</h1>
-	                <h2>${param.sql}</h2>
+                    <h1>Search results for:</h1>
+                    <h2>${param.sql}</h2>
 
-						<c:catch var="exc">
-			                <jsp:scriptlet>
-			                    String sql = request.getParameter("sql");
-			                    String language = request.getParameter("language");
-				                Query q = MgnlContext.getQueryManager(ContentRepository.WEBSITE).createQuery(sql, language);
-				                QueryResult result = q.execute();
-				                pageContext.setAttribute("result", result.getContent("mgnl:content").iterator());
-			                </jsp:scriptlet>
+                        <c:catch var="exc">
+                            <jsp:scriptlet>
+                                String sql = request.getParameter("sql");
+                                String language = request.getParameter("language");
+                                Query q = MgnlContext.getQueryManager(ContentRepository.WEBSITE).createQuery(sql, language);
+                                QueryResult result = q.execute();
+                                pageContext.setAttribute("result", result.getContent("mgnl:content").iterator());
+                            </jsp:scriptlet>
 
-			                <h3>Resulting objects of NodeType (mgnl:content)</h3>
+                            <h3>Resulting objects of NodeType (mgnl:content)</h3>
 
-			                <c:forEach var="node" items="${result}">
-			                  <strong>${node.title}</strong><br/>
-			                  <a href="${pageContext.request.contextPath}${node.handle}.html">${pageContext.request.contextPath}${node.handle}.html</a><br/>
-			                </c:forEach>
+                            <c:forEach var="node" items="${result}">
+                              <strong>${node.title}</strong><br/>
+                              <a href="${pageContext.request.contextPath}${node.handle}.html">${pageContext.request.contextPath}${node.handle}.html</a><br/>
+                            </c:forEach>
 
-			                <h3>Resulting objects of NodeType (mgnl:contentNode)</h3>
+                            <h3>Resulting objects of NodeType (mgnl:contentNode)</h3>
 
-			                <jsp:scriptlet>
-				                pageContext.setAttribute("result", result.getContent("mgnl:contentNode").iterator());
-			                </jsp:scriptlet>
+                            <jsp:scriptlet>
+                                pageContext.setAttribute("result", result.getContent("mgnl:contentNode").iterator());
+                            </jsp:scriptlet>
 
-			                <c:forEach var="node" items="${result}">
-			                  <strong>${node.title}</strong><br/>
-			                  <em>${node.handle}</em><br/>
-			                </c:forEach>
-						</c:catch>
+                            <c:forEach var="node" items="${result}">
+                              <strong>${node.title}</strong><br/>
+                              <em>${node.handle}</em><br/>
+                            </c:forEach>
+                        </c:catch>
 
-						<c:if test="${!empty(exc)}">
-						  	<h1>${exc.message}</h1>
-						</c:if>
-	                </c:if>
+                        <c:if test="${!empty(exc)}">
+                            <h1>${exc.message}</h1>
+                        </c:if>
+                    </c:if>
                        <c:import url="/templates/jsp/samples/global/footer.jsp" />
             </div>
             <div id="contentDivRightColumn">

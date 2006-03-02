@@ -279,7 +279,7 @@ var TrimPath;
             funcText.push('if (_FLAGS.keepWhitespace == true) _OUT.write("');
             var s = text.substring(0, nlPrefix).replace('\n', '\\n'); // A macro IE fix from BJessen.
             if (s.charAt(s.length - 1) == '\n')
-            	s = s.substring(0, s.length - 1);
+                s = s.substring(0, s.length - 1);
             funcText.push(s);
             funcText.push('");');
         }
@@ -293,7 +293,7 @@ var TrimPath;
             funcText.push('if (_FLAGS.keepWhitespace == true) _OUT.write("');
             var s = text.substring(nlSuffix + 1).replace('\n', '\\n');
             if (s.charAt(s.length - 1) == '\n')
-            	s = s.substring(0, s.length - 1);
+                s = s.substring(0, s.length - 1);
             funcText.push(s);
             funcText.push('");');
         }

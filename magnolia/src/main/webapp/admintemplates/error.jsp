@@ -10,29 +10,29 @@
     <h3>Error</h3>
 
     <jsp:scriptlet>
-		Throwable ex = (Throwable) request.getAttribute("javax.servlet.error.exception");
-		if (ex != null)
+        Throwable ex = (Throwable) request.getAttribute("javax.servlet.error.exception");
+        if (ex != null)
         {
     </jsp:scriptlet>
 
     <![CDATA[<p>]]>
 
     <jsp:scriptlet>
-		out.println(ex.getMessage());
-	</jsp:scriptlet>
+        out.println(ex.getMessage());
+    </jsp:scriptlet>
 
     <![CDATA[</p>]]>
     <![CDATA[<pre>]]>
 
     <jsp:scriptlet>
-		ex.printStackTrace(new java.io.PrintWriter(out));
-	</jsp:scriptlet>
+        ex.printStackTrace(new java.io.PrintWriter(out));
+    </jsp:scriptlet>
 
     <![CDATA[</pre>]]>
 
     <jsp:scriptlet>
         }
-	</jsp:scriptlet>
+    </jsp:scriptlet>
 
     </body>
     </html>

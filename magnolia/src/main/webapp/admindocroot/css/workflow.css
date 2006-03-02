@@ -1,21 +1,21 @@
 .nicetable {
-	border-collapse:collapse;
+    border-collapse:collapse;
 }
 .nicetableheader {
-	margin:5px; 
-	padding: 8px;
-	border:1px solid #336699;
-	background-color:#336699;		
-	color:#FFFFFF;	
-	font-size: 9pt;	
-	font-weight:bold;
+    margin:5px; 
+    padding: 8px;
+    border:1px solid #336699;
+    background-color:#336699;       
+    color:#FFFFFF;  
+    font-size: 9pt; 
+    font-weight:bold;
 }
 
 .nicetablerow {
-	margin:5px; 	
-	padding: 5px;
-	border:1px solid #336699;	
-	background-color:#FFFFFF;	
-	color:#000000;	
-	font-size: 9pt;
+    margin:5px;     
+    padding: 5px;
+    border:1px solid #336699;   
+    background-color:#FFFFFF;   
+    color:#000000;  
+    font-size: 9pt;
 }

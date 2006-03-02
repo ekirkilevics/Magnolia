@@ -53,18 +53,18 @@ Iterator it = map.alphaStringIterator();
 
 while (it.hasNext())
 {
-	String name = (String)it.next();
-	if (name.equals("__definition__"))
-		continue;
-	String value = (String)wi.getAttribute(name).toString();	
-	%>
-	 
-	<%=name%><input type="hidden" name="attributeName" value="<%=name%>"/>
-	
-	:<input name="value" value="<%=value%>"/>
-	<!-- 
+    String name = (String)it.next();
+    if (name.equals("__definition__"))
+        continue;
+    String value = (String)wi.getAttribute(name).toString();    
+    %>
+     
+    <%=name%><input type="hidden" name="attributeName" value="<%=name%>"/>
+    
+    :<input name="value" value="<%=value%>"/>
+    <!-- 
 <textarea rows=1 name="<%=value%>" ><%=value%></textarea> -->
-	<br>
+    <br>
 
 <%} %>
 <input type="submit" value="save"/>

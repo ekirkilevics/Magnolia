@@ -12,33 +12,33 @@
  *
  * */
 %><%@ page import="org.apache.webdav.lib.WebdavResource,
-				 java.util.Hashtable,
-				 java.util.Enumeration,
-				 java.net.URLDecoder,
-				 java.io.UnsupportedEncodingException,
-				 org.apache.webdav.lib.methods.XMLResponseMethodBase,
-				 java.io.IOException,
-				 org.apache.webdav.lib.Property,
-				 java.net.URLEncoder,
-				 java.text.SimpleDateFormat,
-				 java.util.Date,
+                 java.util.Hashtable,
+                 java.util.Enumeration,
+                 java.net.URLDecoder,
+                 java.io.UnsupportedEncodingException,
+                 org.apache.webdav.lib.methods.XMLResponseMethodBase,
+                 java.io.IOException,
+                 org.apache.webdav.lib.Property,
+                 java.net.URLEncoder,
+                 java.text.SimpleDateFormat,
+                 java.util.Date,
                  info.magnolia.cms.gui.dialog.DialogWebDAV,
                  info.magnolia.cms.gui.dialog.DialogSuper"%>
 
 <%
-	DialogWebDAV dav=(DialogWebDAV) request.getSession().getAttribute(request.getParameter(DialogSuper.SESSION_ATTRIBUTENAME_DIALOGOBJECT));
-	//do not remove session attribute!
-	if (dav!=null) {
-		if (request.getParameter("subDirectory")!=null) dav.setSubDirectory(request.getParameter("subDirectory"));
-		if (request.getParameter("selectedValue")!=null) {
-			dav.setValue(request.getParameter("selectedValue"));
-		}
+    DialogWebDAV dav=(DialogWebDAV) request.getSession().getAttribute(request.getParameter(DialogSuper.SESSION_ATTRIBUTENAME_DIALOGOBJECT));
+    //do not remove session attribute!
+    if (dav!=null) {
+        if (request.getParameter("subDirectory")!=null) dav.setSubDirectory(request.getParameter("subDirectory"));
+        if (request.getParameter("selectedValue")!=null) {
+            dav.setValue(request.getParameter("selectedValue"));
+        }
         dav.setFrameRequest(request);
-		dav.drawHtmlList(out);
-	}
-	else {
-		out.println("<i>An error occured. Unable to connect to WebDAV Server</i>");
-	}
+        dav.drawHtmlList(out);
+    }
+    else {
+        out.println("<i>An error occured. Unable to connect to WebDAV Server</i>");
+    }
 
 
 

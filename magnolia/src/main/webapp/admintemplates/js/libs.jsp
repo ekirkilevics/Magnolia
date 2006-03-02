@@ -5,9 +5,9 @@
 <%@ page import="java.util.Iterator" %>
 
 <%
-	Collection libFiles = FileUtils.listFiles(new File(Path.getAppRootDir() + "/admindocroot/js/libs"), new String[]{"js"}, true );
-	for(Iterator iter = libFiles.iterator(); iter.hasNext();){
-		File file = (File) iter.next();
-		out.println(FileUtils.readFileToString(file,"UTF8"));
-	}
+    Collection libFiles = FileUtils.listFiles(new File(Path.getAppRootDir() + "/admindocroot/js/libs"), new String[]{"js"}, true );
+    for(Iterator iter = libFiles.iterator(); iter.hasNext();){
+        File file = (File) iter.next();
+        out.println(FileUtils.readFileToString(file,"UTF8"));
+    }
 %>

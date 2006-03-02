@@ -7,29 +7,29 @@
     <table cellpadding="0" cellspacing="2" border="0" height="60">
         <tr>
             <jsp:scriptlet>
-	DialogSuper control=(DialogSuper) pageContext.getRequest().getAttribute("dialogObject");
+    DialogSuper control=(DialogSuper) pageContext.getRequest().getAttribute("dialogObject");
 
-	//access all the values of the dialog definition with getConfigValue
-	String colorStart=control.getConfigValue("colorStart");
-	String colorOffset=control.getConfigValue("colorOffset");
+    //access all the values of the dialog definition with getConfigValue
+    String colorStart=control.getConfigValue("colorStart");
+    String colorOffset=control.getConfigValue("colorOffset");
 
-	int start=Integer.parseInt(colorStart,16);
-	int offset=Integer.parseInt(colorOffset,16);
+    int start=Integer.parseInt(colorStart,16);
+    int offset=Integer.parseInt(colorOffset,16);
 
-	for (int i=start;i>0;i-=offset) {
+    for (int i=start;i>0;i-=offset) {
 
-		String color=Integer.toHexString(i);
-		while(6>color.length()) {
-			color="0"+color;
-		}
+        String color=Integer.toHexString(i);
+        while(6>color.length()) {
+            color="0"+color;
+        }
         pageContext.setAttribute("color", color);
         </jsp:scriptlet>
 
             <td style="background-color:#${color};width:60px;"
                 onclick="document.getElementById('${dialogObject.name}').value='${color}'">&amp;nbsp;</td>
             <jsp:scriptlet>
-	}
-	</jsp:scriptlet>
+    }
+    </jsp:scriptlet>
         </tr>
     </table>
     <br />
@@ -39,13 +39,13 @@
     <jsp:scriptlet>
 
 
-	//for form elements use the magnolia control package
-	// toggle alt to get two different outputs
+    //for form elements use the magnolia control package
+    // toggle alt to get two different outputs
 
-	Edit editControl=new Edit(control.getName(),control.getWebsiteNode());
-	editControl.setCssClass(CssConstants.CSSCLASS_EDIT);
-	editControl.setCssStyles("width","60");
-	out.println(editControl.getHtml());
+    Edit editControl=new Edit(control.getName(),control.getWebsiteNode());
+    editControl.setCssClass(CssConstants.CSSCLASS_EDIT);
+    editControl.setCssStyles("width","60");
+    out.println(editControl.getHtml());
 
 </jsp:scriptlet>
 </jsp:root>
