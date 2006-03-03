@@ -153,6 +153,6 @@ public class RequestInterceptor extends HttpServlet {
         RepositoryException, AccessDeniedException {
         String pagePath = StringUtils.substringBeforeLast(Path.getURI(request), "."); //$NON-NLS-1$
         Content page = hm.getContent(pagePath);
-        page.updateMetaData(request);
+        page.updateMetaData();
     }
 }
