@@ -13,7 +13,6 @@
 package info.magnolia.cms.i18n;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.runtime.Context;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -457,7 +456,7 @@ public final class MessagesManager {
      * @deprecated use MgnlContext instead
      */
     public static void setUserLanguage(String language, HttpSession session) {
-        MgnlContext.setAttribute(Config.FMT_LOCALE + ".session", language, Context.SESSION_SCOPE); //$NON-NLS-1$
+        MgnlContext.setAttribute(Config.FMT_LOCALE + ".session", language, MgnlContext.SESSION_SCOPE); //$NON-NLS-1$
     }
 
     public static void reloadBundles() throws Exception {
