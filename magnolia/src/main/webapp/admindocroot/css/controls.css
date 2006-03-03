@@ -101,9 +101,9 @@
 }
 
 #mgnlMoveDivShadow {
-    background-image: url("../images/mgnlMoveShadow.gif");
+    background-image: url("../../.resources/admin-images/mgnlMoveShadow.gif");
 }
 
 #mgnlMoveDivDenied {
-    background-image: url("../images/mgnlMoveDenied.gif");
+    background-image: url("../../.resources/admin-images/mgnlMoveDenied.gif");
 }
