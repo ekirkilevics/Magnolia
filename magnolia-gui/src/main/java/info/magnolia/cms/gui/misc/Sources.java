@@ -55,36 +55,4 @@ public class Sources {
         return html.toString();
     }
 
-    public String getHtmlRichEdit() {
-        StringBuffer html = new StringBuffer();
-        html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\""); //$NON-NLS-1$
-        html.append(contextPath);
-        html.append("/admindocroot/richE/kupustyles.css\" />"); //$NON-NLS-1$
-        html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\""); //$NON-NLS-1$
-        html.append(contextPath);
-        html.append("/admindocroot/richE/kupucustom.css\" />"); //$NON-NLS-1$
-        html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
-        html.append(contextPath);
-        html.append("/admindocroot/richE/sarissa.js\"> </script>"); //$NON-NLS-1$
-        html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
-        html.append(contextPath);
-        html.append("/admindocroot/richE/kupuhelpers.js\"> </script>"); //$NON-NLS-1$
-        html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
-        html.append(contextPath);
-        html.append("/admindocroot/richE/kupueditor.js\"> </script>"); //$NON-NLS-1$
-        html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
-        html.append(contextPath);
-        html.append("/admindocroot/richE/kupubasetools.js\"> </script>"); //$NON-NLS-1$
-        html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
-        html.append(contextPath);
-        html.append("/admindocroot/richE/kupuloggers.js\"> </script>"); //$NON-NLS-1$
-        html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
-        html.append(contextPath);
-        html.append("/admindocroot/richE/kupucontentfilters.js\"> </script>"); //$NON-NLS-1$
-        html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
-        html.append(contextPath);
-        html.append("/admindocroot/richE/kupuinit.js\"> </script>"); //$NON-NLS-1$
-        return html.toString();
-    }
-
 }

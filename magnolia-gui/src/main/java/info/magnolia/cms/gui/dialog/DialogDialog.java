@@ -145,7 +145,7 @@ public class DialogDialog extends DialogSuper {
             + "</title>"); //$NON-NLS-1$
         out.write(new Sources(this.getRequest().getContextPath()).getHtmlJs());
         out.write(new Sources(this.getRequest().getContextPath()).getHtmlCss());
-        out.write(new Sources(this.getRequest().getContextPath()).getHtmlRichEdit());
+        out.write(getHtmlKupuEditor(this.getRequest().getContextPath()));
         out.write("<script type=\"text/javascript\">"); //$NON-NLS-1$
         out.write("var mgnlRichEditors=new Array();"); // will be extended at each richEdit control //$NON-NLS-1$
         out.write("var kupu = null;"); //$NON-NLS-1$
@@ -161,6 +161,38 @@ public class DialogDialog extends DialogSuper {
 
         this.drawJavascriptSources(out);
         this.drawCssSources(out);
+    }
+
+    public String getHtmlKupuEditor(String contextPath) {
+        StringBuffer html = new StringBuffer();
+        html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\""); //$NON-NLS-1$
+        html.append(contextPath);
+        html.append("/.resources/kupu/kupustyles.css\" />"); //$NON-NLS-1$
+        html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\""); //$NON-NLS-1$
+        html.append(contextPath);
+        html.append("/.resources/kupu/kupucustom.css\" />"); //$NON-NLS-1$
+        html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
+        html.append(contextPath);
+        html.append("/.resources/kupu/sarissa.js\"> </script>"); //$NON-NLS-1$
+        html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
+        html.append(contextPath);
+        html.append("/.resources/kupu/kupuhelpers.js\"> </script>"); //$NON-NLS-1$
+        html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
+        html.append(contextPath);
+        html.append("/.resources/kupu/kupueditor.js\"> </script>"); //$NON-NLS-1$
+        html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
+        html.append(contextPath);
+        html.append("/.resources/kupu/kupubasetools.js\"> </script>"); //$NON-NLS-1$
+        html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
+        html.append(contextPath);
+        html.append("/.resources/kupu/kupuloggers.js\"> </script>"); //$NON-NLS-1$
+        html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
+        html.append(contextPath);
+        html.append("/.resources/kupu/kupucontentfilters.js\"> </script>"); //$NON-NLS-1$
+        html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
+        html.append(contextPath);
+        html.append("/.resources/kupu/kupuinit.js\"> </script>"); //$NON-NLS-1$
+        return html.toString();
     }
 
     protected void drawHtmlPreSubsForm(Writer out) throws IOException {
