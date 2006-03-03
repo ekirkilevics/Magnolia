@@ -13,12 +13,10 @@
 package info.magnolia.cms.gui.fckeditor;
 
 import info.magnolia.cms.beans.runtime.Document;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
 
 /**
  * This class handles the uploaded files for the fckeditor. The editor uses the FCKEditoSimpleUploadServlet to upload
@@ -40,8 +38,8 @@ public class FCKEditorTmpFiles {
      * @param uuid
      * @return the document
      */
-    public static Document getDocument(HttpServletRequest request, String uuid) {
-        return (Document) getTmpFiles(request).get(uuid);
+    public static Document getDocument(String uuid) {
+        return (Document) getTmpFiles().get(uuid);
     }
 
     /**
@@ -50,8 +48,8 @@ public class FCKEditorTmpFiles {
      * @param doc
      * @param uuid
      */
-    public static void addDocument(HttpServletRequest request, Document doc, String uuid) {
-        getTmpFiles(request).put(uuid, doc);
+    public static void addDocument( Document doc, String uuid) {
+        getTmpFiles().put(uuid, doc);
     }
 
     /**
@@ -59,7 +57,7 @@ public class FCKEditorTmpFiles {
      * @param request
      * @param uuid
      */
-    public static void removeDocument(HttpServletRequest request, String uuid) {
+    public static void removeDocument(String uuid) {
 
     }
 
@@ -68,11 +66,11 @@ public class FCKEditorTmpFiles {
      * @param request
      * @return the map
      */
-    private static Map getTmpFiles(HttpServletRequest request) {
-        Map fckTmpFiles = (Map) request.getSession().getAttribute(ATTRIBUTE_FCK_TEMPFILES);
+    private static Map getTmpFiles() {
+        Map fckTmpFiles = (Map) MgnlContext.getAttribute(ATTRIBUTE_FCK_TEMPFILES, MgnlContext.SESSION_SCOPE);
         if (fckTmpFiles == null) {
             fckTmpFiles = new HashMap();
-            request.getSession().setAttribute(ATTRIBUTE_FCK_TEMPFILES, fckTmpFiles);
+            MgnlContext.setAttribute(ATTRIBUTE_FCK_TEMPFILES, fckTmpFiles, MgnlContext.SESSION_SCOPE);
         }
         return fckTmpFiles;
     }

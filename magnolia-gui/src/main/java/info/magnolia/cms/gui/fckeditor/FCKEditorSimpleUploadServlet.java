@@ -99,6 +99,7 @@ public class FCKEditorSimpleUploadServlet extends HttpServlet {
      * javascript command in it.
      */
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        super.doPost(request, response);
         response.setContentType("text/html; charset=UTF-8");
         response.setHeader("Cache-Control", "no-cache");
         PrintWriter out = response.getWriter();
@@ -132,7 +133,7 @@ public class FCKEditorSimpleUploadServlet extends HttpServlet {
                     + doc.getFile().getName()), doc.getType());
 
                 // save it to the session
-                FCKEditorTmpFiles.addDocument(request, doc, uuid);
+                FCKEditorTmpFiles.addDocument(doc, uuid);
 
                 // make the temporary url ready for the editor
                 fileUrl = request.getContextPath() + "/tmp/fckeditor/" + uuid + "/" + doc.getFile().getName();
