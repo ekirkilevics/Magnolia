@@ -83,10 +83,10 @@ public abstract class FlowAdminTreeMVCHandler extends AdminTreeMVCHandler {
 			
 			// Alert the user using a javascript notification
 			String message = "Your request has been dispatched, please wait for approval";
-			AlertUtil.setMessage(message,request);
+			AlertUtil.setMessage(message);
 		} catch (Exception e) {
 			log.error("can't launch activate flow", e);
-			AlertUtil.setMessage(AlertUtil.getExceptionMessage(e), request);
+			AlertUtil.setMessage(AlertUtil.getExceptionMessage(e));
 		}
 		return VIEW_TREE;
 	}
