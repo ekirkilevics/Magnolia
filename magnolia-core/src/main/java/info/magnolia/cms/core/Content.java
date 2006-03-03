@@ -13,6 +13,7 @@
 package info.magnolia.cms.core;
 
 import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Authenticator;
@@ -506,6 +507,20 @@ public class Content extends ContentHandler implements Cloneable {
      * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
      * operation
      * @throws RepositoryException if an error occurs
+     */
+    public void updateMetaData() throws RepositoryException, AccessDeniedException {
+        MetaData md = this.getMetaData();
+        md.setModificationDate();
+        md.setAuthorId(MgnlContext.getUser().getName());
+        md = null;
+    }
+
+    /**
+     * you could call this method anytime to update working page properties - Modification date & Author ID
+     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
+     * operation
+     * @throws RepositoryException if an error occurs
+     * @deprecated use the the method without a request object passed
      */
     public void updateMetaData(HttpServletRequest request) throws RepositoryException, AccessDeniedException {
         MetaData md = this.getMetaData();
