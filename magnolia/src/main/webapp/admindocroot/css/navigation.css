@@ -24,7 +24,7 @@ table.mgnlNavigation1Active {
     height: 30px;
     width: 100%;
     background-color: #ADCADF;
-    background-image: url(../controls/navigation/mgnlNavigationBgActive.gif);
+    background-image: url(../../.resources/controls/navigation/mgnlNavigationBgActive.gif);
     background-repeat: repeat-x;
     cursor: pointer;
 }
@@ -32,7 +32,7 @@ table.mgnlNavigation1Hover {
     height: 30px;
     width: 100%;
     background-color: #C4D9E8;
-    background-image: url(../controls/navigation/mgnlNavigationBgHover.gif);
+    background-image: url(../../.resources/controls/navigation/mgnlNavigationBgHover.gif);
     background-repeat: repeat-x;
     cursor: pointer;
 }
@@ -40,7 +40,7 @@ table.mgnlNavigation1Inactive {
     height: 30px;
     width: 100%;
     background-color: #CDE8A6;
-    background-image: url(../controls/navigation/mgnlNavigationBgInactive.gif);
+    background-image: url(../../.resources/controls/navigation/mgnlNavigationBgInactive.gif);
     background-repeat: repeat-x;
     cursor: pointer;
 }
@@ -48,7 +48,7 @@ table.mgnlNavigation2Active {
     height: 24px;
     width: 100%;
     background-color: #ADCADF;
-    background-image: url(../controls/navigation/mgnlNavigationBgActive.gif);
+    background-image: url(../../.resources/controls/navigation/mgnlNavigationBgActive.gif);
     background-repeat: repeat-x;
     cursor: pointer;
 }
@@ -56,7 +56,7 @@ table.mgnlNavigation2Hover {
     height: 24px;
     width: 100%;
     background-color: #C4D9E8;
-    background-image: url(../controls/navigation/mgnlNavigationBgHover.gif);
+    background-image: url(../../.resources/controls/navigation/mgnlNavigationBgHover.gif);
     background-repeat: repeat-x;
     cursor: pointer;
 }

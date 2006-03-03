@@ -33,7 +33,7 @@ classDef("mgnl.admininterface.Navigation", MgnlNavigation);
  * static variables
  */
 // path to the images
-MgnlNavigation.imagesPath = contextPath + "/admindocroot/controls/navigation/";
+MgnlNavigation.imagesPath = contextPath + "/.resources/controls/navigation/";
 
 // path to the expandable-icon on the left
 MgnlNavigation.openIcon = MgnlNavigation.imagesPath + 'mgnlNavigationArrow.gif';

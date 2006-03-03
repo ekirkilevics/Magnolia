@@ -55,10 +55,10 @@ import org.slf4j.LoggerFactory;
  */
 public class Tree extends ControlSuper {
 
-    public static final String DOCROOT = "/admindocroot/controls/tree/"; //$NON-NLS-1$
+    public static final String DOCROOT = "/.resources/controls/tree/"; //$NON-NLS-1$
 
     public static final String ICONDOCROOT = "/.resources/icons/16/"; //$NON-NLS-1$
-    
+
     public static final String ITEM_TYPE_NODEDATA = "mgnl:nodeData";
 
     public static final int ACTION_MOVE = 0;
@@ -141,7 +141,7 @@ public class Tree extends ControlSuper {
         this.setRepository(repository);
         this.setRequest(request);
         this.setMenu(new ContextMenu(this.getJavascriptTree()));
-        
+
         this.setHierarchyManager(MgnlContext.getHierarchyManager(this.getRepository()));
     }
 
@@ -455,7 +455,8 @@ public class Tree extends ControlSuper {
                 // now tmp: first template of list is taken...
                 if (this.getRepository().equals(ContentRepository.WEBSITE)
                     && itemType.equals(ItemType.CONTENT.getSystemName())) {
-                    Iterator templates = Template.getAvailableTemplates(MgnlContext.getAccessManager(ContentRepository.CONFIG));
+                    Iterator templates = Template.getAvailableTemplates(MgnlContext
+                        .getAccessManager(ContentRepository.CONFIG));
                     while (templates.hasNext()) {
                         Template template = (Template) templates.next();
                         newNode.getMetaData().setTemplate(template.getName());
@@ -591,74 +592,68 @@ public class Tree extends ControlSuper {
         return StringUtils.EMPTY;
     }
 
-    public String pasteNode(String pathOrigin, String pathSelected,
-			int pasteType, int action) throws ExchangeException,
-			RepositoryException {
-		boolean move = false;
-		if (action == ACTION_MOVE) {
-			move = true;
-		}
-		String label = StringUtils.substringAfterLast(pathOrigin, "/"); //$NON-NLS-1$
-		String slash = "/"; //$NON-NLS-1$
-		if (pathSelected.equals("/")) { //$NON-NLS-1$
-			slash = StringUtils.EMPTY;
-		}
-		String destination = pathSelected + slash + label;
-		if (pasteType == PASTETYPE_SUB && action != ACTION_COPY
-				&& destination.equals(pathOrigin)) {
-			// drag node to parent node: move to last position
-			pasteType = PASTETYPE_LAST;
-		}
-		if (pasteType == PASTETYPE_SUB) {
-			destination = pathSelected + slash + label;
-			Content touchedContent = this.copyMoveNode(pathOrigin, destination,
-					move);
-			if (touchedContent == null) {
-				return StringUtils.EMPTY;
-			}
-			return touchedContent.getHandle();
+    public String pasteNode(String pathOrigin, String pathSelected, int pasteType, int action)
+        throws ExchangeException, RepositoryException {
+        boolean move = false;
+        if (action == ACTION_MOVE) {
+            move = true;
+        }
+        String label = StringUtils.substringAfterLast(pathOrigin, "/"); //$NON-NLS-1$
+        String slash = "/"; //$NON-NLS-1$
+        if (pathSelected.equals("/")) { //$NON-NLS-1$
+            slash = StringUtils.EMPTY;
+        }
+        String destination = pathSelected + slash + label;
+        if (pasteType == PASTETYPE_SUB && action != ACTION_COPY && destination.equals(pathOrigin)) {
+            // drag node to parent node: move to last position
+            pasteType = PASTETYPE_LAST;
+        }
+        if (pasteType == PASTETYPE_SUB) {
+            destination = pathSelected + slash + label;
+            Content touchedContent = this.copyMoveNode(pathOrigin, destination, move);
+            if (touchedContent == null) {
+                return StringUtils.EMPTY;
+            }
+            return touchedContent.getHandle();
 
-		} else if (pasteType == PASTETYPE_LAST) {
-			// LAST only available for sorting inside the same directory
-			try {
-				Content touchedContent = getHierarchyManager().getContent(
-						pathOrigin);
-				return touchedContent.getHandle();
-			} catch (RepositoryException re) {
-				return StringUtils.EMPTY;
-			}
-		} else {
-			try {
-				// PASTETYPE_ABOVE | PASTETYPE_BELOW
-				String nameSelected = StringUtils.substringAfterLast(
-						pathSelected, "/"); //$NON-NLS-1$
-				String nameOrigin = StringUtils.substringAfterLast(pathOrigin,
-						"/"); //$NON-NLS-1$
-				Content tomove = getHierarchyManager().getContent(pathOrigin);
-				Content selected = getHierarchyManager().getContent(
-						pathSelected);
-				if (tomove.getParent().getUUID().equals(
-						selected.getParent().getUUID())) {
-					tomove.getParent().orderBefore(nameOrigin, nameSelected);
-					tomove.getParent().save();
-				} else {
-					String newOrigin = selected.getParent().getHandle() + "/"
-							+ nameOrigin;
-					getHierarchyManager().moveTo(pathOrigin, newOrigin);
-					Content newNode = getHierarchyManager().getContent(
-							newOrigin);
-					if (pasteType == PASTETYPE_ABOVE)
-						newNode.getParent().orderBefore(nameOrigin,
-								nameSelected);
-				}
-				return tomove.getHandle();
-			} catch (RepositoryException re) {
-				re.printStackTrace();
-				log.error("Problem when pasting node", re);
-				return StringUtils.EMPTY;
-			}
-		}
-	}
+        }
+        else if (pasteType == PASTETYPE_LAST) {
+            // LAST only available for sorting inside the same directory
+            try {
+                Content touchedContent = getHierarchyManager().getContent(pathOrigin);
+                return touchedContent.getHandle();
+            }
+            catch (RepositoryException re) {
+                return StringUtils.EMPTY;
+            }
+        }
+        else {
+            try {
+                // PASTETYPE_ABOVE | PASTETYPE_BELOW
+                String nameSelected = StringUtils.substringAfterLast(pathSelected, "/"); //$NON-NLS-1$
+                String nameOrigin = StringUtils.substringAfterLast(pathOrigin, "/"); //$NON-NLS-1$
+                Content tomove = getHierarchyManager().getContent(pathOrigin);
+                Content selected = getHierarchyManager().getContent(pathSelected);
+                if (tomove.getParent().getUUID().equals(selected.getParent().getUUID())) {
+                    tomove.getParent().orderBefore(nameOrigin, nameSelected);
+                    tomove.getParent().save();
+                }
+                else {
+                    String newOrigin = selected.getParent().getHandle() + "/" + nameOrigin;
+                    getHierarchyManager().moveTo(pathOrigin, newOrigin);
+                    Content newNode = getHierarchyManager().getContent(newOrigin);
+                    if (pasteType == PASTETYPE_ABOVE)
+                        newNode.getParent().orderBefore(nameOrigin, nameSelected);
+                }
+                return tomove.getHandle();
+            }
+            catch (RepositoryException re) {
+                re.printStackTrace();
+                log.error("Problem when pasting node", re);
+                return StringUtils.EMPTY;
+            }
+        }
+    }
 
     public Content copyMoveNode(String source, String destination, boolean move) throws ExchangeException,
         RepositoryException {
@@ -799,8 +794,8 @@ public class Tree extends ControlSuper {
         }
 
         Syndicator syndicator = (Syndicator) FactoryUtil.getInstance(Syndicator.class);
-        syndicator.init(MgnlContext.getUser(), this.getRepository(), ContentRepository
-            .getDefaultWorkspace(this.getRepository()), rule);
+        syndicator.init(MgnlContext.getUser(), this.getRepository(), ContentRepository.getDefaultWorkspace(this
+            .getRepository()), rule);
 
         return syndicator;
     }
@@ -825,8 +820,8 @@ public class Tree extends ControlSuper {
         rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
         rule.addAllowType(ItemType.NT_FILE);
         Syndicator syndicator = (Syndicator) FactoryUtil.getInstance(Syndicator.class);
-        syndicator.init(MgnlContext.getUser(), this.getRepository(), ContentRepository
-            .getDefaultWorkspace(this.getRepository()), rule);
+        syndicator.init(MgnlContext.getUser(), this.getRepository(), ContentRepository.getDefaultWorkspace(this
+            .getRepository()), rule);
         return syndicator;
     }
 
@@ -844,7 +839,7 @@ public class Tree extends ControlSuper {
     }
 
     public String getHtmlHeader() {
-        
+
         StringBuffer str = new StringBuffer();
         try {
             Map params = populateTemplateParameters();
@@ -860,18 +855,18 @@ public class Tree extends ControlSuper {
     public String getHtmlFooter() {
         StringBuffer html = new StringBuffer();
         html.append("</div>"); //$NON-NLS-1$
-        
+
         Map params = populateTemplateParameters();
-        
+
         // include the tree footer / menu divs
         html.append(FreeMarkerUtil.process("info/magnolia/cms/gui/control/TreeFooter.html", params));
 
         // include the Footer Bar
-        if(!this.isBrowseMode()){
+        if (!this.isBrowseMode()) {
             html.append(FreeMarkerUtil.process("info/magnolia/cms/gui/control/FunctionsBar.html", params));
         }
         // include the Address bar
-        else{
+        else {
             html.append(FreeMarkerUtil.process("info/magnolia/cms/gui/control/TreeAddressBar.html", params));
         }
         html.append(FreeMarkerUtil.process("info/magnolia/cms/gui/control/TreeJavascript.html", params));
@@ -903,7 +898,7 @@ public class Tree extends ControlSuper {
         params.put("columns", this.getColumns());
         params.put("menu", this.getMenu());
         params.put("treeCssClass", "mgnlTreeDiv");
-        if(this.isBrowseMode()){
+        if (this.isBrowseMode()) {
             params.put("treeCssClass", "mgnlTreeBrowseModeDiv mgnlTreeDiv");
         }
         return params;
