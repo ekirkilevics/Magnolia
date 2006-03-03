@@ -14,6 +14,7 @@ String referer = contextPath + Path.getURI(request);
 <head>
     <title>Magnolia Login Form</title>
     <link rel="STYLESHEET" type="text/css" href="${pageContext.request.contextPath}/admindocroot/loginForm/login.css" />
+    <link rel="shortcut icon" href="${pageContext.request.contextPath}/.resources/admin-images/favicon.ico" type="image/x-icon" />
     <script src="${pageContext.request.contextPath}/admindocroot/loginForm/md5.js" type="text/javascript"></script>
     <script type="text/javascript">
         function submit() {
@@ -26,28 +27,28 @@ String referer = contextPath + Path.getURI(request);
             // SUBMIT FORM
             document.loginForm.submit();
         }
-        
+
         // methods copied from magnolia admin central (here not accessible)
         function mgnlIsKeyEnter(event){
-            if (window.event && window.event.keyCode == 13) 
+            if (window.event && window.event.keyCode == 13)
                 return true;
-            else if 
+            else if
                 (navigator.appName=="Netscape" && event.which==13) return true;
-            else 
+            else
                 return false;
         }
-        
+
         document.onkeypress = function(e){
             if(mgnlIsKeyEnter(e)){
                 submit();
             }
         }
-        
+
         onload = function(){
             document.loginForm.username.focus();
         }
 
-        
+
 </script>
 </head>
 

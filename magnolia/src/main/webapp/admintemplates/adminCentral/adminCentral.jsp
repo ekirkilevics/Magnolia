@@ -42,7 +42,7 @@
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
             <title><fmt:message key="central.title" /></title>
 
-            <link rel="shortcut icon" href="${pageContext.request.contextPath}/admindocroot/favicon.ico" type="image/x-icon" />
+            <link rel="shortcut icon" href="${pageContext.request.contextPath}/.resources/admin-images/favicon.ico" type="image/x-icon" />
             <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/admindocroot/css/admin-all.css"/>
 
         <!--  keep the old javascripts -->
