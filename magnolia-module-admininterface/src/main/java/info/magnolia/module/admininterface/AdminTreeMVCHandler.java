@@ -211,7 +211,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
             log.error("can't copy", e);
             AlertUtil.setMessage(MessagesManager.get("tree.error.copy")
                 + " "
-                + AlertUtil.getExceptionMessage(e), request);
+                + AlertUtil.getExceptionMessage(e));
         }
         return VIEW_COPY_MOVE;
     }
@@ -229,7 +229,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
             log.error("can't move", e);
             AlertUtil.setMessage(MessagesManager.get("tree.error.move")
                 + " "
-                + AlertUtil.getExceptionMessage(e), request);
+                + AlertUtil.getExceptionMessage(e));
         }
         return VIEW_COPY_MOVE;
 
@@ -267,7 +267,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
             log.error("can't delete", e);
             AlertUtil.setMessage(MessagesManager.get("tree.error.delete")
                 + " "
-                + AlertUtil.getExceptionMessage(e), request);
+                + AlertUtil.getExceptionMessage(e));
         }
         return VIEW_TREE;
     }
@@ -282,7 +282,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
             log.error("can't activate", e);
             AlertUtil.setMessage(MessagesManager.get("tree.error.activate")
                 + " "
-                + AlertUtil.getExceptionMessage(e), request);
+                + AlertUtil.getExceptionMessage(e));
         }
         return VIEW_TREE;
     }
@@ -295,7 +295,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
             log.error("can't deactivate", e);
             AlertUtil.setMessage(MessagesManager.get("tree.error.deactivate")
                 + " "
-                + AlertUtil.getExceptionMessage(e), request);
+                + AlertUtil.getExceptionMessage(e));
         }
         return VIEW_TREE;
     }
@@ -374,7 +374,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
             log.error("can't rename", e);
             AlertUtil.setMessage(MessagesManager.get("tree.error.rename")
                 + " "
-                + AlertUtil.getExceptionMessage(e), request);
+                + AlertUtil.getExceptionMessage(e));
         }
         return StringUtils.EMPTY;
     }
@@ -388,8 +388,8 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         StringBuffer html = new StringBuffer(500);
 
         // an alert can happen if there were deactivation problems during a renaming
-        if (AlertUtil.isMessageSet(request)) {
-            html.append("<input type=\"hidden\" id=\"mgnlMessage\" value=\"" + AlertUtil.getMessage(request) + "\" />"); //$NON-NLS-1$ //$NON-NLS-2$
+        if (AlertUtil.isMessageSet()) {
+            html.append("<input type=\"hidden\" id=\"mgnlMessage\" value=\"" + AlertUtil.getMessage() + "\" />"); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         if (VIEW_TREE.equals(view) || VIEW_CREATE.equals(view) || VIEW_COPY_MOVE.equals(view)) {
