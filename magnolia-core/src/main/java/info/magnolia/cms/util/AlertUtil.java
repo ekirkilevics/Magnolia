@@ -12,7 +12,7 @@
  */
 package info.magnolia.cms.util;
 
-import javax.servlet.http.HttpServletRequest;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -41,9 +41,9 @@ public class AlertUtil {
      * @param msg
      * @param request
      */
-    public static void setMessage(String msg, HttpServletRequest request) {
-        if (!isMessageSet(request)) {
-            request.setAttribute(MESSAGE_ATTRIBUTE, msg);
+    public static void setMessage(String msg) {
+        if (!isMessageSet()) {
+            MgnlContext.setAttribute(MESSAGE_ATTRIBUTE, msg);
         }
     }
 
@@ -52,8 +52,8 @@ public class AlertUtil {
      * @param request
      * @return true if set
      */
-    public static boolean isMessageSet(HttpServletRequest request) {
-        return StringUtils.isNotEmpty((String) request.getAttribute(MESSAGE_ATTRIBUTE));
+    public static boolean isMessageSet() {
+        return StringUtils.isNotEmpty((String) MgnlContext.getAttribute(MESSAGE_ATTRIBUTE));
     }
 
     /**
@@ -61,8 +61,8 @@ public class AlertUtil {
      * @param request
      * @return the message
      */
-    public static String getMessage(HttpServletRequest request) {
-        return (String) request.getAttribute(MESSAGE_ATTRIBUTE);
+    public static String getMessage() {
+        return (String) MgnlContext.getAttribute(MESSAGE_ATTRIBUTE);
     }
 
     /**
