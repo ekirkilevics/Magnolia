@@ -165,16 +165,17 @@ public class SimpleSyndicator implements Syndicator {
     private String basicCredentials;
 
     /**
-     * @param user
-     * @param repositoryName repository ID
-     * @param workspaceName workspace ID
-     * @param rule content filter rule
+     * 
      */
     public SimpleSyndicator(){
         
     }
     
     /**
+     * @param user
+     * @param repositoryName repository ID
+     * @param workspaceName workspace ID
+     * @param rule content filter rule
      * @see info.magnolia.cms.exchange.Syndicator#init(info.magnolia.cms.security.User, java.lang.String, java.lang.String, info.magnolia.cms.util.Rule)
      */
     public void init(User user, String repositoryName, String workspaceName, Rule rule){
