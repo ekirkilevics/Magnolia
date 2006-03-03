@@ -57,7 +57,7 @@ public class Tree extends ControlSuper {
 
     public static final String DOCROOT = "/admindocroot/controls/tree/"; //$NON-NLS-1$
 
-    public static final String ICONDOCROOT = "/admindocroot/icons/16/"; //$NON-NLS-1$
+    public static final String ICONDOCROOT = "/.resources/icons/16/"; //$NON-NLS-1$
     
     public static final String ITEM_TYPE_NODEDATA = "mgnl:nodeData";
 

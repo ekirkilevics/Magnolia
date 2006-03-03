@@ -9,7 +9,7 @@
  *       mgnlNavigation = new MgnlNavigation ();
  *
  *   add a node:
- *       mgnlNavigation.addNode ('node1', 'Website', 'alert (\'blau\');', './admindocroot/icons/24/earth.gif');
+ *       mgnlNavigation.addNode ('node1', 'Website', 'alert (\'blau\');', './.resources/icons/24/earth.gif');
  *           Parameters for addNode:
  *             id:     the nodes id (must be unique!)
  *             title:  the txt to display
@@ -17,7 +17,7 @@
  *             icon:   path to the icon shown on the left
  *
  *   add a subnode:
- *       mgnlNavigation.getNode ('node1').addNode ('node11', 'Test', '', './admindocroot/icons/16/folder.gif');
+ *       mgnlNavigation.getNode ('node1').addNode ('node11', 'Test', '', './.resources/icons/16/folder.gif');
  *
  *   to activate a node from wherever (without a user's click) without triggering its action:
  *       mgnlNavigation.activate ('node2346');

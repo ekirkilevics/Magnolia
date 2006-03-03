@@ -74,7 +74,7 @@ public void register(String moduleName, String version, Content moduleNode, JarF
 ######################
 
 modules.adminInterface.Config.menu.dms.label = DMS
-modules.adminInterface.Config.menu.dms.icon = /admindocroot/icons/24/folders.gif
+modules.adminInterface.Config.menu.dms.icon = /.resources/icons/24/folders.gif
 modules.adminInterface.Config.menu.dms.onclick = mgnlAdminCentralSwitchExtractTree('dms');
 
 ######################

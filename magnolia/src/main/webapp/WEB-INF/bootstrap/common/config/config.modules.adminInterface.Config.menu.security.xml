@@ -20,7 +20,7 @@
     <sv:value>true</sv:value>
   </sv:property>
   <sv:property sv:name="icon" sv:type="String">
-    <sv:value>/admindocroot/icons/24/lock2.gif</sv:value>
+    <sv:value>/.resources/icons/24/lock2.gif</sv:value>
   </sv:property>
   <sv:property sv:name="label" sv:type="String">
     <sv:value>menu.security</sv:value>
@@ -71,7 +71,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/icons/16/pawn_glass_yellow.gif</sv:value>
+      <sv:value>/.resources/icons/16/pawn_glass_yellow.gif</sv:value>
     </sv:property>
     <sv:property sv:name="onclick" sv:type="String">
       <sv:value>MgnlAdminCentral.showTree('users')</sv:value>
@@ -129,7 +129,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/icons/16/hat_white.gif</sv:value>
+      <sv:value>/.resources/icons/16/hat_white.gif</sv:value>
     </sv:property>
     <sv:property sv:name="onclick" sv:type="String">
       <sv:value>MgnlAdminCentral.showTree('userroles')</sv:value>
@@ -187,7 +187,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/admindocroot/icons/24/groups.jpg</sv:value>
+      <sv:value>/.resources/icons/24/groups.jpg</sv:value>
     </sv:property>
     <sv:property sv:name="onclick" sv:type="String">
       <sv:value>MgnlAdminCentral.showTree('groups')</sv:value>

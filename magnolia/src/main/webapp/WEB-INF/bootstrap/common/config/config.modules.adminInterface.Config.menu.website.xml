@@ -20,7 +20,7 @@
     <sv:value>true</sv:value>
   </sv:property>
   <sv:property sv:name="icon" sv:type="String">
-    <sv:value>/admindocroot/icons/24/earth.gif</sv:value>
+    <sv:value>/.resources/icons/24/earth.gif</sv:value>
   </sv:property>
   <sv:property sv:name="onclick" sv:type="String">
     <sv:value>MgnlAdminCentral.showTree('website')</sv:value>

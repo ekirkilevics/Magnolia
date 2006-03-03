@@ -18,7 +18,7 @@ package info.magnolia.cms.gui.misc;
  */
 public class Icon {
 
-    public static final String BASEPATH = "/admindocroot/icons"; //$NON-NLS-1$
+    public static final String BASEPATH = "/.resources/icons"; //$NON-NLS-1$
 
     public static final int SIZE_SMALL = 16;
 

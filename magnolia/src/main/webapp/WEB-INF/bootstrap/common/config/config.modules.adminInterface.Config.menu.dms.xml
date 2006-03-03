@@ -20,7 +20,7 @@
     <sv:value>true</sv:value>
   </sv:property>
   <sv:property sv:name="icon" sv:type="String">
-    <sv:value>/admindocroot/icons/24/folders.gif</sv:value>
+    <sv:value>/.resources/icons/24/folders.gif</sv:value>
   </sv:property>
   <sv:property sv:name="onclick" sv:type="String">
     <sv:value>MgnlAdminCentral.showContent('http://www.magnolia.info/en/magnolia/products/document-management-system/admincentral-info.html')</sv:value>
