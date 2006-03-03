@@ -5,7 +5,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.gui.control.Save;
 import info.magnolia.cms.gui.dialog.DialogButton;
 import info.magnolia.cms.gui.dialog.DialogDialog;
 import info.magnolia.cms.gui.dialog.DialogEdit;
@@ -13,6 +12,7 @@ import info.magnolia.cms.gui.dialog.DialogFactory;
 import info.magnolia.cms.gui.dialog.DialogInclude;
 import info.magnolia.cms.gui.dialog.DialogStatic;
 import info.magnolia.cms.gui.dialog.DialogTab;
+import info.magnolia.module.admininterface.SaveHandler;
 
 import java.util.Iterator;
 
@@ -120,13 +120,15 @@ public class GroupEditDialog extends ConfiguredDialog {
         return dialog;
     }
 
-    protected Save onPreSave() {
-        Save control = super.onPreSave();
-        control.setPath(path);
-        return control;
+    /**
+     * @see info.magnolia.module.admininterface.DialogMVCHandler#configureSaveHandler(info.magnolia.module.admininterface.SaveHandler)
+     */
+    protected void configureSaveHandler(SaveHandler save) {
+        super.configureSaveHandler(save);
+        save.setPath(path);
     }
 
-    protected void onPostSave(Save saveControl) {
+    protected void onPostSave(SaveHandler saveControl) {
         Content group = this.getStorageNode();
 
         // ######################
