@@ -17,12 +17,13 @@ import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.gui.control.Save;
 import info.magnolia.cms.gui.dialog.DialogDialog;
 import info.magnolia.cms.gui.dialog.DialogFactory;
+import info.magnolia.cms.gui.dialog.DialogSuper;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.servlets.MVCServletHandlerImpl;
+import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.RequestFormUtil;
 import info.magnolia.cms.util.Resource;
 
@@ -103,6 +104,8 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
 
     protected Content storageNode;
 
+    private SaveHandler save;
+
     /**
      * Initialize the used parameters: path, nodeCollectionName, nodeName, ..
      * @param request
@@ -180,22 +183,47 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
      * @return close view name
      */
     public String save() {
-        Save control = onPreSave();
+        SaveHandler control = getSaveHandler(); 
+        onPreSave(control);
         onSave(control);
         onPostSave(control);
+        removeSessionAttributes();
         return VIEW_CLOSE_WINDOW;
     }
 
-    protected Save onPreSave() {
-        Save save = new Save(form, request);
-        return save;
+    /**
+     * Returns the save handler used by this dialog handler.
+     * @return the handler
+     */
+    protected SaveHandler getSaveHandler() {
+        if(this.save == null){
+            this.save = (SaveHandler) FactoryUtil.getInstance(SaveHandler.class);
+            configureSaveHandler(this.save);
+        }
+        return this.save;
+    }
+    
+    /**
+     * Configure the save control
+     */
+    protected void configureSaveHandler(SaveHandler save) {
+        save.init(form);
+        
+        save.setPath(form.getParameter("mgnlPath")); //$NON-NLS-1$
+        save.setNodeCollectionName(form.getParameter("mgnlNodeCollection")); //$NON-NLS-1$
+        save.setNodeName(form.getParameter("mgnlNode")); //$NON-NLS-1$
+        save.setParagraph(form.getParameter("mgnlParagraph")); //$NON-NLS-1$
+        save.setRepository(form.getParameter("mgnlRepository")); //$NON-NLS-1$
     }
 
-    protected void onSave(Save control) {
+    protected void onPreSave(SaveHandler control) {
+    }
+
+    protected void onSave(SaveHandler control) {
         control.save();
     }
 
-    protected void onPostSave(Save control) {
+    protected void onPostSave(SaveHandler control) {
     }
 
     /**
@@ -271,5 +299,14 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
      */
     public String getRepository() {
         return ContentRepository.WEBSITE;
+    }
+
+    public void removeSessionAttributes() {
+        String[] toRemove = form.getParameterValues(DialogSuper.SESSION_ATTRIBUTENAME_DIALOGOBJECT_REMOVE);
+        if (toRemove != null) {
+            for (int i = 0; i < toRemove.length; i++) {
+                request.getSession().removeAttribute(toRemove[i]);
+            }
+        }
     }
 }
