@@ -15,7 +15,6 @@ package info.magnolia.cms.beans.runtime;
 import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Authenticator;
@@ -80,7 +79,7 @@ public class WebContextImpl extends ContextImpl implements WebContext{
      */
     public void setLocale(Locale locale) {
         super.setLocale(locale);
-        this.setAttribute(Config.FMT_LOCALE + ".session", locale.getLanguage(), Context.SESSION_SCOPE); //$NON-NLS-1$
+        this.setAttribute(Config.FMT_LOCALE + ".session", locale.getLanguage(), MgnlContext.SESSION_SCOPE); //$NON-NLS-1$
     }
     
     /**
@@ -165,33 +164,18 @@ public class WebContextImpl extends ContextImpl implements WebContext{
      * Set attribute value, scope of the attribute is defined
      * @param name is used as a key
      * @param value
-     */
-    public void setAttribute(String name, Object value) {
-        this.request.setAttribute(name, value);
-    }
-
-    /**
-     * Set attribute value, scope of the attribute is defined
-     * @param name is used as a key
-     * @param value
      * @param scope , highest level of scope from which this attribute is visible
      */
     public void setAttribute(String name, Object value, int scope) {
         switch (scope) {
-            case REQUEST_SCOPE:
+            case MgnlContext.REQUEST_SCOPE:
                 this.request.setAttribute(name, value);
                 break;
-            case SESSION_SCOPE:
+            case MgnlContext.SESSION_SCOPE:
                 this.request.getSession().setAttribute(name, value);
                 break;
-            case APPLICATION_SCOPE:
-                try {
-                    String stringValue = (String) value;
-                    SystemProperty.setProperty(name, stringValue);
-                }
-                catch (ClassCastException e) {
-                    log.error("setAttribute only supports string values in application scope");
-                }
+            case MgnlContext.APPLICATION_SCOPE:
+                MgnlContext.getSystemContext().setAttribute(name, value, MgnlContext.APPLICATION_SCOPE);
                 break;
             default:
                 this.request.setAttribute(name, value);
@@ -206,12 +190,18 @@ public class WebContextImpl extends ContextImpl implements WebContext{
      * @param name to which value is associated to
      * @return attribute value
      */
-    public Object getAttribute(String name) {
-        Object value = this.request.getAttribute(name);
-        if (null == value) {
-            value = this.request.getSession().getAttribute(name);
+    public Object getAttribute(String name, int scope) {
+        switch (scope) {
+            case MgnlContext.REQUEST_SCOPE:
+                return this.request.getAttribute(name);
+            case MgnlContext.SESSION_SCOPE:
+                return this.request.getAttribute(name);
+            case MgnlContext.APPLICATION_SCOPE:
+                return MgnlContext.getSystemContext().getAttribute(name, MgnlContext.APPLICATION_SCOPE);
+            default:
+                log.error("no illegal scope passed");
+                return null;
         }
-        return value;
     }
 
     

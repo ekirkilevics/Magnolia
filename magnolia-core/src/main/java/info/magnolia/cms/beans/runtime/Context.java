@@ -30,21 +30,6 @@ import java.util.Locale;
 public interface Context {
 
     /**
-     * Attribute visibility scope
-     */
-    public static final int REQUEST_SCOPE = 1;
-
-    /**
-     * Attribute visibility scope Shared by all requests from this session
-     */
-    public static final int SESSION_SCOPE = 2;
-
-    /**
-     * Attribute visibility scope, its visible to all sessions of this application
-     */
-    public static final int APPLICATION_SCOPE = 3;
-
-    /**
      * Set user instance for this context
      * @param user
      */
@@ -117,13 +102,6 @@ public interface Context {
      * Set attribute value, scope of the attribute is defined
      * @param name is used as a key
      * @param value
-     */
-    public void setAttribute(String name, Object value);
-
-    /**
-     * Set attribute value, scope of the attribute is defined
-     * @param name is used as a key
-     * @param value
      * @param scope , highest level of scope from which this attribute is visible
      */
     public void setAttribute(String name, Object value, int scope);
@@ -131,9 +109,10 @@ public interface Context {
     /**
      * Get attribute value
      * @param name to which value is associated to
+     * @param scope the scope (request, session, application)
      * @return attribute value
      */
-    public Object getAttribute(String name);
+    public Object getAttribute(String name, int scope);
 
     /**
      * Get the default messages. It uses the locale set on this context

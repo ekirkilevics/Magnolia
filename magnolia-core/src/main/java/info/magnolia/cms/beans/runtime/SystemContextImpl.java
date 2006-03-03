@@ -38,9 +38,9 @@ public class SystemContextImpl extends ContextImpl implements SystemContext {
      * Init the scopes
      */
     public SystemContextImpl() {
-        scopes.put(new Integer(Context.REQUEST_SCOPE), new HashMap());
-        scopes.put(new Integer(Context.SESSION_SCOPE), new HashMap());
-        scopes.put(new Integer(Context.APPLICATION_SCOPE), new HashMap());
+        scopes.put(new Integer(MgnlContext.REQUEST_SCOPE), new HashMap());
+        scopes.put(new Integer(MgnlContext.SESSION_SCOPE), new HashMap());
+        scopes.put(new Integer(MgnlContext.APPLICATION_SCOPE), new HashMap());
     }
 
     public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
@@ -56,7 +56,7 @@ public class SystemContextImpl extends ContextImpl implements SystemContext {
     }
 
     public void setAttribute(String name, Object value) {
-        this.setAttribute(name, value, Context.REQUEST_SCOPE);
+        this.setAttribute(name, value, MgnlContext.REQUEST_SCOPE);
     }
 
     public void setAttribute(String name, Object value, int scope) {
@@ -67,15 +67,7 @@ public class SystemContextImpl extends ContextImpl implements SystemContext {
         return (Map) scopes.get(new Integer(scope));
     }
 
-    public Object getAttribute(String name) {
-        Object val = null;
-        val = getScope(Context.REQUEST_SCOPE).get(name);
-        if(val == null){
-            val = getScope(Context.SESSION_SCOPE).get(name);
-            if(val == null){
-                val = getScope(Context.SESSION_SCOPE).get(name);
-            }
-        }
-        return val;
+    public Object getAttribute(String name, int scope) {
+        return getScope(scope).get(name);
     }
 }
