@@ -12,10 +12,6 @@
  */
 package info.magnolia.cms.servlets;
 
-import info.magnolia.cms.beans.runtime.MgnlContext;
-import info.magnolia.cms.beans.runtime.WebContext;
-import info.magnolia.cms.util.FactoryUtil;
-
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -36,7 +32,7 @@ import org.slf4j.LoggerFactory;
  * @author Philipp Bracher
  * @version $Id$
  */
-public abstract class MVCServlet extends HttpServlet {
+public abstract class MVCServlet extends ContextSensitiveServlet {
 
     /**
      * Stable serialVersionUID.
@@ -46,18 +42,19 @@ public abstract class MVCServlet extends HttpServlet {
     private static Logger log = LoggerFactory.getLogger(MVCServlet.class);
 
     /**
-     * @see HttpServlet#doPost(HttpServletRequest,HttpServletResponse)
+     * @see HttpServlet#doGet(HttpServletRequest,HttpServletResponse)
      */
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
         IOException {
-        doGet(request, response);
+        doPost(request, response);
     }
 
     /**
-     * @see HttpServlet#doGet(HttpServletRequest, HttpServletResponse)
+     * @see HttpServlet#doPost(HttpServletRequest, HttpServletResponse)
      */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        super.doPost(request, response);
+        
         // http://issues.apache.org/bugzilla/show_bug.cgi?id=22666
         //
         // 1. The Coyote HTTP/1.1 connector has a useBodyEncodingForURI attribute which
@@ -96,12 +93,6 @@ public abstract class MVCServlet extends HttpServlet {
 
         response.setContentType("text/html; charset=UTF-8"); //$NON-NLS-1$
         
-        // initialize the context
-        WebContext ctx = (WebContext) FactoryUtil.getInstance(WebContext.class);
-        ctx.init(request);
-        MgnlContext.setInstance(ctx);
-        
-
         MVCServletHandler handler = getHandler(request, response);
 
         if (handler == null) {

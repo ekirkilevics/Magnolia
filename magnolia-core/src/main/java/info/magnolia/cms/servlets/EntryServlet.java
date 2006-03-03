@@ -19,13 +19,11 @@ import info.magnolia.cms.beans.config.VirtualMap;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.Cache;
 import info.magnolia.cms.beans.runtime.MgnlContext;
-import info.magnolia.cms.beans.runtime.WebContext;
 import info.magnolia.cms.core.CacheHandler;
 import info.magnolia.cms.core.CacheProcess;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.util.FactoryUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,9 +36,9 @@ import java.util.Map;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -57,7 +55,7 @@ import org.slf4j.LoggerFactory;
  * @author Sameer Charles
  * @version 2.1
  */
-public class EntryServlet extends HttpServlet {
+public class EntryServlet extends ContextSensitiveServlet {
 
     /**
      * Request parameter: the INTERCEPT holds the name of an administrative action to perform.
@@ -106,9 +104,13 @@ public class EntryServlet extends HttpServlet {
      * @param req HttpServletRequest
      * @param res HttpServletResponse
      * @throws IOException can be thrown when the servlet is unable to write to the response stream
+     * @throws ServletException 
      */
-    public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
+    public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 
+        // Initialize magnolia context
+        super.doGet(req, res);
+        
         if (ConfigLoader.isBootstrapping()) {
             // @todo a nice page, with the log content...
             res.getWriter().write("Magnolia bootstrapping has failed, check bootstrap.log in magnolia/logs"); //$NON-NLS-1$
@@ -116,8 +118,6 @@ public class EntryServlet extends HttpServlet {
         }
 
         try {
-            // Initialize magnolia context
-            initializeContext(req);
             if (isAuthorized(req, res)) {
 
                 // allowCaching allows users to plug-in application specific logic
@@ -184,20 +184,10 @@ public class EntryServlet extends HttpServlet {
      * @param req HttpServletRequest
      * @param res HttpServletResponse
      * @throws IOException can be thrown when the servlet is unable to write to the response stream
+     * @throws ServletException 
      */
-    public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
+    public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
         doGet(req, res);
-    }
-
-    /**
-     * Initialize Magnolia context. It creates a context and initialize the user only if these do not exist yet. <b>Note</b>:
-     * the implementation may get changed
-     * @param request the current request
-     */
-    protected void initializeContext(HttpServletRequest request) {
-        WebContext ctx = (WebContext)FactoryUtil.getInstance(WebContext.class);
-        ctx.init(request);
-        MgnlContext.setInstance(ctx);
     }
 
     /**
