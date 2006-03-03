@@ -136,7 +136,7 @@
     <servlet-class>info.magnolia.cms.gui.fckeditor.FCKEditorSimpleUploadServlet</servlet-class>
     <init-param>
       <param-name>AllowedExtensionsFile</param-name>
-      <param-value></param-value>
+      <param-value />
     </init-param>
     <init-param>
       <param-name>DeniedExtensionsFile</param-name>
@@ -148,7 +148,7 @@
     </init-param>
     <init-param>
       <param-name>DeniedExtensionsImage</param-name>
-      <param-value></param-value>
+      <param-value />
     </init-param>
     <init-param>
       <param-name>AllowedExtensionsFlash</param-name>
@@ -156,7 +156,7 @@
     </init-param>
     <init-param>
       <param-name>DeniedExtensionsFlash</param-name>
-      <param-value></param-value>
+      <param-value />
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
@@ -272,5 +272,25 @@
     <error-code>400</error-code>
     <location>/admintemplates/error.jsp</location>
   </error-page>
+  <!--registered by Jackie-->
+  <servlet>
+    <servlet-name>FlowDef</servlet-name>
+    <servlet-class>info.magnolia.module.owfe.FlowDefServlet</servlet-class>
+  </servlet>
+  <!--registered by Jackie-->
+  <servlet-mapping>
+    <servlet-name>FlowDef</servlet-name>
+    <url-pattern>/FlowDef</url-pattern>
+  </servlet-mapping>
+  <!--registered by Jackie-->
+  <servlet>
+    <servlet-name>FlowDefUpload</servlet-name>
+    <servlet-class>info.magnolia.module.owfe.FlowDefUpload</servlet-class>
+  </servlet>
+  <!--registered by Jackie-->
+  <servlet-mapping>
+    <servlet-name>FlowDefUpload</servlet-name>
+    <url-pattern>/FlowDefUpload</url-pattern>
+  </servlet-mapping>
 </web-app>
 

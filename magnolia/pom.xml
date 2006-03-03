@@ -63,6 +63,11 @@
       <version>2.2-SNAPSHOT</version>
     </dependency>
     <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-editor-kupu</artifactId>
+      <version>2.2-SNAPSHOT</version>
+    </dependency>
+    <dependency>
       <groupId>getahead</groupId>
       <artifactId>dwr</artifactId>
     </dependency>
