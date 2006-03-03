@@ -302,7 +302,7 @@ public class AdminTreeConfig extends AdminTreeMVCHandler {
             log.error("can't activate", e);
             AlertUtil.setMessage(MessagesManager.get("tree.error.activate")
                 + " "
-                + AlertUtil.getExceptionMessage(e), request);
+                + AlertUtil.getExceptionMessage(e));
         }
 
         return VIEW_TREE;
