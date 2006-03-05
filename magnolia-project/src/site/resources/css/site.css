@@ -30,8 +30,8 @@ a,a:hover,a:visited,a:active {
     height: 100px;
 }
 
-#bannerLeft {
-    margin: 10px;
+#bannerLeft img{
+    margin: 10px 0 0 10px;
 }
 
 #leftColumn {
