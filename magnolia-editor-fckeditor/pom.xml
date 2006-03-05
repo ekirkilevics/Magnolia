@@ -10,4 +10,11 @@
   <artifactId>magnolia-editor-fckeditor</artifactId>
   <name>magnolia-editor-fckeditor</name>
   <packaging>jar</packaging>
+  <distributionManagement>
+    <site>
+      <id>magnolia</id>
+      <name>magnolia</name>
+      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/22/magnolia-editor-fckeditor</url>
+    </site>
+  </distributionManagement>
 </project>

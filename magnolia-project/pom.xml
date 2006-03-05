@@ -24,7 +24,7 @@
     <site>
       <id>magnolia</id>
       <name>magnolia</name>
-      <url>scpexe://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/22</url>
+      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/22</url>
     </site>
     <downloadUrl>http://prdownloads.sourceforge.net/magnolia</downloadUrl>
     <repository>

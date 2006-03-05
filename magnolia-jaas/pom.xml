@@ -42,4 +42,11 @@
       <artifactId>commons-lang</artifactId>
     </dependency>
   </dependencies>
+  <distributionManagement>
+    <site>
+      <id>magnolia</id>
+      <name>magnolia</name>
+      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/22/magnolia-jaas</url>
+    </site>
+  </distributionManagement>
 </project>

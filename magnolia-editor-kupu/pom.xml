@@ -10,4 +10,11 @@
   <artifactId>magnolia-editor-kupu</artifactId>
   <name>magnolia-editor-kupu</name>
   <packaging>jar</packaging>
+  <distributionManagement>
+    <site>
+      <id>magnolia</id>
+      <name>magnolia</name>
+      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/22/magnolia-editor-kupu</url>
+    </site>
+  </distributionManagement>
 </project>

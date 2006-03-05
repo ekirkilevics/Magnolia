@@ -102,6 +102,15 @@
         <item name="Source Xref" href="/magnolia-core/jxr.html" />
         <item name="JDepend Report" href="/magnolia-core/jdepend-report.html" />
       </item>
+      <item name="workflow" href="/magnolia-module-openwfe/index.html" collapse="true">
+        <item name="Overview" href="/magnolia-module-openwfe/overview.html" />
+        <item name="OpenWFE Integration" href="/magnolia-module-openwfe/integration_openWFE.html" />
+        <item name="Magnolia Integration" href="/magnolia-module-openwfe/integration_magnolia.html" />
+        <item name="Workflow API" href="/magnolia-module-openwfe/api.html" />
+        <item name="Test Cases" href="/magnolia-module-openwfe/test.html" />
+        <item name="Timeframe" href="/magnolia-module-openwfe/timeframe.html" />
+        <item name="About" href="/magnolia-module-openwfe/about.html" />
+      </item>
       <item name="exhange-simple" href="/magnolia-exchange-simple/index.html" collapse="true">
         <item name="Dependencies" href="/magnolia-exchange-simple/dependencies.html" />
         <item name="Javadoc" href="/magnolia-exchange-simple/apidocs/index.html" />
