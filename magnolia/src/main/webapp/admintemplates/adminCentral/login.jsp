@@ -13,9 +13,9 @@ String referer = contextPath + Path.getURI(request);
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
     <title>Magnolia Login Form</title>
-    <link rel="STYLESHEET" type="text/css" href="${pageContext.request.contextPath}/admindocroot/loginForm/login.css" />
-    <link rel="shortcut icon" href="${pageContext.request.contextPath}/.resources/admin-images/favicon.ico" type="image/x-icon" />
-    <script src="${pageContext.request.contextPath}/admindocroot/loginForm/md5.js" type="text/javascript"></script>
+    <link rel="STYLESHEET" type="text/css" href="${pageContext.request.contextPath}/.resources/loginForm/login.css" />
+    <link rel="shortcut icon" href="${pageContext.request.contextPath}/.resources/loginForm/favicon.ico" type="image/x-icon" />
+    <script src="${pageContext.request.contextPath}/.resources/loginForm/md5.js" type="text/javascript"></script>
     <script type="text/javascript">
         function submit() {
             // crypt
@@ -25,7 +25,7 @@ String referer = contextPath + Path.getURI(request);
             // BLANK OUT PASSWORD
             ///document.loginForm.password.value = "";
             // SUBMIT FORM
-            document.loginForm.submit();
+            return true;
         }
 
         // methods copied from magnolia admin central (here not accessible)
@@ -55,11 +55,11 @@ String referer = contextPath + Path.getURI(request);
 <body>
 
 <div id="frame">
-    <div id="logo"><img src="${pageContext.request.contextPath}/admindocroot/loginForm/logo.gif" width="271" height="51" title="magnolia Content Management Suite" alt="magnolia Content Management Suite" /></div>
+    <div id="logo"><img src="${pageContext.request.contextPath}/.resources/loginForm/logo.gif" width="271" height="51" title="magnolia Content Management Suite" alt="magnolia Content Management Suite" /></div>
 
     <div id="form">
         <div class="form">
-        <form name="loginForm" action="<%= referer %>" method="post">
+        <form name="loginForm" action="<%= referer %>" method="post" onsubmit="return submit()">
             <label for="username">Username</label>
             <input id="username" name="mgnlUserId" /><br />
 
@@ -67,14 +67,13 @@ String referer = contextPath + Path.getURI(request);
             <input id="pasword" name="mgnlUserPSWD" type="password" /><br />
 
             <label for="submitButton">&nbsp;</label>
-            <!-- <input id="submit" type="button" value="login" class="button" onclick="Javascript:crypt();" /><br /> -->
-            <input id="submitButton" type="button" value="login" class="button" onclick="submit();" /><br />
+            <input id="submitButton" type="submit" value="login" class="button" /><br />
             <input  name="passwordMD5" type="hidden" />
         </form>
         </div>
     </div>
 
-    <div id="copyright">&copy; Copyright 2000-2006 obinary ag, Basel, Switzerland • All rights reserved.</div>
+    <div id="copyright">&copy; Copyright 2000-2006 obinary ag, Basel, Switzerland © All rights reserved.</div>
 
 </div>
 

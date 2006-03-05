@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee     http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" version="2.4" id="WebApp">
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee     http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" version="2.4"
+  id="WebApp">
   <description>Magnolia</description>
   <display-name>magnolia</display-name>
   <filter>
@@ -33,7 +35,7 @@
         NOTE : this will override config/server/SecureURIList
       -->
       <param-name>UnsecuredPath</param-name>
-      <param-value>/admindocroot/loginForm</param-value>
+      <param-value>/.resources/loginForm</param-value>
     </init-param>
     <init-param>
       <param-name>LoginForm</param-name>
@@ -136,7 +138,7 @@
     <servlet-class>info.magnolia.cms.gui.fckeditor.FCKEditorSimpleUploadServlet</servlet-class>
     <init-param>
       <param-name>AllowedExtensionsFile</param-name>
-      <param-value />
+      <param-value></param-value>
     </init-param>
     <init-param>
       <param-name>DeniedExtensionsFile</param-name>
@@ -148,7 +150,7 @@
     </init-param>
     <init-param>
       <param-name>DeniedExtensionsImage</param-name>
-      <param-value />
+      <param-value></param-value>
     </init-param>
     <init-param>
       <param-name>AllowedExtensionsFlash</param-name>
@@ -156,7 +158,7 @@
     </init-param>
     <init-param>
       <param-name>DeniedExtensionsFlash</param-name>
-      <param-value />
+      <param-value></param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
@@ -254,9 +256,11 @@
   </context-param>
   <context-param>
     <param-name>magnolia.initialization.file</param-name>
-    <param-value>WEB-INF/config/${servername}/${webapp}/magnolia.properties, WEB-INF/config/${servername}/magnolia.properties,
+    <param-value>
+      WEB-INF/config/${servername}/${webapp}/magnolia.properties, WEB-INF/config/${servername}/magnolia.properties,
       WEB-INF/config/${webapp}/magnolia.properties, WEB-INF/config/default/magnolia.properties,
-      WEB-INF/config/magnolia.properties</param-value>
+      WEB-INF/config/magnolia.properties
+    </param-value>
   </context-param>
   <listener>
     <description>ShutdownManager</description>
@@ -272,25 +276,4 @@
     <error-code>400</error-code>
     <location>/admintemplates/error.jsp</location>
   </error-page>
-  <!--registered by Jackie-->
-  <servlet>
-    <servlet-name>FlowDef</servlet-name>
-    <servlet-class>info.magnolia.module.owfe.FlowDefServlet</servlet-class>
-  </servlet>
-  <!--registered by Jackie-->
-  <servlet-mapping>
-    <servlet-name>FlowDef</servlet-name>
-    <url-pattern>/FlowDef</url-pattern>
-  </servlet-mapping>
-  <!--registered by Jackie-->
-  <servlet>
-    <servlet-name>FlowDefUpload</servlet-name>
-    <servlet-class>info.magnolia.module.owfe.FlowDefUpload</servlet-class>
-  </servlet>
-  <!--registered by Jackie-->
-  <servlet-mapping>
-    <servlet-name>FlowDefUpload</servlet-name>
-    <url-pattern>/FlowDefUpload</url-pattern>
-  </servlet-mapping>
 </web-app>
-
