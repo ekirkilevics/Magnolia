@@ -51,7 +51,7 @@ public class Sources {
         StringBuffer html = new StringBuffer();
         html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\""); //$NON-NLS-1$
         html.append(contextPath);
-        html.append("/admindocroot/css/admin-all.css\" />"); //$NON-NLS-1$
+        html.append("/.resources/admin-css/admin-all.css\" />"); //$NON-NLS-1$
         return html.toString();
     }
 

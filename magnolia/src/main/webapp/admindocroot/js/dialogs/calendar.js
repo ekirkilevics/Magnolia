@@ -197,9 +197,9 @@ Calendar.prototype.show = function() {
     // Setup the page...
     this.wwrite("<html>");
     this.wwrite("<head><title>Calendar</title>");
-    this.wwrite("<link rel='stylesheet' type='text/css' href='" + contextPath + "/admindocroot/css/controls.css'>");
-    this.wwrite("<link rel='stylesheet' type='text/css' href='" + contextPath + "/admindocroot/css/dialogs.css'>");
-    this.wwrite("<link rel='stylesheet' type='text/css' href='" + contextPath + "/admindocroot/css/calendar.css'>");
+    this.wwrite("<link rel='stylesheet' type='text/css' href='" + contextPath + "/.resources/admin-css/controls.css'>");
+    this.wwrite("<link rel='stylesheet' type='text/css' href='" + contextPath + "/.resources/admin-css/dialogs.css'>");
+    this.wwrite("<link rel='stylesheet' type='text/css' href='" + contextPath + "/.resources/admin-css/calendar.css'>");
     this.wwrite("<script language='javascript' src=" + contextPath + "/admindocroot/js/controls.js></script>");
     this.wwrite("<script language='javascript'>");
 

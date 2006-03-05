@@ -43,7 +43,7 @@
             <title><fmt:message key="central.title" /></title>
 
             <link rel="shortcut icon" href="${pageContext.request.contextPath}/.resources/admin-images/favicon.ico" type="image/x-icon" />
-            <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/admindocroot/css/admin-all.css"/>
+            <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/.resources/admin-css/admin-all.css"/>
 
         <!--  keep the old javascripts -->
         <script type="text/javascript" src="${pageContext.request.contextPath}/admintemplates/js/admincentral.jsp"><!-- --></script>
