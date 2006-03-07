@@ -11,11 +11,11 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.ie.DataTransporter;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Arrays;
@@ -129,11 +129,11 @@ public final class Bootstrapper {
             try {
                 for (int k = 0; k < files.length; k++) {
                     File xmlfile = files[k];
-                    Document doc = new Document(xmlfile, "unknown");
+ 
                     String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(StringUtils
                             .substringBeforeLast(xmlfile.getName(), "."), "."), "."); //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
                     pathName = "/" + StringUtils.replace(pathName, ".", "/");
-                    DataTransporter.executeImport(pathName, repository, doc, false,
+                    DataTransporter.executeImport(pathName, repository, new FileInputStream(xmlfile), xmlfile.getName(), false,
                             ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING,true);
                 }
                 

@@ -18,6 +18,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.cms.core.ie.DataTransporter;
 import info.magnolia.cms.security.AccessDeniedException;
 
 import java.io.BufferedOutputStream;
@@ -29,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -37,6 +39,7 @@ import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
@@ -219,6 +222,18 @@ public final class ModuleUtil {
         installFiles(jar, matcher);
     }
 
+    public static void bootstrap(Collection resourceNames) throws IOException{
+    	for (Iterator iter = resourceNames.iterator(); iter.hasNext();) {
+			String name = (String) iter.next();
+            String repository = StringUtils.substringBefore(name, ".");
+			String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(StringUtils
+                    .substringBeforeLast(name, "."), "."), "."); //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
+            pathName = "/" + StringUtils.replace(pathName, ".", "/");
+            InputStream stream = ModuleUtil.class.getResourceAsStream(name);
+			DataTransporter.executeImport(pathName, repository, stream, name, false, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING,true);
+		}
+    }
+    
     public static void installFiles(JarFile jar, final String path) throws Exception {
         installFiles(jar, new DirectoryIncludeMatcher(path));
     }
@@ -254,7 +269,6 @@ public final class ModuleUtil {
             JarEntry entry = (JarEntry) entries.nextElement();
             String name = entry.getName();
 
-            // Exclude root, dirs, ch-dir, META-INF-dir and jars
             if (matcher.match(name)) { //$NON-NLS-1$
                 files.put(new File(root, matcher.transform(name)), entry);
             }

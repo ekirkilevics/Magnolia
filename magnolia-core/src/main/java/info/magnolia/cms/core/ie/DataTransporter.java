@@ -42,21 +42,37 @@ public class DataTransporter {
     public static synchronized void executeImport(String basepath,
             String repository, Document xmlFile, boolean keepVersionHistory,
             int importMode,boolean saveAfterImport) throws IOException {
+    	executeImport(basepath, repository, xmlFile.getStream(), xmlFile.getFileName(), keepVersionHistory, importMode, saveAfterImport);
+    }
+    
+    /**
+     * Perform import
+	 * @param repository selected repository
+	 * @param basepath base path in repository
+	 * @param xmlStream an imput stream reading a 
+	 * @param keepVersionHistory if <code>false</code> version info will be stripped before importing the document
+	 * @param importMode a valid value for ImportUUIDBehavior
+     * @throws IOException 
+	 * @see ImportUUIDBehavior
+	 */
+    public static synchronized void executeImport(String basepath,
+            String repository, InputStream xmlStream, String fileName, boolean keepVersionHistory,
+            int importMode,boolean saveAfterImport) throws IOException{
+    
         HierarchyManager hr = MgnlContext.getHierarchyManager(repository);
         Workspace ws = hr.getWorkspace();
 
         if (log.isInfoEnabled()) {
-            String message = "Importing content into repository: ["+repository+"] from File: ["+xmlFile.getFileName()+ "] into path:"+basepath;
+            String message = "Importing content into repository: ["+repository+"] from File: [" + fileName+ "] into path:"+basepath;
             log.info(message); //$NON-NLS-1$
         }
 
-        InputStream stream = xmlFile.getStream();
         Session session = ws.getSession();
 
         try {
             if (keepVersionHistory) {
                 // do not manipulate
-                session.importXML(basepath, stream, importMode);
+                session.importXML(basepath, xmlStream, importMode);
             }
 
             else {
@@ -69,9 +85,9 @@ public class DataTransporter {
 
                 // import it
                 try {
-                    filteredReader.parse(new InputSource(stream));
+                    filteredReader.parse(new InputSource(xmlStream));
                 } finally {
-                    IOUtils.closeQuietly(stream);
+                    IOUtils.closeQuietly(xmlStream);
                 }
 
                 if (((ImportXmlRootFilter) filteredReader).rootNodeFound) {
@@ -98,7 +114,7 @@ public class DataTransporter {
         } catch (Exception e) {
             throw new NestableRuntimeException(e);
         } finally {
-            IOUtils.closeQuietly(stream);
+            IOUtils.closeQuietly(xmlStream);
         }
         
         try {
