@@ -521,13 +521,13 @@ public class Tree extends ControlSuper {
                         // todo
                         break;
                 }
-                page.updateMetaData(this.getRequest());
+                page.updateMetaData();
                 page.save();
                 returnValue = new NodeDataUtil(node).getValueString();
             }
             else {
                 page.getMetaData().setProperty(nodeDataName, value);
-                page.updateMetaData(this.getRequest());
+                page.updateMetaData();
                 page.save();
                 returnValue = new MetaDataUtil(page).getPropertyValueString(nodeDataName);
             }
@@ -581,7 +581,7 @@ public class Tree extends ControlSuper {
                         break;
                 }
             }
-            page.updateMetaData(this.getRequest());
+            page.updateMetaData();
             page.save();
             return PropertyType.nameFromValue(page.getNodeData(nodeDataName).getType());
             // return PropertyType.nameFromValue(node.getType());
@@ -686,7 +686,7 @@ public class Tree extends ControlSuper {
         // SessionAccessControl.invalidateUser(this.getRequest());
         Content newContent = getHierarchyManager().getContent(destination);
         try {
-            newContent.updateMetaData(this.getRequest());
+            newContent.updateMetaData();
             newContent.getMetaData().setUnActivated();
         }
         catch (Exception e) {
@@ -753,7 +753,7 @@ public class Tree extends ControlSuper {
         // SessionAccessControl.invalidateUser(this.getRequest());
         Content newPage = getHierarchyManager().getContent(dest);
         returnValue = newLabel;
-        newPage.updateMetaData(this.getRequest());
+        newPage.updateMetaData();
         newPage.save();
 
         return returnValue;
