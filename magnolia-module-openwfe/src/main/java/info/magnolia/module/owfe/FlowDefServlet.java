@@ -46,7 +46,7 @@ public class FlowDefServlet extends javax.servlet.http.HttpServlet implements
 			response
 					.getWriter()
 					.println(
-							"<form action=\"FlowDefUpload\" method=\"post\">"
+							"<html><body><form action=\"FlowDefUpload\" method=\"post\">"
 									+ "<textArea  cols=\"80\" rows=\"25\"  name=\"flow\">"
 									+ "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
 									+ "<process-definition xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://www.openwfe.org/flowdef_r1.5.0.xsd\" name=\"docflow\" revision=\"1.0\">"
@@ -56,9 +56,9 @@ public class FlowDefServlet extends javax.servlet.http.HttpServlet implements
 									+ "</sequence>"
 									+ "</process-definition>"
 									+ "</textArea>"
-									+ "<br><input type=\"submit\"></input>"
+									+ "<br/><input type=\"submit\"></input>"
 									+ "</form>"
-									+ "<p><a href=\"FlowDef?name=*\">List all flows</a>");
+									+ "<p><a href=\"FlowDef?name=*\">List all flows</a></body></html>");
 			return;
 		}
 		if (flowName.equalsIgnoreCase("*")) // list all flow
@@ -72,6 +72,7 @@ public class FlowDefServlet extends javax.servlet.http.HttpServlet implements
 				response.getWriter().println("</a></td></tr>");
 				response.getWriter().println("</table>");
 			}
+			//new JCRFlowDefinition().exportAll("d:\\flowdef");
 
 		} else {
 

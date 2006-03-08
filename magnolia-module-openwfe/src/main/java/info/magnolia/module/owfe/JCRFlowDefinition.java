@@ -4,6 +4,8 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,6 +27,11 @@ public class JCRFlowDefinition {
      * */
     private static Logger log = Logger.getLogger(FlowDefServlet.class);
 
+    /**
+     * find one flow node by flow name
+     * @param name
+     * @return Content node in JCR store for specified flow definition
+     */
 	public Content findFlowDef(String name){
 		if (name == null)
 			return null;
@@ -50,6 +57,23 @@ public class JCRFlowDefinition {
 		return null;
 	}
 	
+	/**
+	 * get flow definition as string of xml
+	 * @param flowName
+	 * @return
+	 */
+	String getflowDefAsString(String flowName){
+		Content node = findFlowDef(flowName);
+		if (node == null)
+			return null;
+		return node.getNodeData("value").getString();		
+	}
+	
+	/**
+	 * get all flows' url
+	 * @param request
+	 * @return a list of string representing the URL of each workflow
+	 */
 	public List getFlows(HttpServletRequest request){
 		String url_base = "http://"+ request.getServerName()+":" + request.getServerPort() + request.getRequestURI();
 		ArrayList list = new ArrayList();
@@ -82,6 +106,34 @@ public class JCRFlowDefinition {
 		return list;
 	}
 
+	/**
+	 * export all flows to xml
+	 * @param xmlFileName
+	 */
+	public void exportAll(String xmlFileName){
+		if (xmlFileName == null || xmlFileName.length() == 0)
+			return;
+		HierarchyManager hm = OWFEEngine.getOWFEHierarchyManager("flowdef");
+		try {
+			Content root = hm.getRoot();
+			  
+			  File outputFile = new File(xmlFileName);
+			  FileOutputStream out = new FileOutputStream(outputFile);
+			  hm.getWorkspace().getSession().exportSystemView("/", out, false, false);
+
+			log.info("exorpt flow def ok");
+		} catch (Exception e) {
+			log.error("exorpt flow failed", e);
+
+		}
+	}
+	
+	/**
+	 * add one flow definition to JCR store
+	 * @param flowDef
+	 * @return
+	 * @throws Exception
+	 */
 	public List addFlow(String flowDef) throws Exception{
 		if (flowDef == null)
 			return null;
