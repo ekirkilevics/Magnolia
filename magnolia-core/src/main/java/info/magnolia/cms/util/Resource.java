@@ -217,4 +217,19 @@ public final class Resource {
     public static boolean showPreview(HttpServletRequest req) {
         return BooleanUtils.toBoolean((Boolean) req.getSession().getAttribute(MGNL_PREVIEW_ATTRIBUTE));
     }
+
+    /**
+     * Set the request's <code>actpage</code> attribute to <code>page</code>
+     */
+    public static void setCurrentActivePage(HttpServletRequest request, Content page) {
+        request.setAttribute(Aggregator.CURRENT_ACTPAGE, page);
+    }
+
+    /**
+     * Restores the request's original <code>actpage</code> attribute (i.e. the one specified by the request URI).
+     */
+    public static void restoreCurrentActivePage(HttpServletRequest request) {
+        setCurrentActivePage(request, getActivePage(request));
+    }
+
 }
