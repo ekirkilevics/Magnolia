@@ -56,9 +56,10 @@ public class DialogDate extends DialogEditWithButton {
         if (this.getWebsiteNode() != null && this.getWebsiteNode().getNodeData(this.getName()).isExist()) {
             Calendar valueCalendar = this.getWebsiteNode().getNodeData(this.getName()).getDate();
 
-            Date valueDate = valueCalendar.getTime();
-
-            this.setValue(DateFormatUtils.formatUTC(valueDate, format));
+            if (valueCalendar != null) {
+                Date valueDate = valueCalendar.getTime();
+                this.setValue(DateFormatUtils.formatUTC(valueDate, format));
+            }
         }
         // check this!
         this.setConfig("type", this.getConfigValue("type", PropertyType.TYPENAME_DATE)); //$NON-NLS-1$ //$NON-NLS-2$
