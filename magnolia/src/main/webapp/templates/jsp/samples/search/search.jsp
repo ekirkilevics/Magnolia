@@ -2,7 +2,8 @@
     xmlns:cms="urn:jsptld:cms-taglib"
     xmlns:cmsu="urn:jsptld:cms-util-taglib"
     xmlns:c="urn:jsptld:http://java.sun.com/jsp/jstl/core"
-    xmlns:fmt="urn:jsptld:http://java.sun.com/jsp/jstl/fmt">
+    xmlns:fmt="urn:jsptld:http://java.sun.com/jsp/jstl/fmt"
+    xmlns:fn="urn:jsptld:http://java.sun.com/jsp/jstl/functions">
     <jsp:directive.page contentType="text/html; charset=utf-8" />
 
     <jsp:text>
@@ -19,13 +20,13 @@
             <c:import url="/templates/jsp/samples/global/columnMain.jsp" />
 
             <form name="mgnlsearch" action=""><input id="query" name="query"
-                value="${param.query}" /> <input type="submit" name="search"
+                value="${fn:escapeXml(param.query)}" /> <input type="submit" name="search"
                 value="search" /></form>
 
 
             <c:if test="${!empty(param.query)}">
                 <h1>Search results for:</h1>
-                <h2>${param.query}</h2>
+                <h2>${fn:escapeXml(param.query)}</h2>
 
                 <cmsu:simpleSearch query="${param.query}" var="results" />
 
