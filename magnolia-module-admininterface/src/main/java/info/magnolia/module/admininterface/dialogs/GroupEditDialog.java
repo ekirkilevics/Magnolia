@@ -183,7 +183,7 @@ public class GroupEditDialog extends ConfiguredDialog {
             }
 
             hm.save();
-
+            log.info("change group ok. repo = " + this.getRepository() + ", hm = " + hm.getWorkspace().getName());
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
@@ -199,13 +199,20 @@ public class GroupEditDialog extends ConfiguredDialog {
             Content user = hm.getContent(userId);
 
             // get "groups" node under node "user"
-            Content groups = user.getContent("groups");
+            Content groups = null;
+            try{
+            	groups = user.getContent("groups");
+            }catch (Exception e){
+            	log.info("groups node not found");
+            }
             if (groups == null)// create it if no exist
-                user.createContent("groups");
+                groups = user.createContent("groups");
 
             // create <groupid> under node "groups"
-            groups.createContent(groupId, ItemType.CONTENTNODE);
-
+            String newLabel = Path.getUniqueLabel(hm, groups.getHandle(), "0");
+            Content r = groups.createContent(newLabel, ItemType.CONTENTNODE);
+            r.createNodeData("path").setValue(groupId);
+            
             hm.save();
 
         }

@@ -116,6 +116,17 @@ public class AdminTreeUsers extends AdminTreeMVCHandler {
         menuOpen.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
             + tree.getJavascriptTree()
             + ")"); //$NON-NLS-1$
+        
+        ContextMenuItem menuAddToGroup = new ContextMenuItem();
+        menuAddToGroup.setLabel("Add user to groups"); //$NON-NLS-1$
+        menuAddToGroup.setIcon(request.getContextPath() + "/.resources/icons/16/pawn_glass_yellow.gif"); //$NON-NLS-1$
+        menuAddToGroup.setOnclick("mgnlTreeMenuOpenDialog(" //$NON-NLS-1$
+            + tree.getJavascriptTree()
+            + ",'.magnolia/dialogs/useraddtogroups.html');"); //$NON-NLS-1$
+        menuAddToGroup.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
+            + tree.getJavascriptTree()
+            + ")"); //$NON-NLS-1$
+ 
         ContextMenuItem menuNewPage = new ContextMenuItem();
         menuNewPage.setLabel(msgs.get("tree.users.menu.new")); //$NON-NLS-1$
         menuNewPage.setIcon(request.getContextPath() + "/.resources/icons/16/pawn_glass_yellow_add.gif"); //$NON-NLS-1$
@@ -174,6 +185,8 @@ public class AdminTreeUsers extends AdminTreeMVCHandler {
 
         if (!this.isBrowseMode()) {
             tree.addMenuItem(menuOpen);
+            tree.addMenuItem(menuAddToGroup);
+            
             tree.addMenuItem(menuNewPage);
 
             tree.addMenuItem(null); // line
