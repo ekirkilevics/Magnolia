@@ -39,7 +39,6 @@ public class ClassResourcesUtil {
      * Filter for filtering the resources.
      * @author Philipp Bracher
      * @version $Revision$ ($Author$)
-     *
      */
     public static abstract class Filter {
 

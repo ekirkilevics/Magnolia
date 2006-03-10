@@ -8,6 +8,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLFilterImpl;
 
+
 public class ImportXmlRootFilter extends XMLFilterImpl {
 
     // this is true if it is an import of a file containing jcr:root node
@@ -45,10 +46,10 @@ public class ImportXmlRootFilter extends XMLFilterImpl {
      * Root node was found should be called after parsing to check if a root node was indeed found
      */
     public boolean rootNodeWasFound() {
-		return rootNodeFound;
-	}
+        return rootNodeFound;
+    }
 
-	/**
+    /**
      * @see org.xml.sax.helpers.XMLFilterImpl#characters(char[], int, int)
      */
     public void characters(char[] ch, int start, int length) throws SAXException {

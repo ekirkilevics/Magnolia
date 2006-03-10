@@ -53,7 +53,7 @@ public interface User {
     /**
      * get user password
      * @return password string
-     * */
+     */
     public abstract String getPassword();
 
 }

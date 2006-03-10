@@ -46,7 +46,7 @@ public class MgnlContext {
     public static Logger log = LoggerFactory.getLogger(MgnlContext.class);
 
     private static SystemContext systemContext = (SystemContext) FactoryUtil.getInstance(SystemContext.class);
-    
+
     /**
      * The thread local variable holding the current context
      */
@@ -87,7 +87,7 @@ public class MgnlContext {
      */
     public static void setLocale(Locale locale) {
         getInstance().setLocale(locale);
-     }
+    }
 
     /**
      * Get the contexts locale object
@@ -96,15 +96,15 @@ public class MgnlContext {
     public static Locale getLocale() {
         return getInstance().getLocale();
     }
-    
-    public static Messages getMessages(){
+
+    public static Messages getMessages() {
         return getInstance().getMessages();
     }
 
-    public static Messages getMessages(String basename){
+    public static Messages getMessages(String basename) {
         return getInstance().getMessages(basename);
     }
-    
+
     /**
      * Set current user
      * @param user
@@ -176,8 +176,8 @@ public class MgnlContext {
      */
     public static Content getActivePage() {
         Context ctx = getInstance();
-        if(ctx instanceof WebContext){
-            return ((WebContext)ctx).getActivePage();
+        if (ctx instanceof WebContext) {
+            return ((WebContext) ctx).getActivePage();
         }
         return null;
     }
@@ -188,8 +188,8 @@ public class MgnlContext {
      */
     public static File getFile() {
         Context ctx = getInstance();
-        if(ctx instanceof WebContext){
-            return ((WebContext)ctx).getFile();
+        if (ctx instanceof WebContext) {
+            return ((WebContext) ctx).getFile();
         }
         return null;
     }
@@ -200,8 +200,8 @@ public class MgnlContext {
      */
     public static MultipartForm getPostedForm() {
         Context ctx = getInstance();
-        if(ctx instanceof WebContext){
-            return ((WebContext)ctx).getPostedForm();
+        if (ctx instanceof WebContext) {
+            return ((WebContext) ctx).getPostedForm();
         }
         return null;
     }
@@ -213,8 +213,8 @@ public class MgnlContext {
      */
     public static String getParameter(String name) {
         Context ctx = getInstance();
-        if(ctx instanceof WebContext){
-            return ((WebContext)ctx).getParameter(name);
+        if (ctx instanceof WebContext) {
+            return ((WebContext) ctx).getParameter(name);
         }
         return null;
 
@@ -226,19 +226,19 @@ public class MgnlContext {
      */
     public static Map getParameters() {
         Context ctx = getInstance();
-        if(ctx instanceof WebContext){
-            return ((WebContext)ctx).getParameters();
+        if (ctx instanceof WebContext) {
+            return ((WebContext) ctx).getParameters();
         }
         return null;
     }
- 
+
     /**
      * @return the context path
      */
     public static String getContextPath() {
         Context ctx = getInstance();
-        if(ctx instanceof WebContext){
-            return ((WebContext)ctx).getContextPath();
+        if (ctx instanceof WebContext) {
+            return ((WebContext) ctx).getContextPath();
         }
         return "";
     }
@@ -288,7 +288,7 @@ public class MgnlContext {
     public static Object getAttribute(String name, int scope) {
         return getInstance().getAttribute(name, scope);
     }
-    
+
     /**
      * Set context implementation instance
      * @param context
@@ -308,7 +308,7 @@ public class MgnlContext {
     /**
      * Get magnolia system context, Note : this context have full rights over all repositories/ workspaces
      * @return system context
-     * */
+     */
     public static Context getSystemContext() {
         return systemContext;
     }

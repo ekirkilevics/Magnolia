@@ -20,6 +20,7 @@ import info.magnolia.cms.security.User;
 
 import java.util.Locale;
 
+
 /**
  * This interface defines all the methods which should be implemented by any configured magnolia context, implementing
  * class should never be accessible directly but only via MgnlContext static methods which work on a local (Thread) copy

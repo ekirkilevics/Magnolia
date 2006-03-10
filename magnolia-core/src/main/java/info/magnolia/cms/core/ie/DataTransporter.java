@@ -25,13 +25,13 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+
 public class DataTransporter {
-    
+
     static Logger log = Logger.getLogger(DataTransporter.class.getSimpleName());
-    
+
     /**
      * Perform import.
-     * 
      * @param repository selected repository
      * @param basepath base path in repository
      * @param xmlFile uploaded file
@@ -39,31 +39,41 @@ public class DataTransporter {
      * @param importMode a valid value for ImportUUIDBehavior
      * @see ImportUUIDBehavior
      */
-    public static synchronized void executeImport(String basepath,
-            String repository, Document xmlFile, boolean keepVersionHistory,
-            int importMode,boolean saveAfterImport) throws IOException {
-    	executeImport(basepath, repository, xmlFile.getStream(), xmlFile.getFileName(), keepVersionHistory, importMode, saveAfterImport);
+    public static synchronized void executeImport(String basepath, String repository, Document xmlFile,
+        boolean keepVersionHistory, int importMode, boolean saveAfterImport) throws IOException {
+        executeImport(
+            basepath,
+            repository,
+            xmlFile.getStream(),
+            xmlFile.getFileName(),
+            keepVersionHistory,
+            importMode,
+            saveAfterImport);
     }
-    
+
     /**
      * Perform import
-	 * @param repository selected repository
-	 * @param basepath base path in repository
-	 * @param xmlStream an imput stream reading a 
-	 * @param keepVersionHistory if <code>false</code> version info will be stripped before importing the document
-	 * @param importMode a valid value for ImportUUIDBehavior
-     * @throws IOException 
-	 * @see ImportUUIDBehavior
-	 */
-    public static synchronized void executeImport(String basepath,
-            String repository, InputStream xmlStream, String fileName, boolean keepVersionHistory,
-            int importMode,boolean saveAfterImport) throws IOException{
-    
+     * @param repository selected repository
+     * @param basepath base path in repository
+     * @param xmlStream an imput stream reading a
+     * @param keepVersionHistory if <code>false</code> version info will be stripped before importing the document
+     * @param importMode a valid value for ImportUUIDBehavior
+     * @throws IOException
+     * @see ImportUUIDBehavior
+     */
+    public static synchronized void executeImport(String basepath, String repository, InputStream xmlStream,
+        String fileName, boolean keepVersionHistory, int importMode, boolean saveAfterImport) throws IOException {
+
         HierarchyManager hr = MgnlContext.getHierarchyManager(repository);
         Workspace ws = hr.getWorkspace();
 
         if (log.isInfoEnabled()) {
-            String message = "Importing content into repository: ["+repository+"] from File: [" + fileName+ "] into path:"+basepath;
+            String message = "Importing content into repository: ["
+                + repository
+                + "] from File: ["
+                + fileName
+                + "] into path:"
+                + basepath;
             log.info(message); //$NON-NLS-1$
         }
 
@@ -76,17 +86,17 @@ public class DataTransporter {
             }
 
             else {
-                ContentHandler handler = session.getImportContentHandler(
-                        basepath, importMode);
+                ContentHandler handler = session.getImportContentHandler(basepath, importMode);
 
-                XMLReader filteredReader = new ImportXmlRootFilter(
-                        new VersionFilter(XMLReaderFactory.createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName())));
+                XMLReader filteredReader = new ImportXmlRootFilter(new VersionFilter(XMLReaderFactory
+                    .createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName())));
                 filteredReader.setContentHandler(handler);
 
                 // import it
                 try {
                     filteredReader.parse(new InputSource(xmlStream));
-                } finally {
+                }
+                finally {
                     IOUtils.closeQuietly(xmlStream);
                 }
 
@@ -111,20 +121,22 @@ public class DataTransporter {
                     dummyRoot.remove();
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new NestableRuntimeException(e);
-        } finally {
+        }
+        finally {
             IOUtils.closeQuietly(xmlStream);
         }
-        
+
         try {
             if (saveAfterImport)
                 session.save();
-        } catch (RepositoryException e) {
-            log.error(MessageFormat.format("Unable to save changes to the [{0}] repository due to a {1} Exception: {2}.", //$NON-NLS-1$
-                                            new Object[] { repository,
-                                                    e.getClass().getName(),
-                                                    e.getMessage() }), e);
+        }
+        catch (RepositoryException e) {
+            log.error(MessageFormat.format(
+                "Unable to save changes to the [{0}] repository due to a {1} Exception: {2}.", //$NON-NLS-1$
+                new Object[]{repository, e.getClass().getName(), e.getMessage()}), e);
             throw new IOException(e.getMessage());
         }
     }

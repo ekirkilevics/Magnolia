@@ -61,6 +61,7 @@
         <item name="Cms util taglib" href="/magnolia-taglib-utility/tagreference.html" />
       </item>
       <item name="Glossary" href="/glossary/glossary.html" />
+      <item name="Jira report" href="/magnolia/jira-report.html" />
     </menu>
     <!--
       <menu name="Downloadable docs">

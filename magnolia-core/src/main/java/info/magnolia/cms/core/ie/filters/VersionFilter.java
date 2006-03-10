@@ -5,6 +5,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLFilterImpl;
 
+
 /**
  * Sax filter, strips version information from a jcr xml (system view).
  */

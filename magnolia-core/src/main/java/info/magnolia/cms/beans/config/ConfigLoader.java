@@ -13,6 +13,10 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.beans.runtime.MgnlContext;
+import info.magnolia.cms.cache.CacheManager;
+import info.magnolia.cms.cache.CacheManagerFactory;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.i18n.MessagesManager;
@@ -52,6 +56,8 @@ public class ConfigLoader {
      * Set to true when bootstrapping is in progress or if it has failed.
      */
     private static boolean bootstrapping;
+
+    private CacheManager cacheManager = CacheManagerFactory.getCacheManager();
 
     /**
      * Initialize a ConfigLoader instance. All the supplied parameters will be set in
@@ -139,16 +145,16 @@ public class ConfigLoader {
             // a bootstrap directory is configured, trying to initialize repositories
             Bootstrapper.bootstrapRepositories(bootDirs);
         }
-        
+
         log.info("Set system context"); //$NON-NLS-1$
         MgnlContext.setInstance(MgnlContext.getSystemContext());
-        
+
         log.info("Init virtualMap"); //$NON-NLS-1$
         VirtualMap.init();
-        
+
         log.info("Init i18n"); //$NON-NLS-1$
         MessagesManager.init(context);
-        
+
         log.info("Init secureURI"); //$NON-NLS-1$
         SecureURI.init();
 
@@ -158,7 +164,7 @@ public class ConfigLoader {
             ModuleLoader.init();
             Listener.init();
             Subscriber.init();
-            Cache.init();
+            initCache();
             MIMEMapping.init();
             VersionConfig.init();
             setConfigured(true);
@@ -228,4 +234,22 @@ public class ConfigLoader {
         setConfigured(false);
     }
 
+    /**
+     * Initialize the CacheManager.
+     * @throws ConfigurationException
+     */
+    private void initCache() throws ConfigurationException {
+        Content config;
+
+        try {
+            HierarchyManager hierarchyManager = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
+            config = hierarchyManager.getContent("/server/cache/level1");
+        }
+        catch (RepositoryException e) {
+            log.error("Unable to get cache configuration!", e);
+            throw new ConfigurationException(e);
+        }
+
+        this.cacheManager.init(config);
+    }
 }

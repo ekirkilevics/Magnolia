@@ -12,8 +12,8 @@
  */
 package info.magnolia.cms;
 
-import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;

@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
  * @author Sameer Charles
  * @version $Revision $ ($Author $)
  */
-public class WebContextImpl extends ContextImpl implements WebContext{
+public class WebContextImpl extends ContextImpl implements WebContext {
 
     /**
      * Logger
@@ -53,7 +53,7 @@ public class WebContextImpl extends ContextImpl implements WebContext{
      */
     public WebContextImpl() {
     }
-    
+
     /**
      * @see info.magnolia.cms.beans.runtime.WebContext#inti(javax.servlet.http.HttpServletRequest)
      */
@@ -67,21 +67,21 @@ public class WebContextImpl extends ContextImpl implements WebContext{
      */
     public User getUser() {
         User user = super.getUser();
-        if(user == null){
+        if (user == null) {
             user = Security.getUserManager().getUserObject(Authenticator.getSubject(request));
             this.setUser(user);
         }
         return user;
     }
-    
+
     /**
-     * Make the language available for JSTL 
+     * Make the language available for JSTL
      */
     public void setLocale(Locale locale) {
         super.setLocale(locale);
         this.setAttribute(Config.FMT_LOCALE + ".session", locale.getLanguage(), MgnlContext.SESSION_SCOPE); //$NON-NLS-1$
     }
-    
+
     /**
      * Get hierarchy manager initialized for this user
      * @param repositoryId
@@ -204,7 +204,6 @@ public class WebContextImpl extends ContextImpl implements WebContext{
         }
     }
 
-    
     /**
      * Avoid the call to this method where ever possible.
      * @return Returns the request.

@@ -140,6 +140,18 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>changes-maven-plugin</artifactId>
+        <configuration>
+          <inherited>false</inherited>
+          <link_template>%URL%/%ISSUE%</link_template>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
   <distributionManagement>
     <site>
       <id>magnolia</id>

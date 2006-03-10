@@ -20,11 +20,11 @@ import info.magnolia.cms.security.AccessManager;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
  * This is the system context using the not secured HierarchyManagers.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class SystemContextImpl extends ContextImpl implements SystemContext {
 
@@ -34,8 +34,7 @@ public class SystemContextImpl extends ContextImpl implements SystemContext {
     protected Map scopes = new HashMap();
 
     /**
-     * DON'T CREATE AN OBJECT. The SystemContext is set by magnolia system itself.
-     * Init the scopes
+     * DON'T CREATE AN OBJECT. The SystemContext is set by magnolia system itself. Init the scopes
      */
     public SystemContextImpl() {
         scopes.put(new Integer(MgnlContext.REQUEST_SCOPE), new HashMap());

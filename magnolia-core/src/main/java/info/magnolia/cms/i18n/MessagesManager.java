@@ -44,6 +44,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
  * From this class you get the i18n messages. You should pass a a request, but if you can't the getMessages method will
  * handle it properly. The get() methods are easy to use.
@@ -95,7 +96,7 @@ public final class MessagesManager {
      * The context used for the messages
      */
     private static ServletContext context;
-    
+
     /**
      * LRU Map for the messages
      */
@@ -126,10 +127,11 @@ public final class MessagesManager {
 
         load();
         registerEventListener();
-        
+
         // create the LRUMap
         Map map = new LRUMap(10);
-        map = LazyMap.decorate(map, new Transformer(){
+        map = LazyMap.decorate(map, new Transformer() {
+
             public Object transform(Object input) {
                 MessagesID id = (MessagesID) input;
                 return new Messages(id.basename, id.locale);
@@ -265,11 +267,11 @@ public final class MessagesManager {
         log.debug("using i18n-messages without a request!"); //$NON-NLS-1$
         return new Messages(MessagesManager.DEFAULT_BASENAME, applicationLocale);
     }
-    
+
     public static Messages getMessages() {
         return getMessages(MessagesManager.DEFAULT_BASENAME, MgnlContext.getLocale());
     }
-    
+
     /**
      * Deprectated! Provide a basename
      * @param req request
@@ -289,7 +291,7 @@ public final class MessagesManager {
     public static Messages getMessages(String basename) {
         return getMessages(basename, MgnlContext.getLocale());
     }
-    
+
     /**
      * Deprectated! Provide a special locale
      * @param req request
@@ -307,11 +309,11 @@ public final class MessagesManager {
         return new Messages(basename, locale);
 
     }
-    
+
     public static Messages getMessages(String basename, Locale locale) {
         return (Messages) messages.get(new MessagesID(basename, locale));
     }
-    
+
     /**
      * Deprectated! Trys to make a new ContextMessages object. if not possible it creates a new Messages object.
      * @param pc the page context to start the lookup
@@ -466,17 +468,18 @@ public final class MessagesManager {
             msgs.reload();
         }
     }
-    
+
     /**
      * Used as the key in the LRUMap
      * @author Philipp Bracher
      * @version $Revision$ ($Author$)
-     *
      */
-     static private class MessagesID{
+    static private class MessagesID {
+
         String basename;
+
         Locale locale;
-        
+
         /**
          * @param basename
          * @param locale
@@ -485,10 +488,9 @@ public final class MessagesManager {
             this.basename = basename;
             this.locale = locale;
         }
-        
+
         public boolean equals(Object id) {
-            return ((MessagesID)id).basename.equals(basename) &&
-            ((MessagesID)id).locale.equals(locale);
+            return ((MessagesID) id).basename.equals(basename) && ((MessagesID) id).locale.equals(locale);
         }
     }
 }

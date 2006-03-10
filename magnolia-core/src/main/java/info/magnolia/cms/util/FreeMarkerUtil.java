@@ -12,7 +12,6 @@
  */
 package info.magnolia.cms.util;
 
-
 import info.magnolia.cms.beans.runtime.MgnlContext;
 
 import java.io.PrintWriter;
@@ -27,6 +26,7 @@ import freemarker.template.Configuration;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.Template;
 
+
 /**
  * This is a FreeMaker Util loading the templates from the classpath
  * @author Philipp Bracher
@@ -34,34 +34,33 @@ import freemarker.template.Template;
  */
 public class FreeMarkerUtil {
 
-   private static Configuration cfg;
-   
-   private static Logger log = LoggerFactory.getLogger(FreeMarkerUtil.class);
-    
-   static{
+    private static Configuration cfg;
+
+    private static Logger log = LoggerFactory.getLogger(FreeMarkerUtil.class);
+
+    static {
         cfg = new Configuration();
         cfg.setObjectWrapper(ObjectWrapper.DEFAULT_WRAPPER);
         cfg.setClassForTemplateLoading(FreeMarkerUtil.class, "/");
-   }
-   
-   public static String process(String name, Map data){
-       Writer writer = new StringWriter();
-       process(name, data, writer);
-       return writer.toString();
-   }
-   
-   public static void process(String name, Map data, Writer writer){
-       try{
-           Template tmpl = cfg.getTemplate(name);
-           // add some usfull default data
-           data.put("contextPath", MgnlContext.getContextPath());
-           tmpl.process(data, writer);
-       }
-       catch(Exception e){
-           e.printStackTrace(new PrintWriter(writer));
-           log.error("exception in template", e);
-       }
-   }
-   
-   
+    }
+
+    public static String process(String name, Map data) {
+        Writer writer = new StringWriter();
+        process(name, data, writer);
+        return writer.toString();
+    }
+
+    public static void process(String name, Map data, Writer writer) {
+        try {
+            Template tmpl = cfg.getTemplate(name);
+            // add some usfull default data
+            data.put("contextPath", MgnlContext.getContextPath());
+            tmpl.process(data, writer);
+        }
+        catch (Exception e) {
+            e.printStackTrace(new PrintWriter(writer));
+            log.error("exception in template", e);
+        }
+    }
+
 }

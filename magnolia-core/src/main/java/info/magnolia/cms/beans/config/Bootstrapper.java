@@ -30,10 +30,9 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
- * Bootstrapper: loads content from xml when a magnolia is started with an
- * uninitialized repository.
- * 
+ * Bootstrapper: loads content from xml when a magnolia is started with an uninitialized repository.
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
@@ -52,16 +51,11 @@ public final class Bootstrapper {
     }
 
     /**
-     * Repositories appears to be empty and the
-     * <code>"magnolia.bootstrap.dir</code> directory is configured in
-     * web.xml. Loops over all the repositories and try to load any xml file
-     * found in a subdirectory with the same name of the repository. For example
-     * the <code>config</code> repository will be initialized using all the
-     * <code>*.xml</code> files found in <code>"magnolia.bootstrap.dir</code><strong>/config</strong>
-     * directory.
-     * 
-     * @param bootdir
-     *            bootstrap dir
+     * Repositories appears to be empty and the <code>"magnolia.bootstrap.dir</code> directory is configured in
+     * web.xml. Loops over all the repositories and try to load any xml file found in a subdirectory with the same name
+     * of the repository. For example the <code>config</code> repository will be initialized using all the
+     * <code>*.xml</code> files found in <code>"magnolia.bootstrap.dir</code><strong>/config</strong> directory.
+     * @param bootdir bootstrap dir
      */
     protected static void bootstrapRepositories(String[] bootdirs) {
 
@@ -74,7 +68,7 @@ public final class Bootstrapper {
         }
 
         MgnlContext.setInstance(MgnlContext.getSystemContext());
-        
+
         Iterator repositoryNames = ContentRepository.getAllRepositoryNames();
         while (repositoryNames.hasNext()) {
             String repository = (String) repositoryNames.next();
@@ -114,10 +108,13 @@ public final class Bootstrapper {
                 continue;
             }
 
-            log.info("Trying to import content from {} files into repository ["+repository+"]", Integer.toString(xmlfileset.size())); //$NON-NLS-1$
+            log
+                .info(
+                    "Trying to import content from {} files into repository [" + repository + "]", Integer.toString(xmlfileset.size())); //$NON-NLS-1$
 
             File[] files = (File[]) xmlfileset.toArray(new File[xmlfileset.size()]);
             Arrays.sort(files, new Comparator() {
+
                 public int compare(Object file1, Object file2) {
                     String name1 = StringUtils.substringBeforeLast(((File) file1).getName(), "."); //$NON-NLS-1$
                     String name2 = StringUtils.substringBeforeLast(((File) file2).getName(), "."); //$NON-NLS-1$
@@ -129,24 +126,32 @@ public final class Bootstrapper {
             try {
                 for (int k = 0; k < files.length; k++) {
                     File xmlfile = files[k];
- 
+
                     String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(StringUtils
-                            .substringBeforeLast(xmlfile.getName(), "."), "."), "."); //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
+                        .substringBeforeLast(xmlfile.getName(), "."), "."), "."); //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
                     pathName = "/" + StringUtils.replace(pathName, ".", "/");
-                    DataTransporter.executeImport(pathName, repository, new FileInputStream(xmlfile), xmlfile.getName(), false,
-                            ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING,true);
+                    DataTransporter.executeImport(
+                        pathName,
+                        repository,
+                        new FileInputStream(xmlfile),
+                        xmlfile.getName(),
+                        false,
+                        ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING,
+                        true);
                 }
-                
-            } catch (IOException ioe) {
+
+            }
+            catch (IOException ioe) {
                 log.error(ioe.getMessage(), ioe);
-            } catch (OutOfMemoryError e) {
+            }
+            catch (OutOfMemoryError e) {
                 int maxMem = (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024);
                 int needed = Math.max(256, maxMem + 128);
                 log
-                        .error(
-                                "Unable to complete bootstrapping: out of memory.\n" //$NON-NLS-1$
-                                        + "{} MB were not enough, try to increase the amount of memory available by adding the -Xmx{}m parameter to the server startup script.\n" //$NON-NLS-1$
-                                        + "You will need to completely remove the magnolia webapp before trying again", Integer.toString(maxMem), Integer.toString(needed)); //$NON-NLS-1$
+                    .error(
+                        "Unable to complete bootstrapping: out of memory.\n" //$NON-NLS-1$
+                            + "{} MB were not enough, try to increase the amount of memory available by adding the -Xmx{}m parameter to the server startup script.\n" //$NON-NLS-1$
+                            + "You will need to completely remove the magnolia webapp before trying again", Integer.toString(maxMem), Integer.toString(needed)); //$NON-NLS-1$
                 break;
             }
 

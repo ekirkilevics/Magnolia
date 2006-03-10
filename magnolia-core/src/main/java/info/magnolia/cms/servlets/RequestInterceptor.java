@@ -18,8 +18,8 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.util.Resource;
 import info.magnolia.cms.util.ExclusiveWrite;
+import info.magnolia.cms.util.Resource;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
@@ -95,7 +95,7 @@ public class RequestInterceptor extends HttpServlet {
             repository = ContentRepository.WEBSITE;
         }
         HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
-        synchronized(ExclusiveWrite.getInstance()) {
+        synchronized (ExclusiveWrite.getInstance()) {
             if (action.equals(ACTION_PREVIEW)) {
                 // preview mode (button in main bar)
                 String preview = request.getParameter(Resource.MGNL_PREVIEW_ATTRIBUTE);
@@ -129,7 +129,7 @@ public class RequestInterceptor extends HttpServlet {
                     String pathParent = StringUtils.substringBeforeLast(pathSelected, "/"); //$NON-NLS-1$
                     String srcName = StringUtils.substringAfterLast(pathSelected, "/");
                     String destName = StringUtils.substringAfterLast(pathSortAbove, "/");
-                    if (StringUtils.equalsIgnoreCase(destName,"mgnlNew")) {
+                    if (StringUtils.equalsIgnoreCase(destName, "mgnlNew")) {
                         destName = null;
                     }
                     hm.getContent(pathParent).orderBefore(srcName, destName);

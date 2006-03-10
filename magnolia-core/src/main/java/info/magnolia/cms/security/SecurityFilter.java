@@ -44,27 +44,27 @@ public class SecurityFilter implements Filter {
 
     /**
      * filter config login form
-     * */
+     */
     private static final String LOGIN_FORM = "LoginForm";
 
     /**
      * filter config unsecured URI
-     * */
+     */
     private static final String UNSECURED_URI = "UnsecuredPath";
 
     /**
      * Authentication type
-     * */
+     */
     private static final String AUTH_TYPE = "AuthType";
 
     /**
      * Authentication type Basic
-     * */
+     */
     private static final String AUTH_TYPE_BASIC = "Basic";
 
     /**
      * filter config
-     * */
+     */
     private FilterConfig filterConfig;
 
     /**
@@ -103,33 +103,32 @@ public class SecurityFilter implements Filter {
      * @return boolean <code>true</code> if access to the resource is allowed
      * @throws IOException can be thrown when the servlet is unable to write to the response stream
      */
-    protected boolean isAllowed(HttpServletRequest req, HttpServletResponse res)
-			throws IOException {
-		if (Lock.isSystemLocked()) {
-			res.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
-			return false;
-		} else if (Authenticator.isAuthenticated(req)) {
-			return true;
-		} else if (SecureURI.isUnsecure(Path.getURI(req)))
-			return true;
-		else if (SecureURI.isProtected(Path.getURI(req))) {
-			return authenticate(req, res);
-		} else if (!Listener.isAllowed(req)) {
-			res.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return false;
-		}
-		return true;
-	}
+    protected boolean isAllowed(HttpServletRequest req, HttpServletResponse res) throws IOException {
+        if (Lock.isSystemLocked()) {
+            res.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+            return false;
+        }
+        else if (Authenticator.isAuthenticated(req)) {
+            return true;
+        }
+        else if (SecureURI.isUnsecure(Path.getURI(req)))
+            return true;
+        else if (SecureURI.isProtected(Path.getURI(req))) {
+            return authenticate(req, res);
+        }
+        else if (!Listener.isAllowed(req)) {
+            res.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return false;
+        }
+        return true;
+    }
 
     /**
-	 * Authenticate on basic headers.
-	 * 
-	 * @param request
-	 *            HttpServletRequest
-	 * @param response
-	 *            HttpServletResponst
-	 * @return <code>true</code> if the user is authenticated
-	 */
+     * Authenticate on basic headers.
+     * @param request HttpServletRequest
+     * @param response HttpServletResponst
+     * @return <code>true</code> if the user is authenticated
+     */
     private boolean authenticate(HttpServletRequest request, HttpServletResponse response) {
         try {
             if (Path.getURI(request).startsWith(this.filterConfig.getInitParameter(UNSECURED_URI))) {
@@ -139,11 +138,13 @@ public class SecurityFilter implements Filter {
                 // invalidate previous session
                 request.getSession().invalidate();
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                if (StringUtils.equalsIgnoreCase(this.filterConfig.getInitParameter(AUTH_TYPE),AUTH_TYPE_BASIC)) {
+                if (StringUtils.equalsIgnoreCase(this.filterConfig.getInitParameter(AUTH_TYPE), AUTH_TYPE_BASIC)) {
                     response.setHeader("WWW-Authenticate", "BASIC realm=\"" + Server.getBasicRealm() + "\"");
-                } else {
-                    request.getRequestDispatcher(
-                            this.filterConfig.getInitParameter(LOGIN_FORM)).include(request, response);
+                }
+                else {
+                    request.getRequestDispatcher(this.filterConfig.getInitParameter(LOGIN_FORM)).include(
+                        request,
+                        response);
                 }
                 return false;
             }
@@ -155,5 +156,5 @@ public class SecurityFilter implements Filter {
 
         return true;
     }
-    
+
 }

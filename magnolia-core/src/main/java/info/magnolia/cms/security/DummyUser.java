@@ -76,7 +76,7 @@ public class DummyUser implements User {
         return USER_NAME;
     }
 
-	public String getPassword() {
-		return "";
-	}
+    public String getPassword() {
+        return "";
+    }
 }

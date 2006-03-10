@@ -194,14 +194,6 @@
         <artifactId>maven-pmd-plugin</artifactId>
       </plugin>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>changes-maven-plugin</artifactId>
-        <configuration>
-          <inherited>false</inherited>
-          <link_template>%URL%/%ISSUE%</link_template>
-        </configuration>
-      </plugin>
-      <plugin>
         <groupId>net.sourceforge.maven-taglib</groupId>
         <artifactId>maven-taglib-plugin</artifactId>
       </plugin>
@@ -373,8 +365,13 @@
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-log4j12</artifactId>
-        <version>1.0-rc5</version>
+        <version>1.0</version>
       </dependency>
+    <dependency>
+      <groupId>ehcache</groupId>
+      <artifactId>ehcache</artifactId>
+      <version>1.1</version>
+    </dependency>
       <dependency>
         <groupId>httpunit</groupId>
         <artifactId>httpunit</artifactId>
@@ -423,6 +420,7 @@
     <module>../magnolia-core</module>
     <module>../magnolia-jaas</module>
     <module>../magnolia-gui</module>
+    <module>../magnolia-cache</module>
     <module>../magnolia-exchange-simple</module>
     <module>../magnolia-module-admininterface</module>
     <module>../magnolia-module-templating</module>

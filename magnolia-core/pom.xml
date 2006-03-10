@@ -109,6 +109,10 @@
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
     </dependency>
+    <dependency>
+      <groupId>ehcache</groupId>
+      <artifactId>ehcache</artifactId>
+    </dependency>
   </dependencies>
   <distributionManagement>
     <site>

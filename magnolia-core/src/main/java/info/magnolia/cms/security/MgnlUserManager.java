@@ -108,10 +108,10 @@ public class MgnlUserManager implements UserManager {
     public User getUserObject(Subject subject) throws UnsupportedOperationException {
         User user = null;
         // this could be the case if no one is logged in yet
-        if(subject == null){
+        if (subject == null) {
             return new DummyUser();
         }
-        
+
         Set principalSet = subject.getPrincipals(Entity.class);
         Iterator entityIterator = principalSet.iterator();
         Entity userDetails = (Entity) entityIterator.next();
@@ -135,13 +135,11 @@ public class MgnlUserManager implements UserManager {
 
     /**
      * Authenticate and initialize user using jaas magnolia login module
-     *
      * @param userId
      * @param pswd
      * @throws UnsupportedOperationException
      */
-    public User getUserObject(String userId, char[] pswd)
-            throws UnsupportedOperationException, LoginException {
+    public User getUserObject(String userId, char[] pswd) throws UnsupportedOperationException, LoginException {
         CredentialsCallbackHandler callbackHandler = new CredentialsCallbackHandler(userId, pswd);
         LoginContext loginContext = new LoginContext("magnolia", callbackHandler);
         loginContext.login();

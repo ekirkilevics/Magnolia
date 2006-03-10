@@ -222,18 +222,25 @@ public final class ModuleUtil {
         installFiles(jar, matcher);
     }
 
-    public static void bootstrap(Collection resourceNames) throws IOException{
-    	for (Iterator iter = resourceNames.iterator(); iter.hasNext();) {
-			String name = (String) iter.next();
+    public static void bootstrap(Collection resourceNames) throws IOException {
+        for (Iterator iter = resourceNames.iterator(); iter.hasNext();) {
+            String name = (String) iter.next();
             String repository = StringUtils.substringBefore(name, ".");
-			String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(StringUtils
-                    .substringBeforeLast(name, "."), "."), "."); //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
+            String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(StringUtils
+                .substringBeforeLast(name, "."), "."), "."); //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
             pathName = "/" + StringUtils.replace(pathName, ".", "/");
             InputStream stream = ModuleUtil.class.getResourceAsStream(name);
-			DataTransporter.executeImport(pathName, repository, stream, name, false, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING,true);
-		}
+            DataTransporter.executeImport(
+                pathName,
+                repository,
+                stream,
+                name,
+                false,
+                ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING,
+                true);
+        }
     }
-    
+
     public static void installFiles(JarFile jar, final String path) throws Exception {
         installFiles(jar, new DirectoryIncludeMatcher(path));
     }
@@ -473,13 +480,13 @@ public final class ModuleUtil {
             }
             SAXBuilder builder = new SAXBuilder();
             Document doc = builder.build(source);
-            
+
             // check if there
             Element node = (Element) XPath.selectSingleNode(doc, "/JCR/Repository[@name='" + name + "']");
             if (node == null) {
                 // create
                 node = new Element("Repository");
-    
+
                 String provider = ((Element) XPath.selectSingleNode(doc, "/JCR/Repository[@name='website']"))
                     .getAttributeValue("provider");
                 String configFile = ((Element) XPath.selectSingleNode(
@@ -487,13 +494,11 @@ public final class ModuleUtil {
                     "/JCR/Repository[@name='website']/param[@name='configFile']")).getAttributeValue("value");
                 String repositoryHome = ((Element) XPath.selectSingleNode(
                     doc,
-                    "/JCR/Repository[@name='website']/param[@name='repositoryHome']"))
-                    .getAttributeValue("value");
+                    "/JCR/Repository[@name='website']/param[@name='repositoryHome']")).getAttributeValue("value");
                 repositoryHome = StringUtils.substringBeforeLast(repositoryHome, "/") + "/" + name;
                 String contextFactoryClass = ((Element) XPath.selectSingleNode(
                     doc,
-                    "/JCR/Repository[@name='website']/param[@name='contextFactoryClass']"))
-                    .getAttributeValue("value");
+                    "/JCR/Repository[@name='website']/param[@name='contextFactoryClass']")).getAttributeValue("value");
                 String providerURL = ((Element) XPath.selectSingleNode(
                     doc,
                     "/JCR/Repository[@name='website']/param[@name='providerURL']")).getAttributeValue("value");
@@ -501,12 +506,12 @@ public final class ModuleUtil {
                     doc,
                     "/JCR/Repository[@name='website']/param[@name='bindName']")).getAttributeValue("value");
                 bindName = StringUtils.replace(bindName, "website", name);
-    
+
                 node.setAttribute("name", name);
                 node.setAttribute("id", name);
                 node.setAttribute("loadOnStartup", "true");
                 node.setAttribute("provider", provider);
-    
+
                 node.addContent(new Element("param").setAttribute("name", "configFile").setAttribute(
                     "value",
                     configFile));
@@ -520,15 +525,15 @@ public final class ModuleUtil {
                     "value",
                     providerURL));
                 node.addContent(new Element("param").setAttribute("name", "bindName").setAttribute("value", bindName));
-    
+
                 doc.getRootElement().addContent(node);
-    
+
                 // make the mapping
                 node = new Element("Map");
                 node.setAttribute("name", name).setAttribute("repositoryName", name);
                 // add it
                 doc.getRootElement().getChild("RepositoryMapping").addContent(node);
-                
+
                 // save it
                 XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
                 outputter.output(doc, new FileWriter(source));

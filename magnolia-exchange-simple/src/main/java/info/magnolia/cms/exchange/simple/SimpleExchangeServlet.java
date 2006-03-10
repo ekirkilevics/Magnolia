@@ -14,8 +14,12 @@ package info.magnolia.cms.exchange.simple;
 
 import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.runtime.*;
-import info.magnolia.cms.core.CacheHandler;
+import info.magnolia.cms.beans.runtime.Document;
+import info.magnolia.cms.beans.runtime.MgnlContext;
+import info.magnolia.cms.beans.runtime.MultipartForm;
+import info.magnolia.cms.beans.runtime.WebContext;
+import info.magnolia.cms.cache.CacheManager;
+import info.magnolia.cms.cache.CacheManagerFactory;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -71,6 +75,8 @@ public class SimpleExchangeServlet extends HttpServlet {
      */
     private static Logger log = LoggerFactory.getLogger(SimpleExchangeServlet.class);
 
+    private CacheManager cacheManager = CacheManagerFactory.getCacheManager();
+
     /**
      * @param request
      * @param response
@@ -86,7 +92,7 @@ public class SimpleExchangeServlet extends HttpServlet {
             applyLock(request);
             receive(request);
             // remove cached files if successful
-            CacheHandler.flushCache();
+            this.cacheManager.flushAll();
             status = SimpleSyndicator.ACTIVATION_SUCCESSFUL;
         }
         catch (OutOfMemoryError e) {
@@ -371,7 +377,7 @@ public class SimpleExchangeServlet extends HttpServlet {
      * @param request the current request
      */
     protected void initializeContext(HttpServletRequest request) {
-        WebContext ctx = (WebContext)FactoryUtil.getInstance(WebContext.class);
+        WebContext ctx = (WebContext) FactoryUtil.getInstance(WebContext.class);
         ctx.init(request);
         MgnlContext.setInstance(ctx);
     }

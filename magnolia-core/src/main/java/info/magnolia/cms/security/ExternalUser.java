@@ -96,7 +96,6 @@ public class ExternalUser implements User {
 
     /**
      * get user password
-     *
      * @return password string
      */
     public String getPassword() {

@@ -3,415 +3,410 @@
         PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
     "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
 <taglib>
-    <tlib-version>2.1</tlib-version>
-    <jsp-version>1.2</jsp-version>
-    <short-name>cms</short-name>
-    <uri>cms-taglib</uri>
-    <description>Core tag library for CMS</description>
-    <tag>
-        <name>mainBar</name>
-        <tag-class>info.magnolia.cms.taglibs.MainBar</tag-class>
-        <body-content>EMPTY</body-content>
-        <display-name>mainBar</display-name>
-        <description>
-            Displays the mainBar, i.e. the bar that allows you to change the page properties and switch to preview mode.
-            This tag also add the css and js links if not previously defined, but it's recommended to add the cms:links
-            tag to the header of the page (also if some browser support it, css links are not valid inside the html body
-            tag.
-        </description>
-        <attribute>
-            <name>paragraph</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>Name of the paragraph for the page properties (as defined in config)</description>
-        </attribute>
-        <attribute>
-            <name>adminButtonVisible</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>boolean</type>
-            <description>Set it to false if you don't want to show the AdminCentral button</description>
-        </attribute>
-    </tag>
-    <tag>
-        <name>links</name>
-        <tag-class>info.magnolia.cms.taglibs.LinksTag</tag-class>
-        <body-content>EMPTY</body-content>
-        <display-name>links</display-name>
-        <description>
-            Add the needed css and js links for magnolia edit controls. This tag should always bee added to html head.
-        </description>
-        <attribute>
-            <name>adminOnly</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>boolean</type>
-            <description>
-                Show links only in admin instance, default to true. You can set it to false if you want magnolia css and
-                js files added also for a public instance.
-            </description>
-        </attribute>
-    </tag>
-    <tag>
-        <name>editBar</name>
-        <tag-class>info.magnolia.cms.taglibs.EditBar</tag-class>
-        <body-content>EMPTY</body-content>
-        <display-name>editBar</display-name>
-        <description>
-            This will display a Magnolia editBar, which allows you to edit a paragraph. This tag is often used within
-            contentNodeIterator, which in turn will set all relevant parameters automatically.
-        </description>
-        <attribute>
-            <name>contentNodeName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>the contentNode (i.e. paragraph) you wish to edit</description>
-        </attribute>
-        <attribute>
-            <name>contentNodeCollectionName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>the contentNode collection</description>
-        </attribute>
-        <attribute>
-            <name>paragraph</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>
-                name of paragraph (as defined in config). Does not have to be set inside "contentNodeIterator"
-            </description>
-        </attribute>
-        <attribute>
-            <name>editLabel</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>text of the edit button, defaults to "Edit"</description>
-        </attribute>
-        <attribute>
-            <name>deleteLabel</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>text of the delete button, defaults to "Delete"; use "" to get no delete button</description>
-        </attribute>
-        <attribute>
-            <name>moveLabel</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>text of the move button, defaults to "Move"; use "" to get no move button</description>
-        </attribute>
-    </tag>
-    <!-- new bar tag -->
-    <tag>
-        <name>newBar</name>
-        <tag-class>info.magnolia.cms.taglibs.NewBar</tag-class>
-        <body-content>EMPTY</body-content>
-        <description>Displays a newBar that allows you to create new paragraphs.</description>
-        <attribute>
-            <name>contentNodeCollectionName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>
-                stored under this name, you will need the name for later retrieval of contents. (required)
-            </description>
-        </attribute>
-        <attribute>
-            <name>paragraph</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>comma separated list of paragraph types</description>
-        </attribute>
-        <attribute>
-            <name>newLabel</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>text of the button, defaults to "New"</description>
-        </attribute>
-        <example>
-            <![CDATA[
+  <tlib-version>2.1</tlib-version>
+  <jsp-version>1.2</jsp-version>
+  <short-name>cms</short-name>
+  <uri>cms-taglib</uri>
+  <description>Core tag library for CMS</description>
+  <tag>
+    <name>mainBar</name>
+    <tag-class>info.magnolia.cms.taglibs.MainBar</tag-class>
+    <body-content>EMPTY</body-content>
+    <display-name>mainBar</display-name>
+    <description>
+      Displays the mainBar, i.e. the bar that allows you to change the page properties and switch to preview mode. This
+      tag also add the css and js links if not previously defined, but it's recommended to add the cms:links tag to the
+      header of the page (also if some browser support it, css links are not valid inside the html body tag.
+    </description>
+    <attribute>
+      <name>paragraph</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Name of the paragraph for the page properties (as defined in config)</description>
+    </attribute>
+    <attribute>
+      <name>adminButtonVisible</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description>Set it to false if you don't want to show the AdminCentral button</description>
+    </attribute>
+  </tag>
+  <tag>
+    <name>links</name>
+    <tag-class>info.magnolia.cms.taglibs.LinksTag</tag-class>
+    <body-content>EMPTY</body-content>
+    <display-name>links</display-name>
+    <description>
+      Add the needed css and js links for magnolia edit controls. This tag should always bee added to html head.
+    </description>
+    <attribute>
+      <name>adminOnly</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description>
+        Show links only in admin instance, default to true. You can set it to false if you want magnolia css and js
+        files added also for a public instance.
+      </description>
+    </attribute>
+  </tag>
+  <tag>
+    <name>editBar</name>
+    <tag-class>info.magnolia.cms.taglibs.EditBar</tag-class>
+    <body-content>EMPTY</body-content>
+    <display-name>editBar</display-name>
+    <description>
+      This will display a Magnolia editBar, which allows you to edit a paragraph. This tag is often used within
+      contentNodeIterator, which in turn will set all relevant parameters automatically.
+    </description>
+    <attribute>
+      <name>contentNodeName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>the contentNode (i.e. paragraph) you wish to edit</description>
+    </attribute>
+    <attribute>
+      <name>contentNodeCollectionName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>the contentNode collection</description>
+    </attribute>
+    <attribute>
+      <name>paragraph</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        name of paragraph (as defined in config). Does not have to be set inside "contentNodeIterator"
+      </description>
+    </attribute>
+    <attribute>
+      <name>editLabel</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>text of the edit button, defaults to "Edit"</description>
+    </attribute>
+    <attribute>
+      <name>deleteLabel</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>text of the delete button, defaults to "Delete"; use "" to get no delete button</description>
+    </attribute>
+    <attribute>
+      <name>moveLabel</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>text of the move button, defaults to "Move"; use "" to get no move button</description>
+    </attribute>
+  </tag>
+  <!-- new bar tag -->
+  <tag>
+    <name>newBar</name>
+    <tag-class>info.magnolia.cms.taglibs.NewBar</tag-class>
+    <body-content>EMPTY</body-content>
+    <description>Displays a newBar that allows you to create new paragraphs.</description>
+    <attribute>
+      <name>contentNodeCollectionName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        stored under this name, you will need the name for later retrieval of contents. (required)
+      </description>
+    </attribute>
+    <attribute>
+      <name>paragraph</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>comma separated list of paragraph types</description>
+    </attribute>
+    <attribute>
+      <name>newLabel</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>text of the button, defaults to "New"</description>
+    </attribute>
+    <example>
+      <![CDATA[
 <cms:newBar
 contentNodeCollectionName="mainColumnParagraphs"
 paragraph="samplesTextImage,samplesDownload,samplesLink"/>
 ]]>
-        </example>
-    </tag>
-    <tag>
-        <name>editButton</name>
-        <tag-class>info.magnolia.cms.taglibs.EditButton</tag-class>
-        <body-content>EMPTY</body-content>
-        <description>display edit button</description>
-        <attribute>
-            <name>contentNodeName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-        <attribute>
-            <name>contentNodeCollectionName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-        <attribute>
-            <name>paragraph</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-        <attribute>
-            <name>parFile</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>@deprecated</description>
-        </attribute>
-        <attribute>
-            <name>template</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-        <attribute>
-            <name>label</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-        <attribute>
-            <name>editLabel</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>@deprecated</description>
-        </attribute>
-        <attribute>
-            <name>small</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-    </tag>
-    <tag>
-        <name>out</name>
-        <tag-class>info.magnolia.cms.taglibs.Out</tag-class>
-        <body-content>EMPTY</body-content>
-        <description>
-            Writes out the content of a nodeData or - for nodeData of type binary - information of the nodeData
-        </description>
-        <attribute>
-            <name>nodeDataName</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>the name of the nodeData you wish to write out (required)</description>
-        </attribute>
-        <attribute>
-            <name>contentNodeName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>
-                # Inside a "contentNodeIterator" * if not set, the current content node is taken. * if set empty
-                (contentNodeName=""), the top level content is taken (equals to Magnolia 1.x actpage="true"). * if
-                specified, the named content node is taken. # Outside a "contentNodeIterator" * if not set or empty: the
-                top level content is taken * if specified, the named content node is taken
-            </description>
-        </attribute>
-        <attribute>
-            <name>contentNodeCollectionName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-        <attribute>
-            <name>actpage</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>
-                @deprecated no meaning anymore; inside a loop, set contentNodeName="" to use "actpage"
-            </description>
-        </attribute>
-        <attribute>
-            <name>fileProperty</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-        <attribute>
-            <name>dateLanguage</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-        <attribute>
-            <name>datePattern</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-        <attribute>
-            <name>lineBreak</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>
-                defaults to BR-tag. Set to "" to have no line break at all, or any other value to be used as the line
-                break
-            </description>
-        </attribute>
-        <example>
-            <![CDATA[
+    </example>
+  </tag>
+  <tag>
+    <name>editButton</name>
+    <tag-class>info.magnolia.cms.taglibs.EditButton</tag-class>
+    <body-content>EMPTY</body-content>
+    <description>display edit button</description>
+    <attribute>
+      <name>contentNodeName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description></description>
+    </attribute>
+    <attribute>
+      <name>contentNodeCollectionName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description></description>
+    </attribute>
+    <attribute>
+      <name>paragraph</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description></description>
+    </attribute>
+    <attribute>
+      <name>parFile</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>@deprecated</description>
+    </attribute>
+    <attribute>
+      <name>template</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description></description>
+    </attribute>
+    <attribute>
+      <name>label</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description></description>
+    </attribute>
+    <attribute>
+      <name>editLabel</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>@deprecated</description>
+    </attribute>
+    <attribute>
+      <name>small</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description></description>
+    </attribute>
+  </tag>
+  <tag>
+    <name>out</name>
+    <tag-class>info.magnolia.cms.taglibs.Out</tag-class>
+    <body-content>EMPTY</body-content>
+    <description>
+      Writes out the content of a nodeData or - for nodeData of type binary - information of the nodeData
+    </description>
+    <attribute>
+      <name>nodeDataName</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>the name of the nodeData you wish to write out (required)</description>
+    </attribute>
+    <attribute>
+      <name>contentNodeName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        # Inside a "contentNodeIterator" * if not set, the current content node is taken. * if set empty
+        (contentNodeName=""), the top level content is taken (equals to Magnolia 1.x actpage="true"). * if specified,
+        the named content node is taken. # Outside a "contentNodeIterator" * if not set or empty: the top level content
+        is taken * if specified, the named content node is taken
+      </description>
+    </attribute>
+    <attribute>
+      <name>contentNodeCollectionName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description></description>
+    </attribute>
+    <attribute>
+      <name>actpage</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>@deprecated no meaning anymore; inside a loop, set contentNodeName="" to use "actpage"</description>
+    </attribute>
+    <attribute>
+      <name>fileProperty</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description></description>
+    </attribute>
+    <attribute>
+      <name>dateLanguage</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description></description>
+    </attribute>
+    <attribute>
+      <name>datePattern</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description></description>
+    </attribute>
+    <attribute>
+      <name>lineBreak</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        defaults to BR-tag. Set to "" to have no line break at all, or any other value to be used as the line break
+      </description>
+    </attribute>
+    <example>
+      <![CDATA[
 <cms:out nodeDataName="title"/>
 ]]>
-        </example>
-    </tag>
-    <tag>
-        <name>adminOnly</name>
-        <tag-class>info.magnolia.cms.taglibs.AdminOnly</tag-class>
-        <body-content>JSP</body-content>
-        <description>
-            Everything between adminOnly tags will only be shown on an authoring instance, not on a public instance.
-            This allows you to provide functionality that is only available to page authors but not to the general
-            public.
-        </description>
-        <attribute>
-            <name>showInPreview</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>boolean</type>
-            <description>Show content in the Preview. Default is false.</description>
-        </attribute>
-        <example>
-            <![CDATA[
+    </example>
+  </tag>
+  <tag>
+    <name>adminOnly</name>
+    <tag-class>info.magnolia.cms.taglibs.AdminOnly</tag-class>
+    <body-content>JSP</body-content>
+    <description>
+      Everything between adminOnly tags will only be shown on an authoring instance, not on a public instance. This
+      allows you to provide functionality that is only available to page authors but not to the general public.
+    </description>
+    <attribute>
+      <name>showInPreview</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description>Show content in the Preview. Default is false.</description>
+    </attribute>
+    <example>
+      <![CDATA[
 <cms:adminOnly>
     <cms:editBar/>
 </cms:adminOnly>
 ]]>
-        </example>
-    </tag>
-    <tag>
-        <name>publicOnly</name>
-        <tag-class>info.magnolia.cms.taglibs.PublicOnly</tag-class>
-        <body-content>JSP</body-content>
-        <description>Everything between publicOnly tags will only be shown on the public instance.</description>
-        <attribute>
-            <name>showInPreview</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>boolean</type>
-            <description>Show content in the Preview. Default is true.</description>
-        </attribute>
-        <example>
-            <![CDATA[
+    </example>
+  </tag>
+  <tag>
+    <name>publicOnly</name>
+    <tag-class>info.magnolia.cms.taglibs.PublicOnly</tag-class>
+    <body-content>JSP</body-content>
+    <description>Everything between publicOnly tags will only be shown on the public instance.</description>
+    <attribute>
+      <name>showInPreview</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description>Show content in the Preview. Default is true.</description>
+    </attribute>
+    <example>
+      <![CDATA[
 <cms:publicOnly>
     Public now!
 </cms:publicOnly>
 ]]>
-        </example>
-    </tag>
-    <tag>
-        <name>includeTemplate</name>
-        <tag-class>info.magnolia.cms.taglibs.Include</tag-class>
-        <body-content>JSP</body-content>
-        <description>
-            Include a JSP. This is typically used to render a paragraph. Within contentNodeIterator, parameters are
-            provided automatically by the loop.
-        </description>
-        <attribute>
-            <name>path</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>file to be included (e.g. /templates/jsp/x.jsp)</description>
-        </attribute>
-        <attribute>
-            <name>contentNode</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>info.magnolia.cms.core.Content</type>
-            <description></description>
-        </attribute>
-        <attribute>
-            <name>contentNodeName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>the name of the contentNode (i.e. paragraph) you wish to show</description>
-        </attribute>
-        <attribute>
-            <name>container</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>info.magnolia.cms.core.Content</type>
-            <description>@deprecated use contentNode</description>
-        </attribute>
-    </tag>
-    <tag>
-        <name>set</name>
-        <tag-class>info.magnolia.cms.taglibs.Set</tag-class>
-        <body-content>EMPTY</body-content>
-        <description>Set contentNode in resource (globally available for the page)</description>
-        <attribute>
-            <name>contentNodeName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>contentNode's name to be loaded from the current active page</description>
-        </attribute>
-        <attribute>
-            <name>containerName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>@deprecated use contentNodeName</description>
-        </attribute>
-        <attribute>
-            <name>contentNode</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>info.magnolia.cms.core.Content</type>
-            <description>contentNodeobject to be set as global contentNode for the page</description>
-        </attribute>
-        <attribute>
-            <name>container</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>info.magnolia.cms.core.Content</type>
-            <description>@deprecated use contentNode</description>
-        </attribute>
-    </tag>
-    <tag>
-        <name>init</name>
-        <tag-class>info.magnolia.cms.taglibs.Init</tag-class>
-        <body-content>EMPTY</body-content>
-        <description>@deprecated this tag does nothing in magnolia 2.x</description>
-    </tag>
-    <tag>
-        <name>contentNodeIterator</name>
-        <tag-class>info.magnolia.cms.taglibs.ContentNodeIterator</tag-class>
-        <body-content>JSP</body-content>
-        <description>iterate over contentNode collection</description>
-        <attribute>
-            <name>contentNodeCollectionName</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>
-                contentNodeIterator is used whenever you want to loop over content, typically paragraphs. A parameter
-                contentNodeCollectionName will contain the name of the contentNode you are looping over.
-                contentNodeCollectionName is created by providing a newBar with the corresponding name. This will result
-                in elements being created within that contentNode, and thus allow you to loop over these.
-            </description>
-        </attribute>
-        <attribute>
-            <name>begin</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>number; defines the starting point of the loop (0 based)</description>
-        </attribute>
-        <attribute>
-            <name>end</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>number; defines after which contentNode the loop breaks (0 based)</description>
-        </attribute>
-        <attribute>
-            <name>step</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-        <example>
-            <![CDATA[
+    </example>
+  </tag>
+  <tag>
+    <name>includeTemplate</name>
+    <tag-class>info.magnolia.cms.taglibs.Include</tag-class>
+    <body-content>JSP</body-content>
+    <description>
+      Include a JSP. This is typically used to render a paragraph. Within contentNodeIterator, parameters are provided
+      automatically by the loop.
+    </description>
+    <attribute>
+      <name>path</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>file to be included (e.g. /templates/jsp/x.jsp)</description>
+    </attribute>
+    <attribute>
+      <name>contentNode</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>info.magnolia.cms.core.Content</type>
+      <description></description>
+    </attribute>
+    <attribute>
+      <name>contentNodeName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>the name of the contentNode (i.e. paragraph) you wish to show</description>
+    </attribute>
+    <attribute>
+      <name>container</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>info.magnolia.cms.core.Content</type>
+      <description>@deprecated use contentNode</description>
+    </attribute>
+  </tag>
+  <tag>
+    <name>set</name>
+    <tag-class>info.magnolia.cms.taglibs.Set</tag-class>
+    <body-content>EMPTY</body-content>
+    <description>Set contentNode in resource (globally available for the page)</description>
+    <attribute>
+      <name>contentNodeName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>contentNode's name to be loaded from the current active page</description>
+    </attribute>
+    <attribute>
+      <name>containerName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>@deprecated use contentNodeName</description>
+    </attribute>
+    <attribute>
+      <name>contentNode</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>info.magnolia.cms.core.Content</type>
+      <description>contentNodeobject to be set as global contentNode for the page</description>
+    </attribute>
+    <attribute>
+      <name>container</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>info.magnolia.cms.core.Content</type>
+      <description>@deprecated use contentNode</description>
+    </attribute>
+  </tag>
+  <tag>
+    <name>init</name>
+    <tag-class>info.magnolia.cms.taglibs.Init</tag-class>
+    <body-content>EMPTY</body-content>
+    <description>@deprecated this tag does nothing in magnolia 2.x</description>
+  </tag>
+  <tag>
+    <name>contentNodeIterator</name>
+    <tag-class>info.magnolia.cms.taglibs.ContentNodeIterator</tag-class>
+    <body-content>JSP</body-content>
+    <description>iterate over contentNode collection</description>
+    <attribute>
+      <name>contentNodeCollectionName</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        contentNodeIterator is used whenever you want to loop over content, typically paragraphs. A parameter
+        contentNodeCollectionName will contain the name of the contentNode you are looping over.
+        contentNodeCollectionName is created by providing a newBar with the corresponding name. This will result in
+        elements being created within that contentNode, and thus allow you to loop over these.
+      </description>
+    </attribute>
+    <attribute>
+      <name>begin</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>number; defines the starting point of the loop (0 based)</description>
+    </attribute>
+    <attribute>
+      <name>end</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>number; defines after which contentNode the loop breaks (0 based)</description>
+    </attribute>
+    <attribute>
+      <name>step</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description></description>
+    </attribute>
+    <example>
+      <![CDATA[
 <cms:contentNodeIterator contentNodeCollectionName="mainColumnParagraphs">
     <cms:adminOnly>
         <cms:editBar/>
@@ -419,291 +414,301 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
     <cms:includeTemplate/>
 </cms:contentNodeIterator>
 ]]>
-        </example>
-    </tag>
-    <tag>
-        <name>ifLastContentNode</name>
-        <tag-class>info.magnolia.cms.taglibs.IfLastContentNode</tag-class>
-        <body-content>JSP</body-content>
-        <description>checks if the current container is last in collection</description>
-    </tag>
-    <tag>
-        <name>ifFirstContentNode</name>
-        <tag-class>info.magnolia.cms.taglibs.IfFirstContentNode</tag-class>
-        <body-content>JSP</body-content>
-        <description>checks if the current container is first in the collection</description>
-    </tag>
-    <tag>
-        <name>attribute</name>
-        <tag-class>info.magnolia.cms.taglibs.Attribute</tag-class>
-        <body-content>EMPTY</body-content>
-        <description>adds an attribute to the request within an includeTemplate tag</description>
-        <attribute>
-            <name>name</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-        <attribute>
-            <name>value</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-    </tag>
-    <tag>
-        <name>ifNotEmpty</name>
-        <tag-class>info.magnolia.cms.taglibs.IfNotEmpty</tag-class>
-        <body-content>JSP</body-content>
-        <description>
-            evaluates the body only if a container exitsts and / or the corresponding atom exists and is not empty
-        </description>
-        <attribute>
-            <name>nodeDataName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-        <attribute>
-            <name>atomName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-        <attribute>
-            <name>contentNodeName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-        <attribute>
-            <name>containerName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>@deprecated use contentNode</description>
-        </attribute>
-        <attribute>
-            <name>contentNodeCollectionName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-        <attribute>
-            <name>containerListName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>@deprecated use contentNodeCollectionName</description>
-        </attribute>
-        <attribute>
-            <name>actpage</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>boolean</type>
-            <description></description>
-        </attribute>
-    </tag>
-    <tag>
-        <name>ifEmpty</name>
-        <tag-class>info.magnolia.cms.taglibs.IfEmpty</tag-class>
-        <body-content>JSP</body-content>
-        <description>this is exactly the opposite of the ifNotEmpty Tag</description>
-        <attribute>
-            <name>nodeDataName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-        <attribute>
-            <name>atomName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-        <attribute>
-            <name>contentNodeName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-        <attribute>
-            <name>containerName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>@deprecated use contentNode</description>
-        </attribute>
-        <attribute>
-            <name>contentNodeCollectionName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-        <attribute>
-            <name>containerListName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>@deprecated use contentNodeCollectionName</description>
-        </attribute>
-        <attribute>
-            <name>actpage</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>boolean</type>
-            <description></description>
-        </attribute>
-    </tag>
-    <tag>
-        <name>ifNotExisting</name>
-        <tag-class>info.magnolia.cms.taglibs.IfNotExisting</tag-class>
-        <body-content>JSP</body-content>
-        <description>evaluates the body only if a container and / or the corresponding atom does not exist</description>
-        <attribute>
-            <name>nodeDataName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-        <attribute>
-            <name>contentNodeName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-        <attribute>
-            <name>contentNodeCollectionName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-        <attribute>
-            <name>actpage</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>boolean</type>
-            <description></description>
-        </attribute>
-    </tag>
-    <tag>
-        <name>ifExisting</name>
-        <tag-class>info.magnolia.cms.taglibs.IfExisting</tag-class>
-        <body-content>JSP</body-content>
-        <description>this is exactly the opposite of the ifNotExisting Tag</description>
-        <attribute>
-            <name>nodeDataName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-        <attribute>
-            <name>contentNodeName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-        <attribute>
-            <name>contentNodeCollectionName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-        <attribute>
-            <name>actpage</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>boolean</type>
-            <description></description>
-        </attribute>
-    </tag>
-    <tag>
-        <name>loadPage</name>
-        <tag-class>info.magnolia.cms.taglibs.LoadPage</tag-class>
-        <body-content>JSP</body-content>
-        <description>
-            Loads another page into actpage. One usage would be within a site-menu structure. loadPage does not nest
-            pages, so the corresponding unloadPage-tag will not revert to the previously loaded page, but restore
-            actpage to the currently displayed page, i.e. the value it held before loadPage was called for the first
-            time.
-        </description>
-        <attribute>
-            <name>path</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>path of the page to be loaded</description>
-        </attribute>
-        <attribute>
-            <name>templateName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>???</description>
-        </attribute>
-        <attribute>
-            <name>level</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>int</type>
-            <description>???</description>
-        </attribute>
-    </tag>
-    <tag>
-        <name>loadPagePath</name>
-        <tag-class>info.magnolia.cms.taglibs.LoadPagePath</tag-class>
-        <body-content>JSP</body-content>
-        <description>sub tag of loadPage, its body contains the path of the page to load</description>
-    </tag>
-    <tag>
-        <name>unloadPage</name>
-        <tag-class>info.magnolia.cms.taglibs.UnloadPage</tag-class>
-        <body-content>EMPTY</body-content>
-        <description>
-            The unloadPage-tag will restore actpage to the currently displayed page. This can be necessary after you
-            have used loadPage to temporarily have access to a different page, e.g. for building a menu.
-        </description>
-    </tag>
-    <tag>
-        <name>setNode</name>
-        <tag-class>info.magnolia.cms.taglibs.SetNode</tag-class>
-        <body-content>EMPTY</body-content>
-        <description>
-            Exposes a content node to the pagecontext as a Map of nodeData, in order to access the exposed object using
-            JSTL.
-        </description>
-        <attribute>
-            <name>contentNodeName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>
-                Inside a "contentNodeIterator": if not set the current content node is taken, if set empty
-                (contentNodeName="") the top level content is taken, if specified the named content node is taken.
-                Outside a "contentNodeIterator": if not set or empty: the top level content is taken, if specified, the
-                named content node is taken
-            </description>
-        </attribute>
-        <attribute>
-            <name>contentNodeCollectionName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>Name of the collection holding the content node, e.g. "mainColumnParagraphs"</description>
-        </attribute>
-        <attribute>
-            <name>var</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>The content node will be added to the pagecontext with this name.</description>
-        </attribute>
-        <attribute>
-            <name>scope</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>
-                Scope for the variable. Can be "page" (default), "request", "session", "application"
-            </description>
-        </attribute>
-        <example>
-            <![CDATA[
+    </example>
+  </tag>
+  <tag>
+    <name>ifLastContentNode</name>
+    <tag-class>info.magnolia.cms.taglibs.IfLastContentNode</tag-class>
+    <body-content>JSP</body-content>
+    <description>checks if the current container is last in collection</description>
+  </tag>
+  <tag>
+    <name>ifFirstContentNode</name>
+    <tag-class>info.magnolia.cms.taglibs.IfFirstContentNode</tag-class>
+    <body-content>JSP</body-content>
+    <description>checks if the current container is first in the collection</description>
+  </tag>
+  <tag>
+    <name>attribute</name>
+    <tag-class>info.magnolia.cms.taglibs.Attribute</tag-class>
+    <body-content>EMPTY</body-content>
+    <description>adds an attribute to the request within an includeTemplate tag</description>
+    <attribute>
+      <name>name</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description></description>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description></description>
+    </attribute>
+  </tag>
+  <tag>
+    <name>ifNotEmpty</name>
+    <tag-class>info.magnolia.cms.taglibs.IfNotEmpty</tag-class>
+    <body-content>JSP</body-content>
+    <description>
+      evaluates the body only if a container exitsts and / or the corresponding atom exists and is not empty
+    </description>
+    <attribute>
+      <name>nodeDataName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description></description>
+    </attribute>
+    <attribute>
+      <name>atomName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description></description>
+    </attribute>
+    <attribute>
+      <name>contentNodeName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description></description>
+    </attribute>
+    <attribute>
+      <name>containerName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>@deprecated use contentNode</description>
+    </attribute>
+    <attribute>
+      <name>contentNodeCollectionName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description></description>
+    </attribute>
+    <attribute>
+      <name>containerListName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>@deprecated use contentNodeCollectionName</description>
+    </attribute>
+    <attribute>
+      <name>actpage</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description></description>
+    </attribute>
+  </tag>
+  <tag>
+    <name>ifEmpty</name>
+    <tag-class>info.magnolia.cms.taglibs.IfEmpty</tag-class>
+    <body-content>JSP</body-content>
+    <description>this is exactly the opposite of the ifNotEmpty Tag</description>
+    <attribute>
+      <name>nodeDataName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description></description>
+    </attribute>
+    <attribute>
+      <name>atomName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description></description>
+    </attribute>
+    <attribute>
+      <name>contentNodeName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description></description>
+    </attribute>
+    <attribute>
+      <name>containerName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>@deprecated use contentNode</description>
+    </attribute>
+    <attribute>
+      <name>contentNodeCollectionName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description></description>
+    </attribute>
+    <attribute>
+      <name>containerListName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>@deprecated use contentNodeCollectionName</description>
+    </attribute>
+    <attribute>
+      <name>actpage</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description></description>
+    </attribute>
+  </tag>
+  <tag>
+    <name>ifNotExisting</name>
+    <tag-class>info.magnolia.cms.taglibs.IfNotExisting</tag-class>
+    <body-content>JSP</body-content>
+    <description>evaluates the body only if a container and / or the corresponding atom does not exist</description>
+    <attribute>
+      <name>nodeDataName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description></description>
+    </attribute>
+    <attribute>
+      <name>contentNodeName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description></description>
+    </attribute>
+    <attribute>
+      <name>contentNodeCollectionName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description></description>
+    </attribute>
+    <attribute>
+      <name>actpage</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description></description>
+    </attribute>
+  </tag>
+  <tag>
+    <name>ifExisting</name>
+    <tag-class>info.magnolia.cms.taglibs.IfExisting</tag-class>
+    <body-content>JSP</body-content>
+    <description>this is exactly the opposite of the ifNotExisting Tag</description>
+    <attribute>
+      <name>nodeDataName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description></description>
+    </attribute>
+    <attribute>
+      <name>contentNodeName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description></description>
+    </attribute>
+    <attribute>
+      <name>contentNodeCollectionName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description></description>
+    </attribute>
+    <attribute>
+      <name>actpage</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description></description>
+    </attribute>
+  </tag>
+  <tag>
+    <name>loadPage</name>
+    <tag-class>info.magnolia.cms.taglibs.LoadPage</tag-class>
+    <body-content>JSP</body-content>
+    <description>
+      Loads another page into actpage. One usage would be within a site-menu structure. loadPage does not nest pages, so
+      the corresponding unloadPage-tag will not revert to the previously loaded page, but restore actpage to the
+      currently displayed page, i.e. the value it held before loadPage was called for the first time.
+    </description>
+    <attribute>
+      <name>path</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>path of the page to be loaded</description>
+    </attribute>
+    <attribute>
+      <name>templateName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>???</description>
+    </attribute>
+    <attribute>
+      <name>level</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>int</type>
+      <description>???</description>
+    </attribute>
+  </tag>
+  <tag>
+    <name>loadPagePath</name>
+    <tag-class>info.magnolia.cms.taglibs.LoadPagePath</tag-class>
+    <body-content>JSP</body-content>
+    <description>sub tag of loadPage, its body contains the path of the page to load</description>
+  </tag>
+  <tag>
+    <name>unloadPage</name>
+    <tag-class>info.magnolia.cms.taglibs.UnloadPage</tag-class>
+    <body-content>EMPTY</body-content>
+    <description>
+      The unloadPage-tag will restore actpage to the currently displayed page. This can be necessary after you have used
+      loadPage to temporarily have access to a different page, e.g. for building a menu.
+    </description>
+  </tag>
+  <tag>
+    <name>setNode</name>
+    <tag-class>info.magnolia.cms.taglibs.SetNode</tag-class>
+    <body-content>EMPTY</body-content>
+    <description>
+      Exposes a content node to the pagecontext as a Map of nodeData, in order to access the exposed object using JSTL.
+    </description>
+    <attribute>
+      <name>contentNodeName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        Inside a "contentNodeIterator": if not set the current content node is taken, if set empty (contentNodeName="")
+        the top level content is taken, if specified the named content node is taken. Outside a "contentNodeIterator":
+        if not set or empty: the top level content is taken, if specified, the named content node is taken
+      </description>
+    </attribute>
+    <attribute>
+      <name>contentNodeCollectionName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Name of the collection holding the content node, e.g. "mainColumnParagraphs"</description>
+    </attribute>
+    <attribute>
+      <name>var</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>The content node will be added to the pagecontext with this name.</description>
+    </attribute>
+    <attribute>
+      <name>scope</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Scope for the variable. Can be "page" (default), "request", "session", "application"</description>
+    </attribute>
+    <example>
+      <![CDATA[
 <cms:setNode var="currentNode"/>
 <c:if test="${!empty currentNode.title}">
   <c:out value="${currentNode.title}"/>
 </c:if>
 ]]>
-        </example>
-    </tag>
+    </example>
+  </tag>
+  <tag>
+    <name>pageIterator</name>
+    <tag-class>info.magnolia.cms.taglibs.PageIterator</tag-class>
+    <body-content>JSP</body-content>
+    <description>iterate over Content (page) collection</description>
+    <attribute>
+      <name>hiddenAttribute</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        If a page contains a boolean property with this name and it is set to true, the page is skipped by the iterator.
+        Defaults to "hidden".
+      </description>
+    </attribute>
+  </tag>
 </taglib>

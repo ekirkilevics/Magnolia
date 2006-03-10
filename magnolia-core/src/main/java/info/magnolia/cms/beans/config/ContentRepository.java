@@ -417,7 +417,7 @@ public final class ContentRepository {
         Collection workspaces = mapping.getWorkspaces();
         if (workspaces.contains(repositoryId)) {
             return repositoryId;
-        } 
+        }
         return DEFAULT_WORKSPACE;
     }
 
@@ -449,10 +449,10 @@ public final class ContentRepository {
      * returns repository mapping as configured.
      */
     public static RepositoryMapping getRepositoryMapping(String repositoryID) {
-        if(ContentRepository.repositoryMapping.containsKey(getMappedRepositoryName(repositoryID))){
+        if (ContentRepository.repositoryMapping.containsKey(getMappedRepositoryName(repositoryID))) {
             return (RepositoryMapping) ContentRepository.repositoryMapping.get(getMappedRepositoryName(repositoryID));
         }
-        else{
+        else {
             log.warn("no mapping for the repository [" + repositoryID + "]");
             return null;
         }

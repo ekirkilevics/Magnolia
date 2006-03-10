@@ -12,10 +12,10 @@
  */
 package info.magnolia.cms.core;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.beans.config.ContentRepository;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -68,7 +68,7 @@ public class MetaData {
 
     /**
      * @deprecated all meta data properties should be under one single MetaData node
-     * */
+     */
     public static final String ACTIVATION_INFO = ".activationInfo"; //$NON-NLS-1$
 
     public static final String DEFAULT_META_NODE = "MetaData"; //$NON-NLS-1$
@@ -139,9 +139,10 @@ public class MetaData {
         catch (PathNotFoundException e) {
             if (log.isDebugEnabled()) {
                 try {
-                    log.debug(workingNode.getPath()+" does not support MetaData");
-                    log.debug("check node type definition of "+workingNode.getPrimaryNodeType().getName());
-                } catch (RepositoryException re) {
+                    log.debug(workingNode.getPath() + " does not support MetaData");
+                    log.debug("check node type definition of " + workingNode.getPrimaryNodeType().getName());
+                }
+                catch (RepositoryException re) {
                     // should never come here
                 }
             }
@@ -152,9 +153,9 @@ public class MetaData {
     }
 
     /**
-     *Get all meta data properties
+     * Get all meta data properties
      * @return property iterator
-     * */
+     */
     public PropertyIterator getProperties() {
         if (node == null) {
             return null;
@@ -189,9 +190,9 @@ public class MetaData {
      * get property name with the prefix
      * @param name
      * @return name with namespace prefix
-     * */
+     */
     private String getInternalPropertyName(String name) {
-        if (StringUtils.indexOf(name, ContentRepository.NAMESPACE_PREFIX+":") != 0) {
+        if (StringUtils.indexOf(name, ContentRepository.NAMESPACE_PREFIX + ":") != 0) {
             return ContentRepository.NAMESPACE_PREFIX + ":" + name;
         }
         return name;

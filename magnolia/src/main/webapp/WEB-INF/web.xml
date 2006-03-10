@@ -42,6 +42,10 @@
       <param-value>/admintemplates/adminCentral/login.jsp</param-value>
     </init-param>
   </filter>
+  <filter>
+    <filter-name>CacheFilter</filter-name>
+    <filter-class>info.magnolia.cms.cache.CacheFilter</filter-class>
+  </filter>
   <filter-mapping>
     <filter-name>ContentTypeFilter</filter-name>
     <url-pattern>/*</url-pattern>
@@ -53,6 +57,10 @@
   <filter-mapping>
     <filter-name>SecurityFilter</filter-name>
     <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>CacheFilter</filter-name>
+    <servlet-name>magnolia</servlet-name>
   </filter-mapping>
   <servlet>
     <description>The main CMS servlet</description>
@@ -122,7 +130,7 @@
   </servlet>
   <servlet>
     <servlet-name>CacheServlet</servlet-name>
-    <servlet-class>info.magnolia.cms.servlets.CacheGeneratorServlet</servlet-class>
+    <servlet-class>info.magnolia.cms.cache.CacheGeneratorServlet</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>log4j</servlet-name>

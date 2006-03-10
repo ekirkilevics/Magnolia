@@ -56,12 +56,12 @@ public final class Authenticator {
 
     /**
      * request parameter user id
-     * */
+     */
     public static final String PARAMETER_USER_ID = "mgnlUserId";
 
     /**
      * request parameter password
-     * */
+     */
     public static final String PARAMETER_PSWD = "mgnlUserPSWD";
 
     /**
@@ -82,10 +82,12 @@ public final class Authenticator {
             // check for form based login request
             if (StringUtils.isNotEmpty(req.getParameter(PARAMETER_USER_ID))) {
                 setFormAuthProperties(req);
-            } else {
+            }
+            else {
                 return false;
             }
-        } else {
+        }
+        else {
             setBasicAuthProperties(credentials, req);
         }
         Subject subject;
@@ -130,7 +132,7 @@ public final class Authenticator {
      * set basic authentication properties
      * @param credentials
      * @param request
-     * */
+     */
     private static void setBasicAuthProperties(String credentials, HttpServletRequest request) {
         credentials = getDecodedCredentials(credentials.substring(6).trim());
         Authenticator.setUserId(StringUtils.substringBefore(credentials, ":"), request);
@@ -140,7 +142,7 @@ public final class Authenticator {
     /**
      * set form authentication properties
      * @param request
-     * */
+     */
     private static void setFormAuthProperties(HttpServletRequest request) {
         Authenticator.setUserId(request.getParameter(PARAMETER_USER_ID), request);
         String pswd = request.getParameter(PARAMETER_PSWD);

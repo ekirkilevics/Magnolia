@@ -44,17 +44,17 @@ public abstract class MVCServlet extends ContextSensitiveServlet {
     /**
      * @see HttpServlet#doGet(HttpServletRequest,HttpServletResponse)
      */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-        IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doPost(request, response);
     }
 
     /**
      * @see HttpServlet#doPost(HttpServletRequest, HttpServletResponse)
      */
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+        IOException {
         super.doPost(request, response);
-        
+
         // http://issues.apache.org/bugzilla/show_bug.cgi?id=22666
         //
         // 1. The Coyote HTTP/1.1 connector has a useBodyEncodingForURI attribute which
@@ -92,7 +92,7 @@ public abstract class MVCServlet extends ContextSensitiveServlet {
         response.setCharacterEncoding("UTF-8"); //$NON-NLS-1$
 
         response.setContentType("text/html; charset=UTF-8"); //$NON-NLS-1$
-        
+
         MVCServletHandler handler = getHandler(request, response);
 
         if (handler == null) {

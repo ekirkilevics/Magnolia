@@ -22,9 +22,9 @@ import java.util.Iterator;
 
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.commons.codec.binary.Base64;
 
 
 /**
@@ -40,7 +40,7 @@ public class MgnlUser implements User {
      * Under this subnodes the assigned roles are saved
      */
     private static final String NODE_ROLES = "roles"; //$NON-NLS-1$
-    
+
     private static final String NODE_GROUPS = "groups"; //$NON-NLS-1$
 
     /**
@@ -54,7 +54,7 @@ public class MgnlUser implements User {
     protected MgnlUser(Content userNode) {
         this.userNode = userNode;
     }
-    
+
     /**
      * Is this user in a specified role?
      * @param roleName the name of the role
@@ -81,7 +81,6 @@ public class MgnlUser implements User {
 
         return false;
     }
-    
 
     /**
      * Is this user in a specified role?
@@ -164,7 +163,6 @@ public class MgnlUser implements User {
 
     /**
      * get user password
-     *
      * @return password string
      */
     public String getPassword() {

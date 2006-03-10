@@ -15,8 +15,8 @@ package info.magnolia.cms.security;
 import java.util.Collection;
 
 import javax.security.auth.Subject;
-import javax.security.auth.login.LoginException;
 import javax.security.auth.login.LoginContext;
+import javax.security.auth.login.LoginException;
 
 
 /**
@@ -49,13 +49,11 @@ public class ExternalUserManager implements UserManager {
 
     /**
      * Authenticate and initialize user using jaas magnolia login module
-     *
      * @param userId
      * @param pswd
      * @throws UnsupportedOperationException
      */
-    public User getUserObject(String userId, char[] pswd)
-            throws UnsupportedOperationException, LoginException {
+    public User getUserObject(String userId, char[] pswd) throws UnsupportedOperationException, LoginException {
         CredentialsCallbackHandler callbackHandler = new CredentialsCallbackHandler(userId, pswd);
         LoginContext loginContext = new LoginContext("magnolia", callbackHandler);
         loginContext.login();

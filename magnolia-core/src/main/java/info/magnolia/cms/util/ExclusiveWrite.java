@@ -13,7 +13,6 @@
 package info.magnolia.cms.util;
 
 /**
- *
  * @author Sameer Charles
  * @version $Revision: 2027 $ ($Author: scharles $)
  */
@@ -21,20 +20,20 @@ public class ExclusiveWrite {
 
     /**
      * package private
-     * */
+     */
     ExclusiveWrite() {
         // protected
     }
 
     /**
      * singleton
-     * */
+     */
     private static final ExclusiveWrite instance = new ExclusiveWrite();
 
     /**
      * get exclusive singleton class object
      * @return instance
-     * */
+     */
     public static ExclusiveWrite getInstance() {
         return instance;
     }

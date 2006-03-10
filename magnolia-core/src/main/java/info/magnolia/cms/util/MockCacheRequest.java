@@ -1,5 +1,6 @@
 package info.magnolia.cms.util;
 
+import info.magnolia.cms.cache.CacheRequest;
 import info.magnolia.cms.core.Content;
 
 import java.io.BufferedReader;
@@ -22,13 +23,19 @@ import javax.servlet.http.HttpSession;
  * Fake request created from a real request used to generate cache content.
  * @author niko
  */
-public class MockCacheRequest implements HttpServletRequest {
+public class MockCacheRequest extends CacheRequest implements HttpServletRequest {
+
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
 
     private HttpServletRequest request;
 
     private Content node;
 
     public MockCacheRequest(HttpServletRequest request, Content node) {
+        super(request);
         this.request = request;
         this.node = node;
     }

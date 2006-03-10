@@ -22,11 +22,11 @@ import info.magnolia.cms.security.User;
 
 import java.util.Locale;
 
+
 /**
  * Default implementation of the Context interface
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public abstract class ContextImpl implements Context {
 
@@ -34,6 +34,7 @@ public abstract class ContextImpl implements Context {
      * user attached to this context
      */
     private User user;
+
     /**
      * The locale for this context
      */
@@ -58,32 +59,31 @@ public abstract class ContextImpl implements Context {
     }
 
     /**
-     * If not yet set try to get the locale of the user. Else
-     * use the locale of the system context
+     * If not yet set try to get the locale of the user. Else use the locale of the system context
      * @see info.magnolia.cms.beans.runtime.Context#getLocale()
      */
     public Locale getLocale() {
-        if(locale == null){
+        if (locale == null) {
             User user = this.getUser();
-            if(user != null){
+            if (user != null) {
                 locale = new Locale(user.getLanguage());
             }
-            if(locale == null){
+            if (locale == null) {
                 locale = MgnlContext.getSystemContext().getLocale();
             }
         }
-        
+
         return locale;
     }
 
     public void setLocale(Locale locale) {
         this.locale = locale;
     }
-    
+
     public Messages getMessages() {
         return getMessages(MessagesManager.DEFAULT_BASENAME);
     }
-    
+
     public Messages getMessages(String basename) {
         return MessagesManager.getMessages(basename, getLocale());
     }

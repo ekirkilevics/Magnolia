@@ -1,9 +1,8 @@
-package info.magnolia.cms.servlets;
+package info.magnolia.cms.cache;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.runtime.MgnlContext;
-import info.magnolia.cms.core.CacheHandler;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.i18n.MessagesManager;
@@ -35,6 +34,8 @@ public class CacheGeneratorServlet extends HttpServlet {
     private static final long serialVersionUID = 222L;
 
     private static final String CACHE_GENERATE_ACTION = "create.cache";
+
+    private CacheManager cacheManager = CacheManagerFactory.getCacheManager();
 
     /**
      * Logger.
@@ -96,7 +97,7 @@ public class CacheGeneratorServlet extends HttpServlet {
         while (iter.hasNext()) {
             Content item = (Content) iter.next();
             MockCacheRequest mock = new MockCacheRequest(request, item);
-            CacheHandler.cacheURI(mock);
+            this.cacheManager.cacheRequest(mock);
             if (log.isDebugEnabled())
                 log.debug("Trying to cache request:" + mock.getRequestURL());
             cachePage(item, request);

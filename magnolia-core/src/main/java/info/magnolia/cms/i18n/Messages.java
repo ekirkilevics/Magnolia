@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
  */
 
 public class Messages {
+
     Logger log = LoggerFactory.getLogger(Messages.class);
 
     /**
@@ -205,7 +206,7 @@ public class Messages {
     public boolean hasFallBackMessages() {
         return this.fallBackMessages != null;
     }
-    
+
     public void reload() throws Exception {
         try {
             ResourceBundle bund = this.getBundle();

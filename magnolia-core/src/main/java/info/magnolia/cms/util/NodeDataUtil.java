@@ -132,12 +132,12 @@ public class NodeDataUtil {
      * Get the string or the empty string if not existing
      * @param node
      * @param name
-     * @return a string 
+     * @return a string
      */
     public static String getString(Content node, String name) {
         return getString(node, name, "");
     }
-    
+
     /**
      * You can define a default value if not found
      * @param repository
@@ -162,19 +162,19 @@ public class NodeDataUtil {
      * @return the string
      */
     public static String getString(Content node, String name, String defaultValue) {
-        try{
-            if(node.hasNodeData(name)){
+        try {
+            if (node.hasNodeData(name)) {
                 return node.getNodeData(name).getString();
             }
-            else{
+            else {
                 return defaultValue;
             }
         }
-        catch(Exception e){
+        catch (Exception e) {
             return defaultValue;
         }
     }
-    
+
     /**
      * If the NodeData does not exist yet, just create it.
      * @param node
@@ -184,34 +184,33 @@ public class NodeDataUtil {
      * @throws PathNotFoundException
      * @throws RepositoryException
      */
-    public static NodeData getOrCreate(Content node, String name) throws AccessDeniedException, PathNotFoundException, RepositoryException{
-        if(node.hasNodeData(name)){
+    public static NodeData getOrCreate(Content node, String name) throws AccessDeniedException, PathNotFoundException,
+        RepositoryException {
+        if (node.hasNodeData(name)) {
             return node.getNodeData(name);
         }
-        else{
+        else {
             return node.createNodeData(name);
         }
     }
 
     /**
-     * Uses the i18n mechanism to translate the message if the resulting string is a key 
+     * Uses the i18n mechanism to translate the message if the resulting string is a key
      * @param node
      * @param string
      * @return the i18n string
      */
     public static Object getI18NString(Content node, String str) {
         String key = getString(node, str);
-        return MessagesManager.getWithDefault(key,key);
+        return MessagesManager.getWithDefault(key, key);
     }
-    
+
     /**
-     * Uses the i18n mechanism to translate the message if the resulting string is a key 
-     */    
+     * Uses the i18n mechanism to translate the message if the resulting string is a key
+     */
     public static Object getI18NString(Content node, String str, String basename) {
         String key = getString(node, str);
-        return MessagesManager.getMessages(basename).getWithDefault(key,key);
+        return MessagesManager.getMessages(basename).getWithDefault(key, key);
     }
-    
-    
-    
+
 }

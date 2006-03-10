@@ -22,15 +22,14 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public interface WebContext extends Context {
-    
+
     /**
      * Method used to initialize the context
      */
     public void init(HttpServletRequest request);
-    
+
     /**
      * Get currently active page
      * @return content object
@@ -61,7 +60,7 @@ public interface WebContext extends Context {
      * @return parameter values
      */
     public Map getParameters();
-    
+
     /**
      * Get the current context path
      * @return
