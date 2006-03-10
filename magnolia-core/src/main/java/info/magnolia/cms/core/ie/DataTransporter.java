@@ -28,7 +28,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 public class DataTransporter {
 
-    static Logger log = Logger.getLogger(DataTransporter.class.getSimpleName());
+    static Logger log = Logger.getLogger(DataTransporter.class.getName());
 
     /**
      * Perform import.
