@@ -139,6 +139,9 @@ public final class Server {
         try {
             addToUnsecureList(page.getContent("unsecureURIList")); //$NON-NLS-1$
         }
+        catch (javax.jcr.PathNotFoundException pn) {
+            log.info("No unsecure uri found");
+        }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
         }
