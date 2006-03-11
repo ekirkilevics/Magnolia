@@ -9,7 +9,7 @@ import info.magnolia.cms.core.Content;
  * @version 2.0
  */
 public class Store {
- 
+
     private static Store store = new Store();
 
     private Content localStore;

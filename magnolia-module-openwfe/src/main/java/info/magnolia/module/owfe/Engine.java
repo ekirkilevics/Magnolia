@@ -46,336 +46,309 @@ import org.apache.log4j.Logger;
 
 /**
  * Module "templating" main class.
- * 
  * @author Sameer Charles
  * @author Fabrizio Giustina
  * @version 2.0
  */
 public class Engine implements Module {
 
-	/**
-	 * Logger.
-	 */
-	private static Logger log = Logger.getLogger(Engine.class);
+    /**
+     * Logger.
+     */
+    private static Logger log = Logger.getLogger(Engine.class);
 
-	/**
-	 * base path jcr property.
-	 */
-	private static final String ATTRIBUTE_BASE_PATH = "basePath"; //$NON-NLS-1$
+    /**
+     * base path jcr property.
+     */
+    private static final String ATTRIBUTE_BASE_PATH = "basePath"; //$NON-NLS-1$
 
-	/**
-	 * Module name.
-	 */
-	protected String moduleName;
+    /**
+     * Module name.
+     */
+    protected String moduleName;
 
-	/**
-	 * Base path in configuration.
-	 */
-	protected String basePath;
+    /**
+     * Base path in configuration.
+     */
+    protected String basePath;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see info.magnolia.cms.module.Module#register(java.lang.String,
-	 *      java.lang.String, info.magnolia.cms.core.Content,
-	 *      java.util.jar.JarFile, int)
-	 */
-	public void register(String moduleName, String version, Content moduleNode,
-			JarFile jar, int registerState) throws RegisterException {
-		// nothing to do
-		/*
-		 * try {
-		 * 
-		 * if (true || registerState == Module.REGISTER_STATE_INSTALLATION) {
-		 * HierarchyManager hm =
-		 * ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
-		 * HierarchyManager hmRoles =
-		 * ContentRepository.getHierarchyManager(ContentRepository.USER_ROLES);
-		 * HierarchyManager hmUsers =
-		 * ContentRepository.getHierarchyManager(ContentRepository.USERS);
-		 * 
-		 * ModuleUtil.registerProperties(hm,
-		 * "com.obinary.magnolia.module.dms.config");
-		 * ModuleUtil.createPath(hmRoles, "dms", ItemType.CONTENT);
-		 * ModuleUtil.registerProperties(hmRoles,
-		 * "com.obinary.magnolia.module.dms.roles");
-		 * ModuleUtil.createPath(hmUsers, "dms", ItemType.CONTENT);
-		 * ModuleUtil.registerProperties(hmUsers,
-		 * "com.obinary.magnolia.module.dms.users"); // moveMenuPoint(hm);
-		 * 
-		 * hm.save(); hmUsers.save(); hmRoles.save(); // install the files
-		 * ModuleUtil.installFiles(jar, "dms"); } } catch (Exception e) {
-		 * log.error("can' register dms module", e); }
-		 */
-	}
+    /*
+     * (non-Javadoc)
+     * @see info.magnolia.cms.module.Module#register(java.lang.String, java.lang.String, info.magnolia.cms.core.Content,
+     * java.util.jar.JarFile, int)
+     */
+    public void register(String moduleName, String version, Content moduleNode, JarFile jar, int registerState)
+        throws RegisterException {
+        // nothing to do
+        /*
+         * try { if (true || registerState == Module.REGISTER_STATE_INSTALLATION) { HierarchyManager hm =
+         * ContentRepository.getHierarchyManager(ContentRepository.CONFIG); HierarchyManager hmRoles =
+         * ContentRepository.getHierarchyManager(ContentRepository.USER_ROLES); HierarchyManager hmUsers =
+         * ContentRepository.getHierarchyManager(ContentRepository.USERS); ModuleUtil.registerProperties(hm,
+         * "com.obinary.magnolia.module.dms.config"); ModuleUtil.createPath(hmRoles, "dms", ItemType.CONTENT);
+         * ModuleUtil.registerProperties(hmRoles, "com.obinary.magnolia.module.dms.roles");
+         * ModuleUtil.createPath(hmUsers, "dms", ItemType.CONTENT); ModuleUtil.registerProperties(hmUsers,
+         * "com.obinary.magnolia.module.dms.users"); // moveMenuPoint(hm); hm.save(); hmUsers.save(); hmRoles.save(); //
+         * install the files ModuleUtil.installFiles(jar, "dms"); } } catch (Exception e) { log.error("can' register dms
+         * module", e); }
+         */
+    }
 
-	/**
-	 * @see info.magnolia.cms.module.Module#init(info.magnolia.cms.module.ModuleConfig)
-	 */
-	public void init(ModuleConfig config) {
-		this.moduleName = config.getModuleName();
-		this.basePath = (String) config.getInitParameters().get(
-				ATTRIBUTE_BASE_PATH);
+    /**
+     * @see info.magnolia.cms.module.Module#init(info.magnolia.cms.module.ModuleConfig)
+     */
+    public void init(ModuleConfig config) {
+        this.moduleName = config.getModuleName();
+        this.basePath = (String) config.getInitParameters().get(ATTRIBUTE_BASE_PATH);
 
-		// set local store to be accessed via admin interface classes or JSP
-		Store.getInstance().setStore(config.getLocalStore());
-		
-		// register servlet
-		
-		try
-		{
-			String servletClassName = FlowDefServlet.class.getName();
-			ModuleUtil.registerServlet("FlowDef", servletClassName, new String[]{"/FlowDef"}, "registered by Jackie");
-			servletClassName = FlowDefUpload.class.getName();
-			ModuleUtil.registerServlet("FlowDefUpload", servletClassName, new String[]{"/FlowDefUpload"}, "registered by Jackie");
-		}
-		catch(Exception e)
-		{
-			log.error("Error while loading the xml rpc module",e);
-		}
+        // set local store to be accessed via admin interface classes or JSP
+        Store.getInstance().setStore(config.getLocalStore());
 
-		log.info("****************************************");
-		log.info("Module: " + this.moduleName); //$NON-NLS-1$
-		log.info(this.moduleName + ": starting OpenWFE"); //$NON-NLS-1$
-		try {
-			log.debug( "create owfe engine ...");
-			new OWFEEngine();// .run();
-			log.debug( "create owfe engine ok.");
-		
+        // register servlet
 
-		} catch (Exception e) {
-			log.error("An exception arised when creating the engine",e);
-		}
+        try {
+            String servletClassName = FlowDefServlet.class.getName();
+            ModuleUtil.registerServlet("FlowDef", servletClassName, new String[]{"/FlowDef"}, "registered by Jackie");
+            servletClassName = FlowDefUpload.class.getName();
+            ModuleUtil.registerServlet(
+                "FlowDefUpload",
+                servletClassName,
+                new String[]{"/FlowDefUpload"},
+                "registered by Jackie");
+        }
+        catch (Exception e) {
+            log.error("Error while loading the xml rpc module", e);
+        }
 
-		log.info(this.moduleName + ": start OpenWFE OK."); //$NON-NLS-1$      
-		log.info("****************************************");
+        log.info("****************************************");
+        log.info("Module: " + this.moduleName); //$NON-NLS-1$
+        log.info(this.moduleName + ": starting OpenWFE"); //$NON-NLS-1$
+        try {
+            log.debug("create owfe engine ...");
+            new OWFEEngine();// .run();
+            log.debug("create owfe engine ok.");
 
-		registerEventListeners();
-	}
+        }
+        catch (Exception e) {
+            log.error("An exception arised when creating the engine", e);
+        }
 
-	String printHMNode(Content node, boolean child) throws Exception {
-		String ret = "";
-		ret += "node name: " + node.getName() + "\r\n";
-		ret += "title: " + node.getTitle() + "\r\n";
-		ret += "JCRNode: " + node.getJCRNode().getName() + "("
-				+ node.getJCRNode().getPath() + ")" + "\r\n";
-		ret += "type: " + node.getNodeType().getName() + "\r\n";
-		ret += "Propertie: \r\n";
-		Iterator r = node.getNodeDataCollection().iterator();
-		while (r.hasNext()) {
-			NodeData p = (NodeData) r.next();
-			ret += (p.getName() + "=" + p.getString() + "\r\n");
-		}
-		ret += "\r\n";
-		//		
-		// List list = node.collectAllChildren();
-		// for (int i = 0; i < list.size(); i++){
-		// Content n = (Content) list.get(i);
-		// ret += "node name: " + n.getName() + "\r\n";
-		// ret += "title: " + n.getTitle() + "\r\n";
-		// ret += "JCRNode: " + n.getJCRNode().getName() + "(" +
-		// n.getJCRNode().getPath() + ")" + "\r\n";
-		// ret += "type: " + n.getNodeType().getName() + "\r\n";
-		// ret += "Propertie: \r\n";
-		// r = n.getNodeDataCollection().iterator();
-		// while (r.hasNext()) {
-		// NodeData p = (NodeData) r.next();
-		// ret += (p.getName() + "=" + p.getString() + "\r\n");
-		// }
-		// ret += "\r\n";
-		// }
-		ret += ("\r\n");
+        log.info(this.moduleName + ": start OpenWFE OK."); //$NON-NLS-1$      
+        log.info("****************************************");
 
-		if (child) {
-			Iterator it = node.getChildren(ItemType.WORKITEM).iterator();
-			while (it.hasNext()) {
-				ret += printHMNode((Content) it.next(), true);
-			}
-		}
-		return ret;
-	}
+        registerEventListeners();
+    }
 
-	String printJCRNode(Node node, boolean child) throws Exception {
+    String printHMNode(Content node, boolean child) throws Exception {
+        String ret = "";
+        ret += "node name: " + node.getName() + "\r\n";
+        ret += "title: " + node.getTitle() + "\r\n";
+        ret += "JCRNode: " + node.getJCRNode().getName() + "(" + node.getJCRNode().getPath() + ")" + "\r\n";
+        ret += "type: " + node.getNodeType().getName() + "\r\n";
+        ret += "Propertie: \r\n";
+        Iterator r = node.getNodeDataCollection().iterator();
+        while (r.hasNext()) {
+            NodeData p = (NodeData) r.next();
+            ret += (p.getName() + "=" + p.getString() + "\r\n");
+        }
+        ret += "\r\n";
+        //		
+        // List list = node.collectAllChildren();
+        // for (int i = 0; i < list.size(); i++){
+        // Content n = (Content) list.get(i);
+        // ret += "node name: " + n.getName() + "\r\n";
+        // ret += "title: " + n.getTitle() + "\r\n";
+        // ret += "JCRNode: " + n.getJCRNode().getName() + "(" +
+        // n.getJCRNode().getPath() + ")" + "\r\n";
+        // ret += "type: " + n.getNodeType().getName() + "\r\n";
+        // ret += "Propertie: \r\n";
+        // r = n.getNodeDataCollection().iterator();
+        // while (r.hasNext()) {
+        // NodeData p = (NodeData) r.next();
+        // ret += (p.getName() + "=" + p.getString() + "\r\n");
+        // }
+        // ret += "\r\n";
+        // }
+        ret += ("\r\n");
 
-		String ret = "";
-		ret += "node name: " + node.getName() + "\r\n";
-		ret += "path: " + node.getPath() + "\r\n";
-		ret += "Propertie: \r\n";
-		// PropertyIterator r = node.getProperties();
-		// while (r.hasNext()){
-		// Property p = r.nextProperty();
-		//			
-		// ret += (p.getName() + "=" + p.toString() + "\r\n");
-		//			
-		// }
+        if (child) {
+            Iterator it = node.getChildren(ItemType.WORKITEM).iterator();
+            while (it.hasNext()) {
+                ret += printHMNode((Content) it.next(), true);
+            }
+        }
+        return ret;
+    }
 
-		ret += ("defintion: " + node.getDefinition().getName() + "\r\n");
-		ret += ("\r\n");
+    String printJCRNode(Node node, boolean child) throws Exception {
 
-		if (child) {
-			NodeIterator it = node.getNodes();
-			while (it.hasNext()) {
+        String ret = "";
+        ret += "node name: " + node.getName() + "\r\n";
+        ret += "path: " + node.getPath() + "\r\n";
+        ret += "Propertie: \r\n";
+        // PropertyIterator r = node.getProperties();
+        // while (r.hasNext()){
+        // Property p = r.nextProperty();
+        //			
+        // ret += (p.getName() + "=" + p.toString() + "\r\n");
+        //			
+        // }
 
-				ret += printJCRNode(it.nextNode(), true);
+        ret += ("defintion: " + node.getDefinition().getName() + "\r\n");
+        ret += ("\r\n");
 
-			}
-		}
-		return ret;
-	}
+        if (child) {
+            NodeIterator it = node.getNodes();
+            while (it.hasNext()) {
 
-	/**
-	 * @see info.magnolia.cms.module.Module#destroy()
-	 */
-	public void destroy() {
-		// do nothing
-		// @todo remove event listeners?
-	}
+                ret += printJCRNode(it.nextNode(), true);
 
-	/**
-	 * Add jcr event listeners for automatic reloading of templates and
-	 * paragraphs when content changes.
-	 */
-	private void registerEventListeners() {
+            }
+        }
+        return ret;
+    }
 
-		// automatically reload paragraphs
-		registerEventListeners(
-				"/" + this.basePath + "/Paragraphs", new EventListener() { //$NON-NLS-1$ //$NON-NLS-2$
+    /**
+     * @see info.magnolia.cms.module.Module#destroy()
+     */
+    public void destroy() {
+        // do nothing
+        // @todo remove event listeners?
+    }
 
-					public void onEvent(EventIterator iterator) {
-						// reload everything, should we handle single-paragraph
-						// reloading?
-						// registerParagraphs();
-					}
-				});
+    /**
+     * Add jcr event listeners for automatic reloading of templates and paragraphs when content changes.
+     */
+    private void registerEventListeners() {
 
-		// automatically reload templates
-		registerEventListeners(
-				"/" + this.basePath + "/Templates", new EventListener() { //$NON-NLS-1$ //$NON-NLS-2$
+        // automatically reload paragraphs
+        registerEventListeners("/" + this.basePath + "/Paragraphs", new EventListener() { //$NON-NLS-1$ //$NON-NLS-2$
 
-					public void onEvent(EventIterator iterator) {
-						// reload everything, should we handle single-template
-						// reloading?
-						Template.reload();
-					}
-				});
-	}
+                public void onEvent(EventIterator iterator) {
+                    // reload everything, should we handle single-paragraph
+                    // reloading?
+                    // registerParagraphs();
+                }
+            });
 
-	/**
-	 * Register a single event listener, bound to the given path.
-	 * 
-	 * @param observationPath
-	 *            repository path
-	 * @param listener
-	 *            event listener
-	 */
-	private void registerEventListeners(String observationPath,
-			EventListener listener) {
+        // automatically reload templates
+        registerEventListeners("/" + this.basePath + "/Templates", new EventListener() { //$NON-NLS-1$ //$NON-NLS-2$
 
-		log
-				.info("Registering event listener for path [" + observationPath + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+                public void onEvent(EventIterator iterator) {
+                    // reload everything, should we handle single-template
+                    // reloading?
+                    Template.reload();
+                }
+            });
+    }
 
-		try {
+    /**
+     * Register a single event listener, bound to the given path.
+     * @param observationPath repository path
+     * @param listener event listener
+     */
+    private void registerEventListeners(String observationPath, EventListener listener) {
 
-			ObservationManager observationManager = ContentRepository
-					.getHierarchyManager(ContentRepository.CONFIG)
-					.getWorkspace().getObservationManager();
+        log.info("Registering event listener for path [" + observationPath + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 
-			observationManager.addEventListener(listener, Event.NODE_ADDED
-					| Event.PROPERTY_ADDED | Event.PROPERTY_CHANGED,
-					observationPath, true, null, null, false);
-		} catch (RepositoryException e) {
-			log
-					.error(
-							"Unable to add event listeners for " + observationPath, e); //$NON-NLS-1$
-		}
+        try {
 
-	}
+            ObservationManager observationManager = ContentRepository
+                .getHierarchyManager(ContentRepository.CONFIG)
+                .getWorkspace()
+                .getObservationManager();
 
-	void testJCREngine() {
+            observationManager.addEventListener(listener, Event.NODE_ADDED
+                | Event.PROPERTY_ADDED
+                | Event.PROPERTY_CHANGED, observationPath, true, null, null, false);
+        }
+        catch (RepositoryException e) {
+            log.error("Unable to add event listeners for " + observationPath, e); //$NON-NLS-1$
+        }
 
-		Repository repo = ContentRepository.getRepository("workitems");
-		log.info("get repository for workitmes = " + repo);
-		HierarchyManager hm = ContentRepository
-				.getHierarchyManager("workitems");
-		log.info("get HierarchyManager for workitmes = " + hm);
-		try {
+    }
 
-			// export to file
-			File outputFile = new File("d:\\export.xml");
-			FileOutputStream out = new FileOutputStream(outputFile);
-			hm.getWorkspace().getSession().exportSystemView("/", out, false,
-					false);
+    void testJCREngine() {
 
-			Content root = hm.getRoot();
-			log.info("root = " + root);
-			log.info("--------------HierarchyManager----------:\r\n"
-					+ printHMNode(root, true) + "\r\n---------------");
+        Repository repo = ContentRepository.getRepository("workitems");
+        log.info("get repository for workitmes = " + repo);
+        HierarchyManager hm = ContentRepository.getHierarchyManager("workitems");
+        log.info("get HierarchyManager for workitmes = " + hm);
+        try {
 
-			// create one node
-			Content nc = root.createContent("test", ItemType.WORKITEM);
-			Node nd1 = root.getJCRNode().addNode("j111crNODE");
-			log.info("added node = " + nd1);
-			NodeData nd = nc.createNodeData("ID");
+            // export to file
+            File outputFile = new File("d:\\export.xml");
+            FileOutputStream out = new FileOutputStream(outputFile);
+            hm.getWorkspace().getSession().exportSystemView("/", out, false, false);
 
-			// nd.setValue(new
-			// Timestamp(System.currentTimeMillis()).toLocaleString());
-			nd.setValue("1");
+            Content root = hm.getRoot();
+            log.info("root = " + root);
+            log.info("--------------HierarchyManager----------:\r\n" + printHMNode(root, true) + "\r\n---------------");
 
-			hm.save();
+            // create one node
+            Content nc = root.createContent("test", ItemType.WORKITEM);
+            Node nd1 = root.getJCRNode().addNode("j111crNODE");
+            log.info("added node = " + nd1);
+            NodeData nd = nc.createNodeData("ID");
 
-			// list content nodes
-			Collection items;
-			// items = root.getChildren(ItemType.WORKITEM);
-			// if (items != null) {
-			// log.info("work items number = " + items.size());
-			// Iterator it = items.iterator();
-			// int i = 0;
-			// while (it.hasNext()) {
-			// Content tmp = (Content) it.next();
-			// log.info("node " + i++);
-			// log.info("----------------");
-			// log.info("node name = " + tmp.getName());
-			// log.info("title = " + tmp.getTitle());
-			// log.info("ID= " + tmp.getNodeData("ID").getString());
-			// log.info("----------------");
-			// }
-			//
-			// }
+            // nd.setValue(new
+            // Timestamp(System.currentTimeMillis()).toLocaleString());
+            nd.setValue("1");
 
-			// test query manager
-			log.info("------Test query manager--------");
-			QueryManager qm = hm.getQueryManager();
-			if (qm == null)
-				throw new Exception("no query manager for repoistory");
-			Query q = qm.createQuery("test", Query.XPATH);
-			QueryResult result = q.execute();
+            hm.save();
 
-			items = result.getContent("workItem");
-			log.info("query result = " + items);
-			if (items != null) {
-				log.info("query result: " + items.size());
-				Iterator it = items.iterator();
-				while (it.hasNext()) {
-					Content n = (Content) it.next();
+            // list content nodes
+            Collection items;
+            // items = root.getChildren(ItemType.WORKITEM);
+            // if (items != null) {
+            // log.info("work items number = " + items.size());
+            // Iterator it = items.iterator();
+            // int i = 0;
+            // while (it.hasNext()) {
+            // Content tmp = (Content) it.next();
+            // log.info("node " + i++);
+            // log.info("----------------");
+            // log.info("node name = " + tmp.getName());
+            // log.info("title = " + tmp.getTitle());
+            // log.info("ID= " + tmp.getNodeData("ID").getString());
+            // log.info("----------------");
+            // }
+            //
+            // }
 
-					log.info(n.getName());
-					log.info(n.getNodeData("ID").getString());
+            // test query manager
+            log.info("------Test query manager--------");
+            QueryManager qm = hm.getQueryManager();
+            if (qm == null) {
+                throw new Exception("no query manager for repoistory");
+            }
+            Query q = qm.createQuery("test", Query.XPATH);
+            QueryResult result = q.execute();
 
-				}
-			}
-			log.info("----------------");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return;
-		}
+            items = result.getContent("workItem");
+            log.info("query result = " + items);
+            if (items != null) {
+                log.info("query result: " + items.size());
+                Iterator it = items.iterator();
+                while (it.hasNext()) {
+                    Content n = (Content) it.next();
 
-		/*
-		 * // travesal the repository try { Node rn =
-		 * hm.getWorkspace().getSession().getRootNode();
-		 * 
-		 * log.info("--------------repository----------:\r\n" + printJCRNode(rn,
-		 * true) + "\r\n---------------"); } catch (Exception e) {
-		 * e.printStackTrace(); return; }
-		 */
-	}
+                    log.info(n.getName());
+                    log.info(n.getNodeData("ID").getString());
+
+                }
+            }
+            log.info("----------------");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+
+        /*
+         * // travesal the repository try { Node rn = hm.getWorkspace().getSession().getRootNode();
+         * log.info("--------------repository----------:\r\n" + printJCRNode(rn, true) + "\r\n---------------"); } catch
+         * (Exception e) { e.printStackTrace(); return; }
+         */
+    }
 }
