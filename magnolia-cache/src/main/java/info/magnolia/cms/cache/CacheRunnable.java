@@ -2,27 +2,18 @@ package info.magnolia.cms.cache;
 
 /**
  * @author Andreas Brenk
- * @since 06.02.2006
+ * @since 3.0
  */
 class CacheRunnable implements Runnable {
-
-    // ~ Instance fields
-    // --------------------------------------------------------------------------------------------------------------------
 
     private final ThreadedCacheManager manager;
 
     private final CacheRequest request;
 
-    // ~ Constructors
-    // -----------------------------------------------------------------------------------------------------------------------
-
     public CacheRunnable(ThreadedCacheManager manager, CacheRequest request) {
         this.manager = manager;
         this.request = request;
     }
-
-    // ~ Methods
-    // ----------------------------------------------------------------------------------------------------------------------------
 
     public int hashCode() {
         return this.request.hashCode();

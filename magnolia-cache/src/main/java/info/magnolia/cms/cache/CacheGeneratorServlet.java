@@ -6,7 +6,6 @@ import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.util.MockCacheRequest;
 
 import java.io.IOException;
 import java.io.PrintWriter;

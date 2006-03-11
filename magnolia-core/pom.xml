@@ -109,15 +109,6 @@
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
     </dependency>
-    <dependency>
-      <groupId>ehcache</groupId>
-      <artifactId>ehcache</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>javax.management</groupId>
-      <artifactId>jmx</artifactId>
-      <scope>provided</scope>
-    </dependency>
   </dependencies>
   <distributionManagement>
     <site>

@@ -8,12 +8,9 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Andreas Brenk
- * @since 06.02.2006
+ * @since 3.0
  */
 public interface CacheManager {
-
-    // ~ Methods
-    // ----------------------------------------------------------------------------------------------------------------------------
 
     boolean cacheRequest(CacheRequest request);
 

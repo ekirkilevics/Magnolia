@@ -23,19 +23,13 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Andreas Brenk
- * @since 06.02.2006
+ * @since 3.0
  */
 public class CacheConfig {
-
-    // ~ Static fields/initializers
-    // ---------------------------------------------------------------------------------------------------------
 
     private static final String DEFAULT_THREAD_STRATEGY = "threaded";
 
     private static final String DEFAULT_CACHE_IMPLEMENTATION = "info.magnolia.cms.cache.simple.CacheImpl";
-
-    // ~ Instance fields
-    // --------------------------------------------------------------------------------------------------------------------
 
     private boolean active;
 
@@ -56,9 +50,6 @@ public class CacheConfig {
 
     private Map uriMapping;
 
-    // ~ Constructors
-    // -----------------------------------------------------------------------------------------------------------------------
-
     /**
      * Create a new CacheConfig and loads the config from the repository.
      * @throws ConfigurationException
@@ -70,9 +61,6 @@ public class CacheConfig {
         loadConfig();
         registerEventListener();
     }
-
-    // ~ Methods
-    // ----------------------------------------------------------------------------------------------------------------------------
 
     public boolean canCompress(String key) {
         return this.compressionList.containsKey(key.trim().toLowerCase());

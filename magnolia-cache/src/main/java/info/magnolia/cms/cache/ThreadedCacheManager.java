@@ -11,7 +11,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import EDU.oswego.cs.dl.util.concurrent.DirectExecutor;
 import EDU.oswego.cs.dl.util.concurrent.Executor;
@@ -22,28 +23,19 @@ import EDU.oswego.cs.dl.util.concurrent.ThreadedExecutor;
 
 /**
  * @author Andreas Brenk
- * @since 06.02.2006
+ * @since 3.0
  */
 public class ThreadedCacheManager extends BaseCacheManager {
 
-    // ~ Static fields/initializers
-    // ---------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = Logger.getLogger(ThreadedCacheManager.class);
+    private static final Logger log = LoggerFactory.getLogger(ThreadedCacheManager.class);
 
     private static final Cache NOOP_CACHE = new NoOpCache();
-
-    // ~ Instance fields
-    // --------------------------------------------------------------------------------------------------------------------
 
     private final Map activeThreads = Collections.synchronizedMap(new HashMap());
 
     private Cache cache = NOOP_CACHE;
 
     private Executor executor;
-
-    // ~ Methods
-    // ----------------------------------------------------------------------------------------------------------------------------
 
     protected boolean doCacheRequest(CacheRequest request) {
         if (!isRunning() || isCached(request) || hasActiveThread(request) || !mayCache(request)) {
@@ -100,10 +92,10 @@ public class ThreadedCacheManager extends BaseCacheManager {
 
         if (log.isDebugEnabled()) {
             if (didUseCache) {
-                log.debug("Used cache for: '" + request.getURI() + "'.");
+                log.debug("Used cache for: '{}'.", request.getURI());
             }
             else {
-                log.debug("Not found in cache: '" + request.getURI() + "'.");
+                log.debug("Not found in cache: '{}'.", request.getURI());
             }
         }
 
@@ -116,7 +108,7 @@ public class ThreadedCacheManager extends BaseCacheManager {
 
     protected void notifyFinish(CacheRunnable runnable) {
         if (log.isDebugEnabled()) {
-            log.debug("Finished " + runnable);
+            log.debug("Finished {}", runnable);
         }
 
         this.activeThreads.remove(runnable);
@@ -124,7 +116,7 @@ public class ThreadedCacheManager extends BaseCacheManager {
 
     protected void notifyStart(CacheRunnable runnable, CacheRequest request) {
         if (log.isDebugEnabled()) {
-            log.debug("Started " + runnable);
+            log.debug("Started {}", runnable);
         }
 
         this.activeThreads.put(runnable, request);

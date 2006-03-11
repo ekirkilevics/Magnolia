@@ -1,20 +1,5 @@
 package info.magnolia.cms.cache.ehcache;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import java.net.URL;
-import java.net.URLConnection;
-
-import java.text.MessageFormat;
-
-import javax.jcr.RepositoryException;
-
-import javax.servlet.http.HttpServletResponse;
-
 import info.magnolia.cms.beans.config.ConfigurationException;
 import info.magnolia.cms.cache.AbstractCache;
 import info.magnolia.cms.cache.CacheConfig;
@@ -22,37 +7,42 @@ import info.magnolia.cms.cache.CacheRequest;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.security.SecureURI;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.text.MessageFormat;
+
+import javax.jcr.RepositoryException;
+import javax.servlet.http.HttpServletResponse;
+
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheException;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
  * A <code>Cache</code> implementation using <a href="http://ehcache.sf.net/">EHCACHE</a>.
  * @author Andreas Brenk
- * @since 06.02.2006
+ * @since 3.0
  */
 public class CacheImpl extends AbstractCache {
 
-    // ~ Static fields/initializers
-    // ---------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = Logger.getLogger(CacheImpl.class);
-
-    // ~ Instance fields
-    // --------------------------------------------------------------------------------------------------------------------
+    private static final Logger log = LoggerFactory.getLogger(CacheImpl.class);
 
     private CacheConfig config;
 
     private Cache ehcache;
 
     private CacheManager ehcacheManager;
-
-    // ~ Methods
-    // ----------------------------------------------------------------------------------------------------------------------------
 
     public void cacheRequest(CacheRequest request) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -172,15 +162,25 @@ public class CacheImpl extends AbstractCache {
 
     private boolean streamRequest(CacheRequest request, OutputStream out) {
 
-        // if (StringUtils.isEmpty(domain)) {
-        // domain = getAppURL(request);
-        // }
+        String domain = this.config.getDomain();
+        if (StringUtils.isEmpty(domain)) {
+            domain = request.getDomain();
+        }
 
         final String uri = request.getURI();
+        URL url;
         try {
-            URL url = new URL(this.config.getDomain() + uri);
+            url = new URL(domain + uri);
+        }
+        catch (MalformedURLException e1) {
+            log.error("MalformedURLException using domain {} and uri {}. Check your cache configuration", domain, uri);
+            return false;
+        }
+
+        try {
+
             if (log.isDebugEnabled()) {
-                log.debug("Streaming uri:" + url.toExternalForm());
+                log.debug("Streaming url: {}" + url);
             }
 
             URLConnection urlConnection = url.openConnection();
@@ -194,7 +194,7 @@ public class CacheImpl extends AbstractCache {
         }
         catch (IOException e) {
             log.error(MessageFormat.format("Failed to stream [{0}] due to a {1}: {2}", new Object[]{
-                uri,
+                url,
                 e.getClass().getName(),
                 e.getMessage()}), e);
         }

@@ -38,6 +38,15 @@
       <artifactId>ehcache</artifactId>
     </dependency>
     <dependency>
+      <groupId>concurrent</groupId>
+      <artifactId>concurrent</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.management</groupId>
+      <artifactId>jmx</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>

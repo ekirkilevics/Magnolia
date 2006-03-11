@@ -9,23 +9,18 @@ import javax.management.ObjectName;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
  * A <code>CacheManager</code> that is JMX manageable.
  * @author Andreas Brenk
- * @since 06.02.2006
+ * @since 3.0
  */
 public class ManageableCacheManager implements CacheManager, ManageableCacheManagerMBean {
 
-    // ~ Static fields/initializers
-    // ---------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = Logger.getLogger(ManageableCacheManager.class);
-
-    // ~ Instance fields
-    // --------------------------------------------------------------------------------------------------------------------
+    private static final Logger log = LoggerFactory.getLogger(ManageableCacheManager.class);
 
     private int cacheHits;
 
@@ -35,15 +30,9 @@ public class ManageableCacheManager implements CacheManager, ManageableCacheMana
 
     private int cachePuts;
 
-    // ~ Constructors
-    // -----------------------------------------------------------------------------------------------------------------------
-
     public ManageableCacheManager(CacheManager cacheManager) {
         this.cacheManager = cacheManager;
     }
-
-    // ~ Methods
-    // ----------------------------------------------------------------------------------------------------------------------------
 
     public boolean cacheRequest(CacheRequest request) {
         boolean didCache = this.cacheManager.cacheRequest(request);

@@ -8,12 +8,9 @@ import java.io.OutputStream;
 /**
  * Abstract implementation of <code>Cache</code> containing common utility methods.
  * @author Andreas Brenk
- * @since 06.02.2006
+ * @since 3.0
  */
 public abstract class AbstractCache implements Cache {
-
-    // ~ Methods
-    // ----------------------------------------------------------------------------------------------------------------------------
 
     /**
      * Stream from the <code>InputStream</code> to the <code>OutputStream</code> in 8K blocks. Flushes and closes

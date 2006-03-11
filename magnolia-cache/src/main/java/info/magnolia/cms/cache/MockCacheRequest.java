@@ -1,6 +1,5 @@
-package info.magnolia.cms.util;
+package info.magnolia.cms.cache;
 
-import info.magnolia.cms.cache.CacheRequest;
 import info.magnolia.cms.core.Content;
 
 import java.io.BufferedReader;

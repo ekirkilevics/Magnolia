@@ -24,6 +24,7 @@ import info.magnolia.cms.security.PermissionImpl;
 import info.magnolia.cms.util.UrlPattern;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -119,7 +120,15 @@ public final class ModuleLoader {
             catch (PathNotFoundException e) {
                 log.info("Module : no shared repository definition found for - " + module.getName()); //$NON-NLS-1$
             }
-            thisModule.setInitParameters(getInitParameters(moduleConfig.getContent("initParams"))); //$NON-NLS-1$
+            try {
+                Content initParamsNode = moduleConfig.getContent("initParams"); //$NON-NLS-1$
+                thisModule.setInitParameters(getInitParameters(initParamsNode));
+            }
+            catch (PathNotFoundException e) {
+                // no init parameters, that's ok
+                thisModule.setInitParameters(new HashMap(0));
+            }
+
             /* add local store */
             LocalStore store = LocalStore.getInstance(CONFIG_PAGE + "/" //$NON-NLS-1$
                 + module.getName()

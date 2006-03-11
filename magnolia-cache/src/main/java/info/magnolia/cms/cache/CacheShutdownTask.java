@@ -13,20 +13,11 @@ import javax.servlet.ServletContextEvent;
  */
 class CacheShutdownTask implements ShutdownTask {
 
-    // ~ Instance fields
-    // --------------------------------------------------------------------------------------------------------------------
-
     private final CacheManager cacheManager;
-
-    // ~ Constructors
-    // -----------------------------------------------------------------------------------------------------------------------
 
     public CacheShutdownTask(CacheManager cacheManager) {
         this.cacheManager = cacheManager;
     }
-
-    // ~ Methods
-    // ----------------------------------------------------------------------------------------------------------------------------
 
     /**
      * Calls <code>CacheManager</code>'s stop() method.

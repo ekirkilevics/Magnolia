@@ -10,12 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * A <code>Cache</code> implementation that does nothing.
  * @author Andreas Brenk
- * @since 06.02.2006
+ * @since 3.0
  */
 public class NoOpCache implements Cache {
-
-    // ~ Methods
-    // ----------------------------------------------------------------------------------------------------------------------------
 
     /**
      * Does nothing.

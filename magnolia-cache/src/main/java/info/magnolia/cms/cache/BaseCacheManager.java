@@ -6,24 +6,19 @@ import info.magnolia.cms.core.Content;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
  * An abstract base implementation of <code>CacheManager</code> implementing its lifecycle and enforcing a no
  * exception policy after initialization. Also does INFO level logging.
  * @author Andreas Brenk
- * @since 06.02.2006
+ * @since 3.0
  */
 public abstract class BaseCacheManager implements CacheManager {
 
-    // ~ Static fields/initializers
-    // ---------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = Logger.getLogger(BaseCacheManager.class);
-
-    // ~ Instance fields
-    // --------------------------------------------------------------------------------------------------------------------
+    private static final Logger log = LoggerFactory.getLogger(BaseCacheManager.class);
 
     private CacheConfig config;
 
@@ -32,9 +27,6 @@ public abstract class BaseCacheManager implements CacheManager {
     private boolean paused;
 
     private boolean started;
-
-    // ~ Methods
-    // ----------------------------------------------------------------------------------------------------------------------------
 
     public final boolean cacheRequest(CacheRequest request) {
         try {
@@ -368,7 +360,7 @@ public abstract class BaseCacheManager implements CacheManager {
     private void handleFatalException(Exception e) {
         this.paused = false;
         this.started = false;
-        log.fatal("Unexpected exception! Stopping operation.", e);
+        log.error("Unexpected exception! Stopping operation.", e);
     }
 
     /**

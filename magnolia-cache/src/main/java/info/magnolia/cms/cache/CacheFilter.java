@@ -14,17 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Andreas Brenk
- * @since 06.02.2006
+ * @since 3.0
  */
 public class CacheFilter implements Filter {
 
-    // ~ Instance fields
-    // --------------------------------------------------------------------------------------------------------------------
-
     private CacheManager cacheManager;
-
-    // ~ Methods
-    // ----------------------------------------------------------------------------------------------------------------------------
 
     public void destroy() {
         this.cacheManager = null;

@@ -22,20 +22,18 @@ import java.util.zip.GZIPOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
- * A <code>Cache</code> implementation based on the Magnolia 2.1.3 filesystem cache.
+ * A <code>Cache</code> implementation based on the Magnolia 2.x filesystem cache.
  * @author Andreas Brenk
- * @since 06.02.2006
+ * @since 3.0
  */
 public class CacheImpl extends AbstractCache {
 
-    // ~ Static fields/initializers
-    // ---------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = Logger.getLogger(CacheImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(CacheImpl.class);
 
     /**
      * Default cache files location under main cache directory
@@ -47,18 +45,12 @@ public class CacheImpl extends AbstractCache {
      */
     private static final String COMPRESSED_STORE = "/optimized";
 
-    // ~ Instance fields
-    // --------------------------------------------------------------------------------------------------------------------
-
     /**
      * Cached items: the key is the URI of the cached request and the entry is a Cache instance
      */
     private Map cachedURIList = new Hashtable();
 
     private CacheConfig config;
-
-    // ~ Methods
-    // ----------------------------------------------------------------------------------------------------------------------------
 
     /**
      * Cache this request in default and optimized stores
@@ -295,32 +287,6 @@ public class CacheImpl extends AbstractCache {
         this.cachedURIList.put(uri, entry);
     }
 
-    /**
-     * Returns the server url for the web application. Used when a cache domain is not configured.
-     * @param request HttpServletRequest
-     * @return the root webapp url [scheme]://[server]:[port]/[context]
-     */
-    // private static String getAppURL(HttpServletRequest request) {
-    // StringBuffer url = new StringBuffer();
-    // int port = request.getServerPort();
-    // if (port < 0) {
-    // port = 80; // Work around java.net.URL bug
-    // }
-    //
-    // String scheme = request.getScheme();
-    // url.append(scheme);
-    // url.append("://"); // $NON-NLS-1$
-    // url.append(request.getServerName());
-    // if ((scheme.equals("http") && (port != 80)) || (scheme.equals("https") && (port != 443))) { // $NON-NLS-1$
-    // //$NON-NLS-2$
-    // url.append(':');
-    // url.append(port);
-    // }
-    //
-    // url.append(request.getContextPath());
-    //
-    // return url.toString();
-    // }
     private void clearCachedURIList() {
         this.cachedURIList.clear();
     }
@@ -456,7 +422,7 @@ public class CacheImpl extends AbstractCache {
             URLConnection urlConnection = url.openConnection();
             if (SecureURI.isProtected(uri)) {
                 urlConnection.setRequestProperty("Authorization", request.getAuthorization()); // $NON-NLS-1$
-                                                                                                // //$NON-NLS-2$
+                // //$NON-NLS-2$
             }
 
             stream(urlConnection.getInputStream(), out);
@@ -479,36 +445,27 @@ public class CacheImpl extends AbstractCache {
         File file = new File(path);
         if (!file.isDirectory()) {
             if (!file.mkdir()) {
-                log.error("Can not create directory - " + path); // $NON-NLS-1$
+                log.error("Can not create directory {}", path); // $NON-NLS-1$
             }
         }
     }
 
-    // ~ Inner Classes
-    // ----------------------------------------------------------------------------------------------------------------------
-
     private static class CacheEntry {
-
-        // ~ Instance fields
-        // ----------------------------------------------------------------------------------------------------------------
 
         /**
          * Compressed size.
          */
-        private int compressedSize;
+        protected int compressedSize;
 
         /**
          * Original size.
          */
-        private int size;
+        protected int size;
 
         /**
          * Time in milliseconds.
          */
-        private long time;
-
-        // ~ Constructors
-        // -------------------------------------------------------------------------------------------------------------------
+        protected long time;
 
         public CacheEntry(long time, int size, int compressedSize) {
             this.time = time;

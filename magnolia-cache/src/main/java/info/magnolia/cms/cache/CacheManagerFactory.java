@@ -6,17 +6,11 @@ package info.magnolia.cms.cache;
  * later replaced with a more sophisticated, configurable method like e.g. dependency injection using the Spring
  * Framework.
  * @author Andreas Brenk
- * @since 06.02.2006
+ * @since 3.0
  */
 public class CacheManagerFactory {
 
-    // ~ Static fields/initializers
-    // ---------------------------------------------------------------------------------------------------------
-
     private static CacheManager cacheManager;
-
-    // ~ Methods
-    // ----------------------------------------------------------------------------------------------------------------------------
 
     public static synchronized CacheManager getCacheManager() {
         if (cacheManager == null) {

@@ -7,17 +7,11 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Andreas Brenk
- * @since 06.02.2006
+ * @since 3.0
  */
 public interface Cache {
 
-    // ~ Instance fields
-    // --------------------------------------------------------------------------------------------------------------------
-
     int UNKNOWN_CREATION_TIME = -1;
-
-    // ~ Methods
-    // ----------------------------------------------------------------------------------------------------------------------------
 
     void cacheRequest(CacheRequest request);
 

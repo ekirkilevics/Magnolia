@@ -4,12 +4,9 @@ package info.magnolia.cms.cache;
  * The JMX Standard MBean management interface for <code>ManageableCacheManager</code>. TODO maybe add persistent
  * enable() and disable() methods that modify the "active" property in the repository.
  * @author Andreas Brenk
- * @since 06.02.2006
+ * @since 3.0
  */
 public interface ManageableCacheManagerMBean {
-
-    // ~ Methods
-    // ----------------------------------------------------------------------------------------------------------------------------
 
     void flushAll();
 
