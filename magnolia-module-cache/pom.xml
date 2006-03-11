@@ -7,8 +7,8 @@
     <version>2.2-SNAPSHOT</version>
     <relativePath>../magnolia-project/pom.xml</relativePath>
   </parent>
-  <artifactId>magnolia-cache</artifactId>
-  <name>magnolia-cache</name>
+  <artifactId>magnolia-module-cache</artifactId>
+  <name>magnolia-module-cache</name>
   <packaging>jar</packaging>
   <dependencies>
     <dependency>

@@ -39,6 +39,11 @@
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-module-cache</artifactId>
+      <version>2.2-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-openwfe</artifactId>
       <version>2.2-SNAPSHOT</version>
     </dependency>
