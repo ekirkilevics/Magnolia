@@ -15,6 +15,7 @@ package info.magnolia.cms.security;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +65,9 @@ public final class Lock {
             + Authenticator.getUserId(request)
             + " ) on " //$NON-NLS-1$
             + (new Date()).toString());
-        request.getSession().setAttribute(SESSION_LOCK, (new Date()).toString());
+        // @todo IMPORTANT remove use of http session
+        HttpSession httpsession = request.getSession(true);
+        httpsession.setAttribute(SESSION_LOCK, (new Date()).toString());
     }
 
     /**
@@ -73,7 +76,8 @@ public final class Lock {
      * @return a boolean
      */
     public static boolean isSessionLocked(HttpServletRequest request) {
-        if (request.getSession().getAttribute(Lock.SESSION_LOCK) != null) {
+        // @todo IMPORTANT remove use of http session
+        if (request.getSession(true).getAttribute(Lock.SESSION_LOCK) != null) {
             return true;
         }
         return false;
@@ -91,7 +95,9 @@ public final class Lock {
             log.debug("Resetting session lock"); //$NON-NLS-1$
             Lock.isSystemLocked = false;
         }
-        request.getSession().removeAttribute(Lock.SESSION_LOCK);
+        // @todo IMPORTANT remove use of http session
+        HttpSession httpsession = request.getSession(true);
+        httpsession.removeAttribute(Lock.SESSION_LOCK);
     }
 
     /**

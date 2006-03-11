@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,8 +38,10 @@ public class RichEditorIFrameDialogPage extends DialogPageMVCHandler {
     protected void draw(HttpServletRequest request, HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
 
-        DialogRichedit richE = (DialogRichedit) request.getSession().getAttribute(
-            request.getParameter(DialogSuper.SESSION_ATTRIBUTENAME_DIALOGOBJECT));
+        // @todo IMPORTANT remove use of http session
+        HttpSession httpsession = request.getSession(true);
+        DialogRichedit richE = (DialogRichedit) httpsession.getAttribute(request
+            .getParameter(DialogSuper.SESSION_ATTRIBUTENAME_DIALOGOBJECT));
         if (richE != null) {
             richE.removeSessionAttribute();
             richE.drawHtmlEditor(out);

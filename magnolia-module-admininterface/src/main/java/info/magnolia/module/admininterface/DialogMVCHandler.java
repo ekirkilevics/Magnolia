@@ -33,6 +33,7 @@ import java.io.PrintWriter;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -183,7 +184,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
      * @return close view name
      */
     public String save() {
-        SaveHandler control = getSaveHandler(); 
+        SaveHandler control = getSaveHandler();
         onPreSave(control);
         onSave(control);
         onPostSave(control);
@@ -196,19 +197,19 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
      * @return the handler
      */
     protected SaveHandler getSaveHandler() {
-        if(this.save == null){
+        if (this.save == null) {
             this.save = (SaveHandler) FactoryUtil.getInstance(SaveHandler.class);
             configureSaveHandler(this.save);
         }
         return this.save;
     }
-    
+
     /**
      * Configure the save control
      */
     protected void configureSaveHandler(SaveHandler save) {
         save.init(form);
-        
+
         save.setPath(form.getParameter("mgnlPath")); //$NON-NLS-1$
         save.setNodeCollectionName(form.getParameter("mgnlNodeCollection")); //$NON-NLS-1$
         save.setNodeName(form.getParameter("mgnlNode")); //$NON-NLS-1$
@@ -305,7 +306,10 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         String[] toRemove = form.getParameterValues(DialogSuper.SESSION_ATTRIBUTENAME_DIALOGOBJECT_REMOVE);
         if (toRemove != null) {
             for (int i = 0; i < toRemove.length; i++) {
-                request.getSession().removeAttribute(toRemove[i]);
+                HttpSession httpsession = request.getSession(false);
+                if (httpsession != null) {
+                    httpsession.removeAttribute(toRemove[i]);
+                }
             }
         }
     }

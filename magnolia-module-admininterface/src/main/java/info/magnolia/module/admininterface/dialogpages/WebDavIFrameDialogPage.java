@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 /**
@@ -30,8 +31,10 @@ public class WebDavIFrameDialogPage extends DialogPageMVCHandler {
     protected void draw(HttpServletRequest request, HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
 
-        DialogWebDAV dav = (DialogWebDAV) request.getSession().getAttribute(
-            request.getParameter(DialogSuper.SESSION_ATTRIBUTENAME_DIALOGOBJECT));
+        // @todo IMPORTANT remove use of http session
+        HttpSession httpsession = request.getSession(true);
+        DialogWebDAV dav = (DialogWebDAV) httpsession.getAttribute(request
+            .getParameter(DialogSuper.SESSION_ATTRIBUTENAME_DIALOGOBJECT));
         // do not remove session attribute!
         if (dav != null) {
             if (request.getParameter("subDirectory") != null) { //$NON-NLS-1$

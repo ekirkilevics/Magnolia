@@ -26,6 +26,7 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -100,11 +101,14 @@ public class RequestInterceptor extends HttpServlet {
                 // preview mode (button in main bar)
                 String preview = request.getParameter(Resource.MGNL_PREVIEW_ATTRIBUTE);
                 if (preview != null) {
+
+                    // @todo IMPORTANT remove use of http session
+                    HttpSession httpsession = request.getSession(true);
                     if (BooleanUtils.toBoolean(preview)) {
-                        request.getSession().setAttribute(Resource.MGNL_PREVIEW_ATTRIBUTE, Boolean.TRUE);
+                        httpsession.setAttribute(Resource.MGNL_PREVIEW_ATTRIBUTE, Boolean.TRUE);
                     }
                     else {
-                        request.getSession().removeAttribute(Resource.MGNL_PREVIEW_ATTRIBUTE);
+                        httpsession.removeAttribute(Resource.MGNL_PREVIEW_ATTRIBUTE);
                     }
                 }
             }

@@ -16,6 +16,7 @@ import javax.security.auth.Subject;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
@@ -101,11 +102,18 @@ public final class Authenticator {
                 LoginContext loginContext = new LoginContext("magnolia", callbackHandler);
                 loginContext.login();
                 subject = loginContext.getSubject();
-                req.getSession().setAttribute(ATTRIBUTE_JAAS_SUBJECT, subject);
+
+                // @todo IMPORTANT remove use of http session
+                HttpSession httpsession = req.getSession(true);
+                httpsession.setAttribute(ATTRIBUTE_JAAS_SUBJECT, subject);
             }
             catch (LoginException le) {
                 log.debug("Exception caught", le);
-                req.getSession().invalidate();
+
+                HttpSession httpsession = req.getSession(false);
+                if (httpsession != null) {
+                    httpsession.invalidate();
+                }
                 return false;
             }
         }
@@ -117,11 +125,16 @@ public final class Authenticator {
                 LoginContext loginContext = new LoginContext("magnolia_authorization", callbackHandler);
                 loginContext.login();
                 subject = loginContext.getSubject();
-                req.getSession().setAttribute(ATTRIBUTE_JAAS_SUBJECT, subject);
+                // @todo IMPORTANT remove use of http session
+                HttpSession httpsession = req.getSession(true);
+                httpsession.setAttribute(ATTRIBUTE_JAAS_SUBJECT, subject);
             }
             catch (LoginException le) {
                 log.debug("Exception caught", le);
-                req.getSession().invalidate();
+                HttpSession httpsession = req.getSession(false);
+                if (httpsession != null) {
+                    httpsession.invalidate();
+                }
                 return false;
             }
         }
@@ -165,7 +178,8 @@ public final class Authenticator {
      * @param request current HttpServletRequest
      */
     private static void setUserId(String userName, HttpServletRequest request) {
-        request.getSession().setAttribute(ATTRIBUTE_USER_ID, userName);
+        // @todo IMPORTANT remove use of http session
+        request.getSession(true).setAttribute(ATTRIBUTE_USER_ID, userName);
     }
 
     /**
@@ -173,7 +187,8 @@ public final class Authenticator {
      * @param pswd
      */
     private static void setPassword(String pswd, HttpServletRequest request) {
-        request.getSession().setAttribute(ATTRIBUTE_PSWD, pswd);
+        // @todo IMPORTANT remove use of http session
+        request.getSession(true).setAttribute(ATTRIBUTE_PSWD, pswd);
     }
 
     /**
@@ -181,7 +196,10 @@ public final class Authenticator {
      * @return String , current logged in user
      */
     public static String getUserId(HttpServletRequest request) {
-        Object userId = request.getSession().getAttribute(ATTRIBUTE_USER_ID);
+        // @todo IMPORTANT remove use of http session
+        HttpSession httpsession = request.getSession(true);
+
+        Object userId = httpsession.getAttribute(ATTRIBUTE_USER_ID);
         if (userId == null) {
             String credentials = request.getHeader("Authorization");
             if (credentials == null) {
@@ -190,7 +208,7 @@ public final class Authenticator {
             try {
                 credentials = getDecodedCredentials(credentials.substring(6).trim());
                 Authenticator.setUserId(credentials, request);
-                userId = request.getSession().getAttribute(ATTRIBUTE_USER_ID);
+                userId = httpsession.getAttribute(ATTRIBUTE_USER_ID);
             }
             catch (Exception e) {
                 return "superuser";
@@ -204,7 +222,8 @@ public final class Authenticator {
      * @return char[] , decoded current user password
      */
     public static char[] getPassword(HttpServletRequest request) {
-        Object pswd = request.getSession().getAttribute(ATTRIBUTE_PSWD);
+        // @todo IMPORTANT remove use of http session
+        Object pswd = request.getSession(true).getAttribute(ATTRIBUTE_PSWD);
         if (pswd == null) {
             return StringUtils.EMPTY.toCharArray();
         }
@@ -225,7 +244,9 @@ public final class Authenticator {
      * @return <code>true</code> if the user is authenticated, <code>false</code> otherwise
      */
     public static boolean isAuthenticated(HttpServletRequest request) {
-        Object user = request.getSession().getAttribute(ATTRIBUTE_JAAS_SUBJECT);
+        // @todo IMPORTANT remove use of http session
+        HttpSession httpsession = request.getSession(true);
+        Object user = httpsession.getAttribute(ATTRIBUTE_JAAS_SUBJECT);
         return !(user == null);
     }
 
@@ -235,6 +256,7 @@ public final class Authenticator {
      * @return Authenticated JAAS subject
      */
     public static Subject getSubject(HttpServletRequest request) {
-        return (Subject) request.getSession().getAttribute(ATTRIBUTE_JAAS_SUBJECT);
+        // @todo IMPORTANT remove use of http session
+        return (Subject) request.getSession(true).getAttribute(ATTRIBUTE_JAAS_SUBJECT);
     }
 }

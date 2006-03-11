@@ -449,14 +449,17 @@ public class ContextMessages extends Messages {
     private static Object find(HttpServletRequest req, String name) {
         Object ret = get(req, name, PageContext.REQUEST_SCOPE);
         if (ret == null) {
-            if (req.getSession() != null) {
+            if (req.getSession(false) != null) {
                 // check session only if a session is present
                 ret = get(req, name, PageContext.SESSION_SCOPE);
             }
             if (ret == null) {
                 ret = get(req, name, PageContext.APPLICATION_SCOPE);
                 if (ret == null) {
-                    ret = req.getSession().getServletContext().getInitParameter(name);
+
+                    // @todo IMPORTANT remove use of http session
+                    HttpSession httpsession = req.getSession(true);
+                    ret = httpsession.getServletContext().getInitParameter(name);
                 }
             }
         }
@@ -468,19 +471,23 @@ public class ContextMessages extends Messages {
      * <p>
      * The lookup of configuration variables is performed as if each scope had its own name space, that is, the same
      * configuration variable name in one scope does not replace one stored in a different scope.
-     * @param req Request context in which the configuration variable is to be looked up
+     * @param request Request context in which the configuration variable is to be looked up
      * @param name Configuration variable name
      * @param scope Scope in which the configuration variable is to be looked up
      * @return The <tt>java.lang.Object</tt> associated with the configuration variable, or null if it is not defined.
      */
-    private static Object get(HttpServletRequest req, String name, int scope) {
+    private static Object get(HttpServletRequest request, String name, int scope) {
         switch (scope) {
             case PageContext.REQUEST_SCOPE:
-                return req.getAttribute(name + REQUEST_SCOPE_SUFFIX);
+                return request.getAttribute(name + REQUEST_SCOPE_SUFFIX);
             case PageContext.SESSION_SCOPE:
-                return get(req.getSession(), name);
+
+                // @todo IMPORTANT remove use of http session
+                HttpSession httpsession = request.getSession();
+                return get(httpsession, name);
             case PageContext.APPLICATION_SCOPE:
-                return req.getSession().getServletContext().getAttribute(name + APPLICATION_SCOPE_SUFFIX);
+                // @todo IMPORTANT remove use of http session
+                return request.getSession().getServletContext().getAttribute(name + APPLICATION_SCOPE_SUFFIX);
             default:
                 throw new IllegalArgumentException("unknown scope"); //$NON-NLS-1$
         }

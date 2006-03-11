@@ -28,6 +28,7 @@ import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
 import javax.security.auth.Subject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,11 +121,13 @@ public final class SessionAccessControl {
      */
     public static HierarchyManager getHierarchyManager(HttpServletRequest request, String repositoryID,
         String workspaceID) {
-        HierarchyManager hm = (HierarchyManager) request.getSession().getAttribute(
+        // @todo IMPORTANT remove use of http session
+        HierarchyManager hm = (HierarchyManager) request.getSession(true).getAttribute(
             ATTRIBUTE_HM_PREFIX + repositoryID + "_" + workspaceID);
         if (hm == null) {
             createHierarchyManager(request, repositoryID, workspaceID);
-            return (HierarchyManager) request.getSession().getAttribute(
+            // @todo IMPORTANT remove use of http session
+            return (HierarchyManager) request.getSession(true).getAttribute(
                 ATTRIBUTE_HM_PREFIX + repositoryID + "_" + workspaceID);
         }
         return hm;
@@ -161,14 +164,17 @@ public final class SessionAccessControl {
      */
     public static AccessManager getAccessManager(HttpServletRequest request, String repositoryID, String workspaceID) {
 
-        AccessManager accessManager = (AccessManager) request.getSession().getAttribute(
+        // @todo IMPORTANT remove use of http session
+        AccessManager accessManager = (AccessManager) request.getSession(true).getAttribute(
             ATTRIBUTE_AM_PREFIX + repositoryID + "_" + workspaceID);
 
         if (accessManager == null) {
             // initialize appropriate repository/workspace session, which will create access manager for it
             getHierarchyManager(request, repositoryID, workspaceID);
             // now session value for access manager must be set
-            accessManager = (AccessManager) request.getSession().getAttribute(
+
+            // @todo IMPORTANT remove use of http session
+            accessManager = (AccessManager) request.getSession(true).getAttribute(
                 ATTRIBUTE_AM_PREFIX + repositoryID + "_" + workspaceID);
         }
 
@@ -207,7 +213,8 @@ public final class SessionAccessControl {
      */
     public static QueryManager getQueryManager(HttpServletRequest request, String repositoryID, String workspaceID)
         throws RepositoryException {
-        QueryManager queryManager = (QueryManager) request.getSession().getAttribute(
+        // @todo IMPORTANT remove use of http session
+        QueryManager queryManager = (QueryManager) request.getSession(true).getAttribute(
             ATTRIBUTE_QM_PREFIX + repositoryID + "_" + workspaceID);
         if (queryManager == null) {
             javax.jcr.query.QueryManager qm = getSession(request, repositoryID, workspaceID)
@@ -217,18 +224,22 @@ public final class SessionAccessControl {
                 request,
                 repositoryID,
                 workspaceID));
-            request.getSession().setAttribute(ATTRIBUTE_QM_PREFIX + repositoryID + "_" + workspaceID, queryManager);
+            // @todo IMPORTANT remove use of http session
+            request.getSession(true).setAttribute(ATTRIBUTE_QM_PREFIX + repositoryID + "_" + workspaceID, queryManager);
         }
         return queryManager;
     }
 
     private static Session getRepositorySession(HttpServletRequest request, String repositoryID, String workspaceID)
         throws LoginException, RepositoryException {
-        Object ticket = request.getSession().getAttribute(
+        // @todo IMPORTANT remove use of http session
+        Object ticket = request.getSession(true).getAttribute(
             ATTRIBUTE_REPOSITORY_SESSION_PREFIX + repositoryID + "_" + workspaceID);
         if (ticket == null) {
             createRepositorySession(request, repositoryID, workspaceID);
-            return (Session) request.getSession().getAttribute(
+
+            // @todo IMPORTANT remove use of http session
+            return (Session) request.getSession(true).getAttribute(
                 ATTRIBUTE_REPOSITORY_SESSION_PREFIX + repositoryID + "_" + workspaceID);
         }
         return (Session) ticket;
@@ -261,7 +272,9 @@ public final class SessionAccessControl {
         SimpleCredentials sc = new SimpleCredentials(Authenticator.getUserId(request), Authenticator
             .getPassword(request));
         Session session = ContentRepository.getRepository(repositoryID).login(sc, workspaceID);
-        request.getSession().setAttribute(
+
+        // @todo IMPORTANT remove use of http session
+        request.getSession(true).setAttribute(
             ATTRIBUTE_REPOSITORY_SESSION_PREFIX + repositoryID + "_" + workspaceID,
             session);
 
@@ -284,16 +297,22 @@ public final class SessionAccessControl {
 
         AccessManagerImpl accessManager = new AccessManagerImpl();
         accessManager.setPermissionList(permissionList);
-        request.getSession().setAttribute(ATTRIBUTE_AM_PREFIX + repositoryID + "_" + workspaceID, accessManager);
+
+        // @todo IMPORTANT remove use of http session
+        request.getSession(true).setAttribute(ATTRIBUTE_AM_PREFIX + repositoryID + "_" + workspaceID, accessManager);
     }
 
     private static void createHierarchyManager(HttpServletRequest request, String repositoryID, String workspaceID) {
         HierarchyManager hm = new HierarchyManager(Authenticator.getUserId(request));
         try {
             hm.init(getSession(request, repositoryID, workspaceID).getRootNode());
-            hm.setAccessManager((AccessManager) request.getSession().getAttribute(
+
+            // @todo IMPORTANT remove use of http session
+            hm.setAccessManager((AccessManager) request.getSession(true).getAttribute(
                 ATTRIBUTE_AM_PREFIX + repositoryID + "_" + workspaceID));
-            request.getSession().setAttribute(ATTRIBUTE_HM_PREFIX + repositoryID + "_" + workspaceID, hm);
+
+            // @todo IMPORTANT remove use of http session
+            request.getSession(true).setAttribute(ATTRIBUTE_HM_PREFIX + repositoryID + "_" + workspaceID, hm);
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
@@ -312,10 +331,13 @@ public final class SessionAccessControl {
     /**
      * invalidates user session
      * @param request
-     * @deprecated user HttpServletRequest.getSession.invalidate()
+     * @deprecated
      */
     public static void invalidateUser(HttpServletRequest request) {
-        request.getSession().invalidate();
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
     }
 
 }

@@ -224,8 +224,10 @@ public abstract class DialogSuper implements DialogInterface {
             request = this.getTopParent().getRequest();
         }
         try {
-            HttpSession session = request.getSession();
-            session.removeAttribute(name);
+            HttpSession httpsession = request.getSession(false);
+            if (httpsession != null) {
+                httpsession.removeAttribute(name);
+            }
         }
         catch (Exception e) {
             log.debug("removeSessionAttribute() for " + name + " failed because this.request is null"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -360,8 +362,10 @@ public abstract class DialogSuper implements DialogInterface {
             request = this.getTopParent().getRequest();
         }
         try {
-            HttpSession session = request.getSession();
-            session.setAttribute(name, this);
+
+            // @todo IMPORTANT remove use of http session
+            HttpSession httpsession = request.getSession(true);
+            httpsession.setAttribute(name, this);
         }
         catch (Exception e) {
             log.error("setSessionAttribute() for " + name + " failed because this.request is null"); //$NON-NLS-1$ //$NON-NLS-2$

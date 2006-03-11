@@ -19,6 +19,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -215,7 +216,11 @@ public final class Resource {
      * @return boolean , true if preview is enabled
      */
     public static boolean showPreview(HttpServletRequest req) {
-        return BooleanUtils.toBoolean((Boolean) req.getSession().getAttribute(MGNL_PREVIEW_ATTRIBUTE));
+        HttpSession httpsession = req.getSession(false);
+        if (httpsession != null) {
+            return BooleanUtils.toBoolean((Boolean) httpsession.getAttribute(MGNL_PREVIEW_ATTRIBUTE));
+        }
+        return false;
     }
 
     /**

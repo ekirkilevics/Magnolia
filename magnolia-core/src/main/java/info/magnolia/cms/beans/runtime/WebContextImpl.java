@@ -26,6 +26,7 @@ import java.util.Map;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.jstl.core.Config;
 
 import org.slf4j.Logger;
@@ -172,7 +173,10 @@ public class WebContextImpl extends ContextImpl implements WebContext {
                 this.request.setAttribute(name, value);
                 break;
             case MgnlContext.SESSION_SCOPE:
-                this.request.getSession().setAttribute(name, value);
+
+                // @todo IMPORTANT remove use of http session
+                HttpSession session = request.getSession();
+                session.setAttribute(name, value);
                 break;
             case MgnlContext.APPLICATION_SCOPE:
                 MgnlContext.getSystemContext().setAttribute(name, value, MgnlContext.APPLICATION_SCOPE);
