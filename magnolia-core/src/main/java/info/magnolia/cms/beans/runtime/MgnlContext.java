@@ -302,7 +302,16 @@ public class MgnlContext {
      * @return the context
      */
     public static Context getInstance() {
-        return (Context) localContext.get();
+
+        Context context = (Context) localContext.get();
+
+        // @todo temporary patch to avoid NPEs
+        if (context == null) {
+            log.error("Context is not set, defaulting to System Context");
+            return MgnlContext.getSystemContext();
+        }
+
+        return context;
     }
 
     /**
