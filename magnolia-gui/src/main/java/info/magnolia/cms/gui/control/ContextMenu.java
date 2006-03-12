@@ -90,11 +90,11 @@ public class ContextMenu extends ControlSuper {
                 counter++;
             }
         }
-        
+
         html.append("</div>"); //$NON-NLS-1$
         return html.toString();
     }
-    
+
     public String getJavascript() {
         StringBuffer menuJavascript = new StringBuffer();
         menuJavascript.append("var " + getName() + "= new mgnlContextMenu('" + getName() + "');");
@@ -123,7 +123,7 @@ public class ContextMenu extends ControlSuper {
                 counter++;
             }
         }
-        
+
         return menuJavascript.toString();
     }
 }

@@ -642,8 +642,9 @@ public class Tree extends ControlSuper {
                     String newOrigin = selected.getParent().getHandle() + "/" + nameOrigin;
                     getHierarchyManager().moveTo(pathOrigin, newOrigin);
                     Content newNode = getHierarchyManager().getContent(newOrigin);
-                    if (pasteType == PASTETYPE_ABOVE)
+                    if (pasteType == PASTETYPE_ABOVE) {
                         newNode.getParent().orderBefore(nameOrigin, nameSelected);
+                    }
                 }
                 return tomove.getHandle();
             }
@@ -940,7 +941,7 @@ public class Tree extends ControlSuper {
 
                     public int compare(Object arg0, Object arg1) {
                         return ((NodeData) arg0).getName().compareTo(((NodeData) arg1).getName());
-                    };
+                    }
                 });
                 it = nodeDatas.iterator();
             }

@@ -1,19 +1,19 @@
 /**
  * FCKeditor - The text editor for internet
  * Copyright (C) 2003-2005 Frederico Caldeira Knabben
- * 
+ *
  * Licensed under the terms of the GNU Lesser General Public License:
  * 		http://www.opensource.org/licenses/lgpl-license.php
- * 
+ *
  * For further information visit:
  * 		http://www.fckeditor.net/
- * 
+ *
  * File Name: SimpleUploaderServlet.java
  * 	Java File Uploader class.
- * 
+ *
  * Version:  2.3
  * Modified: 2005-08-11 16:29:00
- * 
+ *
  * File Authors:
  * 		Simone Chiaretta (simo@users.sourceforge.net)
  */
@@ -193,17 +193,21 @@ public class FCKEditorSimpleUploadServlet extends HttpServlet {
         ArrayList allowList = (ArrayList) allowedExtensions.get(fileType);
         ArrayList denyList = (ArrayList) deniedExtensions.get(fileType);
 
-        if (allowList.size() == 0)
-            if (denyList.contains(ext))
+        if (allowList.size() == 0) {
+            if (denyList.contains(ext)) {
                 return false;
-            else
-                return true;
+            }
+            return true;
 
-        if (denyList.size() == 0)
-            if (allowList.contains(ext))
+        }
+
+        if (denyList.size() == 0) {
+            if (allowList.contains(ext)) {
                 return true;
-            else
-                return false;
+            }
+            return false;
+
+        }
 
         return false;
     }

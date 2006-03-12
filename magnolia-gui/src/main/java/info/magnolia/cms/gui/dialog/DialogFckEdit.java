@@ -227,11 +227,11 @@ public class DialogFckEdit extends DialogBox {
         this.drawHtmlPre(out);
 
         // load the script onece: if there are multiple instances
-        if (getRequest().getAttribute(ATTRIBUTE_FCKED_LOADED) == null) { //$NON-NLS-1$
+        if (getRequest().getAttribute(ATTRIBUTE_FCKED_LOADED) == null) {
             out.write("<script type=\"text/javascript\" src=\"" //$NON-NLS-1$
                 + this.getRequest().getContextPath()
                 + "/.resources/fckeditor/fckeditor.js\"></script>"); //$NON-NLS-1$
-            getRequest().setAttribute(ATTRIBUTE_FCKED_LOADED, "true"); //$NON-NLS-1$ //$NON-NLS-2$
+            getRequest().setAttribute(ATTRIBUTE_FCKED_LOADED, "true"); //$NON-NLS-1$ 
         }
 
         String id = getName();
@@ -252,7 +252,7 @@ public class DialogFckEdit extends DialogBox {
         out.write("fckInstance.Value = '" + escapeJsValue(value) + "';"); //$NON-NLS-1$ //$NON-NLS-2$
         out.write("fckInstance.BasePath = '" + this.getRequest().getContextPath() + FCKEDIT_PATH + "';"); //$NON-NLS-1$ //$NON-NLS-2$
 
-        if (StringUtils.isNotEmpty(height)) { //$NON-NLS-1$
+        if (StringUtils.isNotEmpty(height)) {
             out.write("fckInstance.Height = '" + escapeJsValue(this.getConfigValue("height")) + "';"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
 
@@ -383,7 +383,7 @@ public class DialogFckEdit extends DialogBox {
 
     /**
      * Replacements:
-     *
+     * 
      * <pre>
      *               ' -&gt; \'
      *               &quot; -&gt; \&quot;
@@ -391,7 +391,7 @@ public class DialogFckEdit extends DialogBox {
      *               \n -&gt; \\n
      *               \ -&gt; \\
      * </pre>
-     *
+     * 
      * @param src
      * @return escaped js String
      */

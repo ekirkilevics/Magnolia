@@ -102,7 +102,7 @@ public final class DialogManager {
                     | Event.PROPERTY_ADDED
                     | Event.PROPERTY_CHANGED
                     | Event.PROPERTY_REMOVED,
-                ADMIN_CONFIG_NODE_NAME + "/" + DIALOGCONTROLS_CONFIG_NAME, true, null, null, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                ADMIN_CONFIG_NODE_NAME + "/" + DIALOGCONTROLS_CONFIG_NAME, true, null, null, false); //$NON-NLS-1$ 
         }
         catch (RepositoryException e) {
             log.error("Unable to add event listeners for Controls", e); //$NON-NLS-1$

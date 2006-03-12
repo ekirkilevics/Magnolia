@@ -35,7 +35,7 @@ public class DialogLink extends DialogEditWithButton {
         super.doBeforeDrawHtml();
 
         String extension = this.getConfigValue("extension"); //$NON-NLS-1$
-        String label = this.getMessage( "dialog.link.internal"); //$NON-NLS-1$
+        String label = this.getMessage("dialog.link.internal"); //$NON-NLS-1$
         this.getButton().setLabel(label);
         this.getButton().setSaveInfo(false);
         String repository = this.getConfigValue("repository", ContentRepository.WEBSITE); //$NON-NLS-1$

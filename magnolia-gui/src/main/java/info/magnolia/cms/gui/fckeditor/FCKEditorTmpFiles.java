@@ -18,6 +18,7 @@ import info.magnolia.cms.beans.runtime.MgnlContext;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
  * This class handles the uploaded files for the fckeditor. The editor uses the FCKEditoSimpleUploadServlet to upload
  * the files. The files are stored in the tmp directory until the dialog gets saved. For each file is the Document
@@ -48,7 +49,7 @@ public class FCKEditorTmpFiles {
      * @param doc
      * @param uuid
      */
-    public static void addDocument( Document doc, String uuid) {
+    public static void addDocument(Document doc, String uuid) {
         getTmpFiles().put(uuid, doc);
     }
 
