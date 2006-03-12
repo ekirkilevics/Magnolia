@@ -44,8 +44,6 @@ public class CacheConfig {
 
     private final Content content;
 
-    private String domain;
-
     private Map uriMapping;
 
     /**
@@ -74,10 +72,6 @@ public class CacheConfig {
 
     public Content getContent(String name) throws RepositoryException {
         return this.content.getContent(name);
-    }
-
-    public String getDomain() {
-        return this.domain;
     }
 
     public Node getNode() {
@@ -127,7 +121,6 @@ public class CacheConfig {
 
     private void loadConfig() throws ConfigurationException {
         this.active = this.content.getNodeData("active").getBoolean();
-        this.domain = this.content.getNodeData("domain").getString();
 
         // load mandatory config
         try {

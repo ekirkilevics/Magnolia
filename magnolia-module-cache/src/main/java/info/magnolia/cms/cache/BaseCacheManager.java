@@ -48,22 +48,14 @@ public abstract class BaseCacheManager implements CacheManager {
         return this.config;
     }
 
-    public final long getCreationTime(CacheKey request) {
+    public final long getCreationTime(CacheKey key) {
         try {
-            return doGetCreationTime(request);
+            return doGetCreationTime(key);
         }
         catch (Exception e) {
             handleNonFatalException(e);
             return Cache.UNKNOWN_CREATION_TIME;
         }
-    }
-
-    /**
-     * @return the domain as specified in the cache configuration
-     * @throws NullPointerException if called before init(Content)
-     */
-    public String getDomain() {
-        return this.config.getDomain();
     }
 
     /**

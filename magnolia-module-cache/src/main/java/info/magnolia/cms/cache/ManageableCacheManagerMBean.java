@@ -17,8 +17,6 @@ public interface ManageableCacheManagerMBean {
 
     int getCachePuts();
 
-    String getDomain();
-
     boolean isEnabled();
 
     boolean isPaused();

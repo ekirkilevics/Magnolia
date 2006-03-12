@@ -66,10 +66,6 @@ public class ManageableCacheManager implements CacheManager, ManageableCacheMana
         return this.cacheManager.getCreationTime(request);
     }
 
-    public String getDomain() {
-        return this.cacheManager.getDomain();
-    }
-
     public void init(Content content) throws ConfigurationException {
         this.cacheManager.init(content);
         registerMBean();
@@ -156,7 +152,7 @@ public class ManageableCacheManager implements CacheManager, ManageableCacheMana
      * @todo refactor
      */
     private void registerMBean() {
-        String objectName = "Magnolia:type=CacheManager,domain=" + ObjectName.quote(getDomain());
+        String objectName = "Magnolia:type=CacheManager";
         try {
             MBeanServer mbeanServer = (MBeanServer) MBeanServerFactory.findMBeanServer(null).get(0);
             mbeanServer.registerMBean(this, new ObjectName(objectName));
@@ -165,5 +161,4 @@ public class ManageableCacheManager implements CacheManager, ManageableCacheMana
             log.error("Could not register JMX MBean '" + objectName + "'.", e);
         }
     }
-
 }

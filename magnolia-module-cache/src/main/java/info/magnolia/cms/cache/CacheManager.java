@@ -26,8 +26,6 @@ public interface CacheManager {
 
     long getCreationTime(CacheKey request);
 
-    String getDomain();
-
     void init(Content content) throws ConfigurationException;
 
     boolean isEnabled();
