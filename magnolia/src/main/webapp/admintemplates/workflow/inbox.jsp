@@ -56,7 +56,7 @@ while (it.hasNext())
     String name = (String)it.next();
     if (name.equals("__definition__"))
         continue;
-    String value = (String)wi.getAttribute(name).toString();
+    String value = wi.getAttribute(name).toString();
     %>
 
     <%=name%><input type="hidden" name="attributeName" value="<%=name%>"/>
