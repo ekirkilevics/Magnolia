@@ -4,9 +4,6 @@
 
     <jsp:directive.page import="info.magnolia.cms.core.search.Query" />
     <jsp:directive.page import="info.magnolia.cms.core.search.QueryResult" />
-    <jsp:directive.page import="java.util.Iterator" />
-    <jsp:directive.page import="info.magnolia.cms.core.NodeData" />
-    <jsp:directive.page import="info.magnolia.cms.core.Content" />
 <jsp:directive.page import="info.magnolia.cms.beans.runtime.MgnlContext"/>
 <jsp:directive.page import="info.magnolia.cms.beans.config.ContentRepository"/>
 
