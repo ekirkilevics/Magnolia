@@ -39,7 +39,7 @@ public class Navigation {
      * The node containing the menu and submenupoints
      */
     Content node;
-    
+
     /**
      * The name of the Javascript variable
      */
@@ -79,8 +79,7 @@ public class Navigation {
                 mp.getUUID(),
                 NodeDataUtil.getI18NString(mp, "label"),
                 NodeDataUtil.getString(mp, "onclick"),
-                NodeDataUtil.getString(mp, "icon")
-            }));
+                NodeDataUtil.getString(mp, "icon")}));
 
             // sub menupoints (2 level only)
             for (Iterator iterator = mp.getChildren(ItemType.CONTENTNODE).iterator(); iterator.hasNext();) {
@@ -91,34 +90,33 @@ public class Navigation {
                     sub.getUUID(),
                     NodeDataUtil.getI18NString(sub, "label"),
                     NodeDataUtil.getString(sub, "onclick"),
-                    NodeDataUtil.getString(sub, "icon")
-                }));
+                    NodeDataUtil.getString(sub, "icon")}));
             }
         }
 
         return str.toString();
     }
-    
+
     /**
      * Get the first onclick in this menu. Used as the default src in the content iframe
      * @return the href
      */
-    public String getFirstId(){
-        return getFirstId((Content) node);
+    public String getFirstId() {
+        return getFirstId(node);
     }
-    
-    private String getFirstId(Content node){
+
+    private String getFirstId(Content node) {
         for (Iterator iter = node.getChildren(ItemType.CONTENTNODE).iterator(); iter.hasNext();) {
-             Content sub = (Content) iter.next();
-             if(StringUtils.isNotEmpty(NodeDataUtil.getString(sub, "onclick"))){
-                 return sub.getUUID();
-             }
-             String uuid = getFirstId(sub);
-             if(StringUtils.isNotEmpty(uuid)){
-                 return uuid;
-             }
+            Content sub = (Content) iter.next();
+            if (StringUtils.isNotEmpty(NodeDataUtil.getString(sub, "onclick"))) {
+                return sub.getUUID();
+            }
+            String uuid = getFirstId(sub);
+            if (StringUtils.isNotEmpty(uuid)) {
+                return uuid;
+            }
         }
         return "";
     }
-    
+
 }

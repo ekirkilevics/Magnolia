@@ -1,7 +1,6 @@
 package info.magnolia.cms.cache;
 
 import info.magnolia.cms.beans.config.ConfigurationException;
-import info.magnolia.cms.beans.config.ShutdownManager;
 import info.magnolia.cms.core.Content;
 
 import javax.servlet.http.HttpServletResponse;
@@ -14,6 +13,7 @@ import org.slf4j.LoggerFactory;
  * An abstract base implementation of <code>CacheManager</code> implementing its lifecycle and enforcing a no
  * exception policy after initialization. Also does INFO level logging.
  * @author Andreas Brenk
+ * @author Fabrizio Giustina
  * @since 3.0
  */
 public abstract class BaseCacheManager implements CacheManager {
@@ -27,16 +27,6 @@ public abstract class BaseCacheManager implements CacheManager {
     private boolean paused;
 
     private boolean started;
-
-    public final boolean cacheRequest(CacheRequest request) {
-        try {
-            return doCacheRequest(request);
-        }
-        catch (Exception e) {
-            handleNonFatalException(e);
-            return false;
-        }
-    }
 
     public final void flushAll() {
         log.info("Flushing Cache...");
@@ -58,7 +48,7 @@ public abstract class BaseCacheManager implements CacheManager {
         return this.config;
     }
 
-    public final long getCreationTime(CacheRequest request) {
+    public final long getCreationTime(CacheKey request) {
         try {
             return doGetCreationTime(request);
         }
@@ -91,7 +81,6 @@ public abstract class BaseCacheManager implements CacheManager {
         log.info("Initializing CacheManager...");
 
         createCacheConfig(content);
-        createShutdownTask();
 
         try {
             doInit();
@@ -258,22 +247,16 @@ public abstract class BaseCacheManager implements CacheManager {
         log.info("CacheManager is now stopped.");
     }
 
-    public final boolean streamFromCache(CacheRequest request, HttpServletResponse response) {
+    public final boolean streamFromCache(CacheKey key, HttpServletResponse response, boolean canCompress) {
+        log.info("Streaming from cache {}, {}", key, canCompress ? "compressed" : "not compressed");
         try {
-            return doStreamFromCache(request, response);
+            return doStreamFromCache(key, response, canCompress);
         }
         catch (Exception e) {
             handleNonFatalException(e);
             return false;
         }
     }
-
-    /**
-     * Template method to be implemented by subclasses. Should not throw any exceptions. All exceptions thrown by this
-     * method are logged as an error but are not propagated.
-     * @see BaseCacheManager#handleNonFatalException(Exception)
-     */
-    protected abstract boolean doCacheRequest(CacheRequest request);
 
     /**
      * Template method to be implemented by subclasses. Should not throw any exceptions. All exceptions thrown by this
@@ -287,14 +270,14 @@ public abstract class BaseCacheManager implements CacheManager {
      * method are logged as an error but are not propagated.
      * @see BaseCacheManager#handleNonFatalException(Exception)
      */
-    protected abstract long doGetCreationTime(CacheRequest request);
+    protected abstract long doGetCreationTime(CacheKey request);
 
     /**
      * Template method to be implemented by subclasses. Should not throw any exceptions. All exceptions thrown by this
      * method are logged as an error but are not propagated.
      * @see BaseCacheManager#handleNonFatalException(Exception)
      */
-    protected abstract boolean doStreamFromCache(CacheRequest request, HttpServletResponse response);
+    protected abstract boolean doStreamFromCache(CacheKey request, HttpServletResponse response, boolean canCompress);
 
     /**
      * Template method to be implemented by subclasses. Should not throw any exceptions. All exceptions thrown by this
@@ -348,10 +331,6 @@ public abstract class BaseCacheManager implements CacheManager {
 
     private void createCacheConfig(Content content) throws ConfigurationException {
         this.config = new CacheConfig(this, content);
-    }
-
-    private void createShutdownTask() {
-        ShutdownManager.addShutdownTask(new CacheShutdownTask(this));
     }
 
     /**

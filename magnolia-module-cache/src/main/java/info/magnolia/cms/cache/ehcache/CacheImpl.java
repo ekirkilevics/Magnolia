@@ -1,20 +1,14 @@
 package info.magnolia.cms.cache.ehcache;
 
 import info.magnolia.cms.beans.config.ConfigurationException;
-import info.magnolia.cms.cache.AbstractCache;
 import info.magnolia.cms.cache.CacheConfig;
-import info.magnolia.cms.cache.CacheRequest;
+import info.magnolia.cms.cache.CacheKey;
+import info.magnolia.cms.cache.CacheableEntry;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.security.SecureURI;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.text.MessageFormat;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +18,7 @@ import net.sf.ehcache.CacheException;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,9 +26,10 @@ import org.slf4j.LoggerFactory;
 /**
  * A <code>Cache</code> implementation using <a href="http://ehcache.sf.net/">EHCACHE</a>.
  * @author Andreas Brenk
+ * @author Fabrizio Giustina
  * @since 3.0
  */
-public class CacheImpl extends AbstractCache {
+public class CacheImpl implements info.magnolia.cms.cache.Cache {
 
     private static final Logger log = LoggerFactory.getLogger(CacheImpl.class);
 
@@ -44,12 +39,8 @@ public class CacheImpl extends AbstractCache {
 
     private CacheManager ehcacheManager;
 
-    public void cacheRequest(CacheRequest request) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        boolean success = streamRequest(request, out);
-        if (success) {
-            this.ehcache.put(new Element(request, out.toByteArray()));
-        }
+    public void cacheRequest(CacheKey key, CacheableEntry out, boolean canCompress) {
+        this.ehcache.put(new Element(key, out));
     }
 
     public void flushAll() {
@@ -61,9 +52,9 @@ public class CacheImpl extends AbstractCache {
         }
     }
 
-    public long getCreationTime(CacheRequest request) {
+    public long getCreationTime(CacheKey key) {
         try {
-            Element element = this.ehcache.get(request);
+            Element element = this.ehcache.get(key);
 
             if (element == null) {
                 return -1;
@@ -88,7 +79,7 @@ public class CacheImpl extends AbstractCache {
         }
     }
 
-    public boolean isCached(CacheRequest request) {
+    public boolean isCached(CacheKey request) {
         try {
             Element element = this.ehcache.getQuiet(request);
 
@@ -103,22 +94,29 @@ public class CacheImpl extends AbstractCache {
         this.ehcacheManager.shutdown();
     }
 
-    public boolean streamFromCache(CacheRequest request, HttpServletResponse response) {
+    public boolean streamFromCache(CacheKey key, HttpServletResponse response, boolean canCompress) {
         try {
-            Element element = this.ehcache.get(request);
+            Element element = this.ehcache.get(key);
             if (element == null) {
                 return false;
             }
 
-            byte[] buffer = (byte[]) element.getValue();
+            byte[] buffer = ((CacheableEntry) element.getValue()).getOut();
             ByteArrayInputStream in = new ByteArrayInputStream(buffer);
             response.setContentLength(buffer.length);
+
             try {
-                stream(in, response.getOutputStream());
+                OutputStream out = response.getOutputStream();
+                IOUtils.copy(in, out);
+                out.flush();
+                IOUtils.closeQuietly(out);
             }
             catch (IOException e) {
-                log.error("Error while reading cache for: '" + request.getURI() + "'.", e);
+                log.error("Error while reading cache for: '" + key + "'.", e);
                 return false;
+            }
+            finally {
+                IOUtils.closeQuietly(in);
             }
 
             return true;
@@ -160,45 +158,4 @@ public class CacheImpl extends AbstractCache {
         }
     }
 
-    private boolean streamRequest(CacheRequest request, OutputStream out) {
-
-        String domain = this.config.getDomain();
-        if (StringUtils.isEmpty(domain)) {
-            domain = request.getDomain();
-        }
-
-        final String uri = request.getURI();
-        URL url;
-        try {
-            url = new URL(domain + uri);
-        }
-        catch (MalformedURLException e1) {
-            log.error("MalformedURLException using domain {} and uri {}. Check your cache configuration", domain, uri);
-            return false;
-        }
-
-        try {
-
-            if (log.isDebugEnabled()) {
-                log.debug("Streaming url: {}" + url);
-            }
-
-            URLConnection urlConnection = url.openConnection();
-            if (SecureURI.isProtected(uri)) {
-                urlConnection.setRequestProperty("Authorization", request.getAuthorization());
-            }
-
-            stream(urlConnection.getInputStream(), out);
-
-            return true;
-        }
-        catch (IOException e) {
-            log.error(MessageFormat.format("Failed to stream [{0}] due to a {1}: {2}", new Object[]{
-                url,
-                e.getClass().getName(),
-                e.getMessage()}), e);
-        }
-
-        return false;
-    }
 }

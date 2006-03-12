@@ -21,8 +21,9 @@ import javax.servlet.http.HttpSession;
 /**
  * Fake request created from a real request used to generate cache content.
  * @author niko
+ * @author Fabrizio Giustina
  */
-public class MockCacheRequest extends CacheRequest implements HttpServletRequest {
+public class MockCacheRequest implements HttpServletRequest {
 
     /**
      * Stable serialVersionUID.
@@ -34,7 +35,6 @@ public class MockCacheRequest extends CacheRequest implements HttpServletRequest
     private Content node;
 
     public MockCacheRequest(HttpServletRequest request, Content node) {
-        super(request);
         this.request = request;
         this.node = node;
     }

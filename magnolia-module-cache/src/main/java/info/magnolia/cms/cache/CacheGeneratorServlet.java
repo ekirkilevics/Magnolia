@@ -9,8 +9,6 @@ import info.magnolia.cms.i18n.MessagesManager;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Collection;
-import java.util.Iterator;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -24,6 +22,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Load all the nodes of a website to that they can be cached for immediate production use.
  * @author niko
+ * @author Fabrizio Giustina
  */
 public class CacheGeneratorServlet extends HttpServlet {
 
@@ -91,16 +90,17 @@ public class CacheGeneratorServlet extends HttpServlet {
     }
 
     private void cachePage(Content page, HttpServletRequest request) {
-        Collection children = page.getChildren();
-        Iterator iter = children.iterator();
-        while (iter.hasNext()) {
-            Content item = (Content) iter.next();
-            MockCacheRequest mock = new MockCacheRequest(request, item);
-            this.cacheManager.cacheRequest(mock);
-            if (log.isDebugEnabled())
-                log.debug("Trying to cache request:" + mock.getRequestURL());
-            cachePage(item, request);
-        }
+        // Collection children = page.getChildren();
+        // Iterator iter = children.iterator();
+        // while (iter.hasNext()) {
+        // Content item = (Content) iter.next();
+        // MockCacheRequest mock = new MockCacheRequest(request, item);
+        // // @todo fix the canCompress parameter
+        // this.cacheManager.cacheRequest(mock, true);
+        // if (log.isDebugEnabled())
+        // log.debug("Trying to cache request:" + mock.getRequestURL());
+        // cachePage(item, request);
+        // }
 
     }
 

@@ -13,7 +13,7 @@ import org.apache.commons.logging.LogFactory;
 
 
 /**
- * @author fgiust
+ * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
 public class Engine implements Module {

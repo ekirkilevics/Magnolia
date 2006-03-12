@@ -16,6 +16,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.observation.Event;
 import javax.jcr.observation.EventListener;
 import javax.jcr.observation.ObservationManager;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -23,11 +24,10 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Andreas Brenk
+ * @author Fabrizio Giustina
  * @since 3.0
  */
 public class CacheConfig {
-
-    private static final String DEFAULT_THREAD_STRATEGY = "threaded";
 
     private static final String DEFAULT_CACHE_IMPLEMENTATION = "info.magnolia.cms.cache.simple.CacheImpl";
 
@@ -45,8 +45,6 @@ public class CacheConfig {
     private final Content content;
 
     private String domain;
-
-    private String threadStrategy;
 
     private Map uriMapping;
 
@@ -86,10 +84,6 @@ public class CacheConfig {
         return this.content.getJCRNode();
     }
 
-    public String getThreadStrategy() {
-        return this.threadStrategy;
-    }
-
     public boolean isActive() {
         return this.active;
     }
@@ -97,7 +91,9 @@ public class CacheConfig {
     /**
      * @return true if the uri is allowed to be cached, false otherwise
      */
-    public boolean isAllowed(String uri) {
+    public boolean isUriCacheable(HttpServletRequest request) {
+
+        String uri = request.getRequestURI();
         boolean isAllowed = false;
         int lastMatchedPatternlength = 0;
 
@@ -155,12 +151,6 @@ public class CacheConfig {
 
         this.cacheImplementation = cacheImplementation;
 
-        String threadStrategy = this.content.getNodeData("threadStrategy").getString();
-        if (StringUtils.isBlank(this.threadStrategy)) {
-            threadStrategy = DEFAULT_THREAD_STRATEGY;
-        }
-
-        this.threadStrategy = threadStrategy;
     }
 
     private void registerEventListener() throws ConfigurationException {

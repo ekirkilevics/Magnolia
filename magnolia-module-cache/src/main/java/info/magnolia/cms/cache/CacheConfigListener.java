@@ -9,6 +9,7 @@ import javax.jcr.observation.EventListener;
 
 /**
  * @author Andreas Brenk
+ * @author Fabrizio Giustina
  * @since 3.0
  */
 class CacheConfigListener implements EventListener {

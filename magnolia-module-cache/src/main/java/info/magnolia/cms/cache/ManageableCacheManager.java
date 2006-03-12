@@ -7,6 +7,7 @@ import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
 import javax.management.ObjectName;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 /**
  * A <code>CacheManager</code> that is JMX manageable.
  * @author Andreas Brenk
+ * @author Fabrizio Giustina
  * @since 3.0
  */
 public class ManageableCacheManager implements CacheManager, ManageableCacheManagerMBean {
@@ -34,8 +36,8 @@ public class ManageableCacheManager implements CacheManager, ManageableCacheMana
         this.cacheManager = cacheManager;
     }
 
-    public boolean cacheRequest(CacheRequest request) {
-        boolean didCache = this.cacheManager.cacheRequest(request);
+    public boolean cacheRequest(CacheKey key, CacheableEntry entry, boolean canCompress) {
+        boolean didCache = this.cacheManager.cacheRequest(key, entry, canCompress);
 
         if (didCache) {
             this.cachePuts++;
@@ -60,7 +62,7 @@ public class ManageableCacheManager implements CacheManager, ManageableCacheMana
         return this.cachePuts;
     }
 
-    public long getCreationTime(CacheRequest request) {
+    public long getCreationTime(CacheKey request) {
         return this.cacheManager.getCreationTime(request);
     }
 
@@ -115,12 +117,30 @@ public class ManageableCacheManager implements CacheManager, ManageableCacheMana
         this.cacheManager.stop();
     }
 
-    public boolean streamFromCache(CacheRequest request, ServletResponse response) {
+    public boolean streamFromCache(HttpServletRequest request, ServletResponse response) {
         return false;
     }
 
-    public boolean streamFromCache(CacheRequest request, HttpServletResponse response) {
-        boolean didUseCache = this.cacheManager.streamFromCache(request, response);
+    /**
+     * @see info.magnolia.cms.cache.CacheManager#isCacheable(javax.servlet.http.HttpServletRequest)
+     */
+    public boolean isCacheable(HttpServletRequest request) {
+        return this.cacheManager.isCacheable(request);
+    }
+
+    /**
+     * @see info.magnolia.cms.cache.CacheManager#canCompress(javax.servlet.http.HttpServletRequest)
+     */
+    public boolean canCompress(HttpServletRequest request) {
+        return this.cacheManager.canCompress(request);
+    }
+
+    public CacheKey getCacheKey(HttpServletRequest request) {
+        return this.cacheManager.getCacheKey(request);
+    }
+
+    public boolean streamFromCache(CacheKey key, HttpServletResponse response, boolean canCompress) {
+        boolean didUseCache = this.cacheManager.streamFromCache(key, response, canCompress);
 
         if (didUseCache) {
             this.cacheHits++;
