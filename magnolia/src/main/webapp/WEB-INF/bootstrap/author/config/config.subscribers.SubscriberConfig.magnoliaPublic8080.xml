@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sv:node sv:name="magnoliaPublic8081"
+<sv:node sv:name="magnoliaPublic8080"
   xmlns:jcr="http://www.jcp.org/jcr/1.0"
   xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
   xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:rep="internal"
@@ -20,17 +20,17 @@
   <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
     <sv:value>true</sv:value>
   </sv:property>
+  <sv:property sv:name="URL" sv:type="String">
+    <sv:value>http://localhost:8080/magnoliaPublic</sv:value>
+  </sv:property>
   <sv:property sv:name="active" sv:type="String">
     <sv:value>true</sv:value>
   </sv:property>
-  <sv:property sv:name="protocol" sv:type="String">
-    <sv:value>http</sv:value>
-  </sv:property>
-  <sv:property sv:name="address" sv:type="String">
-    <sv:value>localhost:8081/magnoliaPublic</sv:value>
-  </sv:property>
   <sv:property sv:name="jcr:created" sv:type="Date">
-    <sv:value>2006-03-02T15:25:55.403+01:00</sv:value>
+    <sv:value>2006-03-11T19:27:27.959+01:00</sv:value>
+  </sv:property>
+  <sv:property sv:name="senderURL" sv:type="String">
+    <sv:value/>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -43,25 +43,25 @@
       <sv:value>superuser</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-      <sv:value>2006-01-31T14:39:35.784+01:00</sv:value>
+      <sv:value>2006-03-12T19:32:51.531+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-02T15:25:55.403+01:00</sv:value>
+      <sv:value>2006-03-11T19:27:27.959+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:activatorid" sv:type="String">
       <sv:value>superuser</sv:value>
     </sv:property>
-    <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
-      <sv:value>1099406091334000</sv:value>
-    </sv:property>
     <sv:property sv:name="mgnl:title" sv:type="String">
       <sv:value/>
+    </sv:property>
+    <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
+      <sv:value>1099406091334000</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:creationdate" sv:type="String">
       <sv:value>2004-11-02T15:34:51.322+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2006-03-02T16:08:51.173+01:00</sv:value>
+      <sv:value>2006-03-12T19:42:51.784+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:activated" sv:type="Boolean">
       <sv:value>false</sv:value>
@@ -81,7 +81,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-02T15:25:55.410+01:00</sv:value>
+      <sv:value>2006-03-11T19:27:27.959+01:00</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -94,19 +94,19 @@
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-        <sv:value>2006-01-31T14:39:35.787+01:00</sv:value>
+        <sv:value>2006-03-12T19:32:51.531+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-02T15:25:55.410+01:00</sv:value>
+        <sv:value>2006-03-11T19:27:27.959+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:activatorid" sv:type="String">
         <sv:value>superuser</sv:value>
       </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
-        <sv:value>1099406091465000</sv:value>
-      </sv:property>
       <sv:property sv:name="mgnl:title" sv:type="String">
         <sv:value/>
+      </sv:property>
+      <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
+        <sv:value>1099406091465000</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2004-11-02T15:34:51.450+01:00</sv:value>
@@ -132,7 +132,7 @@
         <sv:value>true</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-02T15:25:55.416+01:00</sv:value>
+        <sv:value>2006-03-11T19:27:27.959+01:00</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -145,19 +145,19 @@
           <sv:value>superuser</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-          <sv:value>2006-01-31T14:39:35.789+01:00</sv:value>
+          <sv:value>2006-03-12T19:32:51.531+01:00</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:created" sv:type="Date">
-          <sv:value>2006-03-02T15:25:55.416+01:00</sv:value>
+          <sv:value>2006-03-11T19:27:27.959+01:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:activatorid" sv:type="String">
           <sv:value>superuser</sv:value>
         </sv:property>
-        <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
-          <sv:value>1099406091720000</sv:value>
-        </sv:property>
         <sv:property sv:name="mgnl:title" sv:type="String">
           <sv:value/>
+        </sv:property>
+        <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
+          <sv:value>1099406091720000</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:creationdate" sv:type="String">
           <sv:value>2004-11-02T15:34:51.705+01:00</sv:value>
@@ -186,7 +186,7 @@
           <sv:value>/</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:created" sv:type="Date">
-          <sv:value>2006-03-02T15:25:55.421+01:00</sv:value>
+          <sv:value>2006-03-11T19:27:27.959+01:00</sv:value>
         </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -199,19 +199,19 @@
             <sv:value>superuser</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-            <sv:value>2006-01-31T14:39:35.791+01:00</sv:value>
+            <sv:value>2006-03-12T19:32:51.531+01:00</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:created" sv:type="Date">
-            <sv:value>2006-03-02T15:25:55.422+01:00</sv:value>
+            <sv:value>2006-03-11T19:27:27.959+01:00</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:activatorid" sv:type="String">
             <sv:value>superuser</sv:value>
           </sv:property>
-          <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
-            <sv:value>1099406091823000</sv:value>
-          </sv:property>
           <sv:property sv:name="mgnl:title" sv:type="String">
             <sv:value/>
+          </sv:property>
+          <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
+            <sv:value>1099406091823000</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:creationdate" sv:type="String">
             <sv:value>2004-11-02T15:34:51.809+01:00</sv:value>
@@ -239,7 +239,7 @@
         <sv:value>true</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-02T15:25:55.427+01:00</sv:value>
+        <sv:value>2006-03-11T19:27:27.959+01:00</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -252,19 +252,19 @@
           <sv:value>superuser</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-          <sv:value>2006-01-31T14:39:35.793+01:00</sv:value>
+          <sv:value>2006-03-12T19:32:51.531+01:00</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:created" sv:type="Date">
-          <sv:value>2006-03-02T15:25:55.427+01:00</sv:value>
+          <sv:value>2006-03-11T19:27:27.959+01:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:activatorid" sv:type="String">
           <sv:value>superuser</sv:value>
         </sv:property>
-        <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
-          <sv:value>1099406091973000</sv:value>
-        </sv:property>
         <sv:property sv:name="mgnl:title" sv:type="String">
           <sv:value/>
+        </sv:property>
+        <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
+          <sv:value>1099406091973000</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:creationdate" sv:type="String">
           <sv:value>2004-11-02T15:34:51.956+01:00</sv:value>
@@ -293,7 +293,7 @@
           <sv:value>/</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:created" sv:type="Date">
-          <sv:value>2006-03-02T15:25:55.433+01:00</sv:value>
+          <sv:value>2006-03-11T19:27:27.969+01:00</sv:value>
         </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -306,19 +306,19 @@
             <sv:value>superuser</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-            <sv:value>2006-01-31T14:39:35.795+01:00</sv:value>
+            <sv:value>2006-03-12T19:32:51.541+01:00</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:created" sv:type="Date">
-            <sv:value>2006-03-02T15:25:55.433+01:00</sv:value>
+            <sv:value>2006-03-11T19:27:27.969+01:00</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:activatorid" sv:type="String">
             <sv:value>superuser</sv:value>
           </sv:property>
-          <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
-            <sv:value>1099406092200000</sv:value>
-          </sv:property>
           <sv:property sv:name="mgnl:title" sv:type="String">
             <sv:value/>
+          </sv:property>
+          <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
+            <sv:value>1099406092200000</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:creationdate" sv:type="String">
             <sv:value>2004-11-02T15:34:52.186+01:00</sv:value>
@@ -346,7 +346,7 @@
         <sv:value>true</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-02T15:25:55.438+01:00</sv:value>
+        <sv:value>2006-03-11T19:27:27.969+01:00</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -359,19 +359,19 @@
           <sv:value>superuser</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-          <sv:value>2006-01-31T14:39:35.797+01:00</sv:value>
+          <sv:value>2006-03-12T19:32:51.541+01:00</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:created" sv:type="Date">
-          <sv:value>2006-03-02T15:25:55.438+01:00</sv:value>
+          <sv:value>2006-03-11T19:27:27.969+01:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:activatorid" sv:type="String">
           <sv:value>superuser</sv:value>
         </sv:property>
-        <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
-          <sv:value>1099406092340000</sv:value>
-        </sv:property>
         <sv:property sv:name="mgnl:title" sv:type="String">
           <sv:value/>
+        </sv:property>
+        <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
+          <sv:value>1099406092340000</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:creationdate" sv:type="String">
           <sv:value>2004-11-02T15:34:52.247+01:00</sv:value>
@@ -400,7 +400,7 @@
           <sv:value>/</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:created" sv:type="Date">
-          <sv:value>2006-03-02T15:25:55.446+01:00</sv:value>
+          <sv:value>2006-03-11T19:27:27.969+01:00</sv:value>
         </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -413,19 +413,19 @@
             <sv:value>superuser</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-            <sv:value>2006-01-31T14:39:35.800+01:00</sv:value>
+            <sv:value>2006-03-12T19:32:51.541+01:00</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:created" sv:type="Date">
-            <sv:value>2006-03-02T15:25:55.446+01:00</sv:value>
+            <sv:value>2006-03-11T19:27:27.969+01:00</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:activatorid" sv:type="String">
             <sv:value>superuser</sv:value>
           </sv:property>
-          <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
-            <sv:value>1099406092472000</sv:value>
-          </sv:property>
           <sv:property sv:name="mgnl:title" sv:type="String">
             <sv:value/>
+          </sv:property>
+          <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
+            <sv:value>1099406092472000</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:creationdate" sv:type="String">
             <sv:value>2004-11-02T15:34:52.432+01:00</sv:value>
@@ -453,7 +453,7 @@
         <sv:value>true</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-02T15:25:55.454+01:00</sv:value>
+        <sv:value>2006-03-11T19:27:27.969+01:00</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -466,19 +466,19 @@
           <sv:value>superuser</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-          <sv:value>2006-01-31T14:39:35.805+01:00</sv:value>
+          <sv:value>2006-03-12T19:32:51.541+01:00</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:created" sv:type="Date">
-          <sv:value>2006-03-02T15:25:55.454+01:00</sv:value>
+          <sv:value>2006-03-11T19:27:27.969+01:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:activatorid" sv:type="String">
           <sv:value>superuser</sv:value>
         </sv:property>
-        <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
-          <sv:value>1099918222784000</sv:value>
-        </sv:property>
         <sv:property sv:name="mgnl:title" sv:type="String">
           <sv:value/>
+        </sv:property>
+        <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
+          <sv:value>1099918222784000</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:creationdate" sv:type="String">
           <sv:value>2004-11-08T13:50:22.757+01:00</sv:value>
@@ -507,7 +507,7 @@
           <sv:value>/</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:created" sv:type="Date">
-          <sv:value>2006-03-02T15:25:55.460+01:00</sv:value>
+          <sv:value>2006-03-11T19:27:27.969+01:00</sv:value>
         </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -520,19 +520,19 @@
             <sv:value>superuser</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-            <sv:value>2006-01-31T14:39:35.807+01:00</sv:value>
+            <sv:value>2006-03-12T19:32:51.541+01:00</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:created" sv:type="Date">
-            <sv:value>2006-03-02T15:25:55.461+01:00</sv:value>
+            <sv:value>2006-03-11T19:27:27.969+01:00</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:activatorid" sv:type="String">
             <sv:value>superuser</sv:value>
           </sv:property>
-          <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
-            <sv:value>1099918231657000</sv:value>
-          </sv:property>
           <sv:property sv:name="mgnl:title" sv:type="String">
             <sv:value/>
+          </sv:property>
+          <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
+            <sv:value>1099918231657000</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:creationdate" sv:type="String">
             <sv:value>2004-11-08T13:50:31.631+01:00</sv:value>
