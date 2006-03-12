@@ -111,7 +111,7 @@ public final class ModuleLoader {
             Content moduleConfig = module.getContent(CONFIG_NODE_REGISTER);
             ModuleConfig thisModule = new ModuleConfig();
             thisModule.setModuleName(moduleConfig.getNodeData("moduleName").getString()); //$NON-NLS-1$
-            thisModule.setModuleDescription(moduleConfig.getNodeData("moduleDescription").getString()); //$NON-NLS-1$
+            thisModule.setModuleDescription(moduleConfig.getNodeData("description").getString()); //$NON-NLS-1$
             thisModule.setHierarchyManager(getHierarchyManager(moduleConfig.getNodeData("repository").getString())); //$NON-NLS-1$
             try {
                 Content sharedRepositories = moduleConfig.getContent("sharedRepositories"); //$NON-NLS-1$
