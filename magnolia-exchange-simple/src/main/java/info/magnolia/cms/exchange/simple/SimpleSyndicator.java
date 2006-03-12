@@ -269,13 +269,13 @@ public class SimpleSyndicator implements Syndicator {
         throws ExchangeException {
         if (!isSubscribed(subscriber)) {
             if (log.isDebugEnabled()) {
-                log.debug("Exchange : subscriber [ " + subscriber.getName() + " ] is not subscribed to " + this.path);
+                log.debug("Exchange : subscriber [{}] is not subscribed to {}", subscriber.getName(), this.path);
             }
             return;
         }
         if (log.isDebugEnabled()) {
-            log.debug("Exchange : sending activation request to " + subscriber.getName()); //$NON-NLS-1$
-            log.debug("Exchange : user [ " + this.user.getName() + " ]"); //$NON-NLS-1$ //$NON-NLS-2$
+            log.debug("Exchange : sending activation request to {}", subscriber.getName()); //$NON-NLS-1$
+            log.debug("Exchange : user [{}]", this.user.getName()); //$NON-NLS-1$
         }
         String handle = getActivationURL(subscriber);
         try {
@@ -293,7 +293,7 @@ public class SimpleSyndicator implements Syndicator {
                 throw new ExchangeException("Message received from subscriber: " + message);
             }
             urlConnection.getContent();
-            log.info("Exchange : activation request received by " + subscriber.getName()); //$NON-NLS-1$
+            log.info("Exchange : activation request received by {}", subscriber.getName()); //$NON-NLS-1$
         }
         catch (ExchangeException e) {
             throw e;
@@ -322,7 +322,7 @@ public class SimpleSyndicator implements Syndicator {
         while (keys.hasNext()) {
             String key = (String) keys.next();
             if (log.isDebugEnabled()) {
-                log.debug("Removing temporary file - " + key);
+                log.debug("Removing temporary file {}", key);
             }
             activationContent.getFile(key).delete();
         }
@@ -386,7 +386,7 @@ public class SimpleSyndicator implements Syndicator {
                 continue;
             }
             if (log.isDebugEnabled()) {
-                log.debug("Removing [ " + this.path + " ] from [ " + si.getAddress() + " ]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                log.debug("Removing [{}] from [{}]", this.path, si.getURL()); //$NON-NLS-1$
             }
             doDeActivate(si);
         }
@@ -424,8 +424,7 @@ public class SimpleSyndicator implements Syndicator {
      * @param subscriberInfo
      */
     private String getDeactivationURL(Subscriber subscriberInfo) {
-        String handle = subscriberInfo.getProtocol() + "://" + subscriberInfo.getAddress() + "/" + DEFAULT_HANDLER; //$NON-NLS-1$ //$NON-NLS-2$
-        return handle;
+        return getActivationURL(subscriberInfo);
     }
 
     /**
