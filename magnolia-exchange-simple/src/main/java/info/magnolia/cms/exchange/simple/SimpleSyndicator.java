@@ -41,9 +41,9 @@ import java.util.zip.GZIPOutputStream;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.codec.binary.Base64;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
@@ -165,23 +165,24 @@ public class SimpleSyndicator implements Syndicator {
     private String basicCredentials;
 
     /**
-     * 
+     *
      */
-    public SimpleSyndicator(){
-        
+    public SimpleSyndicator() {
+
     }
-    
+
     /**
      * @param user
      * @param repositoryName repository ID
      * @param workspaceName workspace ID
      * @param rule content filter rule
-     * @see info.magnolia.cms.exchange.Syndicator#init(info.magnolia.cms.security.User, java.lang.String, java.lang.String, info.magnolia.cms.util.Rule)
+     * @see info.magnolia.cms.exchange.Syndicator#init(info.magnolia.cms.security.User, java.lang.String,
+     * java.lang.String, info.magnolia.cms.util.Rule)
      */
-    public void init(User user, String repositoryName, String workspaceName, Rule rule){
+    public void init(User user, String repositoryName, String workspaceName, Rule rule) {
         this.user = user;
-        this.basicCredentials = "Basic "+ new String(Base64.encodeBase64
-                ((this.user.getName()+":"+this.user.getPassword()).getBytes()));
+        this.basicCredentials = "Basic "
+            + new String(Base64.encodeBase64((this.user.getName() + ":" + this.user.getPassword()).getBytes()));
         this.contentFilter = new RuleBasedContentFilter(rule);
         this.contentFilterRule = rule;
         this.repositoryName = repositoryName;
@@ -207,7 +208,7 @@ public class SimpleSyndicator implements Syndicator {
             this.updateActivationDetails();
         }
         catch (Exception e) {
-        	    log.error("Activation failed for path:"+((path!=null)?path:"[null]"),e);
+            log.error("Activation failed for path:" + ((path != null) ? path : "[null]"), e);
             throw new ExchangeException(e);
         }
         finally {
@@ -445,7 +446,7 @@ public class SimpleSyndicator implements Syndicator {
      * @return activation handle
      */
     private String getActivationURL(Subscriber subscriberInfo) {
-        String handle = subscriberInfo.getProtocol() + "://" + subscriberInfo.getAddress() + "/" + DEFAULT_HANDLER; //$NON-NLS-1$ //$NON-NLS-2$
+        String handle = subscriberInfo.getURL() + DEFAULT_HANDLER;
         return handle;
     }
 
@@ -468,9 +469,7 @@ public class SimpleSyndicator implements Syndicator {
      * @throws RepositoryException
      */
     private void updateActivationDetails() throws RepositoryException {
-        HierarchyManager hm = MgnlContext.getHierarchyManager(
-            this.repositoryName,
-            this.workspaceName);
+        HierarchyManager hm = MgnlContext.getHierarchyManager(this.repositoryName, this.workspaceName);
         Content page = hm.getContent(this.path);
         updateMetaData(page, SimpleSyndicator.ACTIVATE);
         page.save();
@@ -481,9 +480,7 @@ public class SimpleSyndicator implements Syndicator {
      * @throws RepositoryException
      */
     private void updateDeActivationDetails() throws RepositoryException {
-        HierarchyManager hm = MgnlContext.getHierarchyManager(
-            this.repositoryName,
-            this.workspaceName);
+        HierarchyManager hm = MgnlContext.getHierarchyManager(this.repositoryName, this.workspaceName);
         Content page = hm.getContent(this.path);
         updateMetaData(page, SimpleSyndicator.DE_ACTIVATE);
         page.save();
@@ -519,8 +516,7 @@ public class SimpleSyndicator implements Syndicator {
      */
     private ActivationContent collect() throws Exception {
         ActivationContent activationContent = new ActivationContent();
-        HierarchyManager hm = MgnlContext
-            .getHierarchyManager(this.repositoryName, this.workspaceName);
+        HierarchyManager hm = MgnlContext.getHierarchyManager(this.repositoryName, this.workspaceName);
         // add global properties true for this path/hierarchy
         activationContent.addProperty(PARENT_PATH, this.parent);
         activationContent.addProperty(WORKSPACE_NAME, this.workspaceName);

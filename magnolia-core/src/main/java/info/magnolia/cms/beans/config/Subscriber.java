@@ -56,9 +56,7 @@ public final class Subscriber {
 
     private boolean requestConfirmation;
 
-    private String address;
-
-    private String protocol;
+    private String url;
 
     private String senderURL;
 
@@ -120,8 +118,25 @@ public final class Subscriber {
             Content c = (Content) ipList.next();
             Subscriber si = new Subscriber();
 
-            si.address = c.getNodeData("address").getString(); //$NON-NLS-1$
-            si.protocol = c.getNodeData("protocol").getString(); //$NON-NLS-1$
+            si.url = c.getNodeData("URL").getString(); //$NON-NLS-1$
+
+            if (StringUtils.isEmpty(si.url)) {
+                String address = c.getNodeData("address").getString(); //$NON-NLS-1$
+                String protocol = c.getNodeData("protocol").getString(); //$NON-NLS-1$
+
+                log
+                    .warn("Deprecated: subscriber is missing the URL property. Please use URL instead of address and domain");
+
+                if (StringUtils.isEmpty(protocol)) {
+                    protocol = "http";
+                    si.url = protocol + "://" + address;
+                }
+            }
+
+            if (!si.url.endsWith("/")) {
+                si.url = si.url + "/";
+            }
+
             si.senderURL = c.getNodeData("senderURL").getString(); //$NON-NLS-1$
             si.requestConfirmation = c.getNodeData("requestConfirmation").getBoolean(); //$NON-NLS-1$
             si.name = c.getName();
@@ -191,22 +206,6 @@ public final class Subscriber {
     }
 
     /**
-     * Getter for <code>address</code>.
-     * @return Returns the address.
-     */
-    public String getAddress() {
-        return this.address;
-    }
-
-    /**
-     * Getter for <code>protocol</code>.
-     * @return Returns the protocol.
-     */
-    public String getProtocol() {
-        return this.protocol;
-    }
-
-    /**
      * Getter for <code>requestConfirmation</code>.
      * @return Returns the requestConfirmation.
      */
@@ -237,6 +236,15 @@ public final class Subscriber {
      */
     public String getSenderURL() {
         return this.senderURL;
+    }
+
+    /**
+     * Returns the url of the subscriber, in the form <code>protocol://server:port/context/</code> (always with the
+     * leading "/")
+     * @return Returns the url.
+     */
+    public String getURL() {
+        return this.url;
     }
 
 }
