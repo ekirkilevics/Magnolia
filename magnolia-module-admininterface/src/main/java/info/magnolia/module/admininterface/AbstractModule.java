@@ -137,7 +137,7 @@ public abstract class AbstractModule implements Module {
     public final void register(ModuleDefinition def, Content moduleNode, int registerState) throws RegisterException {
         this.setDefinition(def);
 
-        if (true || registerState == REGISTER_STATE_INSTALLATION || registerState == REGISTER_STATE_NEW_VERSION) {
+        if (registerState == REGISTER_STATE_INSTALLATION || registerState == REGISTER_STATE_NEW_VERSION) {
             try {
 
                 final String moduleName = this.getName();
