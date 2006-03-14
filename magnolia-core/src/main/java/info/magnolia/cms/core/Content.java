@@ -227,6 +227,7 @@ public class Content extends ContentHandler implements Cloneable {
      * @param name
      * @param create true if the node is created
      * @param contentType the type of the created node
+     * @deprecated use the ContentUtil instead
      * @return
      * @throws AccessDeniedException
      * @throws RepositoryException
@@ -975,6 +976,15 @@ public class Content extends ContentHandler implements Cloneable {
      */
     public NodeType getNodeType() throws RepositoryException {
         return this.node.getPrimaryNodeType();
+    }
+    
+    /**
+     * Get the magnolia ItemType.
+     * @return the type
+     * @throws RepositoryException
+     */
+    public ItemType getItemType() throws RepositoryException{
+    	return new ItemType(getNodeType().getName());
     }
 
     /**
