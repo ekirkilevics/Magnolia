@@ -25,6 +25,7 @@ import info.magnolia.cms.module.Module;
 import info.magnolia.cms.module.ModuleConfig;
 import info.magnolia.cms.module.ModuleUtil;
 import info.magnolia.cms.module.RegisterException;
+import info.magnolia.module.admininterface.AbstractModule;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -50,7 +51,7 @@ import org.apache.log4j.Logger;
  * @author Fabrizio Giustina
  * @version 2.0
  */
-public class Engine implements Module {
+public class Engine extends AbstractModule {
 
     /**
      * Logger.
@@ -97,8 +98,8 @@ public class Engine implements Module {
     /**
      * @see info.magnolia.cms.module.Module#init(info.magnolia.cms.module.ModuleConfig)
      */
-    public void init(ModuleConfig config) {
-        this.moduleName = config.getModuleName();
+    protected void onInit(ModuleConfig config) {
+        this.moduleName = config.getName();
         this.basePath = (String) config.getInitParameters().get(ATTRIBUTE_BASE_PATH);
 
         // set local store to be accessed via admin interface classes or JSP
@@ -136,7 +137,6 @@ public class Engine implements Module {
         log.info(this.moduleName + ": start OpenWFE OK."); //$NON-NLS-1$      
         log.info("****************************************");
 
-        registerEventListeners();
     }
 
     String printHMNode(Content node, boolean child) throws Exception {
@@ -214,32 +214,6 @@ public class Engine implements Module {
     public void destroy() {
         // do nothing
         // @todo remove event listeners?
-    }
-
-    /**
-     * Add jcr event listeners for automatic reloading of templates and paragraphs when content changes.
-     */
-    private void registerEventListeners() {
-
-        // automatically reload paragraphs
-        registerEventListeners("/" + this.basePath + "/Paragraphs", new EventListener() { //$NON-NLS-1$ //$NON-NLS-2$
-
-                public void onEvent(EventIterator iterator) {
-                    // reload everything, should we handle single-paragraph
-                    // reloading?
-                    // registerParagraphs();
-                }
-            });
-
-        // automatically reload templates
-        registerEventListeners("/" + this.basePath + "/Templates", new EventListener() { //$NON-NLS-1$ //$NON-NLS-2$
-
-                public void onEvent(EventIterator iterator) {
-                    // reload everything, should we handle single-template
-                    // reloading?
-                    Template.reload();
-                }
-            });
     }
 
     /**
