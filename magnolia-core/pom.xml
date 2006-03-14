@@ -13,6 +13,10 @@
   <packaging>jar</packaging>
   <dependencies>
     <dependency>
+      <groupId>commons-betwixt</groupId>
+      <artifactId>commons-betwixt</artifactId>
+    </dependency>
+    <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
     </dependency>
