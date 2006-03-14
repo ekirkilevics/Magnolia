@@ -15,12 +15,15 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.module.Module;
 import info.magnolia.cms.module.ModuleConfig;
-import info.magnolia.cms.module.ModuleFactory;
+import info.magnolia.cms.module.ModuleDefinition;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.AccessManagerImpl;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
+import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.UrlPattern;
 
 import java.util.ArrayList;
@@ -35,6 +38,8 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
 
+import org.apache.commons.collections.OrderedMap;
+import org.apache.commons.collections.OrderedMapIterator;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,9 +56,15 @@ public final class ModuleLoader {
     private static Logger log = LoggerFactory.getLogger(ModuleLoader.class);
 
     /**
+     * The instance of the loader
+     */
+    private static ModuleLoader instance = (ModuleLoader) FactoryUtil
+        .getSingleton(ModuleLoader.class);
+
+    /**
      * magnolia module specific keywords
      */
-    public static final String CONFIG_PAGE = "modules"; //$NON-NLS-1$
+    public static final String MODULES_NODE = "modules"; //$NON-NLS-1$
 
     public static final String CONFIG_NODE_REGISTER = "Register"; //$NON-NLS-1$
 
@@ -62,24 +73,44 @@ public final class ModuleLoader {
     public static final String CONFIG_NODE_LOCAL_STORE = "Config"; //$NON-NLS-1$
 
     /**
+     * The module instances
+     */
+    private Map modules = new HashMap();
+    
+    /**
      * todo fix this with proper JCR implementation.
      */
-    private static SimpleCredentials simpleCredentials;
+    private SimpleCredentials simpleCredentials;
 
     /**
-     * Utility class, don't instantiate.
+     * Don't instantiate.
      */
-    private ModuleLoader() {
-        // unused
+    public ModuleLoader() {
     }
 
-    protected static void init() throws ConfigurationException {
+    /**
+     * @return Returns the instance.
+     */
+    public static ModuleLoader getInstance() {
+        return instance;
+    }
+
+    /**
+     * Init the modules.
+     * @throws ConfigurationException
+     */
+    protected void init() throws ConfigurationException {
+        // do not initialize if a system restart is needed (could corrupt the system)
+        if(ModuleRegistration.getInstance().isRestartNeeded()){
+            log.info("one or more module triggered a system restart, will not initialize the modules");
+            return;
+        }
+        
         log.info("Loading modules"); //$NON-NLS-1$
         setSudoCredentials();
         try {
-            HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
-            Content startPage = hm.getContent(CONFIG_PAGE);
-            init(startPage);
+            Content modulesNode = getModulesNode();
+            init(modulesNode);
             log.info("Finished loading modules"); //$NON-NLS-1$
         }
         catch (Exception e) {
@@ -89,81 +120,116 @@ public final class ModuleLoader {
         }
     }
 
+
     /**
-     * @param startPage
+     * Init the modules
+     * @param modulesNode node with the module nodes
      */
-    private static void init(Content startPage) {
-        Iterator modules = startPage.getChildren().iterator();
-        while (modules.hasNext()) {
-            Content module = (Content) modules.next();
+    private void init(Content modulesNode) {
+        // loop over the definitions (following the dependencies)
+        OrderedMap defs = ModuleRegistration.getInstance().getModuleDefinitions();
+        for (OrderedMapIterator iter = defs.orderedMapIterator(); !ModuleRegistration.getInstance().isRestartNeeded() && iter.hasNext();) {
+            iter.next();
+            ModuleDefinition def = (ModuleDefinition) iter.getValue();
+            try{
+                if(modulesNode.hasContent(def.getName())){
+                    Content moduleNode = modulesNode.getContent(def.getName());
+                    log.info("initializing module - " + def.getName()); //$NON-NLS-1$
+                    load(def, moduleNode);
+                    log.info("module : " + def.getName() + " initialized"); //$NON-NLS-1$ //$NON-NLS-2$
+                }
+                else{
+                    log.error("can't initialize module [" + def.getName() + "]: node module node in the config repository found");
+                }
 
-            String modulename = module.getName();
-
-            log.info("Initializing module - " + modulename); //$NON-NLS-1$
-            load(module);
-            VirtualMap.update(CONFIG_PAGE + "/" + modulename + "/" + CONFIG_NODE_VIRTUAL_MAPPING); //$NON-NLS-1$ //$NON-NLS-2$
-            log.info("Module : " + modulename + " initialized"); //$NON-NLS-1$ //$NON-NLS-2$
+            }
+            catch(RepositoryException e){
+                log.error("can't initialize module [" + def.getName() + "]", e);
+            }
+        }
+        
+        if(ModuleRegistration.getInstance().isRestartNeeded()){
+            log.warn("stopped module initialization since a restart is needed");
         }
     }
 
-    private static void load(Content module) {
+    private void load(ModuleDefinition def, Content moduleNode) {
         try {
-            Content moduleConfig = module.getContent(CONFIG_NODE_REGISTER);
-            ModuleConfig thisModule = new ModuleConfig();
-            thisModule.setModuleName(moduleConfig.getNodeData("moduleName").getString()); //$NON-NLS-1$
-            thisModule.setModuleDescription(moduleConfig.getNodeData("description").getString()); //$NON-NLS-1$
-            thisModule.setHierarchyManager(getHierarchyManager(moduleConfig.getNodeData("repository").getString())); //$NON-NLS-1$
+
+            Content moduleConfigNode = moduleNode.getContent(CONFIG_NODE_REGISTER);
+            ModuleConfig moduleConfig = new ModuleConfig();
+            
+            // set the registration definition
+            moduleConfig.setModuleDefinition(def);
+
+            moduleConfig.setHierarchyManager(getHierarchyManager(moduleConfigNode.getNodeData("repository").getString())); //$NON-NLS-1$
             try {
-                Content sharedRepositories = moduleConfig.getContent("sharedRepositories"); //$NON-NLS-1$
-                thisModule.setSharedHierarchyManagers(getSharedHierarchyManagers(sharedRepositories));
+                Content sharedRepositories = moduleConfigNode.getContent("sharedRepositories"); //$NON-NLS-1$
+                moduleConfig.setSharedHierarchyManagers(getSharedHierarchyManagers(sharedRepositories));
             }
             catch (PathNotFoundException e) {
-                log.info("Module : no shared repository definition found for - " + module.getName()); //$NON-NLS-1$
+                log.info("Module : no shared repository definition found for - " + moduleNode.getName()); //$NON-NLS-1$
             }
+            
             try {
-                Content initParamsNode = moduleConfig.getContent("initParams"); //$NON-NLS-1$
-                thisModule.setInitParameters(getInitParameters(initParamsNode));
+                Content initParamsNode = moduleConfigNode.getContent("initParams"); //$NON-NLS-1$
+                moduleConfig.setInitParameters(getInitParameters(initParamsNode)); //$NON-NLS-1$
             }
             catch (PathNotFoundException e) {
                 // no init parameters, that's ok
-                thisModule.setInitParameters(new HashMap(0));
+                moduleConfig.setInitParameters(new HashMap(0));
             }
 
             /* add local store */
-            LocalStore store = LocalStore.getInstance(CONFIG_PAGE + "/" //$NON-NLS-1$
-                + module.getName()
-                + "/" //$NON-NLS-1$
+            LocalStore store = LocalStore.getInstance(MODULES_NODE + "/" //$NON-NLS-1$
+                + moduleNode.getName() + "/" //$NON-NLS-1$
                 + CONFIG_NODE_LOCAL_STORE);
-            thisModule.setLocalStore(store.getStore());
-            try {
-                // temporary workaround for compatibility with old repositories (the package "adminInterface" has been
-                // renamed to "admininterface" according to java naming standards)
-                String moduleClassName = moduleConfig.getNodeData("class").getString(); //$NON-NLS-1$
-                if ("info.magnolia.module.adminInterface.Engine".equals(moduleClassName)) { //$NON-NLS-1$
-                    moduleClassName = "info.magnolia.module.admininterface.Engine"; //$NON-NLS-1$
+            moduleConfig.setLocalStore(store.getStore());
+            
+            Module module = this.getModuleInstance(moduleConfig.getName());
+            
+            // instantiate if not yet done (due registraion)
+            if(module == null){
+                try {
+                    String moduleClassName = moduleConfigNode.getNodeData("class").getString(); //$NON-NLS-1$
+   
+                    module = (Module) Class.forName(moduleClassName).newInstance();
+                    this.addModuleInstance(moduleConfig.getName(), module);
                 }
-
-                ModuleFactory.initModule(thisModule, moduleClassName);
-
+                catch (InstantiationException ie) {
+                    log.error("Module : [ " + moduleConfigNode.getNodeData("moduleName").getString() + " ] failed to load"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    log.error(ie.getMessage());
+                }
+                catch (IllegalAccessException ae) {
+                    log.error(ae.getMessage());
+                }
             }
-            catch (InstantiationException ie) {
-                log.error("Module : [ " + moduleConfig.getNodeData("moduleName").getString() + " ] failed to load"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                log.error(ie.getMessage());
-            }
-            catch (IllegalAccessException ae) {
-                log.error(ae.getMessage());
+            
+            // init the module
+            if(!module.isInitialized()){
+            	if(!module.isRestartNeeded()){
+            		log.info("start initialization of module [{}]", def.getName());
+            		module.init(moduleConfig);
+            	}
+            	else{
+            		log.warn("won't initialize the module [" + module.getName() + "] since a system restart is needed");
+            	}
+            
+                if(module.isRestartNeeded()){
+                    ModuleRegistration.getInstance().setRestartNeeded(true);
+                }
             }
         }
         catch (Exception e) {
-            log.error("can't initialize module " + module.getHandle(), e); //$NON-NLS-1$
+            log.error("can't initialize module " + moduleNode.getHandle(), e); //$NON-NLS-1$
         }
     }
 
-    public static void reload() throws ConfigurationException {
+    public void reload() throws ConfigurationException {
         init();
     }
 
-    private static Map getInitParameters(Content paramList) {
+    private Map getInitParameters(Content paramList) {
         Map initParams = new Hashtable();
         Iterator initParameters = paramList.getNodeDataCollection().iterator();
         while (initParameters.hasNext()) {
@@ -173,7 +239,7 @@ public final class ModuleLoader {
         return initParams;
     }
 
-    private static HierarchyManager getHierarchyManager(String repositoryName) throws RepositoryException {
+    private HierarchyManager getHierarchyManager(String repositoryName) throws RepositoryException {
         if (StringUtils.isEmpty(repositoryName)) {
             return null;
         }
@@ -191,7 +257,7 @@ public final class ModuleLoader {
         return hm;
     }
 
-    private static Map getSharedHierarchyManagers(Content sharedRepositoriesNode) throws RepositoryException {
+    private Map getSharedHierarchyManagers(Content sharedRepositoriesNode) throws RepositoryException {
         Map sharedHierarchy = new Hashtable();
         Iterator repositories = sharedRepositoriesNode.getChildren().iterator();
         List acl = new ArrayList();
@@ -214,8 +280,40 @@ public final class ModuleLoader {
         return sharedHierarchy;
     }
 
-    private static void setSudoCredentials() {
+    private void setSudoCredentials() {
         simpleCredentials = new SimpleCredentials(ContentRepository.SYSTEM_USER, ContentRepository.SYSTEM_PSWD); //$NON-NLS-1$
+    }
+
+    /**
+     * Returns the node containing the modules definition in the config repository
+     * @return the node
+     * @throws PathNotFoundException
+     * @throws RepositoryException
+     * @throws AccessDeniedException
+     */
+    public Content getModulesNode() throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
+        Content modulesNode = hm.getContent(MODULES_NODE);
+        return modulesNode;
+    }
+
+    
+    /**
+     * Get the module instance
+     * @param name
+     * @return the instance
+     */
+    public Module getModuleInstance(String name){
+        return (Module) this.modules.get(name);
+    }
+    
+    /**
+     * Register this module instance to avoid a second instantiation.
+     * @param name
+     * @param module
+     */
+    public void addModuleInstance(String name, Module module) {
+        this.modules.put(name, module);
     }
 
 }
