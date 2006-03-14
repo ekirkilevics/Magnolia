@@ -14,6 +14,7 @@ package info.magnolia.cms.gui.control;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.Template;
+import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -455,7 +456,7 @@ public class Tree extends ControlSuper {
                 // now tmp: first template of list is taken...
                 if (this.getRepository().equals(ContentRepository.WEBSITE)
                     && itemType.equals(ItemType.CONTENT.getSystemName())) {
-                    Iterator templates = Template.getAvailableTemplates(MgnlContext
+                    Iterator templates = TemplateManager.getInstance().getAvailableTemplates(MgnlContext
                         .getAccessManager(ContentRepository.CONFIG));
                     while (templates.hasNext()) {
                         Template template = (Template) templates.next();
