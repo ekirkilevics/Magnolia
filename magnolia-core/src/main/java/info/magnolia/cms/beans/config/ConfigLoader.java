@@ -17,7 +17,6 @@ import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.license.LicenseFileExtractor;
-import info.magnolia.cms.module.ModuleFactory;
 import info.magnolia.cms.security.SecureURI;
 
 import java.util.Iterator;
@@ -143,9 +142,6 @@ public class ConfigLoader {
         log.info("Set system context"); //$NON-NLS-1$
         MgnlContext.setInstance(MgnlContext.getSystemContext());
 
-        log.info("Init virtualMap"); //$NON-NLS-1$
-        VirtualMap.init();
-
         log.info("Init i18n"); //$NON-NLS-1$
         MessagesManager.init(context);
 
@@ -154,8 +150,8 @@ public class ConfigLoader {
 
         try {
             Server.init();
-            ModuleFactory.init();
-            ModuleLoader.init();
+            ModuleRegistration.getInstance().init();
+            ModuleLoader.getInstance().init();
             Listener.init();
             Subscriber.init();
             MIMEMapping.init();
@@ -164,7 +160,7 @@ public class ConfigLoader {
             log.info("Configuration loaded!"); //$NON-NLS-1$
         }
         catch (ConfigurationException e) {
-            log.info("An error occurred during initialization, incomplete configuration found?"); //$NON-NLS-1$
+            log.error("An error occurred during initialization",e); //$NON-NLS-1$
             enterListeningMode();
             return;
         }
