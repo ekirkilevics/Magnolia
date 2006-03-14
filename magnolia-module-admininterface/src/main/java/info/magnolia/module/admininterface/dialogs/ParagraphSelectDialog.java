@@ -13,6 +13,7 @@
 package info.magnolia.module.admininterface.dialogs;
 
 import info.magnolia.cms.beans.config.Paragraph;
+import info.magnolia.cms.beans.config.ParagraphManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.ControlSuper;
@@ -92,7 +93,7 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
         String[] pars = paragraph.split(","); //$NON-NLS-1$
         for (int i = 0; i < pars.length; i++) {
             try {
-                Paragraph paragraphInfo = Paragraph.getInfo(pars[i]);
+                Paragraph paragraphInfo = ParagraphManager.getInstance().getInfo(pars[i]);
                 Button button = new Button(c1.getName(), paragraphInfo.getName());
                 StringBuffer label = new StringBuffer();
                 // TODO enable an invidual message bundle for each paragraph

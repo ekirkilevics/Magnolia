@@ -38,14 +38,6 @@ public class UserAddToGroupsDialog extends ConfiguredDialog {
      */
     private static final long serialVersionUID = 222L;
 
-    private static final String NODE_ACLUSERS = "acl_users"; //$NON-NLS-1$
-
-    private static final String NODE_ACLROLES = "acl_userroles"; //$NON-NLS-1$
-
-    private static final String NODE_ROLES = "roles"; //$NON-NLS-1$
-
-    private static final String NODE_ACLCONFIG = "acl_config"; //$NON-NLS-1$
-
     /*
      * (non-Javadoc)
      * @see info.magnolia.module.admininterface.DialogMVCHandler#getRepository()

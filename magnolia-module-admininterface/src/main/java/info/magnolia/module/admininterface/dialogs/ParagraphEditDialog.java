@@ -13,6 +13,7 @@
 package info.magnolia.module.admininterface.dialogs;
 
 import info.magnolia.cms.beans.config.Paragraph;
+import info.magnolia.cms.beans.config.ParagraphManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.dialog.DialogDialog;
 
@@ -55,7 +56,7 @@ public class ParagraphEditDialog extends ConfiguredDialog {
      * Get the configuration of the dialog from the paragraph
      */
     public static Content getConfigNode(HttpServletRequest request, String paragraph) {
-        Paragraph para = Paragraph.getInfo(paragraph);
+        Paragraph para = ParagraphManager.getInstance().getInfo(paragraph);
 
         if (para == null) {
             // out.println(msgs.get("dialog.paragraph.paragraphNotAvailable", new String[]{paragraph}));
