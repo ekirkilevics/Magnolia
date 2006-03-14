@@ -27,6 +27,7 @@ import info.magnolia.cms.gui.fckeditor.FCKEditorTmpFiles;
 import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Digester;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.util.LinkUtil;
 
@@ -310,7 +311,7 @@ public class SaveHandlerImpl implements SaveHandler {
         Pattern imagePattern = Pattern.compile("(<(a|img)[^>]+(href|src)[ ]*=[ ]*\")([^\"]*)(\"[^>]*>)");
         Pattern uuidPattern = Pattern.compile(MgnlContext.getContextPath() + "/tmp/fckeditor/([^/]*)/[^\"]*");
 
-        Content filesNode = node.getContent(name + "_files", true, ItemType.CONTENTNODE);
+        Content filesNode = ContentUtil.getOrCreateContent(node, name + "_files", ItemType.CONTENTNODE);
 
         String pageName = StringUtils.substringAfterLast(this.getPath(), "/");
 
