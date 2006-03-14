@@ -1,19 +1,40 @@
 <%@ page contentType="text/javascript; charset=utf-8" %>
+<%@ page import="org.apache.commons.io.IOUtils" %>
+<%@ page import="java.io.InputStream" %>
+<%@ page import="info.magnolia.cms.beans.runtime.MgnlContext" %>
+<%@ page import="info.magnolia.cms.util.FactoryUtil" %>
+<%@ page import="info.magnolia.cms.beans.runtime.WebContext" %>
+
+<%
+WebContext ctx = (WebContext) FactoryUtil.getInstance(WebContext.class);
+ctx.init(request);
+MgnlContext.setInstance(ctx);
+%>
 
 var contextPath = '<%= request.getContextPath() %>';
 
 
-<%@ include file="../../admindocroot/js/debug.js" %>
+<%
+    String[] includes = {
+        "debug.js",
+        "generic.js",
+        "general.js",
+        "controls.js",
+        "tree.js",
+        "i18n.js",
+        "contextmenu.js",
+        "inline.js"
+    };
 
-<%@ include file="../../admindocroot/js/i18n.js" %>
+    for(int i=0; i<includes.length; i++){
+        InputStream in = getClass().getResourceAsStream("/mgnl-resources/admin-js/" + includes[i]);
+        IOUtils.copy(in, out);
+    }
+%>
+
 <%@ include file="messages.jsp" %>
 
 <%@ include file="libs.jsp" %>
 <%@ include file="classes.jsp" %>
 
-<%@ include file="../../admindocroot/js/generic.js" %>
-<%@ include file="../../admindocroot/js/general.js" %>
-<%@ include file="../../admindocroot/js/controls.js" %>
-<%@ include file="../../admindocroot/js/tree.js" %>
-<%@ include file="../../admindocroot/js/contextmenu.js" %>
-<%@ include file="../../admindocroot/js/inline.js" %>
+

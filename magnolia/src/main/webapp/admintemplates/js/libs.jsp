@@ -1,13 +1,17 @@
-<%@ page import="org.apache.commons.io.FileUtils" %>
-<%@ page import="info.magnolia.cms.core.Path" %>
+<%@ page import="info.magnolia.cms.util.ClasspathResourcesUtil" %>
 <%@ page import="java.util.Collection" %>
-<%@ page import="java.io.File" %>
 <%@ page import="java.util.Iterator" %>
+<%@ page import="org.apache.commons.io.IOUtils" %>
 
 <%
-    Collection libFiles = FileUtils.listFiles(new File(Path.getAppRootDir() + "/admindocroot/js/libs"), new String[]{"js"}, true );
-    for(Iterator iter = libFiles.iterator(); iter.hasNext();){
-        File file = (File) iter.next();
-        out.println(FileUtils.readFileToString(file,"UTF8"));
+    Collection names = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter(){
+        public boolean accept(String name){
+            return name.startsWith("/js-libs/") && name.endsWith(".js");
+        }
+    });
+    
+    for(Iterator iter = names.iterator(); iter.hasNext(); ){
+        String name = (String) iter.next();
+        IOUtils.copy(getClass().getResourceAsStream(name), out);
     }
 %>

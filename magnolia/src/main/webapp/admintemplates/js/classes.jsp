@@ -1,17 +1,16 @@
-<%@ page import="org.apache.commons.io.FileUtils" %>
-<%@ page import="info.magnolia.cms.core.Path" %>
 <%@ page import="java.util.Collection" %>
-<%@ page import="java.io.File" %>
 <%@ page import="java.util.Iterator" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.regex.Pattern" %>
-<%@ page import="org.apache.commons.lang.StringUtils" %>
-<%@ page import="java.util.regex.Matcher" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="javax.servlet.jsp.JspWriter" %>
 <%@ page import="java.io.IOException" %>
+<%@ page import="info.magnolia.cms.util.ClasspathResourcesUtil" %>
+<%@ page import="org.apache.commons.io.IOUtils" %>
+<%@ page import="java.util.regex.Matcher" %>
+<%@ page import="org.apache.commons.lang.StringUtils" %>
 <%!
     Pattern importPattern = Pattern.compile("importClass\\(\"(.*)\"\\);");
     Map classes = new HashMap();
@@ -38,15 +37,21 @@
 %>
 
 <%
-    Collection files = FileUtils.listFiles(new File(Path.getAppRootDir() + "/admindocroot/js/classes"), new String[]{"js"}, true );
+    Collection files = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter(){
+        public boolean accept(String name){
+            return name.startsWith("/mgnl-resources/js-classes") && name.endsWith(".js");
+        }
+    });
+    
     for(Iterator iter = files.iterator(); iter.hasNext();){
+        String name = (String) iter.next();
         Definition def = new Definition();
-        File file = (File) iter.next();
-        def.name = StringUtils.replace(file.getPath(), "\\", "/");
-        def.name = StringUtils.substringAfter(def.name, "/classes/");
+        def.name = StringUtils.replace(name, "\\", "/");
+        def.name = StringUtils.substringAfterLast(def.name, "/js-classes/");
         def.name = StringUtils.removeEnd(def.name, ".js");
         def.name = StringUtils.replace(def.name, "/", ".");
-        def.content = FileUtils.readFileToString(file,"UTF8");
+        
+        def.content = IOUtils.toString(getClass().getResourceAsStream(name));
         Matcher matcher = importPattern.matcher(def.content);
         while(matcher.find()){
             String importName = matcher.group(1);
