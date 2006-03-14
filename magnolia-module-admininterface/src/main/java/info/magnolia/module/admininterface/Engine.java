@@ -12,24 +12,10 @@
  */
 package info.magnolia.module.admininterface;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.gui.dialog.DialogManager;
-import info.magnolia.cms.module.Module;
-import info.magnolia.cms.module.ModuleConfig;
 import info.magnolia.cms.module.RegisterException;
-import info.magnolia.module.admininterface.trees.AdminTreeConfig;
-import info.magnolia.module.admininterface.trees.AdminTreeRoles;
-import info.magnolia.module.admininterface.trees.AdminTreeUsers;
-import info.magnolia.module.admininterface.trees.AdminTreeWebsite;
 
 import java.util.jar.JarFile;
-
-import javax.jcr.RepositoryException;
-import javax.jcr.observation.Event;
-import javax.jcr.observation.EventIterator;
-import javax.jcr.observation.EventListener;
-import javax.jcr.observation.ObservationManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +26,7 @@ import org.slf4j.LoggerFactory;
  * @author Fabrizio Giustina
  * @version 2.0
  */
-public class Engine implements Module {
+public class Engine extends AbstractModule {
 
     /**
      * Logger.
@@ -50,146 +36,10 @@ public class Engine implements Module {
     /**
      * @see info.magnolia.cms.module.Module#init(info.magnolia.cms.module.ModuleConfig)
      */
-    public void init(ModuleConfig config) {
+    public void onInit() {
         // set local store to be accessed via admin interface classes or JSP
         Store store = Store.getInstance();
-        store.setStore(config.getLocalStore());
-
-        registerTrees(store);
-
-        try {
-            store.registerDialogHandlers(store.getStore().getContent("dialogs")); //$NON-NLS-1$
-        }
-        catch (Exception e) {
-            log.error("can't register the admin interface dialogs", e); //$NON-NLS-1$
-        }
-
-        try {
-            store.registerParagraphDialogHandlers(ContentRepository
-                .getHierarchyManager(ContentRepository.CONFIG)
-                .getContent("/modules/templating/dialogs")); //$NON-NLS-1$
-        }
-        catch (Exception e) {
-            log.error("can't register the templating dialogs", e); //$NON-NLS-1$
-        }
-
-        try {
-            store.registerDialogPageHandlers(store.getStore().getContent("dialogpages")); //$NON-NLS-1$
-        }
-        catch (Exception e) {
-            log.error("can't register the admin interface dialogpages", e); //$NON-NLS-1$
-        }
-
-        log.info("Init dialog controls"); //$NON-NLS-1$
-        DialogManager.init();
-
-        registerEventListeners(store);
-
-    }
-
-    /**
-     * @param store
-     */
-    protected static void registerTrees(Store store) {
-        // read the tree configuration
-        try {
-            Content defNode = store.getStore().getContent("trees");
-            store.registerTreeHandlers(defNode);
-        }
-        catch (Exception e) {
-            log.warn("can't find trees configuration: will use defaults", e); //$NON-NLS-1$
-        }
-        // register defaults
-        store.registerDefaultTreeHandler(ContentRepository.WEBSITE, AdminTreeWebsite.class);
-        store.registerDefaultTreeHandler(ContentRepository.USERS, AdminTreeUsers.class);
-        store.registerDefaultTreeHandler(ContentRepository.USER_ROLES, AdminTreeRoles.class);
-        store.registerDefaultTreeHandler(ContentRepository.CONFIG, AdminTreeConfig.class);
-    }
-
-    /**
-     * Register an event listener: reload cache configuration when something changes.
-     */
-    private static void registerEventListeners(final Store store) {
-
-        ObservationManager observationManager = null;
-
-        try {
-
-            observationManager = ContentRepository
-                .getHierarchyManager(ContentRepository.CONFIG)
-                .getWorkspace()
-                .getObservationManager();
-        }
-        catch (RepositoryException e) {
-            log.error("Unable to add event listeners for admininterface module", e); //$NON-NLS-1$
-            return;
-        }
-        log.info("Registering event listener for trees"); //$NON-NLS-1$
-        try {
-            observationManager.addEventListener(new EventListener() {
-
-                public void onEvent(EventIterator iterator) {
-                    // reload everything
-                    registerTrees(store);
-                }
-            }, Event.NODE_ADDED
-                | Event.NODE_REMOVED
-                | Event.PROPERTY_ADDED
-                | Event.PROPERTY_CHANGED
-                | Event.PROPERTY_REMOVED, store.getStore().getHandle() + "/" + "trees" //$NON-NLS-1$  //$NON-NLS-2$
-            , true, null, null, false);
-        }
-        catch (RepositoryException e) {
-            log.error("Unable to add event listeners for trees", e); //$NON-NLS-1$
-        }
-
-        log.info("Registering event listener for dialogs"); //$NON-NLS-1$
-        try {
-            observationManager.addEventListener(new EventListener() {
-
-                public void onEvent(EventIterator iterator) {
-                    try {
-                        store.registerDialogHandlers(store.getStore().getContent("dialogs")); //$NON-NLS-1$
-                    }
-                    catch (Exception e) {
-                        log.error("Unable to reload the admin interface dialogs", e); //$NON-NLS-1$
-                    }
-                }
-            }, Event.NODE_ADDED
-                | Event.NODE_REMOVED
-                | Event.PROPERTY_ADDED
-                | Event.PROPERTY_CHANGED
-                | Event.PROPERTY_REMOVED, store.getStore().getHandle() + "/" + "dialogs" //$NON-NLS-1$  //$NON-NLS-2$
-            , true, null, null, false);
-        }
-        catch (RepositoryException e) {
-            log.error("Unable to add event listeners for dialogs", e); //$NON-NLS-1$
-        }
-
-        log.info("Registering event listener for dialogpages"); //$NON-NLS-1$
-        try {
-            observationManager.addEventListener(new EventListener() {
-
-                public void onEvent(EventIterator iterator) {
-
-                    try {
-                        store.registerDialogHandlers(store.getStore().getContent("dialogpages")); //$NON-NLS-1$
-                    }
-                    catch (Exception e) {
-                        log.error("Unable to reload the admin interface dialogpages", e); //$NON-NLS-1$
-                    }
-                }
-            }, Event.NODE_ADDED
-                | Event.NODE_REMOVED
-                | Event.PROPERTY_ADDED
-                | Event.PROPERTY_CHANGED
-                | Event.PROPERTY_REMOVED, store.getStore().getHandle() + "/" + "dialogpages" //$NON-NLS-1$  //$NON-NLS-2$
-            , true, null, null, false);
-        }
-        catch (RepositoryException e) {
-            log.error("Unable to add event listeners for dialogpages", e); //$NON-NLS-1$
-        }
-
+        store.setStore(this.getModuleConfig().getLocalStore());
     }
 
     /**
