@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module SYSTEM "module.dtd">
+<module>
+  <name>adminInterface</name>
+  <display-name>Admin Interface</display-name>	
+  <short-description>Magnolia Administration GUI</short-description>
+  <class>info.magnolia.module.admininterface.Engine</class>
+  <version>3.0</version>
+</module>
