@@ -26,7 +26,6 @@ import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.Session;
 import javax.jcr.Workspace;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -49,7 +48,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
  * @author Fabrizio Giustina
  * @version $Id$
  */
-public class ImportExportServlet extends HttpServlet {
+public class ImportExportServlet extends ContextSensitiveServlet {
 
     /**
      * Stable serialVersionUID.
@@ -110,7 +109,8 @@ public class ImportExportServlet extends HttpServlet {
      * @see javax.servlet.http.HttpServlet#doGet(HttpServletRequest, HttpServletResponse)
      */
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-
+        super.doGet(request, response);
+        
         try {
             request.setCharacterEncoding("UTF-8"); //$NON-NLS-1$
         }
@@ -302,7 +302,8 @@ public class ImportExportServlet extends HttpServlet {
      * @see javax.servlet.http.HttpServlet#doPost(HttpServletRequest, HttpServletResponse)
      */
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-
+        super.doPost(request, response);
+        
         log.debug("Import request received."); //$NON-NLS-1$
 
         MultipartForm form = Resource.getPostedForm(request);
