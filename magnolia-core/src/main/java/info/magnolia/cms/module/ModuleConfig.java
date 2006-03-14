@@ -19,6 +19,7 @@ import java.util.Map;
 
 
 /**
+ * The module configuration read from the config repository.
  * @author Sameer Charles
  * @version 2.0
  */
@@ -35,16 +36,6 @@ public class ModuleConfig {
     private Map initParameters;
 
     /**
-     * Name
-     */
-    private String moduleName;
-
-    /**
-     * Description
-     */
-    private String moduleDescription;
-
-    /**
      * Default HM
      */
     private HierarchyManager hierarchyManager;
@@ -55,17 +46,22 @@ public class ModuleConfig {
     private Content localStore;
 
     /**
+     * The registraion definition
+     */
+    private ModuleDefinition moduleDefinition;
+
+    /**
      * @return module name
      */
-    public String getModuleName() {
-        return this.moduleName;
+    public String getName() {
+        return this.getModuleDefinition().getName();
     }
 
     /**
      * @return description
      */
-    public String getModuleDescription() {
-        return this.moduleDescription;
+    public String getDescription() {
+        return this.getModuleDefinition().getShortDescription();
     }
 
     /**
@@ -97,20 +93,6 @@ public class ModuleConfig {
     }
 
     /**
-     * @param value name
-     */
-    public void setModuleName(String value) {
-        this.moduleName = value;
-    }
-
-    /**
-     * @param value description
-     */
-    public void setModuleDescription(String value) {
-        this.moduleDescription = value;
-    }
-
-    /**
      * @param initParams parameters
      */
     public void setInitParameters(Map initParams) {
@@ -137,4 +119,19 @@ public class ModuleConfig {
     public void setLocalStore(Content localStore) {
         this.localStore = localStore;
     }
+
+    /**
+     * @return Returns the moduleDefinition.
+     */
+    public ModuleDefinition getModuleDefinition() {
+        return this.moduleDefinition;
+    }
+
+    /**
+     * @param moduleDefinition The moduleDefinition to set.
+     */
+    public void setModuleDefinition(ModuleDefinition moduleDefinition) {
+        this.moduleDefinition = moduleDefinition;
+    }
+
 }
