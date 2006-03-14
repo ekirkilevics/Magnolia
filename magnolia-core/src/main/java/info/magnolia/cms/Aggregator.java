@@ -14,6 +14,7 @@ package info.magnolia.cms;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.Template;
+import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
@@ -164,7 +165,7 @@ public class Aggregator {
                 this.setRequestReceiver(true);
                 return;
             }
-            this.requestReceiver = Template.getInfo(templateName).getPath(this.extension);
+            this.requestReceiver = TemplateManager.getInstance().getInfo(templateName).getPath(this.extension);
         }
         catch (Exception e) {
             this.setRequestReceiver(true);
@@ -187,7 +188,7 @@ public class Aggregator {
                     log.error("No template configured for page [{}].", this.requestedPage.getHandle()); //$NON-NLS-1$
                 }
 
-                Template template = Template.getInfo(templateName);
+                Template template = TemplateManager.getInstance().getInfo(templateName);
 
                 if (template == null) {
 
