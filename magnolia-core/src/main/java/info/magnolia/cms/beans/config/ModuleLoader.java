@@ -58,8 +58,7 @@ public final class ModuleLoader {
     /**
      * The instance of the loader
      */
-    private static ModuleLoader instance = (ModuleLoader) FactoryUtil
-        .getSingleton(ModuleLoader.class);
+    private static ModuleLoader instance = (ModuleLoader) FactoryUtil.getSingleton(ModuleLoader.class);
 
     /**
      * magnolia module specific keywords
@@ -76,7 +75,7 @@ public final class ModuleLoader {
      * The module instances
      */
     private Map modules = new HashMap();
-    
+
     /**
      * todo fix this with proper JCR implementation.
      */
@@ -101,11 +100,11 @@ public final class ModuleLoader {
      */
     protected void init() throws ConfigurationException {
         // do not initialize if a system restart is needed (could corrupt the system)
-        if(ModuleRegistration.getInstance().isRestartNeeded()){
+        if (ModuleRegistration.getInstance().isRestartNeeded()) {
             log.info("one or more module triggered a system restart, will not initialize the modules");
             return;
         }
-        
+
         log.info("Loading modules"); //$NON-NLS-1$
         setSudoCredentials();
         try {
@@ -120,7 +119,6 @@ public final class ModuleLoader {
         }
     }
 
-
     /**
      * Init the modules
      * @param modulesNode node with the module nodes
@@ -128,27 +126,30 @@ public final class ModuleLoader {
     private void init(Content modulesNode) {
         // loop over the definitions (following the dependencies)
         OrderedMap defs = ModuleRegistration.getInstance().getModuleDefinitions();
-        for (OrderedMapIterator iter = defs.orderedMapIterator(); !ModuleRegistration.getInstance().isRestartNeeded() && iter.hasNext();) {
+        for (OrderedMapIterator iter = defs.orderedMapIterator(); !ModuleRegistration.getInstance().isRestartNeeded()
+            && iter.hasNext();) {
             iter.next();
             ModuleDefinition def = (ModuleDefinition) iter.getValue();
-            try{
-                if(modulesNode.hasContent(def.getName())){
+            try {
+                if (modulesNode.hasContent(def.getName())) {
                     Content moduleNode = modulesNode.getContent(def.getName());
                     log.info("initializing module - " + def.getName()); //$NON-NLS-1$
                     load(def, moduleNode);
                     log.info("module : " + def.getName() + " initialized"); //$NON-NLS-1$ //$NON-NLS-2$
                 }
-                else{
-                    log.error("can't initialize module [" + def.getName() + "]: node module node in the config repository found");
+                else {
+                    log.error("can't initialize module ["
+                        + def.getName()
+                        + "]: node module node in the config repository found");
                 }
 
             }
-            catch(RepositoryException e){
+            catch (RepositoryException e) {
                 log.error("can't initialize module [" + def.getName() + "]", e);
             }
         }
-        
-        if(ModuleRegistration.getInstance().isRestartNeeded()){
+
+        if (ModuleRegistration.getInstance().isRestartNeeded()) {
             log.warn("stopped module initialization since a restart is needed");
         }
     }
@@ -158,11 +159,12 @@ public final class ModuleLoader {
 
             Content moduleConfigNode = moduleNode.getContent(CONFIG_NODE_REGISTER);
             ModuleConfig moduleConfig = new ModuleConfig();
-            
+
             // set the registration definition
             moduleConfig.setModuleDefinition(def);
 
-            moduleConfig.setHierarchyManager(getHierarchyManager(moduleConfigNode.getNodeData("repository").getString())); //$NON-NLS-1$
+            moduleConfig
+                .setHierarchyManager(getHierarchyManager(moduleConfigNode.getNodeData("repository").getString())); //$NON-NLS-1$
             try {
                 Content sharedRepositories = moduleConfigNode.getContent("sharedRepositories"); //$NON-NLS-1$
                 moduleConfig.setSharedHierarchyManagers(getSharedHierarchyManagers(sharedRepositories));
@@ -170,7 +172,7 @@ public final class ModuleLoader {
             catch (PathNotFoundException e) {
                 log.info("Module : no shared repository definition found for - " + moduleNode.getName()); //$NON-NLS-1$
             }
-            
+
             try {
                 Content initParamsNode = moduleConfigNode.getContent("initParams"); //$NON-NLS-1$
                 moduleConfig.setInitParameters(getInitParameters(initParamsNode)); //$NON-NLS-1$
@@ -185,37 +187,38 @@ public final class ModuleLoader {
                 + moduleNode.getName() + "/" //$NON-NLS-1$
                 + CONFIG_NODE_LOCAL_STORE);
             moduleConfig.setLocalStore(store.getStore());
-            
+
             Module module = this.getModuleInstance(moduleConfig.getName());
-            
+
             // instantiate if not yet done (due registraion)
-            if(module == null){
+            if (module == null) {
                 try {
                     String moduleClassName = moduleConfigNode.getNodeData("class").getString(); //$NON-NLS-1$
-   
+
                     module = (Module) Class.forName(moduleClassName).newInstance();
                     this.addModuleInstance(moduleConfig.getName(), module);
                 }
                 catch (InstantiationException ie) {
-                    log.error("Module : [ " + moduleConfigNode.getNodeData("moduleName").getString() + " ] failed to load"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    log
+                        .error("Module : [ " + moduleConfigNode.getNodeData("moduleName").getString() + " ] failed to load"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                     log.error(ie.getMessage());
                 }
                 catch (IllegalAccessException ae) {
                     log.error(ae.getMessage());
                 }
             }
-            
+
             // init the module
-            if(!module.isInitialized()){
-            	if(!module.isRestartNeeded()){
-            		log.info("start initialization of module [{}]", def.getName());
-            		module.init(moduleConfig);
-            	}
-            	else{
-            		log.warn("won't initialize the module [" + module.getName() + "] since a system restart is needed");
-            	}
-            
-                if(module.isRestartNeeded()){
+            if (!module.isInitialized()) {
+                if (!module.isRestartNeeded()) {
+                    log.info("start initialization of module [{}]", def.getName());
+                    module.init(moduleConfig);
+                }
+                else {
+                    log.warn("won't initialize the module [" + module.getName() + "] since a system restart is needed");
+                }
+
+                if (module.isRestartNeeded()) {
                     ModuleRegistration.getInstance().setRestartNeeded(true);
                 }
             }
@@ -297,16 +300,15 @@ public final class ModuleLoader {
         return modulesNode;
     }
 
-    
     /**
      * Get the module instance
      * @param name
      * @return the instance
      */
-    public Module getModuleInstance(String name){
+    public Module getModuleInstance(String name) {
         return (Module) this.modules.get(name);
     }
-    
+
     /**
      * Register this module instance to avoid a second instantiation.
      * @param name
