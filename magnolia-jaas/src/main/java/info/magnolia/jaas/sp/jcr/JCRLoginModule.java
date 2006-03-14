@@ -175,48 +175,6 @@ public class JCRLoginModule extends AbstractLoginModule {
 
 	}
 
-	/**
-	 * get groups which users are belong to
-	 * 
-	 * @return
-	 */
-	private List getUserGroups(String userName) {
-		ArrayList list = new ArrayList();
-
-		try {
-			HierarchyManager hm = ContentRepository
-					.getHierarchyManager(ContentRepository.USERS);
-
-			// get node "user"
-			Content user = hm.getContent(userName);
-
-			// get "groups" node under node "user"
-			Content groups = user.getContent("groups");
-
-			Collection c = groups.getChildren(ItemType.CONTENTNODE);
-			Iterator it = c.iterator();
-			while (it.hasNext()) {
-				Content ct = (Content) it.next();
-				if (ct == null) {
-					log.error("group node is null");
-					continue;
-				}
-				String groupName = ct.getTitle();
-				if (groupName == null) {
-					log.error("group name is null");
-					continue;
-				}
-				list.add(groupName);
-			}
-
-		} catch (Exception e) {
-
-			log.warn("can not get group reference to user, casuse: " + e);
-		}
-
-		return list;
-
-	}
 
 	/**
 	 * get group nodes which users are belong to
