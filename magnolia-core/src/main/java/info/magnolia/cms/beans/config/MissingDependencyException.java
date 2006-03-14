@@ -12,12 +12,10 @@
  */
 package info.magnolia.cms.beans.config;
 
-
 /**
  * Thrown if a modules dependency is missed
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class MissingDependencyException extends ConfigurationException {
 
