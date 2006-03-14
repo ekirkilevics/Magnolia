@@ -23,28 +23,35 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * Servlet which sets the context properly.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
+ *
  */
 public abstract class ContextSensitiveServlet extends HttpServlet {
-
+    
     /**
-     * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest,
-     * javax.servlet.http.HttpServletResponse)
+     * Logger
+     */
+    Logger log = LoggerFactory.getLogger(ContextSensitiveServlet.class);
+    
+    /**
+     * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         initializeContext(req);
     }
-
+    
     /**
-     * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest,
-     * javax.servlet.http.HttpServletResponse)
+     * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        initializeContext(req);
+        initializeContext(req);  
     }
 
     /**
@@ -53,9 +60,14 @@ public abstract class ContextSensitiveServlet extends HttpServlet {
      * @param request the current request
      */
     protected void initializeContext(HttpServletRequest request) {
-        WebContext ctx = (WebContext) FactoryUtil.getInstance(WebContext.class);
-        ctx.init(request);
-        MgnlContext.setInstance(ctx);
+        if(MgnlContext.getInstance() == null){
+            WebContext ctx = (WebContext)FactoryUtil.getInstance(WebContext.class);
+            ctx.init(request);
+            MgnlContext.setInstance(ctx);
+        }
+        else{
+            log.warn("context of thread was already set");
+        }
     }
 
 }
