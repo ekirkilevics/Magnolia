@@ -12,7 +12,9 @@
  */
 package info.magnolia.cms.module;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ModuleLoader;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -21,7 +23,6 @@ import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.core.ie.DataTransporter;
 import info.magnolia.cms.security.AccessDeniedException;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -30,14 +31,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.PathNotFoundException;
@@ -73,56 +76,10 @@ public final class ModuleUtil {
     private static Logger log = LoggerFactory.getLogger(ModuleUtil.class);
 
     /**
-     * used by the installFiles() method
-     * @author philipp
-     */
-    public interface IncludeMatcher {
-
-        /**
-         * @param name
-         * @return true if this file should get installed
-         */
-        boolean match(String name);
-
-        /**
-         * trans from the path from the jar entry name into a real path
-         * @param name
-         * @return the path to which this file should get installed
-         */
-        String transform(String name);
-    }
-
-    /**
-     * install files from a specifig directory
-     * @author philipp
-     */
-    public static class DirectoryIncludeMatcher implements IncludeMatcher {
-
-        private String path;
-
-        public DirectoryIncludeMatcher(String path) {
-            this.path = path;
-        }
-
-        public boolean match(String name) {
-            return name.startsWith(path) && !name.endsWith("/");
-        }
-
-        public String transform(String name) {
-            return StringUtils.removeStart(name, path);
-        }
-    }
-
-    /**
      * Util has no public constructor
      */
     private ModuleUtil() {
     }
-
-    /**
-     * blocksize
-     */
-    public static final int DATA_BLOCK_SIZE = 1024 * 1024;
 
     /**
      * registers the properties in the repository
@@ -195,41 +152,42 @@ public final class ModuleUtil {
         return node;
     }
 
-    /**
-     * @param jar
-     * @throws Exception
-     * @deprecated use installFiles(jar, path) or installFiles(jar, matcher)
-     */
-    public static void installFiles(JarFile jar) throws Exception {
-        IncludeMatcher matcher = new IncludeMatcher() {
+    public static void bootstrap(Collection resourceNames) throws IOException, RegisterException {
 
-            public boolean match(String name) {
-                if (!name.toUpperCase().equals("/") //$NON-NLS-1$
-                    && !name.endsWith("/") //$NON-NLS-1$
-                    && !name.startsWith("CH") //$NON-NLS-1$
-                    && !name.startsWith("META-INF") //$NON-NLS-1$
-                    && !name.endsWith(".JAR")) { //$NON-NLS-1$
-                    return true;
-                }
-                return false;
+        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
+
+        // sort by length --> import parent node first
+        List list = new ArrayList(resourceNames);
+        Collections.sort(list, new Comparator() {
+
+            public int compare(Object name1, Object name2) {
+                return ((String) name1).length() - ((String) name2).length();
             }
+        });
 
-            public String transform(String name) {
-                return name;
-            }
-        };
+        for (Iterator iter = list.iterator(); iter.hasNext();) {
+            String resourceName = (String) iter.next();
+            String name = StringUtils.removeEnd(StringUtils.removeStart(resourceName, "/mgnl-bootstrap/"), ".xml");
 
-        installFiles(jar, matcher);
-    }
-
-    public static void bootstrap(Collection resourceNames) throws IOException {
-        for (Iterator iter = resourceNames.iterator(); iter.hasNext();) {
-            String name = (String) iter.next();
             String repository = StringUtils.substringBefore(name, ".");
-            String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(StringUtils
-                .substringBeforeLast(name, "."), "."), "."); //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
+            String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(name, "."), "."); //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
             pathName = "/" + StringUtils.replace(pathName, ".", "/");
-            InputStream stream = ModuleUtil.class.getResourceAsStream(name);
+
+            String nodeName = StringUtils.substringAfterLast(name, ".");
+
+            // if the path already exists --> delete it
+            try {
+                if (hm.isExist(pathName + "/" + nodeName)) {
+                    hm.delete(pathName + "/" + nodeName);
+                }
+
+                // if the parent path not exists just create it
+                createPath(hm, pathName);
+            }
+            catch (Exception e) {
+                throw new RegisterException("can't register bootstrap file: [" + name + "]", e);
+            }
+            InputStream stream = ModuleUtil.class.getResourceAsStream(resourceName);
             DataTransporter.executeImport(
                 pathName,
                 repository,
@@ -241,18 +199,13 @@ public final class ModuleUtil {
         }
     }
 
-    public static void installFiles(JarFile jar, final String path) throws Exception {
-        installFiles(jar, new DirectoryIncludeMatcher(path));
-    }
-
     /**
      * Extracts files of a jar and stores them in the magnolia file structure
-     * @param jar the jar containing the files (jsp, images)
-     * @param matcher checks if the file must get installed
-     * @param prefix the prefix to remove from the names
+     * @param files a list of resource names
+     * @param prefix prefix which is not part of the magolia path (in common 'mgnl-content')
      * @throws Exception io exception
      */
-    public static void installFiles(JarFile jar, IncludeMatcher matcher) throws Exception {
+    public static void installFiles(Collection names, String prefix) throws Exception {
 
         String root = null;
         // Try to get root
@@ -270,28 +223,21 @@ public final class ModuleUtil {
             throw new Exception("Invalid magnolia " + SystemProperty.MAGNOLIA_APP_ROOTDIR + " path"); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
-        Map files = new HashMap();
-        Enumeration entries = jar.entries();
-        while (entries.hasMoreElements()) {
-            JarEntry entry = (JarEntry) entries.nextElement();
-            String name = entry.getName();
-
-            if (matcher.match(name)) { //$NON-NLS-1$
-                files.put(new File(root, matcher.transform(name)), entry);
-            }
-        }
-
-        // Loop throgh files an check writeable
+        // Loop throgh files and check writeable
         String error = StringUtils.EMPTY;
-        Iterator iter = files.keySet().iterator();
-        while (iter.hasNext()) {
-            File file = (File) iter.next();
+        for (Iterator iter = names.iterator(); iter.hasNext();) {
+            String name = (String) iter.next();
+
+            InputStream resourceStream = ModuleUtil.class.getResourceAsStream(name);
+
+            File targetFile = new File(Path.getAbsoluteFileSystemPath(StringUtils.removeStart(name, prefix)));
+
             String s = StringUtils.EMPTY;
-            if (!file.getParentFile().exists() && !file.getParentFile().mkdirs()) {
-                s = "Can't create directories for " + file.getAbsolutePath(); //$NON-NLS-1$
+            if (!targetFile.getParentFile().exists() && !targetFile.getParentFile().mkdirs()) {
+                s = "Can't create directories for " + targetFile.getAbsolutePath(); //$NON-NLS-1$
             }
-            else if (!file.getParentFile().canWrite()) {
-                s = "Can't write to " + file.getAbsolutePath(); //$NON-NLS-1$
+            else if (!targetFile.getParentFile().canWrite()) {
+                s = "Can't write to " + targetFile.getAbsolutePath(); //$NON-NLS-1$
             }
             if (s.length() > 0) {
                 if (error.length() > 0) {
@@ -299,36 +245,18 @@ public final class ModuleUtil {
                 }
                 error += s;
             }
+
+            OutputStream out = new FileOutputStream(targetFile);
+            IOUtils.copy(resourceStream, out);
+
+            IOUtils.closeQuietly(resourceStream);
+            IOUtils.closeQuietly(out);
         }
 
         if (error.length() > 0) {
             throw new Exception("Errors while installing files: " + error); //$NON-NLS-1$
         }
 
-        // Copy files
-        iter = files.keySet().iterator();
-        while (iter.hasNext()) {
-            File file = (File) iter.next();
-            JarEntry entry = (JarEntry) files.get(file);
-
-            int byteCount = 0;
-            byte[] data = new byte[DATA_BLOCK_SIZE];
-
-            InputStream in = null;
-            BufferedOutputStream out = null;
-
-            try {
-                in = jar.getInputStream(entry);
-                out = new BufferedOutputStream(new FileOutputStream(file), DATA_BLOCK_SIZE);
-
-                while ((byteCount = in.read(data, 0, DATA_BLOCK_SIZE)) != -1) {
-                    out.write(data, 0, byteCount);
-                }
-            }
-            finally {
-                IOUtils.closeQuietly(out);
-            }
-        }
     }
 
     /**
@@ -357,6 +285,23 @@ public final class ModuleUtil {
         register.createContent("sharedRepositories", ItemType.CONTENTNODE); //$NON-NLS-1$
         register.createContent("initParams", ItemType.CONTENTNODE); //$NON-NLS-1$
         return node;
+    }
+
+    /**
+     * Register a servlet based on the definition of the modules xml descriptor
+     * @param servlet
+     * @throws JDOMException
+     * @throws IOException
+     */
+    public static void registerServlet(ServletDefinition servlet) throws JDOMException, IOException {
+        String[] urlPatterns = (String[]) servlet.getMappings().toArray(new String[servlet.getMappings().size()]);
+        Hashtable params = new Hashtable();
+        for (Iterator iter = servlet.getParams().iterator(); iter.hasNext();) {
+            ServletParameterDefinition param = (ServletParameterDefinition) iter.next();
+            params.put(param.getName(), param.getValue());
+        }
+        registerServlet(servlet.getName(), servlet.getClassName(), urlPatterns, servlet.getComment(), params);
+
     }
 
     /**
