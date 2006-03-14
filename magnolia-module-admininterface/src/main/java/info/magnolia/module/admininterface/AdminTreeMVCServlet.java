@@ -40,6 +40,6 @@ public class AdminTreeMVCServlet extends MVCServlet {
         String handlerName = request.getRequestURI();
         handlerName = StringUtils.replaceOnce(StringUtils.substringAfterLast(handlerName, "/trees/"), ".html", StringUtils.EMPTY);
 
-        return Store.getInstance().getTreeHandler(handlerName, request, response);
+        return TreeHandlerManager.getInstance().getTreeHandler(handlerName, request, response);
     }
 }
