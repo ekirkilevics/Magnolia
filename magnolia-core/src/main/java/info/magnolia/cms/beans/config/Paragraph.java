@@ -12,11 +12,6 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.core.Content;
-
-import java.util.Hashtable;
-import java.util.Map;
-
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,9 +25,7 @@ public final class Paragraph {
     /**
      * Logger.
      */
-    private static Logger log = LoggerFactory.getLogger(Paragraph.class);
-
-    private static Map cachedContent = new Hashtable();
+    static Logger log = LoggerFactory.getLogger(Paragraph.class);
 
     private String name;
 
@@ -46,45 +39,10 @@ public final class Paragraph {
 
     private String description;
 
-    // private Content dialogContent;
-
     /**
      * constructor
      */
-    private Paragraph() {
-    }
-
-    /**
-     * Returns the cached content of the requested template. TemplateInfo properties :
-     * <ol>
-     * <li>title - title describing template</li>
-     * <li>type - jsp / servlet</li>
-     * <li>path - jsp / servlet path</li>
-     * <li>description - description of a template</li>
-     * </ol>
-     * @return TemplateInfo
-     */
-    public static Paragraph getInfo(String key) {
-        return (Paragraph) Paragraph.cachedContent.get(key);
-    }
-
-    /**
-     * Adds paragraph definition to ParagraphInfo cache.
-     */
-    public static Paragraph addParagraphToCache(Content c, String startPage) {
-
-        Paragraph pi = new Paragraph();
-        pi.name = c.getNodeData("name").getString(); //$NON-NLS-1$
-        pi.templatePath = c.getNodeData("templatePath").getString(); //$NON-NLS-1$
-        pi.dialogPath = c.getNodeData("dialogPath").getString(); //$NON-NLS-1$
-        pi.templateType = c.getNodeData("type").getString(); //$NON-NLS-1$
-        pi.title = c.getNodeData("title").getString(); //$NON-NLS-1$
-        pi.description = c.getNodeData("description").getString(); //$NON-NLS-1$
-        if (log.isDebugEnabled()) {
-            log.debug("Registering paragraph [" + pi.name + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-        cachedContent.put(pi.name, pi);
-        return pi;
+    Paragraph() {
     }
 
     /**
@@ -129,13 +87,6 @@ public final class Paragraph {
         return this.description;
     }
 
-    // /**
-    // * @return Content, Content holding information for the paragraph dialog
-    // */
-    // public Content getDialogContent() {
-    // return this.dialogContent;
-    // }
-
     /**
      * @see java.lang.Object#toString()
      */
@@ -149,5 +100,29 @@ public final class Paragraph {
             .append("title", this.title) //$NON-NLS-1$
             .append("templatePath", this.templatePath) //$NON-NLS-1$
             .toString();
+    }
+
+    void setDescription(String description) {
+        this.description = description;
+    }
+
+    void setDialogPath(String dialogPath) {
+        this.dialogPath = dialogPath;
+    }
+
+    void setName(String name) {
+        this.name = name;
+    }
+
+    void setTemplatePath(String templatePath) {
+        this.templatePath = templatePath;
+    }
+
+    void setTemplateType(String templateType) {
+        this.templateType = templateType;
+    }
+
+    void setTitle(String title) {
+        this.title = title;
     }
 }

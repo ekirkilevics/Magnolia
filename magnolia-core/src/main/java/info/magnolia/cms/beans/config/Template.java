@@ -13,23 +13,13 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.security.Permission;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.jcr.ValueFormatException;
 
 
 /**
@@ -37,17 +27,6 @@ import org.slf4j.LoggerFactory;
  * @version 1.1
  */
 public class Template {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(Template.class);
-
-    private static List visibleTemplates = new ArrayList();
-
-    private static Map cachedContent = new Hashtable();
-
-    public static final String DEFAULT_TEMPLATE_PATH_PREFIX = "modules/templating/Templates/";
 
     /**
      * Template name.
@@ -82,175 +61,20 @@ public class Template {
 
     private String location;
 
-    /**
-     * Load all temple definitions available as a collection of Content objects.
-     */
-    public static void init() {
-        log.info("Config : initializing Template info"); //$NON-NLS-1$
-        Template.cachedContent.clear();
-        Template.visibleTemplates.clear();
-    }
+    public Template(Content c) throws ValueFormatException, IllegalStateException, RepositoryException {
+        this.name = c.getNodeData("name").getValue().getString(); //$NON-NLS-1$
+        // ti.name = getTemplatePath(c);
+        this.path = c.getNodeData("path").getValue().getString(); //$NON-NLS-1$
+        addAlternativePaths(c);
+        this.type = c.getNodeData("type").getValue().getString(); //$NON-NLS-1$
+        this.visible = c.getNodeData("visible").getBoolean(); //$NON-NLS-1$
+        this.title = c.getNodeData("title").getString(); //$NON-NLS-1$
+        this.description = c.getNodeData("description").getString(); //$NON-NLS-1$
+        this.image = c.getNodeData("image").getString(); //$NON-NLS-1$
+        this.setLocation(c.getHandle());
+	}
 
-    /**
-     * Recursive search for content nodes contains template data (looks up subfolders)
-     * @author <a href="mailto:tm@touk.pl">Tomasz Mazan</a>
-     * @param cnt current folder to look for template's nodes
-     * @return collection of template's content nodes from current folder and descendants
-     */
-    private static Collection collectChildren(Content cnt) {
-        // Collect template's content node - children of current node
-        Collection children = cnt.getChildren(ItemType.CONTENTNODE);
-
-        // Look into subfolders
-        Collection subFolders = cnt.getChildren(ItemType.CONTENT);
-        if ((subFolders != null) && !(subFolders.isEmpty())) {
-
-            Iterator it = subFolders.iterator();
-            while (it.hasNext()) {
-                Content subCnt = (Content) it.next();
-                Collection grandChildren = collectChildren(subCnt);
-
-                if ((grandChildren != null) && !(grandChildren.isEmpty())) {
-                    children.addAll(grandChildren);
-                }
-            }
-
-        }
-
-        return children;
-    }
-
-    public static void update(String modulePath) {
-        HierarchyManager configHierarchyManager = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
-        try {
-            log.info("Config : loading Template info - " + modulePath); //$NON-NLS-1$
-            Content startPage = configHierarchyManager.getContent(modulePath);
-
-            // It makes possibly to use templates defined within subfolders of /module/templating/Templates
-            Collection children = collectChildren(startPage.getContent("Templates"));
-
-            if ((children != null) && !(children.isEmpty())) {
-                Iterator templates = children.iterator();
-                Template.cacheContent(templates);
-            }
-
-            log.info("Config : Template info loaded - " + modulePath); //$NON-NLS-1$
-        }
-        catch (RepositoryException re) {
-            log.error("Config : Failed to load Template info - " + modulePath); //$NON-NLS-1$
-            log.error(re.getMessage(), re);
-        }
-    }
-
-    public static void reload() {
-        log.info("Config : re-initializing Template info"); //$NON-NLS-1$
-        Template.init();
-        update("modules/templating"); //$NON-NLS-1$
-    }
-
-    /**
-     * Get templates collection.
-     * @return Collection list containing templates as Template objects
-     */
-    public static Iterator getAvailableTemplates() {
-        return Template.visibleTemplates.iterator();
-    }
-
-    /**
-     * Get templates collection after access control filter applied using specified AccessManager
-     * @return Collection list containing templates as Template objects
-     */
-    public static Iterator getAvailableTemplates(AccessManager accessManager) {
-        List templateList = new ArrayList();
-        Iterator it = Template.visibleTemplates.iterator();
-        while (it.hasNext()) {
-            Template template = (Template) it.next();
-            if (accessManager.isGranted(template.getLocation(), Permission.READ)) {
-                templateList.add(template);
-            }
-        }
-        return templateList.iterator();
-    }
-
-    /**
-     * Load content of this template info page in a hash table caching at the system load, this will save lot of time on
-     * every request while matching template info.
-     */
-    private static void cacheContent(Iterator templates) {
-        if (templates != null) {
-            addTemplatesToCache(templates, Template.visibleTemplates);
-        }
-    }
-
-    /**
-     * Adds templates definition to TemplatesInfo cache.
-     * @param templates iterator as read from the repository
-     * @param visibleTemplates List in with all visible templates will be added
-     */
-    private static void addTemplatesToCache(Iterator templates, List visibleTemplates) {
-        while (templates.hasNext()) {
-            Content c = (Content) templates.next();
-            try {
-                Template ti = new Template();
-
-                ti.name = c.getNodeData("name").getValue().getString(); //$NON-NLS-1$
-                // ti.name = getTemplatePath(c);
-                ti.path = c.getNodeData("path").getValue().getString(); //$NON-NLS-1$
-                Template.addAlternativePaths(c, ti);
-                ti.type = c.getNodeData("type").getValue().getString(); //$NON-NLS-1$
-                ti.visible = c.getNodeData("visible").getBoolean(); //$NON-NLS-1$
-                ti.title = c.getNodeData("title").getString(); //$NON-NLS-1$
-                ti.description = c.getNodeData("description").getString(); //$NON-NLS-1$
-                ti.image = c.getNodeData("image").getString(); //$NON-NLS-1$
-
-                log.info(MessageFormat.format("Registering template [{0}]", new Object[]{ti.name})); //$NON-NLS-1$
-
-                Template.cachedContent.put(ti.name, ti);
-                ti.setLocation(c.getHandle());
-                if (ti.visible) {
-                    visibleTemplates.add(ti);
-                }
-            }
-            catch (RepositoryException re) {
-                log.error("Failed to cache TemplateInfo"); //$NON-NLS-1$
-            }
-        }
-    }
-
-    /**
-     * Add alternative extention paths to templates cache.
-     * @param node
-     * @param ti TemplateInfo
-     */
-    private static void addAlternativePaths(Content node, Template ti) {
-        try {
-            Content cl = node.getContent("SubTemplates"); //$NON-NLS-1$
-            Iterator it = cl.getChildren().iterator();
-            ti.alternativePaths = new Hashtable();
-            while (it.hasNext()) {
-                Content c = (Content) it.next();
-                ti.alternativePaths.put(c.getNodeData("extension").getString(), c.getNodeData("path").getString()); //$NON-NLS-1$ //$NON-NLS-2$
-            }
-        }
-        catch (RepositoryException re) {
-        }
-    }
-
-    /**
-     * Returns the cached content of the requested template. TemplateInfo properties:
-     * <ol>
-     * <li> title - title describing template</li>
-     * <li> type - jsp / servlet</li>
-     * <li> path - jsp / servlet path</li>
-     * <li> description - description of a template</li>
-     * </ol>
-     * @return TemplateInfo
-     */
-    public static Template getInfo(String key) throws Exception {
-        return (Template) Template.cachedContent.get(key);
-    }
-
-    /**
+	/**
      *
      */
     public String getName() {
@@ -294,6 +118,25 @@ public class Template {
             return this.getPath();
         }
     }
+    
+	/**
+	 * Add alternative extention paths to templates cache.
+	 * @param node
+	 * @param ti TemplateInfo
+	 */
+	public void addAlternativePaths(Content node) {
+	    try {
+	        Content cl = node.getContent("SubTemplates"); //$NON-NLS-1$
+	        Iterator it = cl.getChildren().iterator();
+	        this.alternativePaths = new Hashtable();
+	        while (it.hasNext()) {
+	            Content c = (Content) it.next();
+	            this.alternativePaths.put(c.getNodeData("extension").getString(), c.getNodeData("path").getString()); //$NON-NLS-1$ //$NON-NLS-2$
+	        }
+	    }
+	    catch (RepositoryException re) {
+	    }
+	}
 
     /**
      *
