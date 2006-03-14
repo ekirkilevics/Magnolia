@@ -12,7 +12,7 @@
  */
 package info.magnolia.cms.taglibs;
 
-import info.magnolia.cms.beans.config.Paragraph;
+import info.magnolia.cms.beans.config.ParagraphManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.inline.ButtonEdit;
 import info.magnolia.cms.util.Resource;
@@ -162,7 +162,7 @@ public class EditButton extends TagSupport {
         if (this.displayHandler == null) {
             Content localContainer = Resource.getLocalContentNode(((HttpServletRequest) pageContext.getRequest()));
             String templateName = localContainer.getNodeData("paragraph").getString(); //$NON-NLS-1$
-            return Paragraph.getInfo(templateName).getTemplatePath();
+            return ParagraphManager.getInstance().getInfo(templateName).getTemplatePath();
         }
         return this.displayHandler;
     }

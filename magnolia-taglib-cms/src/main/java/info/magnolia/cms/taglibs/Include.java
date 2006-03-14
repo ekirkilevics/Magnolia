@@ -13,6 +13,7 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.beans.config.Paragraph;
+import info.magnolia.cms.beans.config.ParagraphManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.Resource;
 
@@ -161,7 +162,7 @@ public class Include extends BodyTagSupport {
 
             if (jspPage == null) {
                 String paragraphName = content.getMetaData().getTemplate();
-                Paragraph paragraph = Paragraph.getInfo(paragraphName);
+                Paragraph paragraph = ParagraphManager.getInstance().getInfo(paragraphName);
 
                 if (paragraph == null) {
                     log.error("Paragraph [" + paragraphName + "] not found for page [" + content.getHandle() + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
