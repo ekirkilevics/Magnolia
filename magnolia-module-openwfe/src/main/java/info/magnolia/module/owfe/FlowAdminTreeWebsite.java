@@ -16,6 +16,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.config.Subscriber;
 import info.magnolia.cms.beans.config.Template;
+import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.gui.control.ContextMenuItem;
@@ -102,7 +103,7 @@ public class FlowAdminTreeWebsite extends FlowAdminTreeMVCHandler {
         templateSelect.setEvent("onchange", tree.getJavascriptTree() //$NON-NLS-1$
             + ".saveNodeData(this.value,this.options[this.selectedIndex].text)"); //$NON-NLS-1$
 
-        Iterator templates = Template.getAvailableTemplates(SessionAccessControl.getAccessManager(
+        Iterator templates = TemplateManager.getInstance().getAvailableTemplates(SessionAccessControl.getAccessManager(
             request,
             ContentRepository.CONFIG));
         while (templates.hasNext()) {
