@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "info.magnolia/module.dtd" "http://magnolia.sf.net/module.dtd" >
+<module>
+  <name>openwfe</name>
+	<short-description>
+	<description>Workflow using OpenWFE</description>
+  <class>info.magnolia.cms.modules.templating.Engine</class>
+  <version>1.0</version>
+  <dependencies>
+    <dependency>
+      <name>adminInterface</name>
+      <version>3.0</version>
+    </dependency>
+  </dependencies>
+</module>
