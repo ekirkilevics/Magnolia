@@ -16,7 +16,7 @@ import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.Dispatcher;
 import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.config.VirtualMap;
+import info.magnolia.cms.beans.config.VirtualURIManager;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.AccessDeniedException;
@@ -212,7 +212,7 @@ public class EntryServlet extends ContextSensitiveServlet {
      * @param request HttpServletRequest
      */
     private String getURIMap(HttpServletRequest request) {
-        return VirtualMap.getURIMapping(StringUtils.substringAfter(request.getRequestURI(), request.getContextPath()));
+        return VirtualURIManager.getInstance().getURIMapping(StringUtils.substringAfter(request.getRequestURI(), request.getContextPath()));
     }
 
 }
