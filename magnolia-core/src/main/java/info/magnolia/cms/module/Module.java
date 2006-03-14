@@ -14,8 +14,6 @@ package info.magnolia.cms.module;
 
 import info.magnolia.cms.core.Content;
 
-import java.util.jar.JarFile;
-
 
 /**
  * All external module must implement this interface in order to be initialised by magnolia and have access to module
@@ -46,26 +44,43 @@ public interface Module {
      * responsibility of the module itself to keep this data. magnolia server will release all handles
      * @param moduleConfig a class containing the configuration of this module
      * @throws InvalidConfigException not a valid configuration
+     * @throws InitializationException
      * @see ModuleConfig#getInitParameters()
-     * @see ModuleConfig#getModuleDescription()
-     * @see ModuleConfig#getModuleName()
+     * @see ModuleConfig#getDescription()
+     * @see ModuleConfig#getName()
      */
-    void init(ModuleConfig moduleConfig) throws InvalidConfigException;
+    void init(ModuleConfig moduleConfig) throws InvalidConfigException, InitializationException;
 
     /**
-     * This method is called if a jar with a magnolia manifest was found.
-     * @param moduleName name read of the manifest
-     * @param version version read of the manifest
+     * This method is always called during the registration phase.
+     * @param def the module definition built by the modules xml file
      * @param moduleNode the node in the config repository
-     * @param jar the jar file
      * @param registerState one of the REGISTER_STATE constants
      * @throws RegisterException no update
      */
-    void register(String moduleName, String version, Content moduleNode, JarFile jar, int registerState)
-        throws RegisterException;
+    void register(ModuleDefinition def, Content moduleNode, int registerState) throws RegisterException;
 
     /**
      * At this point module is responsible to release all resources
      */
     void destroy();
+
+    /**
+     * True if this module is already initialized
+     * @return
+     */
+    boolean isInitialized();
+
+    /**
+     * Return true if the module need a system restart after a registration or initialization
+     * @return
+     */
+    boolean isRestartNeeded();
+
+    /**
+     * Returns the name of this module
+     * @return
+     */
+    String getName();
+
 }
