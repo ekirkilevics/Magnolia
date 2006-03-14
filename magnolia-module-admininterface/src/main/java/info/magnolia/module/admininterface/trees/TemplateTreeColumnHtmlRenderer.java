@@ -13,6 +13,7 @@
 package info.magnolia.module.admininterface.trees;
 
 import info.magnolia.cms.beans.config.Template;
+import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.gui.control.TreeColumnHtmlRenderer;
@@ -39,7 +40,7 @@ public class TemplateTreeColumnHtmlRenderer implements TreeColumnHtmlRenderer {
     }
 
     private String findTemplateKey(String templateName) {
-        for (Iterator iter = Template.getAvailableTemplates(); iter.hasNext();) {
+        for (Iterator iter = TemplateManager.getInstance().getAvailableTemplates(); iter.hasNext();) {
             Template template = (Template) iter.next();
             if (StringUtils.equals(templateName, template.getName())) {
                 return template.getTitle();
