@@ -4,6 +4,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.module.InvalidConfigException;
 import info.magnolia.cms.module.Module;
 import info.magnolia.cms.module.ModuleConfig;
+import info.magnolia.cms.module.ModuleDefinition;
 import info.magnolia.cms.module.RegisterException;
 
 import java.util.jar.JarFile;
@@ -25,11 +26,17 @@ public class Engine implements Module {
 
     private CacheManager cacheManager = CacheManagerFactory.getCacheManager();
 
+    private boolean initialized;
+
+    private String name;
+
     /**
      * @see info.magnolia.cms.module.Module#init(info.magnolia.cms.module.ModuleConfig)
      */
     public void init(ModuleConfig moduleConfig) throws InvalidConfigException {
+        this.name = moduleConfig.getName();
         this.cacheManager.init(moduleConfig.getLocalStore());
+        this.initialized = true;
     }
 
     /**
@@ -45,6 +52,25 @@ public class Engine implements Module {
      */
     public void destroy() {
         this.cacheManager.stop();
+    }
+
+    public void register(ModuleDefinition def, Content moduleNode, int registerState) throws RegisterException {
+        // nothing to do
+    }
+
+    public boolean isInitialized() {
+        return initialized;
+    }
+
+    /**
+     * This module dosn't need any restart.
+     */
+    public boolean isRestartNeeded() {
+        return false;
+    }
+
+    public String getName() {
+        return name;
     }
 
 }
