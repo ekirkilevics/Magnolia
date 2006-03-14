@@ -70,7 +70,7 @@ public class DialogMVCServlet extends MVCServlet {
         if (StringUtils.isNotBlank(dialogName)) {
             // try to get a registered handler
             try {
-                handler = Store.getInstance().getDialogHandler(dialogName, request, response);
+                handler = DialogHandlerManager.getInstance().getDialogHandler(dialogName, request, response);
             }
             catch (InvalidDialogHandlerException e) {
                 log.info("can't find handler will try to load directly from the config", e); //$NON-NLS-1$

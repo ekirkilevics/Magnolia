@@ -63,7 +63,7 @@ public class DialogPageMVCServlet extends MVCServlet {
         if (pageName != null) {
             // try to get a registered handler
             try {
-                handler = Store.getInstance().getDialogPageHandler(pageName, request, response);
+                handler = PageHandlerManager.getInstance().getDialogPageHandler(pageName, request, response);
             }
             catch (InvalidDialogPageHandlerException e) {
                 log.error("no dialogpage found: " + pageName); //$NON-NLS-1$
