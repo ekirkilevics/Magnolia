@@ -1,0 +1,101 @@
+package info.magnolia.module.admininterface;
+
+import info.magnolia.cms.beans.config.ObservedManager;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.util.FactoryUtil;
+
+import java.lang.reflect.Constructor;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class TreeHandlerManager extends ObservedManager {
+	
+	/**
+	 * Logger
+	 */
+	private static Logger log = LoggerFactory.getLogger(TreeHandlerManager.class); 
+	
+	/**
+	 * The current implementation of the ParagraphManager. Defeined in magnolia.properties.
+	 */
+	private static TreeHandlerManager instance = (TreeHandlerManager) FactoryUtil.getSingleton(TreeHandlerManager.class); 
+
+
+	/**
+	 * Map with repository name/handler class for admin tree. When this servlet will receive a call with a parameter
+	 * <code>repository</code>, the corresponding handler will be used top display the admin tree.
+	 */
+	private final Map treeHandlers = new HashMap();
+	
+	/**
+	 * Get the tree handler registered under a particular name.
+	 * @param name
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public AdminTreeMVCHandler getTreeHandler(String name, HttpServletRequest request, HttpServletResponse response) {
+	
+	    Class treeHandlerClass = (Class) treeHandlers.get(name);
+	    if (treeHandlerClass == null) {
+	        throw new InvalidTreeHandlerException(name);
+	    }
+	
+	    try {
+	        Constructor constructor = treeHandlerClass.getConstructor(new Class[]{
+	            String.class,
+	            HttpServletRequest.class,
+	            HttpServletResponse.class});
+	        return (AdminTreeMVCHandler) constructor.newInstance(new Object[]{name, request, response});
+	    }
+	    catch (Exception e) {
+	        throw new InvalidTreeHandlerException(name, e);
+	    }
+	}
+
+	protected void registerTreeHandler(String name, Class treeHandler) {
+	    log.info("Registering tree handler [" + name + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+	    treeHandlers.put(name, treeHandler);
+	}
+
+	protected void onRegister(Content defNode){
+	    Collection trees = defNode.getChildren(ItemType.CONTENTNODE.getSystemName());
+	    for (Iterator iter = trees.iterator(); iter.hasNext();) {
+	        Content tree = (Content) iter.next();
+	        String name = tree.getNodeData("name").getString(); //$NON-NLS-1$
+	        String className = tree.getNodeData("class").getString(); //$NON-NLS-1$
+	        try {
+				this.registerTreeHandler(name, Class.forName(className));
+			} catch (ClassNotFoundException e) {
+				log.warn("can't register the tree handler [{0}]: class [{1}] not found", new Object[]{name, className});
+			}
+	    }
+	}
+	
+	
+
+	/**
+	 * @return Returns the instance.
+	 */
+	public static TreeHandlerManager getInstance() {
+		return instance;
+	}
+
+/**
+ * Clear the handlers
+ *
+ */
+	protected void onClear() {
+		this.treeHandlers.clear();
+	}
+
+}
