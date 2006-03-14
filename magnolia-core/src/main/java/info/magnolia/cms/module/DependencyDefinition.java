@@ -12,24 +12,22 @@
  */
 package info.magnolia.cms.module;
 
-
 /**
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class DependencyDefinition {
+
     /**
      * The name of the module
      */
     private String name;
-    
+
     /**
      * The version of the module
      */
     private String version;
 
-    
     /**
      * @return Returns the name.
      */
@@ -37,7 +35,6 @@ public class DependencyDefinition {
         return this.name;
     }
 
-    
     /**
      * @param name The name to set.
      */
@@ -45,7 +42,6 @@ public class DependencyDefinition {
         this.name = name;
     }
 
-    
     /**
      * @return Returns the version.
      */
@@ -53,12 +49,11 @@ public class DependencyDefinition {
         return this.version;
     }
 
-    
     /**
      * @param version The version to set.
      */
     public void setVersion(String version) {
         this.version = version;
     }
-    
+
 }

@@ -47,7 +47,7 @@ public class ModuleDefinition {
      * The additional bootstrapfiles. The modules.name.* files are imported by default
      */
     private Collection bootstrapFiles = new ArrayList();
-    
+
     /**
      * The additional content files. The templates/modulename/* and docroot/modulename/* are imported by default
      */
@@ -57,7 +57,7 @@ public class ModuleDefinition {
      * The name of the module
      */
     private String name;
-    
+
     /**
      * A nice name for displaying
      */
@@ -67,23 +67,22 @@ public class ModuleDefinition {
      * The version of the module
      */
     private String version;
-    
+
     /**
      * A full descrpition of the module
      */
     private String description;
-    
+
     /**
      * Short description of this module (about 40 chars)
      */
     private String shortDescription;
-    
+
     /**
      * The className of the engine
      */
     private String className;
-    
-    
+
     /**
      * Empty constructor used by betwixt
      */
@@ -115,7 +114,7 @@ public class ModuleDefinition {
      */
     public void setName(String name) {
         this.name = name;
-        if(StringUtils.isEmpty(this.getDisplayName())){
+        if (StringUtils.isEmpty(this.getDisplayName())) {
             this.setDisplayName(name);
         }
     }
@@ -144,33 +143,33 @@ public class ModuleDefinition {
     public void addDependency(DependencyDefinition dep) {
         this.dependencies.add(dep);
     }
-    
+
     /**
      * True if def is a direct or inderect dipendency of this module
-     * @param def 
+     * @param def
      * @return
      */
-    public boolean isDependent(ModuleDefinition def){
+    public boolean isDependent(ModuleDefinition def) {
         // direct dipendency
         for (Iterator iter = this.dependencies.iterator(); iter.hasNext();) {
             DependencyDefinition dep = (DependencyDefinition) iter.next();
-            if(dep.getName().equals(def.getName())){
+            if (dep.getName().equals(def.getName())) {
                 return true;
             }
         }
-        
+
         // indirect dipendency
         for (Iterator iter = this.dependencies.iterator(); iter.hasNext();) {
             DependencyDefinition dep = (DependencyDefinition) iter.next();
             ModuleDefinition depDef = ModuleRegistration.getInstance().getModuleDefinition(dep.getName());
-            if(depDef.isDependent(def)){
+            if (depDef.isDependent(def)) {
                 return true;
             }
         }
         // no dependency
         return false;
     }
-    
+
     /**
      * @return Returns the servlets.
      */
@@ -182,9 +181,9 @@ public class ModuleDefinition {
      * Add a servlet definition
      */
     public void addServlet(ServletDefinition def) {
-    	if(StringUtils.isEmpty(def.getComment())){
-    		def.setComment("a servlet used by " + this.getName() + " module");
-    	}
+        if (StringUtils.isEmpty(def.getComment())) {
+            def.setComment("a servlet used by " + this.getName() + " module");
+        }
         this.servlets.add(def);
     }
 
@@ -232,7 +231,7 @@ public class ModuleDefinition {
     public void addContentFile(String name) {
         this.contentFiles.add(name);
     }
-    
+
     /**
      * @return Returns the className.
      */
@@ -240,7 +239,6 @@ public class ModuleDefinition {
         return this.className;
     }
 
-    
     /**
      * @param className The className to set.
      */
@@ -248,7 +246,6 @@ public class ModuleDefinition {
         this.className = className;
     }
 
-    
     /**
      * @return Returns the description.
      */
@@ -256,7 +253,6 @@ public class ModuleDefinition {
         return this.description;
     }
 
-    
     /**
      * @param description The description to set.
      */
@@ -264,7 +260,6 @@ public class ModuleDefinition {
         this.description = description;
     }
 
-    
     /**
      * @return Returns the shortDescription.
      */
@@ -272,7 +267,6 @@ public class ModuleDefinition {
         return this.shortDescription;
     }
 
-    
     /**
      * @param shortDescription The shortDescription to set.
      */
@@ -280,7 +274,6 @@ public class ModuleDefinition {
         this.shortDescription = shortDescription;
     }
 
-    
     /**
      * @return Returns the displayName.
      */
@@ -288,7 +281,6 @@ public class ModuleDefinition {
         return this.displayName;
     }
 
-    
     /**
      * @param displayName The displayName to set.
      */

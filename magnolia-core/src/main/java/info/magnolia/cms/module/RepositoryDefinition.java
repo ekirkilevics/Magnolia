@@ -12,51 +12,48 @@
  */
 package info.magnolia.cms.module;
 
-
 /**
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class RepositoryDefinition {
-    
+
     /**
      * The name of the repository to register
      */
     String name;
-    
+
     /**
      * The file containing the nodeTypes
      */
     String nodeTypeFile;
-    
+
     /**
      * @return Returns the name.
      */
     public String getName() {
         return this.name;
     }
-    
+
     /**
      * @param name The name to set.
      */
     public void setName(String name) {
         this.name = name;
     }
-    
+
     /**
      * @return Returns the nodeTypeFile.
      */
     public String getNodeTypeFile() {
         return this.nodeTypeFile;
     }
-    
+
     /**
      * @param nodeTypeFile The nodeTypeFile to set.
      */
     public void setNodeTypeFile(String nodeTypeFile) {
         this.nodeTypeFile = nodeTypeFile;
     }
-        
 
 }

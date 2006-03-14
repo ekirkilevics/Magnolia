@@ -12,37 +12,37 @@
  */
 package info.magnolia.cms.module;
 
-
 /**
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class ServletParameterDefinition {
+
     private String name;
+
     private String value;
-    
+
     /**
      * @return Returns the name.
      */
     public String getName() {
         return this.name;
     }
-    
+
     /**
      * @param name The name to set.
      */
     public void setName(String name) {
         this.name = name;
     }
-    
+
     /**
      * @return Returns the value.
      */
     public String getValue() {
         return this.value;
     }
-    
+
     /**
      * @param value The value to set.
      */
