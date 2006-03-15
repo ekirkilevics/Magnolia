@@ -390,9 +390,9 @@ public class Out extends TagSupport {
         if (lang == null) {
             return DateFormatUtils.formatUTC(date, this.getDatePattern());
         }
-        else {
-            return DateFormatUtils.formatUTC(date, this.getDatePattern(), new Locale(lang));
-        }
+
+        return DateFormatUtils.formatUTC(date, this.getDatePattern(), new Locale(lang));
+
     }
 
     public String getFilePropertyValue() {

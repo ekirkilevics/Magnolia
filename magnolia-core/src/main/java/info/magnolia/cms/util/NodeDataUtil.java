@@ -166,9 +166,8 @@ public class NodeDataUtil {
             if (node.hasNodeData(name)) {
                 return node.getNodeData(name).getString();
             }
-            else {
-                return defaultValue;
-            }
+
+            return defaultValue;
         }
         catch (Exception e) {
             return defaultValue;
@@ -189,9 +188,8 @@ public class NodeDataUtil {
         if (node.hasNodeData(name)) {
             return node.getNodeData(name);
         }
-        else {
-            return node.createNodeData(name);
-        }
+
+        return node.createNodeData(name);
     }
 
     /**

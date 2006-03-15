@@ -452,10 +452,9 @@ public final class ContentRepository {
         if (ContentRepository.repositoryMapping.containsKey(getMappedRepositoryName(repositoryID))) {
             return (RepositoryMapping) ContentRepository.repositoryMapping.get(getMappedRepositoryName(repositoryID));
         }
-        else {
-            log.warn("no mapping for the repository [" + repositoryID + "]");
-            return null;
-        }
+
+        log.warn("no mapping for the repository [{}]", repositoryID);
+        return null;
     }
 
     /**
