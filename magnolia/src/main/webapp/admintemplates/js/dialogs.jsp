@@ -5,9 +5,9 @@
 var contextPath = '<%= request.getContextPath() %>';
 <%
     String[] includes = {
-        "dialogs.js",
-        "acl.js",
-        "calendar.js",
+        "dialogs/dialogs.js",
+        "dialogs/acl.js",
+        "dialogs/calendar.js",
         "controls.js",
         "tree.js",
         "i18n.js",
@@ -16,7 +16,7 @@ var contextPath = '<%= request.getContextPath() %>';
     };
 
     for(int i=0; i<includes.length; i++){
-        InputStream in = getClass().getResourceAsStream("/mgnl-resources/admin-js/dialogs/" + includes[i]);
+        InputStream in = getClass().getResourceAsStream("/mgnl-resources/admin-js/" + includes[i]);
         IOUtils.copy(in, out);
     }
 %>
