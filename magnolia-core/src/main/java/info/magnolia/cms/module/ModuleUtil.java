@@ -202,7 +202,7 @@ public final class ModuleUtil {
     /**
      * Extracts files of a jar and stores them in the magnolia file structure
      * @param files a list of resource names
-     * @param prefix prefix which is not part of the magolia path (in common 'mgnl-content')
+     * @param prefix prefix which is not part of the magolia path (in common 'mgnl-files')
      * @throws Exception io exception
      */
     public static void installFiles(Collection names, String prefix) throws Exception {

@@ -51,7 +51,7 @@ public class ModuleDefinition {
     /**
      * The additional content files. The templates/modulename/* and docroot/modulename/* are imported by default
      */
-    private Collection contentFiles = new ArrayList();
+    private Collection files = new ArrayList();
 
     /**
      * The name of the module
@@ -220,16 +220,16 @@ public class ModuleDefinition {
     /**
      * @return Returns the bootstrapfiles.
      */
-    public Collection getContentFiles() {
-        return this.contentFiles;
+    public Collection getFiles() {
+        return this.files;
     }
 
     /**
      * Add a bootstrap file
      * @param name
      */
-    public void addContentFile(String name) {
-        this.contentFiles.add(name);
+    public void addFile(String name) {
+        this.files.add(name);
     }
 
     /**

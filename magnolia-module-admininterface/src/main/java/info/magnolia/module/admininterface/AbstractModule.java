@@ -171,15 +171,15 @@ public abstract class AbstractModule implements Module {
                     this.setRestartNeeded(true);
                 }
 
-                // copy the content of mgnl-content to the webapp
+                // copy the content of mgnl-files to the webapp
                 Collection contentFiles = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
 
                     public boolean accept(String name) {
-                        return name.startsWith("/mgnl-content/templates/" + moduleName)
-                            || name.startsWith("/mgnl-content/docroot/" + moduleName);
+                        return name.startsWith("/mgnl-files/templates/" + moduleName)
+                            || name.startsWith("/mgnl-files/docroot/" + moduleName);
                     };
                 });
-                ModuleUtil.installFiles(contentFiles, "mgnl-content");
+                ModuleUtil.installFiles(contentFiles, "mgnl-files");
 
                 // let the module do it's stuff
                 onRegister(def, moduleNode, registerState);

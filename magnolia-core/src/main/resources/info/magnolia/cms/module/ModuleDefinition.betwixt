@@ -4,9 +4,6 @@
 		<element name="bootstrap-files">
 			<element name="bootstrap-file" property="bootstrapFiles"/>
 		</element>
-		<element name="content-files">
-			<element name="content-file" property="contentFiles"/>
-		</element>
 		<element name="display-name" property="displayName"/> 
 		<element name="short-description" property="shortDescription"/>
 		<addDefaults/>
