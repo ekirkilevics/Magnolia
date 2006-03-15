@@ -60,7 +60,7 @@ public abstract class ContextSensitiveServlet extends HttpServlet {
      * @param request the current request
      */
     protected void initializeContext(HttpServletRequest request) {
-        if(MgnlContext.getInstance() == null){
+        if(!MgnlContext.hasInstance()){
             WebContext ctx = (WebContext)FactoryUtil.getInstance(WebContext.class);
             ctx.init(request);
             MgnlContext.setInstance(ctx);
