@@ -265,8 +265,7 @@ public final class ProviderImpl implements Provider {
                 ntReg.getNodeTypeDef(def.getName());
             }
             catch (NoSuchNodeTypeException nsne) {
-                log.info(MessageFormat.format("registering nodetype {0}", //$NON-NLS-1$
-                    new Object[]{def.getName()}));
+                log.info("registering nodetype {}", def.getName()); //$NON-NLS-1$
 
                 try {
                     ntReg.registerNodeType(def);

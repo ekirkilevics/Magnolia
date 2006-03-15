@@ -30,8 +30,10 @@ import info.magnolia.cms.module.ServletDefinition;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.cms.util.ContentUtil;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -142,20 +144,22 @@ public abstract class AbstractModule implements Module {
 
                 final String moduleName = this.getName();
 
-                // bootsrap the module files
-                Collection bootstrapFiles = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
+                // bootstrap the module files
+                String[] moduleBootstrap = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
 
                     public boolean accept(String name) {
                         return name.startsWith("/mgnl-bootstrap/config.modules." + moduleName);
-                    };
+                    }
                 });
+
+                List bootstrapFiles = new ArrayList(Arrays.asList(moduleBootstrap));
 
                 for (Iterator iter = def.getBootstrapFiles().iterator(); iter.hasNext();) {
                     String additionalBootstrapFile = (String) iter.next();
                     bootstrapFiles.add("/mgnl-bootstrap/" + additionalBootstrapFile);
-
                 }
-                ModuleUtil.bootstrap(bootstrapFiles);
+
+                ModuleUtil.bootstrap((String[]) bootstrapFiles.toArray(new String[bootstrapFiles.size()]));
 
                 // register servlets
                 for (Iterator iter = def.getServlets().iterator(); iter.hasNext();) {
@@ -172,7 +176,7 @@ public abstract class AbstractModule implements Module {
                 }
 
                 // copy the content of mgnl-files to the webapp
-                Collection contentFiles = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
+                String[] contentFiles = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
 
                     public boolean accept(String name) {
                         return name.startsWith("/mgnl-files/templates/" + moduleName)

@@ -133,14 +133,13 @@ public final class ModuleLoader {
             try {
                 if (modulesNode.hasContent(def.getName())) {
                     Content moduleNode = modulesNode.getContent(def.getName());
-                    log.info("initializing module - " + def.getName()); //$NON-NLS-1$
+                    log.info("initializing module {}", def.getName()); //$NON-NLS-1$
                     load(def, moduleNode);
-                    log.info("module : " + def.getName() + " initialized"); //$NON-NLS-1$ //$NON-NLS-2$
+                    log.info("module {} initialized", def.getName()); //$NON-NLS-1$
                 }
                 else {
-                    log.error("can't initialize module ["
-                        + def.getName()
-                        + "]: no module node in the config repository found");
+                    log.error("can't initialize module [{}]: no module node in the config repository found", def
+                        .getName());
                 }
 
             }
@@ -170,7 +169,7 @@ public final class ModuleLoader {
                 moduleConfig.setSharedHierarchyManagers(getSharedHierarchyManagers(sharedRepositories));
             }
             catch (PathNotFoundException e) {
-                log.info("Module : no shared repository definition found for - " + moduleNode.getName()); //$NON-NLS-1$
+                log.info("Module : no shared repository definition found for {}", moduleNode.getName()); //$NON-NLS-1$
             }
 
             try {
@@ -184,7 +183,8 @@ public final class ModuleLoader {
 
             /* add local store */
             LocalStore store = LocalStore.getInstance(MODULES_NODE + "/" //$NON-NLS-1$
-                + moduleNode.getName() + "/" //$NON-NLS-1$
+                + moduleNode.getName()
+                + "/" //$NON-NLS-1$
                 + CONFIG_NODE_LOCAL_STORE);
             moduleConfig.setLocalStore(store.getStore());
 
@@ -199,8 +199,7 @@ public final class ModuleLoader {
                     this.addModuleInstance(moduleConfig.getName(), module);
                 }
                 catch (InstantiationException ie) {
-                    log
-                        .error("Module : [ " + moduleConfigNode.getNodeData("moduleName").getString() + " ] failed to load"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    log.error("Module {} failed to load", moduleConfigNode.getNodeData("moduleName").getString()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                     log.error(ie.getMessage());
                 }
                 catch (IllegalAccessException ae) {
@@ -211,11 +210,11 @@ public final class ModuleLoader {
             // init the module
             if (!module.isInitialized()) {
                 if (!module.isRestartNeeded()) {
-                    log.info("start initialization of module [{}]", def.getName());
+                    log.info("start initialization of module {}", def.getName());
                     module.init(moduleConfig);
                 }
                 else {
-                    log.warn("won't initialize the module [" + module.getName() + "] since a system restart is needed");
+                    log.warn("won't initialize the module {} since a system restart is needed", module.getName());
                 }
 
                 if (module.isRestartNeeded()) {

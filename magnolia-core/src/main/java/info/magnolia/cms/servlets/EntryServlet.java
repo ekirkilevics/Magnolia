@@ -115,9 +115,7 @@ public class EntryServlet extends ContextSensitiveServlet {
                 }
                 else {
                     if (log.isDebugEnabled()) {
-                        log.debug("Resource not found, redirecting request for [" //$NON-NLS-1$
-                            + req.getRequestURI()
-                            + "] to 404 URI"); //$NON-NLS-1$
+                        log.debug("Resource not found, redirecting request for [{}] to 404 URI", req.getRequestURI()); //$NON-NLS-1$
                     }
 
                     if (!res.isCommitted()) {
@@ -182,7 +180,7 @@ public class EntryServlet extends ContextSensitiveServlet {
                 request.getRequestDispatcher(uri).forward(request, response);
             }
             catch (Exception e) {
-                log.error("Failed to forward - " + uri); //$NON-NLS-1$
+                log.error("Failed to forward - {}", uri); //$NON-NLS-1$
                 log.error(e.getMessage(), e);
             }
             return true;
@@ -212,7 +210,8 @@ public class EntryServlet extends ContextSensitiveServlet {
      * @param request HttpServletRequest
      */
     private String getURIMap(HttpServletRequest request) {
-        return VirtualURIManager.getInstance().getURIMapping(StringUtils.substringAfter(request.getRequestURI(), request.getContextPath()));
+        return VirtualURIManager.getInstance().getURIMapping(
+            StringUtils.substringAfter(request.getRequestURI(), request.getContextPath()));
     }
 
 }

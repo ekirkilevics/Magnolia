@@ -33,7 +33,7 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
@@ -152,12 +152,13 @@ public final class ModuleUtil {
         return node;
     }
 
-    public static void bootstrap(Collection resourceNames) throws IOException, RegisterException {
+    public static void bootstrap(String[] resourceNames) throws IOException, RegisterException {
 
         HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
 
         // sort by length --> import parent node first
-        List list = new ArrayList(resourceNames);
+        List list = new ArrayList(Arrays.asList(resourceNames));
+
         Collections.sort(list, new Comparator() {
 
             public int compare(Object name1, Object name2) {
@@ -167,6 +168,10 @@ public final class ModuleUtil {
 
         for (Iterator iter = list.iterator(); iter.hasNext();) {
             String resourceName = (String) iter.next();
+
+            // windows again
+            resourceName = StringUtils.replace(resourceName, "\\", "/");
+
             String name = StringUtils.removeEnd(StringUtils.removeStart(resourceName, "/mgnl-bootstrap/"), ".xml");
 
             String repository = StringUtils.substringBefore(name, ".");
@@ -205,7 +210,7 @@ public final class ModuleUtil {
      * @param prefix prefix which is not part of the magolia path (in common 'mgnl-files')
      * @throws Exception io exception
      */
-    public static void installFiles(Collection names, String prefix) throws Exception {
+    public static void installFiles(String[] names, String prefix) throws Exception {
 
         String root = null;
         // Try to get root
@@ -225,8 +230,8 @@ public final class ModuleUtil {
 
         // Loop throgh files and check writeable
         String error = StringUtils.EMPTY;
-        for (Iterator iter = names.iterator(); iter.hasNext();) {
-            String name = (String) iter.next();
+        for (int j = 0; j < names.length; j++) {
+            String name = names[j];
 
             InputStream resourceStream = ModuleUtil.class.getResourceAsStream(name);
 

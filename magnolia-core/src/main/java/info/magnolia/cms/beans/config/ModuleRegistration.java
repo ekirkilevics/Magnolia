@@ -27,7 +27,6 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -99,13 +98,13 @@ public class ModuleRegistration {
     public void init() throws MissingDependencyException {
         // read the definitions from the xml files in the classpath
         readModuleDefinitions();
-    
+
         // check the dependecies: before odering!
         checkDependencies();
-        
-        // order them by dependency level 
+
+        // order them by dependency level
         sortByDependencyLevel();
-    
+
         // register the modules
         registerModules();
     }
@@ -121,19 +120,19 @@ public class ModuleRegistration {
             log.info("Reading module definition");
 
             // get the xml files
-            Collection defResources = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
-    
+            String[] defResources = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
+
                 public boolean accept(String name) {
                     return name.startsWith("/META-INF/magnolia") && name.endsWith(".xml");
                 }
             });
-    
+
             // parse the xml files
-            for (Iterator iter = defResources.iterator(); iter.hasNext();) {
-                String name = (String) iter.next();
-    
+            for (int j = 0; j < defResources.length; j++) {
+                String name = defResources[j];
+
                 log.info("parsing module file {}", name);
-    
+
                 try {
                     ModuleDefinition def = (ModuleDefinition) beanReader.parse(new StringReader(getXML(name)));
                     this.moduleDefinitions.put(def.getName(), def);
@@ -142,21 +141,20 @@ public class ModuleRegistration {
                     throw new ConfigurationException("can't read the module definition file [" + name + "].", e);
                 }
             }
-    
+
             // add adhoc definitions for already registered modules without an xml file (pseudo modules)
             Content modulesNode = ModuleLoader.getInstance().getModulesNode();
-    
+
             for (Iterator iter = modulesNode.getChildren().iterator(); iter.hasNext();) {
                 Content moduleNode = (Content) iter.next();
 
                 String name = moduleNode.getName();
                 String version = NodeDataUtil.getString(moduleNode, "version", "");
-                String className = NodeDataUtil.getString(ContentRepository.CONFIG, moduleNode.getHandle() +"/Register/class","");
-                
+                String className = NodeDataUtil.getString(ContentRepository.CONFIG, moduleNode.getHandle()
+                    + "/Register/class", "");
+
                 if (!this.moduleDefinitions.containsKey(name)) {
-                    log.warn("no proper module definition file found for ["
-                        + name
-                        + "]: will add an adhoc definition");
+                    log.warn("no proper module definition file found for [{}]: will add an adhoc definition", name);
                     ModuleDefinition def = new ModuleDefinition(name, version, className);
                     this.moduleDefinitions.put(def.getName(), def);
                 }
@@ -176,7 +174,7 @@ public class ModuleRegistration {
         for (MapIterator iter = this.moduleDefinitions.orderedMapIterator(); iter.hasNext();) {
             iter.next();
             ModuleDefinition def = (ModuleDefinition) iter.getValue();
-    
+
             for (Iterator iterator = def.getDependencies().iterator(); iterator.hasNext();) {
                 DependencyDefinition dep = (DependencyDefinition) iterator.next();
                 if (!this.moduleDefinitions.containsKey(dep.getName())
@@ -192,41 +190,41 @@ public class ModuleRegistration {
     }
 
     /**
-     * Sort all the definitions by the dependency level 
+     * Sort all the definitions by the dependency level
      */
     private void sortByDependencyLevel() {
         // order by dependencies
         List modules = new ArrayList();
-        
+
         // make a list for sorting
         for (MapIterator iter = this.moduleDefinitions.mapIterator(); iter.hasNext();) {
             iter.next();
             modules.add(iter.getValue());
         }
-        
+
         Collections.sort(modules, new Comparator() {
-    
+
             public int compare(Object arg1, Object arg2) {
                 ModuleDefinition def1 = (ModuleDefinition) arg1;
                 ModuleDefinition def2 = (ModuleDefinition) arg2;
                 int level1 = calcDependencyLevel(def1);
                 int level2 = calcDependencyLevel(def2);
-    
+
                 // lower level first
                 int dif = level1 - level2;
-                if(dif != 0){
+                if (dif != 0) {
                     return dif;
                 }
-                // rest is ordered alphabetically 
+                // rest is ordered alphabetically
                 else {
                     return def1.getName().compareTo(def2.getName());
                 }
             }
         });
-    
+
         // clear the not yet ordered entries
         this.moduleDefinitions.clear();
-        
+
         // register the sorted defs
         for (Iterator iterator = modules.iterator(); iterator.hasNext();) {
             ModuleDefinition def = (ModuleDefinition) iterator.next();
@@ -241,13 +239,13 @@ public class ModuleRegistration {
     protected void registerModules() {
         try {
             Content modulesNode = ModuleLoader.getInstance().getModulesNode();
-    
+
             for (MapIterator iter = this.moduleDefinitions.orderedMapIterator(); iter.hasNext();) {
                 iter.next();
                 ModuleDefinition def = (ModuleDefinition) iter.getValue();
                 registerModule(modulesNode, def);
             }
-    
+
         }
         catch (Exception e) {
             log.error("can't register modules", e); //$NON-NLS-1$
@@ -260,14 +258,14 @@ public class ModuleRegistration {
      * @param def the definition of the module to register
      */
     protected void registerModule(Content modulesNode, ModuleDefinition def) {
-    	log.info("start regisration of module [{}]", def.getName());
+        log.info("start regisration of module [{}]", def.getName());
         try {
             Module module = (Module) Class.forName(def.getClassName()).newInstance();
             int registerState = Module.REGISTER_STATE_NONE;
             ModuleLoader.getInstance().addModuleInstance(def.getName(), module);
-   
+
             Content moduleNode;
-   
+
             try {
                 moduleNode = modulesNode.getContent(def.getName());
                 // node exists: is it a new version ?
@@ -278,18 +276,17 @@ public class ModuleRegistration {
             // first installation
             catch (PathNotFoundException e1) {
                 moduleNode = modulesNode.createContent(def.getName());
-                ModuleUtil.createMinimalConfiguration(moduleNode, def.getName(), def.getClassName(), def
-                    .getVersion());
+                ModuleUtil.createMinimalConfiguration(moduleNode, def.getName(), def.getClassName(), def.getVersion());
                 registerState = Module.REGISTER_STATE_INSTALLATION;
             }
-   
+
             try {
                 // call register: this is always done not only during the first startup
                 module.register(def, moduleNode, registerState);
                 if (module.isRestartNeeded()) {
                     this.restartNeeded = true;
                 }
-   
+
                 if (registerState == Module.REGISTER_STATE_NEW_VERSION) {
                     moduleNode.createNodeData("version").setValue(def.getVersion()); //$NON-NLS-1$
                 }
@@ -297,21 +294,22 @@ public class ModuleRegistration {
             }
             catch (RegisterException e) {
                 switch (registerState) {
-                    case Module.REGISTER_STATE_INSTALLATION :
+                    case Module.REGISTER_STATE_INSTALLATION:
                         log.error("can't install module [" + def.getName() + "]" + def.getVersion(), e); //$NON-NLS-1$ //$NON-NLS-2$
                         break;
-                    case Module.REGISTER_STATE_NEW_VERSION :
+                    case Module.REGISTER_STATE_NEW_VERSION:
                         log.error("can't update module [" + def.getName() + "] to version " + def.getVersion(), //$NON-NLS-1$ //$NON-NLS-2$
                             e);
                         break;
-                    default :
+                    default:
                         log.error("error during registering an already installed module [" //$NON-NLS-1$
-                            + def.getName() + "]", e); //$NON-NLS-1$
+                            + def.getName()
+                            + "]", e); //$NON-NLS-1$
                         break;
                 }
             }
         }
-   
+
         catch (Exception e) {
             log.error("can't register module [" + def.getName() + "]", e); //$NON-NLS-1$ //$NON-NLS-2$
         }
