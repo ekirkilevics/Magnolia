@@ -1,3 +1,0 @@
-Magnolia-Module-Name: workflow
-Magnolia-Module-Version: 1.0
-Magnolia-Module-Class: info.magnolia.module.owfe.Engine
