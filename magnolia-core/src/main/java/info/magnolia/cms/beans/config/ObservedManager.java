@@ -27,119 +27,115 @@ import javax.jcr.observation.EventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
- * A lot of manager are observed. Will mean that they reload the registered content
- * after the content was changed. To centralize this code we use this abstract manager.
- * A subclass will implement onRegister and onClear.
+ * A lot of manager are observed. Will mean that they reload the registered content after the content was changed. To
+ * centralize this code we use this abstract manager. A subclass will implement onRegister and onClear.
  * @author philipp
- *
  */
 public abstract class ObservedManager {
-	
-	/**
-	 * Logger
-	 */
-	
-	Logger log = LoggerFactory.getLogger(ObservedManager.class);
 
-	/**
-	 * True if this manager is realoading. used to avoid cycles.
-	 */
-	private boolean reloading = false;
-	
-	/**
-	 * UUIDs of the registered main nodes. They will get registered again after a change.
-	 */
-	protected Set registeredUUIDs = new HashSet();
+    /**
+     * Logger
+     */
 
-	/**
-	 * Register a node. The uuid is cached and then onRegister() called.
-	 * @param node the node to register
-	 */
-	public void register(Content node) {
-		if(node == null){
-			log.warn("tried to register a not existing node!");
-			return;
-		}
-	    
+    Logger log = LoggerFactory.getLogger(ObservedManager.class);
+
+    /**
+     * True if this manager is realoading. used to avoid cycles.
+     */
+    private boolean reloading = false;
+
+    /**
+     * UUIDs of the registered main nodes. They will get registered again after a change.
+     */
+    protected Set registeredUUIDs = new HashSet();
+
+    /**
+     * Register a node. The uuid is cached and then onRegister() called.
+     * @param node the node to register
+     */
+    public void register(Content node) {
+        if (node == null) {
+            log.warn("tried to register a not existing node!");
+            return;
+        }
+
         ObservationUtil.registerChangeListener(ContentRepository.CONFIG, node.getHandle(), new EventListener() {
+
             public void onEvent(EventIterator events) {
                 reload();
             }
         });
-	    
-		try{
-			registeredUUIDs.add(node.getUUID());
-			onRegister(node);
-		}
-		catch(Exception e){
-			Paragraph.log.warn("Was not able to register [" + node.getHandle() + "]", e);
-		}
-	}
 
+        try {
+            registeredUUIDs.add(node.getUUID());
+            onRegister(node);
+        }
+        catch (Exception e) {
+            Paragraph.log.warn("Was not able to register [" + node.getHandle() + "]", e);
+        }
+    }
 
-	/**
-	 * Calls onClear and reregister the nodes by calling onRegister
-	 */
-	public void reload() {
-		if(this.reloading=true){
-			log.warn("this manager is already reloading: [{}]", this.getClass().getName());
-			return;
-		}
-		this.reloading=true;
-	    onClear();
-	    
-	    HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
-	
-	    for (Iterator iter = registeredUUIDs.iterator(); iter.hasNext();) {
-	        String uuid = (String) iter.next();
-	        try{
-	            Content node = hm.getContentByUUID(uuid);
-	            reload(node);
-	        }
-	        catch(Exception e){
-	        	registeredUUIDs.remove(uuid);
-	            Paragraph.log.warn("can't reload the the node [" + uuid + "]");
-	        }
-	    }
-	    this.reloading = false;
-	}
+    /**
+     * Calls onClear and reregister the nodes by calling onRegister
+     */
+    public void reload() {
+        if (this.reloading == true) {
+            log.warn("this manager is already reloading: [{}]", this.getClass().getName());
+            return;
+        }
+        this.reloading = true;
+        onClear();
 
-	/**
-	 * Reload a specifig node
-	 * @param node
-	 */
-	private final void reload(Content node) {
-		onRegister(node);
-	}
-	
-	/**
-	 * Clears the registered uuids and calls onClear().
-	 *
-	 */
-	public final void clear(){
-		this.registeredUUIDs.clear();
-		onClear();
-	}
+        HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
 
-	/**
-	 * Registers a node
-	 * @param node
-	 */
-	protected abstract void onRegister(Content node);
+        for (Iterator iter = registeredUUIDs.iterator(); iter.hasNext();) {
+            String uuid = (String) iter.next();
+            try {
+                Content node = hm.getContentByUUID(uuid);
+                reload(node);
+            }
+            catch (Exception e) {
+                registeredUUIDs.remove(uuid);
+                Paragraph.log.warn("can't reload the the node [" + uuid + "]");
+            }
+        }
+        this.reloading = false;
+    }
 
-	/**
-	 * The implementor should clear everthing. If needed the nodes will get registered.
-	 *
-	 */
-	protected abstract void onClear();
+    /**
+     * Reload a specifig node
+     * @param node
+     */
+    private final void reload(Content node) {
+        onRegister(node);
+    }
 
+    /**
+     * Clears the registered uuids and calls onClear().
+     */
+    public final void clear() {
+        this.registeredUUIDs.clear();
+        onClear();
+    }
 
-	/**
-	 * @return Returns the reloading.
-	 */
-	public boolean isReloading() {
-		return reloading;
-	}
+    /**
+     * Registers a node
+     * @param node
+     */
+    protected abstract void onRegister(Content node);
+
+    /**
+     * The implementor should clear everthing. If needed the nodes will get registered.
+     */
+    protected abstract void onClear();
+
+    /**
+     * @return Returns the reloading.
+     */
+    public boolean isReloading() {
+        return reloading;
+    }
 
 }
