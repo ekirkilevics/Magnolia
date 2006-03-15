@@ -66,7 +66,8 @@ public abstract class ContextSensitiveServlet extends HttpServlet {
             MgnlContext.setInstance(ctx);
         }
         else{
-            log.warn("context of thread was already set");
+            // this will happen if a virtual uri mapping is pointing again to a virtual uri
+            log.debug("context of thread was already set");
         }
     }
 
