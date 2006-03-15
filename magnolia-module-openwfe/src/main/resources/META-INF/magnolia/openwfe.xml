@@ -4,7 +4,7 @@
   <name>openwfe</name>
 	<short-description>Workflow</short-description>
 	<description>Workflow using OpenWFE</description>
-  <class>info.magnolia.cms.modules.templating.Engine</class>
+  <class>info.magnolia.module.owfe.Engine</class>
   <version>1.0</version>
   <dependencies>
     <dependency>
