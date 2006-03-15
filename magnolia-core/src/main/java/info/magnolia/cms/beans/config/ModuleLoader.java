@@ -140,7 +140,7 @@ public final class ModuleLoader {
                 else {
                     log.error("can't initialize module ["
                         + def.getName()
-                        + "]: node module node in the config repository found");
+                        + "]: no module node in the config repository found");
                 }
 
             }
