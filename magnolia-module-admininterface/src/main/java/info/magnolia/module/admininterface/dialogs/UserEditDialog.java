@@ -110,18 +110,26 @@ public class UserEditDialog extends ConfiguredDialog {
         nameEdit.setLabel("<strong>" + msgs.get("users.edit.username") + "</strong>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         nameEdit.setValue("<strong>" + storageNode.getName() + "</strong>"); //$NON-NLS-1$ //$NON-NLS-2$
         tab.addSub(nameEdit);
+
         tab.addSub(spacer);
 
         DialogEdit title = DialogFactory.getDialogEditInstance(request, response, storageNode, null);
         title.setName("title"); //$NON-NLS-1$
         title.setLabel(msgs.get("users.edit.fullname")); //$NON-NLS-1$
-
         tab.addSub(title);
 
         DialogPassword pswd = DialogFactory.getDialogPasswordInstance(request, response, storageNode, null);
         pswd.setName("pswd"); //$NON-NLS-1$
         pswd.setLabel(msgs.get("users.edit.password")); //$NON-NLS-1$
         tab.addSub(pswd);
+
+        tab.addSub(spacer);
+
+        DialogEdit email = DialogFactory.getDialogEditInstance(request, response, storageNode, null);
+        email.setName("email"); //$NON-NLS-1$
+        email.setLabel(msgs.get("users.edit.email")); //$NON-NLS-1$
+        tab.addSub(email);
+
 
         tab.addSub(spacer);
 

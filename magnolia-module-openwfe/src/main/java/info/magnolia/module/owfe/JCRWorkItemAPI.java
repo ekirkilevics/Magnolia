@@ -1,10 +1,15 @@
 package info.magnolia.module.owfe;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.search.Query;
+import info.magnolia.cms.core.search.QueryResult;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,222 +27,325 @@ import openwfe.org.xml.XmlUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 
-
 public class JCRWorkItemAPI {
 
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger
-        .getLogger(JCRWorkItemAPI.class.getName());
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger
+			.getLogger(JCRWorkItemAPI.class.getName());
 
-    //
-    // CONSTANTS & co
-    public final static String REPO_OWFE = "owfe";
+	//
+	// CONSTANTS & co
+	public final static String REPO_OWFE = "owfe";
 
-    public final static String WORKSPACEID = "Store";
+	public final static String WORKSPACEID = "Store";
 
-    public final static String WORKITEM_NODENAME = "workItem";
+	public final static String WORKITEM_NODENAME = "workItem";
 
-    //
-    // FIELDS
-    // Repository repository = null;
-    HierarchyManager hm = null;
+	//
+	// FIELDS
+	// Repository repository = null;
+	HierarchyManager hm = null;
 
-    //
-    // CONSTRUCTORS
-    public JCRWorkItemAPI() throws Exception {
-        hm = ContentRepository.getHierarchyManager(REPO_OWFE, WORKSPACEID);
-        if (hm == null) {
-            throw new Exception("Can't get HierarchyManager Object for workitems repository");
-        }
+	//
+	// CONSTRUCTORS
+	public JCRWorkItemAPI() throws Exception {
+		hm = ContentRepository.getHierarchyManager(REPO_OWFE, WORKSPACEID);
+		if (hm == null) {
+			throw new Exception(
+					"Can't get HierarchyManager Object for workitems repository");
+		}
 
-        //
-        // done
+		//
+		// done
 
-    }
+	}
 
-    //
-    // METHODS
-    public int countWorkItems(String arg0) throws StoreException {
-        try {
-            Content root = hm.getRoot();
-            Collection c = root.getChildren(ItemType.WORKITEM);
-            // @fix it
-            return c.size();
-        }
-        catch (Exception e) {
-            log.error("exception:" + e);
-            throw new StoreException(e.toString());
-        }
+	//
+	// METHODS
+	public int countWorkItems(String arg0) throws StoreException {
+		try {
+			Content root = hm.getRoot();
+			Collection c = root.getChildren(ItemType.WORKITEM);
+			// @fix it
+			return c.size();
+		} catch (Exception e) {
+			log.error("exception:" + e);
+			throw new StoreException(e.toString());
+		}
 
-    }
+	}
 
-    public List listWorkItems(String s, int limit) throws StoreException {
-        ArrayList ret = new ArrayList();
-        try {
-            Content root = hm.getRoot();
-            Collection c = root.getChildren(ItemType.WORKITEM);
-            // @fix it
-            Iterator it = c.iterator();
-            while (it.hasNext()) {
-                Content ct = (Content) it.next();
-                /*
-                 * InFlowWorkItem wi = new InFlowWorkItem(); String name = ct.getName(); if (true) { wi = new
-                 * InFlowWorkItem(); wi.setId(FlowExpressionId.fromParseableString(ct .getNodeData("ID").getString()));
-                 * wi.setParticipantName(this.getName()); // add attributes Collection attrs =
-                 * ct.getNodeDataCollection(); Iterator a_it = attrs.iterator(); while (a_it.hasNext()) { NodeData nd =
-                 * (NodeData) a_it.next(); wi.addAttribute(nd.getName(), new StringAttribute(nd .getString())); } }
-                 */
-                InFlowWorkItem wi = loadWorkItem(ct);
-                ret.add(wi);
+	public List listWorkItems(String s, int limit) throws StoreException {
+		ArrayList ret = new ArrayList();
+		try {
+			Content root = hm.getRoot();
+			Collection c = root.getChildren(ItemType.WORKITEM);
+			// @fix it
+			int i = 0;
+			Iterator it = c.iterator();
+			while (it.hasNext()) {
+				Content ct = (Content) it.next();
+				/*
+				 * InFlowWorkItem wi = new InFlowWorkItem(); String name =
+				 * ct.getName(); if (true) { wi = new InFlowWorkItem();
+				 * wi.setId(FlowExpressionId.fromParseableString(ct
+				 * .getNodeData("ID").getString()));
+				 * wi.setParticipantName(this.getName()); // add attributes
+				 * Collection attrs = ct.getNodeDataCollection(); Iterator a_it =
+				 * attrs.iterator(); while (a_it.hasNext()) { NodeData nd =
+				 * (NodeData) a_it.next(); wi.addAttribute(nd.getName(), new
+				 * StringAttribute(nd .getString())); } }
+				 */
+				InFlowWorkItem wi = loadWorkItem(ct);
+				ret.add(wi);
 
-            }
+			}
 
-            return ret;
-        }
-        catch (Exception e) {
-            log.error("exception:" + e);
-            throw new StoreException(e.toString());
-        }
+			return ret;
+		} catch (Exception e) {
+			log.error("exception:" + e);
+			throw new StoreException(e.toString());
+		}
 
-    }
+	}
 
-    public void removeWorkItem(String arg0, FlowExpressionId fei) throws StoreException {
-        try {
-            Content root = hm.getRoot();
-            Collection c = root.getChildren(ItemType.WORKITEM);
-            // @fix it
-            Iterator it = c.iterator();
-            while (it.hasNext()) {
-                Content ct = (Content) it.next();
-                if (checkContentWithEID(ct, fei)) {
-                    ct.delete();
-                    hm.save();
-                    return;
-                }
-            }
-        }
-        catch (Exception e) {
-            log.error("exception:" + e);
-            throw new StoreException(e.toString());
-        }
+	public void removeWorkItem(String arg0, FlowExpressionId fei)
+			throws StoreException {
+		try {
+			Content root = hm.getRoot();
+			Collection c = root.getChildren(ItemType.WORKITEM);
+			// @fix it
+			int i = 0;
+			Iterator it = c.iterator();
+			while (it.hasNext()) {
+				Content ct = (Content) it.next();
+				if (checkContentWithEID(ct, fei)) {
+					ct.delete();
+					hm.save();
+					return;
+				}
+			}
+		} catch (Exception e) {
+			log.error("exception:" + e);
+			throw new StoreException(e.toString());
+		}
 
-    }
+	}
 
-    public InFlowWorkItem retrieveWorkItem(final String storeName, final FlowExpressionId fei) throws StoreException {
+	public InFlowWorkItem retrieveWorkItem(final String storeName,
+			final FlowExpressionId fei) throws StoreException {
+		InFlowWorkItem wi = null;
+		log.debug("starting retrieve work item. this = " + this);
+		log.debug("retrieve work item for ID = " + fei.toParseableString());
+		// String fileName = determineFileName(storeName, fei, false);
+		//
+		// fileName = Utils.getCanonicalPath
+		// (getContext().getApplicationDirectory(), fileName);
+		Content ct = findWorkItem(fei);
 
-        log.debug("starting retrieve work item. this = " + this);
-        log.debug("retrieve work item for ID = " + fei.toParseableString());
-        // String fileName = determineFileName(storeName, fei, false);
-        //
-        // fileName = Utils.getCanonicalPath
-        // (getContext().getApplicationDirectory(), fileName);
-        Content ct = findWorkItem(fei);
+		if (ct == null)
+			throw new StoreException("cannot find workitem " + fei);
 
-        if (ct == null) {
-            throw new StoreException("cannot find workitem " + fei);
-        }
+		try {
+			return loadWorkItem(ct);
+		} catch (Exception e) {
+			throw new StoreException("load work item form xml failed", e);
+		}
+	}
 
-        try {
-            return loadWorkItem(ct);
-        }
-        catch (Exception e) {
-            throw new StoreException("load work item form xml failed", e);
-        }
-    }
+	public static InFlowWorkItem loadWorkItem(Content ct) throws Exception {
+		InFlowWorkItem wi = null;
+		InputStream s = ct.getNodeData("value").getStream();
+		log.debug("retrieve work item: value = " + s.toString());
+		final org.jdom.input.SAXBuilder builder = new org.jdom.input.SAXBuilder();
+		Document doc = builder.build(s);
+		wi = (InFlowWorkItem) XmlCoder.decode(doc);
 
-    public static InFlowWorkItem loadWorkItem(Content ct) throws Exception {
-        InFlowWorkItem wi = null;
-        InputStream s = ct.getNodeData("value").getStream();
-        log.debug("retrieve work item: value = " + s.toString());
-        final org.jdom.input.SAXBuilder builder = new org.jdom.input.SAXBuilder();
-        Document doc = builder.build(s);
-        wi = (InFlowWorkItem) XmlCoder.decode(doc);
+		Iterator itt = wi.getAttributes().alphaStringIterator();
+		while (itt.hasNext()) {
+			Object o = itt.next();
+			String name1 = (String) o;
+			log.debug(name1 + "=" + wi.getAttribute(name1).toString());
+		}
+		return wi;
+	}
 
-        Iterator itt = wi.getAttributes().alphaStringIterator();
-        while (itt.hasNext()) {
-            Object o = itt.next();
-            String name1 = (String) o;
-            log.debug(name1 + "=" + wi.getAttribute(name1).toString());
-        }
-        return wi;
-    }
+	//
+	// public Content findWorkItem(FlowExpressionId fei) {
+	// try {
+	// Content root = hm.getRoot();
+	// Collection c = root.getChildren(ItemType.WORKITEM);
+	// Iterator it = c.iterator();
+	// while (it.hasNext()) {
+	// Content ct = (Content) it.next();
+	// String name = ct.getName();
+	//
+	// if (checkContentWithEID(ct, fei)) {
+	// /*
+	// * wi = new InFlowWorkItem(); wi.setId(fei);
+	// * wi.setParticipantName(this.getName()); // add attributes
+	// * Collection attrs = ct.getNodeDataCollection(); Iterator
+	// * a_it = attrs.iterator(); while (a_it.hasNext()){ NodeData
+	// * nd = (NodeData)a_it.next(); wi.addAttribute(nd.getName(),
+	// * new StringAttribute(nd.getString())); }
+	// */
+	// return ct;
+	// }
+	// }
+	//
+	// } catch (Exception e) {
+	// log.error("exception:" + e);
+	// }
+	// return null;
+	//
+	// }
+	public Content findWorkItem(FlowExpressionId fei) {
+		String sFei = fei.toParseableString();
+		// String queryString = "//*[@name=\'workitem\']/*[/jcr:contains(ID,
+		// \'"+fei+"\')]";
+		String queryString = "//*[@ID=\""+sFei+"\"]";
+		log.info("xpath query string = " + queryString);
+		return doQuery(queryString);
+	}
 
-    public Content findWorkItem(FlowExpressionId fei) {
-        try {
-            Content root = hm.getRoot();
-            Collection c = root.getChildren(ItemType.WORKITEM);
-            Iterator it = c.iterator();
-            while (it.hasNext()) {
-                Content ct = (Content) it.next();
+	public boolean checkContentWithEID(Content ct, FlowExpressionId eid) {
+		String cid = ct.getNodeData("ID").getString();
+		log.debug("checkContentWithEID: ID = " + cid);
+		FlowExpressionId id = null;
 
-                if (checkContentWithEID(ct, fei)) {
-                    /*
-                     * wi = new InFlowWorkItem(); wi.setId(fei); wi.setParticipantName(this.getName()); // add
-                     * attributes Collection attrs = ct.getNodeDataCollection(); Iterator a_it = attrs.iterator(); while
-                     * (a_it.hasNext()){ NodeData nd = (NodeData)a_it.next(); wi.addAttribute(nd.getName(), new
-                     * StringAttribute(nd.getString())); }
-                     */
-                    return ct;
-                }
-            }
+		id = FlowExpressionId.fromParseableString(cid);
 
-        }
-        catch (Exception e) {
-            log.error("exception:" + e);
-        }
-        return null;
+		return id.equals(eid);
+	}
 
-    }
+	public void storeWorkItem(String arg0, InFlowWorkItem wi)
+			throws StoreException {
+		try {
 
-    public boolean checkContentWithEID(Content ct, FlowExpressionId eid) {
-        String cid = ct.getNodeData("ID").getString();
-        log.debug("checkContentWithEID: ID = " + cid);
-        FlowExpressionId id = null;
+			// delete it if already exist
+			Content ct = findWorkItem(wi.getId());
+			if (ct != null)
+				removeWorkItem("", wi.getId());
 
-        id = FlowExpressionId.fromParseableString(cid);
+			Content root = hm.getRoot();
+			Collection c = root.getChildren(ItemType.WORKITEM);
 
-        return id.equals(eid);
-    }
+			// @fix it
+			Content newc = root.createContent("workItem", ItemType.WORKITEM);
 
-    public void storeWorkItem(String arg0, InFlowWorkItem wi) throws StoreException {
-        try {
+			ValueFactory vf = newc.getJCRNode().getSession().getValueFactory();
+			String sId = wi.getLastExpressionId().toParseableString();
+			log.debug("store work item: ID = " + sId);
+			newc.createNodeData("ID", vf.createValue(sId));
+			// convert to xml string
+			Element encoded = XmlCoder.encode(wi);
+			final org.jdom.Document doc = new org.jdom.Document(encoded);
+			String s = XmlUtils.toString(doc, null);
+			newc.createNodeData("value", vf.createValue(s));
+			log.debug("store work item: value=" + s);
+			/*
+			 * // store all attributes StringMapAttribute sma =
+			 * wi.getAttributes(); Iterator it = sma.alphaStringIterator();
+			 * while (it.hasNext()) { StringAttribute sa = (StringAttribute)
+			 * it.next(); Attribute value = (Attribute) sma.get(sa);
+			 * newc.createNodeData(sa.toString(), vf.createValue(value
+			 * .toString())); }
+			 */
+			hm.save();
+		} catch (Exception e) {
+			log.error("exception:" + e);
+			throw new StoreException(e.toString());
+		}
 
-            // delete it if already exist
-            Content ct = findWorkItem(wi.getId());
-            if (ct != null) {
-                removeWorkItem("", wi.getId());
-            }
+	}
+	
+	public void exportToFile(String fileName, String path){
+		File outputFile = new File(fileName);
+		if (path == null || path.length() == 0)
+			path = "/";
+		int i = fileName.lastIndexOf(".");
+		String pre = fileName;
+		String ext = "";
+		if (i > 0)			
+		{
+			log.info("i = " + i);
+			ext = fileName.substring(i+1, fileName.length());
+			pre = fileName.substring(0, i-1);
+		}
+		
+		try{
+		FileOutputStream out_sv = new FileOutputStream(pre+"_sv"+"."+ext);
+		hm.getWorkspace().getSession().exportSystemView(path, out_sv, false,
+				false);
+		
+		FileOutputStream out_dv = new FileOutputStream(pre+"_dv"+"."+ext);
+		hm.getWorkspace().getSession().exportDocumentView(path, out_dv, false,
+				false);
+		
+		}catch (Exception e){
+			log.error("can not export to file " + fileName, e);
+		}
+	}
 
-            Content root = hm.getRoot();
+	public void exportToConsole(String path){
+		
+		if (path == null || path.length() == 0)
+			path = "/";
+		try{
+	
+		hm.getWorkspace().getSession().exportSystemView(path, System.out, false,
+				false);
+		
+		
+		hm.getWorkspace().getSession().exportDocumentView(path, System.out, false,
+				false);
+		
+		}catch (Exception e){
+			log.error("can not export to console");
+		}
+	}
+	
+	public Content doQuery(String queryString) {
+		
+		log.info("xpath query string: " + queryString);		
+		//storage.exportToFile("d:\\owfe_root.xml", null);
+		Query q = null;
+		try {
+			// there is no query manager for config repo, so remove code
+			MgnlContext.setInstance(MgnlContext.getSystemContext()); // for
+																		// testing
+																		// purpose
 
-            // @fix it
-            Content newc = root.createContent("workItem", ItemType.WORKITEM);
+			q = MgnlContext.getQueryManager("owfe", "Store").createQuery(queryString,
+					"xpath"); //$NON-NLS-1$
 
-            ValueFactory vf = newc.getJCRNode().getSession().getValueFactory();
-            String sId = wi.getLastExpressionId().toParseableString();
-            log.debug("store work item: ID = " + sId);
-            newc.createNodeData("ID", vf.createValue(sId));
-            // convert to xml string
-            Element encoded = XmlCoder.encode(wi);
-            final org.jdom.Document doc = new org.jdom.Document(encoded);
-            String s = XmlUtils.toString(doc, null);
-            newc.createNodeData("value", vf.createValue(s));
-            log.debug("store work item: value=" + s);
-            /*
-             * // store all attributes StringMapAttribute sma = wi.getAttributes(); Iterator it =
-             * sma.alphaStringIterator(); while (it.hasNext()) { StringAttribute sa = (StringAttribute) it.next();
-             * Attribute value = (Attribute) sma.get(sa); newc.createNodeData(sa.toString(), vf.createValue(value
-             * .toString())); }
-             */
-            hm.save();
-        }
-        catch (Exception e) {
-            log.error("exception:" + e);
-            throw new StoreException(e.toString());
-        }
+			QueryResult result = q.execute();
+			if (result == null) {
+				log.info("query result is null");
+				return null;
+			}
+			//log.info("result size of mgnl:content = " + result.getContent().size());
+			//log.info("result size of workitem = " + result.getContent("workItem").size());
+			Iterator it = result.getContent("workItem").iterator();
+			while (it.hasNext()) {
+				Content ct = (Content) it.next();
+				String title = ct.getTitle();
+				log.info("title=" + title);
+				String sname = ct.getName();
+				log.info("name=" + sname);
+				//storage.exportToConsole(ct.getJCRNode().getPath());
+				//storage.exportToFile("d:\\owfe_ct.xml", ct.getJCRNode().getPath());
+				return ct;
+			}
+		} catch (Exception e) {
+			log.error("query flow failed", e);
+			return null;
+		}
+		
+		log.info("query return null");
+		return null;
 
-    }
-
-    //
-    // STATIC METHODS
+	}
+	//
+	// STATIC METHODS
 
 }
