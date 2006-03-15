@@ -2,6 +2,8 @@ package info.magnolia.cms.cache;
 
 import info.magnolia.cms.beans.config.ConfigurationException;
 import info.magnolia.cms.core.Content;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
@@ -9,13 +11,12 @@ import javax.management.ObjectName;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.ArrayList;
 
 
 /**
  * A <code>CacheManager</code> that is JMX manageable.
+ *
  * @author Andreas Brenk
  * @author Fabrizio Giustina
  * @since 3.0
@@ -140,8 +141,7 @@ public class ManageableCacheManager implements CacheManager, ManageableCacheMana
 
         if (didUseCache) {
             this.cacheHits++;
-        }
-        else if (isRunning()) {
+        } else if (isRunning()) {
             this.cacheMisses++;
         }
 
@@ -154,7 +154,12 @@ public class ManageableCacheManager implements CacheManager, ManageableCacheMana
     private void registerMBean() {
         String objectName = "Magnolia:type=CacheManager";
         try {
-            MBeanServer mbeanServer = (MBeanServer) MBeanServerFactory.findMBeanServer(null).get(0);
+            ArrayList list = MBeanServerFactory.findMBeanServer(null);
+            MBeanServer mbeanServer;
+            if (list != null && list.size() > 0)
+                mbeanServer = (MBeanServer) list.get(0);
+            else
+                mbeanServer = MBeanServerFactory.createMBeanServer();
             mbeanServer.registerMBean(this, new ObjectName(objectName));
         }
         catch (Exception e) {
