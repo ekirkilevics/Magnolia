@@ -117,7 +117,9 @@ public class ModuleRegistration {
         try {
             BeanReader beanReader = new BeanReader();
             beanReader.registerBeanClass(ModuleDefinition.class);
-    
+
+            log.info("Reading module definition");
+
             // get the xml files
             Collection defResources = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
     
@@ -130,7 +132,7 @@ public class ModuleRegistration {
             for (Iterator iter = defResources.iterator(); iter.hasNext();) {
                 String name = (String) iter.next();
     
-                log.debug("parsing module file {}", name);
+                log.info("parsing module file {}", name);
     
                 try {
                     ModuleDefinition def = (ModuleDefinition) beanReader.parse(new StringReader(getXML(name)));

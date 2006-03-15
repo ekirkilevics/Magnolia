@@ -57,7 +57,7 @@ public class ClasspathResourcesUtil {
         Collection resources = new ArrayList();
         // read the jars in the lib dir
         File dir = new File(Path.getAbsoluteFileSystemPath("WEB-INF/lib")); //$NON-NLS-1$
-        if (dir != null) {
+        if (dir.exists()) {
             File[] files = dir.listFiles(new FilenameFilter() {
 
                 public boolean accept(File file, String name) {
@@ -80,7 +80,7 @@ public class ClasspathResourcesUtil {
         }
 
         dir = new File(Path.getAbsoluteFileSystemPath("WEB-INF/classes"));
-        if (dir != null) {
+        if (dir.exists()) {
             Collection files = FileUtils.listFiles(dir, new TrueFileFilter() {
             }, new TrueFileFilter() {
             });
