@@ -16,7 +16,10 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.AccessDeniedException;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
@@ -80,5 +83,45 @@ public class ContentUtil {
             }
         }
         return null;
+    }
+
+    /**
+     * Get all children recursively (content and contentnode)
+     */
+    public static List collectAllChildren(Content node) {
+        List nodes = new ArrayList();
+        return collectAllChildren(nodes, node, new ItemType[]{ItemType.CONTENT, ItemType.CONTENTNODE});
+    }
+
+    /**
+     * Get all children of a particular type
+     * @param node
+     * @param type
+     * @return
+     */
+    public static List collectAllChildren(Content node, ItemType type) {
+        List nodes = new ArrayList();
+        return collectAllChildren(nodes, node, new ItemType[]{type});
+    }
+
+    /**
+     * Get all subnodes recursively and add them to the nodes collection.
+     * @param nodes
+     * @param node
+     * @param types
+     * @return the list
+     */
+    private static List collectAllChildren(List nodes, Content node, ItemType[] types) {
+        for (int i = 0; i < types.length; i++) {
+            ItemType type = types[i];
+
+            Collection children = node.getChildren(type);
+            for (Iterator iter = children.iterator(); iter.hasNext();) {
+                Content child = (Content) iter.next();
+                nodes.add(child);
+                collectAllChildren(nodes, child, types);
+            }
+        }
+        return nodes;
     }
 }

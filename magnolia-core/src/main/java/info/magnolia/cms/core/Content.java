@@ -604,13 +604,17 @@ public class Content extends ContentHandler implements Cloneable {
         return this.getChildren(StringUtils.defaultString(type));
     }
 
-    // collects all the children nodes, at any level
+    /**
+     * @deprecated use ContentUtil
+     */
     public List collectAllChildren() {
         List nodes = new ArrayList();
         return collectAllChildren(nodes, this);
     }
 
-    // collects all the nodes under a same path
+    /**
+     * @deprecated use ContentUtil
+     */
     private List collectAllChildren(List nodes, Content node) {
         Collection children = node.getChildren();
         for (Iterator iter = children.iterator(); iter.hasNext();) {

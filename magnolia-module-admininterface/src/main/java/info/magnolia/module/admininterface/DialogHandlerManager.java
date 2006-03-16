@@ -16,6 +16,7 @@ import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.config.ParagraphManager;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.module.admininterface.dialogs.ParagraphEditDialog;
@@ -63,7 +64,7 @@ public class DialogHandlerManager extends ObservedManager {
      * @param node
      */
     protected void onRegister(Content node) {
-        List dialogs = node.collectAllChildren();
+        List dialogs = ContentUtil.collectAllChildren(node);
         for (Iterator iter = dialogs.iterator(); iter.hasNext();) {
             Content dialog = (Content) iter.next();
             // if this paragraph is used from a dialog register it under the name of the paragraph
@@ -72,7 +73,7 @@ public class DialogHandlerManager extends ObservedManager {
             String name = dialog.getNodeData("name").getString(); //$NON-NLS-1$
             String className = NodeDataUtil.getString(
                 dialog,
-                "class", "info.magnolia.module.admininterface.ParagraphEditDialog"); //$NON-NLS-1$
+                "class", "info.magnolia.module.admininterface.dialogs.ParagraphEditDialog"); //$NON-NLS-1$
             try {
                 // there are paragraphs dialgos without a name!
                 if (StringUtils.isNotEmpty(name)) {
