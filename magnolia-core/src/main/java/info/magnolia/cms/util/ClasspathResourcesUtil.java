@@ -18,11 +18,9 @@ import info.magnolia.cms.core.SystemProperty;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -44,9 +42,9 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public class ClasspathResourcesUtil {
-    
+
     private static boolean nocache = BooleanUtils.toBoolean(SystemProperty.getProperty("magnolia.debug"));
-    
+
     /**
      * logger
      */
@@ -168,22 +166,23 @@ public class ClasspathResourcesUtil {
         }
 
     }
-    
+
     /**
      * Checks last modified and returns the new content if changed.
      * @param name
      * @return the input stream
      * @throws IOException
      */
-    public static InputStream getStream(String name) throws IOException{
-        if(nocache){
+    public static InputStream getStream(String name) throws IOException {
+        if (nocache) {
             // TODO use the last modified attribute
             URL url = ClasspathResourcesUtil.class.getResource(name);
-            return url.openStream();
+            if (url != null) {
+                return url.openStream();
+            }
+            log.debug("Can't find {}", name);
         }
-        else{
-            return ClasspathResourcesUtil.class.getResourceAsStream(name);
-        }
+        return ClasspathResourcesUtil.class.getResourceAsStream(name);
     }
- 
+
 }
