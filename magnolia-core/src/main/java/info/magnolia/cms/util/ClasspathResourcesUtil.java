@@ -13,12 +13,16 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.core.SystemProperty;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -28,6 +32,7 @@ import java.util.jar.JarFile;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +44,9 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public class ClasspathResourcesUtil {
-
+    
+    private static boolean nocache = BooleanUtils.toBoolean(SystemProperty.getProperty("magnolia.debug"));
+    
     /**
      * logger
      */
@@ -161,5 +168,22 @@ public class ClasspathResourcesUtil {
         }
 
     }
-
+    
+    /**
+     * Checks last modified and returns the new content if changed.
+     * @param name
+     * @return the input stream
+     * @throws IOException
+     */
+    public static InputStream getStream(String name) throws IOException{
+        if(nocache){
+            // TODO use the last modified attribute
+            URL url = ClasspathResourcesUtil.class.getResource(name);
+            return url.openStream();
+        }
+        else{
+            return ClasspathResourcesUtil.class.getResourceAsStream(name);
+        }
+    }
+ 
 }

@@ -1,5 +1,7 @@
 package info.magnolia.cms.servlets;
 
+import info.magnolia.cms.util.ClasspathResourcesUtil;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -41,8 +43,16 @@ public class ClasspathSpool extends HttpServlet {
      * @throws IOException for error in accessing the resource or the servlet output stream
      */
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        InputStream in = getClass().getResourceAsStream("/mgnl-resources" + request.getPathInfo());
+        InputStream in = null;
+        
+        // this method caches content if possible and checks the magnolia.debug property to avoid
+        // caching during the developement process
+        try{
+            in = ClasspathResourcesUtil.getStream("/mgnl-resources" + request.getPathInfo());
+        }
+        catch(IOException e){
+            // in is null
+        }
 
         if (in == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);

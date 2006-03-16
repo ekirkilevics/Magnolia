@@ -13,10 +13,12 @@
     <jsp:directive.page import="info.magnolia.cms.util.ClasspathResourcesUtil" />
     <jsp:directive.page import="java.util.regex.Matcher" />
     <jsp:directive.page import="org.apache.commons.lang.StringUtils" />
+<jsp:directive.page import="info.magnolia.cms.core.SystemProperty"/>
+<jsp:directive.page import="org.apache.commons.lang.BooleanUtils"/>
 
     <jsp:declaration>
        private static String[] files;
-
+       
        Pattern importPattern = Pattern.compile("importClass\\(\"(.*)\"\\);");
        Map classes = new HashMap();
 
@@ -45,8 +47,7 @@
         <![CDATA[
 
             // finding files in classpath is too expensive, just cache the list of paths!
-            if (files ==null)
-            {
+            if (files ==null || nocache) {
                 files = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter(){
                     public boolean accept(String name){
                         return name.startsWith("/mgnl-resources/js-classes") && name.endsWith(".js");
@@ -62,7 +63,7 @@
                 def.name = StringUtils.removeEnd(def.name, ".js");
                 def.name = StringUtils.replace(def.name, "/", ".");
 
-                def.content = IOUtils.toString(getClass().getResourceAsStream(name));
+                def.content = IOUtils.toString(ClasspathResourcesUtil.getStream(name));
                 Matcher matcher = importPattern.matcher(def.content);
                 while(matcher.find()){
                     String importName = matcher.group(1);

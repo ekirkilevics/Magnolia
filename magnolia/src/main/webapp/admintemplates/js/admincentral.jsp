@@ -5,6 +5,10 @@
 <%@ page import="info.magnolia.cms.util.FactoryUtil" %>
 <%@ page import="info.magnolia.cms.beans.runtime.WebContext" %>
 
+<%!
+   private static boolean nocache = BooleanUtils.toBoolean(SystemProperty.getProperty("magnolia.debug"));
+%>
+
 <%
 WebContext ctx = (WebContext) FactoryUtil.getInstance(WebContext.class);
 ctx.init(request);
