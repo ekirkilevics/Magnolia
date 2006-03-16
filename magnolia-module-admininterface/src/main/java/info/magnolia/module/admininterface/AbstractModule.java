@@ -201,7 +201,7 @@ public abstract class AbstractModule implements Module {
         this.config = config;
     }
 
-    protected ModuleConfig getModuleConfig() {
+    public ModuleConfig getModuleConfig() {
         return config;
     }
 
