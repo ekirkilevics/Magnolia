@@ -4,13 +4,17 @@ import info.magnolia.cms.util.ClasspathResourcesUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Hashtable;
+import java.util.Map;
 
+import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +29,11 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public class ClasspathSpool extends HttpServlet {
+
+    /**
+     * Root directory for resources streamed from the classath. Only resources in this folder can be accessed.
+     */
+    public static final String MGNL_RESOURCES_ROOT = "/mgnl-resources";
 
     /**
      * Stable serialVersionUID.
@@ -43,15 +52,115 @@ public class ClasspathSpool extends HttpServlet {
      * @throws IOException for error in accessing the resource or the servlet output stream
      */
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        String filePath = request.getPathInfo();
+
+        if (StringUtils.contains(filePath, "*")) {
+            streamMultipleFile(response, filePath);
+        }
+        else if (StringUtils.contains(filePath, "|")) {
+            String[] paths = StringUtils.split(filePath, "|");
+            streamMultipleFile(response, paths);
+        }
+        else {
+            streamSingleFile(response, filePath);
+        }
+    }
+
+    private Map multipleFilePathsCache;
+
+    /**
+     * @see javax.servlet.GenericServlet#init()
+     */
+    public void init() throws ServletException {
+        super.init();
+        multipleFilePathsCache = new Hashtable();
+    }
+
+    /**
+     * @see javax.servlet.GenericServlet#destroy()
+     */
+    public void destroy() {
+        super.destroy();
+        multipleFilePathsCache.clear();
+    }
+
+    /**
+     * Join and strem multiple files, using a "regexp-like" pattern. Only a single "*" is allowed as keyword in the
+     * request URI.
+     * @param response
+     * @param filePath
+     * @throws IOException
+     */
+    private void streamMultipleFile(HttpServletResponse response, String filePath) throws IOException {
+
+        log.debug("aggregating files for request {}", filePath);
+
+        String[] paths = (String[]) multipleFilePathsCache.get(filePath);
+        if (paths == null) {
+            final String startsWith = MGNL_RESOURCES_ROOT + StringUtils.substringBefore(filePath, "*");
+            final String endssWith = StringUtils.substringAfterLast(filePath, "*");
+
+            paths = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
+
+                public boolean accept(String name) {
+                    return name.startsWith(startsWith) && name.endsWith(endssWith);
+                }
+            });
+        }
+        multipleFilePathsCache.put(filePath, paths);
+
+        if (paths.length == 0) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
+        streamMultipleFile(response, paths);
+    }
+
+    /**
+     * @param response
+     * @param paths
+     * @throws IOException
+     */
+    private void streamMultipleFile(HttpServletResponse response, String[] paths) throws IOException {
+        ServletOutputStream out = response.getOutputStream();
         InputStream in = null;
-        
+
+        for (int j = 0; j < paths.length; j++) {
+            try {
+                String path = paths[j];
+                if (!path.startsWith(MGNL_RESOURCES_ROOT)) {
+                    path = MGNL_RESOURCES_ROOT + path;
+                }
+                in = ClasspathResourcesUtil.getStream(path);
+                if (in != null) {
+                    IOUtils.copy(in, out);
+                }
+            }
+            finally {
+                IOUtils.closeQuietly(in);
+            }
+        }
+
+        out.flush();
+        IOUtils.closeQuietly(out);
+    }
+
+    /**
+     * @param response
+     * @param filePath
+     * @throws IOException
+     */
+    private void streamSingleFile(HttpServletResponse response, String filePath) throws IOException {
+        InputStream in = null;
         // this method caches content if possible and checks the magnolia.debug property to avoid
         // caching during the developement process
-        try{
-            in = ClasspathResourcesUtil.getStream("/mgnl-resources" + request.getPathInfo());
+        try {
+            in = ClasspathResourcesUtil.getStream(MGNL_RESOURCES_ROOT + filePath);
         }
-        catch(IOException e){
-            // in is null
+        catch (IOException e) {
+            IOUtils.closeQuietly(in);
         }
 
         if (in == null) {
@@ -60,14 +169,10 @@ public class ClasspathSpool extends HttpServlet {
         }
 
         try {
-            ServletOutputStream os = response.getOutputStream();
-            byte[] buffer = new byte[8192];
-            int read = 0;
-            while ((read = in.read(buffer)) > 0) {
-                os.write(buffer, 0, read);
-            }
-            os.flush();
-            IOUtils.closeQuietly(os);
+            ServletOutputStream out = response.getOutputStream();
+            IOUtils.copy(in, out);
+            out.flush();
+            IOUtils.closeQuietly(out);
         }
         catch (IOException e) {
             // only log at debug level

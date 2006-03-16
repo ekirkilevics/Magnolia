@@ -36,9 +36,12 @@ var contextPath = '<%= request.getContextPath() %>';
     }
 %>
 
+<jsp:include flush="true" page="${request.contextPath}/.resources/admin-js/*.js" />
+
 <%@ include file="messages.jsp" %>
 
-<%@ include file="libs.jsp" %>
+<jsp:include flush="true" page="${request.contextPath}/.resources/js-libs/*.js" />
+
 <%@ include file="classes.jsp" %>
 
 
