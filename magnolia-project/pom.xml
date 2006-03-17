@@ -33,8 +33,8 @@
     </repository>
   </distributionManagement>
   <scm>
-    <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk</connection>
-    <developerConnection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk</developerConnection>
+    <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk/magnolia-project</connection>
+    <developerConnection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk/magnolia-project</developerConnection>
     <url>http://svn.magnolia.info/view</url>
   </scm>
   <mailingLists>
