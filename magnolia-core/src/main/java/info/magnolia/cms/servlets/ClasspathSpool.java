@@ -154,7 +154,7 @@ public class ClasspathSpool extends HttpServlet {
      */
     private void streamSingleFile(HttpServletResponse response, String filePath) throws IOException {
         InputStream in = null;
-        // this method caches content if possible and checks the magnolia.debug property to avoid
+        // this method caches content if possible and checks the magnolia.develop property to avoid
         // caching during the developement process
         try {
             in = ClasspathResourcesUtil.getStream(MGNL_RESOURCES_ROOT + filePath);

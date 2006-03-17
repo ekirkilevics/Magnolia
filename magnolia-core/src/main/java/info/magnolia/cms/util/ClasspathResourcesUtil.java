@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ClasspathResourcesUtil {
 
-    private static boolean nocache = BooleanUtils.toBoolean(SystemProperty.getProperty("magnolia.debug"));
+    private static boolean nocache = BooleanUtils.toBoolean(SystemProperty.getProperty("magnolia.develop"));
 
     /**
      * logger
