@@ -25,42 +25,41 @@
 
 
     <jsp:declaration>
-   private static boolean nocache = BooleanUtils.toBoolean(SystemProperty.getProperty("magnolia.debug"));
+        private static boolean nocache = BooleanUtils.toBoolean(SystemProperty.getProperty("magnolia.develop"));
 
-       private static String[] files;
+        private static String[] files;
 
-       Pattern importPattern = Pattern.compile("importClass\\(\"(.*)\"\\);");
-       Map classes = new HashMap();
+        Pattern importPattern = Pattern.compile("importClass\\(\"(.*)\"\\);");
+        Map classes = new HashMap();
 
-       class Definition{
-           boolean proceed = false;
-           String content;
-           String name;
-           List imports = new ArrayList();
-       }
+        class Definition{
+            boolean proceed = false;
+            String content;
+            String name;
+            List imports = new ArrayList();
+        }
 
-       void process(String name, JspWriter out) throws IOException{
-           Definition def = (Definition) classes.get(name);
-           if(!def.proceed){
-               def.proceed = true;
-               for(Iterator iter = def.imports.iterator(); iter.hasNext();){
-                   String importName = (String) iter.next();
-                   process(importName, out);
-               }
-               out.println(def.content);
-           }
-       }
+        void process(String name, JspWriter out) throws IOException{
+            Definition def = (Definition) classes.get(name);
+            if(!def.proceed){
+                def.proceed = true;
+                for(Iterator iter = def.imports.iterator(); iter.hasNext();){
+                    String importName = (String) iter.next();
+                    process(importName, out);
+                }
+                out.println(def.content);
+            }
+        }
 
     </jsp:declaration>
 
 <jsp:scriptlet>
-WebContext ctx = (WebContext) FactoryUtil.getInstance(WebContext.class);
-ctx.init(request);
-MgnlContext.setInstance(ctx);
+    WebContext ctx = (WebContext) FactoryUtil.getInstance(WebContext.class);
+    ctx.init(request);
+    MgnlContext.setInstance(ctx);
 </jsp:scriptlet>
 
 var contextPath = '<jsp:expression>request.getContextPath()</jsp:expression>';
-
 
 <jsp:scriptlet>
 <![CDATA[
