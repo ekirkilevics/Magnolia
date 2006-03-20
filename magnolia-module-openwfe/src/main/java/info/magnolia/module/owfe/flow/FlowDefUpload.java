@@ -1,12 +1,12 @@
-package info.magnolia.module.owfe;
+package info.magnolia.module.owfe.flow;
 
-import java.io.IOException;
+import info.magnolia.module.owfe.jcr.JCRFlowDefinition;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
+import java.io.IOException;
 
 
 /**
@@ -45,7 +45,7 @@ public class FlowDefUpload extends javax.servlet.http.HttpServlet implements jav
      * @see javax.servlet.http.HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-        IOException {
+            IOException {
         String flowDef = request.getParameter("flow");
 
         if (flowDef == null) {

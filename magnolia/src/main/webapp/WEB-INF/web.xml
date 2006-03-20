@@ -1,313 +1,316 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee     http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" version="2.4" id="WebApp">
-  <description>Magnolia</description>
-  <display-name>magnolia</display-name>
-  <filter>
-    <display-name>ContentTypeFilter</display-name>
-    <filter-name>ContentTypeFilter</filter-name>
-    <filter-class>info.magnolia.cms.filters.ContentTypeFilter</filter-class>
-  </filter>
-  <filter>
-    <display-name>MultipartRequestFilter</display-name>
-    <filter-name>MultipartRequestFilter</filter-name>
-    <filter-class>info.magnolia.cms.filters.MultipartRequestFilter</filter-class>
-    <init-param>
-      <param-name>LocalStore</param-name>
-      <param-value>false</param-value>
-    </init-param>
-  </filter>
-  <filter>
-    <display-name>SecurityFilter</display-name>
-    <filter-name>SecurityFilter</filter-name>
-    <filter-class>info.magnolia.cms.security.SecurityFilter</filter-class>
-    <init-param>
-      <param-name>AuthType</param-name>
-      <!-- <param-value>Basic</param-value> -->
-      <param-value>Form</param-value>
-    </init-param>
-    <init-param>
-      <!--
-        @todo find a better way to do this, its here simply to support login form
-        since at this time user is not authenticated and login form is unable to
-        access any resources from the server
-        NOTE : this will override config/server/SecureURIList
-      -->
-      <param-name>UnsecuredPath</param-name>
-      <param-value>/.resources/loginForm</param-value>
-    </init-param>
-    <init-param>
-      <param-name>LoginForm</param-name>
-      <param-value>/admintemplates/adminCentral/login.jsp</param-value>
-    </init-param>
-  </filter>
-  <filter>
-    <display-name>UnsetContextFilter</display-name>
-    <filter-name>UnsetContextFilter</filter-name>
-    <filter-class>info.magnolia.cms.filters.UnsetContextFilter</filter-class>
-  </filter>
-  <filter>
-    <filter-name>CacheFilter</filter-name>
-    <filter-class>info.magnolia.cms.cache.CacheFilter</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>ContentTypeFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>MultipartRequestFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>SecurityFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>UnsetContextFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>CacheFilter</filter-name>
-    <servlet-name>magnolia</servlet-name>
-  </filter-mapping>
-  <servlet>
-    <description>The main CMS servlet</description>
-    <display-name>magnolia EntryServlet</display-name>
-    <servlet-name>magnolia</servlet-name>
-    <servlet-class>info.magnolia.cms.servlets.EntryServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <description>Request interceptor servlet</description>
-    <display-name>magnolia RequestInterceptor</display-name>
-    <servlet-name>RequestInterceptor</servlet-name>
-    <servlet-class>info.magnolia.cms.servlets.RequestInterceptor</servlet-class>
-  </servlet>
-  <servlet>
-    <description>The resource dispatcher servlet</description>
-    <display-name>magnolia ResourceDispatcher</display-name>
-    <servlet-name>ResourceDispatcher</servlet-name>
-    <servlet-class>info.magnolia.cms.servlets.ResourceDispatcher</servlet-class>
-  </servlet>
-  <servlet>
-    <description>Activation handler servlet</description>
-    <display-name>magnolia ActivationHandler</display-name>
-    <servlet-name>ActivationHandler</servlet-name>
-    <servlet-class>info.magnolia.cms.exchange.simple.SimpleExchangeServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <description>Admin interface tree servlet</description>
-    <display-name>magnolia AdminTreeServlet</display-name>
-    <servlet-name>AdminTreeServlet</servlet-name>
-    <servlet-class>info.magnolia.module.admininterface.AdminTreeMVCServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <description>ImportExportServlet</description>
-    <display-name>magnolia ImportExportServlet</display-name>
-    <servlet-name>ImportExportServlet</servlet-name>
-    <servlet-class>info.magnolia.cms.servlets.ImportExportServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <description>Spool servlet</description>
-    <display-name>spool</display-name>
-    <servlet-name>Spool</servlet-name>
-    <servlet-class>info.magnolia.cms.servlets.Spool</servlet-class>
-  </servlet>
-  <servlet>
-    <description>Classpath Spool servlet</description>
-    <display-name>classpathspool</display-name>
-    <servlet-name>classpathspool</servlet-name>
-    <servlet-class>info.magnolia.cms.servlets.ClasspathSpool</servlet-class>
-  </servlet>
-  <servlet>
-    <description>Handles the magnolia dialogs (those with the magnolia controls)</description>
-    <servlet-name>DialogServlet</servlet-name>
-    <servlet-class>info.magnolia.module.admininterface.DialogMVCServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <description>Handles the other magnolia dialogs (pages, includes, ..)</description>
-    <servlet-name>DialogPageServlet</servlet-name>
-    <servlet-class>info.magnolia.module.admininterface.DialogPageMVCServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>fileThumbnail</servlet-name>
-    <servlet-class>info.magnolia.module.admininterface.dialogpages.FileThumbnailDialogPage</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>ReloadI18nServlet</servlet-name>
-    <servlet-class>info.magnolia.cms.servlets.ReloadI18nServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>CacheServlet</servlet-name>
-    <servlet-class>info.magnolia.cms.cache.CacheGeneratorServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>log4j</servlet-name>
-    <servlet-class>it.openutils.log4j.Log4jConfigurationServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>uuidRequestDispatcher</servlet-name>
-    <servlet-class>info.magnolia.cms.servlets.UUIDRequestDispatcher</servlet-class>
-  </servlet>
-  <!--  used for fckeditor inline images and files -->
-  <servlet>
-    <servlet-name>FCKEditorSimpleUploadServlet</servlet-name>
-    <servlet-class>info.magnolia.cms.gui.fckeditor.FCKEditorSimpleUploadServlet</servlet-class>
-    <init-param>
-      <param-name>AllowedExtensionsFile</param-name>
-      <param-value />
-    </init-param>
-    <init-param>
-      <param-name>DeniedExtensionsFile</param-name>
-      <param-value>php|php3|php5|phtml|asp|aspx|ascx|jsp|cfm|cfc|pl|bat|exe|dll|reg|cgi</param-value>
-    </init-param>
-    <init-param>
-      <param-name>AllowedExtensionsImage</param-name>
-      <param-value>jpg|gif|jpeg|png|bmp</param-value>
-    </init-param>
-    <init-param>
-      <param-name>DeniedExtensionsImage</param-name>
-      <param-value />
-    </init-param>
-    <init-param>
-      <param-name>AllowedExtensionsFlash</param-name>
-      <param-value>swf|fla</param-value>
-    </init-param>
-    <init-param>
-      <param-name>DeniedExtensionsFlash</param-name>
-      <param-value />
-    </init-param>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>magnolia</servlet-name>
-    <url-pattern>/</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>RequestInterceptor</servlet-name>
-    <url-pattern>/RequestInterceptor</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ResourceDispatcher</servlet-name>
-    <url-pattern>/ResourceDispatcher</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ActivationHandler</servlet-name>
-    <url-pattern>/ActivationHandler</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>classpathspool</servlet-name>
-    <url-pattern>/.resources/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>Spool</servlet-name>
-    <url-pattern>/docroot/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>Spool</servlet-name>
-    <url-pattern>/admindocroot/*</url-pattern>
-  </servlet-mapping>
-  <!-- used for the fck image upload -->
-  <servlet-mapping>
-    <servlet-name>Spool</servlet-name>
-    <url-pattern>/tmp/fckeditor/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>AdminTreeServlet</servlet-name>
-    <url-pattern>/.magnolia/trees/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ImportExportServlet</servlet-name>
-    <url-pattern>/.magnolia/mgnl-export/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ImportExportServlet</servlet-name>
-    <url-pattern>/.magnolia/mgnl-import/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>DialogServlet</servlet-name>
-    <url-pattern>/.magnolia/dialogs/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>DialogPageServlet</servlet-name>
-    <url-pattern>/.magnolia/dialogpages/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>fileThumbnail</servlet-name>
-    <url-pattern>/admintemplates/dialogs/fileThumbnail.jsp</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ReloadI18nServlet</servlet-name>
-    <url-pattern>/.magnolia/reload-i18n/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>CacheServlet</servlet-name>
-    <url-pattern>/.magnolia/cash-all/*</url-pattern>
-    <!-- old typo -->
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>CacheServlet</servlet-name>
-    <url-pattern>/.magnolia/cache-all/*</url-pattern>
-    <!--  good one -->
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>log4j</servlet-name>
-    <url-pattern>/.magnolia/log4j/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>uuidRequestDispatcher</servlet-name>
-    <url-pattern>/uuid/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>FCKEditorSimpleUploadServlet</servlet-name>
-    <url-pattern>/.magnolia/fckeditor/upload</url-pattern>
-  </servlet-mapping>
-  <listener>
-    <description>Magnolia Property Initializer</description>
-    <display-name>propertyInitializer</display-name>
-    <listener-class>info.magnolia.cms.servlets.PropertyInitializer</listener-class>
-  </listener>
-  <context-param>
-    <param-name>magnolia.cache.startdir</param-name>
-    <param-value>cache</param-value>
-  </context-param>
-  <context-param>
-    <param-name>magnolia.initialization.file</param-name>
-    <param-value>WEB-INF/config/${servername}/${webapp}/magnolia.properties, WEB-INF/config/${servername}/magnolia.properties,
-      WEB-INF/config/${webapp}/magnolia.properties, WEB-INF/config/default/magnolia.properties,
-      WEB-INF/config/magnolia.properties</param-value>
-  </context-param>
-  <listener>
-    <description>ShutdownManager</description>
-    <display-name>ShutdownManager</display-name>
-    <listener-class>info.magnolia.cms.beans.config.ShutdownManager</listener-class>
-  </listener>
-  <!-- for error-code definitions see http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html -->
-  <error-page>
-    <error-code>500</error-code>
-    <location>/admintemplates/error.jsp</location>
-  </error-page>
-  <error-page>
-    <error-code>400</error-code>
-    <location>/admintemplates/error.jsp</location>
-  </error-page>
-  <!--registered by Jackie-->
-  <servlet>
-    <servlet-name>FlowDef</servlet-name>
-    <servlet-class>info.magnolia.module.owfe.FlowDefServlet</servlet-class>
-  </servlet>
-  <!--registered by Jackie-->
-  <servlet-mapping>
-    <servlet-name>FlowDef</servlet-name>
-    <url-pattern>/FlowDef</url-pattern>
-  </servlet-mapping>
-  <!--registered by Jackie-->
-  <servlet>
-    <servlet-name>FlowDefUpload</servlet-name>
-    <servlet-class>info.magnolia.module.owfe.FlowDefUpload</servlet-class>
-  </servlet>
-  <!--registered by Jackie-->
-  <servlet-mapping>
-    <servlet-name>FlowDefUpload</servlet-name>
-    <url-pattern>/FlowDefUpload</url-pattern>
-  </servlet-mapping>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee     http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+         version="2.4" id="WebApp">
+    <description>Magnolia</description>
+    <display-name>magnolia</display-name>
+    <filter>
+        <display-name>ContentTypeFilter</display-name>
+        <filter-name>ContentTypeFilter</filter-name>
+        <filter-class>info.magnolia.cms.filters.ContentTypeFilter</filter-class>
+    </filter>
+    <filter>
+        <display-name>MultipartRequestFilter</display-name>
+        <filter-name>MultipartRequestFilter</filter-name>
+        <filter-class>info.magnolia.cms.filters.MultipartRequestFilter</filter-class>
+        <init-param>
+            <param-name>LocalStore</param-name>
+            <param-value>false</param-value>
+        </init-param>
+    </filter>
+    <filter>
+        <display-name>SecurityFilter</display-name>
+        <filter-name>SecurityFilter</filter-name>
+        <filter-class>info.magnolia.cms.security.SecurityFilter</filter-class>
+        <init-param>
+            <param-name>AuthType</param-name>
+            <!-- <param-value>Basic</param-value> -->
+            <param-value>Form</param-value>
+        </init-param>
+        <init-param>
+            <!--
+              @todo find a better way to do this, its here simply to support login form
+              since at this time user is not authenticated and login form is unable to
+              access any resources from the server
+              NOTE : this will override config/server/SecureURIList
+            -->
+            <param-name>UnsecuredPath</param-name>
+            <param-value>/.resources/loginForm</param-value>
+        </init-param>
+        <init-param>
+            <param-name>LoginForm</param-name>
+            <param-value>/admintemplates/adminCentral/login.jsp</param-value>
+        </init-param>
+    </filter>
+    <filter>
+        <display-name>UnsetContextFilter</display-name>
+        <filter-name>UnsetContextFilter</filter-name>
+        <filter-class>info.magnolia.cms.filters.UnsetContextFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>CacheFilter</filter-name>
+        <filter-class>info.magnolia.cms.cache.CacheFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>ContentTypeFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>MultipartRequestFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>SecurityFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>UnsetContextFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CacheFilter</filter-name>
+        <servlet-name>magnolia</servlet-name>
+    </filter-mapping>
+    <servlet>
+        <description>The main CMS servlet</description>
+        <display-name>magnolia EntryServlet</display-name>
+        <servlet-name>magnolia</servlet-name>
+        <servlet-class>info.magnolia.cms.servlets.EntryServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <description>Request interceptor servlet</description>
+        <display-name>magnolia RequestInterceptor</display-name>
+        <servlet-name>RequestInterceptor</servlet-name>
+        <servlet-class>info.magnolia.cms.servlets.RequestInterceptor</servlet-class>
+    </servlet>
+    <servlet>
+        <description>The resource dispatcher servlet</description>
+        <display-name>magnolia ResourceDispatcher</display-name>
+        <servlet-name>ResourceDispatcher</servlet-name>
+        <servlet-class>info.magnolia.cms.servlets.ResourceDispatcher</servlet-class>
+    </servlet>
+    <servlet>
+        <description>Activation handler servlet</description>
+        <display-name>magnolia ActivationHandler</display-name>
+        <servlet-name>ActivationHandler</servlet-name>
+        <servlet-class>info.magnolia.cms.exchange.simple.SimpleExchangeServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <description>Admin interface tree servlet</description>
+        <display-name>magnolia AdminTreeServlet</display-name>
+        <servlet-name>AdminTreeServlet</servlet-name>
+        <servlet-class>info.magnolia.module.admininterface.AdminTreeMVCServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <description>ImportExportServlet</description>
+        <display-name>magnolia ImportExportServlet</display-name>
+        <servlet-name>ImportExportServlet</servlet-name>
+        <servlet-class>info.magnolia.cms.servlets.ImportExportServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <description>Spool servlet</description>
+        <display-name>spool</display-name>
+        <servlet-name>Spool</servlet-name>
+        <servlet-class>info.magnolia.cms.servlets.Spool</servlet-class>
+    </servlet>
+    <servlet>
+        <description>Classpath Spool servlet</description>
+        <display-name>classpathspool</display-name>
+        <servlet-name>classpathspool</servlet-name>
+        <servlet-class>info.magnolia.cms.servlets.ClasspathSpool</servlet-class>
+    </servlet>
+    <servlet>
+        <description>Handles the magnolia dialogs (those with the magnolia controls)</description>
+        <servlet-name>DialogServlet</servlet-name>
+        <servlet-class>info.magnolia.module.admininterface.DialogMVCServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <description>Handles the other magnolia dialogs (pages, includes, ..)</description>
+        <servlet-name>DialogPageServlet</servlet-name>
+        <servlet-class>info.magnolia.module.admininterface.DialogPageMVCServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>fileThumbnail</servlet-name>
+        <servlet-class>info.magnolia.module.admininterface.dialogpages.FileThumbnailDialogPage</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ReloadI18nServlet</servlet-name>
+        <servlet-class>info.magnolia.cms.servlets.ReloadI18nServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CacheServlet</servlet-name>
+        <servlet-class>info.magnolia.cms.cache.CacheGeneratorServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>log4j</servlet-name>
+        <servlet-class>it.openutils.log4j.Log4jConfigurationServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>uuidRequestDispatcher</servlet-name>
+        <servlet-class>info.magnolia.cms.servlets.UUIDRequestDispatcher</servlet-class>
+    </servlet>
+    <!--  used for fckeditor inline images and files -->
+    <servlet>
+        <servlet-name>FCKEditorSimpleUploadServlet</servlet-name>
+        <servlet-class>info.magnolia.cms.gui.fckeditor.FCKEditorSimpleUploadServlet</servlet-class>
+        <init-param>
+            <param-name>AllowedExtensionsFile</param-name>
+            <param-value/>
+        </init-param>
+        <init-param>
+            <param-name>DeniedExtensionsFile</param-name>
+            <param-value>php|php3|php5|phtml|asp|aspx|ascx|jsp|cfm|cfc|pl|bat|exe|dll|reg|cgi</param-value>
+        </init-param>
+        <init-param>
+            <param-name>AllowedExtensionsImage</param-name>
+            <param-value>jpg|gif|jpeg|png|bmp</param-value>
+        </init-param>
+        <init-param>
+            <param-name>DeniedExtensionsImage</param-name>
+            <param-value/>
+        </init-param>
+        <init-param>
+            <param-name>AllowedExtensionsFlash</param-name>
+            <param-value>swf|fla</param-value>
+        </init-param>
+        <init-param>
+            <param-name>DeniedExtensionsFlash</param-name>
+            <param-value/>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>magnolia</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RequestInterceptor</servlet-name>
+        <url-pattern>/RequestInterceptor</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ResourceDispatcher</servlet-name>
+        <url-pattern>/ResourceDispatcher</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ActivationHandler</servlet-name>
+        <url-pattern>/ActivationHandler</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>classpathspool</servlet-name>
+        <url-pattern>/.resources/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Spool</servlet-name>
+        <url-pattern>/docroot/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Spool</servlet-name>
+        <url-pattern>/admindocroot/*</url-pattern>
+    </servlet-mapping>
+    <!-- used for the fck image upload -->
+    <servlet-mapping>
+        <servlet-name>Spool</servlet-name>
+        <url-pattern>/tmp/fckeditor/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminTreeServlet</servlet-name>
+        <url-pattern>/.magnolia/trees/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ImportExportServlet</servlet-name>
+        <url-pattern>/.magnolia/mgnl-export/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ImportExportServlet</servlet-name>
+        <url-pattern>/.magnolia/mgnl-import/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DialogServlet</servlet-name>
+        <url-pattern>/.magnolia/dialogs/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DialogPageServlet</servlet-name>
+        <url-pattern>/.magnolia/dialogpages/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>fileThumbnail</servlet-name>
+        <url-pattern>/admintemplates/dialogs/fileThumbnail.jsp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReloadI18nServlet</servlet-name>
+        <url-pattern>/.magnolia/reload-i18n/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CacheServlet</servlet-name>
+        <url-pattern>/.magnolia/cash-all/*</url-pattern>
+        <!-- old typo -->
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CacheServlet</servlet-name>
+        <url-pattern>/.magnolia/cache-all/*</url-pattern>
+        <!--  good one -->
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>log4j</servlet-name>
+        <url-pattern>/.magnolia/log4j/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>uuidRequestDispatcher</servlet-name>
+        <url-pattern>/uuid/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FCKEditorSimpleUploadServlet</servlet-name>
+        <url-pattern>/.magnolia/fckeditor/upload</url-pattern>
+    </servlet-mapping>
+    <listener>
+        <description>Magnolia Property Initializer</description>
+        <display-name>propertyInitializer</display-name>
+        <listener-class>info.magnolia.cms.servlets.PropertyInitializer</listener-class>
+    </listener>
+    <context-param>
+        <param-name>magnolia.cache.startdir</param-name>
+        <param-value>cache</param-value>
+    </context-param>
+    <context-param>
+        <param-name>magnolia.initialization.file</param-name>
+        <param-value>WEB-INF/config/${servername}/${webapp}/magnolia.properties,
+            WEB-INF/config/${servername}/magnolia.properties,
+            WEB-INF/config/${webapp}/magnolia.properties, WEB-INF/config/default/magnolia.properties,
+            WEB-INF/config/magnolia.properties</param-value>
+    </context-param>
+    <listener>
+        <description>ShutdownManager</description>
+        <display-name>ShutdownManager</display-name>
+        <listener-class>info.magnolia.cms.beans.config.ShutdownManager</listener-class>
+    </listener>
+    <!-- for error-code definitions see http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html -->
+    <error-page>
+        <error-code>500</error-code>
+        <location>/admintemplates/error.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>400</error-code>
+        <location>/admintemplates/error.jsp</location>
+    </error-page>
+    <!--registered by Jackie-->
+    <servlet>
+        <servlet-name>FlowDef</servlet-name>
+        <servlet-class>info.magnolia.module.owfe.flow.FlowDefServlet</servlet-class>
+    </servlet>
+    <!--registered by Jackie-->
+    <servlet-mapping>
+        <servlet-name>FlowDef</servlet-name>
+        <url-pattern>/FlowDef</url-pattern>
+    </servlet-mapping>
+    <!--registered by Jackie-->
+    <servlet>
+        <servlet-name>FlowDefUpload</servlet-name>
+        <servlet-class>info.magnolia.module.owfe.flow.FlowDefUpload</servlet-class>
+    </servlet>
+    <!--registered by Jackie-->
+    <servlet-mapping>
+        <servlet-name>FlowDefUpload</servlet-name>
+        <url-pattern>/FlowDefUpload</url-pattern>
+    </servlet-mapping>
 </web-app>
 

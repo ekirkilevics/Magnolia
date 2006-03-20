@@ -13,7 +13,6 @@
 package info.magnolia.module.owfe;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -21,32 +20,31 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.QueryResult;
-import info.magnolia.cms.module.Module;
 import info.magnolia.cms.module.ModuleConfig;
 import info.magnolia.cms.module.ModuleUtil;
 import info.magnolia.cms.module.RegisterException;
 import info.magnolia.module.admininterface.AbstractModule;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.jar.JarFile;
+import info.magnolia.module.owfe.flow.FlowDefServlet;
+import info.magnolia.module.owfe.flow.FlowDefUpload;
+import org.apache.log4j.Logger;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
 import javax.jcr.observation.Event;
-import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 import javax.jcr.observation.ObservationManager;
-
-import org.apache.log4j.Logger;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.jar.JarFile;
 
 
 /**
  * Module "templating" main class.
+ *
  * @author Sameer Charles
  * @author Fabrizio Giustina
  * @version 2.0
@@ -79,7 +77,7 @@ public class Engine extends AbstractModule {
      * java.util.jar.JarFile, int)
      */
     public void register(String moduleName, String version, Content moduleNode, JarFile jar, int registerState)
-        throws RegisterException {
+            throws RegisterException {
         // nothing to do
         /*
          * try { if (true || registerState == Module.REGISTER_STATE_INSTALLATION) { HierarchyManager hm =
@@ -112,10 +110,10 @@ public class Engine extends AbstractModule {
             ModuleUtil.registerServlet("FlowDef", servletClassName, new String[]{"/FlowDef"}, "registered by Jackie");
             servletClassName = FlowDefUpload.class.getName();
             ModuleUtil.registerServlet(
-                "FlowDefUpload",
-                servletClassName,
-                new String[]{"/FlowDefUpload"},
-                "registered by Jackie");
+                    "FlowDefUpload",
+                    servletClassName,
+                    new String[]{"/FlowDefUpload"},
+                    "registered by Jackie");
         }
         catch (Exception e) {
             log.error("Error while loading the xml rpc module", e);
@@ -218,8 +216,9 @@ public class Engine extends AbstractModule {
 
     /**
      * Register a single event listener, bound to the given path.
+     *
      * @param observationPath repository path
-     * @param listener event listener
+     * @param listener        event listener
      */
     private void registerEventListeners(String observationPath, EventListener listener) {
 
@@ -228,13 +227,13 @@ public class Engine extends AbstractModule {
         try {
 
             ObservationManager observationManager = ContentRepository
-                .getHierarchyManager(ContentRepository.CONFIG)
-                .getWorkspace()
-                .getObservationManager();
+                    .getHierarchyManager(ContentRepository.CONFIG)
+                    .getWorkspace()
+                    .getObservationManager();
 
             observationManager.addEventListener(listener, Event.NODE_ADDED
-                | Event.PROPERTY_ADDED
-                | Event.PROPERTY_CHANGED, observationPath, true, null, null, false);
+                    | Event.PROPERTY_ADDED
+                    | Event.PROPERTY_CHANGED, observationPath, true, null, null, false);
         }
         catch (RepositoryException e) {
             log.error("Unable to add event listeners for " + observationPath, e); //$NON-NLS-1$

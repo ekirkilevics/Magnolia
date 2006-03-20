@@ -2,10 +2,10 @@ package info.magnolia.module.owfe;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
+import org.apache.log4j.Logger;
 
 import javax.jcr.Repository;
-
-import org.apache.log4j.Logger;
 
 
 public class OWFEEngine {
@@ -44,8 +44,7 @@ public class OWFEEngine {
         HierarchyManager hm = null;
         if (workspace != null) {
             hm = ContentRepository.getHierarchyManager(REPO_OWFE, workspace);
-        }
-        else {
+        } else {
             hm = ContentRepository.getHierarchyManager(REPO_OWFE);
         }
         log.info("get HierarchyManager for " + REPO_OWFE + "=" + hm);

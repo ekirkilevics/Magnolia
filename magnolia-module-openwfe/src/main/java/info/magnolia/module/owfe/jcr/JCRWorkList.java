@@ -1,4 +1,4 @@
-package info.magnolia.module.owfe;
+package info.magnolia.module.owfe.jcr;
 
 import openwfe.org.Service;
 import openwfe.org.ServiceException;
@@ -25,8 +25,7 @@ public class JCRWorkList extends AbstractWorklist {
         if (parName.startsWith("command")) // handle commands
         {
             // @Todo execute command
-        }
-        else {
+        } else {
             super.consume(wi); // save
         }
         log.info("leave consume()..");

@@ -1,18 +1,9 @@
-package info.magnolia.module.owfe;
+package info.magnolia.module.owfe.jcr;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
-
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.jcr.ValueFactory;
-
 import openwfe.org.ApplicationContext;
 import openwfe.org.ServiceException;
 import openwfe.org.engine.expressions.FlowExpressionId;
@@ -21,16 +12,22 @@ import openwfe.org.worklist.impl.store.AbstractStorage;
 import openwfe.org.worklist.store.StoreException;
 import openwfe.org.xml.XmlCoder;
 import openwfe.org.xml.XmlUtils;
-
 import org.jdom.Document;
 import org.jdom.Element;
 
+import javax.jcr.ValueFactory;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 //public class JCRWorkItemStore implements WorkItemStorage {
+
 public class JCRWorkItemStorage extends AbstractStorage {
 
     private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(JCRWorkItemStorage.class
-        .getName());
+            .getName());
 
     //
     // CONSTANTS & co
@@ -48,7 +45,7 @@ public class JCRWorkItemStorage extends AbstractStorage {
     //
     // CONSTRUCTORS
     public void init(final String serviceName, final ApplicationContext context, final java.util.Map serviceParams)
-        throws ServiceException {
+            throws ServiceException {
         super.init(serviceName, context, serviceParams);
 
         //
