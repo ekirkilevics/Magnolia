@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module PUBLIC "info.magnolia/module.dtd" "http://magnolia.sf.net/module.dtd" >
 <module>
-  <name>openwfe</name>
-	<short-description>Workflow</short-description>
-	<description>Workflow using OpenWFE</description>
-  <class>info.magnolia.module.owfe.Engine</class>
-  <version>1.0</version>
-  <dependencies>
-    <dependency>
-      <name>adminInterface</name>
-      <version>3.0</version>
-    </dependency>
-  </dependencies>
+    <name>openwfe</name>
+    <short-description>Workflow</short-description>
+    <description>Workflow using OpenWFE</description>
+    <class>info.magnolia.module.owfe.Engine</class>
+    <version>1.0</version>
+    <dependencies>
+        <dependency>
+            <name>adminInterface</name>
+            <version>3.0</version>
+        </dependency>
+    </dependencies>
+    <bootstrap-files>
+        <bootsrap-file>config.modules.adminInterface.Config.dialogpages.groupEditRolesInclude.xml</bootsrap-file>
+        <bootsrap-file>config.modules.adminInterface.Config.dialogpages.groupEditUsersInclude.xml</bootsrap-file>
+        <bootsrap-file>config.modules.adminInterface.Config.dialogs.groupassignroles.xml</bootsrap-file>
+        <bootsrap-file>config.modules.adminInterface.Config.dialogs.groupedit.xml</bootsrap-file>
+        <bootsrap-file>config.modules.adminInterface.Config.menu.flowwebsite.xml</bootsrap-file>
+        <bootsrap-file>config.modules.adminInterface.Config.menu.inbox.xml</bootsrap-file>
+        <bootsrap-file>config.modules.adminInterface.Config.trees.groups.xml</bootsrap-file>
+        <bootsrap-file>config.modules.adminInterface.Config.trees.website.xml</bootsrap-file>
+        <bootsrap-file>config.commands.xml</bootsrap-file>
+        <bootsrap-file>config.modules.workflow.xml</bootsrap-file>
+    </bootstrap-files>
 </module>

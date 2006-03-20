@@ -156,6 +156,8 @@ public class OWFEBean {
 
 	public void approveActivation(String expressionId,
 			HttpServletRequest request) throws Exception {
+		
+		// get workitem
 		InFlowWorkItem if_wi = storage.retrieveWorkItem("", FlowExpressionId
 				.fromParseableString(expressionId));
 		if (if_wi == null)
@@ -173,16 +175,17 @@ public class OWFEBean {
 			
 		}
 		removeWorkItem(if_wi);
-
-		// do activation
+		OWFEEngine.getEngine().reply(if_wi);
+		
+	/*	// do activation
 		log.debug("attribute=" + if_wi.getAttribute("pathSelected"));
 		String path = ((StringAttribute) if_wi.getAttribute("pathSelected"))
 				.toString();
 		boolean recursive = ((StringAttribute) if_wi.getAttribute("recursive"))
 				.equals("true");
 		doActivate(request, path, recursive, true);
-
-		// send mail to developer
+*/
+		
 	}
 
 	private Repository getRepository() {
@@ -191,6 +194,7 @@ public class OWFEBean {
 		return repo;
 	}
 
+	
 	private void doActivate(HttpServletRequest request, String path,
 			boolean recursive, boolean includeContentNodes) throws Exception {
 		Content c = null;
@@ -252,6 +256,7 @@ public class OWFEBean {
 			removeWorkItem(if_wi);
 		}
 		removeWorkItem(if_wi);
+		OWFEEngine.getEngine().reply(if_wi);
 
 		log.debug("work item removed.");
 		// send mail to developer
@@ -311,11 +316,14 @@ public class OWFEBean {
 			return;
 		}
 
-		if (userName == null || userName.length() == 0) {
-			log.error("can not assign work item, user name is " + userName);
-			return;
-		}
+//		if (userName == null || userName.length() == 0) {
+//			log.error("can not assign work item, user name is " + userName);
+//			return;
+//		}
 
+		if (userName == null)
+			userName = "";
+		
 		FlowExpressionId eid = FlowExpressionId
 				.fromParseableString(expressionId);
 		if (eid == null) {
@@ -324,10 +332,10 @@ public class OWFEBean {
 							+ expressionId);
 			return;
 		}
+		
 		InFlowWorkItem if_wi = null;
 		try {
-			if_wi = storage.retrieveWorkItem("", eid);
-			;
+			if_wi = storage.retrieveWorkItem("", eid);			
 		} catch (Exception e) {
 			log.error("retrieve work item failed", e);
 		}
@@ -343,11 +351,13 @@ public class OWFEBean {
 	}
 
 	public void assignWorkItemToUser(InFlowWorkItem wi, String userName) {
-		if (userName == null || userName.length() == 0) {
-			log.error("can not assign work item, user name is " + userName);
-			return;
-		}
-
+//		if (userName == null || userName.length() == 0) {
+//			log.error("can not assign work item, user name is " + userName);
+//			return;
+//		}
+		if (userName == null)
+			userName = "";
+		
 		try {
 			wi.addAttribute("assignTo", new StringAttribute(userName));
 			storage.storeWorkItem("", wi);
