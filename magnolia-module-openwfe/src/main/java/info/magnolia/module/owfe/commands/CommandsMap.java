@@ -11,7 +11,7 @@ public class CommandsMap {
      */
     private static Logger log = Logger.getLogger(CommandsMap.class);
 
-    public Command getTreeCommand(String commandName) {
+    public AbstractTreeCommand getTreeCommand(String commandName) {
         HierarchyManager hm = ContentRepository
                 .getHierarchyManager(ContentRepository.CONFIG);
         try {
@@ -25,7 +25,7 @@ public class CommandsMap {
             String className = c.getNodeData("impl").getString();
             log.info("class name is " + className);
             Class cmdClass = Class.forName(className);
-            return (Command) cmdClass.newInstance();
+            return (AbstractTreeCommand) cmdClass.newInstance();
 
         } catch (Exception e) {
             log.warn("can not get command for " + commandName, e);
@@ -34,7 +34,7 @@ public class CommandsMap {
 
     }
 
-    public Command getFlowCommand(String commandName) {
+    public AbstractTreeCommand getFlowCommand(String commandName) {
         HierarchyManager hm = ContentRepository
                 .getHierarchyManager(ContentRepository.CONFIG);
         try {
@@ -48,7 +48,7 @@ public class CommandsMap {
             String className = c.getNodeData("impl").getString();
             log.info("class name is " + className);
             Class cmdClass = Class.forName(className);
-            return (Command) cmdClass.newInstance();
+            return (AbstractTreeCommand) cmdClass.newInstance();
 
         } catch (Exception e) {
             log.warn("can not get command for " + commandName, e);

@@ -1,5 +1,6 @@
 package info.magnolia.module.owfe;
 
+import info.magnolia.module.owfe.commands.AbstractTreeCommand;
 import info.magnolia.module.owfe.commands.Command;
 import info.magnolia.module.owfe.commands.CommandsMap;
 import info.magnolia.module.owfe.jcr.JCRWorkItemAPI;
@@ -51,7 +52,7 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
             //	commandAgent.use((InFlowWorkItem)wi);
             String cmd = parName.substring(8, parName.length());
             log.info("command name is " + cmd);
-            Command tc = new CommandsMap().getFlowCommand(cmd);
+            AbstractTreeCommand tc = new CommandsMap().getFlowCommand(cmd);
             if (tc == null) { // not found, do in the old ways
                 log.warn("can not find command named " + cmd + "in tree command map");
             } else {

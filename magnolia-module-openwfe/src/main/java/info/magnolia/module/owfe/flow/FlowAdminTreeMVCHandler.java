@@ -4,7 +4,7 @@ import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 import info.magnolia.module.owfe.OWFEEngine;
-import info.magnolia.module.owfe.commands.Command;
+import info.magnolia.module.owfe.commands.AbstractTreeCommand;
 import info.magnolia.module.owfe.commands.CommandsMap;
 import info.magnolia.module.owfe.jcr.JCRFlowDefinition;
 import openwfe.org.embed.impl.engine.PersistedEngine;
@@ -39,7 +39,7 @@ public abstract class FlowAdminTreeMVCHandler extends AdminTreeMVCHandler {
      */
     public String execute(String command) {
         // get command from command map in JCR repository
-        Command tc = new CommandsMap().getTreeCommand(command);
+        AbstractTreeCommand tc = new CommandsMap().getTreeCommand(command);
         if (tc == null) { // not found, do in the old ways
             //throw new Exception("can not find command named " + command);
             log.warn("can not find command named " + command + "in tree command map");
@@ -49,7 +49,7 @@ public abstract class FlowAdminTreeMVCHandler extends AdminTreeMVCHandler {
 
         // set parameters
         HashMap params = new HashMap();
-        params.put(Command.P_REQUEST, request);
+        params.put(AbstractTreeCommand.P_REQUEST, request);
         params.put("pathSelected", pathSelected);
         params.put("recursive", Boolean.valueOf((request.getParameter("recursive") != null)));
 
