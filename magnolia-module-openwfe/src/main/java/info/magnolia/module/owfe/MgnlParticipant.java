@@ -1,7 +1,6 @@
 package info.magnolia.module.owfe;
 
 import info.magnolia.module.owfe.commands.AbstractTreeCommand;
-import info.magnolia.module.owfe.commands.Command;
 import info.magnolia.module.owfe.commands.CommandsMap;
 import info.magnolia.module.owfe.jcr.JCRWorkItemAPI;
 import openwfe.org.embed.impl.engine.AbstractEmbeddedParticipant;
