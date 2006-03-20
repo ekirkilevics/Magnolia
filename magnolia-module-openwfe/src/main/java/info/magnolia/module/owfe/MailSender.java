@@ -16,8 +16,8 @@ public class MailSender implements Runnable {
     private String list = "jackie_juju@hotmail.com";
     private String pathSelected;
 
-    public MailSender(String pathSelected) {
-        this.pathSelected = pathSelected;
+    public MailSender(String pathSelectedP) {
+        this.pathSelected = pathSelectedP;
     }
 
     public void run() {

@@ -1,25 +1,18 @@
 package info.magnolia.module.owfe;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.security.MgnlUserManager;
-import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.cms.util.Rule;
-import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
 import info.magnolia.module.owfe.jcr.JCRWorkItemAPI;
 import info.magnolia.module.owfe.jcr.JCRWorkItemStorage;
 import openwfe.org.engine.expressions.FlowExpressionId;
 import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.engine.workitem.StringAttribute;
 import openwfe.org.engine.workitem.WorkItem;
-import org.apache.commons.lang.StringUtils;
 
-import javax.jcr.Repository;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,8 +22,6 @@ import java.util.List;
 public class OWFEBean {
     private final static org.apache.log4j.Logger log = org.apache.log4j.Logger
             .getLogger(OWFEBean.class.getName());
-
-    static private final String WEBSITE_REPOSITORY = "website";
 
     JCRWorkItemAPI storage = null;
 
@@ -43,7 +34,7 @@ public class OWFEBean {
      *
      * @param wi
      * @param userName
-     * @return
+     * @return true if the item is assifned to the user
      */
     public boolean checkPariticipant(InFlowWorkItem wi, String userName) {
         // MgnlUser user =
@@ -56,10 +47,7 @@ public class OWFEBean {
             log.info("this workitem has been assigned to user " + assignTo);
             if (assignTo != null && assignTo.length() > 0) {// have valid
                 // assignee
-                if (assignTo.endsWith(userName))
-                    return true;
-                else
-                    return false;
+                return assignTo.endsWith(userName);
             }
         }
         String pName = wi.getParticipantName();
@@ -68,10 +56,7 @@ public class OWFEBean {
         if (pName.startsWith("command-")) {
             return false;
         } else if (pName.startsWith("user-")) {
-            if (userName.equals(pName.substring(5)))
-                return true;
-            else
-                return false;
+            return userName.equals(pName.substring(5));
         } else if (pName.startsWith("role-")) {
             return user.hasRole(pName.substring(5));
         } else if ((pName.startsWith("group-"))) {
@@ -84,7 +69,7 @@ public class OWFEBean {
      * get user name from request
      *
      * @param request
-     * @return
+     * @return get the user name from the request
      */
     public String getUsername(HttpServletRequest request) {
         return MgnlContext.getUser().getName();
@@ -106,7 +91,6 @@ public class OWFEBean {
         // ArrayList ret = new ArrayList();
         try {
             Collection c = root.getChildren(ItemType.WORKITEM);
-            int i = 0;
             Iterator it = c.iterator();
             while (it.hasNext()) {
                 Content ct = (Content) it.next();
@@ -138,7 +122,6 @@ public class OWFEBean {
 
     private void removeWorkItem(InFlowWorkItem wi) throws Exception {
         HierarchyManager hm = OWFEEngine.getOWFEHierarchyManager("Store");
-        Content root = hm.getRoot();
         try {
             Content ct = storage.findWorkItem(wi.getLastExpressionId());
             if (ct != null) {
@@ -183,56 +166,6 @@ public class OWFEBean {
                         .equals("true");
                 doActivate(request, path, recursive, true);
         */
-
-    }
-
-    private Repository getRepository() {
-        Repository repo = ContentRepository.getRepository(WEBSITE_REPOSITORY);
-        log.info("get repository for " + WEBSITE_REPOSITORY + "=" + repo);
-        return repo;
-    }
-
-
-    private void doActivate(HttpServletRequest request, String path,
-                            boolean recursive, boolean includeContentNodes) throws Exception {
-        Content c = null;
-        HierarchyManager hm = ContentRepository
-                .getHierarchyManager(WEBSITE_REPOSITORY);
-        if (hm.isPage(path)) {
-            c = hm.getContent(path);
-        } else {
-            c = hm.getContent(path); // ?
-        }
-        /**
-         * Here rule defines which content types to collect, its a resposibility
-         * of the caller ro set this, it will be different in every hierarchy,
-         * for instance - in website tree recursive activation : rule will allow
-         * mgnl:contentNode, mgnl:content and nt:file - in website tree
-         * non-recursive activation : rule will allow mgnl:contentNode and
-         * nt:file only
-         */
-        Rule rule = new Rule();
-        rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
-        rule.addAllowType(ItemType.NT_FILE);
-        if (recursive) {
-            rule.addAllowType(ItemType.CONTENT.getSystemName());
-        }
-
-        Syndicator syndicator = (Syndicator) FactoryUtil
-                .getInstance(Syndicator.class);
-        syndicator
-                .init(MgnlContext.getUser(), WEBSITE_REPOSITORY,
-                        ContentRepository
-                                .getDefaultWorkspace(WEBSITE_REPOSITORY), rule);
-
-        String parentPath = StringUtils.substringBeforeLast(path, "/");
-        if (StringUtils.isEmpty(parentPath)) {
-            parentPath = "/";
-        }
-        syndicator.activate(parentPath, path);
-
-        // unlock content
-        // c.unlock();
 
     }
 
@@ -291,14 +224,10 @@ public class OWFEBean {
             throw new Exception(
                     "cant not get the work iem by this expression id ("
                             + expressionId + ")");
-
         for (int i = 0; i < names.length; i++) {
             ifwi.setAttribute(names[i], new StringAttribute(values[i]));
         }
-
         storage.storeWorkItem("", ifwi);
-
-        return;
     }
 
     //
@@ -314,13 +243,11 @@ public class OWFEBean {
             return;
         }
 
-//		if (userName == null || userName.length() == 0) {
-//			log.error("can not assign work item, user name is " + userName);
-//			return;
-//		}
+        if (userName == null) {
+            log.info("User name was null");
+            return;
+        }
 
-        if (userName == null)
-            userName = "";
 
         FlowExpressionId eid = FlowExpressionId
                 .fromParseableString(expressionId);
@@ -349,12 +276,10 @@ public class OWFEBean {
     }
 
     public void assignWorkItemToUser(InFlowWorkItem wi, String userName) {
-//		if (userName == null || userName.length() == 0) {
-//			log.error("can not assign work item, user name is " + userName);
-//			return;
-//		}
-        if (userName == null)
-            userName = "";
+        if (userName == null) {
+            log.info("User name was null");
+            return;
+        }
 
         try {
             wi.addAttribute("assignTo", new StringAttribute(userName));
@@ -366,9 +291,8 @@ public class OWFEBean {
     }
 
     public void doTest(String s) throws Exception {
-        ((JCRPersistedEngine) (OWFEEngine.getEngine())).getExpStore().doTest(s);
-	}
-	
+        OWFEEngine.getEngine().getExpStore().doTest(s);
+    }
 
 
 }

@@ -16,7 +16,6 @@ import org.jdom.Document;
 import org.jdom.Element;
 
 import javax.jcr.ValueFactory;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -77,7 +76,6 @@ public class JCRWorkItemAPI {
             Content root = hm.getRoot();
             Collection c = root.getChildren(ItemType.WORKITEM);
             // @fix it
-            int i = 0;
             Iterator it = c.iterator();
             while (it.hasNext()) {
                 Content ct = (Content) it.next();
@@ -111,7 +109,6 @@ public class JCRWorkItemAPI {
             Content root = hm.getRoot();
             Collection c = root.getChildren(ItemType.WORKITEM);
             // @fix it
-            int i = 0;
             Iterator it = c.iterator();
             while (it.hasNext()) {
                 Content ct = (Content) it.next();
@@ -130,7 +127,6 @@ public class JCRWorkItemAPI {
 
     public InFlowWorkItem retrieveWorkItem(final String storeName,
                                            final FlowExpressionId fei) throws StoreException {
-        InFlowWorkItem wi = null;
         log.debug("starting retrieve work item. this = " + this);
         log.debug("retrieve work item for ID = " + fei.toParseableString());
         // String fileName = determineFileName(storeName, fei, false);
@@ -150,7 +146,7 @@ public class JCRWorkItemAPI {
     }
 
     public static InFlowWorkItem loadWorkItem(Content ct) throws Exception {
-        InFlowWorkItem wi = null;
+        InFlowWorkItem wi;
         InputStream s = ct.getNodeData("value").getStream();
         log.debug("retrieve work item: value = " + s.toString());
         final org.jdom.input.SAXBuilder builder = new org.jdom.input.SAXBuilder();
@@ -207,10 +203,7 @@ public class JCRWorkItemAPI {
     public boolean checkContentWithEID(Content ct, FlowExpressionId eid) {
         String cid = ct.getNodeData("ID").getString();
         log.debug("checkContentWithEID: ID = " + cid);
-        FlowExpressionId id = null;
-
-        id = FlowExpressionId.fromParseableString(cid);
-
+        FlowExpressionId id = FlowExpressionId.fromParseableString(cid);
         return id.equals(eid);
     }
 
@@ -224,7 +217,7 @@ public class JCRWorkItemAPI {
                 removeWorkItem("", wi.getId());
 
             Content root = hm.getRoot();
-            Collection c = root.getChildren(ItemType.WORKITEM);
+            //Collection c = root.getChildren(ItemType.WORKITEM);
 
             // @fix it
             Content newc = root.createContent("workItem", ItemType.WORKITEM);
@@ -256,7 +249,6 @@ public class JCRWorkItemAPI {
     }
 
     public void exportToFile(String fileName, String path) {
-        File outputFile = new File(fileName);
         if (path == null || path.length() == 0)
             path = "/";
         int i = fileName.lastIndexOf(".");
@@ -304,7 +296,7 @@ public class JCRWorkItemAPI {
 
         log.info("xpath query string: " + queryString);
         //storage.exportToFile("d:\\owfe_root.xml", null);
-        Query q = null;
+        Query q;
         try {
             // there is no query manager for config repo, so remove code
             MgnlContext.setInstance(MgnlContext.getSystemContext()); // for

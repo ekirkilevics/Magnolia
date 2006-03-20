@@ -125,7 +125,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
             Iterator it = c.iterator();
             while (it.hasNext()) {
                 Content ct = (Content) it.next();
-                String name = ct.getName();
+                //String name = ct.getName();
                 String sid = ct.getNodeData("ID").getString();
                 FlowExpressionId id = null;
                 // compare the expression id
@@ -220,21 +220,9 @@ public class JCRExpressionStore extends AbstractExpressionStore {
     }
 
     public boolean doTest(String s) throws Exception {
-        // test write content with expresion id
-        Content ct = null;
         Content root = hm.getRoot();
-        // log.info("store expresion: expression id = "+"kjakf||dafa");
-        // ct = root.createContent("kjakf||dafa",
-        // ItemType.EXPRESSION);
-        // log.info("store expresion: expression id = "+"0.0.0");
-        // ct = root.createContent("0.0.0",
-        // ItemType.EXPRESSION);
-        // log.info("store expresion: expression id = "+"a 0 0");
-        // ct = root.createContent("a 0 ",
-        // ItemType.EXPRESSION);
         log.info("store expresion: expression id = " + s);
-        ct = root.createContent(s, ItemType.EXPRESSION);
-
+        root.createContent(s, ItemType.EXPRESSION);
         hm.save();
 
         return true;

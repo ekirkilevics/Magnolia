@@ -6,7 +6,6 @@ import info.magnolia.module.owfe.jcr.JCRFlowDefinition;
 import openwfe.org.embed.impl.engine.PersistedEngine;
 import openwfe.org.engine.workitem.LaunchItem;
 import openwfe.org.engine.workitem.StringAttribute;
-import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 
@@ -15,8 +14,6 @@ import java.util.HashMap;
  */
 public class FlowActivation extends AbstractTreeCommand {
 
-    private static Logger log = Logger.getLogger(FlowActivation.class);
-//	HttpServletRequest request = null;
     String pathSelected = "";
     boolean recursive = false;
 
@@ -30,7 +27,7 @@ public class FlowActivation extends AbstractTreeCommand {
         return true;
     }
 
-    protected String activate() {
+    private String activate() {
         //boolean recursive = (request.getParameter("recursive") != null); //$NON-NLS-1$
 
         try {

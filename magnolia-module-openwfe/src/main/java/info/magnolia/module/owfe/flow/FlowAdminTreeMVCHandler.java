@@ -22,7 +22,7 @@ import java.util.HashMap;
  * In this case, only the activate method is part of a flow. We should find a way to plug in flow on the different methods.
  *
  * @author jackie
- * @authro Niko
+ * @author Niko
  */
 
 public abstract class FlowAdminTreeMVCHandler extends AdminTreeMVCHandler {
@@ -51,7 +51,7 @@ public abstract class FlowAdminTreeMVCHandler extends AdminTreeMVCHandler {
         HashMap params = new HashMap();
         params.put(Command.P_REQUEST, request);
         params.put("pathSelected", pathSelected);
-        params.put("recursive", new Boolean((request.getParameter("recursive") != null)));
+        params.put("recursive", Boolean.valueOf((request.getParameter("recursive") != null)));
 
         // execute
         tc.execute(params);

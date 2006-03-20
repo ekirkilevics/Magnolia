@@ -37,12 +37,11 @@ public class JCRFlowDefinition {
         if (name == null)
             return null;
         // HierarchyManager hm = OWFEEngine.getOWFEHierarchyManager("flowdef");
-        HierarchyManager hm = hm = ContentRepository
+        HierarchyManager hm = ContentRepository
                 .getHierarchyManager(ContentRepository.CONFIG);
 
         try {
 
-            Content flowroot = hm.getContent("/modules/workflow/Config/flows/");
             //
             // String queryString = "//*[@name=\'name\']/*/*";
             // Query q = null;
@@ -71,7 +70,7 @@ public class JCRFlowDefinition {
             // }
 
             // Content root = hm.getRoot();
-            Content root = flowroot;
+            Content root = hm.getContent("/modules/workflow/Config/flows/");
             Collection c = root.getChildren(ItemType.CONTENT);
             Iterator it = c.iterator();
             while (it.hasNext()) {
@@ -80,7 +79,7 @@ public class JCRFlowDefinition {
                 // log.info("title="+title);
                 String sname = ct.getName();
                 // log.info("name="+sname);
-                if (name != null && sname.equals(name)) {
+                if (sname.equals(name)) {
                     return ct;
                 }
             }
@@ -94,7 +93,7 @@ public class JCRFlowDefinition {
      * get flow definition as string of xml
      *
      * @param flowName
-     * @return
+     * @return the string defining the flow in xml format
      */
     public String getflowDefAsString(String flowName) {
         Content node = findFlowDef(flowName);
@@ -122,7 +121,7 @@ public class JCRFlowDefinition {
 
         // HierarchyManager hm = OWFEEngine.getOWFEHierarchyManager("flowdef");
         try {
-            HierarchyManager hm = hm = ContentRepository
+            HierarchyManager hm = ContentRepository
                     .getHierarchyManager(ContentRepository.CONFIG);
             Content root = hm.getContent("/modules/workflow/Config/flows/");
 
@@ -159,7 +158,6 @@ public class JCRFlowDefinition {
             // Content root = hm.getRoot();
             HierarchyManager hm = ContentRepository
                     .getHierarchyManager(ContentRepository.CONFIG);
-            Content root = hm.getContent("/modules/workflow/Config/flows/");
             File outputFile = new File(xmlFileName);
             FileOutputStream out = new FileOutputStream(outputFile);
             hm.getWorkspace().getSession().exportSystemView("/", out, false,
@@ -182,7 +180,7 @@ public class JCRFlowDefinition {
     public List addFlow(String flowDef) throws Exception {
         if (flowDef == null)
             return null;
-        String name = "";
+        String name;
         // jdom
         final org.jdom.input.SAXBuilder builder = new org.jdom.input.SAXBuilder();
         Document doc = builder.build(new StringReader(flowDef));

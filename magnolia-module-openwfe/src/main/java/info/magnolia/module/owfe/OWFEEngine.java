@@ -41,7 +41,7 @@ public class OWFEEngine {
     }
 
     public static HierarchyManager getOWFEHierarchyManager(String workspace) {
-        HierarchyManager hm = null;
+        HierarchyManager hm;
         if (workspace != null) {
             hm = ContentRepository.getHierarchyManager(REPO_OWFE, workspace);
         } else {

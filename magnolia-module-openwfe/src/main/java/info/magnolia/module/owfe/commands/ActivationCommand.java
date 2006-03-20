@@ -2,32 +2,25 @@ package info.magnolia.module.owfe.commands;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.MgnlContext;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.Rule;
 import openwfe.org.engine.workitem.InFlowWorkItem;
-import openwfe.org.engine.workitem.StringAttribute;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 
-public class ActivationCommandImpl extends AbstractTreeCommand {
-    private static Logger log = Logger.getLogger(ActivationCommandImpl.class);
+public class ActivationCommand extends AbstractTreeCommand {
 
     public boolean execute(HashMap params) {
 
-        String path = "";
-        boolean recursive = false;
-        InFlowWorkItem if_wi = (InFlowWorkItem) params.get(Command.P_WORKITEM);
+        String path;
+        boolean recursive; // is initialized at false
+        InFlowWorkItem if_wi = (InFlowWorkItem) params.get(AbstractTreeCommand.P_WORKITEM);
         if (if_wi != null) { // if call from flow
-            path = ((StringAttribute) if_wi.getAttribute("pathSelected"))
-                    .toString();
-            recursive = ((StringAttribute) if_wi.getAttribute("recursive"))
-                    .equals("true");
+            path = (if_wi.getAttribute("pathSelected")).toString();
+            recursive = (if_wi.getAttribute("recursive")).equals("true");
         } else {
             path = (String) params.get("pathSelected");
             recursive = ((Boolean) params.get("recursive")).booleanValue();
@@ -42,13 +35,6 @@ public class ActivationCommandImpl extends AbstractTreeCommand {
     }
 
     private void doActivate(String path, boolean recursive) throws Exception {
-        Content c = null;
-        HierarchyManager hm = ContentRepository.getHierarchyManager("website");
-        if (hm.isPage(path)) {
-            c = hm.getContent(path);
-        } else {
-            c = hm.getContent(path); // ?
-        }
         /**
          * Here rule defines which content types to collect, its a resposibility
          * of the caller ro set this, it will be different in every hierarchy,
@@ -74,9 +60,6 @@ public class ActivationCommandImpl extends AbstractTreeCommand {
             parentPath = "/";
         }
         syndicator.activate(parentPath, path);
-
-        // unlock content
-        // c.unlock();
 
     }
 

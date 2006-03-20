@@ -48,7 +48,6 @@ public class JCRPersistedEngine extends PersistedEngine {
         final java.util.Map esParams = new java.util.HashMap(1);
 
         eStore = new JCRExpressionStore();
-        ;
 
         eStore.init(Definitions.S_EXPRESSION_STORE, getContext(), esParams);
 

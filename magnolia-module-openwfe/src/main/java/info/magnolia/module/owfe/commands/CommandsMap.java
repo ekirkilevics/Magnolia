@@ -12,7 +12,7 @@ public class CommandsMap {
     private static Logger log = Logger.getLogger(CommandsMap.class);
 
     public Command getTreeCommand(String commandName) {
-        HierarchyManager hm = hm = ContentRepository
+        HierarchyManager hm = ContentRepository
                 .getHierarchyManager(ContentRepository.CONFIG);
         try {
             Content root = hm.getContent("/modules/workflow/Config/commands/treeCommands");
@@ -25,8 +25,7 @@ public class CommandsMap {
             String className = c.getNodeData("impl").getString();
             log.info("class name is " + className);
             Class cmdClass = Class.forName(className);
-            Command ret = (Command) cmdClass.newInstance();
-            return ret;
+            return (Command) cmdClass.newInstance();
 
         } catch (Exception e) {
             log.warn("can not get command for " + commandName, e);
@@ -36,7 +35,7 @@ public class CommandsMap {
     }
 
     public Command getFlowCommand(String commandName) {
-        HierarchyManager hm = hm = ContentRepository
+        HierarchyManager hm = ContentRepository
                 .getHierarchyManager(ContentRepository.CONFIG);
         try {
             Content root = hm.getContent("/commands/flowCommands");
@@ -49,8 +48,7 @@ public class CommandsMap {
             String className = c.getNodeData("impl").getString();
             log.info("class name is " + className);
             Class cmdClass = Class.forName(className);
-            Command ret = (Command) cmdClass.newInstance();
-            return ret;
+            return (Command) cmdClass.newInstance();
 
         } catch (Exception e) {
             log.warn("can not get command for " + commandName, e);
