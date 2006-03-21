@@ -13,6 +13,8 @@ import openwfe.org.engine.impl.expool.AbstractExpressionStore;
 import openwfe.org.engine.impl.expool.ExpoolUtils;
 import openwfe.org.xml.XmlCoder;
 import openwfe.org.xml.XmlUtils;
+
+import org.apache.commons.lang.StringUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 
@@ -54,8 +56,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
     }
 
     private String convertId(String id) {
-        return id.replace("|", "").replaceAll(":", ".");
-
+        return StringUtils.replace(StringUtils.replace(id,"|", ""),":", ".");
     }
 
     // interface
