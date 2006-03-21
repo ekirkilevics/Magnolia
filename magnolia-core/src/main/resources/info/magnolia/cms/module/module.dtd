@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- main definition -->
-<!ELEMENT module (name, class, version, description, short-description, bootstrap-files, files, dependencies, repositories, servlets)>
+<!ELEMENT module (name, class, version, description, short-description, dependencies, repositories, servlets)>
 <!ELEMENT name (#PCDATA)>
 <!ELEMENT version (#PCDATA)>
 <!ELEMENT description (#PCDATA)>
 <!ELEMENT short-description (#PCDATA)>
 <!ELEMENT class (#PCDATA)>
-
-<!-- bootstrap files to load -->
-<!ELEMENT bootstrap-file (#PCDATA)>
-<!ELEMENT bootstrap-files (bootstrap-file+)>
-
-<!-- content files to load -->
-<!ELEMENT file (#PCDATA)>
-<!ELEMENT files (file+)>
 
 <!-- dependencies to other modules -->
 <!ELEMENT dependencies (dependency+)>

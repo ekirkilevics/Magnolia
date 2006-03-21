@@ -171,22 +171,32 @@ public final class ModuleUtil {
             // windows again
             resourceName = StringUtils.replace(resourceName, "\\", "/");
 
-            String name = StringUtils.removeEnd(StringUtils.removeStart(resourceName, "/mgnl-bootstrap/"), ".xml");
+            String name = StringUtils.removeEnd(StringUtils.substringAfterLast(resourceName, "/"), ".xml");
 
             String repository = StringUtils.substringBefore(name, ".");
             String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(name, "."), "."); //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
-            pathName = "/" + StringUtils.replace(pathName, ".", "/");
-
             String nodeName = StringUtils.substringAfterLast(name, ".");
-
+            String fullPath;
+            if(StringUtils.isEmpty(pathName)){
+                pathName = "/";
+                fullPath = "/" + nodeName;
+            }
+            else{
+                pathName = "/" + StringUtils.replace(pathName, ".", "/");
+                fullPath = pathName + "/" + nodeName;
+            }
+            
             // if the path already exists --> delete it
             try {
-                if (hm.isExist(pathName + "/" + nodeName)) {
-                    hm.delete(pathName + "/" + nodeName);
+                if (hm.isExist(fullPath)) {
+                    hm.delete(fullPath);
+                    log.warn("already existing node [{}] deleted", fullPath);
                 }
 
                 // if the parent path not exists just create it
-                createPath(hm, pathName);
+                if(!pathName.equals("/")){
+                    createPath(hm, pathName, ItemType.CONTENT);
+                }
             }
             catch (Exception e) {
                 throw new RegisterException("can't register bootstrap file: [" + name + "]", e);
@@ -281,7 +291,7 @@ public final class ModuleUtil {
         node.createNodeData("description");
         node.createNodeData("class").setValue(className); //$NON-NLS-1$
         node.createContent("config"); //$NON-NLS-1$
-        node.createContent("virtualURIMapping", ItemType.CONTENTNODE); //$NON-NLS-1$
+        node.createContent("virtualURIMapping", ItemType.CONTENT); //$NON-NLS-1$
         Content license = node.createContent("license", ItemType.CONTENTNODE); //$NON-NLS-1$
         license.createNodeData("key"); //$NON-NLS-1$
         license.createNodeData("owner"); //$NON-NLS-1$

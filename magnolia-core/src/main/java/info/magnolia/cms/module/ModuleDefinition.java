@@ -44,16 +44,6 @@ public class ModuleDefinition {
     private Collection repositories = new ArrayList();
 
     /**
-     * The additional bootstrapfiles. The modules.name.* files are imported by default
-     */
-    private Collection bootstrapFiles = new ArrayList();
-
-    /**
-     * The additional content files. The templates/modulename/* and docroot/modulename/* are imported by default
-     */
-    private Collection files = new ArrayList();
-
-    /**
      * The name of the module
      */
     private String name;
@@ -182,7 +172,7 @@ public class ModuleDefinition {
      */
     public void addServlet(ServletDefinition def) {
         if (StringUtils.isEmpty(def.getComment())) {
-            def.setComment("a servlet used by " + this.getName() + " module");
+            def.setComment("a servlet used by the " + this.getName() + " module");
         }
         this.servlets.add(def);
     }
@@ -200,36 +190,6 @@ public class ModuleDefinition {
      */
     public void addRepository(RepositoryDefinition repository) {
         this.repositories.add(repository);
-    }
-
-    /**
-     * @return Returns the bootstrapfiles.
-     */
-    public Collection getBootstrapFiles() {
-        return this.bootstrapFiles;
-    }
-
-    /**
-     * Add a bootstrap file
-     * @param name
-     */
-    public void addBootstrapFile(String name) {
-        this.bootstrapFiles.add(name);
-    }
-
-    /**
-     * @return Returns the bootstrapfiles.
-     */
-    public Collection getFiles() {
-        return this.files;
-    }
-
-    /**
-     * Add a bootstrap file
-     * @param name
-     */
-    public void addFile(String name) {
-        this.files.add(name);
     }
 
     /**

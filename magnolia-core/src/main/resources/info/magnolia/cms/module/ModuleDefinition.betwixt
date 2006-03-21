@@ -1,9 +1,6 @@
 <info>
 	<element name="module">
 		<element name="class" property="className"/> 
-		<element name="bootstrap-files">
-			<element name="bootstrap-file" property="bootstrapFiles"/>
-		</element>
 		<element name="display-name" property="displayName"/> 
 		<element name="short-description" property="shortDescription"/>
 		<addDefaults/>
