@@ -1,13 +1,11 @@
 package info.magnolia.cms.cache;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.module.InitializationException;
 import info.magnolia.cms.module.InvalidConfigException;
-import info.magnolia.cms.module.Module;
-import info.magnolia.cms.module.ModuleConfig;
 import info.magnolia.cms.module.ModuleDefinition;
+import info.magnolia.cms.module.ModuleImpl;
 import info.magnolia.cms.module.RegisterException;
-
-import java.util.jar.JarFile;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,7 +15,7 @@ import org.apache.commons.logging.LogFactory;
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
-public class Engine implements Module {
+public class Engine extends ModuleImpl {
 
     /**
      * Logger.
@@ -26,25 +24,13 @@ public class Engine implements Module {
 
     private CacheManager cacheManager = CacheManagerFactory.getCacheManager();
 
-    private boolean initialized;
-
-    private String name;
-
     /**
-     * @see info.magnolia.cms.module.Module#init(info.magnolia.cms.module.ModuleConfig)
+     * Init cache manager
      */
-    public void init(ModuleConfig moduleConfig) throws InvalidConfigException {
-        this.name = moduleConfig.getName();
-        this.cacheManager.init(moduleConfig.getLocalStore());
-        this.initialized = true;
-    }
-
-    /**
-     * @see info.magnolia.cms.module.Module#register(String, String, Content,JarFile, int)
-     */
-    public void register(String moduleName, String version, Content moduleNode, JarFile jar, int registerState)
-        throws RegisterException {
-        // nothing to do
+    public void init(Content configNode) throws InvalidConfigException, InitializationException {
+        super.init(configNode);
+        this.cacheManager.init(configNode);
+        this.setInitialized(true);
     }
 
     /**
@@ -55,22 +41,7 @@ public class Engine implements Module {
     }
 
     public void register(ModuleDefinition def, Content moduleNode, int registerState) throws RegisterException {
-        // nothing to do
-    }
-
-    public boolean isInitialized() {
-        return initialized;
-    }
-
-    /**
-     * This module dosn't need any restart.
-     */
-    public boolean isRestartNeeded() {
-        return false;
-    }
-
-    public String getName() {
-        return name;
+        super.register(def, moduleNode, registerState);
     }
 
 }
