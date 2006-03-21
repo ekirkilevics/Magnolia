@@ -42,14 +42,10 @@ public interface Module {
     /**
      * Initialise module based on the configuration. once repositories are initialised and tickets are created its a
      * responsibility of the module itself to keep this data. magnolia server will release all handles
-     * @param moduleConfig a class containing the configuration of this module
      * @throws InvalidConfigException not a valid configuration
      * @throws InitializationException
-     * @see ModuleConfig#getInitParameters()
-     * @see ModuleConfig#getDescription()
-     * @see ModuleConfig#getName()
      */
-    void init(ModuleConfig moduleConfig) throws InvalidConfigException, InitializationException;
+    void init(Content configNode) throws InvalidConfigException, InitializationException;
 
     /**
      * This method is always called during the registration phase.
@@ -82,5 +78,10 @@ public interface Module {
      * @return
      */
     String getName();
+    
+    /**
+     * Get the description of this module
+     */
+     ModuleDefinition getModuleDefinition();
 
 }
