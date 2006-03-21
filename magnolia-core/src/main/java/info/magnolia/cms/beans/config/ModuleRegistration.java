@@ -258,7 +258,6 @@ public class ModuleRegistration {
      * @param def the definition of the module to register
      */
     protected void registerModule(Content modulesNode, ModuleDefinition def) {
-        log.info("start regisration of module [{}]", def.getName());
         try {
             Module module = (Module) Class.forName(def.getClassName()).newInstance();
             int registerState = Module.REGISTER_STATE_NONE;
@@ -281,6 +280,11 @@ public class ModuleRegistration {
             }
 
             try {
+                // do only log if the register state is not none
+                if(registerState != Module.REGISTER_STATE_NONE){
+                    log.info("start registration of module [{}]", def.getName());
+                }
+
                 // call register: this is always done not only during the first startup
                 module.register(def, moduleNode, registerState);
                 if (module.isRestartNeeded()) {
