@@ -18,10 +18,9 @@ import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.cms.beans.config.VirtualURIManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.dialog.ControlsManager;
+import info.magnolia.cms.module.ModuleImpl;
 import info.magnolia.cms.module.InitializationException;
 import info.magnolia.cms.module.InvalidConfigException;
-import info.magnolia.cms.module.Module;
-import info.magnolia.cms.module.ModuleConfig;
 import info.magnolia.cms.module.ModuleDefinition;
 import info.magnolia.cms.module.ModuleUtil;
 import info.magnolia.cms.module.RegisterException;
@@ -35,6 +34,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,44 +43,22 @@ import org.slf4j.LoggerFactory;
  * Default implementation. Imports bootstrap files, registers dialogs ,...
  * @author philipp
  */
-public abstract class AbstractModule implements Module {
+public abstract class AbstractAdminModule extends ModuleImpl {
 
     /**
      * Logger
      */
-    Logger log = LoggerFactory.getLogger(AbstractModule.class);
-
-    /**
-     * The configuration passed by the initializer (read from the repository)
-     */
-    private ModuleConfig config;
-
-    /**
-     * The modules definition built by the modules xml file
-     */
-    private ModuleDefinition definition;
-
-    /**
-     * True after a registration.
-     */
-    private boolean restartNeeded = false;
-
-    /**
-     * True after initialization.
-     */
-    private boolean initialized = false;
+    Logger log = LoggerFactory.getLogger(AbstractAdminModule.class);
 
     /**
      * Initialize the module. Registers the dialogs, paragraphs and templates of this modules. Calls the abstract onInit
      * method.
      * @throws InitializationException
      */
-    public final void init(ModuleConfig moduleConfig) throws InvalidConfigException, InitializationException {
+    public final void init(Content configNode) throws InvalidConfigException, InitializationException {
+        super.init(configNode);
         try {
-            Content moduleNode = moduleConfig.getLocalStore().getParent();
             Content node;
-
-            this.setModuleConfig(moduleConfig);
 
             // register uri mappings
             node = ContentUtil.getCaseInsensitive(moduleNode, "virtualURIMapping");
@@ -129,7 +107,7 @@ public abstract class AbstractModule implements Module {
             this.setInitialized(true);
         }
         catch (Exception e) {
-            throw new InitializationException("can't initialize module [" + moduleConfig.getName() + "]", e);
+            throw new InitializationException("can't initialize module [" + this.getName() + "]", e);
         }
     }
 
@@ -137,7 +115,7 @@ public abstract class AbstractModule implements Module {
      * Calles onRegister if not yet installed after it loaded the bootstrapfiles of this module
      */
     public final void register(ModuleDefinition def, Content moduleNode, int registerState) throws RegisterException {
-        this.setDefinition(def);
+        super.register(def, moduleNode, registerState);
 
         if (registerState == REGISTER_STATE_INSTALLATION || registerState == REGISTER_STATE_NEW_VERSION) {
             try {
@@ -176,17 +154,31 @@ public abstract class AbstractModule implements Module {
                 }
 
                 // copy the content of mgnl-files to the webapp
-                String[] contentFiles = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
+                String[] moduleFiles = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
 
                     public boolean accept(String name) {
                         return name.startsWith("/mgnl-files/templates/" + moduleName)
-                            || name.startsWith("/mgnl-files/docroot/" + moduleName);
+                            || name.startsWith("/mgnl-files/docroot/" + moduleName)
+                            || name.startsWith("/mgnl-files/admintemplates/" + moduleName);
                     };
                 });
-                ModuleUtil.installFiles(contentFiles, "mgnl-files");
+                
+                List files = new ArrayList();
+                
+                // add files defined in the descriptor
+                for (Iterator iter = def.getFiles().iterator(); iter.hasNext();) {
+                    String additionalFile = (String) iter.next();
+                    files.add("/mgnl-files/" + additionalFile);
+                }
+                
+                CollectionUtils.addAll(files, moduleFiles);
+                
+                String[] filesArray = (String[]) files.toArray(new String[files.size()]);
+
+                ModuleUtil.installFiles(filesArray, "/mgnl-files/");
 
                 // let the module do it's stuff
-                onRegister(def, moduleNode, registerState);
+                onRegister(registerState);
             }
             catch (Exception e) {
                 throw new RegisterException("can't register module " + this.definition.getName(), e);
@@ -194,77 +186,15 @@ public abstract class AbstractModule implements Module {
         }
     }
 
-    public void destroy() {
-    }
-
-    protected void setModuleConfig(ModuleConfig config) {
-        this.config = config;
-    }
-
-    public ModuleConfig getModuleConfig() {
-        return config;
-    }
-
     /**
      * Template pattern. Implement to performe some module specific stuff
+     * @param registerState
      */
-    protected void onRegister(ModuleDefinition def, Content moduleNode, int registerState) throws RegisterException {
-    }
+    protected abstract void onRegister(int registerState) throws RegisterException;
 
     /**
      * Template pattern. Implement to perfome somem module specific stuff
      */
-    protected void onInit() throws InitializationException {
-    }
-
-    /**
-     * @return Returns the restartNeeded.
-     */
-    public boolean isRestartNeeded() {
-        return this.restartNeeded;
-    }
-
-    /**
-     * @param restartNeeded The restartNeeded to set.
-     */
-    protected void setRestartNeeded(boolean restartNeeded) {
-        this.restartNeeded = restartNeeded;
-    }
-
-    /**
-     * @return Returns the definition.
-     */
-    public ModuleDefinition getModuleDefinition() {
-        return this.definition;
-    }
-
-    /**
-     * @param definition The definition to set.
-     */
-    protected void setDefinition(ModuleDefinition definition) {
-        this.definition = definition;
-    }
-
-    /**
-     * @return Returns the initialized.
-     */
-    public boolean isInitialized() {
-        return this.initialized;
-    }
-
-    /**
-     * @param initialized The initialized to set.
-     */
-    protected void setInitialized(boolean initialized) {
-        this.initialized = initialized;
-    }
-
-    /**
-     * Delegate to the modules definition getName() method
-     * @return
-     */
-    public String getName() {
-        return definition.getName();
-    }
+    protected abstract void onInit() throws InitializationException;
 
 }
