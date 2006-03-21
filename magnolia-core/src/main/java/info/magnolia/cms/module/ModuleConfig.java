@@ -22,21 +22,25 @@ import java.util.Map;
  * The module configuration read from the config repository.
  * @author Sameer Charles
  * @version 2.0
+ * @deprecated use the ModuleDefinition where possible. the register node is not used anymore.
  */
 public class ModuleConfig {
 
     /**
      * The HM of the modules
+     * @deprecated
      */
     private Map sharedHierarchyManagers; /* id - HierarchyManager map */
 
     /**
      * Startup parameters
+     * @deprecated
      */
     private Map initParameters;
 
     /**
      * Default HM
+     * @deprecated
      */
     private HierarchyManager hierarchyManager;
 
