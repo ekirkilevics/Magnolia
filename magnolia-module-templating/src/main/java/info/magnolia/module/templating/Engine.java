@@ -12,8 +12,8 @@
  */
 package info.magnolia.module.templating;
 
-import info.magnolia.cms.module.ModuleConfig;
-import info.magnolia.module.admininterface.AbstractModule;
+import info.magnolia.cms.module.RegisterException;
+import info.magnolia.module.admininterface.AbstractAdminModule;
 
 
 
@@ -23,14 +23,20 @@ import info.magnolia.module.admininterface.AbstractModule;
  * @author Fabrizio Giustina
  * @version 2.0
  */
-public class Engine extends AbstractModule {
+public class Engine extends AbstractAdminModule {
 
     /**
-     * @see info.magnolia.cms.module.Module#init(info.magnolia.cms.module.ModuleConfig)
+     * @see info.magnolia.module.admininterface.AbstractAdminModule#onInit()
      */
-    public void onInit(ModuleConfig config) {
-
+    public void onInit() {
         // set local store to be accessed via admin interface classes or JSP
-        Store.getInstance().setStore(config.getLocalStore());
+        Store.getInstance().setStore(this.getConfigNode());
+    }
+
+    /**
+     * @see info.magnolia.module.admininterface.AbstractAdminModule#onRegister(int)
+     */
+    protected void onRegister(int registerState) throws RegisterException {
+        // nothing todo
     }
 }
