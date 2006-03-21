@@ -12,10 +12,7 @@
  */
 package info.magnolia.module.admininterface;
 
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.module.RegisterException;
-
-import java.util.jar.JarFile;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +23,7 @@ import org.slf4j.LoggerFactory;
  * @author Fabrizio Giustina
  * @version 2.0
  */
-public class Engine extends AbstractModule {
+public class Engine extends AbstractAdminModule {
 
     /**
      * Logger.
@@ -34,27 +31,20 @@ public class Engine extends AbstractModule {
     protected static Logger log = LoggerFactory.getLogger(Engine.class);
 
     /**
-     * @see info.magnolia.cms.module.Module#init(info.magnolia.cms.module.ModuleConfig)
+     * @see info.magnolia.module.admininterface.AbstractAdminModule#onInit()
      */
     public void onInit() {
         // set local store to be accessed via admin interface classes or JSP
         Store store = Store.getInstance();
-        store.setStore(this.getModuleConfig().getLocalStore());
+        store.setStore(this.getConfigNode());
     }
 
     /**
-     * @see info.magnolia.cms.module.Module#register(java.lang.String, java.lang.String, info.magnolia.cms.core.Content,
-     * java.util.jar.JarFile, int)
+     * @see info.magnolia.module.admininterface.AbstractAdminModule#onRegister(int)
      */
-    public void register(String moduleName, String version, Content moduleNode, JarFile jar, int registerState)
-        throws RegisterException {
-        // nothing todo
+    protected void onRegister(int registerState) throws RegisterException {
+        // everything done
     }
 
-    /**
-     * @see info.magnolia.cms.module.Module#destroy()
-     */
-    public void destroy() {
-        // nothing to do
-    }
+
 }
