@@ -55,7 +55,7 @@ public abstract class ObservedManager {
      * Register a node. The uuid is cached and then onRegister() called.
      * @param node the node to register
      */
-    public void register(Content node) {
+    public synchronized void register(Content node) {
         if (node == null) {
             log.warn("tried to register a not existing node!");
             return;
@@ -80,7 +80,8 @@ public abstract class ObservedManager {
     /**
      * Calls onClear and reregister the nodes by calling onRegister
      */
-    public void reload() {
+    public synchronized void reload() {
+        // if recalled in the same thread only
         if (this.reloading == true) {
             log.warn("this manager is already reloading: [{}]", this.getClass().getName());
             return;
@@ -98,7 +99,7 @@ public abstract class ObservedManager {
             }
             catch (Exception e) {
                 registeredUUIDs.remove(uuid);
-                Paragraph.log.warn("can't reload the the node [" + uuid + "]");
+                log.warn("can't reload the the node [" + uuid + "]");
             }
         }
         this.reloading = false;
