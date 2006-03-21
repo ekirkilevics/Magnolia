@@ -29,12 +29,8 @@ import info.magnolia.cms.module.ServletDefinition;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.cms.util.ContentUtil;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -126,18 +122,11 @@ public abstract class AbstractAdminModule extends ModuleImpl {
                 String[] moduleBootstrap = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
 
                     public boolean accept(String name) {
-                        return name.startsWith("/mgnl-bootstrap/config.modules." + moduleName);
+                        return name.startsWith("/mgnl-bootstrap/" + moduleName) && name.endsWith(".xml");
                     }
                 });
 
-                List bootstrapFiles = new ArrayList(Arrays.asList(moduleBootstrap));
-
-                for (Iterator iter = def.getBootstrapFiles().iterator(); iter.hasNext();) {
-                    String additionalBootstrapFile = (String) iter.next();
-                    bootstrapFiles.add("/mgnl-bootstrap/" + additionalBootstrapFile);
-                }
-
-                ModuleUtil.bootstrap((String[]) bootstrapFiles.toArray(new String[bootstrapFiles.size()]));
+                ModuleUtil.bootstrap(moduleBootstrap);
 
                 // register servlets
                 for (Iterator iter = def.getServlets().iterator(); iter.hasNext();) {
@@ -163,19 +152,7 @@ public abstract class AbstractAdminModule extends ModuleImpl {
                     };
                 });
                 
-                List files = new ArrayList();
-                
-                // add files defined in the descriptor
-                for (Iterator iter = def.getFiles().iterator(); iter.hasNext();) {
-                    String additionalFile = (String) iter.next();
-                    files.add("/mgnl-files/" + additionalFile);
-                }
-                
-                CollectionUtils.addAll(files, moduleFiles);
-                
-                String[] filesArray = (String[]) files.toArray(new String[files.size()]);
-
-                ModuleUtil.installFiles(filesArray, "/mgnl-files/");
+                ModuleUtil.installFiles(moduleFiles, "/mgnl-files/");
 
                 // let the module do it's stuff
                 onRegister(registerState);
