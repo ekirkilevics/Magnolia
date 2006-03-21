@@ -13,7 +13,6 @@
 package info.magnolia.cms.module;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.config.ModuleLoader;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -278,17 +277,15 @@ public final class ModuleUtil {
     public static Content createMinimalConfiguration(Content node, String name, String className, String version)
         throws AccessDeniedException, PathNotFoundException, RepositoryException {
         node.createNodeData("version").setValue(version); //$NON-NLS-1$
-        node.createNodeData("license"); //$NON-NLS-1$
-        node.createContent("Config"); //$NON-NLS-1$
-        node.createContent("VirtualURIMapping", ItemType.CONTENTNODE); //$NON-NLS-1$
+        node.createNodeData("name").setValue(name); //$NON-NLS-1$
+        node.createNodeData("description");
+        node.createNodeData("class").setValue(className); //$NON-NLS-1$
+        node.createContent("config"); //$NON-NLS-1$
+        node.createContent("virtualURIMapping", ItemType.CONTENTNODE); //$NON-NLS-1$
+        Content license = node.createContent("license", ItemType.CONTENTNODE); //$NON-NLS-1$
+        license.createNodeData("key"); //$NON-NLS-1$
+        license.createNodeData("owner"); //$NON-NLS-1$
 
-        Content register = node.createContent(ModuleLoader.CONFIG_NODE_REGISTER, ItemType.CONTENTNODE);
-        register.createNodeData("moduleName"); //$NON-NLS-1$
-        register.createNodeData("moduleDescription"); //$NON-NLS-1$
-        register.createNodeData("class").setValue(className); //$NON-NLS-1$
-        register.createNodeData("repository"); //$NON-NLS-1$
-        register.createContent("sharedRepositories", ItemType.CONTENTNODE); //$NON-NLS-1$
-        register.createContent("initParams", ItemType.CONTENTNODE); //$NON-NLS-1$
         return node;
     }
 
@@ -417,7 +414,7 @@ public final class ModuleUtil {
             doc.getRootElement().addContent(node);
         }
         else {
-            log.info("servlet " + name + " allready registered");
+            log.info("servlet mapping [{0}] for servlet [{1}] allready registered", new Object[]{urlPattern, name});
         }
     }
 
