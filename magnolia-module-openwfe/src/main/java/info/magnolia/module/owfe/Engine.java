@@ -20,10 +20,9 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.QueryResult;
-import info.magnolia.cms.module.ModuleConfig;
 import info.magnolia.cms.module.ModuleUtil;
 import info.magnolia.cms.module.RegisterException;
-import info.magnolia.module.admininterface.AbstractModule;
+import info.magnolia.module.admininterface.AbstractAdminModule;
 import info.magnolia.module.owfe.flow.FlowDefServlet;
 import info.magnolia.module.owfe.flow.FlowDefUpload;
 import org.apache.log4j.Logger;
@@ -31,15 +30,10 @@ import org.apache.log4j.Logger;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.Repository;
-import javax.jcr.RepositoryException;
-import javax.jcr.observation.Event;
-import javax.jcr.observation.EventListener;
-import javax.jcr.observation.ObservationManager;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.jar.JarFile;
 
 
 /**
@@ -49,7 +43,7 @@ import java.util.jar.JarFile;
  * @author Fabrizio Giustina
  * @version 2.0
  */
-public class Engine extends AbstractModule {
+public class Engine extends AbstractAdminModule {
 
     /**
      * Logger.
@@ -57,54 +51,18 @@ public class Engine extends AbstractModule {
     private static Logger log = Logger.getLogger(Engine.class);
 
     /**
-     * base path jcr property.
+     * @see info.magnolia.module.admininterface.AbstractAdminModule#onRegister(int)
      */
-    private static final String ATTRIBUTE_BASE_PATH = "basePath"; //$NON-NLS-1$
-
-    /**
-     * Module name.
-     */
-    protected String moduleName;
-
-    /**
-     * Base path in configuration.
-     */
-    protected String basePath;
-
-    /*
-     * (non-Javadoc)
-     * @see info.magnolia.cms.module.Module#register(java.lang.String, java.lang.String, info.magnolia.cms.core.Content,
-     * java.util.jar.JarFile, int)
-     */
-    public void register(String moduleName, String version, Content moduleNode, JarFile jar, int registerState)
-            throws RegisterException {
-        // nothing to do
-        /*
-         * try { if (true || registerState == Module.REGISTER_STATE_INSTALLATION) { HierarchyManager hm =
-         * ContentRepository.getHierarchyManager(ContentRepository.CONFIG); HierarchyManager hmRoles =
-         * ContentRepository.getHierarchyManager(ContentRepository.USER_ROLES); HierarchyManager hmUsers =
-         * ContentRepository.getHierarchyManager(ContentRepository.USERS); ModuleUtil.registerProperties(hm,
-         * "com.obinary.magnolia.module.dms.config"); ModuleUtil.createPath(hmRoles, "dms", ItemType.CONTENT);
-         * ModuleUtil.registerProperties(hmRoles, "com.obinary.magnolia.module.dms.roles");
-         * ModuleUtil.createPath(hmUsers, "dms", ItemType.CONTENT); ModuleUtil.registerProperties(hmUsers,
-         * "com.obinary.magnolia.module.dms.users"); // moveMenuPoint(hm); hm.save(); hmUsers.save(); hmRoles.save(); //
-         * install the files ModuleUtil.installFiles(jar, "dms"); } } catch (Exception e) { log.error("can' register dms
-         * module", e); }
-         */
+    protected void onRegister(int registerState) throws RegisterException {
+        // nothing todo
     }
 
     /**
-     * @see info.magnolia.cms.module.Module#init(info.magnolia.cms.module.ModuleConfig)
+     * @see info.magnolia.module.admininterface.AbstractAdminModule#onInit()
      */
-    protected void onInit(ModuleConfig config) {
-        this.moduleName = config.getName();
-        this.basePath = (String) config.getInitParameters().get(ATTRIBUTE_BASE_PATH);
-
-        // set local store to be accessed via admin interface classes or JSP
-        Store.getInstance().setStore(config.getLocalStore());
+    protected void onInit() {
 
         // register servlet
-
         try {
             String servletClassName = FlowDefServlet.class.getName();
             ModuleUtil.registerServlet("FlowDef", servletClassName, new String[]{"/FlowDef"}, "registered by Jackie");
@@ -120,8 +78,8 @@ public class Engine extends AbstractModule {
         }
 
         log.info("****************************************");
-        log.info("Module: " + this.moduleName); //$NON-NLS-1$
-        log.info(this.moduleName + ": starting OpenWFE"); //$NON-NLS-1$
+        log.info("Module: " + this.getName()); //$NON-NLS-1$
+        log.info(this.getName() + ": starting OpenWFE"); //$NON-NLS-1$
         try {
             log.debug("create owfe engine ...");
             new OWFEEngine();// .run();
@@ -132,7 +90,7 @@ public class Engine extends AbstractModule {
             log.error("An exception arised when creating the engine", e);
         }
 
-        log.info(this.moduleName + ": start OpenWFE OK."); //$NON-NLS-1$      
+        log.info(this.getName() + ": start OpenWFE OK."); //$NON-NLS-1$      
         log.info("****************************************");
 
     }
@@ -206,40 +164,6 @@ public class Engine extends AbstractModule {
         return ret;
     }
 
-    /**
-     * @see info.magnolia.cms.module.Module#destroy()
-     */
-    public void destroy() {
-        // do nothing
-        // @todo remove event listeners?
-    }
-
-    /**
-     * Register a single event listener, bound to the given path.
-     *
-     * @param observationPath repository path
-     * @param listener        event listener
-     */
-    private void registerEventListeners(String observationPath, EventListener listener) {
-
-        log.info("Registering event listener for path [" + observationPath + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-
-        try {
-
-            ObservationManager observationManager = ContentRepository
-                    .getHierarchyManager(ContentRepository.CONFIG)
-                    .getWorkspace()
-                    .getObservationManager();
-
-            observationManager.addEventListener(listener, Event.NODE_ADDED
-                    | Event.PROPERTY_ADDED
-                    | Event.PROPERTY_CHANGED, observationPath, true, null, null, false);
-        }
-        catch (RepositoryException e) {
-            log.error("Unable to add event listeners for " + observationPath, e); //$NON-NLS-1$
-        }
-
-    }
 
     void testJCREngine() {
 
@@ -324,4 +248,5 @@ public class Engine extends AbstractModule {
          * (Exception e) { e.printStackTrace(); return; }
          */
     }
+
 }
