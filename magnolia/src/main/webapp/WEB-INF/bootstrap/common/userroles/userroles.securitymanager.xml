@@ -300,7 +300,7 @@
         <sv:value>2006-01-31T12:41:56.968+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="path" sv:type="String">
-        <sv:value>/modules/adminInterface/Config/menu</sv:value>
+        <sv:value>/modules/adminInterface/config/menu</sv:value>
       </sv:property>
       <sv:property sv:name="permissions" sv:type="Long">
         <sv:value>8</sv:value>
@@ -337,7 +337,7 @@
         <sv:value>2006-01-31T12:41:56.970+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="path" sv:type="String">
-        <sv:value>/modules/adminInterface/Config/menu/*</sv:value>
+        <sv:value>/modules/adminInterface/config/menu/*</sv:value>
       </sv:property>
       <sv:property sv:name="permissions" sv:type="Long">
         <sv:value>8</sv:value>
@@ -374,7 +374,7 @@
         <sv:value>2006-01-31T12:41:56.972+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="path" sv:type="String">
-        <sv:value>/modules/adminInterface/Config/menu/config</sv:value>
+        <sv:value>/modules/adminInterface/config/menu/config</sv:value>
       </sv:property>
       <sv:property sv:name="permissions" sv:type="Long">
         <sv:value>0</sv:value>
@@ -411,7 +411,7 @@
         <sv:value>2006-01-31T12:41:56.974+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="path" sv:type="String">
-        <sv:value>/modules/adminInterface/Config/menu/config/*</sv:value>
+        <sv:value>/modules/adminInterface/config/menu/config/*</sv:value>
       </sv:property>
       <sv:property sv:name="permissions" sv:type="Long">
         <sv:value>0</sv:value>
@@ -448,7 +448,7 @@
         <sv:value>2006-01-31T12:41:56.977+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="path" sv:type="String">
-        <sv:value>/modules/adminInterface/Config/menu/website</sv:value>
+        <sv:value>/modules/adminInterface/config/menu/website</sv:value>
       </sv:property>
       <sv:property sv:name="permissions" sv:type="Long">
         <sv:value>0</sv:value>
@@ -485,7 +485,7 @@
         <sv:value>2006-01-31T12:41:56.979+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="path" sv:type="String">
-        <sv:value>/modules/adminInterface/Config/menu/website/*</sv:value>
+        <sv:value>/modules/adminInterface/config/menu/website/*</sv:value>
       </sv:property>
       <sv:property sv:name="permissions" sv:type="Long">
         <sv:value>0</sv:value>

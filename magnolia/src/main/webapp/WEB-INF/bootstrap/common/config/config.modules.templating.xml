@@ -327,7 +327,7 @@
       </sv:node>
     </sv:node>
   </sv:node>
-  <sv:node sv:name="VirtualURIMapping">
+  <sv:node sv:name="virtualURIMapping">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:contentNode</sv:value>
     </sv:property>
@@ -367,7 +367,7 @@
       </sv:property>
     </sv:node>
   </sv:node>
-  <sv:node sv:name="Config">
+  <sv:node sv:name="config">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:content</sv:value>
     </sv:property>

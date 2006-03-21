@@ -163,7 +163,7 @@
         <sv:value>2006-01-31T12:41:50.135+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="path" sv:type="String">
-        <sv:value>/modules/adminInterface/Config/menu/config</sv:value>
+        <sv:value>/modules/adminInterface/config/menu/config</sv:value>
       </sv:property>
       <sv:property sv:name="permissions" sv:type="Long">
         <sv:value>0</sv:value>
@@ -200,7 +200,7 @@
         <sv:value>2006-01-31T12:41:50.137+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="path" sv:type="String">
-        <sv:value>/modules/adminInterface/Config/menu/config/*</sv:value>
+        <sv:value>/modules/adminInterface/config/menu/config/*</sv:value>
       </sv:property>
       <sv:property sv:name="permissions" sv:type="Long">
         <sv:value>0</sv:value>
@@ -237,7 +237,7 @@
         <sv:value>2006-01-31T12:41:50.145+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="path" sv:type="String">
-        <sv:value>/modules/adminInterface/Config/menu/users</sv:value>
+        <sv:value>/modules/adminInterface/config/menu/users</sv:value>
       </sv:property>
       <sv:property sv:name="permissions" sv:type="Long">
         <sv:value>0</sv:value>
@@ -274,7 +274,7 @@
         <sv:value>2006-01-31T12:41:50.148+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="path" sv:type="String">
-        <sv:value>/modules/adminInterface/Config/menu/users/*</sv:value>
+        <sv:value>/modules/adminInterface/config/menu/users/*</sv:value>
       </sv:property>
       <sv:property sv:name="permissions" sv:type="Long">
         <sv:value>0</sv:value>
@@ -311,7 +311,7 @@
         <sv:value>2006-01-31T12:41:50.150+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="path" sv:type="String">
-        <sv:value>/modules/adminInterface/Config/menu</sv:value>
+        <sv:value>/modules/adminInterface/config/menu</sv:value>
       </sv:property>
       <sv:property sv:name="permissions" sv:type="Long">
         <sv:value>8</sv:value>
@@ -348,7 +348,7 @@
         <sv:value>2006-01-31T12:41:50.153+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="path" sv:type="String">
-        <sv:value>/modules/adminInterface/Config/menu/*</sv:value>
+        <sv:value>/modules/adminInterface/config/menu/*</sv:value>
       </sv:property>
       <sv:property sv:name="permissions" sv:type="Long">
         <sv:value>8</sv:value>
@@ -385,7 +385,7 @@
         <sv:value>2006-01-31T12:41:50.156+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="path" sv:type="String">
-        <sv:value>/modules/adminInterface/Config/menu/roles</sv:value>
+        <sv:value>/modules/adminInterface/config/menu/roles</sv:value>
       </sv:property>
       <sv:property sv:name="permissions" sv:type="Long">
         <sv:value>0</sv:value>
@@ -422,7 +422,7 @@
         <sv:value>2006-01-31T12:41:50.158+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="path" sv:type="String">
-        <sv:value>/modules/adminInterface/Config/menu/roles/*</sv:value>
+        <sv:value>/modules/adminInterface/config/menu/roles/*</sv:value>
       </sv:property>
       <sv:property sv:name="permissions" sv:type="Long">
         <sv:value>0</sv:value>
