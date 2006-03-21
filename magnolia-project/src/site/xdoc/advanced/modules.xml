@@ -73,25 +73,25 @@ public void register(String moduleName, String version, Content moduleNode, JarF
 # menu
 ######################
 
-modules.adminInterface.Config.menu.dms.label = DMS
-modules.adminInterface.Config.menu.dms.icon = /.resources/icons/24/folders.gif
-modules.adminInterface.Config.menu.dms.onclick = mgnlAdminCentralSwitchExtractTree('dms');
+modules.adminInterface.config.menu.dms.label = DMS
+modules.adminInterface.config.menu.dms.icon = /.resources/icons/24/folders.gif
+modules.adminInterface.config.menu.dms.onclick = mgnlAdminCentralSwitchExtractTree('dms');
 
 ######################
 # mapping
 ######################
 
-modules.dms.VirtualURIMapping.search.fromURI = /.magnolia/dms/search.html
-modules.dms.VirtualURIMapping.search.toURI = /admintemplates/dms/search.jsp
+modules.dms.virtualURIMapping.search.fromURI = /.magnolia/dms/search.html
+modules.dms.virtualURIMapping.search.toURI = /admintemplates/dms/search.jsp
 
-modules.dms.VirtualURIMapping.uploadzip.fromURI = /.magnolia/dms/uploadzip.html
-modules.dms.VirtualURIMapping.uploadzip.toURI = /admintemplates/dms/uploadzip.jsp
+modules.dms.virtualURIMapping.uploadzip.fromURI = /.magnolia/dms/uploadzip.html
+modules.dms.virtualURIMapping.uploadzip.toURI = /admintemplates/dms/uploadzip.jsp
 
-modules.dms.VirtualURIMapping.download.fromURI = /dms/*
-modules.dms.VirtualURIMapping.download.toURI = /admintemplates/dms/download.jsp
+modules.dms.virtualURIMapping.download.fromURI = /dms/*
+modules.dms.virtualURIMapping.download.toURI = /admintemplates/dms/download.jsp
 
-modules.dms.VirtualURIMapping.versions.fromURI = /.magnolia/dms/versions.html
-modules.dms.VirtualURIMapping.versions.toURI = /admintemplates/dms/versions.jsp
+modules.dms.virtualURIMapping.versions.fromURI = /.magnolia/dms/versions.html
+modules.dms.virtualURIMapping.versions.toURI = /admintemplates/dms/versions.jsp
 
 
 ######################
