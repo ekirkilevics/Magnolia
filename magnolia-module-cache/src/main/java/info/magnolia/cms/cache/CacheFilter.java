@@ -61,7 +61,6 @@ public class CacheFilter implements Filter {
 
             boolean canCompress = cacheManager.canCompress(request);
             boolean usedCache = cacheManager.streamFromCache(key, response, canCompress && clientAcceptsGzip(request));
-
             if (!usedCache && !isAlreadyFiltered(request) && cacheManager.isCacheable(request)) {
 
                 // mark the request as already filtered, avoid recursion
