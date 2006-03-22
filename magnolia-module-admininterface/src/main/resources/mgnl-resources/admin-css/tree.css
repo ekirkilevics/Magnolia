@@ -65,7 +65,7 @@ div.mgnlTreeMenu {
     z-index: 600;
 }
 
-div.mgnlTreeMenuItem,div.mgnlTreeMenuItem_DISABLED {
+div.mgnlTreeMenuItem, div.mgnlTreeMenuItem_DISABLED {
     width: 150px;
     padding-left: 4px;
     padding-right: 4px;
@@ -75,6 +75,9 @@ div.mgnlTreeMenuItem,div.mgnlTreeMenuItem_DISABLED {
     color: #000;
     font-size: 11px;
     cursor: default;
+}
+div.mgnlTreeMenuItem {
+	cursor: pointer;
 }
 
 div.mgnlTreeMenuLine {
@@ -102,6 +105,7 @@ div.mgnlTreeMenuItemX,div.mgnlTreeMenuItemX_DISABLED {
 
 div.mgnlTreeMenuItem_DISABLED {
     color: #999;
+    cursor: default;
 }
 
 .mgnlTreeLineInter {
@@ -129,7 +133,6 @@ div.mgnlTreeMenuItem_DISABLED {
     line-height: 15px;
     height: 15px;
     display: block;
-    cursor: pointer;
     white-space: nowrap;
 }
 
