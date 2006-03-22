@@ -13,6 +13,7 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.AccessDeniedException;
 
@@ -23,6 +24,8 @@ import java.util.List;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -123,5 +126,28 @@ public class ContentUtil {
             }
         }
         return nodes;
+    }
+
+    public static Content createPath(HierarchyManager hm, String path) throws AccessDeniedException,
+            PathNotFoundException, RepositoryException {
+        return ContentUtil.createPath(hm, path, ItemType.CONTENTNODE);
+    }
+
+    public static Content createPath(HierarchyManager hm, String path, ItemType type) throws AccessDeniedException,
+            PathNotFoundException, RepositoryException {
+        // remove leading /
+        path = StringUtils.removeStart(path, "/");
+    
+        String[] names = path.split("/"); //$NON-NLS-1$
+        Content node = hm.getRoot();
+        for (int i = 0; i < names.length; i++) {
+            String name = names[i];
+            if (node.hasContent(name)) {
+                node = node.getContent(name);
+            } else {
+                node = node.createContent(name, type);
+            }
+        }
+        return node;
     }
 }

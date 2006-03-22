@@ -2,7 +2,6 @@ package info.magnolia.cms.core.ie;
 
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MgnlContext;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.ie.filters.ImportXmlRootFilter;
@@ -10,13 +9,15 @@ import info.magnolia.cms.core.ie.filters.VersionFilter;
 import info.magnolia.cms.util.ContentUtil;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import javax.jcr.*;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
@@ -25,7 +26,7 @@ import java.util.Iterator;
 
 public class DataTransporter {
 
-    static Logger log = Logger.getLogger(DataTransporter.class.getName());
+    static Logger log = LoggerFactory.getLogger(DataTransporter.class.getName());
 
     /**
      * Perform import.
@@ -78,7 +79,12 @@ public class DataTransporter {
         }
 
         if (!hr.isExist(basepath) && createBasepathIfNotExist) {
-            checkAndCreateBasepath(hr, basepath, true);
+            try {
+                ContentUtil.createPath(hr, basepath, ItemType.CONTENT);
+            }
+            catch (RepositoryException e) {
+                log.error("can't create path [{}]", basepath);
+            }
         }
 
         Session session = ws.getSession();
@@ -139,46 +145,6 @@ public class DataTransporter {
             log.error(MessageFormat.format(
                     "Unable to save changes to the [{0}] repository due to a {1} Exception: {2}.", //$NON-NLS-1$
                     new Object[]{repository, e.getClass().getName(), e.getMessage()}), e);
-            throw new IOException(e.getMessage());
-        }
-    }
-
-
-    /**
-     * Check the existence of a node and create if if necessary
-     *
-     * @param hr        hierarchy manager used for creation
-     * @param basepath  the path of the node to create
-     * @param recursive recursively create parents if they do not exist
-     * @throws IOException if something happens.
-     */
-    public static void checkAndCreateBasepath(HierarchyManager hr, String basepath, boolean recursive) throws IOException {
-        try {
-            // If the path already exits do nothing
-            if (hr.isExist(basepath))
-                return;
-
-            // get parent and name of the new node
-            int slash = basepath.lastIndexOf("/");
-            if (slash < 0)
-                throw new Exception("Node has a strange path" + basepath);
-            String parent = basepath.substring(0, slash);
-            String name = basepath.substring(slash + 1);
-
-            // check if parent exist
-            if (!hr.isExist(parent) && recursive)
-                checkAndCreateBasepath(hr, parent, true);
-
-            // create new node from the parent since we know it exists
-            Content parentNode = hr.getContent(parent);
-            ContentUtil.getOrCreateContent(parentNode, name, ItemType.CONTENTNODE);
-
-            // save and logs
-            hr.save();
-            log.info("Created node at path:" + basepath);
-        }
-        catch (Exception e) {
-            log.warn("Could not create the basepath:[" + basepath + "]. Failing here.", e);
             throw new IOException(e.getMessage());
         }
     }

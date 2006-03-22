@@ -18,6 +18,8 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.*;
 import info.magnolia.cms.core.ie.DataTransporter;
 import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.util.ContentUtil;
+
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -99,32 +101,9 @@ public final class ModuleUtil {
 
             String name = StringUtils.substringAfterLast(key, "."); //$NON-NLS-1$
             String path = StringUtils.substringBeforeLast(key, ".").replace('.', '/'); //$NON-NLS-1$
-            Content node = createPath(hm, path);
+            Content node = ContentUtil.createPath(hm, path);
             node.createNodeData(name).setValue(value);
         }
-    }
-
-    public static Content createPath(HierarchyManager hm, String path) throws AccessDeniedException,
-            PathNotFoundException, RepositoryException {
-        return createPath(hm, path, ItemType.CONTENTNODE);
-    }
-
-    public static Content createPath(HierarchyManager hm, String path, ItemType type) throws AccessDeniedException,
-            PathNotFoundException, RepositoryException {
-        // remove leading /
-        path = StringUtils.removeStart(path, "/");
-
-        String[] names = path.split("/"); //$NON-NLS-1$
-        Content node = hm.getRoot();
-        for (int i = 0; i < names.length; i++) {
-            String name = names[i];
-            if (node.hasContent(name)) {
-                node = node.getContent(name);
-            } else {
-                node = node.createContent(name, type);
-            }
-        }
-        return node;
     }
 
     public static void bootstrap(String[] resourceNames) throws IOException, RegisterException {
@@ -170,7 +149,7 @@ public final class ModuleUtil {
 
                 // if the parent path not exists just create it
                 if (!pathName.equals("/")) {
-                    createPath(hm, pathName, ItemType.CONTENT);
+                    ContentUtil.createPath(hm, pathName, ItemType.CONTENT);
                 }
             }
             catch (Exception e) {
