@@ -15,7 +15,7 @@ public class CommandsMap {
         HierarchyManager hm = ContentRepository
                 .getHierarchyManager(ContentRepository.CONFIG);
         try {
-            Content root = hm.getContent("/modules/workflow/Config/commands/treeCommands");
+            Content root = hm.getContent("/modules/workflow/config/commands/treeCommands");
 
             Content c = root.getContent(commandName);
             if (c == null) {
