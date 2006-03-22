@@ -70,7 +70,7 @@ public class JCRFlowDefinition {
             // }
 
             // Content root = hm.getRoot();
-            Content root = hm.getContent("/modules/workflow/Config/flows/");
+            Content root = hm.getContent("/modules/workflow/config/flows/");
             Collection c = root.getChildren(ItemType.CONTENT);
             Iterator it = c.iterator();
             while (it.hasNext()) {
@@ -222,7 +222,7 @@ public class JCRFlowDefinition {
         try {
             HierarchyManager hm = ContentRepository
                     .getHierarchyManager(ContentRepository.CONFIG);
-            Content root = hm.getContent("/modules/workflow/Config/flows/");
+            Content root = hm.getContent("/modules/workflow/config/flows/");
             Content c = root.createContent(name, ItemType.CONTENT);
             ValueFactory vf = c.getJCRNode().getSession().getValueFactory();
             c.createNodeData("value", vf.createValue(flowDef));
