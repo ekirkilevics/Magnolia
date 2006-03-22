@@ -75,7 +75,7 @@ var contextPath = '<jsp:expression>request.getContextPath()</jsp:expression>';
     };
 
     for(int i=0; i<includes.length; i++){
-        InputStream in = getClass().getResourceAsStream("/mgnl-resources/admin-js/" + includes[i]);
+        InputStream in = ClasspathResourcesUtil.getStream("/mgnl-resources/admin-js/" + includes[i]);
         IOUtils.copy(in, out);
     }
     ]]>
