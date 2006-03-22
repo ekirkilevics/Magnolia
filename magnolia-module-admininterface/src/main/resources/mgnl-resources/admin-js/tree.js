@@ -10,9 +10,10 @@
     //### name: the name of the javascript tree
     //### handlerName: the name of the tree handler
     //### browseMode: true if the tree is showed in the link browser.
+    //### functionBarName: the name of the functionBar javascript object (needs call to refresh on selectNode)
     //#################
 
-    function mgnlTree(repository, path, name, height, handlerName, browseMode) {
+    function mgnlTree(repository, path, name, height, handlerName, browseMode, functionBarName) {
         if(handlerName == null){
             handlerName = repository;
         }
@@ -26,6 +27,7 @@
         this.name=name;
         this.handlerName = handlerName;
         this.browseMode = browseMode;
+        this.functionBarName = functionBarName;
         mgnlDebug("new mgnlTree", "tree", this);
 
         document.write('<div id="'+name+'_'+path+'_DivSub" style="display:none;"></div>');
@@ -159,6 +161,9 @@
             if(this.addressBar)
                 this.addressBar.value=id;
             this.selectedNode=sNode;
+
+            // refresh functionBar
+            if (this.functionBarName) eval (this.functionBarName).refresh ();
             }
         }
 
@@ -436,6 +441,9 @@
         var divMain=document.getElementById(this.selectedNode.divMainId);
         divMain.style.backgroundColor="";
         this.selectedNode=this.getNode(this.path); //root
+
+        // refresh functionBar
+        if (this.functionBarName) eval (this.functionBarName).refresh ();
         }
 
 
