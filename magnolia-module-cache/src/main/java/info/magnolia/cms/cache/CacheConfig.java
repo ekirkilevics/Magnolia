@@ -3,6 +3,7 @@ package info.magnolia.cms.cache;
 import info.magnolia.cms.beans.config.ConfigurationException;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.core.Path;
 import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.cms.util.UrlPattern;
 
@@ -26,6 +27,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Andreas Brenk
  * @author Fabrizio Giustina
  * @since 3.0
+ * @version $Id: $
  */
 public class CacheConfig {
 
@@ -87,7 +89,7 @@ public class CacheConfig {
      */
     public boolean isUriCacheable(HttpServletRequest request) {
 
-        String uri = request.getRequestURI();
+        String uri = Path.getURI(request);
         boolean isAllowed = false;
         int lastMatchedPatternlength = 0;
 
@@ -106,7 +108,7 @@ public class CacheConfig {
     }
 
     /**
-     * @todo refactor
+     * todo refactor
      */
     private Map cacheCacheableURIMappings(Content nodeList, Map mappings, boolean allow) {
         for (Iterator it = nodeList.getChildren().iterator(); it.hasNext();) {
@@ -164,7 +166,7 @@ public class CacheConfig {
     }
 
     /**
-     * @todo refactor
+     * todo refactor
      */
     private Map updateCompressionList(Content list) {
         Map compressionList = new HashMap();
