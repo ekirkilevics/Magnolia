@@ -1,5 +1,7 @@
 package info.magnolia.cms.cache;
 
+import info.magnolia.cms.core.Path;
+
 import java.io.Serializable;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +21,7 @@ public class CacheKey implements Serializable {
     private String key;
 
     public CacheKey(HttpServletRequest request) {
-        key = request.getRequestURI();
+        key = Path.getURI(request);
     }
 
     /**
