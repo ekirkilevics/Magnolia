@@ -13,6 +13,7 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.SimpleUrlPattern;
@@ -84,7 +85,7 @@ public final class VirtualURIManager extends ObservedManager {
     protected void onRegister(Content node) {
         try {
             log.info("Config : Loading VirtualMap - " + node.getHandle()); //$NON-NLS-1$
-            Collection list = node.getChildren();
+            Collection list = node.getChildren(ItemType.CONTENTNODE);
             Collections.sort((List) list, new StringComparator("fromURI")); //$NON-NLS-1$
             Iterator it = list.iterator();
             while (it.hasNext()) {
