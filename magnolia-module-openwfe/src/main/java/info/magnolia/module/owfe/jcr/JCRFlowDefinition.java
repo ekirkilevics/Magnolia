@@ -4,7 +4,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.module.owfe.flow.FlowDefServlet;
+import info.magnolia.module.owfe.servlets.FlowDefServlet;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -123,7 +123,7 @@ public class JCRFlowDefinition {
         try {
             HierarchyManager hm = ContentRepository
                     .getHierarchyManager(ContentRepository.CONFIG);
-            Content root = hm.getContent("/modules/workflow/Config/flows/");
+            Content root = hm.getContent("/modules/workflow/config/flows/");
 
             // Content root = hm.getRoot();
 
@@ -220,7 +220,6 @@ public class JCRFlowDefinition {
 
         // HierarchyManager hm = OWFEEngine.getOWFEHierarchyManager("flowdef");
         try {
-            // Content root = hm.getRoot();
             HierarchyManager hm = ContentRepository
                     .getHierarchyManager(ContentRepository.CONFIG);
             Content root = hm.getContent("/modules/workflow/Config/flows/");
@@ -231,8 +230,6 @@ public class JCRFlowDefinition {
             log.info("add ok");
         } catch (Exception e) {
             log.error("add flow failed", e);
-            // Log.error("owfe", e);
-            // log.error("exception:" + e);
         }
         return null;
     }

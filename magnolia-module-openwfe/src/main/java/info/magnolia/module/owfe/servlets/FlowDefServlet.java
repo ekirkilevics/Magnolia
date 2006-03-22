@@ -1,4 +1,4 @@
-package info.magnolia.module.owfe.flow;
+package info.magnolia.module.owfe.servlets;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.module.owfe.OWFEBean;

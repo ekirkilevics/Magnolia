@@ -12,4 +12,29 @@
       <version>3.0</version>
     </dependency>
   </dependencies>
+  <servlets>
+      <servlet>
+          <class>info.magnolia.module.owfe.servlets.FlowDefServlet</class>
+          <mappings>
+              <mapping>/FlowDef</mapping>
+          </mappings>
+          <name>FlowDef</name>
+          <comment>Servlet to see flow definition.</comment>
+          <params>
+          <!--              <param></param> -->
+          </params>
+      </servlet>
+
+      <servlet>
+          <class>info.magnolia.module.owfe.servlets.FlowDefUpload</class>
+          <mappings>
+              <mapping>/FlowDefUpload</mapping>
+          </mappings>
+          <name>FlowDefUpload</name>
+          <comment>Servlet to upload flow definition.</comment>
+          <params>
+          <!--              <param></param> -->
+          </params>
+      </servlet>
+  </servlets>
 </module>

@@ -1,7 +1,8 @@
 package info.magnolia.module.owfe;
 
 import info.magnolia.cms.util.MailHandler;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * One time usage thread to send an async email
@@ -9,11 +10,12 @@ import org.apache.log4j.Logger;
  * @author niko
  */
 public class MailSender implements Runnable {
-    static Logger logt = Logger.getLogger("MailSender");
+    static Logger logt = LoggerFactory.getLogger(MailSender.class);
+
     private String smtpHost = "localhost";
     private String from = "MagnoliaWorkflow";
     private String subject = "Workflow Request";
-    private String list = "jackie_juju@hotmail.com";
+    private String list = "niko@macnica.com";
     private String pathSelected;
 
     public MailSender(String pathSelectedP) {

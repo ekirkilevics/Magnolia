@@ -16,24 +16,17 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
      */
     private static Logger log = Logger.getLogger(AbstractEmbeddedParticipant.class);
     JCRWorkItemAPI storage = null;
-//    CommandAgent commandAgent = new CommandAgent();
-//    JavaAgentBuilder jab = new JavaAgentBuilder();
-
     public MgnlParticipant() throws Exception {
 
         super();
         storage = new JCRWorkItemAPI();
         log.debug("storage = " + storage);
-
-//		commandAgent.init("command-.*", new ApplicationContext(),  new java.util.HashMap(1));
-        // TODO Auto-generated constructor stub
     }
 
     public MgnlParticipant(String arg0) throws Exception {
         super(arg0);
         storage = new JCRWorkItemAPI();
         log.debug("storage = " + storage);
-        // TODO Auto-generated constructor stub
     }
 
     public void consume(WorkItem wi) throws Exception {

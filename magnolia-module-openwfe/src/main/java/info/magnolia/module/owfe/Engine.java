@@ -23,8 +23,8 @@ import info.magnolia.cms.core.search.QueryResult;
 import info.magnolia.cms.module.ModuleUtil;
 import info.magnolia.cms.module.RegisterException;
 import info.magnolia.module.admininterface.AbstractAdminModule;
-import info.magnolia.module.owfe.flow.FlowDefServlet;
-import info.magnolia.module.owfe.flow.FlowDefUpload;
+import info.magnolia.module.owfe.servlets.FlowDefServlet;
+import info.magnolia.module.owfe.servlets.FlowDefUpload;
 import org.apache.log4j.Logger;
 
 import javax.jcr.Node;
