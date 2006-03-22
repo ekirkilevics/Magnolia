@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- main definition -->
-<!ELEMENT module (name, class, version, description, short-description, dependencies, repositories, servlets)>
+<!ELEMENT module (name, displayName, class, version, description, dependencies, repositories, servlets)>
 <!ELEMENT name (#PCDATA)>
+<!ELEMENT displayName (#PCDATA)>
 <!ELEMENT version (#PCDATA)>
 <!ELEMENT description (#PCDATA)>
-<!ELEMENT short-description (#PCDATA)>
 <!ELEMENT class (#PCDATA)>
 
 <!-- dependencies to other modules -->

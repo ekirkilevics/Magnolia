@@ -2,7 +2,6 @@
 	<element name="module">
 		<element name="class" property="className"/> 
 		<element name="display-name" property="displayName"/> 
-		<element name="short-description" property="shortDescription"/>
 		<addDefaults/>
 	</element>
 </info>

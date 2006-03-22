@@ -64,11 +64,6 @@ public class ModuleDefinition {
     private String description;
 
     /**
-     * Short description of this module (about 40 chars)
-     */
-    private String shortDescription;
-
-    /**
      * The className of the engine
      */
     private String className;
@@ -218,20 +213,6 @@ public class ModuleDefinition {
      */
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    /**
-     * @return Returns the shortDescription.
-     */
-    public String getShortDescription() {
-        return this.shortDescription;
-    }
-
-    /**
-     * @param shortDescription The shortDescription to set.
-     */
-    public void setShortDescription(String shortDescription) {
-        this.shortDescription = shortDescription;
     }
 
     /**

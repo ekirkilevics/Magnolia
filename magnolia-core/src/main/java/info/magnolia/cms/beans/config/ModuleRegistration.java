@@ -275,7 +275,7 @@ public class ModuleRegistration {
             // first installation
             catch (PathNotFoundException e1) {
                 moduleNode = modulesNode.createContent(def.getName());
-                ModuleUtil.createMinimalConfiguration(moduleNode, def.getName(), def.getClassName(), def.getVersion());
+                ModuleUtil.createMinimalConfiguration(moduleNode, def.getName(), def.getDisplayName(), def.getClassName(), def.getVersion());
                 registerState = Module.REGISTER_STATE_INSTALLATION;
             }
 

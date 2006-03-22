@@ -65,7 +65,7 @@ public class ModuleConfig {
      * @return description
      */
     public String getDescription() {
-        return this.getModuleDefinition().getShortDescription();
+        return this.getModuleDefinition().getDisplayName();
     }
 
     /**

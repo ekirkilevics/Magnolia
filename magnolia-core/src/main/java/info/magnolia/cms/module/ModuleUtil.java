@@ -260,11 +260,11 @@ public final class ModuleUtil {
      * @throws PathNotFoundException exception
      * @throws RepositoryException   exception
      */
-    public static Content createMinimalConfiguration(Content node, String name, String className, String version)
+    public static Content createMinimalConfiguration(Content node, String name, String displayName, String className, String version)
             throws AccessDeniedException, PathNotFoundException, RepositoryException {
         node.createNodeData("version").setValue(version); //$NON-NLS-1$
         node.createNodeData("name").setValue(name); //$NON-NLS-1$
-        node.createNodeData("description");
+        node.createNodeData("displayName").setValue(displayName); //$NON-NLS-1$
         node.createNodeData("class").setValue(className); //$NON-NLS-1$
         node.createContent("config"); //$NON-NLS-1$
         Content license = node.createContent("license", ItemType.CONTENTNODE); //$NON-NLS-1$
