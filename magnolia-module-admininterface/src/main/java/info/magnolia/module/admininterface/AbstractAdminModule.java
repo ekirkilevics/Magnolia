@@ -18,28 +18,20 @@ import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.cms.beans.config.VirtualURIManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.dialog.ControlsManager;
-import info.magnolia.cms.module.ModuleImpl;
+import info.magnolia.cms.module.AbstractModule;
 import info.magnolia.cms.module.InitializationException;
 import info.magnolia.cms.module.InvalidConfigException;
-import info.magnolia.cms.module.ModuleDefinition;
-import info.magnolia.cms.module.ModuleUtil;
-import info.magnolia.cms.module.RegisterException;
-import info.magnolia.cms.module.RepositoryDefinition;
-import info.magnolia.cms.module.ServletDefinition;
-import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.cms.util.ContentUtil;
-
-import java.util.Iterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 /**
- * Default implementation. Imports bootstrap files, registers dialogs ,...
+ * Default implementation. registers dialogs , paragraphs, ...
  * @author philipp
  */
-public abstract class AbstractAdminModule extends ModuleImpl {
+public abstract class AbstractAdminModule extends AbstractModule {
 
     /**
      * Logger
@@ -47,12 +39,17 @@ public abstract class AbstractAdminModule extends ModuleImpl {
     Logger log = LoggerFactory.getLogger(AbstractAdminModule.class);
 
     /**
+     * The node containing the configuration for this module
+     */
+    private Content configNode;
+
+    /**
      * Initialize the module. Registers the dialogs, paragraphs and templates of this modules. Calls the abstract onInit
      * method.
      * @throws InitializationException
      */
     public final void init(Content configNode) throws InvalidConfigException, InitializationException {
-        super.init(configNode);
+        this.setConfigNode(configNode);
         try {
             Content node;
 
@@ -108,70 +105,22 @@ public abstract class AbstractAdminModule extends ModuleImpl {
     }
 
     /**
-     * Calles onRegister if not yet installed after it loaded the bootstrapfiles of this module
-     */
-    public final void register(ModuleDefinition def, Content moduleNode, int registerState) throws RegisterException {
-        super.register(def, moduleNode, registerState);
-
-        if (registerState == REGISTER_STATE_INSTALLATION || registerState == REGISTER_STATE_NEW_VERSION) {
-            try {
-
-                final String moduleName = this.getName();
-
-                // bootstrap the module files
-                String[] moduleBootstrap = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
-
-                    public boolean accept(String name) {
-                        return name.startsWith("/mgnl-bootstrap/" + moduleName) && name.endsWith(".xml");
-                    }
-                });
-
-                ModuleUtil.bootstrap(moduleBootstrap);
-
-                // register servlets
-                for (Iterator iter = def.getServlets().iterator(); iter.hasNext();) {
-                    ServletDefinition servlet = (ServletDefinition) iter.next();
-                    ModuleUtil.registerServlet(servlet);
-                    this.setRestartNeeded(true);
-                }
-
-                // register repositories
-                for (Iterator iter = def.getRepositories().iterator(); iter.hasNext();) {
-                    RepositoryDefinition repDef = (RepositoryDefinition) iter.next();
-                    ModuleUtil.registerRepository(repDef.getName());
-                    this.setRestartNeeded(true);
-                }
-
-                // copy the content of mgnl-files to the webapp
-                String[] moduleFiles = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
-
-                    public boolean accept(String name) {
-                        return name.startsWith("/mgnl-files/templates/" + moduleName)
-                            || name.startsWith("/mgnl-files/docroot/" + moduleName)
-                            || name.startsWith("/mgnl-files/admintemplates/" + moduleName);
-                    };
-                });
-                
-                ModuleUtil.installFiles(moduleFiles, "/mgnl-files/");
-
-                // let the module do it's stuff
-                onRegister(registerState);
-            }
-            catch (Exception e) {
-                throw new RegisterException("can't register module " + this.definition.getName(), e);
-            }
-        }
-    }
-
-    /**
-     * Template pattern. Implement to performe some module specific stuff
-     * @param registerState
-     */
-    protected abstract void onRegister(int registerState) throws RegisterException;
-
-    /**
      * Template pattern. Implement to perfome somem module specific stuff
      */
     protected abstract void onInit() throws InitializationException;
+
+    /**
+     * @return Returns the config node of the modules node.
+     */
+    public Content getConfigNode() {
+        return this.configNode;
+    }
+
+    /**
+     * @param configNode The configNode to set.
+     */
+    protected void setConfigNode(Content configNode) {
+        this.configNode = configNode;
+    }
 
 }
