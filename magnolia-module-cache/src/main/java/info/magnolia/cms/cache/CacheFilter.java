@@ -79,6 +79,9 @@ public class CacheFilter implements Filter {
                     }
                 }
                 return;
+            } else if (usedCache) {
+                // dont forward, response has already been commited if usedCache is true.
+                return;
             }
         }
 
