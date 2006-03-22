@@ -16,7 +16,9 @@ import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.config.Subscriber;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
+import info.magnolia.cms.gui.control.ContextMenu;
 import info.magnolia.cms.gui.control.ContextMenuItem;
+import info.magnolia.cms.gui.control.FunctionBarItem;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.i18n.Messages;
@@ -54,8 +56,7 @@ public class AdminTreeRoles extends AdminTreeMVCHandler {
         tree.setIconPage(Tree.ICONDOCROOT + "hat_white.gif"); //$NON-NLS-1$
         if (Server.isAdmin()) {
             tree.setIconOndblclick("mgnlTreeMenuOpenDialog(" //$NON-NLS-1$
-                + tree.getJavascriptTree()
-                + ",'.magnolia/dialogs/roleedit.html');"); //$NON-NLS-1$
+                + tree.getJavascriptTree() + ",'.magnolia/dialogs/roleedit.html');"); //$NON-NLS-1$
         }
         tree.addItemType(ItemType.CONTENT);
 
@@ -105,61 +106,49 @@ public class AdminTreeRoles extends AdminTreeMVCHandler {
     protected void prepareContextMenu(Tree tree, HttpServletRequest request) {
         Messages msgs = MessagesManager.getMessages();
 
-        ContextMenuItem menuOpen = new ContextMenuItem();
+        ContextMenuItem menuOpen = new ContextMenuItem("edit");
         menuOpen.setLabel(msgs.get("tree.roles.menu.edit")); //$NON-NLS-1$
         menuOpen.setIcon(request.getContextPath() + "/.resources/icons/16/hat_white.gif"); //$NON-NLS-1$
         menuOpen.setOnclick("mgnlTreeMenuOpenDialog(" //$NON-NLS-1$
-            + tree.getJavascriptTree()
-            + ",'.magnolia/dialogs/roleedit.html');"); //$NON-NLS-1$
+            + tree.getJavascriptTree() + ",'.magnolia/dialogs/roleedit.html');"); //$NON-NLS-1$
         menuOpen.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
-            + tree.getJavascriptTree()
-            + ")"); //$NON-NLS-1$
-        ContextMenuItem menuNewPage = new ContextMenuItem();
+            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+        ContextMenuItem menuNewPage = new ContextMenuItem("new");
         menuNewPage.setLabel(msgs.get("tree.roles.menu.new")); //$NON-NLS-1$
         menuNewPage.setIcon(request.getContextPath() + "/.resources/icons/16/hat_white_add.gif"); //$NON-NLS-1$
         menuNewPage.setOnclick(tree.getJavascriptTree() + ".createRootNode('" //$NON-NLS-1$
-            + ItemType.CONTENT.getSystemName()
-            + "');"); //$NON-NLS-1$
-        ContextMenuItem menuDelete = new ContextMenuItem();
+            + ItemType.CONTENT.getSystemName() + "');"); //$NON-NLS-1$
+        ContextMenuItem menuDelete = new ContextMenuItem("delete");
         menuDelete.setLabel(msgs.get("tree.roles.menu.delete")); //$NON-NLS-1$
         menuDelete.setIcon(request.getContextPath() + "/.resources/icons/16/delete2.gif"); //$NON-NLS-1$
         menuDelete.setOnclick(tree.getJavascriptTree() + ".deleteNode();"); //$NON-NLS-1$
         menuDelete.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
-            + tree.getJavascriptTree()
-            + ")"); //$NON-NLS-1$
-        ContextMenuItem menuMove = new ContextMenuItem();
+            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+        ContextMenuItem menuMove = new ContextMenuItem("move");
         menuMove.setLabel(msgs.get("tree.roles.menu.move")); //$NON-NLS-1$
         menuMove.setIcon(request.getContextPath() + "/.resources/icons/16/up_down.gif"); //$NON-NLS-1$
         menuMove.setOnclick(tree.getJavascriptTree() + ".cutNode();"); //$NON-NLS-1$
         menuMove.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
-            + tree.getJavascriptTree()
-            + ")"); //$NON-NLS-1$
-        ContextMenuItem menuCopy = new ContextMenuItem();
+            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+        ContextMenuItem menuCopy = new ContextMenuItem("copy");
         menuCopy.setLabel(msgs.get("tree.roles.menu.copy")); //$NON-NLS-1$
         menuCopy.setIcon(request.getContextPath() + "/.resources/icons/16/copy.gif"); //$NON-NLS-1$
         menuCopy.setOnclick(tree.getJavascriptTree() + ".copyNode();"); //$NON-NLS-1$
         menuCopy.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
-            + tree.getJavascriptTree()
-            + ")"); //$NON-NLS-1$
-        ContextMenuItem menuRefresh = new ContextMenuItem();
-        menuRefresh.setLabel(msgs.get("tree.menu.refresh")); //$NON-NLS-1$
-        menuRefresh.setIcon(request.getContextPath() + "/.resources/icons/16/refresh.gif"); //$NON-NLS-1$
-        menuRefresh.setOnclick(tree.getJavascriptTree() + ".refresh();"); //$NON-NLS-1$
+            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
 
-        ContextMenuItem menuActivateExcl = new ContextMenuItem();
+        ContextMenuItem menuActivateExcl = new ContextMenuItem("activate");
         menuActivateExcl.setLabel(msgs.get("tree.roles.menu.activate")); //$NON-NLS-1$
         menuActivateExcl.setIcon(request.getContextPath() + "/.resources/icons/16/arrow_right_green.gif"); //$NON-NLS-1$
         menuActivateExcl.setOnclick(tree.getJavascriptTree() + ".activateNode(" + Tree.ACTION_ACTIVATE + ",false);"); //$NON-NLS-1$ //$NON-NLS-2$
         menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
-            + tree.getJavascriptTree()
-            + ")"); //$NON-NLS-1$
-        ContextMenuItem menuDeActivate = new ContextMenuItem();
+            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+        ContextMenuItem menuDeActivate = new ContextMenuItem("deactivate");
         menuDeActivate.setLabel(msgs.get("tree.roles.menu.deactivate")); //$NON-NLS-1$
         menuDeActivate.setIcon(request.getContextPath() + "/.resources/icons/16/arrow_left_red.gif"); //$NON-NLS-1$
         menuDeActivate.setOnclick(tree.getJavascriptTree() + ".deActivateNode(" + Tree.ACTION_DEACTIVATE + ");"); //$NON-NLS-1$ //$NON-NLS-2$
         menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
-            + tree.getJavascriptTree()
-            + ")"); //$NON-NLS-1$
+            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
 
         if (!Server.isAdmin()) {
             menuOpen.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
@@ -181,9 +170,46 @@ public class AdminTreeRoles extends AdminTreeMVCHandler {
             tree.addMenuItem(null); // line
             tree.addMenuItem(menuActivateExcl);
             tree.addMenuItem(menuDeActivate);
-
-            tree.addMenuItem(null); // line
         }
-        tree.addMenuItem(menuRefresh);
+        else {
+            ContextMenuItem menuRefresh = new ContextMenuItem("refresh");
+            menuRefresh.setLabel(msgs.get("tree.menu.refresh")); //$NON-NLS-1$
+            menuRefresh.setIcon(request.getContextPath() + "/.resources/icons/16/refresh.gif"); //$NON-NLS-1$
+            menuRefresh.setOnclick(tree.getJavascriptTree() + ".refresh();"); //$NON-NLS-1$
+            tree.addMenuItem(menuRefresh);
+        }
+    }
+
+    /**
+     * @see info.magnolia.module.admininterface.AdminTreeMVCHandler#prepareFunctionBar(info.magnolia.cms.gui.control.Tree,
+     * javax.servlet.http.HttpServletRequest)
+     */
+    protected void prepareFunctionBar(Tree tree, HttpServletRequest request) {
+        Messages msgs = MessagesManager.getMessages();
+        ContextMenu cm = tree.getMenu();
+        ContextMenuItem cmItem = cm.getMenuItemByName("edit");
+        if (cmItem != null) {
+            tree.addFunctionBarItem(new FunctionBarItem(cmItem));
+        }
+        cmItem = cm.getMenuItemByName("new");
+        if (cmItem != null) {
+            tree.addFunctionBarItem(new FunctionBarItem(cmItem));
+        }
+        // null is separator :)
+        tree.addFunctionBarItem(null);
+        cmItem = cm.getMenuItemByName("activate");
+        if (cmItem != null) {
+            tree.addFunctionBarItem(new FunctionBarItem(cmItem));
+        }
+        cmItem = cm.getMenuItemByName("deactivate");
+        if (cmItem != null) {
+            tree.addFunctionBarItem(new FunctionBarItem(cmItem));
+        }
+        tree.addFunctionBarItem(null);
+        ContextMenuItem menuRefresh = new ContextMenuItem("refresh");
+        menuRefresh.setLabel(msgs.get("tree.menu.refresh")); //$NON-NLS-1$
+        menuRefresh.setIcon(request.getContextPath() + "/.resources/icons/16/refresh.gif"); //$NON-NLS-1$
+        menuRefresh.setOnclick(tree.getJavascriptTree() + ".refresh();"); //$NON-NLS-1$
+        tree.addFunctionBarItem(new FunctionBarItem(menuRefresh));
     }
 }
