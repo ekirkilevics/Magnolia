@@ -44,16 +44,27 @@ mgnlContextMenu.prototype.show = function(event){
                     }
                 }
 
-            if (disabled)
-                {
+            img = item.div.firstChild;
+            if (disabled) {
                 item.div.className+="_DISABLED";
                 item.div.onclick="";
-                }
-            else
-                {
-                item.div.onclick=item.onclick;
+                // change image path to disabled
+                if (img.tagName.toUpperCase () == 'IMG') {
+                	if (img.src.substr (img.src.length - '_inactive.gif'.length) != '_inactive.gif') {
+                		img.src = img.src.substr (0, img.src.length - '.gif'.length) + '_inactive.gif';
+                	}
                 }
             }
+            else {
+                item.div.onclick=item.onclick;
+                // change image path to enabled
+                if (img.tagName.toUpperCase () == 'IMG') {
+                	if (img.src.substr (img.src.length - '_inactive.gif'.length) == '_inactive.gif') {
+                		img.src = img.src.substr (0, img.src.length - '_inactive.gif'.length) + '.gif';
+                	}
+                }
+            }
+        }
         var pos=mgnlGetMousePos(event);
 
         var left=pos.x+2;
