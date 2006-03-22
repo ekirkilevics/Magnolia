@@ -13,6 +13,7 @@
 package info.magnolia.cms.gui.control;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -58,6 +59,21 @@ public class ContextMenu extends ControlSuper {
      */
     public ContextMenuItem getMenuItem(int col) {
         return (ContextMenuItem) this.getMenuItems().get(col);
+    }
+
+    /**
+     * @param col index
+     * @return the item
+     */
+    public ContextMenuItem getMenuItemByName(String name) {
+        java.util.List menuItems = this.getMenuItems ();
+        for (Iterator iter = menuItems.iterator(); iter.hasNext();) {
+            ContextMenuItem menuItem = (ContextMenuItem) iter.next();
+            if (menuItem != null && menuItem.getName() != null && menuItem.getName() == name){
+                return menuItem;
+            }
+        }
+        return null;
     }
 
     /**

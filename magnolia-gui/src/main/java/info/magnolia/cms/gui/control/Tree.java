@@ -119,6 +119,8 @@ public class Tree extends ControlSuper {
 
     // private List menuItems = new ArrayList();
     private ContextMenu menu;
+    // the bar at the bottom of the page holding some function buttons
+    private FunctionBar functionBar;
 
     private boolean snippetMode = true;
 
@@ -142,6 +144,7 @@ public class Tree extends ControlSuper {
         this.setRepository(repository);
         this.setRequest(request);
         this.setMenu(new ContextMenu(this.getJavascriptTree()));
+        this.setFunctionBar(new FunctionBar(this.getJavascriptTree()));
 
         this.setHierarchyManager(MgnlContext.getHierarchyManager(this.getRepository()));
     }
@@ -863,15 +866,17 @@ public class Tree extends ControlSuper {
         // include the tree footer / menu divs
         html.append(FreeMarkerUtil.process("info/magnolia/cms/gui/control/TreeFooter.html", params));
 
-        // include the Footer Bar
+        // render js for tree and context menu but not for the functionBar
+        html.append(FreeMarkerUtil.process("info/magnolia/cms/gui/control/TreeJavascript.html", params));
+
+        // include the footer (functionBar or AddressBar)
         if (!this.isBrowseMode()) {
-            html.append(FreeMarkerUtil.process("info/magnolia/cms/gui/control/FunctionsBar.html", params));
+            html.append(this.getFunctionBar().getHtml());
         }
         // include the Address bar
         else {
             html.append(FreeMarkerUtil.process("info/magnolia/cms/gui/control/TreeAddressBar.html", params));
         }
-        html.append(FreeMarkerUtil.process("info/magnolia/cms/gui/control/TreeJavascript.html", params));
 
         return html.toString();
     }
@@ -1287,9 +1292,17 @@ public class Tree extends ControlSuper {
     public void addMenuItem(ContextMenuItem item) {
         menu.addMenuItem(item);
     }
+    
+    /**
+     * @param item FunctionBarItem
+     */
+    public void addFunctionBarItem(FunctionBarItem item) {
+        if (item != null) item.setJavascriptMenuName(functionBar.getJavascriptName());
+        functionBar.addMenuItem (item);
+    }
 
     /**
-     * Add a separator line between menu items.
+     * Add a separator line between context menu items.
      */
     public void addSeparator() {
         menu.addMenuItem(null);
@@ -1299,8 +1312,22 @@ public class Tree extends ControlSuper {
         return this.menu;
     }
 
+    /**
+     * @return the function bar object
+     */
+    public FunctionBar getFunctionBar() {
+        return this.functionBar;
+    }
+
     protected void setMenu(ContextMenu menu) {
         this.menu = menu;
+    }
+
+    /**
+     * @param functionBar the function bar object
+     */
+    protected void setFunctionBar(FunctionBar functionBar) {
+        this.functionBar = functionBar;
     }
 
     /**

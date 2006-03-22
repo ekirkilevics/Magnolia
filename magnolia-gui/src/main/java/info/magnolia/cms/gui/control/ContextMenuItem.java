@@ -34,6 +34,10 @@ public class ContextMenuItem extends ControlSuper {
 
     public ContextMenuItem() {
     }
+ 
+    public ContextMenuItem(String name) {
+        this.setName(name);
+    }
 
     public void setOnclick(String s) {
         this.onclick = s;
