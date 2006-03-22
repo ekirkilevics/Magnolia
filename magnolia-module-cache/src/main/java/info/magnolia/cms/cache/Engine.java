@@ -3,8 +3,7 @@ package info.magnolia.cms.cache;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.module.InitializationException;
 import info.magnolia.cms.module.InvalidConfigException;
-import info.magnolia.cms.module.ModuleDefinition;
-import info.magnolia.cms.module.ModuleImpl;
+import info.magnolia.cms.module.AbstractModule;
 import info.magnolia.cms.module.RegisterException;
 
 import org.apache.commons.logging.Log;
@@ -15,7 +14,7 @@ import org.apache.commons.logging.LogFactory;
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
-public class Engine extends ModuleImpl {
+public class Engine extends AbstractModule {
 
     /**
      * Logger.
@@ -28,7 +27,6 @@ public class Engine extends ModuleImpl {
      * Init cache manager
      */
     public void init(Content configNode) throws InvalidConfigException, InitializationException {
-        super.init(configNode);
         this.cacheManager.init(configNode);
         this.setInitialized(true);
     }
@@ -40,8 +38,11 @@ public class Engine extends ModuleImpl {
         this.cacheManager.stop();
     }
 
-    public void register(ModuleDefinition def, Content moduleNode, int registerState) throws RegisterException {
-        super.register(def, moduleNode, registerState);
+    /**
+     * @see info.magnolia.cms.module.AbstractModule#onRegister(int)
+     */
+    protected void onRegister(int registerState) throws RegisterException {
+        // nothing todo
     }
 
 }
