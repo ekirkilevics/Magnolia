@@ -16,6 +16,7 @@ package info.magnolia.module.admininterface;
 import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.beans.config.Subscriber;
 import info.magnolia.cms.exchange.ExchangeException;
+import info.magnolia.cms.gui.control.ContextMenuItem;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.MessagesManager;
@@ -431,6 +432,14 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
     protected abstract void prepareContextMenu(Tree tree, HttpServletRequest request);
 
     /**
+     * Prepare the functionbar (footerbar) of the tree. This is called during renderTree
+     * @param tree
+     * @param request
+     * @todo used to be abstract
+     */
+    protected abstract void prepareFunctionBar(Tree tree, HttpServletRequest request);
+    
+    /**
      * Create the html for the tree. Calls tree.getHtml after calling prepareTree.
      * @param html
      */
@@ -459,6 +468,7 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
 
         prepareTree(tree, request);
         prepareContextMenu(getTree(), request);
+        prepareFunctionBar(getTree(), request);
 
         if (!snippetMode) {
             html.append("<div id=\"" + tree.getJavascriptTree() + "_DivSuper\" style=\"display:block;\">"); //$NON-NLS-1$ //$NON-NLS-2$
