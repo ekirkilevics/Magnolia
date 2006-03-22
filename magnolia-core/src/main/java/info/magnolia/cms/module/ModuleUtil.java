@@ -267,7 +267,6 @@ public final class ModuleUtil {
         node.createNodeData("description");
         node.createNodeData("class").setValue(className); //$NON-NLS-1$
         node.createContent("config"); //$NON-NLS-1$
-        node.createContent("virtualURIMapping", ItemType.CONTENT); //$NON-NLS-1$
         Content license = node.createContent("license", ItemType.CONTENTNODE); //$NON-NLS-1$
         license.createNodeData("key"); //$NON-NLS-1$
         license.createNodeData("owner"); //$NON-NLS-1$
