@@ -1,11 +1,14 @@
 package info.magnolia.cms.cache;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.module.InitializationException;
 import info.magnolia.cms.module.InvalidConfigException;
 import info.magnolia.cms.module.AbstractModule;
 import info.magnolia.cms.module.RegisterException;
+import info.magnolia.cms.util.NodeDataUtil;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -42,7 +45,16 @@ public class Engine extends AbstractModule {
      * @see info.magnolia.cms.module.AbstractModule#onRegister(int)
      */
     protected void onRegister(int registerState) throws RegisterException {
-        // nothing todo
+        // set the cache inactive if this is an admin instance (default)
+        try{
+            boolean admin = BooleanUtils.toBoolean(NodeDataUtil.getString(ContentRepository.CONFIG, "/server/admin", "true"));
+            if(admin){
+                NodeDataUtil.getOrCreate(this.getModuleNode().getContent("config"), "active").setValue(false);
+            }
+        }
+        catch(Exception e){
+            log.error("can't set the caches active flag properly", e);
+        }
     }
 
 }
