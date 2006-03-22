@@ -764,6 +764,12 @@ public class Tree extends ControlSuper {
         return returnValue;
     }
 
+    /**
+     * @param path
+     * @param recursive
+     * @param includeContentNodes
+     *
+     * */
     public void activateNode(String path, boolean recursive, boolean includeContentNodes) throws ExchangeException,
         RepositoryException {
 
@@ -772,18 +778,36 @@ public class Tree extends ControlSuper {
             parentPath = "/";
         }
 
-        Syndicator syndicator = getActivationSyndicator(path, recursive, includeContentNodes);
+        Syndicator syndicator = getActivationSyndicator(path, includeContentNodes);
+        if (recursive) {
+            activateNodeRecursive(syndicator, parentPath, path);
+        } else {
+            syndicator.activate(parentPath, path);
+        }
+    }
+
+    /**
+     * recursive activation
+     * @param syndicator
+     * @param parentPath
+     * @param path
+     * */
+    private void activateNodeRecursive(Syndicator syndicator, String parentPath, String path) throws ExchangeException,
+        RepositoryException {
         syndicator.activate(parentPath, path);
+        Iterator children = this.hm.getContent(path).getChildren().iterator();
+        while (children.hasNext()) {
+            this.activateNodeRecursive(syndicator, path, ((Content)children.next()).getHandle());
+        }
     }
 
     /**
      * Create the <code>Syndicator</code> to activate the specified path.
      * @param path node path to be activated
-     * @param recursive flag if the activation should work recursively
      * @param includeContentNodes flag if the activation should consider ContentNodes
      * @return the <code>Syndicator</code> used to activate
      */
-    protected Syndicator getActivationSyndicator(String path, boolean recursive, boolean includeContentNodes) {
+    protected Syndicator getActivationSyndicator(String path, boolean includeContentNodes) {
         /*
          * Here rule defines which content types to collect, its a resposibility of the caller ro set this, it will be
          * different in every hierarchy, for instance - in website tree recursive activation : rule will allow
@@ -791,12 +815,11 @@ public class Tree extends ControlSuper {
          * mgnl:contentNode and nt:file only
          */
         Rule rule = new Rule();
-        rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
-        rule.addAllowType(ItemType.NT_FILE);
-        rule.addAllowType(ItemType.NT_RESOURCE);
-        if (recursive) {
-            rule.addAllowType(ItemType.CONTENT.getSystemName());
+        if (includeContentNodes) {
+            rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
         }
+        rule.addAllowType(ItemType.NT_METADATA);
+        rule.addAllowType(ItemType.NT_RESOURCE);
 
         Syndicator syndicator = (Syndicator) FactoryUtil.getInstance(Syndicator.class);
         syndicator.init(MgnlContext.getUser(), this.getRepository(), ContentRepository.getDefaultWorkspace(this
