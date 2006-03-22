@@ -285,4 +285,8 @@ public class FlowAdminTreeWebsite extends FlowAdminTreeMVCHandler {
         tree.addMenuItem(menuRefresh);
     }
 
+    protected void prepareFunctionBar(Tree tree, HttpServletRequest request) {
+        // TODO Auto-generated method stub
+        
+    }
 }
