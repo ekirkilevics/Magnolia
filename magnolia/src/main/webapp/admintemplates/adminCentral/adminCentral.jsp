@@ -13,6 +13,7 @@
     // create the menu
     Navigation navigation = new Navigation("/modules/adminInterface/config/menu", "mgnlNavigation");
 
+    
     // get the current username
     User user = MgnlContext.getUser();
     String userName = "";
