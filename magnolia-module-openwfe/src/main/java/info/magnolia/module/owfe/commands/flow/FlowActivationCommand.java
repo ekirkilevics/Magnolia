@@ -24,14 +24,14 @@ public class FlowActivationCommand extends AbstractFlowCommand {
             boolean recursive = ((Boolean) params.get(MgnlCommand.P_RECURSIVE)).booleanValue();
 
             // Parameters for the flow item
-            li.setWorkflowDefinitionUrl("field:__definition__");
+            li.setWorkflowDefinitionUrl(MgnlCommand.P_WORKFLOW_DEFINITION_URL);
             li.addAttribute(MgnlCommand.P_RECURSIVE, new StringAttribute(recursive ? "true" : "false"));
-            li.addAttribute(MgnlCommand.P_RECURSIVE, new StringAttribute(pathSelected));
+            li.addAttribute(MgnlCommand.P_PATH, new StringAttribute(pathSelected));
             li.addAttribute("OK", new StringAttribute("false"));
 
             // Retrieve and add the flow definition to the LaunchItem
-            String flowDef = new JCRFlowDefinition().getflowDefAsString("webActivation");
-            li.getAttributes().puts("__definition__", flowDef);
+            String flowDef = new JCRFlowDefinition().getflowDefAsString(P_DEFAULT_ACTIVATION_FLOW);
+            li.getAttributes().puts(MgnlCommand.P_DEFINITION, flowDef);
 
         } catch (Exception e) {
             MgnlCommand.log.error("can't launch activate flow", e);

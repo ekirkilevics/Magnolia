@@ -18,9 +18,10 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
      */
     private static Logger log = Logger.getLogger(AbstractEmbeddedParticipant.class);
     JCRWorkItemAPI storage = null;
+    private static final String COMMAND_PREFIX = "command-";
+    private static final int COMMAND_PREFIX_LEN = COMMAND_PREFIX.length();
 
     public MgnlParticipant() throws Exception {
-
         super();
         storage = new JCRWorkItemAPI();
         log.debug("storage = " + storage);
@@ -41,11 +42,10 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
             return;
         }
         String parName = ((InFlowWorkItem) (wi)).getParticipantName();
-        log.info("paritcipant name = " + parName);
-        if (parName.startsWith("command-")) // handle commands
+        log.info("participant name = " + parName);
+        if (parName.startsWith(COMMAND_PREFIX)) // handle commands
         {
-            //	commandAgent.use((InFlowWorkItem)wi);
-            String cmd = parName.substring(8, parName.length());
+            String cmd = parName.substring(COMMAND_PREFIX_LEN, parName.length());
             log.info("command name is " + cmd);
             MgnlCommand tc = new CommandsMap().getFlowCommand(cmd);
             if (tc == null) { // not found, do in the old ways

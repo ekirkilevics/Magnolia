@@ -13,6 +13,11 @@ public interface MgnlCommand extends Command {
     final static public String P_PATH = "pathSelected";
     final static public String P_RECURSIVE = "recursive";
     final static public String P_ACTION = "action";
+    final static public String P_WORKFLOW_DEFINITION_URL = "field:__definition__";
+    final static public String P_DEFINITION = "__definition__";
+
+    final static public String P_DEFAULT_ACTIVATION_FLOW = "webActivation";
+    final static public String P_DEFAULT_DEACTIVATION_FLOW = "webDeactivation";
 
     final static public String REPOSITORY = "website";
 

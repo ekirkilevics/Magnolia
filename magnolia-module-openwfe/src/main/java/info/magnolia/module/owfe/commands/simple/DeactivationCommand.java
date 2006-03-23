@@ -18,7 +18,6 @@ public class DeactivationCommand implements MgnlCommand {
     public boolean execute(Context context) {
         HashMap params = (HashMap) context.get(PARAMS);
         String path;
-        boolean recursive; // is initialized at false
         InFlowWorkItem if_wi = (InFlowWorkItem) params.get(MgnlCommand.P_WORKITEM);
         if (if_wi != null) { // if call from flow
             path = (if_wi.getAttribute(P_PATH)).toString();
