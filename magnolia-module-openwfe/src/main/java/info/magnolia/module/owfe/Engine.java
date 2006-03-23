@@ -24,7 +24,6 @@ import info.magnolia.cms.module.ModuleUtil;
 import info.magnolia.cms.module.RegisterException;
 import info.magnolia.module.admininterface.AbstractAdminModule;
 import info.magnolia.module.owfe.servlets.FlowDefServlet;
-import info.magnolia.module.owfe.servlets.FlowDefUpload;
 import org.apache.log4j.Logger;
 
 import javax.jcr.Node;
@@ -66,12 +65,6 @@ public class Engine extends AbstractAdminModule {
         try {
             String servletClassName = FlowDefServlet.class.getName();
             ModuleUtil.registerServlet("FlowDef", servletClassName, new String[]{"/FlowDef"}, "registered by Jackie");
-            servletClassName = FlowDefUpload.class.getName();
-            ModuleUtil.registerServlet(
-                    "FlowDefUpload",
-                    servletClassName,
-                    new String[]{"/FlowDefUpload"},
-                    "registered by Jackie");
         }
         catch (Exception e) {
             log.error("Error while loading the xml rpc module", e);

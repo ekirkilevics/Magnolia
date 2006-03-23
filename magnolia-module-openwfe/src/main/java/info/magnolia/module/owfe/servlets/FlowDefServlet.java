@@ -56,7 +56,7 @@ public class FlowDefServlet extends javax.servlet.http.HttpServlet implements
             sb.append("<html><body>");
 
             // Flow edit area
-            sb.append("<form action=\"FlowDefUpload\" method=\"post\">"
+            sb.append("<form action=\"FlowDef\" method=\"post\">"
                     + "<textArea  cols=\"80\" rows=\"25\"  name=\"flow\">" + DEFAULT_FLOW + "</textArea>"
                     + "<br/>"
                     + "<input type=\"submit\" value=\"upload\"></input>"
@@ -153,6 +153,20 @@ public class FlowDefServlet extends javax.servlet.http.HttpServlet implements
       */
     protected void doPost(HttpServletRequest request,
                           HttpServletResponse response) throws ServletException, IOException {
-        // TODO Auto-generated method stub
+        String flowDef = request.getParameter("flow");
+
+        if (flowDef == null) {
+            return;
+        }
+        flowDef = flowDef.trim();
+        try {
+            new JCRFlowDefinition().addFlow(flowDef);
+        }
+        catch (Exception e) {
+            log.error("add flow failed", e);
+            response.getWriter().println("add flow failed: exception" + e);
+            return;
+        }
+        response.getWriter().println("add flow OK.");
     }
 }

@@ -1,6 +1,5 @@
 package info.magnolia.module.owfe.servlets;
 
-import info.magnolia.module.owfe.jcr.JCRFlowDefinition;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -46,21 +45,7 @@ public class FlowDefUpload extends javax.servlet.http.HttpServlet implements jav
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
-        String flowDef = request.getParameter("flow");
 
-        if (flowDef == null) {
-            return;
-        }
-        flowDef = flowDef.trim();
-        try {
-            new JCRFlowDefinition().addFlow(flowDef);
-        }
-        catch (Exception e) {
-            log.error("add flow failed", e);
-            response.getWriter().println("add flow failed: exception" + e);
-            return;
-        }
-        response.getWriter().println("add flow OK.");
 
     }
 }
