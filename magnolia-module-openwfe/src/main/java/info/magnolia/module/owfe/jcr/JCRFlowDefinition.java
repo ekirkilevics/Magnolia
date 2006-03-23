@@ -4,11 +4,13 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.NodeData;
 import info.magnolia.module.owfe.servlets.FlowDefServlet;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 
+import javax.jcr.Value;
 import javax.jcr.ValueFactory;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -27,6 +29,7 @@ public class JCRFlowDefinition {
     private static Logger log = Logger.getLogger(FlowDefServlet.class);
 
     private final static String ROOT_PATH_FOR_FLOW = "/modules/workflow/config/flows/";
+    private final static String FLOW_VALUE = "value";
 
     /**
      * find one flow node by flow name
@@ -172,45 +175,21 @@ public class JCRFlowDefinition {
         Element process_definition = doc.getRootElement();
         name = process_definition.getAttribute("name").getValue();
 
-        // jaxp
-
-        // DocumentBuilderFactory factory = null;
-        // DocumentBuilder builder = null;
-        // //get a DocumentBuilderFactory from the underlying implementation
-        // factory = DocumentBuilderFactory.newInstance();
-        //
-        // //factory.setValidating(true);
-        //
-        // //get a DocumentBuilder from the factory
-        // builder = factory.newDocumentBuilder();
-        //
-        // Document doc = builder.parse(new StringBufferInputStream(flowDef));
-        // Element process_definition = doc.getDocumentElement();
-        //
-        // name = process_definition.getAttribute("name");
-
-        // String flowDef = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-        // + "<process-definition "
-        // + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
-        // +
-        // "xsi:noNamespaceSchemaLocation=\"http://www.openwfe.org/flowdef_r1.5.0.xsd\"
-        // "
-        // + "name=\"docflow\" "
-        // + "revision=\"1.0\">"
-        // + "<description language=\"default\"> "
-        // + "This just the complete flow definition of docflow process. "
-        // + "</description>" + "<sequence>" +
-        // "<participant ref=\""+ name + "\"/>" + "</sequence>"
-        // + "</process-definition>";
-
-        // HierarchyManager hm = OWFEEngine.getOWFEHierarchyManager("flowdef");
         try {
-            HierarchyManager hm = ContentRepository
-                    .getHierarchyManager(ContentRepository.CONFIG);
+            HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
             Content root = hm.getContent(ROOT_PATH_FOR_FLOW);
-            Content c = root.createContent(name, ItemType.CONTENT);
+            boolean exist = hm.isExist(root.getHandle() + "/" + name);
+            Content c;
+            if (exist)
+                c = (Content) root.getChildren(name).iterator().next();
+            else
+                c = root.createContent(name, ItemType.CONTENT);
             ValueFactory vf = c.getJCRNode().getSession().getValueFactory();
-            c.createNodeData("value", vf.createValue(flowDef));
+            Value value = vf.createValue(flowDef);
+            if (!exist)
+                c.createNodeData(FLOW_VALUE, value);
+            else
+                ((NodeData) c.getNodeDataCollection(FLOW_VALUE).iterator().next()).setValue(value);
             hm.save();
             log.info("add ok");
         } catch (Exception e) {
@@ -218,5 +197,38 @@ public class JCRFlowDefinition {
         }
         return null;
     }
+
+    // jaxp
+
+    // DocumentBuilderFactory factory = null;
+    // DocumentBuilder builder = null;
+    // //get a DocumentBuilderFactory from the underlying implementation
+    // factory = DocumentBuilderFactory.newInstance();
+    //
+    // //factory.setValidating(true);
+    //
+    // //get a DocumentBuilder from the factory
+    // builder = factory.newDocumentBuilder();
+    //
+    // Document doc = builder.parse(new StringBufferInputStream(flowDef));
+    // Element process_definition = doc.getDocumentElement();
+    //
+    // name = process_definition.getAttribute("name");
+
+    // String flowDef = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+    // + "<process-definition "
+    // + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+    // +
+    // "xsi:noNamespaceSchemaLocation=\"http://www.openwfe.org/flowdef_r1.5.0.xsd\"
+    // "
+    // + "name=\"docflow\" "
+    // + "revision=\"1.0\">"
+    // + "<description language=\"default\"> "
+    // + "This just the complete flow definition of docflow process. "
+    // + "</description>" + "<sequence>" +
+    // "<participant ref=\""+ name + "\"/>" + "</sequence>"
+    // + "</process-definition>";
+
+    // HierarchyManager hm = OWFEEngine.getOWFEHierarchyManager("flowdef");
 
 }
