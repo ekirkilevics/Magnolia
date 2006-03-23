@@ -27,7 +27,11 @@ public class CommandsMap {
             Class cmdClass = Class.forName(className);
             return (ITreeCommand) cmdClass.newInstance();
 
-        } catch (Exception e) {
+        } catch (javax.jcr.PathNotFoundException pne) {
+            log.warn("command [" + commandName + "] is not defined");
+            return null;
+        }
+        catch (Exception e) {
             log.warn("can not get command for " + commandName, e);
             return null;
         }
@@ -49,7 +53,9 @@ public class CommandsMap {
             log.info("class name is " + className);
             Class cmdClass = Class.forName(className);
             return (ITreeCommand) cmdClass.newInstance();
-
+        } catch (javax.jcr.PathNotFoundException pne) {
+            log.warn("command [" + commandName + "] is not defined");
+            return null;
         } catch (Exception e) {
             log.warn("can not get command for " + commandName, e);
             return null;
