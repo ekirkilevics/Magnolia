@@ -193,6 +193,13 @@ public final class ModuleLoader {
     public Module getModuleInstance(String name) {
         return (Module) this.modules.get(name);
     }
+    
+    /**
+     * @return the map containing the modules
+     */
+    public Map getModuleInstances(){
+        return this.modules;
+    }
 
     /**
      * Register this module instance to avoid a second instantiation.

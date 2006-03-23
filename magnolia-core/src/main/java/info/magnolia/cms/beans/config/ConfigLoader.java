@@ -17,6 +17,7 @@ import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.license.LicenseFileExtractor;
+import info.magnolia.cms.module.Module;
 import info.magnolia.cms.security.SecureURI;
 
 import java.util.Iterator;
@@ -156,8 +157,15 @@ public class ConfigLoader {
             Subscriber.init();
             MIMEMapping.init();
             VersionConfig.init();
-            setConfigured(true);
-            log.info("Configuration loaded!"); //$NON-NLS-1$
+            
+            if(ModuleRegistration.getInstance().isRestartNeeded()){
+                printSystemRestartInfo();
+            }
+            else{
+                // finished
+                setConfigured(true);
+                log.info("Configuration loaded!"); //$NON-NLS-1$
+            }
         }
         catch (ConfigurationException e) {
             log.error("An error occurred during initialization",e); //$NON-NLS-1$
@@ -183,7 +191,24 @@ public class ConfigLoader {
             + license.get(LicenseFileExtractor.PRIVIDER_EMAIL)
             + ")"); //$NON-NLS-1$
     }
-
+    
+    /**
+     * Print the list of modules needing a restart of the container.
+     */
+    private void printSystemRestartInfo() {
+        ModuleLoader loader = ModuleLoader.getInstance();    
+        System.out.println("---------------------------------------------"); //$NON-NLS-1$
+        System.out.println("One or more modules need a restart of the container:"); //$NON-NLS-1$
+        for (Iterator iter = loader.getModuleInstances().keySet().iterator(); iter.hasNext();) {
+            String moduleName = (String) iter.next();
+            Module module = loader.getModuleInstance(moduleName);
+            if(module.isRestartNeeded()){
+                System.out.println(module.getName() +" ("+ module.getModuleDefinition().getVersion() + ")");
+            }
+        }
+        System.out.println("---------------------------------------------"); //$NON-NLS-1$
+    }
+    
     /**
      * Returns true is magnolia is running with all basic configuration.
      * @return <code>true</code> if Magnolia is configured

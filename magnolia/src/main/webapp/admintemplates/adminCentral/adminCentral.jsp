@@ -8,17 +8,39 @@
 <jsp:directive.page import="info.magnolia.cms.security.Authenticator"/>
 <jsp:directive.page import="info.magnolia.cms.security.User"/>
 <jsp:directive.page import="info.magnolia.module.admininterface.Navigation"/>
+<jsp:directive.page import="info.magnolia.cms.beans.config.ModuleRegistration"/>
+<jsp:directive.page import="java.util.List"/>
+<jsp:directive.page import="java.util.ArrayList"/>
+<jsp:directive.page import="java.util.Iterator"/>
+<jsp:directive.page import="info.magnolia.cms.beans.config.ModuleLoader"/>
+<jsp:directive.page import="info.magnolia.cms.module.Module"/>
 
 <jsp:scriptlet>
     // create the menu
     Navigation navigation = new Navigation("/modules/adminInterface/config/menu", "mgnlNavigation");
-
     
     // get the current username
     User user = MgnlContext.getUser();
     String userName = "";
     if (user == null || (userName = user.getName()).equals("")) userName = Authenticator.getUserId(request);
 
+    // is a system restart needed
+    boolean restart = ModuleRegistration.getInstance().isRestartNeeded();
+    List restartNeedingModules = new ArrayList();
+
+    if(restart){
+        // collect the modules needing a restart
+        for (Iterator iter = ModuleLoader.getInstance().getModuleInstances().keySet().iterator(); iter.hasNext();) {
+            String moduleName = (String) iter.next();
+            Module module = ModuleLoader.getInstance().getModuleInstance(moduleName);
+            if(module.isRestartNeeded()){
+                restartNeedingModules.add(module);
+            }
+        }
+    }    
+
+    pageContext.setAttribute("restart", new Boolean(restart));
+    pageContext.setAttribute("restartNeedingModules", restartNeedingModules);
     pageContext.setAttribute("navigation", navigation);
     pageContext.setAttribute("username", userName);
 
@@ -51,7 +73,7 @@
         var mgnlAdminCentral;
 
         function configureNavigation() {
-        ${navigation.javascript}
+            ${navigation.javascript}
         }
 
         // init the system
@@ -87,44 +109,41 @@
 </head>
 
 <body class="mgnlBgDark mgnlAdminMain">
-<!--
-    <div style="position:absolute;top:3px;right:20px;" class="mgnlText"><fmt:message key="central.loggedInAs">
-        <fmt:param value="${username}" />
-    </fmt:message></div>
 
-    <jsp:scriptlet>
-        if (!Server.isAdmin()) {
-            </jsp:scriptlet>
-                <div style="position:absolute;top:20px;right:20px;" class="mgnlText"><strong>*** <fmt:message>central.publicInstance</fmt:message> ***</strong></div>
-            <jsp:scriptlet>
-        }
-    </jsp:scriptlet>
-    -->
-
-<!-- Menu -->
-<div id="mgnlAdminCentralMenuDiv" class="mgnlAdminCentralMenuDiv">
-    <div class="mgnlAdminCentralMenu">
-        <!-- do not delete me -->
+<c:if test="${restart}">
+    <div class="mgnlAdminCentralMessagesDiv mgnlText" >
+        <fmt:message>system.restart</fmt:message>:
+        <c:forEach items="${restartNeedingModules}" var="module">
+            <div style="padding-left: 15px; padding-top: 5px;">- ${module.name} (${module.moduleDefinition.version})</div>
+        </c:forEach>
     </div>
-</div>
+</c:if>
 
-<!-- Not scrolled content like the website tree -->
-<div id="mgnlAdminCentralContentDiv" class="mgnlAdminCentralContentDiv">
-    <iframe
-            id="mgnlAdminCentralContentIFrame" src="" scrolling="no"
-            style="border: none; width:100%; height:100%" frameborder="0"><![CDATA[
-        <!-- a comment here is needed for the correct rendering of the iframe tag -->]]></iframe>
-</div>
-
-<!-- Scrolled content like the about or other included pages -->
-
-<div id="mgnlAdminCentralScrolledContentDiv" class="mgnlAdminCentralContentDiv">
-    <iframe
-            id="mgnlAdminCentralScrolledContentIFrame" src="" style="border: none; width:100%; height:100%"
-            frameborder="0"><![CDATA[ <!-- a comment here is needed for the correct rendering of the iframe tag -->]]>
-    </iframe>
-</div>
-
+<c:if test="${!restart}">
+    <!-- Menu -->
+    <div id="mgnlAdminCentralMenuDiv" class="mgnlAdminCentralMenuDiv">
+        <div class="mgnlAdminCentralMenu">
+            <!-- do not delete me -->
+        </div>
+    </div>
+    
+    <!-- Not scrolled content like the website tree -->
+    <div id="mgnlAdminCentralContentDiv" class="mgnlAdminCentralContentDiv">
+        <iframe
+                id="mgnlAdminCentralContentIFrame" src="" scrolling="no"
+                style="border: none; width:100%; height:100%" frameborder="0"><![CDATA[
+            <!-- a comment here is needed for the correct rendering of the iframe tag -->]]></iframe>
+    </div>
+    
+    <!-- Scrolled content like the about or other included pages -->
+    
+    <div id="mgnlAdminCentralScrolledContentDiv" class="mgnlAdminCentralContentDiv">
+        <iframe
+                id="mgnlAdminCentralScrolledContentIFrame" src="" style="border: none; width:100%; height:100%"
+                frameborder="0"><![CDATA[ <!-- a comment here is needed for the correct rendering of the iframe tag -->]]>
+        </iframe>
+    </div>
+</c:if>
 </body>
 </html>
 </jsp:root>
