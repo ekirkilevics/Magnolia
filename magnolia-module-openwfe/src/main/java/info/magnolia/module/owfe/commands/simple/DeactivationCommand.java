@@ -9,7 +9,6 @@ import info.magnolia.cms.util.Rule;
 import info.magnolia.module.owfe.commands.MgnlCommand;
 import openwfe.org.engine.workitem.InFlowWorkItem;
 import org.apache.commons.chain.Context;
-import org.apache.commons.lang.StringUtils;
 
 import java.util.HashMap;
 
@@ -39,15 +38,7 @@ public class DeactivationCommand implements MgnlCommand {
         rule.addAllowType(ItemType.NT_FILE);
         Syndicator syndicator = (Syndicator) FactoryUtil.getInstance(Syndicator.class);
         syndicator.init(MgnlContext.getUser(), REPOSITORY, ContentRepository.getDefaultWorkspace(REPOSITORY), rule);
-
         syndicator.deActivate(path);
-
-        String parentPath = StringUtils.substringBeforeLast(path, "/");
-        if (StringUtils.isEmpty(parentPath)) {
-            parentPath = "/";
-        }
-        syndicator.activate(parentPath, path);
-
     }
 
 }
