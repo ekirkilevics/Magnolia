@@ -27,6 +27,8 @@ public class JCRFlowDefinition {
      */
     private static Logger log = Logger.getLogger(FlowDefServlet.class);
 
+    private final static String ROOT_PATH_FOR_FLOW = "/modules/workflow/config/flows/";
+
     /**
      * find one flow node by flow name
      *
@@ -37,8 +39,7 @@ public class JCRFlowDefinition {
         if (name == null)
             return null;
         // HierarchyManager hm = OWFEEngine.getOWFEHierarchyManager("flowdef");
-        HierarchyManager hm = ContentRepository
-                .getHierarchyManager(ContentRepository.CONFIG);
+        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
 
         try {
 
@@ -70,7 +71,7 @@ public class JCRFlowDefinition {
             // }
 
             // Content root = hm.getRoot();
-            Content root = hm.getContent("/modules/workflow/config/flows/");
+            Content root = hm.getContent(ROOT_PATH_FOR_FLOW);
             Collection c = root.getChildren(ItemType.CONTENT);
             Iterator it = c.iterator();
             while (it.hasNext()) {
@@ -109,37 +110,25 @@ public class JCRFlowDefinition {
      * @return a list of string representing the URL of each workflow
      */
     public List getFlows(HttpServletRequest request) {
-        String url_base = "http://" + request.getServerName() + ":"
-                + request.getServerPort() + request.getRequestURI();
+
+        String url_base = "http://";
+        if (request.isSecure())
+            url_base = "https://";
+        url_base += request.getServerName() + ":" + request.getServerPort() + request.getRequestURI();
         ArrayList list = new ArrayList();
         log.info(url_base);
-        // log.info(request.getRealPath());
-        // log.info(request.getContextPath());
-        // log.info(request.getServletPath());
-        // log.info(request.getPathInfo());
-        // log.info(request.getPathTranslated());
-
-        // HierarchyManager hm = OWFEEngine.getOWFEHierarchyManager("flowdef");
         try {
-            HierarchyManager hm = ContentRepository
-                    .getHierarchyManager(ContentRepository.CONFIG);
-            Content root = hm.getContent("/modules/workflow/config/flows/");
-
-            // Content root = hm.getRoot();
-
+            HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
+            Content root = hm.getContent(ROOT_PATH_FOR_FLOW);
             Collection c = root.getChildren(ItemType.CONTENT);
             Iterator it = c.iterator();
             while (it.hasNext()) {
-                Content ct = (Content) it.next();
-                String name = ct.getName();
-
-                if (name != null) {
+                String name = ((Content) (it.next())).getName();
+                if (name != null)
                     list.add(url_base + "?name=" + name);
-                }
             }
         } catch (Exception e) {
             log.error("error", e);
-            // log.error("exception:" + e);
         }
         return list;
     }
@@ -152,10 +141,7 @@ public class JCRFlowDefinition {
     public void exportAll(String xmlFileName) {
         if (xmlFileName == null || xmlFileName.length() == 0)
             return;
-        // HierarchyManager hm = OWFEEngine.getOWFEHierarchyManager("flowdef");
-
         try {
-            // Content root = hm.getRoot();
             HierarchyManager hm = ContentRepository
                     .getHierarchyManager(ContentRepository.CONFIG);
             File outputFile = new File(xmlFileName);
@@ -222,7 +208,7 @@ public class JCRFlowDefinition {
         try {
             HierarchyManager hm = ContentRepository
                     .getHierarchyManager(ContentRepository.CONFIG);
-            Content root = hm.getContent("/modules/workflow/config/flows/");
+            Content root = hm.getContent(ROOT_PATH_FOR_FLOW);
             Content c = root.createContent(name, ItemType.CONTENT);
             ValueFactory vf = c.getJCRNode().getSession().getValueFactory();
             c.createNodeData("value", vf.createValue(flowDef));
