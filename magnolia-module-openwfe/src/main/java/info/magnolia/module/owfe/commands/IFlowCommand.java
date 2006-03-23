@@ -2,8 +2,8 @@ package info.magnolia.module.owfe.commands;
 
 import info.magnolia.module.owfe.OWFEEngine;
 import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
-import openwfe.org.engine.launch.LaunchException;
 import openwfe.org.engine.workitem.LaunchItem;
+import openwfe.org.engine.workitem.StringAttribute;
 import org.apache.commons.chain.Context;
 
 import java.util.HashMap;
@@ -20,18 +20,19 @@ public abstract class IFlowCommand implements ITreeCommand {
     public boolean execute(Context context) {
         HashMap params = (HashMap) context.get(PARAMS);
         log.info("- Flow command -" + this.getClass().toString() + "- Start");
-
-        // Get the references
-        LaunchItem li = new LaunchItem();
-        JCRPersistedEngine engine = OWFEEngine.getEngine();
-
-        // start activation
-        onExecute(context, params, engine, li);
-
-        // Launch the item
         try {
+            // Get the references
+            LaunchItem li = new LaunchItem();
+            li.addAttribute(P_ACTION, new StringAttribute(this.getClass().getName()));
+            JCRPersistedEngine engine = OWFEEngine.getEngine();
+
+            // start activation
+            onExecute(context, params, engine, li);
+
+            // Launch the item
             engine.launch(li, true);
-        } catch (LaunchException e) {
+
+        } catch (Exception e) {
             log.error("Launching failed", e);
         }
 

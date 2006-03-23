@@ -12,7 +12,7 @@ import org.apache.commons.lang.StringUtils;
 
 import java.util.HashMap;
 
-public class ActivationCommand implements ITreeCommand {
+public class DeactivationCommand implements ITreeCommand {
 
     public boolean execute(Context context) {
         HashMap params = (HashMap) context.get(PARAMS);
@@ -21,38 +21,26 @@ public class ActivationCommand implements ITreeCommand {
         InFlowWorkItem if_wi = (InFlowWorkItem) params.get(ITreeCommand.P_WORKITEM);
         if (if_wi != null) { // if call from flow
             path = (if_wi.getAttribute(P_PATH)).toString();
-            recursive = (if_wi.getAttribute(P_RECURSIVE)).equals("true");
         } else {
             path = (String) params.get(P_PATH);
-            recursive = ((Boolean) params.get(P_RECURSIVE)).booleanValue();
         }
         try {
-            doActivate(path, recursive);
+            doDeactivate(path);
         } catch (Exception e) {
-            log.error("cannot do activate", e);
+            log.error("cannot do deactivate", e);
             return false;
         }
         return true;
     }
 
-    private void doActivate(String path, boolean recursive) throws Exception {
-        /**
-         * Here rule defines which content types to collect, its a resposibility
-         * of the caller ro set this, it will be different in every hierarchy,
-         * for instance - in website tree recursive activation : rule will allow
-         * mgnl:contentNode, mgnl:content and nt:file - in website tree
-         * non-recursive activation : rule will allow mgnl:contentNode and
-         * nt:file only
-         */
+    private void doDeactivate(String path) throws Exception {
         Rule rule = new Rule();
         rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
         rule.addAllowType(ItemType.NT_FILE);
-        if (recursive) {
-            rule.addAllowType(ItemType.CONTENT.getSystemName());
-        }
-
         Syndicator syndicator = (Syndicator) FactoryUtil.getInstance(Syndicator.class);
         syndicator.init(MgnlContext.getUser(), REPOSITORY, ContentRepository.getDefaultWorkspace(REPOSITORY), rule);
+
+        syndicator.deActivate(path);
 
         String parentPath = StringUtils.substringBeforeLast(path, "/");
         if (StringUtils.isEmpty(parentPath)) {

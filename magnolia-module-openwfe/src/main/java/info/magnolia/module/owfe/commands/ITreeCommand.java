@@ -10,6 +10,12 @@ public interface ITreeCommand extends Command {
     final static public String P_WORKITEM = "workItem";
     final static public String P_REQUEST = "request";
     final static public String P_RESULT = "__RESULT__";
+    final static public String P_PATH = "pathSelected";
+    final static public String P_RECURSIVE = "recursive";
+    final static public String P_ACTION = "action";
+
+    final static public String REPOSITORY = "website";
+
 
     static Logger log = LoggerFactory.getLogger(ITreeCommand.class);
 
