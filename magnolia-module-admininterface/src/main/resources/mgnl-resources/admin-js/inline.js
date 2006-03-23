@@ -30,8 +30,8 @@ function mgnlPreview(prev)
 
 function mgnlDeleteNode(path,paragraphName,nodeName)
     {
-    var alertText = mgnlMessages.get("js.inline.delete.text");
-    if (mgnlConfirm(alertText,mgnlMessages.get("js.inline.delete.title")))
+    var alertText = mgnlMessages.get("inline.delete.text.js");
+    if (mgnlConfirm(alertText,mgnlMessages.get("inline.delete.title.js")))
         {
         var href=mgnlUpdateCK(document.location.href)
 
@@ -66,7 +66,7 @@ document.write('<div id="mgnlMoveDivShadow"></div>');
 //denied: denied sign
 document.write('<div id="mgnlMoveDivDenied"></div>');
 //allowed: text 'Move above here'
-document.write('<div id="mgnlMoveDivAllowed" style="visibility:hidden">' + mgnlMessages.get('js.inline.move.aboveThisOne') + '</div>');
+document.write('<div id="mgnlMoveDivAllowed" style="visibility:hidden">' + mgnlMessages.get('inline.move.aboveThisOne.js') + '</div>');
 
 var mgnlMoveDont=false;
 //move will not start as long as mgnlMoveDont is true

@@ -17,7 +17,7 @@ isIE = (navigator.appName.indexOf("Microsoft") != -1) ? true : false;
 
 Calendar.Months = new Array()
 for(i=1;i<=12;i++){
-    Calendar.Months[i-1] = mgnlMessages.get('js.dialog.calendar.month' + i);
+    Calendar.Months[i-1] = mgnlMessages.get('dialog.calendar.month.js' + i);
 }
 
 // Non-Leap year Month days..
@@ -415,13 +415,13 @@ Calendar.prototype.wwriteA = function(wtext) {
 Calendar.prototype.cal_header = function() {
     var vCode = "";
     vCode = vCode + "<tr bgcolor=ffffff>";
-    vCode = vCode + "<td width='14%' class=mgnlCalendarHeader align=center bgcolor="+weekendColor+">" + mgnlMessages.get('js.dialog.calendar.sun') + "</td>";
-    vCode = vCode + "<td width='14%' class=mgnlCalendarHeader align=center>" + mgnlMessages.get('js.dialog.calendar.mon') + "</td>";
-    vCode = vCode + "<td width='14%' class=mgnlCalendarHeader align=center>" + mgnlMessages.get('js.dialog.calendar.tue') + "</td>";
-    vCode = vCode + "<td width='14%' class=mgnlCalendarHeader align=center>" + mgnlMessages.get('js.dialog.calendar.wed') + "</td>";
-    vCode = vCode + "<td width='14%' class=mgnlCalendarHeader align=center>" + mgnlMessages.get('js.dialog.calendar.thu') + "</td>";
-    vCode = vCode + "<td width='14%' class=mgnlCalendarHeader align=center>" + mgnlMessages.get('js.dialog.calendar.fri') + "</td>";
-    vCode = vCode + "<td width='16%' class=mgnlCalendarHeader align=center bgcolor="+weekendColor+">" + mgnlMessages.get('js.dialog.calendar.sat') + "</td>";
+    vCode = vCode + "<td width='14%' class=mgnlCalendarHeader align=center bgcolor="+weekendColor+">" + mgnlMessages.get('dialog.calendar.sun.js') + "</td>";
+    vCode = vCode + "<td width='14%' class=mgnlCalendarHeader align=center>" + mgnlMessages.get('dialog.calendar.mon.js') + "</td>";
+    vCode = vCode + "<td width='14%' class=mgnlCalendarHeader align=center>" + mgnlMessages.get('dialog.calendar.tue.js') + "</td>";
+    vCode = vCode + "<td width='14%' class=mgnlCalendarHeader align=center>" + mgnlMessages.get('dialog.calendar.wed.js') + "</td>";
+    vCode = vCode + "<td width='14%' class=mgnlCalendarHeader align=center>" + mgnlMessages.get('dialog.calendar.thu.js') + "</td>";
+    vCode = vCode + "<td width='14%' class=mgnlCalendarHeader align=center>" + mgnlMessages.get('dialog.calendar.fri.js') + "</td>";
+    vCode = vCode + "<td width='16%' class=mgnlCalendarHeader align=center bgcolor="+weekendColor+">" + mgnlMessages.get('dialog.calendar.sat.js') + "</td>";
     vCode = vCode + "</tr>";
 
     return vCode;

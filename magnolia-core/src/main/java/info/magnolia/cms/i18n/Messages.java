@@ -166,7 +166,7 @@ public class Messages {
         while (en.hasMoreElements()) {
             String key = (String) en.nextElement();
 
-            if (key.startsWith("js.")) { //$NON-NLS-1$
+            if (key.endsWith(".js")) { //$NON-NLS-1$
                 String msg = ((String) bundle.getObject(key)).replaceAll("'", "\\\\'").replaceAll("\n", "\\\\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
                 str.append(JS_OBJECTNAME + ".add('" + key + "','" + msg + "','" + getBasename() + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
                 str.append("\n"); //$NON-NLS-1$

@@ -19,7 +19,7 @@ function mgnlAclAdd(contextUsers,rowIndex,path,name,accessRight,accessType)
     if (!path)
         {
         path="";
-        name="<i>" + mgnlMessages.get('js.dialog.acl.choose') + "</i>";
+        name="<i>" + mgnlMessages.get('dialog.acl.choose.js') + "</i>";
         }
     else if (!name || name=="") name=path;
     var tr = aclTable.insertRow(rowIndex);

@@ -321,8 +321,8 @@ function mgnlDialogDatePatternCheck(control,pattern)
         }
     if (value!=pattern)
         {
-        if (pattern=="XXXX-XX-XX") mgnlAlert(mgnlMessages.get('js.dialog.calendar.datecheck.date'));
-        else mgnlAlert(mgnlMessages.get('js.dialog.calendar.datecheck.datetime'));
+        if (pattern=="XXXX-XX-XX") mgnlAlert(mgnlMessages.get('dialog.calendar.datecheck.date.js'));
+        else mgnlAlert(mgnlMessages.get('dialog.calendar.datecheck.datetime.js'));
         control.focus();
         }
     }
@@ -365,7 +365,7 @@ function mgnlDialogRichEStart()
 
 function mgnlDialogRichEPasteClean()
     {
-    if (!window.clipboardData) alert(mgnlMessages.get('js.dialog.richedit.nopaste'));
+    if (!window.clipboardData) alert(mgnlMessages.get('dialog.richedit.nopaste.js'));
     else kupuui.pasteButtonHandler(window.clipboardData.getData('Text'));
     }
 function mgnlDialogRichEPasteCleanHelp()
@@ -468,7 +468,7 @@ function mgnlDialogPasswordVerify(id)
     if (c1.value!=c2.value)
         {
         var form=document.forms[mgnlFormMainName];
-        mgnlAlert(mgnlMessages.get('js.dialog.password.failed'));
+        mgnlAlert(mgnlMessages.get('dialog.password.failed.js'));
         form[id+"_verification"].value="";
         //seems not to work...
         form[id+"_verification"].focus();
@@ -527,7 +527,7 @@ function mgnlDialogVerifyName(nameId)
         {
         if (name.value!=mgnlDialogCreateName(name.value))
             {
-            mgnlAlert(mgnlMessages.get('js.dialog.verifyname.illegalCharacter'));
+            mgnlAlert(mgnlMessages.get('dialog.verifyname.illegalCharacter.js'));
             //name.value=mgnlDialogCreateName(name.value);
             name.focus();
             return false;

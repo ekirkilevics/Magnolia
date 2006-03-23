@@ -4,6 +4,12 @@ body.mgnlAdminMain {
     background-repeat: no-repeat;
 }
 
+div.mgnlAdminCentralMessagesDiv {
+    position: absolute;
+    left: 20px;
+    top: 60px;
+}
+
 div.mgnlAdminCentralMenuDiv {
     position: absolute;
     left: 20px;

@@ -78,8 +78,8 @@
         this.colors.nodeSelected="#D1E1ED";
 
         this.strings=new Object();
-        this.strings.saving=mgnlMessages.get('js.tree.saving');
-        this.strings.loading=mgnlMessages.get('js.tree.loading');
+        this.strings.saving=mgnlMessages.get('tree.saving.js');
+        this.strings.loading=mgnlMessages.get('tree.loading.js');
         this.strings.empty="-";
 
         this.moveDontReset=false;
@@ -499,8 +499,8 @@
 
     mgnlTree.prototype.deleteNode = function()
         {
-        var text=mgnlMessages.get('js.tree.deletenode.confirm.text', null, [this.selectedNode.id]);
-        var title=mgnlMessages.get('js.tree.deletenode.confirm.title');
+        var text=mgnlMessages.get('tree.deletenode.confirm.text.js', null, [this.selectedNode.id]);
+        var title=mgnlMessages.get('tree.deletenode.confirm.title.js');
         if (!this.selectedNode.isActivated || mgnlConfirm(text,title))
             {
             var parentNode=this.getNode(this.selectedNode.parentId);
@@ -521,8 +521,8 @@
 
     mgnlTree.prototype.exportNode = function(keepVersions)
         {
-        var text=mgnlMessages.get('js.tree.exportnode.confirm.text');
-        var title=mgnlMessages.get('js.tree.exportnode.confirm.title', null, [this.selectedNode.id]);
+        var text=mgnlMessages.get('tree.exportnode.confirm.text.js');
+        var title=mgnlMessages.get('tree.exportnode.confirm.title.js', null, [this.selectedNode.id]);
 
         if (mgnlConfirm(text,title))
             {
@@ -549,8 +549,8 @@
             strDiv +='<input type="hidden" name="mgnlRedirect" value="' + contextPath + '/.magnolia/trees/' + this.handlerName + '.html">';
             strDiv +='<input type="file" name="mgnlFileImport" id="mgnlFileImport" /><br/>';
 
-            strDiv +='<input type="submit" class="mgnlImportButton" name="importxml" value="' + mgnlMessages.get('js.import.button') + '" />';
-            strDiv +='<input type="button" class="mgnlImportButton" value="' + mgnlMessages.get('js.import.button.close') + '" onclick="document.body.removeChild(this.parentNode.parentNode)" />';
+            strDiv +='<input type="submit" class="mgnlImportButton" name="importxml" value="' + mgnlMessages.get('import.button.js') + '" />';
+            strDiv +='<input type="button" class="mgnlImportButton" value="' + mgnlMessages.get('import.button.close.js') + '" onclick="document.body.removeChild(this.parentNode.parentNode)" />';
             strDiv +='</form>';
 
             var resDiv = document.createElement('div');
@@ -587,17 +587,17 @@
         if (mgnlTreeMoveNode && permissionWrite){
             if (this.clipboardMethod==0 && id.indexOf(this.clipboardNode.id)==0 && pasteType!=0){
                 //move into itself is not possible
-                mgnlAlert(mgnlMessages.get('js.tree.pastenode.itself'));
+                mgnlAlert(mgnlMessages.get('tree.pastenode.itself.js'));
             }
             else if (this.clipboardMethod==1 && id.indexOf(this.clipboardNode.id)==0 && pasteType!=0){
                 //move into itself is not possible
-                mgnlAlert(mgnlMessages.get('js.tree.pastenode.itself'));
+                mgnlAlert(mgnlMessages.get('tree.pastenode.itself.js'));
              }
             else{
                 // confirm deactivation
                 
-                var text=mgnlMessages.get('js.tree.movenode.confirm.text', null, [this.selectedNode.id]);
-                var title=mgnlMessages.get('js.tree.movenode.confirm.title');
+                var text=mgnlMessages.get('tree.movenode.confirm.text.js', null, [this.selectedNode.id]);
+                var title=mgnlMessages.get('tree.movenode.confirm.title.js');
 
                 if (!this.getNode(id).isActivated || this.clipboardMethod==1 || mgnlConfirm(text,title)){
                     if (lineDivId){
@@ -856,8 +856,8 @@
             }
         else if (this.lastEditedIsLabel && this.lastEditedNode.isActivated)
             {
-            if (!mgnlConfirm(mgnlMessages.get('js.tree.savenode.confirmDeactivation.text'),
-                                mgnlMessages.get('js.tree.savenode.confirmDeactivation.title')))
+            if (!mgnlConfirm(mgnlMessages.get('tree.savenode.confirmDeactivation.text.js'),
+                                mgnlMessages.get('tree.savenode.confirmDeactivation.title.js')))
                 {
                 exit=true;
                 }
