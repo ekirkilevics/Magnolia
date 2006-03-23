@@ -8,12 +8,7 @@ var contextPath = '<%= request.getContextPath() %>';
     String[] includes = {
         "dialogs/dialogs.js",
         "dialogs/acl.js",
-        "dialogs/calendar.js",
-        "controls.js",
-        "tree.js",
-        "i18n.js",
-        "contextmenu.js",
-        "inline.js"
+        "dialogs/calendar.js"
     };
 
     for(int i=0; i<includes.length; i++){
