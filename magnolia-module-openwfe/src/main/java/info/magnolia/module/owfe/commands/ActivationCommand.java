@@ -7,17 +7,18 @@ import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.Rule;
 import openwfe.org.engine.workitem.InFlowWorkItem;
+import org.apache.commons.chain.Context;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.HashMap;
 
-public class ActivationCommand extends AbstractTreeCommand {
+public class ActivationCommand implements ITreeCommand {
 
-    public boolean execute(HashMap params) {
-
+    public boolean execute(Context context) {
+        HashMap params = (HashMap) context.get(PARAMS);
         String path;
         boolean recursive; // is initialized at false
-        InFlowWorkItem if_wi = (InFlowWorkItem) params.get(AbstractTreeCommand.P_WORKITEM);
+        InFlowWorkItem if_wi = (InFlowWorkItem) params.get(ITreeCommand.P_WORKITEM);
         if (if_wi != null) { // if call from flow
             path = (if_wi.getAttribute("pathSelected")).toString();
             recursive = (if_wi.getAttribute("recursive")).equals("true");

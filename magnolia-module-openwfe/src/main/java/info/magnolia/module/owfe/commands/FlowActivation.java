@@ -5,6 +5,7 @@ import info.magnolia.module.owfe.jcr.JCRFlowDefinition;
 import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
 import openwfe.org.engine.workitem.LaunchItem;
 import openwfe.org.engine.workitem.StringAttribute;
+import org.apache.commons.chain.Context;
 
 import java.util.HashMap;
 
@@ -12,10 +13,9 @@ import java.util.HashMap;
  * @author jackie
  * @author nicolas
  */
-public class FlowActivation extends AbstractFlowCommand {
+public class FlowActivation extends IFlowCommand {
 
-
-    public void executeImpl(HashMap params, JCRPersistedEngine engine, LaunchItem li) {
+    public void onExecute(Context context, HashMap params, JCRPersistedEngine engine, LaunchItem li) {
         try {
 
             // Retrieve parameters

@@ -1,9 +1,11 @@
 package info.magnolia.module.owfe.flow;
 
+import info.magnolia.cms.beans.runtime.Context;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
-import info.magnolia.module.owfe.commands.AbstractTreeCommand;
 import info.magnolia.module.owfe.commands.CommandsMap;
+import info.magnolia.module.owfe.commands.ITreeCommand;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,7 +35,7 @@ public abstract class FlowAdminTreeMVCHandler extends AdminTreeMVCHandler {
      */
     public String execute(String command) {
         // get command from command map in JCR repository
-        AbstractTreeCommand tc = new CommandsMap().getTreeCommand(command);
+        ITreeCommand tc = new CommandsMap().getTreeCommand(command);
         if (tc == null) { // not found, do in the old ways
             log.warn("can not find command named " + command + "in tree command map");
             return super.execute(command);
@@ -42,12 +44,21 @@ public abstract class FlowAdminTreeMVCHandler extends AdminTreeMVCHandler {
 
         // set parameters
         HashMap params = new HashMap();
-        params.put(AbstractTreeCommand.P_REQUEST, request);
+        params.put(ITreeCommand.P_REQUEST, request);
         params.put("pathSelected", pathSelected);
         params.put("recursive", Boolean.valueOf((request.getParameter("recursive") != null)));
+        Context context = MgnlContext.getInstance();
+        context.put(ITreeCommand.PARAMS, params);
 
-        // execute the command
-        tc.execute(params);
+        // execute
+        try {
+            tc.execute(context);
+        }
+        catch (Exception e) {
+            //TODO: check that this is processed somewhere else
+            log.error("Error while executing the command:" + command, e);
+        }
+
         return VIEW_TREE;
     }
 

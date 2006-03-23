@@ -25,19 +25,22 @@ import java.util.Locale;
  * This interface defines all the methods which should be implemented by any configured magnolia context, implementing
  * class should never be accessible directly but only via MgnlContext static methods which work on a local (Thread) copy
  * of the implementation
+ *
  * @author Sameer Charles
  * @version $Revision $ ($Author $)
  */
-public interface Context {
+public interface Context extends org.apache.commons.chain.Context {
 
     /**
      * Set user instance for this context
+     *
      * @param user
      */
     public void setUser(User user);
 
     /**
      * Get exiting logged in user instance
+     *
      * @return User
      * @see info.magnolia.cms.security.User
      */
@@ -50,12 +53,14 @@ public interface Context {
 
     /**
      * Get the current locale
+     *
      * @return
      */
     public Locale getLocale();
 
     /**
      * Get hierarchy manager initialized for this user
+     *
      * @param repositoryId
      * @return hierarchy manager
      */
@@ -63,6 +68,7 @@ public interface Context {
 
     /**
      * Get hierarchy manager initialized for this user
+     *
      * @param repositoryId
      * @param workspaceId
      * @return hierarchy manager
@@ -71,6 +77,7 @@ public interface Context {
 
     /**
      * Get access manager for the specified repository on default workspace
+     *
      * @param repositoryId
      * @return access manager
      */
@@ -78,6 +85,7 @@ public interface Context {
 
     /**
      * Get access manager for the specified repository on the specified workspace
+     *
      * @param repositoryId
      * @param workspaceId
      * @return access manager
@@ -86,6 +94,7 @@ public interface Context {
 
     /**
      * Get QueryManager created for this user on the specified repository
+     *
      * @param repositoryId
      * @return query manager
      */
@@ -93,6 +102,7 @@ public interface Context {
 
     /**
      * Get QueryManager created for this user on the specified repository and workspace
+     *
      * @param repositoryId
      * @param workspaceId
      * @return query manager
@@ -101,7 +111,8 @@ public interface Context {
 
     /**
      * Set attribute value, scope of the attribute is defined
-     * @param name is used as a key
+     *
+     * @param name  is used as a key
      * @param value
      * @param scope , highest level of scope from which this attribute is visible
      */
@@ -109,7 +120,8 @@ public interface Context {
 
     /**
      * Get attribute value
-     * @param name to which value is associated to
+     *
+     * @param name  to which value is associated to
      * @param scope the scope (request, session, application)
      * @return attribute value
      */
@@ -117,12 +129,14 @@ public interface Context {
 
     /**
      * Get the default messages. It uses the locale set on this context
+     *
      * @return
      */
     public Messages getMessages();
 
     /**
      * Get the messages of the named bundle. It uses the locale set on this context
+     *
      * @param basename name of the bundle
      * @return
      */

@@ -1,7 +1,9 @@
 package info.magnolia.module.owfe;
 
-import info.magnolia.module.owfe.commands.AbstractTreeCommand;
+import info.magnolia.cms.beans.runtime.Context;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.module.owfe.commands.CommandsMap;
+import info.magnolia.module.owfe.commands.ITreeCommand;
 import info.magnolia.module.owfe.jcr.JCRWorkItemAPI;
 import openwfe.org.embed.impl.engine.AbstractEmbeddedParticipant;
 import openwfe.org.engine.workitem.InFlowWorkItem;
@@ -16,6 +18,7 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
      */
     private static Logger log = Logger.getLogger(AbstractEmbeddedParticipant.class);
     JCRWorkItemAPI storage = null;
+
     public MgnlParticipant() throws Exception {
 
         super();
@@ -44,17 +47,19 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
             //	commandAgent.use((InFlowWorkItem)wi);
             String cmd = parName.substring(8, parName.length());
             log.info("command name is " + cmd);
-            AbstractTreeCommand tc = new CommandsMap().getFlowCommand(cmd);
+            ITreeCommand tc = new CommandsMap().getFlowCommand(cmd);
             if (tc == null) { // not found, do in the old ways
                 log.warn("can not find command named " + cmd + "in tree command map");
             } else {
                 log.info("find command for " + cmd);
-                // set parameters
+                // set parameters in the context
                 HashMap params = new HashMap();
                 params.put("workItem", wi);
+                Context context = MgnlContext.getInstance();
+                context.put(ITreeCommand.PARAMS, params);
 
                 // execute
-                tc.execute(params);
+                tc.execute(context);
             }
         } else {
             log.debug("storage = " + storage);

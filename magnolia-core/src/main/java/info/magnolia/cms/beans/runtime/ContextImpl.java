@@ -20,15 +20,17 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.User;
 
+import java.util.HashMap;
 import java.util.Locale;
 
 
 /**
  * Default implementation of the Context interface
+ *
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
-public abstract class ContextImpl implements Context {
+public abstract class ContextImpl extends HashMap implements Context {
 
     /**
      * user attached to this context
@@ -42,6 +44,7 @@ public abstract class ContextImpl implements Context {
 
     /**
      * Set user instance for this context
+     *
      * @param user
      */
     public void setUser(User user) {
@@ -51,6 +54,7 @@ public abstract class ContextImpl implements Context {
 
     /**
      * Get exiting logged in user instance
+     *
      * @return User
      * @see info.magnolia.cms.security.User
      */
@@ -60,7 +64,8 @@ public abstract class ContextImpl implements Context {
 
     /**
      * If not yet set try to get the locale of the user. Else use the locale of the system context
-     * @see info.magnolia.cms.beans.runtime.Context#getLocale()
+     *
+     * @see Context#getLocale()
      */
     public Locale getLocale() {
         if (locale == null) {
