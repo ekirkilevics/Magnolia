@@ -15,6 +15,8 @@ package info.magnolia.cms.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.commons.lang.time.DateFormatUtils;
+
 
 /**
  * @author Sameer Charles
@@ -35,8 +37,7 @@ public class DateUtil {
         if (formatPattern == null) {
             formatPattern = FORMAT_DEFAULTPATTERN;
         }
-        SimpleDateFormat sdf = new SimpleDateFormat(formatPattern);
-        String fd = sdf.format(date);
+        String fd = DateFormatUtils.formatUTC(date,formatPattern);
         return fd;
     }
 }
