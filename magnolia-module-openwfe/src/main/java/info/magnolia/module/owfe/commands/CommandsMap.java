@@ -11,7 +11,7 @@ public class CommandsMap {
      */
     private static Logger log = Logger.getLogger(CommandsMap.class);
 
-    public ITreeCommand getTreeCommand(String commandName) {
+    public MgnlCommand getTreeCommand(String commandName) {
         HierarchyManager hm = ContentRepository
                 .getHierarchyManager(ContentRepository.CONFIG);
         try {
@@ -25,7 +25,7 @@ public class CommandsMap {
             String className = c.getNodeData("impl").getString();
             log.info("class name is " + className);
             Class cmdClass = Class.forName(className);
-            return (ITreeCommand) cmdClass.newInstance();
+            return (MgnlCommand) cmdClass.newInstance();
 
         } catch (javax.jcr.PathNotFoundException pne) {
             log.warn("command [" + commandName + "] is not defined");
@@ -38,7 +38,7 @@ public class CommandsMap {
 
     }
 
-    public ITreeCommand getFlowCommand(String commandName) {
+    public MgnlCommand getFlowCommand(String commandName) {
         HierarchyManager hm = ContentRepository
                 .getHierarchyManager(ContentRepository.CONFIG);
         try {
@@ -52,7 +52,7 @@ public class CommandsMap {
             String className = c.getNodeData("impl").getString();
             log.info("class name is " + className);
             Class cmdClass = Class.forName(className);
-            return (ITreeCommand) cmdClass.newInstance();
+            return (MgnlCommand) cmdClass.newInstance();
         } catch (javax.jcr.PathNotFoundException pne) {
             log.warn("command [" + commandName + "] is not defined");
             return null;

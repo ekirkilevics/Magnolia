@@ -1,6 +1,7 @@
-package info.magnolia.module.owfe.commands;
+package info.magnolia.module.owfe.commands.flow;
 
 import info.magnolia.cms.util.AlertUtil;
+import info.magnolia.module.owfe.commands.MgnlCommand;
 import info.magnolia.module.owfe.jcr.JCRFlowDefinition;
 import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
 import openwfe.org.engine.workitem.LaunchItem;
@@ -13,19 +14,19 @@ import java.util.HashMap;
  * @author jackie
  * @author nicolas
  */
-public class FlowActivation extends IFlowCommand {
+public class FlowActivationCommand extends AbstractFlowCommand {
 
     public void onExecute(Context context, HashMap params, JCRPersistedEngine engine, LaunchItem li) {
         try {
 
             // Retrieve parameters
-            String pathSelected = (String) params.get(ITreeCommand.P_PATH);
-            boolean recursive = ((Boolean) params.get(ITreeCommand.P_RECURSIVE)).booleanValue();
+            String pathSelected = (String) params.get(MgnlCommand.P_PATH);
+            boolean recursive = ((Boolean) params.get(MgnlCommand.P_RECURSIVE)).booleanValue();
 
             // Parameters for the flow item
             li.setWorkflowDefinitionUrl("field:__definition__");
-            li.addAttribute(ITreeCommand.P_RECURSIVE, new StringAttribute(recursive ? "true" : "false"));
-            li.addAttribute(ITreeCommand.P_RECURSIVE, new StringAttribute(pathSelected));
+            li.addAttribute(MgnlCommand.P_RECURSIVE, new StringAttribute(recursive ? "true" : "false"));
+            li.addAttribute(MgnlCommand.P_RECURSIVE, new StringAttribute(pathSelected));
             li.addAttribute("OK", new StringAttribute("false"));
 
             // Retrieve and add the flow definition to the LaunchItem
@@ -33,7 +34,7 @@ public class FlowActivation extends IFlowCommand {
             li.getAttributes().puts("__definition__", flowDef);
 
         } catch (Exception e) {
-            log.error("can't launch activate flow", e);
+            MgnlCommand.log.error("can't launch activate flow", e);
             AlertUtil.setMessage(AlertUtil.getExceptionMessage(e));
         }
     }

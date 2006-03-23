@@ -1,6 +1,7 @@
-package info.magnolia.module.owfe.commands;
+package info.magnolia.module.owfe.commands.flow;
 
 import info.magnolia.module.owfe.OWFEEngine;
+import info.magnolia.module.owfe.commands.MgnlCommand;
 import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
 import openwfe.org.engine.workitem.LaunchItem;
 import openwfe.org.engine.workitem.StringAttribute;
@@ -15,7 +16,7 @@ import java.util.HashMap;
  * Time: 1:11:29 PM
  * To change this template use File | Settings | File Templates.
  */
-public abstract class IFlowCommand implements ITreeCommand {
+public abstract class AbstractFlowCommand implements MgnlCommand {
 
     public boolean execute(Context context) {
         HashMap params = (HashMap) context.get(PARAMS);

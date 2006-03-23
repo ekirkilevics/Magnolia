@@ -1,4 +1,4 @@
-package info.magnolia.module.owfe.commands;
+package info.magnolia.module.owfe.commands.simple;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.MgnlContext;
@@ -6,19 +6,20 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.Rule;
+import info.magnolia.module.owfe.commands.MgnlCommand;
 import openwfe.org.engine.workitem.InFlowWorkItem;
 import org.apache.commons.chain.Context;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.HashMap;
 
-public class DeactivationCommand implements ITreeCommand {
+public class DeactivationCommand implements MgnlCommand {
 
     public boolean execute(Context context) {
         HashMap params = (HashMap) context.get(PARAMS);
         String path;
         boolean recursive; // is initialized at false
-        InFlowWorkItem if_wi = (InFlowWorkItem) params.get(ITreeCommand.P_WORKITEM);
+        InFlowWorkItem if_wi = (InFlowWorkItem) params.get(MgnlCommand.P_WORKITEM);
         if (if_wi != null) { // if call from flow
             path = (if_wi.getAttribute(P_PATH)).toString();
         } else {

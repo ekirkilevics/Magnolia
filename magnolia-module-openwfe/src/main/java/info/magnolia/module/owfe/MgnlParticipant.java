@@ -3,7 +3,7 @@ package info.magnolia.module.owfe;
 import info.magnolia.cms.beans.runtime.Context;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.module.owfe.commands.CommandsMap;
-import info.magnolia.module.owfe.commands.ITreeCommand;
+import info.magnolia.module.owfe.commands.MgnlCommand;
 import info.magnolia.module.owfe.jcr.JCRWorkItemAPI;
 import openwfe.org.embed.impl.engine.AbstractEmbeddedParticipant;
 import openwfe.org.engine.workitem.InFlowWorkItem;
@@ -47,7 +47,7 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
             //	commandAgent.use((InFlowWorkItem)wi);
             String cmd = parName.substring(8, parName.length());
             log.info("command name is " + cmd);
-            ITreeCommand tc = new CommandsMap().getFlowCommand(cmd);
+            MgnlCommand tc = new CommandsMap().getFlowCommand(cmd);
             if (tc == null) { // not found, do in the old ways
                 log.warn("can not find command named " + cmd + "in tree command map");
             } else {
@@ -56,7 +56,7 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
                 HashMap params = new HashMap();
                 params.put("workItem", wi);
                 Context context = MgnlContext.getInstance();
-                context.put(ITreeCommand.PARAMS, params);
+                context.put(MgnlCommand.PARAMS, params);
 
                 // execute
                 tc.execute(context);

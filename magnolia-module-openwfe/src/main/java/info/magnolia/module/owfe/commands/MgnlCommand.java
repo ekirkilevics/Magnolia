@@ -4,7 +4,7 @@ import org.apache.commons.chain.Command;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public interface ITreeCommand extends Command {
+public interface MgnlCommand extends Command {
     final static public String PARAMS = "__params__";
 
     final static public String P_WORKITEM = "workItem";
@@ -17,7 +17,7 @@ public interface ITreeCommand extends Command {
     final static public String REPOSITORY = "website";
 
 
-    static Logger log = LoggerFactory.getLogger(ITreeCommand.class);
+    static Logger log = LoggerFactory.getLogger(MgnlCommand.class);
 
 
 }
