@@ -158,14 +158,14 @@ public class ConfigLoader {
             MIMEMapping.init();
             VersionConfig.init();
             
+            // finished
+            setConfigured(true);
+            log.info("Configuration loaded!"); //$NON-NLS-1$
+
             if(ModuleRegistration.getInstance().isRestartNeeded()){
                 printSystemRestartInfo();
             }
-            else{
-                // finished
-                setConfigured(true);
-                log.info("Configuration loaded!"); //$NON-NLS-1$
-            }
+
         }
         catch (ConfigurationException e) {
             log.error("An error occurred during initialization",e); //$NON-NLS-1$
@@ -197,16 +197,16 @@ public class ConfigLoader {
      */
     private void printSystemRestartInfo() {
         ModuleLoader loader = ModuleLoader.getInstance();    
-        System.out.println("---------------------------------------------"); //$NON-NLS-1$
+        System.out.println("-----------------------------------------------------"); //$NON-NLS-1$
         System.out.println("One or more modules need a restart of the container:"); //$NON-NLS-1$
         for (Iterator iter = loader.getModuleInstances().keySet().iterator(); iter.hasNext();) {
             String moduleName = (String) iter.next();
             Module module = loader.getModuleInstance(moduleName);
             if(module.isRestartNeeded()){
-                System.out.println(module.getName() +" ("+ module.getModuleDefinition().getVersion() + ")");
+                System.out.println(" - " +module.getName() +" ("+ module.getModuleDefinition().getVersion() + ")");
             }
         }
-        System.out.println("---------------------------------------------"); //$NON-NLS-1$
+        System.out.println("-----------------------------------------------------"); //$NON-NLS-1$
     }
     
     /**

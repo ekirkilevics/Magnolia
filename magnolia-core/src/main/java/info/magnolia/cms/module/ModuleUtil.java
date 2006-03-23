@@ -365,7 +365,7 @@ public final class ModuleUtil {
         Element node = (Element) xpath.selectSingleNode(doc);
 
         if (node == null) {
-            log.info("register servlet " + name);
+            log.info("register servlet mapping [{0}] for servlet [{1}]", new Object[]{urlPattern, name});
 
             // make a nice comment
             doc.getRootElement().addContent(new Comment(comment));

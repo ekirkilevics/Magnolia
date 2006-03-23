@@ -24,23 +24,6 @@
     String userName = "";
     if (user == null || (userName = user.getName()).equals("")) userName = Authenticator.getUserId(request);
 
-    // is a system restart needed
-    boolean restart = ModuleRegistration.getInstance().isRestartNeeded();
-    List restartNeedingModules = new ArrayList();
-
-    if(restart){
-        // collect the modules needing a restart
-        for (Iterator iter = ModuleLoader.getInstance().getModuleInstances().keySet().iterator(); iter.hasNext();) {
-            String moduleName = (String) iter.next();
-            Module module = ModuleLoader.getInstance().getModuleInstance(moduleName);
-            if(module.isRestartNeeded()){
-                restartNeedingModules.add(module);
-            }
-        }
-    }    
-
-    pageContext.setAttribute("restart", new Boolean(restart));
-    pageContext.setAttribute("restartNeedingModules", restartNeedingModules);
     pageContext.setAttribute("navigation", navigation);
     pageContext.setAttribute("username", userName);
 
@@ -110,16 +93,6 @@
 
 <body class="mgnlBgDark mgnlAdminMain">
 
-<c:if test="${restart}">
-    <div class="mgnlAdminCentralMessagesDiv mgnlText" >
-        <fmt:message>system.restart</fmt:message>:
-        <c:forEach items="${restartNeedingModules}" var="module">
-            <div style="padding-left: 15px; padding-top: 5px;">- ${module.name} (${module.moduleDefinition.version})</div>
-        </c:forEach>
-    </div>
-</c:if>
-
-<c:if test="${!restart}">
     <!-- Menu -->
     <div id="mgnlAdminCentralMenuDiv" class="mgnlAdminCentralMenuDiv">
         <div class="mgnlAdminCentralMenu">
@@ -143,7 +116,7 @@
                 frameborder="0"><![CDATA[ <!-- a comment here is needed for the correct rendering of the iframe tag -->]]>
         </iframe>
     </div>
-</c:if>
+
 </body>
 </html>
 </jsp:root>

@@ -16,6 +16,8 @@ import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.Dispatcher;
 import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.config.ModuleLoader;
+import info.magnolia.cms.beans.config.ModuleRegistration;
 import info.magnolia.cms.beans.config.VirtualURIManager;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Path;
@@ -92,6 +94,11 @@ public class EntryServlet extends ContextSensitiveServlet {
             // @todo a nice page, with the log content...
             res.getWriter().write("Magnolia bootstrapping has failed, check bootstrap.log in magnolia/logs"); //$NON-NLS-1$
             return;
+        }
+        
+        if(ModuleRegistration.getInstance().isRestartNeeded()){
+            req.getRequestDispatcher("/admintemplates/adminCentral/restart.jsp").forward(req, res);
+            System.out.println("UPS");
         }
 
         try {
