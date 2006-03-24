@@ -181,9 +181,10 @@ public class JCRFlowDefinition {
             boolean exist = hm.isExist(root.getHandle() + "/" + name);
             Content c;
             if (exist)
-                c = (Content) root.getChildren(name).iterator().next();
+                c = hm.getContent(root.getHandle() + "/" + name);
             else
                 c = root.createContent(name, ItemType.CONTENT);
+
             ValueFactory vf = c.getJCRNode().getSession().getValueFactory();
             Value value = vf.createValue(flowDef);
             if (!exist)
