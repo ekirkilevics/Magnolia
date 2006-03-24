@@ -24,7 +24,7 @@ public class DeleteCommand implements MgnlCommand {
         try {
             deleteNode(context, path);
         } catch (Exception e) {
-            log.error("cannot do deactivate", e);
+            log.error("cannot do delete", e);
             return false;
         }
         return true;
