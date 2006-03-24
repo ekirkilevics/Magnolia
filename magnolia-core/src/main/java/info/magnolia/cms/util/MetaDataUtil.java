@@ -14,12 +14,11 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.MetaData;
-
-import java.util.Date;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Date;
 
 
 /**
@@ -52,30 +51,30 @@ public class MetaDataUtil {
     }
 
     /**
-     * <p>
+     * <p/>
      * Returns the representation of the value as a String:
      * </p>
+     *
      * @return String
      */
     public String getPropertyValueString(String propertyName, String dateFormat) {
         try {
             if (propertyName.equals(MetaData.CREATION_DATE)
-                || propertyName.equals(MetaData.LAST_MODIFIED)
-                || propertyName.equals(MetaData.LAST_ACTION)
-                || propertyName.equals(MetaData.START_TIME)
-                || propertyName.equals(MetaData.END_TIME)) {
+                    || propertyName.equals(MetaData.LAST_MODIFIED)
+                    || propertyName.equals(MetaData.LAST_ACTION)
+                    || propertyName.equals(MetaData.START_TIME)
+                    || propertyName.equals(MetaData.END_TIME)) {
                 Date date = this.getContent().getMetaData().getDateProperty(propertyName).getTime();
                 return new DateUtil().getFormattedDate(date, dateFormat);
-            }
-            else if (propertyName.equals(MetaData.ACTIVATED)) {
+            } else if (propertyName.equals(MetaData.ACTIVATED)) {
                 return Boolean.toString(this.getContent().getMetaData().getBooleanProperty(propertyName));
-            }
-            else {
+            } else {
                 return this.getContent().getMetaData().getStringProperty(propertyName);
             }
         }
         catch (Exception e) {
-            log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+            if (log.isDebugEnabled())
+                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
         }
         return StringUtils.EMPTY;
     }
