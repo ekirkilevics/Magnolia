@@ -23,7 +23,6 @@
         <dependency>
             <groupId>commons-chain</groupId>
             <artifactId>commons-chain</artifactId>
-            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
