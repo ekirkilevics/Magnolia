@@ -14,6 +14,12 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -28,16 +34,10 @@ import java.util.Iterator;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.TrueFileFilter;
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
  * Util to find resources in the classpath (WEB-INF/lib and WEB-INF/classes).
+ *
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
@@ -52,6 +52,7 @@ public class ClasspathResourcesUtil {
 
     /**
      * Filter for filtering the resources.
+     *
      * @author Philipp Bracher
      * @version $Revision$ ($Author$)
      */
@@ -62,6 +63,7 @@ public class ClasspathResourcesUtil {
 
     /**
      * Return a collection containing the resource names which passed the filter.
+     *
      * @param filter
      * @return
      * @throws IOException
@@ -83,8 +85,7 @@ public class ClasspathResourcesUtil {
                 File tofile = new File(url.getFile());
                 collectFiles(resources, tofile, filter);
             }
-        }
-        else {
+        } else {
 
             // no way, we have to assume a standard war structure and look in the WEB-INF/lib and WEB-INF/classes dirs
 
@@ -112,9 +113,10 @@ public class ClasspathResourcesUtil {
 
     /**
      * Load resources from jars or directories
+     *
      * @param resources found resources will be added to this collection
-     * @param jarOrDir a File, can be a jar or a directory
-     * @param filter used to filter resources
+     * @param jarOrDir  a File, can be a jar or a directory
+     * @param filter    used to filter resources
      */
     private static void collectFiles(Collection resources, File jarOrDir, Filter filter) {
 
@@ -124,7 +126,8 @@ public class ClasspathResourcesUtil {
         }
 
         if (jarOrDir.isDirectory()) {
-            log.debug("looking in dir {}", jarOrDir.getAbsolutePath());
+            if (log.isDebugEnabled())
+                log.debug("looking in dir {}", jarOrDir.getAbsolutePath());
 
             Collection files = FileUtils.listFiles(jarOrDir, new TrueFileFilter() {
             }, new TrueFileFilter() {
@@ -143,9 +146,9 @@ public class ClasspathResourcesUtil {
                     resources.add(name);
                 }
             }
-        }
-        else if (jarOrDir.getName().endsWith(".jar")) {
-            log.debug("looking in jar {}", jarOrDir.getAbsolutePath());
+        } else if (jarOrDir.getName().endsWith(".jar")) {
+            if (log.isDebugEnabled())
+                log.debug("looking in jar {}", jarOrDir.getAbsolutePath());
             JarFile jar;
             try {
                 jar = new JarFile(jarOrDir);
@@ -160,15 +163,16 @@ public class ClasspathResourcesUtil {
                     resources.add("/" + entry.getName());
                 }
             }
-        }
-        else {
-            log.debug("Unknown (not jar) file in classpath: {}, skipping.", jarOrDir.getName());
+        } else {
+            if (log.isDebugEnabled())
+                log.debug("Unknown (not jar) file in classpath: {}, skipping.", jarOrDir.getName());
         }
 
     }
 
     /**
      * Checks last modified and returns the new content if changed.
+     *
      * @param name
      * @return the input stream
      * @throws IOException
@@ -180,7 +184,8 @@ public class ClasspathResourcesUtil {
             if (url != null) {
                 return url.openStream();
             }
-            log.debug("Can't find {}", name);
+            if (log.isDebugEnabled())
+                log.debug("Can't find {}", name);
         }
         return ClasspathResourcesUtil.class.getResourceAsStream(name);
     }

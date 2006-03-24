@@ -136,9 +136,10 @@ public class JCRWorkItemStorage extends AbstractStorage {
     }
 
     public InFlowWorkItem retrieveWorkItem(final String storeName, final FlowExpressionId fei) throws StoreException {
-
-        log.debug("starting retrieve work item. this = " + this);
-        log.debug("retrieve work item for ID = " + fei.toParseableString());
+        if (log.isDebugEnabled()) {
+            log.debug("starting retrieve work item. this = " + this);
+            log.debug("retrieve work item for ID = " + fei.toParseableString());
+        }
         // String fileName = determineFileName(storeName, fei, false);
         //
         // fileName = Utils.getCanonicalPath
@@ -160,7 +161,8 @@ public class JCRWorkItemStorage extends AbstractStorage {
     public static InFlowWorkItem loadWorkItem(Content ct) throws Exception {
         InFlowWorkItem wi = null;
         InputStream s = ct.getNodeData("value").getStream();
-        log.debug("retrieve work item: value = " + s.toString());
+        if (log.isDebugEnabled())
+            log.debug("retrieve work item: value = " + s.toString());
         final org.jdom.input.SAXBuilder builder = new org.jdom.input.SAXBuilder();
         Document doc = builder.build(s);
         wi = (InFlowWorkItem) XmlCoder.decode(doc);
@@ -169,7 +171,8 @@ public class JCRWorkItemStorage extends AbstractStorage {
         while (itt.hasNext()) {
             Object o = itt.next();
             String name1 = (String) o;
-            log.debug(name1 + "=" + wi.getAttribute(name1).toString());
+            if (log.isDebugEnabled())
+                log.debug(name1 + "=" + wi.getAttribute(name1).toString());
         }
         return wi;
     }
@@ -203,7 +206,8 @@ public class JCRWorkItemStorage extends AbstractStorage {
 
     public boolean checkContentWithEID(Content ct, FlowExpressionId eid) {
         String cid = ct.getNodeData("ID").getString();
-        log.debug("checkContentWithEID: ID = " + cid);
+        if (log.isDebugEnabled())
+            log.debug("checkContentWithEID: ID = " + cid);
         FlowExpressionId id = null;
 
         id = FlowExpressionId.fromParseableString(cid);
@@ -227,14 +231,16 @@ public class JCRWorkItemStorage extends AbstractStorage {
 
             ValueFactory vf = newc.getJCRNode().getSession().getValueFactory();
             String sId = wi.getLastExpressionId().toParseableString();
-            log.debug("store work item: ID = " + sId);
+            if (log.isDebugEnabled())
+                log.debug("store work item: ID = " + sId);
             newc.createNodeData("ID", vf.createValue(sId));
             // convert to xml string
             Element encoded = XmlCoder.encode(wi);
             final org.jdom.Document doc = new org.jdom.Document(encoded);
             String s = XmlUtils.toString(doc, null);
             newc.createNodeData("value", vf.createValue(s));
-            log.debug("store work item: value=" + s);
+            if (log.isDebugEnabled())
+                log.debug("store work item: value=" + s);
             /*
              * // store all attributes StringMapAttribute sma = wi.getAttributes(); Iterator it =
              * sma.alphaStringIterator(); while (it.hasNext()) { StringAttribute sa = (StringAttribute) it.next();

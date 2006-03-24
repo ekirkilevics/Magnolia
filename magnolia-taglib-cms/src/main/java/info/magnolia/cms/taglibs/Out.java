@@ -17,21 +17,19 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.util.LinkUtil;
 import info.magnolia.cms.util.Resource;
-
-import java.io.IOException;
-import java.util.Date;
-import java.util.Locale;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateFormatUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.IOException;
+import java.util.Date;
+import java.util.Locale;
 
 
 /**
@@ -91,19 +89,18 @@ public class Out extends TagSupport {
                 if (StringUtils.isEmpty(contentNodeCollectionName)) {
                     // e.g. <cms:out nodeDataName="title" contentNodeName="footer"/>
                     this.setContentNode(this.getCurrentActivePage().getContent(contentNodeName));
-                }
-                else {
+                } else {
                     // e.g. <cms:out nodeDataName="title" contentNodeName="01" contentNodeCollectionName="mainPars"/>
                     // e.g. <cms:out nodeDataName="title" contentNodeName="footer" contentNodeCollectionName=""/>
                     this.setContentNode(this.getCurrentActivePage().getContent(contentNodeCollectionName).getContent(
-                        contentNodeName));
+                            contentNodeName));
                 }
             }
             catch (RepositoryException re) {
-                log.debug(re.getMessage());
+                if (log.isDebugEnabled())
+                    log.debug(re.getMessage());
             }
-        }
-        else {
+        } else {
             if (local == null) {
                 // outside collection iterator
                 if (StringUtils.isNotEmpty(contentNodeCollectionName)) {
@@ -115,20 +112,17 @@ public class Out extends TagSupport {
                 // e.g. <cms:out nodeDataName="title" contentNodeName=""/>
                 // e.g. <cms:out nodeDataName="title" contentNodeCollectionName=""/>
                 this.setContentNode(this.getCurrentActivePage());
-            }
-            else {
+            } else {
                 // inside collection iterator
                 if (contentNodeName == null && contentNodeCollectionName == null) {
                     // e.g. <cms:out nodeDataName="title"/>
                     this.setContentNode(local);
-                }
-                else if ((contentNodeName != null && StringUtils.isEmpty(contentNodeName))
-                    || (contentNodeCollectionName != null && StringUtils.isEmpty(contentNodeCollectionName))) {
+                } else if ((contentNodeName != null && StringUtils.isEmpty(contentNodeName))
+                        || (contentNodeCollectionName != null && StringUtils.isEmpty(contentNodeCollectionName))) {
                     // empty collection name -> use actpage
                     // e.g. <cms:out nodeDataName="title" contentNodeCollectionName=""/>
                     this.setContentNode(this.getCurrentActivePage());
-                }
-                else {
+                } else {
                     // ERROR: no content node assignable because contentNodeName is empty
                     // e.g. <cms:out nodeDataName="title" contentNodeCollectionName="mainPars"/>
                     return SKIP_BODY;
@@ -156,9 +150,10 @@ public class Out extends TagSupport {
     }
 
     /**
-     * <p>
+     * <p/>
      * set the requested node data
      * </p>
+     *
      * @param node
      */
     public void setNodeData(NodeData node) {
@@ -170,9 +165,10 @@ public class Out extends TagSupport {
     }
 
     /**
-     * <p>
+     * <p/>
      * set the node data name, e.g. "mainText"
      * </p>
+     *
      * @param name
      */
     public void setNodeDataName(String name) {
@@ -184,9 +180,10 @@ public class Out extends TagSupport {
     }
 
     /**
-     * <p>
+     * <p/>
      * set the content node name name, e.g. "01"
      * </p>
+     *
      * @param name
      */
     public void setContentNodeName(String name) {
@@ -194,9 +191,10 @@ public class Out extends TagSupport {
     }
 
     /**
-     * <p>
+     * <p/>
      * set the content node collection name name, e.g. "mainColumnParagraphs"
      * </p>
+     *
      * @param name
      */
     public void setContentNodeCollectionName(String name) {
@@ -212,9 +210,10 @@ public class Out extends TagSupport {
     }
 
     /**
-     * <p>
+     * <p/>
      * set the content node name
      * </p>
+     *
      * @param c
      */
     public void setContentNode(Content c) {
@@ -226,23 +225,22 @@ public class Out extends TagSupport {
     }
 
     /**
-     * @deprecated
-     * <p>
-     * set the actpage
-     * </p>
      * @param set (true/false; false is default)
+     * @deprecated <p/>
+     *             set the actpage
+     *             </p>
      */
     public void setActpage(String set) {
     }
 
     /**
-     * <p>
+     * <p/>
      * set which information of a file to retrieve
      * </p>
-     * <p>
+     * <p/>
      * does only apply for nodeDatas of type=Binary
      * </p>
-     * <p>
+     * <p/>
      * supported values (sample value):
      * <ul>
      * <li><b>path (default): </b> path inlcuding the filename (/dev/mainColumnParagraphs/0/image/Alien.png)
@@ -258,6 +256,7 @@ public class Out extends TagSupport {
      * <li><b>contentType: </b> (image/png)
      * </ul>
      * </p>
+     *
      * @param property
      */
     public void setFileProperty(String property) {
@@ -265,13 +264,13 @@ public class Out extends TagSupport {
     }
 
     /**
-     * <p>
+     * <p/>
      * set which date format shall be delivered
      * </p>
-     * <p>
+     * <p/>
      * does only apply for nodeDatas of type=Date
      * </p>
-     * <p>
+     * <p/>
      * language according to java.text.SimpleDateFormat:
      * <ul>
      * <li><b>G </b> Era designator Text AD
@@ -295,6 +294,7 @@ public class Out extends TagSupport {
      * <li><b>Z </b> Time zone RFC 822 time zone -0800
      * </ul>
      * </p>
+     *
      * @param pattern , default is yyyy-MM-dd
      */
     public void setDatePattern(String pattern) {
@@ -306,15 +306,16 @@ public class Out extends TagSupport {
     }
 
     /**
-     * <p>
+     * <p/>
      * set which date format shall be delivered
      * </p>
-     * <p>
+     * <p/>
      * does only apply for nodeDatas of type=Date
      * </p>
-     * <p>
+     * <p/>
      * language according to java.util.Locale
      * </p>
+     *
      * @param language
      */
     public void setDateLanguage(String language) {
@@ -326,9 +327,10 @@ public class Out extends TagSupport {
     }
 
     /**
-     * <p>
+     * <p/>
      * set the lineBreak String
      * </p>
+     *
      * @param lineBreak
      */
     public void setLineBreak(String lineBreak) {
@@ -352,31 +354,30 @@ public class Out extends TagSupport {
             int type = nodeData.getType();
             if (type == PropertyType.DATE) {
                 value = this.getDateFormatted(nodeData.getDate().getTime());
-            }
-            else if (type == PropertyType.BINARY) {
+            } else if (type == PropertyType.BINARY) {
                 value = this.getFilePropertyValue();
-            }
-            else {
+            } else {
                 if (StringUtils.isEmpty(this.getLineBreak())) {
                     value = nodeData.getString();
-                }
-                else {
+                } else {
                     value = nodeData.getString(this.getLineBreak());
                 }
                 // replace internal links
                 value = LinkUtil.convertUUIDsToRelativeLinks(value, Resource
-                    .getActivePage((HttpServletRequest) pageContext.getRequest())); // static actpage
+                        .getActivePage((HttpServletRequest) pageContext.getRequest())); // static actpage
             }
             JspWriter out = pageContext.getOut();
             try {
                 out.print(value);
             }
             catch (IOException e) {
-                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+                if (log.isDebugEnabled())
+                    log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
             }
         }
         catch (Exception e) {
-            log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+            if (log.isDebugEnabled())
+                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
         }
     }
 

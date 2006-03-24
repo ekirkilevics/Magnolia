@@ -22,7 +22,8 @@ public class OWFEEngine {
 
     OWFEEngine() throws Exception {
         wfEngine = new JCRPersistedEngine();
-        log.debug("create worklist...");
+        if (log.isDebugEnabled())
+            log.debug("create worklist...");
 
         // JCRWorkList wl_pl = new JCRWorkList("project-leader");
         // OWFEEngine.getEngine().registerParticipant(wl_pl);

@@ -5,32 +5,6 @@ import info.magnolia.cms.core.Path;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
 import info.magnolia.repository.RepositoryNotInitializedException;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.MessageFormat;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.jcr.NamespaceException;
-import javax.jcr.Repository;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.SimpleCredentials;
-import javax.jcr.Workspace;
-import javax.jcr.nodetype.NoSuchNodeTypeException;
-import javax.jcr.nodetype.NodeTypeManager;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NameNotFoundException;
-import javax.naming.NamingException;
-import javax.servlet.ServletContextEvent;
-import javax.xml.transform.TransformerFactoryConfigurationError;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.jackrabbit.core.WorkspaceImpl;
@@ -42,6 +16,21 @@ import org.apache.jackrabbit.core.nodetype.NodeTypeRegistry;
 import org.apache.jackrabbit.core.nodetype.xml.NodeTypeReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.jcr.*;
+import javax.jcr.nodetype.NoSuchNodeTypeException;
+import javax.jcr.nodetype.NodeTypeManager;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NameNotFoundException;
+import javax.naming.NamingException;
+import javax.servlet.ServletContextEvent;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import java.io.*;
+import java.text.MessageFormat;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
 
 
 /**
@@ -81,6 +70,7 @@ public final class ProviderImpl implements Provider {
 
     /**
      * Find the physical path to the repository folder
+     *
      * @param repositoryHome the property set in the repository.xml file
      * @return the full path resolved to the repository dir
      */
@@ -141,8 +131,8 @@ public final class ProviderImpl implements Provider {
             catch (NameNotFoundException ne) {
                 if (log.isDebugEnabled()) {
                     log.debug("No JNDI bound Repository found with name - "
-                        + bindName
-                        + " , trying to initialize a new Repository");
+                            + bindName
+                            + " , trying to initialize a new Repository");
                 }
                 RegistryHelper.registerRepository(ctx, bindName, configFile, repositoryHome, true);
                 this.repository = (Repository) ctx.lookup(bindName);
@@ -173,15 +163,15 @@ public final class ProviderImpl implements Provider {
                 }
                 catch (NamingException ne) {
                     log.warn(MessageFormat.format("Unable to shutdown repository {0}: {1} {2}", new Object[]{
-                        bindName,
-                        ne.getClass().getName(),
-                        ne.getMessage()}), ne);
+                            bindName,
+                            ne.getClass().getName(),
+                            ne.getMessage()}), ne);
                 }
                 catch (Throwable e) {
                     log.warn(MessageFormat.format("Failed to shutdown repository {0}: {1} {2}", new Object[]{
-                        bindName,
-                        e.getClass().getName(),
-                        e.getMessage()}), e);
+                            bindName,
+                            e.getClass().getName(),
+                            e.getMessage()}), e);
                 }
             }
         });
@@ -228,10 +218,10 @@ public final class ProviderImpl implements Provider {
         InputStream xml;
         String customNodeTypes = (String) this.repositoryMapping.getParameters().get(CUSTOM_NODETYPES);
         if (StringUtils.isEmpty(customNodeTypes)) {
-            log.debug("No custom node type definition found, registering default magnolia node types");
+            if (log.isDebugEnabled())
+                log.debug("No custom node type definition found, registering default magnolia node types");
             xml = getClass().getClassLoader().getResourceAsStream(MGNL_NODETYPES);
-        }
-        else {
+        } else {
             File nodeTypeDefinition = new File(Path.getAbsoluteFileSystemPath(customNodeTypes));
             try {
                 xml = new FileInputStream(nodeTypeDefinition);
@@ -290,15 +280,15 @@ public final class ProviderImpl implements Provider {
      */
     protected void checkXmlSettings() {
         if (SystemUtils.isJavaVersionAtLeast(1.5f)
-            && "org.apache.xalan.processor.TransformerFactoryImpl".equals(System
+                && "org.apache.xalan.processor.TransformerFactoryImpl".equals(System
                 .getProperty("javax.xml.transform.TransformerFactory"))) {
 
             log.info("Java 1.5 detected, setting system property \"javax.xml.transform.TransformerFactory\" to "
-                + "\"com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl\"");
+                    + "\"com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl\"");
 
             System.setProperty(
-                "javax.xml.transform.TransformerFactory",
-                "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
+                    "javax.xml.transform.TransformerFactory",
+                    "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
         }
     }
 

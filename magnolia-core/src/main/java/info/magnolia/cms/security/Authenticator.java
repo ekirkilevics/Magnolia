@@ -12,16 +12,16 @@
  */
 package info.magnolia.cms.security;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -74,6 +74,7 @@ public final class Authenticator {
 
     /**
      * Authenticate authorization request using JAAS login module as configured
+     *
      * @param req as received by the servlet engine
      * @return boolean
      */
@@ -83,12 +84,10 @@ public final class Authenticator {
             // check for form based login request
             if (StringUtils.isNotEmpty(req.getParameter(PARAMETER_USER_ID))) {
                 setFormAuthProperties(req);
-            }
-            else {
+            } else {
                 return false;
             }
-        }
-        else {
+        } else {
             setBasicAuthProperties(credentials, req);
         }
         Subject subject;
@@ -96,8 +95,8 @@ public final class Authenticator {
         if (req.getUserPrincipal() == null) {
             // JAAS authentication
             CredentialsCallbackHandler callbackHandler = new CredentialsCallbackHandler(
-                getUserId(req),
-                getPassword(req));
+                    getUserId(req),
+                    getPassword(req));
             try {
                 LoginContext loginContext = new LoginContext("magnolia", callbackHandler);
                 loginContext.login();
@@ -108,7 +107,8 @@ public final class Authenticator {
                 httpsession.setAttribute(ATTRIBUTE_JAAS_SUBJECT, subject);
             }
             catch (LoginException le) {
-                log.debug("Exception caught", le);
+                if (log.isDebugEnabled())
+                    log.debug("Exception caught", le);
 
                 HttpSession httpsession = req.getSession(false);
                 if (httpsession != null) {
@@ -116,8 +116,7 @@ public final class Authenticator {
                 }
                 return false;
             }
-        }
-        else {
+        } else {
             // user already authenticated via JAAS, try to load roles for it via configured authorization module
             String userName = req.getUserPrincipal().getName();
             CredentialsCallbackHandler callbackHandler = new CredentialsCallbackHandler(userName, getPassword(req));
@@ -130,7 +129,8 @@ public final class Authenticator {
                 httpsession.setAttribute(ATTRIBUTE_JAAS_SUBJECT, subject);
             }
             catch (LoginException le) {
-                log.debug("Exception caught", le);
+                if (log.isDebugEnabled())
+                    log.debug("Exception caught", le);
                 HttpSession httpsession = req.getSession(false);
                 if (httpsession != null) {
                     httpsession.invalidate();
@@ -143,6 +143,7 @@ public final class Authenticator {
 
     /**
      * set basic authentication properties
+     *
      * @param credentials
      * @param request
      */
@@ -154,6 +155,7 @@ public final class Authenticator {
 
     /**
      * set form authentication properties
+     *
      * @param request
      */
     private static void setFormAuthProperties(HttpServletRequest request) {
@@ -175,7 +177,7 @@ public final class Authenticator {
 
     /**
      * @param userName
-     * @param request current HttpServletRequest
+     * @param request  current HttpServletRequest
      */
     private static void setUserId(String userName, HttpServletRequest request) {
         // @todo IMPORTANT remove use of http session
@@ -240,6 +242,7 @@ public final class Authenticator {
 
     /**
      * checks user session for attribute "user node"
+     *
      * @param request current HttpServletRequest
      * @return <code>true</code> if the user is authenticated, <code>false</code> otherwise
      */
@@ -252,6 +255,7 @@ public final class Authenticator {
 
     /**
      * Get JAAS authenticated subject
+     *
      * @param request
      * @return Authenticated JAAS subject
      */

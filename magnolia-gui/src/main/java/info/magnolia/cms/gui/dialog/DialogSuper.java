@@ -18,25 +18,18 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.TemplateMessagesUtil;
-
-import java.io.IOException;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.*;
 
 
 /**
@@ -112,7 +105,7 @@ public abstract class DialogSuper implements DialogInterface {
     /**
      */
     public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
-        throws RepositoryException {
+            throws RepositoryException {
 
         if (log.isDebugEnabled()) {
             log.debug("Init " + getClass().getName()); //$NON-NLS-1$
@@ -171,11 +164,9 @@ public abstract class DialogSuper implements DialogInterface {
     public String getValue() {
         if (this.value != null) {
             return this.value;
-        }
-        else if (this.getWebsiteNode() != null) {
+        } else if (this.getWebsiteNode() != null) {
             return this.getWebsiteNode().getNodeData(this.getName()).getString();
-        }
-        else {
+        } else {
             return StringUtils.EMPTY;
         }
     }
@@ -187,6 +178,7 @@ public abstract class DialogSuper implements DialogInterface {
     /**
      * Set the name of this control. This is not the same value as the id setted by the parent. In common this value is
      * setted in the dialog configuration.
+     *
      * @param the name
      */
     public void setName(String s) {
@@ -195,6 +187,7 @@ public abstract class DialogSuper implements DialogInterface {
 
     /**
      * Return the configured name of this control (not the id).
+     *
      * @return the name
      */
     public String getName() {
@@ -230,7 +223,8 @@ public abstract class DialogSuper implements DialogInterface {
             }
         }
         catch (Exception e) {
-            log.debug("removeSessionAttribute() for " + name + " failed because this.request is null"); //$NON-NLS-1$ //$NON-NLS-2$
+            if (log.isDebugEnabled())
+                log.debug("removeSessionAttribute() for " + name + " failed because this.request is null"); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
@@ -287,6 +281,7 @@ public abstract class DialogSuper implements DialogInterface {
 
     /**
      * Find a control by its name
+     *
      * @param name the name of the control to find
      * @return the found control or null
      */
@@ -412,10 +407,10 @@ public abstract class DialogSuper implements DialogInterface {
                 log.debug("Loading control \"" + controlType + "\" for " + configNode.getHandle()); //$NON-NLS-1$ //$NON-NLS-2$
             }
             DialogInterface dialogControl = DialogFactory.loadDialog(
-                request,
-                response,
-                this.getWebsiteNode(),
-                configNode);
+                    request,
+                    response,
+                    this.getWebsiteNode(),
+                    configNode);
             this.addSub(dialogControl);
         }
     }
@@ -427,6 +422,7 @@ public abstract class DialogSuper implements DialogInterface {
     /**
      * Get the Messages object for this dialog/control. It checks first if there was a bundle defined
      * <code>i18nBasename</code>, then it tries to find the parent with the first definition.
+     *
      * @return
      */
     protected Messages getMessages() {
@@ -434,8 +430,7 @@ public abstract class DialogSuper implements DialogInterface {
             // if this is the root
             if (this.getParent() == null) {
                 messages = TemplateMessagesUtil.getMessages();
-            }
-            else {
+            } else {
                 // try to get it from the control nearest to the root
                 messages = this.getParent().getMessages();
             }
@@ -453,6 +448,7 @@ public abstract class DialogSuper implements DialogInterface {
 
     /**
      * Get the message.
+     *
      * @param key key
      * @return message
      */
@@ -462,7 +458,8 @@ public abstract class DialogSuper implements DialogInterface {
 
     /**
      * Get the message with replacement strings. Use the {nr} syntax
-     * @param key key
+     *
+     * @param key  key
      * @param args replacement strings
      * @return message
      */

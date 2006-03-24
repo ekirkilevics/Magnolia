@@ -178,6 +178,12 @@ public class JCRFlowDefinition {
         try {
             HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
             Content root = hm.getContent(ROOT_PATH_FOR_FLOW);
+
+            /*
+             check if the node already exist, and if it does update the value of the
+             the NodeData FLOW_VALUE with the new flow.
+             This is to allow duplication of flow node.
+            */
             boolean exist = hm.isExist(root.getHandle() + "/" + name);
             Content c;
             if (exist)
@@ -191,6 +197,7 @@ public class JCRFlowDefinition {
                 c.createNodeData(FLOW_VALUE, value);
             else
                 ((NodeData) c.getNodeDataCollection(FLOW_VALUE).iterator().next()).setValue(value);
+
             hm.save();
             log.info("add ok");
         } catch (Exception e) {

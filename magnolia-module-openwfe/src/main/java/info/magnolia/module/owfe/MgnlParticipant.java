@@ -50,7 +50,8 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
         if (parName.startsWith(COMMAND_PREFIX)) // handle commands
         {
             String cmd = parName.substring(COMMAND_PREFIX_LEN, parName.length());
-            log.debug("command name is " + cmd);
+            if (log.isDebugEnabled())
+                log.debug("command name is " + cmd);
             MgnlCommand tc = new CommandsMap().getFlowCommand(cmd);
             if (tc == null) { // not found, do in the old ways
                 if (log.isDebugEnabled())

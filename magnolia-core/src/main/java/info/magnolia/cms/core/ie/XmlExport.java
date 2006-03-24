@@ -15,19 +15,6 @@ package info.magnolia.cms.core.ie;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Collection;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.jcr.Property;
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -37,9 +24,21 @@ import org.jdom.output.Format;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jcr.Property;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
+
 
 /**
  * This utility class provides static methods for turning a content [node] into an XML document.
+ *
  * @author Mettraux John (john.mettraux &gt;at&lt; openwfe.org)
  * @version 0.1 $Id :$
  */
@@ -174,9 +173,7 @@ public class XmlExport implements ExportHandler {
 
         }
         catch (final Throwable t) {
-
             log.warn("export() skipped a property because of " + t); //$NON-NLS-1$
-            log.debug("export() skipped a property", t); //$NON-NLS-1$
         }
 
         elt.addContent(pElt);
@@ -191,8 +188,7 @@ public class XmlExport implements ExportHandler {
 
                 if (this.binaryAsLink) {
                     sContent = property.getPath();
-                }
-                else {
+                } else {
                     StringBuffer stringBuffer = new StringBuffer();
                     try {
                         InputStream is = property.getStream();
@@ -209,11 +205,9 @@ public class XmlExport implements ExportHandler {
 
                     sContent = new String(Base64.encodeBase64(stringBuffer.toString().getBytes()));
                 }
-            }
-            else if (property.getType() == PropertyType.DATE) {
+            } else if (property.getType() == PropertyType.DATE) {
                 sContent = property.getDate().getTime().toString();
-            }
-            else {
+            } else {
                 sContent = property.getString();
             }
         }

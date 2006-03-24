@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Date: Oct 26, 2005 Time: 5:02:46 PM
+ *
  * @author Sameer Charles
  * @version $Revision: 1633 $ ($Author: scharles $)
  */
@@ -36,6 +37,7 @@ public class DummyUser implements User {
 
     /**
      * has full access
+     *
      * @param roleName the name of the role
      * @return true if in role
      */
@@ -45,22 +47,27 @@ public class DummyUser implements User {
 
     /**
      * Simply log that its a dummy user
+     *
      * @param roleName
      */
     public void removeRole(String roleName) throws UnsupportedOperationException {
-        log.debug("User [ Anonymous ] has no roles");
+        if (log.isDebugEnabled())
+            log.debug("User [ Anonymous ] has no roles");
     }
 
     /**
      * Simply log that its a dummy user
+     *
      * @param roleName the name of the role
      */
     public void addRole(String roleName) throws UnsupportedOperationException {
-        log.debug("No roles can be attached to user [ Anonymous ]");
+        if (log.isDebugEnabled())
+            log.debug("No roles can be attached to user [ Anonymous ]");
     }
 
     /**
      * get user language
+     *
      * @return language string
      */
 
@@ -70,6 +77,7 @@ public class DummyUser implements User {
 
     /**
      * get user name
+     *
      * @return name string
      */
     public String getName() {

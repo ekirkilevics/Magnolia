@@ -15,15 +15,14 @@ package info.magnolia.cms.taglibs;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.Resource;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -102,6 +101,7 @@ public class IfEmpty extends ConditionalTagSupport {
 
     /**
      * Set the actpage.
+     *
      * @param set
      */
     public void setActpage(boolean set) {
@@ -117,10 +117,11 @@ public class IfEmpty extends ConditionalTagSupport {
         if (StringUtils.isNotEmpty(this.contentNodeCollectionName)) {
             try {
                 this.contentNodeCollection = Resource.getCurrentActivePage(req).getContent(
-                    this.contentNodeCollectionName);
+                        this.contentNodeCollectionName);
             }
             catch (RepositoryException e) {
-                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+                if (log.isDebugEnabled())
+                    log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
             }
             if (this.contentNodeCollection == null) {
                 return true;
@@ -150,7 +151,8 @@ public class IfEmpty extends ConditionalTagSupport {
                 this.contentNode = Resource.getCurrentActivePage(req).getContent(this.contentNodeName);
             }
             catch (RepositoryException re) {
-                log.debug("Repository exception while reading " + this.contentNodeName + ": " + re.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+                if (log.isDebugEnabled())
+                    log.debug("Repository exception while reading " + this.contentNodeName + ": " + re.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
             }
             if (this.contentNode == null) {
                 return true;
@@ -160,8 +162,8 @@ public class IfEmpty extends ConditionalTagSupport {
                 this.nodeData = this.contentNode.getNodeData(this.nodeDataName);
 
                 if ((this.nodeData == null)
-                    || !this.nodeData.isExist()
-                    || StringUtils.isEmpty(this.nodeData.getString())) {
+                        || !this.nodeData.isExist()
+                        || StringUtils.isEmpty(this.nodeData.getString())) {
                     return true;
                 }
             }
@@ -171,8 +173,7 @@ public class IfEmpty extends ConditionalTagSupport {
         else if (StringUtils.isEmpty(this.contentNodeName) && StringUtils.isNotEmpty(this.nodeDataName)) {
             if (this.actpage) {
                 this.contentNode = Resource.getCurrentActivePage((HttpServletRequest) pageContext.getRequest());
-            }
-            else {
+            } else {
                 this.contentNode = Resource.getLocalContentNode((HttpServletRequest) pageContext.getRequest());
                 if (this.contentNode == null) {
                     this.contentNode = Resource.getGlobalContentNode((HttpServletRequest) pageContext.getRequest());
@@ -186,8 +187,8 @@ public class IfEmpty extends ConditionalTagSupport {
                 this.nodeData = this.contentNode.getNodeData(this.nodeDataName);
 
                 if ((this.nodeData == null)
-                    || !this.nodeData.isExist()
-                    || StringUtils.isEmpty(this.nodeData.getString())) {
+                        || !this.nodeData.isExist()
+                        || StringUtils.isEmpty(this.nodeData.getString())) {
                     return true;
                 }
             }

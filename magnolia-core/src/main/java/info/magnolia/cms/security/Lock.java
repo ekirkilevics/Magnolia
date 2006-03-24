@@ -12,18 +12,18 @@
  */
 package info.magnolia.cms.security;
 
-import java.util.Date;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Date;
 
 
 /**
  * This class is a utility class and does not impose any security rules Its a responsibility of the caller to set and
  * check for lock to meet specific needs
+ *
  * @author Sameer Charles
  * @version $Revision$ ($Author$)
  */
@@ -58,13 +58,14 @@ public final class Lock {
 
     /**
      * Set session based lock
+     *
      * @param request
      */
     public static void setSessionLock(HttpServletRequest request) {
         log.info("Session lock enabled for user ( " //$NON-NLS-1$
-            + Authenticator.getUserId(request)
-            + " ) on " //$NON-NLS-1$
-            + (new Date()).toString());
+                + Authenticator.getUserId(request)
+                + " ) on " //$NON-NLS-1$
+                + (new Date()).toString());
         // @todo IMPORTANT remove use of http session
         HttpSession httpsession = request.getSession(true);
         httpsession.setAttribute(SESSION_LOCK, (new Date()).toString());
@@ -72,6 +73,7 @@ public final class Lock {
 
     /**
      * returns true if this session is locked
+     *
      * @param request
      * @return a boolean
      */
@@ -85,14 +87,16 @@ public final class Lock {
 
     /**
      * reset session lock
+     *
      * @param request
      */
     public static void resetSessionLock(HttpServletRequest request) {
         if (!Lock.isSessionLocked(request)) {
-            log.debug("No Lock found to reset"); //$NON-NLS-1$
-        }
-        else {
-            log.debug("Resetting session lock"); //$NON-NLS-1$
+            if (log.isDebugEnabled())
+                log.debug("No Lock found to reset"); //$NON-NLS-1$
+        } else {
+            if (log.isDebugEnabled())
+                log.debug("Resetting session lock"); //$NON-NLS-1$
             Lock.isSystemLocked = false;
         }
         // @todo IMPORTANT remove use of http session
@@ -108,8 +112,7 @@ public final class Lock {
             if (log.isDebugEnabled()) {
                 log.debug("System lock exist, created on " + Lock.lockSetDate.toString()); //$NON-NLS-1$
             }
-        }
-        else {
+        } else {
             Lock.isSystemLocked = true;
             Lock.lockSetDate = new Date();
             if (log.isDebugEnabled()) {
@@ -124,8 +127,7 @@ public final class Lock {
     public static void resetSystemLock() {
         if (!Lock.isSystemLocked()) {
             log.debug("No Lock found to reset"); //$NON-NLS-1$
-        }
-        else {
+        } else {
             if (log.isDebugEnabled()) {
                 log.debug("Resetting system lock created on " + Lock.lockSetDate.toString()); //$NON-NLS-1$
             }
@@ -135,6 +137,7 @@ public final class Lock {
 
     /**
      * Return true if system is locked
+     *
      * @return a boolean
      */
     public static boolean isSystemLocked() {

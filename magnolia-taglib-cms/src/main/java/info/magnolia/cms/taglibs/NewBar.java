@@ -15,15 +15,13 @@ package info.magnolia.cms.taglibs;
 import info.magnolia.cms.gui.inline.BarNew;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.Resource;
-
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.tagext.TagSupport;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.tagext.TagSupport;
+import java.io.IOException;
 
 
 /**
@@ -69,15 +67,17 @@ public class NewBar extends TagSupport {
             this.display();
         }
         catch (Exception e) {
-            log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+            if (log.isDebugEnabled())
+                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
         }
         return EVAL_PAGE;
     }
 
     /**
-     * <p>
+     * <p/>
      * set working container list
      * </p>
+     *
      * @param name , comtainer list name
      */
     public void setContentNodeCollectionName(String name) {
@@ -89,9 +89,10 @@ public class NewBar extends TagSupport {
     }
 
     /**
-     * <p>
+     * <p/>
      * get the content path (Page or Node)
      * </p>
+     *
      * @return String path
      */
     private String getPath() {
@@ -105,20 +106,20 @@ public class NewBar extends TagSupport {
     }
 
     /**
-     * @deprecated
-     * <p>
-     * set the tapes which defines all paragraps available in this contentNode collection
-     * </p>
      * @param list , comma seperated list of all allowed paragraphs
+     * @deprecated <p/>
+     *             set the tapes which defines all paragraps available in this contentNode collection
+     *             </p>
      */
     public void setParFiles(String list) {
         this.paragraph = list;
     }
 
     /**
-     * <p>
+     * <p/>
      * comma separeted list of paragraphs
      * </p>
+     *
      * @param list , comma seperated list of all allowed paragraphs
      */
     public void setParagraph(String list) {
@@ -133,9 +134,10 @@ public class NewBar extends TagSupport {
     }
 
     /**
-     * <p>
+     * <p/>
      * set the new label
      * </p>
+     *
      * @param label
      */
     public void setNewLabel(String label) {
@@ -151,9 +153,10 @@ public class NewBar extends TagSupport {
     }
 
     /**
-     * <p>
+     * <p/>
      * displays new bar
      * </p>
+     *
      * @throws java.io.IOException
      */
     private void display() throws IOException {
@@ -167,8 +170,7 @@ public class NewBar extends TagSupport {
         if (this.getNewLabel() != null) {
             if (StringUtils.isEmpty(this.getNewLabel())) {
                 bar.setButtonNew(null);
-            }
-            else {
+            } else {
                 bar.getButtonNew().setLabel(this.getNewLabel());
             }
         }

@@ -17,20 +17,18 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.util.LinkUtil;
 import info.magnolia.cms.util.Resource;
-
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -38,14 +36,14 @@ import org.slf4j.LoggerFactory;
  * Since JSTL doesn't allow calling a method like <code>Content.getNodeData(String)</code> the <code>Content</code>
  * is wrapped into a <code>NodeMapWrapper</code> which exposes NodeData using a map interface. This tag can be useful
  * in similar situations:
- * 
+ * <p/>
  * <pre>
  * &lt;cms:setNode var="currentNode"/>
  * &lt;c:if test="${!empty currentNode.title}">
  *   &lt;c:out value="${currentNode.title}"/>
  * &lt;/c:if>
  * </pre>
- * 
+ *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
@@ -84,6 +82,7 @@ public class SetNode extends TagSupport {
 
     /**
      * set the content node name name, e.g. "01"
+     *
      * @param name content node name
      */
     public void setContentNodeName(String name) {
@@ -92,6 +91,7 @@ public class SetNode extends TagSupport {
 
     /**
      * set the name of the collection holding the content node, e.g. "mainColumnParagraphs"
+     *
      * @param name content node collection name
      */
     public void setContentNodeCollectionName(String name) {
@@ -100,6 +100,7 @@ public class SetNode extends TagSupport {
 
     /**
      * Setter fot the <code>var</code> tag attribute.
+     *
      * @param var variable name: the content node will be added to the pagecontext with this name
      */
     public void setVar(String var) {
@@ -108,20 +109,18 @@ public class SetNode extends TagSupport {
 
     /**
      * Scope for the declared variable.
+     *
      * @param scope Can be <code>page</code>, <code>request</code>, <code>session</code> or
-     * <code>application</code><code></code>.
+     *              <code>application</code><code></code>.
      */
     public void setScope(String scope) {
         if ("request".equalsIgnoreCase(scope)) { //$NON-NLS-1$
             this.scope = PageContext.REQUEST_SCOPE;
-        }
-        else if ("session".equalsIgnoreCase(scope)) { //$NON-NLS-1$
+        } else if ("session".equalsIgnoreCase(scope)) { //$NON-NLS-1$
             this.scope = PageContext.SESSION_SCOPE;
-        }
-        else if ("application".equalsIgnoreCase(scope)) { //$NON-NLS-1$
+        } else if ("application".equalsIgnoreCase(scope)) { //$NON-NLS-1$
             this.scope = PageContext.APPLICATION_SCOPE;
-        }
-        else {
+        } else {
             // default
             this.scope = PageContext.PAGE_SCOPE;
         }
@@ -129,6 +128,7 @@ public class SetNode extends TagSupport {
 
     /**
      * Set contentNode in pagecontext and continue evaluating jsp.
+     *
      * @return int
      */
     public int doEndTag() {
@@ -146,18 +146,17 @@ public class SetNode extends TagSupport {
                 if (StringUtils.isEmpty(contentNodeCollectionName)) {
                     // e.g. <cms:setNode contentNodeName="footer"/>
                     contentNode = actpage.getContent(contentNodeName);
-                }
-                else {
+                } else {
                     // e.g. <cms:setNode contentNodeName="01" contentNodeCollectionName="mainPars"/>
                     // e.g. <cms:setNode contentNodeName="footer" contentNodeCollectionName=""/>
                     contentNode = actpage.getContent(contentNodeCollectionName).getContent(contentNodeName);
                 }
             }
             catch (RepositoryException re) {
-                log.debug(re.getMessage());
+                if (log.isDebugEnabled())
+                    log.debug(re.getMessage());
             }
-        }
-        else {
+        } else {
             if (local == null) {
                 // outside collection iterator
                 if (StringUtils.isEmpty(contentNodeCollectionName)) {
@@ -168,15 +167,13 @@ public class SetNode extends TagSupport {
                 // else:
                 // ERROR: no content node assignable because contentNodeName is empty
                 // e.g. <cms:setNode contentNodeCollectionName="mainPars"/>
-            }
-            else {
+            } else {
                 // inside collection iterator
                 if (contentNodeName == null && contentNodeCollectionName == null) {
                     // e.g. <cms:setNode />
                     contentNode = local;
-                }
-                else if ((contentNodeName != null && StringUtils.isEmpty(contentNodeName))
-                    || (contentNodeCollectionName != null && StringUtils.isEmpty(contentNodeCollectionName))) {
+                } else if ((contentNodeName != null && StringUtils.isEmpty(contentNodeName))
+                        || (contentNodeCollectionName != null && StringUtils.isEmpty(contentNodeCollectionName))) {
                     // empty collection name -> use actpage
                     // e.g. <cms:setNode contentNodeCollectionName=""/>
                     contentNode = actpage;
@@ -187,9 +184,8 @@ public class SetNode extends TagSupport {
         // set attribute
         if (contentNode != null) {
             pageContext.setAttribute(this.var, new NodeMapWrapper(contentNode, Resource
-                .getActivePage((HttpServletRequest) pageContext.getRequest())), this.scope);
-        }
-        else {
+                    .getActivePage((HttpServletRequest) pageContext.getRequest())), this.scope);
+        } else {
             pageContext.removeAttribute(this.var);
         }
 
@@ -209,6 +205,7 @@ public class SetNode extends TagSupport {
 
     /**
      * Wrapper for a content Node which exposes a Map interface, used to access its content using jstl.
+     *
      * @author fgiust
      * @version $Revision$ ($Author$)
      */
@@ -226,6 +223,7 @@ public class SetNode extends TagSupport {
 
         /**
          * Instantiates a new NodeMapWrapper for the given node.
+         *
          * @param node Content node
          */
         public NodeMapWrapper(Content node, Content actPage) {
@@ -267,7 +265,8 @@ public class SetNode extends TagSupport {
 
         /**
          * Shortcut for Content.getNodeData(name).getString() or Content.getNodeData(name).getName().
-         * @see java.util.Map#get(java.lang.Object)
+         *
+         * @see java.util.Map#get(Object)
          */
         public Object get(Object key) {
             NodeData nodeData;
@@ -277,13 +276,11 @@ public class SetNode extends TagSupport {
             int type = nodeData.getType();
             if (type == PropertyType.DATE) {
                 value = nodeData.getDate();
-            }
-            else if (type == PropertyType.BINARY) {
+            } else if (type == PropertyType.BINARY) {
                 // only file path is supported
                 FileProperties props = new FileProperties(this.wrappedNode, (String) key);
                 value = props.getProperty(StringUtils.EMPTY);
-            }
-            else {
+            } else {
                 value = LinkUtil.convertUUIDsToRelativeLinks(nodeData.getString(), this.actPage);
             }
             return value;

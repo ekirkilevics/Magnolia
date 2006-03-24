@@ -17,20 +17,18 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.control.SelectOption;
 import info.magnolia.cms.gui.misc.CssConstants;
-
-import java.io.IOException;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -70,7 +68,8 @@ public class DialogSelect extends DialogBox {
             }
         }
         catch (RepositoryException e) {
-            log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+            if (log.isDebugEnabled())
+                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
         }
         this.setOptions(options);
     }
@@ -79,7 +78,7 @@ public class DialogSelect extends DialogBox {
      * @see info.magnolia.cms.gui.dialog.DialogInterface#init(HttpServletRequest, HttpServletResponse, Content, Content)
      */
     public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
-        throws RepositoryException {
+            throws RepositoryException {
         super.init(request, response, websiteNode, configNode);
         if (configNode != null) {
             setOptions(configNode);

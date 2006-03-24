@@ -14,11 +14,7 @@ package info.magnolia.cms.exchange.simple;
 
 import info.magnolia.cms.beans.config.Subscriber;
 import info.magnolia.cms.beans.runtime.MgnlContext;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.MetaData;
-import info.magnolia.cms.core.Path;
+import info.magnolia.cms.core.*;
 import info.magnolia.cms.exchange.ActivationContent;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Syndicator;
@@ -26,7 +22,17 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.output.XMLOutputter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -37,18 +43,6 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
-
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.output.XMLOutputter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -174,15 +168,15 @@ public class SimpleSyndicator implements Syndicator {
     /**
      * @param user
      * @param repositoryName repository ID
-     * @param workspaceName workspace ID
-     * @param rule content filter rule
-     * @see info.magnolia.cms.exchange.Syndicator#init(info.magnolia.cms.security.User, java.lang.String,
-     * java.lang.String, info.magnolia.cms.util.Rule)
+     * @param workspaceName  workspace ID
+     * @param rule           content filter rule
+     * @see info.magnolia.cms.exchange.Syndicator#init(info.magnolia.cms.security.User, String,
+     *      String, info.magnolia.cms.util.Rule)
      */
     public void init(User user, String repositoryName, String workspaceName, Rule rule) {
         this.user = user;
         this.basicCredentials = "Basic "
-            + new String(Base64.encodeBase64((this.user.getName() + ":" + this.user.getPassword()).getBytes()));
+                + new String(Base64.encodeBase64((this.user.getName() + ":" + this.user.getPassword()).getBytes()));
         this.contentFilter = new RuleBasedContentFilter(rule);
         this.contentFilterRule = rule;
         this.repositoryName = repositoryName;
@@ -190,11 +184,12 @@ public class SimpleSyndicator implements Syndicator {
     }
 
     /**
-     * <p>
+     * <p/>
      * this will activate specifies page (sub pages) to all configured subscribers
      * </p>
+     *
      * @param parent parent under which this page will be activated
-     * @param path page to be activated
+     * @param path   page to be activated
      * @throws RepositoryException
      * @throws ExchangeException
      */
@@ -212,23 +207,25 @@ public class SimpleSyndicator implements Syndicator {
             throw new ExchangeException(e);
         }
         finally {
-            log.debug("Cleaning temporary files");
+            if (log.isDebugEnabled())
+                log.debug("Cleaning temporary files");
             cleanTemporaryStore(activationContent);
         }
     }
 
     /**
-     * <p>
+     * <p/>
      * this will activate specifies page (sub pages) to the specified subscribers
      * </p>
+     *
      * @param subscriber
-     * @param parent parent under which this page will be activated
-     * @param path page to be activated
+     * @param parent     parent under which this page will be activated
+     * @param path       page to be activated
      * @throws RepositoryException
      * @throws ExchangeException
      */
     public synchronized void activate(Subscriber subscriber, String parent, String path) throws ExchangeException,
-        RepositoryException {
+            RepositoryException {
         this.parent = parent;
         this.path = path;
         ActivationContent activationContent = null;
@@ -241,7 +238,8 @@ public class SimpleSyndicator implements Syndicator {
             throw new ExchangeException(e);
         }
         finally {
-            log.debug("Cleaning temporary files");
+            if (log.isDebugEnabled())
+                log.debug("Cleaning temporary files");
             cleanTemporaryStore(activationContent);
         }
     }
@@ -261,12 +259,13 @@ public class SimpleSyndicator implements Syndicator {
 
     /**
      * Send activation request if subscribed to the activated URI
+     *
      * @param subscriber
      * @param activationContent
      * @throws ExchangeException
      */
     private synchronized void activate(Subscriber subscriber, ActivationContent activationContent)
-        throws ExchangeException {
+            throws ExchangeException {
         if (!isSubscribed(subscriber)) {
             if (log.isDebugEnabled()) {
                 log.debug("Exchange : subscriber [{}] is not subscribed to {}", subscriber.getName(), this.path);
@@ -311,11 +310,13 @@ public class SimpleSyndicator implements Syndicator {
 
     /**
      * cleans temporary store
+     *
      * @param activationContent
      */
     private void cleanTemporaryStore(ActivationContent activationContent) {
         if (activationContent == null) {
-            log.debug("Clean temporary store - nothing to do");
+            if (log.isDebugEnabled())
+                log.debug("Clean temporary store - nothing to do");
             return;
         }
         Iterator keys = activationContent.getFiles().keySet().iterator();
@@ -330,6 +331,7 @@ public class SimpleSyndicator implements Syndicator {
 
     /**
      * Check if this subscriber is subscribed to this uri
+     *
      * @param subscriber
      * @return a boolean
      */
@@ -340,11 +342,9 @@ public class SimpleSyndicator implements Syndicator {
             String uri = (String) subscribedURIList.get(i);
             if (this.path.equals(uri)) {
                 isSubscribed = true;
-            }
-            else if (this.path.startsWith(uri + "/")) { //$NON-NLS-1$
+            } else if (this.path.startsWith(uri + "/")) { //$NON-NLS-1$
                 isSubscribed = true;
-            }
-            else if (uri.endsWith("/") && (this.path.startsWith(uri))) { //$NON-NLS-1$
+            } else if (uri.endsWith("/") && (this.path.startsWith(uri))) { //$NON-NLS-1$
                 isSubscribed = true;
             }
         }
@@ -363,13 +363,13 @@ public class SimpleSyndicator implements Syndicator {
     }
 
     /**
-     * @param path , to deactivate
+     * @param path       , to deactivate
      * @param subscriber
      * @throws RepositoryException
      * @throws ExchangeException
      */
     public synchronized void deActivate(Subscriber subscriber, String path) throws ExchangeException,
-        RepositoryException {
+            RepositoryException {
         this.path = path;
         this.doDeActivate(subscriber);
         updateDeActivationDetails();
@@ -394,6 +394,7 @@ public class SimpleSyndicator implements Syndicator {
 
     /**
      * deactivate from a specified subscriber
+     *
      * @param subscriber
      * @throws ExchangeException
      */
@@ -421,6 +422,7 @@ public class SimpleSyndicator implements Syndicator {
 
     /**
      * get deactivation URL
+     *
      * @param subscriberInfo
      */
     private String getDeactivationURL(Subscriber subscriberInfo) {
@@ -429,6 +431,7 @@ public class SimpleSyndicator implements Syndicator {
 
     /**
      * add deactivation request header fields
+     *
      * @param connection
      */
     protected void addDeactivationHeaders(URLConnection connection) {
@@ -441,6 +444,7 @@ public class SimpleSyndicator implements Syndicator {
 
     /**
      * Get activation URL
+     *
      * @param subscriberInfo
      * @return activation handle
      */
@@ -451,6 +455,7 @@ public class SimpleSyndicator implements Syndicator {
 
     /**
      * add request headers needed for this activation
+     *
      * @param connection
      * @param activationContent
      */
@@ -465,6 +470,7 @@ public class SimpleSyndicator implements Syndicator {
 
     /**
      * Update activation meta data
+     *
      * @throws RepositoryException
      */
     private void updateActivationDetails() throws RepositoryException {
@@ -476,6 +482,7 @@ public class SimpleSyndicator implements Syndicator {
 
     /**
      * Update de-activation meta data
+     *
      * @throws RepositoryException
      */
     private void updateDeActivationDetails() throws RepositoryException {
@@ -494,8 +501,7 @@ public class SimpleSyndicator implements Syndicator {
         MetaData md = node.getMetaData();
         if (type.equals(SimpleSyndicator.ACTIVATE)) {
             md.setActivated();
-        }
-        else {
+        } else {
             md.setUnActivated();
         }
         md.setActivatorId(this.user.getName());
@@ -511,6 +517,7 @@ public class SimpleSyndicator implements Syndicator {
 
     /**
      * Collect Activation content
+     *
      * @throws Exception
      */
     private ActivationContent collect() throws Exception {
@@ -529,11 +536,11 @@ public class SimpleSyndicator implements Syndicator {
         Element root = new Element(RESOURCE_MAPPING_ROOT_ELEMENT);
         document.setRootElement(root);
         this.addResources(
-            root,
-            hm.getWorkspace().getSession(),
-            hm.getContent(path),
-            this.contentFilter,
-            activationContent);
+                root,
+                hm.getWorkspace().getSession(),
+                hm.getContent(path),
+                this.contentFilter,
+                activationContent);
         File resourceFile = File.createTempFile("resources", "", Path.getTempDirectory());
         XMLOutputter outputter = new XMLOutputter();
         outputter.output(document, new FileOutputStream(resourceFile));
@@ -553,7 +560,7 @@ public class SimpleSyndicator implements Syndicator {
      * @throws RepositoryException
      */
     private void addResources(Element resourceElement, Session session, Content content, Content.ContentFilter filter,
-        ActivationContent activationContent) throws IOException, RepositoryException {
+                              ActivationContent activationContent) throws IOException, RepositoryException {
 
         File file = File.createTempFile("exchange" + content.getName(), "", Path.getTempDirectory());
         GZIPOutputStream gzipOutputStream = new GZIPOutputStream(new FileOutputStream(file));
@@ -563,8 +570,7 @@ public class SimpleSyndicator implements Syndicator {
          */
         if (content.isNodeType(ItemType.NT_FILE)) {
             session.exportSystemView(content.getHandle(), gzipOutputStream, false, false);
-        }
-        else {
+        } else {
             session.exportSystemView(content.getHandle(), gzipOutputStream, false, true);
         }
         IOUtils.closeQuietly(gzipOutputStream);

@@ -5,22 +5,14 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.gui.dialog.DialogButton;
-import info.magnolia.cms.gui.dialog.DialogDialog;
-import info.magnolia.cms.gui.dialog.DialogEdit;
-import info.magnolia.cms.gui.dialog.DialogFactory;
-import info.magnolia.cms.gui.dialog.DialogInclude;
-import info.magnolia.cms.gui.dialog.DialogStatic;
-import info.magnolia.cms.gui.dialog.DialogTab;
+import info.magnolia.cms.gui.dialog.*;
 import info.magnolia.module.admininterface.SaveHandler;
-
-import java.util.Iterator;
+import org.apache.log4j.Logger;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
+import java.util.Iterator;
 
 
 /**
@@ -191,7 +183,8 @@ public class GroupEditDialog extends ConfiguredDialog {
     }
 
     private void addGroupForUser(String groupId, String userId) throws Exception {
-        log.debug("group id = " + groupId + ", User Id = " + userId);
+        if (log.isDebugEnabled())
+            log.debug("group id = " + groupId + ", User Id = " + userId);
         try {
             HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USERS);
 
@@ -200,10 +193,10 @@ public class GroupEditDialog extends ConfiguredDialog {
 
             // get "groups" node under node "user"
             Content groups = null;
-            try{
-            	groups = user.getContent("groups");
-            }catch (Exception e){
-            	log.info("groups node not found");
+            try {
+                groups = user.getContent("groups");
+            } catch (Exception e) {
+                log.info("groups node not found");
             }
             if (groups == null)// create it if no exist
                 groups = user.createContent("groups");
@@ -212,7 +205,7 @@ public class GroupEditDialog extends ConfiguredDialog {
             String newLabel = Path.getUniqueLabel(hm, groups.getHandle(), "0");
             Content r = groups.createContent(newLabel, ItemType.CONTENTNODE);
             r.createNodeData("path").setValue(groupId);
-            
+
             hm.save();
 
         }

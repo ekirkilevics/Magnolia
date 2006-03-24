@@ -33,30 +33,23 @@ import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Iterator;
-import java.util.zip.GZIPInputStream;
-
-import javax.jcr.ImportUUIDBehavior;
-import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.Property;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.lock.LockException;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.io.IOUtils;
 import org.doomdark.uuid.UUIDGenerator;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.jcr.*;
+import javax.jcr.lock.LockException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Iterator;
+import java.util.zip.GZIPInputStream;
 
 
 /**
@@ -98,10 +91,10 @@ public class SimpleExchangeServlet extends HttpServlet {
         catch (OutOfMemoryError e) {
             Runtime rt = Runtime.getRuntime();
             log.error("---------\nOutOfMemoryError caught during activation. Total memory = " //$NON-NLS-1$
-                + rt.totalMemory()
-                + ", free memory = " //$NON-NLS-1$
-                + rt.freeMemory()
-                + "\n---------"); //$NON-NLS-1$
+                    + rt.totalMemory()
+                    + ", free memory = " //$NON-NLS-1$
+                    + rt.freeMemory()
+                    + "\n---------"); //$NON-NLS-1$
             statusMessage = e.getMessage();
             status = SimpleSyndicator.ACTIVATION_FAILED;
         }
@@ -135,6 +128,7 @@ public class SimpleExchangeServlet extends HttpServlet {
 
     /**
      * handle activate or deactivate request
+     *
      * @param request
      * @throws Exception if fails to update
      */
@@ -142,11 +136,9 @@ public class SimpleExchangeServlet extends HttpServlet {
         String action = request.getHeader(SimpleSyndicator.ACTION);
         if (action.equalsIgnoreCase(SimpleSyndicator.ACTIVATE)) {
             update(request);
-        }
-        else if (action.equalsIgnoreCase(SimpleSyndicator.DE_ACTIVATE)) {
+        } else if (action.equalsIgnoreCase(SimpleSyndicator.DE_ACTIVATE)) {
             remove(request);
-        }
-        else {
+        } else {
             throw new UnsupportedOperationException("Method not supported : " + action);
         }
         // Everything went well
@@ -155,6 +147,7 @@ public class SimpleExchangeServlet extends HttpServlet {
 
     /**
      * handle update (activate) request
+     *
      * @param request
      * @throws Exception if fails to update
      */
@@ -170,15 +163,15 @@ public class SimpleExchangeServlet extends HttpServlet {
             org.jdom.Document jdomDocument = builder.build(documentInputStream);
             IOUtils.closeQuietly(documentInputStream);
             Element topContentElement = jdomDocument.getRootElement().getChild(
-                SimpleSyndicator.RESOURCE_MAPPING_FILE_ELEMENT);
+                    SimpleSyndicator.RESOURCE_MAPPING_FILE_ELEMENT);
             String newPath = "";
             if (parentPath.equals("/"))
                 newPath = parentPath
-                    + topContentElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_NAME_ATTRIBUTE);
+                        + topContentElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_NAME_ATTRIBUTE);
             else
                 newPath = parentPath
-                    + "/"
-                    + topContentElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_NAME_ATTRIBUTE);
+                        + "/"
+                        + topContentElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_NAME_ATTRIBUTE);
             // lock this hierarchy
             if (hm.isExist(newPath)) {
                 String ruleString = request.getHeader(SimpleSyndicator.CONTENT_FILTER_RULE);
@@ -189,8 +182,7 @@ public class SimpleExchangeServlet extends HttpServlet {
                 this.removeChildren(content, filter);
                 // import all child nodes
                 this.importOnExisting(topContentElement, data, hm, content);
-            }
-            else {
+            } else {
                 importFresh(topContentElement, data, hm, parentPath);
             }
         }
@@ -198,7 +190,8 @@ public class SimpleExchangeServlet extends HttpServlet {
 
     /**
      * Copy all properties from source to destination (by cleaning the old properties).
-     * @param source the content node to be copied
+     *
+     * @param source      the content node to be copied
      * @param destination the destination node
      */
     private synchronized void copyProperties(Content source, Content destination) throws RepositoryException {
@@ -219,13 +212,11 @@ public class SimpleExchangeServlet extends HttpServlet {
             if (property.getDefinition().isMultiple()) {
                 if (destination.isGranted(Permission.WRITE)) {
                     destinationNode.setProperty(nodeData.getName(), property.getValues());
-                }
-                else {
+                } else {
                     throw new AccessDeniedException(
-                        "User not allowed to " + Permission.PERMISSION_NAME_WRITE + " at [" + nodeData.getHandle() + "]"); //$NON-NLS-1$ $NON-NLS-2$ $NON-NLS-3$
+                            "User not allowed to " + Permission.PERMISSION_NAME_WRITE + " at [" + nodeData.getHandle() + "]"); //$NON-NLS-1$ $NON-NLS-2$ $NON-NLS-3$
                 }
-            }
-            else {
+            } else {
                 destination.createNodeData(nodeData.getName(), nodeData.getValue());
             }
         }
@@ -233,8 +224,9 @@ public class SimpleExchangeServlet extends HttpServlet {
 
     /**
      * remove children
+     *
      * @param content whose children to be deleted
-     * @param filter content filter
+     * @param filter  content filter
      */
     private synchronized void removeChildren(Content content, Content.ContentFilter filter) {
         Iterator children = content.getChildren(filter).iterator();
@@ -253,6 +245,7 @@ public class SimpleExchangeServlet extends HttpServlet {
 
     /**
      * import on non existing tree
+     *
      * @param topContentElement
      * @param data
      * @param hierarchyManager
@@ -261,7 +254,7 @@ public class SimpleExchangeServlet extends HttpServlet {
      * @throws RepositoryException
      */
     private synchronized void importFresh(Element topContentElement, MultipartForm data,
-        HierarchyManager hierarchyManager, String parentPath) throws ExchangeException, RepositoryException {
+                                          HierarchyManager hierarchyManager, String parentPath) throws ExchangeException, RepositoryException {
         try {
             importResource(data, topContentElement, hierarchyManager.getWorkspace().getSession(), parentPath);
             hierarchyManager.save();
@@ -275,6 +268,7 @@ public class SimpleExchangeServlet extends HttpServlet {
 
     /**
      * import on existing content, making sure that content which is not sent stays as is
+     *
      * @param topContentElement
      * @param data
      * @param hierarchyManager
@@ -283,30 +277,30 @@ public class SimpleExchangeServlet extends HttpServlet {
      * @throws RepositoryException
      */
     private synchronized void importOnExisting(Element topContentElement, MultipartForm data,
-        HierarchyManager hierarchyManager, Content existingContent) throws ExchangeException, RepositoryException {
+                                               HierarchyManager hierarchyManager, Content existingContent) throws ExchangeException, RepositoryException {
         Iterator fileListIterator = topContentElement
-            .getChildren(SimpleSyndicator.RESOURCE_MAPPING_FILE_ELEMENT)
-            .iterator();
+                .getChildren(SimpleSyndicator.RESOURCE_MAPPING_FILE_ELEMENT)
+                .iterator();
         String uuid = UUIDGenerator.getInstance().generateTimeBasedUUID().toString();
         String transientStore = "/" + uuid;
         try {
             while (fileListIterator.hasNext()) {
                 Element fileElement = (Element) fileListIterator.next();
                 importResource(data, fileElement, hierarchyManager.getWorkspace().getSession(), existingContent
-                    .getHandle());
+                        .getHandle());
             }
             // use temporary transient store to extract top level node and copy properties
             hierarchyManager.createContent("/", uuid, ItemType.CONTENTNODE.toString());
             String fileName = topContentElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_ID_ATTRIBUTE);
             GZIPInputStream inputStream = new GZIPInputStream(data.getDocument(fileName).getStream());
             hierarchyManager.getWorkspace().getSession().importXML(
-                transientStore,
-                inputStream,
-                ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
+                    transientStore,
+                    inputStream,
+                    ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
             IOUtils.closeQuietly(inputStream);
             Content tmpContent = hierarchyManager.getContent(transientStore
-                + "/"
-                + topContentElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_NAME_ATTRIBUTE));
+                    + "/"
+                    + topContentElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_NAME_ATTRIBUTE));
             copyProperties(tmpContent, existingContent);
             hierarchyManager.delete(transientStore);
             hierarchyManager.save();
@@ -320,14 +314,15 @@ public class SimpleExchangeServlet extends HttpServlet {
 
     /**
      * import documents
-     * @param data as sent
+     *
+     * @param data            as sent
      * @param resourceElement parent file element
      * @param jcrSession
      * @param parentPath
      * @throws Exception
      */
     private synchronized void importResource(MultipartForm data, Element resourceElement, Session jcrSession,
-        String parentPath) throws Exception {
+                                             String parentPath) throws Exception {
 
         String name = resourceElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_NAME_ATTRIBUTE);
         String fileName = resourceElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_ID_ATTRIBUTE);
@@ -336,8 +331,8 @@ public class SimpleExchangeServlet extends HttpServlet {
         jcrSession.importXML(parentPath, inputStream, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
         IOUtils.closeQuietly(inputStream);
         Iterator fileListIterator = resourceElement
-            .getChildren(SimpleSyndicator.RESOURCE_MAPPING_FILE_ELEMENT)
-            .iterator();
+                .getChildren(SimpleSyndicator.RESOURCE_MAPPING_FILE_ELEMENT)
+                .iterator();
         // parent path
         if (parentPath.equals("/")) {
             parentPath = ""; // remove / if its a root
@@ -351,6 +346,7 @@ public class SimpleExchangeServlet extends HttpServlet {
 
     /**
      * handle remove (de-activate) request
+     *
      * @param request
      * @throws Exception if fails to update
      */
@@ -374,6 +370,7 @@ public class SimpleExchangeServlet extends HttpServlet {
     /**
      * Initialize Magnolia context. It creates a context and initialize the user only if these do not exist yet. <b>Note</b>:
      * the implementation may get changed
+     *
      * @param request the current request
      */
     protected void initializeContext(HttpServletRequest request) {
@@ -384,6 +381,7 @@ public class SimpleExchangeServlet extends HttpServlet {
 
     /**
      * Check if the request is valid
+     *
      * @param request
      * @throws AccessDeniedException
      */
@@ -395,6 +393,7 @@ public class SimpleExchangeServlet extends HttpServlet {
 
     /**
      * get hierarchy manager
+     *
      * @param request
      */
     private HierarchyManager getHierarchyManager(HttpServletRequest request) {
@@ -410,6 +409,7 @@ public class SimpleExchangeServlet extends HttpServlet {
 
     /**
      * cleans temporary store and removes any locks set
+     *
      * @param request
      */
     private void cleanUp(HttpServletRequest request) {
@@ -425,8 +425,7 @@ public class SimpleExchangeServlet extends HttpServlet {
         String path = "";
         if (action.equalsIgnoreCase(SimpleSyndicator.ACTIVATE)) {
             path = request.getHeader(SimpleSyndicator.PARENT_PATH);
-        }
-        else if (action.equalsIgnoreCase(SimpleSyndicator.DE_ACTIVATE)) {
+        } else if (action.equalsIgnoreCase(SimpleSyndicator.DE_ACTIVATE)) {
             path = request.getHeader(SimpleSyndicator.PATH);
         }
         try {
@@ -437,16 +436,19 @@ public class SimpleExchangeServlet extends HttpServlet {
         }
         catch (LockException le) {
             // either repository does not support locking OR this node never locked
-            log.debug(le.getMessage());
+            if (log.isDebugEnabled())
+                log.debug(le.getMessage());
         }
         catch (RepositoryException re) {
             // should never come here
-            log.debug("Exception caught", re);
+            if (log.isDebugEnabled())
+                log.debug("Exception caught", re);
         }
     }
 
     /**
      * apply lock
+     *
      * @param request
      */
     private void applyLock(HttpServletRequest request) throws ExchangeException {
@@ -454,8 +456,7 @@ public class SimpleExchangeServlet extends HttpServlet {
         String path = "";
         if (action.equalsIgnoreCase(SimpleSyndicator.ACTIVATE)) {
             path = request.getHeader(SimpleSyndicator.PARENT_PATH);
-        }
-        else if (action.equalsIgnoreCase(SimpleSyndicator.DE_ACTIVATE)) {
+        } else if (action.equalsIgnoreCase(SimpleSyndicator.DE_ACTIVATE)) {
             path = request.getHeader(SimpleSyndicator.PATH);
         }
         try {
@@ -470,11 +471,13 @@ public class SimpleExchangeServlet extends HttpServlet {
         }
         catch (LockException le) {
             // either repository does not support locking OR this node never locked
-            log.debug(le.getMessage());
+            if (log.isDebugEnabled())
+                log.debug(le.getMessage());
         }
         catch (RepositoryException re) {
             // should never come here
-            log.debug("Exception caught", re);
+            if (log.isDebugEnabled())
+                log.debug("Exception caught", re);
         }
     }
 

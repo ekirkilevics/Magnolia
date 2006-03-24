@@ -13,29 +13,10 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.module.DependencyDefinition;
-import info.magnolia.cms.module.Module;
-import info.magnolia.cms.module.ModuleDefinition;
-import info.magnolia.cms.module.ModuleUtil;
-import info.magnolia.cms.module.RegisterException;
+import info.magnolia.cms.module.*;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.NodeDataUtil;
-
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.jcr.PathNotFoundException;
-
 import org.apache.commons.betwixt.io.BeanReader;
 import org.apache.commons.collections.MapIterator;
 import org.apache.commons.collections.OrderedMap;
@@ -49,10 +30,20 @@ import org.jdom.output.XMLOutputter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jcr.PathNotFoundException;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.net.URL;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 /**
  * Executes the registration of the modules. It searches the META-INF/magnolia/*.xml module descriptors, instantiate the
  * engine object and calls the register method on it.
+ *
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
@@ -62,7 +53,7 @@ public class ModuleRegistration {
      * The instance of the registration
      */
     private static ModuleRegistration instance = (ModuleRegistration) FactoryUtil
-        .getSingleton(ModuleRegistration.class);
+            .getSingleton(ModuleRegistration.class);
 
     /**
      * @return Returns the instance.
@@ -151,7 +142,7 @@ public class ModuleRegistration {
                 String name = moduleNode.getName();
                 String version = NodeDataUtil.getString(moduleNode, "version", "");
                 String className = NodeDataUtil.getString(ContentRepository.CONFIG, moduleNode.getHandle()
-                    + "/Register/class", "");
+                        + "/Register/class", "");
 
                 if (!this.moduleDefinitions.containsKey(name)) {
                     log.warn("no proper module definition file found for [{}]: will add an adhoc definition", name);
@@ -167,6 +158,7 @@ public class ModuleRegistration {
 
     /**
      * Check if the dependencies are ok
+     *
      * @return true if so
      * @throws MissingDependencyException
      */
@@ -178,12 +170,12 @@ public class ModuleRegistration {
             for (Iterator iterator = def.getDependencies().iterator(); iterator.hasNext();) {
                 DependencyDefinition dep = (DependencyDefinition) iterator.next();
                 if (!this.moduleDefinitions.containsKey(dep.getName())
-                    || !dep.getVersion().equals(this.getModuleDefinition(dep.getName()).getVersion())) {
+                        || !dep.getVersion().equals(this.getModuleDefinition(dep.getName()).getVersion())) {
                     throw new MissingDependencyException("missing dependency: module ["
-                        + def.getName()
-                        + "] needs ["
-                        + dep.getName()
-                        + "]");
+                            + def.getName()
+                            + "] needs ["
+                            + dep.getName()
+                            + "]");
                 }
             }
         }
@@ -228,7 +220,8 @@ public class ModuleRegistration {
         // register the sorted defs
         for (Iterator iterator = modules.iterator(); iterator.hasNext();) {
             ModuleDefinition def = (ModuleDefinition) iterator.next();
-            log.debug("add module definition [{}]", def.getName());
+            if (log.isDebugEnabled())
+                log.debug("add module definition [{}]", def.getName());
             this.moduleDefinitions.put(def.getName(), def);
         }
     }
@@ -254,8 +247,9 @@ public class ModuleRegistration {
 
     /**
      * Regsiter a module
+     *
      * @param modulesNode the module is or wil get placed under this node
-     * @param def the definition of the module to register
+     * @param def         the definition of the module to register
      */
     protected void registerModule(Content modulesNode, ModuleDefinition def) {
         try {
@@ -281,7 +275,7 @@ public class ModuleRegistration {
 
             try {
                 // do only log if the register state is not none
-                if(registerState != Module.REGISTER_STATE_NONE){
+                if (registerState != Module.REGISTER_STATE_NONE) {
                     log.info("start registration of module [{}]", def.getName());
                 }
 
@@ -303,12 +297,12 @@ public class ModuleRegistration {
                         break;
                     case Module.REGISTER_STATE_NEW_VERSION:
                         log.error("can't update module [" + def.getName() + "] to version " + def.getVersion(), //$NON-NLS-1$ //$NON-NLS-2$
-                            e);
+                                e);
                         break;
                     default:
                         log.error("error during registering an already installed module [" //$NON-NLS-1$
-                            + def.getName()
-                            + "]", e); //$NON-NLS-1$
+                                + def.getName()
+                                + "]", e); //$NON-NLS-1$
                         break;
                 }
             }
@@ -323,6 +317,7 @@ public class ModuleRegistration {
      * Calculates the level of dependency. 0 means no dependency. If no of the dependencies has itself dependencies is
      * this level 1. If one or more of the dependencies has a dependencies has a dependency it would return 2. And so on
      * ...
+     *
      * @param def module definition
      * @return the level
      */
@@ -341,6 +336,7 @@ public class ModuleRegistration {
 
     /**
      * Returns the definition of this module
+     *
      * @param moduleName
      */
     public ModuleDefinition getModuleDefinition(String moduleName) {
@@ -356,6 +352,7 @@ public class ModuleRegistration {
 
     /**
      * Changes the doctype to the correct dtd path (in the classpath)
+     *
      * @param name name of the xml resource
      * @return the reader for passing to the beanReader
      * @throws IOException

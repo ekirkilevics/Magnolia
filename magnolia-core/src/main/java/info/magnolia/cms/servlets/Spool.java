@@ -13,23 +13,22 @@
 package info.magnolia.cms.servlets;
 
 import info.magnolia.cms.core.Path;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 
 /**
  * Use this servlet to spool static resources from the servlet context.
+ *
  * @author Sameer Charles
  * @version 2.1
  */
@@ -47,6 +46,7 @@ public class Spool extends HttpServlet {
 
     /**
      * This makes browser and proxy caches work more effectively, reducing the load on server and network resources.
+     *
      * @param request HttpServletRequest
      * @return last modified time in miliseconds since 1st Jan 1970 GMT
      */
@@ -60,7 +60,8 @@ public class Spool extends HttpServlet {
 
     /**
      * All static resource requests are handled here.
-     * @param request HttpServletRequest
+     *
+     * @param request  HttpServletRequest
      * @param response HttpServletResponse
      * @throws IOException for error in accessing the resource or the servlet output stream
      */
@@ -99,7 +100,8 @@ public class Spool extends HttpServlet {
         catch (IOException e) {
             // only log at debug level, tomcat usually throws a ClientAbortException anytime the user stop loading the
             // page
-            log.debug("Unable to spool resource due to a " + e.getClass().getName() + " exception", e); //$NON-NLS-1$ //$NON-NLS-2$
+            if (log.isDebugEnabled())
+                log.debug("Unable to spool resource due to a " + e.getClass().getName() + " exception", e); //$NON-NLS-1$ //$NON-NLS-2$
             return false;
         }
         finally {
@@ -110,6 +112,7 @@ public class Spool extends HttpServlet {
 
     /**
      * Set content length. content type is set by the filters as defined in server/MIMEMappings.
+     *
      * @param resource File to be returned to the client
      * @param response HttpServletResponse
      */

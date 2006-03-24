@@ -74,9 +74,11 @@ public class Engine extends AbstractAdminModule {
         log.info("Module: " + this.getName()); //$NON-NLS-1$
         log.info(this.getName() + ": starting OpenWFE"); //$NON-NLS-1$
         try {
-            log.debug("create owfe engine ...");
+            if (log.isDebugEnabled())
+                log.debug("create owfe engine ...");
             new OWFEEngine();// .run();
-            log.debug("create owfe engine ok.");
+            if (log.isDebugEnabled())
+                log.debug("create owfe engine ok.");
 
         }
         catch (Exception e) {

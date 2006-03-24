@@ -16,21 +16,19 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 
 /**
@@ -89,6 +87,7 @@ public class MetaData {
 
     /**
      * Package private constructor
+     *
      * @param workingNode current <code>Node</code> on which <code>MetaData</code> is requested
      */
     MetaData(Node workingNode, AccessManager manager) {
@@ -97,8 +96,9 @@ public class MetaData {
 
     /**
      * constructor
+     *
      * @param workingNode current <code>Node</code> on which <code>MetaData</code> is requested
-     * @param nodeName under which this data is saved
+     * @param nodeName    under which this data is saved
      */
     MetaData(Node workingNode, String nodeName, AccessManager manager) {
         this.setMetaNode(workingNode, DEFAULT_META_NODE);
@@ -129,6 +129,7 @@ public class MetaData {
 
     /**
      * MetaData should be created by the repository implementation based on the node type definition
+     *
      * @param workingNode
      * @param name
      */
@@ -154,6 +155,7 @@ public class MetaData {
 
     /**
      * Get all meta data properties
+     *
      * @return property iterator
      */
     public PropertyIterator getProperties() {
@@ -171,6 +173,7 @@ public class MetaData {
 
     /**
      * Part of metadata, same as name of actual storage node. This value is unique at the hierarchy level context.
+     *
      * @return String value of the requested metadata
      */
     public String getLabel() {
@@ -178,7 +181,8 @@ public class MetaData {
             return this.node.getName();
         }
         catch (NullPointerException e) {
-            log.debug("MetaData has not been created or this node does not support MetaData"); //$NON-NLS-1$
+            if (log.isDebugEnabled())
+                log.debug("MetaData has not been created or this node does not support MetaData"); //$NON-NLS-1$
         }
         catch (RepositoryException e) {
             log.error(e.getMessage(), e);
@@ -188,6 +192,7 @@ public class MetaData {
 
     /**
      * get property name with the prefix
+     *
      * @param name
      * @return name with namespace prefix
      */
@@ -200,6 +205,7 @@ public class MetaData {
 
     /**
      * Part of metadata , could be used as html header.
+     *
      * @return String value of the requested metadata
      */
     public String getTitle() {
@@ -208,6 +214,7 @@ public class MetaData {
 
     /**
      * Part of metadata, could be used as html header.
+     *
      * @param value
      */
     public void setTitle(String value) throws AccessDeniedException {
@@ -226,6 +233,7 @@ public class MetaData {
 
     /**
      * Part of metadata, get creation date of the current node.
+     *
      * @return Calendar
      */
     public Calendar getCreationDate() {
@@ -234,6 +242,7 @@ public class MetaData {
 
     /**
      * Part of metadata, adds sequence number of the current node
+     *
      * @deprecated use JCR ordering
      */
     public void setSequencePosition(long seqPos) throws AccessDeniedException {
@@ -262,6 +271,7 @@ public class MetaData {
 
     /**
      * Part of metadata, adds sequence number of the current node
+     *
      * @deprecated use JCR ordering
      */
     public void setSequencePosition() throws AccessDeniedException {
@@ -270,6 +280,7 @@ public class MetaData {
 
     /**
      * Part of metadata, get sequence position of the current node
+     *
      * @return long
      * @deprecated use JCR ordering
      */
@@ -313,6 +324,7 @@ public class MetaData {
 
     /**
      * Part of metadata, get last activated status of the current node
+     *
      * @return Calendar
      */
     public boolean getIsActivated() {
@@ -330,6 +342,7 @@ public class MetaData {
 
     /**
      * Part of metadata, get last activated/de- date of the current node
+     *
      * @return Calendar
      */
     public Calendar getLastActionDate() {
@@ -347,6 +360,7 @@ public class MetaData {
 
     /**
      * Part of metadata, get last modified date of the current node
+     *
      * @return Calendar
      */
     public Calendar getModificationDate() {
@@ -355,6 +369,7 @@ public class MetaData {
 
     /**
      * Part of metadata, last known author of this node.
+     *
      * @return String value of the requested metadata
      */
     public String getAuthorId() {
@@ -363,6 +378,7 @@ public class MetaData {
 
     /**
      * Part of metadata, current logged-in author who did some action on this page.
+     *
      * @param value
      */
     public void setAuthorId(String value) throws AccessDeniedException {
@@ -372,6 +388,7 @@ public class MetaData {
 
     /**
      * Part of metadata, last known activator of this node.
+     *
      * @return String value of the requested metadata
      */
     public String getActivatorId() {
@@ -380,6 +397,7 @@ public class MetaData {
 
     /**
      * Part of metadata, current logged-in author who last activated this page
+     *
      * @param value
      */
     public void setActivatorId(String value) throws AccessDeniedException {
@@ -397,6 +415,7 @@ public class MetaData {
 
     /**
      * Part of metadata, node activation time
+     *
      * @return Calendar
      */
     public Calendar getStartTime() {
@@ -413,6 +432,7 @@ public class MetaData {
 
     /**
      * Part of metadata, node de-activation time
+     *
      * @return Calendar
      */
     public Calendar getEndTime() {
@@ -421,6 +441,7 @@ public class MetaData {
 
     /**
      * Part of metadata, template which will be used to render content of this node.
+     *
      * @return String value of the requested metadata
      */
     public String getTemplate() {
@@ -429,6 +450,7 @@ public class MetaData {
 
     /**
      * Part of metadata, template which will be used to render content of this node
+     *
      * @param value
      */
     public void setTemplate(String value) throws AccessDeniedException {
@@ -438,6 +460,7 @@ public class MetaData {
 
     /**
      * Part of metadata, template type : JSP - Servlet - _xxx_
+     *
      * @param value
      */
     public void setTemplateType(String value) throws AccessDeniedException {
@@ -696,6 +719,7 @@ public class MetaData {
 
     /**
      * Returns a String property. If the property does not exist, this will return an empty String.
+     *
      * @param name
      * @return the property value, never null
      */
@@ -726,18 +750,18 @@ public class MetaData {
      */
     public String toString() {
         return new ToStringBuilder(this).append("title", this.getTitle()) //$NON-NLS-1$
-            .append("template", this.getTemplate()) //$NON-NLS-1$
-            .append("authorId", this.getAuthorId()) //$NON-NLS-1$
-            .append("label", this.getLabel()) //$NON-NLS-1$
-            .append("sequencePosition", this.getSequencePosition()) //$NON-NLS-1$
-            .append("activatorId", this.getActivatorId()) //$NON-NLS-1$
-            .append("isActivated", this.getIsActivated()) //$NON-NLS-1$
-            .append("creationDate", this.getCreationDate()) //$NON-NLS-1$
-            .append("lastActionDate", this.getLastActionDate()) //$NON-NLS-1$
-            .append("modificationDate", this.getModificationDate()) //$NON-NLS-1$
-            .append("startTime", this.getStartTime()) //$NON-NLS-1$
-            .append("endTime", this.getEndTime()) //$NON-NLS-1$
-            .toString();
+                .append("template", this.getTemplate()) //$NON-NLS-1$
+                .append("authorId", this.getAuthorId()) //$NON-NLS-1$
+                .append("label", this.getLabel()) //$NON-NLS-1$
+                .append("sequencePosition", this.getSequencePosition()) //$NON-NLS-1$
+                .append("activatorId", this.getActivatorId()) //$NON-NLS-1$
+                .append("isActivated", this.getIsActivated()) //$NON-NLS-1$
+                .append("creationDate", this.getCreationDate()) //$NON-NLS-1$
+                .append("lastActionDate", this.getLastActionDate()) //$NON-NLS-1$
+                .append("modificationDate", this.getModificationDate()) //$NON-NLS-1$
+                .append("startTime", this.getStartTime()) //$NON-NLS-1$
+                .append("endTime", this.getEndTime()) //$NON-NLS-1$
+                .toString();
     }
 
 }

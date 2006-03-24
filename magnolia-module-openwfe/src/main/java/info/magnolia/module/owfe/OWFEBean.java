@@ -51,8 +51,8 @@ public class OWFEBean {
             }
         }
         String pName = wi.getParticipantName();
-        log.debug("participant name = " + pName + "(" + pName.substring(5)
-                + ")");
+        if (log.isDebugEnabled())
+            log.debug("participant name = " + pName + "(" + pName.substring(5) + ")");
         if (pName.startsWith("command-")) {
             return false;
         } else if (pName.startsWith("user-")) {
@@ -83,8 +83,10 @@ public class OWFEBean {
      * @throws Exception
      */
     public List getWorkItems(String userName) throws Exception {
-        log.debug("enter getWorkItems");
-        log.debug("user name = " + userName);
+        if (log.isDebugEnabled()) {
+            log.debug("enter getWorkItems");
+            log.debug("user name = " + userName);
+        }
         ArrayList list = new ArrayList();
         HierarchyManager hm = OWFEEngine.getOWFEHierarchyManager("Store");
         Content root = hm.getRoot();
@@ -98,15 +100,18 @@ public class OWFEBean {
                 if (checkPariticipant(wi, userName)) { // if belong to this
                     // user
                     list.add(wi);
-                    log.debug("found one workitem for user" + userName);
+                    if (log.isDebugEnabled())
+                        log.debug("found one workitem for user" + userName);
                 }
             }
-            log.debug("enter getWorkItems");
+            if (log.isDebugEnabled())
+                log.debug("enter getWorkItems");
             return list;
         } catch (Exception e) {
             log.error("exception:" + e);
         }
-        log.debug("leave getWorkItems");
+        if (log.isDebugEnabled())
+            log.debug("leave getWorkItems");
         return list;
 
     }
@@ -127,7 +132,8 @@ public class OWFEBean {
             if (ct != null) {
                 ct.delete();
                 hm.save();
-                log.debug("work item removed");
+                if (log.isDebugEnabled())
+                    log.debug("work item removed");
             }
 
         } catch (Exception e) {
@@ -188,8 +194,8 @@ public class OWFEBean {
         }
         removeWorkItem(if_wi);
         OWFEEngine.getEngine().reply(if_wi);
-
-        log.debug("work item removed.");
+        if (log.isDebugEnabled())
+            log.debug("work item removed.");
         // send mail to developer
     }
 

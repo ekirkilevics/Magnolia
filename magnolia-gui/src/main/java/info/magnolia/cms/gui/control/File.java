@@ -16,13 +16,12 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.i18n.MessagesManager;
-
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
 
 
 /**
@@ -118,7 +117,8 @@ public class File extends ControlSuper {
             }
         }
         catch (RepositoryException e) {
-            log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+            if (log.isDebugEnabled())
+                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
         }
         return fileName;
     }
@@ -139,7 +139,8 @@ public class File extends ControlSuper {
                 }
             }
             catch (RepositoryException e) {
-                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+                if (log.isDebugEnabled())
+                    log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
             }
         }
         return template;
@@ -156,7 +157,8 @@ public class File extends ControlSuper {
             }
         }
         catch (RepositoryException e) {
-            log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+            if (log.isDebugEnabled())
+                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
         }
         return ext;
     }
@@ -200,6 +202,7 @@ public class File extends ControlSuper {
 
     /**
      * Read a property from content node, check nulls.
+     *
      * @param propertyName node data name
      * @return property string, "" if not found
      * @throws RepositoryException

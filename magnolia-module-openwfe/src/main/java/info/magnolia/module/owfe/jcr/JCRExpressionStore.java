@@ -13,7 +13,6 @@ import openwfe.org.engine.impl.expool.AbstractExpressionStore;
 import openwfe.org.engine.impl.expool.ExpoolUtils;
 import openwfe.org.xml.XmlCoder;
 import openwfe.org.xml.XmlUtils;
-
 import org.apache.commons.lang.StringUtils;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -56,7 +55,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
     }
 
     private String convertId(String id) {
-        return StringUtils.replace(StringUtils.replace(id,"|", ""),":", ".");
+        return StringUtils.replace(StringUtils.replace(id, "|", ""), ":", ".");
     }
 
     // interface
@@ -74,7 +73,8 @@ public class JCRExpressionStore extends AbstractExpressionStore {
             // set expressionId as attribte id
             ValueFactory vf = ct.getJCRNode().getSession().getValueFactory();
             String value = fe.getId().toParseableString();
-            log.debug("id_value=" + value);
+            if (log.isDebugEnabled())
+                log.debug("id_value=" + value);
             ct.createNodeData("ID", vf.createValue(value));
 
             // convert to xml string

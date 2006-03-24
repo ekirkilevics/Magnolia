@@ -20,6 +20,10 @@ import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.util.Resource;
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
@@ -28,14 +32,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
- * @version 2.0
  * @version $Revision$ ($Author$)
  */
 public class RequestInterceptor extends HttpServlet {
@@ -106,13 +104,11 @@ public class RequestInterceptor extends HttpServlet {
                     HttpSession httpsession = request.getSession(true);
                     if (BooleanUtils.toBoolean(preview)) {
                         httpsession.setAttribute(Resource.MGNL_PREVIEW_ATTRIBUTE, Boolean.TRUE);
-                    }
-                    else {
+                    } else {
                         httpsession.removeAttribute(Resource.MGNL_PREVIEW_ATTRIBUTE);
                     }
                 }
-            }
-            else if (action.equals(ACTION_NODE_DELETE)) {
+            } else if (action.equals(ACTION_NODE_DELETE)) {
                 // delete paragraph
                 try {
                     String path = request.getParameter(PARAM_PATH);
@@ -124,8 +120,7 @@ public class RequestInterceptor extends HttpServlet {
                 catch (RepositoryException e) {
                     log.error("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
                 }
-            }
-            else if (action.equals(ACTION_NODE_SORT)) {
+            } else if (action.equals(ACTION_NODE_SORT)) {
                 // sort paragrpahs
                 try {
                     String pathSelected = request.getParameter(PARAM_PATH_SELECTED);
@@ -140,7 +135,8 @@ public class RequestInterceptor extends HttpServlet {
                     hm.save();
                 }
                 catch (RepositoryException e) {
-                    log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+                    if (log.isDebugEnabled())
+                        log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
                 }
             }
         }
@@ -154,7 +150,7 @@ public class RequestInterceptor extends HttpServlet {
      * @throws AccessDeniedException
      */
     private void updatePageMetaData(HttpServletRequest request, HierarchyManager hm) throws PathNotFoundException,
-        RepositoryException, AccessDeniedException {
+            RepositoryException, AccessDeniedException {
         String pagePath = StringUtils.substringBeforeLast(Path.getURI(request), "."); //$NON-NLS-1$
         Content page = hm.getContent(pagePath);
         page.updateMetaData();

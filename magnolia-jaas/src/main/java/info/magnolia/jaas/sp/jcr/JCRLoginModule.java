@@ -16,11 +16,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.security.ACL;
-import info.magnolia.cms.security.Entity;
-import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.security.PermissionImpl;
-import info.magnolia.cms.security.PrincipalCollection;
+import info.magnolia.cms.security.*;
 import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.cms.util.UrlPattern;
 import info.magnolia.jaas.principal.ACLImpl;
@@ -28,12 +24,10 @@ import info.magnolia.jaas.principal.EntityImpl;
 import info.magnolia.jaas.principal.PrincipalCollectionImpl;
 import info.magnolia.jaas.principal.RoleListImpl;
 import info.magnolia.jaas.sp.AbstractLoginModule;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
@@ -42,345 +36,347 @@ import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginException;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * This is a default login module for magnolia, it uses initialized repository
  * as defined by the provider interface
- * 
+ *
  * @author Sameer Charles
  * @version $Revision$ ($Author$)
  */
 public class JCRLoginModule extends AbstractLoginModule {
 
-	/**
-	 * Logger
-	 */
-	private static Logger log = LoggerFactory.getLogger(JCRLoginModule.class);
+    /**
+     * Logger
+     */
+    private static Logger log = LoggerFactory.getLogger(JCRLoginModule.class);
 
-	protected String name;
+    protected String name;
 
-	protected char[] pswd;
+    protected char[] pswd;
 
-	protected boolean success;
+    protected boolean success;
 
-	protected Content user;
+    protected Content user;
 
-	/**
-	 * Authenticate against magnolia/jcr user repository
-	 */
-	public boolean login() throws LoginException {
-		if (this.callbackHandler == null)
-			throw new LoginException(
-					"Error: no CallbackHandler available for JCRLoginModule");
+    /**
+     * Authenticate against magnolia/jcr user repository
+     */
+    public boolean login() throws LoginException {
+        if (this.callbackHandler == null)
+            throw new LoginException(
+                    "Error: no CallbackHandler available for JCRLoginModule");
 
-		Callback[] callbacks = new Callback[2];
-		callbacks[0] = new NameCallback("name");
-		callbacks[1] = new PasswordCallback("pswd", false);
+        Callback[] callbacks = new Callback[2];
+        callbacks[0] = new NameCallback("name");
+        callbacks[1] = new PasswordCallback("pswd", false);
 
-		this.success = false;
-		try {
-			this.callbackHandler.handle(callbacks);
-			this.name = ((NameCallback) callbacks[0]).getName();
-			this.pswd = ((PasswordCallback) callbacks[1]).getPassword();
-			this.success = this.isValidUser();
-		} catch (IOException ioe) {
-			log.debug("Exception caught", ioe);
-			throw new LoginException(ioe.toString());
-		} catch (UnsupportedCallbackException ce) {
-			log.debug(ce.getMessage(), ce);
-			throw new LoginException(ce.getCallback().toString()
-					+ " not available");
-		}
+        this.success = false;
+        try {
+            this.callbackHandler.handle(callbacks);
+            this.name = ((NameCallback) callbacks[0]).getName();
+            this.pswd = ((PasswordCallback) callbacks[1]).getPassword();
+            this.success = this.isValidUser();
+        } catch (IOException ioe) {
+            if (log.isDebugEnabled())
+                log.debug("Exception caught", ioe);
+            throw new LoginException(ioe.toString());
+        } catch (UnsupportedCallbackException ce) {
+            if (log.isDebugEnabled())
+                log.debug(ce.getMessage(), ce);
+            throw new LoginException(ce.getCallback().toString()
+                    + " not available");
+        }
 
-		return this.success;
-	}
+        return this.success;
+    }
 
-	/**
-	 * Update subject with ACL and other properties
-	 */
-	public boolean commit() throws LoginException {
-		if (!this.success)
-			return false;
-		this.setEntity();
-		this.setACL();
-		return true;
-	}
+    /**
+     * Update subject with ACL and other properties
+     */
+    public boolean commit() throws LoginException {
+        if (!this.success)
+            return false;
+        this.setEntity();
+        this.setACL();
+        return true;
+    }
 
-	/**
-	 * Releases all associated memory
-	 */
-	public boolean release() {
-		return true;
-	}
+    /**
+     * Releases all associated memory
+     */
+    public boolean release() {
+        return true;
+    }
 
-	/**
-	 * checks is the credentials exist in the repository
-	 * 
-	 * @return boolean
-	 */
-	public boolean isValidUser() {
-		HierarchyManager hm = ContentRepository
-				.getHierarchyManager(ContentRepository.USERS);
-		try {
-			this.user = hm.getContent(this.name);
-			String fromRepository = this.user.getNodeData("pswd").getString()
-					.trim();
-			String encodedPassword = new String(Base64
-					.encodeBase64((new String(this.pswd)).getBytes()));
-			if (fromRepository.equalsIgnoreCase(encodedPassword)) {
-				return true;
-			}
-			return false;
-		} catch (PathNotFoundException pe) {
-			log.info("Unable to locate user [" + this.name
-					+ "], authentication failed");
-		} catch (RepositoryException re) {
-			log.error("Unable to locate user [" + this.name
-					+ "], authentication failed due to a "
-					+ re.getClass().getName(), re);
-		}
-		return false;
-	}
+    /**
+     * checks is the credentials exist in the repository
+     *
+     * @return boolean
+     */
+    public boolean isValidUser() {
+        HierarchyManager hm = ContentRepository
+                .getHierarchyManager(ContentRepository.USERS);
+        try {
+            this.user = hm.getContent(this.name);
+            String fromRepository = this.user.getNodeData("pswd").getString()
+                    .trim();
+            String encodedPassword = new String(Base64
+                    .encodeBase64((new String(this.pswd)).getBytes()));
+            if (fromRepository.equalsIgnoreCase(encodedPassword)) {
+                return true;
+            }
+            return false;
+        } catch (PathNotFoundException pe) {
+            log.info("Unable to locate user [" + this.name
+                    + "], authentication failed");
+        } catch (RepositoryException re) {
+            log.error("Unable to locate user [" + this.name
+                    + "], authentication failed due to a "
+                    + re.getClass().getName(), re);
+        }
+        return false;
+    }
 
-	/**
-	 * set user details
-	 */
-	public void setEntity() {
-		EntityImpl user = new EntityImpl();
-		String language = this.user.getNodeData("language").getString();
-		user.addProperty(Entity.LANGUAGE, language);
-		String name = this.user.getTitle();
-		user.addProperty(Entity.NAME, name);
-		user.addProperty(Entity.PASSWORD, new String(this.pswd));
-		this.subject.getPrincipals().add(user);
-	}
+    /**
+     * set user details
+     */
+    public void setEntity() {
+        EntityImpl user = new EntityImpl();
+        String language = this.user.getNodeData("language").getString();
+        user.addProperty(Entity.LANGUAGE, language);
+        String name = this.user.getTitle();
+        user.addProperty(Entity.NAME, name);
+        user.addProperty(Entity.PASSWORD, new String(this.pswd));
+        this.subject.getPrincipals().add(user);
+    }
 
-	/**
-	 * set access control list from the user, roles and groups
-	 */
-	public void setACL() {
-		List list = this.getUserGroupNodes(name);
+    /**
+     * set access control list from the user, roles and groups
+     */
+    public void setACL() {
+        List list = this.getUserGroupNodes(name);
 
-		this.setACLFromUser();
+        this.setACLFromUser();
 
-		for (int i = 0; i < list.size(); i++) {
-			Content ct = (Content) list.get(i);
-			this.setACLFromUserGroup(ct);
-		}
+        for (int i = 0; i < list.size(); i++) {
+            Content ct = (Content) list.get(i);
+            this.setACLFromUserGroup(ct);
+        }
 
-	}
+    }
 
 
-	/**
-	 * get group nodes which users are belong to
-	 * 
-	 * @return
-	 */
-	private List getUserGroupNodes(String userName) {
-		ArrayList list = new ArrayList();
+    /**
+     * get group nodes which users are belong to
+     *
+     * @return
+     */
+    private List getUserGroupNodes(String userName) {
+        ArrayList list = new ArrayList();
 
-		try {
-			HierarchyManager hm = ContentRepository
-					.getHierarchyManager(ContentRepository.USERS);
+        try {
+            HierarchyManager hm = ContentRepository
+                    .getHierarchyManager(ContentRepository.USERS);
 
-			// get node "user"
-			Content user = hm.getContent(userName);
+            // get node "user"
+            Content user = hm.getContent(userName);
 
-			Content groups = null;
-			try {
-				// get "groups" node under node "user"
-				groups = user.getContent("groups");
-			} catch (javax.jcr.PathNotFoundException e) {
-				log.warn("the user " + userName + " does have not groups node");
-			}
+            Content groups = null;
+            try {
+                // get "groups" node under node "user"
+                groups = user.getContent("groups");
+            } catch (javax.jcr.PathNotFoundException e) {
+                log.warn("the user " + userName + " does have not groups node");
+            }
 
-			if (groups != null) {
-				Collection c = groups.getChildren(ItemType.CONTENTNODE);
-				Iterator it = c.iterator();
-				while (it.hasNext()) {
-					Content ct = (Content) it.next();
+            if (groups != null) {
+                Collection c = groups.getChildren(ItemType.CONTENTNODE);
+                Iterator it = c.iterator();
+                while (it.hasNext()) {
+                    Content ct = (Content) it.next();
 
-					if (ct == null) {
-						log.error("group node is null");
-						continue;
-					}
-					list.add(ct);
-				}
-			}
+                    if (ct == null) {
+                        log.error("group node is null");
+                        continue;
+                    }
+                    list.add(ct);
+                }
+            }
 
-		} catch (Exception e) {
+        } catch (Exception e) {
 
-			log.warn("can not add group reference to user.", e);
-		}
+            log.warn("can not add group reference to user.", e);
+        }
 
-		return list;
+        return list;
 
-	}
+    }
 
-	private void setACLFromUser() {
-		HierarchyManager rolesHierarchy = ContentRepository
-				.getHierarchyManager(ContentRepository.USER_ROLES);
-		try {
-			Content rolesNode = this.user.getContent("roles");
-			Iterator children = rolesNode.getChildren().iterator();
-			RoleListImpl roleList = new RoleListImpl();
-			PrincipalCollection principalList = new PrincipalCollectionImpl();
-			while (children.hasNext()) {
-				Content child = (Content) children.next();
-				String rolePath = child.getNodeData("path").getString();
-				roleList.addRole(rolePath);
-				Content role = rolesHierarchy.getContent(rolePath);
-				Iterator it = role.getChildren(
-						ItemType.CONTENTNODE.getSystemName(), "acl*")
-						.iterator();
-				while (it.hasNext()) {
-					Content aclEntry = (Content) it.next();
-					String name = StringUtils.substringAfter(
-							aclEntry.getName(), "acl_");
-					ACL acl;
-					String repositoryName = "";
-					String workspaceName = "";
-					if (!StringUtils.contains(name, "_")) {
-						workspaceName = ContentRepository
-								.getDefaultWorkspace(StringUtils
-										.substringBefore(name, "_"));
-						repositoryName = name;
-						name += ("_" + workspaceName); // default workspace
-														// must be added to the
-														// name
-					} else {
-						String[] tokens = StringUtils.split(name, "_");
-						repositoryName = tokens[0];
-						workspaceName = tokens[1];
-					}
-					// get the existing acl object if created before with some
-					// other role
-					if (!principalList.contains(name)) {
-						acl = new ACLImpl();
-						principalList.add(acl);
-					} else {
-						acl = (ACL) principalList.get(name);
-					}
-					acl.setName(name);
-					acl.setRepository(repositoryName);
-					acl.setWorkspace(workspaceName);
+    private void setACLFromUser() {
+        HierarchyManager rolesHierarchy = ContentRepository
+                .getHierarchyManager(ContentRepository.USER_ROLES);
+        try {
+            Content rolesNode = this.user.getContent("roles");
+            Iterator children = rolesNode.getChildren().iterator();
+            RoleListImpl roleList = new RoleListImpl();
+            PrincipalCollection principalList = new PrincipalCollectionImpl();
+            while (children.hasNext()) {
+                Content child = (Content) children.next();
+                String rolePath = child.getNodeData("path").getString();
+                roleList.addRole(rolePath);
+                Content role = rolesHierarchy.getContent(rolePath);
+                Iterator it = role.getChildren(
+                        ItemType.CONTENTNODE.getSystemName(), "acl*")
+                        .iterator();
+                while (it.hasNext()) {
+                    Content aclEntry = (Content) it.next();
+                    String name = StringUtils.substringAfter(
+                            aclEntry.getName(), "acl_");
+                    ACL acl;
+                    String repositoryName = "";
+                    String workspaceName = "";
+                    if (!StringUtils.contains(name, "_")) {
+                        workspaceName = ContentRepository
+                                .getDefaultWorkspace(StringUtils
+                                        .substringBefore(name, "_"));
+                        repositoryName = name;
+                        name += ("_" + workspaceName); // default workspace
+                        // must be added to the
+                        // name
+                    } else {
+                        String[] tokens = StringUtils.split(name, "_");
+                        repositoryName = tokens[0];
+                        workspaceName = tokens[1];
+                    }
+                    // get the existing acl object if created before with some
+                    // other role
+                    if (!principalList.contains(name)) {
+                        acl = new ACLImpl();
+                        principalList.add(acl);
+                    } else {
+                        acl = (ACL) principalList.get(name);
+                    }
+                    acl.setName(name);
+                    acl.setRepository(repositoryName);
+                    acl.setWorkspace(workspaceName);
 
-					// add acl
-					Iterator permissionIterator = aclEntry.getChildren()
-							.iterator();
-					while (permissionIterator.hasNext()) {
-						Content map = (Content) permissionIterator.next();
-						String path = map.getNodeData("path").getString();
-						UrlPattern p = new SimpleUrlPattern(path);
-						Permission permission = new PermissionImpl();
-						permission.setPattern(p);
-						permission.setPermissions(map
-								.getNodeData("permissions").getLong());
-						acl.addPermission(permission);
-					}
-				}
-			}
-			/**
-			 * set principal list, a set of info.magnolia.jaas.principal.ACL
-			 */
-			this.subject.getPrincipals().add(principalList);
-			/**
-			 * set list of role names, info.magnolia.jaas.principal.RoleList
-			 */
-			this.subject.getPrincipals().add(roleList);
-		} catch (RepositoryException re) {
-			log.error(re.getMessage(), re);
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		}
+                    // add acl
+                    Iterator permissionIterator = aclEntry.getChildren()
+                            .iterator();
+                    while (permissionIterator.hasNext()) {
+                        Content map = (Content) permissionIterator.next();
+                        String path = map.getNodeData("path").getString();
+                        UrlPattern p = new SimpleUrlPattern(path);
+                        Permission permission = new PermissionImpl();
+                        permission.setPattern(p);
+                        permission.setPermissions(map
+                                .getNodeData("permissions").getLong());
+                        acl.addPermission(permission);
+                    }
+                }
+            }
+            /**
+             * set principal list, a set of info.magnolia.jaas.principal.ACL
+             */
+            this.subject.getPrincipals().add(principalList);
+            /**
+             * set list of role names, info.magnolia.jaas.principal.RoleList
+             */
+            this.subject.getPrincipals().add(roleList);
+        } catch (RepositoryException re) {
+            log.error(re.getMessage(), re);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
 
-	}
+    }
 
-	private void setACLFromUserGroup(Content group) {
-		HierarchyManager rolesHierarchy = ContentRepository
-				.getHierarchyManager(ContentRepository.USER_ROLES);
-		try {
-			// get node "roles" under node user
-			Content rolesNode = group.getContent("roles");
-			Iterator children = rolesNode.getChildren().iterator();
-			RoleListImpl roleList = new RoleListImpl();
-			PrincipalCollection principalList = new PrincipalCollectionImpl();
-			while (children.hasNext()) { // travesal all children under node
-				// "roles"
-				Content child = (Content) children.next();
-				// get path value of role
-				String rolePath = child.getNodeData("path").getString();
-				roleList.addRole(rolePath);
-				// get role node from roles repository
-				Content role = rolesHierarchy.getContent(rolePath);
-				// get nodes "mgnl:contentNode" with name "acl*"
-				Iterator it = role.getChildren(
-						ItemType.CONTENTNODE.getSystemName(), "acl*")
-						.iterator();
-				while (it.hasNext()) { // for each node node "acl*"
-					Content aclEntry = (Content) it.next();
-					String name = StringUtils.substringAfter(
-							aclEntry.getName(), "acl_");
-					ACL acl;
-					String repositoryName = "";
-					String workspaceName = "";
-					if (!StringUtils.contains(name, "_")) {
-						workspaceName = ContentRepository
-								.getDefaultWorkspace(StringUtils
-										.substringBefore(name, "_"));
-						repositoryName = name;
-						name += ("_" + workspaceName); // default workspace
-						// must be added to the
-						// name
-					} else {
-						String[] tokens = StringUtils.split(name, "_");
-						repositoryName = tokens[0];
-						workspaceName = tokens[1];
-					}
-					// get the existing acl object if created before with some
-					// other role
-					if (!principalList.contains(name)) {
-						acl = new ACLImpl();
-						principalList.add(acl);
-					} else {
-						acl = (ACL) principalList.get(name);
-					}
-					acl.setName(name);
-					acl.setRepository(repositoryName);
-					acl.setWorkspace(workspaceName);
+    private void setACLFromUserGroup(Content group) {
+        HierarchyManager rolesHierarchy = ContentRepository
+                .getHierarchyManager(ContentRepository.USER_ROLES);
+        try {
+            // get node "roles" under node user
+            Content rolesNode = group.getContent("roles");
+            Iterator children = rolesNode.getChildren().iterator();
+            RoleListImpl roleList = new RoleListImpl();
+            PrincipalCollection principalList = new PrincipalCollectionImpl();
+            while (children.hasNext()) { // travesal all children under node
+                // "roles"
+                Content child = (Content) children.next();
+                // get path value of role
+                String rolePath = child.getNodeData("path").getString();
+                roleList.addRole(rolePath);
+                // get role node from roles repository
+                Content role = rolesHierarchy.getContent(rolePath);
+                // get nodes "mgnl:contentNode" with name "acl*"
+                Iterator it = role.getChildren(
+                        ItemType.CONTENTNODE.getSystemName(), "acl*")
+                        .iterator();
+                while (it.hasNext()) { // for each node node "acl*"
+                    Content aclEntry = (Content) it.next();
+                    String name = StringUtils.substringAfter(
+                            aclEntry.getName(), "acl_");
+                    ACL acl;
+                    String repositoryName = "";
+                    String workspaceName = "";
+                    if (!StringUtils.contains(name, "_")) {
+                        workspaceName = ContentRepository
+                                .getDefaultWorkspace(StringUtils
+                                        .substringBefore(name, "_"));
+                        repositoryName = name;
+                        name += ("_" + workspaceName); // default workspace
+                        // must be added to the
+                        // name
+                    } else {
+                        String[] tokens = StringUtils.split(name, "_");
+                        repositoryName = tokens[0];
+                        workspaceName = tokens[1];
+                    }
+                    // get the existing acl object if created before with some
+                    // other role
+                    if (!principalList.contains(name)) {
+                        acl = new ACLImpl();
+                        principalList.add(acl);
+                    } else {
+                        acl = (ACL) principalList.get(name);
+                    }
+                    acl.setName(name);
+                    acl.setRepository(repositoryName);
+                    acl.setWorkspace(workspaceName);
 
-					// add acl
-					Iterator permissionIterator = aclEntry.getChildren()
-							.iterator();
-					while (permissionIterator.hasNext()) {
-						Content map = (Content) permissionIterator.next();
-						String path = map.getNodeData("path").getString();
-						UrlPattern p = new SimpleUrlPattern(path);
-						Permission permission = new PermissionImpl();
-						permission.setPattern(p);
-						permission.setPermissions(map
-								.getNodeData("permissions").getLong());
-						acl.addPermission(permission);
-					}
-				}
-			}
-			/**
-			 * set principal list, a set of info.magnolia.jaas.principal.ACL
-			 */
-			this.subject.getPrincipals().add(principalList);
-			/**
-			 * set list of role names, info.magnolia.jaas.principal.RoleList
-			 */
-			this.subject.getPrincipals().add(roleList);
-		} catch (RepositoryException re) {
-			re.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+                    // add acl
+                    Iterator permissionIterator = aclEntry.getChildren()
+                            .iterator();
+                    while (permissionIterator.hasNext()) {
+                        Content map = (Content) permissionIterator.next();
+                        String path = map.getNodeData("path").getString();
+                        UrlPattern p = new SimpleUrlPattern(path);
+                        Permission permission = new PermissionImpl();
+                        permission.setPattern(p);
+                        permission.setPermissions(map
+                                .getNodeData("permissions").getLong());
+                        acl.addPermission(permission);
+                    }
+                }
+            }
+            /**
+             * set principal list, a set of info.magnolia.jaas.principal.ACL
+             */
+            this.subject.getPrincipals().add(principalList);
+            /**
+             * set list of role names, info.magnolia.jaas.principal.RoleList
+             */
+            this.subject.getPrincipals().add(roleList);
+        } catch (RepositoryException re) {
+            re.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 	}
 }

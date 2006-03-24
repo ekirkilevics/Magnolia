@@ -16,16 +16,15 @@ import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.Resource;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -75,8 +74,8 @@ public class FileSrc extends TagSupport {
     }
 
     /**
-     * @deprecated
      * @param nodeDataName
+     * @deprecated
      */
     public void setNodeDataName(String nodeDataName) {
         this.nodeDataName = nodeDataName;
@@ -90,16 +89,16 @@ public class FileSrc extends TagSupport {
     }
 
     /**
-     * @deprecated
      * @param contentNodeName
+     * @deprecated
      */
     public void setContentNodeName(String contentNodeName) {
         this.contentNodeName = contentNodeName;
     }
 
     /**
-     * @deprecated
      * @param value
+     * @deprecated
      */
     public void setFileNameOnly(String value) {
         this.fileNameOnly = "true"; //$NON-NLS-1$
@@ -122,16 +121,14 @@ public class FileSrc extends TagSupport {
                 writeSrc(StringUtils.EMPTY);
                 return SKIP_BODY;
             }
-        }
-        else {
+        } else {
             this.contentNode = Resource.getLocalContentNode(request);
             if (this.contentNode == null) {
                 this.contentNode = Resource.getGlobalContentNode(request);
             }
             if (this.contentNode != null) {
                 this.contentNodeName = this.contentNode.getName();
-            }
-            else {
+            } else {
                 writeSrc(StringUtils.EMPTY);
                 return SKIP_BODY;
             }
@@ -154,37 +151,38 @@ public class FileSrc extends TagSupport {
         setFileProperties();
 
         String contentNodeCollectionName = (String) pageContext.getAttribute("contentNodeCollectionName", //$NON-NLS-1$
-            PageContext.REQUEST_SCOPE);
+                PageContext.REQUEST_SCOPE);
         if (this.fileNameOnly.equals("true")) { //$NON-NLS-1$
             try {
                 writeSrc(this.fileExtendedName);
             }
             catch (Exception e) {
-                log.debug(e.getMessage());
+                if (log.isDebugEnabled())
+                    log.debug(e.getMessage());
             }
-        }
-        else {
+        } else {
             if (contentNodeCollectionName == null) {
                 // we are not in a loop
                 try {
                     writeSrc(this.contentNode.getHandle() + "/" //$NON-NLS-1$
-                        + this.nodeDataName
-                        + this.slash
-                        + this.fileExtendedName);
+                            + this.nodeDataName
+                            + this.slash
+                            + this.fileExtendedName);
                 }
                 catch (Exception e) {
-                    log.debug(e.getMessage());
+                    if (log.isDebugEnabled())
+                        log.debug(e.getMessage());
                 }
-            }
-            else {
+            } else {
                 try {
                     writeSrc(Resource.getLocalContentNode(request).getHandle() + "/" //$NON-NLS-1$
-                        + this.nodeDataName
-                        + this.slash
-                        + this.fileExtendedName);
+                            + this.nodeDataName
+                            + this.slash
+                            + this.fileExtendedName);
                 }
                 catch (Exception e) {
-                    log.debug(e.getMessage());
+                    if (log.isDebugEnabled())
+                        log.debug(e.getMessage());
                 }
             }
         }
@@ -197,7 +195,8 @@ public class FileSrc extends TagSupport {
             out.print(src);
         }
         catch (Exception e) {
-            log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+            if (log.isDebugEnabled())
+                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
         }
     }
 
@@ -208,22 +207,23 @@ public class FileSrc extends TagSupport {
         this.fileExtension = Server.getDefaultExtension();
         Content properties = null;
         String contentNodeCollectionName = (String) pageContext.getAttribute("contentNodeCollectionName", //$NON-NLS-1$
-            PageContext.REQUEST_SCOPE);
+                PageContext.REQUEST_SCOPE);
         if (contentNodeCollectionName == null) {
             // we are not in a loop
             try {
                 properties = Resource.getGlobalContentNode(this.request).getContent(this.nodeDataName + "_properties"); //$NON-NLS-1$
             }
             catch (Exception e) {
-                log.debug(e.getMessage());
+                if (log.isDebugEnabled())
+                    log.debug(e.getMessage());
             }
-        }
-        else {
+        } else {
             try {
                 properties = Resource.getLocalContentNode(this.request).getContent(this.nodeDataName + "_properties"); //$NON-NLS-1$
             }
             catch (Exception e) {
-                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+                if (log.isDebugEnabled())
+                    log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
             }
         }
         if (properties != null) {
@@ -231,8 +231,7 @@ public class FileSrc extends TagSupport {
             this.fileExtension = properties.getNodeData("extension").getString(); //$NON-NLS-1$
             if (StringUtils.isEmpty(this.fileName)) {
                 this.fileExtendedName = "." + this.fileExtension; //$NON-NLS-1$
-            }
-            else {
+            } else {
                 this.slash = "/"; //$NON-NLS-1$
                 this.fileExtendedName = this.fileName;
                 int posLastDot = this.fileName.lastIndexOf("."); //$NON-NLS-1$

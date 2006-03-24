@@ -14,18 +14,16 @@ package info.magnolia.cms.servlets;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Path;
-
-import java.io.IOException;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.IOException;
 
 
 /**
@@ -78,16 +76,17 @@ public class UUIDRequestDispatcher extends HttpServlet {
         }
         try {
             String handle = ContentRepository
-                .getHierarchyManager(repositoryName, workspaceName)
-                .getContentByUUID(uuid)
-                .getHandle();
+                    .getHierarchyManager(repositoryName, workspaceName)
+                    .getContentByUUID(uuid)
+                    .getHandle();
             handle = (handle + "." + extension);
             RequestDispatcher dispatcher = request.getRequestDispatcher(handle);
             dispatcher.forward(request, response);
         }
         catch (Exception e) {
             log.error("Failed to retrieve content for UUID : " + uuid + " , " + e.getMessage());
-            log.debug("Exception caught", e);
+            if (log.isDebugEnabled())
+                log.debug("Exception caught", e);
         }
 
     }

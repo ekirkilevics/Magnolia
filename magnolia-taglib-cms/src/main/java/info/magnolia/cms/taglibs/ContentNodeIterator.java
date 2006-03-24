@@ -15,17 +15,15 @@ package info.magnolia.cms.taglibs;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.Resource;
-
-import java.util.Collection;
-import java.util.Iterator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Collection;
+import java.util.Iterator;
 
 
 /**
@@ -119,20 +117,20 @@ public class ContentNodeIterator extends TagSupport {
         Content page = Resource.getCurrentActivePage(request);
         try {
             Collection children = page.getContent(this.contentNodeCollectionName).getChildren(
-                ItemType.CONTENTNODE);
+                    ItemType.CONTENTNODE);
             this.size = children.size();
             if (this.size == 0) {
                 return SKIP_BODY;
             }
             pageContext.setAttribute(ContentNodeIterator.SIZE, new Integer(this.getEnd()), PageContext.REQUEST_SCOPE);
             pageContext.setAttribute(
-                ContentNodeIterator.CURRENT_INDEX,
-                new Integer(this.currentIndex),
-                PageContext.REQUEST_SCOPE);
+                    ContentNodeIterator.CURRENT_INDEX,
+                    new Integer(this.currentIndex),
+                    PageContext.REQUEST_SCOPE);
             pageContext.setAttribute(
-                ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME,
-                this.contentNodeCollectionName,
-                PageContext.REQUEST_SCOPE);
+                    ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME,
+                    this.contentNodeCollectionName,
+                    PageContext.REQUEST_SCOPE);
             this.contentNodeIterator = children.iterator();
             Resource.setLocalContentNodeCollectionName(request, this.contentNodeCollectionName);
             for (; this.beginIndex > -1; --this.beginIndex) {
@@ -140,7 +138,8 @@ public class ContentNodeIterator extends TagSupport {
             }
         }
         catch (RepositoryException re) {
-            log.debug(re.getMessage());
+            if (log.isDebugEnabled())
+                log.debug(re.getMessage());
             return SKIP_BODY;
         }
         return EVAL_BODY_INCLUDE;
@@ -154,9 +153,9 @@ public class ContentNodeIterator extends TagSupport {
         if (this.contentNodeIterator.hasNext() && (this.currentIndex < this.getEnd())) {
             this.currentIndex++;
             pageContext.setAttribute(
-                ContentNodeIterator.CURRENT_INDEX,
-                new Integer(this.currentIndex),
-                PageContext.REQUEST_SCOPE);
+                    ContentNodeIterator.CURRENT_INDEX,
+                    new Integer(this.currentIndex),
+                    PageContext.REQUEST_SCOPE);
             for (int i = 0; i < this.step; i++) {
                 Resource.setLocalContentNode(request, (Content) this.contentNodeIterator.next());
             }

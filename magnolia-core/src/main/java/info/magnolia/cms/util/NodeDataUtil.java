@@ -17,16 +17,14 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessDeniedException;
-
-import java.util.Date;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Date;
 
 
 /**
@@ -55,9 +53,10 @@ public class NodeDataUtil {
     }
 
     /**
-     * <p>
+     * <p/>
      * Returns the representation of the value as a String:
      * </p>
+     *
      * @return String
      */
     public String getValueString() {
@@ -65,9 +64,10 @@ public class NodeDataUtil {
     }
 
     /**
-     * <p>
+     * <p/>
      * Returns the representation of the value as a String:
      * </p>
+     *
      * @return String
      */
     public String getValueString(String dateFormat) {
@@ -92,7 +92,8 @@ public class NodeDataUtil {
             }
         }
         catch (Exception e) {
-            log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+            if (log.isDebugEnabled())
+                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
         }
         return StringUtils.EMPTY;
     }
@@ -120,6 +121,7 @@ public class NodeDataUtil {
 
     /**
      * Simple method to get strings like configuration informations
+     *
      * @param repository
      * @param path
      * @return
@@ -130,6 +132,7 @@ public class NodeDataUtil {
 
     /**
      * Get the string or the empty string if not existing
+     *
      * @param node
      * @param name
      * @return a string
@@ -140,6 +143,7 @@ public class NodeDataUtil {
 
     /**
      * You can define a default value if not found
+     *
      * @param repository
      * @param path
      * @param defaultValue
@@ -156,6 +160,7 @@ public class NodeDataUtil {
 
     /**
      * You can define a default value if not found
+     *
      * @param node
      * @param name
      * @param defaultValue
@@ -176,6 +181,7 @@ public class NodeDataUtil {
 
     /**
      * If the NodeData does not exist yet, just create it.
+     *
      * @param node
      * @param name
      * @return the found or created NodeData
@@ -184,7 +190,7 @@ public class NodeDataUtil {
      * @throws RepositoryException
      */
     public static NodeData getOrCreate(Content node, String name) throws AccessDeniedException, PathNotFoundException,
-        RepositoryException {
+            RepositoryException {
         if (node.hasNodeData(name)) {
             return node.getNodeData(name);
         }
@@ -194,6 +200,7 @@ public class NodeDataUtil {
 
     /**
      * Uses the i18n mechanism to translate the message if the resulting string is a key
+     *
      * @param node
      * @param string
      * @return the i18n string
