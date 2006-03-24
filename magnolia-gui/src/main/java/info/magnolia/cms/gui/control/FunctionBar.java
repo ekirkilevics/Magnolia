@@ -44,7 +44,7 @@ public class FunctionBar extends ContextMenu {
     public String getHtml() {
         Map params = new HashMap();
         params.put("functionBar", this);
-        return FreeMarkerUtil.process("info/magnolia/cms/gui/control/FunctionBar.html", params);
+        return FreeMarkerUtil.process("info/magnolia/cms/gui/control/FunctionBar.ftl", params);
     }
 
     /**
