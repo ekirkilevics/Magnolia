@@ -13,22 +13,22 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.SecureURI;
-
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Map;
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 import javax.jcr.observation.ObservationManager;
-
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
 
 
 /**
@@ -38,6 +38,8 @@ import org.slf4j.LoggerFactory;
 public final class Server {
 
     public static final String CONFIG_PAGE = "server"; //$NON-NLS-1$
+
+    public static final String[] MAIL_SETTINGS = {"smtpServer", "smtpPort", "smtpUser", "smtpPassword"};
 
     /**
      * Logger.
@@ -49,6 +51,8 @@ public final class Server {
     private static Map cachedURImapping = new Hashtable();
 
     private static Map cachedCacheableURIMapping = new Hashtable();
+
+    private static Map cachedMailSettings = new Hashtable();
 
     /**
      * Utility class, don't instantiate.
@@ -67,17 +71,20 @@ public final class Server {
 
     /**
      * Load the server configuration.
+     *
      * @throws ConfigurationException
      */
     public static void load() throws ConfigurationException {
         Server.cachedContent.clear();
         Server.cachedURImapping.clear();
         Server.cachedCacheableURIMapping.clear();
+        Server.cachedMailSettings.clear();
         try {
             log.info("Config : loading Server"); //$NON-NLS-1$
             Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(CONFIG_PAGE);
             cacheServerConfiguration(startPage);
             cacheSecureURIList(startPage);
+            cacheMailSettings();
             log.info("Config : Server config loaded"); //$NON-NLS-1$
         }
         catch (RepositoryException re) {
@@ -86,8 +93,35 @@ public final class Server {
         }
     }
 
+    private static void cacheMailSettings() throws RepositoryException, AccessDeniedException {
+        Content mailContent = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(CONFIG_PAGE + "/mail");
+        Iterator iter = mailContent.getNodeDataCollection().iterator();
+        while (iter.hasNext()) {
+            NodeData data = (NodeData) iter.next();
+            addPossiblyNullKeyToMap(data.getName(), data.getString(), cachedMailSettings, false);
+        }
+
+        if (log.isDebugEnabled())
+            for (int i = 0; i < MAIL_SETTINGS.length; i++)
+                if (cachedMailSettings.containsKey(MAIL_SETTINGS[i]))
+                    log.debug("Mail setting:" + MAIL_SETTINGS[i] + "=[" + cachedMailSettings.get(MAIL_SETTINGS[i]));
+
+
+    }
+
+    private static void addPossiblyNullKeyToMap(String key, String value, Map map, boolean putKeyIfNull) {
+        try {
+            map.put(key, value);
+        }
+        catch (Exception e) {
+            if (putKeyIfNull)
+                map.put(key, StringUtils.EMPTY);
+        }
+    }
+
     /**
      * Reload the server configuration: simply calls load().
+     *
      * @throws ConfigurationException
      */
     public static void reload() throws ConfigurationException {
@@ -109,15 +143,6 @@ public final class Server {
         String basicRealm = page.getNodeData("basicRealm").getString(); //$NON-NLS-1$
         Server.cachedContent.put("basicRealm", basicRealm); //$NON-NLS-1$
 
-        try {
-            String mailServer = page.getNodeData("defaultMailServer").getString(); //$NON-NLS-1$
-            Server.cachedContent.put("defaultMailServer", mailServer); //$NON-NLS-1$
-        }
-        catch (Exception e) {
-            log.error(e.getMessage());
-            Server.cachedContent.put("defaultMailServer", StringUtils.EMPTY); //$NON-NLS-1$
-        }
-
         Server.cachedContent.put("404URI", page.getNodeData("ResourceNotAvailableURIMapping").getString()); //$NON-NLS-1$ //$NON-NLS-2$
 
         boolean visibleToObinary = page.getNodeData("visibleToObinary").getBoolean(); //$NON-NLS-1$
@@ -137,7 +162,7 @@ public final class Server {
         }
 
         try {
-            if(page.hasContent("unsecureURIList")){
+            if (page.hasContent("unsecureURIList")) {
                 addToUnsecureList(page.getContent("unsecureURIList")); //$NON-NLS-1$
             }
         }
@@ -173,9 +198,9 @@ public final class Server {
         // server properties, only on the root server node
         try {
             ObservationManager observationManager = ContentRepository
-                .getHierarchyManager(ContentRepository.CONFIG)
-                .getWorkspace()
-                .getObservationManager();
+                    .getHierarchyManager(ContentRepository.CONFIG)
+                    .getWorkspace()
+                    .getObservationManager();
 
             observationManager.addEventListener(new EventListener() {
 
@@ -189,10 +214,10 @@ public final class Server {
                     }
                 }
             }, Event.PROPERTY_ADDED | Event.PROPERTY_CHANGED | Event.PROPERTY_REMOVED, "/" + CONFIG_PAGE, //$NON-NLS-1$
-                false,
-                null,
-                null,
-                false);
+                    false,
+                    null,
+                    null,
+                    false);
         }
         catch (RepositoryException e) {
             log.error("Unable to add event listeners for server", e); //$NON-NLS-1$
@@ -201,9 +226,9 @@ public final class Server {
         // secure URI list
         try {
             ObservationManager observationManager = ContentRepository
-                .getHierarchyManager(ContentRepository.CONFIG)
-                .getWorkspace()
-                .getObservationManager();
+                    .getHierarchyManager(ContentRepository.CONFIG)
+                    .getWorkspace()
+                    .getObservationManager();
 
             observationManager.addEventListener(new EventListener() {
 
@@ -217,10 +242,10 @@ public final class Server {
                     }
                 }
             }, Event.NODE_ADDED
-                | Event.NODE_REMOVED
-                | Event.PROPERTY_ADDED
-                | Event.PROPERTY_CHANGED
-                | Event.PROPERTY_REMOVED, "/" + CONFIG_PAGE + "/secureURIList", true, null, null, false); //$NON-NLS-1$ //$NON-NLS-2$
+                    | Event.NODE_REMOVED
+                    | Event.PROPERTY_ADDED
+                    | Event.PROPERTY_CHANGED
+                    | Event.PROPERTY_REMOVED, "/" + CONFIG_PAGE + "/secureURIList", true, null, null, false); //$NON-NLS-1$ //$NON-NLS-2$
         }
         catch (RepositoryException e) {
             log.error("Unable to add event listeners for server", e); //$NON-NLS-1$
@@ -269,7 +294,7 @@ public final class Server {
      * @return default mail server
      */
     public static String getDefaultMailServer() {
-        return (String) Server.cachedContent.get("defaultMailServer"); //$NON-NLS-1$
+        return (String) Server.cachedMailSettings.get("smtpServer");
     }
 
     /**
