@@ -128,10 +128,7 @@ public class JCRLoginModule extends AbstractLoginModule {
                     .trim();
             String encodedPassword = new String(Base64
                     .encodeBase64((new String(this.pswd)).getBytes()));
-            if (fromRepository.equalsIgnoreCase(encodedPassword)) {
-                return true;
-            }
-            return false;
+            return fromRepository.equalsIgnoreCase(encodedPassword);
         } catch (PathNotFoundException pe) {
             log.info("Unable to locate user [" + this.name
                     + "], authentication failed");
@@ -162,20 +159,18 @@ public class JCRLoginModule extends AbstractLoginModule {
     public void setACL() {
         List list = this.getUserGroupNodes(name);
 
-        this.setACLFromUser();
+        this.setACL(this.user);
 
         for (int i = 0; i < list.size(); i++) {
             Content ct = (Content) list.get(i);
-            this.setACLFromUserGroup(ct);
+            this.setACL(ct);
         }
-
     }
 
 
     /**
      * get group nodes which users are belong to
      *
-     * @return
      */
     private List getUserGroupNodes(String userName) {
         ArrayList list = new ArrayList();
@@ -218,11 +213,15 @@ public class JCRLoginModule extends AbstractLoginModule {
 
     }
 
-    private void setACLFromUser() {
+    /**
+     * set access control list from a list of roles under the provided content object
+     * @param aclNode under which roles and ACL are defined
+     * */
+    private void setACL(Content aclNode) {
         HierarchyManager rolesHierarchy = ContentRepository
                 .getHierarchyManager(ContentRepository.USER_ROLES);
         try {
-            Content rolesNode = this.user.getContent("roles");
+            Content rolesNode = aclNode.getContent("roles");
             Iterator children = rolesNode.getChildren().iterator();
             RoleListImpl roleList = new RoleListImpl();
             PrincipalCollection principalList = new PrincipalCollectionImpl();
@@ -239,8 +238,8 @@ public class JCRLoginModule extends AbstractLoginModule {
                     String name = StringUtils.substringAfter(
                             aclEntry.getName(), "acl_");
                     ACL acl;
-                    String repositoryName = "";
-                    String workspaceName = "";
+                    String repositoryName;
+                    String workspaceName;
                     if (!StringUtils.contains(name, "_")) {
                         workspaceName = ContentRepository
                                 .getDefaultWorkspace(StringUtils
@@ -297,86 +296,4 @@ public class JCRLoginModule extends AbstractLoginModule {
 
     }
 
-    private void setACLFromUserGroup(Content group) {
-        HierarchyManager rolesHierarchy = ContentRepository
-                .getHierarchyManager(ContentRepository.USER_ROLES);
-        try {
-            // get node "roles" under node user
-            Content rolesNode = group.getContent("roles");
-            Iterator children = rolesNode.getChildren().iterator();
-            RoleListImpl roleList = new RoleListImpl();
-            PrincipalCollection principalList = new PrincipalCollectionImpl();
-            while (children.hasNext()) { // travesal all children under node
-                // "roles"
-                Content child = (Content) children.next();
-                // get path value of role
-                String rolePath = child.getNodeData("path").getString();
-                roleList.addRole(rolePath);
-                // get role node from roles repository
-                Content role = rolesHierarchy.getContent(rolePath);
-                // get nodes "mgnl:contentNode" with name "acl*"
-                Iterator it = role.getChildren(
-                        ItemType.CONTENTNODE.getSystemName(), "acl*")
-                        .iterator();
-                while (it.hasNext()) { // for each node node "acl*"
-                    Content aclEntry = (Content) it.next();
-                    String name = StringUtils.substringAfter(
-                            aclEntry.getName(), "acl_");
-                    ACL acl;
-                    String repositoryName = "";
-                    String workspaceName = "";
-                    if (!StringUtils.contains(name, "_")) {
-                        workspaceName = ContentRepository
-                                .getDefaultWorkspace(StringUtils
-                                        .substringBefore(name, "_"));
-                        repositoryName = name;
-                        name += ("_" + workspaceName); // default workspace
-                        // must be added to the
-                        // name
-                    } else {
-                        String[] tokens = StringUtils.split(name, "_");
-                        repositoryName = tokens[0];
-                        workspaceName = tokens[1];
-                    }
-                    // get the existing acl object if created before with some
-                    // other role
-                    if (!principalList.contains(name)) {
-                        acl = new ACLImpl();
-                        principalList.add(acl);
-                    } else {
-                        acl = (ACL) principalList.get(name);
-                    }
-                    acl.setName(name);
-                    acl.setRepository(repositoryName);
-                    acl.setWorkspace(workspaceName);
-
-                    // add acl
-                    Iterator permissionIterator = aclEntry.getChildren()
-                            .iterator();
-                    while (permissionIterator.hasNext()) {
-                        Content map = (Content) permissionIterator.next();
-                        String path = map.getNodeData("path").getString();
-                        UrlPattern p = new SimpleUrlPattern(path);
-                        Permission permission = new PermissionImpl();
-                        permission.setPattern(p);
-                        permission.setPermissions(map
-                                .getNodeData("permissions").getLong());
-                        acl.addPermission(permission);
-                    }
-                }
-            }
-            /**
-             * set principal list, a set of info.magnolia.jaas.principal.ACL
-             */
-            this.subject.getPrincipals().add(principalList);
-            /**
-             * set list of role names, info.magnolia.jaas.principal.RoleList
-             */
-            this.subject.getPrincipals().add(roleList);
-        } catch (RepositoryException re) {
-            re.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-	}
 }
