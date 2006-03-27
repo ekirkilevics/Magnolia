@@ -50,23 +50,40 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
             log.debug("participant name = " + parName);
         if (parName.startsWith(COMMAND_PREFIX)) // handle commands
         {
+        	log.info("consume command " + parName + "...");
             String cmd = parName.substring(COMMAND_PREFIX_LEN, parName.length());
             if (log.isDebugEnabled())
                 log.debug("command name is " + cmd);
 
+
+
+
             try {
-                Command c = new CommandsMap().getFlowCommand(cmd);
+                Command c = new CommandsMap().getCommand(cmd);
                 //Catalog catalog = new MgnlRepositoryCatalogFactory().getCatalog();
                 //Command c = catalog.getCommand(cmd);
 
+//<<<<<<< .mine
+//            MgnlCommand tc = new CommandsMap().getCommand(cmd);
+//
+//            if (tc == null) { // not found, do in the old ways
+//            	//tc = new CommandsMap().getFlowCommand(cmd);
+//            	//if (tc==null)
+//                if (log.isDebugEnabled())
+//                    log.debug("can not find command named " + cmd + "in tree command map");
+//            } else {
+//                if (log.isDebugEnabled())
+//                    log.debug("found command for " + cmd);
+//=======
                 if (c != null) {
                     if (log.isDebugEnabled())
                         log.debug("Command has been found through the magnolia catalog:" + c.getClass().getName());
                     // set parameters in the context
                     HashMap params = new HashMap();
-                    params.put(MgnlCommand.P_WORKITEM, wi);
+                    params.put(MgnlCommand.INFLOW_PARAM, wi);
                     Context context = MgnlContext.getInstance();
                     context.put(MgnlCommand.PARAMS, params);
+//>>>>>>> .r2446
 
                     // execute
                     c.execute(context);
@@ -75,6 +92,7 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
                     if (log.isDebugEnabled())
                         log.debug("No command has been found through the magnolia catalog for name:" + cmd);
 
+                log.info("consume command " + parName + "end.");
             }
             catch (Exception e) {
                 // does not really matter here

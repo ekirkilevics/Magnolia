@@ -2,17 +2,25 @@ package info.magnolia.module.admininterface.dialogs;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.gui.dialog.*;
+import info.magnolia.cms.gui.dialog.DialogButton;
+import info.magnolia.cms.gui.dialog.DialogDialog;
+import info.magnolia.cms.gui.dialog.DialogEdit;
+import info.magnolia.cms.gui.dialog.DialogFactory;
+import info.magnolia.cms.gui.dialog.DialogInclude;
+import info.magnolia.cms.gui.dialog.DialogStatic;
+import info.magnolia.cms.gui.dialog.DialogTab;
+import info.magnolia.jaas.sp.jcr.JCRUserMgr;
 import info.magnolia.module.admininterface.SaveHandler;
-import org.apache.log4j.Logger;
+
+import java.util.Iterator;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Iterator;
+
+import org.apache.log4j.Logger;
 
 
 /**
@@ -120,6 +128,9 @@ public class GroupEditDialog extends ConfiguredDialog {
         save.setPath(path);
     }
 
+    /* (non-Javadoc)
+     * @see info.magnolia.module.admininterface.DialogMVCHandler#onPostSave(info.magnolia.module.admininterface.SaveHandler)
+     */
     protected void onPostSave(SaveHandler saveControl) {
         Content group = this.getStorageNode();
 
@@ -167,7 +178,7 @@ public class GroupEditDialog extends ConfiguredDialog {
                     Content r = users.createContent(newLabel, ItemType.CONTENTNODE);
                     r.createNodeData("path").setValue(usersValue[i]); //$NON-NLS-1$
                     // add gourp reference to user's repository
-                    addGroupForUser(group.getJCRNode().getPath(), usersValue[i]);
+                    new JCRUserMgr().addGroupForUser(group.getJCRNode().getPath(), usersValue[i]);
                 }
                 catch (Exception e) {
                     log.error(e.getMessage(), e);
@@ -182,36 +193,6 @@ public class GroupEditDialog extends ConfiguredDialog {
         }
     }
 
-    private void addGroupForUser(String groupId, String userId) throws Exception {
-        if (log.isDebugEnabled())
-            log.debug("group id = " + groupId + ", User Id = " + userId);
-        try {
-            HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USERS);
 
-            // get node "user"
-            Content user = hm.getContent(userId);
-
-            // get "groups" node under node "user"
-            Content groups = null;
-            try {
-                groups = user.getContent("groups");
-            } catch (Exception e) {
-                log.info("groups node not found");
-            }
-            if (groups == null)// create it if no exist
-                groups = user.createContent("groups");
-
-            // create <groupid> under node "groups"
-            String newLabel = Path.getUniqueLabel(hm, groups.getHandle(), "0");
-            Content r = groups.createContent(newLabel, ItemType.CONTENTNODE);
-            r.createNodeData("path").setValue(groupId);
-
-            hm.save();
-
-        }
-        catch (Exception e) {
-            log.error("can not add group reference to user.", e);
-        }
-    }
 
 }

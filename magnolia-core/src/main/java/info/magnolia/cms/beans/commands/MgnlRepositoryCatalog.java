@@ -25,10 +25,16 @@ public class MgnlRepositoryCatalog extends MgnlBaseCatalog {
 
 
     public void initCatalog(String name) {
+    	String path = null;
+    	if (name == null || name.length()==0)
+    		path = REPO_PATH;
+    	else
+    		path = REPO_PATH + "/" + name;
+    	
         try {
             Context context = MgnlContext.getSystemContext();
             HierarchyManager hm = context.getHierarchyManager("config");
-            Content content = hm.getContent(REPO_PATH + "/" + name);
+            Content content = hm.getContent(path);
             Iterator iter = content.getChildren(ItemType.CONTENTNODE).iterator();
             // loop over the command names one by one
             while (iter.hasNext()) {

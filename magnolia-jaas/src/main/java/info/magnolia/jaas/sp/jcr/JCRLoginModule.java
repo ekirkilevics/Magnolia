@@ -157,7 +157,7 @@ public class JCRLoginModule extends AbstractLoginModule {
      * set access control list from the user, roles and groups
      */
     public void setACL() {
-        List list = this.getUserGroupNodes(name);
+        List list = new JCRUserMgr().getUserGroupNodes(name);
 
         this.setACL(this.user);
 
@@ -168,50 +168,16 @@ public class JCRLoginModule extends AbstractLoginModule {
     }
 
 
-    /**
-     * get group nodes which users are belong to
-     *
-     */
-    private List getUserGroupNodes(String userName) {
-        ArrayList list = new ArrayList();
-
-        try {
-            HierarchyManager hm = ContentRepository
-                    .getHierarchyManager(ContentRepository.USERS);
-
-            // get node "user"
-            Content user = hm.getContent(userName);
-
-            Content groups = null;
-            try {
-                // get "groups" node under node "user"
-                groups = user.getContent("groups");
-            } catch (javax.jcr.PathNotFoundException e) {
-                log.warn("the user " + userName + " does have not groups node");
-            }
-
-            if (groups != null) {
-                Collection c = groups.getChildren(ItemType.CONTENTNODE);
-                Iterator it = c.iterator();
-                while (it.hasNext()) {
-                    Content ct = (Content) it.next();
-
-                    if (ct == null) {
-                        log.error("group node is null");
-                        continue;
-                    }
-                    list.add(ct);
-                }
-            }
-
-        } catch (Exception e) {
-
-            log.warn("can not add group reference to user.", e);
-        }
-
-        return list;
-
-    }
+//<<<<<<< .mine
+//   
+//=======
+//    /**
+//     * get group nodes which users are belong to
+//     *
+//     */
+//    private List getUserGroupNodes(String userName) {
+//        ArrayList list = new ArrayList();
+//>>>>>>> .r2449
 
     /**
      * set access control list from a list of roles under the provided content object

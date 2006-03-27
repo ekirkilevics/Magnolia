@@ -2,14 +2,13 @@ package info.magnolia.module.admininterface.dialogs;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.Path;
 import info.magnolia.cms.gui.dialog.DialogButton;
 import info.magnolia.cms.gui.dialog.DialogDialog;
 import info.magnolia.cms.gui.dialog.DialogFactory;
 import info.magnolia.cms.gui.dialog.DialogInclude;
 import info.magnolia.cms.gui.dialog.DialogStatic;
 import info.magnolia.cms.gui.dialog.DialogTab;
+import info.magnolia.jaas.sp.jcr.JCRUserMgr;
 import info.magnolia.module.admininterface.SaveHandler;
 
 import java.util.Iterator;
@@ -119,6 +118,9 @@ public class UserAddToGroupsDialog extends ConfiguredDialog {
         save.setPath(path);
     }
 
+    /* (non-Javadoc)
+     * @see info.magnolia.module.admininterface.DialogMVCHandler#onPostSave(info.magnolia.module.admininterface.SaveHandler)
+     */
     protected void onPostSave(SaveHandler saveControl) {
         Content user = this.getStorageNode();
 
@@ -140,35 +142,16 @@ public class UserAddToGroupsDialog extends ConfiguredDialog {
 
         // rewrite
         try {
+        	String[] groupsValue = form.getParameter("aclList").split(";"); //$NON-NLS-1$ //$NON-NLS-2$
 
-            // recreate groups node
-            Content groups = null;
-            try {
-                groups = user.getContent("groups");
-            }
-            catch (Exception e) {
-                log.info("User does not have groups node", e);
-            }
-            if (groups != null)
-                groups.delete();
-            groups = user.createContent("groups");
-
-            String[] groupsValue = form.getParameter("aclList").split(";"); //$NON-NLS-1$ //$NON-NLS-2$
-
-            for (int i = 0; i < groupsValue.length; i++) {
-                // create <groupid> under node "groups"
-                String newLabel = Path.getUniqueLabel(hm, groups.getHandle(), "0");
-                Content r = groups.createContent(newLabel, ItemType.CONTENTNODE);
-                r.createNodeData("path").setValue(groupsValue[i]);
-                log.info("added to group " + groupsValue[i]);
-            }
-
+        	new JCRUserMgr().createGroupsForUser(user, groupsValue);
+        	        
             hm.save();
 
             log.info("add user to group ok. repo = " + this.getRepository() + ", hm = " + hm.getWorkspace().getName());
 
         }
-        catch (RepositoryException re) {
+        catch (Exception re) {
             log.error(re.getMessage(), re);
         }
     }

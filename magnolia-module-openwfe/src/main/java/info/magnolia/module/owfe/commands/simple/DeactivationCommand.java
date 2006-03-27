@@ -12,25 +12,38 @@ import org.apache.commons.chain.Context;
 
 import java.util.HashMap;
 
-public class DeactivationCommand implements MgnlCommand {
+public class DeactivationCommand extends SimpleCommand {
 
-    public boolean execute(Context context) {
-        HashMap params = (HashMap) context.get(PARAMS);
-        String path;
-        InFlowWorkItem if_wi = (InFlowWorkItem) params.get(MgnlCommand.P_WORKITEM);
-        if (if_wi != null) { // if call from flow
-            path = (if_wi.getAttribute(P_PATH)).toString();
-        } else {
-            path = (String) params.get(P_PATH);
-        }
-        try {
-            doDeactivate(path);
-        } catch (Exception e) {
-            log.error("cannot do deactivate", e);
-            return false;
-        }
-        return true;
-    }
+    public boolean exec(HashMap params, Context Ctx) {
+		String path;
+//		 boolean recursive; 
+	   path = (String) params.get(P_PATH);
+//       recursive = ((Boolean) params.get(P_RECURSIVE)).booleanValue();
+	  try {
+		  doDeactivate(path);
+      } catch (Exception e) {
+          log.error("cannot do activate", e);
+          return false;
+      }
+      return true;
+}
+//    public boolean execute(Context context) {
+//        HashMap params = (HashMap) context.get(PARAMS);
+//        String path;
+//        InFlowWorkItem if_wi = (InFlowWorkItem) params.get(MgnlCommand.P_WORKITEM);
+//        if (if_wi != null) { // if call from flow
+//            path = (if_wi.getAttribute(P_PATH)).toString();
+//        } else {
+//            path = (String) params.get(P_PATH);
+//        }
+//        try {
+//            doDeactivate(path);
+//        } catch (Exception e) {
+//            log.error("cannot do deactivate", e);
+//            return false;
+//        }
+//        return true;
+//    }
 
     private void doDeactivate(String path) throws Exception {
         Rule rule = new Rule();

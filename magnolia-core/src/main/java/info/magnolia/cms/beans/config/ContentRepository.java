@@ -65,7 +65,7 @@ public final class ContentRepository {
 
     public static final String USER_ROLES = "userroles"; //$NON-NLS-1$
 
-    public static final String GROUPS = "groups"; //$NON-NLS-1$
+    public static final String USERGROUPS = "usergroups"; //$NON-NLS-1$
 
     public static final String CONFIG = "config"; //$NON-NLS-1$
 

@@ -13,28 +13,42 @@ import org.apache.commons.lang.StringUtils;
 
 import java.util.HashMap;
 
-public class ActivationCommand implements MgnlCommand {
+public class ActivationCommand extends SimpleCommand {
 
-    public boolean execute(Context context) {
-        HashMap params = (HashMap) context.get(PARAMS);
-        String path;
-        boolean recursive; // is initialized at false
-        InFlowWorkItem if_wi = (InFlowWorkItem) params.get(MgnlCommand.P_WORKITEM);
-        if (if_wi != null) { // if call from flow
-            path = (if_wi.getAttribute(P_PATH)).toString();
-            recursive = (if_wi.getAttribute(P_RECURSIVE)).equals("true");
-        } else {
-            path = (String) params.get(P_PATH);
-            recursive = ((Boolean) params.get(P_RECURSIVE)).booleanValue();
-        }
-        try {
-            doActivate(path, recursive);
-        } catch (Exception e) {
-            log.error("cannot do activate", e);
-            return false;
-        }
-        return true;
-    }
+    public boolean exec(HashMap params, Context ctx) {
+			String path;
+			 boolean recursive; 
+		   path = (String) params.get(P_PATH);
+           recursive = ((Boolean) params.get(P_RECURSIVE)).booleanValue();
+    	  try {
+              doActivate(path, recursive);
+          } catch (Exception e) {
+              log.error("cannot do activate", e);
+              return false;
+          }
+          return true;
+	}
+
+//	public boolean execute(Context context) {
+//        HashMap params = (HashMap) context.get(PARAMS);
+//        String path;
+//        boolean recursive; // is initialized at false
+//        InFlowWorkItem if_wi = (InFlowWorkItem) params.get(MgnlCommand.P_WORKITEM);
+//        if (if_wi != null) { // if call from flow
+//            path = (if_wi.getAttribute(P_PATH)).toString();
+//            recursive = (if_wi.getAttribute(P_RECURSIVE)).equals("true");
+//        } else {
+//            path = (String) params.get(P_PATH);
+//            recursive = ((Boolean) params.get(P_RECURSIVE)).booleanValue();
+//        }
+//        try {
+//            doActivate(path, recursive);
+//        } catch (Exception e) {
+//            log.error("cannot do activate", e);
+//            return false;
+//        }
+//        return true;
+//    }
 
     private void doActivate(String path, boolean recursive) throws Exception {
         /**

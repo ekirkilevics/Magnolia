@@ -10,25 +10,41 @@ import org.apache.commons.lang.StringUtils;
 import javax.jcr.RepositoryException;
 import java.util.HashMap;
 
-public class DeleteCommand implements MgnlCommand {
+public class DeleteCommand extends SimpleCommand{
 
-    public boolean execute(Context context) {
-        HashMap params = (HashMap) context.get(PARAMS);
-        String path;
-        InFlowWorkItem if_wi = (InFlowWorkItem) params.get(MgnlCommand.P_WORKITEM);
-        if (if_wi != null) { // if call from flow
-            path = (if_wi.getAttribute(P_PATH)).toString();
-        } else {
-            path = (String) params.get(P_PATH);
-        }
-        try {
-            deleteNode(context, path);
-        } catch (Exception e) {
-            log.error("cannot do delete", e);
-            return false;
-        }
-        return true;
-    }
+	public boolean exec(HashMap params, Context ctx) {
+ 
+      String path;
+
+       path = (String) params.get(P_PATH);
+  
+      try {
+          deleteNode(ctx, path);
+      } catch (Exception e) {
+          log.error("cannot do delete", e);
+          return false;
+      }
+      return true;
+
+	}
+
+//	public boolean execute(Context context) {
+//        HashMap params = (HashMap) context.get(PARAMS);
+//        String path;
+//        InFlowWorkItem if_wi = (InFlowWorkItem) params.get(MgnlCommand.P_WORKITEM);
+//        if (if_wi != null) { // if call from flow
+//            path = (if_wi.getAttribute(P_PATH)).toString();
+//        } else {
+//            path = (String) params.get(P_PATH);
+//        }
+//        try {
+//            deleteNode(context, path);
+//        } catch (Exception e) {
+//            log.error("cannot do delete", e);
+//            return false;
+//        }
+//        return true;
+//    }
 
     private void deleteNode(Context context, String parentPath, String label) throws RepositoryException {
         Content parentNode = MgnlContext.getHierarchyManager(MgnlCommand.REPOSITORY).getContent(parentPath);
