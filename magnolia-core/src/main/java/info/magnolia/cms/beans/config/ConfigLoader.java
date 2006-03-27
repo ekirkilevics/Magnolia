@@ -76,15 +76,21 @@ public class ConfigLoader {
         }
 
         if (StringUtils.isEmpty(System.getProperty("java.security.auth.login.config"))) { //$NON-NLS-1$
-            System.setProperty("java.security.auth.login.config", Path //$NON-NLS-1$
-                .getAbsoluteFileSystemPath("WEB-INF/config/jaas.config")); //$NON-NLS-1$
+            try {
+                System.setProperty("java.security.auth.login.config", Path //$NON-NLS-1$
+                    .getAbsoluteFileSystemPath("WEB-INF/config/jaas.config")); //$NON-NLS-1$
+            } catch (SecurityException se) {
+                log.error("Failed to set java.security.auth.login.config, check application server settings"); //$NON-NLS-1$
+                log.error(se.getMessage(), se);
+                log.info("Aborting startup");
+                return;
+            }
         }
         else {
             if (log.isInfoEnabled()) {
                 log.info("JAAS config file set by parent container or some other application"); //$NON-NLS-1$
                 log.info("Config in use " + System.getProperty("java.security.auth.login.config")); //$NON-NLS-1$ //$NON-NLS-2$
-                log
-                    .info("Please make sure JAAS config has all necessary modules (refer config/jaas.config) configured"); //$NON-NLS-1$
+                log.info("Please make sure JAAS config has all necessary modules (refer config/jaas.config) configured"); //$NON-NLS-1$
             }
         }
 
@@ -105,7 +111,7 @@ public class ConfigLoader {
         ContentRepository.init();
 
         // check for initialized repositories
-        boolean initialized = false;
+        boolean initialized;
 
         try {
             initialized = ContentRepository.checkIfInitialized();
@@ -170,7 +176,6 @@ public class ConfigLoader {
         catch (ConfigurationException e) {
             log.error("An error occurred during initialization",e); //$NON-NLS-1$
             enterListeningMode();
-            return;
         }
 
     }
