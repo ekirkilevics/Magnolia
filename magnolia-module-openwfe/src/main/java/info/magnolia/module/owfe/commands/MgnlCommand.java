@@ -24,5 +24,4 @@ public interface MgnlCommand extends Command {
 
     static Logger log = LoggerFactory.getLogger(MgnlCommand.class);
 
-
 }

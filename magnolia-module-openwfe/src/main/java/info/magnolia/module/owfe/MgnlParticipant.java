@@ -1,6 +1,5 @@
 package info.magnolia.module.owfe;
 
-import info.magnolia.cms.beans.config.MgnlCatalogFactory;
 import info.magnolia.cms.beans.runtime.Context;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.module.owfe.commands.CommandsMap;
@@ -9,7 +8,6 @@ import info.magnolia.module.owfe.jcr.JCRWorkItemAPI;
 import openwfe.org.embed.impl.engine.AbstractEmbeddedParticipant;
 import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.engine.workitem.WorkItem;
-import org.apache.commons.chain.Catalog;
 import org.apache.commons.chain.Command;
 import org.apache.log4j.Logger;
 
@@ -57,39 +55,36 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
                 log.debug("command name is " + cmd);
 
             try {
-                Catalog catalog = new MgnlCatalogFactory().getCatalog();
-                Command c = catalog.getCommand(cmd);
-                if (c != null)
-                    log.info("Command has been found through the magnolia catalog:" + c.getClass().getName());
-                else
-                    log.info("No command has been found through the magnolia catalog for name:" + cmd);
+                Command c = new CommandsMap().getFlowCommand(cmd);
+                //Catalog catalog = new MgnlRepositoryCatalogFactory().getCatalog();
+                //Command c = catalog.getCommand(cmd);
+
+                if (c != null) {
+                    if (log.isDebugEnabled())
+                        log.debug("Command has been found through the magnolia catalog:" + c.getClass().getName());
+                    // set parameters in the context
+                    HashMap params = new HashMap();
+                    params.put(MgnlCommand.P_WORKITEM, wi);
+                    Context context = MgnlContext.getInstance();
+                    context.put(MgnlCommand.PARAMS, params);
+
+                    // execute
+                    c.execute(context);
+
+                } else // not found, do in the old ways
+                    if (log.isDebugEnabled())
+                        log.debug("No command has been found through the magnolia catalog for name:" + cmd);
+
             }
             catch (Exception e) {
                 // does not really matter here
-            }
-
-            MgnlCommand tc = new CommandsMap().getFlowCommand(cmd);
-            if (tc == null) { // not found, do in the old ways
-                if (log.isDebugEnabled())
-                    log.debug("can not find command named " + cmd + "in tree command map");
-            } else {
-                if (log.isDebugEnabled())
-                    log.debug("found command for " + cmd);
-
-                // set parameters in the context
-                HashMap params = new HashMap();
-                params.put(MgnlCommand.P_WORKITEM, wi);
-                Context context = MgnlContext.getInstance();
-                context.put(MgnlCommand.PARAMS, params);
-
-                // execute
-                tc.execute(context);
             }
         } else {
             if (log.isDebugEnabled())
                 log.debug("storage = " + storage);
             storage.storeWorkItem("", (InFlowWorkItem) wi);
         }
+
         if (log.isDebugEnabled())
             log.debug("leave consume()..");
 

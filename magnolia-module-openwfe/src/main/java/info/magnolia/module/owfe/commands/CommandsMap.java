@@ -1,66 +1,40 @@
 package info.magnolia.module.owfe.commands;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import org.apache.log4j.Logger;
+import info.magnolia.cms.util.FactoryUtil;
+import org.apache.commons.chain.Catalog;
+import org.apache.commons.chain.CatalogFactory;
 
+/**
+ * This is used for backward compatibility to access tree and flow commands. We should move to CatalogFactory straight
+ * from the calling code.
+ *
+ * @author Jackie
+ * @author Nicolas
+ */
 public class CommandsMap {
-    /**
-     * Logger
-     */
-    private static Logger log = Logger.getLogger(CommandsMap.class);
+    static Class klass;
 
-    public MgnlCommand getTreeCommand(String commandName) {
-        HierarchyManager hm = ContentRepository
-                .getHierarchyManager(ContentRepository.CONFIG);
+    static {
         try {
-            Content root = hm.getContent("/modules/workflow/config/commands/treeCommands");
-
-            Content c = root.getContent(commandName);
-            if (c == null) {
-                log.error("can not get command for " + commandName);
-                return null;
-            }
-            String className = c.getNodeData("impl").getString();
-            log.info("class name is " + className);
-            Class cmdClass = Class.forName(className);
-            return (MgnlCommand) cmdClass.newInstance();
-
-        } catch (javax.jcr.PathNotFoundException pne) {
-            log.warn("command [" + commandName + "] is not defined");
-            return null;
+            klass = Class.forName("info.magnolia.cms.beans.commands.MgnlCatalogFactory");
         }
         catch (Exception e) {
-            log.warn("can not get command for " + commandName, e);
-            return null;
+            e.printStackTrace();
         }
+    }
 
+    public MgnlCommand getTreeCommand(String commandName) {
+        return getCommand("treeCommands", commandName);
     }
 
     public MgnlCommand getFlowCommand(String commandName) {
-        HierarchyManager hm = ContentRepository
-                .getHierarchyManager(ContentRepository.CONFIG);
-        try {
-            Content root = hm.getContent("/commands/flowCommands");
+        return getCommand("flowCommands", commandName);
+    }
 
-            Content c = root.getContent(commandName);
-            if (c == null) {
-                log.error("can not get command for " + commandName);
-                return null;
-            }
-            String className = c.getNodeData("impl").getString();
-            log.info("class name is " + className);
-            Class cmdClass = Class.forName(className);
-            return (MgnlCommand) cmdClass.newInstance();
-        } catch (javax.jcr.PathNotFoundException pne) {
-            log.warn("command [" + commandName + "] is not defined");
-            return null;
-        } catch (Exception e) {
-            log.warn("can not get command for " + commandName, e);
-            return null;
-        }
-
+    private MgnlCommand getCommand(String catalogName, String commandName) {
+        CatalogFactory factory = (CatalogFactory) FactoryUtil.getSingleton(klass);
+        Catalog catalog = factory.getCatalog(catalogName);
+        return (MgnlCommand) catalog.getCommand(commandName);
     }
 
 }
