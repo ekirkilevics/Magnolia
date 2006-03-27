@@ -1,6 +1,7 @@
 package info.magnolia.cms.beans.commands;
 
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.core.SystemProperty;
 import org.apache.commons.chain.config.ConfigParser;
 
 import java.net.MalformedURLException;
@@ -13,7 +14,7 @@ import java.net.URL;
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */
 public class MgnlXmlCatalog extends MgnlBaseCatalog {
-    static final String DEFAULT_PATH = System.getProperty("magnolia.commands.dir");
+    static final String DEFAULT_PATH = SystemProperty.getProperty("magnolia.commands.dir");
 
     public void initCatalog(String string) {
         ConfigParser parser = new ConfigParser();
