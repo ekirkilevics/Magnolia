@@ -20,7 +20,7 @@
         <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-19T19:18:25.301+08:00</sv:value>
+        <sv:value>2006-03-27T12:52:38.764+09:00</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -33,7 +33,7 @@
             <sv:value>2006-03-19T19:18:52.751+08:00</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:created" sv:type="Date">
-            <sv:value>2006-03-19T19:18:25.301+08:00</sv:value>
+            <sv:value>2006-03-27T12:52:38.764+09:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:activatorid" sv:type="String">
             <sv:value>superuser</sv:value>
@@ -62,7 +62,7 @@
             <sv:value>true</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:created" sv:type="Date">
-            <sv:value>2006-03-19T22:06:35.781+08:00</sv:value>
+            <sv:value>2006-03-27T12:52:38.802+09:00</sv:value>
         </sv:property>
         <sv:node sv:name="MetaData">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -75,7 +75,7 @@
                 <sv:value>2006-03-19T22:06:43.692+08:00</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:created" sv:type="Date">
-                <sv:value>2006-03-19T22:06:35.781+08:00</sv:value>
+                <sv:value>2006-03-27T12:52:38.802+09:00</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:activatorid" sv:type="String">
                 <sv:value>superuser</sv:value>
@@ -103,11 +103,8 @@
             <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
                 <sv:value>true</sv:value>
             </sv:property>
-            <sv:property sv:name="impl" sv:type="String">
-                <sv:value>info.magnolia.module.owfe.commands.flow.FlowActivationCommand</sv:value>
-            </sv:property>
             <sv:property sv:name="jcr:created" sv:type="Date">
-                <sv:value>2006-03-19T19:18:55.094+08:00</sv:value>
+                <sv:value>2006-03-27T12:52:38.807+09:00</sv:value>
             </sv:property>
             <sv:node sv:name="MetaData">
                 <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -120,7 +117,7 @@
                     <sv:value>2006-03-19T22:06:50.512+08:00</sv:value>
                 </sv:property>
                 <sv:property sv:name="jcr:created" sv:type="Date">
-                    <sv:value>2006-03-19T19:18:55.094+08:00</sv:value>
+                    <sv:value>2006-03-27T12:52:38.807+09:00</sv:value>
                 </sv:property>
                 <sv:property sv:name="mgnl:activatorid" sv:type="String">
                     <sv:value>superuser</sv:value>
@@ -134,6 +131,52 @@
                 <sv:property sv:name="mgnl:activated" sv:type="Boolean">
                     <sv:value>false</sv:value>
                 </sv:property>
+            </sv:node>
+            <sv:node sv:name="01">
+                <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                    <sv:value>mgnl:contentNode</sv:value>
+                </sv:property>
+                <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+                    <sv:value>mix:versionable</sv:value>
+                </sv:property>
+                <sv:property sv:name="jcr:uuid" sv:type="String">
+                    <sv:value>3798f896-aecd-40aa-bcf9-5e680e835869</sv:value>
+                </sv:property>
+                <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+                    <sv:value>true</sv:value>
+                </sv:property>
+                <sv:property sv:name="jcr:created" sv:type="Date">
+                    <sv:value>2006-03-27T15:06:52.889+09:00</sv:value>
+                </sv:property>
+                <sv:property sv:name="className" sv:type="String">
+                    <sv:value>info.magnolia.module.owfe.commands.flow.FlowActivationCommand</sv:value>
+                </sv:property>
+                <sv:node sv:name="MetaData">
+                    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                        <sv:value>mgnl:metaData</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="mgnl:authorid" sv:type="String">
+                        <sv:value>superuser</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+                        <sv:value>2006-03-27T15:07:47.470+09:00</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="jcr:created" sv:type="Date">
+                        <sv:value>2006-03-27T15:06:52.890+09:00</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="mgnl:activatorid" sv:type="String">
+                        <sv:value>superuser</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+                        <sv:value>2006-03-27T15:06:52.891+09:00</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+                        <sv:value>2006-03-27T15:20:04.411+09:00</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+                        <sv:value>false</sv:value>
+                    </sv:property>
+                </sv:node>
             </sv:node>
         </sv:node>
     </sv:node>
@@ -151,7 +194,7 @@
             <sv:value>true</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:created" sv:type="Date">
-            <sv:value>2006-03-19T22:06:35.781+08:00</sv:value>
+            <sv:value>2006-03-27T12:52:38.811+09:00</sv:value>
         </sv:property>
         <sv:node sv:name="MetaData">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -160,11 +203,11 @@
             <sv:property sv:name="mgnl:authorid" sv:type="String">
                 <sv:value>superuser</sv:value>
             </sv:property>
-            <sv:property sv:name="jcr:created" sv:type="Date">
-                <sv:value>2006-03-19T22:06:35.781+08:00</sv:value>
-            </sv:property>
             <sv:property sv:name="mgnl:lastaction" sv:type="Date">
                 <sv:value>2006-03-19T22:11:08.092+08:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:created" sv:type="Date">
+                <sv:value>2006-03-27T12:52:38.811+09:00</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:activatorid" sv:type="String">
                 <sv:value>superuser</sv:value>
@@ -192,11 +235,8 @@
             <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
                 <sv:value>true</sv:value>
             </sv:property>
-            <sv:property sv:name="impl" sv:type="String">
-                <sv:value>info.magnolia.module.owfe.commands.simple.ActivationCommand</sv:value>
-            </sv:property>
             <sv:property sv:name="jcr:created" sv:type="Date">
-                <sv:value>2006-03-19T19:18:55.094+08:00</sv:value>
+                <sv:value>2006-03-27T12:52:38.815+09:00</sv:value>
             </sv:property>
             <sv:node sv:name="MetaData">
                 <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -209,7 +249,7 @@
                     <sv:value>2006-03-19T22:11:08.092+08:00</sv:value>
                 </sv:property>
                 <sv:property sv:name="jcr:created" sv:type="Date">
-                    <sv:value>2006-03-19T19:18:55.094+08:00</sv:value>
+                    <sv:value>2006-03-27T12:52:38.815+09:00</sv:value>
                 </sv:property>
                 <sv:property sv:name="mgnl:activatorid" sv:type="String">
                     <sv:value>superuser</sv:value>
@@ -218,11 +258,57 @@
                     <sv:value>2006-03-19T19:18:55.094+08:00</sv:value>
                 </sv:property>
                 <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-                    <sv:value>2006-03-19T22:42:15.477+08:00</sv:value>
+                    <sv:value>2006-03-27T15:08:37.424+09:00</sv:value>
                 </sv:property>
                 <sv:property sv:name="mgnl:activated" sv:type="Boolean">
                     <sv:value>false</sv:value>
                 </sv:property>
+            </sv:node>
+            <sv:node sv:name="01">
+                <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                    <sv:value>mgnl:contentNode</sv:value>
+                </sv:property>
+                <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+                    <sv:value>mix:versionable</sv:value>
+                </sv:property>
+                <sv:property sv:name="jcr:uuid" sv:type="String">
+                    <sv:value>b58b5ba9-b280-4638-9a21-46adfd43d29e</sv:value>
+                </sv:property>
+                <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+                    <sv:value>true</sv:value>
+                </sv:property>
+                <sv:property sv:name="jcr:created" sv:type="Date">
+                    <sv:value>2006-03-27T15:08:30.275+09:00</sv:value>
+                </sv:property>
+                <sv:property sv:name="className" sv:type="String">
+                    <sv:value>info.magnolia.module.owfe.commands.simple.ActivationCommand</sv:value>
+                </sv:property>
+                <sv:node sv:name="MetaData">
+                    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                        <sv:value>mgnl:metaData</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="mgnl:authorid" sv:type="String">
+                        <sv:value>superuser</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+                        <sv:value>2006-03-27T15:08:33.055+09:00</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="jcr:created" sv:type="Date">
+                        <sv:value>2006-03-27T15:08:30.276+09:00</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="mgnl:activatorid" sv:type="String">
+                        <sv:value>superuser</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+                        <sv:value>2006-03-27T15:08:30.277+09:00</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+                        <sv:value>2006-03-27T15:08:53.278+09:00</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+                        <sv:value>false</sv:value>
+                    </sv:property>
+                </sv:node>
             </sv:node>
         </sv:node>
     </sv:node>
