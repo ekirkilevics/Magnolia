@@ -1,7 +1,8 @@
 package info.magnolia.module.owfe.commands.flow;
 
+import info.magnolia.cms.beans.commands.MgnlCommand;
+import info.magnolia.module.owfe.MgnlConstants;
 import info.magnolia.module.owfe.OWFEEngine;
-import info.magnolia.module.owfe.commands.MgnlCommand;
 import info.magnolia.module.owfe.jcr.JCRFlowDefinition;
 import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
 import openwfe.org.engine.workitem.LaunchItem;
@@ -25,12 +26,12 @@ public abstract class AbstractFlowCommand extends MgnlCommand {
         try {
             // Get the references
             LaunchItem li = new LaunchItem();
-            li.addAttribute(P_ACTION, new StringAttribute(this.getClass().getName()));
-            li.setWorkflowDefinitionUrl(MgnlCommand.P_WORKFLOW_DEFINITION_URL);
+            li.addAttribute(MgnlConstants.P_ACTION, new StringAttribute(this.getClass().getName()));
+            li.setWorkflowDefinitionUrl(MgnlConstants.P_WORKFLOW_DEFINITION_URL);
 
             // Retrieve and add the flow definition to the LaunchItem
             String flowDef = new JCRFlowDefinition().getflowDefAsString(getFlowName());
-            li.getAttributes().puts(MgnlCommand.P_DEFINITION, flowDef);
+            li.getAttributes().puts(MgnlConstants.P_DEFINITION, flowDef);
             JCRPersistedEngine engine = OWFEEngine.getEngine();
 
             // start activation

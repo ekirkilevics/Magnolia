@@ -1,8 +1,9 @@
 package info.magnolia.module.owfe.commands.simple;
 
+import info.magnolia.cms.beans.commands.MgnlCommand;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
-import info.magnolia.module.owfe.commands.MgnlCommand;
+import info.magnolia.module.owfe.MgnlConstants;
 import org.apache.commons.chain.Context;
 import org.apache.commons.lang.StringUtils;
 
@@ -12,7 +13,7 @@ import java.util.HashMap;
 public class DeleteCommand extends MgnlCommand {
 
 
-    static final String[] expectedParameters = {P_PATH};
+    static final String[] expectedParameters = {MgnlConstants.P_PATH};
 
     /**
      * List of the parameters that this command needs to run
@@ -25,7 +26,7 @@ public class DeleteCommand extends MgnlCommand {
 
 
     public boolean exec(HashMap params, Context ctx) {
-        String path = (String) params.get(P_PATH);
+        String path = (String) params.get(MgnlConstants.P_PATH);
         try {
             deleteNode(ctx, path);
         } catch (Exception e) {
@@ -36,14 +37,14 @@ public class DeleteCommand extends MgnlCommand {
     }
 
     private void deleteNode(Context context, String parentPath, String label) throws RepositoryException {
-        Content parentNode = MgnlContext.getHierarchyManager(MgnlCommand.REPOSITORY).getContent(parentPath);
+        Content parentNode = MgnlContext.getHierarchyManager(MgnlConstants.REPOSITORY).getContent(parentPath);
         String path;
         if (!parentPath.equals("/")) {
             path = parentPath + "/" + label;
         } else {
             path = "/" + label;
         }
-        ((HashMap) context.get(PARAMS)).put(P_PATH, path);
+        ((HashMap) context.get(PARAMS)).put(MgnlConstants.P_PATH, path);
         new DeactivationCommand().execute(context);
         parentNode.delete(label);
         parentNode.save();

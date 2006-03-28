@@ -1,7 +1,7 @@
 package info.magnolia.module.owfe.commands.flow;
 
 import info.magnolia.cms.util.AlertUtil;
-import info.magnolia.module.owfe.commands.MgnlCommand;
+import info.magnolia.module.owfe.MgnlConstants;
 import info.magnolia.module.owfe.jcr.JCRFlowDefinition;
 import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
 import openwfe.org.engine.workitem.LaunchItem;
@@ -13,7 +13,7 @@ import java.util.HashMap;
 public class TimeBasedFlowActivationCommand extends AbstractFlowCommand {
     private static final String WEB_SCHEDULED_ACTIVATION = "webScheduledActivation";
 
-    static final String[] parameters = {P_START_DATE, P_END_DATE, P_PATH};
+    static final String[] parameters = {MgnlConstants.P_START_DATE, MgnlConstants.P_END_DATE, MgnlConstants.P_PATH};
 
     /**
      * List of the parameters that this command needs to run
@@ -32,23 +32,23 @@ public class TimeBasedFlowActivationCommand extends AbstractFlowCommand {
     public void preLaunchFlow(Context context, HashMap params, JCRPersistedEngine engine, LaunchItem li) {
         try {
             // Retrieve parameters from caller
-            String pathSelected = (String) params.get(MgnlCommand.P_PATH);
+            String pathSelected = (String) params.get(MgnlConstants.P_PATH);
 
             // set parameters for lanuching the flow
-            li.setWorkflowDefinitionUrl(MgnlCommand.P_WORKFLOW_DEFINITION_URL);
-            li.addAttribute(MgnlCommand.P_PATH, new StringAttribute(pathSelected));
-            li.addAttribute(MgnlCommand.P_OK, MgnlCommand.ATT_FALSE);
+            li.setWorkflowDefinitionUrl(MgnlConstants.P_WORKFLOW_DEFINITION_URL);
+            li.addAttribute(MgnlConstants.P_PATH, new StringAttribute(pathSelected));
+            li.addAttribute(MgnlConstants.P_OK, MgnlConstants.ATT_FALSE);
 
 
-            li.addAttribute(MgnlCommand.P_START_DATE, new StringAttribute(params.get(MgnlCommand.P_START_DATE)));
-            li.addAttribute(MgnlCommand.P_END_DATE, new StringAttribute(params.get(MgnlCommand.P_END_DATE)));
+            li.addAttribute(MgnlConstants.P_START_DATE, new StringAttribute(params.get(MgnlConstants.P_START_DATE)));
+            li.addAttribute(MgnlConstants.P_END_DATE, new StringAttribute(params.get(MgnlConstants.P_END_DATE)));
 
             // Retrieve and add the flow definition to the LaunchItem
-            String flowDef = new JCRFlowDefinition().getflowDefAsString(MgnlCommand.P_DEFAULT_SCHEDULEDACTIVATION_FLOW);
-            li.getAttributes().puts(MgnlCommand.P_DEFINITION, flowDef);
+            String flowDef = new JCRFlowDefinition().getflowDefAsString(MgnlConstants.P_DEFAULT_SCHEDULEDACTIVATION_FLOW);
+            li.getAttributes().puts(MgnlConstants.P_DEFINITION, flowDef);
 
         } catch (Exception e) {
-            MgnlCommand.log.error("can't launch deactivate flow", e);
+            log.error("can't launch deactivate flow", e);
             AlertUtil.setMessage(AlertUtil.getExceptionMessage(e));
         }
     }

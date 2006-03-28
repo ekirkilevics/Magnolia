@@ -1,12 +1,13 @@
 package info.magnolia.module.owfe.commands.simple;
 
+import info.magnolia.cms.beans.commands.MgnlCommand;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.Rule;
-import info.magnolia.module.owfe.commands.MgnlCommand;
+import info.magnolia.module.owfe.MgnlConstants;
 import org.apache.commons.chain.Context;
 import org.apache.commons.lang.StringUtils;
 
@@ -14,7 +15,7 @@ import java.util.HashMap;
 
 public class ActivationCommand extends MgnlCommand {
 
-    static final String[] parameters = {P_RECURSIVE, P_PATH};
+    static final String[] parameters = {MgnlConstants.P_RECURSIVE, MgnlConstants.P_PATH};
 
     /**
      * List of the parameters that this command needs to run
@@ -28,8 +29,8 @@ public class ActivationCommand extends MgnlCommand {
     public boolean exec(HashMap params, Context ctx) {
         String path;
         boolean recursive;
-        path = (String) params.get(P_PATH);
-        recursive = ((Boolean) params.get(P_RECURSIVE)).booleanValue();
+        path = (String) params.get(MgnlConstants.P_PATH);
+        recursive = ((Boolean) params.get(MgnlConstants.P_RECURSIVE)).booleanValue();
         try {
             doActivate(path, recursive);
         } catch (Exception e) {
@@ -48,7 +49,7 @@ public class ActivationCommand extends MgnlCommand {
         }
 
         Syndicator syndicator = (Syndicator) FactoryUtil.getInstance(Syndicator.class);
-        syndicator.init(MgnlContext.getUser(), REPOSITORY, ContentRepository.getDefaultWorkspace(REPOSITORY), rule);
+        syndicator.init(MgnlContext.getUser(), MgnlConstants.REPOSITORY, ContentRepository.getDefaultWorkspace(MgnlConstants.REPOSITORY), rule);
 
         String parentPath = StringUtils.substringBeforeLast(path, "/");
         if (StringUtils.isEmpty(parentPath)) {

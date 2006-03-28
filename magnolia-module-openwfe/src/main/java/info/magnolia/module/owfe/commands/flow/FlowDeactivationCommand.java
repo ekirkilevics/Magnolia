@@ -1,7 +1,7 @@
 package info.magnolia.module.owfe.commands.flow;
 
 import info.magnolia.cms.util.AlertUtil;
-import info.magnolia.module.owfe.commands.MgnlCommand;
+import info.magnolia.module.owfe.MgnlConstants;
 import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
 import openwfe.org.engine.workitem.LaunchItem;
 import openwfe.org.engine.workitem.StringAttribute;
@@ -21,7 +21,7 @@ public class FlowDeactivationCommand extends AbstractFlowCommand {
 
     private static final String WEB_SCHEDULED_ACTIVATION = "webScheduledActivation";
 
-    static final String[] parameters = {P_PATH};
+    static final String[] parameters = {MgnlConstants.P_PATH};
 
     /**
      * List of the parameters that this command needs to run
@@ -40,14 +40,14 @@ public class FlowDeactivationCommand extends AbstractFlowCommand {
     public void preLaunchFlow(Context context, HashMap params, JCRPersistedEngine engine, LaunchItem li) {
         try {
             // Retrieve parameters
-            String pathSelected = (String) params.get(MgnlCommand.P_PATH);
+            String pathSelected = (String) params.get(MgnlConstants.P_PATH);
 
             // Parameters for the flow item
-            li.addAttribute(MgnlCommand.P_PATH, new StringAttribute(pathSelected));
-            li.addAttribute(MgnlCommand.P_OK, MgnlCommand.ATT_FALSE);
+            li.addAttribute(MgnlConstants.P_PATH, new StringAttribute(pathSelected));
+            li.addAttribute(MgnlConstants.P_OK, MgnlConstants.ATT_FALSE);
 
         } catch (Exception e) {
-            MgnlCommand.log.error("can't launch deactivate flow", e);
+            log.error("can't launch deactivate flow", e);
             AlertUtil.setMessage(AlertUtil.getExceptionMessage(e));
         }
 

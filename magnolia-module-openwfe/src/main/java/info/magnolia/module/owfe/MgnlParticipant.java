@@ -1,9 +1,9 @@
 package info.magnolia.module.owfe;
 
+import info.magnolia.cms.beans.commands.CommandsMap;
+import info.magnolia.cms.beans.commands.MgnlCommand;
 import info.magnolia.cms.beans.runtime.Context;
 import info.magnolia.cms.beans.runtime.MgnlContext;
-import info.magnolia.module.owfe.commands.CommandsMap;
-import info.magnolia.module.owfe.commands.MgnlCommand;
 import info.magnolia.module.owfe.commands.ParametersSetterHelper;
 import info.magnolia.module.owfe.jcr.JCRWorkItemAPI;
 import openwfe.org.embed.impl.engine.AbstractEmbeddedParticipant;
@@ -49,7 +49,7 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
         if (parName.startsWith(MgnlCommand.PREFIX_COMMAND)) // handle commands
         {
             log.info("consume command " + parName + "...");
-            String cmd = parName.substring(MgnlCommand.PREFIX_COMAMND_LEN, parName.length());
+            String cmd = parName.substring(MgnlCommand.PREFIX_COMMAND_LEN, parName.length());
             if (log.isDebugEnabled())
                 log.debug("command name is " + cmd);
 
@@ -70,19 +70,18 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
                     if (log.isDebugEnabled())
                         log.debug("Command has been found through the magnolia catalog:" + c.getClass().getName());
 
-                  //  String[] expected = c.getExpectedParameters();
+                    //  String[] expected = c.getExpectedParameters();
 
                     // set parameters in the context
                     HashMap params = new HashMap();
-                    params.put(MgnlCommand.INFLOW_PARAM, wi);
+                    params.put(MgnlConstants.INFLOW_PARAM, wi);
 
                     Context context = MgnlContext.getInstance();
                     context.put(MgnlCommand.PARAMS, params);
 
-                    
                     // translate parameter
                     new ParametersSetterHelper().translateParam(c, context);
-                    
+
                     // execute
                     c.execute(context);
 

@@ -1,7 +1,6 @@
-package info.magnolia.module.owfe.commands;
+package info.magnolia.cms.beans.commands;
 
 import info.magnolia.cms.util.FactoryUtil;
-import openwfe.org.embed.impl.engine.AbstractEmbeddedParticipant;
 import org.apache.commons.chain.Catalog;
 import org.apache.commons.chain.CatalogFactory;
 import org.apache.log4j.Logger;
@@ -15,7 +14,7 @@ import org.apache.log4j.Logger;
  */
 public class CommandsMap {
 
-    private static Logger log = Logger.getLogger(AbstractEmbeddedParticipant.class);
+    private static Logger log = Logger.getLogger(CommandsMap.class);
 
     static Class klass;
 
@@ -41,7 +40,7 @@ public class CommandsMap {
     }
 
     public static MgnlCommand getCommandFromFullName(String commandName) {
-        String command_ = commandName.substring(MgnlCommand.PREFIX_COMAMND_LEN);
+        String command_ = commandName.substring(MgnlCommand.PREFIX_COMMAND_LEN);
         int index1 = command_.indexOf(MgnlCommand.COMMAND_DELIM);
         int index2 = command_.indexOf(MgnlCommand.COMMAND_DELIM, index1);
         String catalog = command_.substring(index1 + 1, index2);

@@ -1,5 +1,7 @@
 package info.magnolia.module.owfe.commands;
 
+import info.magnolia.cms.beans.commands.MgnlCommand;
+import info.magnolia.module.owfe.MgnlConstants;
 import openwfe.org.engine.workitem.WorkItem;
 import org.apache.commons.chain.Context;
 
@@ -19,7 +21,7 @@ public class ParametersSetterHelper {
 
         HashMap params = new HashMap();
 
-        WorkItem workItem = (WorkItem) context.get(MgnlCommand.INFLOW_PARAM);
+        WorkItem workItem = (WorkItem) context.get(MgnlConstants.INFLOW_PARAM);
         if (workItem != null) {
             for (int i = 0; i < expected.length; i++)
                 params.put(expected[i], workItem.getAttribute(expected[i]));

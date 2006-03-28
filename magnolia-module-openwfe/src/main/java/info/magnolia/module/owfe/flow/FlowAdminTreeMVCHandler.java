@@ -1,13 +1,13 @@
 package info.magnolia.module.owfe.flow;
 
+import info.magnolia.cms.beans.commands.CommandsMap;
+import info.magnolia.cms.beans.commands.MgnlCommand;
 import info.magnolia.cms.beans.runtime.Context;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
-import info.magnolia.module.owfe.commands.CommandsMap;
-import info.magnolia.module.owfe.commands.MgnlCommand;
+import info.magnolia.module.owfe.MgnlConstants;
 import info.magnolia.module.owfe.commands.ParametersSetterHelper;
-
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,12 +50,12 @@ public abstract class FlowAdminTreeMVCHandler extends AdminTreeMVCHandler {
 
         // set parameters
         HashMap params = new HashMap();
-        params.put(MgnlCommand.P_REQUEST, request);
+        params.put(MgnlConstants.P_REQUEST, request);
         params.put("pathSelected", pathSelected);
         params.put("recursive", Boolean.valueOf((request.getParameter("recursive") != null)));
         params.put("tree", tree);
         Context context = MgnlContext.getInstance();
-        context.put(MgnlCommand.INTREE_PARAM, params);
+        context.put(MgnlConstants.INTREE_PARAM, params);
 
         // translate parameter
         new ParametersSetterHelper().translateParam(tc, context);

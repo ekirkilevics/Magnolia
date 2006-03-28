@@ -1,11 +1,12 @@
 package info.magnolia.module.owfe.commands.simple;
 
+import info.magnolia.cms.beans.commands.MgnlCommand;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.MailHandler;
-import info.magnolia.module.owfe.commands.MgnlCommand;
+import info.magnolia.module.owfe.MgnlConstants;
 import org.apache.commons.chain.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,7 @@ import java.util.HashMap;
 
 public class MailCommand extends MgnlCommand {
     static Logger logt = LoggerFactory.getLogger(MailCommand.class);
-    static final String[] parameters = {P_MAILTO, P_PATH};
+    static final String[] parameters = {MgnlConstants.P_MAILTO, MgnlConstants.P_PATH};
 
     private String smtpServer = "localhost";
     private String smtpPort = "25";
@@ -40,8 +41,8 @@ public class MailCommand extends MgnlCommand {
     }
 
     public boolean exec(HashMap params, Context ctx) {
-        String mailTo = convertEmailList((String) params.get(P_MAILTO));
-        String path = (String) params.get(P_PATH);
+        String mailTo = convertEmailList((String) params.get(MgnlConstants.P_MAILTO));
+        String path = (String) params.get(MgnlConstants.P_PATH);
 
         if (log.isDebugEnabled())
             log.debug("mail receiver list: " + mailTo);
@@ -87,14 +88,14 @@ public class MailCommand extends MgnlCommand {
             return "";
         for (int i = 0; i < list.length; i++) { // for each item
             String userName = list[i];
-            if (userName.startsWith(MgnlCommand.PREFIX_USER)) {
-                userName = userName.substring(PREFIX_USER_LEN);
+            if (userName.startsWith(MgnlConstants.PREFIX_USER)) {
+                userName = userName.substring(MgnlConstants.PREFIX_USER_LEN);
                 if (log.isDebugEnabled())
                     log.debug("username =" + userName);
                 ret.append(getUserMail(userName));
-            } else if (userName.startsWith(MgnlCommand.PREFIX_GROUP)) {
+            } else if (userName.startsWith(MgnlConstants.PREFIX_GROUP)) {
 
-            } else if (userName.startsWith(MgnlCommand.PREFIX_ROLE)) {
+            } else if (userName.startsWith(MgnlConstants.PREFIX_ROLE)) {
 
             }
         }
