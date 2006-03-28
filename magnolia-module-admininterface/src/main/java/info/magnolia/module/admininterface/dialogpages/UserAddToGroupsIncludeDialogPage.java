@@ -134,9 +134,9 @@ public class UserAddToGroupsIncludeDialogPage extends DialogPageMVCHandler {
 			
 			if (groupsOfUser != null) {
 				Iterator it = groupsOfUser.getChildren(ItemType.CONTENTNODE).iterator();
-				log.info("--------------------->");
+				//log.info("--------------------->");
 				while (it.hasNext()) {
-					log.info("--------------------->1");
+					//log.info("--------------------->1");
 					Content c = (Content) it.next();
 					// get path of group
 					String path = c.getNodeData("path").getString(); //$NON-NLS-1$
