@@ -5,9 +5,10 @@ import info.magnolia.module.owfe.commands.MgnlCommand;
 import java.util.HashMap;
 
 public class ActivationCommand extends AbstractInTreeCommand {
+    private static final String REAL_ACTIVATE = "realActivate";
 
     public String getTargetCommand() {
-        return "realActivate";
+        return REAL_ACTIVATE;
     }
 
     public HashMap translateParam(HashMap param) {

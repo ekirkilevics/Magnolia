@@ -9,9 +9,10 @@ import info.magnolia.module.owfe.commands.intreecommands.AbstractInTreeCommand;
 import java.util.HashMap;
 
 public class ScheduledActivationCommand extends AbstractInTreeCommand {
+    private static final String SCHEDULED_FLOW_ACTIVATE = "scheduledFlowActivate";
 
     public String getTargetCommand() {
-        return "scheduledFlowActivate";
+        return SCHEDULED_FLOW_ACTIVATE;
     }
 
     public HashMap translateParam(HashMap param) {
@@ -33,8 +34,8 @@ public class ScheduledActivationCommand extends AbstractInTreeCommand {
 
         params.put(MgnlCommand.P_PATH, pathSelected);
         params.put(MgnlCommand.P_RECURSIVE, MgnlCommand.P_RECURSIVE);
-        params.put("startDate", ct.getMetaData("startDate").getStartTime());
-        params.put("endDate", ct.getMetaData("endDate").getEndTime());
+        params.put(MgnlCommand.P_START_DATE, ct.getMetaData(MgnlCommand.P_START_DATE).getStartTime());
+        params.put(MgnlCommand.P_END_DATE, ct.getMetaData(MgnlCommand.P_END_DATE).getEndTime());
 
         return params;
     }

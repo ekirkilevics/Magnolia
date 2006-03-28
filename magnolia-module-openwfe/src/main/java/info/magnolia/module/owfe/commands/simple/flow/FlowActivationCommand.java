@@ -14,16 +14,12 @@ import java.util.HashMap;
  * @author nicolas
  */
 public class FlowActivationCommand extends AbstractFlowCommand {
+    private static final String WEB_ACTIVATION = "webActivation";
 
 
     public String getFlowName() {
-        return "webActivation";
+        return WEB_ACTIVATION;
     }
-
-    public boolean exec(HashMap params, Context ctx) {
-        return super.exec(params, ctx);
-    }
-
 
     public void preLaunchFlow(Context context, HashMap params, JCRPersistedEngine engine, LaunchItem li) {
         try {
@@ -33,10 +29,9 @@ public class FlowActivationCommand extends AbstractFlowCommand {
             boolean recursive = ((Boolean) params.get(MgnlCommand.P_RECURSIVE)).booleanValue();
 
             // Parameters for the flow item
-
-            li.addAttribute(MgnlCommand.P_RECURSIVE, new StringAttribute(recursive ? "true" : "false"));
+            li.addAttribute(MgnlCommand.P_RECURSIVE, recursive ? MgnlCommand.ATT_TRUE : MgnlCommand.ATT_FALSE);
             li.addAttribute(MgnlCommand.P_PATH, new StringAttribute(pathSelected));
-            li.addAttribute("OK", new StringAttribute("false"));
+            li.addAttribute(MgnlCommand.P_OK, MgnlCommand.ATT_FALSE);
         } catch (Exception e) {
             MgnlCommand.log.error("can't launch activate flow", e);
             AlertUtil.setMessage(AlertUtil.getExceptionMessage(e));

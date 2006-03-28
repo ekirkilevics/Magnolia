@@ -19,9 +19,6 @@ import java.util.HashMap;
  */
 public abstract class AbstractFlowCommand extends MgnlCommand {
 
-    String flowName = "";
-
-
     public boolean exec(HashMap params, Context ctx) {
         if (log.isDebugEnabled())
             log.debug("- Flow command -" + this.getClass().toString() + "- Start");

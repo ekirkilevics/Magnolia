@@ -29,12 +29,12 @@ public class DeactivationCommand extends AbstractInFlowCommand {
         boolean recursive = false; // is initialized at false
         if (workItem != null) { // if call from flow
             path = (workItem.getAttribute(P_PATH)).toString();
-            recursive = (workItem.getAttribute(P_RECURSIVE)).equals("true");
+            recursive = (workItem.getAttribute(P_RECURSIVE)).equals(MgnlCommand.TRUE);
         }
 
         HashMap params = new HashMap();
         params.put(MgnlCommand.P_PATH, path);
-        params.put(MgnlCommand.P_RECURSIVE, new Boolean(recursive));
+        params.put(MgnlCommand.P_RECURSIVE, recursive ? Boolean.TRUE : Boolean.FALSE);
 
         return params;
 

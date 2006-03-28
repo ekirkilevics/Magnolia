@@ -26,11 +26,11 @@ public class MailCommand extends AbstractInFlowCommand {
 
     public HashMap translateParam(WorkItem workItem) {
         String mailTo = "";
-        if (workItem != null) { // if call from flow
+        if (workItem != null) // if call from flow
             mailTo = (workItem.getAttribute(P_MAILTO)).toString();
-        }
 
-        log.info("mailTo = " + mailTo);
+        if (log.isDebugEnabled())
+            log.debug("mailTo = " + mailTo);
         HashMap params = new HashMap();
         params.put(MgnlCommand.P_MAILTO, mailTo);
 

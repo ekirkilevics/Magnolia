@@ -1,5 +1,6 @@
 package info.magnolia.module.owfe.commands;
 
+import openwfe.org.engine.workitem.StringAttribute;
 import org.apache.commons.chain.Command;
 import org.apache.commons.chain.Context;
 import org.slf4j.Logger;
@@ -23,10 +24,30 @@ public abstract class MgnlCommand implements Command {
     final static public String P_WORKFLOW_DEFINITION_URL = "field:__definition__";
     final static public String P_DEFINITION = "__definition__";
     final static public String P_MAILTO = "mailTo";
+    final static public String P_OK = "OK";
+    final static public String P_START_DATE = "startDate";
+    final static public String P_END_DATE = "endDate";
 
     final static public String P_DEFAULT_ACTIVATION_FLOW = "webActivation";
     final static public String P_DEFAULT_DEACTIVATION_FLOW = "webDeactivation";
     final static public String P_DEFAULT_SCHEDULEDACTIVATION_FLOW = "webScheduledActivation";
+
+    final static public String TRUE = "true";
+    final static public String FALSE = "false";
+    final static public StringAttribute ATT_TRUE = new StringAttribute(TRUE);
+    final static public StringAttribute ATT_FALSE = new StringAttribute(FALSE);
+
+    final static public String PREFIX_USER = "user-";
+    final static public String PREFIX_GROUP = "group-";
+    final static public String PREFIX_ROLE = "role-";
+    final static public String PREFIX_COMMAND = "command-";
+
+    final static public int PREFIX_USER_LEN = PREFIX_USER.length();
+    final static public int PREFIX_GROUP_LEN = PREFIX_GROUP.length();
+    final static public int PREFIX_ROLE_LEN = PREFIX_ROLE.length();
+    final static public int PREFIX_COMAMND_LEN = PREFIX_COMMAND.length();
+
+    final static public String COMMAND_DELIM = "-";
 
 
     final static public String REPOSITORY = "website";

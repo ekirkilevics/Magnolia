@@ -19,8 +19,6 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
      */
     private static Logger log = Logger.getLogger(AbstractEmbeddedParticipant.class);
     JCRWorkItemAPI storage = null;
-    private static final String COMMAND_PREFIX = "command-";
-    private static final int COMMAND_PREFIX_LEN = COMMAND_PREFIX.length();
 
     public MgnlParticipant() throws Exception {
         super();
@@ -48,10 +46,10 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
         String parName = ((InFlowWorkItem) (wi)).getParticipantName();
         if (log.isDebugEnabled())
             log.debug("participant name = " + parName);
-        if (parName.startsWith(COMMAND_PREFIX)) // handle commands
+        if (parName.startsWith(MgnlCommand.PREFIX_COMMAND)) // handle commands
         {
             log.info("consume command " + parName + "...");
-            String cmd = parName.substring(COMMAND_PREFIX_LEN, parName.length());
+            String cmd = parName.substring(MgnlCommand.PREFIX_COMAMND_LEN, parName.length());
             if (log.isDebugEnabled())
                 log.debug("command name is " + cmd);
 
@@ -74,6 +72,7 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
                     // set parameters in the context
                     HashMap params = new HashMap();
                     params.put(MgnlCommand.INFLOW_PARAM, wi);
+
                     Context context = MgnlContext.getInstance();
                     context.put(MgnlCommand.PARAMS, params);
 

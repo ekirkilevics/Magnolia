@@ -6,9 +6,10 @@ import info.magnolia.module.owfe.commands.intreecommands.AbstractInTreeCommand;
 import java.util.HashMap;
 
 public class ActivationCommand extends AbstractInTreeCommand {
+    private static final String FLOW_ACTIVATE = "flowActivate";
 
     public String getTargetCommand() {
-        return "flowActivate";
+        return FLOW_ACTIVATE;
     }
 
     public HashMap translateParam(HashMap param) {

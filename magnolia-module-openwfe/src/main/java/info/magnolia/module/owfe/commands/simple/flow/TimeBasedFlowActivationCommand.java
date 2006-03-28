@@ -11,17 +11,12 @@ import org.apache.commons.chain.Context;
 import java.util.HashMap;
 
 public class TimeBasedFlowActivationCommand extends AbstractFlowCommand {
+    private static final String WEB_SCHEDULED_ACTIVATION = "webScheduledActivation";
 
 
     public String getFlowName() {
-        return "webScheduledActivation";
+        return WEB_SCHEDULED_ACTIVATION;
     }
-
-
-    public boolean exec(HashMap params, Context ctx) {
-        return super.exec(params, ctx);
-    }
-
 
     public void preLaunchFlow(Context context, HashMap params, JCRPersistedEngine engine, LaunchItem li) {
         try {
@@ -31,11 +26,11 @@ public class TimeBasedFlowActivationCommand extends AbstractFlowCommand {
             // set parameters for lanuching the flow
             li.setWorkflowDefinitionUrl(MgnlCommand.P_WORKFLOW_DEFINITION_URL);
             li.addAttribute(MgnlCommand.P_PATH, new StringAttribute(pathSelected));
-            li.addAttribute("OK", new StringAttribute("false"));
+            li.addAttribute(MgnlCommand.P_OK, MgnlCommand.ATT_FALSE);
 
 
-            li.addAttribute("startDate", new StringAttribute(params.get("startDate")));
-            li.addAttribute("endDate", new StringAttribute(params.get("endDate")));
+            li.addAttribute(MgnlCommand.P_START_DATE, new StringAttribute(params.get(MgnlCommand.P_START_DATE)));
+            li.addAttribute(MgnlCommand.P_END_DATE, new StringAttribute(params.get(MgnlCommand.P_END_DATE)));
 
             // Retrieve and add the flow definition to the LaunchItem
             String flowDef = new JCRFlowDefinition().getflowDefAsString(MgnlCommand.P_DEFAULT_SCHEDULEDACTIVATION_FLOW);

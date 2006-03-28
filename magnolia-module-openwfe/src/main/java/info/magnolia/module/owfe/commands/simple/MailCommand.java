@@ -22,7 +22,6 @@ public class MailCommand extends MgnlCommand {
     private String from = "MagnoliaWorkflow";
     private String subject = "Workflow Request";
 
-
     public boolean exec(HashMap params, Context ctx) {
         String mailTo = convertEmailList((String) params.get(P_MAILTO));
         String path = (String) params.get(P_PATH);
@@ -34,15 +33,28 @@ public class MailCommand extends MgnlCommand {
             mh.setFrom(from);
             mh.setSubject(subject);
             mh.setToList(mailTo);
-            mh.setBody("The following page is waiting for approval" + path);
+            mh.setBody(getMessageBody(path, from));
             mh.sendMail();
         } catch (Exception e) {
             log.error("Could not send email", e);
         }
-        log.info("send mail successfully to" + mailTo);
+        log.info("send mail successfully to:" + mailTo);
 
         return true;
+    }
 
+
+    private static final String BODY = "The following page is waiting for approval:";
+
+    /**
+     * TODO: use velocity here for mail templating
+     *
+     * @param path
+     * @param from
+     * @return
+     */
+    public String getMessageBody(String path, String from) {
+        return BODY + path;
     }
 
     /**
@@ -58,12 +70,14 @@ public class MailCommand extends MgnlCommand {
             return "";
         for (int i = 0; i < list.length; i++) { // for each item
             String userName = list[i];
-            if (userName.startsWith("user-")) {
-                userName = userName.substring(5);
-                log.info("username =" + userName);
+            if (userName.startsWith(MgnlCommand.PREFIX_USER)) {
+                userName = userName.substring(PREFIX_USER_LEN);
+                if (log.isDebugEnabled())
+                    log.debug("username =" + userName);
                 ret.append(getUserMail(userName));
-            } else if (userName.startsWith("group-")) {
-            } else if (userName.startsWith("role-")) {
+            } else if (userName.startsWith(MgnlCommand.PREFIX_GROUP)) {
+
+            } else if (userName.startsWith(MgnlCommand.PREFIX_ROLE)) {
 
             }
         }

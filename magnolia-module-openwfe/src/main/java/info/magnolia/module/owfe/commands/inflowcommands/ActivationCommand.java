@@ -20,7 +20,7 @@ public class ActivationCommand extends AbstractInFlowCommand {
         boolean recursive = false; // is initialized at false
         if (workItem != null) { // if call from flow
             path = (workItem.getAttribute(P_PATH)).toString();
-            recursive = (workItem.getAttribute(P_RECURSIVE)).equals("true");
+            recursive = (workItem.getAttribute(P_RECURSIVE)).equals(MgnlCommand.TRUE);
         }
 
         HashMap params = new HashMap();

@@ -17,13 +17,10 @@ import java.util.HashMap;
  */
 public class FlowDeactivationCommand extends AbstractFlowCommand {
 
+    private final static String FLOWNAME = "webDetactivation";
 
     public String getFlowName() {
-        return "webDetactivation";
-    }
-
-    public boolean exec(HashMap params, Context ctx) {
-        return super.exec(params, ctx);
+        return FLOWNAME;
     }
 
     public void preLaunchFlow(Context context, HashMap params, JCRPersistedEngine engine, LaunchItem li) {
@@ -33,7 +30,7 @@ public class FlowDeactivationCommand extends AbstractFlowCommand {
 
             // Parameters for the flow item
             li.addAttribute(MgnlCommand.P_PATH, new StringAttribute(pathSelected));
-            li.addAttribute("OK", new StringAttribute("false"));
+            li.addAttribute(MgnlCommand.P_OK, MgnlCommand.ATT_FALSE);
 
         } catch (Exception e) {
             MgnlCommand.log.error("can't launch deactivate flow", e);
