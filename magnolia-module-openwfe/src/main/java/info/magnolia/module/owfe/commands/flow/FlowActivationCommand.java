@@ -16,8 +16,6 @@ import java.util.HashMap;
 public class FlowActivationCommand extends AbstractFlowCommand {
     private static final String WEB_ACTIVATION = "webActivation";
 
-    private static final String WEB_SCHEDULED_ACTIVATION = "webScheduledActivation";
-
     static final String[] parameters = {MgnlConstants.P_RECURSIVE, MgnlConstants.P_PATH};
 
     /**
@@ -38,10 +36,11 @@ public class FlowActivationCommand extends AbstractFlowCommand {
         try {
             // Retrieve parameters
             String pathSelected = (String) params.get(MgnlConstants.P_PATH);
-            boolean recursive = ((Boolean) params.get(MgnlConstants.P_RECURSIVE)).booleanValue();
+            String recursive = (String) params.get(MgnlConstants.P_RECURSIVE);
+            boolean brecursive = (recursive != null) && Boolean.valueOf(recursive).booleanValue();
 
             // Parameters for the flow item
-            li.addAttribute(MgnlConstants.P_RECURSIVE, recursive ? MgnlConstants.ATT_TRUE : MgnlConstants.ATT_FALSE);
+            li.addAttribute(MgnlConstants.P_RECURSIVE, brecursive ? MgnlConstants.ATT_TRUE : MgnlConstants.ATT_FALSE);
             li.addAttribute(MgnlConstants.P_PATH, new StringAttribute(pathSelected));
             li.addAttribute(MgnlConstants.P_OK, MgnlConstants.ATT_FALSE);
         } catch (Exception e) {

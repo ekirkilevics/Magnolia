@@ -44,7 +44,7 @@ public abstract class MgnlCommand implements Command {
         String[] params = this.getExpectedParameters();
         if (params == null)
             return true;
-        HashMap map = (HashMap) context.get(PARAM);
+        HashMap map = (HashMap) context.get(PARAMS);
         for (int i = 0; i < params.length; i++) {
             if (map.get(params[i]) == null)
                 return false;

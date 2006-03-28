@@ -1,20 +1,18 @@
 package info.magnolia.module.owfe.flow;
 
 import info.magnolia.cms.beans.commands.CommandsMap;
-import info.magnolia.cms.beans.commands.MgnlChain;
+import info.magnolia.cms.beans.commands.MgnlCommand;
 import info.magnolia.cms.beans.runtime.Context;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 import info.magnolia.module.owfe.MgnlConstants;
 import info.magnolia.module.owfe.commands.ParametersSetterHelper;
-
-import java.util.HashMap;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
+import java.util.HashMap;
 
 /**
  * This is a subclass of the regular MVCHandler to plug in flow events. <p/> In
@@ -40,7 +38,7 @@ public abstract class FlowAdminTreeMVCHandler extends AdminTreeMVCHandler {
      */
     public String execute(String command) {
         // get command from command map in JCR repository
-    	MgnlChain tc = (MgnlChain)CommandsMap.getCommand("website", command);
+        MgnlCommand tc = (MgnlCommand) CommandsMap.getCommand("website", command);
         if (tc == null) { // not found, do in the old ways
             log.warn("can not find command named " + command + "in tree command map");
             return super.execute(command);
@@ -48,15 +46,15 @@ public abstract class FlowAdminTreeMVCHandler extends AdminTreeMVCHandler {
         if (log.isDebugEnabled())
             log.debug("find command for " + command + ": " + tc);
 
-//        String[] expected = tc.getExpectedParameters();
-
         // set parameters
         HashMap params = new HashMap();
         params.put(MgnlConstants.P_REQUEST, request);
-        params.put("pathSelected", pathSelected);
-        params.put("recursive", Boolean.valueOf((request.getParameter("recursive") != null)));
+        //params.put("pathSelected", pathSelected);
+        //params.put("recursive", Boolean.valueOf((request.getParameter("recursive") != null)));
         params.put("tree", tree);
+
         Context context = MgnlContext.getInstance();
+        context.put(MgnlConstants.P_REQUEST, request);
         context.put(MgnlConstants.INTREE_PARAM, params);
 
         // translate parameter

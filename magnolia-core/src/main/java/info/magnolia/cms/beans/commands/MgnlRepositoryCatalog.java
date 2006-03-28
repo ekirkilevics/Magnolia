@@ -50,9 +50,6 @@ public class MgnlRepositoryCatalog extends MgnlBaseCatalog {
                     log.info("This is a simple action" + actionName);
                     // this is a simple command
                     className = impl.getString();
-                    log.info(className);
-                    className = impl.getValue().getString();
-                    log.info(className);
                     Class klass = Class.forName(className);
                     try {
                         this.addCommand(actionName, (Command) klass.newInstance());
@@ -79,7 +76,7 @@ public class MgnlRepositoryCatalog extends MgnlBaseCatalog {
                             className = commandNode.getNodeData(CLASS_NODE_DATA).getString();
                             log.info("Found class " + className + " for action " + actionName);
                             Class klass = Class.forName(className);
-                            Command command = (Command) klass.newInstance();
+                            MgnlCommand command = (MgnlCommand) klass.newInstance();
                             chain.addCommand(command);
                         }
                         catch (Exception te) {

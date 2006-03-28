@@ -11,8 +11,6 @@ import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.engine.workitem.WorkItem;
 import org.apache.log4j.Logger;
 
-import java.util.HashMap;
-
 public class MgnlParticipant extends AbstractEmbeddedParticipant {
     /**
      * Logger
@@ -59,14 +57,9 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
                     if (log.isDebugEnabled())
                         log.debug("Command has been found through the magnolia catalog:" + c.getClass().getName());
 
-                    //  String[] expected = c.getExpectedParameters();
-
                     // set parameters in the context
-                    HashMap params = new HashMap();
-                    params.put(MgnlConstants.INFLOW_PARAM, wi);
-
                     Context context = MgnlContext.getInstance();
-                    context.put(MgnlCommand.PARAMS, params);
+                    context.put(MgnlConstants.INFLOW_PARAM, wi);
 
                     // translate parameter
                     new ParametersSetterHelper().translateParam(c, context);

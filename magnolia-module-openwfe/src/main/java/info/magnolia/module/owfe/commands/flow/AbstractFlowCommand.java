@@ -35,6 +35,7 @@ public abstract class AbstractFlowCommand extends MgnlCommand {
             JCRPersistedEngine engine = OWFEEngine.getEngine();
 
             // start activation
+            log.info("Params for command:" + getClass() + ":" + params);
             preLaunchFlow(ctx, params, engine, li);
 
             // Launch the item
