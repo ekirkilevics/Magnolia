@@ -32,6 +32,9 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
             log.debug("storage = " + storage);
     }
 
+    /* (non-Javadoc)
+     * @see openwfe.org.embed.engine.EmbeddedParticipant#consume(openwfe.org.engine.workitem.WorkItem)
+     */
     public void consume(WorkItem wi) throws Exception {
 
         // get participant name
@@ -66,6 +69,8 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
 
                     // execute
                     c.execute(context);
+                    
+                    OWFEEngine.getEngine().reply((InFlowWorkItem)wi);
 
                 } else // not found, do in the old ways
                     if (log.isDebugEnabled())
