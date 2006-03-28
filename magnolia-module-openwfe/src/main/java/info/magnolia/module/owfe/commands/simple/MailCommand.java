@@ -23,6 +23,13 @@ public class MailCommand extends MgnlCommand {
     private String from = "MagnoliaWorkflow";
     private String subject = "Workflow Request";
 
+    private static final String EMAIL = "email";
+    private static final String SMTP_SERVER = "smtpServer";
+    private static final String SMTP_PORT = "smtpPort";
+    private static final String SMTP_USER = "smtpUser";
+    private static final String SMTP_PASSWORD = "smtpPassword";
+    private static final String SERVER_MAIL = "/server/mail";
+
     /**
      * List of the parameters that this command needs to run
      *
@@ -115,7 +122,7 @@ public class MailCommand extends MgnlCommand {
             HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USERS);
             Content user = hm.getContent(userName);
             if (user != null)
-                return user.getNodeData("email").toString();
+                return user.getNodeData(EMAIL).toString();
         } catch (Exception e) {
             log.error("can not add group reference to user.", e);
         }
@@ -130,7 +137,7 @@ public class MailCommand extends MgnlCommand {
 
         Content node = null;
         try {
-            node = hm.getContent("/server/server/mail");
+            node = hm.getContent(SERVER_MAIL);
         } catch (Exception e) {
             return;
         }
@@ -140,19 +147,19 @@ public class MailCommand extends MgnlCommand {
 
         NodeData nd = null;
 
-        nd = node.getNodeData("smtpServer");
+        nd = node.getNodeData(SMTP_SERVER);
         if (nd != null)
             smtpServer = nd.toString();
 
-        nd = node.getNodeData("smtpPort");
+        nd = node.getNodeData(SMTP_PORT);
         if (nd != null)
             smtpPort = nd.toString();
 
-        nd = node.getNodeData("smtpUser");
+        nd = node.getNodeData(SMTP_USER);
         if (nd != null)
             smtpUser = nd.toString();
 
-        nd = node.getNodeData("smtpPassword");
+        nd = node.getNodeData(SMTP_PASSWORD);
         if (nd != null)
             smtpPassword = nd.toString();
     }
