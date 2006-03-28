@@ -36,7 +36,7 @@ public class OWFEBean {
      * @param userName
      * @return true if the item is assifned to the user
      */
-    public boolean checkPariticipant(InFlowWorkItem wi, String userName) {
+    public boolean checkParticipant(InFlowWorkItem wi, String userName) {
         // MgnlUser user =
         // (MgnlUser)UserManagerFactory.getUserManager().getUser(userName);
         MgnlUser user = (MgnlUser) new MgnlUserManager().getUser(userName);
@@ -97,7 +97,7 @@ public class OWFEBean {
             while (it.hasNext()) {
                 Content ct = (Content) it.next();
                 InFlowWorkItem wi = JCRWorkItemStorage.loadWorkItem(ct);
-                if (checkPariticipant(wi, userName)) { // if belong to this
+                if (checkParticipant(wi, userName)) { // if belong to this
                     // user
                     list.add(wi);
                     if (log.isDebugEnabled())
