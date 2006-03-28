@@ -1,4 +1,4 @@
-package info.magnolia.module.owfe.commands.simple.flow;
+package info.magnolia.module.owfe.commands.flow;
 
 import info.magnolia.module.owfe.OWFEEngine;
 import info.magnolia.module.owfe.commands.MgnlCommand;
