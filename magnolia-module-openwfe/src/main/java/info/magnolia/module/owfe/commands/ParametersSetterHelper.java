@@ -25,7 +25,7 @@ public class ParametersSetterHelper {
         WorkItem workItem = (WorkItem) context.get(MgnlConstants.INFLOW_PARAM);
         if (workItem != null) {
             for (int i = 0; i < expected.length; i++)
-                params.put(expected[i], workItem.getAttribute(expected[i]));
+                params.put(expected[i], workItem.getAttribute(expected[i]).toString());
         } else {
             HttpServletRequest request = (HttpServletRequest) context.get(MgnlConstants.P_REQUEST);
 //            HashMap param = (HashMap) context.get(MgnlConstants.INTREE_PARAM);

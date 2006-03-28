@@ -41,21 +41,24 @@ public class MailCommand extends MgnlCommand {
     }
 
     public boolean exec(HashMap params, Context ctx) {
-        //init server parameters ...
-        //TODO: make this to reload only when needed
+    	log.info("starting sending mail");
+        //init server parameters ...        
         getMailParameter();
 
+        log.info("converting receiver list");
         String mailTo = convertEmailList((String) params.get(MgnlConstants.P_MAILTO));
         String path = (String) params.get(MgnlConstants.P_PATH);
 
         if (log.isDebugEnabled())
             log.debug("mail receiver list: " + mailTo);
         try {
+        	log.info("creating mail handler");
             MailHandler mh = new MailHandler(smtpServer, 1, 0);
             mh.setFrom(from);
             mh.setSubject(subject);
             mh.setToList(mailTo);
             mh.setBody(getMessageBody(path, from));
+            log.info("sending mail");
             mh.sendMail();
         } catch (Exception e) {
             log.error("Could not send email", e);
@@ -126,10 +129,12 @@ public class MailCommand extends MgnlCommand {
         try {
             HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USERS);
             Content user = hm.getContent(userName);
+//            log.info("username = " + userName);
+//            log.info("username = " + user.getTitle());
             if (user != null)
                 return user.getNodeData(EMAIL).getValue().getString();
         } catch (Exception e) {
-            log.error("can not add group reference to user.", e);
+            log.error("can not get user email info.", e);
         }
         return "";
     }
@@ -144,6 +149,7 @@ public class MailCommand extends MgnlCommand {
         try {
             node = hm.getContent(SERVER_MAIL);
         } catch (Exception e) {
+        	log.error("get content node for mail parameter failed", e);
             return;
         }
 
@@ -170,7 +176,8 @@ public class MailCommand extends MgnlCommand {
                 smtpPassword = nd.getValue().getString();
         }
         catch (Exception e) {
-            e.printStackTrace();
+        	log.error("get mail parameter failed", e);
+//            e.printStackTrace();
         }
     }
 

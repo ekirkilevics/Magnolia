@@ -79,7 +79,7 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
                 log.info("consume command " + parName + "end.");
             }
             catch (Exception e) {
-                // does not really matter here
+                log.error("consume command failed", e);
             }
         } else {
             if (log.isDebugEnabled())
