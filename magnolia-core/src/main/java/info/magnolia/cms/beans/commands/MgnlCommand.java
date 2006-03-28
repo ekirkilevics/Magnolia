@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 
 public abstract class MgnlCommand implements Command {
+    public static final String DEFAULT_CATALOG = "default";
     final static public String PARAMS = "__params__";
     final static public String PARAM = "param";
     final static public String PREFIX_COMMAND = "command-";
@@ -16,6 +17,7 @@ public abstract class MgnlCommand implements Command {
 
 
     public static Logger log = LoggerFactory.getLogger(MgnlCommand.class);
+
 
     /**
      * List of the parameters that this command needs to run

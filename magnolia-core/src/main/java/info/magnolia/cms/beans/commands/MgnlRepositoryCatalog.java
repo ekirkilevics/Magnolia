@@ -46,7 +46,13 @@ public class MgnlRepositoryCatalog extends MgnlBaseCatalog {
                 String className = StringUtils.EMPTY;
 
                 NodeData impl = actionNode.getNodeData(CLASS_NODE_DATA);
-                if (impl != null) {
+                if (impl != null && impl.getString() != null && !(impl.getString().equals(""))) {
+                    log.info("This is a simple command");
+                    // this is a simple command
+                    className = impl.getString();
+                    log.info(className);
+                    className = impl.getValue().getString();
+                    log.info(className);
                     Class klass = Class.forName(className);
                     try {
                         this.addCommand(actionName, (Command) klass.newInstance());
@@ -56,6 +62,7 @@ public class MgnlRepositoryCatalog extends MgnlBaseCatalog {
                     }
                     // continue with next action
                 } else {
+                    log.info("This is a chain");
                     // this is a chain
                     Chain chain = new MgnlChain();
 
@@ -90,6 +97,7 @@ public class MgnlRepositoryCatalog extends MgnlBaseCatalog {
             }
         }
         catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
     }
