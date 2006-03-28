@@ -1,18 +1,20 @@
 package info.magnolia.module.owfe.flow;
 
 import info.magnolia.cms.beans.commands.CommandsMap;
-import info.magnolia.cms.beans.commands.MgnlCommand;
+import info.magnolia.cms.beans.commands.MgnlChain;
 import info.magnolia.cms.beans.runtime.Context;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 import info.magnolia.module.owfe.MgnlConstants;
 import info.magnolia.module.owfe.commands.ParametersSetterHelper;
-import org.apache.log4j.Logger;
+
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
+
+import org.apache.log4j.Logger;
 
 /**
  * This is a subclass of the regular MVCHandler to plug in flow events. <p/> In
@@ -38,7 +40,7 @@ public abstract class FlowAdminTreeMVCHandler extends AdminTreeMVCHandler {
      */
     public String execute(String command) {
         // get command from command map in JCR repository
-        MgnlCommand tc = CommandsMap.getCommand("website", command);
+    	MgnlChain tc = (MgnlChain)CommandsMap.getCommand("website", command);
         if (tc == null) { // not found, do in the old ways
             log.warn("can not find command named " + command + "in tree command map");
             return super.execute(command);
