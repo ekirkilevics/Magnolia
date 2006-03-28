@@ -41,6 +41,10 @@ public class MailCommand extends MgnlCommand {
     }
 
     public boolean exec(HashMap params, Context ctx) {
+        //init server parameters ...
+        //TODO: make this to reload only when needed
+        getMailParameter();
+
         String mailTo = convertEmailList((String) params.get(MgnlConstants.P_MAILTO));
         String path = (String) params.get(MgnlConstants.P_PATH);
 
@@ -123,7 +127,7 @@ public class MailCommand extends MgnlCommand {
             HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USERS);
             Content user = hm.getContent(userName);
             if (user != null)
-                return user.getNodeData(EMAIL).toString();
+                return user.getNodeData(EMAIL).getValue().getString();
         } catch (Exception e) {
             log.error("can not add group reference to user.", e);
         }
@@ -148,21 +152,26 @@ public class MailCommand extends MgnlCommand {
 
         NodeData nd = null;
 
-        nd = node.getNodeData(SMTP_SERVER);
-        if (nd != null)
-            smtpServer = nd.toString();
+        try {
+            nd = node.getNodeData(SMTP_SERVER);
+            if (nd != null)
+                smtpServer = nd.getValue().getString();
 
-        nd = node.getNodeData(SMTP_PORT);
-        if (nd != null)
-            smtpPort = nd.toString();
+            nd = node.getNodeData(SMTP_PORT);
+            if (nd != null)
+                smtpPort = nd.getValue().getString();
 
-        nd = node.getNodeData(SMTP_USER);
-        if (nd != null)
-            smtpUser = nd.toString();
+            nd = node.getNodeData(SMTP_USER);
+            if (nd != null)
+                smtpUser = nd.getValue().getString();
 
-        nd = node.getNodeData(SMTP_PASSWORD);
-        if (nd != null)
-            smtpPassword = nd.toString();
+            nd = node.getNodeData(SMTP_PASSWORD);
+            if (nd != null)
+                smtpPassword = nd.getValue().getString();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
