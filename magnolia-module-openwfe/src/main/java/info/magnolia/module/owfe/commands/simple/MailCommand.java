@@ -6,187 +6,132 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.MailHandler;
 import info.magnolia.module.owfe.commands.MgnlCommand;
-
-import java.util.HashMap;
-
-import openwfe.org.engine.workitem.InFlowWorkItem;
-
 import org.apache.commons.chain.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MailCommand extends SimpleCommand {
+import java.util.HashMap;
+
+public class MailCommand extends MgnlCommand {
     static Logger logt = LoggerFactory.getLogger(MailCommand.class);
-    
+
     private String smtpServer = "localhost";
     private String smtpPort = "25";
     private String smtpUser = "";
     private String smtpPassword = "";
     private String from = "MagnoliaWorkflow";
     private String subject = "Workflow Request";
-    
-    
-    public boolean exec(HashMap params, Context ctx) {
-    	  
-          //String path;
-          String mailTo;
-          String path;
-          path = (String) params.get(P_PATH);
-        	mailTo = (String) params.get(P_MAILTO);
-    
-          String email = "";
-          email = convertEmailList(mailTo);
-          log.info("mail receiver list: " + mailTo);
-          try {
-              MailHandler mh = new MailHandler(smtpServer, 1, 0);            
-              mh.setFrom(from);
-              mh.setSubject(subject);
-              mh.setToList(mailTo);
-              mh.setBody("The following page is waiting for approval" + path);
-              mh.sendMail();
-          } catch (Exception e) {
-              log.error("Could not send email", e);
-          }
-          log.info("send mail successfully");
-          
-          return true;
-		
-	}
 
-//	public boolean execute(Context context) {
-//        HashMap params = (HashMap) context.get(PARAMS);
-//        //String path;
-//        String mailTo;
-//        String path;
-//        
-//  
-//        InFlowWorkItem if_wi = (InFlowWorkItem) params.get(MgnlCommand.P_WORKITEM);
-//        if (if_wi != null) { // if call from flow
-//            path = (if_wi.getAttribute(P_PATH)).toString();
-//            mailTo = (if_wi.getAttribute(P_MAILTO)).toString();
-//        } else {
-//            path = (String) params.get(P_PATH);
-//        	mailTo = (String) params.get(P_MAILTO);
-//        }
-//
-//        String email = "";
-//        email = convertEmailList(mailTo);
-//        log.info("mail receiver list: " + mailTo);
-//        try {
-//            MailHandler mh = new MailHandler(smtpServer, 1, 0);            
-//            mh.setFrom(from);
-//            mh.setSubject(subject);
-//            mh.setToList(mailTo);
-//            mh.setBody("The following page is waiting for approval" + path);
-//            mh.sendMail();
-//        } catch (Exception e) {
-//            log.error("Could not send email", e);
-//        }
-//        log.info("send mail successfully");
-//        
-//        return true;
-//    }
-//    
+
+    public boolean exec(HashMap params, Context ctx) {
+        String mailTo = convertEmailList((String) params.get(P_MAILTO));
+        String path = (String) params.get(P_PATH);
+
+        if (log.isDebugEnabled())
+            log.debug("mail receiver list: " + mailTo);
+        try {
+            MailHandler mh = new MailHandler(smtpServer, 1, 0);
+            mh.setFrom(from);
+            mh.setSubject(subject);
+            mh.setToList(mailTo);
+            mh.setBody("The following page is waiting for approval" + path);
+            mh.sendMail();
+        } catch (Exception e) {
+            log.error("Could not send email", e);
+        }
+        log.info("send mail successfully to" + mailTo);
+
+        return true;
+
+    }
+
     /**
      * convert the parameter mailTo of flow to real email address list
+     *
      * @param mailTo
      * @return
      */
-    /**
-     * @param mailTo
-     * @return
-     */
-    String convertEmailList(String mailTo){
-    	StringBuffer ret = new StringBuffer();
-    	String[] list = mailTo.split(";");
-    	if (list == null)
-    		return "";
-    	for (int i = 0; i < list.length; i++){ // for each item
-    		String userName = list[i];
-    		if (userName.startsWith("user-")){
-    		userName = userName.substring(5);
-    		log.info("username ="+ userName);
-    		ret.append(getUserMail(userName));
-    		}else if (userName.startsWith("group-")){
-//    			String groupName = userName.substring(6);
-//    			log.info("username ="+ userName);
-//    			groupName = new JCRUserMgr().
-    		}
-    		else if (userName.startsWith("role-")){
-    			
-    		}
-    	}
-    	return ret.toString();
+    String convertEmailList(String mailTo) {
+        StringBuffer ret = new StringBuffer();
+        String[] list = mailTo.split(";");
+        if (list == null)
+            return "";
+        for (int i = 0; i < list.length; i++) { // for each item
+            String userName = list[i];
+            if (userName.startsWith("user-")) {
+                userName = userName.substring(5);
+                log.info("username =" + userName);
+                ret.append(getUserMail(userName));
+            } else if (userName.startsWith("group-")) {
+            } else if (userName.startsWith("role-")) {
+
+            }
+        }
+        return ret.toString();
     }
-    
-    
-    String getGroupMail(String groupName){
-    	return "";
+
+
+    String getGroupMail(String groupName) {
+        return "";
     }
-    
-    String getRoleMail(String groupName){
-    	return "";
+
+    String getRoleMail(String groupName) {
+        return "";
     }
-    
-    
+
+
     /**
      * retrieve email address fo user
+     *
      * @param userName
      * @return
      */
-    String getUserMail(String userName){
-    	try {
-			HierarchyManager hm = ContentRepository
-					.getHierarchyManager(ContentRepository.USERS);
-
-			// get node "user"
-			Content user = hm.getContent(userName);
-			
-			if (user != null) {
-				return user.getNodeData("email").toString();
-			}
-
-		} catch (Exception e) {
-			log.error("can not add group reference to user.", e);
-		}
-		return "";
+    String getUserMail(String userName) {
+        try {
+            HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USERS);
+            Content user = hm.getContent(userName);
+            if (user != null)
+                return user.getNodeData("email").toString();
+        } catch (Exception e) {
+            log.error("can not add group reference to user.", e);
+        }
+        return "";
     }
 
     /**
      * get mail parameters from JCR
-     *
      */
-    void getMailParameter(){
-    	HierarchyManager hm = ContentRepository
-		.getHierarchyManager(ContentRepository.CONFIG);
-    	
-    	Content node = null;
-    	try{
-    		node = hm.getContent("/server/server/mail");
-    	}catch(Exception e){
-    		return;
-    	}
-    	
-    	if (node == null)
-    		return;
-    	
-    	NodeData nd = null;
-    	
-    	nd = node.getNodeData("smtpServer");
-    	if (nd != null)
-    		smtpServer = nd.toString();
-    	
-    	nd = node.getNodeData("smtpPort");
-    	if (nd != null)
-    	smtpPort = nd.toString();
-    	
-    	nd = node.getNodeData("smtpUser");
-    	if (nd != null)
-    	smtpUser = nd.toString();
-    	
-    	nd = node.getNodeData("smtpPassword");
-    	if (nd != null)
-    	smtpPassword = nd.toString();
+    void getMailParameter() {
+        HierarchyManager hm = ContentRepository
+                .getHierarchyManager(ContentRepository.CONFIG);
+
+        Content node = null;
+        try {
+            node = hm.getContent("/server/server/mail");
+        } catch (Exception e) {
+            return;
+        }
+
+        if (node == null)
+            return;
+
+        NodeData nd = null;
+
+        nd = node.getNodeData("smtpServer");
+        if (nd != null)
+            smtpServer = nd.toString();
+
+        nd = node.getNodeData("smtpPort");
+        if (nd != null)
+            smtpPort = nd.toString();
+
+        nd = node.getNodeData("smtpUser");
+        if (nd != null)
+            smtpUser = nd.toString();
+
+        nd = node.getNodeData("smtpPassword");
+        if (nd != null)
+            smtpPassword = nd.toString();
     }
 
 }

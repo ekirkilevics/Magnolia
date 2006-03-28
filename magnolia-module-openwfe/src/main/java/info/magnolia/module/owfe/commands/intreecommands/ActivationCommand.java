@@ -4,19 +4,17 @@ import info.magnolia.module.owfe.commands.MgnlCommand;
 
 import java.util.HashMap;
 
-import org.apache.commons.chain.Context;
-
 public class ActivationCommand extends AbstractInTreeCommand {
 
-	public String getTargetCommand() {
-		return "realActivate";
-	}
+    public String getTargetCommand() {
+        return "realActivate";
+    }
 
-	public HashMap translateParam(HashMap param) {
-		HashMap params = new HashMap();
-		params.put(MgnlCommand.P_PATH, param.get(MgnlCommand.P_PATH));
-		params.put(MgnlCommand.P_RECURSIVE, MgnlCommand.P_RECURSIVE);
-		return params;
-	}
+    public HashMap translateParam(HashMap param) {
+        HashMap params = new HashMap();
+        params.put(MgnlCommand.P_PATH, param.get(MgnlCommand.P_PATH));
+        params.put(MgnlCommand.P_RECURSIVE, MgnlCommand.P_RECURSIVE);
+        return params;
+    }
 
 }

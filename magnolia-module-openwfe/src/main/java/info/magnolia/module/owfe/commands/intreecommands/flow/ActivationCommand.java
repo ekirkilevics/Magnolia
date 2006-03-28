@@ -7,18 +7,20 @@ import java.util.HashMap;
 
 public class ActivationCommand extends AbstractInTreeCommand {
 
-	public String getTargetCommand() {
-		return "flowActivate";
-	}
+    public String getTargetCommand() {
+        return "flowActivate";
+    }
 
-	public HashMap translateParam(HashMap param) {
-		HashMap params = new HashMap();
-		log.info("param = " + param);
-		log.info("params = " + params);
-		log.info("param.get(MgnlCommand.P_PATH)=" + param.get(MgnlCommand.P_PATH));
-		params.put(MgnlCommand.P_PATH, param.get(MgnlCommand.P_PATH));
-		params.put(MgnlCommand.P_RECURSIVE, MgnlCommand.P_RECURSIVE);
-		return params;
-	}
+    public HashMap translateParam(HashMap param) {
+        HashMap params = new HashMap();
+        if (log.isDebugEnabled()) {
+            log.debug("param = " + param);
+            log.debug("params = " + params);
+            log.debug("param.get(MgnlCommand.P_PATH)=" + param.get(MgnlCommand.P_PATH));
+        }
+        params.put(MgnlCommand.P_PATH, param.get(MgnlCommand.P_PATH));
+        params.put(MgnlCommand.P_RECURSIVE, MgnlCommand.P_RECURSIVE);
+        return params;
+    }
 
 }
