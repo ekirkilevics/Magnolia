@@ -13,6 +13,17 @@ import java.util.HashMap;
 public class TimeBasedFlowActivationCommand extends AbstractFlowCommand {
     private static final String WEB_SCHEDULED_ACTIVATION = "webScheduledActivation";
 
+    static final String[] parameters = {P_START_DATE, P_END_DATE, P_PATH};
+
+    /**
+     * List of the parameters that this command needs to run
+     *
+     * @return a list of string describing the parameters needed. The parameters should have a  mapping in this class.
+     */
+    public String[] getExpectedParameters() {
+        return parameters;
+    }
+
 
     public String getFlowName() {
         return WEB_SCHEDULED_ACTIVATION;

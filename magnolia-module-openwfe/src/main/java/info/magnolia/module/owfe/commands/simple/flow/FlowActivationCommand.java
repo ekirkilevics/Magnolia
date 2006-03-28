@@ -16,6 +16,19 @@ import java.util.HashMap;
 public class FlowActivationCommand extends AbstractFlowCommand {
     private static final String WEB_ACTIVATION = "webActivation";
 
+    private static final String WEB_SCHEDULED_ACTIVATION = "webScheduledActivation";
+
+    static final String[] parameters = {P_RECURSIVE, P_PATH};
+
+    /**
+     * List of the parameters that this command needs to run
+     *
+     * @return a list of string describing the parameters needed. The parameters should have a  mapping in this class.
+     */
+    public String[] getExpectedParameters() {
+        return parameters;
+    }
+
 
     public String getFlowName() {
         return WEB_ACTIVATION;
@@ -23,7 +36,6 @@ public class FlowActivationCommand extends AbstractFlowCommand {
 
     public void preLaunchFlow(Context context, HashMap params, JCRPersistedEngine engine, LaunchItem li) {
         try {
-
             // Retrieve parameters
             String pathSelected = (String) params.get(MgnlCommand.P_PATH);
             boolean recursive = ((Boolean) params.get(MgnlCommand.P_RECURSIVE)).booleanValue();
@@ -36,8 +48,6 @@ public class FlowActivationCommand extends AbstractFlowCommand {
             MgnlCommand.log.error("can't launch activate flow", e);
             AlertUtil.setMessage(AlertUtil.getExceptionMessage(e));
         }
-
     }
-
 
 }

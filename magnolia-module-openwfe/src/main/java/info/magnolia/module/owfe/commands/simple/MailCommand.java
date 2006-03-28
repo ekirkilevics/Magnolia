@@ -14,6 +14,7 @@ import java.util.HashMap;
 
 public class MailCommand extends MgnlCommand {
     static Logger logt = LoggerFactory.getLogger(MailCommand.class);
+    static final String[] parameters = {P_MAILTO, P_PATH};
 
     private String smtpServer = "localhost";
     private String smtpPort = "25";
@@ -21,6 +22,15 @@ public class MailCommand extends MgnlCommand {
     private String smtpPassword = "";
     private String from = "MagnoliaWorkflow";
     private String subject = "Workflow Request";
+
+    /**
+     * List of the parameters that this command needs to run
+     *
+     * @return a list of string describing the parameters needed. The parameters should have a  mapping in this class.
+     */
+    public String[] getExpectedParameters() {
+        return parameters;
+    }
 
     public boolean exec(HashMap params, Context ctx) {
         String mailTo = convertEmailList((String) params.get(P_MAILTO));
@@ -116,8 +126,7 @@ public class MailCommand extends MgnlCommand {
      * get mail parameters from JCR
      */
     void getMailParameter() {
-        HierarchyManager hm = ContentRepository
-                .getHierarchyManager(ContentRepository.CONFIG);
+        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
 
         Content node = null;
         try {

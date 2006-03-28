@@ -12,6 +12,16 @@ import org.apache.commons.chain.Context;
 import java.util.HashMap;
 
 public class DeactivationCommand extends MgnlCommand {
+    final static String[] expected = {P_PATH};
+
+    /**
+     * List of the parameters that this command needs to run
+     *
+     * @return a list of string describing the parameters needed. The parameters should have a  mapping in this class.
+     */
+    public String[] getExpectedParameters() {
+        return expected;
+    }
 
     public boolean exec(HashMap params, Context Ctx) {
         String path;

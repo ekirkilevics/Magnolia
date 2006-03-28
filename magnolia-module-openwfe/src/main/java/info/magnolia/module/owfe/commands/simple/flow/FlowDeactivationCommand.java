@@ -19,6 +19,20 @@ public class FlowDeactivationCommand extends AbstractFlowCommand {
 
     private final static String FLOWNAME = "webDetactivation";
 
+    private static final String WEB_SCHEDULED_ACTIVATION = "webScheduledActivation";
+
+    static final String[] parameters = {P_PATH};
+
+    /**
+     * List of the parameters that this command needs to run
+     *
+     * @return a list of string describing the parameters needed. The parameters should have a  mapping in this class.
+     */
+    public String[] getExpectedParameters() {
+        return parameters;
+    }
+
+
     public String getFlowName() {
         return FLOWNAME;
     }

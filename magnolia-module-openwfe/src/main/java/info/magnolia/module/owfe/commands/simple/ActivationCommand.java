@@ -14,6 +14,17 @@ import java.util.HashMap;
 
 public class ActivationCommand extends MgnlCommand {
 
+    static final String[] parameters = {P_RECURSIVE, P_PATH};
+
+    /**
+     * List of the parameters that this command needs to run
+     *
+     * @return a list of string describing the parameters needed. The parameters should have a  mapping in this class.
+     */
+    public String[] getExpectedParameters() {
+        return parameters;
+    }
+
     public boolean exec(HashMap params, Context ctx) {
         String path;
         boolean recursive;

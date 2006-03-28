@@ -60,9 +60,7 @@ public abstract class MgnlCommand implements Command {
      *
      * @return a list of string describing the parameters needed. The parameters should have a  mapping in this class.
      */
-    public String[] getExpectedParameters() {
-        return null;
-    }
+    public abstract String[] getExpectedParameters();
 
     /**
      * List of the parameters that this command is accepting

@@ -8,7 +8,6 @@ import info.magnolia.module.owfe.jcr.JCRWorkItemAPI;
 import openwfe.org.embed.impl.engine.AbstractEmbeddedParticipant;
 import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.engine.workitem.WorkItem;
-import org.apache.commons.chain.Command;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
@@ -56,7 +55,7 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
 
             try {
                 // for testing now
-                Command test = CommandsMap.getCommandFromFullName(parName);
+                MgnlCommand test = CommandsMap.getCommandFromFullName(parName);
                 if (test == null) { // not found, do in the old ways
                     if (log.isDebugEnabled())
                         log.debug("can not find command named " + cmd + " from command map");
@@ -65,10 +64,13 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
                         log.debug("found command for " + cmd + "in command map");
                 }
 
-                Command c = CommandsMap.getCommand(cmd);
+                MgnlCommand c = CommandsMap.getCommand(cmd);
                 if (c != null) {
                     if (log.isDebugEnabled())
                         log.debug("Command has been found through the magnolia catalog:" + c.getClass().getName());
+
+                    String[] expected = c.getExpectedParameters();
+
                     // set parameters in the context
                     HashMap params = new HashMap();
                     params.put(MgnlCommand.INFLOW_PARAM, wi);

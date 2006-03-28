@@ -14,6 +14,15 @@ import java.util.HashMap;
  */
 public abstract class AbstractInTreeCommand extends MgnlCommand {
 
+    /**
+     * List of the parameters that this command needs to run
+     *
+     * @return a list of string describing the parameters needed. The parameters should have a  mapping in this class.
+     */
+    public String[] getExpectedParameters() {
+        return new String[0];  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public boolean execute(Context context) {
         HashMap param = (HashMap) context.get(INTREE_PARAM);
         if (log.isDebugEnabled())

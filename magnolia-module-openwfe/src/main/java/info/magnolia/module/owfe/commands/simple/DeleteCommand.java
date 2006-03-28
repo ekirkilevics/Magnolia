@@ -11,7 +11,18 @@ import java.util.HashMap;
 
 public class DeleteCommand extends MgnlCommand {
 
+
     static final String[] expectedParameters = {P_PATH};
+
+    /**
+     * List of the parameters that this command needs to run
+     *
+     * @return a list of string describing the parameters needed. The parameters should have a  mapping in this class.
+     */
+    public String[] getExpectedParameters() {
+        return expectedParameters;
+    }
+
 
     public boolean exec(HashMap params, Context ctx) {
         String path = (String) params.get(P_PATH);
@@ -22,7 +33,6 @@ public class DeleteCommand extends MgnlCommand {
             return false;
         }
         return true;
-
     }
 
     private void deleteNode(Context context, String parentPath, String label) throws RepositoryException {
