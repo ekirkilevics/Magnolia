@@ -49,23 +49,12 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
         if (parName.startsWith(MgnlCommand.PREFIX_COMMAND)) // handle commands
         {
             log.info("consume command " + parName + "...");
-            String cmd = parName.substring(MgnlCommand.PREFIX_COMMAND_LEN, parName.length());
             if (log.isDebugEnabled())
-                log.debug("command name is " + cmd);
+                log.debug("command name is " + parName);
 
 
             try {
-                // for testing now
-//                MgnlCommand test = CommandsMap.getCommandFromFullName(parName);
-//                if (test == null) { // not found, do in the old ways
-//                    if (log.isDebugEnabled())
-//                        log.debug("can not find command named " + cmd + " from command map");
-//                } else {
-//                    if (log.isDebugEnabled())
-//                        log.debug("found command for " + cmd + "in command map");
-//                }
-
-                MgnlCommand c = CommandsMap.getCommandFromFullName(cmd);
+                MgnlCommand c = CommandsMap.getCommandFromFullName(parName);
                 if (c != null) {
                     if (log.isDebugEnabled())
                         log.debug("Command has been found through the magnolia catalog:" + c.getClass().getName());
@@ -87,7 +76,7 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
 
                 } else // not found, do in the old ways
                     if (log.isDebugEnabled())
-                        log.debug("No command has been found through the magnolia catalog for name:" + cmd);
+                        log.debug("No command has been found through the magnolia catalog for name:" + parName);
 
                 log.info("consume command " + parName + "end.");
             }

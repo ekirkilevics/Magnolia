@@ -47,7 +47,7 @@ public class MgnlRepositoryCatalog extends MgnlBaseCatalog {
 
                 NodeData impl = actionNode.getNodeData(CLASS_NODE_DATA);
                 if (impl != null && impl.getString() != null && !(impl.getString().equals(""))) {
-                    log.info("This is a simple command");
+                    log.info("This is a simple action" + actionName);
                     // this is a simple command
                     className = impl.getString();
                     log.info(className);
