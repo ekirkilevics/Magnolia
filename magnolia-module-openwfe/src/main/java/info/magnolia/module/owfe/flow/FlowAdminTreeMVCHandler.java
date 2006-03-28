@@ -6,6 +6,8 @@ import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 import info.magnolia.module.owfe.commands.CommandsMap;
 import info.magnolia.module.owfe.commands.MgnlCommand;
+import info.magnolia.module.owfe.commands.ParametersSetterHelper;
+
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,7 +46,7 @@ public abstract class FlowAdminTreeMVCHandler extends AdminTreeMVCHandler {
         if (log.isDebugEnabled())
             log.debug("find command for " + command + ": " + tc);
 
-        String[] expected = tc.getExpectedParameters();
+//        String[] expected = tc.getExpectedParameters();
 
         // set parameters
         HashMap params = new HashMap();
@@ -55,6 +57,8 @@ public abstract class FlowAdminTreeMVCHandler extends AdminTreeMVCHandler {
         Context context = MgnlContext.getInstance();
         context.put(MgnlCommand.INTREE_PARAM, params);
 
+        // translate parameter
+        new ParametersSetterHelper().translateParam(tc, context);
         // execute
         try {
             tc.execute(context);

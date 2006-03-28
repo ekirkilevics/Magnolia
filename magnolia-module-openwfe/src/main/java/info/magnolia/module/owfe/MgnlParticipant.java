@@ -4,6 +4,7 @@ import info.magnolia.cms.beans.runtime.Context;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.module.owfe.commands.CommandsMap;
 import info.magnolia.module.owfe.commands.MgnlCommand;
+import info.magnolia.module.owfe.commands.ParametersSetterHelper;
 import info.magnolia.module.owfe.jcr.JCRWorkItemAPI;
 import openwfe.org.embed.impl.engine.AbstractEmbeddedParticipant;
 import openwfe.org.engine.workitem.InFlowWorkItem;
@@ -55,21 +56,21 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
 
             try {
                 // for testing now
-                MgnlCommand test = CommandsMap.getCommandFromFullName(parName);
-                if (test == null) { // not found, do in the old ways
-                    if (log.isDebugEnabled())
-                        log.debug("can not find command named " + cmd + " from command map");
-                } else {
-                    if (log.isDebugEnabled())
-                        log.debug("found command for " + cmd + "in command map");
-                }
+//                MgnlCommand test = CommandsMap.getCommandFromFullName(parName);
+//                if (test == null) { // not found, do in the old ways
+//                    if (log.isDebugEnabled())
+//                        log.debug("can not find command named " + cmd + " from command map");
+//                } else {
+//                    if (log.isDebugEnabled())
+//                        log.debug("found command for " + cmd + "in command map");
+//                }
 
-                MgnlCommand c = CommandsMap.getCommand(cmd);
+                MgnlCommand c = CommandsMap.getCommandFromFullName(cmd);
                 if (c != null) {
                     if (log.isDebugEnabled())
                         log.debug("Command has been found through the magnolia catalog:" + c.getClass().getName());
 
-                    String[] expected = c.getExpectedParameters();
+                  //  String[] expected = c.getExpectedParameters();
 
                     // set parameters in the context
                     HashMap params = new HashMap();
@@ -78,6 +79,10 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
                     Context context = MgnlContext.getInstance();
                     context.put(MgnlCommand.PARAMS, params);
 
+                    
+                    // translate parameter
+                    new ParametersSetterHelper().translateParam(c, context);
+                    
                     // execute
                     c.execute(context);
 
