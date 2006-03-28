@@ -38,7 +38,7 @@ public abstract class FlowAdminTreeMVCHandler extends AdminTreeMVCHandler {
      */
     public String execute(String command) {
         // get command from command map in JCR repository
-        MgnlCommand tc = CommandsMap.getCommand(command);
+        MgnlCommand tc = CommandsMap.getCommand("website", command);
         if (tc == null) { // not found, do in the old ways
             log.warn("can not find command named " + command + "in tree command map");
             return super.execute(command);
