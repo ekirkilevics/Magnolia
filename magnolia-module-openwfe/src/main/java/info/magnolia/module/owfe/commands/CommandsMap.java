@@ -39,6 +39,12 @@ public class CommandsMap {
         Catalog catalog = factory.getCatalog(catalogName);
         return (MgnlCommand) catalog.getCommand(commandName);
     }
+    
+    public static MgnlCommand getCommand(String commandName) {
+        CatalogFactory factory = (CatalogFactory) FactoryUtil.getSingleton(klass);
+        Catalog catalog = factory.getCatalog("");
+        return (MgnlCommand) catalog.getCommand(commandName);
+    }
 
     public static MgnlCommand getCommandFromFullName(String commandName) {
         String command_ = commandName.substring(COMMAND_PREFIX_LEN);
@@ -50,29 +56,29 @@ public class CommandsMap {
     }
 
 
-    public static MgnlCommand getCommand(String commandName) {
-        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
-        try {
-
-            Content root = hm.getContent("/modules/workflow/config/commands");
-            Content c = root.getContent(commandName);
-            if (c == null) {
-                log.error("can not get command for " + commandName);
-                return null;
-            }
-            String className = c.getNodeData("impl").getString();
-            log.info("class name is " + className);
-            Class cmdClass = Class.forName(className);
-            return (MgnlCommand) cmdClass.newInstance();
-        } catch (javax.jcr.PathNotFoundException pne) {
-            log.warn("command [" + commandName + "] is not defined");
-            return null;
-
-        } catch (Exception e) {
-            log.warn("can not get command for " + commandName, e);
-            return null;
-        }
-
-    }
+//    public static MgnlCommand getCommand(String commandName) {
+//        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
+//        try {
+//
+//            Content root = hm.getContent("/modules/workflow/config/commands");
+//            Content c = root.getContent(commandName);
+//            if (c == null) {
+//                log.error("can not get command for " + commandName);
+//                return null;
+//            }
+//            String className = c.getNodeData("impl").getString();
+//            log.info("class name is " + className);
+//            Class cmdClass = Class.forName(className);
+//            return (MgnlCommand) cmdClass.newInstance();
+//        } catch (javax.jcr.PathNotFoundException pne) {
+//            log.warn("command [" + commandName + "] is not defined");
+//            return null;
+//
+//        } catch (Exception e) {
+//            log.warn("can not get command for " + commandName, e);
+//            return null;
+//        }
+//
+//    }
 
 }
