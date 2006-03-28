@@ -26,7 +26,7 @@ public class ParametersSetterHelper {
             for (int i = 0; i < expected.length; i++)
                 params.put(expected[i], workItem.getAttribute(expected[i]));
         } else {
-            HashMap param = (HashMap) context.get(MgnlCommand.PARAMS);
+            HashMap param = (HashMap) context.get(MgnlConstants.INTREE_PARAM);
             for (int i = 0; i < expected.length; i++) {
                 params.put(expected[i], param.get(expected[i]));
             }
