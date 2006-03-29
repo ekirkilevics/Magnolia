@@ -12,7 +12,8 @@
  */
 package info.magnolia.cms.util;
 
-import java.util.Properties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -21,14 +22,13 @@ import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Properties;
 
 
 /**
  * This is a simple util class to send email from the form pages ... This class was previously included inside the jsp
  * related to the form.
+ *
  * @author niko
  * @version $Id $
  */
@@ -59,6 +59,12 @@ public class MailHandler {
         session = Session.getInstance(props, null);
     }
 
+    public void setMailHost(String smtpServer) {
+        Properties props = System.getProperties();
+        props.put("mail.smtp.host", smtpServer);
+        session = Session.getInstance(props, null);
+    }
+
     public void sendMail() throws MessagingException {
         try {
             MimeMessage message = new MimeMessage(session);
@@ -75,24 +81,25 @@ public class MailHandler {
         }
         catch (MessagingException e) {
             log.error("Email to: ["
-                + addressesToString(this.getToList())
-                + "] was not sent because of the following error: "
-                + e.getMessage(), e);
+                    + addressesToString(this.getToList())
+                    + "] was not sent because of the following error: "
+                    + e.getMessage(), e);
             throw e;
         }
         catch (RuntimeException e) {
             // this is here in order to catch UnsupportedOperationException
             // by alternative javamail libraries
             log.error("Email to: ["
-                + addressesToString(this.getToList())
-                + "] was not sent because of the following error: "
-                + e.getMessage(), e);
+                    + addressesToString(this.getToList())
+                    + "] was not sent because of the following error: "
+                    + e.getMessage(), e);
             throw e;
         }
     }
 
     /**
      * Convert list of addresses to a nice string
+     *
      * @param addresses list of internet addresses
      * @return a comma-separated list of email addresses as a <code>String</code>
      */
