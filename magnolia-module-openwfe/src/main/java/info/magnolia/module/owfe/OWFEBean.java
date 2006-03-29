@@ -97,7 +97,7 @@ public class OWFEBean implements WorkflowAPI {
 		List groups = new JCRUserMgr().getGroupsForUser(userName);
 		List roles = new JCRUserMgr().getRolesForUser(userName);
 		StringBuffer queryString = new StringBuffer();
-		queryString.append("//*[(@participant=\"user-" + userName + "\" and @assignTo!=\"" + userName + "\") or (@assignTo=\""+userName+"\") or (@participant=\"user-" + userName + "\" and not(@assignTo))");
+		queryString.append("//*[(@assignTo=\""+userName+"\") or (@participant=\"user-" + userName + "\" and not(@assignTo))");
 		for (int i = 0; i < groups.size(); i++) {
 			queryString.append(" or (@participant=\"group-" + groups.get(i)
 					+ "\" and @assignTo!=\"" + userName + "\") ");
