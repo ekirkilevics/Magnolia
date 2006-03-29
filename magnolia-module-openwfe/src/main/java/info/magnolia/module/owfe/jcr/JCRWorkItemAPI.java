@@ -12,6 +12,8 @@ import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.worklist.store.StoreException;
 import openwfe.org.xml.XmlCoder;
 import openwfe.org.xml.XmlUtils;
+
+import org.apache.commons.lang.StringUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 
@@ -212,6 +214,10 @@ public class JCRWorkItemAPI {
         return id.equals(eid);
     }
 
+    private String convertId(String id) {
+        return StringUtils.replace(StringUtils.replace(id, "|", ""), ":", ".");
+    }
+    
     public void storeWorkItem(String arg0, InFlowWorkItem wi)
             throws StoreException {
         try {
@@ -224,8 +230,9 @@ public class JCRWorkItemAPI {
             Content root = hm.getRoot();
             //Collection c = root.getChildren(ItemType.WORKITEM);
 
-            // @fix it
-            Content newc = root.createContent("workItem", ItemType.WORKITEM);
+            String id = convertId(wi.getId().toParseableString());
+            log.info("workitem id = " + id);
+            Content newc = root.createContent(id, ItemType.WORKITEM);
 
             ValueFactory vf = newc.getJCRNode().getSession().getValueFactory();
             String sId = wi.getLastExpressionId().toParseableString();

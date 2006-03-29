@@ -7,7 +7,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.security.MgnlUserManager;
 import info.magnolia.module.owfe.jcr.JCRWorkItemAPI;
-import info.magnolia.module.owfe.jcr.JCRWorkItemStorage;
+
 import openwfe.org.engine.expressions.FlowExpressionId;
 import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.engine.workitem.StringAttribute;
@@ -96,7 +96,7 @@ public class OWFEBean {
             Iterator it = c.iterator();
             while (it.hasNext()) {
                 Content ct = (Content) it.next();
-                InFlowWorkItem wi = JCRWorkItemStorage.loadWorkItem(ct);
+                InFlowWorkItem wi = JCRWorkItemAPI.loadWorkItem(ct);
                 if (checkParticipant(wi, userName)) { // if belong to this
                     // user
                     list.add(wi);
