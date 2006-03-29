@@ -13,8 +13,34 @@ public interface WorkflowAPI {
      * @return
      * @throws Exception
      */
-    public List getWorkItems(String userName) throws Exception;
+    //public List getWorkItems(String userName) throws Exception;
 
+    /**
+     * get all work items for the user
+     *
+     * @param userName
+     * @return
+     * @throws Exception
+     */
+    public List getUserInbox(String userName) throws Exception;
+    
+    /**
+     * get all work items for the user
+     *
+     * @param userName
+     * @return
+     * @throws Exception
+     */
+    public List getGroupInbox(String GroupName) throws Exception;
+    /**
+     * get all work items for the user
+     *
+     * @param userName
+     * @return
+     * @throws Exception
+     */
+    public List getRoleInbox(String groupName) throws Exception;
+ 
     /**
      * get the number of work items in user's inbox
      *
@@ -31,7 +57,9 @@ public interface WorkflowAPI {
      * @param i
      * @return
      */
-    public WorkItem getWorkItem(HttpServletRequest request, int i);
+    //public WorkItem getWorkItem(HttpServletRequest request, int i) throws Exception;
+    
+    public List getWorkItems(HttpServletRequest request) throws Exception ;
 
     /**
      * approve acitvation

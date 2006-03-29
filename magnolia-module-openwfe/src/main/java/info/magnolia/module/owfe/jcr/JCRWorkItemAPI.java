@@ -7,8 +7,10 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryResult;
+import info.magnolia.cms.util.ContentUtil;
 import openwfe.org.engine.expressions.FlowExpressionId;
 import openwfe.org.engine.workitem.InFlowWorkItem;
+import openwfe.org.engine.workitem.StringAttribute;
 import openwfe.org.worklist.store.StoreException;
 import openwfe.org.xml.XmlCoder;
 import openwfe.org.xml.XmlUtils;
@@ -18,6 +20,8 @@ import org.jdom.Document;
 import org.jdom.Element;
 
 import javax.jcr.ValueFactory;
+
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -137,7 +141,7 @@ public class JCRWorkItemAPI {
         //
         // fileName = Utils.getCanonicalPath
         // (getContext().getApplicationDirectory(), fileName);
-        Content ct = findWorkItem(fei);
+        Content ct = getWorkItemById(fei);
 
         if (ct == null)
             throw new StoreException("cannot find workitem " + fei);
@@ -197,13 +201,45 @@ public class JCRWorkItemAPI {
     // return null;
     //
     // }
-    public Content findWorkItem(FlowExpressionId fei) {
-        String sFei = fei.toParseableString();
-        // String queryString = "//*[@name=\'workitem\']/*[/jcr:contains(ID,
-        // \'"+fei+"\')]";
-        String queryString = "//*[@ID=\"" + sFei + "\"]";
+//    public Content findWorkItem(FlowExpressionId fei) {
+//        String sFei = fei.toParseableString();
+//        // String queryString = "//*[@name=\'workitem\']/*[/jcr:contains(ID,
+//        // \'"+fei+"\')]";
+//        String queryString = "//*[@ID=\"" + sFei + "\"]";
+//        log.info("xpath query string = " + queryString);
+//        return doQuery(queryString);
+//    }
+    
+    public Content getWorkItemByParticipant(String participant) {  
+        String queryString = "//*[@participant=\"" + participant + "\"]";
         log.info("xpath query string = " + queryString);
-        return doQuery(queryString);
+        List list =  doQuery(queryString);
+        if (list != null && list.size()>0)
+        	return (Content)list.get(0);
+        else
+        	return null;
+    }
+    
+    
+    
+    /**
+     * get work item by id
+     * @param fei
+     * @return
+     */
+    public Content getWorkItemById(FlowExpressionId fei){
+    	String path = createPathFromId(fei);
+    	
+    	log.info("path = " + path);
+    	 try {
+             Content c = hm.getContent(path, false, ItemType.WORKITEM);
+             return c;
+    	 }catch (Exception e){
+    		 log.error("get work item by id failed, path = " + path, e);
+    	 }
+    	 
+    	 return null;
+    	 
     }
 
     public boolean checkContentWithEID(Content ct, FlowExpressionId eid) {
@@ -214,31 +250,55 @@ public class JCRWorkItemAPI {
         return id.equals(eid);
     }
 
-    private String convertId(String id) {
+    private String convertPath(String id) {
         return StringUtils.replace(StringUtils.replace(id, "|", ""), ":", ".");
     }
     
+    private String createPathFromId(FlowExpressionId eid){
+    	String ret = "";
+//    	FlowExpressionId eid = wi.getId();
+    	ret = eid.getWorkflowDefinitionName() + "/" + eid.getWorkflowDefinitionRevision()
+    			+ "/" + eid.getWorkflowInstanceId()
+    			+ "/" + eid.getExpressionName()
+    			+ "/" + eid.getExpressionId();
+    	
+    	return convertPath(ret);    	
+    }
+    
+
     public void storeWorkItem(String arg0, InFlowWorkItem wi)
             throws StoreException {
         try {
 
             // delete it if already exist
-            Content ct = findWorkItem(wi.getId());
+            Content ct = getWorkItemById(wi.getId());
             if (ct != null)
                 removeWorkItem("", wi.getId());
 
             Content root = hm.getRoot();
             //Collection c = root.getChildren(ItemType.WORKITEM);
 
-            String id = convertId(wi.getId().toParseableString());
-            log.info("workitem id = " + id);
-            Content newc = root.createContent(id, ItemType.WORKITEM);
-
+            String path = createPathFromId(wi.getId());
+            log.info("workitem id = " + path);           
+            //Content newc = root.createContent(path, ItemType.WORKITEM);
+            Content newc = ContentUtil.createPath(hm, path, ItemType.WORKITEM);
+            
             ValueFactory vf = newc.getJCRNode().getSession().getValueFactory();
-            String sId = wi.getLastExpressionId().toParseableString();
-            if (log.isDebugEnabled())
-                log.debug("store work item: ID = " + sId);
+            String sId = wi.getLastExpressionId().toParseableString();  
+             
             newc.createNodeData("ID", vf.createValue(sId));
+            log.info("ID=" + sId);
+            newc.createNodeData("participant", vf.createValue(wi.getParticipantName().toString()));
+            log.info("participant = " + wi.getParticipantName().toString());
+            StringAttribute assignTo = (StringAttribute)wi.getAttribute("assignTo");
+            if (assignTo != null){
+            	String s = assignTo.toString();
+            	if (s.length() >0)
+            		newc.createNodeData("assignTo", vf.createValue(s));  
+            	log.info("assignTo=" + s);
+            }
+         
+            
             // convert to xml string
             Element encoded = XmlCoder.encode(wi);
             final org.jdom.Document doc = new org.jdom.Document(encoded);
@@ -255,8 +315,13 @@ public class JCRWorkItemAPI {
                 * .toString())); }
                 */
             hm.save();
+            
+            // for testing
+            exportToFile("d:\\wi.xml", "/");
+
+            log.info("store work item ok. ");
         } catch (Exception e) {
-            log.error("exception:" + e);
+            log.error("store work item failed", e);
             throw new StoreException(e.toString());
         }
 
@@ -306,8 +371,8 @@ public class JCRWorkItemAPI {
         }
     }
 
-    public Content doQuery(String queryString) {
-
+    public List doQuery(String queryString) {
+    	ArrayList list = new ArrayList();
         log.info("xpath query string: " + queryString);
         //storage.exportToFile("d:\\owfe_root.xml", null);
         Query q;
@@ -336,7 +401,7 @@ public class JCRWorkItemAPI {
                 log.info("name=" + sname);
                 //storage.exportToConsole(ct.getJCRNode().getPath());
                 //storage.exportToFile("d:\\owfe_ct.xml", ct.getJCRNode().getPath());
-                return ct;
+                list.add(ct);
             }
         } catch (Exception e) {
             log.error("query flow failed", e);
@@ -344,7 +409,7 @@ public class JCRWorkItemAPI {
         }
 
         log.info("query return null");
-        return null;
+        return list;
 
     }
     //

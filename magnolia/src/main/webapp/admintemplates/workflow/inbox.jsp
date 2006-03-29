@@ -3,6 +3,8 @@
 <%@ page import="openwfe.org.engine.workitem.InFlowWorkItem" %>
 <%@ page import="openwfe.org.engine.workitem.StringMapAttribute" %>
 <%@ page import="java.util.Iterator" %>
+<%@ page import="java.util.List" %>
+
 
 <jsp:useBean id ="owfeBean" scope="application" class="info.magnolia.module.owfe.OWFEBean" />  
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -15,7 +17,9 @@
 <body>
 
 <%
-int size = owfeBean.getWorkItemsNumber(request);
+List list = owfeBean.getWorkItems(request);
+if (list != null){
+int size = list.size();
 %>
 <table class="nicetable">
 
@@ -28,9 +32,9 @@ int size = owfeBean.getWorkItemsNumber(request);
 </tr>
 <%
 for (int i = 0; i < size; i++){ 
-InFlowWorkItem wi = (InFlowWorkItem)owfeBean.getWorkItem(request, i);
+InFlowWorkItem wi = (InFlowWorkItem)list.get(i);
 if (wi != null){
-String id = wi.getLastExpressionId().toParseableString();
+String id = wi.getId().toParseableString();
 %>
 <tr class="nicetablerow"><td>
 <%=i %></td>
@@ -66,7 +70,10 @@ while (it.hasNext())
 <textarea rows=1 name="<%=value%>" ><%=value%></textarea> -->
     <br>
 
-<%} %>
+<%
+	} // while
+
+%>
 <input type="submit" value="save"/>
 </form>
 </td>
@@ -83,7 +90,13 @@ Assign work item to:
 
 </td></tr>
 
-<%}} %>
+<%} // if (wi != null)
+} // for
+
+} //if (list != null)
+
+
+ %>
 </table>
 
 

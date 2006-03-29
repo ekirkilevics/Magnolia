@@ -36,6 +36,18 @@ public class JCRUserMgr {
 		return list;
 	}
 	
+	public List getRolesForUser(String userName){
+		ArrayList list = new ArrayList();
+		List cts = getUserGroupNodes(userName);
+		for (int i = 0; i < cts.size(); i++){
+			Content ct = (Content)cts.get(i);			
+			String s = ct.getTitle();
+			list.add(s);
+			log.info("group name = " + ct.getTitle());
+		}
+		return list;
+	}
+	
 	public List getUsersForGroup(String groupName){
 		ArrayList list = new ArrayList();
 //		try {
@@ -61,8 +73,6 @@ public class JCRUserMgr {
 		ArrayList list = new ArrayList();
 
 		try {
-		
-
 			// get node "user"
 			Content user = hm.getContent(userName);
 
@@ -80,6 +90,43 @@ public class JCRUserMgr {
 				while (it.hasNext()) {
 					Content ct = (Content) it.next();
 
+					if (ct == null) {
+						log.error("group node is null");
+						continue;
+					}
+					list.add(ct);
+				}
+			}
+
+		} catch (Exception e) {
+
+			log.warn("can not add group reference to user.", e);
+		}
+
+		return list;
+
+	}
+
+	public List getUserRoleNodes(String userName) {
+		ArrayList list = new ArrayList();
+
+		try {
+			// get node "user"
+			Content user = hm.getContent(userName);
+
+			Content groups = null;
+			try {
+				// get "groups" node under node "user"
+				groups = user.getContent("roles");
+			} catch (javax.jcr.PathNotFoundException e) {
+				log.warn("the user " + userName + " does have not groups node");
+			}
+
+			if (groups != null) {
+				Collection c = groups.getChildren(ItemType.CONTENTNODE);
+				Iterator it = c.iterator();
+				while (it.hasNext()) {
+					Content ct = (Content) it.next();
 					if (ct == null) {
 						log.error("group node is null");
 						continue;
