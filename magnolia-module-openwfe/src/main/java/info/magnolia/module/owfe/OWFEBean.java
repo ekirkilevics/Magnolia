@@ -97,15 +97,16 @@ public class OWFEBean implements WorkflowAPI {
 		List groups = new JCRUserMgr().getGroupsForUser(userName);
 		List roles = new JCRUserMgr().getRolesForUser(userName);
 		StringBuffer queryString = new StringBuffer();
-		queryString.append("//*[@participant=\"user-" + userName + "\" and @assignTo!=\"" + userName + "\"] | //*[@assignTo=\""+userName+"\"] | //*[@participant=\"user-" + userName + "\" and not(@assignTo)]");
+		queryString.append("//*[(@participant=\"user-" + userName + "\" and @assignTo!=\"" + userName + "\") or (@assignTo=\""+userName+"\") or (@participant=\"user-" + userName + "\" and not(@assignTo))");
 		for (int i = 0; i < groups.size(); i++) {
-			queryString.append(" | //*[@participant=\"group-" + groups.get(i)
-					+ "\" and @assignTo!=\"" + userName + "\"]");
+			queryString.append(" or (@participant=\"group-" + groups.get(i)
+					+ "\" and @assignTo!=\"" + userName + "\") ");
 		}
 		for (int i = 0; i < roles.size(); i++) {
-			queryString.append(" | //*[@participant=\"role-" + roles.get(i)
-					+ "\" and @assignTo!=\"" + userName + "\"]");
+			queryString.append(" or (@participant=\"role-" + roles.get(i)
+					+ "\" and @assignTo!=\"" + userName + "\") ");
 		}
+		queryString.append("]");
 		log.info("xpath query string = " + queryString);
 		return storage.doQuery(queryString.toString());
 	}

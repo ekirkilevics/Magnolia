@@ -317,7 +317,7 @@ public class JCRWorkItemAPI {
             hm.save();
             
             // for testing
-            exportToFile("d:\\wi.xml", "/");
+           // exportToFile("d:\\wi.xml", "/");
 
             log.info("store work item ok. ");
         } catch (Exception e) {
