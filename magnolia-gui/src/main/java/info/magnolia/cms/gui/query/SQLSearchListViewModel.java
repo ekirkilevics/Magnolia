@@ -12,6 +12,8 @@
  */
 package info.magnolia.cms.gui.query;
 
+import info.magnolia.cms.gui.control.list.SearchListViewModel;
+
 /**
  * @author Sameer Charles
  * $Id :$

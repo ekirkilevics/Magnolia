@@ -10,7 +10,9 @@
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.gui.query;
+package info.magnolia.cms.gui.control.list;
+
+import info.magnolia.cms.gui.query.SearchQuery;
 
 /**
  * @author Sameer Charles
