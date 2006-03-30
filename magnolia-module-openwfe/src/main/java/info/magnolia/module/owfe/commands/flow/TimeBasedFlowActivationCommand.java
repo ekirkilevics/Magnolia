@@ -13,7 +13,7 @@ import java.util.HashMap;
 public class TimeBasedFlowActivationCommand extends AbstractFlowCommand {
     private static final String WEB_SCHEDULED_ACTIVATION = "webScheduledActivation";
 
-    static final String[] parameters = {MgnlConstants.P_START_DATE, MgnlConstants.P_END_DATE, MgnlConstants.P_PATH};
+    static final String[] parameters = {MgnlConstants.P_RECURSIVE, MgnlConstants.P_START_DATE, MgnlConstants.P_END_DATE, MgnlConstants.P_PATH};
 
     /**
      * List of the parameters that this command needs to run

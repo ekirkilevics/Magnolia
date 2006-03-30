@@ -67,9 +67,16 @@ public abstract class FlowAdminTreeMVCHandler extends AdminTreeMVCHandler {
         }catch(Exception e){
         	log.error("can not get content node for path " + pathSelected, e);
         }        
-		//params.put(MgnlConstants.P_PATH, pathSelected);		
-		params.put("startDate", ct.getMetaData("startDate").getStartTime());
-		params.put("endDate", ct.getMetaData("endDate").getEndTime());
+		params.put(MgnlConstants.P_PATH, pathSelected);		
+		params.put("startDate", ct.getMetaData("startDate").getStartTime().toString());
+		params.put("endDate", ct.getMetaData("endDate").getEndTime()).toString();
+		
+		
+		String recursive = "false";
+		if (request.getParameter("recursive")!=null)
+			recursive = "true";
+		params.put(MgnlConstants.P_RECURSIVE, recursive);
+		log.info("recursive = " + recursive);
 		log.info("start date = " +  ct.getMetaData("startDate").getStartTime());
 		log.info("end date = " +  ct.getMetaData("endDate").getEndTime());
 		

@@ -53,6 +53,7 @@ public class ParametersSetterHelper {
             HashMap map = (HashMap)context.get(MgnlConstants.INTREE_PARAM);
             for (int i = 0; i < expected.length; i++) {
                 params.put(expected[i], map.get(expected[i]));
+                log.info("translate: " + expected[i] + "=" + map.get(expected[i]));
             }
             
             // check

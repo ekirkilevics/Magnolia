@@ -1,17 +1,24 @@
 package info.magnolia.module.owfe.servlets;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.module.owfe.OWFEBean;
 import info.magnolia.module.owfe.jcr.JCRFlowDefinition;
 import info.magnolia.module.owfe.jcr.JCRWorkItemAPI;
-import org.apache.log4j.Logger;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
+
+import org.apache.log4j.Logger;
 
 /**
  * Servlet implementation class for Servlet: FlowDef
@@ -64,6 +71,18 @@ public class FlowDefServlet extends javax.servlet.http.HttpServlet implements
 
             sb.append("<hr/><hr/><p/>");
 
+            // set start/end date
+            sb.append("<form action=\"FlowDef\" method=\"get\">");
+            sb.append("<input type=\"hidden\" name=\"method\" value=\"setDate\"/>" +
+            		"path:<input name=\"path\" />" +
+            		"start date:<input name=\"startDate\" value="+new Timestamp(System.currentTimeMillis()).toString()+" />" +
+            				"stop date:<input name=\"stopDate\" value="+new Timestamp(System.currentTimeMillis()).toString()+" />"); 
+            sb.append("<br/>");
+            sb.append("<input type=\"submit\" value=\"test\"></input>");
+            sb.append("</form>");
+
+            sb.append("<hr/><hr/><p/>");
+            
             // Query
             sb.append("<form action=\"FlowDef\" method=\"get\">");
             sb.append("query string:<input name=\"query\"></input>");
@@ -113,11 +132,13 @@ public class FlowDefServlet extends javax.servlet.http.HttpServlet implements
                 response.flushBuffer();
             }
         }
-
+        sb.append("<hr><p>result<p>");
         // for testing
         String query = request.getParameter("query");
         if (query != null && query.length() > 0) {
             try {
+            	String path = request.getParameter("path");
+            	
                 sb.append("<hr>" +
                         (new JCRWorkItemAPI().doQuery(query).toString())
                 );
@@ -126,7 +147,26 @@ public class FlowDefServlet extends javax.servlet.http.HttpServlet implements
             }
 
         }
+        
+        // set date
+        String method = request.getParameter("method");
+        
+        if (method != null && method.equalsIgnoreCase("setDate") ) {
+            try {
+            	
+            	String path = request.getParameter("path");
+            	String start = request.getParameter("startDate");
+            	String stop = request.getParameter("stopDate");
+                sb.append("<hr>" +
+                        setDate(path, start, stop));
+                
+            } catch (Exception e) {
+                log.error("testing query failed", e);
+            }
 
+        }
+        
+        // test
         String test = request.getParameter("test");
         if (test != null && test.equalsIgnoreCase("yes")) {
             try {
@@ -168,5 +208,26 @@ public class FlowDefServlet extends javax.servlet.http.HttpServlet implements
             return;
         }
         response.getWriter().println("add flow OK.");
+    }
+    
+    private String setDate(String pathSelected, String start, String stop) throws Exception{
+        // add start date and end date
+        HierarchyManager hm =  ContentRepository
+		.getHierarchyManager(ContentRepository.WEBSITE);
+        Content ct = null;
+        try{
+        	ct = hm.getContent(pathSelected);
+        }catch(Exception e){
+        	log.error("can not get content node for path " + pathSelected, e);
+        }        
+		//params.put(MgnlConstants.P_PATH, pathSelected);		
+        Calendar start_c = Calendar.getInstance();
+        Calendar stop_c = Calendar.getInstance();
+        start_c.setTime(new Date(Timestamp.valueOf(start).getTime()));
+        ct.getMetaData("startDate").setStartTime(start_c);
+        stop_c.setTime(new Date(Timestamp.valueOf(stop).getTime()));		
+		ct.getMetaData("endDate").setEndTime(stop_c);
+		hm.save();
+		return "set date ok. path " + pathSelected +", start date " + start + ", stop date " + stop;
     }
 }

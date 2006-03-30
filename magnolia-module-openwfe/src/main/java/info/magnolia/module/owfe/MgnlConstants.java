@@ -14,7 +14,7 @@ public final class MgnlConstants {
     final static public String INFLOW_PARAM = "workItem";
     final static public String INTREE_PARAM = "treeParam";
 
-
+    final static public String P_CONTEXT = "context";
     final static public String P_REQUEST = "request";
     final static public String P_RESULT = "__RESULT__";
     final static public String P_PATH = "pathSelected";
