@@ -64,9 +64,9 @@ public class UserRolesEditDialog extends ConfiguredDialog {
 
         DialogDialog dialog = super.createDialog(configNode, storageNode);
 
-        dialog.setJavascriptSources(request.getContextPath() + "/admindocroot/js/dialogs/DynamicTable.js"); //$NON-NLS-1$
+        dialog.setJavascriptSources(request.getContextPath() + "/.resources/admin-js/dialogs/DynamicTable.js"); //$NON-NLS-1$
         dialog.setJavascriptSources(request.getContextPath()
-            + "/admindocroot/js/dialogs/pages/userRolesEditDialogPage.js"); //$NON-NLS-1$
+            + "/.resources/admin-js/dialogs/pages/userRolesEditDialogPage.js"); //$NON-NLS-1$
         dialog.setCssSources(request.getContextPath()
             + "/.resources/admin-css/dialogs/pages/userRolesEditDialogPage.css"); //$NON-NLS-1$
         dialog.setConfig("height", 600); //$NON-NLS-1$
