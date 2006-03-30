@@ -16,7 +16,7 @@ import info.magnolia.cms.gui.query.SearchQuery;
 
 /**
  * @author Sameer Charles
- * $Id :$
+ * $Id$
  */
 public abstract class SearchListViewModel implements ListViewModel {
 

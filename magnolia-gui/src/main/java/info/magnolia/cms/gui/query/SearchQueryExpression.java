@@ -14,7 +14,7 @@ package info.magnolia.cms.gui.query;
 
 /**
  * @author Sameer Charles
- * $Id :$
+ * $Id$
  */
 public interface SearchQueryExpression {
 }

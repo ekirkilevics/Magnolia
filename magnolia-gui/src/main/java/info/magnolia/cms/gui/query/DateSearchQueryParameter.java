@@ -16,7 +16,7 @@ import java.util.Calendar;
 
 /**
  * @author Sameer Charles
- * $Id :$
+ * $Id$
  */
 public class DateSearchQueryParameter extends SearchQueryParameter {
 

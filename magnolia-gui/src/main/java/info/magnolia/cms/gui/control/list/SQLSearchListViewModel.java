@@ -15,7 +15,7 @@ package info.magnolia.cms.gui.control.list;
 
 /**
  * @author Sameer Charles
- * $Id :$
+ * $Id$
  */
 public class SQLSearchListViewModel extends SearchListViewModel {
 
@@ -28,5 +28,5 @@ public class SQLSearchListViewModel extends SearchListViewModel {
     public ListViewIterator iterator() {
         return null;
     }
-    
+
 }
