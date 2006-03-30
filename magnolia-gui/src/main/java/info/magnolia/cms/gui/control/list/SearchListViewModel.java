@@ -23,12 +23,12 @@ public abstract class SearchListViewModel implements ListViewModel {
     /**
      * sort or group by order
      * */
-    public static final int DESCENDING = 0;
+    public static final String DESCENDING = "DESC";
 
     /**
      * sort or group by order
      * */
-    public static final int ASCENDING = 1;
+    public static final String ASCENDING = "ASC";
 
     /**
      * search query to be used by sub implementation
@@ -43,7 +43,7 @@ public abstract class SearchListViewModel implements ListViewModel {
     /**
      * sort by order
      * */
-    protected int sortByOrder;
+    protected String sortByOrder;
 
     /**
      * group by field name
@@ -53,7 +53,7 @@ public abstract class SearchListViewModel implements ListViewModel {
     /**
      * group by order
      * */
-    protected int groupByOrder;
+    protected String groupByOrder;
 
     /**
      * set Query
@@ -91,7 +91,7 @@ public abstract class SearchListViewModel implements ListViewModel {
      * @param name
      * @param order
      * */
-    public void setSortBy(String name, int order) {
+    public void setSortBy(String name, String order) {
         this.sortBy = name;
         this.sortByOrder = order;
     }
@@ -109,7 +109,7 @@ public abstract class SearchListViewModel implements ListViewModel {
      * @param name
      * @param order
      * */
-    public void setGroupBy(String name, int order) {
+    public void setGroupBy(String name, String order) {
         this.groupBy = name;
         this.groupByOrder = order;
     }
@@ -126,7 +126,7 @@ public abstract class SearchListViewModel implements ListViewModel {
      * get sort by ordering
      * @return order ('ASCENDING' | 'DESCENDING')
      * */
-    public int getSortByOrder() {
+    public String getSortByOrder() {
         return this.sortByOrder;
     }
 
@@ -142,7 +142,7 @@ public abstract class SearchListViewModel implements ListViewModel {
      * get group by ordering
      * @return order ('ASCENDING' | 'DESCENDING')
      * */
-    public int getGroupByOrder() {
+    public String getGroupByOrder() {
         return this.groupByOrder;
     }
 

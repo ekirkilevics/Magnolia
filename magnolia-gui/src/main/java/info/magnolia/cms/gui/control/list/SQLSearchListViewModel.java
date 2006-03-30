@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -78,6 +79,13 @@ public class SQLSearchListViewModel extends SearchListViewModel {
      * */
     private ListViewIterator dummyIterator() {
         String statement = "SELECT * FROM nt:base where title like '%'";
+        if (StringUtils.isNotEmpty(this.getGroupBy()) && StringUtils.isNotEmpty(this.getSortBy())) {
+            statement += (" order by "+this.getGroupBy()+" "+this.getGroupByOrder()+", "+this.getSortBy()+" "+this.getSortByOrder());
+        } else if (StringUtils.isNotEmpty(this.getGroupBy()) && StringUtils.isEmpty(this.getSortBy())) {
+            statement += (" order by "+this.getGroupBy() + " " + this.getGroupByOrder());
+        } else if (StringUtils.isEmpty(this.getGroupBy()) && StringUtils.isNotEmpty(this.getSortBy())) {
+            statement += (" order by "+this.getSortBy() + " " + this.getSortByOrder());
+        }
         try {
             Query q = MgnlContext.getQueryManager(this.repositoryId).createQuery(statement, Query.SQL);
             QueryResult result = q.execute();

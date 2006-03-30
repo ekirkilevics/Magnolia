@@ -35,7 +35,7 @@ public interface ListViewModel {
      * @param name
      * @param order
      * */
-    public void setSortBy(String name, int order);
+    public void setSortBy(String name, String order);
 
     /**
      * set group on field name
@@ -48,7 +48,7 @@ public interface ListViewModel {
      * @param name
      * @param order
      * */
-    public void setGroupBy(String name, int order);
+    public void setGroupBy(String name, String order);
 
     /**
      * get sort on field name
@@ -60,7 +60,7 @@ public interface ListViewModel {
      * get sort by ordering
      * @return order ('ASCENDING' | 'DESCENDING')
      * */
-    public int getSortByOrder();
+    public String getSortByOrder();
 
     /**
      * get group on field name
@@ -72,6 +72,6 @@ public interface ListViewModel {
      * get group by ordering
      * @return order ('ASCENDING' | 'DESCENDING')
      * */
-    public int getGroupByOrder();
+    public String getGroupByOrder();
 
 }
