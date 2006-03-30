@@ -14,7 +14,7 @@ package info.magnolia.cms.gui.control.list;
 
 /**
  * @author Sameer Charles
- * $Id :$
+ * $Id$
  */
 public class ListViewIteratorImpl implements ListViewIterator {
     /**
