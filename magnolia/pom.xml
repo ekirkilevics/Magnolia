@@ -73,10 +73,6 @@
       <version>2.2-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>getahead</groupId>
-      <artifactId>dwr</artifactId>
-    </dependency>
-    <dependency>
       <groupId>commons-chain</groupId>
       <artifactId>commons-chain</artifactId>
       <version>1.0</version>
