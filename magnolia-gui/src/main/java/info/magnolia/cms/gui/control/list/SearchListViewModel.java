@@ -21,6 +21,16 @@ import info.magnolia.cms.gui.query.SearchQuery;
 public abstract class SearchListViewModel implements ListViewModel {
 
     /**
+     * sort or group by order
+     * */
+    public static final int DESCENDING = 0;
+
+    /**
+     * sort or group by order
+     * */
+    public static final int ASCENDING = 1;
+
+    /**
      * search query to be used by sub implementation
      * */
     protected SearchQuery query;
@@ -31,9 +41,19 @@ public abstract class SearchListViewModel implements ListViewModel {
     protected String sortBy;
 
     /**
+     * sort by order
+     * */
+    protected int sortByOrder;
+
+    /**
      * group by field name
      * */
     protected String groupBy;
+
+    /**
+     * group by order
+     * */
+    protected int groupByOrder;
 
     /**
      * set Query
@@ -59,11 +79,31 @@ public abstract class SearchListViewModel implements ListViewModel {
     }
 
     /**
+     * set sort by field and order ('ASCENDING' | 'DESCENDING')
+     * @param name
+     * @param order
+     * */
+    public void setSortBy(String name, int order) {
+        this.sortBy = name;
+        this.sortByOrder = order;
+    }
+
+    /**
      * set group by field
      * @param name
      * */
     public void setGroupBy(String name) {
         this.groupBy = name;
+    }
+
+    /**
+     * set group by field and order ('ASCENDING' | 'DESCENDING')
+     * @param name
+     * @param order
+     * */
+    public void setGroupBy(String name, int order) {
+        this.groupBy = name;
+        this.groupByOrder = order;
     }
 
     /**
