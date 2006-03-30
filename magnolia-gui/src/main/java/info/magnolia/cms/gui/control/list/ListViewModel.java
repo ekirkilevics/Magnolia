@@ -31,10 +31,24 @@ public interface ListViewModel {
     public void setSortBy(String name);
 
     /**
+     * set sort on field name
+     * @param name
+     * @param order
+     * */
+    public void setSortBy(String name, int order);
+
+    /**
      * set group on field name
      * @param name
      * */
     public void setGroupBy(String name);
+
+    /**
+     * set group on field name
+     * @param name
+     * @param order
+     * */
+    public void setGroupBy(String name, int order);
 
     /**
      * get sort on field name
