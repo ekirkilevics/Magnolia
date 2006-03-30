@@ -33,6 +33,9 @@ public class TimeBasedFlowActivationCommand extends AbstractFlowCommand {
         try {
             // Retrieve parameters from caller
             String pathSelected = (String) params.get(MgnlConstants.P_PATH);
+            
+            log.info("start date = " + params.get(MgnlConstants.P_START_DATE));
+            log.info("end date = " + params.get(MgnlConstants.P_END_DATE));
 
             // set parameters for lanuching the flow
             li.setWorkflowDefinitionUrl(MgnlConstants.P_WORKFLOW_DEFINITION_URL);

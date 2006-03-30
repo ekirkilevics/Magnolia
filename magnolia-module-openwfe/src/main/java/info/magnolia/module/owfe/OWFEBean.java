@@ -97,7 +97,9 @@ public class OWFEBean implements WorkflowAPI {
 		List groups = new JCRUserMgr().getGroupsForUser(userName);
 		List roles = new JCRUserMgr().getRolesForUser(userName);
 		StringBuffer queryString = new StringBuffer();
-		queryString.append("//*[(@assignTo=\""+userName+"\") or (@participant=\"user-" + userName + "\" and not(@assignTo))");
+		queryString.append("//*[(@assignTo=\"" + userName
+				+ "\") or (@participant=\"user-" + userName
+				+ "\" and not(@assignTo))");
 		for (int i = 0; i < groups.size(); i++) {
 			queryString.append(" or (@participant=\"group-" + groups.get(i)
 					+ "\" and @assignTo!=\"" + userName + "\") ");
@@ -114,11 +116,11 @@ public class OWFEBean implements WorkflowAPI {
 	public int getWorkItemsNumber(HttpServletRequest request) throws Exception {
 		return getWorkItems(getUsername(request)).size();
 	}
-	
+
 	public List getWorkItems(HttpServletRequest request) throws Exception {
 		return getWorkItems(getUsername(request));
 	}
-	
+
 	public WorkItem getWorkItem(HttpServletRequest request, int i)
 			throws Exception {
 		return (WorkItem) getWorkItems(getUsername(request)).get(i);
@@ -157,19 +159,12 @@ public class OWFEBean implements WorkflowAPI {
 			OWFEEngine.getEngine().reply(if_wi);
 		} catch (Exception e) {
 			log.error("reply to engine failed", e);
+
+		} finally {
 			removeWorkItem(if_wi);
-
 		}
-		removeWorkItem(if_wi);
-		OWFEEngine.getEngine().reply(if_wi);
-
-		/*
-		 * // do activation log.debug("attribute=" +
-		 * if_wi.getAttribute("pathSelected")); String path = ((StringAttribute)
-		 * if_wi.getAttribute("pathSelected")) .toString(); boolean recursive =
-		 * ((StringAttribute) if_wi.getAttribute("recursive")) .equals("true");
-		 * doActivate(request, path, recursive, true);
-		 */
+		
+		log.info("approve ok");
 
 	}
 
@@ -188,13 +183,16 @@ public class OWFEBean implements WorkflowAPI {
 			OWFEEngine.getEngine().reply(if_wi);
 		} catch (Exception e) {
 			log.error("Error while accessing the workflow engine", e);
-			removeWorkItem(if_wi);
+			
 		}
-		removeWorkItem(if_wi);
-		OWFEEngine.getEngine().reply(if_wi);
+		 finally {
+				removeWorkItem(if_wi);
+			}
+		
 		if (log.isDebugEnabled())
 			log.debug("work item removed.");
-		// send mail to developer
+
+		log.info("reject ok");
 	}
 
 	//

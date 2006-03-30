@@ -58,6 +58,7 @@ public class MailCommand extends MgnlCommand {
             mh.setSubject(subject);
             mh.setToList(mailTo);
             mh.setBody(getMessageBody(path, from));
+          
             log.info("sending mail");
             mh.sendMail();
         } catch (Exception e) {

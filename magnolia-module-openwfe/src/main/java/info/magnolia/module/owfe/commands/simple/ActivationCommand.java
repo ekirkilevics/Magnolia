@@ -27,10 +27,18 @@ public class ActivationCommand extends MgnlCommand {
     }
 
     public boolean exec(HashMap params, Context ctx) {
-        log.info(params.toString());
-        String path = (String) params.get(MgnlConstants.P_PATH);
 
-        boolean recursive = Boolean.valueOf((String) params.get(MgnlConstants.P_RECURSIVE)).booleanValue();
+        String path;
+        boolean recursive;
+        path = (String) params.get(MgnlConstants.P_PATH);
+        log.info("recursive = " + (params.get(MgnlConstants.P_RECURSIVE).toString() ));
+      //  recursive = (params.get(MgnlConstants.P_RECURSIVE).toString()).equalsIgnoreCase("true");
+
+       
+      
+
+         recursive = Boolean.valueOf((String) params.get(MgnlConstants.P_RECURSIVE)).booleanValue();
+
         try {
             doActivate(path, recursive);
         } catch (Exception e) {

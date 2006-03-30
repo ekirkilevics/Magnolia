@@ -372,6 +372,7 @@ public class JCRWorkItemAPI {
     }
 
     public List doQuery(String queryString) {
+    	log.debug("enter doQuery");
     	ArrayList list = new ArrayList();
         log.info("xpath query string: " + queryString);
         //storage.exportToFile("d:\\owfe_root.xml", null);
@@ -401,14 +402,20 @@ public class JCRWorkItemAPI {
                 log.info("name=" + sname);
                 //storage.exportToConsole(ct.getJCRNode().getPath());
                 //storage.exportToFile("d:\\owfe_ct.xml", ct.getJCRNode().getPath());
-                list.add(ct);
+                InFlowWorkItem wi = loadWorkItem(ct);
+                if (wi == null){
+                	log.error("can not load found workitem");
+                	continue;
+                }
+                log.info("added workitem to return list ok");
+                list.add(wi);
             }
         } catch (Exception e) {
             log.error("query flow failed", e);
             return null;
         }
 
-        log.info("query return null");
+        log.debug("leave doQuery");
         return list;
 
     }

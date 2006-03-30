@@ -2,8 +2,11 @@ package info.magnolia.module.owfe.commands;
 
 import info.magnolia.cms.beans.commands.MgnlCommand;
 import info.magnolia.module.owfe.MgnlConstants;
+import info.magnolia.module.owfe.OWFEEngine;
+import openwfe.org.engine.workitem.Attribute;
 import openwfe.org.engine.workitem.WorkItem;
 import org.apache.commons.chain.Context;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -15,7 +18,11 @@ import java.util.HashMap;
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */
 public class ParametersSetterHelper {
-
+	/**
+	 * Logger.
+	 */
+	private static Logger log = Logger.getLogger(ParametersSetterHelper.class);
+	
     public HashMap translateParam(MgnlCommand command, Context context) {
         String[] expected = command.getExpectedParameters();
         //String[] accepted = command.getAcceptedParameters();
@@ -24,8 +31,18 @@ public class ParametersSetterHelper {
 
         WorkItem workItem = (WorkItem) context.get(MgnlConstants.INFLOW_PARAM);
         if (workItem != null) {
-            for (int i = 0; i < expected.length; i++)
-                params.put(expected[i], workItem.getAttribute(expected[i]).toString());
+            for (int i = 0; i < expected.length; i++){
+            	Attribute attr = workItem.getAttribute(expected[i]);
+            	if (attr != null)            		
+            	{
+            		params.put(expected[i], attr.toString());
+            		log.info("parameter[" + i + "] added:" + expected[i] + "=" + attr.toString());
+            	}
+            	
+            	else{
+            		log.error("cannot find parameter "+ expected[i] + " for command " + command);
+            	}
+            }
         } else {
             HttpServletRequest request = (HttpServletRequest) context.get(MgnlConstants.P_REQUEST);
             for (int i = 0; i < expected.length; i++) {
