@@ -64,6 +64,14 @@ public abstract class SearchListViewModel implements ListViewModel {
     }
 
     /**
+     * get query
+     * @return query
+     * */
+    public SearchQuery getQuery() {
+        return this.query;
+    }
+
+    /**
      * this must be implemented by implementing classes
      * @return Iterator over found records
      * @see ListViewIterator
@@ -115,10 +123,27 @@ public abstract class SearchListViewModel implements ListViewModel {
     }
 
     /**
+     * get sort by ordering
+     * @return order ('ASCENDING' | 'DESCENDING')
+     * */
+    public int getSortByOrder() {
+        return this.sortByOrder;
+    }
+
+    /**
      * get group on field name
      * @return String field name
      * */
     public String getGroupBy() {
         return this.groupBy;
     }
+
+    /**
+     * get group by ordering
+     * @return order ('ASCENDING' | 'DESCENDING')
+     * */
+    public int getGroupByOrder() {
+        return this.groupByOrder;
+    }
+
 }

@@ -57,8 +57,21 @@ public interface ListViewModel {
     public String getSortBy();
 
     /**
+     * get sort by ordering
+     * @return order ('ASCENDING' | 'DESCENDING')
+     * */
+    public int getSortByOrder();
+
+    /**
      * get group on field name
      * @return String field name
      * */
     public String getGroupBy();
+
+    /**
+     * get group by ordering
+     * @return order ('ASCENDING' | 'DESCENDING')
+     * */
+    public int getGroupByOrder();
+
 }

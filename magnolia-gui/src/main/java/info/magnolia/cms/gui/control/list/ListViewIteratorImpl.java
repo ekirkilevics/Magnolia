@@ -12,18 +12,80 @@
  */
 package info.magnolia.cms.gui.control.list;
 
+import info.magnolia.cms.core.Content;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.util.NoSuchElementException;
+
+import org.apache.commons.lang.StringUtils;
+
 /**
  * @author Sameer Charles
- * $Id$
+ * $Id:ListViewIteratorImpl.java 2492 2006-03-30 08:30:43Z scharles $
  */
 public class ListViewIteratorImpl implements ListViewIterator {
+
+    /**
+     * list holding all objects/records
+     * */
+    private final List list;
+
+    /**
+     *  next position
+     * */
+    private int pos;
+
+    /**
+     * next content object (prefetched)
+     * */
+    private Content next;
+
+    /**
+     * object on current pointer
+     * */
+    private Content current;
+
+    /**
+     *  key name on which provided list is grouped
+     * */
+    private String groupKey;
+
+    /**
+     * creates a new ListViewIterator
+     * @param list of content objects
+     * */
+    public ListViewIteratorImpl(List list, String groupKey) {
+        this.list = new ArrayList(list);
+        this.groupKey = groupKey;
+        this.pos = 0;
+        // prefetch next object
+        prefetchNext();
+    }
+
+    /**
+     * prefetch object for the list
+     *
+     * */
+    private void prefetchNext() {
+        this.next = null;
+        while (this.next == null && this.pos < this.list.size()) {
+            try {
+                this.next = (Content) this.list.get(pos);
+            } catch (ClassCastException e) {
+                // invalid object, remove it and try again
+                this.list.remove(pos); // will try again
+            }
+        }
+    }
+
     /**
      * get named value
      *
      * @param name its a key to which value is attached in this record
      */
     public Object getValue(String name) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return this.current.getNodeData(name).getString();
     }
 
     /**
@@ -32,21 +94,29 @@ public class ListViewIteratorImpl implements ListViewIterator {
      * @return name of the group of the current record
      */
     public String getGroupName() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        if (StringUtils.isEmpty(this.groupKey)) return StringUtils.EMPTY;
+        return this.current.getNodeData(this.groupKey).getString();
     }
 
     /**
      * move next
      */
     public void next() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (this.next == null) {
+            throw new NoSuchElementException();
+        }
+        this.current = this.next;
+        this.pos++;
+        prefetchNext();
     }
 
     /**
      * jump to next group
      */
     public void nextGroup() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        while (this.hasNextInGroup()) {
+            this.next();
+        }
     }
 
     /**
@@ -55,7 +125,7 @@ public class ListViewIteratorImpl implements ListViewIterator {
      * @return true if not EOF
      */
     public boolean hasNext() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return this.next != null;
     }
 
     /**
@@ -64,6 +134,17 @@ public class ListViewIteratorImpl implements ListViewIterator {
      * @return true if not EOF
      */
     public boolean hasNextInGroup() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        if (StringUtils.isEmpty(this.groupKey)) return this.hasNext(); // no group key defined, its all one group
+        else if (this.hasNext()) {
+            if (this.current != null) {
+                String currentValue = this.current.getNodeData(this.groupKey).getString();
+                String nextValue = this.next.getNodeData(this.groupKey).getString();
+                return StringUtils.equalsIgnoreCase(currentValue, nextValue);
+            }
+        } else {
+            return false;
+        }
+        return true;
     }
+
 }
