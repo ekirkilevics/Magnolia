@@ -39,56 +39,56 @@ public class SearchQueryOperator implements SearchQueryExpression {
     private String operator;
 
     /**
-     * left pointer
+     * previous pointer
      * */
-    private SearchQueryOperator left;
+    private SearchQueryOperator previous;
 
     /**
-     * right pointer
+     * next pointer
      * */
-    private SearchQueryOperator right;
+    private SearchQueryOperator next;
 
     /**
      * @param operator
-     * @param left pointing to an Expression on left
-     * @param right pointing to an Expression on right
+     * @param previous pointing to an Expression on left
+     * @param next pointing to an Expression on right
      * */
-    public SearchQueryOperator(String operator, SearchQueryOperator left, SearchQueryOperator right) {
+    public SearchQueryOperator(String operator, SearchQueryOperator previous, SearchQueryOperator next) {
         this.operator = operator;
-        this.left = left;
-        this.right = right;
+        this.previous = previous;
+        this.next = next;
     }
 
     /**
-     * get left expression
+     * get previous expression
      * @return object on left
      * */
-    public SearchQueryOperator getLeft() {
-        return left;
+    public SearchQueryOperator getPrevious() {
+        return this.previous;
     }
 
     /**
-     * set left expression
-     * @param left object on left
+     * set previous expression
+     * @param previous object on left
      * */
-    public void setLeft(SearchQueryOperator left) {
-        this.left = left;
+    public void setPrevious(SearchQueryOperator previous) {
+        this.previous = previous;
     }
 
     /**
-     * get right expression
+     * get next expression
      * @return object on right
      * */
-    public SearchQueryOperator getRight() {
-        return right;
+    public SearchQueryOperator getNext() {
+        return next;
     }
 
     /**
-     * set right expression
-     * @param right object on left
+     * set next expression
+     * @param next object on left
      * */
-    public void setRight(SearchQueryOperator right) {
-        this.right = right;
+    public void setRight(SearchQueryOperator next) {
+        this.next = next;
     }
 
     /**

@@ -44,12 +44,11 @@ public abstract class SearchListViewModel implements ListViewModel {
     }
 
     /**
+     * this must be implemented by implementing classes
      * @return Iterator over found records
      * @see ListViewIterator
      * */
-    public ListViewIterator iterator() {
-        return null;
-    }
+    public abstract ListViewIterator iterator();
 
     /**
      * set sort by field

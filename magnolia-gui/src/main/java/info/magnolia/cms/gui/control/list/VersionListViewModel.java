@@ -19,6 +19,14 @@ package info.magnolia.cms.gui.control.list;
  */
 public class VersionListViewModel extends SearchListViewModel {
 
-    // todo
+    /**
+     * this must be implemented by implementing classes
+     *
+     * @return Iterator over found records
+     * @see ListViewIterator
+     */
+    public ListViewIterator iterator() {
+        return null;
+    }
 
 }
