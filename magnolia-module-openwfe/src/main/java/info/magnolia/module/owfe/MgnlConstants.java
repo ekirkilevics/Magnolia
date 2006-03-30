@@ -26,6 +26,7 @@ public final class MgnlConstants {
     final static public String P_OK = "OK";
     final static public String P_START_DATE = "startDate";
     final static public String P_END_DATE = "endDate";
+    final static public String P_TREE = "tree";
 
     final static public String P_DEFAULT_ACTIVATION_FLOW = "webActivation";
     final static public String P_DEFAULT_DEACTIVATION_FLOW = "webDeactivation";
@@ -36,7 +37,7 @@ public final class MgnlConstants {
     final static public StringAttribute ATT_TRUE = new StringAttribute(TRUE);
     final static public StringAttribute ATT_FALSE = new StringAttribute(FALSE);
 
-    final static public String REPOSITORY = "website";
+    final static public String WEBSITE_REPOSITORY = "website";
 
     final static public String PREFIX_USER = "user-";
     final static public String PREFIX_GROUP = "group-";

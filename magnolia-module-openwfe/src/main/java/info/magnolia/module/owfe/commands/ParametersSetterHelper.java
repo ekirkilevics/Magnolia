@@ -28,10 +28,6 @@ public class ParametersSetterHelper {
                 params.put(expected[i], workItem.getAttribute(expected[i]).toString());
         } else {
             HttpServletRequest request = (HttpServletRequest) context.get(MgnlConstants.P_REQUEST);
-//            HashMap param = (HashMap) context.get(MgnlConstants.INTREE_PARAM);
-//            for (int i = 0; i < expected.length; i++) {
-//                params.put(expected[i], param.get(expected[i]));
-//            }
             for (int i = 0; i < expected.length; i++) {
                 params.put(expected[i], request.getParameter(expected[i]));
             }

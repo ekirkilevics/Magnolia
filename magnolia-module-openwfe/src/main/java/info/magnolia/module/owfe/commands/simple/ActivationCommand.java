@@ -27,10 +27,10 @@ public class ActivationCommand extends MgnlCommand {
     }
 
     public boolean exec(HashMap params, Context ctx) {
-        String path;
-        boolean recursive;
-        path = (String) params.get(MgnlConstants.P_PATH);
-        recursive = ((Boolean) params.get(MgnlConstants.P_RECURSIVE)).booleanValue();
+        log.info(params.toString());
+        String path = (String) params.get(MgnlConstants.P_PATH);
+
+        boolean recursive = Boolean.valueOf((String) params.get(MgnlConstants.P_RECURSIVE)).booleanValue();
         try {
             doActivate(path, recursive);
         } catch (Exception e) {
@@ -49,7 +49,7 @@ public class ActivationCommand extends MgnlCommand {
         }
 
         Syndicator syndicator = (Syndicator) FactoryUtil.getInstance(Syndicator.class);
-        syndicator.init(MgnlContext.getUser(), MgnlConstants.REPOSITORY, ContentRepository.getDefaultWorkspace(MgnlConstants.REPOSITORY), rule);
+        syndicator.init(MgnlContext.getUser(), MgnlConstants.WEBSITE_REPOSITORY, ContentRepository.getDefaultWorkspace(MgnlConstants.WEBSITE_REPOSITORY), rule);
 
         String parentPath = StringUtils.substringBeforeLast(path, "/");
         if (StringUtils.isEmpty(parentPath)) {

@@ -42,7 +42,8 @@ public class MgnlBaseCatalogFactory extends CatalogFactory implements MgnlCatalo
         Catalog catalog = (Catalog) catalogs.get(string);
         if (catalog == null) {
             catalog = initCatalog(string);
-            catalogs.put(string, catalog);
+            if (catalog != null) // init failed, but we can fix it at runtime
+                catalogs.put(string, catalog);
             return catalog;
         } else
             return catalog;

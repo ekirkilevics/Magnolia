@@ -37,7 +37,7 @@ public class DeleteCommand extends MgnlCommand {
     }
 
     private void deleteNode(Context context, String parentPath, String label) throws RepositoryException {
-        Content parentNode = MgnlContext.getHierarchyManager(MgnlConstants.REPOSITORY).getContent(parentPath);
+        Content parentNode = MgnlContext.getHierarchyManager(MgnlConstants.WEBSITE_REPOSITORY).getContent(parentPath);
         String path;
         if (!parentPath.equals("/")) {
             path = parentPath + "/" + label;

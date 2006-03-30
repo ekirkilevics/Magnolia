@@ -41,7 +41,7 @@ public class DeactivationCommand extends MgnlCommand {
         rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
         rule.addAllowType(ItemType.NT_FILE);
         Syndicator syndicator = (Syndicator) FactoryUtil.getInstance(Syndicator.class);
-        syndicator.init(MgnlContext.getUser(), MgnlConstants.REPOSITORY, ContentRepository.getDefaultWorkspace(MgnlConstants.REPOSITORY), rule);
+        syndicator.init(MgnlContext.getUser(), MgnlConstants.WEBSITE_REPOSITORY, ContentRepository.getDefaultWorkspace(MgnlConstants.WEBSITE_REPOSITORY), rule);
         syndicator.deActivate(path);
     }
 

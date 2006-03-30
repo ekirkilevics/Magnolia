@@ -45,4 +45,8 @@ public class MgnlChain extends MgnlCommand implements Chain {
     public void addCommand(Command command) {
         list.add(command);
     }
+
+    public int countCommands() {
+        return list.size();
+    }
 }

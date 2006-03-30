@@ -4,6 +4,7 @@ import info.magnolia.cms.beans.commands.CommandsMap;
 import info.magnolia.cms.beans.commands.MgnlCommand;
 import info.magnolia.cms.beans.runtime.Context;
 import info.magnolia.cms.beans.runtime.MgnlContext;
+import info.magnolia.cms.beans.runtime.WebContextImpl;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 import info.magnolia.module.owfe.MgnlConstants;
@@ -38,9 +39,10 @@ public abstract class FlowAdminTreeMVCHandler extends AdminTreeMVCHandler {
      */
     public String execute(String command) {
         // get command from command map in JCR repository
-        MgnlCommand tc = (MgnlCommand) CommandsMap.getCommand("website", command);
+        MgnlCommand tc = (MgnlCommand) CommandsMap.getCommand(MgnlConstants.WEBSITE_REPOSITORY, command);
         if (tc == null) { // not found, do in the old ways
-            log.warn("can not find command named " + command + "in tree command map");
+            if (log.isDebugEnabled())
+                log.debug("can not find command named " + command + " in tree command map");
             return super.execute(command);
         }
         if (log.isDebugEnabled())
@@ -49,11 +51,9 @@ public abstract class FlowAdminTreeMVCHandler extends AdminTreeMVCHandler {
         // set parameters
         HashMap params = new HashMap();
         params.put(MgnlConstants.P_REQUEST, request);
-        //params.put("pathSelected", pathSelected);
-        //params.put("recursive", Boolean.valueOf((request.getParameter("recursive") != null)));
-        params.put("tree", tree);
+        params.put(MgnlConstants.P_TREE, tree);
 
-        Context context = MgnlContext.getInstance();
+        Context context = (MgnlContext.hasInstance()) ? MgnlContext.getInstance() : new WebContextImpl();
         context.put(MgnlConstants.P_REQUEST, request);
         context.put(MgnlConstants.INTREE_PARAM, params);
 
