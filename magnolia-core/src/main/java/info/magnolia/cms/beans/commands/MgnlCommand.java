@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 
 public abstract class MgnlCommand implements Command {
+	
     public static final String DEFAULT_CATALOG = "default";
     final static public String PARAMS = "__params__";
     final static public String PARAM = "param";
@@ -58,5 +59,15 @@ public abstract class MgnlCommand implements Command {
     }
 
     public abstract boolean exec(HashMap param, Context ctx);
+    
+    public boolean checkParameter(HashMap map, String[] p){
+    	for (int i = 0; i< p.length; i++){
+    		if (map.get(p) == null){
+    			log.error("lack of parameter " + p[i]);
+    			return false;
+    		}
+    	}
+    	return true;
+    }
 
 }

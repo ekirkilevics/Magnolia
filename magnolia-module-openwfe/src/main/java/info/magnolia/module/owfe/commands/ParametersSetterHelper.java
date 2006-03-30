@@ -23,7 +23,7 @@ public class ParametersSetterHelper {
 	 */
 	private static Logger log = Logger.getLogger(ParametersSetterHelper.class);
 	
-    public HashMap translateParam(MgnlCommand command, Context context) {
+    public HashMap translateParam(MgnlCommand command, Context context)throws Exception {
         String[] expected = command.getExpectedParameters();
         //String[] accepted = command.getAcceptedParameters();
 
@@ -41,12 +41,24 @@ public class ParametersSetterHelper {
             	
             	else{
             		log.error("cannot find parameter "+ expected[i] + " for command " + command);
+            		throw new Exception("cannot find parameter "+ expected[i] + " for command " + command);
             	}
             }
         } else {
             HttpServletRequest request = (HttpServletRequest) context.get(MgnlConstants.P_REQUEST);
             for (int i = 0; i < expected.length; i++) {
                 params.put(expected[i], request.getParameter(expected[i]));
+            }
+            
+            HashMap map = (HashMap)context.get(MgnlConstants.INTREE_PARAM);
+            for (int i = 0; i < expected.length; i++) {
+                params.put(expected[i], map.get(expected[i]));
+            }
+            
+            // check
+            for (int i = 0; i < expected.length; i++){
+            	if (params.get(expected[i]) == null)
+            		throw new Exception("cannot find parameter "+ expected[i] + " for command " + command);
             }
 
         }

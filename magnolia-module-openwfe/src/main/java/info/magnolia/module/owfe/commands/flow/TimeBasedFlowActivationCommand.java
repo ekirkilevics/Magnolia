@@ -41,6 +41,7 @@ public class TimeBasedFlowActivationCommand extends AbstractFlowCommand {
             li.setWorkflowDefinitionUrl(MgnlConstants.P_WORKFLOW_DEFINITION_URL);
             li.addAttribute(MgnlConstants.P_PATH, new StringAttribute(pathSelected));
             li.addAttribute(MgnlConstants.P_OK, MgnlConstants.ATT_FALSE);
+            li.addAttribute(MgnlConstants.P_RECURSIVE, new StringAttribute( (params.get(MgnlConstants.P_RECURSIVE)).toString() ) );
 
 
             li.addAttribute(MgnlConstants.P_START_DATE, new StringAttribute(params.get(MgnlConstants.P_START_DATE)));

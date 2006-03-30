@@ -25,9 +25,11 @@ public class ActivationCommand extends MgnlCommand {
     public String[] getExpectedParameters() {
         return parameters;
     }
-
-    public boolean exec(HashMap params, Context ctx) {
-
+    
+    
+    
+    public boolean exec(HashMap params, Context ctx) {    	
+    	
         String path;
         boolean recursive;
         path = (String) params.get(MgnlConstants.P_PATH);

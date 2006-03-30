@@ -2,18 +2,23 @@ package info.magnolia.module.owfe.flow;
 
 import info.magnolia.cms.beans.commands.CommandsMap;
 import info.magnolia.cms.beans.commands.MgnlCommand;
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.Context;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.beans.runtime.WebContextImpl;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 import info.magnolia.module.owfe.MgnlConstants;
 import info.magnolia.module.owfe.commands.ParametersSetterHelper;
-import org.apache.log4j.Logger;
+
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
+
+import org.apache.log4j.Logger;
 
 /**
  * This is a subclass of the regular MVCHandler to plug in flow events. <p/> In
@@ -52,6 +57,22 @@ public abstract class FlowAdminTreeMVCHandler extends AdminTreeMVCHandler {
         HashMap params = new HashMap();
         params.put(MgnlConstants.P_REQUEST, request);
         params.put(MgnlConstants.P_TREE, tree);
+        
+        // add start date and end date
+        HierarchyManager hm =  ContentRepository
+		.getHierarchyManager(ContentRepository.WEBSITE);
+        Content ct = null;
+        try{
+        	ct = hm.getContent(pathSelected);
+        }catch(Exception e){
+        	log.error("can not get content node for path " + pathSelected, e);
+        }        
+		//params.put(MgnlConstants.P_PATH, pathSelected);		
+		params.put("startDate", ct.getMetaData("startDate").getStartTime());
+		params.put("endDate", ct.getMetaData("endDate").getEndTime());
+		log.info("start date = " +  ct.getMetaData("startDate").getStartTime());
+		log.info("end date = " +  ct.getMetaData("endDate").getEndTime());
+		
 
         Context context = (MgnlContext.hasInstance()) ? MgnlContext.getInstance() : new WebContextImpl();
         context.put(MgnlConstants.P_REQUEST, request);
