@@ -78,10 +78,12 @@ public abstract class FlowAdminTreeMVCHandler extends AdminTreeMVCHandler {
         context.put(MgnlConstants.P_REQUEST, request);
         context.put(MgnlConstants.INTREE_PARAM, params);
 
-        // translate parameter
-        new ParametersSetterHelper().translateParam(tc, context);
-        // execute
+        
+       
         try {
+        	// translate parameter
+            new ParametersSetterHelper().translateParam(tc, context);
+            // execute
             tc.execute(context);
         } catch (Exception e) {
             // TODO: check that this is processed somewhere else
