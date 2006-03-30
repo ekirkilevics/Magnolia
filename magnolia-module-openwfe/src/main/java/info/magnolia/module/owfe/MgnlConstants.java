@@ -1,5 +1,6 @@
 package info.magnolia.module.owfe;
 
+import info.magnolia.cms.util.MgnlCoreConstants;
 import openwfe.org.engine.workitem.StringAttribute;
 
 /**
@@ -32,20 +33,15 @@ public final class MgnlConstants {
     final static public String P_DEFAULT_DEACTIVATION_FLOW = "webDeactivation";
     final static public String P_DEFAULT_SCHEDULEDACTIVATION_FLOW = "webScheduledActivation";
 
-    final static public String TRUE = "true";
-    final static public String FALSE = "false";
-    final static public StringAttribute ATT_TRUE = new StringAttribute(TRUE);
-    final static public StringAttribute ATT_FALSE = new StringAttribute(FALSE);
+
+    final static public StringAttribute ATT_TRUE = new StringAttribute(MgnlCoreConstants.TRUE);
+    final static public StringAttribute ATT_FALSE = new StringAttribute(MgnlCoreConstants.FALSE);
 
     final static public String WEBSITE_REPOSITORY = "website";
 
-    final static public String PREFIX_USER = "user-";
-    final static public String PREFIX_GROUP = "group-";
-    final static public String PREFIX_ROLE = "role-";
+    final static public String WORKFLOW_EMAIL_TEMPLATE = "workflowEmail";
+    final static public String WORKFLOW_EMAIL_FROM_FIELD = "MagnoliaWorkflow";
+    final static public String WORKFLOW_EMAIL_SUBJECT_FIELD = "Workflow Request";
 
-
-    final static public int PREFIX_USER_LEN = PREFIX_USER.length();
-    final static public int PREFIX_GROUP_LEN = PREFIX_GROUP.length();
-    final static public int PREFIX_ROLE_LEN = PREFIX_ROLE.length();
 
 }

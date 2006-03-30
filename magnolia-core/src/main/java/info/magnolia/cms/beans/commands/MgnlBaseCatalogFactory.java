@@ -3,7 +3,8 @@ package info.magnolia.cms.beans.commands;
 import info.magnolia.cms.util.FactoryUtil;
 import org.apache.commons.chain.Catalog;
 import org.apache.commons.chain.CatalogFactory;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,7 +17,7 @@ import java.util.Iterator;
  */
 public class MgnlBaseCatalogFactory extends CatalogFactory implements MgnlCatalogFactory {
 
-    static Logger log = Logger.getLogger(MgnlBaseCatalogFactory.class);
+    static Logger log = LoggerFactory.getLogger(MgnlBaseCatalogFactory.class);
 
     static final String DEFAULT_CATALOG = "default";
 

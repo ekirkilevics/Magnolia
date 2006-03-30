@@ -1,7 +1,8 @@
 package info.magnolia.cms.beans.commands;
 
 import org.apache.commons.chain.impl.CatalogBase;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Base class for a  catalog implementation for magnolia
@@ -10,7 +11,7 @@ import org.apache.log4j.Logger;
  */
 public abstract class MgnlBaseCatalog extends CatalogBase implements MgnlCatalog {
 
-    static Logger log = Logger.getLogger(MgnlBaseCatalog.class);
+    static Logger log = LoggerFactory.getLogger(MgnlBaseCatalog.class);
 
     public abstract void initCatalog(String defaultCatalog);
 

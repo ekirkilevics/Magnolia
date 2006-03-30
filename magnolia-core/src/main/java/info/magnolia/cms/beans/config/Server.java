@@ -105,8 +105,6 @@ public final class Server {
             for (int i = 0; i < MAIL_SETTINGS.length; i++)
                 if (cachedMailSettings.containsKey(MAIL_SETTINGS[i]))
                     log.debug("Mail setting:" + MAIL_SETTINGS[i] + "=[" + cachedMailSettings.get(MAIL_SETTINGS[i]));
-
-
     }
 
     private static void addPossiblyNullKeyToMap(String key, String value, Map map, boolean putKeyIfNull) {

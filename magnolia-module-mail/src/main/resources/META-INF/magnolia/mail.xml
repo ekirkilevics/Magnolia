@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module SYSTEM "module.dtd" >
+<module>
+    <name>mail</name>
+    <class>info.magnolia.cms.mail.Engine</class>
+    <version>3.0</version>
+    <displayName>Magnolia templating mail</displayName>
+</module>

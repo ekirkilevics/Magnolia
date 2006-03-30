@@ -3,7 +3,8 @@ package info.magnolia.cms.beans.commands;
 import info.magnolia.cms.util.FactoryUtil;
 import org.apache.commons.chain.Catalog;
 import org.apache.commons.chain.CatalogFactory;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is used for backward compatibility to access tree and flow commands. We
@@ -14,7 +15,7 @@ import org.apache.log4j.Logger;
  */
 public class CommandsMap {
 
-    private static Logger log = Logger.getLogger(CommandsMap.class);
+    private static Logger log = LoggerFactory.getLogger(CommandsMap.class);
 
     static Class klass;
 
