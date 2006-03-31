@@ -12,6 +12,15 @@
  */
 package info.magnolia.cms.gui.control.list;
 
+import info.magnolia.cms.core.Content;
+
+import javax.jcr.version.VersionIterator;
+import javax.jcr.version.Version;
+import javax.jcr.RepositoryException;
+import java.util.*;
+
+import org.apache.log4j.Logger;
+
 
 /**
  * @author Sameer Charles
@@ -20,13 +29,68 @@ package info.magnolia.cms.gui.control.list;
 public class VersionListViewModel extends SearchListViewModel {
 
     /**
-     * this must be implemented by implementing classes
-     *
+     * Logger
+     * */
+    private static final Logger log = Logger.getLogger(VersionListViewModel.class);
+
+    /**
+     * versioned node
+     * */
+    private Content content;
+
+    /**
+     * constructor
+     * */
+    public VersionListViewModel(Content content) {
+        this.content = content;
+    }
+
+    /**
      * @return Iterator over found records
      * @see ListViewIterator
      */
     public ListViewIterator iterator() {
-        return null;
+        try {
+            return new ListViewIteratorImpl((List) this.doSort(this.getAllVersions()), this.getGroupBy());
+        } catch (RepositoryException re) {
+            log.error("Failed to get ListViewIterator, returning blank Iterator");
+            log.error(re.getMessage(), re);
+        }
+        return new ListViewIteratorImpl(new ArrayList(), this.getGroupBy());
     }
 
+    /**
+     * get all versions
+     * @return all versions in a collection
+     * */
+    private Collection getAllVersions() throws RepositoryException {
+        VersionIterator iterator = this.content.getVersionHistory().getAllVersions();
+        Collection allVersions = new ArrayList();
+        while (iterator.hasNext()) {
+            Version version = iterator.nextVersion();
+            allVersions.add(this.content.getVersionedContent(version));
+        }
+        return allVersions;
+    }
+
+    /**
+     * sort
+     * @param collection
+     * @return sorted collection
+     * */
+    private Collection doSort(Collection collection) {
+        Collections.sort((List) collection, new ListComparator());
+        return collection;
+    }
+
+    /**
+     * Does simple or sub ordering
+     * */
+    private class ListComparator implements Comparator {
+
+        public int compare(Object object, Object object1) {
+            return 0;
+        }
+    }
+    
 }
