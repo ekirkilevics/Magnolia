@@ -23,6 +23,7 @@ import javax.jcr.RepositoryException;
 import java.util.*;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -82,7 +83,12 @@ public class VersionListModel extends AbstractListModel {
      * @return sorted collection
      * */
     private Collection doSort(Collection collection) {
-        Collections.sort((List) collection, new ListComparator());
+        if (StringUtils.isNotEmpty(this.getGroupBy())) {
+            Collections.sort((List) collection, new ListComparator(this.getGroupBy(), this.getSortBy()));
+        }
+        if (StringUtils.isNotEmpty(this.getGroupBy()) && StringUtils.isNotEmpty(this.getSortBy())) { // sub sort
+            Collections.sort((List) collection, new ListComparator(this.getGroupBy(), this.getSortBy()));
+        }
         return collection;
     }
 
@@ -91,9 +97,51 @@ public class VersionListModel extends AbstractListModel {
      * */
     private class ListComparator implements Comparator {
 
+        private String groupBy;
+
+        private String sortBy;
+
+        ListComparator(String groupBy, String sortBy) {
+            this.groupBy = groupBy;
+            this.sortBy = sortBy;
+        }
+
         public int compare(Object object, Object object1) {
+            if (StringUtils.isNotEmpty(this.groupBy)) {
+                return this.group(object, object1);
+            } else if (StringUtils.isNotEmpty(this.sortBy)) {
+                return this.subSort(object, object1);
+            }
             return 0;
         }
+
+        /**
+         * group by
+         * @param object to be compared
+         * @param object1 to be compared
+         * */
+        private int group(Object object, Object object1) {
+            String firstKey = ((Content) object).getNodeData(this.groupBy).getString();
+            String secondKey = ((Content) object1).getNodeData(this.groupBy).getString();
+            return firstKey.compareTo(secondKey);
+        }
+
+        /**
+         * sub sort
+         * @param object to be compared
+         * @param object1 to be compared
+         * */
+        private int subSort(Object object, Object object1) {
+            String firstKey = ((Content) object).getNodeData(this.groupBy).getString();
+            String secondKey = ((Content) object1).getNodeData(this.groupBy).getString();
+            String subSortFirstKey = ((Content) object).getNodeData(this.sortBy).getString();
+            String subSortSecondKey = ((Content) object1).getNodeData(this.sortBy).getString();
+            if (firstKey.equalsIgnoreCase(secondKey)) {
+                return subSortFirstKey.compareTo(subSortSecondKey);
+            }
+            return -1;
+        }
+
     }
-    
+
 }
