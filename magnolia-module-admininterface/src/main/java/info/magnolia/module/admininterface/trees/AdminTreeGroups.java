@@ -6,12 +6,9 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.gui.control.ContextMenu;
 import info.magnolia.cms.gui.control.ContextMenuItem;
-import info.magnolia.cms.gui.control.FunctionBar;
 import info.magnolia.cms.gui.control.FunctionBarItem;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.control.TreeColumn;
-import info.magnolia.cms.i18n.Messages;
-import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 
 import javax.servlet.http.HttpServletRequest;
