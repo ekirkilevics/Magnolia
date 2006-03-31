@@ -470,7 +470,7 @@ public class DialogRichedit extends DialogBox {
             out.write(" frameborder=\"0\""); //$NON-NLS-1$
             out.write(" src=\"" //$NON-NLS-1$
                     + this.getRequest().getContextPath()
-                    + "/.magnolia/dialogpages/richEIFrame.html?" //$NON-NLS-1$
+                    + "/.magnolia/pages/richEIFrame.html?" //$NON-NLS-1$
                     + SESSION_ATTRIBUTENAME_DIALOGOBJECT
                     + "=" //$NON-NLS-1$
                     + this.getConfigValue(SESSION_ATTRIBUTENAME_DIALOGOBJECT)
