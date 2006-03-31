@@ -18,7 +18,7 @@ import info.magnolia.cms.gui.query.SearchQuery;
  * @author Sameer Charles
  * $Id$
  */
-public abstract class AbstractListModel {
+public abstract class AbstractListModel implements ListModel {
 
 
     /**

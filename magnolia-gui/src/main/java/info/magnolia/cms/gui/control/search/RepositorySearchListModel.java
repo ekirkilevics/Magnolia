@@ -31,12 +31,12 @@ import org.apache.commons.lang.StringUtils;
  * @author Sameer Charles
  * $Id$
  */
-public class SQLSearchListModel extends AbstractListModel {
+public class RepositorySearchListModel extends AbstractListModel {
 
     /**
      * Logger
      * */
-    private static Logger log = Logger.getLogger(SQLSearchListModel.class);
+    private static Logger log = Logger.getLogger(RepositorySearchListModel.class);
 
     /**
      * repository id
@@ -61,7 +61,7 @@ public class SQLSearchListModel extends AbstractListModel {
     /**
      * default constructor
      * */
-    public SQLSearchListModel(String repositoryId) {
+    public RepositorySearchListModel(String repositoryId) {
         this.repositoryId = repositoryId;
     }
 
