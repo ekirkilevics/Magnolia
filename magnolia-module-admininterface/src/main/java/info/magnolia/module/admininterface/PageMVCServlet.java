@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * @author Philipp Bracher
  * @version $Id$
  */
-public class DialogPageMVCServlet extends MVCServlet {
+public class PageMVCServlet extends MVCServlet {
 
     /**
      * Stable serialVersionUID.
@@ -38,7 +38,7 @@ public class DialogPageMVCServlet extends MVCServlet {
     /**
      * Logger.
      */
-    private static Logger log = LoggerFactory.getLogger(DialogPageMVCServlet.class);
+    private static Logger log = LoggerFactory.getLogger(PageMVCServlet.class);
 
     /**
      *
@@ -54,11 +54,11 @@ public class DialogPageMVCServlet extends MVCServlet {
             if (StringUtils.isEmpty(pageName)) {
                 pageName = request.getRequestURI();
             }
-            pageName = StringUtils.replaceOnce(StringUtils.substringAfterLast(pageName, "/dialogpages/"), ".html", //$NON-NLS-1$ //$NON-NLS-2$
+            pageName = StringUtils.replaceOnce(StringUtils.substringAfterLast(pageName, "/pages/"), ".html", //$NON-NLS-1$ //$NON-NLS-2$
                 StringUtils.EMPTY);
         }
 
-        DialogPageMVCHandler handler = null;
+        PageMVCHandler handler = null;
 
         if (pageName != null) {
             // try to get a registered handler
@@ -66,7 +66,7 @@ public class DialogPageMVCServlet extends MVCServlet {
                 handler = PageHandlerManager.getInstance().getDialogPageHandler(pageName, request, response);
             }
             catch (InvalidDialogPageHandlerException e) {
-                log.error("no dialogpage found: " + pageName); //$NON-NLS-1$
+                log.error("no page found: [" + pageName + "]"); //$NON-NLS-1$
             }
         }
         else {

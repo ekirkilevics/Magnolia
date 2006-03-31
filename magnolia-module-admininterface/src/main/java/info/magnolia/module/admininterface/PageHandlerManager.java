@@ -59,7 +59,7 @@ public class PageHandlerManager extends ObservedManager {
      * @param response
      * @returnn an instance of the handlers
      */
-    public DialogPageMVCHandler getDialogPageHandler(String name, HttpServletRequest request,
+    public PageMVCHandler getDialogPageHandler(String name, HttpServletRequest request,
         HttpServletResponse response) {
 
         Class dialogPageHandlerClass = (Class) dialogPageHandlers.get(name);
@@ -72,15 +72,15 @@ public class PageHandlerManager extends ObservedManager {
                 String.class,
                 HttpServletRequest.class,
                 HttpServletResponse.class});
-            return (DialogPageMVCHandler) constructor.newInstance(new Object[]{name, request, response});
+            return (PageMVCHandler) constructor.newInstance(new Object[]{name, request, response});
         }
         catch (Exception e) {
             throw new InvalidDialogPageHandlerException(name, e);
         }
     }
 
-    protected void registerDialogPageHandler(String name, Class dialogPageHandler) {
-        log.info("Registering dialogpage handler [" + name + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+    protected void registerPageHandler(String name, Class dialogPageHandler) {
+        log.info("Registering page handler [" + name + "]"); //$NON-NLS-1$ //$NON-NLS-2$
         dialogPageHandlers.put(name, dialogPageHandler);
     }
 
@@ -98,7 +98,7 @@ public class PageHandlerManager extends ObservedManager {
                 String name = page.getNodeData("name").getString(); //$NON-NLS-1$
                 String className = page.getNodeData("class").getString(); //$NON-NLS-1$
                 try {
-                    registerDialogPageHandler(name, Class.forName(className));
+                    registerPageHandler(name, Class.forName(className));
                 }
                 catch (ClassNotFoundException e) {
                     log.warn("can't find dialogpage handler class " + className, e); //$NON-NLS-1$
@@ -106,7 +106,7 @@ public class PageHandlerManager extends ObservedManager {
             }
         }
         catch (Exception e) {
-            log.warn("can't find dialogpages configuration", e); //$NON-NLS-1$
+            log.warn("can't find pages configuration", e); //$NON-NLS-1$
         }
     }
 

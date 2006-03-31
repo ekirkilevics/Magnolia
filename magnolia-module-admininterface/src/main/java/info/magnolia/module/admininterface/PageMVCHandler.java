@@ -18,23 +18,28 @@ import info.magnolia.cms.servlets.MVCServletHandlerImpl;
 import info.magnolia.cms.util.RequestFormUtil;
 import info.magnolia.cms.util.Resource;
 
-import java.io.IOException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
- * This is the MVCHandler for simple dialog pages.
+ * This is the MVCHandler for simple pages.
  * @author Philipp Bracher
  * @version $Revision$
  */
 
-public abstract class DialogPageMVCHandler extends MVCServletHandlerImpl {
+public abstract class PageMVCHandler extends MVCServletHandlerImpl {
+
+    /**
+     * The name of the parameter passed by the request. Not used for simple pages.
+     */
+    protected static final String COMMAND_PARAMETER_NAME = "cmd";
 
     protected static final String COMMAND_SHOW = "show"; //$NON-NLS-1$
 
-    protected static final String VIEW_DRAW = "draw"; //$NON-NLS-1$
+    protected static final String VIEW_SHOW = "render"; //$NON-NLS-1$
 
     /**
      * the request passed by the MVCServlet
@@ -51,15 +56,22 @@ public abstract class DialogPageMVCHandler extends MVCServletHandlerImpl {
      */
     protected MultipartForm form;
 
+    /**
+     * The messages used for this page
+     */
     protected info.magnolia.cms.i18n.Messages msgs;
 
+    /**
+     * Parameters passed by the request. 
+     */
     protected RequestFormUtil params;
 
     /**
+     * 
      * @param request
      * @param response
      */
-    public DialogPageMVCHandler(String name, HttpServletRequest request, HttpServletResponse response) {
+    public PageMVCHandler(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
 
         this.request = request;
@@ -74,27 +86,19 @@ public abstract class DialogPageMVCHandler extends MVCServletHandlerImpl {
      * @see info.magnolia.cms.servlets.MVCServletHandler#getCommand()
      */
     public String getCommand() {
+        if(StringUtils.isNotEmpty(params.getParameter(COMMAND_PARAMETER_NAME))){
+            return params.getParameter(COMMAND_PARAMETER_NAME);
+        }
         return COMMAND_SHOW;
     }
 
     /**
-     * @return
+     * This is an empty implementation return the default show view.
+     * @return the view name
      */
     public String show() {
-        return VIEW_DRAW;
+        return VIEW_SHOW;
     }
 
-    public void renderHtml(String view) throws IOException {
-        if (VIEW_DRAW.equals(view)) {
-            try {
-                draw(request, response);
-            }
-            catch (Exception e) {
-                response.getWriter().print(e);
-            }
-        }
-    }
-
-    protected abstract void draw(HttpServletRequest request, HttpServletResponse response) throws Exception;
-
+ 
 }
