@@ -10,10 +10,12 @@
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.gui.control.list;
+package info.magnolia.cms.gui.control.version;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.gui.control.search.SearchListModel;
+import info.magnolia.cms.gui.control.list.AbstractListModel;
+import info.magnolia.cms.gui.control.list.ListModelIterator;
+import info.magnolia.cms.gui.control.list.ListModelIteratorImpl;
 
 import javax.jcr.version.VersionIterator;
 import javax.jcr.version.Version;
@@ -27,7 +29,7 @@ import org.apache.log4j.Logger;
  * @author Sameer Charles
  * $Id$
  */
-public class VersionListModel extends SearchListModel {
+public class VersionListModel extends AbstractListModel {
 
     /**
      * Logger
@@ -48,7 +50,7 @@ public class VersionListModel extends SearchListModel {
 
     /**
      * @return Iterator over found records
-     * @see ListModelIterator
+     * @see info.magnolia.cms.gui.control.list.ListModelIterator
      */
     public ListModelIterator iterator() {
         try {

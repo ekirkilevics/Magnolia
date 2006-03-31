@@ -10,17 +10,16 @@
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.gui.control.search;
+package info.magnolia.cms.gui.control.list;
 
-import info.magnolia.cms.gui.control.list.ListModelIterator;
-import info.magnolia.cms.gui.control.list.ListModel;
 import info.magnolia.cms.gui.query.SearchQuery;
 
 /**
  * @author Sameer Charles
- * $Id: SearchListModel.java 2500 2006-03-30 14:37:06Z scharles $
+ * $Id$
  */
-public abstract class SearchListModel implements ListModel {
+public abstract class AbstractListModel {
+
 
     /**
      * sort or group by order

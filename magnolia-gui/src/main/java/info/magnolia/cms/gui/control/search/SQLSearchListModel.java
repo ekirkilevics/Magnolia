@@ -16,6 +16,7 @@ import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryResult;
 import info.magnolia.cms.gui.control.list.ListModelIterator;
 import info.magnolia.cms.gui.control.list.ListModelIteratorImpl;
+import info.magnolia.cms.gui.control.list.AbstractListModel;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 
 import javax.jcr.RepositoryException;
@@ -30,7 +31,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Sameer Charles
  * $Id$
  */
-public class SQLSearchListModel extends SearchListModel {
+public class SQLSearchListModel extends AbstractListModel {
 
     /**
      * Logger
