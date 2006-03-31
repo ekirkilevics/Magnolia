@@ -87,7 +87,7 @@ public class VersionListModel extends AbstractListModel {
             Collections.sort((List) collection, new ListComparator(this.getGroupBy(), this.getSortBy()));
         }
         if (StringUtils.isNotEmpty(this.getGroupBy()) && StringUtils.isNotEmpty(this.getSortBy())) { // sub sort
-            Collections.sort((List) collection, new ListComparator(this.getGroupBy(), this.getSortBy()));
+            Collections.sort((List) collection, new ListComparator("", this.getSortBy()));
         }
         return collection;
     }
