@@ -4,6 +4,7 @@ import info.magnolia.cms.beans.commands.MgnlCommand;
 import info.magnolia.cms.mail.MgnlMailFactory;
 import info.magnolia.cms.mail.handlers.MgnlMailHandler;
 import info.magnolia.cms.mail.templates.MgnlEmail;
+import info.magnolia.cms.mail.templates.SimpleEmail;
 import info.magnolia.module.owfe.MgnlConstants;
 import org.apache.commons.chain.Context;
 import org.slf4j.Logger;
@@ -36,7 +37,8 @@ public class MailCommand extends MgnlCommand {
 
             MgnlMailFactory factory = MgnlMailFactory.getInstance();
             MgnlMailHandler handler = factory.getEmailHandler();
-            MgnlEmail email = factory.getEmail(MgnlConstants.WORKFLOW_EMAIL_TEMPLATE);
+            //MgnlEmail email = factory.getEmail(MgnlConstants.WORKFLOW_EMAIL_TEMPLATE);
+            MgnlEmail email = new SimpleEmail(factory.getSession());
             email.setFrom(MgnlConstants.WORKFLOW_EMAIL_FROM_FIELD);
             email.setSubject(MgnlConstants.WORKFLOW_EMAIL_SUBJECT_FIELD);
             email.setParameters(params);

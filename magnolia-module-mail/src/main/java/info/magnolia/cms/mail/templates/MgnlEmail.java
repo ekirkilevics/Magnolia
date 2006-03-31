@@ -1,15 +1,26 @@
 package info.magnolia.cms.mail.templates;
 
+import info.magnolia.cms.mail.MailConstants;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.activation.URLDataSource;
 import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import java.io.File;
+import java.net.URL;
 import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
 
 /**
  * Date: Mar 30, 2006
@@ -82,5 +93,40 @@ public abstract class MgnlEmail extends MimeMessage {
             ato[i] = new InternetAddress(toObj[i]);
         }
         this.setRecipients(type, ato);
+    }
+
+
+    public void setAttachments(Hashtable attachments) throws Exception {
+        if (attachments == null)
+            return;
+
+        MimeMultipart multipart = (MimeMultipart) this.getContent();
+        Iterator iter = attachments.keySet().iterator();
+        while (iter.hasNext()) {
+            MimeBodyPart messageBodyPart = new MimeBodyPart();
+            String key = (String) iter.next();
+            Object att = attachments.get(key);
+
+            if (att instanceof URL) {
+                // Fetch the image and associate to part
+                DataSource fds = new URLDataSource((URL) att);
+                //DataSource fd = new FileDataSource(file);
+                messageBodyPart.setDataHandler(new DataHandler(fds));
+
+                // Add a header to connect to the HTML
+                messageBodyPart.setHeader(MailConstants.CONTENT_ID, key);
+
+                // Add part to multi-part
+                multipart.addBodyPart(messageBodyPart);
+            } else if (att instanceof File) {
+                // Fetch the image and associate to part
+                DataSource fds = new FileDataSource((File) att);
+                messageBodyPart.setDataHandler(new DataHandler(fds));
+                // Add a header to connect to the HTML
+                messageBodyPart.setHeader(MailConstants.CONTENT_ID, key);
+                // Add part to multi-part
+                multipart.addBodyPart(messageBodyPart);
+            }
+        }
     }
 }

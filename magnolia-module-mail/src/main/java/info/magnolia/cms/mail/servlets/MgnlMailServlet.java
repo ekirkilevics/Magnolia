@@ -15,10 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringBufferInputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Servlet to send email using the email module.
@@ -39,10 +36,12 @@ public class MgnlMailServlet extends javax.servlet.http.HttpServlet {
     private static final String PARAMETERS = "parameters";
     private static final String FILE = "file";
     private static final String TEMPLATE = "template";
+    public static final String ATT_ID = "att";
+    public static final String ACTION = "action";
 
     protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
         RequestFormUtil request = new RequestFormUtil(httpServletRequest);
-        if (request.getParameter("action") == null) {
+        if (request.getParameter(ACTION) == null) {
             this.doGet(httpServletRequest, httpServletResponse);
             return;
         }
@@ -55,25 +54,36 @@ public class MgnlMailServlet extends javax.servlet.http.HttpServlet {
         String cc = request.getParameter(CCRECIPIENTS);
         String parameters = request.getParameter(PARAMETERS);
         String template = request.getParameter(TEMPLATE);
-        Document doc = null;
+        Document doc;
+        Hashtable attachment = new Hashtable(1);
         try {
             doc = request.getDocument(FILE);
+            attachment.put(ATT_ID, doc.getFile());
         } catch (Exception e) {
-            log.info("No Attachment");
+            log.info("No Attachment", e);
         }
 
         try {
             MgnlMailFactory factory = MgnlMailFactory.getInstance();
             MgnlMailHandler handler = factory.getEmailHandler();
+
+            HashMap map = convertToMap(parameters);
+            map.put(MailConstants.MAIL_ATTACHMENT, attachment);
+
             MgnlEmail email = factory.getEmailFromType(type);
             email.setFrom(from);
             email.setSubject(subject);
             email.setToList(factory.convertEmailList(to));
-            email.setBody(text, convertToMap(parameters));
+            email.setBody(text, map);
             email.setTemplate(template);
             email.setCcList(factory.convertEmailList(cc));
             log.info("Email:" + email.toString());
             handler.prepareAndSendMail(email);
+
+            PrintWriter writer = httpServletResponse.getWriter();
+            writer.write("<p class=\"success\">");
+            writer.write("Mail was sent to " + from);
+            writer.write("</p>");
         }
         catch (Exception e) {
             log.error("Error while sending email", e);
@@ -107,6 +117,8 @@ public class MgnlMailServlet extends javax.servlet.http.HttpServlet {
                 "<!--\n " +
                 "body    { background-color: rgb(255,255,255); color: rgb(0,0,0); margin: 0px 0px; font-size: 10pt ; font-family: verdana}" +
                 "p.error       { font-size: 8pt; color: red; }" +
+                "p.success { font-size: 8pt; color: green; }" +
+                "p.comments { font-size: 7pt; }" +
                 "textArea {color: blue }" +
                 "input {color:blue ; font-size: 10pt}" +
                 "table {font-size: 10pt}" +
@@ -132,7 +144,7 @@ public class MgnlMailServlet extends javax.servlet.http.HttpServlet {
 
         // Email edit area
         sb.append("<form method=\"post\">");
-        sb.append("<input type=\"hidden\"  width=\"80%\" name=\"action\" value=\"action\"/>");
+        sb.append("<input type=\"hidden\"  width=\"80%\" name=\"" + ACTION + "\" value=\"action\"/>");
         sb.append("<table>");
 
         sb.append("<tr>");
@@ -167,7 +179,7 @@ public class MgnlMailServlet extends javax.servlet.http.HttpServlet {
 
         sb.append("<tr>");
         sb.append("<td>Attach:</td>");
-        sb.append("<td><input cols=\"80\" width=\"80%\"type=\"file\" name=\"" + FILE + "\">");
+        sb.append("<td><input cols=\"80\" width=\"80%\"type=\"file\" name=\"" + FILE + "\"><p class=\"comments\">The attachment has a default id of '" + ATT_ID + "'. This is only limited in the servlet</p>");
         sb.append("</tr>");
 
         sb.append("<tr>");

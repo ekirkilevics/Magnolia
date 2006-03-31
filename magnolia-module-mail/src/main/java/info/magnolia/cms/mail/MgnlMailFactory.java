@@ -156,7 +156,7 @@ public class MgnlMailFactory {
     void initParam(HierarchyManager hm, Content configNode, String param, String defaultValue) {
         try {
             if (hm.isExist(MailConstants.SERVER_MAIL + "/" + param)) {
-                NodeData nd = configNode.getNodeData(MailConstants.SMTP_SERVER);
+                NodeData nd = configNode.getNodeData(param);
                 String value = nd.getValue().getString();
                 if (!value.equalsIgnoreCase("")) {
                     log.info("Init param[" + param + "] with value:[" + value + "]");

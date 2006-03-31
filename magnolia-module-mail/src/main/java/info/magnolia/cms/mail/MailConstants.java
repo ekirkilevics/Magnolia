@@ -32,8 +32,11 @@ public interface MailConstants {
     public static final String MAIL_TEMPLATE_SIMPLE = "simple";
     public static final String MAIL_TEMPLATE_STATIC = "static";
 
+    public static final String MAIL_ATTACHMENT = "attachment";
+
     public static final InternetAddress DEFAULT_FROM = new InternetAddress();
 
     public static final String MAIL_HANDLER_INTERFACE = "info.magnolia.cms.mail.handlers.MgnlMailHandler";
 
+    String CONTENT_ID = "Content-ID";
 }
