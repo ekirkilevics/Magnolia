@@ -21,7 +21,7 @@
     <sv:value>true</sv:value>
   </sv:property>
   <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.module.admininterface.dialogpages.UserAddToGroupsIncludeDialogPage</sv:value>
+    <sv:value>info.magnolia.module.admininterface.pages.UserAddToGroupsIncludeDialogPage</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:created" sv:type="Date">
     <sv:value>2006-03-28T11:03:08.381+08:00</sv:value>
