@@ -110,7 +110,7 @@ public class GroupAssignRolesDialog extends ConfiguredDialog{
         DialogInclude roles = DialogFactory.getDialogIncludeInstance(request, response, storageNode, null);
         roles.setLabel("roles"); //$NON-NLS-1$
         roles.setName("aclRolesRepository"); //$NON-NLS-1$
-        roles.setConfig("file", "/.magnolia/dialogpages/groupEditRolesInclude.html"); //$NON-NLS-1$ //$NON-NLS-2$
+        roles.setConfig("file", "/.magnolia/pages/groupEditRolesInclude.html"); //$NON-NLS-1$ //$NON-NLS-2$
         tab.addSub(roles);
 
         DialogButton addRole = DialogFactory.getDialogButtonInstance(request, response, null, null);

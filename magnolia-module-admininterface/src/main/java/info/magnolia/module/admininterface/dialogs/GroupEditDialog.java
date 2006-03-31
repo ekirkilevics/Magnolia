@@ -107,7 +107,7 @@ public class GroupEditDialog extends ConfiguredDialog {
         DialogInclude users = DialogFactory.getDialogIncludeInstance(request, response, storageNode, null);
         users.setLabel("users"); //$NON-NLS-1$
         users.setName("aclRolesRepository"); //$NON-NLS-1$
-        users.setConfig("file", "/.magnolia/dialogpages/groupEditUsersInclude.html"); //$NON-NLS-1$ //$NON-NLS-2$
+        users.setConfig("file", "/.magnolia/pages/groupEditUsersInclude.html"); //$NON-NLS-1$ //$NON-NLS-2$
         tab.addSub(users);
 
         DialogButton addUser = DialogFactory.getDialogButtonInstance(request, response, null, null);

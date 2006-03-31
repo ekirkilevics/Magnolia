@@ -104,7 +104,7 @@ public class UserRolesEditDialog extends ConfiguredDialog {
         DialogInclude acl = DialogFactory.getDialogIncludeInstance(request, response, storageNode, null);
         acl.setBoxType(DialogBox.BOXTYPE_1COL);
         acl.setName("aclRolesRepository"); //$NON-NLS-1$
-        acl.setConfig("file", "/.magnolia/dialogpages/userRolesEditAclInclude.html"); //$NON-NLS-1$ //$NON-NLS-2$
+        acl.setConfig("file", "/.magnolia/pages/userRolesEditAclInclude.html"); //$NON-NLS-1$ //$NON-NLS-2$
         tab1.addSub(acl);
 
         dialog.setConfig("saveOnclick", "aclFormSubmit();"); //$NON-NLS-1$ //$NON-NLS-2$

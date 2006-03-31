@@ -97,7 +97,7 @@ public class UserAddToGroupsDialog extends ConfiguredDialog {
         DialogInclude groups = DialogFactory.getDialogIncludeInstance(request, response, storageNode, null);
         groups.setLabel("Groups"); //$NON-NLS-1$
         groups.setName("aclRolesRepository"); //$NON-NLS-1$
-        groups.setConfig("file", "/.magnolia/dialogpages/userAddToGroupsInclude.html"); //$NON-NLS-1$ //$NON-NLS-2$
+        groups.setConfig("file", "/.magnolia/pages/userAddToGroupsInclude.html"); //$NON-NLS-1$ //$NON-NLS-2$
         tab.addSub(groups);
 
         DialogButton add = DialogFactory.getDialogButtonInstance(request, response, null, null);
