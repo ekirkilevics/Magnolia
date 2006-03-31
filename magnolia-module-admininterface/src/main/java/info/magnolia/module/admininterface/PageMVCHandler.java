@@ -44,27 +44,27 @@ public abstract class PageMVCHandler extends MVCServletHandlerImpl {
     /**
      * the request passed by the MVCServlet
      */
-    protected HttpServletRequest request;
+    private HttpServletRequest request;
 
     /**
      * The repsonse passed by the MVCServlet
      */
-    protected HttpServletResponse response;
+    private HttpServletResponse response;
 
     /**
      * The posted multipart form. Use params for easy access.
      */
-    protected MultipartForm form;
+    private MultipartForm form;
 
     /**
      * The messages used for this page
      */
-    protected info.magnolia.cms.i18n.Messages msgs;
+    private info.magnolia.cms.i18n.Messages msgs;
 
     /**
      * Parameters passed by the request. 
      */
-    protected RequestFormUtil params;
+    private RequestFormUtil params;
 
     /**
      * 
@@ -74,20 +74,20 @@ public abstract class PageMVCHandler extends MVCServletHandlerImpl {
     public PageMVCHandler(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
 
-        this.request = request;
-        this.response = response;
+        this.setRequest(request);
+        this.setResponse(response);
 
-        form = Resource.getPostedForm(request);
-        params = new RequestFormUtil(request, form);
-        msgs = MessagesManager.getMessages();
+        setForm(Resource.getPostedForm(request));
+        setParams(new RequestFormUtil(request, getForm()));
+        setMsgs(MessagesManager.getMessages());
     }
 
     /*
      * @see info.magnolia.cms.servlets.MVCServletHandler#getCommand()
      */
     public String getCommand() {
-        if(StringUtils.isNotEmpty(params.getParameter(COMMAND_PARAMETER_NAME))){
-            return params.getParameter(COMMAND_PARAMETER_NAME);
+        if(StringUtils.isNotEmpty(getParams().getParameter(COMMAND_PARAMETER_NAME))){
+            return getParams().getParameter(COMMAND_PARAMETER_NAME);
         }
         return COMMAND_SHOW;
     }
@@ -98,6 +98,76 @@ public abstract class PageMVCHandler extends MVCServletHandlerImpl {
      */
     public String show() {
         return VIEW_SHOW;
+    }
+
+    /**
+     * @param request The request to set.
+     */
+    protected void setRequest(HttpServletRequest request) {
+        this.request = request;
+    }
+
+    /**
+     * @return Returns the request.
+     */
+    protected HttpServletRequest getRequest() {
+        return request;
+    }
+
+    /**
+     * @param response The response to set.
+     */
+    protected void setResponse(HttpServletResponse response) {
+        this.response = response;
+    }
+
+    /**
+     * @return Returns the response.
+     */
+    protected HttpServletResponse getResponse() {
+        return response;
+    }
+
+    /**
+     * @param form The form to set.
+     */
+    protected void setForm(MultipartForm form) {
+        this.form = form;
+    }
+
+    /**
+     * @return Returns the form.
+     */
+    protected MultipartForm getForm() {
+        return form;
+    }
+
+    /**
+     * @param msgs The msgs to set.
+     */
+    protected void setMsgs(info.magnolia.cms.i18n.Messages msgs) {
+        this.msgs = msgs;
+    }
+
+    /**
+     * @return Returns the msgs.
+     */
+    protected info.magnolia.cms.i18n.Messages getMsgs() {
+        return msgs;
+    }
+
+    /**
+     * @param params The params to set.
+     */
+    protected void setParams(RequestFormUtil params) {
+        this.params = params;
+    }
+
+    /**
+     * @return Returns the params.
+     */
+    protected RequestFormUtil getParams() {
+        return params;
     }
 
  

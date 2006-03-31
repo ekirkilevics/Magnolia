@@ -56,7 +56,7 @@ public class TemplatedMVCHandler extends PageMVCHandler {
     public void renderHtml(String view) throws IOException {
         Map data = new HashMap();
         data.put("this", this);
-        FreeMarkerUtil.process(this.getTemplateName(view), data, response.getWriter());
+        FreeMarkerUtil.process(this.getTemplateName(view), data, getResponse().getWriter());
     }
 
 }

@@ -42,10 +42,10 @@ public abstract class SimplePageMVCHandler extends PageMVCHandler {
     public void renderHtml(String view) throws IOException {
         if (VIEW_SHOW.equals(view)) {
             try {
-                render(request, response);
+                render(getRequest(), getResponse());
             }
             catch (Exception e) {
-                response.getWriter().print(e);
+                getResponse().getWriter().print(e);
             }
         }
     }
