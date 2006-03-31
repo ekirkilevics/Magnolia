@@ -8,12 +8,16 @@ import info.magnolia.cms.mail.handlers.MgnlMailHandler;
 import info.magnolia.cms.mail.templates.*;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.MgnlCoreConstants;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Properties;
 
 /**
@@ -24,17 +28,8 @@ import java.util.Properties;
 public class MgnlMailFactory {
 
     private static Logger log = LoggerFactory.getLogger(MgnlMailFactory.class);
-
     private static MgnlMailFactory factory = new MgnlMailFactory();
-    private static final String MailHandlerInterface = "info.magnolia.cms.mail.handlers.MgnlMailHandler";
-
-    private String smtpServer = "localhost";
-    private String smtpPort = "25";
-    private String smtpUser;
-    private String smtpPassword;
-    private String smtpAuth = "false";
-    private String smtpSendPartial = "true";
-
+    private Hashtable mailParameters;
     private static Class mailHandlerClass;
 
 
@@ -45,9 +40,10 @@ public class MgnlMailFactory {
             log.error("Could not init MgnlMailFactory", e);
         }
         try {
+            mailParameters = new Hashtable();
             initMailParameter();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Could not init parameters", e);
             // should go for the moment
         }
     }
@@ -60,17 +56,35 @@ public class MgnlMailFactory {
         return (MgnlMailHandler) FactoryUtil.getSingleton(mailHandlerClass);
     }
 
-    public MgnlEmail getEmail(String id) throws Exception {
+    /**
+     * Data is fetch into the repository to get the different parameters of the email
+     *
+     * @param id the id to find under the template section of the repository
+     * @return a new <code>MgnlMail</code> instance, with the template set
+     * @throws Exception if fails
+     */
+    public MgnlEmail getEmailFromTemplate(String id) throws Exception {
         if (id == null)
             return new StaticEmail(getSession());
         HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
         Content node = hm.getContent(MailConstants.MAIL_TEMPLATES_PATH + "/" + id);
         NodeData data = node.getNodeData(MailConstants.MAIL_TEMPLATE);
         String type = data.getValue().getString();
+        MgnlEmail mail = getEmailFromType(type);
+        mail.setTemplate(id);
+        return mail;
+    }
 
+    /**
+     * Return an instance of the mail type, given a string description.
+     *
+     * @param type the type of the email as defined in <code>MailConstants</code>
+     * @return a new <code>MgnlEmail</code> instance, template is not set.
+     * @throws Exception if fails
+     */
+    public MgnlEmail getEmailFromType(String type) throws Exception {
         if (type.equalsIgnoreCase(MailConstants.MAIL_TEMPLATE_VELOCITY)) {
             VelocityEmail mail = new VelocityEmail(getSession());
-            mail.setTemplate(id);
             return mail;
         } else if (type.equalsIgnoreCase(MailConstants.MAIL_TEMPLATE_HTML))
             return new HtmlEmail(getSession());
@@ -79,52 +93,86 @@ public class MgnlMailFactory {
         else return new StaticEmail(getSession());
     }
 
+    /**
+     * List the templates stored in the repository
+     * //TODO: this should be loaded once and reloaded when needed
+     *
+     * @return <code>ArrayList</code> of <code>String</code> containing the template name
+     */
+    public ArrayList listTemplatesFromRepository() {
+        ArrayList list = new ArrayList();
+        try {
+            HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
+            Content node = hm.getContent(MailConstants.MAIL_TEMPLATES_PATH);
+            Iterator iter = node.getChildren().iterator();
+
+            while (iter.hasNext()) {
+                Content temp = (Content) iter.next();
+                list.add(temp.getName());
+            }
+        } catch (javax.jcr.PathNotFoundException pne) {
+            log.error("Path for templates was not found");
+        } catch (Exception e) {
+            log.error("Error while listing templates", e);
+        } finally {
+            return list;
+        }
+    }
+
+
     public Session getSession() {
-        Properties props = System.getProperties();
-        props.put("mail.smtp.host", smtpServer);
-        props.put("mail.smtp.port", smtpPort);
+        Properties props = new Properties(); //System.getProperties(); should I try to use the system properties ?
+        props.put("mail.smtp.host", mailParameters.get(MailConstants.SMTP_SERVER));
+        props.put("mail.smtp.port", mailParameters.get(MailConstants.SMTP_PORT));
         Authenticator auth = null;
-        if (Boolean.valueOf(smtpAuth).booleanValue()) {
-            props.put("mail.smtp.auth", "true");
-            props.put("mail.smtp.user", smtpUser);
+        if (Boolean.valueOf((String) mailParameters.get(MailConstants.SMTP_AUTH)).booleanValue()) {
+            props.put("mail.smtp.auth", MgnlCoreConstants.TRUE);
+            props.put("mail.smtp.user", mailParameters.get(MailConstants.SMTP_USER));
             auth = new Authenticator() {
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(smtpUser, smtpPassword);
+                    return new PasswordAuthentication((String) mailParameters.get(MailConstants.SMTP_USER), (String) mailParameters.get(MailConstants.SMTP_PASSWORD));
                 }
             };
         }
-        props.put("mail.smtp.sendpartial", smtpSendPartial);
+        props.put("mail.smtp.sendpartial", mailParameters.get(MailConstants.SMTP_SEND_PARTIAL));
         return Session.getInstance(props, auth);
     }
 
     void initMailParameter() throws Exception {
         HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
         Content node = hm.getContent(MailConstants.SERVER_MAIL);
+        initParam(hm, node, MailConstants.SMTP_SERVER, "localhost");
+        initParam(hm, node, MailConstants.SMTP_PORT, "25");
+        initParam(hm, node, MailConstants.SMTP_USER, StringUtils.EMPTY);
+        initParam(hm, node, MailConstants.SMTP_PASSWORD, StringUtils.EMPTY);
 
-        NodeData nd;
-        nd = node.getNodeData(MailConstants.SMTP_SERVER);
-        if (nd != null)
-            smtpServer = nd.getValue().getString();
+        initParam(hm, node, MailConstants.SMTP_AUTH, StringUtils.EMPTY);
+        initParam(hm, node, MailConstants.SMTP_SEND_PARTIAL, StringUtils.EMPTY);
+    }
 
-        nd = node.getNodeData(MailConstants.SMTP_PORT);
-        if (nd != null)
-            smtpPort = nd.getValue().getString();
-
-        nd = node.getNodeData(MailConstants.SMTP_USER);
-        if (nd != null)
-            smtpUser = nd.getValue().getString();
-
-        nd = node.getNodeData(MailConstants.SMTP_PASSWORD);
-        if (nd != null)
-            smtpPassword = nd.getValue().getString();
-
-        nd = node.getNodeData(MailConstants.SMTP_AUTH);
-        if (nd != null)
-            smtpAuth = nd.getValue().getString();
-
-        nd = node.getNodeData(MailConstants.SMTP_SEND_PARTIAL);
-        if (nd != null)
-            smtpAuth = nd.getValue().getString();
+    /**
+     * Method to init a stmp parameter
+     */
+    void initParam(HierarchyManager hm, Content configNode, String param, String defaultValue) {
+        try {
+            if (hm.isExist(MailConstants.SERVER_MAIL + "/" + param)) {
+                NodeData nd = configNode.getNodeData(MailConstants.SMTP_SERVER);
+                String value = nd.getValue().getString();
+                if (!value.equalsIgnoreCase("")) {
+                    log.info("Init param[" + param + "] with value:[" + value + "]");
+                    mailParameters.put(param, value);
+                } else {
+                    log.info("Init param[" + param + "] with value:[" + defaultValue + " (default)]");
+                    mailParameters.put(param, defaultValue);
+                }
+            } else {
+                log.info("No path for param[" + param + "]. Using default:[" + defaultValue + "]");
+                mailParameters.put(param, defaultValue);
+            }
+        } catch (Exception e) {
+            log.error("Failed to load value for param[" + param + "]. Using default:[" + defaultValue + "]", e);
+            mailParameters.put(param, defaultValue);
+        }
     }
 
     /**

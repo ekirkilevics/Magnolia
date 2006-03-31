@@ -29,6 +29,8 @@ public interface MailConstants {
     public static final String MAIL_TEMPLATE = "template";
     public static final String MAIL_TEMPLATE_HTML = "html";
     public static final String MAIL_TEMPLATE_VELOCITY = "velocity";
+    public static final String MAIL_TEMPLATE_SIMPLE = "simple";
+    public static final String MAIL_TEMPLATE_STATIC = "static";
 
     public static final InternetAddress DEFAULT_FROM = new InternetAddress();
 

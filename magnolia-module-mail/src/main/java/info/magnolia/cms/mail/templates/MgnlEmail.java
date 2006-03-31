@@ -1,5 +1,6 @@
 package info.magnolia.cms.mail.templates;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,6 +74,8 @@ public abstract class MgnlEmail extends MimeMessage {
     }
 
     private void setListByString(String to, Message.RecipientType type) throws Exception {
+        if (to == null || to.equals(StringUtils.EMPTY))
+            return;
         String[] toObj = to.split("\n");
         Address[] ato = new Address[toObj.length];
         for (int i = 0; i < toObj.length; i++) {

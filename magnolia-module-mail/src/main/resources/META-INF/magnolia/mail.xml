@@ -5,4 +5,17 @@
     <class>info.magnolia.cms.mail.Engine</class>
     <version>3.0</version>
     <displayName>Magnolia templating mail</displayName>
+    <servlets>
+        <servlet>
+            <class>info.magnolia.cms.mail.servlets.MgnlMailServlet</class>
+            <mappings>
+                <mapping>/Mail</mapping>
+            </mappings>
+            <name>Mail</name>
+            <comment>Servlet to send email using the email system.</comment>
+            <params>
+                <!--              <param></param> -->
+            </params>
+        </servlet>
+    </servlets>
 </module>

@@ -24,8 +24,8 @@ public class VelocityEmail extends MgnlEmail {
         }
     }
 
-    public VelocityEmail(Session session) throws Exception {
-        super(session);
+    public VelocityEmail(Session _session) throws Exception {
+        super(_session);
         this.setHeader(MailConstants.CONTENT_TYPE, MailConstants.TEXT_HTML_UTF);
     }
 
@@ -33,7 +33,12 @@ public class VelocityEmail extends MgnlEmail {
         VelocityContext context = new VelocityContext(parameters);
         /* lets render a template */
         StringWriter w = new StringWriter();
-        Velocity.mergeTemplate(getClass().getResource(MailConstants.VELOCITY_MAIL_PATH + this.getTemplate() + ".vm").getFile(), context, w);
-        this.setContent(w.toString(), MailConstants.TEXT_HTML_UTF);
+        if (this.getTemplate() == null) {
+            log.error("No template defined for this mail. Copying the text as is");
+            this.setContent(body, MailConstants.TEXT_PLAIN_UTF);
+        } else {
+            Velocity.mergeTemplate(getClass().getResource(MailConstants.VELOCITY_MAIL_PATH + this.getTemplate() + ".vm").getFile(), context, w);
+            this.setContent(w.toString(), MailConstants.TEXT_HTML_UTF);
+        }
     }
 }
