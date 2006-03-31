@@ -71,7 +71,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="class" sv:type="String">
-      <sv:value>info.magnolia.module.admininterface.dialogpages.RichEditorIFrameDialogPage</sv:value>
+      <sv:value>info.magnolia.module.admininterface.pages.RichEditorIFrameDialogPage</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-10T21:27:02.854+01:00</sv:value>
@@ -126,7 +126,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="class" sv:type="String">
-      <sv:value>info.magnolia.module.admininterface.dialogpages.LinkBrowserDialogPage</sv:value>
+      <sv:value>info.magnolia.module.admininterface.pages.LinkBrowserDialogPage</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-10T21:27:02.889+01:00</sv:value>
@@ -181,7 +181,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="class" sv:type="String">
-      <sv:value>info.magnolia.module.admininterface.dialogpages.WebDavIFrameDialogPage</sv:value>
+      <sv:value>info.magnolia.module.admininterface.pages.WebDavIFrameDialogPage</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-10T21:27:02.901+01:00</sv:value>
@@ -236,7 +236,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="class" sv:type="String">
-      <sv:value>info.magnolia.module.admininterface.dialogpages.UserRolesEditIncludeAclDialogPage</sv:value>
+      <sv:value>info.magnolia.module.admininterface.pages.UserRolesEditIncludeAclDialogPage</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-10T21:27:02.911+01:00</sv:value>
@@ -291,7 +291,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="class" sv:type="String">
-      <sv:value>info.magnolia.module.admininterface.dialogpages.UserEditIncludeRolesDialogPage</sv:value>
+      <sv:value>info.magnolia.module.admininterface.pages.UserEditIncludeRolesDialogPage</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-10T21:27:02.918+01:00</sv:value>
@@ -346,7 +346,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="class" sv:type="String">
-      <sv:value>info.magnolia.module.admininterface.dialogpages.GroupEditRolesIncludeDialogPage</sv:value>
+      <sv:value>info.magnolia.module.admininterface.pages.GroupEditRolesIncludeDialogPage</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-10T21:27:29.443+01:00</sv:value>
@@ -386,7 +386,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="class" sv:type="String">
-      <sv:value>info.magnolia.module.admininterface.dialogpages.GroupEditUsersIncludeDialogPage</sv:value>
+      <sv:value>info.magnolia.module.admininterface.pages.GroupEditUsersIncludeDialogPage</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-10T21:27:29.493+01:00</sv:value>
