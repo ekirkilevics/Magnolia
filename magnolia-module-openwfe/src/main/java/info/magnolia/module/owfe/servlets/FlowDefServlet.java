@@ -75,8 +75,8 @@ public class FlowDefServlet extends javax.servlet.http.HttpServlet implements
             sb.append("<form action=\"FlowDef\" method=\"get\">");
             sb.append("<input type=\"hidden\" name=\"method\" value=\"setDate\"/>" +
             		"path:<input name=\"path\" />" +
-            		"start date:<input name=\"startDate\" value="+new Timestamp(System.currentTimeMillis()).toString()+" />" +
-            				"stop date:<input name=\"stopDate\" value="+new Timestamp(System.currentTimeMillis()).toString()+" />"); 
+            		"start date:<input name=\"startDate\" value=\""+new Timestamp(System.currentTimeMillis()).toString()+"\" />" +
+            				"stop date:<input name=\"stopDate\" value=\""+new Timestamp(System.currentTimeMillis()).toString()+"\" />"); 
             sb.append("<br/>");
             sb.append("<input type=\"submit\" value=\"test\"></input>");
             sb.append("</form>");
@@ -224,9 +224,9 @@ public class FlowDefServlet extends javax.servlet.http.HttpServlet implements
         Calendar start_c = Calendar.getInstance();
         Calendar stop_c = Calendar.getInstance();
         start_c.setTime(new Date(Timestamp.valueOf(start).getTime()));
-        ct.getMetaData("startDate").setStartTime(start_c);
+        ct.getMetaData().setStartTime(start_c);
         stop_c.setTime(new Date(Timestamp.valueOf(stop).getTime()));		
-		ct.getMetaData("endDate").setEndTime(stop_c);
+		ct.getMetaData().setEndTime(stop_c);
 		hm.save();
 		return "set date ok. path " + pathSelected +", start date " + start + ", stop date " + stop;
     }

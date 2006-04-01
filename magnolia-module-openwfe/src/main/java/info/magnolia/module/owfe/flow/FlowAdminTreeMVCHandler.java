@@ -64,21 +64,23 @@ public abstract class FlowAdminTreeMVCHandler extends AdminTreeMVCHandler {
         Content ct = null;
         try{
         	ct = hm.getContent(pathSelected);
+    		params.put("startDate", ct.getMetaData().getStartTime().toString());
+    		params.put("endDate", ct.getMetaData().getEndTime().toString());
         }catch(Exception e){
-        	log.error("can not get content node for path " + pathSelected, e);
+        	log.error("can not get start/end date for path " + pathSelected+", please use sevlet FlowDef to set start/end date for node.", e);
         }        
-		params.put(MgnlConstants.P_PATH, pathSelected);		
-		params.put("startDate", ct.getMetaData("startDate").getStartTime().toString());
-		params.put("endDate", ct.getMetaData("endDate").getEndTime()).toString();
-		
+        
+		params.put(MgnlConstants.P_PATH, pathSelected);	
 		
 		String recursive = "false";
 		if (request.getParameter("recursive")!=null)
 			recursive = "true";
 		params.put(MgnlConstants.P_RECURSIVE, recursive);
+
+		// for testing
 		log.info("recursive = " + recursive);
-		log.info("start date = " +  ct.getMetaData("startDate").getStartTime());
-		log.info("end date = " +  ct.getMetaData("endDate").getEndTime());
+		log.info("start date = " +  ct.getMetaData().getStartTime());
+		log.info("end date = " +  ct.getMetaData().getEndTime());
 		
 
         Context context = (MgnlContext.hasInstance()) ? MgnlContext.getInstance() : new WebContextImpl();
