@@ -24,14 +24,9 @@ public class StringSearchQueryParameter extends SearchQueryParameter {
     public static final String CONTAINS = "contains";
 
     /**
-     * sql constraint "IS"
+     * sql constraint "LIKE"
      * */
-    public static final String IS = "is";
-
-    /**
-     * sql constraint "NOT"
-     * */
-    public static final String NOT = "not";
+    public static final String LIKE = "like";
 
     /**
      * sql constraint "STARTS"
@@ -66,6 +61,27 @@ public class StringSearchQueryParameter extends SearchQueryParameter {
      * */
     public void setValue(String value) {
         this.value = value;
+    }
+
+    /**
+     * get string representation
+     * @return string representation if this expression
+     * */
+    public String toString() {
+        StringBuffer buffer = new StringBuffer();
+        if (constraint.equalsIgnoreCase(StringSearchQueryParameter.LIKE)) {
+            buffer.append(this.getName());
+            buffer.append(" like '%");
+            buffer.append(this.getValue());
+            buffer.append("%'");
+        } else if (constraint.equalsIgnoreCase(StringSearchQueryParameter.CONTAINS)) {
+            buffer.append("contains(");
+            buffer.append(this.getName());
+            buffer.append(", '");
+            buffer.append(this.getValue());
+            buffer.append("')");
+        }
+        return buffer.toString();
     }
 
 

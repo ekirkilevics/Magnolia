@@ -60,4 +60,11 @@ public class DateSearchQueryParameter extends SearchQueryParameter {
         this.value = value;
     }
 
+    /**
+     * get string representation
+     * @return string representation if this expression
+     * */
+    public String toString() {
+        return "";
+    }
 }

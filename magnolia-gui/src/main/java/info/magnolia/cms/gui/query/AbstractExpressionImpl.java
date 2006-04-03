@@ -16,48 +16,70 @@ package info.magnolia.cms.gui.query;
  * @author Sameer Charles
  * $Id$
  */
-public interface SearchQueryExpression {
+public abstract class AbstractExpressionImpl implements SearchQueryExpression {
+
+    /**
+     * previous pointer
+     * */
+    private SearchQueryExpression left;
+
+    /**
+     * next pointer
+     * */
+    private SearchQueryExpression right;
 
     /**
      * get left expression
      * @return object on left
      * */
-    public SearchQueryExpression getLeft();
+    public SearchQueryExpression getLeft() {
+        return this.left;
+    }
 
     /**
      * set left expression
      * @param left object on left
      * */
-    public void setleft(SearchQueryExpression left);
+    public void setleft(SearchQueryExpression left) {
+        this.left = left;
+    }
 
     /**
      * checks if has left
      * @return true if left object exist
      * */
-    public boolean hasLeft();
+    public boolean hasLeft() {
+        return (this.getLeft()!=null);
+    }
 
     /**
      * get right expression
      * @return object on right
      * */
-    public SearchQueryExpression getRight();
+    public SearchQueryExpression getRight() {
+        return this.right;
+    }
 
     /**
      * set right expression
      * @param right object on right
      * */
-    public void setRight(SearchQueryExpression right);
+    public void setRight(SearchQueryExpression right) {
+        this.right = right;
+    }
 
     /**
      * checks if has right
      * @return true if right object exist
      * */
-    public boolean hasRight();
+    public boolean hasRight() {
+        return (this.getRight()!=null);
+    }
 
     /**
      * get string representation
      * @return string representation if this expression
      * */
-    public String toString();
+    public abstract String toString();
 
 }

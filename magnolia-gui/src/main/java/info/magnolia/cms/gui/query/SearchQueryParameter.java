@@ -16,7 +16,7 @@ package info.magnolia.cms.gui.query;
  * @author Sameer Charles
  * $Id$
  */
-public abstract class SearchQueryParameter implements SearchQueryExpression {
+public abstract class SearchQueryParameter extends AbstractExpressionImpl {
 
     /**
      * parameter name

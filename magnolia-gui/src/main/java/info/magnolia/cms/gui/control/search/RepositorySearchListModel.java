@@ -72,9 +72,27 @@ public class RepositorySearchListModel extends AbstractListModel {
      * @see ListModelIterator
      */
     public ListModelIterator iterator() {
-        //return new ListModelIteratorImpl(null, this.getGroupBy());
+        QueryBuilder builder = new QueryBuilder(this);
+        System.out.println("SQL : "+builder.getSQLStatement());
+        //return this.getResult(builder.getSQLStatement());
         return this.dummyIterator();
     }
+
+    /**
+     * execute statement
+     * @param statement
+     * */
+    private ListModelIteratorImpl getResult(String statement) {
+        try {
+            Query q = MgnlContext.getQueryManager(this.repositoryId).createQuery(statement, Query.SQL);
+            QueryResult result = q.execute();
+            return new ListModelIteratorImpl((List)result.getContent(), this.getGroupBy());
+        } catch (RepositoryException re) {
+            log.error(re);
+        }
+        return new ListModelIteratorImpl(new ArrayList(), this.getGroupBy());
+    }
+
 
     /**
      * dummy iterator, will be removed
