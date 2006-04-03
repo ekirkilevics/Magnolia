@@ -20,8 +20,8 @@ import org.apache.commons.lang.StringUtils;
  * $Id$
  *
  * package private helper class
- * at the moment only simple AND operations are supported
  * Implement this class if you need any further operations in future
+ * <b>NOTE</b> : its a very simple in-order binary traversal, order of operation is not preserved
  */
 class QueryBuilder {
 
@@ -99,8 +99,7 @@ class QueryBuilder {
     }
 
     /**
-     * build statement, assuming SearchQueryExpression is of type SearchQueryOperator
-     * NOTE : it treats all operators as AND, a very simple query builder
+     * NOTE : its a very simple in-order binary traversal, order of operation is not preserved
      * @param expression
      * */
     private void build(SearchQueryExpression expression) {

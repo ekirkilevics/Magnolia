@@ -12,13 +12,22 @@
  */
 package info.magnolia.cms.gui.query;
 
+import org.apache.log4j.Logger;
+
 import java.util.Calendar;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 /**
  * @author Sameer Charles
  * $Id$
  */
 public class DateSearchQueryParameter extends SearchQueryParameter {
+
+    /**
+     * Logger
+     * */
+    private static Logger log = Logger.getLogger(DateSearchQueryParameter.class);
 
     /**
      * sql constraint "TODAY"
@@ -36,6 +45,16 @@ public class DateSearchQueryParameter extends SearchQueryParameter {
     public static final String BEFORE = "before";
 
     /**
+     * sql constraint "IS"
+     * */
+    public static final String IS = "is";
+
+    /**
+     * default date format
+     * */
+    private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+    /**
      * @param name of this parameter
      * @param value
      * @param constraint check SearchQueryParameter constants
@@ -48,16 +67,32 @@ public class DateSearchQueryParameter extends SearchQueryParameter {
      * get value
      * @return Date
      * */
-    public Calendar getValue() {
-        return (Calendar) this.value;
+    public String getValue() {
+        return (String) this.value;
     }
 
     /**
      * set value
      * @param value Date
      * */
-    public void setValue(Calendar value) {
+    public void setValue(String value) {
         this.value = value;
+    }
+
+    /**
+     * set date format
+     * @param format
+     * */
+    public void setDateFormat(SimpleDateFormat format) {
+        this.format = format;
+    }
+
+    /**
+     * get date format
+     * @return date format, either the one which has been set or default "yyyy-MM-dd"
+     * */
+    public SimpleDateFormat getDateFormat() {
+        return this.format;
     }
 
     /**
@@ -65,6 +100,25 @@ public class DateSearchQueryParameter extends SearchQueryParameter {
      * @return string representation if this expression
      * */
     public String toString() {
-        return "";
+        if (this.getValue() == null)
+            return "";
+        try {
+            this.setValue(this.format.format(this.format.parse(this.getValue())));
+        } catch (ParseException e) {
+            log.error(e.getMessage(), e);
+            return "";
+        }
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(this.getName());
+        if (this.getConstraint().equalsIgnoreCase(BEFORE)) {
+            buffer.append(" <= TIMESTAMP '");
+        } else if (this.getConstraint().equalsIgnoreCase(AFTER)) {
+            buffer.append(" >= TIMESTAMP '");
+        } else if (this.getConstraint().equalsIgnoreCase(IS)) {
+            buffer.append(" = TIMESTAMP '");
+        }
+        buffer.append(this.getValue());
+        buffer.append("T00:00:00.000Z'");
+        return buffer.toString();
     }
 }

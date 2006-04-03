@@ -68,13 +68,15 @@ public class StringSearchQueryParameter extends SearchQueryParameter {
      * @return string representation if this expression
      * */
     public String toString() {
+        if (this.getValue() == null)
+            return "";
         StringBuffer buffer = new StringBuffer();
-        if (constraint.equalsIgnoreCase(StringSearchQueryParameter.LIKE)) {
+        if (this.getConstraint().equalsIgnoreCase(LIKE)) {
             buffer.append(this.getName());
             buffer.append(" like '%");
             buffer.append(this.getValue());
             buffer.append("%'");
-        } else if (constraint.equalsIgnoreCase(StringSearchQueryParameter.CONTAINS)) {
+        } else if (this.getConstraint().equalsIgnoreCase(CONTAINS)) {
             buffer.append("contains(");
             buffer.append(this.getName());
             buffer.append(", '");
