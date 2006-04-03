@@ -1,5 +1,7 @@
 package info.magnolia.cms.mail.templates;
 
+import info.magnolia.cms.mail.MailConstants;
+import info.magnolia.cms.mail.MailException;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,6 +77,18 @@ public abstract class MgnlEmail extends MimeMessage {
         }
     }
 
+    public void setCharsetHeader(String charset) throws MailException {
+        try {
+            StringBuffer contentType = new StringBuffer(this.getHeader(MailConstants.CONTENT_TYPE, MailConstants.TEXT_PLAIN_UTF));
+            int index = contentType.lastIndexOf(";");
+            if (index != -1)
+                contentType.substring(0, index);
+            contentType.append(MailConstants.CHARSET_HEADER_STRING).append(charset);
+        } catch (Exception e) {
+            throw new MailException("Content type is not set. Set the content type before setting the charset");
+        }
+    }
+
     public void setToList(String to) throws Exception {
         setListByString(to, Message.RecipientType.TO);
     }
@@ -98,13 +112,18 @@ public abstract class MgnlEmail extends MimeMessage {
         this.setRecipients(type, ato);
     }
 
-    public void setAttachments(ArrayList list) throws Exception {
-        // do nothing here
+
+    public void setAttachments(ArrayList list) throws MailException {
+        if (list == null)
+            return;
+        log.info("Set attachments [" + list.size() + "] for mail: [" + this.getClass().getName() + "]");
+        for (int i = 0; i < list.size(); i++) {
+            addAttachment((MailAttachment) list.get(i));
+        }
     }
 
-    public MimeMultipart addAttachment(MailAttachment attachment) throws Exception {
-        // do nothing here
-        return null;
+    public MimeMultipart addAttachment(MailAttachment attachment) throws MailException {
+        throw new MailException("Cannot add attachment to this email. It is not a Multimime email");
     }
 
 }

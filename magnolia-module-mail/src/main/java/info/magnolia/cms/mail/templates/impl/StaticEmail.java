@@ -15,11 +15,11 @@ import java.util.HashMap;
 public class StaticEmail extends MgnlEmail {
 
     //public static final String TEST_STRING = "This is a test email";
-    public static String STATIC_TEST_SUBJECT = new String("ありがとう");
+    public static String STATIC_TEST_SUBJECT = "ありがとう";
     public static String STATIC_TEST_CONTENT = "元気ですか？";
 
-    public StaticEmail(Session session) throws Exception {
-        super(session);
+    public StaticEmail(Session _session) throws Exception {
+        super(_session);
         this.setHeader(MailConstants.CONTENT_TYPE, MailConstants.TEXT_PLAIN_UTF);
         this.setContent(STATIC_TEST_CONTENT, MailConstants.TEXT_PLAIN_UTF);
         this.setSubject(STATIC_TEST_CONTENT);

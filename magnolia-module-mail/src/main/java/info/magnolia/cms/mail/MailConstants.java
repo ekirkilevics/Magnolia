@@ -46,4 +46,5 @@ public interface MailConstants {
     public static final String ATTACHMENT_NORMAL = "normal";
 
     public static final String FILE_URL_PREFIX = "file://";
+    String CHARSET_HEADER_STRING = "charset=";
 }

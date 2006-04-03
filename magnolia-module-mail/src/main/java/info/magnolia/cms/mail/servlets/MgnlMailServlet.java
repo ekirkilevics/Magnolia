@@ -261,10 +261,10 @@ public class MgnlMailServlet extends javax.servlet.http.HttpServlet {
         }
         catch (Exception e) {
             log.error("Error while getting the templates");
-        } finally {
-            buffer.append("</select>");
-            return buffer;
         }
+        buffer.append("</select>");
+        return buffer;
+
     }
 
 }

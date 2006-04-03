@@ -21,7 +21,7 @@ public class ThreadedMailHandler implements MgnlMailHandler {
     ArrayList emails = new ArrayList();
     MailThread thread; // can be replaced with a pool of thread someday
 
-    public ThreadedMailHandler() {
+    private ThreadedMailHandler() {
         thread = new MailThread();
         Thread bb = new Thread(thread);
         bb.start();
@@ -41,7 +41,7 @@ public class ThreadedMailHandler implements MgnlMailHandler {
      */
     public void prepareAndSendMail(MgnlEmail email) throws Exception {
         email.setBodyNotSetFlag(true);
-        synchronized (emails) {
+        synchronized (this) {
             emails.add(email);
         }
         thread.notify();
@@ -54,7 +54,7 @@ public class ThreadedMailHandler implements MgnlMailHandler {
      * @throws Exception if fails
      */
     public void sendMail(MgnlEmail email) throws Exception {
-        synchronized (emails) {
+        synchronized (this) {
             emails.add(email);
         }
         thread.notify();
@@ -78,7 +78,7 @@ public class ThreadedMailHandler implements MgnlMailHandler {
                     }
                 } else {
                     MgnlEmail email = null;
-                    synchronized (emails) {
+                    synchronized (this) {
                         if (emails.size() > 0) {
                             email = (MgnlEmail) emails.remove(0);
                         }
