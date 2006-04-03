@@ -11,8 +11,8 @@ import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -116,13 +116,14 @@ public abstract class MgnlEmail extends MimeMessage {
     public void setAttachments(ArrayList list) throws MailException {
         if (list == null)
             return;
-        log.info("Set attachments [" + list.size() + "] for mail: [" + this.getClass().getName() + "]");
+        if (log.isDebugEnabled())
+            log.debug("Set attachments [" + list.size() + "] for mail: [" + this.getClass().getName() + "]");
         for (int i = 0; i < list.size(); i++) {
             addAttachment((MailAttachment) list.get(i));
         }
     }
 
-    public MimeMultipart addAttachment(MailAttachment attachment) throws MailException {
+    public MimeBodyPart addAttachment(MailAttachment attachment) throws MailException {
         throw new MailException("Cannot add attachment to this email. It is not a Multimime email");
     }
 

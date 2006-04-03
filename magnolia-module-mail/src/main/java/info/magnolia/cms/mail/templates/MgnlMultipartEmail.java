@@ -7,6 +7,7 @@ import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.activation.URLDataSource;
+import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
@@ -20,17 +21,20 @@ import java.net.URL;
  */
 public abstract class MgnlMultipartEmail extends MgnlEmail {
 
-    MimeMultipart multipart;
+    protected MimeMultipart multipart;
 
     protected MgnlMultipartEmail(Session _session) {
         super(_session);
         // Create a related multi-part to combine the parts
         multipart = new MimeMultipart(MailConstants.RELATED);
-        // Associate multi-part with message
+    }
+
+    public boolean isMultipart() {
         try {
-            this.setContent(multipart);
-        } catch (Exception e) {
-            log.error("Could not set the content of the email.");
+            int count = multipart.getCount();
+            return (count > 0);
+        } catch (MessagingException e) {
+            return false;
         }
     }
 
@@ -38,15 +42,12 @@ public abstract class MgnlMultipartEmail extends MgnlEmail {
         return multipart;
     }
 
-    public MimeMultipart addAttachment(MailAttachment attachment) throws MailException {
+    public MimeBodyPart addAttachment(MailAttachment attachment) throws MailException {
 
         try {
             MimeBodyPart messageBodyPart = new MimeBodyPart();
             String key = attachment.getName();
             log.info("Found new attachment with name :" + key);
-
-            // access content of this mail
-            MimeMultipart _multipart = this.getMailMultipart();
 
             // get info on the attachment
             URL url = attachment.getURL();
@@ -65,15 +66,17 @@ public abstract class MgnlMultipartEmail extends MgnlEmail {
             // Add a header to connect to the HTML
             messageBodyPart.setHeader(MailConstants.CONTENT_ID, key);
             // Add part to multi-part
-            _multipart.addBodyPart(messageBodyPart);
+            multipart.addBodyPart(messageBodyPart);
 
             // Set the content again
-            this.setContent(_multipart);
+            this.setContent(multipart);
 
-            return _multipart;
+            return messageBodyPart;
         }
         catch (Exception e) {
             throw new MailException(e.getMessage(), e);
         }
     }
+
+    //public abstract String getContentDescription();
 }

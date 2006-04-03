@@ -23,10 +23,18 @@ public class HtmlMailTest extends TestCase implements TestConstants {
     MgnlMailFactory factory = MgnlMailFactory.getInstance();
     SimpleMailHandler handler = new SimpleMailHandler();
 
+    static int count = 0;
+
+    private String getTestMailSubject() {
+        count ++;
+        return "Test HTML [" + (count) + "]";
+    }
+
+
     public void testHtmlMail() throws Exception {
         MgnlEmail email = factory.getEmailFromType(MailConstants.MAIL_TEMPLATE_HTML);
+        email.setSubject(getTestMailSubject());
         email.setBody("<h1>Helloniko</h1>", null);
-        email.setSubject("Test Html");
         email.setToList(TEST_RECIPIENT);
         email.setFrom(TEST_SENDER);
         handler.prepareAndSendMail(email);
@@ -36,7 +44,7 @@ public class HtmlMailTest extends TestCase implements TestConstants {
         MgnlEmail email = factory.getEmailFromType(MailConstants.MAIL_TEMPLATE_HTML);
         email.setBody("<h1>Helloniko</h1><img src=\"cid:att\"/>", null);
         email.addAttachment(new MailAttachment(new URL(TEST_URL_IMAGE), "att"));
-        email.setSubject("Test Html");
+        email.setSubject(getTestMailSubject());
         email.setToList(TEST_RECIPIENT);
         email.setFrom(TEST_SENDER);
         handler.prepareAndSendMail(email);
@@ -46,7 +54,7 @@ public class HtmlMailTest extends TestCase implements TestConstants {
         MgnlEmail email = factory.getEmailFromType(MailConstants.MAIL_TEMPLATE_HTML);
         email.addAttachment(new MailAttachment(new File(TEST_FILE), "att"));
         email.setBody("<h1>Helloniko</h1><img src=\"cid:att\"/>", null);
-        email.setSubject("Test Html");
+        email.setSubject(getTestMailSubject());
         email.setToList(TEST_RECIPIENT);
         email.setFrom(TEST_SENDER);
         handler.prepareAndSendMail(email);
@@ -59,6 +67,7 @@ public class HtmlMailTest extends TestCase implements TestConstants {
         attach.add(new MailAttachment(new URL(TEST_URL_IMAGE), "att2"));
         HashMap param = new HashMap(1);
         param.put(MailConstants.MAIL_ATTACHMENT, attach);
+        email.setSubject(getTestMailSubject());
         email.setBody("<h1>Helloniko</h1><img src=\"cid:att1\"/><img src=\"cid:att2\"/>", param);
         email.setToList(TEST_RECIPIENT);
         email.setFrom(TEST_SENDER);
@@ -67,6 +76,7 @@ public class HtmlMailTest extends TestCase implements TestConstants {
 
     public void testHtmlMailWithPdf() throws Exception {
         MgnlEmail email = factory.getEmailFromType(MailConstants.MAIL_TEMPLATE_HTML);
+        email.setSubject(getTestMailSubject());
         email.setBody("<h1>Helloniko in pdf</h1>", new HashMap(0));
         email.addAttachment(new MailAttachment(new File(TEST_FILE_PDF), "att1"));
         email.setToList(TEST_RECIPIENT);
