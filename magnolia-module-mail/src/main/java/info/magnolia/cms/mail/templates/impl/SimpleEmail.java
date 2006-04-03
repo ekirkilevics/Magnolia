@@ -1,6 +1,7 @@
-package info.magnolia.cms.mail.templates;
+package info.magnolia.cms.mail.templates.impl;
 
 import info.magnolia.cms.mail.MailConstants;
+import info.magnolia.cms.mail.templates.MgnlEmail;
 
 import javax.mail.Session;
 import java.util.HashMap;

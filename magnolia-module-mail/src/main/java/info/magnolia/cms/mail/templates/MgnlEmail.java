@@ -1,26 +1,18 @@
 package info.magnolia.cms.mail.templates;
 
-import info.magnolia.cms.mail.MailConstants;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
-import javax.activation.URLDataSource;
+import javax.activation.MimetypesFileTypeMap;
 import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import java.io.File;
-import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
 
 /**
  * Date: Mar 30, 2006
@@ -30,15 +22,25 @@ import java.util.Iterator;
  */
 public abstract class MgnlEmail extends MimeMessage {
 
-    static Logger log = LoggerFactory.getLogger(MgnlEmail.class);
+    public static Logger log = LoggerFactory.getLogger(MgnlEmail.class);
+    public static final MimetypesFileTypeMap map = new MimetypesFileTypeMap();
     private String template;
     private HashMap parameters;
+    private boolean bodyNotSetFlag; // used for threads
+
+    public boolean isBodyNotSetFlag() {
+        return bodyNotSetFlag;
+    }
+
+    public void setBodyNotSetFlag(boolean _bodyNotSetFlag) {
+        this.bodyNotSetFlag = _bodyNotSetFlag;
+    }
 
     public MgnlEmail(Session _session) {
         super(_session);
     }
 
-    public abstract void setBody(String body, HashMap parameters) throws Exception;
+    public abstract void setBody(String body, HashMap _parameters) throws Exception;
 
     public void setTemplate(String _template) {
         this.template = _template;
@@ -52,15 +54,12 @@ public abstract class MgnlEmail extends MimeMessage {
         return template;
     }
 
-    public void setParameters(HashMap parameters) {
-        this.parameters = parameters;
+    public void setParameters(HashMap _parameters) {
+        this.parameters = _parameters;
     }
 
-
     public void setBody() throws Exception {
-        if (template == null)
-            ;//throw new RuntimeException("Body template was not set");
-        else
+        if (template != null)
             this.setBody(template, parameters);
     }
 
@@ -84,6 +83,10 @@ public abstract class MgnlEmail extends MimeMessage {
         setListByString(to, Message.RecipientType.CC);
     }
 
+    public void setBccList(String to) throws Exception {
+        setListByString(to, Message.RecipientType.BCC);
+    }
+
     private void setListByString(String to, Message.RecipientType type) throws Exception {
         if (to == null || to.equals(StringUtils.EMPTY))
             return;
@@ -95,38 +98,13 @@ public abstract class MgnlEmail extends MimeMessage {
         this.setRecipients(type, ato);
     }
 
-
-    public void setAttachments(Hashtable attachments) throws Exception {
-        if (attachments == null)
-            return;
-
-        MimeMultipart multipart = (MimeMultipart) this.getContent();
-        Iterator iter = attachments.keySet().iterator();
-        while (iter.hasNext()) {
-            MimeBodyPart messageBodyPart = new MimeBodyPart();
-            String key = (String) iter.next();
-            Object att = attachments.get(key);
-
-            if (att instanceof URL) {
-                // Fetch the image and associate to part
-                DataSource fds = new URLDataSource((URL) att);
-                //DataSource fd = new FileDataSource(file);
-                messageBodyPart.setDataHandler(new DataHandler(fds));
-
-                // Add a header to connect to the HTML
-                messageBodyPart.setHeader(MailConstants.CONTENT_ID, key);
-
-                // Add part to multi-part
-                multipart.addBodyPart(messageBodyPart);
-            } else if (att instanceof File) {
-                // Fetch the image and associate to part
-                DataSource fds = new FileDataSource((File) att);
-                messageBodyPart.setDataHandler(new DataHandler(fds));
-                // Add a header to connect to the HTML
-                messageBodyPart.setHeader(MailConstants.CONTENT_ID, key);
-                // Add part to multi-part
-                multipart.addBodyPart(messageBodyPart);
-            }
-        }
+    public void setAttachments(ArrayList list) throws Exception {
+        // do nothing here
     }
+
+    public MimeMultipart addAttachment(MailAttachment attachment) throws Exception {
+        // do nothing here
+        return null;
+    }
+
 }

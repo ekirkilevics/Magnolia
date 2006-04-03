@@ -5,7 +5,11 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.mail.handlers.MgnlMailHandler;
-import info.magnolia.cms.mail.templates.*;
+import info.magnolia.cms.mail.templates.MgnlEmail;
+import info.magnolia.cms.mail.templates.impl.HtmlEmail;
+import info.magnolia.cms.mail.templates.impl.SimpleEmail;
+import info.magnolia.cms.mail.templates.impl.StaticEmail;
+import info.magnolia.cms.mail.templates.impl.VelocityEmail;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.MgnlCoreConstants;
 import org.apache.commons.lang.StringUtils;
@@ -84,13 +88,14 @@ public class MgnlMailFactory {
      */
     public MgnlEmail getEmailFromType(String type) throws Exception {
         if (type.equalsIgnoreCase(MailConstants.MAIL_TEMPLATE_VELOCITY)) {
-            VelocityEmail mail = new VelocityEmail(getSession());
-            return mail;
+            return new VelocityEmail(getSession());
         } else if (type.equalsIgnoreCase(MailConstants.MAIL_TEMPLATE_HTML))
             return new HtmlEmail(getSession());
         else if (type.equalsIgnoreCase(MailConstants.MAIL_TEMPLATE_HTML))
             return new SimpleEmail(getSession());
-        else return new StaticEmail(getSession());
+        else {
+            return new StaticEmail(getSession());
+        }
     }
 
     /**
@@ -105,7 +110,6 @@ public class MgnlMailFactory {
             HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
             Content node = hm.getContent(MailConstants.MAIL_TEMPLATES_PATH);
             Iterator iter = node.getChildren().iterator();
-
             while (iter.hasNext()) {
                 Content temp = (Content) iter.next();
                 list.add(temp.getName());
@@ -114,11 +118,20 @@ public class MgnlMailFactory {
             log.error("Path for templates was not found");
         } catch (Exception e) {
             log.error("Error while listing templates", e);
-        } finally {
-            return list;
         }
+
+        return list;
+
     }
 
+
+    public void setMailParameters(Hashtable _mailParameters) {
+        this.mailParameters = _mailParameters;
+    }
+
+    public Hashtable getMailParameters() {
+        return mailParameters;
+    }
 
     public Session getSession() {
         Properties props = new Properties(); //System.getProperties(); should I try to use the system properties ?
@@ -139,13 +152,19 @@ public class MgnlMailFactory {
     }
 
     void initMailParameter() throws Exception {
-        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
-        Content node = hm.getContent(MailConstants.SERVER_MAIL);
-        initParam(hm, node, MailConstants.SMTP_SERVER, "localhost");
-        initParam(hm, node, MailConstants.SMTP_PORT, "25");
+        HierarchyManager hm = null;
+        Content node = null;
+        try {
+            hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
+            node = hm.getContent(MailConstants.SERVER_MAIL);
+        } catch (Exception e) {
+            log.info("Cannot access repository configuration");
+        }
+
+        initParam(hm, node, MailConstants.SMTP_SERVER, MailConstants.SMTP_DEFAULT_HOST);
+        initParam(hm, node, MailConstants.SMTP_PORT, MailConstants.SMTP_DEFAULT_PORT);
         initParam(hm, node, MailConstants.SMTP_USER, StringUtils.EMPTY);
         initParam(hm, node, MailConstants.SMTP_PASSWORD, StringUtils.EMPTY);
-
         initParam(hm, node, MailConstants.SMTP_AUTH, StringUtils.EMPTY);
         initParam(hm, node, MailConstants.SMTP_SEND_PARTIAL, StringUtils.EMPTY);
     }
@@ -155,14 +174,14 @@ public class MgnlMailFactory {
      */
     void initParam(HierarchyManager hm, Content configNode, String param, String defaultValue) {
         try {
-            if (hm.isExist(MailConstants.SERVER_MAIL + "/" + param)) {
+            if (hm != null && hm.isExist(MailConstants.SERVER_MAIL + "/" + param)) {
                 NodeData nd = configNode.getNodeData(param);
                 String value = nd.getValue().getString();
-                if (!value.equalsIgnoreCase("")) {
+                if (!value.equalsIgnoreCase(StringUtils.EMPTY)) {
                     log.info("Init param[" + param + "] with value:[" + value + "]");
                     mailParameters.put(param, value);
                 } else {
-                    log.info("Init param[" + param + "] with value:[" + defaultValue + " (default)]");
+                    log.info("Init param[" + param + "] with value:[" + defaultValue + " ] (default)");
                     mailParameters.put(param, defaultValue);
                 }
             } else {
@@ -179,9 +198,6 @@ public class MgnlMailFactory {
      * convert email address mapping<br>
      * <code>user-</code> will be replace by the email address of the user as stored in the user repository
      * <code>group-</code> will
-     *
-     * @param mailTo
-     * @return
      */
     public String convertEmailList(String mailTo) {
         StringBuffer ret = new StringBuffer();

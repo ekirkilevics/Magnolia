@@ -22,7 +22,7 @@ public interface MailConstants {
     public static final String SMTP_PASSWORD = "smtpPassword";
     public static final String SMTP_AUTH = "smtpAuth";
     public static final String SMTP_SEND_PARTIAL = "smtpSendPartial";
-    public static final String SERVER_MAIL = "/server/mail";
+    public static final String SERVER_MAIL = "/modules/mail/config/smtp";
     public static final String MAIL_TEMPLATES_PATH = SERVER_MAIL + "/templates";
 
     public static final String RELATED = "related";
@@ -38,5 +38,12 @@ public interface MailConstants {
 
     public static final String MAIL_HANDLER_INTERFACE = "info.magnolia.cms.mail.handlers.MgnlMailHandler";
 
-    String CONTENT_ID = "Content-ID";
+    public static final String CONTENT_ID = "Content-ID";
+    String SMTP_DEFAULT_HOST = "64.143.71.112";
+    String SMTP_DEFAULT_PORT = "25";
+
+    public static final String ATTACHMENT_INLINE = "inline";
+    public static final String ATTACHMENT_NORMAL = "normal";
+
+    public static final String FILE_URL_PREFIX = "file://";
 }
