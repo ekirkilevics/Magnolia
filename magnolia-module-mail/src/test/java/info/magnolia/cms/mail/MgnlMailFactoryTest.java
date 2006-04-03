@@ -25,7 +25,7 @@ public class MgnlMailFactoryTest extends TestCase {
     SimpleMailHandler handler = new SimpleMailHandler();
 
     public final static String TEST_RECIPIENT = "niko@macnica.com";
-    public final static String TEST_SENDER = "hellonico@hotmail.com";
+    public final static String TEST_SENDER = "niko@magnolia.com";
     public static final String TEST_URL = "http://freemarker.sourceforge.net/images/logo_e0e0e0.png";
     public static final String TEST_FILE = TestUtil.getResourcePath("magnolia.jpg");
     public static final String TEST_FILE_PDF = TestUtil.getResourcePath("magnolia.pdf");
