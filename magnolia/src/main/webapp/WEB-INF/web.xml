@@ -126,12 +126,12 @@
     </servlet>
     <servlet>
         <description>Handles the other magnolia dialogs (pages, includes, ..)</description>
-        <servlet-name>DialogPageServlet</servlet-name>
-        <servlet-class>info.magnolia.module.admininterface.DialogPageMVCServlet</servlet-class>
+        <servlet-name>PageServlet</servlet-name>
+        <servlet-class>info.magnolia.module.admininterface.PageMVCServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>fileThumbnail</servlet-name>
-        <servlet-class>info.magnolia.module.admininterface.dialogpages.FileThumbnailDialogPage</servlet-class>
+        <servlet-class>info.magnolia.module.admininterface.pages.FileThumbnailDialogPage</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ReloadI18nServlet</servlet-name>
@@ -229,8 +229,8 @@
         <url-pattern>/.magnolia/dialogs/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>DialogPageServlet</servlet-name>
-        <url-pattern>/.magnolia/dialogpages/*</url-pattern>
+        <servlet-name>PageServlet</servlet-name>
+        <url-pattern>/.magnolia/pages/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>fileThumbnail</servlet-name>
