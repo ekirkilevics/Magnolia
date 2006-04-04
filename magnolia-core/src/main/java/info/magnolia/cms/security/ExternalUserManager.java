@@ -43,7 +43,7 @@ public class ExternalUserManager implements UserManager {
      * @param subject
      * @throws UnsupportedOperationException
      */
-    public User getUserObject(Subject subject) throws UnsupportedOperationException {
+    public User getUser(Subject subject) throws UnsupportedOperationException {
         return new ExternalUser(subject);
     }
 
@@ -53,11 +53,11 @@ public class ExternalUserManager implements UserManager {
      * @param pswd
      * @throws UnsupportedOperationException
      */
-    public User getUserObject(String userId, char[] pswd) throws UnsupportedOperationException, LoginException {
+    public User getUser(String userId, char[] pswd) throws UnsupportedOperationException, LoginException {
         CredentialsCallbackHandler callbackHandler = new CredentialsCallbackHandler(userId, pswd);
         LoginContext loginContext = new LoginContext("magnolia", callbackHandler);
         loginContext.login();
         Subject subject = loginContext.getSubject();
-        return this.getUserObject(subject);
+        return this.getUser(subject);
     }
 }

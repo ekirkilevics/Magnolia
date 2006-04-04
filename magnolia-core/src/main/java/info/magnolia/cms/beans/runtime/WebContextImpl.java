@@ -69,7 +69,7 @@ public class WebContextImpl extends ContextImpl implements WebContext {
     public User getUser() {
         User user = super.getUser();
         if (user == null) {
-            user = Security.getUserManager().getUserObject(Authenticator.getSubject(request));
+            user = Security.getUserManager().getUser(Authenticator.getSubject(request));
             this.setUser(user);
         }
         return user;

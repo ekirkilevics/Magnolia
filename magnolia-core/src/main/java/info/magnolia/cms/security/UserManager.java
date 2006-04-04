@@ -53,7 +53,7 @@ public interface UserManager {
      * @param subject
      * @throws UnsupportedOperationException
      */
-    public User getUserObject(Subject subject) throws UnsupportedOperationException;
+    public User getUser(Subject subject) throws UnsupportedOperationException;
 
     /**
      * Authenticate and initialize user using jaas magnolia login module
@@ -61,5 +61,5 @@ public interface UserManager {
      * @param pswd
      * @throws UnsupportedOperationException
      */
-    public User getUserObject(String userId, char[] pswd) throws UnsupportedOperationException, LoginException;
+    public User getUser(String userId, char[] pswd) throws UnsupportedOperationException, LoginException;
 }
