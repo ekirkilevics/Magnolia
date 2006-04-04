@@ -60,10 +60,7 @@ public class JCRPersistedEngine extends PersistedEngine {
 
     }
 
-//	public JCRPersistedEngine(String engineName, boolean cached) throws ServiceException {
-//		super(engineName, cached);
-//		// TODO Auto-generated constructor stub
-//	}
+
 
 
     public JCRExpressionStore getExpStore() {

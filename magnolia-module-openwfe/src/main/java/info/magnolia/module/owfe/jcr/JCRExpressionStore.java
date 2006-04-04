@@ -23,6 +23,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+/**
+ * the expresion store using JCR
+ * @author jackie
+ *
+ */
 public class JCRExpressionStore extends AbstractExpressionStore {
 
     private final static org.apache.log4j.Logger log = org.apache.log4j.Logger
@@ -54,11 +59,20 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 
     }
 
+    /**
+     * convert the id to a valid node name
+     * @param id
+     * @return
+     */
     private String convertId(String id) {
         return StringUtils.replace(StringUtils.replace(id, "|", ""), ":", ".");
     }
 
     // interface
+    
+    /**
+     * stroe one expresion
+     */
     public void storeExpression(FlowExpression fe) throws PoolException {
         try {
             Content root = hm.getRoot();
@@ -92,6 +106,9 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 
     }
 
+    /**
+     * remove one expresion 
+     */
     public void unstoreExpression(FlowExpression fe) throws PoolException {
         try {
             // get root
@@ -151,6 +168,9 @@ public class JCRExpressionStore extends AbstractExpressionStore {
         return ret;
     }
 
+    /**
+     * load expreson by id
+     */
     public FlowExpression loadExpression(FlowExpressionId fei)
             throws PoolException {
         FlowExpression ret_fe = null;
@@ -175,6 +195,9 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 
     }
 
+    /**
+     * return a iterator of content
+     */
     public Iterator contentIterator(Class assignClass) {
         ArrayList ret = new ArrayList();
         try {
@@ -207,6 +230,9 @@ public class JCRExpressionStore extends AbstractExpressionStore {
         }
     }
 
+    /**
+     * return size of expresion
+     */
     public int size() {
         try {
             Content root = hm.getRoot();
@@ -220,6 +246,12 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 
     }
 
+    /**
+     * some testing code
+     * @param s
+     * @return
+     * @throws Exception
+     */
     public boolean doTest(String s) throws Exception {
         Content root = hm.getRoot();
         log.info("store expresion: expression id = " + s);

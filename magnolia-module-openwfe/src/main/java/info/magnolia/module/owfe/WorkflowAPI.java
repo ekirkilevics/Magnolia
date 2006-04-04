@@ -1,10 +1,16 @@
 package info.magnolia.module.owfe;
 
-import openwfe.org.engine.workitem.WorkItem;
+import info.magnolia.cms.core.HierarchyManager;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
+/**
+ * the interface for work flow in magnolia
+ * @author jackie
+ *
+ */
 public interface WorkflowAPI {
     /**
      * get all work items for the user
@@ -92,5 +98,8 @@ public interface WorkflowAPI {
      * @param userName
      */
     public void assignWorkItemToUser(String expressionId, String userName);
+    
+    
+    public void LaunchFlow(HierarchyManager hm, String path, String flowName);
 
 }

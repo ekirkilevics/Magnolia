@@ -8,6 +8,12 @@ import javax.jcr.Repository;
 
 import org.apache.log4j.Logger;
 
+
+/**
+ * A Wrapper of jcr work flow engine 
+ * @author jackie
+ *
+ */
 public class OWFEEngine{
 	/**
 	 * Logger.
@@ -35,16 +41,29 @@ public class OWFEEngine{
 				new MgnlParticipant("command-.*"));		
 	}
 		
+	/**
+	 * return the global work flow engine
+	 * @return
+	 */
 	static public JCRPersistedEngine getEngine(){
 		return wfEngine;		
 	}
 	
+	/**
+	 * return repository for owfe
+	 * @return
+	 */
 	static public Repository getOWFERepository() {
 		Repository repo = ContentRepository.getRepository(REPO_OWFE);
 		log.info("get repository for " + REPO_OWFE + "=" + repo);
 		return repo;
 	}
 	
+	/**
+	 * get hierarchy mananger for owfe repository
+	 * @param workspace
+	 * @return
+	 */
 	public static HierarchyManager getOWFEHierarchyManager(String workspace) {
 		HierarchyManager hm = null;
 		if (workspace != null)

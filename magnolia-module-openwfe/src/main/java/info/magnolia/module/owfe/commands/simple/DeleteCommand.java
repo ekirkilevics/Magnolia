@@ -10,6 +10,11 @@ import org.apache.commons.lang.StringUtils;
 import javax.jcr.RepositoryException;
 import java.util.HashMap;
 
+/**
+ * the command to delete one node
+ * @author jackie
+ *
+ */
 public class DeleteCommand extends MgnlCommand {
 
 

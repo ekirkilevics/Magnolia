@@ -12,6 +12,11 @@ import org.apache.commons.chain.Context;
 
 import java.util.HashMap;
 
+/**
+ * the deactivation command which do real deactivation
+ * @author jackie
+ *
+ */
 public class DeactivationCommand extends MgnlCommand {
     final static String[] expected = {MgnlConstants.P_PATH};
 

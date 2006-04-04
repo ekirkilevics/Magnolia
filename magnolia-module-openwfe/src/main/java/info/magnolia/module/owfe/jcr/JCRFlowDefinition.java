@@ -21,7 +21,11 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-
+/**
+ * a class to wrapper the manipulation of flow definition in JCR repository
+ * @author jackie
+ *
+ */
 public class JCRFlowDefinition {
     /**
      * Logger
@@ -206,37 +210,5 @@ public class JCRFlowDefinition {
         return null;
     }
 
-    // jaxp
-
-    // DocumentBuilderFactory factory = null;
-    // DocumentBuilder builder = null;
-    // //get a DocumentBuilderFactory from the underlying implementation
-    // factory = DocumentBuilderFactory.newInstance();
-    //
-    // //factory.setValidating(true);
-    //
-    // //get a DocumentBuilder from the factory
-    // builder = factory.newDocumentBuilder();
-    //
-    // Document doc = builder.parse(new StringBufferInputStream(flowDef));
-    // Element process_definition = doc.getDocumentElement();
-    //
-    // name = process_definition.getAttribute("name");
-
-    // String flowDef = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-    // + "<process-definition "
-    // + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
-    // +
-    // "xsi:noNamespaceSchemaLocation=\"http://www.openwfe.org/flowdef_r1.5.0.xsd\"
-    // "
-    // + "name=\"docflow\" "
-    // + "revision=\"1.0\">"
-    // + "<description language=\"default\"> "
-    // + "This just the complete flow definition of docflow process. "
-    // + "</description>" + "<sequence>" +
-    // "<participant ref=\""+ name + "\"/>" + "</sequence>"
-    // + "</process-definition>";
-
-    // HierarchyManager hm = OWFEEngine.getOWFEHierarchyManager("flowdef");
 
 }

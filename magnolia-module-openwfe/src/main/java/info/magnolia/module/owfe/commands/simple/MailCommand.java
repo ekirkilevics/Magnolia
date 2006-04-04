@@ -12,6 +12,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 
+/**
+ * the command for sending mail
+ * @author jackie
+ *
+ */
 public class MailCommand extends MgnlCommand {
     static Logger logt = LoggerFactory.getLogger(MailCommand.class);
     static final String[] parameters = {MgnlConstants.P_MAILTO, MgnlConstants.P_PATH};

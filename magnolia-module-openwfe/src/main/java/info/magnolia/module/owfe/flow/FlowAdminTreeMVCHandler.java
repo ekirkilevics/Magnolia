@@ -13,6 +13,8 @@ import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 import info.magnolia.module.owfe.MgnlConstants;
 import info.magnolia.module.owfe.commands.ParametersSetterHelper;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
@@ -64,8 +66,16 @@ public abstract class FlowAdminTreeMVCHandler extends AdminTreeMVCHandler {
         Content ct = null;
         try{
         	ct = hm.getContent(pathSelected);
-    		params.put("startDate", ct.getMetaData().getStartTime().toString());
-    		params.put("endDate", ct.getMetaData().getEndTime().toString());
+        	Calendar cd = ct.getMetaData().getStartTime();
+        	String date = new Timestamp(cd.getTimeInMillis()).toString();
+        	log.info("start date = " +  date);
+        	date = "2006-10-10";
+    		params.put("startDate", date);
+    		
+    		cd = ct.getMetaData().getEndTime();
+    		date = new Timestamp(cd.getTimeInMillis()).toString();
+        	log.info("end date = " +  date);   		
+    		params.put("endDate", date);
         }catch(Exception e){
         	log.error("can not get start/end date for path " + pathSelected+", please use sevlet FlowDef to set start/end date for node.", e);
         }        
@@ -79,11 +89,8 @@ public abstract class FlowAdminTreeMVCHandler extends AdminTreeMVCHandler {
 
 		// for testing
 		log.info("recursive = " + recursive);
-		log.info("start date = " +  ct.getMetaData().getStartTime());
-		log.info("end date = " +  ct.getMetaData().getEndTime());
 		
-
-        Context context = (MgnlContext.hasInstance()) ? MgnlContext.getInstance() : new WebContextImpl();
+		Context context = (MgnlContext.hasInstance()) ? MgnlContext.getInstance() : new WebContextImpl();
         context.put(MgnlConstants.P_REQUEST, request);
         context.put(MgnlConstants.INTREE_PARAM, params);
 

@@ -13,6 +13,11 @@ import org.apache.commons.lang.StringUtils;
 
 import java.util.HashMap;
 
+/**
+ * the activation command which do real activation
+ * @author jackie
+ *
+ */
 public class ActivationCommand extends MgnlCommand {
 
     static final String[] parameters = {MgnlConstants.P_RECURSIVE, MgnlConstants.P_PATH};
@@ -50,6 +55,12 @@ public class ActivationCommand extends MgnlCommand {
         return true;
     }
 
+    /**
+     * do real activation
+     * @param path	node path
+     * @param recursive	activet recursively or no
+     * @throws Exception
+     */
     private void doActivate(String path, boolean recursive) throws Exception {
         Rule rule = new Rule();
         rule.addAllowType(ItemType.CONTENTNODE.getSystemName());

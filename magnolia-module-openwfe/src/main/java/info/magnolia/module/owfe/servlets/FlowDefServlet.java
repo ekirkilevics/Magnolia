@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 
 /**
  * Servlet implementation class for Servlet: FlowDef
+ * This servlet is mainly for testing (add flow def, list flow xml ...)
  */
 public class FlowDefServlet extends javax.servlet.http.HttpServlet implements
         javax.servlet.Servlet {
@@ -130,6 +131,7 @@ public class FlowDefServlet extends javax.servlet.http.HttpServlet implements
                 response.setContentType("text/xml");
                 response.getWriter().print(flowdef.getNodeData("value").getString());
                 response.flushBuffer();
+                return;
             }
         }
         sb.append("<hr><p>result<p>");

@@ -10,6 +10,7 @@ import org.apache.commons.chain.Context;
 import java.util.HashMap;
 
 /**
+ * The activation command which will launch a flow
  * @author jackie
  * @author nicolas
  */

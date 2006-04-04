@@ -21,7 +21,7 @@ import java.util.HashMap;
 public abstract class AbstractFlowCommand extends MgnlCommand {
 
     public boolean exec(HashMap params, Context ctx) {
-        if (log.isDebugEnabled())
+       // if (log.isDebugEnabled())
             log.debug("- Flow command -" + this.getClass().toString() + "- Start");
         try {
             // Get the references
@@ -46,7 +46,7 @@ public abstract class AbstractFlowCommand extends MgnlCommand {
         }
 
         // End execution
-        if (log.isDebugEnabled())
+        //if (log.isDebugEnabled())
             log.debug("- Flow command -" + this.getClass().toString() + "- End");
         return true;
     }
