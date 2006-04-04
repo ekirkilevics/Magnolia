@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author jackie
  *
  */
-public interface WorkflowAPI {
+interface WorkflowAPI {
     /**
      * get all work items for the user
      *
@@ -33,7 +33,7 @@ public interface WorkflowAPI {
     /**
      * get all work items for the user
      *
-     * @param userName
+     * @param GroupName
      * @return
      * @throws Exception
      */
@@ -41,7 +41,7 @@ public interface WorkflowAPI {
     /**
      * get all work items for the user
      *
-     * @param userName
+     * @param groupName
      * @return
      * @throws Exception
      */
@@ -60,8 +60,7 @@ public interface WorkflowAPI {
      * get work itemby the index in the lis return by getWorkItems(String userName)
      *
      * @param request
-     * @param i
-     * @return
+     * @param request
      */
     //public WorkItem getWorkItem(HttpServletRequest request, int i) throws Exception;
     

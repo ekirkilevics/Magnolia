@@ -18,6 +18,8 @@ import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.User;
 
+import javax.jcr.SimpleCredentials;
+import javax.security.auth.login.LoginException;
 import java.util.Locale;
 
 
@@ -39,6 +41,13 @@ public interface Context extends org.apache.commons.chain.Context {
     public void setUser(User user);
 
     /**
+     * login in to the repository using provided credentials and set user instance for this context
+     *
+     * @param credentials
+     */
+    public void login(SimpleCredentials credentials) throws LoginException;
+
+    /**
      * Get exiting logged in user instance
      *
      * @return User
@@ -54,7 +63,6 @@ public interface Context extends org.apache.commons.chain.Context {
     /**
      * Get the current locale
      *
-     * @return
      */
     public Locale getLocale();
 
@@ -130,7 +138,6 @@ public interface Context extends org.apache.commons.chain.Context {
     /**
      * Get the default messages. It uses the locale set on this context
      *
-     * @return
      */
     public Messages getMessages();
 
@@ -138,7 +145,6 @@ public interface Context extends org.apache.commons.chain.Context {
      * Get the messages of the named bundle. It uses the locale set on this context
      *
      * @param basename name of the bundle
-     * @return
      */
     public Messages getMessages(String basename);
 

@@ -24,8 +24,6 @@ import java.util.Set;
 
 import javax.jcr.PathNotFoundException;
 import javax.security.auth.Subject;
-import javax.security.auth.login.LoginContext;
-import javax.security.auth.login.LoginException;
 
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
@@ -86,7 +84,7 @@ public class MgnlUserManager implements UserManager {
      */
     public User createUser(String name, String pw) {
         try {
-            Content node = null;
+            Content node;
             node = getHierarchyManager().createContent("/", name, ItemType.CONTENT.getSystemName());
             node.createNodeData("name").setValue(name);
             node.createNodeData("pswd").setValue(new String(Base64.encodeBase64(pw.getBytes())));
@@ -131,20 +129,6 @@ public class MgnlUserManager implements UserManager {
         }
 
         return user;
-    }
-
-    /**
-     * Authenticate and initialize user using jaas magnolia login module
-     * @param userId
-     * @param pswd
-     * @throws UnsupportedOperationException
-     */
-    public User getUser(String userId, char[] pswd) throws UnsupportedOperationException, LoginException {
-        CredentialsCallbackHandler callbackHandler = new CredentialsCallbackHandler(userId, pswd);
-        LoginContext loginContext = new LoginContext("magnolia", callbackHandler);
-        loginContext.login();
-        Subject subject = loginContext.getSubject();
-        return this.getUser(subject);
     }
 
     /**
