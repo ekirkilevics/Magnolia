@@ -12,11 +12,13 @@
  */
 package info.magnolia.cms.gui.controlx.list;
 
+import java.util.Iterator;
+
 /**
  * @author Sameer Charles
- * $Id$
+ * $Id:ListModelIterator.java 2544 2006-04-04 12:47:32Z philipp $
  */
-public interface ListModelIterator {
+public interface ListModelIterator extends Iterator {
 
     /**
      * get named value
@@ -31,20 +33,9 @@ public interface ListModelIterator {
     public String getGroupName();
 
     /**
-     * move next
-     * */
-    public void next();
-
-    /**
      * jump to next group
      * */
-    public void nextGroup();
-
-    /**
-     * checks if there is next record
-     * @return true if not EOF
-     * */
-    public boolean hasNext();
+    public Object nextGroup();
 
     /**
      * checks if there are more records in the current group

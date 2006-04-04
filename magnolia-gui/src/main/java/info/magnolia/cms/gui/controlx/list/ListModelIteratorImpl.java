@@ -101,22 +101,26 @@ public class ListModelIteratorImpl implements ListModelIterator {
     /**
      * move next
      */
-    public void next() {
+    public Object next() {
         if (this.next == null) {
             throw new NoSuchElementException();
         }
         this.current = this.next;
         this.pos++;
         prefetchNext();
+        
+        return this.current;
     }
 
     /**
      * jump to next group
      */
-    public void nextGroup() {
+    public Object nextGroup() {
+        Object tmp = null;
         while (this.hasNextInGroup()) {
-            this.next();
+            tmp = this.next();
         }
+        return tmp;
     }
 
     /**
@@ -145,6 +149,13 @@ public class ListModelIteratorImpl implements ListModelIterator {
             return false;
         }
         return true;
+    }
+
+    /**
+     * @see java.util.Iterator#remove()
+     */
+    public void remove() {
+        // not implemented
     }
 
 }
