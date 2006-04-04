@@ -1,16 +1,13 @@
 package info.magnolia.cms.mail.servlets;
 
-import com.oreilly.servlet.MultipartRequest;
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
-import info.magnolia.cms.core.Path;
 import info.magnolia.cms.mail.MailConstants;
 import info.magnolia.cms.mail.MgnlMailFactory;
 import info.magnolia.cms.mail.handlers.MgnlMailHandler;
 import info.magnolia.cms.mail.templates.MailAttachment;
 import info.magnolia.cms.mail.templates.MgnlEmail;
 import info.magnolia.cms.util.RequestFormUtil;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +17,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringBufferInputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Properties;
 
 /**
  * Servlet to send email using the email module.
@@ -51,38 +51,11 @@ public class MgnlMailServlet extends javax.servlet.http.HttpServlet {
     public static final String HTML_SELECT = "select";
     public static final String HTML_FILE = "file";
 
-    public static final int MAX_FILE_SIZE = 200000000; // 200MB
-
-    private MultipartForm parseParameters(HttpServletRequest request) throws IOException {
-        MultipartForm form = new MultipartForm();
-        String encoding = StringUtils.defaultString(request.getCharacterEncoding(), "UTF-8"); //$NON-NLS-1$
-        MultipartRequest multi = new MultipartRequest(
-                request,
-                Path.getTempDirectoryPath(),
-                MAX_FILE_SIZE,
-                encoding,
-                null);
-        Enumeration params = multi.getParameterNames();
-        while (params.hasMoreElements()) {
-            String name = (String) params.nextElement();
-            String value = multi.getParameter(name);
-            form.addParameter(name, value);
-            String[] s = multi.getParameterValues(name);
-            if (s != null) {
-                form.addparameterValues(name, s);
-            }
-        }
-        Enumeration files = multi.getFileNames();
-        while (files.hasMoreElements()) {
-            String name = (String) files.nextElement();
-            form.addDocument(name, multi.getFilesystemName(name), multi.getContentType(name), multi.getFile(name));
-        }
-        return form;
-    }
-
     protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
         try {
-            MultipartForm form = parseParameters(httpServletRequest);
+            MultipartForm form = (MultipartForm) httpServletRequest.getAttribute(MultipartForm.REQUEST_ATTRIBUTE_NAME);
+            Document doc = form.getDocument("file");
+            log.info(doc.getFileName());
 
             RequestFormUtil request = new RequestFormUtil(httpServletRequest);
 
@@ -90,8 +63,6 @@ public class MgnlMailServlet extends javax.servlet.http.HttpServlet {
                 this.doGet(httpServletRequest, httpServletResponse);
                 return;
             }
-
-            Document doc = form.getDocument("file");
 
             MailAttachment attachment = null;
             if (doc != null) {
@@ -195,7 +166,7 @@ public class MgnlMailServlet extends javax.servlet.http.HttpServlet {
         sb.append("<h1>Email Servlet</h1>");
 
         // Email edit area
-        sb.append("<form method=\"post\" action=\"/Mail2\" enctype=\"multipart/form-data\">");
+        sb.append("<form method=\"post\" enctype=\"multipart/form-data\">");
         sb.append("<input type=\"hidden\"  width=\"80%\" name=\"" + ACTION + "\" value=\"action\"/>");
         sb.append("<table>");
 

@@ -9,7 +9,7 @@
         <servlet>
             <class>info.magnolia.cms.mail.servlets.MgnlMailServlet</class>
             <mappings>
-                <mapping>/Mail</mapping>
+                <mapping>/.magnolia/mail/*</mapping>
             </mappings>
             <name>Mail</name>
             <comment>Servlet to send email using the email system.</comment>
