@@ -75,6 +75,7 @@ public class PageHandlerManager extends ObservedManager {
             return (PageMVCHandler) constructor.newInstance(new Object[]{name, request, response});
         }
         catch (Exception e) {
+            log.error("can't instantiate page ["+name+"]",  e);
             throw new InvalidDialogPageHandlerException(name, e);
         }
     }
