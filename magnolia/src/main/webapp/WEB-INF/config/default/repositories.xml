@@ -1,5 +1,5 @@
 <!--
-    $Id :$
+    $Id$
 -->
 <!DOCTYPE JCR [
 <!ELEMENT Map (#PCDATA)>
@@ -57,6 +57,16 @@
     </Repository>
 
     and define workspaces website, config, users and userroles in repository specific config
+
+    ##################################################################
+    Parameters used by jackrabbit repository provider
+    ##################################################################
+        1) configFile - configuration file to be used to register repository
+        2) repositoryHome - repository home directory
+        3) customNodeTypes - (optional) if new node types needs to be defined for this repository
+        4) contextFactoryClass - used if Repopsitory is to be registered or retrieved via JNDI
+        5) providerURL - used as JNDI init param
+        6) bindName - this will be used to bind this repository or to find an existing repository with the same name
 
     -->
     <RepositoryMapping>
