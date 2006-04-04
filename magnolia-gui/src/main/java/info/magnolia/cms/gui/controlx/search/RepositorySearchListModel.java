@@ -10,21 +10,22 @@
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.gui.control.search;
+package info.magnolia.cms.gui.controlx.search;
 
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryResult;
-import info.magnolia.cms.gui.control.list.ListModelIterator;
-import info.magnolia.cms.gui.control.list.ListModelIteratorImpl;
-import info.magnolia.cms.gui.control.list.AbstractListModel;
-import info.magnolia.cms.beans.runtime.MgnlContext;
+import info.magnolia.cms.gui.controlx.list.AbstractListModel;
+import info.magnolia.cms.gui.controlx.list.ListModelIterator;
+import info.magnolia.cms.gui.controlx.list.ListModelIteratorImpl;
 
-import javax.jcr.RepositoryException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import javax.jcr.RepositoryException;
+
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 
 /**

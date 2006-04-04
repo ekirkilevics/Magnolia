@@ -10,20 +10,25 @@
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.gui.control.version;
+package info.magnolia.cms.gui.controlx.version;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.gui.control.list.AbstractListModel;
-import info.magnolia.cms.gui.control.list.ListModelIterator;
-import info.magnolia.cms.gui.control.list.ListModelIteratorImpl;
+import info.magnolia.cms.gui.controlx.list.AbstractListModel;
+import info.magnolia.cms.gui.controlx.list.ListModelIterator;
+import info.magnolia.cms.gui.controlx.list.ListModelIteratorImpl;
 
-import javax.jcr.version.VersionIterator;
-import javax.jcr.version.Version;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import javax.jcr.RepositoryException;
-import java.util.*;
+import javax.jcr.version.Version;
+import javax.jcr.version.VersionIterator;
 
-import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -51,7 +56,7 @@ public class VersionListModel extends AbstractListModel {
 
     /**
      * @return Iterator over found records
-     * @see info.magnolia.cms.gui.control.list.ListModelIterator
+     * @see info.magnolia.cms.gui.controlx.list.ListModelIterator
      */
     public ListModelIterator iterator() {
         try {

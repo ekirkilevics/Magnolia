@@ -10,9 +10,10 @@
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.gui.control.search;
+package info.magnolia.cms.gui.controlx.search;
 
-import info.magnolia.cms.gui.query.*;
+import info.magnolia.cms.gui.query.SearchQueryExpression;
+
 import org.apache.commons.lang.StringUtils;
 
 /**
