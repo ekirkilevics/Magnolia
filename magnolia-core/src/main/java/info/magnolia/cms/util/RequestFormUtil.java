@@ -32,7 +32,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class RequestFormUtil {
 
-    private MultipartForm from;
+    private MultipartForm form;
 
     private HttpServletRequest request;
 
@@ -40,9 +40,9 @@ public class RequestFormUtil {
         this(request, Resource.getPostedForm(request));
     }
 
-    public RequestFormUtil(HttpServletRequest request, MultipartForm from) {
+    public RequestFormUtil(HttpServletRequest request, MultipartForm form) {
         super();
-        this.from = from;
+        this.form = form;
         this.request = request;
     }
 
@@ -52,7 +52,7 @@ public class RequestFormUtil {
      */
 
     public String getParameter(String name) {
-        return RequestFormUtil.getParameter(this.request, this.from, name);
+        return RequestFormUtil.getParameter(this.request, this.form, name);
     }
 
     public static String getParameter(HttpServletRequest request, String name) {
@@ -62,7 +62,7 @@ public class RequestFormUtil {
     /**
      * returns the value found in the form or the request
      * @param request
-     * @param from
+     * @param form
      * @param name
      * @return
      */
@@ -79,7 +79,7 @@ public class RequestFormUtil {
     }
 
     public String getParameter(String name, String defaultValue) {
-        return RequestFormUtil.getParameter(this.request, this.from, name, defaultValue);
+        return RequestFormUtil.getParameter(this.request, this.form, name, defaultValue);
     }
 
     public static String getParameter(HttpServletRequest request, String name, String defaultValue) {
@@ -133,7 +133,7 @@ public class RequestFormUtil {
     }
 
     public MultipartForm getFrom() {
-        return from;
+        return form;
     }
 
     /*
@@ -141,7 +141,7 @@ public class RequestFormUtil {
      * @see info.magnolia.cms.beans.runtime.MultipartForm#getDocument(java.lang.String)
      */
     public Document getDocument(String name) {
-        return from.getDocument(name);
+        return form.getDocument(name);
     }
 
     /*
@@ -149,7 +149,11 @@ public class RequestFormUtil {
      * @see info.magnolia.cms.beans.runtime.MultipartForm#getDocuments()
      */
     public Map getDocuments() {
-        return from.getDocuments();
+        if(form == null){
+            return new HashMap();
+        }
+        
+        return form.getDocuments();
     }
 
     /*
@@ -157,7 +161,10 @@ public class RequestFormUtil {
      * @see info.magnolia.cms.beans.runtime.MultipartForm#getParameters()
      */
     public Map getParameters() {
-        return from.getParameters();
+        if(form == null){
+            return this.request.getParameterMap();
+        }
+        return form.getParameters();
     }
 
     /*
@@ -165,7 +172,7 @@ public class RequestFormUtil {
      * @see info.magnolia.cms.beans.runtime.MultipartForm#getParameterValues(java.lang.String)
      */
     public String[] getParameterValues(String name) {
-        return from.getParameterValues(name);
+        return form.getParameterValues(name);
     }
 
     /*
@@ -173,7 +180,7 @@ public class RequestFormUtil {
      * @see info.magnolia.cms.beans.runtime.MultipartForm#removeParameter(java.lang.String)
      */
     public void removeParameter(String name) {
-        from.removeParameter(name);
+        form.removeParameter(name);
     }
 
 }
