@@ -52,7 +52,6 @@ public class HtmlEmail extends MgnlMultipartEmail {
                 BodyPart messageBodyPart = new MimeBodyPart();
                 messageBodyPart.setContent(o, MailConstants.TEXT_HTML_UTF);
                 multipart.addBodyPart(messageBodyPart, 0);
-                log.info(o.getClass().getName());
                 this.setContent(multipart);
             }
         }

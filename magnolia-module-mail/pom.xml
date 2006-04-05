@@ -66,6 +66,10 @@
             <artifactId>jsp-api</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+        </dependency>
     </dependencies>
     <distributionManagement>
         <site>

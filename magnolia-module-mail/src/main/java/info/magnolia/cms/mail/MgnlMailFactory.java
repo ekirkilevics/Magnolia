@@ -7,10 +7,7 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.mail.handlers.MgnlMailHandler;
 import info.magnolia.cms.mail.templates.MailAttachment;
 import info.magnolia.cms.mail.templates.MgnlEmail;
-import info.magnolia.cms.mail.templates.impl.HtmlEmail;
-import info.magnolia.cms.mail.templates.impl.SimpleEmail;
-import info.magnolia.cms.mail.templates.impl.StaticEmail;
-import info.magnolia.cms.mail.templates.impl.VelocityEmail;
+import info.magnolia.cms.mail.templates.impl.*;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.MgnlCoreConstants;
 import org.apache.commons.lang.StringUtils;
@@ -116,11 +113,13 @@ public class MgnlMailFactory {
      * @throws Exception if fails
      */
     public MgnlEmail getEmailFromType(String type) throws Exception {
-        if (type.equalsIgnoreCase(MailConstants.MAIL_TEMPLATE_VELOCITY)) {
+        if (type.equalsIgnoreCase(MailConstants.MAIL_TEMPLATE_VELOCITY))
             return new VelocityEmail(getSession());
-        } else if (type.equalsIgnoreCase(MailConstants.MAIL_TEMPLATE_HTML))
-            return new HtmlEmail(getSession());
         else if (type.equalsIgnoreCase(MailConstants.MAIL_TEMPLATE_HTML))
+            return new HtmlEmail(getSession());
+        else if (type.equalsIgnoreCase(MailConstants.MAIL_TEMPLATE_FREEMARKER))
+            return new FreemarkerEmail(getSession());
+        else if (type.equalsIgnoreCase(MailConstants.MAIL_TEMPLATE_SIMPLE))
             return new SimpleEmail(getSession());
         else {
             return new StaticEmail(getSession());

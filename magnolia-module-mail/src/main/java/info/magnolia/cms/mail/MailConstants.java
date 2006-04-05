@@ -32,6 +32,7 @@ public interface MailConstants {
     public static final String MAIL_TEMPLATE_VELOCITY = "velocity";
     public static final String MAIL_TEMPLATE_SIMPLE = "simple";
     public static final String MAIL_TEMPLATE_STATIC = "static";
+    public static final String MAIL_TEMPLATE_FREEMARKER = "freemarker";
 
     public static final String MAIL_ATTACHMENT = "attachment";
 

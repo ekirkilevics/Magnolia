@@ -1,6 +1,5 @@
 package info.magnolia.cms.mail.templates.impl;
 
-import info.magnolia.cms.mail.MailConstants;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 
@@ -29,13 +28,6 @@ public class VelocityEmail extends HtmlEmail {
 
     public VelocityEmail(Session _session) throws Exception {
         super(_session);
-    }
-
-    public void setBody(String body, HashMap parameters) throws Exception {
-        VelocityContext context = new VelocityContext(parameters);
-        StringWriter w = new StringWriter();
-        Velocity.mergeTemplate(getClass().getResource(MailConstants.VELOCITY_MAIL_PATH + body).getFile(), "UTF-8", context, w);
-        super.setBody(w.toString(), parameters);
     }
 
     public void setBodyFromResourceFile(String resourceFile, HashMap _map) throws Exception {
