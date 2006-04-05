@@ -17,14 +17,23 @@ import info.magnolia.cms.core.Content;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.lang.reflect.Method;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import javax.jcr.RepositoryException;
 
 /**
  * @author Sameer Charles
  * $Id:ListModelIteratorImpl.java 2492 2006-03-30 08:30:43Z scharles $
  */
 public class ListModelIteratorImpl implements ListModelIterator {
+
+    /**
+     * Logger
+     * */
+    private static Logger log = Logger.getLogger(ListModelIteratorImpl.class);
 
     /**
      * list holding all objects/records
@@ -85,7 +94,101 @@ public class ListModelIteratorImpl implements ListModelIterator {
      * @param name its a key to which value is attached in this record
      */
     public Object getValue(String name) {
-        return this.current.getNodeData(name).getString();
+        return this.getValue(name, this.current);
+    }
+
+    /**
+     * get value from a specified object
+     * @param name its a key to which value is attached in this record
+     * @param node
+     * */
+    private Object getValue(String name, Content node) {
+        return this.internalGetValue(name, node);
+    }
+
+    /**
+     * get internal value
+     * - first check for property in  this object
+     * - then look for the getter for this name
+     * - else search in MetaData
+     * @param name
+     * @param node
+     * */
+    private Object internalGetValue(String name, Content node) {
+        try {
+            if (node.hasNodeData(name)) {
+                return node.getNodeData(name).getString();
+            } else {
+                // check if getter exist for this name
+                try {
+                    String methodName =
+                            "get"+StringUtils.substring(name,0,1).toUpperCase() + StringUtils.substring(name,1);
+                    Method method = getClass().getMethod(methodName, new Class[] {node.getClass()});
+                    return method.invoke(this, new Object[] {node});
+                } catch (NoSuchMethodException e) {
+                    // finally check MetaData
+                    return node.getMetaData().getStringProperty(name);
+                } catch (Exception e) {
+                    log.error("Unable to locate property or method for - "+name);
+                }
+            }
+        } catch (RepositoryException e) {
+            log.error(e.getMessage(), e);
+        }
+        return StringUtils.EMPTY;
+    }
+
+    /**
+     * get name
+     * @return name of the current object
+     * */
+    public String getName() {
+        return this.getName(this.current);
+    }
+
+    /**
+     * get name
+     * @return name of the current object
+     * */
+    private String getName(Content node) {
+        return node.getName();
+    }
+
+    /**
+     * get node type
+     * @return node type
+     * */
+    public String getType() {
+        return this.getType(this.current);
+    }
+
+    /**
+     * get node type
+     * @return node type
+     * */
+    private String getType(Content node) {
+        try {
+            return node.getNodeType().getName();
+        } catch (RepositoryException re) {
+            log.error(re.getMessage(), re);
+        }
+        return StringUtils.EMPTY;
+    }
+
+    /**
+     * get path
+     * @return handle for the ciurrent object
+     * */
+    public String getPath() {
+        return this.getPath(this.current);
+    }
+
+    /**
+     * get path
+     * @return handle for the ciurrent object
+     * */
+    private String getPath(Content node) {
+        return node.getHandle();
     }
 
     /**
@@ -94,7 +197,7 @@ public class ListModelIteratorImpl implements ListModelIterator {
     public Object getValueObject() {
         return this.current;
     }
-    
+
     /**
      * get group name
      *
@@ -102,7 +205,7 @@ public class ListModelIteratorImpl implements ListModelIterator {
      */
     public String getGroupName() {
         if (StringUtils.isEmpty(this.groupKey)) return StringUtils.EMPTY;
-        return this.current.getNodeData(this.groupKey).getString();
+        return (String) this.getValue(this.groupKey, this.current);
     }
 
     /**
@@ -115,7 +218,7 @@ public class ListModelIteratorImpl implements ListModelIterator {
         this.current = this.next;
         this.pos++;
         prefetchNext();
-        
+
         return this.current;
     }
 
@@ -148,8 +251,8 @@ public class ListModelIteratorImpl implements ListModelIterator {
         if (StringUtils.isEmpty(this.groupKey)) return this.hasNext(); // no group key defined, its all one group
         else if (this.hasNext()) {
             if (this.current != null) {
-                String currentValue = this.current.getNodeData(this.groupKey).getString();
-                String nextValue = this.next.getNodeData(this.groupKey).getString();
+                String currentValue = (String) this.getValue(this.groupKey, this.current);
+                String nextValue = (String) this.getValue(this.groupKey, this.next);
                 return StringUtils.equalsIgnoreCase(currentValue, nextValue);
             }
         } else {
