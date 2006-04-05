@@ -45,7 +45,6 @@ public class FreemarkerEmail extends HtmlEmail {
         StringWriter writer = new StringWriter();
         late.process(_map, writer);
         writer.flush();
-        log.info(writer.toString());
         super.setBody(writer.toString(), _map);
     }
 }
