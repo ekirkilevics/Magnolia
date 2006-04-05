@@ -16,6 +16,7 @@ package info.magnolia.cms.gui.controlx.list;
 import info.magnolia.cms.gui.control.ContextMenu;
 import info.magnolia.cms.gui.controlx.impl.AbstractControl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -48,12 +49,12 @@ public class ListControl extends AbstractControl {
     /**
      * Fields on which you can sort
      */
-    private List sortableFields;
+    private List sortableFields = new ArrayList();
     
     /**
      * Fields you can group
      */
-    private List groupableFields;
+    private List groupableFields = new ArrayList();
     
     /**
      * Max rows shown per group

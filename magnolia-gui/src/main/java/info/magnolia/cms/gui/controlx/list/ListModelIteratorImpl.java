@@ -150,7 +150,7 @@ public class ListModelIteratorImpl implements ListModelIterator {
      * get name
      * @return name of the current object
      * */
-    private String getName(Content node) {
+    public String getName(Content node) {
         return node.getName();
     }
 
@@ -166,7 +166,7 @@ public class ListModelIteratorImpl implements ListModelIterator {
      * get node type
      * @return node type
      * */
-    private String getType(Content node) {
+    public String getType(Content node) {
         try {
             return node.getNodeType().getName();
         } catch (RepositoryException re) {
@@ -187,7 +187,7 @@ public class ListModelIteratorImpl implements ListModelIterator {
      * get path
      * @return handle for the ciurrent object
      * */
-    private String getPath(Content node) {
+    public String getPath(Content node) {
         return node.getHandle();
     }
 

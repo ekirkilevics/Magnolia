@@ -10,21 +10,25 @@
  * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.gui.controlx.list;
+package info.magnolia.cms.gui.controlx.search;
 
 import info.magnolia.cms.gui.controlx.Control;
 import info.magnolia.cms.gui.controlx.Renderer;
 
+
 /**
- * Renders a column in a list.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  *
  */
-public class ListColumnRenderer implements Renderer {
+public class SearchFormRenderer implements Renderer {
 
+    /**
+     * @see info.magnolia.cms.gui.controlx.search.SearchFormRenderer#render(info.magnolia.cms.gui.controlx.search.SearchForm)
+     */
     public String render(Control control) {
-        ListColumn column = (ListColumn) control;
-        return column.getValue().toString();
+        SearchForm form = (SearchForm) control;
+        return "the form";
     }
+
 }

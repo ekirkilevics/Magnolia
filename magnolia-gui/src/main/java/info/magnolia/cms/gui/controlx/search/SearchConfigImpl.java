@@ -10,21 +10,30 @@
  * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.gui.controlx.list;
+package info.magnolia.cms.gui.controlx.search;
 
-import info.magnolia.cms.gui.controlx.Control;
-import info.magnolia.cms.gui.controlx.Renderer;
+import org.apache.commons.collections.OrderedMap;
+import org.apache.commons.collections.map.ListOrderedMap;
+
 
 /**
- * Renders a column in a list.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  *
  */
-public class ListColumnRenderer implements Renderer {
+public class SearchConfigImpl implements SearchConfig {
 
-    public String render(Control control) {
-        ListColumn column = (ListColumn) control;
-        return column.getValue().toString();
+    private OrderedMap controlDefinitions = new ListOrderedMap();
+
+    /**
+     * @return Returns the controls.
+     */
+    public OrderedMap getControlDefinitions() {
+        return this.controlDefinitions;
     }
+
+    public void addControlDefinition(SearchControlDefinition def) {
+        controlDefinitions.put(def.getName(), def); 
+    }
+
 }

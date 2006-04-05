@@ -29,9 +29,9 @@ public class ListColumn extends AbstractControl{
     public static final String RENDER_TYPE = "listColumn";
 
     /**
-     * The name of the column.
+     * The columnName of the column.
      */
-    private String name;
+    private String columnName;
     
     /**
      * The label showed 
@@ -47,26 +47,28 @@ public class ListColumn extends AbstractControl{
      * Show a separator after this column
      */
     private boolean separator;
-    
-    /**
-     * Create a new column.
-     * @param name
-     * @param label
-     * @param width
-     * @param separator
-     */
-    public ListColumn(String name, String label, String width, boolean separator) {
-        this.setRenderType(RENDER_TYPE);
-        this.setName(name);
-        this.setLabel(label);
-        this.setWidth(width);
-        this.setSeparator(separator);
-    }
-    
+
     /**
      * Empty Constructor. Used for anonymous classes.
      */
     public ListColumn() {
+        this.setRenderType(RENDER_TYPE);
+    }
+
+    /**
+     * Create a new column.
+     * @param columnName
+     * @param label
+     * @param width
+     * @param separator
+     */
+    public ListColumn(String columnName, String label, String width, boolean separator) {
+        this();
+        this.setName(columnName);
+        this.setColumnName(columnName);
+        this.setLabel(label);
+        this.setWidth(width);
+        this.setSeparator(separator);
     }
 
     /**
@@ -94,23 +96,6 @@ public class ListColumn extends AbstractControl{
     public void setLabel(String label) {
         this.label = label;
     }
-
-    
-    /**
-     * @return Returns the name.
-     */
-    public String getName() {
-        return this.name;
-    }
-
-    
-    /**
-     * @param name The name to set.
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
     
     /**
      * @return Returns the separator.
@@ -148,7 +133,23 @@ public class ListColumn extends AbstractControl{
      * @return the object to render
      */
     public Object getValue(){
-        return this.getListControl().getIteratorValue(this.getName());
+        return this.getListControl().getIteratorValue(this.getColumnName());
+    }
+
+    
+    /**
+     * @return Returns the columnName.
+     */
+    public String getColumnName() {
+        return this.columnName;
+    }
+
+    
+    /**
+     * @param columnName The columnName to set.
+     */
+    public void setColumnName(String columnName) {
+        this.columnName = columnName;
     }
 
 }

@@ -1,0 +1,38 @@
+<!-- form for sorting and grouping -->
+<form name="${this.name}Form">
+	<input type="text" name="sortField" value="${this.sortField}"/>
+	<input type="text" name="sortDirection" value="${this.sortDirection}"/>
+	<input type="text" name="groupField" value="${this.groupField}"/>
+	<input type="text" name="groupDirection" value="${this.groupDirection}"/>
+</form>
+
+<#if this.groupableFields?has_content>
+	group:<br/>
+	<#list this.groupableFields as field>
+		<a href="javascript:document.${this.name}Form.groupField.value='${field}';document.${this.name}Form.submit();">${field}</a><br/>
+	</#list>
+</#if>
+
+<#if this.sortableFields?has_content>
+	sort:<br/>
+	<#list this.sortableFields as field>
+		<a href="javascript:document.${this.name}Form.sortField.value='${field}';document.${this.name}Form.submit();">${field}</a><br/>
+	</#list>
+</#if>
+
+
+<table border="1">
+	<tr>
+		<#list this.children as column>
+			<td>${column.label}</td>
+		</#list>
+	</tr>
+	
+	<#list this.iterator as item>
+		<tr>
+			<#list this.children as column>
+				<td>${column.render()}</td>
+			</#list>
+		</tr>
+	</#list>
+</table>
