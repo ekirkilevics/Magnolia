@@ -12,6 +12,7 @@
  */
 package info.magnolia.module.admininterface;
 
+import info.magnolia.cms.gui.controlx.RenderKitFactory;
 import info.magnolia.cms.module.RegisterException;
 
 import org.slf4j.Logger;
@@ -37,6 +38,9 @@ public class Engine extends AbstractAdminModule {
         // set local store to be accessed via admin interface classes or JSP
         Store store = Store.getInstance();
         store.setStore(this.getConfigNode());
+
+        // register the admin renderer kit
+        RenderKitFactory.registerRenderKit(RenderKitFactory.ADMIN_INTERFACE_RENDER_KIT, new AdminInterfaceRenderKit());
     }
 
     /**
@@ -45,6 +49,5 @@ public class Engine extends AbstractAdminModule {
     protected void onRegister(int registerState) throws RegisterException {
         // everything done
     }
-
 
 }
