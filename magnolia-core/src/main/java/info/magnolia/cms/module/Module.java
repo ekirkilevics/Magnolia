@@ -55,6 +55,13 @@ public interface Module {
      * @throws RegisterException no update
      */
     void register(ModuleDefinition def, Content moduleNode, int registerState) throws RegisterException;
+    
+    /**
+     * Unregister a module. A module is responsible to undo all the steps done during the registration.
+     * @param def the definition of this module
+     * @param moduleNode the node in the config repository
+     */
+    void unregister(ModuleDefinition def, Content moduleNode);
 
     /**
      * At this point module is responsible to release all resources

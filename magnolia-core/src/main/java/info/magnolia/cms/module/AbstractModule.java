@@ -77,12 +77,30 @@ public abstract class AbstractModule implements Module {
             }
         }
     }
+    
+    /**
+     * @see info.magnolia.cms.module.Module#unregister(info.magnolia.cms.module.ModuleDefinition, info.magnolia.cms.core.Content)
+     */
+    public void unregister(ModuleDefinition def, Content moduleNode) {
+        // TODO implement the unrigister
+        onUnRegister();
+        // now delete the jar if existing
+        // set the restart needed
+    }
 
     /**
      * Template pattern. Implement to performe some module specific stuff
      * @param registerState
      */
-    protected abstract void onRegister(int registerState) throws RegisterException;
+    protected void onRegister(int registerState) throws RegisterException{
+        
+    }
+    
+    /**
+     * Template pattern. Implement to perform some module specific stuff.
+     */
+    protected void onUnRegister() {
+    }
 
     /**
      * @return Returns the restartNeeded.
