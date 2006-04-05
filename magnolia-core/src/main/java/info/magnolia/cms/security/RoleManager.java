@@ -30,7 +30,6 @@ public interface RoleManager {
     /**
      * Get the specifig role without any security restrictions
      * @param name
-     * @param request
      * @return the role object
      * @throws UnsupportedOperationException
      */

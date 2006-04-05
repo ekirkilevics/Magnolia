@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
  * Date: Oct 26, 2005 Time: 5:02:46 PM
  *
  * @author Sameer Charles
- * @version $Revision: 1633 $ ($Author: scharles $)
+ * @version $Revision$ ($Author$)
  */
 public class DummyUser implements User {
 

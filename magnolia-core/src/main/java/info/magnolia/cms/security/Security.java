@@ -24,7 +24,6 @@ public class Security {
 
     /**
      * Returns the current RoleManager. Depends on the configuration.
-     * @return
      */
     public static RoleManager getRoleManager() {
         return (RoleManager) FactoryUtil.getSingleton(RoleManager.class);
@@ -32,7 +31,6 @@ public class Security {
 
     /**
      * Returns the current UserManager. Depends on the configuration.
-     * @return
      */
     public static UserManager getUserManager() {
         return (UserManager) FactoryUtil.getSingleton(UserManager.class);

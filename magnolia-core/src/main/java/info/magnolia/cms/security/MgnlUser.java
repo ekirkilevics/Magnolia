@@ -57,7 +57,7 @@ public class MgnlUser implements User {
 
     /**
      * Is this user in a specified role?
-     * @param roleName the name of the role
+     * @param groupName the name of the role
      * @return true if in role
      */
     public boolean inGroup(String groupName) {

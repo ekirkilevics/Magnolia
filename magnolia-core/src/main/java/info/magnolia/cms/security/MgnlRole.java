@@ -125,7 +125,6 @@ public class MgnlRole implements Role {
      * @param aclNode
      * @param path
      * @param permission
-     * @return
      */
     private boolean existsPermission(Content aclNode, String path, long permission) {
         Collection childs = aclNode.getChildren();
