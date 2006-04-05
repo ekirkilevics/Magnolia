@@ -89,10 +89,10 @@ public class ThreadedMailHandler implements MgnlMailHandler {
                                 email.setBody();
                             try {
                                 Transport.send(email);
-                                log.info("Mail has been sent to: [" + Arrays.toString(email.getAllRecipients()) + "]");
+                                log.info("Mail has been sent to: [" + Arrays.asList(email.getAllRecipients()) + "]");
                             }
                             catch (Exception e) {
-                                log.error("Email to: [" + Arrays.toString(email.getAllRecipients()) + "] was not sent because of an error", e);
+                                log.error("Email to: [" + Arrays.asList(email.getAllRecipients()) + "] was not sent because of an error", e);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
