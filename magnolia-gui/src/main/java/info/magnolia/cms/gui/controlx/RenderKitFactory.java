@@ -12,8 +12,8 @@
  */
 package info.magnolia.cms.gui.controlx;
 
-import info.magnolia.cms.gui.controlx.impl.AdminInterfaceRenderKit;
-import info.magnolia.cms.gui.controlx.impl.WebRenderKit;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Factory to get the used RenderKit
@@ -24,45 +24,40 @@ import info.magnolia.cms.gui.controlx.impl.WebRenderKit;
 public class RenderKitFactory {
     
     /**
-     * The kit used in the admin interface
+     * RenderKit used in the admin interface
      */
-    static RenderKit adminInterfaceRenderKit = new AdminInterfaceRenderKit();
+    public static String ADMIN_INTERFACE_RENDER_KIT = "adminInterfaceRenderKit";
     
     /**
-     * Simple rendering. Less javascript, standard html controls
+     * RenderKit used in the public website. 
      */
-    static RenderKit webRenderKit = new WebRenderKit();
+    public static String WEB_RENDER_KIT = "webRenderKit";
     
     /**
-     * @return Returns the adminInterfaceRenderKit.
+     * Minimal output for testing reasons
      */
-    public static RenderKit getAdminInterfaceRenderKit() {
-        return adminInterfaceRenderKit;
+    public static String TEST_RENDER_KIT = "testRenderKit";
+    
+    /**
+     * The registered RenderKits
+     */
+    private static Map renderKits = new HashMap();
+    
+    /**
+     * Register a RenderKit
+     * @param name
+     * @param renderKit
+     */
+    public static void registerRenderKit(String name, RenderKit renderKit){
+        renderKits.put(name, renderKit);
     }
 
-    
     /**
-     * @param adminInterfaceRenderKit The adminInterfaceRenderKit to set.
+     * Get a named RenderKit
+     * @param name
+     * @return
      */
-    public static void setAdminInterfaceRenderKit(RenderKit adminInterfaceRenderKit) {
-        RenderKitFactory.adminInterfaceRenderKit = adminInterfaceRenderKit;
+    public static RenderKit getRenderKit(String name){
+        return (RenderKit) renderKits.get(name);
     }
-
-    
-    /**
-     * @return Returns the webRenderKit.
-     */
-    public static RenderKit getWebRenderKit() {
-        return webRenderKit;
-    }
-
-    
-    /**
-     * @param webRenderKit The webRenderKit to set.
-     */
-    public static void setWebRenderKit(RenderKit webRenderKit) {
-        RenderKitFactory.webRenderKit = webRenderKit;
-    }
-    
-
 }

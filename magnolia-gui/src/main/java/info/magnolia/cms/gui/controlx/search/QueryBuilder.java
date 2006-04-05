@@ -69,7 +69,7 @@ class QueryBuilder {
         if (this.statement.length() > 0) {
             select.append(" where");
         }
-        this.statement.insert(0,select);
+        this.statement.insert(0,select.toString());
     }
 
     /**

@@ -12,7 +12,6 @@
  */
 package info.magnolia.cms.gui.controlx.list;
 
-import info.magnolia.cms.gui.query.SearchQuery;
 
 /**
  * @author Sameer Charles
@@ -30,11 +29,6 @@ public abstract class AbstractListModel implements ListModel {
      * sort or group by order
      * */
     public static final String ASCENDING = "ASC";
-
-    /**
-     * search query to be used by sub implementation
-     * */
-    protected SearchQuery query;
 
     /**
      * sort by field name
@@ -55,22 +49,6 @@ public abstract class AbstractListModel implements ListModel {
      * group by order
      * */
     protected String groupByOrder;
-
-    /**
-     * set Query
-     * @param query
-     * */
-    public void setQuery(SearchQuery query) {
-        this.query = query;
-    }
-
-    /**
-     * get query
-     * @return query
-     * */
-    public SearchQuery getQuery() {
-        return this.query;
-    }
 
     /**
      * this must be implemented by implementing classes

@@ -10,25 +10,19 @@
  * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.gui.controlx.list;
+package info.magnolia.cms.gui.controlx.search;
 
-import info.magnolia.cms.gui.controlx.impl.TemplatedRenderer;
+import info.magnolia.cms.gui.controlx.list.ListModel;
+import info.magnolia.cms.gui.query.SearchQuery;
+
 
 /**
- * Renders a list view.
- * 
+ * A model allowing queries.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  *
  */
-public class ListControlRenderer extends TemplatedRenderer {
-    
-    public String onClick(ListModelIterator iter){
-        return "";
-    }
-    
-    public String onDbClick(ListModelIterator iter){
-        return "";
-    }
-    
+public interface SearchableListModel extends ListModel {
+    public SearchQuery getQuery();
+    public void setQuery(SearchQuery query);
 }

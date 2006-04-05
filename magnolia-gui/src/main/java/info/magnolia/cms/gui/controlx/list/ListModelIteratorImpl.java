@@ -89,6 +89,13 @@ public class ListModelIteratorImpl implements ListModelIterator {
     }
 
     /**
+     * @see info.magnolia.cms.gui.controlx.list.ListModelIterator#getValueObject()
+     */
+    public Object getValueObject() {
+        return this.current;
+    }
+    
+    /**
      * get group name
      *
      * @return name of the group of the current record

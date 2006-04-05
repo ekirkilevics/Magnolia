@@ -15,9 +15,9 @@ package info.magnolia.cms.gui.controlx.search;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryResult;
-import info.magnolia.cms.gui.controlx.list.AbstractListModel;
 import info.magnolia.cms.gui.controlx.list.ListModelIterator;
 import info.magnolia.cms.gui.controlx.list.ListModelIteratorImpl;
+import info.magnolia.cms.gui.query.SearchQuery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +30,9 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Sameer Charles
- * $Id$
+ * $Id:RepositorySearchListModel.java 2544 2006-04-04 12:47:32Z philipp $
  */
-public class RepositorySearchListModel extends AbstractListModel {
+public class RepositorySearchListModel extends AbstractSearchableListModel {
 
     /**
      * Logger
@@ -58,6 +58,11 @@ public class RepositorySearchListModel extends AbstractListModel {
      * search path (optional)
      * */
     private String searchPath;
+
+    /**
+     * search query to be used by sub implementation
+     * */
+    protected SearchQuery query;
 
     /**
      * default constructor
@@ -180,6 +185,22 @@ public class RepositorySearchListModel extends AbstractListModel {
      * */
     public void setSearchPath(String searchPath) {
         this.searchPath = searchPath;
+    }
+
+    /**
+     * set Query
+     * @param query
+     * */
+    public void setQuery(SearchQuery query) {
+        this.query = query;
+    }
+
+    /**
+     * get query
+     * @return query
+     * */
+    public SearchQuery getQuery() {
+        return this.query;
     }
 
 }

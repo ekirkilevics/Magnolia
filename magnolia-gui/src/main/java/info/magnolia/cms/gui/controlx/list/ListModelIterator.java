@@ -27,6 +27,12 @@ public interface ListModelIterator extends Iterator {
     public Object getValue(String name);
 
     /**
+     * The current object representing a row. Can be of any type.
+     * @return the object.
+     */
+    public Object getValueObject();
+    
+    /**
      * get group name
      * @return name of the group of the current record
      * */

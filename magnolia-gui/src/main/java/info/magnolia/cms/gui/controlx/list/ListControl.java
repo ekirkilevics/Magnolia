@@ -112,7 +112,7 @@ public class ListControl extends AbstractControl {
      * @param name
      * @return the value
      */
-    public Object getCurrentIteratorValue(String name) {
+    public Object getIteratorValue(String name) {
         return this.getIterator().getValue(name);
     }
 
@@ -120,8 +120,8 @@ public class ListControl extends AbstractControl {
      * Get the current object (not the value) in the current iterator.
      * @return the object. corresponds to a row. 
      */
-    public Object getCurrentIteratorObject() {
-        return null;
+    public Object getIteratorValueObject() {
+        return this.getIterator().getValueObject();
     }
 
     /**
@@ -220,7 +220,6 @@ public class ListControl extends AbstractControl {
     public void setSortField(String sortField) {
         this.sortField = sortField;
     }
-
 
 }
 

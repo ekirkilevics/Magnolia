@@ -22,13 +22,14 @@ import org.apache.commons.collections.OrderedMap;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.lang.StringUtils;
 
+
 /**
- * Default Implementation. Gets the nearest RenderKit in the controls tree. 
+ * Default Implementation. Gets the nearest RenderKit in the controls tree.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class AbstractControl implements Control {
+
     /**
      * Name of the control
      */
@@ -38,52 +39,52 @@ public class AbstractControl implements Control {
      * The render kit used. layzy bound.
      */
     private RenderKit renderKit;
-    
+
     /**
      * The name of the renderer to use.
      */
     private String renderType;
-    
+
     /**
      * Parent control
      */
     private Control parent;
-    
+
     /**
      * The ordered children
      */
     private OrderedMap children = new ListOrderedMap();
-    
+
     /**
      * @return Returns the parent.
      */
     public Control getParent() {
         return parent;
     }
-    
+
     /**
      * @param parent The parent to set.
      */
     public void setParent(Control parent) {
         this.parent = parent;
     }
-    
-    public void addChild(Control control){
+
+    public void addChild(Control control) {
         control.setParent(this);
-        if(StringUtils.isEmpty(this.getName())){
+        if (StringUtils.isEmpty(this.getName())) {
             control.setName(this.getName() + "_" + this.children.size());
         }
         this.children.put(control.getName(), control);
     }
-    
-    public Control getChild(String name){
+
+    public Control getChild(String name) {
         return (Control) this.children.get(name);
     }
-    
-    public Collection getChildren(){
+
+    public Collection getChildren() {
         return this.children.values();
     }
-    
+
     /**
      * @return Returns the name.
      */
@@ -91,7 +92,6 @@ public class AbstractControl implements Control {
         return name;
     }
 
-    
     /**
      * @param name The name to set.
      */
@@ -99,33 +99,33 @@ public class AbstractControl implements Control {
         this.name = name;
     }
 
-    
     /**
      * @return Returns the renderKit.
      */
     public RenderKit getRenderKit() {
-        if(this.renderKit == null){
-            if(this.getParent() != null){
-                this.renderKit = this.getParent().getRenderKit(); 
+        if (this.renderKit == null) {
+            if (this.getParent() != null) {
+                this.renderKit = this.getParent().getRenderKit();
             }
         }
         return renderKit;
     }
 
-    
     /**
      * @param renderKit The renderKit to set.
      */
     public void setRenderKit(RenderKit renderKit) {
         this.renderKit = renderKit;
     }
-    
-    public String render(){
+
+    /**
+     * Get the Renderer assigned to this render type and call its render() method.
+     */
+    public String render() {
         Renderer renderer = this.getRenderKit().getRenderer(this.getRenderType());
         return renderer.render(this);
     }
 
-    
     /**
      * @return Returns the renderType.
      */
@@ -133,13 +133,11 @@ public class AbstractControl implements Control {
         return renderType;
     }
 
-    
     /**
      * @param renderType The renderType to set.
      */
     public void setRenderType(String renderType) {
         this.renderType = renderType;
     }
-    
 
 }

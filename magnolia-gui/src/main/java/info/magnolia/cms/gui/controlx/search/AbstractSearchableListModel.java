@@ -10,20 +10,39 @@
  * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.gui.controlx.impl;
+package info.magnolia.cms.gui.controlx.search;
+
+import info.magnolia.cms.gui.controlx.list.AbstractListModel;
+import info.magnolia.cms.gui.query.SearchQuery;
 
 
 /**
- * The default render kit for the admin interface
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  *
  */
-public class AdminInterfaceRenderKit extends RenderKitImpl {
+public abstract class AbstractSearchableListModel extends AbstractListModel implements SearchableListModel {
 
     /**
-     * Register the default renderers used in the admin interface 
-     */
-    public AdminInterfaceRenderKit() {
+     * search query to be used by sub implementation
+     * */
+    protected SearchQuery query;
+
+    /**
+     * set Query
+     * @param query
+     * */
+    public void setQuery(SearchQuery query) {
+        this.query = query;
     }
+
+    /**
+     * get query
+     * @return query
+     * */
+    public SearchQuery getQuery() {
+        return this.query;
+    }
+
+
 }

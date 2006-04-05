@@ -12,6 +12,8 @@
  */
 package info.magnolia.cms.gui.controlx.list;
 
+import org.apache.commons.lang.StringUtils;
+
 import info.magnolia.cms.gui.controlx.impl.AbstractControl;
 
 /**
@@ -60,11 +62,28 @@ public class ListColumn extends AbstractControl{
         this.setWidth(width);
         this.setSeparator(separator);
     }
+    
+    /**
+     * Empty Constructor. Used for anonymous classes.
+     */
+    public ListColumn() {
+    }
+
+    /**
+     * Get the list control this column belongs to.
+     * @return the list control
+     */
+    public ListControl getListControl(){
+        return (ListControl) this.getParent();
+    }
 
     /**
      * @return Returns the label.
      */
     public String getLabel() {
+        if(StringUtils.isEmpty(this.label)){
+            return this.getName();
+        }
         return this.label;
     }
 
@@ -129,7 +148,7 @@ public class ListColumn extends AbstractControl{
      * @return the object to render
      */
     public Object getValue(){
-        return ((ListControl)this.getParent()).getCurrentIteratorValue(this.getName());
+        return this.getListControl().getIteratorValue(this.getName());
     }
 
 }
