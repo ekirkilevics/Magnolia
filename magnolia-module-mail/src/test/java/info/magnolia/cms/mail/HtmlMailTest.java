@@ -37,7 +37,7 @@ public class HtmlMailTest extends TestCase implements TestConstants {
         email.setBody("<h1>Helloniko</h1>", null);
         email.setToList(TEST_RECIPIENT);
         email.setFrom(TEST_SENDER);
-        handler.prepareAndSendMail(email);
+        //handler.prepareAndSendMail(email);
     }
 
     public void testHtmlMailWithImageURL() throws Exception {
@@ -47,7 +47,7 @@ public class HtmlMailTest extends TestCase implements TestConstants {
         email.setSubject(getTestMailSubject());
         email.setToList(TEST_RECIPIENT);
         email.setFrom(TEST_SENDER);
-        handler.prepareAndSendMail(email);
+        //handler.prepareAndSendMail(email);
     }
 
     public void testHtmlMailWithImageFile() throws Exception {
@@ -57,7 +57,7 @@ public class HtmlMailTest extends TestCase implements TestConstants {
         email.setSubject(getTestMailSubject());
         email.setToList(TEST_RECIPIENT);
         email.setFrom(TEST_SENDER);
-        handler.prepareAndSendMail(email);
+        //handler.prepareAndSendMail(email);
     }
 
     public void testHtmlMailWithTwoEmbeddedContent() throws Exception {
@@ -71,7 +71,7 @@ public class HtmlMailTest extends TestCase implements TestConstants {
         email.setBody("<h1>Helloniko</h1><img src=\"cid:att1\"/><img src=\"cid:att2\"/>", param);
         email.setToList(TEST_RECIPIENT);
         email.setFrom(TEST_SENDER);
-        handler.prepareAndSendMail(email);
+        //handler.prepareAndSendMail(email);
     }
 
     public void testHtmlMailWithPdf() throws Exception {
@@ -81,6 +81,6 @@ public class HtmlMailTest extends TestCase implements TestConstants {
         email.addAttachment(new MailAttachment(new File(TEST_FILE_PDF), "att1"));
         email.setToList(TEST_RECIPIENT);
         email.setFrom(TEST_SENDER);
-        handler.prepareAndSendMail(email);
+        //handler.prepareAndSendMail(email);
     }
 }

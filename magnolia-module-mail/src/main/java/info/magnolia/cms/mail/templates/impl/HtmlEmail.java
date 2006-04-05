@@ -35,8 +35,7 @@ public class HtmlEmail extends MgnlMultipartEmail {
             messageBodyPart.setContent(body, MailConstants.TEXT_HTML_UTF);
             // Add body part to multipart
             multipart.addBodyPart(messageBodyPart, 0);
-            // set multipart
-            turnOnMultipart();
+            this.setContent(multipart);
         }
 
         // process the attachments
@@ -48,7 +47,14 @@ public class HtmlEmail extends MgnlMultipartEmail {
 
     private void turnOnMultipart() {
         try {
-            this.setContent(multipart);
+            Object o = this.getContent();
+            if (o instanceof String) {
+                BodyPart messageBodyPart = new MimeBodyPart();
+                messageBodyPart.setContent(o, MailConstants.TEXT_HTML_UTF);
+                multipart.addBodyPart(messageBodyPart, 0);
+                log.info(o.getClass().getName());
+                this.setContent(multipart);
+            }
         }
         catch (Exception e) {
             log.info("Could not turn on multipart");

@@ -13,6 +13,10 @@ import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -125,6 +129,18 @@ public abstract class MgnlEmail extends MimeMessage {
 
     public MimeBodyPart addAttachment(MailAttachment attachment) throws MailException {
         throw new MailException("Cannot add attachment to this email. It is not a Multimime email");
+    }
+
+    public void setBodyFromResourceFile(String resourceFile, HashMap map) throws Exception {
+        URL url = this.getClass().getResource("/" + resourceFile);
+        log.info("This is the url:" + url);
+        BufferedReader br = new BufferedReader(new FileReader(url.getFile()));
+        String line;
+        StringBuffer buffer = new StringBuffer();
+        while ((line = br.readLine()) != null) {
+            buffer.append(line).append(File.separator);
+        }
+        this.setBody(buffer.toString(), map);
     }
 
 }

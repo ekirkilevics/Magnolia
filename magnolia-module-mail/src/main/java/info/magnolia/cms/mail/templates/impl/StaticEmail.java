@@ -14,9 +14,8 @@ import java.util.HashMap;
  */
 public class StaticEmail extends MgnlEmail {
 
-    //public static final String TEST_STRING = "This is a test email";
-    public static String STATIC_TEST_SUBJECT = "ありがとう";
-    public static String STATIC_TEST_CONTENT = "元気ですか？";
+    public static String STATIC_TEST_SUBJECT = "Hello";
+    public static String STATIC_TEST_CONTENT = "This is a test email";
 
     public StaticEmail(Session _session) throws Exception {
         super(_session);

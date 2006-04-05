@@ -22,8 +22,9 @@ public interface MailConstants {
     public static final String SMTP_PASSWORD = "smtpPassword";
     public static final String SMTP_AUTH = "smtpAuth";
     public static final String SMTP_SEND_PARTIAL = "smtpSendPartial";
-    public static final String SERVER_MAIL = "/modules/mail/config/smtp";
-    public static final String MAIL_TEMPLATES_PATH = SERVER_MAIL + "/templates";
+    public static final String EMAIL_CONFIG = "/modules/mail/config";
+    public static final String SERVER_MAIL = EMAIL_CONFIG + "/smtp";
+    public static final String MAIL_TEMPLATES_PATH = EMAIL_CONFIG + "/templates";
 
     public static final String RELATED = "related";
     public static final String MAIL_TEMPLATE = "template";
@@ -47,4 +48,9 @@ public interface MailConstants {
 
     public static final String FILE_URL_PREFIX = "file://";
     String CHARSET_HEADER_STRING = "charset=";
+
+    public static final String MAIL_TYPE = "type";
+    public static final String MAIL_FROM = "from";
+    public static final String MAIL_SUBJECT = "subject";
+    public static final String MAIL_BODY = "body";
 }

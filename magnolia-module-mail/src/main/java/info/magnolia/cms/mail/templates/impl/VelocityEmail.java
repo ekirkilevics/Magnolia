@@ -1,12 +1,14 @@
 package info.magnolia.cms.mail.templates.impl;
 
 import info.magnolia.cms.mail.MailConstants;
-import info.magnolia.cms.mail.templates.MgnlEmail;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 
 import javax.mail.Session;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.StringWriter;
+import java.net.URL;
 import java.util.HashMap;
 
 /**
@@ -15,7 +17,7 @@ import java.util.HashMap;
  *
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */
-public class VelocityEmail extends MgnlEmail {
+public class VelocityEmail extends HtmlEmail {
 
     static {
         try {
@@ -27,19 +29,22 @@ public class VelocityEmail extends MgnlEmail {
 
     public VelocityEmail(Session _session) throws Exception {
         super(_session);
-        this.setHeader(MailConstants.CONTENT_TYPE, MailConstants.TEXT_HTML_UTF);
     }
 
     public void setBody(String body, HashMap parameters) throws Exception {
         VelocityContext context = new VelocityContext(parameters);
-        /* lets render a template */
         StringWriter w = new StringWriter();
-        if (this.getTemplate() == null) {
-            log.error("No template defined for this mail. Copying the text as is");
-            this.setContent(body, MailConstants.TEXT_PLAIN_UTF);
-        } else {
-            Velocity.mergeTemplate(getClass().getResource(MailConstants.VELOCITY_MAIL_PATH + this.getTemplate() + ".vm").getFile(), context, w);
-            this.setContent(w.toString(), MailConstants.TEXT_HTML_UTF);
-        }
+        Velocity.mergeTemplate(getClass().getResource(MailConstants.VELOCITY_MAIL_PATH + body).getFile(), "UTF-8", context, w);
+        super.setBody(w.toString(), parameters);
+    }
+
+    public void setBodyFromResourceFile(String resourceFile, HashMap _map) throws Exception {
+        VelocityContext context = new VelocityContext(_map);
+        URL url = this.getClass().getResource("/" + resourceFile);
+        log.info("This is the url:" + url);
+        BufferedReader br = new BufferedReader(new FileReader(url.getFile()));
+        StringWriter w = new StringWriter();
+        Velocity.evaluate(context, w, "email", br);
+        super.setBody(w.toString(), _map);
     }
 }

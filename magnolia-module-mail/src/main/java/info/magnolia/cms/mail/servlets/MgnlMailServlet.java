@@ -8,6 +8,7 @@ import info.magnolia.cms.mail.handlers.MgnlMailHandler;
 import info.magnolia.cms.mail.templates.MailAttachment;
 import info.magnolia.cms.mail.templates.MgnlEmail;
 import info.magnolia.cms.util.RequestFormUtil;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,28 +42,30 @@ public class MgnlMailServlet extends javax.servlet.http.HttpServlet {
     private static final String PARAMETERS = "parameters";
     private static final String FILE = "file";
     private static final String TEMPLATE = "template";
-    public static final String ATT_ID = "att";
-    public static final String ACTION = "action";
+    private static final String ATT_ID = "att";
+    private static final String ACTION = "action";
 
-    public static final String HTML_TEXT_AREA = "textarea";
-    public static final String HTML_SMALL_TEXT_AREA = "smalltextarea";
-    public static final String HTML_BIG_TEXT_AREA = "bigtextarea";
-    public static final String HTML_TEXT = "text";
-    public static final String HTML_SELECT = "select";
-    public static final String HTML_FILE = "file";
+    private static final String HTML_TEXT_AREA = "textarea";
+    private static final String HTML_SMALL_TEXT_AREA = "smalltextarea";
+    private static final String HTML_BIG_TEXT_AREA = "bigtextarea";
+    private static final String HTML_TEXT = "text";
+    private static final String HTML_SELECT = "select";
+    private static final String HTML_FILE = "file";
+    private static final String NONE = "<none>";
 
     protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
+
+        RequestFormUtil request = new RequestFormUtil(httpServletRequest);
+
+        if (request.getParameter(ACTION) == null) {
+            this.doGet(httpServletRequest, httpServletResponse);
+            return;
+        }
+
         try {
+
             MultipartForm form = (MultipartForm) httpServletRequest.getAttribute(MultipartForm.REQUEST_ATTRIBUTE_NAME);
             Document doc = form.getDocument("file");
-            log.info(doc.getFileName());
-
-            RequestFormUtil request = new RequestFormUtil(httpServletRequest);
-
-            if (request.getParameter(ACTION) == null) {
-                this.doGet(httpServletRequest, httpServletResponse);
-                return;
-            }
 
             MailAttachment attachment = null;
             if (doc != null) {
@@ -85,18 +88,25 @@ public class MgnlMailServlet extends javax.servlet.http.HttpServlet {
 
             HashMap map = convertToMap(parameters);
 
-            MgnlEmail email = factory.getEmailFromType(type);
-            email.setFrom(from);
-            email.setSubject(subject);
-            email.setToList(factory.convertEmailList(to));
-            email.setBody(text, map);
-            if (attachment != null)
-                email.addAttachment(attachment);
-            email.setTemplate(template);
-            email.setCcList(factory.convertEmailList(cc));
-            handler.prepareAndSendMail(email);
+            if (template != null && !(template.equals(StringUtils.EMPTY))) {
+                MgnlEmail email = factory.getEmailFromTemplate(template, map);
+                email.setToList(factory.convertEmailList(to));
+                email.setCcList(factory.convertEmailList(cc));
+                handler.prepareAndSendMail(email);
+            } else {
+                MgnlEmail email = factory.getEmailFromType(type);
+                email.setFrom(from);
+                email.setSubject(subject);
+                email.setToList(factory.convertEmailList(to));
+                email.setBody(text, map);
+                if (attachment != null)
+                    email.addAttachment(attachment);
+                //email.setTemplate(template);
+                email.setCcList(factory.convertEmailList(cc));
+                handler.prepareAndSendMail(email);
+            }
 
-            setMessage(false, null, "Mail [" + email.getClass().getName() + "] was sent to " + to, httpServletResponse);
+            setMessage(false, null, "Mail was sent to " + to, httpServletResponse);
         }
         catch (Exception e) {
             setMessage(true, e, "Error while sending email ", httpServletResponse);
@@ -131,6 +141,7 @@ public class MgnlMailServlet extends javax.servlet.http.HttpServlet {
             String key = (String) iter.next();
             map.put(key, props.get(key));
         }
+        log.info(map.toString());
         return map;
     }
 
@@ -248,6 +259,7 @@ public class MgnlMailServlet extends javax.servlet.http.HttpServlet {
                 buffer.append(" disabled ");
             buffer.append(" name=\"" + TEMPLATE + "\">");
 
+            addOption(NONE, buffer);
             for (int i = 0; i < list.size(); i++) {
                 String item = (String) list.get(i);
                 addOption(item, buffer);
