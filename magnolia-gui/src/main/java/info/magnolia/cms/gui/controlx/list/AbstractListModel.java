@@ -12,6 +12,16 @@
  */
 package info.magnolia.cms.gui.controlx.list;
 
+import org.apache.commons.lang.StringUtils;
+
+import java.util.Comparator;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.gui.controlx.list.util.ValueProvider;
+
 
 /**
  * @author Sameer Charles
@@ -125,4 +135,73 @@ public abstract class AbstractListModel implements ListModel {
         return this.groupByOrder;
     }
 
+    /**
+     * sort
+     * @param collection
+     * @return sorted collection
+     * */
+    protected Collection doSort(Collection collection) {
+        if (StringUtils.isNotEmpty(this.getGroupBy())) {
+            Collections.sort((List) collection, new ListComparator(this.getGroupBy(), this.getSortBy()));
+        }
+        if (StringUtils.isNotEmpty(this.getGroupBy()) && StringUtils.isNotEmpty(this.getSortBy())) { // sub sort
+            Collections.sort((List) collection, new ListComparator("", this.getSortBy()));
+        }
+        return collection;
+    }
+
+    /**
+     * Does simple or sub ordering
+     * */
+    protected class ListComparator implements Comparator {
+
+        private String groupBy;
+
+        private String sortBy;
+
+        private ValueProvider valueProvider;
+
+        ListComparator(String groupBy, String sortBy) {
+            this.groupBy = groupBy;
+            this.sortBy = sortBy;
+            this.valueProvider = ValueProvider.getInstance();
+        }
+
+        public int compare(Object object, Object object1) {
+            if (StringUtils.isNotEmpty(this.groupBy)) {
+                return this.group(object, object1);
+            } else if (StringUtils.isNotEmpty(this.sortBy)) {
+                return this.subSort(object, object1);
+            }
+            return 0;
+        }
+
+        /**
+         * group by
+         * @param object to be compared
+         * @param object1 to be compared
+         * */
+        private int group(Object object, Object object1) {
+            String firstKey = (String) this.valueProvider.getValue(this.groupBy, (Content) object);
+            String secondKey = (String) this.valueProvider.getValue(this.groupBy, (Content) object1);
+            return firstKey.compareTo(secondKey);
+        }
+
+        /**
+         * sub sort
+         * @param object to be compared
+         * @param object1 to be compared
+         * */
+        private int subSort(Object object, Object object1) {
+            String firstKey = (String) this.valueProvider.getValue(this.groupBy, (Content) object);
+            String secondKey = (String) this.valueProvider.getValue(this.groupBy, (Content) object1);
+            String subSortFirstKey = (String) this.valueProvider.getValue(this.sortBy, (Content) object);
+            String subSortSecondKey = (String) this.valueProvider.getValue(this.sortBy, (Content) object1);
+            if (firstKey.equalsIgnoreCase(secondKey)) {
+                return subSortFirstKey.compareTo(subSortSecondKey);
+            }
+            return -1;
+        }
+
+    }
 }

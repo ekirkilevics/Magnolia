@@ -13,27 +13,19 @@
 package info.magnolia.cms.gui.controlx.list;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.gui.controlx.list.util.ValueProvider;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.lang.reflect.Method;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
-import javax.jcr.RepositoryException;
 
 /**
  * @author Sameer Charles
  * $Id:ListModelIteratorImpl.java 2492 2006-03-30 08:30:43Z scharles $
  */
 public class ListModelIteratorImpl implements ListModelIterator {
-
-    /**
-     * Logger
-     * */
-    private static Logger log = Logger.getLogger(ListModelIteratorImpl.class);
 
     /**
      * list holding all objects/records
@@ -103,92 +95,7 @@ public class ListModelIteratorImpl implements ListModelIterator {
      * @param node
      * */
     private Object getValue(String name, Content node) {
-        return this.internalGetValue(name, node);
-    }
-
-    /**
-     * get internal value
-     * - first check for property in  this object
-     * - then look for the getter for this name
-     * - else search in MetaData
-     * @param name
-     * @param node
-     * */
-    private Object internalGetValue(String name, Content node) {
-        try {
-            if (node.hasNodeData(name)) {
-                return node.getNodeData(name).getString();
-            } else {
-                // check if getter exist for this name
-                try {
-                    String methodName =
-                            "get"+StringUtils.substring(name,0,1).toUpperCase() + StringUtils.substring(name,1);
-                    Method method = getClass().getMethod(methodName, new Class[] {node.getClass()});
-                    return method.invoke(this, new Object[] {node});
-                } catch (NoSuchMethodException e) {
-                    // finally check MetaData
-                    return node.getMetaData().getStringProperty(name);
-                } catch (Exception e) {
-                    log.error("Unable to locate property or method for - "+name);
-                }
-            }
-        } catch (RepositoryException e) {
-            log.error(e.getMessage(), e);
-        }
-        return StringUtils.EMPTY;
-    }
-
-    /**
-     * get name
-     * @return name of the current object
-     * */
-    public String getName() {
-        return this.getName(this.current);
-    }
-
-    /**
-     * get name
-     * @return name of the current object
-     * */
-    public String getName(Content node) {
-        return node.getName();
-    }
-
-    /**
-     * get node type
-     * @return node type
-     * */
-    public String getType() {
-        return this.getType(this.current);
-    }
-
-    /**
-     * get node type
-     * @return node type
-     * */
-    public String getType(Content node) {
-        try {
-            return node.getNodeType().getName();
-        } catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        }
-        return StringUtils.EMPTY;
-    }
-
-    /**
-     * get path
-     * @return handle for the ciurrent object
-     * */
-    public String getPath() {
-        return this.getPath(this.current);
-    }
-
-    /**
-     * get path
-     * @return handle for the ciurrent object
-     * */
-    public String getPath(Content node) {
-        return node.getHandle();
+        return ValueProvider.getInstance().getValue(name, node);
     }
 
     /**
