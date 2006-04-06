@@ -70,23 +70,17 @@ public class JCRWorkItemAPI {
 	public void removeWorkItem(FlowExpressionId fei)
 			throws StoreException {
 		try {
-			Content root = hm.getRoot();
-			Collection c = root.getChildren(ItemType.WORKITEM);
-			// @fix it
-			Iterator it = c.iterator();
-			while (it.hasNext()) {
-				Content ct = (Content) it.next();
-				if (checkContentWithEID(ct, fei)) {
-					ct.delete();
-					hm.save();
-					return;
-				}
+			Content ct = getWorkItemById(fei);
+			if (ct != null) {
+				ct.delete();
+				hm.save();
+				if (log.isDebugEnabled())
+					log.debug("work item removed");
 			}
+
 		} catch (Exception e) {
 			log.error("exception:" + e);
-			throw new StoreException(e.toString());
 		}
-
 	}
 
 	/**
@@ -340,7 +334,7 @@ public class JCRWorkItemAPI {
 					false, false);
 
 		} catch (Exception e) {
-			log.error("can not export to console");
+			log.error("can not export to console", e);
 		}
 	}
 

@@ -114,20 +114,21 @@ public class OWFEBean implements WorkflowAPI {
 	/**
 	 * remove one work item by id
 	 */
-	private void removeWorkItem(InFlowWorkItem wi) throws Exception {
-		HierarchyManager hm = OWFEEngine.getOWFEHierarchyManager("Store");
-		try {
-			Content ct = storage.getWorkItemById(wi.getLastExpressionId());
-			if (ct != null) {
-				ct.delete();
-				hm.save();
-				if (log.isDebugEnabled())
-					log.debug("work item removed");
-			}
-
-		} catch (Exception e) {
-			log.error("exception:" + e);
-		}
+	public void removeWorkItem(InFlowWorkItem wi) throws Exception {
+//		HierarchyManager hm = OWFEEngine.getOWFEHierarchyManager("Store");
+//		try {
+//			Content ct = storage.getWorkItemById(wi.getLastExpressionId());
+//			if (ct != null) {
+//				ct.delete();
+//				hm.save();
+//				if (log.isDebugEnabled())
+//					log.debug("work item removed");
+//			}
+//
+//		} catch (Exception e) {
+//			log.error("exception:" + e);
+//		}
+		storage.removeWorkItem(wi.getId());
 	}
 
 	/**
