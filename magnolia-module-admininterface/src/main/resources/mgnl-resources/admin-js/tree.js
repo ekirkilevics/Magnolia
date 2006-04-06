@@ -141,8 +141,7 @@
         node.shift();
         }
 
-    mgnlTree.prototype.selectNode = function(id)
-        {
+    mgnlTree.prototype.selectNode = function(id) {
         mgnlDebug("selectNode:" + id, "tree");
         var sNode=this.getNode(id);
         var divMain=document.getElementById(sNode.divMainId);
@@ -150,22 +149,23 @@
 
         var divMainSelected=document.getElementById(this.selectedNode.divMainId);
 
-        if (divMain && this.selectedNode.divMainId!=sNode.divMainId)
-            {
-            if (divMainSelected)
-                {
+        if (divMain && this.selectedNode.divMainId!=sNode.divMainId) {
+            if (divMainSelected) {
                 divMainSelected.style.backgroundColor="";
                 divMainSelected.style.textDecoration="";
-                }
+            }
             divMain.style.backgroundColor=this.colors.nodeSelected;
-            if(this.addressBar)
-                this.addressBar.value=id;
-            this.selectedNode=sNode;
 
+            if(this.addressBar){
+                this.addressBar.value=id;
+            }
+            this.selectedNode=sNode;
             // refresh functionBar
-            if (this.functionBarName) eval (this.functionBarName).refresh ();
+            if (window[this.functionBarName]) {
+                eval (this.functionBarName).refresh ();
             }
         }
+    }
 
 
     mgnlTree.prototype.getNode = function(id)
@@ -436,15 +436,16 @@
             }
         }
 
-    mgnlTree.prototype.selectedNodeReset = function()
-        {
+    mgnlTree.prototype.selectedNodeReset = function() {
         var divMain=document.getElementById(this.selectedNode.divMainId);
         divMain.style.backgroundColor="";
         this.selectedNode=this.getNode(this.path); //root
 
         // refresh functionBar
-        if (this.functionBarName) eval (this.functionBarName).refresh ();
+        if (window[this.functionBarName]) {
+            eval (this.functionBarName).refresh ();
         }
+    }
 
 
     mgnlTree.prototype.mainDivReset = function()
