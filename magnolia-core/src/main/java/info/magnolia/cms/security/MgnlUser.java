@@ -61,25 +61,25 @@ public class MgnlUser implements User {
      * @return true if in role
      */
     public boolean inGroup(String groupName) {
-        try {
-            Content rolesNode = userNode.getContent(NODE_GROUPS);
+        return this.hasAny(groupName, NODE_GROUPS);
+    }
 
-            for (Iterator iter = rolesNode.getChildren().iterator(); iter.hasNext();) {
-                Content node = (Content) iter.next();
-                if (node.getNodeData("path").getString().equals("/" + groupName)) { //$NON-NLS-1$ //$NON-NLS-2$
-                    return true;
-                }
-            }
-            if (rolesNode.hasContent(groupName)) {
-                return true;
-            }
+    /**
+     * Remove a group. Implementation is optional
+     *
+     * @param groupName
+     */
+    public void removeGroup(String groupName) throws UnsupportedOperationException {
+        this.remove(groupName, NODE_GROUPS);
+    }
 
-        }
-        catch (RepositoryException e) {
-            // nothing
-        }
-
-        return false;
+    /**
+     * Adds this user to a group. Implementation is optional
+     *
+     * @param groupName
+     */
+    public void addGroup(String groupName) throws UnsupportedOperationException {
+        this.add(groupName, NODE_GROUPS);
     }
 
     /**
@@ -88,45 +88,11 @@ public class MgnlUser implements User {
      * @return true if in role
      */
     public boolean hasRole(String roleName) {
-        try {
-            Content rolesNode = userNode.getContent(NODE_ROLES);
-
-            for (Iterator iter = rolesNode.getChildren().iterator(); iter.hasNext();) {
-                Content node = (Content) iter.next();
-                if (node.getNodeData("path").getString().equals("/" + roleName)) { //$NON-NLS-1$ //$NON-NLS-2$
-                    return true;
-                }
-            }
-            if (rolesNode.hasContent(roleName)) {
-                return true;
-            }
-
-        }
-        catch (RepositoryException e) {
-            // nothing
-        }
-
-        return false;
+        return this.hasAny(roleName, NODE_ROLES);
     }
 
     public void removeRole(String roleName) {
-        try {
-            Content rolesNode = userNode.getContent(NODE_ROLES);
-
-            for (Iterator iter = rolesNode.getChildren().iterator(); iter.hasNext();) {
-                Content node = (Content) iter.next();
-                if (node.getNodeData("path").getString().equals("/" + roleName)) { //$NON-NLS-1$ //$NON-NLS-2$
-                    node.delete();
-                }
-            }
-            if (rolesNode.hasContent(roleName)) {
-                rolesNode.delete(roleName);
-            }
-            userNode.save();
-        }
-        catch (RepositoryException e) {
-            log.error("can't remove role from user [" + this.getName() + "]", e);
-        }
+        this.remove(roleName, NODE_ROLES);
     }
 
     /**
@@ -134,22 +100,72 @@ public class MgnlUser implements User {
      * @param roleName the name of the role
      */
     public void addRole(String roleName) {
+        this.add(roleName, NODE_ROLES);
+    }
+
+    /**
+     * checks is any object exist with the given name under this node
+     * @param name
+     * @param nodeName
+     * */
+    private boolean hasAny(String name, String nodeName) {
         try {
-            if (!this.hasRole(roleName)) {
-                Content rolesNode = userNode.getContent(NODE_ROLES);
+            Content node = userNode.getContent(nodeName);
+            for (Iterator iter = node.getChildren().iterator(); iter.hasNext();) {
+                Content subNode = (Content) iter.next();
+                if (subNode.getNodeData("path").getString().equals("/" + name)) { //$NON-NLS-1$ //$NON-NLS-2$
+                    return true;
+                }
+            }
+        }
+        catch (RepositoryException e) {
+            log.debug(e.getMessage(), e);
+        }
+        return false;
+    }
+
+    /**
+     * removed node
+     * @param name
+     * @param nodeName
+     * */
+    private void remove(String name, String nodeName) {
+        try {
+            Content node = userNode.getContent(nodeName);
+
+            for (Iterator iter = node.getChildren().iterator(); iter.hasNext();) {
+                Content subNode = (Content) iter.next();
+                if (subNode.getNodeData("path").getString().equals("/" + name)) { //$NON-NLS-1$ //$NON-NLS-2$
+                    subNode.delete();
+                }
+            }
+            userNode.save();
+        }
+        catch (RepositoryException e) {
+            log.error("failed to remove "+name+" from user [" + this.getName() + "]", e);
+        }
+    }
+
+    /**
+     * adds a new node under specified node collection
+     * */
+    private void add(String name, String nodeName) {
+        try {
+            if (!this.hasAny(name, nodeName)) {
+                Content node = userNode.getContent(nodeName);
 
                 // used only to get the unique label
                 HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USERS);
-                if (!rolesNode.hasContent(roleName)) {
-                    String nodename = Path.getUniqueLabel(hm, rolesNode.getHandle(), "0");
-                    Content node = rolesNode.createContent(nodename, ItemType.CONTENTNODE);
-                    node.createNodeData("path").setValue("/" + roleName);
+                if (!node.hasContent(name)) {
+                    String newName = Path.getUniqueLabel(hm, node.getHandle(), "0");
+                    Content subNode = node.createContent(newName, ItemType.CONTENTNODE);
+                    subNode.createNodeData("path").setValue("/" + name);
                     userNode.save();
                 }
             }
         }
         catch (RepositoryException e) {
-            log.error("can't add role to user [" + this.getName() + "]", e);
+            log.error("failed to add "+name+" to user [" + this.getName() + "]", e);
         }
     }
 

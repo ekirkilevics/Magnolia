@@ -66,6 +66,36 @@ public class DummyUser implements User {
     }
 
     /**
+     * Is this user in a specified group?
+     *
+     * @param groupName
+     * @return true if in group
+     */
+    public boolean inGroup(String groupName) {
+        return true;
+    }
+
+    /**
+     * Remove a group. Implementation is optional
+     *
+     * @param groupName
+     */
+    public void removeGroup(String groupName) throws UnsupportedOperationException {
+        if (log.isDebugEnabled())
+            log.debug("User [ Anonymous ] has no groups");
+    }
+
+    /**
+     * Adds this user to a group. Implementation is optional
+     *
+     * @param groupName
+     */
+    public void addGroup(String groupName) throws UnsupportedOperationException {
+        if (log.isDebugEnabled())
+            log.debug("No groups can be attached to user [ Anonymous ]");
+    }
+
+    /**
      * get user language
      *
      * @return language string

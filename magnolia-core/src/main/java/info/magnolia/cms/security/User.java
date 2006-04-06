@@ -15,7 +15,7 @@ package info.magnolia.cms.security;
 /**
  * Represents an magnolia user.
  * @author philipp
- * @version $Revision$ ($Author$)
+ * @version $Revision:2558 $ ($Author:scharles $)
  */
 public interface User {
 
@@ -24,18 +24,37 @@ public interface User {
      * @param roleName the name of the role
      * @return true if in role
      */
-    public abstract boolean hasRole(String roleName);
+    public boolean hasRole(String roleName);
 
     /**
-     * Remove a role. Not all implementations will support this methods.
+     * Remove a role. Implementation is optional
      */
-    public abstract void removeRole(String roleName) throws UnsupportedOperationException;
+    public void removeRole(String roleName) throws UnsupportedOperationException;
 
     /**
-     * Adds a role to this user. Not all implementations will support this method
+     * Adds a role to this user. Implementation is optional
      * @param roleName the name of the role
      */
-    public abstract void addRole(String roleName) throws UnsupportedOperationException;
+    public void addRole(String roleName) throws UnsupportedOperationException;
+
+    /**
+     * Is this user in a specified group?
+     * @param groupName
+     * @return true if in group
+     */
+    public boolean inGroup(String groupName);
+
+    /**
+     * Remove a group. Implementation is optional
+     * @param groupName
+     */
+    public void removeGroup(String groupName) throws UnsupportedOperationException;
+
+    /**
+     * Adds this user to a group. Implementation is optional
+     * @param groupName
+     */
+    public void addGroup(String groupName) throws UnsupportedOperationException;
 
     /**
      * get user language

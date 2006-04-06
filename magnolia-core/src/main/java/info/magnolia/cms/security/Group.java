@@ -40,4 +40,12 @@ public interface Group {
      * */
     public void removeRole(String roleName) throws UnsupportedOperationException, AccessDeniedException;
 
+    /**
+     * returns true if role exist in this group
+     * @param roleName
+     * @throws UnsupportedOperationException if the implementation does not exist
+     * @throws AccessDeniedException if loggen in repository user does not sufficient rights
+     * */
+    public boolean hasRole(String roleName) throws UnsupportedOperationException, AccessDeniedException;
+
 }

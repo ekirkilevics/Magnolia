@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
  * This class wraps a user content object to provide some nice methods
  * @author philipp
  * @author Sameer Charles
- * @version $Revision$ ($Author$)
+ * @version $Revision:2558 $ ($Author:scharles $)
  */
 public class ExternalUser implements User {
 
@@ -66,7 +66,7 @@ public class ExternalUser implements User {
      * @see info.magnolia.cms.security.UserInterface#removeRole(java.lang.String)
      */
     public void removeRole(String roleName) {
-        throw new UnsupportedOperationException("not implemented with JAAS");
+        throw new UnsupportedOperationException("not implemented for this ExternalUser");
     }
 
     /*
@@ -74,7 +74,35 @@ public class ExternalUser implements User {
      * @see info.magnolia.cms.security.UserInterface#addRole(java.lang.String)
      */
     public void addRole(String roleName) {
-        throw new UnsupportedOperationException("not implemented with JAAS");
+        throw new UnsupportedOperationException("not implemented for this ExternalUser");
+    }
+
+    /**
+     * Is this user in a specified group?
+     *
+     * @param groupName
+     * @return true if in group
+     */
+    public boolean inGroup(String groupName) {
+        return this.roleList.hasRole(groupName);
+    }
+
+    /**
+     * Remove a group. Implementation is optional
+     *
+     * @param groupName
+     */
+    public void removeGroup(String groupName) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("not implemented for this ExternalUser");
+    }
+
+    /**
+     * Adds this user to a group. Implementation is optional
+     *
+     * @param groupName
+     */
+    public void addGroup(String groupName) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("not implemented for this ExternalUser");
     }
 
     /*

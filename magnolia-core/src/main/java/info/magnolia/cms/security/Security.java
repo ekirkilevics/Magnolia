@@ -23,17 +23,24 @@ import info.magnolia.cms.util.FactoryUtil;
 public class Security {
 
     /**
-     * Returns the current RoleManager. Depends on the configuration.
+     * Returns the configured RoleManager.
      */
     public static RoleManager getRoleManager() {
         return (RoleManager) FactoryUtil.getSingleton(RoleManager.class);
     }
 
     /**
-     * Returns the current UserManager. Depends on the configuration.
+     * Returns the configured UserManager.
      */
     public static UserManager getUserManager() {
         return (UserManager) FactoryUtil.getSingleton(UserManager.class);
+    }
+
+    /**
+     * Returns the configured GroupManager.
+     */
+    public static GroupManager getGroupManager() {
+        return (GroupManager) FactoryUtil.getSingleton(GroupManager.class);
     }
 
 }

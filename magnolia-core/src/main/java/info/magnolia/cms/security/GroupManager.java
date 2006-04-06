@@ -23,7 +23,7 @@ public interface GroupManager {
      * @param name
      * @return newly created group
      * @throws UnsupportedOperationException if the implementation does not support writing
-     * @throws AccessDeniedException if loggen in repository user does not sufficient rights
+     * @throws AccessDeniedException if logged in repository user does not sufficient rights
      */
     public Group createGroup(String name) throws UnsupportedOperationException, AccessDeniedException;
 
@@ -32,7 +32,7 @@ public interface GroupManager {
      * @param name
      * @return group
      * @throws UnsupportedOperationException if the implementation does not support writing
-     * @throws AccessDeniedException if loggen in repository user does not sufficient rights
+     * @throws AccessDeniedException if logged in repository user does not sufficient rights
      */
     public Group getGroup(String name) throws UnsupportedOperationException, AccessDeniedException;
 
