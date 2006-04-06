@@ -18,7 +18,7 @@ public class JCRUserMgr {
 	HierarchyManager hm = ContentRepository
 	.getHierarchyManager(ContentRepository.USERS);
 	HierarchyManager hm_usergroups = ContentRepository
-	.getHierarchyManager(ContentRepository.USERS, ContentRepository.USERGROUPS);
+	.getHierarchyManager(ContentRepository.USERS, ContentRepository.USER_GROUPS);
 	/**
 	 * Logger
 	 */

@@ -37,10 +37,9 @@ import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * This is a default login module for magnolia, it uses initialized repository
@@ -157,27 +156,28 @@ public class JCRLoginModule extends AbstractLoginModule {
      * set access control list from the user, roles and groups
      */
     public void setACL() {
-        List list = new JCRUserMgr().getUserGroupNodes(name);
-
         this.setACL(this.user);
-
-        for (int i = 0; i < list.size(); i++) {
-            Content ct = (Content) list.get(i);
-            this.setACL(ct);
+        Iterator groupsIterator = this.getGroupNodes().iterator();
+        while (groupsIterator.hasNext()) {
+            this.setACL((Content) groupsIterator.next());
         }
     }
 
-
-//<<<<<<< .mine
-//   
-//=======
-//    /**
-//     * get group nodes which users are belong to
-//     *
-//     */
-//    private List getUserGroupNodes(String userName) {
-//        ArrayList list = new ArrayList();
-//>>>>>>> .r2449
+    /**
+     * get all group nodes
+     * @return collection of group nodes
+     */
+    public Collection getGroupNodes() {
+        try {
+            Content groups = user.getContent("groups");
+            return groups.getChildren(ItemType.CONTENTNODE);
+        } catch (RepositoryException re) {
+            if (log.isDebugEnabled())
+                log.debug(user.getName() + "do not belong to any group");
+            log.debug(re.getMessage());
+        }
+        return new ArrayList();
+    }
 
     /**
      * set access control list from a list of roles under the provided content object
