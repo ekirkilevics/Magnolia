@@ -41,9 +41,6 @@ public class ActivationCommand extends MgnlCommand {
         log.info("recursive = " + (params.get(MgnlConstants.P_RECURSIVE).toString() ));
       //  recursive = (params.get(MgnlConstants.P_RECURSIVE).toString()).equalsIgnoreCase("true");
 
-       
-      
-
          recursive = Boolean.valueOf((String) params.get(MgnlConstants.P_RECURSIVE)).booleanValue();
 
         try {

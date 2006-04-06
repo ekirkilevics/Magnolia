@@ -212,8 +212,10 @@ public class JCRWorkItemAPI {
 	private String createPathFromId(FlowExpressionId eid) {
 		String ret = "";
 		// FlowExpressionId eid = wi.getId();
+		String wlInstId = eid.getWorkflowInstanceId();
+		int groupNumber = Integer.valueOf(wlInstId.substring(wlInstId.length()-3)).intValue()%100;
 		ret = eid.getWorkflowDefinitionName() + "/"
-				+ eid.getWorkflowDefinitionRevision() + "/"
+				+ eid.getWorkflowDefinitionRevision() + "/" + groupNumber +"/"
 				+ eid.getWorkflowInstanceId() + "/" + eid.getExpressionName()
 				+ "/" + eid.getExpressionId();
 
@@ -236,11 +238,11 @@ public class JCRWorkItemAPI {
 				removeWorkItem(wi.getId());
 
 			Content root = hm.getRoot();
-			// Collection c = root.getChildren(ItemType.WORKITEM);
 
+			// crete path from work item id
 			String path = createPathFromId(wi.getId());
 			log.info("workitem id = " + path);
-			// Content newc = root.createContent(path, ItemType.WORKITEM);
+
 			Content newc = ContentUtil.createPath(hm, path, ItemType.WORKITEM);
 
 			ValueFactory vf = newc.getJCRNode().getSession().getValueFactory();

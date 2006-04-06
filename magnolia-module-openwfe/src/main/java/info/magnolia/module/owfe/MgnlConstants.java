@@ -29,6 +29,7 @@ public final class MgnlConstants {
     final static public String P_END_DATE = "endDate";
     final static public String P_TREE = "tree";
     final static public String P_HM = "hm";
+    final static public String P_MAILTEMPLATE = "mailTemplate";
 
     final static public String P_DEFAULT_ACTIVATION_FLOW = "webActivation";
     final static public String P_DEFAULT_DEACTIVATION_FLOW = "webDeactivation";

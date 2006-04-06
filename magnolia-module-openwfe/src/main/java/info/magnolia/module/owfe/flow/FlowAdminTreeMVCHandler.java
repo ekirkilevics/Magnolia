@@ -77,7 +77,7 @@ public abstract class FlowAdminTreeMVCHandler extends AdminTreeMVCHandler {
         	log.info("end date = " +  date);   		
     		params.put("endDate", date);
         }catch(Exception e){
-        	log.error("can not get start/end date for path " + pathSelected+", please use sevlet FlowDef to set start/end date for node.", e);
+        	log.warn("can not get start/end date for path " + pathSelected+", please use sevlet FlowDef to set start/end date for node.", e);
         }        
         
 		params.put(MgnlConstants.P_PATH, pathSelected);	

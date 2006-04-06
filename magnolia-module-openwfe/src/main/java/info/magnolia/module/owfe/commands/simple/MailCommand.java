@@ -19,7 +19,7 @@ import java.util.HashMap;
  */
 public class MailCommand extends MgnlCommand {
     static Logger logt = LoggerFactory.getLogger(MailCommand.class);
-    static final String[] parameters = {MgnlConstants.P_MAILTO, MgnlConstants.P_PATH};
+    static final String[] parameters = {MgnlConstants.P_MAILTO, MgnlConstants.P_MAILTEMPLATE, MgnlConstants.P_PATH};
 
 
     /**
@@ -39,11 +39,16 @@ public class MailCommand extends MgnlCommand {
             String mailTo = (String) params.get(MgnlConstants.P_MAILTO);
             if (log.isDebugEnabled())
                 log.debug("mail receiver list: " + mailTo);
-
+            String mailTemplate = (String)params.get(MgnlConstants.P_MAILTEMPLATE);
+            log.info("mail template: " + mailTemplate);
+            
             MgnlMailFactory factory = MgnlMailFactory.getInstance();
             MgnlMailHandler handler = factory.getEmailHandler();
             //MgnlEmail email = factory.getEmail(MgnlConstants.WORKFLOW_EMAIL_TEMPLATE);
-            MgnlEmail email = new SimpleEmail(factory.getSession());
+            //MgnlEmail email = new SimpleEmail(factory.getSession());
+            
+            HashMap map = new HashMap();
+            MgnlEmail email = factory.getEmailFromTemplate(mailTemplate, map);
             email.setFrom(MgnlConstants.WORKFLOW_EMAIL_FROM_FIELD);
             email.setSubject(MgnlConstants.WORKFLOW_EMAIL_SUBJECT_FIELD);
             email.setParameters(params);

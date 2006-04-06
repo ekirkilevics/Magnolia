@@ -57,8 +57,7 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
             try {
                 MgnlCommand c = CommandsMap.getCommandFromFullName(parName);
                 if (c != null) {
-                    if (log.isDebugEnabled())
-                        log.debug("Command has been found through the magnolia catalog:" + c.getClass().getName());
+                   log.info("Command has been found through the magnolia catalog:" + c.getClass().getName());
 
                     // set parameters in the context
                     Context context = MgnlContext.getInstance();
@@ -73,10 +72,9 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
                     OWFEEngine.getEngine().reply((InFlowWorkItem)wi);
 
                 } else // not found, do in the old ways
-                    if (log.isDebugEnabled())
-                        log.debug("No command has been found through the magnolia catalog for name:" + parName);
+                    log.error("No command has been found through the magnolia catalog for name:" + parName);
 
-                log.info("consume command " + parName + "end.");
+                log.info("consume command " + parName + " end.");
             }
             catch (Exception e) {
                 log.error("consume command failed", e);

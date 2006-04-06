@@ -3,7 +3,6 @@ package info.magnolia.module.owfe;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.security.MgnlUserManager;
 import info.magnolia.jaas.sp.jcr.JCRUserMgr;
@@ -12,8 +11,6 @@ import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
 import info.magnolia.module.owfe.jcr.JCRWorkItemAPI;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +20,6 @@ import openwfe.org.engine.workitem.AttributeUtils;
 import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.engine.workitem.LaunchItem;
 import openwfe.org.engine.workitem.StringAttribute;
-import openwfe.org.engine.workitem.WorkItem;
 
 /**
  * the class implements all the interface of work flow API
@@ -37,6 +33,8 @@ public class OWFEBean implements WorkflowAPI {
 	JCRWorkItemAPI storage = null;
 
 	public OWFEBean() throws Exception {
+		// for testing purpose 
+		MgnlContext.setInstance(MgnlContext.getSystemContext()); 
 		storage = new JCRWorkItemAPI();
 	}
 
@@ -48,6 +46,7 @@ public class OWFEBean implements WorkflowAPI {
 	 * @return get the user name from the request
 	 */
 	public String getUsername(HttpServletRequest request) {
+		
 		return MgnlContext.getUser().getName();
 	}
 
@@ -146,7 +145,7 @@ public class OWFEBean implements WorkflowAPI {
 							+ expressionId + ")");
 
 		if_wi.touch();
-		if_wi.setAttribute("OK", new StringAttribute("true"));
+	//	if_wi.setAttribute("OK", new StringAttribute("true"));
 		try {
 			OWFEEngine.getEngine().reply(if_wi);
 		} catch (Exception e) {
@@ -172,7 +171,7 @@ public class OWFEBean implements WorkflowAPI {
 					"cant not get the work iem by this expression id ("
 							+ expressionId + ")");
 		if_wi.touch();
-		if_wi.setAttribute("OK", new StringAttribute("false"));
+	//	if_wi.setAttribute("OK", new StringAttribute("false"));
 
 		try {
 			OWFEEngine.getEngine().reply(if_wi);
@@ -328,8 +327,10 @@ public class OWFEBean implements WorkflowAPI {
 	/**
 	 * Simply launch a flow
 	 */
-	 public void LaunchFlow(HierarchyManager hm, String path, String flowName){
+	 public void LaunchFlow(HierarchyManager hm, String path, String flowName) throws Exception{
          log.debug("- Lauch flow -" + this.getClass().toString() + "- Start");
+         if (flowName == null || flowName.length() == 0)
+        	 throw new IllegalArgumentException("flowName is null or empty string");
          try {
              // Get the references
              LaunchItem li = new LaunchItem();
@@ -342,8 +343,10 @@ public class OWFEBean implements WorkflowAPI {
              JCRPersistedEngine engine = OWFEEngine.getEngine();
 
              // start activation
-             li.addAttribute(MgnlConstants.P_HM,  AttributeUtils.java2owfe(hm));
-             li.addAttribute(MgnlConstants.P_PATH, new StringAttribute(path));
+             if (hm != null)
+            	 li.addAttribute(MgnlConstants.P_HM,  AttributeUtils.java2owfe(hm));
+             if (path != null )
+            	 li.addAttribute(MgnlConstants.P_PATH, new StringAttribute(path));
            
 
              // Launch the item

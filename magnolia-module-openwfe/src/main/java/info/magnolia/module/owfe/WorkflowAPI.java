@@ -98,7 +98,13 @@ interface WorkflowAPI {
      */
     public void assignWorkItemToUser(String expressionId, String userName);
     
-    
-    public void LaunchFlow(HierarchyManager hm, String path, String flowName);
+    /**
+     * simply launch a flow
+     * @param hm				hierarchy manager
+     * @param path				the path of selected node			
+     * @param flowName			name of flow
+     * @throws Exception
+     */
+    public void LaunchFlow(HierarchyManager hm, String path, String flowName)throws Exception;
 
 }
