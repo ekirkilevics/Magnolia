@@ -67,7 +67,11 @@ public class MgnlMailFactory {
         if (id == null)
             return new StaticEmail(getSession());
         HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
-        Content node = hm.getContent(MailConstants.MAIL_TEMPLATES_PATH + "/" + id);
+        String nodeTemplatePath = MailConstants.MAIL_TEMPLATES_PATH + "/" + id;
+        if (!hm.isExist(nodeTemplatePath))
+            throw new MailException("Template:[" + id + "] configuration was not found in repository");
+
+        Content node = hm.getContent(nodeTemplatePath);
 
         // type
         NodeData typeNode = node.getNodeData(MailConstants.MAIL_TYPE);
@@ -90,15 +94,18 @@ public class MgnlMailFactory {
         String subject = subjectNode.getValue().getString();
         mail.setSubject(subject);
 
-        Content attachments = hm.getContent(node.getHandle() + "/" + MailConstants.MAIL_ATTACHMENT);
-        Collection atts = attachments.getChildren();
-        Iterator iter = atts.iterator();
-        while (iter.hasNext()) {
-            Content att = (Content) iter.next();
-            String cid = att.getNodeData("cid").getString();
-            String url = att.getNodeData("url").getString();
-            MailAttachment a = new MailAttachment(new URL(url), cid);
-            mail.addAttachment(a);
+        String attachNodePath = node.getHandle() + "/" + MailConstants.MAIL_ATTACHMENT;
+        if (hm.isExist(attachNodePath)) {
+            Content attachments = hm.getContent(attachNodePath);
+            Collection atts = attachments.getChildren();
+            Iterator iter = atts.iterator();
+            while (iter.hasNext()) {
+                Content att = (Content) iter.next();
+                String cid = att.getNodeData("cid").getString();
+                String url = att.getNodeData("url").getString();
+                MailAttachment a = new MailAttachment(new URL(url), cid);
+                mail.addAttachment(a);
+            }
         }
 
         return mail;
