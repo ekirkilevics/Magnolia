@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE module PUBLIC "info.magnolia/module.dtd" "http://magnolia.sf.net/module.dtd" >
 <module>
     <name>workflow</name>
     <displayName>Workflow</displayName>
