@@ -4,79 +4,96 @@
   <parent>
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
-    <version>2.2-SNAPSHOT</version>
+    <version>3.0-SNAPSHOT</version>
     <relativePath>../magnolia-project/pom.xml</relativePath>
   </parent>
   <artifactId>magnolia</artifactId>
   <name>magnolia</name>
   <packaging>war</packaging>
-  <version>2.2-SNAPSHOT</version>
+  <version>3.0-SNAPSHOT</version>
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>2.2-SNAPSHOT</version>
+      <version>3.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-jaas</artifactId>
-      <version>2.2-SNAPSHOT</version>
+      <version>3.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-exchange-simple</artifactId>
-      <version>2.2-SNAPSHOT</version>
+      <version>3.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-gui</artifactId>
-      <version>2.2-SNAPSHOT</version>
+      <version>3.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-admininterface</artifactId>
-      <version>2.2-SNAPSHOT</version>
+      <version>3.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-cache</artifactId>
-      <version>2.2-SNAPSHOT</version>
+      <version>3.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-openwfe</artifactId>
-      <version>2.2-SNAPSHOT</version>
+      <version>3.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-templating</artifactId>
-      <version>2.2-SNAPSHOT</version>
+      <version>3.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-taglib-cms</artifactId>
-      <version>2.2-SNAPSHOT</version>
+      <version>3.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-taglib-utility</artifactId>
-      <version>2.2-SNAPSHOT</version>
+      <version>3.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-editor-fckeditor</artifactId>
-      <version>2.2-SNAPSHOT</version>
+      <version>3.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-editor-kupu</artifactId>
-      <version>2.2-SNAPSHOT</version>
+      <version>3.0-SNAPSHOT</version>
     </dependency>
+
+    <dependency>
+      <groupId>com.obinary</groupId>
+      <artifactId>magnolia-module-professional</artifactId>
+      <version>3.0-SNAPSHOT</version>
+    </dependency>
+    
+    <!-- temporary solution for pro version -->
+    <!-- 
+    <dependency>
+      <groupId>com.obinary</groupId>
+      <artifactId>magnolia-module-dms</artifactId>
+      <version>1.1-SNAPSHOT</version>
+    </dependency>
+	  
     <dependency>
       <groupId>commons-chain</groupId>
       <artifactId>commons-chain</artifactId>
       <version>1.0</version>
     </dependency>
+    -->
+    
     <dependency>
       <groupId>org.apache.jackrabbit</groupId>
       <artifactId>jackrabbit</artifactId>
