@@ -12,6 +12,8 @@
  */
 package info.magnolia.cms.gui.controlx;
 
+import info.magnolia.cms.gui.controlx.impl.TestRenderKit;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,6 +44,15 @@ public class RenderKitFactory {
      * The registered RenderKits
      */
     private static Map renderKits = new HashMap();
+    
+    /**
+     * Register the test render kit as default.
+     */
+    static{
+        registerRenderKit(TEST_RENDER_KIT, new TestRenderKit());
+        registerRenderKit(ADMIN_INTERFACE_RENDER_KIT, new TestRenderKit());
+        registerRenderKit(WEB_RENDER_KIT, new TestRenderKit());
+    }
     
     /**
      * Register a RenderKit

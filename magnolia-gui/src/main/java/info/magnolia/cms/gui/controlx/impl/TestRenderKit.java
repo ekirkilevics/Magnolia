@@ -12,14 +12,27 @@
  */
 package info.magnolia.cms.gui.controlx.impl;
 
-import info.magnolia.cms.gui.controlx.RenderKit;
+import info.magnolia.cms.gui.controlx.list.ListColumn;
+import info.magnolia.cms.gui.controlx.list.ListColumnRenderer;
+import info.magnolia.cms.gui.controlx.list.ListControl;
+import info.magnolia.cms.gui.controlx.list.ListControlRenderer;
 
 
 /**
- * The simple render kit to render the controls in a public website. Less javascript and standard html controls used.
+ * A simple implementation returning the simplest possible html for testing reasons.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
+ *
  */
-public class WebRenderKit extends RenderKitImpl implements RenderKit {
+public class TestRenderKit extends RenderKitImpl {
+    
+    
+    /**
+     * Init the special renderers 
+     */
+    public TestRenderKit() {
+        this.register(ListColumn.RENDER_TYPE, new ListColumnRenderer());
+        this.register(ListControl.RENDER_TYPE, new ListControlRenderer());
+    }
 
 }

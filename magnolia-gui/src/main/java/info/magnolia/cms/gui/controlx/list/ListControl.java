@@ -19,6 +19,8 @@ import info.magnolia.cms.gui.controlx.impl.AbstractControl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * A list. Can sort or group data.
  * @author Philipp Bracher
@@ -60,26 +62,6 @@ public class ListControl extends AbstractControl {
      * Max rows shown per group
      */
     private int maxRowsPerGroup = 5;
-
-    /**
-     * Current sorting
-     */
-    private String sortField = "";
-
-    /**
-     * Current sort direction
-     */
-    private String sortDirection = "asc";
-
-    /**
-     * Current group field
-     */
-    private String groupField = "";
-
-    /**
-     * Current grouping direction
-     */
-    private String groupDirection = "asc";
     
     /**
      * Constructor. Setting the render type.
@@ -167,59 +149,56 @@ public class ListControl extends AbstractControl {
     }
 
     /**
-     * @return Returns the groupDirection.
+     * @see info.magnolia.cms.gui.controlx.list.ListModel#getGroupBy()
      */
-    public String getGroupDirection() {
-        return groupDirection;
+    public String getGroupBy() {
+        return StringUtils.defaultString(this.model.getGroupBy());
     }
 
     /**
-     * @param groupDirection The groupDirection to set.
+     * @see info.magnolia.cms.gui.controlx.list.ListModel#getGroupByOrder()
      */
-    public void setGroupDirection(String groupDirection) {
-        this.groupDirection = groupDirection;
+    public String getGroupByOrder() {
+        return StringUtils.defaultIfEmpty(this.model.getGroupByOrder(), "asc");
     }
 
     /**
-     * @return Returns the groupField.
+     * @see info.magnolia.cms.gui.controlx.list.ListModel#getSortBy()
      */
-    public String getGroupField() {
-        return groupField;
+    public String getSortBy() {
+        return StringUtils.defaultString(this.model.getSortBy());
     }
 
     /**
-     * @param groupField The groupField to set.
+     * @see info.magnolia.cms.gui.controlx.list.ListModel#getSortByOrder()
      */
-    public void setGroupField(String groupField) {
-        this.groupField = groupField;
+    public String getSortByOrder() {
+        return StringUtils.defaultIfEmpty(this.model.getSortByOrder(), "asc");
     }
 
     /**
-     * @return Returns the sortDirection.
+     * @see info.magnolia.cms.gui.controlx.list.ListModel#setGroupBy(java.lang.String)
      */
-    public String getSortDirection() {
-        return sortDirection;
+    public void setGroupBy(String name) {
+        this.model.setGroupBy(name, this.model.getGroupByOrder());
+    }
+    
+    /**
+     * @see info.magnolia.cms.gui.controlx.list.ListModel#setGroupBy(java.lang.String)
+     */
+    public void setGroupByOrder(String order) {
+        this.model.setGroupBy(this.model.getGroupBy(), order);
+    }
+    
+    /**
+     * @see info.magnolia.cms.gui.controlx.list.ListModel#setSortBy(java.lang.String)
+     */
+    public void setSortBy(String name) {
+        this.model.setSortBy(name, this.model.getSortByOrder());
     }
 
-    /**
-     * @param sortDirection The sortDirection to set.
-     */
-    public void setSortDirection(String sortDirection) {
-        this.sortDirection = sortDirection;
-    }
-
-    /**
-     * @return Returns the sortField.
-     */
-    public String getSortField() {
-        return sortField;
-    }
-
-    /**
-     * @param sortField The sortField to set.
-     */
-    public void setSortField(String sortField) {
-        this.sortField = sortField;
+    public void setSortByOrder(String order) {
+        this.model.setSortBy(this.model.getSortBy(), order);
     }
 
 }

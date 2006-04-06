@@ -23,10 +23,65 @@ import info.magnolia.cms.gui.controlx.impl.TemplatedRenderer;
  */
 public class ListControlRenderer extends TemplatedRenderer {
     
+    /**
+     * Default template used.
+     */
+    public ListControlRenderer() {
+        super();
+    }
+
+    /**
+     * Pass the template to use.
+     * @param templateName
+     */
+    public ListControlRenderer(String templateName) {
+        super(templateName);
+    }
+
+    /**
+     * Return asc or desc. 
+     * @param list
+     * @param field
+     * @return
+     */
+    public String nextSortByOrder(ListControl list, String field){
+        if(list.getSortBy().equals(field)){
+            if(list.getSortByOrder().equals("asc")){
+                return "desc";
+            }
+        }
+        return "asc";
+    }
+
+    /**
+     * Return asc or desc.
+     * @param list
+     * @param field
+     * @return
+     */
+    public String nextGroupByOrder(ListControl list, String field){
+        if(list.getGroupBy().equals(field)){
+            if(list.getGroupByOrder().equals("asc")){
+                return "desc";
+            }
+        }
+        return "asc";
+    }
+
+    /**
+     * Render the click event
+     * @param iter
+     * @return
+     */
     public String onClick(ListModelIterator iter){
         return "";
     }
     
+    /**
+     * Render the double click event
+     * @param iter
+     * @return
+     */
     public String onDbClick(ListModelIterator iter){
         return "";
     }

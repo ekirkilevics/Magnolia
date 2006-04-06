@@ -57,7 +57,7 @@ public class TemplatedRenderer implements Renderer {
     /**
      * @return
      */
-    private String getTemplateName(Control control) {
+    protected String getTemplateName(Control control) {
         if(this.templateName == null){
             return "/" + StringUtils.replace(control.getClass().getName(), ".", "/") + ".html";
         }

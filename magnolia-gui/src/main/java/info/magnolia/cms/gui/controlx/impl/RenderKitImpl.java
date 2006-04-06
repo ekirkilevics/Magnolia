@@ -32,7 +32,7 @@ public class RenderKitImpl implements RenderKit {
     /**
      * The renderers registered.
      */
-    Map renderers;
+    protected Map renderers;
     
     /**
      * Init the layzy map. 

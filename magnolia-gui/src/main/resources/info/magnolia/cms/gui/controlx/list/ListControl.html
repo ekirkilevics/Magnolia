@@ -1,22 +1,35 @@
 <!-- form for sorting and grouping -->
-<form name="${this.name}Form">
-	<input type="text" name="sortField" value="${this.sortField}"/>
-	<input type="text" name="sortDirection" value="${this.sortDirection}"/>
-	<input type="text" name="groupField" value="${this.groupField}"/>
-	<input type="text" name="groupDirection" value="${this.groupDirection}"/>
-</form>
+<input type="hidden" name="sortBy" value="${this.sortBy}"/>
+<input type="hidden" name="sortByOrder" value="${this.sortByOrder}"/>
+<input type="hidden" name="groupBy" value="${this.groupBy}"/>
+<input type="hidden" name="groupByOrder" value="${this.groupByOrder}"/>
+
+<script>
+	function sort(name, direction){
+		document.mgnlForm.sortBy.value = name;
+		document.mgnlForm.sortByOrder.value = direction;
+		document.mgnlForm.submit();
+	}
+
+	function group(name, direction){
+		document.mgnlForm.groupBy.value = name;
+		document.mgnlForm.groupByOrder.value = direction;
+		document.mgnlForm.submit();
+	}
+
+</script>
 
 <#if this.groupableFields?has_content>
 	group:<br/>
 	<#list this.groupableFields as field>
-		<a href="javascript:document.${this.name}Form.groupField.value='${field}';document.${this.name}Form.submit();">${field}</a><br/>
+		<a href="javascript:group('${field}','${renderer.nextGroupByOrder(this, field)}');">${field}</a><br/>
 	</#list>
 </#if>
 
 <#if this.sortableFields?has_content>
 	sort:<br/>
 	<#list this.sortableFields as field>
-		<a href="javascript:document.${this.name}Form.sortField.value='${field}';document.${this.name}Form.submit();">${field}</a><br/>
+		<a href="javascript:sort('${field}','${renderer.nextSortByOrder(this, field)}');">${field}</a><br/>
 	</#list>
 </#if>
 

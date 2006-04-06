@@ -89,7 +89,6 @@ public class AbstractControl implements Control {
      * @return Returns the name.
      */
     public String getName() {
-        System.out.println(this.getClass() + ": get " + name);
         return name;
     }
 
@@ -97,8 +96,6 @@ public class AbstractControl implements Control {
      * @param name The name to set.
      */
     public void setName(String name) {
-        System.out.println(this.getClass() + ": set " + name);
-
         this.name = name;
     }
 
