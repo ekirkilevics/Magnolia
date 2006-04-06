@@ -893,9 +893,6 @@ public class Tree extends ControlSuper {
         // include the tree footer / menu divs
         html.append(FreeMarkerUtil.process("info/magnolia/cms/gui/control/TreeFooter.ftl", params));
 
-        // render js for tree and context menu but not for the functionBar
-        html.append(FreeMarkerUtil.process("info/magnolia/cms/gui/control/TreeJavascript.ftl", params));
-
         // include the footer (functionBar or AddressBar)
         if (!this.isBrowseMode()) {
             html.append(this.getFunctionBar().getHtml());
@@ -905,6 +902,9 @@ public class Tree extends ControlSuper {
             html.append(FreeMarkerUtil.process("info/magnolia/cms/gui/control/TreeAddressBar.ftl", params));
         }
 
+        // render js for tree and context menu but not for the functionBar
+        html.append(FreeMarkerUtil.process("info/magnolia/cms/gui/control/TreeJavascript.ftl", params));
+        
         return html.toString();
     }
 
