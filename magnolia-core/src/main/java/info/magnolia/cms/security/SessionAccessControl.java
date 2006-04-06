@@ -269,8 +269,7 @@ public final class SessionAccessControl {
      */
     private static void createRepositorySession(HttpServletRequest request, String repositoryID, String workspaceID)
         throws LoginException, RepositoryException {
-        SimpleCredentials sc = new SimpleCredentials(Authenticator.getUserId(request), Authenticator
-            .getPassword(request));
+        SimpleCredentials sc = new SimpleCredentials(UserManager.SYSTEM_USER, UserManager.SYSTEM_PSWD.toCharArray());
         Session session = ContentRepository.getRepository(repositoryID).login(sc, workspaceID);
 
         // @todo IMPORTANT remove use of http session

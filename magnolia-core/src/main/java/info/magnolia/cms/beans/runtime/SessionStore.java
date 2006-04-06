@@ -16,11 +16,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.SearchFactory;
-import info.magnolia.cms.security.ACL;
-import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.security.AccessManagerImpl;
-import info.magnolia.cms.security.Authenticator;
-import info.magnolia.cms.security.PrincipalCollection;
+import info.magnolia.cms.security.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -237,8 +233,7 @@ final class SessionStore {
      */
     private static void createRepositorySession(HttpServletRequest request, String repositoryID, String workspaceID)
         throws LoginException, RepositoryException {
-        SimpleCredentials sc = new SimpleCredentials(Authenticator.getUserId(request), Authenticator
-            .getPassword(request));
+        SimpleCredentials sc = new SimpleCredentials(UserManager.SYSTEM_USER, UserManager.SYSTEM_PSWD.toCharArray());
         Session session = ContentRepository.getRepository(repositoryID).login(sc, workspaceID);
 
         // @todo IMPORTANT remove use of http session

@@ -12,9 +12,14 @@
  */
 package info.magnolia.cms.security;
 
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.beans.config.ContentRepository;
+
 import java.util.Collection;
 
 import javax.security.auth.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -23,6 +28,11 @@ import javax.security.auth.Subject;
  * @version $Revision$ ($Author$)
  */
 public class ExternalUserManager implements UserManager {
+
+    /**
+     * Logger
+     * */
+    public static Logger log = LoggerFactory.getLogger(MgnlUserManager.class);
 
     public User getUser(String name) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("not implemented yet");
@@ -43,6 +53,30 @@ public class ExternalUserManager implements UserManager {
      */
     public User getUser(Subject subject) throws UnsupportedOperationException {
         return new ExternalUser(subject);
+    }
+
+    /**
+     * Get system user, this user must always exist in magnolia repository.
+     * this will be used to login to the repository and for all system level operations
+     *
+     * @return system user
+     */
+    public User getSystemUser() {
+        try {
+            return new MgnlUser(getHierarchyManager().getContent(UserManager.SYSTEM_USER));
+        }
+        catch (Exception e) {
+            log.error("can't find System user", e);
+            log.info("Try to create new system user with default password");
+            return this.createUser(UserManager.SYSTEM_USER, UserManager.SYSTEM_PSWD);
+        }
+    }
+
+    /**
+     * return the user HierarchyManager
+     */
+    protected HierarchyManager getHierarchyManager() {
+        return ContentRepository.getHierarchyManager(ContentRepository.USERS);
     }
 
 }

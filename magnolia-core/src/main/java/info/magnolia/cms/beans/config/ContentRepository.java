@@ -18,10 +18,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.SearchFactory;
-import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.security.AccessManagerImpl;
-import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.security.PermissionImpl;
+import info.magnolia.cms.security.*;
 import info.magnolia.cms.util.UrlPattern;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
@@ -106,16 +103,6 @@ public final class ContentRepository {
     private static final String ATTRIBUTE_VALUE = "value"; //$NON-NLS-1$
 
     private static final String ATTRIBUTE_REPOSITORY_NAME = "repositoryName"; //$NON-NLS-1$
-
-    /**
-     * Magnolia system user.
-     */
-    public static final String SYSTEM_USER = "admin"; //$NON-NLS-1$
-
-    /**
-     * Magnolia system password
-     */
-    public static final char[] SYSTEM_PSWD = "admin".toCharArray(); //$NON-NLS-1$
 
     /**
      * All available repositories store.
@@ -327,12 +314,12 @@ public final class ContentRepository {
     private static void loadHierarchyManager(Repository repository, String wspID, RepositoryMapping map,
         Provider provider) {
         try {
-            SimpleCredentials sc = new SimpleCredentials(ContentRepository.SYSTEM_USER, ContentRepository.SYSTEM_PSWD);
+            SimpleCredentials sc = new SimpleCredentials(UserManager.SYSTEM_USER, UserManager.SYSTEM_PSWD.toCharArray());
             Session session = repository.login(sc, wspID);
             provider.registerNamespace(NAMESPACE_PREFIX, NAMESPACE_URI, session.getWorkspace());
             provider.registerNodeTypes(session.getWorkspace());
             AccessManagerImpl accessManager = getAccessManager();
-            HierarchyManager hierarchyManager = new HierarchyManager(ContentRepository.SYSTEM_USER);
+            HierarchyManager hierarchyManager = new HierarchyManager(UserManager.SYSTEM_USER);
             hierarchyManager.init(session.getRootNode());
             hierarchyManager.setAccessManager(accessManager);
             ContentRepository.hierarchyManagers.put(map.getName() + "_" + wspID, hierarchyManager); //$NON-NLS-1$
