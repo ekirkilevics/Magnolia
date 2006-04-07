@@ -10,7 +10,10 @@
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.core;
+package info.magnolia.cms.core.version;
+
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 
 import java.util.Calendar;
 
@@ -35,7 +38,7 @@ public class ContentVersion extends Content {
      * @param thisVersion
      * @throws RepositoryException
      */
-    ContentVersion(Version thisVersion) throws RepositoryException {
+    public ContentVersion(Version thisVersion) throws RepositoryException {
         this.state = thisVersion;
         this.init();
     }

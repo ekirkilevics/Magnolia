@@ -12,12 +12,12 @@
  */
 package info.magnolia.cms.core;
 
-import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.core.version.ContentVersion;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -809,32 +809,6 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
-     * Gets a Collection containing all child nodes at the current level+1 level
-     *
-     * @param contentCollection collection of content nodes
-     * @return sorted collection
-     */
-    public Collection sortByDate(Collection contentCollection) {
-        try {
-            if (contentCollection == null) {
-                return contentCollection;
-            }
-            Collections.sort((List) contentCollection, new Comparator() {
-
-                public int compare(Object o1, Object o2) {
-                    Date date1 = ((Content) o1).getMetaData().getCreationDate().getTime();
-                    Date date2 = ((Content) o2).getMetaData().getCreationDate().getTime();
-                    return date1.compareTo(date2);
-                }
-            });
-        }
-        catch (Exception e) {
-            log.error(e.getMessage());
-        }
-        return contentCollection;
-    }
-
-    /**
      * get a handle representing path relative to the content repository
      *
      * @return String representing path (handle) of the content
@@ -847,17 +821,6 @@ public class Content extends ContentHandler implements Cloneable {
             log.error("Failed to get handle: " + e.getMessage(), e); //$NON-NLS-1$
             return StringUtils.EMPTY;
         }
-    }
-
-    /**
-     * get a handle representing path relative to the content repository with the default extension
-     *
-     * @return String representing path (handle) of the content
-     * @throws RepositoryException if an error occurs
-     * @deprecated content should not care how its rendered and what's the extension
-     */
-    public String getHandleWithDefaultExtension() throws PathNotFoundException, RepositoryException {
-        return (this.node.getPath() + "." + Server.getDefaultExtension()); //$NON-NLS-1$
     }
 
     /**
@@ -1147,7 +1110,7 @@ public class Content extends ContentHandler implements Cloneable {
      * @see ContentVersion
      */
     public ContentVersion getVersionedContent(String versionName) throws RepositoryException {
-        return new ContentVersion(this.getVersionHistory().getVersion(versionName));
+        return new info.magnolia.cms.core.version.ContentVersion(this.getVersionHistory().getVersion(versionName));
     }
 
     /**
