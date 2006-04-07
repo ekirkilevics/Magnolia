@@ -157,29 +157,27 @@ public class MagnoliaEmail extends FreemarkerEmail {
             _client.getHostConfiguration().setHost(location.getHost(), location.getPort(), location.getProtocol());
             _client.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
 
-            try {
-                MgnlContext.setInstance(MgnlContext.getSystemContext());
-                UserManager manager = (UserManager) FactoryUtil.getInstance(UserManager.class);
-                Iterator iter = manager.getAllUsers().iterator();
-                User user = null;
-                while (iter.hasNext()) {
-                    user = (User) iter.next();
-                }
-                if (user != null) {
-                    log.info(user.getName());
-                    log.info(user.getPassword());
-                } else
-                    log.info("User was null");
-            } catch (Exception e) {
-                e.printStackTrace();
+
+            MgnlContext.setInstance(MgnlContext.getSystemContext());
+            UserManager manager = (UserManager) FactoryUtil.getInstance(UserManager.class);
+            Iterator iter = manager.getAllUsers().iterator();
+            User user = null;
+
+            if (iter.hasNext()) {
+                user = (User) iter.next();
             }
+            if (user != null && log.isDebugEnabled()) {
+                log.debug(user.getName());
+                log.debug(user.getPassword());
+            } else
+                throw new Exception("No user found");
 
             // login
             PostMethod authpost = new PostMethod(location.getPath());
             NameValuePair action = new NameValuePair("action", "login");
             NameValuePair url = new NameValuePair("url", location.getPath());
-            NameValuePair userid = new NameValuePair("mgnlUserId", "superuser");
-            NameValuePair password = new NameValuePair("mgnlUserPSWD", "superuser");
+            NameValuePair userid = new NameValuePair("mgnlUserId", user.getName());
+            NameValuePair password = new NameValuePair("mgnlUserPSWD", user.getPassword());
             authpost.setRequestBody(new NameValuePair[]{action, url, userid, password});
             _client.executeMethod(authpost);
             authpost.releaseConnection();
