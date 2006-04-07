@@ -142,10 +142,23 @@ public abstract class AbstractListModel implements ListModel {
      * */
     protected Collection doSort(Collection collection) {
         if (StringUtils.isNotEmpty(this.getGroupBy())) {
-            Collections.sort((List) collection, new ListComparator(this.getGroupBy(), this.getSortBy()));
+            ListComparator comparator = new ListComparator();
+            comparator.setSortBy(this.getGroupBy());
+            comparator.setOrder(this.getGroupByOrder());
+            Collections.sort((List) collection, comparator);
         }
         if (StringUtils.isNotEmpty(this.getGroupBy()) && StringUtils.isNotEmpty(this.getSortBy())) { // sub sort
-            Collections.sort((List) collection, new ListComparator("", this.getSortBy()));
+            ListComparator comparator = new ListComparator();
+            comparator.setPreSort(this.getGroupBy());
+            comparator.setSortBy(this.getSortBy());
+            comparator.setOrder(this.getSortByOrder());
+            Collections.sort((List) collection, comparator);
+        }
+        if (StringUtils.isEmpty(this.getGroupBy()) && StringUtils.isNotEmpty(this.getSortBy())) {
+            ListComparator comparator = new ListComparator();
+            comparator.setSortBy(this.getSortBy());
+            comparator.setOrder(this.getSortByOrder());
+            Collections.sort((List) collection, comparator);
         }
         return collection;
     }
@@ -155,22 +168,22 @@ public abstract class AbstractListModel implements ListModel {
      * */
     protected class ListComparator implements Comparator {
 
-        private String groupBy;
+        private String preSort;
 
         private String sortBy;
 
+        private String order;
+
         private ValueProvider valueProvider;
 
-        ListComparator(String groupBy, String sortBy) {
-            this.groupBy = groupBy;
-            this.sortBy = sortBy;
+        ListComparator() {
             this.valueProvider = ValueProvider.getInstance();
         }
 
         public int compare(Object object, Object object1) {
-            if (StringUtils.isNotEmpty(this.groupBy)) {
-                return this.group(object, object1);
-            } else if (StringUtils.isNotEmpty(this.sortBy)) {
+            if (StringUtils.isNotEmpty(this.sortBy) && StringUtils.isEmpty(this.preSort)) {
+                return this.sort(object, object1);
+            } else if (StringUtils.isNotEmpty(this.sortBy) && StringUtils.isNotEmpty(this.preSort)) {
                 return this.subSort(object, object1);
             }
             return 0;
@@ -181,10 +194,13 @@ public abstract class AbstractListModel implements ListModel {
          * @param object to be compared
          * @param object1 to be compared
          * */
-        private int group(Object object, Object object1) {
-            String firstKey = (String) this.valueProvider.getValue(this.groupBy, (Content) object);
-            String secondKey = (String) this.valueProvider.getValue(this.groupBy, (Content) object1);
-            return firstKey.compareTo(secondKey);
+        private int sort(Object object, Object object1) {
+            String firstKey = (String) this.valueProvider.getValue(this.sortBy, (Content) object);
+            String secondKey = (String) this.valueProvider.getValue(this.sortBy, (Content) object1);
+            if (this.getOrder().equalsIgnoreCase(ASCENDING))
+                return firstKey.compareTo(secondKey);
+            else
+                return secondKey.compareTo(firstKey);
         }
 
         /**
@@ -193,14 +209,43 @@ public abstract class AbstractListModel implements ListModel {
          * @param object1 to be compared
          * */
         private int subSort(Object object, Object object1) {
-            String firstKey = (String) this.valueProvider.getValue(this.groupBy, (Content) object);
-            String secondKey = (String) this.valueProvider.getValue(this.groupBy, (Content) object1);
+            String firstKey = (String) this.valueProvider.getValue(this.preSort, (Content) object);
+            String secondKey = (String) this.valueProvider.getValue(this.preSort, (Content) object1);
             String subSortFirstKey = (String) this.valueProvider.getValue(this.sortBy, (Content) object);
             String subSortSecondKey = (String) this.valueProvider.getValue(this.sortBy, (Content) object1);
             if (firstKey.equalsIgnoreCase(secondKey)) {
-                return subSortFirstKey.compareTo(subSortSecondKey);
+                if (this.getOrder().equalsIgnoreCase(ASCENDING))
+                    return subSortFirstKey.compareTo(subSortSecondKey);
+                else
+                    return subSortSecondKey.compareTo(subSortFirstKey);
             }
             return -1;
+        }
+
+        public String getPreSort() {
+            return preSort;
+        }
+
+        public void setPreSort(String preSort) {
+            this.preSort = preSort;
+        }
+
+        public String getSortBy() {
+            return sortBy;
+        }
+
+        public void setSortBy(String sortBy) {
+            this.sortBy = sortBy;
+        }
+
+        public String getOrder() {
+            if (order == null)
+                return ASCENDING;
+            return order;
+        }
+
+        public void setOrder(String order) {
+            this.order = order;
         }
 
     }
