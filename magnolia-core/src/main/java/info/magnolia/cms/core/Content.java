@@ -177,8 +177,7 @@ public class Content extends ContentHandler implements Cloneable {
      * @deprecated use getContent(String name) instead
      */
     public Content getContentNode(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        Content content = new Content(this.node, path, this.accessManager);
-        return content;
+        return new Content(this.node, path, this.accessManager);
     }
 
     /**
@@ -224,7 +223,7 @@ public class Content extends ContentHandler implements Cloneable {
      */
     public Content getContent(String name, boolean create, ItemType contentType) throws AccessDeniedException,
             RepositoryException {
-        Content node = null;
+        Content node;
         try {
             node = this.getContent(name);
         }
@@ -514,7 +513,6 @@ public class Content extends ContentHandler implements Cloneable {
         MetaData md = this.getMetaData();
         md.setModificationDate();
         md.setAuthorId(MgnlContext.getUser().getName());
-        md = null;
     }
 
     /**
@@ -529,7 +527,6 @@ public class Content extends ContentHandler implements Cloneable {
         MetaData md = this.getMetaData();
         md.setModificationDate();
         md.setAuthorId(Authenticator.getUserId(request));
-        md = null;
     }
 
     /**
@@ -552,7 +549,7 @@ public class Content extends ContentHandler implements Cloneable {
      * @return Collection of content objects
      */
     public Collection getChildren(ContentFilter filter, Comparator orderCriteria) {
-        Collection children = null;
+        Collection children;
         if (orderCriteria == null) {
             children = new ArrayList();
         } else {
@@ -599,34 +596,12 @@ public class Content extends ContentHandler implements Cloneable {
             log.error(re.getMessage());
             log.debug(re.getMessage(), re);
         }
-        // @todo workaround
         // fix all getChildren calls from the root node
         if ("rep:root".equalsIgnoreCase(type)) { //$NON-NLS-1$
             type = ItemType.CONTENT.getSystemName();
         }
         // --------------------------------------------------
         return this.getChildren(StringUtils.defaultString(type));
-    }
-
-    /**
-     * @deprecated use ContentUtil
-     */
-    public List collectAllChildren() {
-        List nodes = new ArrayList();
-        return collectAllChildren(nodes, this);
-    }
-
-    /**
-     * @deprecated use ContentUtil
-     */
-    private List collectAllChildren(List nodes, Content node) {
-        Collection children = node.getChildren();
-        for (Iterator iter = children.iterator(); iter.hasNext();) {
-            Content child = (Content) iter.next();
-            nodes.add(child);
-            collectAllChildren(nodes, child);
-        }
-        return nodes;
     }
 
     /**
