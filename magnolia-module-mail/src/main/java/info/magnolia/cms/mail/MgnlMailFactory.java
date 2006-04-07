@@ -111,7 +111,6 @@ public class MgnlMailFactory {
         return mail;
     }
 
-
     /**
      * Return an instance of the mail type, given a string description.
      *
@@ -128,6 +127,8 @@ public class MgnlMailFactory {
             return new FreemarkerEmail(getSession());
         else if (type.equalsIgnoreCase(MailConstants.MAIL_TEMPLATE_SIMPLE))
             return new SimpleEmail(getSession());
+        else if (type.equalsIgnoreCase(MailConstants.MAIL_TEMPLATE_MAGNOLIA))
+            return new MagnoliaEmail(getSession());
         else {
             return new StaticEmail(getSession());
         }
@@ -260,7 +261,6 @@ public class MgnlMailFactory {
         }
         return ret.toString();
     }
-
 
     /**
      * retrieve email address fo user

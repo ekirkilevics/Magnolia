@@ -5,6 +5,12 @@
     <class>info.magnolia.cms.mail.Engine</class>
     <version>3.0</version>
     <displayName>Magnolia templating mail</displayName>
+    <dependencies>
+        <dependency>
+            <name>templating</name>
+            <version>3.0</version>
+        </dependency>
+    </dependencies>
     <servlets>
         <servlet>
             <class>info.magnolia.cms.mail.servlets.MgnlMailServlet</class>

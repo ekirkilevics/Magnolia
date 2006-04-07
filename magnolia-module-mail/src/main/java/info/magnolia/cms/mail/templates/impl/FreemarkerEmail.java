@@ -42,8 +42,12 @@ public class FreemarkerEmail extends HtmlEmail {
 
     public void setBodyFromResourceFile(String resourceFile, HashMap _map) throws Exception {
         Template late = cfg.getTemplate(resourceFile);
+        setBodyFromTemplate(late, _map);
+    }
+
+    public void setBodyFromTemplate(Template template, HashMap _map) throws Exception {
         StringWriter writer = new StringWriter();
-        late.process(_map, writer);
+        template.process(_map, writer);
         writer.flush();
         super.setBody(writer.toString(), _map);
     }
