@@ -55,7 +55,7 @@ public class Aggregator {
 
     public static final String REQUEST_RECEIVER = "requestReceiver"; //$NON-NLS-1$
 
-    public static final String DIRECT_REQUEST_RECEIVER = "/ResourceDispatcher"; //$NON-NLS-1$
+    public static final String TEMPLATE = "mgnl_Template"; //$NON-NLS-1$
 
     /**
      * Logger.
@@ -74,7 +74,6 @@ public class Aggregator {
      * @throws RepositoryException
      */
     public static boolean collect(HttpServletRequest request) throws PathNotFoundException, RepositoryException {
-        boolean success = true;
 
         String uri = StringUtils.substringBeforeLast(Path.getURI(request), "."); //$NON-NLS-1$
         String extension = StringUtils.substringAfterLast(Path.getURI(request), "."); //$NON-NLS-1$
@@ -83,34 +82,58 @@ public class Aggregator {
 
         Content requestedPage = null;
         NodeData requestedData = null;
-        String requestReceiver = null;
+        Template template = null;
 
-        if (hierarchyManager.isNodeData(uri)) {
-            requestedData = hierarchyManager.getNodeData(uri);
-            requestReceiver = getRequestReceiver(requestedData, extension);
-        }
-        else if (hierarchyManager.isPage(uri)) {
+        if (hierarchyManager.isPage(uri)) {
             requestedPage = hierarchyManager.getContent(uri); // ATOM
-            requestReceiver = getRequestReceiver(requestedPage, extension);
+
+            String templateName = requestedPage.getMetaData().getTemplate();
+
+            if (StringUtils.isBlank(templateName)) {
+                log.error("No template configured for page [{}].", requestedPage.getHandle()); //$NON-NLS-1$
+            }
+
+            template = TemplateManager.getInstance().getInfo(templateName);
+
+            if (template == null) {
+                log.error("Template [{}] for page [{}] not found.", //$NON-NLS-1$
+                    templateName,
+                    requestedPage.getHandle());
+            }
         }
         else {
-            // check again, resource might have different name
-            int lastIndexOfSlash = uri.lastIndexOf("/"); //$NON-NLS-1$
+            if (hierarchyManager.isNodeData(uri)) {
+                requestedData = hierarchyManager.getNodeData(uri);
+            }
+            else {
+                // check again, resource might have different name
+                int lastIndexOfSlash = uri.lastIndexOf("/"); //$NON-NLS-1$
 
-            if (lastIndexOfSlash > 0) {
-                uri = StringUtils.substringBeforeLast(uri, "/"); //$NON-NLS-1$
-                try {
-                    requestedData = hierarchyManager.getNodeData(uri);
-                    requestReceiver = getRequestReceiver(requestedData, extension);
+                if (lastIndexOfSlash > 0) {
+                    uri = StringUtils.substringBeforeLast(uri, "/"); //$NON-NLS-1$
+                    try {
+                        requestedData = hierarchyManager.getNodeData(uri);
+                    }
+                    catch (PathNotFoundException e) {
+                        // no page available
+                        return false;
+                    }
+                    catch (RepositoryException e) {
+                        log.debug(e.getMessage(), e);
+                        return false;
+                    }
                 }
-                catch (RepositoryException e) {
-                    requestReceiver = Aggregator.DIRECT_REQUEST_RECEIVER;
-                    success = false;
+            }
+
+            if (requestedData != null) {
+                String templateName = requestedData.getAttribute("nodeDataTemplate"); //$NON-NLS-1$
+
+                if (!StringUtils.isEmpty(templateName)) {
+                    template = TemplateManager.getInstance().getInfo(templateName);
                 }
             }
             else {
-                requestReceiver = Aggregator.DIRECT_REQUEST_RECEIVER;
-                success = false;
+                return false;
             }
         }
 
@@ -125,60 +148,18 @@ public class Aggregator {
             file.setNodeData(requestedData);
             request.setAttribute(Aggregator.FILE, file);
         }
+
         request.setAttribute(Aggregator.HANDLE, uri);
         request.setAttribute(Aggregator.EXTENSION, extension);
         request.setAttribute(Aggregator.HIERARCHY_MANAGER, hierarchyManager);
-        request.setAttribute(Aggregator.REQUEST_RECEIVER, requestReceiver);
 
-        return success;
-    }
-
-    /**
-     * Set the template responsible to handle this request.
-     * @param type
-     */
-    private static String getRequestReceiver(NodeData requestedData, String extension) {
-        try {
-            String templateName = requestedData.getAttribute("nodeDataTemplate"); //$NON-NLS-1$
-            if (StringUtils.isEmpty(templateName)) {
-                return Aggregator.DIRECT_REQUEST_RECEIVER;
-            }
-            return TemplateManager.getInstance().getInfo(templateName).getPath(extension);
+        if (template != null) {
+            request.setAttribute(Aggregator.TEMPLATE, template);
+            String requestReceiver = template.getPath(extension);
+            request.setAttribute(Aggregator.REQUEST_RECEIVER, requestReceiver);
         }
-        catch (Exception e) {
-            return Aggregator.DIRECT_REQUEST_RECEIVER;
-        }
-    }
 
-    /**
-     * Set the servlet responsible to handle direct resource request.
-     */
-    private static String getRequestReceiver(Content requestedPage, String extension) {
-
-        try {
-            String templateName = requestedPage.getMetaData().getTemplate();
-
-            if (StringUtils.isBlank(templateName)) {
-                log.error("No template configured for page [{}].", requestedPage.getHandle()); //$NON-NLS-1$
-            }
-
-            Template template = TemplateManager.getInstance().getInfo(templateName);
-
-            if (template == null) {
-
-                log.error("Template [{}] for page [{}] not found.", //$NON-NLS-1$
-                    templateName,
-                    requestedPage.getHandle());
-
-                return null;
-            }
-
-            return template.getPath(extension);
-        }
-        catch (Exception e) {
-            log.error("Failed to set request receiver: " + e.getMessage(), e); //$NON-NLS-1$
-        }
-        return null;
+        return true;
     }
 
 }

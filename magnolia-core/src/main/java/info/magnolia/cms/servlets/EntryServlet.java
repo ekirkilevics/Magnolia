@@ -16,6 +16,7 @@ import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ModuleRegistration;
+import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.cms.beans.config.VirtualURIManager;
 import info.magnolia.cms.beans.runtime.MgnlContext;
@@ -66,6 +67,11 @@ public class EntryServlet extends ContextSensitiveServlet {
     private static final String REQUEST_INTERCEPTOR = "/RequestInterceptor"; //$NON-NLS-1$
 
     /**
+     * The default request dispatcher.
+     */
+    private static final String DIRECT_REQUEST_RECEIVER = "/ResourceDispatcher"; //$NON-NLS-1$
+
+    /**
      * Allow caching of this specific resource. This method always returns <code>true</code>, and it's here to allow
      * an easy plug-in of application-specific logic by extending EntrySrvlet. If you need to disable cache for specific
      * requests (not based on the request URI, since this is configurable from adminCentral) you can override this
@@ -112,14 +118,24 @@ public class EntryServlet extends ContextSensitiveServlet {
                 // aggregate content
                 boolean success = Aggregator.collect(req);
                 if (success) {
-                    try {
-                        // @todo temporary hardcoded jsp renderer
-                        TemplateRenderer renderer = TemplateManager.getInstance().getRenderer("jsp");
-                        renderer.renderTemplate(req, res);
+
+                    Template template = (Template) req.getAttribute(Aggregator.TEMPLATE);
+
+                    if (template != null) {
+                        try {
+                            TemplateRenderer renderer = TemplateManager.getInstance().getRenderer(template.getType());
+                            renderer.renderTemplate(req, res);
+                        }
+                        catch (Exception e) {
+                            // @todo better handling of rendering exception
+                            log.error(e.getMessage(), e);
+                        }
                     }
-                    catch (Exception e) {
-                        log.error(e.getMessage(), e);
+                    else {
+                        // direct request
+                        req.getRequestDispatcher(DIRECT_REQUEST_RECEIVER).forward(req, res);
                     }
+
                 }
                 else {
                     if (log.isDebugEnabled()) {

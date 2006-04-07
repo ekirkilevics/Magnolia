@@ -111,7 +111,7 @@ public class TemplateManager extends ObservedManager {
      * </ol>
      * @return TemplateInfo
      */
-    public Template getInfo(String key) throws Exception {
+    public Template getInfo(String key) {
         return (Template) cachedContent.get(key);
     }
 
