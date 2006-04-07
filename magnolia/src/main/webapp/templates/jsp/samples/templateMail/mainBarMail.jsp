@@ -5,10 +5,7 @@
     <jsp:directive.page import="info.magnolia.cms.util.Resource"/>
 
     <jsp:scriptlet>
-        <
-        !
-        [
-        CDATA[
+        <![CDATA[
 
         if (request.getParameter("mail") == null) {
             Content currentPage = Resource.getActivePage(request);
@@ -31,11 +28,7 @@
             //draw the main bar
             bar.drawHtml(out);
         }
-
-
-        ]
-        ]
-        >
+        ]]>
     </jsp:scriptlet>
 
 </jsp:root>

@@ -6,6 +6,7 @@ import info.magnolia.cms.core.Path;
 import info.magnolia.cms.mail.templates.MailAttachment;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.UserManager;
+import info.magnolia.cms.security.Security;
 import info.magnolia.cms.util.FactoryUtil;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.NameValuePair;
@@ -157,7 +158,14 @@ public class MagnoliaEmail extends FreemarkerEmail {
             _client.getHostConfiguration().setHost(location.getHost(), location.getPort(), location.getProtocol());
             _client.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
 
+            try {
+                log.info("User:" + MgnlContext.getInstance().getUser().getName());
+            } catch (Exception e) {
+                log.error("Current user not found");
+            }
 
+
+            /*
             MgnlContext.setInstance(MgnlContext.getSystemContext());
             UserManager manager = (UserManager) FactoryUtil.getInstance(UserManager.class);
             Iterator iter = manager.getAllUsers().iterator();
@@ -171,13 +179,18 @@ public class MagnoliaEmail extends FreemarkerEmail {
                 log.debug(user.getPassword());
             } else
                 throw new Exception("No user found");
+                */
+            String user = "superuser";
+            String pass = "superuser";
+
+            //Security.getUserManager().getAllUsers();
 
             // login
             PostMethod authpost = new PostMethod(location.getPath());
             NameValuePair action = new NameValuePair("action", "login");
             NameValuePair url = new NameValuePair("url", location.getPath());
-            NameValuePair userid = new NameValuePair("mgnlUserId", user.getName());
-            NameValuePair password = new NameValuePair("mgnlUserPSWD", user.getPassword());
+            NameValuePair userid = new NameValuePair("mgnlUserId", user);
+            NameValuePair password = new NameValuePair("mgnlUserPSWD", pass);
             authpost.setRequestBody(new NameValuePair[]{action, url, userid, password});
             _client.executeMethod(authpost);
             authpost.releaseConnection();

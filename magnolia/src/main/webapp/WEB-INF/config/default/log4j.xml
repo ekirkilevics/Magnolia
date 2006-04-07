@@ -90,6 +90,9 @@
   <category name="freemarker">
     <priority value="WARN" />
   </category>
+  <category name="httpclient">
+    <priority value="WARN" />
+  </category>
   <category name="info.magnolia.cms.exchange" additivity="false">
     <priority value="info" />
     <appender-ref ref="log-activation" />
