@@ -70,53 +70,31 @@
 
     -->
     <RepositoryMapping>
-        <Map name="website" repositoryName="website" />
-        <Map name="config" repositoryName="config" />
-        <Map name="users" repositoryName="user" />
-        <Map name="userroles" repositoryName="user" />
-        <Map name="usergroups" repositoryName="user"/>
+        <Map name="website" repositoryName="magnolia" />
+        <Map name="config" repositoryName="magnolia" />
+        <Map name="users" repositoryName="magnolia" />
+        <Map name="userroles" repositoryName="magnolia" />
+        <Map name="usergroups" repositoryName="magnolia"/>
+        <Map name="mgnlSystem" repositoryName="magnolia"/> <!-- System internal data -->
+        <Map name="mgnlVersion" repositoryName="magnolia"/> <!-- magnolia version workspace -->
         <Map name="owfe" repositoryName="owfe"/>
     </RepositoryMapping>
-    
-    <!-- magnolia default website repository -->
-    <Repository name="website" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
+
+    <!-- magnolia default repository -->
+    <Repository name="magnolia" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
         <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-derby-search.xml" />
-        <param name="repositoryHome" value="repositories/website" />
+        <param name="repositoryHome" value="repositories/magnolia" />
         <param name="customNodeTypes" value="WEB-INF/config/repo-conf/nodetypes/magnolia_nodetypes.xml" />
         <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory" />
         <param name="providerURL" value="localhost" />
-        <param name="bindName" value="websiteAuthor" />
-        <!--
-            You can define workspaces for this repository, attribute "name" is used to to login to the specified
-            workspace, check provider specific configuration file to configure workspaces.
-            WEB-INF/config/repo-conf/??.xml
-        -->
-        <!--
+        <param name="bindName" value="magnoliaAuthor" />
         <workspace name="website" />
         <workspace name="config" />
         <workspace name="users" />
-        <workspace name="userRoles" />
-        -->
-    </Repository>
-    <!-- magnolia default config repository -->
-    <Repository name="config" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
-        <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-derby-nosearch.xml" />
-        <param name="repositoryHome" value="repositories/config" />
-        <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory" />
-        <param name="providerURL" value="localhost" />
-        <param name="bindName" value="configAuthor" />
-    </Repository>
-    <!-- magnolia user repository -->
-    <Repository name="user" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
-        <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-derby-nosearch.xml" />
-        <param name="repositoryHome" value="repositories/user" />
-        <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory" />
-        <param name="providerURL" value="localhost" />
-        <param name="bindName" value="usersAuthor" />
-        <workspace name="user" />
-        <workspace name="users" />
         <workspace name="userroles" />
         <workspace name="usergroups" />
+        <workspace name="mgnlSystem" />
+        <workspace name="mgnlVersion" />
     </Repository>
     <!-- workflow module -->
     <Repository name="owfe" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
