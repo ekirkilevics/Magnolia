@@ -26,7 +26,6 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -63,54 +62,10 @@ public class Aggregator {
      */
     private static Logger log = LoggerFactory.getLogger(Aggregator.class);
 
-    private static final int ATOM = 2;
-
-    private HttpServletRequest request;
-
-    private Content requestedPage;
-
-    private NodeData requestedData;
-
-    private HierarchyManager hierarchyManager;
-
-    private String uri;
-
-    private String extension;
-
-    private String requestReceiver;
-
     /**
-     * constructor
-     * @param req HttpServletRequest as received by the servlet engine
+     * Don't instantiate.
      */
-    public Aggregator(HttpServletRequest req, HttpServletResponse response) {
-        this.request = req;
-    }
-
-    /**
-     * Update requested page of the current request.
-     * @throws PathNotFoundException
-     * @throws RepositoryException
-     */
-    private void getRequestedContent() throws PathNotFoundException, RepositoryException {
-        this.requestedPage = this.hierarchyManager.getContent(this.uri);
-    }
-
-    /**
-     * Update requested content of the current request.
-     * @throws PathNotFoundException
-     * @throws RepositoryException
-     */
-    private void getRequestedContent(int type) throws PathNotFoundException, RepositoryException {
-        this.requestedData = this.hierarchyManager.getNodeData(this.uri);
-    }
-
-    /**
-     * Parse uri to get exact Content path.
-     */
-    private void parseURI() {
-        this.uri = StringUtils.substringBeforeLast(Path.getURI(this.request), "."); //$NON-NLS-1$
-        this.extension = StringUtils.substringAfterLast(Path.getURI(this.request), "."); //$NON-NLS-1$
+    private Aggregator() {
     }
 
     /**
@@ -118,39 +73,63 @@ public class Aggregator {
      * @throws PathNotFoundException
      * @throws RepositoryException
      */
-    public boolean collect() throws PathNotFoundException, RepositoryException {
+    public static boolean collect(HttpServletRequest request) throws PathNotFoundException, RepositoryException {
         boolean success = true;
-        this.hierarchyManager = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
-        this.parseURI();
-        if (this.hierarchyManager.isNodeData(this.uri)) {
-            this.getRequestedContent(Aggregator.ATOM);
-            this.setRequestReceiver(Aggregator.ATOM);
+
+        String uri = StringUtils.substringBeforeLast(Path.getURI(request), "."); //$NON-NLS-1$
+        String extension = StringUtils.substringAfterLast(Path.getURI(request), "."); //$NON-NLS-1$
+
+        HierarchyManager hierarchyManager = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+
+        Content requestedPage = null;
+        NodeData requestedData = null;
+        String requestReceiver = null;
+
+        if (hierarchyManager.isNodeData(uri)) {
+            requestedData = hierarchyManager.getNodeData(uri);
+            requestReceiver = getRequestReceiver(requestedData, extension);
         }
-        else if (this.hierarchyManager.isPage(this.uri)) {
-            this.getRequestedContent();
-            this.setRequestReceiver(false);
+        else if (hierarchyManager.isPage(uri)) {
+            requestedPage = hierarchyManager.getContent(uri); // ATOM
+            requestReceiver = getRequestReceiver(requestedPage, extension);
         }
         else {
             // check again, resource might have different name
-            int lastIndexOfSlash = this.uri.lastIndexOf("/"); //$NON-NLS-1$
+            int lastIndexOfSlash = uri.lastIndexOf("/"); //$NON-NLS-1$
 
             if (lastIndexOfSlash > 0) {
-                this.uri = StringUtils.substringBeforeLast(this.uri, "/"); //$NON-NLS-1$
+                uri = StringUtils.substringBeforeLast(uri, "/"); //$NON-NLS-1$
                 try {
-                    this.getRequestedContent(Aggregator.ATOM);
-                    this.setRequestReceiver(Aggregator.ATOM);
+                    requestedData = hierarchyManager.getNodeData(uri);
+                    requestReceiver = getRequestReceiver(requestedData, extension);
                 }
                 catch (RepositoryException e) {
-                    this.setRequestReceiver(true);
+                    requestReceiver = Aggregator.DIRECT_REQUEST_RECEIVER;
                     success = false;
                 }
             }
             else {
-                this.setRequestReceiver(true);
+                requestReceiver = Aggregator.DIRECT_REQUEST_RECEIVER;
                 success = false;
             }
         }
-        this.updateRequest();
+
+        // Attach all collected information to the HttpServletRequest.
+        if (requestedPage != null) {
+            request.setAttribute(Aggregator.ACTPAGE, requestedPage);
+            request.setAttribute(Aggregator.CURRENT_ACTPAGE, requestedPage);
+        }
+        if ((requestedData != null) && (requestedData.getType() == PropertyType.BINARY)) {
+            File file = new File();
+            file.setProperties(requestedData);
+            file.setNodeData(requestedData);
+            request.setAttribute(Aggregator.FILE, file);
+        }
+        request.setAttribute(Aggregator.HANDLE, uri);
+        request.setAttribute(Aggregator.EXTENSION, extension);
+        request.setAttribute(Aggregator.HIERARCHY_MANAGER, hierarchyManager);
+        request.setAttribute(Aggregator.REQUEST_RECEIVER, requestReceiver);
+
         return success;
     }
 
@@ -158,72 +137,48 @@ public class Aggregator {
      * Set the template responsible to handle this request.
      * @param type
      */
-    private void setRequestReceiver(int type) {
+    private static String getRequestReceiver(NodeData requestedData, String extension) {
         try {
-            String templateName = this.requestedData.getAttribute("nodeDataTemplate"); //$NON-NLS-1$
+            String templateName = requestedData.getAttribute("nodeDataTemplate"); //$NON-NLS-1$
             if (StringUtils.isEmpty(templateName)) {
-                this.setRequestReceiver(true);
-                return;
+                return Aggregator.DIRECT_REQUEST_RECEIVER;
             }
-            this.requestReceiver = TemplateManager.getInstance().getInfo(templateName).getPath(this.extension);
+            return TemplateManager.getInstance().getInfo(templateName).getPath(extension);
         }
         catch (Exception e) {
-            this.setRequestReceiver(true);
-            return;
+            return Aggregator.DIRECT_REQUEST_RECEIVER;
         }
     }
 
     /**
      * Set the servlet responsible to handle direct resource request.
      */
-    private void setRequestReceiver(boolean direct) {
-        if (direct) {
-            this.requestReceiver = Aggregator.DIRECT_REQUEST_RECEIVER;
-        }
-        else {
-            try {
-                String templateName = this.requestedPage.getMetaData().getTemplate();
+    private static String getRequestReceiver(Content requestedPage, String extension) {
 
-                if (StringUtils.isBlank(templateName)) {
-                    log.error("No template configured for page [{}].", this.requestedPage.getHandle()); //$NON-NLS-1$
-                }
+        try {
+            String templateName = requestedPage.getMetaData().getTemplate();
 
-                Template template = TemplateManager.getInstance().getInfo(templateName);
-
-                if (template == null) {
-
-                    log.error("Template [{}] for page [{}] not found.", //$NON-NLS-1$
-                        templateName,
-                        this.requestedPage.getHandle());
-
-                    return;
-                }
-
-                this.requestReceiver = template.getPath(this.extension);
+            if (StringUtils.isBlank(templateName)) {
+                log.error("No template configured for page [{}].", requestedPage.getHandle()); //$NON-NLS-1$
             }
-            catch (Exception e) {
-                log.error("Failed to set request receiver: " + e.getMessage(), e); //$NON-NLS-1$
+
+            Template template = TemplateManager.getInstance().getInfo(templateName);
+
+            if (template == null) {
+
+                log.error("Template [{}] for page [{}] not found.", //$NON-NLS-1$
+                    templateName,
+                    requestedPage.getHandle());
+
+                return null;
             }
+
+            return template.getPath(extension);
         }
+        catch (Exception e) {
+            log.error("Failed to set request receiver: " + e.getMessage(), e); //$NON-NLS-1$
+        }
+        return null;
     }
 
-    /**
-     * Attach all collected information to the HttpServletRequest.
-     */
-    private void updateRequest() {
-        if (this.requestedPage != null) {
-            this.request.setAttribute(Aggregator.ACTPAGE, this.requestedPage);
-            this.request.setAttribute(Aggregator.CURRENT_ACTPAGE, this.requestedPage);
-        }
-        if ((this.requestedData != null) && (this.requestedData.getType() == PropertyType.BINARY)) {
-            File file = new File();
-            file.setProperties(this.requestedData);
-            file.setNodeData(this.requestedData);
-            this.request.setAttribute(Aggregator.FILE, file);
-        }
-        this.request.setAttribute(Aggregator.HANDLE, this.uri);
-        this.request.setAttribute(Aggregator.EXTENSION, this.extension);
-        this.request.setAttribute(Aggregator.HIERARCHY_MANAGER, this.hierarchyManager);
-        this.request.setAttribute(Aggregator.REQUEST_RECEIVER, this.requestReceiver);
-    }
 }

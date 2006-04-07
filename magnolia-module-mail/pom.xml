@@ -80,7 +80,7 @@
         <site>
             <id>magnolia</id>
             <name>magnolia</name>
-            <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/22/magnolia-mail</url>
+            <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/22/magnolia-module-mail</url>
         </site>
     </distributionManagement>
 </project>

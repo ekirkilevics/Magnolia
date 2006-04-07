@@ -12,6 +12,7 @@
  */
 package info.magnolia.cms.beans.config;
 
+import info.magnolia.cms.beans.runtime.TemplateRenderer;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.AccessManager;
@@ -21,6 +22,7 @@ import info.magnolia.cms.util.FactoryUtil;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -58,6 +60,8 @@ public class TemplateManager extends ObservedManager {
      */
     private List visibleTemplates = new ArrayList();
 
+    private Map renderers = new HashMap();
+
     /**
      * Called by the ObervedManager
      */
@@ -80,6 +84,16 @@ public class TemplateManager extends ObservedManager {
             log.error(re.getMessage(), re);
         }
 
+    }
+
+    public void registerTemplateRenderer(String type, TemplateRenderer instance) {
+        synchronized (renderers) {
+            renderers.put("jsp", instance);
+        }
+    }
+
+    public TemplateRenderer getRenderer(String type) {
+        return (TemplateRenderer) renderers.get(type);
     }
 
     protected void onClear() {

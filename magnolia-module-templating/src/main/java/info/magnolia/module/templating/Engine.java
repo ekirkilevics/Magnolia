@@ -12,9 +12,10 @@
  */
 package info.magnolia.module.templating;
 
+import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.cms.module.RegisterException;
 import info.magnolia.module.admininterface.AbstractAdminModule;
-
+import info.magnolia.module.templating.renderers.JspTemplateRenderer;
 
 
 /**
@@ -31,6 +32,10 @@ public class Engine extends AbstractAdminModule {
     public void onInit() {
         // set local store to be accessed via admin interface classes or JSP
         Store.getInstance().setStore(this.getConfigNode());
+
+        // temporary hardcoded renderers
+        TemplateManager.getInstance().registerTemplateRenderer("jsp", new JspTemplateRenderer());
+        TemplateManager.getInstance().registerTemplateRenderer("servlet", new JspTemplateRenderer());
     }
 
     /**

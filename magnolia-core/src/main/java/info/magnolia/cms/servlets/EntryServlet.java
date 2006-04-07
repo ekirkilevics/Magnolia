@@ -13,13 +13,13 @@
 package info.magnolia.cms.servlets;
 
 import info.magnolia.cms.Aggregator;
-import info.magnolia.cms.Dispatcher;
 import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.config.ModuleLoader;
 import info.magnolia.cms.beans.config.ModuleRegistration;
+import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.cms.beans.config.VirtualURIManager;
 import info.magnolia.cms.beans.runtime.MgnlContext;
+import info.magnolia.cms.beans.runtime.TemplateRenderer;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Permission;
@@ -95,8 +95,8 @@ public class EntryServlet extends ContextSensitiveServlet {
             res.getWriter().write("Magnolia bootstrapping has failed, check bootstrap.log in magnolia/logs"); //$NON-NLS-1$
             return;
         }
-        
-        if(ModuleRegistration.getInstance().isRestartNeeded()){
+
+        if (ModuleRegistration.getInstance().isRestartNeeded()) {
             req.getRequestDispatcher("/admintemplates/adminCentral/restart.jsp").forward(req, res);
             System.out.println("UPS");
         }
@@ -110,11 +110,12 @@ public class EntryServlet extends ContextSensitiveServlet {
                 }
                 intercept(req, res);
                 // aggregate content
-                Aggregator aggregator = new Aggregator(req, res);
-                boolean success = aggregator.collect();
+                boolean success = Aggregator.collect(req);
                 if (success) {
                     try {
-                        Dispatcher.dispatch(req, res, getServletContext());
+                        // @todo temporary hardcoded jsp renderer
+                        TemplateRenderer renderer = TemplateManager.getInstance().getRenderer("jsp");
+                        renderer.renderTemplate(req, res);
                     }
                     catch (Exception e) {
                         log.error(e.getMessage(), e);
