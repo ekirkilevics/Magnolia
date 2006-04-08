@@ -5,9 +5,6 @@ import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.mail.templates.MailAttachment;
 import info.magnolia.cms.security.User;
-import info.magnolia.cms.security.UserManager;
-import info.magnolia.cms.security.Security;
-import info.magnolia.cms.util.FactoryUtil;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
@@ -25,6 +22,7 @@ import java.io.*;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.ArrayList;
 
 /**
  * Date: Apr 6, 2006
@@ -36,6 +34,21 @@ public class MagnoliaEmail extends FreemarkerEmail {
     public static final String SUFFIX = "?mgnlIntercept=PREVIEW&mgnlPreview=true&mail=draw";
     private HttpClient client;
     private int cid = 0;
+    private static final String UTF_8 = "UTF-8";
+    private static final String MAGNOLIA = "magnolia";
+    private static final String IMG = "img";
+    private static final String SRC = "src";
+    private static final String CID = "cid:";
+    private static final String LINK = "link";
+    private static final String HREF = "href";
+    private static final String STYLE = "style";
+    private static final String REL = "rel";
+    private static final String ACTION = "action";
+    private static final String LOGIN = "login";
+    private static final String URL = "url";
+    private static final String MGNL_USER_ID = "mgnlUserId";
+    private static final String MGNL_USER_PSWD = "mgnlUserPSWD";
+    private static final String SLASH = "/";
 
     public MagnoliaEmail(Session _session) throws Exception {
         super(_session);
@@ -53,7 +66,7 @@ public class MagnoliaEmail extends FreemarkerEmail {
         reader = FilterImages(urlBasePath, reader);
 
         // create the template from the previously filtered stream
-        Template template = new Template("magnolia", reader, FreemarkerEmail.cfg, "UTF-8");
+        Template template = new Template(MAGNOLIA, reader, FreemarkerEmail.cfg, UTF_8);
 
         // execute the template, calling super will make use of Freemarker capabilities
         super.setBodyFromTemplate(template, _map);
@@ -75,29 +88,55 @@ public class MagnoliaEmail extends FreemarkerEmail {
         log.info("Filtering images");
         SAXBuilder parser = new SAXBuilder();
         Document doc = parser.build(reader);
-        Iterator iter = doc.getDescendants(new Filter() {
-            public boolean matches(Object object) {
-                if (object instanceof Element) {
-                    Element e = (Element) object;
-                    return e.getName().equalsIgnoreCase("img");
-                } else
-                    return false;
-            }
-        });
+        ArrayList toremove = new ArrayList();
+        ArrayList toadd = new ArrayList();
+
+        // Filter content
+        Iterator iter = doc.getDescendants(new ContentFilter());
         while (iter.hasNext()) {
             Element elem = (Element) iter.next();
-            Attribute att = elem.getAttribute("src");
-            log.info("Found new elem:" + att.toString());
-            String value = att.getValue();
+            String name = elem.getName();
+            if (name.equalsIgnoreCase(IMG)) {
+                // stream image and attach it to the email
+                Attribute att = elem.getAttribute(SRC);
+                if (log.isDebugEnabled())
+                    log.debug("Found new img:" + att.toString());
+                String value = att.getValue();
+                cid ++;
+                att.setValue(CID + (cid));
+                String url = urlBasePath + value;
+                if (log.isDebugEnabled())
+                    log.debug("Url is:" + url);
+                this.addAttachment(new MailAttachment(getAttachmentFile(url), String.valueOf(cid)));
+            } else if (name.equalsIgnoreCase(LINK)) {
+                // stream the css and put the content into a <style> tag
+                Attribute att = elem.getAttribute(HREF);
+                Element el = (Element) elem.clone();
+                if (log.isDebugEnabled())
+                    log.debug("Found new css:" + att.toString());
+                String url = urlBasePath + att.getValue();
+                el.setName(STYLE);
+                el.removeAttribute(HREF);
+                el.removeAttribute(REL);
+                GetMethod streamCss = new GetMethod(url);
+                getHttpClient(url).executeMethod(streamCss);
+                el.setText(streamCss.getResponseBodyAsString());
 
-            cid ++;
-            att.setValue("cid:" + (cid));
-            String url = urlBasePath + value;
-            log.info("Url is:" + url);
-
-            this.addAttachment(new MailAttachment(getAttachmentFile(url), String.valueOf(cid)));
+                toremove.add(elem);
+                toadd.add(el);
+            }
         }
 
+        // this is ugly but is there to
+        // avoid concurrent modification  exception on the Document
+        for (int i = 0; i < toremove.size(); i++) {
+            Element elem = (Element) toremove.get(i);
+            Element parent = elem.getParentElement();
+            doc.removeContent(elem);
+            parent.addContent((Element) toadd.get(i));
+        }
+
+        // create the return string reader with new document content
         StringWriter writer = new StringWriter();
         new XMLOutputter().output(doc, writer);
         return new StringReader(writer.toString());
@@ -111,30 +150,37 @@ public class MagnoliaEmail extends FreemarkerEmail {
      * @throws Exception if fails
      */
     private File getAttachmentFile(String url) throws Exception {
-        log.info("Downloading file:" + url);
+        log.info("Streaming content of url:" + url + " to a temporary file");
+
+        // Execute an http get on the url
         GetMethod redirect = new GetMethod(url);
         getHttpClient(url).executeMethod(redirect);
 
         URL _url = new URL(url);
         String file = _url.getFile();
-        log.info("Looking for file:" + file);
 
-        File tempFile = new File(Path.getTempDirectoryPath() + File.separator + file.substring(file.lastIndexOf("/") + 1));
+        // create file in temp dir, with just the file name.
+        File tempFile = new File(Path.getTempDirectoryPath() + File.separator + file.substring(file.lastIndexOf(SLASH) + 1));
         // if same file and same size, return, do not process
         if (tempFile.exists() && redirect.getResponseContentLength() == tempFile.length()) {
             redirect.releaseConnection();
             return tempFile;
         }
 
-        // stream the content to the file
+        // stream the content to the temp file
         FileOutputStream out = new FileOutputStream(tempFile);
         final int BUFFER_SIZE = 1 << 10 << 3; //8KiB buffer
         byte[] buffer = new byte[BUFFER_SIZE];
-        int bytesRead = -1;
+        int bytesRead;
         InputStream in = new BufferedInputStream(redirect.getResponseBodyAsStream());
-        while ((bytesRead = in.read(buffer)) > -1) {
-            out.write(buffer, 0, bytesRead);
+        while (true) {
+            bytesRead = in.read(buffer);
+            if (bytesRead > -1) {
+                out.write(buffer, 0, bytesRead);
+            } else
+                break;
         }
+
         // cleanup
         in.close();
         out.close();
@@ -152,52 +198,38 @@ public class MagnoliaEmail extends FreemarkerEmail {
      */
     private HttpClient getHttpClient(String baseURL) throws Exception {
         if (client == null) {
-            log.info("logging in...");
             URL location = new URL(baseURL);
-            HttpClient _client = new HttpClient();
-            _client.getHostConfiguration().setHost(location.getHost(), location.getPort(), location.getProtocol());
-            _client.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
-
-            try {
-                log.info("User:" + MgnlContext.getInstance().getUser().getName());
-            } catch (Exception e) {
-                log.error("Current user not found");
-            }
-
-
-            /*
-            MgnlContext.setInstance(MgnlContext.getSystemContext());
-            UserManager manager = (UserManager) FactoryUtil.getInstance(UserManager.class);
-            Iterator iter = manager.getAllUsers().iterator();
-            User user = null;
-
-            if (iter.hasNext()) {
-                user = (User) iter.next();
-            }
-            if (user != null && log.isDebugEnabled()) {
-                log.debug(user.getName());
-                log.debug(user.getPassword());
-            } else
-                throw new Exception("No user found");
-                */
-            String user = "superuser";
-            String pass = "superuser";
-
-            //Security.getUserManager().getAllUsers();
-
-            // login
-            PostMethod authpost = new PostMethod(location.getPath());
-            NameValuePair action = new NameValuePair("action", "login");
-            NameValuePair url = new NameValuePair("url", location.getPath());
-            NameValuePair userid = new NameValuePair("mgnlUserId", user);
-            NameValuePair password = new NameValuePair("mgnlUserPSWD", pass);
-            authpost.setRequestBody(new NameValuePair[]{action, url, userid, password});
-            _client.executeMethod(authpost);
-            authpost.releaseConnection();
-            this.client = _client;
+            User user = MgnlContext.getInstance().getUser();
+            this.client = getHttpClientForUser(location, user);
         }
-
         return client;
+    }
+
+    /**
+     * Separate this method from HttpClient in case we want to get the http client for a different user than the current one
+     *
+     * @param location the url to login to
+     * @param _user    the user to get credentials from
+     * @return <code>HttpClient</code> logged in to the system
+     * @throws IOException if fails
+     */
+    private HttpClient getHttpClientForUser(URL location, User _user) throws IOException {
+        HttpClient _client = new HttpClient();
+        _client.getHostConfiguration().setHost(location.getHost(), location.getPort(), location.getProtocol());
+        _client.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
+        String user = _user.getName();
+        String pass = _user.getPassword();
+        log.info("Creating http client for user:" + user);
+        // login using the id and password of the current user
+        PostMethod authpost = new PostMethod(location.getPath());
+        NameValuePair action = new NameValuePair(ACTION, LOGIN);
+        NameValuePair url = new NameValuePair(URL, location.getPath());
+        NameValuePair userid = new NameValuePair(MGNL_USER_ID, user);
+        NameValuePair password = new NameValuePair(MGNL_USER_PSWD, pass);
+        authpost.setRequestBody(new NameValuePair[]{action, url, userid, password});
+        _client.executeMethod(authpost);
+        authpost.releaseConnection();
+        return _client;
     }
 
     /**
@@ -214,5 +246,18 @@ public class MagnoliaEmail extends FreemarkerEmail {
         String response = redirect.getResponseBodyAsString();
         redirect.releaseConnection();
         return response;
+    }
+
+    /**
+     * Class to filter content when parsing the html
+     */
+    private static class ContentFilter implements Filter {
+        public boolean matches(Object object) {
+            if (object instanceof Element) {
+                Element e = (Element) object;
+                return e.getName().equalsIgnoreCase(LINK) || e.getName().equalsIgnoreCase(IMG);
+            } else
+                return false;
+        }
     }
 }

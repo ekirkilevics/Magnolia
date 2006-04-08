@@ -7,6 +7,7 @@ import info.magnolia.cms.mail.MgnlMailFactory;
 import info.magnolia.cms.mail.handlers.MgnlMailHandler;
 import info.magnolia.cms.mail.templates.MailAttachment;
 import info.magnolia.cms.mail.templates.MgnlEmail;
+import info.magnolia.cms.servlets.ContextSensitiveServlet;
 import info.magnolia.cms.util.RequestFormUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -17,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.StringBufferInputStream;
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -30,9 +31,10 @@ import java.util.Properties;
  *
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */
-public class MgnlMailServlet extends javax.servlet.http.HttpServlet {
+public class MgnlMailServlet extends ContextSensitiveServlet {
 
-    Logger log = LoggerFactory.getLogger(MgnlMailServlet.class);
+    static  Logger log = LoggerFactory.getLogger(MgnlMailServlet.class);
+
     private static final String TYPE = "type";
     private static final String SUBJECT = "subject";
     private static final String FROM = "from";
@@ -54,6 +56,7 @@ public class MgnlMailServlet extends javax.servlet.http.HttpServlet {
     private static final String NONE = "<none>";
 
     protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
+        super.doPost(httpServletRequest, httpServletResponse);
 
         RequestFormUtil request = new RequestFormUtil(httpServletRequest);
 
@@ -101,7 +104,6 @@ public class MgnlMailServlet extends javax.servlet.http.HttpServlet {
                 email.setBody(text, map);
                 if (attachment != null)
                     email.addAttachment(attachment);
-                //email.setTemplate(template);
                 email.setCcList(factory.convertEmailList(cc));
                 handler.prepareAndSendMail(email);
             }
@@ -130,9 +132,16 @@ public class MgnlMailServlet extends javax.servlet.http.HttpServlet {
         writer.flush();
     }
 
+    /**
+     * Convert the string of parameters retrieved from the form into a HashMap.
+     *
+     * @param parameters string from the text area of the form
+     * @return <code>HashMap</code>
+     * @throws IOException if fails
+     */
     private HashMap convertToMap(String parameters) throws IOException {
         HashMap map = new HashMap();
-        StringBufferInputStream string = new StringBufferInputStream(parameters);
+        ByteArrayInputStream string = new ByteArrayInputStream(parameters.getBytes());
         Properties props = new Properties();
         props.load(string);
 
@@ -145,6 +154,11 @@ public class MgnlMailServlet extends javax.servlet.http.HttpServlet {
         return map;
     }
 
+    /**
+     * CSS portion of the form
+     *
+     * @return <code>String</code> containing the CSS portion of the form
+     */
     private String getServletStyle() {
         StringBuffer buffer = new StringBuffer();
         buffer.append("" +
@@ -167,20 +181,28 @@ public class MgnlMailServlet extends javax.servlet.http.HttpServlet {
     }
 
     protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
-        displayForm(httpServletResponse);
+        super.doGet(httpServletRequest, httpServletResponse);
+        StringBuffer sb = displayForm();
+
+        PrintWriter writer = httpServletResponse.getWriter();
+        writer.write(sb.toString());
+        writer.flush();
     }
 
-    private void displayForm(HttpServletResponse httpServletResponse) throws IOException {
+    /**
+     * Display the mail form
+     *
+     */
+    private StringBuffer displayForm() {
         StringBuffer sb = new StringBuffer();
-        sb.append(getServletStyle());
 
+        sb.append(getServletStyle());
         sb.append("<h1>Email Servlet</h1>");
 
         // Email edit area
         sb.append("<form method=\"post\" enctype=\"multipart/form-data\">");
         sb.append("<input type=\"hidden\"  width=\"80%\" name=\"" + ACTION + "\" value=\"action\"/>");
         sb.append("<table>");
-
         addSection("From", FROM, HTML_TEXT, "The sender of the email", sb);
         addSection("Subject", SUBJECT, HTML_TEXT, "The subject of the email", sb);
         addSection("Text", TEXT, HTML_BIG_TEXT_AREA, "The content of the email. Note that this is not used if a template is set", sb);
@@ -190,40 +212,50 @@ public class MgnlMailServlet extends javax.servlet.http.HttpServlet {
         addSection("Attach", FILE, HTML_FILE, "The attachment has a default id of '" + ATT_ID + "'. This is only limited in the servlet", sb);
         addSection("Template", TEMPLATE, HTML_SELECT, "If a template is set, the type of the mail, the content and subject are retrieved from the repository.The configuration for template us under the following node (" + MailConstants.MAIL_TEMPLATES_PATH + ")", sb);
         addSection("Email Type", TYPE, HTML_SELECT, "This define the format of the email. In the future more implementation can be added", sb);
-
         sb.append("</table>");
-
         sb.append("<center><input type=\"submit\" value=\"send\"/></center>");
         sb.append("</form>");
 
-        PrintWriter writer = httpServletResponse.getWriter();
-        writer.write(sb.toString());
-        writer.flush();
+        return sb;
     }
 
+    /**
+     * Factorized code for the form
+     * @param label description of the entry
+     * @param name to use for parameter
+     * @param htmlInputType the type of the input
+     * @param comments if needed for explanations
+     * @param sb the stringbuffer to append the code to
+     * @return the same string buffer as sb, appended with the form section
+     */
     private StringBuffer addSection(String label, String name, String htmlInputType, String comments, StringBuffer sb) {
         sb.append("<tr>");
-        sb.append("<td>" + label + " :</td>");
+        sb.append("<td>").append(label).append(" :</td>");
         sb.append("<td>");
         if (htmlInputType.equals(HTML_SMALL_TEXT_AREA)) {
-            sb.append("<textArea  cols=\"80\" width=\"80%\"rows=\"2\"  name=\"" + name + "\"></textArea>");
+            sb.append("<textArea  cols=\"80\" width=\"80%\"rows=\"2\"  name=\"").append(name).append("\"></textArea>");
         } else if (htmlInputType.equals(HTML_SELECT)) {
             sb.append(getSelectBox(name));
         } else if (htmlInputType.equals(HTML_BIG_TEXT_AREA)) {
-            sb.append("<textArea  cols=\"80\" width=\"80%\"rows=\"10\"  name=\"" + name + "\"/></textArea>");
+            sb.append("<textArea  cols=\"80\" width=\"80%\"rows=\"10\"  name=\"").append(name).append("\"/></textArea>");
         } else if (htmlInputType.equals(HTML_TEXT_AREA)) {
-            sb.append("<textArea  cols=\"80\" width=\"80%\"rows=\"5\"  name=\"" + name + "\"/></textArea>");
+            sb.append("<textArea  cols=\"80\" width=\"80%\"rows=\"5\"  name=\"").append(name).append("\"/></textArea>");
         } else if (htmlInputType.equals(HTML_TEXT)) {
-            sb.append("<input type=\"text\" width=\"80%\"cols=\"80\" name=\"" + name + "\"/>");
+            sb.append("<input type=\"text\" width=\"80%\"cols=\"80\" name=\"").append(name).append("\"/>");
         } else if (htmlInputType.equals(HTML_FILE)) {
-            sb.append("<input cols=\"80\" width=\"80%\" type=\"file\" name=\"" + name + "\"/>");
+            sb.append("<input cols=\"80\" width=\"80%\" type=\"file\" name=\"").append(name).append("\"/>");
         }
-        sb.append("<p class=\"comments\">" + comments + "</p>");
+        sb.append("<p class=\"comments\">").append(comments).append("</p>");
         sb.append("</td>");
         sb.append("</tr>");
         return sb;
     }
 
+    /**
+     * Get an html select box string
+     * @param type <code>TYPE</code> or <code>TEMPLATE</code>
+     * @return html code for select box
+     */
     private StringBuffer getSelectBox(String type) {
         if (type.equalsIgnoreCase(TYPE))
             return getMailTypeSelectBox();
@@ -245,7 +277,7 @@ public class MgnlMailServlet extends javax.servlet.http.HttpServlet {
     }
 
     private void addOption(String option, StringBuffer buffer) {
-        buffer.append("<option value=\"" + option + "\">" + option + "");
+        buffer.append("<option value=\"").append(option).append("\">").append(option).append("");
     }
 
     private StringBuffer getTemplateSelectBox() {
