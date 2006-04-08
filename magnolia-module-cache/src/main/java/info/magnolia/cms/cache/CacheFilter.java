@@ -48,39 +48,44 @@ public class CacheFilter implements Filter {
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException,
         ServletException {
 
-        HttpServletRequest request = (HttpServletRequest) req;
-        boolean cacheable = cacheManager.isCacheable(request);
+        if (cacheManager.isEnabled() && cacheManager.isRunning()) {
+            HttpServletRequest request = (HttpServletRequest) req;
+            boolean cacheable = cacheManager.isCacheable(request);
 
-        // check if the request is cachable before trying to stream from cache.
-        // if the same page has already been requested before without parameters we should not fetch it from the cache
-        // if this time there are parameters.
-        if (cacheable) {
-            HttpServletResponse response = (HttpServletResponse) res;
+            // check if the request is cachable before trying to stream from cache.
+            // if the same page has already been requested before without parameters we should not fetch it from the
+            // cache
+            // if this time there are parameters.
+            if (cacheable) {
+                HttpServletResponse response = (HttpServletResponse) res;
 
-            CacheKey key = cacheManager.getCacheKey(request);
+                CacheKey key = cacheManager.getCacheKey(request);
 
-            boolean canCompress = cacheManager.canCompress(request);
-            boolean usedCache = cacheManager.streamFromCache(key, response, canCompress && clientAcceptsGzip(request));
-            if (!usedCache && !isAlreadyFiltered(request) && cacheManager.isCacheable(request)) {
+                boolean canCompress = cacheManager.canCompress(request);
+                boolean usedCache = cacheManager.streamFromCache(key, response, canCompress
+                    && clientAcceptsGzip(request));
+                if (!usedCache && !isAlreadyFiltered(request) && cacheManager.isCacheable(request)) {
 
-                // mark the request as already filtered, avoid recursion
-                request.setAttribute(ALREADY_FILTERED, Boolean.TRUE);
+                    // mark the request as already filtered, avoid recursion
+                    request.setAttribute(ALREADY_FILTERED, Boolean.TRUE);
 
-                CacheResponseWrapper responseWrapper = new CacheResponseWrapper(response);
+                    CacheResponseWrapper responseWrapper = new CacheResponseWrapper(response);
 
-                chain.doFilter(request, responseWrapper);
+                    chain.doFilter(request, responseWrapper);
 
-                // if response has status 200 go cache it
-                if (responseWrapper.getStatus() == HttpServletResponse.SC_OK) {
-                    CacheableEntry cacheableEntry = responseWrapper.getCacheableEntry();
-                    if (cacheableEntry != null) {
-                        this.cacheManager.cacheRequest(key, cacheableEntry, canCompress);
+                    // if response has status 200 go cache it
+                    if (responseWrapper.getStatus() == HttpServletResponse.SC_OK) {
+                        CacheableEntry cacheableEntry = responseWrapper.getCacheableEntry();
+                        if (cacheableEntry != null) {
+                            this.cacheManager.cacheRequest(key, cacheableEntry, canCompress);
+                        }
                     }
+                    return;
                 }
-                return;
-            } else if (usedCache) {
-                // dont forward, response has already been commited if usedCache is true.
-                return;
+                else if (usedCache) {
+                    // dont forward, response has already been commited if usedCache is true.
+                    return;
+                }
             }
         }
 
