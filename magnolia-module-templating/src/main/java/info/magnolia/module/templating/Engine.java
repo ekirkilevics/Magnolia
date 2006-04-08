@@ -36,6 +36,7 @@ public class Engine extends AbstractAdminModule {
         // temporary hardcoded renderers
         TemplateManager.getInstance().registerTemplateRenderer("jsp", new JspTemplateRenderer());
         TemplateManager.getInstance().registerTemplateRenderer("servlet", new JspTemplateRenderer());
+        // TemplateManager.getInstance().registerTemplateRenderer("jasperreports", new JasperReportsTemplateRenderer());
     }
 
     /**

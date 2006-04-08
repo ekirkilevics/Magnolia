@@ -53,8 +53,6 @@ public class Aggregator {
 
     public static final String HIERARCHY_MANAGER = "hierarchyManager"; //$NON-NLS-1$
 
-    public static final String REQUEST_RECEIVER = "requestReceiver"; //$NON-NLS-1$
-
     public static final String TEMPLATE = "mgnl_Template"; //$NON-NLS-1$
 
     /**
@@ -93,7 +91,7 @@ public class Aggregator {
                 log.error("No template configured for page [{}].", requestedPage.getHandle()); //$NON-NLS-1$
             }
 
-            template = TemplateManager.getInstance().getInfo(templateName);
+            template = TemplateManager.getInstance().getInfo(templateName, extension);
 
             if (template == null) {
                 log.error("Template [{}] for page [{}] not found.", //$NON-NLS-1$
@@ -129,7 +127,7 @@ public class Aggregator {
                 String templateName = requestedData.getAttribute("nodeDataTemplate"); //$NON-NLS-1$
 
                 if (!StringUtils.isEmpty(templateName)) {
-                    template = TemplateManager.getInstance().getInfo(templateName);
+                    template = TemplateManager.getInstance().getInfo(templateName, extension);
                 }
             }
             else {
@@ -153,11 +151,7 @@ public class Aggregator {
         request.setAttribute(Aggregator.EXTENSION, extension);
         request.setAttribute(Aggregator.HIERARCHY_MANAGER, hierarchyManager);
 
-        if (template != null) {
-            request.setAttribute(Aggregator.TEMPLATE, template);
-            String requestReceiver = template.getPath(extension);
-            request.setAttribute(Aggregator.REQUEST_RECEIVER, requestReceiver);
-        }
+        request.setAttribute(Aggregator.TEMPLATE, template);
 
         return true;
     }

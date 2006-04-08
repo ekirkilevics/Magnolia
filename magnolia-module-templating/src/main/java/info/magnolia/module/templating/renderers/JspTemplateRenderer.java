@@ -12,7 +12,7 @@
  */
 package info.magnolia.module.templating.renderers;
 
-import info.magnolia.cms.Aggregator;
+import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.runtime.TemplateRenderer;
 
 import java.io.IOException;
@@ -44,10 +44,10 @@ public class JspTemplateRenderer implements TemplateRenderer {
      * @see info.magnolia.cms.beans.runtime.TemplateRenderer#renderTemplate(javax.servlet.http.HttpServletRequest,
      * javax.servlet.http.HttpServletResponse)
      */
-    public void renderTemplate(HttpServletRequest request, HttpServletResponse response) throws IOException,
-        ServletException {
+    public void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response)
+        throws IOException, ServletException {
 
-        String requestReceiver = (String) request.getAttribute(Aggregator.REQUEST_RECEIVER);
+        String requestReceiver = template.getPath();
 
         if (requestReceiver == null) {
             log.error("requestReceiver is missing, returning a 404 error"); //$NON-NLS-1$

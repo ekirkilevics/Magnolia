@@ -12,6 +12,8 @@
  */
 package info.magnolia.cms.beans.runtime;
 
+import info.magnolia.cms.beans.config.Template;
+
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -30,10 +32,12 @@ public interface TemplateRenderer {
 
     /**
      * Generates the actual output using the selected template
+     * @param template template to be rendered
      * @param request HttpServletRequest
      * @param response HttpServletResponse
      * @throws IOException exception occurred while writing to the output stream
      * @throws ServletException generic servlet exception
      */
-    void renderTemplate(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException;
+    void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response)
+        throws IOException, ServletException;
 }

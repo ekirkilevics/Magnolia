@@ -124,7 +124,7 @@ public class EntryServlet extends ContextSensitiveServlet {
                     if (template != null) {
                         try {
                             TemplateRenderer renderer = TemplateManager.getInstance().getRenderer(template.getType());
-                            renderer.renderTemplate(req, res);
+                            renderer.renderTemplate(template, req, res);
                         }
                         catch (Exception e) {
                             // @todo better handling of rendering exception

@@ -28,8 +28,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.jcr.RepositoryException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,7 +86,7 @@ public class TemplateManager extends ObservedManager {
 
     public void registerTemplateRenderer(String type, TemplateRenderer instance) {
         synchronized (renderers) {
-            renderers.put("jsp", instance);
+            renderers.put(type, instance);
         }
     }
 
@@ -116,6 +114,30 @@ public class TemplateManager extends ObservedManager {
     }
 
     /**
+     * Returns the cached content of the requested template. TemplateInfo properties:
+     * <ol>
+     * <li> title - title describing template</li>
+     * <li> type - jsp / servlet</li>
+     * <li> path - jsp / servlet path</li>
+     * <li> description - description of a template</li>
+     * </ol>
+     * @return TemplateInfo
+     */
+    public Template getInfo(String key, String extension) {
+        Template template = (Template) cachedContent.get(key);
+
+        if (template == null) {
+            return null;
+        }
+        Template subtemplate = template.getSubTemplate(extension);
+        if (subtemplate != null) {
+            return subtemplate;
+        }
+
+        return template;
+    }
+
+    /**
      * Adds templates definition to TemplatesInfo cache.
      * @param templates iterator as read from the repository
      * @param visibleTemplates List in with all visible templates will be added
@@ -123,19 +145,15 @@ public class TemplateManager extends ObservedManager {
     private void addTemplatesToCache(Iterator templates, List visibleTemplates) {
         while (templates.hasNext()) {
             Content c = (Content) templates.next();
-            try {
-                Template ti = new Template(c);
-                cachedContent.put(ti.getName(), ti);
-                if (ti.isVisible()) {
-                    visibleTemplates.add(ti);
-                }
 
-                log.info(MessageFormat.format("Registering template [{0}]", new Object[]{ti.getName()})); //$NON-NLS-1$
+            Template ti = new Template(c);
+            cachedContent.put(ti.getName(), ti);
+            if (ti.isVisible()) {
+                visibleTemplates.add(ti);
+            }
 
-            }
-            catch (RepositoryException re) {
-                log.error("Failed to cache TemplateInfo"); //$NON-NLS-1$
-            }
+            log.info(MessageFormat.format("Registering template [{0}]", new Object[]{ti.getName()})); //$NON-NLS-1$
+
         }
     }
 
