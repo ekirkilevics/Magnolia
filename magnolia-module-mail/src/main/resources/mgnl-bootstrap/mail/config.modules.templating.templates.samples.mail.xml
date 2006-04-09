@@ -32,7 +32,7 @@
         <sv:value>2006-04-05T13:13:10.716+09:00</sv:value>
     </sv:property>
     <sv:property sv:name="path" sv:type="String">
-        <sv:value>/templates/jsp/samples/templateMail/main.jsp</sv:value>
+        <sv:value>/templates/samples/templates/sample-mail.jsp</sv:value>
     </sv:property>
     <sv:property sv:name="title" sv:type="String">
         <sv:value>Sample Mail Template</sv:value>
