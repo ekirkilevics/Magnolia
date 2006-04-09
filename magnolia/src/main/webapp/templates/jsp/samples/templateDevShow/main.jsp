@@ -12,7 +12,31 @@
     <body>
       <cms:mainBar paragraph="samplesPageProperties" />
       <div id="contentDivMainColumnTotalWidth">
-        <c:import url="/templates/jsp/samples/templateDevShow/columnMain.jsp" />
+        <!-- content title -->
+        <h1>
+          <cms:ifNotEmpty nodeDataName="contentTitle" actpage="true">
+            <cms:out nodeDataName="contentTitle" />
+          </cms:ifNotEmpty>
+          <cms:ifEmpty nodeDataName="contentTitle" actpage="true">
+            <cms:out nodeDataName="title" />
+          </cms:ifEmpty>
+        </h1>
+        <cms:contentNodeIterator contentNodeCollectionName="mainColumnParagraphsDev">
+          <div style="clear:both;">
+            <cms:adminOnly>
+              <cms:editBar />
+            </cms:adminOnly>
+            <cms:includeTemplate />
+            <br />
+            <br />
+          </div>
+        </cms:contentNodeIterator>
+        <cms:adminOnly>
+          <div style="clear:both;">
+            <cms:newBar contentNodeCollectionName="mainColumnParagraphsDev"
+              paragraph="samplesDevShowRichEdit,samplesDevShowDate,samplesDevShowFile,samplesDevShowAllControls,samplesDevShowInclude" />
+          </div>
+        </cms:adminOnly>
         <c:import url="/templates/jsp/samples/global/footer.jsp" />
       </div>
       <c:import url="/templates/jsp/samples/global/headerImage.jsp" />
