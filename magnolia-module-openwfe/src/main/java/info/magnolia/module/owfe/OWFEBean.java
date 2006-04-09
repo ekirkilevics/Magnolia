@@ -5,7 +5,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.security.MgnlUserManager;
-import info.magnolia.jaas.sp.jcr.JCRUserMgr;
+import info.magnolia.cms.security.Security;
 import info.magnolia.module.owfe.jcr.JCRFlowDefinition;
 import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
 import info.magnolia.module.owfe.jcr.JCRWorkItemAPI;
@@ -65,9 +65,9 @@ public class OWFEBean implements WorkflowAPI {
 		ArrayList list = new ArrayList();
 		HierarchyManager hm = OWFEEngine.getOWFEHierarchyManager("Store");
 		Content root = hm.getRoot();
-		MgnlUser user = (MgnlUser) new MgnlUserManager().getUser(userName);
-		List groups = new JCRUserMgr().getGroupsForUser(userName);
-		List roles = new JCRUserMgr().getRolesForUser(userName);
+		MgnlUser user = (MgnlUser) MgnlContext.getUser();
+		List groups = user.getGroups();
+		List roles = user.getRoles();
 		StringBuffer queryString = new StringBuffer();
 		queryString.append("//*[(@assignTo=\"" + userName
 				+ "\") or (@participant=\"user-" + userName

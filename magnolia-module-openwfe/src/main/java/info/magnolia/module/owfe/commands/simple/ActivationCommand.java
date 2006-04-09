@@ -5,13 +5,15 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.exchange.Syndicator;
+import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.module.owfe.MgnlConstants;
-import org.apache.commons.chain.Context;
-import org.apache.commons.lang.StringUtils;
 
 import java.util.HashMap;
+
+import org.apache.commons.chain.Context;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * the activation command which do real activation
@@ -38,17 +40,21 @@ public class ActivationCommand extends MgnlCommand {
         String path;
         boolean recursive;
         path = (String) params.get(MgnlConstants.P_PATH);
-        log.info("recursive = " + (params.get(MgnlConstants.P_RECURSIVE).toString() ));
+        
       //  recursive = (params.get(MgnlConstants.P_RECURSIVE).toString()).equalsIgnoreCase("true");
 
          recursive = Boolean.valueOf((String) params.get(MgnlConstants.P_RECURSIVE)).booleanValue();
-
+         log.info("recursive = " + recursive);
+//       for tesing 
+     	log.info("user = " + ((info.magnolia.cms.beans.runtime.Context)ctx).getUser());
+      
         try {
-            doActivate(path, recursive);
+        	   doActivate(((info.magnolia.cms.beans.runtime.Context)ctx).getUser(), path, recursive);
         } catch (Exception e) {
             log.error("cannot do activate", e);
             return false;
         }
+        log.info("exec successfully.");
         return true;
     }
 
@@ -58,7 +64,7 @@ public class ActivationCommand extends MgnlCommand {
      * @param recursive	activet recursively or no
      * @throws Exception
      */
-    private void doActivate(String path, boolean recursive) throws Exception {
+    private void doActivate(User user, String path, boolean recursive) throws Exception {
         Rule rule = new Rule();
         rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
         rule.addAllowType(ItemType.NT_FILE);
