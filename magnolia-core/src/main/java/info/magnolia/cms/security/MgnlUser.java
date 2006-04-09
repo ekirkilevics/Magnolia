@@ -18,7 +18,10 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.jcr.RepositoryException;
 
@@ -192,4 +195,74 @@ public class MgnlUser implements User {
     public String getLanguage() {
         return userNode.getNodeData("language").getString(); //$NON-NLS-1$
     }
+
+	public List getGroups() {
+		ArrayList list = new ArrayList();
+
+		try {		
+			Content groups = null;
+			try {
+				// get "groups" node under node "user"
+				groups = userNode.getContent("groups");
+			} catch (javax.jcr.PathNotFoundException e) {
+				log.warn("the user " + getName() + " does have not groups node");
+			}
+
+			if (groups != null) {
+				Collection c = groups.getChildren(ItemType.CONTENTNODE);
+				Iterator it = c.iterator();
+				while (it.hasNext()) {
+					Content ct = (Content) it.next();
+
+					if (ct == null) {
+						log.error("group node is null");
+						continue;
+					}
+					String s = ct.getTitle();
+					list.add(s);
+				}
+			}
+
+		} catch (Exception e) {
+
+			log.warn("can not add group reference to user.", e);
+		}
+
+		return list;
+	}
+
+	public List getRoles() {
+		ArrayList list = new ArrayList();
+
+		try {
+			Content groups = null;
+			try {
+				// get "groups" node under node "user"
+				groups = userNode.getContent("roles");
+			} catch (javax.jcr.PathNotFoundException e) {
+				log.warn("the user " + getName() + " does have not groups node");
+			}
+
+			if (groups != null) {
+				Collection c = groups.getChildren(ItemType.CONTENTNODE);
+				Iterator it = c.iterator();
+				while (it.hasNext()) {
+					Content ct = (Content) it.next();
+					if (ct == null) {
+						log.error("group node is null");
+						continue;
+					}
+					String s = ct.getTitle();
+					list.add(ct);
+				}
+			}
+
+		} catch (Exception e) {
+
+			log.warn("can not add group reference to user.", e);
+		}
+
+		return list;
+
+	}
 }

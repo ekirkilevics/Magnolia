@@ -12,6 +12,8 @@
  */
 package info.magnolia.cms.security;
 
+import java.util.List;
+
 /**
  * Represents an magnolia user.
  * @author philipp
@@ -74,5 +76,16 @@ public interface User {
      * @return password string
      */
     public abstract String getPassword();
-
+   
+    /**
+     * get groups that user is in
+     * @return
+     */
+    public abstract List getGroups();
+    
+    /**
+     * get roles tha are assigned to user
+     * @return
+     */
+    public abstract List getRoles();
 }
