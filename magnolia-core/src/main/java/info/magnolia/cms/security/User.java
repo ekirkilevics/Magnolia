@@ -12,7 +12,8 @@
  */
 package info.magnolia.cms.security;
 
-import java.util.List;
+import java.util.Collection;
+
 
 /**
  * Represents an magnolia user.
@@ -76,16 +77,16 @@ public interface User {
      * @return password string
      */
     public abstract String getPassword();
-   
+
     /**
      * get groups that user is in
      * @return
      */
-    public abstract List getGroups();
-    
+    public abstract Collection getGroups();
+
     /**
      * get roles tha are assigned to user
      * @return
      */
-    public abstract List getRoles();
+    public abstract Collection getRoles();
 }

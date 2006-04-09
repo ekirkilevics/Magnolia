@@ -12,6 +12,7 @@
  */
 package info.magnolia.cms.security;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -79,7 +80,6 @@ public class ExternalUser implements User {
 
     /**
      * Is this user in a specified group?
-     *
      * @param groupName
      * @return true if in group
      */
@@ -89,7 +89,6 @@ public class ExternalUser implements User {
 
     /**
      * Remove a group. Implementation is optional
-     *
      * @param groupName
      */
     public void removeGroup(String groupName) throws UnsupportedOperationException {
@@ -98,7 +97,6 @@ public class ExternalUser implements User {
 
     /**
      * Adds this user to a group. Implementation is optional
-     *
      * @param groupName
      */
     public void addGroup(String groupName) throws UnsupportedOperationException {
@@ -128,5 +126,20 @@ public class ExternalUser implements User {
      */
     public String getPassword() {
         return (String) this.userDetails.getProperty(Entity.PASSWORD);
+    }
+
+    /**
+     * @see info.magnolia.cms.security.User#getGroups()
+     */
+    public Collection getGroups() {
+        // @todo Auto-generated method stub
+        return null;
+    }
+
+    /**
+     * @see info.magnolia.cms.security.User#getRoles()
+     */
+    public Collection getRoles() {
+        return this.roleList.getList();
     }
 }

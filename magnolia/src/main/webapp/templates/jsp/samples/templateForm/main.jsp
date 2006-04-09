@@ -76,20 +76,14 @@
 
     <div id="contentDivMainColumn">
         <jsp:scriptlet>
-            <
-            !
-            [
-            CDATA[
-                    String
-            alertText = Resource.getActivePage(request).getNodeData("mandatoryAlert").getString();
+            <![CDATA[
+            String alertText = Resource.getActivePage(request).getNodeData("mandatoryAlert").getString();
             if (alertText.equals("")) alertText = "Please fill in all fields marked with an asterisk.";
             alertText = alertText.replaceAll("'", "&rsquo;");
             alertText = alertText.replaceAll("\"", "&rsquo;");
             alertText = alertText.replaceAll("\r\n", "<br/>");
             pageContext.setAttribute("alertText", alertText);
-            ]
-            ]
-            >
+            ]]>
         </jsp:scriptlet>
         <form name="samplesForm" action="${pageContext.request.contextPath}${actpage.handle}.html" method="post"
               onsubmit="return (checkMandatories(this.name,'${alertText}'));">

@@ -21,7 +21,6 @@ import info.magnolia.cms.core.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import javax.jcr.RepositoryException;
 
@@ -69,7 +68,6 @@ public class MgnlUser implements User {
 
     /**
      * Remove a group. Implementation is optional
-     *
      * @param groupName
      */
     public void removeGroup(String groupName) throws UnsupportedOperationException {
@@ -78,7 +76,6 @@ public class MgnlUser implements User {
 
     /**
      * Adds this user to a group. Implementation is optional
-     *
      * @param groupName
      */
     public void addGroup(String groupName) throws UnsupportedOperationException {
@@ -110,7 +107,7 @@ public class MgnlUser implements User {
      * checks is any object exist with the given name under this node
      * @param name
      * @param nodeName
-     * */
+     */
     private boolean hasAny(String name, String nodeName) {
         try {
             Content node = userNode.getContent(nodeName);
@@ -131,7 +128,7 @@ public class MgnlUser implements User {
      * removed node
      * @param name
      * @param nodeName
-     * */
+     */
     private void remove(String name, String nodeName) {
         try {
             Content node = userNode.getContent(nodeName);
@@ -145,13 +142,13 @@ public class MgnlUser implements User {
             userNode.save();
         }
         catch (RepositoryException e) {
-            log.error("failed to remove "+name+" from user [" + this.getName() + "]", e);
+            log.error("failed to remove " + name + " from user [" + this.getName() + "]", e);
         }
     }
 
     /**
      * adds a new node under specified node collection
-     * */
+     */
     private void add(String name, String nodeName) {
         try {
             if (!this.hasAny(name, nodeName)) {
@@ -168,7 +165,7 @@ public class MgnlUser implements User {
             }
         }
         catch (RepositoryException e) {
-            log.error("failed to add "+name+" to user [" + this.getName() + "]", e);
+            log.error("failed to add " + name + " to user [" + this.getName() + "]", e);
         }
     }
 
@@ -196,73 +193,76 @@ public class MgnlUser implements User {
         return userNode.getNodeData("language").getString(); //$NON-NLS-1$
     }
 
-	public List getGroups() {
-		ArrayList list = new ArrayList();
+    public Collection getGroups() {
+        ArrayList list = new ArrayList();
 
-		try {		
-			Content groups = null;
-			try {
-				// get "groups" node under node "user"
-				groups = userNode.getContent("groups");
-			} catch (javax.jcr.PathNotFoundException e) {
-				log.warn("the user " + getName() + " does have not groups node");
-			}
+        try {
+            Content groups = null;
+            try {
+                // get "groups" node under node "user"
+                groups = userNode.getContent("groups");
+            }
+            catch (javax.jcr.PathNotFoundException e) {
+                log.warn("the user " + getName() + " does have not groups node");
+            }
 
-			if (groups != null) {
-				Collection c = groups.getChildren(ItemType.CONTENTNODE);
-				Iterator it = c.iterator();
-				while (it.hasNext()) {
-					Content ct = (Content) it.next();
+            if (groups != null) {
+                Collection c = groups.getChildren(ItemType.CONTENTNODE);
+                Iterator it = c.iterator();
+                while (it.hasNext()) {
+                    Content ct = (Content) it.next();
 
-					if (ct == null) {
-						log.error("group node is null");
-						continue;
-					}
-					String s = ct.getTitle();
-					list.add(s);
-				}
-			}
+                    if (ct == null) {
+                        log.error("group node is null");
+                        continue;
+                    }
+                    String s = ct.getTitle();
+                    list.add(s);
+                }
+            }
 
-		} catch (Exception e) {
+        }
+        catch (Exception e) {
 
-			log.warn("can not add group reference to user.", e);
-		}
+            log.warn("can not add group reference to user.", e);
+        }
 
-		return list;
-	}
+        return list;
+    }
 
-	public List getRoles() {
-		ArrayList list = new ArrayList();
+    public Collection getRoles() {
+        ArrayList list = new ArrayList();
 
-		try {
-			Content groups = null;
-			try {
-				// get "groups" node under node "user"
-				groups = userNode.getContent("roles");
-			} catch (javax.jcr.PathNotFoundException e) {
-				log.warn("the user " + getName() + " does have not groups node");
-			}
+        try {
+            Content groups = null;
+            try {
+                // get "groups" node under node "user"
+                groups = userNode.getContent("roles");
+            }
+            catch (javax.jcr.PathNotFoundException e) {
+                log.warn("the user " + getName() + " does have not groups node");
+            }
 
-			if (groups != null) {
-				Collection c = groups.getChildren(ItemType.CONTENTNODE);
-				Iterator it = c.iterator();
-				while (it.hasNext()) {
-					Content ct = (Content) it.next();
-					if (ct == null) {
-						log.error("group node is null");
-						continue;
-					}
-					String s = ct.getTitle();
-					list.add(ct);
-				}
-			}
+            if (groups != null) {
+                Collection c = groups.getChildren(ItemType.CONTENTNODE);
+                Iterator it = c.iterator();
+                while (it.hasNext()) {
+                    Content ct = (Content) it.next();
+                    if (ct == null) {
+                        log.error("group node is null");
+                        continue;
+                    }
+                    list.add(ct);
+                }
+            }
 
-		} catch (Exception e) {
+        }
+        catch (Exception e) {
 
-			log.warn("can not add group reference to user.", e);
-		}
+            log.warn("can not add group reference to user.", e);
+        }
 
-		return list;
+        return list;
 
-	}
+    }
 }
