@@ -7,6 +7,11 @@
   <jsp:directive.page import="info.magnolia.cms.mail.templates.MgnlEmail" />
   <jsp:directive.page import="info.magnolia.cms.util.Resource" />
   <jsp:directive.page import="java.util.Iterator" />
+  <jsp:directive.page import="info.magnolia.cms.core.Content" />
+  <jsp:directive.page import="info.magnolia.cms.util.Resource" />
+  <jsp:directive.page import="info.magnolia.cms.gui.inline.BarMain" />
+  <jsp:directive.page import="info.magnolia.cms.gui.control.Button" />
+  <jsp:directive.page import="info.magnolia.cms.beans.config.ContentRepository" />
   <jsp:scriptlet>
     <![CDATA[ 
     if (request.getParameter("sendMail") != null) { 
@@ -58,7 +63,42 @@
       <c:import url="/templates/jsp/samples/global/head.jsp" />
     </head>
     <body>
-      <cms:mainBar paragraph="samplesPageProperties" />
+      <!-- main bar of form template -->
+      <jsp:scriptlet>
+        <![CDATA[
+    Content currentPage=Resource.getActivePage(request);
+
+    BarMain bar=new BarMain(request);
+
+    //path is needed for the links of the buttons
+    bar.setPath(currentPage.getHandle());
+
+    //"paragraph" specifies the paragraph evoked by the "Properties" button
+    bar.setParagraph("samplesPageProperties");
+
+    // initialize the default buttons (preview, site admin, properties)
+    // note: buttons are not placed through init (see below)
+    bar.setDefaultButtons();
+
+    // to overwrite single properties of the default buttons, use getButtonXXX() methods:
+    bar.getButtonProperties().setLabel("Page properties");
+
+
+    //add customized buttons to the main bar
+    Button fProps=new Button();
+    fProps.setLabel("Form properties");
+    fProps.setOnclick("mgnlOpenDialog('"+Resource.getActivePage(request).getHandle()+"','','','samplesFormProperties','"+ContentRepository.WEBSITE+"')");
+    bar.setButtonsRight(fProps);
+
+
+    // places the preview and the site admin button to the very left and the properties button to the very right
+    bar.placeDefaultButtons();
+
+
+    //draw the main bar
+    bar.drawHtml(out);
+]]>
+      </jsp:scriptlet>
       <div id="contentDivMainColumn">
         <jsp:scriptlet>
           <![CDATA[
@@ -74,7 +114,13 @@
           onsubmit="return (checkMandatories(this.name,'${alertText}'));">
           <input type="hidden" name="sendMail" value="true" />
           <c:import url="/templates/jsp/samples/global/columnMain.jsp" />
-          <c:import url="/templates/jsp/samples/templateForm/columnMainNewBar.jsp" />
+          <!-- new bar -->
+          <cms:adminOnly>
+            <div style="clear:both;">
+              <cms:newBar contentNodeCollectionName="mainColumnParagraphs"
+                paragraph="samplesTextImage,samplesFormEdit,samplesFormSelection,samplesFormSubmit" />
+            </div>
+          </cms:adminOnly>
           <c:import url="/templates/jsp/samples/global/footer.jsp" />
         </form>
       </div>
