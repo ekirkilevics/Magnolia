@@ -20,7 +20,7 @@
     <sv:value>true</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:created" sv:type="Date">
-    <sv:value>2006-03-02T15:25:31.392+01:00</sv:value>
+    <sv:value>2006-04-08T11:15:26.531+02:00</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -33,13 +33,13 @@
       <sv:value>superuser</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-02T15:25:31.392+01:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-      <sv:value>1127807238096000</sv:value>
+      <sv:value>2006-04-08T11:15:26.531+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:title" sv:type="String">
       <sv:value/>
+    </sv:property>
+    <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
+      <sv:value>1127807238096000</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:creationdate" sv:type="Date">
       <sv:value>2005-09-27T09:47:18.096+02:00</sv:value>
@@ -71,10 +71,10 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-02T15:25:31.396+01:00</sv:value>
+      <sv:value>2006-04-08T11:15:26.531+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="path" sv:type="String">
-      <sv:value>/templates/jsp/samples/templateTwoColumns/main.jsp</sv:value>
+      <sv:value>/templates/samples/templates/sample-twocolumns.jsp</sv:value>
     </sv:property>
     <sv:property sv:name="title" sv:type="String">
       <sv:value>template.twoColumns.title</sv:value>
@@ -90,7 +90,7 @@
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-02T15:25:31.396+01:00</sv:value>
+        <sv:value>2006-04-08T11:15:26.531+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
         <sv:value>1121345948453000</sv:value>
@@ -99,7 +99,7 @@
         <sv:value>2004-11-02T15:34:50.219+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2005-09-27T11:18:16.144+02:00</sv:value>
+        <sv:value>2006-04-09T15:32:02.233+02:00</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
@@ -126,10 +126,10 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-02T15:25:31.400+01:00</sv:value>
+      <sv:value>2006-04-08T11:15:26.531+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="path" sv:type="String">
-      <sv:value>/templates/jsp/samples/templateOneColumn/main.jsp</sv:value>
+      <sv:value>/templates/samples/templates/sample-onecolumn.jsp</sv:value>
     </sv:property>
     <sv:property sv:name="title" sv:type="String">
       <sv:value>template.oneColumns.title</sv:value>
@@ -145,7 +145,7 @@
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-02T15:25:31.400+01:00</sv:value>
+        <sv:value>2006-04-08T11:15:26.531+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
         <sv:value>1121345953489000</sv:value>
@@ -154,7 +154,7 @@
         <sv:value>2004-11-02T15:34:50.342+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2005-09-27T11:18:13.650+02:00</sv:value>
+        <sv:value>2006-04-09T15:32:11.536+02:00</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
@@ -184,10 +184,10 @@
       <sv:value/>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-02T15:25:31.404+01:00</sv:value>
+      <sv:value>2006-04-08T11:15:26.531+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="path" sv:type="String">
-      <sv:value>/templates/jsp/samples/templateDevShow/main.jsp</sv:value>
+      <sv:value>/templates/samples/templates/sample-devshow.jsp</sv:value>
     </sv:property>
     <sv:property sv:name="title" sv:type="String">
       <sv:value>template.devShow.title</sv:value>
@@ -203,7 +203,7 @@
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-02T15:25:31.404+01:00</sv:value>
+        <sv:value>2006-04-08T11:15:26.531+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
         <sv:value>1127810962161000</sv:value>
@@ -212,7 +212,7 @@
         <sv:value>2004-11-02T15:34:50.608+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2005-09-27T11:18:10.446+02:00</sv:value>
+        <sv:value>2006-04-09T15:32:25.336+02:00</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
@@ -239,10 +239,10 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-02T15:25:31.407+01:00</sv:value>
+      <sv:value>2006-04-08T11:15:26.531+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="path" sv:type="String">
-      <sv:value>/templates/jsp/samples/templateForm/main.jsp</sv:value>
+      <sv:value>/templates/samples/templates/sample-form.jsp</sv:value>
     </sv:property>
     <sv:property sv:name="title" sv:type="String">
       <sv:value>template.form.title</sv:value>
@@ -258,7 +258,7 @@
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-02T15:25:31.407+01:00</sv:value>
+        <sv:value>2006-04-08T11:15:26.531+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
         <sv:value>1127810965686000</sv:value>
@@ -267,7 +267,7 @@
         <sv:value>2004-11-02T15:34:50.733+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2005-09-27T11:18:04.768+02:00</sv:value>
+        <sv:value>2006-04-09T15:32:35.220+02:00</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
@@ -294,10 +294,10 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-02T15:25:31.411+01:00</sv:value>
+      <sv:value>2006-04-08T11:15:26.531+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="path" sv:type="String">
-      <sv:value>/templates/jsp/samples/search/search.jsp</sv:value>
+      <sv:value>/templates/samples/templates/sample-search.jsp</sv:value>
     </sv:property>
     <sv:property sv:name="title" sv:type="String">
       <sv:value>template.search.title</sv:value>
@@ -313,7 +313,7 @@
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-02T15:25:31.411+01:00</sv:value>
+        <sv:value>2006-04-08T11:15:26.531+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
         <sv:value>1127810968840000</sv:value>
@@ -322,7 +322,71 @@
         <sv:value>2004-11-02T15:34:50.733+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2005-09-27T11:18:01.944+02:00</sv:value>
+        <sv:value>2006-04-09T15:32:47.027+02:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="mail">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>4fc7d943-9044-405d-8f8c-cdb78f64c984</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="type" sv:type="String">
+      <sv:value>jsp</sv:value>
+    </sv:property>
+    <sv:property sv:name="name" sv:type="String">
+      <sv:value>mail</sv:value>
+    </sv:property>
+    <sv:property sv:name="visible" sv:type="String">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-04-08T11:15:38.909+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="path" sv:type="String">
+      <sv:value>/templates/samples/templates/sample-mail.jsp</sv:value>
+    </sv:property>
+    <sv:property sv:name="title" sv:type="String">
+      <sv:value>Sample Mail Template</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+        <sv:value>2006-04-06T23:30:52.293+09:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-04-08T11:15:38.909+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activatorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
+        <sv:value>1121345953489000</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="String">
+        <sv:value>2004-11-02T15:34:50.342+01:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2006-04-09T15:32:53.566+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+        <sv:value>false</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>

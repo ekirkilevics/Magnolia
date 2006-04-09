@@ -20,7 +20,7 @@
     <sv:value>true</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:created" sv:type="Date">
-    <sv:value>2006-03-02T15:25:31.294+01:00</sv:value>
+    <sv:value>2006-04-08T11:15:27.022+02:00</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -33,13 +33,13 @@
       <sv:value>superuser</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-02T15:25:31.295+01:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-      <sv:value>1127807018550000</sv:value>
+      <sv:value>2006-04-08T11:15:27.022+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:title" sv:type="String">
       <sv:value/>
+    </sv:property>
+    <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
+      <sv:value>1127807018550000</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:creationdate" sv:type="Date">
       <sv:value>2005-09-27T09:43:38.550+02:00</sv:value>
@@ -74,7 +74,7 @@
       <sv:value>paragraph.pageProperties.description</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-02T15:25:31.298+01:00</sv:value>
+      <sv:value>2006-04-08T11:15:27.022+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="title" sv:type="String">
       <sv:value>paragraph.pageProperties.title</sv:value>
@@ -90,7 +90,7 @@
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-02T15:25:31.298+01:00</sv:value>
+        <sv:value>2006-04-08T11:15:27.022+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
         <sv:value>1121345984384000</sv:value>
@@ -100,64 +100,6 @@
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
         <sv:value>2005-09-27T11:19:11.554+02:00</sv:value>
-      </sv:property>
-    </sv:node>
-  </sv:node>
-  <sv:node sv:name="formSubmit">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-      <sv:value>mix:versionable</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>8ed77ab4-c3c6-4ca4-a95b-0beab6e58d19</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
-    <sv:property sv:name="type" sv:type="String">
-      <sv:value>jsp</sv:value>
-    </sv:property>
-    <sv:property sv:name="name" sv:type="String">
-      <sv:value>samplesFormSubmit</sv:value>
-    </sv:property>
-    <sv:property sv:name="dialogPath" sv:type="String">
-      <sv:value>samples/form/submit</sv:value>
-    </sv:property>
-    <sv:property sv:name="description" sv:type="String">
-      <sv:value>paragraph.formSubmit.description</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-02T15:25:31.302+01:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="templatePath" sv:type="String">
-      <sv:value>/templates/jsp/samples/templateForm/paragraphs/submit.jsp</sv:value>
-    </sv:property>
-    <sv:property sv:name="title" sv:type="String">
-      <sv:value>paragraph.formSubmit.title</sv:value>
-    </sv:property>
-    <sv:node sv:name="MetaData">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:metaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:Data" sv:type="String">
-        <sv:value>MetaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:authorid" sv:type="String">
-        <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-02T15:25:31.302+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1127811001177000</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:creationdate" sv:type="String">
-        <sv:value>2004-11-03T09:03:29.016+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2005-09-27T11:19:08.479+02:00</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
@@ -187,10 +129,10 @@
       <sv:value>paragraph.formProperties.description</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-02T15:25:31.306+01:00</sv:value>
+      <sv:value>2006-04-08T11:15:27.022+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="templatePath" sv:type="String">
-      <sv:value>/templates/jsp/samples/templateForm/paragraphs/properties.jsp</sv:value>
+      <sv:value>/templates/samples/paragraphs/properties.jsp</sv:value>
     </sv:property>
     <sv:property sv:name="title" sv:type="String">
       <sv:value>paragraph.formProperties.title</sv:value>
@@ -206,7 +148,7 @@
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-02T15:25:31.306+01:00</sv:value>
+        <sv:value>2006-04-08T11:15:27.022+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
         <sv:value>1127811017120000</sv:value>
@@ -215,471 +157,7 @@
         <sv:value>2004-11-03T09:03:29.016+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2005-09-27T11:19:05.836+02:00</sv:value>
-      </sv:property>
-    </sv:node>
-  </sv:node>
-  <sv:node sv:name="devShowRichEdit">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-      <sv:value>mix:versionable</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>85f84d06-b1c2-42cd-b72e-3bb22aa210c2</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
-    <sv:property sv:name="type" sv:type="String">
-      <sv:value>jsp</sv:value>
-    </sv:property>
-    <sv:property sv:name="name" sv:type="String">
-      <sv:value>samplesDevShowRichEdit</sv:value>
-    </sv:property>
-    <sv:property sv:name="dialogPath" sv:type="String">
-      <sv:value>samples/devShow/richEdit</sv:value>
-    </sv:property>
-    <sv:property sv:name="description" sv:type="String">
-      <sv:value>paragraph.devShowRichEdit.description</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-02T15:25:31.310+01:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="templatePath" sv:type="String">
-      <sv:value>/templates/jsp/samples/templateDevShow/paragraphs/richEdit.jsp</sv:value>
-    </sv:property>
-    <sv:property sv:name="title" sv:type="String">
-      <sv:value>paragraph.devShowRichEdit.title</sv:value>
-    </sv:property>
-    <sv:node sv:name="MetaData">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:metaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:Data" sv:type="String">
-        <sv:value>MetaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:authorid" sv:type="String">
-        <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-02T15:25:31.310+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1127811030068500</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:creationdate" sv:type="String">
-        <sv:value>2004-11-02T15:34:49.702+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2005-09-27T11:18:57.844+02:00</sv:value>
-      </sv:property>
-    </sv:node>
-  </sv:node>
-  <sv:node sv:name="rightColumn">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-      <sv:value>mix:versionable</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>c92da859-6747-4dbf-855c-43bd094168eb</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
-    <sv:property sv:name="type" sv:type="String">
-      <sv:value>jsp</sv:value>
-    </sv:property>
-    <sv:property sv:name="name" sv:type="String">
-      <sv:value>samplesRightColumn</sv:value>
-    </sv:property>
-    <sv:property sv:name="dialogPath" sv:type="String">
-      <sv:value>samples/rightColumn</sv:value>
-    </sv:property>
-    <sv:property sv:name="description" sv:type="String">
-      <sv:value>paragraph.rightColumn.description</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-02T15:25:31.330+01:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="templatePath" sv:type="String">
-      <sv:value>/templates/jsp/samples/paragraphs/rightColumn.jsp</sv:value>
-    </sv:property>
-    <sv:property sv:name="title" sv:type="String">
-      <sv:value>paragraph.rightColumn.title</sv:value>
-    </sv:property>
-    <sv:node sv:name="MetaData">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:metaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:Data" sv:type="String">
-        <sv:value>MetaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:authorid" sv:type="String">
-        <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-02T15:25:31.331+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1127811024170000</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:creationdate" sv:type="String">
-        <sv:value>2004-11-03T09:03:29.016+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2005-09-27T11:19:03.602+02:00</sv:value>
-      </sv:property>
-    </sv:node>
-  </sv:node>
-  <sv:node sv:name="devShowAllControls">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-      <sv:value>mix:versionable</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>f83dd7d5-a3a4-4eb1-a755-54ee04546c06</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
-    <sv:property sv:name="type" sv:type="String">
-      <sv:value>jsp</sv:value>
-    </sv:property>
-    <sv:property sv:name="name" sv:type="String">
-      <sv:value>samplesDevShowAllControls</sv:value>
-    </sv:property>
-    <sv:property sv:name="dialogPath" sv:type="String">
-      <sv:value>samples/devShow/allControls</sv:value>
-    </sv:property>
-    <sv:property sv:name="description" sv:type="String">
-      <sv:value>paragraph.devShowAllControls.description</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-02T15:25:31.334+01:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="templatePath" sv:type="String">
-      <sv:value>/templates/jsp/samples/templateDevShow/paragraphs/noOutput.jsp</sv:value>
-    </sv:property>
-    <sv:property sv:name="title" sv:type="String">
-      <sv:value>paragraph.devShowAllControls.title</sv:value>
-    </sv:property>
-    <sv:node sv:name="MetaData">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:metaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:Data" sv:type="String">
-        <sv:value>MetaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:authorid" sv:type="String">
-        <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-02T15:25:31.334+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1127811028386000</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:creationdate" sv:type="String">
-        <sv:value>2004-11-02T15:34:48.736+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2005-09-27T11:19:00.288+02:00</sv:value>
-      </sv:property>
-    </sv:node>
-  </sv:node>
-  <sv:node sv:name="devShowDate">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-      <sv:value>mix:versionable</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>a3309206-0136-4bb3-a9fa-a75dfb7c3646</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
-    <sv:property sv:name="type" sv:type="String">
-      <sv:value>jsp</sv:value>
-    </sv:property>
-    <sv:property sv:name="name" sv:type="String">
-      <sv:value>samplesDevShowDate</sv:value>
-    </sv:property>
-    <sv:property sv:name="dialogPath" sv:type="String">
-      <sv:value>samples/devShow/date</sv:value>
-    </sv:property>
-    <sv:property sv:name="description" sv:type="String">
-      <sv:value>paragraph.devShowDate.description</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-02T15:25:31.338+01:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="templatePath" sv:type="String">
-      <sv:value>/templates/jsp/samples/templateDevShow/paragraphs/date.jsp</sv:value>
-    </sv:property>
-    <sv:property sv:name="title" sv:type="String">
-      <sv:value>paragraph.devShowDate.title</sv:value>
-    </sv:property>
-    <sv:node sv:name="MetaData">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:metaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:Data" sv:type="String">
-        <sv:value>MetaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:authorid" sv:type="String">
-        <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-02T15:25:31.338+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1127811031751000</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:creationdate" sv:type="String">
-        <sv:value>2004-11-02T15:34:49.120+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2005-09-27T11:18:55.531+02:00</sv:value>
-      </sv:property>
-    </sv:node>
-  </sv:node>
-  <sv:node sv:name="devShowInclude">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-      <sv:value>mix:versionable</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>34d0db64-60c3-4360-8c5b-a78cb26de3c5</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
-    <sv:property sv:name="type" sv:type="String">
-      <sv:value>jsp</sv:value>
-    </sv:property>
-    <sv:property sv:name="name" sv:type="String">
-      <sv:value>samplesDevShowInclude</sv:value>
-    </sv:property>
-    <sv:property sv:name="dialogPath" sv:type="String">
-      <sv:value>samples/devShow/include</sv:value>
-    </sv:property>
-    <sv:property sv:name="description" sv:type="String">
-      <sv:value>paragraph.devShowInclude.description</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-02T15:25:31.343+01:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="templatePath" sv:type="String">
-      <sv:value>/templates/jsp/samples/templateDevShow/paragraphs/noOutput.jsp</sv:value>
-    </sv:property>
-    <sv:property sv:name="title" sv:type="String">
-      <sv:value>paragraph.devShowInclude.title</sv:value>
-    </sv:property>
-    <sv:node sv:name="MetaData">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:metaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:Data" sv:type="String">
-        <sv:value>MetaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:authorid" sv:type="String">
-        <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-02T15:25:31.344+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1127811034825000</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:creationdate" sv:type="String">
-        <sv:value>2004-11-02T15:34:49.346+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2005-09-27T11:18:52.767+02:00</sv:value>
-      </sv:property>
-    </sv:node>
-  </sv:node>
-  <sv:node sv:name="devShowWebDAV">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-      <sv:value>mix:versionable</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>65b020e3-6445-4583-8464-7c7a5380c757</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
-    <sv:property sv:name="type" sv:type="String">
-      <sv:value>jsp</sv:value>
-    </sv:property>
-    <sv:property sv:name="name" sv:type="String">
-      <sv:value>samplesDevShowWebDAV</sv:value>
-    </sv:property>
-    <sv:property sv:name="dialogPath" sv:type="String">
-      <sv:value>samples/devShow/webDAV</sv:value>
-    </sv:property>
-    <sv:property sv:name="description" sv:type="String">
-      <sv:value>paragraph.devShowWebDAV.description</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-02T15:25:31.347+01:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="templatePath" sv:type="String">
-      <sv:value>/templates/jsp/samples/templateDevShow/paragraphs/webDAV.jsp</sv:value>
-    </sv:property>
-    <sv:property sv:name="title" sv:type="String">
-      <sv:value>paragraph.devShowWebDAV.title</sv:value>
-    </sv:property>
-    <sv:node sv:name="MetaData">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:metaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:Data" sv:type="String">
-        <sv:value>MetaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:authorid" sv:type="String">
-        <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-02T15:25:31.348+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1127811038000000</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:creationdate" sv:type="String">
-        <sv:value>2004-11-02T15:34:49.540+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2005-09-27T11:18:49.873+02:00</sv:value>
-      </sv:property>
-    </sv:node>
-  </sv:node>
-  <sv:node sv:name="devShowFile">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-      <sv:value>mix:versionable</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>c7849f13-f3b9-4cec-bb57-3ee8e8df6d70</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
-    <sv:property sv:name="type" sv:type="String">
-      <sv:value>jsp</sv:value>
-    </sv:property>
-    <sv:property sv:name="name" sv:type="String">
-      <sv:value>samplesDevShowFile</sv:value>
-    </sv:property>
-    <sv:property sv:name="dialogPath" sv:type="String">
-      <sv:value>samples/devShow/file</sv:value>
-    </sv:property>
-    <sv:property sv:name="description" sv:type="String">
-      <sv:value>paragraph.devShowFile.description</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-02T15:25:31.351+01:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="templatePath" sv:type="String">
-      <sv:value>/templates/jsp/samples/templateDevShow/paragraphs/file.jsp</sv:value>
-    </sv:property>
-    <sv:property sv:name="title" sv:type="String">
-      <sv:value>paragraph.devShowFile.title</sv:value>
-    </sv:property>
-    <sv:node sv:name="MetaData">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:metaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:Data" sv:type="String">
-        <sv:value>MetaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:authorid" sv:type="String">
-        <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-02T15:25:31.351+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1127811041294000</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:creationdate" sv:type="String">
-        <sv:value>2004-11-03T16:16:59.676+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2005-09-27T11:18:44.986+02:00</sv:value>
-      </sv:property>
-    </sv:node>
-  </sv:node>
-  <sv:node sv:name="pageFooter">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-      <sv:value>mix:versionable</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>3dc715ea-b908-417f-8d18-43f7e2402446</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
-    <sv:property sv:name="type" sv:type="String">
-      <sv:value>jsp</sv:value>
-    </sv:property>
-    <sv:property sv:name="name" sv:type="String">
-      <sv:value>samplesPageFooter</sv:value>
-    </sv:property>
-    <sv:property sv:name="dialogPath" sv:type="String">
-      <sv:value>samples/footer</sv:value>
-    </sv:property>
-    <sv:property sv:name="description" sv:type="String">
-      <sv:value>paragraph.pageFooter.description</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-02T15:25:31.355+01:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="templatePath" sv:type="String">
-      <sv:value>/templates/jsp/samples/global/footer.jsp</sv:value>
-    </sv:property>
-    <sv:property sv:name="title" sv:type="String">
-      <sv:value>paragraph.pageFooter.title</sv:value>
-    </sv:property>
-    <sv:node sv:name="MetaData">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:metaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:Data" sv:type="String">
-        <sv:value>MetaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:authorid" sv:type="String">
-        <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-02T15:25:31.355+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1127811044459000</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:creationdate" sv:type="String">
-        <sv:value>2004-11-02T15:34:48.871+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2005-09-27T11:18:42.141+02:00</sv:value>
+        <sv:value>2006-04-09T15:41:03.070+02:00</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
@@ -709,10 +187,10 @@
       <sv:value>paragraph.textImage.description</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-02T15:25:31.359+01:00</sv:value>
+      <sv:value>2006-04-08T11:15:27.062+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="templatePath" sv:type="String">
-      <sv:value>/templates/jsp/samples/paragraphs/textImage.jsp</sv:value>
+      <sv:value>/templates/samples/paragraphs/textImage.jsp</sv:value>
     </sv:property>
     <sv:property sv:name="title" sv:type="String">
       <sv:value>paragraph.textImage.title</sv:value>
@@ -728,7 +206,7 @@
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-02T15:25:31.359+01:00</sv:value>
+        <sv:value>2006-04-08T11:15:27.062+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
         <sv:value>1127811047313000</sv:value>
@@ -737,7 +215,7 @@
         <sv:value>2004-11-02T15:34:49.049+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2005-09-27T11:18:38.316+02:00</sv:value>
+        <sv:value>2006-04-09T15:41:28.046+02:00</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
@@ -767,10 +245,10 @@
       <sv:value>paragraph.download.description</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-02T15:25:31.363+01:00</sv:value>
+      <sv:value>2006-04-08T11:15:27.062+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="templatePath" sv:type="String">
-      <sv:value>/templates/jsp/samples/paragraphs/download.jsp</sv:value>
+      <sv:value>/templates/samples/paragraphs/download.jsp</sv:value>
     </sv:property>
     <sv:property sv:name="title" sv:type="String">
       <sv:value>paragraph.download.title</sv:value>
@@ -786,7 +264,7 @@
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-02T15:25:31.363+01:00</sv:value>
+        <sv:value>2006-04-08T11:15:27.062+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
         <sv:value>1127811050478000</sv:value>
@@ -795,11 +273,11 @@
         <sv:value>2004-11-02T15:34:49.286+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2005-09-27T11:18:35.111+02:00</sv:value>
+        <sv:value>2006-04-09T15:41:42.677+02:00</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
-  <sv:node sv:name="link">
+  <sv:node sv:name="rightColumn">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:contentNode</sv:value>
     </sv:property>
@@ -807,7 +285,7 @@
       <sv:value>mix:versionable</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>65ed236b-fb4f-46c5-8e47-4287eb677439</sv:value>
+      <sv:value>c92da859-6747-4dbf-855c-43bd094168eb</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
       <sv:value>true</sv:value>
@@ -816,22 +294,22 @@
       <sv:value>jsp</sv:value>
     </sv:property>
     <sv:property sv:name="name" sv:type="String">
-      <sv:value>samplesLink</sv:value>
+      <sv:value>samplesRightColumn</sv:value>
     </sv:property>
     <sv:property sv:name="dialogPath" sv:type="String">
-      <sv:value>samples/mainColumn/link</sv:value>
+      <sv:value>samples/rightColumn</sv:value>
     </sv:property>
     <sv:property sv:name="description" sv:type="String">
-      <sv:value>paragraph.link.description</sv:value>
+      <sv:value>paragraph.rightColumn.description</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-02T15:25:31.367+01:00</sv:value>
+      <sv:value>2006-04-08T11:15:27.022+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="templatePath" sv:type="String">
-      <sv:value>/templates/jsp/samples/paragraphs/link.jsp</sv:value>
+      <sv:value>/templates/samples/paragraphs/rightColumn.jsp</sv:value>
     </sv:property>
     <sv:property sv:name="title" sv:type="String">
-      <sv:value>paragraph.link.title</sv:value>
+      <sv:value>paragraph.rightColumn.title</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -844,20 +322,20 @@
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-02T15:25:31.367+01:00</sv:value>
+        <sv:value>2006-04-08T11:15:27.022+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1127811053522000</sv:value>
+        <sv:value>1127811024170000</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2004-11-03T09:03:29.016+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2005-09-27T11:18:31.746+02:00</sv:value>
+        <sv:value>2006-04-09T15:41:10.501+02:00</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
-  <sv:node sv:name="table">
+  <sv:node sv:name="pageFooter">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:contentNode</sv:value>
     </sv:property>
@@ -865,7 +343,7 @@
       <sv:value>mix:versionable</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>1e6d5a7e-1a15-4f5e-ba4f-042e2a50288a</sv:value>
+      <sv:value>3dc715ea-b908-417f-8d18-43f7e2402446</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
       <sv:value>true</sv:value>
@@ -874,22 +352,22 @@
       <sv:value>jsp</sv:value>
     </sv:property>
     <sv:property sv:name="name" sv:type="String">
-      <sv:value>samplesTable</sv:value>
+      <sv:value>samplesPageFooter</sv:value>
     </sv:property>
     <sv:property sv:name="dialogPath" sv:type="String">
-      <sv:value>samples/mainColumn/table</sv:value>
+      <sv:value>samples/footer</sv:value>
     </sv:property>
     <sv:property sv:name="description" sv:type="String">
-      <sv:value>paragraph.table.description</sv:value>
+      <sv:value>paragraph.pageFooter.description</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-02T15:25:31.371+01:00</sv:value>
+      <sv:value>2006-04-08T11:15:27.062+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="templatePath" sv:type="String">
-      <sv:value>/templates/jsp/samples/paragraphs/table.jsp</sv:value>
+      <sv:value>/templates/samples/paragraphs/footer.jsp</sv:value>
     </sv:property>
     <sv:property sv:name="title" sv:type="String">
-      <sv:value>paragraph.table.title</sv:value>
+      <sv:value>paragraph.pageFooter.title</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -902,132 +380,16 @@
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-02T15:25:31.371+01:00</sv:value>
+        <sv:value>2006-04-08T11:15:27.062+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1127811057287000</sv:value>
+        <sv:value>1127811044459000</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
-        <sv:value>2004-11-03T09:03:29.016+01:00</sv:value>
+        <sv:value>2004-11-02T15:34:48.871+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2005-09-27T11:18:25.888+02:00</sv:value>
-      </sv:property>
-    </sv:node>
-  </sv:node>
-  <sv:node sv:name="formEdit">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-      <sv:value>mix:versionable</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>cafe7de9-c38a-4aea-9c07-fcad5a665ce0</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
-    <sv:property sv:name="type" sv:type="String">
-      <sv:value>jsp</sv:value>
-    </sv:property>
-    <sv:property sv:name="name" sv:type="String">
-      <sv:value>samplesFormEdit</sv:value>
-    </sv:property>
-    <sv:property sv:name="dialogPath" sv:type="String">
-      <sv:value>samples/form/edit</sv:value>
-    </sv:property>
-    <sv:property sv:name="description" sv:type="String">
-      <sv:value>paragraph.formEdit.description</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-02T15:25:31.374+01:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="templatePath" sv:type="String">
-      <sv:value>/templates/jsp/samples/templateForm/paragraphs/edit.jsp</sv:value>
-    </sv:property>
-    <sv:property sv:name="title" sv:type="String">
-      <sv:value>paragraph.formEdit.title</sv:value>
-    </sv:property>
-    <sv:node sv:name="MetaData">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:metaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:Data" sv:type="String">
-        <sv:value>MetaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:authorid" sv:type="String">
-        <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-02T15:25:31.374+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1127811060462000</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:creationdate" sv:type="String">
-        <sv:value>2004-11-03T09:03:29.016+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2005-09-27T11:18:22.263+02:00</sv:value>
-      </sv:property>
-    </sv:node>
-  </sv:node>
-  <sv:node sv:name="formSelection">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-      <sv:value>mix:versionable</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>c3ea6b39-b951-4a7a-89b2-9b01c4399fb8</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
-    <sv:property sv:name="type" sv:type="String">
-      <sv:value>jsp</sv:value>
-    </sv:property>
-    <sv:property sv:name="name" sv:type="String">
-      <sv:value>samplesFormSelection</sv:value>
-    </sv:property>
-    <sv:property sv:name="dialogPath" sv:type="String">
-      <sv:value>samples/form/selection</sv:value>
-    </sv:property>
-    <sv:property sv:name="description" sv:type="String">
-      <sv:value>paragraph.formSelection.description</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-02T15:25:31.378+01:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="templatePath" sv:type="String">
-      <sv:value>/templates/jsp/samples/templateForm/paragraphs/selection.jsp</sv:value>
-    </sv:property>
-    <sv:property sv:name="title" sv:type="String">
-      <sv:value>paragraph.formSelection.title</sv:value>
-    </sv:property>
-    <sv:node sv:name="MetaData">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:metaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:Data" sv:type="String">
-        <sv:value>MetaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:authorid" sv:type="String">
-        <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-02T15:25:31.378+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1127811064077000</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:creationdate" sv:type="String">
-        <sv:value>2004-11-03T09:03:29.016+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2005-09-27T11:18:18.958+02:00</sv:value>
+        <sv:value>2006-04-09T15:41:23.039+02:00</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
@@ -1057,10 +419,10 @@
       <sv:value>paragraph.editor.description</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-02T15:25:31.382+01:00</sv:value>
+      <sv:value>2006-04-08T11:15:27.072+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="templatePath" sv:type="String">
-      <sv:value>/templates/jsp/samples/paragraphs/editor.jsp</sv:value>
+      <sv:value>/templates/samples/paragraphs/editor.jsp</sv:value>
     </sv:property>
     <sv:property sv:name="title" sv:type="String">
       <sv:value>paragraph.editor.title</sv:value>
@@ -1076,19 +438,738 @@
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-02T15:25:31.382+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:title" sv:type="String">
-        <sv:value/>
+        <sv:value>2006-04-08T11:15:27.072+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
         <sv:value>1134133896689000</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:title" sv:type="String">
+        <sv:value/>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2004-11-02T15:34:49.049+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2005-12-09T14:12:31.849+01:00</sv:value>
+        <sv:value>2006-04-09T15:42:33.781+02:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="table">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>1e6d5a7e-1a15-4f5e-ba4f-042e2a50288a</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="type" sv:type="String">
+      <sv:value>jsp</sv:value>
+    </sv:property>
+    <sv:property sv:name="name" sv:type="String">
+      <sv:value>samplesTable</sv:value>
+    </sv:property>
+    <sv:property sv:name="dialogPath" sv:type="String">
+      <sv:value>samples/mainColumn/table</sv:value>
+    </sv:property>
+    <sv:property sv:name="description" sv:type="String">
+      <sv:value>paragraph.table.description</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-04-08T11:15:27.062+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="templatePath" sv:type="String">
+      <sv:value>/templates/samples/paragraphs/table.jsp</sv:value>
+    </sv:property>
+    <sv:property sv:name="title" sv:type="String">
+      <sv:value>paragraph.table.title</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-04-08T11:15:27.062+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
+        <sv:value>1127811057287000</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="String">
+        <sv:value>2004-11-03T09:03:29.016+01:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2006-04-09T15:41:56.507+02:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="link">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>65ed236b-fb4f-46c5-8e47-4287eb677439</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="type" sv:type="String">
+      <sv:value>jsp</sv:value>
+    </sv:property>
+    <sv:property sv:name="name" sv:type="String">
+      <sv:value>samplesLink</sv:value>
+    </sv:property>
+    <sv:property sv:name="dialogPath" sv:type="String">
+      <sv:value>samples/mainColumn/link</sv:value>
+    </sv:property>
+    <sv:property sv:name="description" sv:type="String">
+      <sv:value>paragraph.link.description</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-04-08T11:15:27.062+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="templatePath" sv:type="String">
+      <sv:value>/templates/samples/paragraphs/link.jsp</sv:value>
+    </sv:property>
+    <sv:property sv:name="title" sv:type="String">
+      <sv:value>paragraph.link.title</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-04-08T11:15:27.062+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
+        <sv:value>1127811053522000</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="String">
+        <sv:value>2004-11-03T09:03:29.016+01:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2006-04-09T15:41:48.746+02:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="devshow-allcontrols">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>f83dd7d5-a3a4-4eb1-a755-54ee04546c06</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="type" sv:type="String">
+      <sv:value>jsp</sv:value>
+    </sv:property>
+    <sv:property sv:name="name" sv:type="String">
+      <sv:value>samplesDevShowAllControls</sv:value>
+    </sv:property>
+    <sv:property sv:name="dialogPath" sv:type="String">
+      <sv:value>samples/devShow/allControls</sv:value>
+    </sv:property>
+    <sv:property sv:name="description" sv:type="String">
+      <sv:value>paragraph.devShowAllControls.description</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-04-08T11:15:27.032+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="templatePath" sv:type="String">
+      <sv:value>/templates/samples/paragraphs/noOutput.jsp</sv:value>
+    </sv:property>
+    <sv:property sv:name="title" sv:type="String">
+      <sv:value>paragraph.devShowAllControls.title</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-04-08T11:15:27.032+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+        <sv:value>2006-04-09T15:38:20.867+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activatorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
+        <sv:value>1127811028386000</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="String">
+        <sv:value>2004-11-02T15:34:48.736+01:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2006-04-09T15:38:20.967+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+        <sv:value>false</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="devshow-date">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>a3309206-0136-4bb3-a9fa-a75dfb7c3646</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="type" sv:type="String">
+      <sv:value>jsp</sv:value>
+    </sv:property>
+    <sv:property sv:name="name" sv:type="String">
+      <sv:value>samplesDevShowDate</sv:value>
+    </sv:property>
+    <sv:property sv:name="dialogPath" sv:type="String">
+      <sv:value>samples/devShow/date</sv:value>
+    </sv:property>
+    <sv:property sv:name="description" sv:type="String">
+      <sv:value>paragraph.devShowDate.description</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-04-08T11:15:27.032+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="templatePath" sv:type="String">
+      <sv:value>/templates/samples/paragraphs/date.jsp</sv:value>
+    </sv:property>
+    <sv:property sv:name="title" sv:type="String">
+      <sv:value>paragraph.devShowDate.title</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-04-08T11:15:27.032+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+        <sv:value>2006-04-09T15:38:29.479+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activatorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
+        <sv:value>1127811031751000</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="String">
+        <sv:value>2004-11-02T15:34:49.120+01:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2006-04-09T15:39:57.887+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+        <sv:value>false</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="devshow-include">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>34d0db64-60c3-4360-8c5b-a78cb26de3c5</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="type" sv:type="String">
+      <sv:value>jsp</sv:value>
+    </sv:property>
+    <sv:property sv:name="name" sv:type="String">
+      <sv:value>samplesDevShowInclude</sv:value>
+    </sv:property>
+    <sv:property sv:name="dialogPath" sv:type="String">
+      <sv:value>samples/devShow/include</sv:value>
+    </sv:property>
+    <sv:property sv:name="description" sv:type="String">
+      <sv:value>paragraph.devShowInclude.description</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-04-08T11:15:27.032+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="templatePath" sv:type="String">
+      <sv:value>/templates/samples/paragraphs/noOutput.jsp</sv:value>
+    </sv:property>
+    <sv:property sv:name="title" sv:type="String">
+      <sv:value>paragraph.devShowInclude.title</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-04-08T11:15:27.032+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+        <sv:value>2006-04-09T15:38:37.311+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activatorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
+        <sv:value>1127811034825000</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="String">
+        <sv:value>2004-11-02T15:34:49.346+01:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2006-04-09T15:40:13.849+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+        <sv:value>false</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="devshow-webdav">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>65b020e3-6445-4583-8464-7c7a5380c757</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="type" sv:type="String">
+      <sv:value>jsp</sv:value>
+    </sv:property>
+    <sv:property sv:name="name" sv:type="String">
+      <sv:value>samplesDevShowWebDAV</sv:value>
+    </sv:property>
+    <sv:property sv:name="dialogPath" sv:type="String">
+      <sv:value>samples/devShow/webDAV</sv:value>
+    </sv:property>
+    <sv:property sv:name="description" sv:type="String">
+      <sv:value>paragraph.devShowWebDAV.description</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-04-08T11:15:27.032+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="templatePath" sv:type="String">
+      <sv:value>/templates/samples/paragraphs/webDAV.jsp</sv:value>
+    </sv:property>
+    <sv:property sv:name="title" sv:type="String">
+      <sv:value>paragraph.devShowWebDAV.title</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-04-08T11:15:27.032+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+        <sv:value>2006-04-09T15:38:49.048+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activatorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
+        <sv:value>1127811038000000</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="String">
+        <sv:value>2004-11-02T15:34:49.540+01:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2006-04-09T15:40:24.345+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+        <sv:value>false</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="devshow-file">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>c7849f13-f3b9-4cec-bb57-3ee8e8df6d70</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="type" sv:type="String">
+      <sv:value>jsp</sv:value>
+    </sv:property>
+    <sv:property sv:name="name" sv:type="String">
+      <sv:value>samplesDevShowFile</sv:value>
+    </sv:property>
+    <sv:property sv:name="dialogPath" sv:type="String">
+      <sv:value>samples/devShow/file</sv:value>
+    </sv:property>
+    <sv:property sv:name="description" sv:type="String">
+      <sv:value>paragraph.devShowFile.description</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-04-08T11:15:27.052+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="templatePath" sv:type="String">
+      <sv:value>/templates/samples/paragraphs/file.jsp</sv:value>
+    </sv:property>
+    <sv:property sv:name="title" sv:type="String">
+      <sv:value>paragraph.devShowFile.title</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-04-08T11:15:27.052+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+        <sv:value>2006-04-09T15:38:58.381+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activatorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
+        <sv:value>1127811041294000</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="String">
+        <sv:value>2004-11-03T16:16:59.676+01:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2006-04-09T15:40:34.399+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+        <sv:value>false</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="devshow-richedit">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>85f84d06-b1c2-42cd-b72e-3bb22aa210c2</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="type" sv:type="String">
+      <sv:value>jsp</sv:value>
+    </sv:property>
+    <sv:property sv:name="name" sv:type="String">
+      <sv:value>samplesDevShowRichEdit</sv:value>
+    </sv:property>
+    <sv:property sv:name="dialogPath" sv:type="String">
+      <sv:value>samples/devShow/richEdit</sv:value>
+    </sv:property>
+    <sv:property sv:name="description" sv:type="String">
+      <sv:value>paragraph.devShowRichEdit.description</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-04-08T11:15:27.022+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="templatePath" sv:type="String">
+      <sv:value>/templates/samples/paragraphs/richEdit.jsp</sv:value>
+    </sv:property>
+    <sv:property sv:name="title" sv:type="String">
+      <sv:value>paragraph.devShowRichEdit.title</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-04-08T11:15:27.022+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+        <sv:value>2006-04-09T15:39:11.960+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activatorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
+        <sv:value>1127811030068500</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="String">
+        <sv:value>2004-11-02T15:34:49.702+01:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2006-04-09T15:40:46.366+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+        <sv:value>false</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="form-edit">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>cafe7de9-c38a-4aea-9c07-fcad5a665ce0</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="type" sv:type="String">
+      <sv:value>jsp</sv:value>
+    </sv:property>
+    <sv:property sv:name="name" sv:type="String">
+      <sv:value>samplesFormEdit</sv:value>
+    </sv:property>
+    <sv:property sv:name="dialogPath" sv:type="String">
+      <sv:value>samples/form/edit</sv:value>
+    </sv:property>
+    <sv:property sv:name="description" sv:type="String">
+      <sv:value>paragraph.formEdit.description</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-04-08T11:15:27.072+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="templatePath" sv:type="String">
+      <sv:value>/templates/samples/paragraphs/form-edit.jsp</sv:value>
+    </sv:property>
+    <sv:property sv:name="title" sv:type="String">
+      <sv:value>paragraph.formEdit.title</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-04-08T11:15:27.072+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+        <sv:value>2006-04-09T15:35:33.366+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activatorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
+        <sv:value>1127811060462000</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="String">
+        <sv:value>2004-11-03T09:03:29.016+01:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2006-04-09T15:42:03.327+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+        <sv:value>false</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="form-selection">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>c3ea6b39-b951-4a7a-89b2-9b01c4399fb8</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="type" sv:type="String">
+      <sv:value>jsp</sv:value>
+    </sv:property>
+    <sv:property sv:name="name" sv:type="String">
+      <sv:value>samplesFormSelection</sv:value>
+    </sv:property>
+    <sv:property sv:name="dialogPath" sv:type="String">
+      <sv:value>samples/form/selection</sv:value>
+    </sv:property>
+    <sv:property sv:name="description" sv:type="String">
+      <sv:value>paragraph.formSelection.description</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-04-08T11:15:27.072+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="templatePath" sv:type="String">
+      <sv:value>/templates/samples/paragraphs/form-selection.jsp</sv:value>
+    </sv:property>
+    <sv:property sv:name="title" sv:type="String">
+      <sv:value>paragraph.formSelection.title</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-04-08T11:15:27.072+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+        <sv:value>2006-04-09T15:35:47.046+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activatorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
+        <sv:value>1127811064077000</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="String">
+        <sv:value>2004-11-03T09:03:29.016+01:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2006-04-09T15:42:14.062+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+        <sv:value>false</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="form-submit">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>8ed77ab4-c3c6-4ca4-a95b-0beab6e58d19</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="type" sv:type="String">
+      <sv:value>jsp</sv:value>
+    </sv:property>
+    <sv:property sv:name="name" sv:type="String">
+      <sv:value>samplesFormSubmit</sv:value>
+    </sv:property>
+    <sv:property sv:name="dialogPath" sv:type="String">
+      <sv:value>samples/form/submit</sv:value>
+    </sv:property>
+    <sv:property sv:name="description" sv:type="String">
+      <sv:value>paragraph.formSubmit.description</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-04-08T11:15:27.022+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="templatePath" sv:type="String">
+      <sv:value>/templates/samples/paragraphs/form-submit.jsp</sv:value>
+    </sv:property>
+    <sv:property sv:name="title" sv:type="String">
+      <sv:value>paragraph.formSubmit.title</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-04-08T11:15:27.022+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+        <sv:value>2006-04-09T15:35:53.345+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activatorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
+        <sv:value>1127811001177000</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="String">
+        <sv:value>2004-11-03T09:03:29.016+01:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2006-04-09T15:42:25.959+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+        <sv:value>false</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
