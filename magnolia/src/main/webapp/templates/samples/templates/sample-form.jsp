@@ -60,7 +60,7 @@
   </jsp:text>
   <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
     <head>
-      <c:import url="/templates/jsp/samples/global/head.jsp" />
+      <c:import url="/templates/samples/templates/inc/head.jsp" />
     </head>
     <body>
       <!-- main bar of form template -->
@@ -113,7 +113,7 @@
         <form name="samplesForm" action="${pageContext.request.contextPath}${actpage.handle}.html" method="post"
           onsubmit="return (checkMandatories(this.name,'${alertText}'));">
           <input type="hidden" name="sendMail" value="true" />
-          <c:import url="/templates/jsp/samples/global/columnMain.jsp" />
+          <c:import url="/templates/samples/templates/inc/columnMain.jsp" />
           <!-- new bar -->
           <cms:adminOnly>
             <div style="clear:both;">
@@ -121,7 +121,7 @@
                 paragraph="samplesTextImage,samplesFormEdit,samplesFormSelection,samplesFormSubmit" />
             </div>
           </cms:adminOnly>
-          <c:import url="/templates/jsp/samples/global/footer.jsp" />
+          <c:import url="/templates/samples/templates/inc/footer.jsp" />
         </form>
       </div>
       <div id="contentDivRightColumn">
@@ -139,7 +139,7 @@
           </div>
         </cms:adminOnly>
       </div>
-      <c:import url="/templates/jsp/samples/global/headerImage.jsp" />
+      <c:import url="/templates/samples/templates/inc/headerImage.jsp" />
       <cmsu:simpleNavigation />
     </body>
   </html>

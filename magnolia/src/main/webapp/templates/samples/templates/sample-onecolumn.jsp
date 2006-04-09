@@ -90,7 +90,7 @@
             src="${pageContext.request.contextPath}/docroot/samples/imgs/poweredSmall.gif" />
         </a>
       </div>
-      <c:import url="/templates/jsp/samples/global/headerImage.jsp" />
+      <c:import url="/templates/samples/templates/inc/headerImage.jsp" />
       <cmsu:simpleNavigation />
     </body>
   </html>

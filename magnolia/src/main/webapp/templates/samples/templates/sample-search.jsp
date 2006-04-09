@@ -9,12 +9,12 @@
   </jsp:text>
   <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
     <head>
-      <c:import url="/templates/jsp/samples/global/head.jsp" />
+      <c:import url="/templates/samples/templates/inc/head.jsp" />
     </head>
     <body>
       <cms:mainBar paragraph="samplesPageProperties" />
       <div id="contentDivMainColumn">
-        <c:import url="/templates/jsp/samples/global/columnMain.jsp" />
+        <c:import url="/templates/samples/templates/inc/columnMain.jsp" />
         <form name="mgnlsearch" action="">
           <input id="query" name="query" value="${fn:escapeXml(param.query)}" />
           <input type="submit" name="search" value="search" />
@@ -42,7 +42,7 @@
             </div>
           </c:forEach>
         </c:if>
-        <c:import url="/templates/jsp/samples/global/footer.jsp" />
+        <c:import url="/templates/samples/templates/inc/footer.jsp" />
       </div>
       <div id="contentDivRightColumn">
         <cms:contentNodeIterator contentNodeCollectionName="rightColumnParagraphs">
@@ -59,7 +59,7 @@
           </div>
         </cms:adminOnly>
       </div>
-      <c:import url="/templates/jsp/samples/global/headerImage.jsp" />
+      <c:import url="/templates/samples/templates/inc/headerImage.jsp" />
       <cmsu:simpleNavigation />
     </body>
   </html>

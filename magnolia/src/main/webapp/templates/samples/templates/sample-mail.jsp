@@ -11,7 +11,7 @@
   </jsp:text>
   <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
     <head>
-      <c:import url="/templates/jsp/samples/global/head.jsp" />
+      <c:import url="/templates/samples/templates/inc/head.jsp" />
     </head>
     <body>
       <jsp:scriptlet>

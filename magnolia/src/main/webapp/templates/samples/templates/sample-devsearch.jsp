@@ -11,12 +11,12 @@
   </jsp:text>
   <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
     <head>
-      <c:import url="/templates/jsp/samples/global/head.jsp" />
+      <c:import url="/templates/samples/templates/inc/head.jsp" />
     </head>
     <body>
       <cms:mainBar paragraph="samplesPageProperties" />
       <div id="contentDivMainColumn">
-        <c:import url="/templates/jsp/samples/global/columnMain.jsp" />
+        <c:import url="/templates/samples/templates/inc/columnMain.jsp" />
         <c:choose>
           <c:when test="${!empty(param.sql)}">
             <c:set var="formvalue" value="${param.sql}" />
@@ -73,7 +73,7 @@
             <h1>${exc.message}</h1>
           </c:if>
         </c:if>
-        <c:import url="/templates/jsp/samples/global/footer.jsp" />
+        <c:import url="/templates/samples/templates/inc/footer.jsp" />
       </div>
       <div id="contentDivRightColumn">
         <cms:contentNodeIterator contentNodeCollectionName="rightColumnParagraphs">
@@ -90,7 +90,7 @@
           </div>
         </cms:adminOnly>
       </div>
-      <c:import url="/templates/jsp/samples/global/headerImage.jsp" />
+      <c:import url="/templates/samples/templates/inc/headerImage.jsp" />
       <cmsu:simpleNavigation />
     </body>
   </html>
