@@ -26,7 +26,7 @@ int size = list.size();
 <tr>
 <th class="nicetableheader">index</th>
 <th class="nicetableheader">FlowExpressionId</th>
-<th class="nicetableheader">Dispatch time</th>
+<th class="nicetableheader">Last Modify</th>
 <th class="nicetableheader">Attributes</th>
 <th class="nicetableheader">action</th>
 </tr>
@@ -43,7 +43,7 @@ String id = wi.getId().toParseableString();
 <%=id %>
 <td width="30">
 <%
-out.println(wi.getDispatchTime());
+out.println(wi.getLastModified());
 %>
 </td>
 <td>
