@@ -144,7 +144,7 @@ public class UserAddToGroupsDialog extends ConfiguredDialog {
         try {
         	String[] groupsValue = form.getParameter("aclList").split(";"); //$NON-NLS-1$ //$NON-NLS-2$
 
-        	new JCRUserMgr().createGroupsForUser(user, groupsValue);
+        	new JCRUserUtil().createGroupsForUser(user, groupsValue);
         	        
             hm.save();
 

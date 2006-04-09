@@ -178,7 +178,7 @@ public class GroupEditDialog extends ConfiguredDialog {
                     Content r = users.createContent(newLabel, ItemType.CONTENTNODE);
                     r.createNodeData("path").setValue(usersValue[i]); //$NON-NLS-1$
                     // add gourp reference to user's repository
-                    new JCRUserMgr().addGroupForUser(group.getJCRNode().getPath(), usersValue[i]);
+                    new JCRUserUtil().addGroupForUser(group.getJCRNode().getPath(), usersValue[i]);
                 }
                 catch (Exception e) {
                     log.error(e.getMessage(), e);
@@ -192,7 +192,4 @@ public class GroupEditDialog extends ConfiguredDialog {
             log.error(re.getMessage(), re);
         }
     }
-
-
-
 }
