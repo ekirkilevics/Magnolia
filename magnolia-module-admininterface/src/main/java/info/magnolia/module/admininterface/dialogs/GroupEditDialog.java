@@ -11,7 +11,6 @@ import info.magnolia.cms.gui.dialog.DialogFactory;
 import info.magnolia.cms.gui.dialog.DialogInclude;
 import info.magnolia.cms.gui.dialog.DialogStatic;
 import info.magnolia.cms.gui.dialog.DialogTab;
-import info.magnolia.jaas.sp.jcr.JCRUserMgr;
 import info.magnolia.module.admininterface.SaveHandler;
 
 import java.util.Iterator;
