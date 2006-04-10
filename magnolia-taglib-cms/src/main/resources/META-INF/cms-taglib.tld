@@ -98,6 +98,13 @@
       <rtexprvalue>true</rtexprvalue>
       <description>text of the move button, defaults to "Move"; use "" to get no move button</description>
     </attribute>
+    <attribute>
+      <name>adminOnly</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description>Show only in admin instance, default to false.</description>
+    </attribute>
   </tag>
   <!-- new bar tag -->
   <tag>
@@ -249,9 +256,31 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
         defaults to BR-tag. Set to "" to have no line break at all, or any other value to be used as the line break
       </description>
     </attribute>
+    <attribute>
+      <name>var</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        If set, the result of the evaluation will be set to a variable named from this attribute (and in the scope
+        defined using the "scope" attribute, defaulting to PAGE) instead of being written directly to the page.
+      </description>
+    </attribute>
+    <attribute>
+      <name>scope</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        Scope for the attribute named from the "var" parameter. Setting this attribute doesn't have any effect if "var"
+        is not set.
+      </description>
+    </attribute>
     <example>
       <![CDATA[
 <cms:out nodeDataName="title"/>
+<cms:out nodeDataName="myprop" var="check"/>
+<c:if test="${check == 'ok'}">
+  done
+</if>
 ]]>
     </example>
   </tag>

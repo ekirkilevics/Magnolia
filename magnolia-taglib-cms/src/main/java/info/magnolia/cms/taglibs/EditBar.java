@@ -12,6 +12,7 @@
  */
 package info.magnolia.cms.taglibs;
 
+import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.inline.BarEdit;
 import info.magnolia.cms.util.Resource;
@@ -48,6 +49,11 @@ public class EditBar extends TagSupport {
     private String deleteLabel;
 
     private String moveLabel;
+
+    /**
+     * Show links only in admin instance.
+     */
+    private boolean adminOnly;
 
     /**
      * set working contentNode
@@ -94,6 +100,14 @@ public class EditBar extends TagSupport {
     }
 
     /**
+     * Setter for <code>adminOnly</code>.
+     * @param adminOnly The adminOnly to set.
+     */
+    public void setAdminOnly(boolean adminOnly) {
+        this.adminOnly = adminOnly;
+    }
+
+    /**
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
     public int doStartTag() {
@@ -104,15 +118,14 @@ public class EditBar extends TagSupport {
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag() {
-        /*
-         * if (!ServerInfo.isAdmin() || Resource.showPreview(this.request)) return EVAL_PAGE; if
-         * (!Resource.getActivePage(this.request).isGranted(Permission.WRITE_PROPERTY)) return EVAL_PAGE;
-         */
-        try {
-            this.display();
-        }
-        catch (IOException e) {
-            throw new NestableRuntimeException(e);
+
+        if (!adminOnly || Server.isAdmin()) {
+            try {
+                this.display();
+            }
+            catch (IOException e) {
+                throw new NestableRuntimeException(e);
+            }
         }
         return EVAL_PAGE;
     }
@@ -201,6 +214,7 @@ public class EditBar extends TagSupport {
         this.editLabel = null;
         this.deleteLabel = null;
         this.moveLabel = null;
+        this.adminOnly = false;
         super.release();
     }
 }

@@ -55,33 +55,19 @@
         ]]>
       </jsp:scriptlet>
       <cms:contentNodeIterator contentNodeCollectionName="mainColumnParagraphs">
-        <c:set var="spacer">
-          <cms:out nodeDataName="spacer" />
-        </c:set>
-        <c:set var="lineAbove">
-          <cms:out nodeDataName="lineAbove" />
-        </c:set>
+        <cms:out nodeDataName="lineAbove" var="lineAbove" />
         <div style="clear:both;">
-          <cms:adminOnly>
-            <cms:editBar />
-          </cms:adminOnly>
+          <cms:editBar adminOnly="true" />
           <!-- line -->
           <c:if test="${lineAbove=='true'}">
-            <div class="line">
-              <br />
-            </div>
+            <hr />
           </c:if>
           <cms:includeTemplate />
         </div>
         <!-- spacer -->
-        <div style="clear:both;">
-          <c:if test="${spacer=='1'}">
-            <br />
-          </c:if>
-          <c:if test="${spacer=='2'}">
-            <br />
-            <br />
-          </c:if>
+        <cms:out nodeDataName="spacer" var="spacer" />
+        <div style="clear:both;" class="spacer${spacer}">
+          <!--  -->
         </div>
       </cms:contentNodeIterator>
       <cms:adminOnly>

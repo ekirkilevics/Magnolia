@@ -13,50 +13,40 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.NodeData;
 
+import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.collections.IteratorUtils;
+
 
 /**
  * @author Sameer Charles
- * @version 1.1
+ * @author Fabrizio Giustina
+ * @version $Revision$ ($Author$)
  */
-public class Template {
+public class Template implements Serializable {
 
     /**
-     * Template name.
+     * Stable serialVersionUID.
      */
-    private String name;
+    private static final long serialVersionUID = 222L;
 
     /**
-     * Template path.
+     * Contains all the Template parameters.
      */
-    private String path;
-
-    /**
-     * Template type (e.g. <code>jsp</code>).
-     */
-    private String type;
+    private Map parameters;
 
     /**
      * Mandatory.
      */
     private boolean visible;
-
-    /**
-     * Optional fields.
-     */
-    private String description;
-
-    private String image;
-
-    private String title;
-
-    private String location;
 
     private Map alternativeTemplates;
 
@@ -68,15 +58,10 @@ public class Template {
     }
 
     public Template(Content c) {
-        this.name = c.getNodeData("name").getString(); //$NON-NLS-1$
-        this.path = c.getNodeData("path").getString(); //$NON-NLS-1$
 
-        this.type = c.getNodeData("type").getString(); //$NON-NLS-1$
+        parameters = nodeDataCollectionToStringMap(c.getNodeDataCollection());
+
         this.visible = c.getNodeData("visible").getBoolean(); //$NON-NLS-1$
-        this.title = c.getNodeData("title").getString(); //$NON-NLS-1$
-        this.description = c.getNodeData("description").getString(); //$NON-NLS-1$
-        this.image = c.getNodeData("image").getString(); //$NON-NLS-1$
-        this.location = c.getHandle();
 
         addAlternativePaths(c);
     }
@@ -86,7 +71,7 @@ public class Template {
      * @return Returns the description.
      */
     public String getDescription() {
-        return this.description;
+        return getParameter("description");
     }
 
     /**
@@ -94,7 +79,7 @@ public class Template {
      * @return Returns the name.
      */
     public String getName() {
-        return this.name;
+        return getParameter("name");
     }
 
     /**
@@ -102,7 +87,7 @@ public class Template {
      * @return Returns the path.
      */
     public String getPath() {
-        return this.path;
+        return getParameter("path");
     }
 
     /**
@@ -110,7 +95,7 @@ public class Template {
      * @return Returns the title.
      */
     public String getTitle() {
-        return this.title;
+        return getParameter("title");
     }
 
     /**
@@ -118,7 +103,7 @@ public class Template {
      * @return Returns the image.
      */
     public String getImage() {
-        return this.image;
+        return getParameter("image");
     }
 
     /**
@@ -126,7 +111,7 @@ public class Template {
      * @return Returns the type.
      */
     public String getType() {
-        return this.type;
+        return getParameter("type");
     }
 
     /**
@@ -134,7 +119,11 @@ public class Template {
      * @return Returns the location.
      */
     public String getLocation() {
-        return this.location;
+        return getParameter("location");
+    }
+
+    public String getParameter(String key) {
+        return (String) parameters.get(key);
     }
 
     /**
@@ -158,7 +147,7 @@ public class Template {
             return template.getPath();
         }
 
-        return path;
+        return getParameter("path");
     }
 
     /**
@@ -196,22 +185,29 @@ public class Template {
             Content c = (Content) it.next();
 
             Template template = new Template();
-            template.path = c.getNodeData("path").getString(); //$NON-NLS-1$
 
-            template.type = c.getNodeData("type").getString(); //$NON-NLS-1$
-            if (template.type == null) {
-                template.type = type;
-            }
+            template.parameters = new HashMap(this.parameters);
+            template.parameters.putAll(nodeDataCollectionToStringMap(c.getNodeDataCollection()));
 
-            template.name = name;
+            nodeDataCollectionToStringMap(c.getNodeDataCollection());
+
             template.visible = visible;
-            template.location = location;
 
             synchronized (alternativeTemplates) {
                 this.alternativeTemplates.put(c.getNodeData("extension").getString(), template); //$NON-NLS-1$ 
             }
         }
 
+    }
+
+    private Map nodeDataCollectionToStringMap(Collection collection) {
+        Map map = new HashMap();
+        Iterator it = IteratorUtils.getIterator(collection);
+        while (it.hasNext()) {
+            NodeData data = (NodeData) it.next();
+            map.put(data.getName(), data.getString());
+        }
+        return map;
     }
 
 }

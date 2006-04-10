@@ -1,9 +1,8 @@
 <jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:cms="urn:jsptld:cms-taglib"
     xmlns:cmsu="urn:jsptld:cms-util-taglib" xmlns:c="urn:jsptld:http://java.sun.com/jsp/jstl/core">
 
-    <c:set var="file">
-        <cms:out nodeDataName="file" />
-    </c:set>
+    <cms:out nodeDataName="file" var="file" />
+
     <a href="${pageContext.request.contextPath}${file}" target="_blank"> <cms:out nodeDataName="file"
         fileProperty="nameWithoutExtension" /> &amp;ndash; <cms:out nodeDataName="file"
         fileProperty="extensionUpperCase" />-File, <cms:out nodeDataName="file" fileProperty="size" /></a>

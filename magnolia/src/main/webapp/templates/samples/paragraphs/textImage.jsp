@@ -3,9 +3,8 @@
 
     <cms:ifNotEmpty nodeDataName="image">
         <cms:setNode var="imagedata" />
-        <c:set var="imageurl">
-            <cms:out nodeDataName="image" />
-        </c:set>
+        <cms:out nodeDataName="image" var="imageurl" />
+
         <img src="${pageContext.request.contextPath}${imageurl}" class="contentImage_${imagedata.imageFloat}" alt="${imagedata.imageAlt}" />
     </cms:ifNotEmpty>
 

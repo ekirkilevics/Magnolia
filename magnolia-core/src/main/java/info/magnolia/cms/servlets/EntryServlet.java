@@ -32,7 +32,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -123,12 +125,22 @@ public class EntryServlet extends ContextSensitiveServlet {
 
                     if (template != null) {
                         try {
-                            TemplateRenderer renderer = TemplateManager.getInstance().getRenderer(template.getType());
+                            String type = template.getType();
+                            TemplateRenderer renderer = TemplateManager.getInstance().getRenderer(type);
+
+                            if (renderer == null) {
+                                throw new RuntimeException("No renderer found for type " + type);
+                            }
                             renderer.renderTemplate(template, req, res);
                         }
                         catch (Exception e) {
                             // @todo better handling of rendering exception
                             log.error(e.getMessage(), e);
+                            if (!res.isCommitted()) {
+                                res.reset();
+                                res.setContentType("text/html");
+                            }
+                            throw new NestableRuntimeException(e);
                         }
                     }
                     else {
@@ -200,13 +212,21 @@ public class EntryServlet extends ContextSensitiveServlet {
     private boolean redirect(HttpServletRequest request, HttpServletResponse response) {
         String uri = this.getURIMap(request);
         if (StringUtils.isNotEmpty(uri)) {
-            try {
-                request.getRequestDispatcher(uri).forward(request, response);
+            if (!response.isCommitted()) {
+                try {
+                    request.getRequestDispatcher(uri).forward(request, response);
+                }
+                catch (Exception e) {
+                    log.error("Failed to forward to {} - {}:{}", //$NON-NLS-1$
+                        new Object[]{uri, ClassUtils.getShortClassName(e.getClass()), e.getMessage()});
+                }
             }
-            catch (Exception e) {
-                log.error("Failed to forward - {}", uri); //$NON-NLS-1$
-                log.error(e.getMessage(), e);
+            else {
+                log.warn("Response is already committed, cannot forward to {} (original URI was {})",//$NON-NLS-1$
+                    uri,
+                    request.getRequestURI());
             }
+
             return true;
         }
         return false;

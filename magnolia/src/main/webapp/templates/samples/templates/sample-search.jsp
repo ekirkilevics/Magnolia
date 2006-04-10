@@ -42,14 +42,25 @@
             </div>
           </c:forEach>
         </c:if>
-        <c:import url="/templates/samples/templates/inc/footer.jsp" />
+        <div id="footer">
+          <cms:adminOnly>
+            <fmt:message key="buttons.editfooter" var="label" />
+            <cms:editButton label="${label}" paragraph="samplesPageFooter" contentNodeName="footerPar" />
+          </cms:adminOnly>
+          <cms:ifNotEmpty nodeDataName="footerText" contentNodeName="footerPar">
+            <p>
+              <cms:out nodeDataName="footerText" contentNodeName="footerPar" />
+            </p>
+          </cms:ifNotEmpty>
+          <a href="http://www.magnolia.info">
+            <img src="${pageContext.request.contextPath}/docroot/samples/imgs/poweredSmall.gif" />
+          </a>
+        </div>
       </div>
       <div id="contentDivRightColumn">
         <cms:contentNodeIterator contentNodeCollectionName="rightColumnParagraphs">
           <div style="clear:both;">
-            <cms:adminOnly>
-              <cms:editBar />
-            </cms:adminOnly>
+            <cms:editBar adminOnly="true" />
             <cms:includeTemplate />
           </div>
         </cms:contentNodeIterator>

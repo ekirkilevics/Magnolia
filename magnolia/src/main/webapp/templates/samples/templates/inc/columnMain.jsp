@@ -1,43 +1,25 @@
 <jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:cms="urn:jsptld:cms-taglib"
   xmlns:cmsu="urn:jsptld:cms-util-taglib" xmlns:c="urn:jsptld:http://java.sun.com/jsp/jstl/core">
   <!-- content title -->
-  <c:set var="title">
-    <cms:out nodeDataName="title" />
-  </c:set>
+  <cms:out nodeDataName="title" var="title" />
   <c:if test="%{empty(title)}">
-    <c:set var="title">
-      <cms:out nodeDataName="contentTitle" />
-    </c:set>
+    <cms:out nodeDataName="contentTitle" var="title" />
   </c:if>
   <h1>${title}</h1>
   <cms:contentNodeIterator contentNodeCollectionName="mainColumnParagraphs">
-    <c:set var="spacer">
-      <cms:out nodeDataName="spacer" />
-    </c:set>
-    <c:set var="lineAbove">
-      <cms:out nodeDataName="lineAbove" />
-    </c:set>
+    <cms:out nodeDataName="lineAbove" var="lineAbove" />
     <div style="clear:both;">
-      <cms:adminOnly>
-        <cms:editBar />
-      </cms:adminOnly>
+      <cms:editBar adminOnly="true" />
       <!-- line -->
       <c:if test="${lineAbove=='true'}">
-        <div class="line">
-          <br />
-        </div>
+        <hr />
       </c:if>
       <cms:includeTemplate />
     </div>
     <!-- spacer -->
-    <div style="clear:both;">
-      <c:if test="${spacer=='1'}">
-        <br />
-      </c:if>
-      <c:if test="${spacer=='2'}">
-        <br />
-        <br />
-      </c:if>
+    <cms:out nodeDataName="spacer" var="spacer" />
+    <div style="clear:both;" class="spacer${spacer}">
+      <!--  -->
     </div>
   </cms:contentNodeIterator>
   <cms:adminOnly>

@@ -17,23 +17,28 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.util.LinkUtil;
 import info.magnolia.cms.util.Resource;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateFormatUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.Date;
+import java.util.Locale;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
-import java.io.IOException;
-import java.util.Date;
-import java.util.Locale;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.NestableRuntimeException;
+import org.apache.commons.lang.time.DateFormatUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
  * @author Sameer Charles
+ * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
 public class Out extends TagSupport {
@@ -58,15 +63,6 @@ public class Out extends TagSupport {
 
     private String contentNodeCollectionName;
 
-    /**
-     * The current page. This is important to make relative links.
-     */
-    private transient Content currentActivePage;
-
-    private transient Content contentNode;
-
-    private transient NodeData nodeData;
-
     private String fileProperty = StringUtils.EMPTY;
 
     private String datePattern = DEFAULT_DATEPATTERN; // according to ISO 8601
@@ -75,115 +71,68 @@ public class Out extends TagSupport {
 
     private String lineBreak = DEFAULT_LINEBREAK;
 
-    /**
-     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
-     */
-    public int doStartTag() {
+    private transient Content contentNode;
 
-        Content local = Resource.getLocalContentNode((HttpServletRequest) pageContext.getRequest());
-        String contentNodeName = this.getContentNodeName();
-        String contentNodeCollectionName = this.getContentNodeCollectionName();
-        if (StringUtils.isNotEmpty(contentNodeName)) {
-            // contentNodeName is defined
-            try {
-                if (StringUtils.isEmpty(contentNodeCollectionName)) {
-                    // e.g. <cms:out nodeDataName="title" contentNodeName="footer"/>
-                    this.setContentNode(this.getCurrentActivePage().getContent(contentNodeName));
-                } else {
-                    // e.g. <cms:out nodeDataName="title" contentNodeName="01" contentNodeCollectionName="mainPars"/>
-                    // e.g. <cms:out nodeDataName="title" contentNodeName="footer" contentNodeCollectionName=""/>
-                    this.setContentNode(this.getCurrentActivePage().getContent(contentNodeCollectionName).getContent(
-                            contentNodeName));
-                }
-            }
-            catch (RepositoryException re) {
-                if (log.isDebugEnabled())
-                    log.debug(re.getMessage());
-            }
-        } else {
-            if (local == null) {
-                // outside collection iterator
-                if (StringUtils.isNotEmpty(contentNodeCollectionName)) {
-                    // ERROR: no content node assignable because contentNodeName is empty
-                    // e.g. <cms:out nodeDataName="title" contentNodeCollectionName="mainPars"/>
-                    return SKIP_BODY;
-                }
-                // e.g. <cms:out nodeDataName="title"/>
-                // e.g. <cms:out nodeDataName="title" contentNodeName=""/>
-                // e.g. <cms:out nodeDataName="title" contentNodeCollectionName=""/>
-                this.setContentNode(this.getCurrentActivePage());
-            } else {
-                // inside collection iterator
-                if (contentNodeName == null && contentNodeCollectionName == null) {
-                    // e.g. <cms:out nodeDataName="title"/>
-                    this.setContentNode(local);
-                } else if ((contentNodeName != null && StringUtils.isEmpty(contentNodeName))
-                        || (contentNodeCollectionName != null && StringUtils.isEmpty(contentNodeCollectionName))) {
-                    // empty collection name -> use actpage
-                    // e.g. <cms:out nodeDataName="title" contentNodeCollectionName=""/>
-                    this.setContentNode(this.getCurrentActivePage());
-                } else {
-                    // ERROR: no content node assignable because contentNodeName is empty
-                    // e.g. <cms:out nodeDataName="title" contentNodeCollectionName="mainPars"/>
-                    return SKIP_BODY;
-                }
-            }
+    private transient NodeData nodeData;
+
+    /**
+     * If set, the result of the evaluation will be set to a variable named from this attribute (and in the scope
+     * defined using the "scope" attribute, defaulting to PAGE) instead of being written directly to the page.
+     */
+    private String var;
+
+    /**
+     * Scope for the attribute named from the "var" parameter. Setting this attribute doesn't have any effect if "var"
+     * is not set.
+     */
+    private int scope = PageContext.PAGE_SCOPE;
+
+    /**
+     * Setter for <code>var</code>.
+     * @param var The var to set.
+     */
+    public void setVar(String var) {
+        this.var = var;
+    }
+
+    /**
+     * Setter for <code>scope</code>.
+     * @param scope The scope to set.
+     */
+    public void setScope(String scope) {
+        if ("request".equalsIgnoreCase(scope)) { //$NON-NLS-1$
+            this.scope = PageContext.REQUEST_SCOPE;
         }
-        return SKIP_BODY;
+        else if ("session".equalsIgnoreCase(scope)) { //$NON-NLS-1$
+            this.scope = PageContext.SESSION_SCOPE;
+        }
+        else if ("application".equalsIgnoreCase(scope)) { //$NON-NLS-1$
+            this.scope = PageContext.APPLICATION_SCOPE;
+        }
+        else {
+            // default
+            this.scope = PageContext.PAGE_SCOPE;
+        }
     }
 
     /**
-     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
-     */
-    public int doEndTag() {
-        this.display();
-        this.setCurrentActivePage(null);
-        this.setContentNodeCollectionName(null);
-        this.setContentNodeName(null);
-        this.setContentNode(null);
-        this.setNodeDataName(null);
-        this.setNodeData(null);
-        this.setDateLanguage(null);
-        this.setDatePattern(DEFAULT_DATEPATTERN);
-        this.setLineBreak(DEFAULT_LINEBREAK);
-        return EVAL_PAGE;
-    }
-
-    /**
-     * <p/>
-     * set the requested node data
-     * </p>
-     *
+     * Set the requested node data.
      * @param node
      */
     public void setNodeData(NodeData node) {
         this.nodeData = node;
     }
 
-    public NodeData getNodeData() {
-        return this.nodeData;
-    }
-
     /**
-     * <p/>
-     * set the node data name, e.g. "mainText"
-     * </p>
-     *
+     * Set the node data name, e.g. "mainText".
      * @param name
      */
     public void setNodeDataName(String name) {
         this.nodeDataName = name;
     }
 
-    public String getNodeDataName() {
-        return this.nodeDataName;
-    }
-
     /**
-     * <p/>
-     * set the content node name name, e.g. "01"
-     * </p>
-     *
+     * Set the content node name name, e.g. "01".
      * @param name
      */
     public void setContentNodeName(String name) {
@@ -191,57 +140,33 @@ public class Out extends TagSupport {
     }
 
     /**
-     * <p/>
-     * set the content node collection name name, e.g. "mainColumnParagraphs"
-     * </p>
-     *
+     * Set the content node collection name name, e.g. "mainColumnParagraphs".
      * @param name
      */
     public void setContentNodeCollectionName(String name) {
         this.contentNodeCollectionName = name;
     }
 
-    public String getContentNodeCollectionName() {
-        return this.contentNodeCollectionName;
-    }
-
-    public String getContentNodeName() {
-        return this.contentNodeName;
-    }
-
     /**
-     * <p/>
-     * set the content node name
-     * </p>
-     *
+     * Set the content node name.
      * @param c
      */
     public void setContentNode(Content c) {
         this.contentNode = c;
     }
 
-    public Content getContentNode() {
-        return this.contentNode;
-    }
-
     /**
-     * @param set (true/false; false is default)
-     * @deprecated <p/>
-     *             set the actpage
-     *             </p>
+     * @deprecated does nothing
      */
     public void setActpage(String set) {
     }
 
     /**
-     * <p/>
-     * set which information of a file to retrieve
+     * <p/> set which information of a file to retrieve
      * </p>
-     * <p/>
-     * does only apply for nodeDatas of type=Binary
+     * <p/> does only apply for nodeDatas of type=Binary
      * </p>
-     * <p/>
-     * supported values (sample value):
+     * <p/> supported values (sample value):
      * <ul>
      * <li><b>path (default): </b> path inlcuding the filename (/dev/mainColumnParagraphs/0/image/Alien.png)
      * <li><b>name </b>: name and extension (Alien.png)
@@ -256,7 +181,6 @@ public class Out extends TagSupport {
      * <li><b>contentType: </b> (image/png)
      * </ul>
      * </p>
-     *
      * @param property
      */
     public void setFileProperty(String property) {
@@ -264,14 +188,11 @@ public class Out extends TagSupport {
     }
 
     /**
-     * <p/>
-     * set which date format shall be delivered
+     * <p/> set which date format shall be delivered
      * </p>
-     * <p/>
-     * does only apply for nodeDatas of type=Date
+     * <p/> does only apply for nodeDatas of type=Date
      * </p>
-     * <p/>
-     * language according to java.text.SimpleDateFormat:
+     * <p/> language according to java.text.SimpleDateFormat:
      * <ul>
      * <li><b>G </b> Era designator Text AD
      * <li><b>y </b> Year Year 1996; 96
@@ -294,129 +215,155 @@ public class Out extends TagSupport {
      * <li><b>Z </b> Time zone RFC 822 time zone -0800
      * </ul>
      * </p>
-     *
      * @param pattern , default is yyyy-MM-dd
      */
     public void setDatePattern(String pattern) {
         this.datePattern = pattern;
     }
 
-    public String getDatePattern() {
-        return this.datePattern;
-    }
-
     /**
-     * <p/>
-     * set which date format shall be delivered
-     * </p>
-     * <p/>
-     * does only apply for nodeDatas of type=Date
-     * </p>
-     * <p/>
-     * language according to java.util.Locale
-     * </p>
-     *
+     * Set which date format shall be delivered. Does only apply for nodeDatas of type=Date. Language according to
+     * <code>java.util.Locale</code>.
      * @param language
      */
     public void setDateLanguage(String language) {
         this.dateLanguage = language;
     }
 
-    public String getDateLanguage() {
-        return this.dateLanguage;
-    }
-
     /**
-     * <p/>
-     * set the lineBreak String
-     * </p>
-     *
+     * Set the lineBreak String.
      * @param lineBreak
      */
     public void setLineBreak(String lineBreak) {
         this.lineBreak = lineBreak;
     }
 
-    public String getLineBreak() {
-        return this.lineBreak;
-    }
-
-    /**
-     *
-     */
-    protected void display() {
-        try {
-
-            // @todo //check if multiple values (checkboxes) -> not nodeData but contentNode
-
-            NodeData nodeData = this.getContentNode().getNodeData(this.getNodeDataName());
-            String value = StringUtils.EMPTY;
-            int type = nodeData.getType();
-            if (type == PropertyType.DATE) {
-                value = this.getDateFormatted(nodeData.getDate().getTime());
-            } else if (type == PropertyType.BINARY) {
-                value = this.getFilePropertyValue();
-            } else {
-                if (StringUtils.isEmpty(this.getLineBreak())) {
-                    value = nodeData.getString();
-                } else {
-                    value = nodeData.getString(this.getLineBreak());
-                }
-                // replace internal links
-                value = LinkUtil.convertUUIDsToRelativeLinks(value, Resource
-                        .getActivePage((HttpServletRequest) pageContext.getRequest())); // static actpage
-            }
-            JspWriter out = pageContext.getOut();
-            try {
-                out.print(value);
-            }
-            catch (IOException e) {
-                if (log.isDebugEnabled())
-                    log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
-            }
-        }
-        catch (Exception e) {
-            if (log.isDebugEnabled())
-                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
-        }
-    }
-
-    // @todo: place in another package to make it availbable globaly -> NodeData?
-    public String getDateFormatted(Date date) {
-        if (date == null) {
-            return StringUtils.EMPTY;
-        }
-
-        String lang = this.getDateLanguage();
-        if (lang == null) {
-            return DateFormatUtils.formatUTC(date, this.getDatePattern());
-        }
-
-        return DateFormatUtils.formatUTC(date, this.getDatePattern(), new Locale(lang));
-
-    }
-
     public String getFilePropertyValue() {
-        FileProperties props = new FileProperties(this.getContentNode(), this.nodeDataName);
+        FileProperties props = new FileProperties(this.contentNode, this.nodeDataName);
         String value = props.getProperty(this.fileProperty);
         return value;
     }
 
     /**
-     * @return the current page
+     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
-    protected Content getCurrentActivePage() {
-        if (this.currentActivePage == null) {
-            this.currentActivePage = Resource.getCurrentActivePage((HttpServletRequest) pageContext.getRequest());
+    public int doStartTag() {
+
+        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+
+        Content currentActivePage = Resource.getCurrentActivePage(request);
+        Content local = Resource.getLocalContentNode(request);
+
+        if (StringUtils.isNotEmpty(contentNodeName)) {
+            // contentNodeName is defined
+            try {
+                if (StringUtils.isEmpty(contentNodeCollectionName)) {
+                    // e.g. <cms:out nodeDataName="title" contentNodeName="footer"/>
+                    this.setContentNode(currentActivePage.getContent(contentNodeName));
+                }
+                else {
+                    // e.g. <cms:out nodeDataName="title" contentNodeName="01" contentNodeCollectionName="mainPars"/>
+                    // e.g. <cms:out nodeDataName="title" contentNodeName="footer" contentNodeCollectionName=""/>
+                    this.setContentNode(currentActivePage.getContent(contentNodeCollectionName).getContent(
+                        contentNodeName));
+                }
+            }
+            catch (RepositoryException re) {
+                if (log.isDebugEnabled())
+                    log.debug(re.getMessage());
+            }
         }
-        return this.currentActivePage;
+        else {
+            if (local == null) {
+                // outside collection iterator
+                if (StringUtils.isNotEmpty(contentNodeCollectionName)) {
+                    // ERROR: no content node assignable because contentNodeName is empty
+                    // e.g. <cms:out nodeDataName="title" contentNodeCollectionName="mainPars"/>
+                    return SKIP_BODY;
+                }
+                // e.g. <cms:out nodeDataName="title"/>
+                // e.g. <cms:out nodeDataName="title" contentNodeName=""/>
+                // e.g. <cms:out nodeDataName="title" contentNodeCollectionName=""/>
+                this.setContentNode(currentActivePage);
+            }
+            else {
+                // inside collection iterator
+                if (contentNodeName == null && contentNodeCollectionName == null) {
+                    // e.g. <cms:out nodeDataName="title"/>
+                    this.setContentNode(local);
+                }
+                else if ((contentNodeName != null && StringUtils.isEmpty(contentNodeName))
+                    || (contentNodeCollectionName != null && StringUtils.isEmpty(contentNodeCollectionName))) {
+                    // empty collection name -> use actpage
+                    // e.g. <cms:out nodeDataName="title" contentNodeCollectionName=""/>
+                    this.setContentNode(currentActivePage);
+                }
+                else {
+                    // ERROR: no content node assignable because contentNodeName is empty
+                    // e.g. <cms:out nodeDataName="title" contentNodeCollectionName="mainPars"/>
+                    return SKIP_BODY;
+                }
+            }
+        }
+        return SKIP_BODY;
     }
 
     /**
-     * @param currentActivePage the current page
+     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
-    protected void setCurrentActivePage(Content currentActivePage) {
-        this.currentActivePage = currentActivePage;
+    public int doEndTag() {
+        // don't reset any value set using a tag attribute here, or it will break any container that does tag pooling!
+
+        String value = null;
+
+        // @todo //check if multiple values (checkboxes) -> not nodeData but contentNode
+
+        NodeData nodeData = this.contentNode.getNodeData(this.nodeDataName);
+
+        int type = nodeData.getType();
+
+        switch (type) {
+            case PropertyType.DATE:
+
+                Date date = nodeData.getDate().getTime();
+                if (date != null) {
+                    if (this.dateLanguage == null) {
+                        value = DateFormatUtils.formatUTC(date, this.datePattern);
+                    }
+                    else {
+                        value = DateFormatUtils.formatUTC(date, this.datePattern, new Locale(this.dateLanguage));
+                    }
+                }
+                break;
+
+            case PropertyType.BINARY:
+                value = this.getFilePropertyValue();
+                break;
+
+            default:
+                value = StringUtils.isEmpty(this.lineBreak) ? nodeData.getString() : nodeData.getString(this.lineBreak);
+                // replace internal links
+                value = LinkUtil.convertUUIDsToRelativeLinks(value, Resource
+                    .getActivePage((HttpServletRequest) pageContext.getRequest())); // static actpage
+                break;
+        }
+
+        if (var != null) {
+            // set result as a variable
+            pageContext.setAttribute(var, value, scope);
+        }
+        else if (value != null) {
+            JspWriter out = pageContext.getOut();
+            try {
+                out.print(value);
+            }
+            catch (IOException e) {
+                // should never happen
+                throw new NestableRuntimeException(e);
+            }
+        }
+
+        return EVAL_PAGE;
     }
 
     /**
@@ -428,13 +375,14 @@ public class Out extends TagSupport {
         this.nodeDataName = null;
         this.contentNodeName = null;
         this.contentNodeCollectionName = null;
-        this.currentActivePage = null;
         this.contentNode = null;
         this.nodeData = null;
         this.fileProperty = StringUtils.EMPTY;
         this.datePattern = DEFAULT_DATEPATTERN;
         this.dateLanguage = null;
         this.lineBreak = DEFAULT_LINEBREAK;
-
+        this.var = null;
+        this.scope = PageContext.PAGE_SCOPE;
     }
+
 }

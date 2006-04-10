@@ -1,5 +1,6 @@
 <jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:cms="urn:jsptld:cms-taglib"
-  xmlns:cmsu="urn:jsptld:cms-util-taglib" xmlns:c="urn:jsptld:http://java.sun.com/jsp/jstl/core">
+  xmlns:cmsu="urn:jsptld:cms-util-taglib" xmlns:c="urn:jsptld:http://java.sun.com/jsp/jstl/core"
+  xmlns:fmt="urn:jsptld:http://java.sun.com/jsp/jstl/fmt">
   <jsp:directive.page contentType="text/html; charset=utf-8" />
   <jsp:text>
     <![CDATA[<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -22,45 +23,28 @@
       <meta name="keywords" content="${pageProperties.metaKeywords}" />
     </head>
     <body>
+      <cms:mainBar paragraph="samplesPageProperties" />
       <div id="contentDivMainColumnTotalWidth">
         <!-- content title -->
-        <c:set var="title">
-          <cms:out nodeDataName="title" />
-        </c:set>
+        <cms:out nodeDataName="title" var="title" />
         <c:if test="%{empty(title)}">
-          <c:set var="title">
-            <cms:out nodeDataName="contentTitle" />
-          </c:set>
+          <cms:out nodeDataName="contentTitle" var="title" />
         </c:if>
         <h1>${title}</h1>
         <cms:contentNodeIterator contentNodeCollectionName="mainColumnParagraphs">
-          <c:set var="spacer">
-            <cms:out nodeDataName="spacer" />
-          </c:set>
-          <c:set var="lineAbove">
-            <cms:out nodeDataName="lineAbove" />
-          </c:set>
+          <cms:out nodeDataName="lineAbove" var="lineAbove" />
           <div style="clear:both;">
-            <cms:adminOnly>
-              <cms:editBar />
-            </cms:adminOnly>
+            <cms:editBar adminOnly="true" />
             <!-- line -->
             <c:if test="${lineAbove=='true'}">
-              <div class="line">
-                <br />
-              </div>
+              <hr />
             </c:if>
             <cms:includeTemplate />
           </div>
           <!-- spacer -->
-          <div style="clear:both;">
-            <c:if test="${spacer=='1'}">
-              <br />
-            </c:if>
-            <c:if test="${spacer=='2'}">
-              <br />
-              <br />
-            </c:if>
+          <cms:out nodeDataName="spacer" var="spacer" />
+          <div style="clear:both;" class="spacer${spacer}">
+            <!--  -->
           </div>
         </cms:contentNodeIterator>
         <cms:adminOnly>
@@ -69,26 +53,20 @@
               paragraph="samplesTextImage,samplesEditor,samplesDownload,samplesLink,samplesTable" />
           </div>
         </cms:adminOnly>
-        <br />
-        <br />
-        <br />
-        <div class="line">
-          <br />
+        <div id="footer">
+          <cms:adminOnly>
+            <fmt:message key="buttons.editfooter" var="label" />
+            <cms:editButton label="${label}" paragraph="samplesPageFooter" contentNodeName="footerPar" />
+          </cms:adminOnly>
+          <cms:ifNotEmpty nodeDataName="footerText" contentNodeName="footerPar">
+            <p>
+              <cms:out nodeDataName="footerText" contentNodeName="footerPar" />
+            </p>
+          </cms:ifNotEmpty>
+          <a href="http://www.magnolia.info">
+            <img src="${pageContext.request.contextPath}/docroot/samples/imgs/poweredSmall.gif" />
+          </a>
         </div>
-        <cms:adminOnly>
-          <fmt:message key="buttons.editfooter" var="label" />
-          <cms:editButton label="${label}" paragraph="samplesPageFooter" contentNodeName="footerPar" />
-          <br />
-        </cms:adminOnly>
-        <cms:ifNotEmpty nodeDataName="footerText" contentNodeName="footerPar">
-          <cms:out nodeDataName="footerText" contentNodeName="footerPar" />
-          <br />
-          <br />
-        </cms:ifNotEmpty>
-        <a href="http://www.magnolia.info" target="_blank">
-          <img align="right" border="0" style="margin-top: 5px"
-            src="${pageContext.request.contextPath}/docroot/samples/imgs/poweredSmall.gif" />
-        </a>
       </div>
       <c:import url="/templates/samples/templates/inc/headerImage.jsp" />
       <cmsu:simpleNavigation />

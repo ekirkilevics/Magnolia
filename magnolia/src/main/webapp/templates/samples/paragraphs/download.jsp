@@ -6,7 +6,7 @@
 
     &amp;raquo;
 
-    <c:set var="document"><cms:out nodeDataName="document" /></c:set>
+    <cms:out nodeDataName="document" var="document" />
 
         <a href="${pageContext.request.contextPath}${document}" target="_blank">
             <cms:ifEmpty nodeDataName="text">
