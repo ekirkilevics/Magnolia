@@ -68,6 +68,8 @@ public final class ContentRepository {
 
     public static final String DEFAULT_WORKSPACE = "default"; //$NON-NLS-1$
 
+    public static final String VERSION_STORE = "mgnlVersion";
+
     /**
      * magnolia namespace.
      */
