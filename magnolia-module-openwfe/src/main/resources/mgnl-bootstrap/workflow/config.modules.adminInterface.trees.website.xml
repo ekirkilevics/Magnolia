@@ -20,7 +20,7 @@
         <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.module.owfe.flow.FlowAdminTreeWebsite</sv:value>
+        <sv:value>info.magnolia.module.owfe.tree.CommandBasedWebsiteTree</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
         <sv:value>2006-02-13T21:03:57.794+08:00</sv:value>
