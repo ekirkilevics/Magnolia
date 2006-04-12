@@ -48,6 +48,15 @@ public class FunctionBar extends ContextMenu {
     }
 
     /**
+     * Render the javascript code to initialize it
+     */
+    public String getJavascript() {
+        Map params = new HashMap();
+        params.put("functionBar", this);
+        return FreeMarkerUtil.process("info/magnolia/cms/gui/control/FunctionBarJavascript.ftl", params);
+    }
+
+    /**
      * @return true if the functionBar has one or more functionBarItems
      */
     public boolean hasMenuItems() {
