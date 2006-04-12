@@ -12,7 +12,6 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.beans.runtime.TemplateRenderer;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.AccessManager;
@@ -22,14 +21,10 @@ import info.magnolia.cms.util.FactoryUtil;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -39,12 +34,7 @@ import org.slf4j.LoggerFactory;
 public class TemplateManager extends ObservedManager {
 
     /**
-     * Logger
-     */
-    private static Logger log = LoggerFactory.getLogger(TemplateManager.class);
-
-    /**
-     * The current implementation of the ParagraphManager. Defeined in magnolia.properties.
+     * The current implementation of the TemplateManager. Defined in magnolia.properties.
      */
     private static TemplateManager instance = (TemplateManager) FactoryUtil.getSingleton(TemplateManager.class);
 
@@ -57,8 +47,6 @@ public class TemplateManager extends ObservedManager {
      * The templates visible in the templates selection
      */
     private List visibleTemplates = new ArrayList();
-
-    private Map renderers = new HashMap();
 
     /**
      * Called by the ObervedManager
@@ -82,16 +70,6 @@ public class TemplateManager extends ObservedManager {
             log.error(re.getMessage(), re);
         }
 
-    }
-
-    public void registerTemplateRenderer(String type, TemplateRenderer instance) {
-        synchronized (renderers) {
-            renderers.put(type, instance);
-        }
-    }
-
-    public TemplateRenderer getRenderer(String type) {
-        return (TemplateRenderer) renderers.get(type);
     }
 
     protected void onClear() {

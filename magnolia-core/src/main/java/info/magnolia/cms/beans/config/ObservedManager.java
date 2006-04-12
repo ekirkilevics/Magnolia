@@ -38,8 +38,7 @@ public abstract class ObservedManager {
     /**
      * Logger
      */
-
-    Logger log = LoggerFactory.getLogger(ObservedManager.class);
+    protected Logger log = LoggerFactory.getLogger(getClass());
 
     /**
      * True if this manager is realoading. used to avoid cycles.

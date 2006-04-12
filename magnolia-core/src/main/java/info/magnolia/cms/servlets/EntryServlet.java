@@ -17,7 +17,7 @@ import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ModuleRegistration;
 import info.magnolia.cms.beans.config.Template;
-import info.magnolia.cms.beans.config.TemplateManager;
+import info.magnolia.cms.beans.config.TemplateRendererManager;
 import info.magnolia.cms.beans.config.VirtualURIManager;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.beans.runtime.TemplateRenderer;
@@ -126,7 +126,7 @@ public class EntryServlet extends ContextSensitiveServlet {
                     if (template != null) {
                         try {
                             String type = template.getType();
-                            TemplateRenderer renderer = TemplateManager.getInstance().getRenderer(type);
+                            TemplateRenderer renderer = TemplateRendererManager.getInstance().getRenderer(type);
 
                             if (renderer == null) {
                                 throw new RuntimeException("No renderer found for type " + type);

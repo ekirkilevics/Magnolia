@@ -15,6 +15,7 @@ package info.magnolia.module.admininterface;
 
 import info.magnolia.cms.beans.config.ParagraphManager;
 import info.magnolia.cms.beans.config.TemplateManager;
+import info.magnolia.cms.beans.config.TemplateRendererManager;
 import info.magnolia.cms.beans.config.VirtualURIManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.dialog.ControlsManager;
@@ -36,7 +37,7 @@ public abstract class AbstractAdminModule extends AbstractModule {
     /**
      * Logger
      */
-    Logger log = LoggerFactory.getLogger(AbstractAdminModule.class);
+    protected Logger log = LoggerFactory.getLogger(getClass());
 
     /**
      * The node containing the configuration for this module
@@ -63,6 +64,12 @@ public abstract class AbstractAdminModule extends AbstractModule {
             node = ContentUtil.getCaseInsensitive(moduleNode, "templates");
             if (node != null) {
                 TemplateManager.getInstance().register(node);
+            }
+
+            // register renderers
+            node = ContentUtil.getCaseInsensitive(moduleNode, "renderers");
+            if (node != null) {
+                TemplateRendererManager.getInstance().register(node);
             }
 
             // register paragraphs

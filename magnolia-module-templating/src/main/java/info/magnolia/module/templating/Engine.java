@@ -12,8 +12,10 @@
  */
 package info.magnolia.module.templating;
 
-import info.magnolia.cms.beans.config.TemplateManager;
+import info.magnolia.cms.beans.config.TemplateRendererManager;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.module.RegisterException;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.module.admininterface.AbstractAdminModule;
 import info.magnolia.module.templating.renderers.JspTemplateRenderer;
 
@@ -33,10 +35,16 @@ public class Engine extends AbstractAdminModule {
         // set local store to be accessed via admin interface classes or JSP
         Store.getInstance().setStore(this.getConfigNode());
 
-        // temporary hardcoded renderers
-        TemplateManager.getInstance().registerTemplateRenderer("jsp", new JspTemplateRenderer());
-        TemplateManager.getInstance().registerTemplateRenderer("servlet", new JspTemplateRenderer());
-        // TemplateManager.getInstance().registerTemplateRenderer("jasperreports", new JasperReportsTemplateRenderer());
+        // register renderers
+        Content node = ContentUtil.getCaseInsensitive(moduleNode, "renderers");
+        if (node == null) {
+            log
+                .warn(
+                    "No template renderers configured at {}/renderers. Adding default jsp renderer, please fix your configuration",
+                    moduleNode.getHandle());
+            // temporary hardcoded renderer
+            TemplateRendererManager.getInstance().registerTemplateRenderer("jsp", new JspTemplateRenderer());
+        }
     }
 
     /**

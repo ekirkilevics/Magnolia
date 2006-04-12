@@ -28,7 +28,11 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * @author fgiust
+ * <p>
+ * Simple jsp template renderer, mapped to template type <code>jsp</code>. The only valid attribute jsp templates is
+ * <code>path</code>, which specify the jsp/servlet path to forward to.
+ * </p>
+ * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
 public class JspTemplateRenderer implements TemplateRenderer {
