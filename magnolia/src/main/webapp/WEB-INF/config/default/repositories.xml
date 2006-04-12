@@ -107,6 +107,5 @@
         <workspace name="owfe" />
         <workspace name="Store" />
         <workspace name="Expressions" />
-        <workspace name="flowdef" />
-    </Repository>
+   </Repository>
 </JCR>
