@@ -86,6 +86,11 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
      * name of the tree (not the repository)
      */
     protected Tree tree;
+    
+    /**
+     * The configuration used to configure the tree
+     */
+    protected AdminTreeConfiguration configuration;
 
     protected String path;
 
@@ -417,27 +422,6 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         response.getWriter().print(html);
     }
 
-    /**
-     * Override this method to configure the tree control (define the columns, ...)
-     * @param tree
-     * @param request
-     */
-    protected abstract void prepareTree(Tree tree, HttpServletRequest request);
-
-    /**
-     * Prepare the context menu of the tree. This is called during renderTree
-     * @param tree
-     * @param request
-     */
-    protected abstract void prepareContextMenu(Tree tree, HttpServletRequest request);
-
-    /**
-     * Prepare the functionbar (footerbar) of the tree. This is called during renderTree
-     * @param tree
-     * @param request
-     * @todo used to be abstract
-     */
-    protected abstract void prepareFunctionBar(Tree tree, HttpServletRequest request);
     
     /**
      * Create the html for the tree. Calls tree.getHtml after calling prepareTree.
@@ -466,9 +450,9 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
 
         tree.setPath(path);
 
-        prepareTree(tree, request);
-        prepareContextMenu(getTree(), request);
-        prepareFunctionBar(getTree(), request);
+        this.getConfiguration().prepareTree(tree, this.isBrowseMode(), this.request);
+        this.getConfiguration().prepareContextMenu(tree, this.isBrowseMode(), this.request);
+        this.getConfiguration().prepareFunctionBar(tree, this.isBrowseMode(), this.request);
 
         if (!snippetMode) {
             html.append("<div id=\"" + tree.getJavascriptTree() + "_DivSuper\" style=\"display:block;\">"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -519,6 +503,22 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
      */
     public void setBrowseMode(boolean browseMode) {
         this.browseMode = browseMode;
+    }
+
+    
+    /**
+     * @return Returns the configuration.
+     */
+    public AdminTreeConfiguration getConfiguration() {
+        return this.configuration;
+    }
+
+    
+    /**
+     * @param configuration The configuration to set.
+     */
+    public void setConfiguration(AdminTreeConfiguration configuration) {
+        this.configuration = configuration;
     }
 
 }
