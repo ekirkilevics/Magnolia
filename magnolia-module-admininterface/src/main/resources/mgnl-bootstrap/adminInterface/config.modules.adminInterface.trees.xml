@@ -65,7 +65,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="class" sv:type="String">
-      <sv:value>info.magnolia.module.admininterface.trees.AdminTreeWebsite</sv:value>
+      <sv:value>info.magnolia.module.admininterface.trees.WebsiteTreeHandler</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-10T21:27:02.570+01:00</sv:value>
@@ -111,7 +111,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="class" sv:type="String">
-      <sv:value>info.magnolia.module.admininterface.trees.AdminTreeUsers</sv:value>
+      <sv:value>info.magnolia.module.admininterface.trees.UsersTreeHandler</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-10T21:27:02.576+01:00</sv:value>
@@ -157,7 +157,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="class" sv:type="String">
-      <sv:value>info.magnolia.module.admininterface.trees.AdminTreeRoles</sv:value>
+      <sv:value>info.magnolia.module.admininterface.trees.RolesTreeHandler</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-10T21:27:02.581+01:00</sv:value>
@@ -203,7 +203,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="class" sv:type="String">
-      <sv:value>info.magnolia.module.admininterface.trees.AdminTreeConfig</sv:value>
+      <sv:value>info.magnolia.module.admininterface.trees.ConfigTreeHandler</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-10T21:27:02.587+01:00</sv:value>
@@ -249,7 +249,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="class" sv:type="String">
-      <sv:value>info.magnolia.module.admininterface.trees.AdminTreeGroups</sv:value>
+      <sv:value>info.magnolia.module.admininterface.trees.GroupsTreeHandler</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-03-10T21:27:27.191+01:00</sv:value>
@@ -263,61 +263,6 @@
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
         <sv:value>2006-03-10T21:27:27.191+01:00</sv:value>
-      </sv:property>
-    </sv:node>
-  </sv:node>
-  <sv:node sv:name="website">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-      <sv:value>mix:versionable</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>7cac54fe-55bc-4113-a4c2-4128b4565ccf</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
-    <sv:property sv:name="class" sv:type="String">
-      <sv:value>info.magnolia.module.owfe.FlowAdminTreeWebsite</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-10T21:27:27.787+01:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="name" sv:type="String">
-      <sv:value>website</sv:value>
-    </sv:property>
-    <sv:node sv:name="MetaData">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:metaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:Data" sv:type="String">
-        <sv:value>MetaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:authorid" sv:type="String">
-        <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-        <sv:value>2006-02-13T22:31:36.466+08:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-10T21:27:27.787+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:activatorid" sv:type="String">
-        <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1139838156158000</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-        <sv:value>2005-05-06T16:18:38.686+02:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2006-02-13T22:31:36.516+08:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
-        <sv:value>false</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>

@@ -20,7 +20,7 @@
     <sv:value>true</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:created" sv:type="Date">
-    <sv:value>2006-03-10T21:27:02.612+01:00</sv:value>
+    <sv:value>2006-04-12T14:18:08.660+02:00</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -33,13 +33,13 @@
       <sv:value>superuser</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-10T21:27:02.614+01:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="mgnl:title" sv:type="String">
-      <sv:value/>
+      <sv:value>2006-04-12T14:18:08.661+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
       <sv:value>1115393692492000</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:title" sv:type="String">
+      <sv:value/>
     </sv:property>
     <sv:property sv:name="mgnl:creationdate" sv:type="Date">
       <sv:value>2005-05-06T17:34:52.488+02:00</sv:value>
@@ -68,7 +68,7 @@
       <sv:value>info.magnolia.module.admininterface.dialogs.UserEditDialog</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-10T21:27:02.626+01:00</sv:value>
+      <sv:value>2006-04-12T14:18:08.666+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="name" sv:type="String">
       <sv:value>useredit</sv:value>
@@ -84,7 +84,7 @@
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-10T21:27:02.626+01:00</sv:value>
+        <sv:value>2006-04-12T14:18:08.666+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
         <sv:value>1115405266906000</sv:value>
@@ -114,7 +114,7 @@
       <sv:value>info.magnolia.module.admininterface.dialogs.UserRolesEditDialog</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-10T21:27:02.632+01:00</sv:value>
+      <sv:value>2006-04-12T14:18:08.675+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="name" sv:type="String">
       <sv:value>roleedit</sv:value>
@@ -130,7 +130,7 @@
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-10T21:27:02.633+01:00</sv:value>
+        <sv:value>2006-04-12T14:18:08.675+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
         <sv:value>1115410312259000</sv:value>
@@ -160,7 +160,7 @@
       <sv:value>info.magnolia.module.admininterface.dialogs.ParagraphSelectDialog</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-10T21:27:02.637+01:00</sv:value>
+      <sv:value>2006-04-12T14:18:08.722+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="name" sv:type="String">
       <sv:value>selectParagraph</sv:value>
@@ -176,7 +176,7 @@
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-10T21:27:02.637+01:00</sv:value>
+        <sv:value>2006-04-12T14:18:08.722+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
         <sv:value>1115405265906000</sv:value>
@@ -206,7 +206,7 @@
       <sv:value>info.magnolia.module.admininterface.dialogs.GroupEditDialog</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-10T21:27:28.081+01:00</sv:value>
+      <sv:value>2006-04-12T14:18:08.730+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="name" sv:type="String">
       <sv:value>groupedit</sv:value>
@@ -216,7 +216,7 @@
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-10T21:27:28.081+01:00</sv:value>
+        <sv:value>2006-04-12T14:18:08.730+02:00</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
@@ -237,7 +237,7 @@
       <sv:value>info.magnolia.module.admininterface.dialogs.GroupAssignRolesDialog</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-10T21:27:29.345+01:00</sv:value>
+      <sv:value>2006-04-12T14:18:08.733+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="name" sv:type="String">
       <sv:value>groupassignroles</sv:value>
@@ -247,7 +247,56 @@
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-10T21:27:29.345+01:00</sv:value>
+        <sv:value>2006-04-12T14:18:08.733+02:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="userAddToGroups">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>3dda684e-c316-4e8a-81a3-34461f4b00be</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="class" sv:type="String">
+      <sv:value>info.magnolia.module.admininterface.dialogs.UserAddToGroupsDialog</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-04-12T14:18:38.325+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="name" sv:type="String">
+      <sv:value>useraddtogroups</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+        <sv:value>2006-03-28T11:15:07.726+08:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-04-12T14:18:38.326+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activatorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+        <sv:value>2006-03-28T11:13:54.060+08:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2006-04-12T14:25:14.766+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+        <sv:value>false</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
