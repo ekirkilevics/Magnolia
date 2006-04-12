@@ -11,9 +11,9 @@
  *
  */
  
-classDef("mgnl.controls.SearchTextField", MgnlSearchTextField);
+classDef("mgnl.controls.TextField", MgnlTextField);
  
-function MgnlSearchTextField(name, value, width, imageLeft, imageLeftWidth, attributes){
+function MgnlTextField(name, value, width, imageLeft, imageLeftWidth, attributes){
 	this.attributes = attributes!=null?attributes:{};
 
 	this.name = name;
@@ -25,7 +25,7 @@ function MgnlSearchTextField(name, value, width, imageLeft, imageLeftWidth, attr
 		this.width = width;
 	}
 	if (imageLeft == undefined) {
-		this.imageLeft = contextPath + '/.resources/controls/search/queryFieldLeft.gif';
+		this.imageLeft = contextPath + '/.resources/controls/textfield/left.gif';
 		this.imageLeftWidth = 5;
 	} else {
 		this.imageLeft = imageLeft;this.imageLeftWidth = (imageLeftWidth == undefined ? '20' : imageLeftWidth);
@@ -34,10 +34,10 @@ function MgnlSearchTextField(name, value, width, imageLeft, imageLeftWidth, attr
 	this.widthSearchField = this.width - (5 + this.imageLeftWidth);
 	
 	// register control
-	MgnlSearchTextField.prototype.all[this.name] = this;
+	MgnlTextField.prototype.all[this.name] = this;
 }
 
-MgnlSearchTextField.prototype.render = function() {
+MgnlTextField.prototype.render = function() {
 	// create other attributes
 	var attributes="";
 	for(name in this.attributes){
@@ -47,9 +47,9 @@ MgnlSearchTextField.prototype.render = function() {
 	if (window.navigator.userAgent.indexOf("Safari") == -1) {
 		var html = '<table border="0" cellspacing="0" cellpadding="0" style="width: ' + this.width + 'px;"><tr>';
 		html += '<td width="5"><img src="'+ this.imageLeft +'" width="'+ this.imageLeftWidth +'" border="0"></td>'
-		html += '<td width="100%" class="dmsQueryFieldTD" background="'+contextPath+'/.resources/controls/search/queryFieldMiddle.gif">'
-		html += '<input class="queryField" style="width: ' + this.widthSearchField + 'px;" type="text" id="' + this.name + '" value="' + this.value + '" ' + attributes + '></td>';
-		html += '<td width="5"><img src="'+ contextPath +'/.resources/controls/search/queryFieldRight.gif" width="5" border="0"></td>';
+		html += '<td width="100%" class="smothTextFieldTD" background="'+contextPath+'/.resources/controls/textfield/middle.gif">'
+		html += '<input class="smothTextField" style="width: ' + this.widthSearchField + 'px;" type="text" id="' + this.name + '" value="' + this.value + '" ' + attributes + '></td>';
+		html += '<td width="5"><img src="'+ contextPath +'/.resources/controls/textfield/right.gif" width="5" border="0"></td>';
 		html += '</tr></table>'
 	} else {
 		var html = '<input type="search" style="width: ' + this.width + 'px;" id="' + this.name + '" value="' + this.value + '" ' + attributes + '>';
@@ -58,4 +58,4 @@ MgnlSearchTextField.prototype.render = function() {
 }
 
 // collection of all instantiated controls
-MgnlSearchTextField.prototype.all = new Object();
+MgnlTextField.prototype.all = new Object();
