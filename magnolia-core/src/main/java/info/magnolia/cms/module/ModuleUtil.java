@@ -399,24 +399,24 @@ public final class ModuleUtil {
                 // create
                 node = new Element("Repository");
 
-                String provider = ((Element) XPath.selectSingleNode(doc, "/JCR/Repository[@name='website']"))
+                String provider = ((Element) XPath.selectSingleNode(doc, "/JCR/Repository[@name='magnolia']"))
                         .getAttributeValue("provider");
                 String configFile = ((Element) XPath.selectSingleNode(
                         doc,
-                        "/JCR/Repository[@name='website']/param[@name='configFile']")).getAttributeValue("value");
+                        "/JCR/Repository[@name='magnolia']/param[@name='configFile']")).getAttributeValue("value");
                 String repositoryHome = ((Element) XPath.selectSingleNode(
                         doc,
-                        "/JCR/Repository[@name='website']/param[@name='repositoryHome']")).getAttributeValue("value");
+                        "/JCR/Repository[@name='magnolia']/param[@name='repositoryHome']")).getAttributeValue("value");
                 repositoryHome = StringUtils.substringBeforeLast(repositoryHome, "/") + "/" + name;
                 String contextFactoryClass = ((Element) XPath.selectSingleNode(
                         doc,
-                        "/JCR/Repository[@name='website']/param[@name='contextFactoryClass']")).getAttributeValue("value");
+                        "/JCR/Repository[@name='magnolia']/param[@name='contextFactoryClass']")).getAttributeValue("value");
                 String providerURL = ((Element) XPath.selectSingleNode(
                         doc,
-                        "/JCR/Repository[@name='website']/param[@name='providerURL']")).getAttributeValue("value");
+                        "/JCR/Repository[@name='magnolia']/param[@name='providerURL']")).getAttributeValue("value");
                 String bindName = ((Element) XPath.selectSingleNode(
                         doc,
-                        "/JCR/Repository[@name='website']/param[@name='bindName']")).getAttributeValue("value");
+                        "/JCR/Repository[@name='magnolia']/param[@name='bindName']")).getAttributeValue("value");
                 bindName = StringUtils.replace(bindName, "website", name);
 
                 node.setAttribute("name", name);
