@@ -18,3 +18,13 @@
     ${menu.html}
 </#if>
 
+<#if tree.browseMode>
+    <#include "TreeAddressBar.ftl"/>
+</#if>
+
+<#if !tree.browseMode && tree.functionBar?exists>
+    ${tree.functionBar.html}
+</#if>
+
+<#include "TreeJavascript.ftl"/>
+

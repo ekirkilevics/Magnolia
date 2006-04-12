@@ -1,32 +1,4 @@
 <style type="text/css">
-    .mgnlTreeColumnLine {
-        width:1px;
-        background-color: #D8EFB6;
-        position: absolute;
-        left:10px;
-        height:100px;
-        z-index: 1;
-    }
-
-    .mgnlTreeColumnResizer{
-        position:absolute;
-        left:-1000px;
-        background-image:url(${contextPath}/.resources/controls/list/headerDelimiterGreen.gif);
-        height:20;
-        width:9;
-        z-index: 1;
-        cursor: e-resize;
-    }
-
-    .mgnlTreeHeaderBackground{
-        border-left: 1px #999999 solid;
-        border-right: 1px #CCCCCC solid;
-        position: relative;
-        z-index:460;
-        background-image:url(${contextPath}/.resources/controls/list/headerBackgroundGreen.gif);
-        background-repeat: repeat;
-        height:20
-    }
 
     <#list 0..(columns?size-1) as i>
         .${tree.javascriptTree}CssClassColumn${i}{
@@ -38,21 +10,20 @@
         }
     </#list>
 
-
 </style>
 
 <!-- background image -->
-<div class="mgnlTreeHeaderBackground">
+<div class="mgnlListHeaderBackground">
 
 <!-- delimiters -->
     <!-- move icons -->
     <#list 1..(columns?size-1) as i>
-        <div onmousedown="${tree.javascriptTree}.dragColumnStart(this,${i});" class="mgnlTreeColumnResizer" id="${tree.javascriptTree}ColumnResizer${i}"></div>
+        <div onmousedown="${tree.javascriptTree}.dragColumnStart(this,${i});" class="mgnlListColumnResizer" id="${tree.javascriptTree}ColumnResizer${i}"></div>
     </#list>
 
     <!-- column title -->
     <#list 0..(columns?size-1) as i>
-        <div id="${tree.javascriptTree}ColumnHeader${i}" class="${tree.javascriptTree} mgnlTreeHeader ${tree.javascriptTree}CssClassColumn${i}">${tree.getColumns()[i].title}<!-- ie --></div>
+        <div id="${tree.javascriptTree}ColumnHeader${i}" class="${tree.javascriptTree} mgnlListHeader ${tree.javascriptTree}CssClassColumn${i}">${tree.getColumns()[i].title}<!-- ie --></div>
     </#list>
 
 </div>
@@ -66,7 +37,7 @@
 
     <#if (columns?size > 1)>
         <#list 1..(columns?size-1) as i>
-            <div id="${tree.javascriptTree}ColumnLine${i}" class="mgnlTreeColumnLine"> </div>
+            <div id="${tree.javascriptTree}ColumnLine${i}" class="mgnlListColumnLine"> </div>
         </#list>
     </#if>
 

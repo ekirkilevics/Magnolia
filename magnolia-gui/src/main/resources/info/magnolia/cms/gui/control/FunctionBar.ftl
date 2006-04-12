@@ -59,9 +59,7 @@
 		text-decoration: none;
 	}
 </style>
-<script type="text/javascript">
-  var ${functionBar.javascriptName} = new MgnlFunctionBar ('${functionBar.javascriptName}');
-</script>
+
 <div id="mgnlFunctionBarDiv" class="mgnlFunctionBar">
   <table cellpadding="0" cellspacing="0" border="0" width="100%" border="0">
     <tr>
@@ -75,12 +73,6 @@
               <div><a href="javascript:void(0);" class="mgnlFunctionBarAnchor" onclick="${functionBar.javascriptName}.clicked ('${item.name}')" id="${functionBar.javascriptName}_${item.name}_div">
               <#if item.icon?exists><img src="${item.icon}" id="${functionBar.javascriptName}_${item.name}_img" border="0" alt="" /><br/></#if>
               ${item.label}</a></div>
-              <script type="text/javascript">
-                ${functionBar.javascriptName}.addNode ("${item.name}", ${item.active?string}, "${item.icon?default('')}", "${item.inactiveIcon?default('')}", "${item.onclick}");
-      <#list item.javascriptConditions as cond>
-                ${functionBar.javascriptName}.getNode ("${item.name}").addCondition ("${cond}");
-      </#list>
-              </script>
             </td>
     <#else>
             <td class="separator"><div><!-- --></div></td>
@@ -91,14 +83,11 @@
 </#if>
           </tr>
         </table>
-        <script type="text/javascript">
-          ${functionBar.javascriptName}.refresh ();
-        </script>
       </td>
       <td style="width: 2%; padding-right: 10px; vertical-align: middle;">
         <script type="text/javascript">
           // @todo add form, give a name to the text field...
-          var mgnlSearchTF = new MgnlSearchTextField ('name', '', 200, contextPath + '/.resources/controls/search/queryFieldLupe.gif', 29);
+          var mgnlSearchTF = new MgnlTextField ('name', '', 200, contextPath + '/.resources/controls/search/lupe.gif', 29);
           document.write (mgnlSearchTF.render ());
         </script>
       </td>

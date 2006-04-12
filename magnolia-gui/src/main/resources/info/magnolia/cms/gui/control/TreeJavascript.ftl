@@ -33,6 +33,10 @@
         ${menu.javascript}
     </#if>
 
+    <#if !tree.browseMode && tree.functionBar?exists>
+        ${tree.functionBar.javascript}
+    </#if>
+
     // make the menu avaiable for the tree control
     ${tree.javascriptTree}.menu = ${menu.name};
 </script>
