@@ -12,14 +12,7 @@
  */
 package info.magnolia.module.admininterface;
 
-import java.util.HashMap;
-
-import org.apache.commons.collections.Factory;
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang.StringUtils;
-
 import info.magnolia.cms.gui.controlx.impl.RenderKitImpl;
-import info.magnolia.cms.gui.controlx.impl.TemplatedRenderer;
 import info.magnolia.cms.gui.controlx.list.ListColumn;
 import info.magnolia.cms.gui.controlx.list.ListColumnRenderer;
 import info.magnolia.cms.gui.controlx.list.ListControl;
@@ -39,21 +32,7 @@ public class AdminInterfaceRenderKit extends RenderKitImpl {
      * Register the default renderers used in the admin interface 
      */
     public AdminInterfaceRenderKit() {
-        this.renderers = MapUtils.lazyMap(new HashMap(), new Factory(){
-            public Object create() {
-                return new TemplatedRenderer(){
-                    protected String getTemplateName(info.magnolia.cms.gui.controlx.Control control) {
-                        String name = StringUtils.substringAfterLast(super.getTemplateName(control), "/controlx/");
-                        String path = "/" + StringUtils.substringBeforeLast(name, "/");
-                        name = StringUtils.substringAfterLast(name, "/");
-                        return DEFAULT_TEMPLATE_PATH + path + "/Admin" + name;
-                    };
-                };
-            } 
-        });
-
-        
         this.register(ListColumn.RENDER_TYPE, new ListColumnRenderer());
-        this.register(ListControl.RENDER_TYPE, new ListControlRenderer(DEFAULT_TEMPLATE_PATH + "/list/AdminListControl.html"));
+        this.register(ListControl.RENDER_TYPE, new ListControlRenderer(DEFAULT_TEMPLATE_PATH + "/list/ListControl.html"));
     }
 }
