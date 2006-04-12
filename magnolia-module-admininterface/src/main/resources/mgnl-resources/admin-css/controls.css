@@ -107,3 +107,85 @@
 #mgnlMoveDivDenied {
     background-image: url("../../.resources/admin-images/mgnlMoveDenied.gif");
 }
+
+.smothTextField {
+	height: 18px;
+	border: 0px #dddddd solid;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	padding-top:2px;
+}
+
+.smothTextFieldTD {
+	height: 20px;
+}
+
+.smothDropdownHeader {
+	padding-left: 3px;
+	padding-right: 3px;
+	padding-top: 2px;
+	cursor: pointer;
+	font:11px verdana, arial, helvetica, sans-serif;
+	background-color:#ffffff;
+	z-index:1000;
+}
+
+.smothDropdownHeaderField {
+	padding-top: 2px;
+	cursor: pointer;
+	font:11px verdana, arial, helvetica, sans-serif;
+	background-color:#ffffff;
+	border-top: 1px #999999 solid;
+	border-bottom: 1px #CCCCCC solid;
+	z-index:1000;
+}
+
+.smothDropdownBox {
+	marg	margin: 0px;
+	padding: 0px;
+	cursor: pointer;
+	font:11px verdana, arial, helvetica, sans-serif;
+	background-color:#ffffff;
+	z-index:1000;
+	width: auto;
+		in: 0px;
+	padding: 0px;
+	cursor: pointer;
+	font:11px verdana, arial, helvetica, sans-serif;
+	background-color:#ffffff;
+	z-index:1000;
+	width: auto;
+}
+
+.smothDropdownEntry {
+	margin: 0px;
+	padding: 0px;
+	cursor: pointer;
+	font:11px verdana, arial, helvetica, sans-serif;
+	background-color:#ffffff;
+	width: auto;
+	border-left: 1px #999999 solid;
+	border-right: 1px #CCCCCC solid;
+	padding-left: 6px;
+	padding-right: 10px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+.smothDropdownEntryHover {
+	margin: 0px;
+	padding: 0px;
+	cursor: pointer;
+	font:11px verdana, arial, helvetica, sans-serif;
+	background-color:#D9F1B3;
+	width: auto;
+	border-left: 1px #999999 solid;
+	border-right: 1px #CCCCCC solid;
+	padding-left: 6px;
+	padding-right: 10px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+
+.smothDropdownEntryText {
+	font:11px verdana, arial, helvetica, sans-serif;
+}
