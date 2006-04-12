@@ -2,6 +2,7 @@
     xmlns:c="urn:jsptld:http://java.sun.com/jsp/jstl/core"
     xmlns:cms="urn:jsptld:cms-taglib"
     xmlns:fmt="urn:jsptld:http://java.sun.com/jsp/jstl/fmt">
+    <jsp:directive.page contentType="text/html; charset=UTF-8"/>
     <jsp:text>
         <![CDATA[<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> ]]>
