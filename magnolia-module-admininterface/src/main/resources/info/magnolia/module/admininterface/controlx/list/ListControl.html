@@ -1,1 +1,56 @@
-ADMIN
+<!-- form for sorting and grouping -->
+<input type="hidden" name="sortBy" value="${this.sortBy}"/>
+<input type="hidden" name="sortByOrder" value="${this.sortByOrder}"/>
+<input type="hidden" name="groupBy" value="${this.groupBy}"/>
+<input type="hidden" name="groupByOrder" value="${this.groupByOrder}"/>
+
+<script>
+	function ${this.name}Resize(){
+		var thisHeight = MgnlDHTMLUtil.getHeight($('${this.parent.name}ListDiv'));
+		var thisWidth = MgnlDHTMLUtil.getWidth($('${this.parent.name}ListDiv'));
+		var sortWidth = MgnlDHTMLUtil.getWidth($('${this.name}SortGroupDiv'));
+		$('${this.name}SortGroupDiv').style.height = thisHeight -1 + "px";
+		$('${this.name}SortGroupDiv').style.left = thisWidth - sortWidth + "px";	
+		$('${this.name}ContentDiv').style.height = thisHeight + "px";
+		$('${this.name}ContentDiv').style.width = thisWidth - sortWidth + "px";	
+	}
+	
+	MgnlDHTMLUtil.addOnLoad(${this.name}Resize);
+	MgnlDHTMLUtil.addOnResize(${this.name}Resize);
+</script>
+
+<script>
+	function sort(name, direction){
+		document.mgnlForm.sortBy.value = name;
+		document.mgnlForm.sortByOrder.value = direction;
+		document.mgnlForm.submit();
+	}
+
+	function group(name, direction){
+		document.mgnlForm.groupBy.value = name;
+		document.mgnlForm.groupByOrder.value = direction;
+		document.mgnlForm.submit();
+	}
+
+</script>
+
+<style>
+    <#list this.children as column>
+        .${this.name}CssClassColumn${column_index}{
+            position:absolute;
+            left:${column_index * 200}px;
+            clip:rect(0 200 100 0);
+            cursor:default;
+            padding-left:8px;
+        }
+    </#list>
+</style>
+<div style="position:relative">
+	<div id="${this.name}SortGroupDiv" class="mgnlListSortGroupDiv mgnlText">
+		<#include "ListControlSortGroup.html"/>
+	</div>
+	
+	<div id="${this.name}ContentDiv" class="mgnlListContentDiv">
+		<#include "ListControlContent.html"/>
+	</div>
+</div>
