@@ -30,12 +30,12 @@ import org.apache.log4j.Logger;
  * @author Niko
  */
 
-public abstract class FlowAdminTreeMVCHandler extends AdminTreeMVCHandler {
+public abstract class CommandBasedTreeHandler extends AdminTreeMVCHandler {
 
     private static Logger log = Logger
-            .getLogger(info.magnolia.module.owfe.tree.FlowAdminTreeMVCHandler.class);
+            .getLogger(info.magnolia.module.owfe.tree.CommandBasedTreeHandler.class);
 
-    public FlowAdminTreeMVCHandler(String name, HttpServletRequest vrequest,
+    public CommandBasedTreeHandler(String name, HttpServletRequest vrequest,
                                    HttpServletResponse vresponse) {
         super(name, vrequest, vresponse);
     }

@@ -24,14 +24,14 @@ import javax.servlet.http.HttpServletResponse;
  * @author Fabrizio Giustina
  * @version $Id: WebsiteTreeHandler.java 1610 2006-01-30 23:54:23Z svk $
  */
-public class FlowAdminTreeWebsite extends FlowAdminTreeMVCHandler {
+public class CommandBasedWebsiteTree extends CommandBasedTreeHandler {
 
     /**
      * @param name
      * @param request
      * @param response
      */
-    public FlowAdminTreeWebsite(String name, HttpServletRequest request, HttpServletResponse response) {
+    public CommandBasedWebsiteTree(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
         this.setConfiguration(new WebsiteTreeConfiguration());
     }
