@@ -54,7 +54,7 @@ classDef("mgnl.util.DHTMLUtil", {
     },
 
     /**
-     * Get the y position of the element
+     * Get the x position of the element
      */
     getPosX: function(obj){
         if (!obj) return 0;
@@ -138,6 +138,32 @@ classDef("mgnl.util.DHTMLUtil", {
     show: function(element){
         element.style.visibility='visible';
         element.style.display='block';
-    }
+    },
+    
+    addOnLoad: function(handler){
+        var orgHandler = window.onload;
+        window.onload = function(){
+            if(orgHandler)
+                orgHandler();
+            handler();
+        };
+    },
+
+    addOnResize: function(handler){
+        var orgHandler = window.onresize;
+        window.onresize = function(){
+            if(orgHandler)
+                orgHandler();
+            handler();
+        };
+    },
+    
+    getHeight: function(element){
+        return element.offsetHeight;
+    },
+    
+    getWidth: function(element){
+        return element.offsetWidth;
+    }    
 
 });
