@@ -55,6 +55,9 @@ public class FreeMarkerUtil {
             Template tmpl = cfg.getTemplate(name);
             // add some usfull default data
             data.put("contextPath", MgnlContext.getContextPath());
+            if(AlertUtil.isMessageSet()){
+                data.put("message", AlertUtil.getMessage());
+            }
             tmpl.process(data, writer);
         }
         catch (Exception e) {
