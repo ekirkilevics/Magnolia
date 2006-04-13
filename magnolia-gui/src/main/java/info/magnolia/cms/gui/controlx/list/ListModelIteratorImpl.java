@@ -40,12 +40,12 @@ public class ListModelIteratorImpl implements ListModelIterator {
     /**
      * next content object (prefetched)
      * */
-    private Content next;
+    private Object next;
 
     /**
      * object on current pointer
      * */
-    private Content current;
+    private Object current;
 
     /**
      *  key name on which provided list is grouped
@@ -94,7 +94,7 @@ public class ListModelIteratorImpl implements ListModelIterator {
      * @param name its a key to which value is attached in this record
      * @param node
      * */
-    private Object getValue(String name, Content node) {
+    protected Object getValue(String name, Object node) {
         return ValueProvider.getInstance().getValue(name, node);
     }
 
