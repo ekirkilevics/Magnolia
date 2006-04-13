@@ -39,4 +39,8 @@
 
     // make the menu avaiable for the tree control
     ${tree.javascriptTree}.menu = ${menu.name};
+    
+    <#if message?exists>
+        MgnlDHTMLUtil.addOnLoad(function(){alert('${message}')});
+    </#if>
 </script>
