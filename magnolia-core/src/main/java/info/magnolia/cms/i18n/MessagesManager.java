@@ -352,7 +352,6 @@ public final class MessagesManager {
      * @param key  key to find
      * @param args replacement strings
      * @return message
-     * @deprecated
      */
 
     public static String get(String key, Object[] args) {
