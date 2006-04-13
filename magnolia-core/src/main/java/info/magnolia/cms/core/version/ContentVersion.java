@@ -59,6 +59,15 @@ public class ContentVersion extends Content {
     public Calendar getCreated() throws RepositoryException {
         return this.state.getCreated();
     }
+    
+    /**
+     * Return the name of the version represented by this object
+     * @return the versions name
+     * @throws RepositoryException 
+     */
+    public String getVersionLable() throws RepositoryException{
+        return this.state.getName();
+    }
 
     /**
      * Get containing version history
