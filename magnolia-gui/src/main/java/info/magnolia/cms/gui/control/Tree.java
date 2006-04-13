@@ -117,10 +117,11 @@ public class Tree extends ControlSuper {
 
     private List columns = new ArrayList();
 
-    // private List menuItems = new ArrayList();
     private ContextMenu menu;
 
-    // the bar at the bottom of the page holding some function buttons
+    /**
+     * the bar at the bottom of the page holding some function buttons
+     */
     private FunctionBar functionBar;
 
     private boolean snippetMode = true;
@@ -1338,14 +1339,14 @@ public class Tree extends ControlSuper {
         return this.functionBar;
     }
 
-    protected void setMenu(ContextMenu menu) {
+    public void setMenu(ContextMenu menu) {
         this.menu = menu;
     }
 
     /**
      * @param functionBar the function bar object
      */
-    protected void setFunctionBar(FunctionBar functionBar) {
+    public void setFunctionBar(FunctionBar functionBar) {
         this.functionBar = functionBar;
     }
 
