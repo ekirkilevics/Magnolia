@@ -72,41 +72,42 @@
       <artifactId>magnolia-editor-kupu</artifactId>
       <version>3.0-SNAPSHOT</version>
     </dependency>
-
     <!-- temporary solution for pro version -->
-    <!-- 
-    <dependency>
+    <!--
+      <dependency>
       <groupId>com.obinary</groupId>
       <artifactId>magnolia-module-professional</artifactId>
       <version>3.0-SNAPSHOT</version>
-    </dependency>
-    
-    
-    <dependency>
+      </dependency>
+      
+      
+      <dependency>
       <groupId>com.obinary</groupId>
       <artifactId>magnolia-module-dms</artifactId>
       <version>1.1-SNAPSHOT</version>
-    </dependency>
-	  
-    <dependency>
+      </dependency>
+      
+      <dependency>
       <groupId>commons-chain</groupId>
       <artifactId>commons-chain</artifactId>
       <version>1.0</version>
-    </dependency>
+      </dependency>
     -->
-    
     <dependency>
       <groupId>org.apache.jackrabbit</groupId>
-      <artifactId>jackrabbit</artifactId>
+      <artifactId>jackrabbit-core</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.apache.jackrabbit</groupId>
+      <artifactId>jackrabbit-index-filters</artifactId>
+    </dependency>
+    <!-- uncomment this to use berkeleydb -->
+    <!-- 
+      <dependency>
       <groupId>org.apache.jackrabbit</groupId>
       <artifactId>jackrabbit-bdb</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.jackrabbit</groupId>
-      <artifactId>jackrabbit-textfilters</artifactId>
-    </dependency>
+      </dependency>
+    -->
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>

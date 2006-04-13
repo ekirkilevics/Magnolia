@@ -220,26 +220,22 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>3.8.1</version>
-        <scope>test</scope>
+        <groupId>org.apache.jackrabbit</groupId>
+        <artifactId>jackrabbit-core</artifactId>
+        <version>1.0</version>
       </dependency>
       <dependency>
         <groupId>org.apache.jackrabbit</groupId>
-        <artifactId>jackrabbit</artifactId>
-        <version>1.0-20060115.155604-8</version>
+        <artifactId>jackrabbit-index-filters</artifactId>
+        <version>1.0</version>
       </dependency>
-      <dependency>
+      <!--
+        <dependency>
         <groupId>org.apache.jackrabbit</groupId>
         <artifactId>jackrabbit-bdb</artifactId>
-        <version>1.0-20060115.160157-3</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.jackrabbit</groupId>
-        <artifactId>jackrabbit-textfilters</artifactId>
-        <version>1.0-20060115.160640-2</version>
-      </dependency>
+        <version>1.0-SNAPSHOT</version>
+        </dependency>
+      -->
       <dependency>
         <groupId>org.apache.derby</groupId>
         <artifactId>derby</artifactId>
@@ -387,6 +383,12 @@
         <groupId>ehcache</groupId>
         <artifactId>ehcache</artifactId>
         <version>1.2beta4</version>
+      </dependency>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>3.8.1</version>
+        <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>httpunit</groupId>
