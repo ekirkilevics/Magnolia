@@ -40,6 +40,11 @@ import org.slf4j.LoggerFactory;
 public class WebContextImpl extends ContextImpl implements WebContext {
 
     /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
+
+    /**
      * Logger
      */
     private static Logger log = LoggerFactory.getLogger(WebContextImpl.class);

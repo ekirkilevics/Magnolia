@@ -29,6 +29,11 @@ import java.util.Map;
 public class SystemContextImpl extends ContextImpl implements SystemContext {
 
     /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
+
+    /**
      * To get and set the attributes for this context
      */
     protected Map scopes = new HashMap();
