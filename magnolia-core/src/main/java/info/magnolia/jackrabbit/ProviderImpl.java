@@ -38,7 +38,7 @@ import java.util.Map;
  * @author Fabrizio Giustina
  * @version $Id$
  */
-public final class ProviderImpl implements Provider {
+public class ProviderImpl implements Provider {
 
     protected static Logger log = LoggerFactory.getLogger(ProviderImpl.class);
 
