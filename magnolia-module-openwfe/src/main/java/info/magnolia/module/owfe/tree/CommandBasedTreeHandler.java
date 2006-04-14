@@ -12,6 +12,7 @@
  */
 package info.magnolia.module.owfe.tree;
 
+import freemarker.template.SimpleDate;
 import info.magnolia.cms.beans.commands.CommandsMap;
 import info.magnolia.cms.beans.commands.MgnlCommand;
 import info.magnolia.cms.beans.config.ContentRepository;
@@ -24,6 +25,7 @@ import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 import info.magnolia.module.owfe.MgnlConstants;
 import info.magnolia.module.owfe.commands.ParametersSetterHelper;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -102,13 +104,19 @@ public abstract class CommandBasedTreeHandler extends AdminTreeMVCHandler {
         try {
             ct = hm.getContent(pathSelected);
             Calendar cd = ct.getMetaData().getStartTime();
-            String date = new Timestamp(cd.getTimeInMillis()).toString();
+            String date;// new Timestamp(cd.getTimeInMillis()).toString();
+            //Timestamp tm = new Timestamp(cd.getTimeInMillis());
+            //date = new SimpleDate(new Date(cd.getTimeInMillis()) ).toString();
+            date = ""+cd.get(Calendar.YEAR)+"-"+(cd.get(Calendar.MONTH)+1)+"-"+cd.get(Calendar.DAY_OF_MONTH)
+            +" "+cd.get(Calendar.HOUR_OF_DAY)+":"+cd.get(Calendar.MINUTE)+":"+cd.get(Calendar.SECOND)+"+0000";
             log.info("start date = " + date);
-            date = "2006-10-10";
+            //date = "2006-04-14 10:23:15+0800";
             params.put("startDate", date);
 
-            cd = ct.getMetaData().getEndTime();
-            date = new Timestamp(cd.getTimeInMillis()).toString();
+            cd = ct.getMetaData().getEndTime();          
+            date = ""+cd.get(Calendar.YEAR)+"-"+(cd.get(Calendar.MONTH)+1)+"-"+cd.get(Calendar.DAY_OF_MONTH)
+            +" "+cd.get(Calendar.HOUR_OF_DAY)+":"+cd.get(Calendar.MINUTE)+":"+cd.get(Calendar.SECOND)+"+0000";
+          
             log.info("end date = " + date);
             params.put("endDate", date);
         }
