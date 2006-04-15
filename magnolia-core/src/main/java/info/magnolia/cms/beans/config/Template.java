@@ -13,6 +13,7 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 
 import java.io.Serializable;
@@ -20,8 +21,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import javax.jcr.RepositoryException;
 
 import org.apache.commons.collections.IteratorUtils;
 
@@ -168,16 +167,13 @@ public class Template implements Serializable {
      */
     public void addAlternativePaths(Content node) {
 
-        Content cl;
-        try {
-            cl = node.getContent("SubTemplates");//$NON-NLS-1$
-        }
-        catch (RepositoryException e) {
-            // no subtemplates available, that's ok
+        Content cl = node.getChildByName("SubTemplates");//$NON-NLS-1$
+
+        if (cl == null) {
             return;
         }
 
-        Iterator it = cl.getChildren().iterator();
+        Iterator it = cl.getChildren(ItemType.CONTENTNODE).iterator();
 
         this.alternativeTemplates = new HashMap();
 
