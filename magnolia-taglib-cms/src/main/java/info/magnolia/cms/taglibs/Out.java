@@ -71,9 +71,7 @@ public class Out extends TagSupport {
 
     private String lineBreak = DEFAULT_LINEBREAK;
 
-    private transient Content contentNode;
-
-    private transient NodeData nodeData;
+    private boolean inherit;
 
     /**
      * If set, the result of the evaluation will be set to a variable named from this attribute (and in the scope
@@ -116,14 +114,6 @@ public class Out extends TagSupport {
     }
 
     /**
-     * Set the requested node data.
-     * @param node
-     */
-    public void setNodeData(NodeData node) {
-        this.nodeData = node;
-    }
-
-    /**
      * Set the node data name, e.g. "mainText".
      * @param name
      */
@@ -145,14 +135,6 @@ public class Out extends TagSupport {
      */
     public void setContentNodeCollectionName(String name) {
         this.contentNodeCollectionName = name;
-    }
-
-    /**
-     * Set the content node name.
-     * @param c
-     */
-    public void setContentNode(Content c) {
-        this.contentNode = c;
     }
 
     /**
@@ -231,6 +213,14 @@ public class Out extends TagSupport {
     }
 
     /**
+     * Setter for <code>inherit</code>.
+     * @param inherit <code>true</code> to inherit from parent pages if value is not set.
+     */
+    public void setInherit(boolean inherit) {
+        this.inherit = inherit;
+    }
+
+    /**
      * Set the lineBreak String.
      * @param lineBreak
      */
@@ -238,35 +228,29 @@ public class Out extends TagSupport {
         this.lineBreak = lineBreak;
     }
 
-    public String getFilePropertyValue() {
-        FileProperties props = new FileProperties(this.contentNode, this.nodeDataName);
+    public String getFilePropertyValue(Content contentNode) {
+        FileProperties props = new FileProperties(contentNode, this.nodeDataName);
         String value = props.getProperty(this.fileProperty);
         return value;
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
-     */
-    public int doStartTag() {
-
+    protected Content resolveNode(Content currentPage) {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 
-        Content currentActivePage = Resource.getCurrentActivePage(request);
-        Content local = Resource.getLocalContentNode(request);
+        Content currentParagraph = Resource.getLocalContentNode(request);
 
         if (StringUtils.isNotEmpty(contentNodeName)) {
             // contentNodeName is defined
             try {
                 if (StringUtils.isEmpty(contentNodeCollectionName)) {
                     // e.g. <cms:out nodeDataName="title" contentNodeName="footer"/>
-                    this.setContentNode(currentActivePage.getContent(contentNodeName));
+                    return currentPage.getContent(contentNodeName);
                 }
-                else {
-                    // e.g. <cms:out nodeDataName="title" contentNodeName="01" contentNodeCollectionName="mainPars"/>
-                    // e.g. <cms:out nodeDataName="title" contentNodeName="footer" contentNodeCollectionName=""/>
-                    this.setContentNode(currentActivePage.getContent(contentNodeCollectionName).getContent(
-                        contentNodeName));
-                }
+
+                // e.g. <cms:out nodeDataName="title" contentNodeName="01" contentNodeCollectionName="mainPars"/>
+                // e.g. <cms:out nodeDataName="title" contentNodeName="footer" contentNodeCollectionName=""/>
+                return currentPage.getContent(contentNodeCollectionName).getContent(contentNodeName);
+
             }
             catch (RepositoryException re) {
                 if (log.isDebugEnabled())
@@ -274,38 +258,32 @@ public class Out extends TagSupport {
             }
         }
         else {
-            if (local == null) {
+            if (currentParagraph == null) {
                 // outside collection iterator
-                if (StringUtils.isNotEmpty(contentNodeCollectionName)) {
-                    // ERROR: no content node assignable because contentNodeName is empty
-                    // e.g. <cms:out nodeDataName="title" contentNodeCollectionName="mainPars"/>
-                    return SKIP_BODY;
+                if (StringUtils.isEmpty(contentNodeCollectionName)) {
+                    // e.g. <cms:out nodeDataName="title"/>
+                    // e.g. <cms:out nodeDataName="title" contentNodeName=""/>
+                    // e.g. <cms:out nodeDataName="title" contentNodeCollectionName=""/>
+                    return currentPage;
                 }
-                // e.g. <cms:out nodeDataName="title"/>
-                // e.g. <cms:out nodeDataName="title" contentNodeName=""/>
-                // e.g. <cms:out nodeDataName="title" contentNodeCollectionName=""/>
-                this.setContentNode(currentActivePage);
+                // ERROR: no content node assignable because contentNodeName is empty
+                // e.g. <cms:out nodeDataName="title" contentNodeCollectionName="mainPars"/>
             }
             else {
                 // inside collection iterator
                 if (contentNodeName == null && contentNodeCollectionName == null) {
                     // e.g. <cms:out nodeDataName="title"/>
-                    this.setContentNode(local);
+                    return currentParagraph;
                 }
                 else if ((contentNodeName != null && StringUtils.isEmpty(contentNodeName))
                     || (contentNodeCollectionName != null && StringUtils.isEmpty(contentNodeCollectionName))) {
                     // empty collection name -> use actpage
                     // e.g. <cms:out nodeDataName="title" contentNodeCollectionName=""/>
-                    this.setContentNode(currentActivePage);
-                }
-                else {
-                    // ERROR: no content node assignable because contentNodeName is empty
-                    // e.g. <cms:out nodeDataName="title" contentNodeCollectionName="mainPars"/>
-                    return SKIP_BODY;
+                    return currentPage;
                 }
             }
         }
-        return SKIP_BODY;
+        return null;
     }
 
     /**
@@ -314,11 +292,33 @@ public class Out extends TagSupport {
     public int doEndTag() {
         // don't reset any value set using a tag attribute here, or it will break any container that does tag pooling!
 
+        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+        Content currentPage = Resource.getCurrentActivePage(request);
+        Content contentNode = resolveNode(currentPage);
+        if (contentNode == null) {
+            return EVAL_PAGE;
+        }
+
         String value = null;
 
         // @todo //check if multiple values (checkboxes) -> not nodeData but contentNode
 
-        NodeData nodeData = this.contentNode.getNodeData(this.nodeDataName);
+        NodeData nodeData = contentNode.getNodeData(this.nodeDataName);
+
+        try {
+            while (inherit && currentPage.getLevel() > 0 && !nodeData.isExist()) {
+                currentPage = currentPage.getParent();
+                contentNode = resolveNode(currentPage);
+                nodeData = contentNode.getNodeData(this.nodeDataName);
+            }
+        }
+        catch (RepositoryException e) {
+            log.error(e.getMessage(), e);
+        }
+
+        if (!nodeData.isExist()) {
+            return EVAL_PAGE;
+        }
 
         int type = nodeData.getType();
 
@@ -337,7 +337,7 @@ public class Out extends TagSupport {
                 break;
 
             case PropertyType.BINARY:
-                value = this.getFilePropertyValue();
+                value = this.getFilePropertyValue(contentNode);
                 break;
 
             default:
@@ -375,14 +375,13 @@ public class Out extends TagSupport {
         this.nodeDataName = null;
         this.contentNodeName = null;
         this.contentNodeCollectionName = null;
-        this.contentNode = null;
-        this.nodeData = null;
         this.fileProperty = StringUtils.EMPTY;
         this.datePattern = DEFAULT_DATEPATTERN;
         this.dateLanguage = null;
         this.lineBreak = DEFAULT_LINEBREAK;
         this.var = null;
         this.scope = PageContext.PAGE_SCOPE;
+        this.inherit = false;
     }
 
 }

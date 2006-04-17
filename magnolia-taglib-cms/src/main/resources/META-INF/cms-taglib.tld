@@ -274,6 +274,13 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
         is not set.
       </description>
     </attribute>
+    <attribute>
+      <name>inherit</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description>Inherit the value from parent pages, if not set in the current one.</description>
+    </attribute>
     <example>
       <![CDATA[
 <cms:out nodeDataName="title"/>
