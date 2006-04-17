@@ -7,42 +7,59 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.mail.handlers.MgnlMailHandler;
 import info.magnolia.cms.mail.templates.MailAttachment;
 import info.magnolia.cms.mail.templates.MgnlEmail;
-import info.magnolia.cms.mail.templates.impl.*;
+import info.magnolia.cms.mail.templates.impl.FreemarkerEmail;
+import info.magnolia.cms.mail.templates.impl.HtmlEmail;
+import info.magnolia.cms.mail.templates.impl.MagnoliaEmail;
+import info.magnolia.cms.mail.templates.impl.SimpleEmail;
+import info.magnolia.cms.mail.templates.impl.StaticEmail;
+import info.magnolia.cms.mail.templates.impl.VelocityEmail;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.MgnlCoreConstants;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
 
 import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
-import java.net.URL;
-import java.util.*;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * This reads the repository to know what kind of email to instanciate
- *
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */
 public class MgnlMailFactory {
 
     private static Logger log = LoggerFactory.getLogger(MgnlMailFactory.class);
-    private static MgnlMailFactory factory = new MgnlMailFactory();
-    private Hashtable mailParameters;
-    private static Class mailHandlerClass;
 
+    private static MgnlMailFactory factory = new MgnlMailFactory();
+
+    private Map mailParameters;
+
+    private static Class mailHandlerClass;
 
     private MgnlMailFactory() {
         try {
             mailHandlerClass = Class.forName(MailConstants.MAIL_HANDLER_INTERFACE);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("Could not init MgnlMailFactory", e);
         }
         try {
             mailParameters = new Hashtable();
             initMailParameter();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("Could not init parameters", e);
             // should go for the moment
         }
@@ -58,7 +75,6 @@ public class MgnlMailFactory {
 
     /**
      * Data is fetch into the repository to get the different parameters of the email
-     *
      * @param id the id to find under the template section of the repository
      * @return a new <code>MgnlMail</code> instance, with the template set
      * @throws Exception if fails
@@ -113,7 +129,6 @@ public class MgnlMailFactory {
 
     /**
      * Return an instance of the mail type, given a string description.
-     *
      * @param type the type of the email as defined in <code>MailConstants</code>
      * @return a new <code>MgnlEmail</code> instance, template is not set.
      * @throws Exception if fails
@@ -135,9 +150,7 @@ public class MgnlMailFactory {
     }
 
     /**
-     * List the templates stored in the repository
-     * //TODO: this should be loaded once and reloaded when needed
-     *
+     * List the templates stored in the repository //TODO: this should be loaded once and reloaded when needed
      * @return <code>ArrayList</code> of <code>String</code> containing the template name
      */
     public ArrayList listTemplatesFromRepository() {
@@ -150,9 +163,11 @@ public class MgnlMailFactory {
                 Content temp = (Content) iter.next();
                 list.add(temp.getName());
             }
-        } catch (javax.jcr.PathNotFoundException pne) {
+        }
+        catch (javax.jcr.PathNotFoundException pne) {
             log.error("Path for templates was not found");
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("Error while listing templates", e);
         }
 
@@ -160,17 +175,16 @@ public class MgnlMailFactory {
 
     }
 
-
-    public void setMailParameters(Hashtable _mailParameters) {
+    public void setMailParameters(Map _mailParameters) {
         this.mailParameters = _mailParameters;
     }
 
-    public Hashtable getMailParameters() {
+    public Map getMailParameters() {
         return mailParameters;
     }
 
     public Session getSession() {
-        Properties props = new Properties(); //System.getProperties(); should I try to use the system properties ?
+        Properties props = new Properties(); // System.getProperties(); should I try to use the system properties ?
         props.put("mail.smtp.host", mailParameters.get(MailConstants.SMTP_SERVER));
         props.put("mail.smtp.port", mailParameters.get(MailConstants.SMTP_PORT));
         Authenticator auth = null;
@@ -178,8 +192,11 @@ public class MgnlMailFactory {
             props.put("mail.smtp.auth", MgnlCoreConstants.TRUE);
             props.put("mail.smtp.user", mailParameters.get(MailConstants.SMTP_USER));
             auth = new Authenticator() {
+
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication((String) mailParameters.get(MailConstants.SMTP_USER), (String) mailParameters.get(MailConstants.SMTP_PASSWORD));
+                    return new PasswordAuthentication(
+                        (String) mailParameters.get(MailConstants.SMTP_USER),
+                        (String) mailParameters.get(MailConstants.SMTP_PASSWORD));
                 }
             };
         }
@@ -193,7 +210,8 @@ public class MgnlMailFactory {
         try {
             hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
             node = hm.getContent(MailConstants.SERVER_MAIL);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.info("Cannot access repository configuration");
         }
 
@@ -216,15 +234,18 @@ public class MgnlMailFactory {
                 if (!value.equalsIgnoreCase(StringUtils.EMPTY)) {
                     log.info("Init param[" + param + "] with value:[" + value + "]");
                     mailParameters.put(param, value);
-                } else {
+                }
+                else {
                     log.info("Init param[" + param + "] with value:[" + defaultValue + " ] (default)");
                     mailParameters.put(param, defaultValue);
                 }
-            } else {
+            }
+            else {
                 log.info("No path for param[" + param + "]. Using default:[" + defaultValue + "]");
                 mailParameters.put(param, defaultValue);
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("Failed to load value for param[" + param + "]. Using default:[" + defaultValue + "]", e);
             mailParameters.put(param, defaultValue);
         }
@@ -249,11 +270,14 @@ public class MgnlMailFactory {
                 if (log.isDebugEnabled())
                     log.debug("username =" + userName);
                 ret.append(getUserMail(userName));
-            } else if (userName.startsWith(MgnlCoreConstants.PREFIX_GROUP)) {
+            }
+            else if (userName.startsWith(MgnlCoreConstants.PREFIX_GROUP)) {
 
-            } else if (userName.startsWith(MgnlCoreConstants.PREFIX_ROLE)) {
+            }
+            else if (userName.startsWith(MgnlCoreConstants.PREFIX_ROLE)) {
 
-            } else {
+            }
+            else {
                 // none of the above, just add the mail to the list
                 ret.append(userName);
             }
@@ -264,7 +288,6 @@ public class MgnlMailFactory {
 
     /**
      * retrieve email address fo user
-     *
      * @param userName
      * @return the email of the user as stored in the repository, if not found returns the parameter userName
      */
@@ -274,7 +297,8 @@ public class MgnlMailFactory {
             Content user = hm.getContent(userName);
             if (user != null)
                 return user.getNodeData(MailConstants.EMAIL).getValue().getString();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("can not get user email info.", e);
         }
         return userName;
