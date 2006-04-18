@@ -417,7 +417,7 @@ public final class ModuleUtil {
                 String bindName = ((Element) XPath.selectSingleNode(
                         doc,
                         "/JCR/Repository[@name='magnolia']/param[@name='bindName']")).getAttributeValue("value");
-                bindName = StringUtils.replace(bindName, "website", name);
+                bindName = StringUtils.replace(bindName, "magnolia", name);
 
                 node.setAttribute("name", name);
                 node.setAttribute("id", name);
@@ -438,6 +438,9 @@ public final class ModuleUtil {
                         providerURL));
                 node.addContent(new Element("param").setAttribute("name", "bindName").setAttribute("value", bindName));
 
+                // add a workspace
+                node.addContent(new Element("workspace").setAttribute("name", name));
+                
                 doc.getRootElement().addContent(node);
 
                 // make the mapping
