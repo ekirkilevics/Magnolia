@@ -123,7 +123,7 @@ public abstract class CommandBasedTreeHandler extends AdminTreeMVCHandler {
         catch (Exception e) {
             log.warn("can not get start/end date for path "
                 + pathSelected
-                + ", please use sevlet FlowDef to set start/end date for node.", e);
+                + ", please use sevlet FlowDef to set start/end date for node.");
         }
 
         String recursive = "false";
