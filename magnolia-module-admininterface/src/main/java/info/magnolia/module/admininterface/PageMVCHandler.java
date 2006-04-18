@@ -41,6 +41,8 @@ public abstract class PageMVCHandler extends MVCServletHandlerImpl {
      * Logger
      */
     Logger log = LoggerFactory.getLogger(PageMVCHandler.class);
+    
+    private boolean autoSetProperties = true;
 
     /**
      * The name of the parameter passed by the request. Not used for simple pages.
@@ -96,16 +98,17 @@ public abstract class PageMVCHandler extends MVCServletHandlerImpl {
         setForm(Resource.getPostedForm(request));
         setParams(new RequestFormUtil(request, getForm()));
         setMsgs(MessagesManager.getMessages());
-
-        init();
-
-        setProperties();
     }
-
+    
     /**
-     * Called during instantiating. Before calling setProperties().
+     * Called after instantiating. Set's by default the properties.
+     * @throws Exception 
+     *
      */
-    protected void init() {
+    public void init() throws Exception{
+        if(this.isAutoSetProperties()){
+            setProperties();
+        }
     }
 
     /**
@@ -220,6 +223,20 @@ public abstract class PageMVCHandler extends MVCServletHandlerImpl {
      */
     public void setCommand(String command) {
         this.command = command;
+    }
+
+    /**
+     * @param autoSetProperties The autoSetProperties to set.
+     */
+    protected void setAutoSetProperties(boolean autoSetProperties) {
+        this.autoSetProperties = autoSetProperties;
+    }
+
+    /**
+     * @return Returns the autoSetProperties.
+     */
+    protected boolean isAutoSetProperties() {
+        return autoSetProperties;
     }
 
 }
