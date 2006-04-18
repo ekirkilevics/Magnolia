@@ -8,11 +8,16 @@
 	function ${this.name}Resize(){
 		var thisHeight = MgnlDHTMLUtil.getHeight($('${this.parent.name}ListDiv'));
 		var thisWidth = MgnlDHTMLUtil.getWidth($('${this.parent.name}ListDiv'));
-		var sortWidth = MgnlDHTMLUtil.getWidth($('${this.name}SortGroupDiv'));
-		$('${this.name}SortGroupDiv').style.height = thisHeight -1 + "px";
-		$('${this.name}SortGroupDiv').style.left = thisWidth - sortWidth + "px";	
+		<#if this.groupableFields?has_content || this.sortableFields?has_content>
+			var sortWidth = MgnlDHTMLUtil.getWidth($('${this.name}SortGroupDiv'));
+			$('${this.name}SortGroupDiv').style.left = thisWidth - sortWidth + "px";		
+			$('${this.name}ContentDiv').style.width = thisWidth - sortWidth + "px";	
+			$('${this.name}SortGroupDiv').style.height = thisHeight -1 + "px";
+		<#else/>
+			$('${this.name}ContentDiv').style.width = thisWidth + "px";	
+		</#if>
+		
 		$('${this.name}ContentDiv').style.height = thisHeight + "px";
-		$('${this.name}ContentDiv').style.width = thisWidth - sortWidth + "px";	
 	}
 	
 	MgnlDHTMLUtil.addOnLoad(${this.name}Resize);
@@ -46,9 +51,11 @@
     </#list>
 </style>
 <div style="position:relative">
-	<div id="${this.name}SortGroupDiv" class="mgnlListSortGroupDiv mgnlText">
-		<#include "ListControlSortGroup.html"/>
-	</div>
+	<#if this.groupableFields?has_content || this.sortableFields?has_content>
+		<div id="${this.name}SortGroupDiv" class="mgnlListSortGroupDiv mgnlText">
+			<#include "ListControlSortGroup.html"/>
+		</div>
+	</#if>
 	
 	<div id="${this.name}ContentDiv" class="mgnlListContentDiv">
 		<#include "ListControlContent.html"/>
