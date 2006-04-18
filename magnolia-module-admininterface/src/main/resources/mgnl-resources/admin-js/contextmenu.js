@@ -49,19 +49,19 @@ mgnlContextMenu.prototype.show = function(event){
                 item.div.className+="_DISABLED";
                 item.div.onclick="";
                 // change image path to disabled
-                if (img.tagName.toUpperCase () == 'IMG') {
-                	if (img.src.substr (img.src.length - '_inactive.gif'.length) != '_inactive.gif') {
-                		img.src = img.src.substr (0, img.src.length - '.gif'.length) + '_inactive.gif';
-                	}
+                if (img && img.tagName && img.tagName.toUpperCase () == 'IMG') {
+                    if (img.src.substr (img.src.length - '_inactive.gif'.length) != '_inactive.gif') {
+                        img.src = img.src.substr (0, img.src.length - '.gif'.length) + '_inactive.gif';
+                    }
                 }
             }
             else {
                 item.div.onclick=item.onclick;
                 // change image path to enabled
-                if (img.tagName.toUpperCase () == 'IMG') {
-                	if (img.src.substr (img.src.length - '_inactive.gif'.length) == '_inactive.gif') {
-                		img.src = img.src.substr (0, img.src.length - '_inactive.gif'.length) + '.gif';
-                	}
+                if (img && img.tagName && img.tagName.toUpperCase () == 'IMG') {
+                    if (img.src.substr (img.src.length - '_inactive.gif'.length) == '_inactive.gif') {
+                        img.src = img.src.substr (0, img.src.length - '_inactive.gif'.length) + '.gif';
+                	   }  
                 }
             }
         }
@@ -187,16 +187,15 @@ function mgnlTreeMenuItemConditionPermissionWrite(tree)
 //### Common Commands
 //#################
 
-    function mgnlTreeMenuItemOpen(tree)
-        {
-        var url= contextPath + tree.selectedNode.path+".html";
-        var w=window.open(url,"mgnlInline","");
-        if (w) w.focus();
-        }
+function mgnlTreeMenuItemOpen(tree){
+    var url= contextPath + tree.selectedNode.path+".html";
+    var w=window.open(url,"mgnlInline","");
+    if (w) 
+        w.focus();
+}
 
-    function mgnlTreeMenuOpenDialog(tree,dialogPath)
-        {
-        var path=tree.selectedNode.id;
-        mgnlOpenDialog(path,'','','',tree.repository,dialogPath);
-        }
+function mgnlTreeMenuOpenDialog(tree,dialogPath){
+    var path=tree.selectedNode.id;
+    mgnlOpenDialog(path,'','','',tree.repository,dialogPath);
+}
 
