@@ -38,7 +38,7 @@ public class DeactivationCommand extends MgnlCommand {
         try {
             doDeactivate(((info.magnolia.cms.beans.runtime.Context)Ctx).getUser(), path);
         } catch (Exception e) {
-            log.error("cannot do activate", e);
+            log.error("cannot do deactivate", e);
             return false;
         }
         return true;
