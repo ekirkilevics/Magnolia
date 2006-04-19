@@ -76,10 +76,4 @@ public abstract class AbstractExpressionImpl implements SearchQueryExpression {
         return (this.getRight()!=null);
     }
 
-    /**
-     * get string representation
-     * @return string representation if this expression
-     * */
-    public abstract String toString();
-
 }

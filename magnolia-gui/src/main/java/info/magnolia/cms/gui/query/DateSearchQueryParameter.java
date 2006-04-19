@@ -15,6 +15,7 @@ package info.magnolia.cms.gui.query;
 import org.apache.log4j.Logger;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
@@ -59,7 +60,7 @@ public class DateSearchQueryParameter extends SearchQueryParameter {
      * @param value
      * @param constraint check SearchQueryParameter constants
      * */
-    public DateSearchQueryParameter(String name, Calendar value, String constraint) {
+    public DateSearchQueryParameter(String name, Date value, String constraint) {
         super(name, value, constraint);
     }
 
@@ -67,15 +68,15 @@ public class DateSearchQueryParameter extends SearchQueryParameter {
      * get value
      * @return Date
      * */
-    public String getValue() {
-        return (String) this.value;
+    public Date getValue() {
+        return (Date) this.value;
     }
 
     /**
      * set value
      * @param value Date
      * */
-    public void setValue(String value) {
+    public void setValue(Date value) {
         this.value = value;
     }
 
@@ -93,32 +94,5 @@ public class DateSearchQueryParameter extends SearchQueryParameter {
      * */
     public SimpleDateFormat getDateFormat() {
         return this.format;
-    }
-
-    /**
-     * get string representation
-     * @return string representation if this expression
-     * */
-    public String toString() {
-        if (this.getValue() == null)
-            return "";
-        try {
-            this.setValue(this.format.format(this.format.parse(this.getValue())));
-        } catch (ParseException e) {
-            log.error(e.getMessage(), e);
-            return "";
-        }
-        StringBuffer buffer = new StringBuffer();
-        buffer.append(this.getName());
-        if (this.getConstraint().equalsIgnoreCase(BEFORE)) {
-            buffer.append(" <= TIMESTAMP '");
-        } else if (this.getConstraint().equalsIgnoreCase(AFTER)) {
-            buffer.append(" >= TIMESTAMP '");
-        } else if (this.getConstraint().equalsIgnoreCase(IS)) {
-            buffer.append(" = TIMESTAMP '");
-        }
-        buffer.append(this.getValue());
-        buffer.append("T00:00:00.000Z'");
-        return buffer.toString();
     }
 }

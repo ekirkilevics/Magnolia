@@ -48,17 +48,6 @@ public class SearchQueryOperator extends AbstractExpressionImpl {
     }
 
     /**
-     * get string representation
-     * @return string representation if this expression
-     * */
-    public String toString() {
-        if (StringUtils.isEmpty(this.operator)) {
-            return StringUtils.EMPTY;
-        }
-        return this.operator;
-    }
-
-    /**
      * get operator name
      * @return String
      * */
