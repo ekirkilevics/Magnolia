@@ -12,19 +12,17 @@
  */
 package info.magnolia.cms.gui.controlx.list.util;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import info.magnolia.cms.core.Content;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import javax.jcr.RepositoryException;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 
 /**
  * @author Sameer Charles $Id$
@@ -61,22 +59,25 @@ public class ValueProvider {
      * @param node
      */
     public synchronized Object getValue(String name, Object obj) {
+        Object value = null;
         try {
             if (obj instanceof Content) {
                 Content node = (Content) obj;
                 if (node.hasNodeData(name)) {
-                    return node.getNodeData(name).getString();
+                    value = node.getNodeData(name).getString();
                 }
 
-                String value = node.getMetaData().getStringProperty(name);
-                if (StringUtils.isNotEmpty(value)) {
-                    return value;
+                if(value != null){
+                    value = node.getMetaData().getStringProperty(name);
+                    if (StringUtils.isNotEmpty((String)value)) {
+                        return value;
+                    }
                 }
             }
 
             // is this a property of the object
             try {
-                return PropertyUtils.getProperty(obj, name);
+                value = PropertyUtils.getProperty(obj, name);
             }
             catch (NoSuchMethodException e1) {
                 // check if getter exist for this name
@@ -84,17 +85,21 @@ public class ValueProvider {
                     String methodName = "get"
                         + StringUtils.substring(name, 0, 1).toUpperCase()
                         + StringUtils.substring(name, 1);
-                    return MethodUtils.invokeMethod(this, methodName, obj);
+                    value = MethodUtils.invokeMethod(this, methodName, obj);
                 }
                 catch (NoSuchMethodException e2) {
-                    return StringUtils.EMPTY;
+                    value = StringUtils.EMPTY;
                 }
+            }
+            if(value instanceof Calendar){
+                value =  new Date(((Calendar)value).getTimeInMillis());
             }
         }
         catch (Exception e) {
             log.error("can't get value", e);
-            return StringUtils.EMPTY;
+            value = StringUtils.EMPTY;
         }
+        return value;
     }
 
     /**

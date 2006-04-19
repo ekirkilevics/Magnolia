@@ -191,6 +191,16 @@ public class ListControl extends AbstractControl {
     }
     
     /**
+     * Get the lable of a specific 
+     * @param name
+     * @return
+     */
+    public String getColumnLabel(String name){
+        ListColumn column = (ListColumn) this.getChild(name);
+        return column.getLabel();
+    }
+    
+    /**
      * @see info.magnolia.cms.gui.controlx.list.ListModel#setSortBy(java.lang.String)
      */
     public void setSortBy(String name) {

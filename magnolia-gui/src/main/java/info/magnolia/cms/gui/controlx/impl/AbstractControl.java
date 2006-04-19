@@ -36,7 +36,7 @@ public class AbstractControl implements Control {
     private String name;
 
     /**
-     * The render kit used. layzy bound.
+     * The renderer kit used. layzy bound.
      */
     private RenderKit renderKit;
 
@@ -44,6 +44,11 @@ public class AbstractControl implements Control {
      * The name of the renderer to use.
      */
     private String renderType;
+    
+    /**
+     * The renderer used. If not set the renderType is used to get the renderer from the RenderKit
+     */
+    private Renderer renderer;
 
     /**
      * Parent control
@@ -69,9 +74,12 @@ public class AbstractControl implements Control {
         this.parent = parent;
     }
 
+    /**
+     * If no name set yet just set one.
+     */
     public void addChild(Control control) {
         control.setParent(this);
-        if (StringUtils.isEmpty(this.getName())) {
+        if (StringUtils.isEmpty(control.getName())) {
             control.setName(this.getName() + "_" + this.children.size());
         }
         this.children.put(control.getName(), control);
@@ -119,11 +127,10 @@ public class AbstractControl implements Control {
     }
 
     /**
-     * Get the Renderer assigned to this render type and call its render() method.
+     * Get the Renderer assigned to this renderer type and call its renderer() method.
      */
     public String render() {
-        Renderer renderer = this.getRenderKit().getRenderer(this.getRenderType());
-        return renderer.render(this);
+        return this.getRenderer().render(this);
     }
 
     /**
@@ -138,6 +145,26 @@ public class AbstractControl implements Control {
      */
     public void setRenderType(String renderType) {
         this.renderType = renderType;
+    }
+
+    
+    /**
+     * @return Returns the renderer.
+     */
+    public Renderer getRenderer() {
+        if (this.renderer == null) {
+            this.renderer = this.getRenderKit().getRenderer(this.getRenderType());
+        }
+
+        return this.renderer;
+    }
+
+    
+    /**
+     * @param renderer The renderer to set.
+     */
+    public void setRenderer(Renderer renderer) {
+        this.renderer = renderer;
     }
 
 }

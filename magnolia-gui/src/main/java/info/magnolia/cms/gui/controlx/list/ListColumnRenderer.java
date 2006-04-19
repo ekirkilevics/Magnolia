@@ -12,6 +12,11 @@
  */
 package info.magnolia.cms.gui.controlx.list;
 
+import java.util.Calendar;
+import java.util.Date;
+import org.apache.commons.lang.time.FastDateFormat;
+
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.gui.controlx.Control;
 import info.magnolia.cms.gui.controlx.Renderer;
 
@@ -25,6 +30,13 @@ public class ListColumnRenderer implements Renderer {
 
     public String render(Control control) {
         ListColumn column = (ListColumn) control;
-        return column.getValue().toString();
+        Object val = column.getValue();
+        if(val instanceof Calendar || val instanceof Date){
+            FastDateFormat format = FastDateFormat.getDateTimeInstance(FastDateFormat.SHORT, FastDateFormat.SHORT, MgnlContext.getLocale());
+            return format.format(val);
+        }
+        else{
+            return val.toString();
+        }
     }
 }

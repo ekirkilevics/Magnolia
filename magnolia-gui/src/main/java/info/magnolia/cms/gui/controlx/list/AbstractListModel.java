@@ -195,8 +195,8 @@ public abstract class AbstractListModel implements ListModel {
          * @param object1 to be compared
          * */
         private int sort(Object object, Object object1) {
-            String firstKey = (String) this.valueProvider.getValue(this.sortBy, (Content) object);
-            String secondKey = (String) this.valueProvider.getValue(this.sortBy, (Content) object1);
+            Comparable firstKey = (Comparable) this.valueProvider.getValue(this.sortBy, object);
+            Comparable secondKey = (Comparable) this.valueProvider.getValue(this.sortBy, object1);
             if (this.getOrder().equalsIgnoreCase(ASCENDING))
                 return firstKey.compareTo(secondKey);
             else
@@ -209,10 +209,10 @@ public abstract class AbstractListModel implements ListModel {
          * @param object1 to be compared
          * */
         private int subSort(Object object, Object object1) {
-            String firstKey = (String) this.valueProvider.getValue(this.preSort, (Content) object);
-            String secondKey = (String) this.valueProvider.getValue(this.preSort, (Content) object1);
-            String subSortFirstKey = (String) this.valueProvider.getValue(this.sortBy, (Content) object);
-            String subSortSecondKey = (String) this.valueProvider.getValue(this.sortBy, (Content) object1);
+            String firstKey = (String) this.valueProvider.getValue(this.preSort, object);
+            String secondKey = (String) this.valueProvider.getValue(this.preSort, object1);
+            Comparable subSortFirstKey = (Comparable) this.valueProvider.getValue(this.sortBy, object);
+            Comparable subSortSecondKey = (Comparable) this.valueProvider.getValue(this.sortBy, object1);
             if (firstKey.equalsIgnoreCase(secondKey)) {
                 if (this.getOrder().equalsIgnoreCase(ASCENDING))
                     return subSortFirstKey.compareTo(subSortSecondKey);
