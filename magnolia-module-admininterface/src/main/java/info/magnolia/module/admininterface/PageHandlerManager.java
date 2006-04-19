@@ -59,7 +59,7 @@ public class PageHandlerManager extends ObservedManager {
      * @param response
      * @returnn an instance of the handlers
      */
-    public PageMVCHandler getDialogPageHandler(String name, HttpServletRequest request,
+    public PageMVCHandler getPageHandler(String name, HttpServletRequest request,
         HttpServletResponse response) {
 
         Class dialogPageHandlerClass = (Class) dialogPageHandlers.get(name);
