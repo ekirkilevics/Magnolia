@@ -140,6 +140,7 @@ public class OWFEBean implements WorkflowAPI {
         if_wi.touch();
         // if_wi.setAttribute("OK", new StringAttribute("true"));
         try {
+        	if_wi.getAttributes().puts("OK", "true");
             OWFEEngine.getEngine().reply(if_wi);
         }
         catch (Exception e) {
@@ -166,11 +167,11 @@ public class OWFEBean implements WorkflowAPI {
         // if_wi.setAttribute("OK", new StringAttribute("false"));
 
         try {
+        	if_wi.getAttributes().puts("OK", "false");
             OWFEEngine.getEngine().reply(if_wi);
         }
         catch (Exception e) {
             log.error("Error while accessing the workflow engine", e);
-
         }
         finally {
             removeWorkItem(if_wi);

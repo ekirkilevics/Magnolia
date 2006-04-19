@@ -104,8 +104,18 @@ public abstract class CommandBasedTreeHandler extends AdminTreeMVCHandler {
         Content ct = null;
         try {
             ct = hm.getContent(pathSelected);
-            Calendar cd = ct.getMetaData().getStartTime();
+            
+            Calendar cd = null;
             String date; 
+            
+            // get start time
+            try{
+            	cd = ct.getMetaData().getStartTime();            	
+            }catch (Exception e){
+            	log.warn("cannot get start time for node " + pathSelected, e);            	
+            }    
+            if (cd == null)
+            	cd = Calendar.getInstance();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ");
             date = sdf.format(new Date(cd.getTimeInMillis()));
             //date = ""+cd.get(Calendar.YEAR)+"-"+(cd.get(Calendar.MONTH)+1)+"-"+cd.get(Calendar.DAY_OF_MONTH)
@@ -114,7 +124,18 @@ public abstract class CommandBasedTreeHandler extends AdminTreeMVCHandler {
             //date = "2006-04-14 10:23:15+0800";
             params.put("startDate", date);
 
-            cd = ct.getMetaData().getEndTime();            
+            // get end time
+            try{
+            cd = ct.getMetaData().getEndTime(); 
+            }
+            catch(Exception e){
+            	log.warn("cannot get end time for node " + pathSelected, e);            	
+            }
+            if (cd == null)
+            {
+            	cd = Calendar.getInstance();
+            	cd.add(Calendar.YEAR, 100);
+            }
             date = sdf.format(new Date(cd.getTimeInMillis()));        
             log.debug("end date = " + date);
             params.put("endDate", date);
@@ -122,7 +143,7 @@ public abstract class CommandBasedTreeHandler extends AdminTreeMVCHandler {
         catch (Exception e) {
             log.warn("can not get start/end date for path "
                 + pathSelected
-                + ", please use sevlet FlowDef to set start/end date for node.");
+                + ", please use sevlet FlowDef to set start/end date for node.", e);
         }
 
         String recursive = "false";
