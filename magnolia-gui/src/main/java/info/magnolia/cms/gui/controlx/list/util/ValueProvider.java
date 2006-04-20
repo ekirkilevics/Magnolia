@@ -16,13 +16,17 @@ import java.util.Calendar;
 import java.util.Date;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.util.NodeDataUtil;
 
 import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+import javax.jcr.Value;
 
 
 /**
@@ -59,19 +63,30 @@ public class ValueProvider {
      * @param name
      * @param node
      */
-    public synchronized Object getValue(String name, Object obj) {
+    public Object getValue(String name, Object obj) {
         Object value = null;
         try {
             if (obj instanceof Content) {
                 Content node = (Content) obj;
                 if (node.hasNodeData(name)) {
-                    value = node.getNodeData(name).getString();
+                    NodeData nd = node.getNodeData(name);
+                    if(nd.getType() == PropertyType.DATE){
+                        value = nd.getDate();
+                    }
+                    else{
+                        value = nd.getString();
+                    }
                 }
-
-                if (value == null) {
-                    value = node.getMetaData().getStringProperty(name);
-                    if (StringUtils.isNotEmpty((String) value)) {
-                        return value;
+                
+                if(value == null){
+                    try{
+                        value = PropertyUtils.getProperty(node.getMetaData(), name);
+                    }
+                    catch(NoSuchMethodException e){
+                        value = node.getMetaData().getStringProperty(name);
+                        if (StringUtils.isEmpty((String) value)) {
+                            value = null;
+                        }
                     }
                 }
             }
@@ -93,15 +108,17 @@ public class ValueProvider {
                         value = StringUtils.EMPTY;
                     }
                 }
-                if (value instanceof Calendar) {
-                    value = new Date(((Calendar) value).getTimeInMillis());
-                }
             }
         }
         catch (Exception e) {
             log.error("can't get value", e);
             value = StringUtils.EMPTY;
         }
+
+        if (value instanceof Calendar) {
+            value = new Date(((Calendar) value).getTimeInMillis());
+        }
+
         return value;
     }
 
