@@ -24,6 +24,7 @@ import org.apache.log4j.Logger;
 
 import javax.jcr.RepositoryException;
 
+
 /**
  * @author Sameer Charles $Id$
  */
@@ -67,32 +68,34 @@ public class ValueProvider {
                     value = node.getNodeData(name).getString();
                 }
 
-                if(value != null){
+                if (value == null) {
                     value = node.getMetaData().getStringProperty(name);
-                    if (StringUtils.isNotEmpty((String)value)) {
+                    if (StringUtils.isNotEmpty((String) value)) {
                         return value;
                     }
                 }
             }
 
-            // is this a property of the object
-            try {
-                value = PropertyUtils.getProperty(obj, name);
-            }
-            catch (NoSuchMethodException e1) {
-                // check if getter exist for this name
+            if (value == null) {
+                // is this a property of the object
                 try {
-                    String methodName = "get"
-                        + StringUtils.substring(name, 0, 1).toUpperCase()
-                        + StringUtils.substring(name, 1);
-                    value = MethodUtils.invokeMethod(this, methodName, obj);
+                    value = PropertyUtils.getProperty(obj, name);
                 }
-                catch (NoSuchMethodException e2) {
-                    value = StringUtils.EMPTY;
+                catch (NoSuchMethodException e1) {
+                    // check if getter exist for this name
+                    try {
+                        String methodName = "get"
+                            + StringUtils.substring(name, 0, 1).toUpperCase()
+                            + StringUtils.substring(name, 1);
+                        value = MethodUtils.invokeMethod(this, methodName, obj);
+                    }
+                    catch (NoSuchMethodException e2) {
+                        value = StringUtils.EMPTY;
+                    }
                 }
-            }
-            if(value instanceof Calendar){
-                value =  new Date(((Calendar)value).getTimeInMillis());
+                if (value instanceof Calendar) {
+                    value = new Date(((Calendar) value).getTimeInMillis());
+                }
             }
         }
         catch (Exception e) {
