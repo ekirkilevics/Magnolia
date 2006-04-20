@@ -52,6 +52,10 @@ public class MetaData {
 
     public static final String ACTIVATOR_ID = "activatorid"; //$NON-NLS-1$
 
+    public static final String VERSION_USER = "versionUser"; //$NON-NLS-1$
+
+    public static final String NAME = "name";
+    
     public static final String START_TIME = "starttime"; //$NON-NLS-1$
 
     public static final String END_TIME = "endtime"; //$NON-NLS-1$
@@ -63,6 +67,7 @@ public class MetaData {
     public static final String ACTIVATED = "activated"; //$NON-NLS-1$
 
     public static final String SEQUENCE_POS = "sequenceposition"; //$NON-NLS-1$
+    
 
     /**
      * @deprecated all meta data properties should be under one single MetaData node

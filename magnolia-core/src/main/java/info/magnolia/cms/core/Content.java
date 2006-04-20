@@ -993,6 +993,11 @@ public class Content extends ContentHandler implements Cloneable {
      * @throws RepositoryException if an error occurs
      */
     public Version addVersion() throws UnsupportedRepositoryOperationException, RepositoryException {
+        this.getMetaData().setProperty(MetaData.VERSION_USER, MgnlContext.getUser().getName());
+        this.getMetaData().setProperty(MetaData.NAME, this.getName());
+        // save first
+        this.save();
+        // now version
         Version version = this.checkIn();
         this.checkOut();
         return version;
