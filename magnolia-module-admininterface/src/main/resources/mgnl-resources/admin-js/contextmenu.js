@@ -15,6 +15,8 @@ function mgnlContextMenu(name){
     this.menuItems=new Array();
     this.colors=new Object();
     this.colors.menuHighlight="#F0F2E6";
+    // true if this is keep showing
+    this.showing = false;
 
     if(!this.divMenu){
         alert('no div for the context [' + name + '] menu found');
@@ -67,8 +69,8 @@ mgnlContextMenu.prototype.show = function(event){
         }
         var pos=mgnlGetMousePos(event);
 
-        var left=pos.x+2;
-        var top=pos.y+2;
+        var left=pos.x-4;
+        var top=pos.y-4;
         var windowSize=mgnlGetWindowSize();
         if (windowSize.h<top+divMenuHeight+25)
             {
@@ -85,16 +87,26 @@ mgnlContextMenu.prototype.show = function(event){
         this.divMenu.style.top=top;
         this.divMenu.style.visibility="visible";
         }
-    //event.returnValue=false;
+    this.showing = true;
+    event.returnValue=false;
 }
 
-mgnlContextMenu.prototype.hide = function()
-    {
-    if (this.divMenu)
-        {
-        this.divMenu.style.visibility="hidden";
+mgnlContextMenu.prototype.keepShowing = function(){
+    this.showing = true;
+}
+
+mgnlContextMenu.prototype.hide = function(){
+    this.showing = false;
+    var tmp = this;
+    _mgnlContextMenuHide = function(){
+        if(tmp.showing == true)
+            return;
+        if (tmp.divMenu){
+            tmp.divMenu.style.visibility="hidden";
         }
     }
+    window.setTimeout("_mgnlContextMenuHide();",1000);
+}
 
 
 mgnlContextMenu.prototype.menuItemHighlight = function(item)

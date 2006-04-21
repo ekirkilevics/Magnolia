@@ -20,7 +20,12 @@
 		$('${this.name}ContentDiv').style.height = thisHeight + "px";
 	}
 	
-	MgnlDHTMLUtil.addOnLoad(${this.name}Resize);
+	function ${this.name}Init(){
+		${this.name} = new mgnl.controls.List('${this.name}');	
+		${this.name}Resize
+	}
+
+	MgnlDHTMLUtil.addOnLoad(${this.name}Init);
 	MgnlDHTMLUtil.addOnResize(${this.name}Resize);
 </script>
 
@@ -50,6 +55,14 @@
         }
     </#list>
 </style>
+
+<#if this.contextMenu?exists>
+	${this.contextMenu.html}
+	<script>
+		${this.contextMenu.javascript}
+	</script>
+</#if>
+
 <div style="position:relative">
 	<#if this.groupableFields?has_content || this.sortableFields?has_content>
 		<div id="${this.name}SortGroupDiv" class="mgnlListSortGroupDiv mgnlText">

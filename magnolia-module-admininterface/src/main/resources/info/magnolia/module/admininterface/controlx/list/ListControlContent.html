@@ -26,7 +26,7 @@
 
 <!-- content -->
 	<#list this.iterator as item>
-		<div style="position:relative;top:0;left:0;width:100%;height:18px;">
+		<div id="${this.name}Row${item_index}" style="position:relative;top:0;left:0;width:100%;height:18px;" onmouseover="${this.name}.mouseover(${item_index})" onmouseout="${this.name}.mouseout(${item_index})" onclick="${renderer.onSelect(this, item_index)} ${renderer.onClick(this, item_index)}" ondblclick="${renderer.onSelect(this, item_index)} ${renderer.onDblClick(this, item_index)}" oncontextmenu="${renderer.onSelect(this, item_index)} ${renderer.onRightClick(this, item_index)} return false;">
 			<#list this.children as column>
 				<span class="mgnlTreeColumn ${this.name}CssClassColumn${column_index}"><span class="mgnlText">${column.render()}</span></span>
 			</#list>

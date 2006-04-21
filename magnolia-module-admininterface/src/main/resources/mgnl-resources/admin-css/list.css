@@ -54,3 +54,14 @@
 	background-color: #EDEEE9;
 	height: 800px;
 }
+
+.mgnlListRow{
+}
+
+.mgnlListRowHover{
+    background-color: #EDF2FA;
+}
+
+.mgnlListRowSelected{
+    background-color: #D1E1ED;
+}
