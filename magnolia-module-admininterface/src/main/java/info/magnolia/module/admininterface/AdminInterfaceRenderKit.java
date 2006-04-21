@@ -16,7 +16,7 @@ import info.magnolia.cms.gui.controlx.impl.RenderKitImpl;
 import info.magnolia.cms.gui.controlx.list.ListColumn;
 import info.magnolia.cms.gui.controlx.list.ListColumnRenderer;
 import info.magnolia.cms.gui.controlx.list.ListControl;
-import info.magnolia.cms.gui.controlx.list.ListControlRenderer;
+import info.magnolia.module.admininterface.controlx.list.AdminListControlRenderer;
 
 
 /**
@@ -33,6 +33,6 @@ public class AdminInterfaceRenderKit extends RenderKitImpl {
      */
     public AdminInterfaceRenderKit() {
         this.register(ListColumn.RENDER_TYPE, new ListColumnRenderer());
-        this.register(ListControl.RENDER_TYPE, new ListControlRenderer(DEFAULT_TEMPLATE_PATH + "/list/ListControl.html"));
+        this.register(ListControl.RENDER_TYPE, new AdminListControlRenderer());
     }
 }
