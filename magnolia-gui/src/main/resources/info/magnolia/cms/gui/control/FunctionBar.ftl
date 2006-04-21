@@ -84,13 +84,15 @@
           </tr>
         </table>
       </td>
+      <#if functionBar.searchable>
       <td style="width: 2%; padding-right: 10px; vertical-align: middle;">
         <script type="text/javascript">
-          // @todo add form, give a name to the text field...
-          var mgnlSearchTF = new MgnlTextField ('name', '', 200, contextPath + '/.resources/controls/search/lupe.gif', 29);
+            
+          var mgnlSearchTF = new MgnlTextField ('${functionBar.javascriptName}SearchField', '', 200, contextPath + '/.resources/controls/search/lupe.gif', 29, {onKeyPress: "if (mgnlIsKeyEnter(event)) {${functionBar.onSearch}}"});
           document.write (mgnlSearchTF.render ());
         </script>
       </td>
+      </#if>
     </tr>
   </table>
 </div>
