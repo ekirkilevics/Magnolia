@@ -69,11 +69,20 @@ public class ListControlRenderer extends TemplatedRenderer {
     }
 
     /**
+     * Called onclick, dblclick, contextmenu
+     * @param list
+     * @return
+     */
+    public String onSelect(ListControl list, Integer index){
+        return "";
+    }
+    
+    /**
      * Render the click event
      * @param iter
      * @return
      */
-    public String onClick(ListModelIterator iter){
+    public String onClick(ListControl list, Integer index){
         return "";
     }
     
@@ -82,8 +91,17 @@ public class ListControlRenderer extends TemplatedRenderer {
      * @param iter
      * @return
      */
-    public String onDbClick(ListModelIterator iter){
+    public String onDblClick(ListControl list, Integer index){
         return "";
     }
-    
+
+    /**
+     * Render the double click event
+     * @param iter
+     * @return
+     */
+    public String onRightClick(ListControl list, Integer index){
+        return "";
+    }
+
 }
