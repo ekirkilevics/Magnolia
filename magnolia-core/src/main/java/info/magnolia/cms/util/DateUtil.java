@@ -12,10 +12,12 @@
  */
 package info.magnolia.cms.util;
 
-import java.text.SimpleDateFormat;
+import info.magnolia.cms.beans.runtime.MgnlContext;
+
 import java.util.Date;
 
 import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.commons.lang.time.FastDateFormat;
 
 
 /**
@@ -37,7 +39,20 @@ public class DateUtil {
         if (formatPattern == null) {
             formatPattern = FORMAT_DEFAULTPATTERN;
         }
-        String fd = DateFormatUtils.formatUTC(date,formatPattern);
+        String fd = DateFormatUtils.formatUTC(date, formatPattern);
         return fd;
+    }
+
+    /**
+     * Uses the current locale (user) to format the date and time
+     * @param val Date or Calendar
+     * @return the String
+     */
+    public static String formatDateTime(Object val) {
+        FastDateFormat format = FastDateFormat.getDateTimeInstance(
+            FastDateFormat.SHORT,
+            FastDateFormat.SHORT,
+            MgnlContext.getLocale());
+        return format.format(val);
     }
 }
