@@ -90,7 +90,7 @@ public class ContextMenu extends ControlSuper {
      */
     public String getHtml() {
         StringBuffer html = new StringBuffer();
-        html.append("<div id=\"" + getName() + "_DivMenu\" class=\"mgnlTreeMenu\" >"); //$NON-NLS-1$ //$NON-NLS-2$
+        html.append("<div id=\"" + getName() + "_DivMenu\" class=\"mgnlTreeMenu\" onmouseover=\"" + getName() + ".keepShowing();\" onmouseout=\"" + getName() + ".hide();\" >"); //$NON-NLS-1$ //$NON-NLS-2$
         int counter = 0;
 
         for (int i = 0; i < this.getMenuItems().size(); i++) {
@@ -105,6 +105,7 @@ public class ContextMenu extends ControlSuper {
                 html.append(item.getHtml());
                 counter++;
             }
+            html.append("\n");
         }
 
         html.append("</div>"); //$NON-NLS-1$
