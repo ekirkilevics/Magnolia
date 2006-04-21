@@ -17,8 +17,10 @@ import info.magnolia.cms.beans.runtime.MgnlContext;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +36,9 @@ import freemarker.template.Template;
  */
 public class FreeMarkerUtil {
 
+    /**
+     * The internal configuration used
+     */
     private static Configuration cfg;
 
     private static Logger log = LoggerFactory.getLogger(FreeMarkerUtil.class);
@@ -44,18 +49,64 @@ public class FreeMarkerUtil {
         cfg.setClassForTemplateLoading(FreeMarkerUtil.class, "/");
     }
 
+    /**
+     * Process this template with the passed data
+     * @param name
+     * @param data
+     * @return the resuling string
+     */
     public static String process(String name, Map data) {
         Writer writer = new StringWriter();
         process(name, data, writer);
         return writer.toString();
     }
 
+    /**
+     * Uses the class of the object to create the templates name and passes the object under the name 'this'
+     * @param thisObj
+     * @return the resuling string
+     */
+    public static String process(Object thisObj) {
+        return process(thisObj.getClass(), thisObj, "html");
+    }
+
+    /**
+     * Uses the class to create the templates name and passes the object under the name 'this'
+     * @param klass
+     * @param thisObj
+     * @param ext
+     * @return
+     */
+    public static String process(Class klass, Object thisObj, String ext) {
+        Map data = new HashMap();
+        data.put("this", thisObj);
+        return process(klass, data, ext);
+    }
+
+    /**
+     * Uses the class to create the templates name.
+     * @param klass
+     * @param data
+     * @param ext
+     * @return
+     */
+    public static String process(Class klass, Map data, String ext) {
+        String name = "/" + StringUtils.replace(klass.getName(), ".", "/") + "." + ext;
+        return process(name, data);
+    }
+
+    /**
+     * Process the template with the data and writes the result to the writer.
+     * @param name
+     * @param data
+     * @param writer
+     */
     public static void process(String name, Map data, Writer writer) {
         try {
             Template tmpl = cfg.getTemplate(name);
             // add some usfull default data
             data.put("contextPath", MgnlContext.getContextPath());
-            if(AlertUtil.isMessageSet()){
+            if (AlertUtil.isMessageSet()) {
                 data.put("message", AlertUtil.getMessage());
             }
             tmpl.process(data, writer);
