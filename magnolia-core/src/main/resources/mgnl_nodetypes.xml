@@ -71,6 +71,7 @@
     <nodeType name="mgnl:metaData" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
         <supertypes>
             <supertype>nt:hierarchyNode</supertype>
+            <supertype>mix:versionable</supertype>
         </supertypes>
         <propertyDefinition name="*" requiredType="undefined" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
     </nodeType>
