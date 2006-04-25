@@ -12,12 +12,266 @@
  */
 package info.magnolia.cms.core.version;
 
+import info.magnolia.cms.core.*;
+import info.magnolia.cms.util.Rule;
+import info.magnolia.cms.util.RuleBasedContentFilter;
+import info.magnolia.cms.util.ExclusiveWrite;
+import info.magnolia.cms.beans.runtime.MgnlContext;
+
+import javax.jcr.version.Version;
+import javax.jcr.version.VersionHistory;
+import javax.jcr.version.VersionIterator;
+import javax.jcr.version.VersionException;
+import javax.jcr.UnsupportedRepositoryOperationException;
+import javax.jcr.RepositoryException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.apache.commons.io.IOUtils;
+
+import java.io.*;
+
 /**
  * @author Sameer Charles
  * $Id$
  */
-public interface VersionManager {
+public class VersionManager {
 
-    
+    /**
+     * version data base
+     * */
+    public static final String VERSION_WORKSPACE = "mgnlVersion";
+
+    /**
+     * version workspace system path
+     * */
+    protected static final String TMP_REFERENCED_NODES = "mgnl:tmpReferencedNodes";
+
+    /**
+     * string reference property value
+     * */
+    protected static final String REFERENCE_VALUE = "mgnl:Reference";
+
+    /**
+     * Logger.
+     */
+    private static Logger log = LoggerFactory.getLogger(VersionManager.class);
+
+    /**
+     * singleton
+     * */
+    private static final VersionManager thisInstance = new VersionManager();
+
+    /**
+     * do not instanciate
+     * */
+    private VersionManager() {
+        try {
+            this.createInitialStructure();
+        } catch (RepositoryException re) {
+            log.error("Failed to initialize VersionManager");
+            log.error(re.getMessage(), re);
+        }
+    }
+
+    /**
+     * create structure needed for version store workspace
+     * */
+    private void createInitialStructure() throws RepositoryException {
+        HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(VERSION_WORKSPACE);
+        if (!hm.isExist("/"+VersionManager.TMP_REFERENCED_NODES)) {
+            hm.createContent("",VersionManager.TMP_REFERENCED_NODES, ItemType.SYSTEM.getSystemName());
+        }
+    }
+
+    /**
+     * get instance
+     * */
+    public static VersionManager getInstance() {
+        return thisInstance;
+    }
+
+    /**
+     * add version of the specified node and all child nodes while ignoring the same node type
+     *
+     * @param node to be versioned
+     * @return newly created version node
+     * @throws UnsupportedOperationException if repository implementation does not support Versions API
+     * @throws javax.jcr.RepositoryException if any repository error occurs
+     */
+    public Version addVersion(Content node) throws UnsupportedRepositoryOperationException, RepositoryException {
+        Rule rule = new Rule(new String[] {node.getNodeType().getName()});
+        rule.reverse();
+        return this.addVersion(node, rule);
+    }
+
+    /**
+     * add version of the specified node and all child nodes while ignoring the same node type
+     *
+     * @param node to be versioned
+     * @return newly created version node
+     * @throws UnsupportedOperationException if repository implementation does not support Versions API
+     * @throws javax.jcr.RepositoryException if any repository error occurs
+     */
+    public Version addVersion(Content node, Rule rule)
+            throws UnsupportedRepositoryOperationException, RepositoryException {
+        try {
+            return this.createVersion(node, rule);
+        } catch (RepositoryException re) {
+            // since add version is synchronized on a singleton object, its safe to revert all changes made in
+            // the session attached to workspace - mgnlVersion
+            log.error("failed to copy versionable node to version store, reverting all changes made in this session");
+            getHierarchyManager().refresh(false);
+            throw re;
+        }
+    }
+
+    /**
+     * create version of the specified node and all child nodes based on the given <code>Rule</code>
+     *
+     * @param node to be versioned
+     * @param rule
+     * @return newly created version node
+     * @throws UnsupportedOperationException if repository implementation does not support Versions API
+     * @throws javax.jcr.RepositoryException if any repository error occurs
+     */
+    private synchronized Version createVersion(Content node, Rule rule)
+            throws UnsupportedRepositoryOperationException, RepositoryException {
+        CopyUtil.getInstance().copyToversion(node, new RuleBasedContentFilter(rule));
+        Content versionedNode = this.getVersionedNode(node);
+        // add serialized rule which was used to create this version
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            ObjectOutput objectOut = new ObjectOutputStream(out);
+            objectOut.writeObject(rule);
+            objectOut.flush();
+            objectOut.close();
+            NodeData nodeData;
+            if (!versionedNode.hasNodeData("Rule"))
+                nodeData = versionedNode.createNodeData("Rule");
+            else
+                nodeData = versionedNode.getNodeData("Rule");
+            nodeData.setValue(out.toString());
+        } catch (IOException e) {
+            throw new RepositoryException("Unable to add serialized Rule to the versioned content");
+        }
+        versionedNode.getMetaData().setProperty(MetaData.VERSION_USER, MgnlContext.getUser().getName());
+        versionedNode.save();
+        // add version
+        Version newVersion = versionedNode.getJCRNode().checkin();
+        versionedNode.getJCRNode().checkout();
+        return newVersion;
+    }
+
+    /***
+     * get node from version store
+     * @param node
+     * */
+    private Content getVersionedNode(Content node) throws RepositoryException {
+        return MgnlContext.getHierarchyManager(VERSION_WORKSPACE).getContentByUUID(node.getUUID());
+    }
+
+    /**
+     * get history of this node as recorded in the version store
+     *
+     * @param node
+     * @return version history of the given node
+     * @throws UnsupportedOperationException if repository implementation does not support Versions API
+     * @throws javax.jcr.RepositoryException if any repository error occurs
+     */
+    public VersionHistory getVersionHistory(Content node)
+            throws UnsupportedRepositoryOperationException, RepositoryException {
+        Content versionedNode = this.getVersionedNode(node);
+        if (versionedNode == null) {
+            // node does not exist in version store so no version history
+            return null;
+        }
+        return versionedNode.getJCRNode().getVersionHistory();
+    }
+
+    /**
+     * get named version
+     * @param node
+     * @param name
+     * @return version node
+     * @throws UnsupportedOperationException if repository implementation does not support Versions API
+     * @throws javax.jcr.RepositoryException if any repository error occurs
+     * */
+    public Version getVersion(Content node, String name)
+            throws UnsupportedRepositoryOperationException, RepositoryException {
+        VersionHistory history = this.getVersionHistory(node);
+        if (history != null) {
+            return this.getVersionHistory(node).getVersion(name);
+        }
+        log.error("Node "+node.getHandle()+" was never versioned");
+        return null;
+    }
+
+    /**
+     * get all versions
+     *
+     * @param node
+     * @return Version iterator retreived from version history
+     * @throws UnsupportedOperationException if repository implementation does not support Versions API
+     * @throws javax.jcr.RepositoryException if any repository error occurs
+     */
+    public VersionIterator getAllVersions(Content node)
+            throws UnsupportedRepositoryOperationException, RepositoryException {
+        Content versionedNode = this.getVersionedNode(node);
+        if (versionedNode == null) {
+            // node does not exist in version store so no versions
+            return null;
+        }
+        return versionedNode.getJCRNode().getVersionHistory().getAllVersions();
+    }
+
+    /**
+     * restore specified version
+     *
+     * @param node to be restored
+     * @param version to be used
+     * @param removeExisting
+     * @throws javax.jcr.version.VersionException if the specified <code>versionName</code> does not exist in this
+     * node's version history
+     * @throws javax.jcr.RepositoryException if an error occurs
+     * @throws javax.jcr.version.VersionException
+     */
+    public synchronized void restore(Content node, Version version, boolean removeExisting)
+            throws VersionException, UnsupportedRepositoryOperationException, RepositoryException {
+        // get the cloned node from version store
+        Content versionedNode = this.getVersionedNode(node);
+        versionedNode.getJCRNode().restore(version, removeExisting);
+        versionedNode.getJCRNode().checkout();
+        // if restored, update original node with the restored node and its subtree
+        String ruleString = versionedNode.getNodeData("Rule").getString();
+        ByteArrayInputStream inStream = new ByteArrayInputStream(ruleString.getBytes());
+        try {
+            ObjectInput objectInput = new ObjectInputStream(inStream);
+            Rule rule = (Rule) objectInput.readObject();
+            try {
+                synchronized(ExclusiveWrite.getInstance()) {
+                    CopyUtil.getInstance().copyFromVersion(versionedNode, node, new RuleBasedContentFilter(rule));
+                    node.save();
+                }
+            } catch (RepositoryException re) {
+                log.error("failed to restore versioned node, reverting all changes make to this node");
+                node.refresh(false);
+                throw re;
+            }
+        } catch (IOException e) {
+            throw new RepositoryException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RepositoryException(e);
+        } finally {
+            IOUtils.closeQuietly(inStream);
+        }
+    }
+
+    /**
+     * get version store hierarchy manager
+     * */
+    private HierarchyManager getHierarchyManager() {
+        return MgnlContext.getHierarchyManager(VersionManager.VERSION_WORKSPACE);
+    }
 
 }

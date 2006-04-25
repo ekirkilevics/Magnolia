@@ -18,6 +18,8 @@ import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.core.version.ContentVersion;
+import info.magnolia.cms.core.version.VersionManager;
+import info.magnolia.cms.util.Rule;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -128,6 +130,7 @@ public class Content extends ContentHandler implements Cloneable {
         this.setRootNode(rootNode);
         this.node = this.rootNode.addNode(this.path, contentType);
         this.setAccessManager(manager);
+        this.getMetaData().setProperty(MetaData.NAME, this.getName());
         this.addMixin(ItemType.MIX_VERSIONABLE);
     }
 
@@ -641,7 +644,6 @@ public class Content extends ContentHandler implements Cloneable {
      * Returns the first child with the given name, any node type
      * @param namePattern child node name
      * @return first found node with the given name or <code>null</code> if not found
-     * @throws RepositoryException
      */
     public Content getChildByName(String namePattern) {
         Collection children = null;
@@ -943,8 +945,8 @@ public class Content extends ContentHandler implements Cloneable {
      */
     public void restore(String versionName, boolean removeExisting) throws VersionException,
         UnsupportedRepositoryOperationException, RepositoryException {
-        this.node.restore(versionName, removeExisting);
-        this.checkOut();
+        Version version = this.getVersionHistory().getVersion(versionName);
+        this.restore(version,  removeExisting);
     }
 
     /**
@@ -956,8 +958,7 @@ public class Content extends ContentHandler implements Cloneable {
      */
     public void restore(Version version, boolean removeExisting) throws VersionException,
         UnsupportedRepositoryOperationException, RepositoryException {
-        this.node.restore(version, removeExisting);
-        this.checkOut();
+        VersionManager.getInstance().restore(this, version, removeExisting);
     }
 
     /**
@@ -970,8 +971,7 @@ public class Content extends ContentHandler implements Cloneable {
      */
     public void restore(Version version, String relPath, boolean removeExisting) throws VersionException,
         UnsupportedRepositoryOperationException, RepositoryException {
-        this.node.restore(version, relPath, removeExisting);
-        this.checkOut();
+        throw new UnsupportedRepositoryOperationException("Not implemented in 3.0 Beta");
     }
 
     /**
@@ -993,30 +993,18 @@ public class Content extends ContentHandler implements Cloneable {
      * @throws RepositoryException if an error occurs
      */
     public Version addVersion() throws UnsupportedRepositoryOperationException, RepositoryException {
-        this.getMetaData().setProperty(MetaData.VERSION_USER, MgnlContext.getUser().getName());
-        this.getMetaData().setProperty(MetaData.NAME, this.getName());
-        // save first
-        this.save();
-        // now version
-        Version version = this.checkIn();
-        this.checkOut();
-        return version;
+        return VersionManager.getInstance().addVersion(this);
     }
 
     /**
-     * @return checked in version
+     * add version leaving the node checked out
+     * @param rule to be used to collect content
+     * @throws UnsupportedRepositoryOperationException
      * @throws RepositoryException if an error occurs
+     * @see info.magnolia.cms.util.Rule
      */
-    protected Version checkIn() throws UnsupportedRepositoryOperationException, RepositoryException {
-        return this.node.checkin();
-    }
-
-    /**
-     * check out for further write operations
-     * @throws RepositoryException if an error occurs
-     */
-    protected void checkOut() throws UnsupportedRepositoryOperationException, RepositoryException {
-        this.node.checkout();
+    public Version addVersion(Rule rule) throws UnsupportedRepositoryOperationException, RepositoryException {
+        return VersionManager.getInstance().addVersion(this, rule);
     }
 
     /**
@@ -1033,7 +1021,7 @@ public class Content extends ContentHandler implements Cloneable {
      * @return true if the node is checked out
      * @throws RepositoryException
      */
-    public boolean isCheckedOut() throws RepositoryException {
+    protected boolean isCheckedOut() throws RepositoryException {
         return this.node.isCheckedOut();
     }
 
@@ -1055,7 +1043,7 @@ public class Content extends ContentHandler implements Cloneable {
      * @throws RepositoryException if an error occurs
      */
     public VersionHistory getVersionHistory() throws UnsupportedRepositoryOperationException, RepositoryException {
-        return this.node.getVersionHistory();
+        return VersionManager.getInstance().getVersionHistory(this);
     }
 
     /**
@@ -1063,7 +1051,7 @@ public class Content extends ContentHandler implements Cloneable {
      * @throws RepositoryException if an error occurs
      */
     public VersionIterator getAllVersions() throws UnsupportedRepositoryOperationException, RepositoryException {
-        return this.getVersionHistory().getAllVersions();
+        return VersionManager.getInstance().getAllVersions(this);
     }
 
     /**
@@ -1083,7 +1071,7 @@ public class Content extends ContentHandler implements Cloneable {
      * @see ContentVersion
      */
     public ContentVersion getVersionedContent(String versionName) throws RepositoryException {
-        return new info.magnolia.cms.core.version.ContentVersion(this.getVersionHistory().getVersion(versionName));
+        return new ContentVersion(this.getVersionHistory().getVersion(versionName));
     }
 
     /**
@@ -1309,6 +1297,14 @@ public class Content extends ContentHandler implements Cloneable {
      */
     public boolean isLocked() throws RepositoryException {
         return this.node.isLocked();
+    }
+
+    /**
+     * get workspace to which this node attached to
+     * @throws RepositoryException if unable to get this node session
+     * */
+    public Workspace getWorkspace() throws RepositoryException {
+        return this.node.getSession().getWorkspace();
     }
 
     /**
