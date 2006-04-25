@@ -15,6 +15,7 @@ package info.magnolia.cms.util;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.io.Serializable;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -23,9 +24,14 @@ import org.apache.commons.lang.StringUtils;
  * This class defines the rules to be used by the activation content aggregator this is simply a collection of node
  * types
  * @author Sameer Charles
- * @version $Revision: 1633 $ ($Author: scharles $)
+ * @version $Revision$ ($Author$)
  */
-public class Rule {
+public class Rule implements Serializable {
+
+    /**
+     * generated Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 43115354810497L;
 
     /**
      * list of node types allowed
@@ -92,10 +98,7 @@ public class Rule {
      */
     public boolean isAllowed(String nodeType) {
         if (this.reverse) {
-            if (this.allowedTypes.contains(nodeType)) {
-                return false;
-            }
-            return true;
+            return !this.allowedTypes.contains(nodeType);
         }
         else if (this.allowedTypes.contains(nodeType)) {
             return true;
