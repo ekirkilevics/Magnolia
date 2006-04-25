@@ -52,7 +52,7 @@ public class ParametersSetterHelper {
 
                 else {
                     log.error("cannot find parameter " + expected[i] + " for command " + command);
-                    throw new Exception("cannot find parameter " + expected[i] + " for command " + command);
+                    log.warn("cannot find parameter " + expected[i] + " for command " + command);
                 }
             }
         }
@@ -71,7 +71,7 @@ public class ParametersSetterHelper {
             // check
             for (int i = 0; i < expected.length; i++) {
                 if (params.get(expected[i]) == null)
-                    throw new Exception("cannot find parameter " + expected[i] + " for command " + command);
+                  log.warn("cannot find parameter " + expected[i] + " for command " + command);
             }
 
         }
