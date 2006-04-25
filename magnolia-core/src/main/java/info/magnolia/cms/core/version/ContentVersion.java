@@ -15,13 +15,9 @@ package info.magnolia.cms.core.version;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
-import info.magnolia.cms.util.DumperUtil;
-
-import java.io.PrintWriter;
 import java.util.Calendar;
 
 import javax.jcr.RepositoryException;
-import javax.jcr.nodetype.NodeType;
 import javax.jcr.version.Version;
 import javax.jcr.version.VersionHistory;
 
@@ -36,7 +32,7 @@ public class ContentVersion extends Content {
      * version node (nt:version)
      */
     private Version state;
-    
+
     /**
      * package private constructor
      * @param thisVersion
@@ -54,7 +50,7 @@ public class ContentVersion extends Content {
     private void init() throws RepositoryException {
         this.setNode(this.state.getNode(ItemType.JCR_FROZENNODE));
     }
-    
+
     /**
      * Get creation date of this version
      * @throws RepositoryException
@@ -63,11 +59,11 @@ public class ContentVersion extends Content {
     public Calendar getCreated() throws RepositoryException {
         return this.state.getCreated();
     }
-    
+
     /**
      * Return the name of the version represented by this object
      * @return the versions name
-     * @throws RepositoryException 
+     * @throws RepositoryException
      */
     public String getVersionLabel() throws RepositoryException{
         return this.state.getName();
