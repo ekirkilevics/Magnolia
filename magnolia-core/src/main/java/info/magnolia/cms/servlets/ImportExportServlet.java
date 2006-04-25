@@ -6,23 +6,13 @@ import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ie.DataTransporter;
-import info.magnolia.cms.core.ie.filters.VersionFilter;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.commons.lang.math.NumberUtils;
-import org.apache.xml.serialize.OutputFormat;
-import org.apache.xml.serialize.XMLSerializer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.Session;
@@ -30,7 +20,9 @@ import javax.jcr.Workspace;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.text.MessageFormat;
 import java.util.Iterator;
 
@@ -88,15 +80,10 @@ public class ImportExportServlet extends ContextSensitiveServlet {
      */
     private static final String PARAM_EXPORT_ACTION = "exportxml"; //$NON-NLS-1$
 
-    /**
-     * Number of space for indentation
-     */
-    private static final int INDENT_VALUE = 2; //$NON-NLS-1$
-
-    /**
-     * Logger.
-     */
-    static Logger log = LoggerFactory.getLogger(ImportExportServlet.class);
+    private static final String PARAM_EXTENSION = "ext";
+    public static final String MIME_TEXT_XML = "text/xml";
+    public static final String MIME_GZIP = "application/x-gzip";
+    public static final String MIME_APPLICATION_ZIP = "application/zip";
 
     /**
      * @see javax.servlet.http.HttpServlet#doGet(HttpServletRequest, HttpServletResponse)
@@ -119,6 +106,11 @@ public class ImportExportServlet extends ContextSensitiveServlet {
         if (StringUtils.isEmpty(basepath)) {
             basepath = "/"; //$NON-NLS-1$
         }
+        String extension = request.getParameter(PARAM_EXTENSION);
+        if (StringUtils.isEmpty(extension)) {
+            extension = DataTransporter.XML;
+        }
+
 
         boolean keepVersionHistory = BooleanUtils.toBoolean(request.getParameter(PARAM_KEEPVERSIONS));
         boolean format = BooleanUtils.toBoolean(request.getParameter(PARAM_FORMAT));
@@ -126,7 +118,7 @@ public class ImportExportServlet extends ContextSensitiveServlet {
         if (request.getParameter(PARAM_EXPORT_ACTION) != null) {
 
             if (checkPermissions(request, repository, basepath, Permission.WRITE)) {
-                executeExport(request, response, repository, basepath, format, keepVersionHistory);
+                executeExport(response, repository, basepath, format, keepVersionHistory, extension);
                 return;
             }
 
@@ -137,20 +129,19 @@ public class ImportExportServlet extends ContextSensitiveServlet {
         }
 
         if (StringUtils.contains(request.getRequestURI(), "import")) { //$NON-NLS-1$
-            displayImportForm(request, response.getWriter(), repository, basepath);
+            displayImportForm(response.getWriter(), repository, basepath);
         } else {
-            displayExportForm(request, response.getWriter(), repository, basepath);
+            displayExportForm(response.getWriter(), repository, basepath);
         }
     }
 
     /**
      * Display a simple form for importing/exporting data.
      *
-     * @param response   HttpServletResponse
      * @param repository selected repository
      * @param basepath   base path in repository (extracted from request parameter or default)
      */
-    private void displayExportForm(HttpServletRequest request, PrintWriter out, String repository, String basepath) {
+    private void displayExportForm(PrintWriter out, String repository, String basepath) {
 
         out.println("<html><head><title>Magnolia</title>"); //$NON-NLS-1$
         // @todo FIXME! out.println(new
@@ -162,10 +153,11 @@ public class ImportExportServlet extends ContextSensitiveServlet {
         out.println("</h2>"); //$NON-NLS-1$
         out.println("<form method=\"get\" action=\"\">"); //$NON-NLS-1$
 
-        writeRepositoryField(request, out, repository);
-        writeBasePathField(request, out, basepath);
-        writeKeepVersionField(request, out);
-        writeFormatField(request, out);
+        writeRepositoryField(out, repository);
+        writeBasePathField(out, basepath);
+        writeKeepVersionField(out);
+        writeFormatField(out);
+        writeExtensionField(out);
 
         out.println("<input type=\"submit\" name=\"" //$NON-NLS-1$
                 + PARAM_EXPORT_ACTION
@@ -179,11 +171,10 @@ public class ImportExportServlet extends ContextSensitiveServlet {
     /**
      * Display a simple form for importing/exporting data.
      *
-     * @param response   HttpServletResponse
      * @param repository selected repository
      * @param basepath   base path in repository (extracted from request parameter or default)
      */
-    private void displayImportForm(HttpServletRequest request, PrintWriter out, String repository, String basepath) {
+    private void displayImportForm(PrintWriter out, String repository, String basepath) {
 
         out.println("<html><head><title>Magnolia</title>"); //$NON-NLS-1$
         // @todo FIXME! out.println(new
@@ -195,9 +186,9 @@ public class ImportExportServlet extends ContextSensitiveServlet {
         out.println("</h2>"); //$NON-NLS-1$
         out.println("<form method=\"post\" action=\"\" enctype=\"multipart/form-data\">"); //$NON-NLS-1$
 
-        writeRepositoryField(request, out, repository);
-        writeBasePathField(request, out, basepath);
-        writeKeepVersionField(request, out);
+        writeRepositoryField(out, repository);
+        writeBasePathField(out, basepath);
+        writeKeepVersionField(out);
         out.println(MessagesManager.get("importexport.file") //$NON-NLS-1$
                 + " <input type=\"file\" name=\"" + PARAM_FILE + "\" /><br/>"); //$NON-NLS-1$//$NON-NLS-2$
 
@@ -238,7 +229,7 @@ public class ImportExportServlet extends ContextSensitiveServlet {
      * @param out
      * @param basepath
      */
-    private void writeBasePathField(HttpServletRequest request, PrintWriter out, String basepath) {
+    private void writeBasePathField(PrintWriter out, String basepath) {
         out.println(MessagesManager.get("importexport.basepath") //$NON-NLS-1$
                 + " <input name=\"" //$NON-NLS-1$
                 + PARAM_PATH
@@ -250,7 +241,7 @@ public class ImportExportServlet extends ContextSensitiveServlet {
     /**
      * @param out
      */
-    private void writeKeepVersionField(HttpServletRequest request, PrintWriter out) {
+    private void writeKeepVersionField(PrintWriter out) {
         out.println(MessagesManager.get("importexport.keepversions") //$NON-NLS-1$
                 + " <input name=\"" //$NON-NLS-1$
                 + PARAM_KEEPVERSIONS
@@ -260,18 +251,30 @@ public class ImportExportServlet extends ContextSensitiveServlet {
     /**
      * @param out
      */
-    private void writeFormatField(HttpServletRequest request, PrintWriter out) {
+    private void writeFormatField(PrintWriter out) {
         out.println(MessagesManager.get("importexport.format") //$NON-NLS-1$
                 + " <input name=\"" //$NON-NLS-1$
                 + PARAM_FORMAT
                 + "\" value=\"true\" type=\"checkbox\"/><br/>"); //$NON-NLS-1$
     }
 
+    private void writeExtensionField(PrintWriter out) {
+        out.println(MessagesManager.get("importexport.extension") //$NON-NLS-1$
+                + " <select name=\"" //$NON-NLS-1$
+                + PARAM_EXTENSION
+                + "\">"); //$NON-NLS-1$
+        out.println("<option selected=\"selected\" value=\"" + DataTransporter.XML + "\">Xml</option>");
+        out.println("<option value=\"" + DataTransporter.ZIP + "\">Zip</option>");
+        out.println("<option value=\"" + DataTransporter.GZ + "\">Gzip</option>");
+        out.println("</select>"); //$NON-NLS-1$
+        out.println("<br/>"); //$NON-NLS-1$
+    }
+
     /**
      * @param out
      * @param repository
      */
-    private void writeRepositoryField(HttpServletRequest request, PrintWriter out, String repository) {
+    private void writeRepositoryField(PrintWriter out, String repository) {
         out.println(MessagesManager.get("importexport.repository") //$NON-NLS-1$
                 + " <select name=\"" //$NON-NLS-1$
                 + PARAM_REPOSITORY
@@ -353,7 +356,6 @@ public class ImportExportServlet extends ContextSensitiveServlet {
     /**
      * Actually perform export. The generated file is sent to the client.
      *
-     * @param request            HttpServletRequest
      * @param response           HttpServletResponse
      * @param repository         selected repository
      * @param basepath           base path in repository
@@ -361,94 +363,31 @@ public class ImportExportServlet extends ContextSensitiveServlet {
      * @param keepVersionHistory if <code>false</code> version info will be stripped from the exported document
      * @throws IOException for errors while accessing the servlet output stream
      */
-    private void executeExport(HttpServletRequest request, HttpServletResponse response, String repository,
-                               String basepath, boolean format, boolean keepVersionHistory) throws IOException {
+    private void executeExport(HttpServletResponse response, String repository,
+                               String basepath, boolean format, boolean keepVersionHistory, String ext) throws IOException {
         HierarchyManager hr = MgnlContext.getHierarchyManager(repository);
         Workspace ws = hr.getWorkspace();
-        OutputStream stream = response.getOutputStream();
-        response.setContentType("text/xml"); //$NON-NLS-1$
-        response.setCharacterEncoding("UTF-8"); //$NON-NLS-1$
+        Session session = ws.getSession();
+
+        if (ext.equalsIgnoreCase(DataTransporter.ZIP))
+            response.setContentType(MIME_APPLICATION_ZIP);
+        else if (ext.equalsIgnoreCase(DataTransporter.GZ))
+            response.setContentType(MIME_GZIP);
+        else {
+            response.setContentType(MIME_TEXT_XML); //$NON-NLS-1$
+            response.setCharacterEncoding("UTF-8"); //$NON-NLS-1$
+        }
+
         String pathName = StringUtils.replace(basepath, "/", "."); //$NON-NLS-1$ //$NON-NLS-2$
         if (".".equals(pathName)) { //$NON-NLS-1$
             // root node
             pathName = StringUtils.EMPTY;
         }
-        response.setHeader("content-disposition", "attachment; filename=" + repository + pathName + ".xml"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-        Session session = ws.getSession();
-
-        try {
-            if (keepVersionHistory) {
-                // use exportSystemView in order to preserve property types
-                // http://issues.apache.org/jira/browse/JCR-115
-                if (!format) {
-                    session.exportSystemView(basepath, stream, false, false);
-                } else {
-                    parseAndFormat(stream, null, repository, basepath, format, session);
-                }
-            } else {
-                // use XMLSerializer and a SAXFilter in order to rewrite the
-                // file
-                XMLReader reader = new VersionFilter(XMLReaderFactory
-                        .createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName()));
-                parseAndFormat(stream, reader, repository, basepath, format, session);
-            }
-        }
-        catch (Exception e) {
-            throw new NestableRuntimeException(e);
-        }
-
-        stream.flush();
-        IOUtils.closeQuietly(stream);
+        response.setHeader("content-disposition", "attachment; filename=" + repository + pathName + DataTransporter.XML + ext); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        OutputStream baseOutputStream = response.getOutputStream();
+        DataTransporter.executeExport(baseOutputStream, keepVersionHistory, format, session, basepath, repository, ext);
     }
 
-    /**
-     * This export the content of the repository, and format it if necessary
-     *
-     * @param stream     the stream to write the content to
-     * @param reader     the reader to use to parse the xml content (so that we can perform filtering), if null instanciate
-     *                   a default one
-     * @param repository the repository to export
-     * @param basepath   the basepath in the repository
-     * @param format     should we format the xml
-     * @param session    the session to use to export the data from the repository
-     * @throws Exception if anything goes wrong ...
-     */
-    private void parseAndFormat(OutputStream stream, XMLReader reader, String repository, String basepath,
-                                boolean format, Session session) throws Exception {
-
-        if (reader == null) {
-            reader = XMLReaderFactory.createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName());
-        }
-
-        // write to a temp file and then re-read it to remove version history
-        File tempFile = File.createTempFile("export-" + repository + session.getUserID(), "xml"); //$NON-NLS-1$ //$NON-NLS-2$
-        OutputStream fileStream = new FileOutputStream(tempFile);
-
-        try {
-            session.exportSystemView(basepath, fileStream, false, false);
-        }
-        finally {
-            IOUtils.closeQuietly(fileStream);
-        }
-
-        InputStream fileInputStream = new FileInputStream(tempFile);
-
-        OutputFormat forma = new OutputFormat();
-        if (format) {
-            forma.setIndenting(true);
-            forma.setIndent(INDENT_VALUE);
-        }
-        reader.setContentHandler(new XMLSerializer(stream, forma));
-
-        reader.parse(new InputSource(fileInputStream));
-
-        IOUtils.closeQuietly(fileInputStream);
-
-        if (!tempFile.delete()) {
-            log.error("Could not delete temporary export file..." + tempFile.getAbsolutePath()); //$NON-NLS-1$
-        }
-    }
 
     /**
      * Uses access manager to authorise this request.
@@ -458,11 +397,9 @@ public class ImportExportServlet extends ContextSensitiveServlet {
      */
     protected boolean checkPermissions(HttpServletRequest request, String repository, String basePath,
                                        long permissionType) {
-        if (MgnlContext.getAccessManager(repository) != null) {
-            if (!MgnlContext.getAccessManager(ContentRepository.WEBSITE).isGranted(basePath, permissionType)) {
+        if (MgnlContext.getAccessManager(repository) != null)
+            if (!MgnlContext.getAccessManager(ContentRepository.WEBSITE).isGranted(basePath, permissionType))
                 return false;
-            }
-        }
         return true;
     }
 }

@@ -17,9 +17,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jcr.ImportUUIDBehavior;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.*;
@@ -91,7 +89,7 @@ public final class Bootstrapper {
                 File[] files = xmldir.listFiles(new FilenameFilter() {
 
                     public boolean accept(File dir, String name) {
-                        return name.endsWith(".xml"); //$NON-NLS-1$
+                        return name.endsWith(DataTransporter.XML) || name.endsWith(DataTransporter.ZIP) || name.endsWith(DataTransporter.GZ); //$NON-NLS-1$
                     }
                 });
 
@@ -100,7 +98,7 @@ public final class Bootstrapper {
             }
 
             if (xmlfileset.isEmpty()) {
-                log.info("No xml files found in directory [{}], skipping...", repository); //$NON-NLS-1$
+                log.info("No bootstrap files found in directory [{}], skipping...", repository); //$NON-NLS-1$
                 continue;
             }
 
@@ -122,17 +120,7 @@ public final class Bootstrapper {
             try {
                 for (int k = 0; k < files.length; k++) {
                     File xmlfile = files[k];
-
-                    String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(StringUtils
-                            .substringBeforeLast(xmlfile.getName(), "."), "."), "."); //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
-                    pathName = "/" + StringUtils.replace(pathName, ".", "/");
-                    DataTransporter.executeImport(
-                            pathName,
-                            repository,
-                            new FileInputStream(xmlfile),
-                            xmlfile.getName(),
-                            false,
-                            ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING, true, true);
+                    DataTransporter.executeBootstrapImport(xmlfile, repository);
                 }
 
             }
@@ -154,5 +142,6 @@ public final class Bootstrapper {
 
         }
     }
+
 
 }
