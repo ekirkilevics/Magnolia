@@ -73,7 +73,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
     /**
      * stroe one expresion
      */
-    public void storeExpression(FlowExpression fe) throws PoolException {
+    public synchronized void storeExpression(FlowExpression fe) throws PoolException {
         try {
             Content root = hm.getRoot();
 
@@ -109,7 +109,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
     /**
      * remove one expresion 
      */
-    public void unstoreExpression(FlowExpression fe) throws PoolException {
+    public synchronized void unstoreExpression(FlowExpression fe) throws PoolException {
         try {
             // get root
             Content ret = findExpression(fe.getId());
