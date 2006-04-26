@@ -122,7 +122,7 @@ public class HierarchyManager {
     }
 
     /**
-     * Set access manager for this hierarchy.
+     * Set access manager for this hierarchy
      * @param accessManager
      */
     public void setAccessManager(AccessManager accessManager) {
