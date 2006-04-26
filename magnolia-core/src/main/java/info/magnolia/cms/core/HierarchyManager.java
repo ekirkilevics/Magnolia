@@ -130,6 +130,14 @@ public class HierarchyManager {
     }
 
     /**
+     * Get access manager
+     * @return accessmanager attached to this hierarchy
+     * */
+    public AccessManager getAccessManager() {
+        return this.accessManager;
+    }
+
+    /**
      * Set query manager for this hierarchy
      * @param queryManager
      */
