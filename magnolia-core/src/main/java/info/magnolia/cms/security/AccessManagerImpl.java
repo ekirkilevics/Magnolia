@@ -19,7 +19,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Sameer Charles
- * @version $Revision$ ($Author$)
+ * @version $Revision:2558 $ ($Author:scharles $)
  */
 public class AccessManagerImpl implements AccessManager {
 
@@ -47,6 +47,13 @@ public class AccessManagerImpl implements AccessManager {
      */
     public void setPermissionList(List permissions) {
         this.userPermissions = permissions;
+    }
+
+    /**
+     * Get permision list assigned to this access manager
+     */
+    public List getPermissionList() {
+        return this.userPermissions;
     }
 
     /**

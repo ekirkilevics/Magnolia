@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * @author Sameer Charles
- * @version $Revision$ ($Author$)
+ * @version $Revision:2558 $ ($Author:scharles $)
  */
 public interface AccessManager {
 
@@ -35,6 +35,11 @@ public interface AccessManager {
      * @param permissions
      */
     void setPermissionList(List permissions);
+
+    /**
+     * Get permision list assigned to this access manager
+     */
+    List getPermissionList();
 
     /**
      * Get permissions assigned to the given path.
