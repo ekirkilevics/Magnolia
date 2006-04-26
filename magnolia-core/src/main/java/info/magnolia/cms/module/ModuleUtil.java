@@ -15,15 +15,45 @@ package info.magnolia.cms.module;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.*;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.Path;
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.core.ie.DataTransporter;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ContentUtil;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.jcr.ImportUUIDBehavior;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.jdom.*;
+import org.jdom.Comment;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.Namespace;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
@@ -31,16 +61,9 @@ import org.jdom.xpath.XPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jcr.ImportUUIDBehavior;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import java.io.*;
-import java.util.*;
-
 
 /**
  * This is a util providing some methods for the registration process of a module.
- *
  * @author philipp
  * @version $Revision$ ($Author$)
  */
@@ -60,7 +83,6 @@ public final class ModuleUtil {
 
     /**
      * registers the properties in the repository
-     *
      * @param hm
      * @param name
      * @throws IOException
@@ -69,7 +91,7 @@ public final class ModuleUtil {
      * @throws AccessDeniedException
      */
     public static void registerProperties(HierarchyManager hm, String name) throws IOException, AccessDeniedException,
-            PathNotFoundException, RepositoryException {
+        PathNotFoundException, RepositoryException {
         Map map = new ListOrderedMap();
 
         // not using properties since they are not ordered
@@ -94,7 +116,7 @@ public final class ModuleUtil {
     }
 
     public static void registerProperties(HierarchyManager hm, Map map) throws AccessDeniedException,
-            PathNotFoundException, RepositoryException {
+        PathNotFoundException, RepositoryException {
         for (Iterator iter = map.keySet().iterator(); iter.hasNext();) {
             String key = (String) iter.next();
             String value = (String) map.get(key);
@@ -135,7 +157,8 @@ public final class ModuleUtil {
             if (StringUtils.isEmpty(pathName)) {
                 pathName = "/";
                 fullPath = "/" + nodeName;
-            } else {
+            }
+            else {
                 pathName = "/" + StringUtils.replace(pathName, ".", "/");
                 fullPath = pathName + "/" + nodeName;
             }
@@ -157,20 +180,20 @@ public final class ModuleUtil {
             }
             InputStream stream = ModuleUtil.class.getResourceAsStream(resourceName);
             DataTransporter.executeImport(
-                    pathName,
-                    repository,
-                    stream,
-                    name,
-                    false,
-                    ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING,
-                    true, true);
+                pathName,
+                repository,
+                stream,
+                name,
+                false,
+                ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING,
+                true,
+                true);
         }
     }
 
     /**
      * Extracts files of a jar and stores them in the magnolia file structure
-     *
-     * @param names  a list of resource names
+     * @param names a list of resource names
      * @param prefix prefix which is not part of the magolia path (in common 'mgnl-files')
      * @throws Exception io exception
      */
@@ -204,7 +227,8 @@ public final class ModuleUtil {
             String s = StringUtils.EMPTY;
             if (!targetFile.getParentFile().exists() && !targetFile.getParentFile().mkdirs()) {
                 s = "Can't create directories for " + targetFile.getAbsolutePath(); //$NON-NLS-1$
-            } else if (!targetFile.getParentFile().canWrite()) {
+            }
+            else if (!targetFile.getParentFile().canWrite()) {
                 s = "Can't write to " + targetFile.getAbsolutePath(); //$NON-NLS-1$
             }
             if (s.length() > 0) {
@@ -229,18 +253,17 @@ public final class ModuleUtil {
 
     /**
      * Create a minimal module configuration
-     *
-     * @param node      the module node
-     * @param name      module name
+     * @param node the module node
+     * @param name module name
      * @param className the class used
-     * @param version   version number of the module
+     * @param version version number of the module
      * @return the modified node (not yet stored)
      * @throws AccessDeniedException exception
      * @throws PathNotFoundException exception
-     * @throws RepositoryException   exception
+     * @throws RepositoryException exception
      */
-    public static Content createMinimalConfiguration(Content node, String name, String displayName, String className, String version)
-            throws AccessDeniedException, PathNotFoundException, RepositoryException {
+    public static Content createMinimalConfiguration(Content node, String name, String displayName, String className,
+        String version) throws AccessDeniedException, PathNotFoundException, RepositoryException {
         node.createNodeData("version").setValue(version); //$NON-NLS-1$
         node.createNodeData("name").setValue(name); //$NON-NLS-1$
         node.createNodeData("displayName").setValue(displayName); //$NON-NLS-1$
@@ -255,7 +278,6 @@ public final class ModuleUtil {
 
     /**
      * Register a servlet based on the definition of the modules xml descriptor
-     *
      * @param servlet
      * @throws JDOMException
      * @throws IOException
@@ -273,7 +295,6 @@ public final class ModuleUtil {
 
     /**
      * Register a servlet in the web.xml. The code checks if the servlet already exists
-     *
      * @param name
      * @param className
      * @param urlPatterns
@@ -282,13 +303,12 @@ public final class ModuleUtil {
      * @throws IOException
      */
     public static void registerServlet(String name, String className, String[] urlPatterns, String comment)
-            throws JDOMException, IOException {
+        throws JDOMException, IOException {
         registerServlet(name, className, urlPatterns, comment, null);
     }
 
     /**
      * Register a servlet in the web.xml including init parameters. The code checks if the servlet already exists
-     *
      * @param name
      * @param className
      * @param urlPatterns
@@ -298,12 +318,12 @@ public final class ModuleUtil {
      * @throws IOException
      */
     public static void registerServlet(String name, String className, String[] urlPatterns, String comment,
-                                       Hashtable initParams) throws JDOMException, IOException {
+        Hashtable initParams) throws JDOMException, IOException {
         // get the web.xml
         File source = new File(Path.getAppRootDir() + "/WEB-INF/web.xml");
         if (!source.exists()) {
             throw new FileNotFoundException("Failed to locate web.xml " //$NON-NLS-1$
-                    + source.getAbsolutePath());
+                + source.getAbsolutePath());
         }
         SAXBuilder builder = new SAXBuilder();
         Document doc = builder.build(source);
@@ -341,7 +361,8 @@ public final class ModuleUtil {
             }
 
             doc.getRootElement().addContent(node);
-        } else {
+        }
+        else {
             log.info("servlet " + name + " allready registered");
         }
         for (int i = 0; i < urlPatterns.length; i++) {
@@ -354,18 +375,18 @@ public final class ModuleUtil {
     }
 
     public static void registerServletMapping(Document doc, String name, String urlPattern, String comment)
-            throws JDOMException {
+        throws JDOMException {
         XPath xpath = XPath.newInstance("/webxml:web-app/webxml:servlet-mapping[webxml:servlet-name='"
-                + name
-                + "' and webxml:url-pattern='"
-                + urlPattern
-                + "']");
+            + name
+            + "' and webxml:url-pattern='"
+            + urlPattern
+            + "']");
         // must add the namespace and use it: there is no default namespace elsewise
         xpath.addNamespace("webxml", doc.getRootElement().getNamespace().getURI());
         Element node = (Element) xpath.selectSingleNode(doc);
 
         if (node == null) {
-            log.info("register servlet mapping [{0}] for servlet [{1}]", new Object[]{urlPattern, name});
+            log.info("register servlet mapping [{}] for servlet [{}]", urlPattern, name);
 
             // make a nice comment
             doc.getRootElement().addContent(new Comment(comment));
@@ -378,8 +399,9 @@ public final class ModuleUtil {
             node.addContent(new Element("servlet-name", ns).addContent(name));
             node.addContent(new Element("url-pattern", ns).addContent(urlPattern));
             doc.getRootElement().addContent(node);
-        } else {
-            log.info("servlet mapping [{0}] for servlet [{1}] allready registered", new Object[]{urlPattern, name});
+        }
+        else {
+            log.info("servlet mapping [{}] for servlet [{}] allready registered", urlPattern, name);
         }
     }
 
@@ -388,7 +410,7 @@ public final class ModuleUtil {
             File source = Path.getRepositoriesConfigFile();
             if (!source.exists()) {
                 throw new FileNotFoundException("Failed to locate magnolia repositories config file at " //$NON-NLS-1$
-                        + source.getAbsolutePath());
+                    + source.getAbsolutePath());
             }
             SAXBuilder builder = new SAXBuilder();
             Document doc = builder.build(source);
@@ -400,23 +422,23 @@ public final class ModuleUtil {
                 node = new Element("Repository");
 
                 String provider = ((Element) XPath.selectSingleNode(doc, "/JCR/Repository[@name='magnolia']"))
-                        .getAttributeValue("provider");
+                    .getAttributeValue("provider");
                 String configFile = ((Element) XPath.selectSingleNode(
-                        doc,
-                        "/JCR/Repository[@name='magnolia']/param[@name='configFile']")).getAttributeValue("value");
+                    doc,
+                    "/JCR/Repository[@name='magnolia']/param[@name='configFile']")).getAttributeValue("value");
                 String repositoryHome = ((Element) XPath.selectSingleNode(
-                        doc,
-                        "/JCR/Repository[@name='magnolia']/param[@name='repositoryHome']")).getAttributeValue("value");
+                    doc,
+                    "/JCR/Repository[@name='magnolia']/param[@name='repositoryHome']")).getAttributeValue("value");
                 repositoryHome = StringUtils.substringBeforeLast(repositoryHome, "/") + "/" + name;
                 String contextFactoryClass = ((Element) XPath.selectSingleNode(
-                        doc,
-                        "/JCR/Repository[@name='magnolia']/param[@name='contextFactoryClass']")).getAttributeValue("value");
+                    doc,
+                    "/JCR/Repository[@name='magnolia']/param[@name='contextFactoryClass']")).getAttributeValue("value");
                 String providerURL = ((Element) XPath.selectSingleNode(
-                        doc,
-                        "/JCR/Repository[@name='magnolia']/param[@name='providerURL']")).getAttributeValue("value");
+                    doc,
+                    "/JCR/Repository[@name='magnolia']/param[@name='providerURL']")).getAttributeValue("value");
                 String bindName = ((Element) XPath.selectSingleNode(
-                        doc,
-                        "/JCR/Repository[@name='magnolia']/param[@name='bindName']")).getAttributeValue("value");
+                    doc,
+                    "/JCR/Repository[@name='magnolia']/param[@name='bindName']")).getAttributeValue("value");
                 bindName = StringUtils.replace(bindName, "magnolia", name);
 
                 node.setAttribute("name", name);
@@ -425,22 +447,22 @@ public final class ModuleUtil {
                 node.setAttribute("provider", provider);
 
                 node.addContent(new Element("param").setAttribute("name", "configFile").setAttribute(
-                        "value",
-                        configFile));
+                    "value",
+                    configFile));
                 node.addContent(new Element("param").setAttribute("name", "repositoryHome").setAttribute(
-                        "value",
-                        repositoryHome));
+                    "value",
+                    repositoryHome));
                 node.addContent(new Element("param").setAttribute("name", "contextFactoryClass").setAttribute(
-                        "value",
-                        contextFactoryClass));
+                    "value",
+                    contextFactoryClass));
                 node.addContent(new Element("param").setAttribute("name", "providerURL").setAttribute(
-                        "value",
-                        providerURL));
+                    "value",
+                    providerURL));
                 node.addContent(new Element("param").setAttribute("name", "bindName").setAttribute("value", bindName));
 
                 // add a workspace
                 node.addContent(new Element("workspace").setAttribute("name", name));
-                
+
                 doc.getRootElement().addContent(node);
 
                 // make the mapping
