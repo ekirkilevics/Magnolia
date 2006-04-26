@@ -35,6 +35,7 @@ import org.apache.commons.io.IOUtils;
  * @author Sameer Charles
  * $Id$
  * Utility class to copy nodes using specified Roles to the magnolia specific version store
+ * todo - use inter workspace cloning instead of xml import/export
  */
 public class CopyUtil {
 
@@ -66,7 +67,7 @@ public class CopyUtil {
      * @param source
      * @param filter
      * */
-    synchronized void copyToversion(Content source, Content.ContentFilter filter)
+    void copyToversion(Content source, Content.ContentFilter filter)
             throws RepositoryException {
         // first check if the node already exist
         Content root;

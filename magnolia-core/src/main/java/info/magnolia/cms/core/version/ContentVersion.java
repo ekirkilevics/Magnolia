@@ -24,7 +24,7 @@ import javax.jcr.version.VersionHistory;
 
 /**
  * @author Sameer Charles
- * @version $Revision: 1871 $ ($Author: scharles $)
+ * @version $Revision$ ($Author$)
  */
 public class ContentVersion extends Content {
 

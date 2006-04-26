@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
+import java.util.List;
 
 /**
  * @author Sameer Charles
@@ -46,11 +47,6 @@ public class VersionManager {
      * version workspace system path
      * */
     protected static final String TMP_REFERENCED_NODES = "mgnl:tmpReferencedNodes";
-
-    /**
-     * string reference property value
-     * */
-    protected static final String REFERENCE_VALUE = "mgnl:Reference";
 
     /**
      * Logger.
@@ -76,6 +72,7 @@ public class VersionManager {
 
     /**
      * create structure needed for version store workspace
+     * @throws RepositoryException if unable to create magnolia system structure
      * */
     private void createInitialStructure() throws RepositoryException {
         HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(VERSION_WORKSPACE);
@@ -99,7 +96,7 @@ public class VersionManager {
      * @throws UnsupportedOperationException if repository implementation does not support Versions API
      * @throws javax.jcr.RepositoryException if any repository error occurs
      */
-    public Version addVersion(Content node) throws UnsupportedRepositoryOperationException, RepositoryException {
+    public synchronized Version addVersion(Content node) throws UnsupportedRepositoryOperationException, RepositoryException {
         Rule rule = new Rule(new String[] {node.getNodeType().getName()});
         rule.reverse();
         return this.addVersion(node, rule);
@@ -113,8 +110,10 @@ public class VersionManager {
      * @throws UnsupportedOperationException if repository implementation does not support Versions API
      * @throws javax.jcr.RepositoryException if any repository error occurs
      */
-    public Version addVersion(Content node, Rule rule)
+    public synchronized Version addVersion(Content node, Rule rule)
             throws UnsupportedRepositoryOperationException, RepositoryException {
+        List permissions = this.getAccessManegerPermissions();
+        this.impersonateAccessManager(null);
         try {
             return this.createVersion(node, rule);
         } catch (RepositoryException re) {
@@ -123,6 +122,8 @@ public class VersionManager {
             log.error("failed to copy versionable node to version store, reverting all changes made in this session");
             getHierarchyManager().refresh(false);
             throw re;
+        } finally {
+            this.revertAccessManager(permissions);
         }
     }
 
@@ -135,7 +136,7 @@ public class VersionManager {
      * @throws UnsupportedOperationException if repository implementation does not support Versions API
      * @throws javax.jcr.RepositoryException if any repository error occurs
      */
-    private synchronized Version createVersion(Content node, Rule rule)
+    private Version createVersion(Content node, Rule rule)
             throws UnsupportedRepositoryOperationException, RepositoryException {
         CopyUtil.getInstance().copyToversion(node, new RuleBasedContentFilter(rule));
         Content versionedNode = this.getVersionedNode(node);
@@ -167,8 +168,16 @@ public class VersionManager {
      * get node from version store
      * @param node
      * */
-    private Content getVersionedNode(Content node) throws RepositoryException {
-        return MgnlContext.getHierarchyManager(VERSION_WORKSPACE).getContentByUUID(node.getUUID());
+    private synchronized Content getVersionedNode(Content node) throws RepositoryException {
+        List permissions = this.getAccessManegerPermissions();
+        this.impersonateAccessManager(null);
+        try {
+            return MgnlContext.getHierarchyManager(VERSION_WORKSPACE).getContentByUUID(node.getUUID());
+        } catch (RepositoryException re) {
+            throw re;
+        } finally {
+            this.revertAccessManager(permissions);
+        }
     }
 
     /**
@@ -179,7 +188,7 @@ public class VersionManager {
      * @throws UnsupportedOperationException if repository implementation does not support Versions API
      * @throws javax.jcr.RepositoryException if any repository error occurs
      */
-    public VersionHistory getVersionHistory(Content node)
+    public synchronized VersionHistory getVersionHistory(Content node)
             throws UnsupportedRepositoryOperationException, RepositoryException {
         Content versionedNode = this.getVersionedNode(node);
         if (versionedNode == null) {
@@ -197,11 +206,11 @@ public class VersionManager {
      * @throws UnsupportedOperationException if repository implementation does not support Versions API
      * @throws javax.jcr.RepositoryException if any repository error occurs
      * */
-    public Version getVersion(Content node, String name)
+    public synchronized Version getVersion(Content node, String name)
             throws UnsupportedRepositoryOperationException, RepositoryException {
         VersionHistory history = this.getVersionHistory(node);
         if (history != null) {
-            return this.getVersionHistory(node).getVersion(name);
+            return history.getVersion(name);
         }
         log.error("Node "+node.getHandle()+" was never versioned");
         return null;
@@ -215,7 +224,7 @@ public class VersionManager {
      * @throws UnsupportedOperationException if repository implementation does not support Versions API
      * @throws javax.jcr.RepositoryException if any repository error occurs
      */
-    public VersionIterator getAllVersions(Content node)
+    public synchronized VersionIterator getAllVersions(Content node)
             throws UnsupportedRepositoryOperationException, RepositoryException {
         Content versionedNode = this.getVersionedNode(node);
         if (versionedNode == null) {
@@ -242,10 +251,13 @@ public class VersionManager {
         Content versionedNode = this.getVersionedNode(node);
         versionedNode.getJCRNode().restore(version, removeExisting);
         versionedNode.getJCRNode().checkout();
-        // if restored, update original node with the restored node and its subtree
-        String ruleString = versionedNode.getNodeData("Rule").getString();
-        ByteArrayInputStream inStream = new ByteArrayInputStream(ruleString.getBytes());
+        ByteArrayInputStream inStream = null;
+        List permissions = this.getAccessManegerPermissions();
+        this.impersonateAccessManager(null);
         try {
+            // if restored, update original node with the restored node and its subtree
+            String ruleString = versionedNode.getNodeData("Rule").getString();
+            inStream = new ByteArrayInputStream(ruleString.getBytes());
             ObjectInput objectInput = new ObjectInputStream(inStream);
             Rule rule = (Rule) objectInput.readObject();
             try {
@@ -262,9 +274,35 @@ public class VersionManager {
             throw new RepositoryException(e);
         } catch (ClassNotFoundException e) {
             throw new RepositoryException(e);
+        } catch (RepositoryException e) {
+            throw e;
         } finally {
+            this.revertAccessManager(permissions);
             IOUtils.closeQuietly(inStream);
         }
+    }
+
+    /**
+     * impersonate to be access manager with system rights
+     * @param permissions
+     * */
+    private void impersonateAccessManager(List permissions) {
+        this.getHierarchyManager().getAccessManager().setPermissionList(permissions);
+    }
+
+    /**
+     * revert access manager permissions
+     * @param permissions
+     * */
+    private void revertAccessManager(List permissions) {
+        this.getHierarchyManager().getAccessManager().setPermissionList(permissions);
+    }
+
+    /**
+     * get access manager permission list
+     * */
+    private List getAccessManegerPermissions() {
+        return this.getHierarchyManager().getAccessManager().getPermissionList();
     }
 
     /**
