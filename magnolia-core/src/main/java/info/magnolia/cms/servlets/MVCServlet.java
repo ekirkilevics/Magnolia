@@ -101,15 +101,17 @@ public abstract class MVCServlet extends ContextSensitiveServlet {
         }
 
         if (log.isDebugEnabled()) {
-            log.debug("handler: " + handler.getName()); //$NON-NLS-1$
+            log.debug("handler: {}", handler.getName()); //$NON-NLS-1$
         }
+
         String command = handler.getCommand();
         if (log.isDebugEnabled()) {
-            log.debug("calling command: " + command); //$NON-NLS-1$
+            log.debug("calling command: {}", command); //$NON-NLS-1$
         }
+
         String view = handler.execute(command);
         if (log.isDebugEnabled()) {
-            log.debug("calling view: " + view); //$NON-NLS-1$
+            log.debug("calling view: {}", view); //$NON-NLS-1$
         }
 
         handler.renderHtml(view);

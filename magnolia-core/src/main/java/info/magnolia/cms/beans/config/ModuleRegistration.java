@@ -43,7 +43,6 @@ import java.util.regex.Pattern;
 /**
  * Executes the registration of the modules. It searches the META-INF/magnolia/*.xml module descriptors, instantiate the
  * engine object and calls the register method on it.
- *
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
@@ -53,7 +52,7 @@ public class ModuleRegistration {
      * The instance of the registration
      */
     private static ModuleRegistration instance = (ModuleRegistration) FactoryUtil
-            .getSingleton(ModuleRegistration.class);
+        .getSingleton(ModuleRegistration.class);
 
     /**
      * @return Returns the instance.
@@ -142,7 +141,7 @@ public class ModuleRegistration {
                 String name = moduleNode.getName();
                 String version = NodeDataUtil.getString(moduleNode, "version", "");
                 String className = NodeDataUtil.getString(ContentRepository.CONFIG, moduleNode.getHandle()
-                        + "/Register/class", "");
+                    + "/Register/class", "");
 
                 if (!this.moduleDefinitions.containsKey(name)) {
                     log.warn("no proper module definition file found for [{}]: will add an adhoc definition", name);
@@ -158,7 +157,6 @@ public class ModuleRegistration {
 
     /**
      * Check if the dependencies are ok
-     *
      * @return true if so
      * @throws MissingDependencyException
      */
@@ -170,12 +168,12 @@ public class ModuleRegistration {
             for (Iterator iterator = def.getDependencies().iterator(); iterator.hasNext();) {
                 DependencyDefinition dep = (DependencyDefinition) iterator.next();
                 if (!this.moduleDefinitions.containsKey(dep.getName())
-                        || !dep.getVersion().equals(this.getModuleDefinition(dep.getName()).getVersion())) {
+                    || !dep.getVersion().equals(this.getModuleDefinition(dep.getName()).getVersion())) {
                     throw new MissingDependencyException("missing dependency: module ["
-                            + def.getName()
-                            + "] needs ["
-                            + dep.getName()
-                            + "]");
+                        + def.getName()
+                        + "] needs ["
+                        + dep.getName()
+                        + "]");
                 }
             }
         }
@@ -247,9 +245,8 @@ public class ModuleRegistration {
 
     /**
      * Regsiter a module
-     *
      * @param modulesNode the module is or wil get placed under this node
-     * @param def         the definition of the module to register
+     * @param def the definition of the module to register
      */
     protected void registerModule(Content modulesNode, ModuleDefinition def) {
         try {
@@ -269,7 +266,8 @@ public class ModuleRegistration {
             // first installation
             catch (PathNotFoundException e1) {
                 moduleNode = modulesNode.createContent(def.getName());
-                ModuleUtil.createMinimalConfiguration(moduleNode, def.getName(), def.getDisplayName(), def.getClassName(), def.getVersion());
+                ModuleUtil.createMinimalConfiguration(moduleNode, def.getName(), def.getDisplayName(), def
+                    .getClassName(), def.getVersion());
                 registerState = Module.REGISTER_STATE_INSTALLATION;
             }
 
@@ -297,19 +295,24 @@ public class ModuleRegistration {
                         break;
                     case Module.REGISTER_STATE_NEW_VERSION:
                         log.error("can't update module [" + def.getName() + "] to version " + def.getVersion(), //$NON-NLS-1$ //$NON-NLS-2$
-                                e);
+                            e);
                         break;
                     default:
                         log.error("error during registering an already installed module [" //$NON-NLS-1$
-                                + def.getName()
-                                + "]", e); //$NON-NLS-1$
+                            + def.getName()
+                            + "]", e); //$NON-NLS-1$
                         break;
                 }
             }
         }
 
         catch (Exception e) {
-            log.error("can't register module [" + def.getName() + "]", e); //$NON-NLS-1$ //$NON-NLS-2$
+            log.error("can't register module [" //$NON-NLS-1$ 
+                + def.getName()
+                + "] due to a " //$NON-NLS-1$ 
+                + e.getClass().getName()
+                + " exception: " //$NON-NLS-1$ 
+                + e.getMessage(), e);
         }
     }
 
@@ -317,7 +320,6 @@ public class ModuleRegistration {
      * Calculates the level of dependency. 0 means no dependency. If no of the dependencies has itself dependencies is
      * this level 1. If one or more of the dependencies has a dependencies has a dependency it would return 2. And so on
      * ...
-     *
      * @param def module definition
      * @return the level
      */
@@ -336,7 +338,6 @@ public class ModuleRegistration {
 
     /**
      * Returns the definition of this module
-     *
      * @param moduleName
      */
     public ModuleDefinition getModuleDefinition(String moduleName) {
@@ -352,7 +353,6 @@ public class ModuleRegistration {
 
     /**
      * Changes the doctype to the correct dtd path (in the classpath)
-     *
      * @param name name of the xml resource
      * @return the reader for passing to the beanReader
      * @throws IOException
