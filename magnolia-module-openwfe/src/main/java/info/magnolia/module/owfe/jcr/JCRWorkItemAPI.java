@@ -7,7 +7,19 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryResult;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ContentUtil;
+
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.ValueFactory;
+
 import openwfe.org.engine.expressions.FlowExpressionId;
 import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.engine.workitem.StringAttribute;
@@ -18,16 +30,6 @@ import openwfe.org.xml.XmlUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jdom.Document;
 import org.jdom.Element;
-
-import javax.jcr.ValueFactory;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 
 public class JCRWorkItemAPI {
 
@@ -163,16 +165,34 @@ public class JCRWorkItemAPI {
 	public Content getWorkItemById(FlowExpressionId fei) {
 		String path = createPathFromId(fei);
 
-		log.info("path = " + path);
+		log.debug("path = " + path);
+		
 		try {
-			Content c = hm.getContent(path, false, ItemType.WORKITEM);
-			return c;
+			Content c = hm.getContent(path, false, ItemType.WORKITEM);			
+			return c;			
 		} catch (Exception e) {
 			log.error("get work item by id failed, path = " + path, e);
-		}
-
+		}		
 		return null;
-
+	}
+	
+	/**
+	 * check whether the specified work item exists
+	 * @param fei	expression id of work item
+	 * @return	true if exist, false if not
+	 */
+	public boolean hasWorkItem(FlowExpressionId fei) throws AccessDeniedException,
+    RepositoryException {
+		String path = createPathFromId(fei);
+		log.debug("path = " + path);
+		Content c = null;
+		try {
+			c = hm.getContent(path, false, ItemType.WORKITEM);							
+		} catch (PathNotFoundException e) {
+			return false;
+		}
+		
+		return (c!=null);
 	}
 
 	/**
@@ -227,10 +247,13 @@ public class JCRWorkItemAPI {
 		try {
 
 			// delete it if already exist
-			Content ct = getWorkItemById(wi.getId());
-			if (ct != null)
-				removeWorkItem(wi.getId());
-
+			if (hasWorkItem(wi.getId()))
+			{
+				Content ct = getWorkItemById(wi.getId());
+				if (ct != null)
+					removeWorkItem(wi.getId());
+			}
+			
 			Content root = hm.getRoot();
 
 			// crete path from work item id
