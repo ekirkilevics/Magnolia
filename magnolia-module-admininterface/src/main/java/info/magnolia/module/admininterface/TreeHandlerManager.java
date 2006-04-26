@@ -14,88 +14,118 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 public class TreeHandlerManager extends ObservedManager {
-	
-	/**
-	 * Logger
-	 */
-	private static Logger log = LoggerFactory.getLogger(TreeHandlerManager.class); 
-	
-	/**
-	 * The current implementation of the ParagraphManager. Defeined in magnolia.properties.
-	 */
-	private static TreeHandlerManager instance = (TreeHandlerManager) FactoryUtil.getSingleton(TreeHandlerManager.class); 
 
+    /**
+     * Logger
+     */
+    private static Logger log = LoggerFactory.getLogger(TreeHandlerManager.class);
 
-	/**
-	 * Map with repository name/handler class for admin tree. When this servlet will receive a call with a parameter
-	 * <code>repository</code>, the corresponding handler will be used top display the admin tree.
-	 */
-	private final Map treeHandlers = new HashMap();
-	
-	/**
-	 * Get the tree handler registered under a particular name.
-	 * @param name
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	public AdminTreeMVCHandler getTreeHandler(String name, HttpServletRequest request, HttpServletResponse response) {
-	
-	    Class treeHandlerClass = (Class) treeHandlers.get(name);
-	    if (treeHandlerClass == null) {
-	        throw new InvalidTreeHandlerException(name);
-	    }
-	
-	    try {
-	        Constructor constructor = treeHandlerClass.getConstructor(new Class[]{
-	            String.class,
-	            HttpServletRequest.class,
-	            HttpServletResponse.class});
-	        return (AdminTreeMVCHandler) constructor.newInstance(new Object[]{name, request, response});
-	    }
-	    catch (Exception e) {
-	        throw new InvalidTreeHandlerException(name, e);
-	    }
-	}
+    /**
+     * The current implementation of the ParagraphManager. Defeined in magnolia.properties.
+     */
+    private static TreeHandlerManager instance = (TreeHandlerManager) FactoryUtil
+        .getSingleton(TreeHandlerManager.class);
 
-	protected void registerTreeHandler(String name, Class treeHandler) {
-	    log.info("Registering tree handler [" + name + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-	    treeHandlers.put(name, treeHandler);
-	}
+    /**
+     * Map with repository name/handler class for admin tree. When this servlet will receive a call with a parameter
+     * <code>repository</code>, the corresponding handler will be used top display the admin tree.
+     */
+    private final Map treeHandlers = new HashMap();
 
-	protected void onRegister(Content defNode){
-	    Collection trees = defNode.getChildren(ItemType.CONTENTNODE.getSystemName());
-	    for (Iterator iter = trees.iterator(); iter.hasNext();) {
-	        Content tree = (Content) iter.next();
-	        String name = tree.getNodeData("name").getString(); //$NON-NLS-1$
-	        String className = tree.getNodeData("class").getString(); //$NON-NLS-1$
-	        try {
-				this.registerTreeHandler(name, Class.forName(className));
-			} catch (ClassNotFoundException e) {
-				log.warn("can't register the tree handler [{0}]: class [{1}] not found", new Object[]{name, className});
-			}
-	    }
-	}
-	
-	
+    /**
+     * Get the tree handler registered under a particular name.
+     * @param name
+     * @param request
+     * @param response
+     * @return
+     */
+    public AdminTreeMVCHandler getTreeHandler(String name, HttpServletRequest request, HttpServletResponse response) {
 
-	/**
-	 * @return Returns the instance.
-	 */
-	public static TreeHandlerManager getInstance() {
-		return instance;
-	}
+        TreeHandlerConfig th = (TreeHandlerConfig) treeHandlers.get(name);
 
-/**
- * Clear the handlers
- *
- */
-	protected void onClear() {
-		this.treeHandlers.clear();
-	}
+        if (th == null) {
+            throw new InvalidTreeHandlerException(name);
+        }
+
+        Class treeHandlerClass = th.getHandler();
+        String repository = th.getRepository();
+
+        try {
+            Constructor constructor = treeHandlerClass.getConstructor(new Class[]{
+                String.class,
+                HttpServletRequest.class,
+                HttpServletResponse.class});
+            return (AdminTreeMVCHandler) constructor.newInstance(new Object[]{repository, request, response});
+        }
+        catch (Exception e) {
+            throw new InvalidTreeHandlerException(name, e);
+        }
+    }
+
+    protected void registerTreeHandler(String name, String repository, Class treeHandler) {
+        log.info("Registering tree handler [" + name + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+        treeHandlers.put(name, new TreeHandlerConfig(treeHandler, repository));
+    }
+
+    protected void onRegister(Content defNode) {
+        Collection trees = defNode.getChildren(ItemType.CONTENTNODE.getSystemName());
+        for (Iterator iter = trees.iterator(); iter.hasNext();) {
+            Content tree = (Content) iter.next();
+            String name = tree.getNodeData("name").getString(); //$NON-NLS-1$
+            String repository = tree.getNodeData("repository").getString(); //$NON-NLS-1$
+            String className = tree.getNodeData("class").getString(); //$NON-NLS-1$
+
+            if (StringUtils.isEmpty(repository)) {
+                repository = name;
+            }
+
+            try {
+                this.registerTreeHandler(name, repository, Class.forName(className));
+            }
+            catch (ClassNotFoundException e) {
+                log.error("Can't register tree handler [{}]: class [{}] not found", name, className);
+            }
+        }
+    }
+
+    /**
+     * @return Returns the instance.
+     */
+    public static TreeHandlerManager getInstance() {
+        return instance;
+    }
+
+    /**
+     * Clear the handlers
+     */
+    protected void onClear() {
+        this.treeHandlers.clear();
+    }
+
+    class TreeHandlerConfig {
+
+        private Class handler;
+
+        private String repository;
+
+        TreeHandlerConfig(Class handler, String repository) {
+            this.handler = handler;
+            this.repository = repository;
+        }
+
+        public Class getHandler() {
+            return this.handler;
+        }
+
+        public String getRepository() {
+            return this.repository;
+        }
+    }
 
 }
