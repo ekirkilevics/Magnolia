@@ -945,6 +945,7 @@ public class Content extends ContentHandler implements Cloneable {
      */
     public void restore(String versionName, boolean removeExisting) throws VersionException,
         UnsupportedRepositoryOperationException, RepositoryException {
+        Access.isGranted(this.getAccessManager(), this.getHandle(), Permission.WRITE);
         Version version = this.getVersionHistory().getVersion(versionName);
         this.restore(version,  removeExisting);
     }
@@ -958,6 +959,7 @@ public class Content extends ContentHandler implements Cloneable {
      */
     public void restore(Version version, boolean removeExisting) throws VersionException,
         UnsupportedRepositoryOperationException, RepositoryException {
+        Access.isGranted(this.getAccessManager(), this.getHandle(), Permission.WRITE);
         VersionManager.getInstance().restore(this, version, removeExisting);
     }
 
@@ -985,6 +987,7 @@ public class Content extends ContentHandler implements Cloneable {
     public void restoreByLabel(String versionLabel, boolean removeExisting) throws VersionException,
         UnsupportedRepositoryOperationException, RepositoryException {
         this.node.restoreByLabel(versionLabel, removeExisting);
+        throw new UnsupportedRepositoryOperationException("Not implemented in 3.0 Beta");
     }
 
     /**
