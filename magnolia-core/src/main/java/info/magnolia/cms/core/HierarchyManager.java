@@ -21,7 +21,6 @@ import info.magnolia.cms.security.Permission;
 import java.util.Collection;
 import java.util.Iterator;
 
-import javax.jcr.ItemExistsException;
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
@@ -37,7 +36,7 @@ import org.slf4j.LoggerFactory;
 /**
  * User: sameercharles Date: Sept 23, 2004 Time: 1:42:48 PM
  * @author Sameer Charles
- * @version 2.01
+ * $Id$
  */
 public class HierarchyManager {
 
@@ -173,19 +172,13 @@ public class HierarchyManager {
      */
     public Content createContent(String path, String label, String contentType) throws PathNotFoundException,
         RepositoryException, AccessDeniedException {
-        try {
-            Content newPage = new Content(
-                this.startPage,
-                this.getNodePath(path, label),
-                contentType,
-                this.accessManager);
-            setMetaData(newPage.getMetaData());
-            return newPage;
-        }
-        catch (ItemExistsException ee) {
-            Content page = this.getContent(this.getNodePath(path, label));
-            return page;
-        }
+        Content newPage = new Content(
+            this.startPage,
+            this.getNodePath(path, label),
+            contentType,
+            this.accessManager);
+        setMetaData(newPage.getMetaData());
+        return newPage;
     }
 
     private String getNodePath(String path, String label) {
@@ -251,12 +244,10 @@ public class HierarchyManager {
      * @throws javax.jcr.RepositoryException
      */
     public Content getContent(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        // todo remove this.. caller should take care of this
         if (path.equals("/")) { //$NON-NLS-1$
             return this.getRoot();
         }
-        Content content = (new Content(this.startPage, getNodePath(path), this.accessManager));
-        return content;
+        return (new Content(this.startPage, getNodePath(path), this.accessManager));
     }
 
     /**
@@ -270,7 +261,7 @@ public class HierarchyManager {
      */
     public Content getContent(String path, boolean create, ItemType type) throws AccessDeniedException,
         RepositoryException {
-        Content node = null;
+        Content node;
         try {
             node = getContent(path);
         }
@@ -296,8 +287,7 @@ public class HierarchyManager {
      * @deprecated use getContent(String path) instead
      */
     public Content getContentNode(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        Content content = new Content(this.startPage, getNodePath(path), this.accessManager);
-        return content;
+        return new Content(this.startPage, getNodePath(path), this.accessManager);
     }
 
     /**
@@ -313,8 +303,7 @@ public class HierarchyManager {
             return null;
         }
 
-        NodeData nodeData = new NodeData(this.startPage, nodePath, this.accessManager);
-        return nodeData;
+        return new NodeData(this.startPage, nodePath, this.accessManager);
     }
 
     /**
@@ -383,8 +372,7 @@ public class HierarchyManager {
      * @return startPage of the current working repository-workspace
      */
     public Content getRoot() throws RepositoryException, AccessDeniedException {
-        Content content = (new Content(this.startPage, this.accessManager));
-        return content;
+        return (new Content(this.startPage, this.accessManager));
     }
 
     /**
