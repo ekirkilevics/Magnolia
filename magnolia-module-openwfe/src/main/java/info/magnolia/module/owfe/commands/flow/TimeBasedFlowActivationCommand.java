@@ -53,8 +53,15 @@ public class TimeBasedFlowActivationCommand extends AbstractFlowCommand {
         	
             // Retrieve parameters from caller
             String pathSelected = (String) params.get(MgnlConstants.P_PATH);
-            String startDate = params.get(MgnlConstants.P_START_DATE).toString();
-            String endDate = params.get(MgnlConstants.P_END_DATE).toString();
+            String startDate = null;
+            String endDate = null;
+            String s = (String)params.get(MgnlConstants.P_START_DATE);
+            if (s!=null)
+             startDate = params.get(MgnlConstants.P_START_DATE).toString();
+            
+            s = (String)params.get(MgnlConstants.P_END_DATE);
+            if (s!=null)
+             endDate = params.get(MgnlConstants.P_END_DATE).toString();
             
             log.info("start date = " + startDate);
             log.info("end date = " + endDate);
@@ -69,8 +76,10 @@ public class TimeBasedFlowActivationCommand extends AbstractFlowCommand {
 //            li.addAttribute(MgnlConstants.P_START_DATE, new StringAttribute(params.get(MgnlConstants.P_START_DATE)));
 //            li.addAttribute(MgnlConstants.P_END_DATE, new StringAttribute(params.get(MgnlConstants.P_END_DATE)));
 
-            li.getAttributes().puts(MgnlConstants.P_START_DATE, startDate);
-            li.getAttributes().puts(MgnlConstants.P_END_DATE, endDate);
+            if (startDate!=null)
+            	li.getAttributes().puts(MgnlConstants.P_START_DATE, startDate);
+            if (endDate!=null)
+            	li.getAttributes().puts(MgnlConstants.P_END_DATE, endDate);
             
             // Retrieve and add the flow definition to the LaunchItem
             String flowDef = new JCRFlowDefinition().getflowDefAsString(MgnlConstants.P_DEFAULT_SCHEDULEDACTIVATION_FLOW);
@@ -79,7 +88,7 @@ public class TimeBasedFlowActivationCommand extends AbstractFlowCommand {
             li.getAttributes().puts(MgnlConstants.P_DEFINITION, flowDef);
 
         } catch (Exception e) {
-            log.error("can't launch deactivate flow", e);
+            log.error("can't launch flow", e);
             AlertUtil.setMessage(AlertUtil.getExceptionMessage(e));
         }
     }

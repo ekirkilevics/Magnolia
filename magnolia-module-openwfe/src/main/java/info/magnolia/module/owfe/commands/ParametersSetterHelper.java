@@ -43,6 +43,7 @@ public class ParametersSetterHelper {
 
         WorkItem workItem = (WorkItem) context.get(MgnlConstants.INFLOW_PARAM);
         if (workItem != null) {
+        	log.debug("finf in flow params");
             for (int i = 0; i < expected.length; i++) {
                 Attribute attr = workItem.getAttribute(expected[i]);
                 if (attr != null) {
@@ -51,12 +52,13 @@ public class ParametersSetterHelper {
                 }
 
                 else {
-                    log.error("cannot find parameter " + expected[i] + " for command " + command);
+                    //log.error("cannot find parameter " + expected[i] + " for command " + command);
                     log.warn("cannot find parameter " + expected[i] + " for command " + command);
                 }
             }
         }
         else {
+        	log.debug("finf in tree params");
             HttpServletRequest request = (HttpServletRequest) context.get(MgnlConstants.P_REQUEST);
             for (int i = 0; i < expected.length; i++) {
                 params.put(expected[i], request.getParameter(expected[i]));

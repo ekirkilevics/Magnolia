@@ -36,120 +36,136 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-
 /**
- * This is a subclass of the regular MVCHandler to plug in flow events. <p/> In this case, only the activate method is
- * part of a flow. We should find a way to plug in flow on the different methods.
+ * This is a subclass of the regular MVCHandler to plug in flow events. <p/> In
+ * this case, only the activate method is part of a flow. We should find a way
+ * to plug in flow on the different methods.
+ * 
  * @author jackie
  * @author Niko
  */
 
 public abstract class CommandBasedTreeHandler extends AdminTreeMVCHandler {
 
-    private static Logger log = Logger.getLogger(info.magnolia.module.owfe.tree.CommandBasedTreeHandler.class);
+	private static Logger log = Logger
+			.getLogger(info.magnolia.module.owfe.tree.CommandBasedTreeHandler.class);
 
-    public CommandBasedTreeHandler(String name, HttpServletRequest vrequest, HttpServletResponse vresponse) {
-        super(name, vrequest, vresponse);
-    }
+	public CommandBasedTreeHandler(String name, HttpServletRequest vrequest,
+			HttpServletResponse vresponse) {
+		super(name, vrequest, vresponse);
+	}
 
-    /**
-     * execute dynamic command
-     */
-    public String execute(String command) {
-        // get command from command map in JCR repository
-        MgnlCommand tc = (MgnlCommand) CommandsMap.getCommand(MgnlConstants.WEBSITE_REPOSITORY, command);
-        if (tc == null) { // not found, do in the old ways
-            if (log.isDebugEnabled())
-                log.debug("can not find command named " + command + " in tree command map");
-            return super.execute(command);
-        }
-        if (log.isDebugEnabled())
-            log.debug("find command for " + command + ": " + tc);
-        
-        // set parameters
-        HashMap params = new HashMap();
-        
-        // set some general parameters
-        params.put(MgnlConstants.P_REQUEST, request);
-        params.put(MgnlConstants.P_TREE, tree);
-        params.put(MgnlConstants.P_PATH, pathSelected);
+	/**
+	 * execute dynamic command
+	 */
+	public String execute(String command) {
+		// get command from command map in JCR repository
+		MgnlCommand tc = (MgnlCommand) CommandsMap.getCommand(
+				MgnlConstants.WEBSITE_REPOSITORY, command);
+		if (tc == null) { // not found, do in the old ways
+			if (log.isDebugEnabled())
+				log.debug("can not find command named " + command
+						+ " in tree command map");
+			return super.execute(command);
+		}
+		if (log.isDebugEnabled())
+			log.debug("find command for " + command + ": " + tc);
 
-        populateParams(command, params);
+		// set parameters
+		HashMap params = new HashMap();
 
-        Context context = (MgnlContext.hasInstance()) ? MgnlContext.getInstance() : new WebContextImpl();
-        context.put(MgnlConstants.P_REQUEST, request);
-        context.put(MgnlConstants.INTREE_PARAM, params);
+		// set some general parameters
+		params.put(MgnlConstants.P_REQUEST, request);
+		params.put(MgnlConstants.P_TREE, tree);
+		params.put(MgnlConstants.P_PATH, pathSelected);
 
-        try {
-            // translate parameter
-            new ParametersSetterHelper().translateParam(tc, context);
-            // execute
-            tc.execute(context);
-        }
-        catch (Exception e) {
-            // TODO: check that this is processed somewhere else
-            log.error("Error while executing the command:" + command, e);
-        }
+		populateParams(command, params);
 
-        return VIEW_TREE;
-    }
+		Context context = (MgnlContext.hasInstance()) ? MgnlContext
+				.getInstance() : new WebContextImpl();
+		context.put(MgnlConstants.P_REQUEST, request);
+		context.put(MgnlConstants.INTREE_PARAM, params);
 
-    /**
-     * This method populates the params passed to the command
-     * @param params
-     */
-    protected void populateParams(String command, HashMap params) {
-        // add start date and end date
-        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.WEBSITE);
-        Content ct = null;
-        try {
-            ct = hm.getContent(pathSelected);
-            
-            Calendar cd = null;
-            String date; 
-            
-            // get start time
-            try{
-            	cd = ct.getMetaData().getStartTime();            	
-            }catch (Exception e){
-            	log.warn("cannot get start time for node " + pathSelected, e);            	
-            }    
-            if (cd == null)
-            	cd = Calendar.getInstance();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ");
-            date = sdf.format(new Date(cd.getTimeInMillis()));
-            //date = ""+cd.get(Calendar.YEAR)+"-"+(cd.get(Calendar.MONTH)+1)+"-"+cd.get(Calendar.DAY_OF_MONTH)
-//            +" "+cd.get(Calendar.HOUR_OF_DAY)+":"+cd.get(Calendar.MINUTE)+":"+cd.get(Calendar.SECOND)+"+0000";
-            log.debug("start date = " + date);            
-            //date = "2006-04-14 10:23:15+0800";
-            params.put("startDate", date);
+		try {
+			// translate parameter
+			new ParametersSetterHelper().translateParam(tc, context);
+			// execute
+			tc.execute(context);
+		} catch (Exception e) {
+			// TODO: check that this is processed somewhere else
+			log.error("Error while executing the command:" + command, e);
+		}
 
-            // get end time
-            try{
-            cd = ct.getMetaData().getEndTime(); 
-            }
-            catch(Exception e){
-            	log.warn("cannot get end time for node " + pathSelected, e);            	
-            }
-            if (cd == null)
-            {
-            	cd = Calendar.getInstance();
-            	cd.add(Calendar.YEAR, 100);
-            }
-            date = sdf.format(new Date(cd.getTimeInMillis()));        
-            log.debug("end date = " + date);
-            params.put("endDate", date);
-        }
-        catch (Exception e) {
-            log.warn("can not get start/end date for path "
-                + pathSelected
-                + ", please use sevlet FlowDef to set start/end date for node.", e);
-        }
+		return VIEW_TREE;
+	}
 
-        String recursive = "false";
-        if (request.getParameter("recursive") != null)
-            recursive = "true";
-        params.put(MgnlConstants.P_RECURSIVE, recursive);
-    }
+	/**
+	 * This method populates the params passed to the command
+	 * 
+	 * @param params
+	 */
+	protected void populateParams(String command, HashMap params) {
+		// add start date and end date
+		HierarchyManager hm = ContentRepository
+				.getHierarchyManager(ContentRepository.WEBSITE);
+		Content ct = null;
+		try {
+			ct = hm.getContent(pathSelected);
+
+			Calendar cd = null;
+			String date;
+
+			// get start time
+			try {
+				cd = ct.getMetaData().getStartTime();
+			} catch (Exception e) {
+				log.warn("cannot get start time for node " + pathSelected, e);
+			}
+			// if (cd == null)
+			// cd = Calendar.getInstance();
+			SimpleDateFormat sdf = null;
+			if (cd != null) {
+				sdf = new SimpleDateFormat(
+						"yyyy-MM-dd HH:mm:ssZ");
+				date = sdf.format(new Date(cd.getTimeInMillis()));
+				// date =
+				// ""+cd.get(Calendar.YEAR)+"-"+(cd.get(Calendar.MONTH)+1)+"-"+cd.get(Calendar.DAY_OF_MONTH)
+				// +"
+				// "+cd.get(Calendar.HOUR_OF_DAY)+":"+cd.get(Calendar.MINUTE)+":"+cd.get(Calendar.SECOND)+"+0000";
+				log.debug("start date = " + date);
+				// date = "2006-04-14 10:23:15+0800";
+				params.put("startDate", date);
+			}
+
+			// get end time
+			try {
+				cd = ct.getMetaData().getEndTime();
+			} catch (Exception e) {
+				log.warn("cannot get end time for node " + pathSelected, e);
+			}
+			// if (cd == null)
+			// {
+			// cd = Calendar.getInstance();
+			// cd.add(Calendar.YEAR, 100);
+			// }
+			if (cd != null) {
+				date = sdf.format(new Date(cd.getTimeInMillis()));
+				log.debug("end date = " + date);
+				params.put("endDate", date);
+			}
+		} catch (Exception e) {
+			log
+					.warn(
+							"can not get start/end date for path "
+									+ pathSelected
+									+ ", please use sevlet FlowDef to set start/end date for node.",
+							e);
+		}
+
+		String recursive = "false";
+		if (request.getParameter("recursive") != null)
+			recursive = "true";
+		params.put(MgnlConstants.P_RECURSIVE, recursive);
+	}
 
 }

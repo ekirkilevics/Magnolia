@@ -40,11 +40,15 @@ String id = wi.getId().toParseableString();
 <%=i %></td>
 
 <td width="30">
-<%=id %>
+<font size=2>
+<input width=20 value="
+<%=id %>"/>
+</font>
 <td width="30">
+<font size=2>
 <%
 out.println(wi.getLastModified());
-%>
+%></font>
 </td>
 <td>
 <form action="${pageContext.request.contextPath}/.magnolia/save.html" method="get">
