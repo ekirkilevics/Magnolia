@@ -24,6 +24,7 @@ import javax.jcr.version.VersionIterator;
 import javax.jcr.version.VersionException;
 import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.RepositoryException;
+import javax.jcr.PathNotFoundException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +48,12 @@ public class VersionManager {
      * version workspace system path
      * */
     protected static final String TMP_REFERENCED_NODES = "mgnl:tmpReferencedNodes";
+
+    /**
+     *  property name for collection rule
+     *
+     * */
+    protected static final String PROPERTY_RULE = "mgnl:Rule";
 
     /**
      * Logger.
@@ -148,15 +155,16 @@ public class VersionManager {
             objectOut.flush();
             objectOut.close();
             NodeData nodeData;
-            if (!versionedNode.hasNodeData("Rule"))
-                nodeData = versionedNode.createNodeData("Rule");
+            if (!versionedNode.hasNodeData(PROPERTY_RULE))
+                nodeData = versionedNode.createNodeData(PROPERTY_RULE);
             else
-                nodeData = versionedNode.getNodeData("Rule");
+                nodeData = versionedNode.getNodeData(PROPERTY_RULE);
             nodeData.setValue(out.toString());
         } catch (IOException e) {
             throw new RepositoryException("Unable to add serialized Rule to the versioned content");
         }
         versionedNode.getMetaData().setProperty(MetaData.VERSION_USER, MgnlContext.getUser().getName());
+        versionedNode.getMetaData().setProperty(MetaData.NAME, node.getName());
         versionedNode.save();
         // add version
         Version newVersion = versionedNode.getJCRNode().checkin();
@@ -172,7 +180,10 @@ public class VersionManager {
         List permissions = this.getAccessManegerPermissions();
         this.impersonateAccessManager(null);
         try {
-            return MgnlContext.getHierarchyManager(VERSION_WORKSPACE).getContentByUUID(node.getUUID());
+            return getHierarchyManager().getContent(node.getUUID());
+            //return MgnlContext.getHierarchyManager(VERSION_WORKSPACE).getContentByUUID(node.getUUID());
+        } catch (PathNotFoundException e) {
+            return null;
         } catch (RepositoryException re) {
             throw re;
         } finally {
@@ -256,7 +267,7 @@ public class VersionManager {
         this.impersonateAccessManager(null);
         try {
             // if restored, update original node with the restored node and its subtree
-            String ruleString = versionedNode.getNodeData("Rule").getString();
+            String ruleString = versionedNode.getNodeData(PROPERTY_RULE).getString();
             inStream = new ByteArrayInputStream(ruleString.getBytes());
             ObjectInput objectInput = new ObjectInputStream(inStream);
             Rule rule = (Rule) objectInput.readObject();

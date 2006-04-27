@@ -35,7 +35,6 @@ import org.apache.commons.io.IOUtils;
  * @author Sameer Charles
  * $Id$
  * Utility class to copy nodes using specified Roles to the magnolia specific version store
- * todo - use inter workspace cloning instead of xml import/export
  */
 public class CopyUtil {
 
@@ -72,40 +71,32 @@ public class CopyUtil {
         // first check if the node already exist
         Content root;
         try {
-            root = this.getHierarchyManager().getContentByUUID(source.getUUID());
-            // clean up first, leaving the top node "root" intact
-            NodeIterator subNodes = root.getJCRNode().getNodes();
-            while (subNodes.hasNext()) {
-                this.depthFirstRemoval(subNodes.nextNode());
-            }
-            // copy root properties
+            root = this.getHierarchyManager().getContent(source.getUUID());
             this.removeProperties(root);
+            // copy root properties
             this.updateProperties(source, root);
-            // copy all child nodes
-            Iterator children = source.getChildren(filter).iterator();
-            while (children.hasNext()) {
-                Content child = (Content) children.next();
-                this.copyToVersion(child, root, filter);
-            }
-        } catch (ItemNotFoundException e) {
-            root = this.getHierarchyManager().getRoot();
-            this.copyToVersion(source, root, filter);
+        } catch (PathNotFoundException e) {
+            // create root for this versionable node
+            root = this.getHierarchyManager().createContent("", source.getUUID(), source.getNodeType().getName());
+            // copy root properties
+            this.updateProperties(source, root);
+            root.save();
         }
-    }
-
-    /**
-     * recursively copy all nodes under the source according to the given content filter
-     * @param source
-     * @param parent
-     * @param filter
-     * */
-    private void copyToVersion(Content source, Content parent, Content.ContentFilter filter)
-            throws RepositoryException {
-        Content newNode = this.safeCopy(source, parent);
+        // copy all child nodes
+        List uuidList = new ArrayList();
         Iterator children = source.getChildren(filter).iterator();
         while (children.hasNext()) {
             Content child = (Content) children.next();
-            copyToVersion(child, newNode, filter);
+            this.safeCopy(child, root);
+            uuidList.add(child.getUUID());
+        }
+        // remove any old nodes
+        children = root.getChildren(filter).iterator();
+        while (children.hasNext()) {
+            Content child = (Content) children.next();
+            if (!uuidList.contains(child.getUUID()) && !child.getJCRNode().getDefinition().isAutoCreated()) {
+                child.delete();
+            }
         }
     }
 
@@ -137,9 +128,8 @@ public class CopyUtil {
         Iterator children = node.getChildren(filter).iterator();
         while (children.hasNext()) {
             Content child = (Content) children.next();
-            if (!uuidList.contains(child.getUUID())) {
+            if (!uuidList.contains(child.getUUID()) && !child.getJCRNode().getDefinition().isAutoCreated())
                 child.delete();
-            }
         }
     }
 
@@ -155,9 +145,8 @@ public class CopyUtil {
         Iterator children = node1.getChildren(filter).iterator();
         while (children.hasNext()) {
             Content child = (Content) children.next();
-            Content copiedNode = this.safeCopy(child, node2);
+            this.safeCopy(child, node2);
             uuidList.add(child.getUUID());
-            this.copyAllChildNodes(child, copiedNode, filter, uuidList);
         }
     }
 
@@ -165,15 +154,32 @@ public class CopyUtil {
      * clone all properties of this node and add referenced property
      * @param node
      * @param parent
-     * @return newly copied content
      * */
-    private Content safeCopy(Content node, Content parent) throws RepositoryException {
-        try {
-            this.importNode(parent, node);
-            return parent.getContent(node.getName());
-        } catch (IOException e) {
-            throw new RepositoryException(e);
+    private void safeCopy(Content node, Content parent) throws RepositoryException {
+        if (node.getJCRNode().getDefinition().isAutoCreated()) {
+            this.removeProperties(parent.getContent(node.getName()));
+            this.updateProperties(node, parent.getContent(node.getName()));
+        } else {
+            this.clone(node, parent);
         }
+    }
+
+    /**
+     * clone
+     * @param node
+     * @param parent
+     * */
+    private void clone(Content node, Content parent) throws RepositoryException {
+        try {
+            parent.getWorkspace().getSession().getNodeByUUID(node.getUUID()).remove();
+            // todo , it seems to be a bug in jackrabbit - cloning does not work if the node with the same uuid
+            // exist, "removeExisting" has no effect
+            parent.getJCRNode().save();
+        } catch (ItemNotFoundException e) {
+            // its safe to clone if UUID does not exist in this workspace
+        }
+        parent.getWorkspace().
+                clone(node.getWorkspace().getName(), node.getHandle(), parent.getHandle()+"/"+node.getName(), true);
     }
 
     /**
@@ -264,6 +270,8 @@ public class CopyUtil {
         PropertyIterator properties = sourceNode.getProperties();
         while (properties.hasNext()) {
             Property property = properties.nextProperty();
+            // exclude system property Rule
+            if (property.getName().equalsIgnoreCase(VersionManager.PROPERTY_RULE)) continue;
             try {
                 if (property.getDefinition().isMultiple()) {
                     destinationNode.setProperty(property.getName(), property.getValues());

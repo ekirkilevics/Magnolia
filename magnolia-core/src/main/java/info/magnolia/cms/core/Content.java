@@ -1074,7 +1074,7 @@ public class Content extends ContentHandler implements Cloneable {
      * @see ContentVersion
      */
     public ContentVersion getVersionedContent(String versionName) throws RepositoryException {
-        return new ContentVersion(this.getVersionHistory().getVersion(versionName));
+        return new ContentVersion(VersionManager.getInstance().getVersion(this, versionName));
     }
 
     /**
