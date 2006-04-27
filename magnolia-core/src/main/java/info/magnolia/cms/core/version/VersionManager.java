@@ -155,6 +155,7 @@ public class VersionManager {
             objectOut.flush();
             objectOut.close();
             NodeData nodeData;
+            // PROPERTY_RULE is not a part of MetaData to allow versioning of node types which does support MetaData
             if (!versionedNode.hasNodeData(PROPERTY_RULE))
                 nodeData = versionedNode.createNodeData(PROPERTY_RULE);
             else
@@ -163,8 +164,11 @@ public class VersionManager {
         } catch (IOException e) {
             throw new RepositoryException("Unable to add serialized Rule to the versioned content");
         }
-        versionedNode.getMetaData().setProperty(MetaData.VERSION_USER, MgnlContext.getUser().getName());
-        versionedNode.getMetaData().setProperty(MetaData.NAME, node.getName());
+        if (versionedNode.hasMetaData()) {
+            versionedNode.getMetaData().setProperty(MetaData.VERSION_USER, MgnlContext.getUser().getName());
+            versionedNode.getMetaData().setProperty(MetaData.NAME, node.getName());
+            versionedNode.getMetaData().setProperty(MetaData.PATH_ON_VERSION, node.getHandle());
+        }
         versionedNode.save();
         // add version
         Version newVersion = versionedNode.getJCRNode().checkin();

@@ -1310,6 +1310,19 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
+     * checks if this node has a sub node with name MetaData
+     * @return true if MetaData exists
+     * */
+    public boolean hasMetaData() {
+        try {
+            return this.node.hasNode("MetaData");
+        } catch (RepositoryException re) {
+            log.debug(re.getMessage(), re);
+        }
+        return false;
+    }
+
+    /**
      * Implement this interface to be used as node filter by getChildren()
      */
     public interface ContentFilter {

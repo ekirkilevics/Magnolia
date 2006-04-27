@@ -54,6 +54,8 @@ public class MetaData {
 
     public static final String VERSION_USER = "versionUser"; //$NON-NLS-1$
 
+    public static final String PATH_ON_VERSION = "pathOnVersion"; //$NON-NLS-1$
+
     public static final String NAME = "name";
     
     public static final String START_TIME = "starttime"; //$NON-NLS-1$
@@ -748,6 +750,30 @@ public class MetaData {
             }
         }
         return StringUtils.EMPTY;
+    }
+
+    /**
+     * remove specified property
+     * @param name of the property to be removed
+     * @throws PathNotFoundException if property does not exist
+     * @throws RepositoryException if unable to remove
+     * */
+    public void removeProperty(String name) throws PathNotFoundException, RepositoryException {
+        this.node.getProperty(this.getInternalPropertyName(name)).remove();
+    }
+
+    /**
+     * check if property exist
+     * @param name
+     * @return true if the specified property exist
+     * */
+    public boolean hasProperty(String name) {
+        try {
+            return this.node.hasProperty(this.getInternalPropertyName(name));
+        } catch (RepositoryException re) {
+            log.error(re.getMessage(), re);
+        }
+        return false;
     }
 
     /**

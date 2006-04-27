@@ -15,6 +15,7 @@ package info.magnolia.cms.core.version;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 
 import javax.jcr.*;
@@ -114,6 +115,16 @@ public class CopyUtil {
         // copy all nodes from version store
         List uuidList = new ArrayList();
         this.copyAllChildNodes(source, destination, filter, uuidList);
+        // remove properties created on version
+        if (destination.hasMetaData()) {
+            MetaData metaData = destination.getMetaData();
+            if (metaData.hasProperty(MetaData.VERSION_USER))
+                metaData.removeProperty(MetaData.VERSION_USER);
+            if (metaData.hasProperty(MetaData.PATH_ON_VERSION))
+                metaData.removeProperty(MetaData.PATH_ON_VERSION);
+            if (metaData.hasProperty(MetaData.NAME))
+                metaData.removeProperty(MetaData.NAME);
+        }
         // remove all non existing nodes
         this.removeNonExistingChildNodes(destination, filter, uuidList);
     }
@@ -157,8 +168,9 @@ public class CopyUtil {
      * */
     private void safeCopy(Content node, Content parent) throws RepositoryException {
         if (node.getJCRNode().getDefinition().isAutoCreated()) {
-            this.removeProperties(parent.getContent(node.getName()));
-            this.updateProperties(node, parent.getContent(node.getName()));
+            Content destination = parent.getContent(node.getName());
+            this.removeProperties(destination);
+            this.updateProperties(node, destination);
         } else {
             this.clone(node, parent);
         }
@@ -266,11 +278,10 @@ public class CopyUtil {
     private void updateProperties(Content source, Content destination) throws RepositoryException {
         Node sourceNode = source.getJCRNode();
         Node destinationNode = destination.getJCRNode();
-
         PropertyIterator properties = sourceNode.getProperties();
         while (properties.hasNext()) {
             Property property = properties.nextProperty();
-            // exclude system property Rule
+            // exclude system property Rule and Version specific properties which were created on version
             if (property.getName().equalsIgnoreCase(VersionManager.PROPERTY_RULE)) continue;
             try {
                 if (property.getDefinition().isMultiple()) {

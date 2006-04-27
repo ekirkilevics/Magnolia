@@ -34,11 +34,6 @@ public class ContentVersion extends Content {
     private Version state;
 
     /**
-     * not a default meta data, only used for version preview
-     * */
-    private static final String ORIGINAL_PATH = "mgnl:originalPath";
-
-    /**
      * package private constructor
      * @param thisVersion
      * @throws RepositoryException
@@ -103,7 +98,7 @@ public class ContentVersion extends Content {
      * get original path of this versioned content
      * */
     public String getHandle() {
-        return this.getMetaData().getStringProperty(ORIGINAL_PATH);
+        return this.getMetaData().getStringProperty(MetaData.PATH_ON_VERSION);
     }
 
 }
