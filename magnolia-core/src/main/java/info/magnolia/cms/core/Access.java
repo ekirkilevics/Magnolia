@@ -21,7 +21,7 @@ import java.text.MessageFormat;
 
 /**
  * @author Sameer Charles
- * @version $Revision $ ($Author $)
+ * $Id$
  */
 public final class Access {
 

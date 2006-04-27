@@ -31,6 +31,7 @@ import java.util.Collection;
  *
  * @author Sameer Charles
  * @version 2.0
+ * $Id$
  */
 public class NodeData extends ContentHandler {
 

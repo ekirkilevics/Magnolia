@@ -32,7 +32,7 @@ import java.util.TimeZone;
 
 
 /**
- *
+ * $Id$
  */
 public class MetaData {
 
