@@ -12,7 +12,9 @@
  */
 package info.magnolia.cms.taglibs;
 
+import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.gui.inline.BarMain;
+import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
 
 import java.io.IOException;
@@ -57,15 +59,20 @@ public class MainBar extends TagSupport {
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag() {
-        /*
-         * if (!ServerInfo.isAdmin()) return EVAL_PAGE; if
-         * (!Resource.getActivePage(this.request).isGranted(Permission.WRITE_PROPERTY)) return EVAL_PAGE;
-         */
-        try {
-            this.display();
-        }
-        catch (Exception e) {
-            log.warn("Exception caught during display: " + e.getMessage(), e); //$NON-NLS-1$
+
+        HttpServletRequest request = (HttpServletRequest) this.pageContext.getRequest();
+        if (Server.isAdmin() && Resource.getActivePage(request).isGranted(Permission.SET)) {
+            try {
+                BarMain bar = new BarMain(request);
+                bar.setPath(this.getPath());
+                bar.setParagraph(this.getParagraph());
+                bar.setDefaultButtons();
+                bar.placeDefaultButtons();
+                bar.drawHtml(pageContext.getOut());
+            }
+            catch (Exception e) {
+                log.warn("Exception caught during display: " + e.getMessage(), e); //$NON-NLS-1$
+            }
         }
         return EVAL_PAGE;
     }
@@ -114,22 +121,6 @@ public class MainBar extends TagSupport {
      */
     private String getParagraph() {
         return this.paragraph;
-    }
-
-    /**
-     * <p>
-     * displays main admin bar
-     * </p>
-     * @throws java.io.IOException
-     */
-    private void display() throws IOException {
-        HttpServletRequest request = (HttpServletRequest) this.pageContext.getRequest();
-        BarMain bar = new BarMain(request);
-        bar.setPath(this.getPath());
-        bar.setParagraph(this.getParagraph());
-        bar.setDefaultButtons();
-        bar.placeDefaultButtons();
-        bar.drawHtml(pageContext.getOut());
     }
 
     public boolean isAdminButtonVisible() {

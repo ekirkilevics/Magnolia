@@ -13,11 +13,11 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.beans.config.ParagraphManager;
+import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.inline.ButtonEdit;
+import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
-
-import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -69,12 +69,33 @@ public class EditButton extends TagSupport {
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag() {
+        HttpServletRequest request = (HttpServletRequest) this.pageContext.getRequest();
 
-        try {
-            this.display();
-        }
-        catch (Exception e) {
-            log.error(e.getMessage(), e);
+        if (Server.isAdmin() && Resource.getActivePage(request).isGranted(Permission.SET)) {
+
+            try {
+                if (this.getNodeCollectionName() != null && this.getNodeName() == null) {
+                    // cannot draw edit button with nodeCllection and without node
+                    return EVAL_PAGE;
+                }
+                JspWriter out = pageContext.getOut();
+                ButtonEdit button = new ButtonEdit(((HttpServletRequest) pageContext.getRequest()));
+                button.setPath(this.getPath());
+                button.setParagraph(this.getParagraph());
+                button.setNodeCollectionName(this.getNodeCollectionName());
+                button.setNodeName(this.getNodeName());
+                button.setDefaultOnclick((HttpServletRequest) this.pageContext.getRequest());
+                if (this.getLabel() != null) {
+                    button.setLabel(this.getLabel());
+                }
+                if (this.small) {
+                    button.setSmall(true);
+                }
+                button.drawHtml(out);
+            }
+            catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
         }
         return EVAL_PAGE;
     }
@@ -209,31 +230,6 @@ public class EditButton extends TagSupport {
      */
     public void setSmall(boolean small) {
         this.small = small;
-    }
-
-    /**
-     * displays edit bar
-     * @throws IOException
-     */
-    private void display() throws IOException {
-        if (this.getNodeCollectionName() != null && this.getNodeName() == null) {
-            // cannot draw edit button with nodeCllection and without node
-            return;
-        }
-        JspWriter out = pageContext.getOut();
-        ButtonEdit button = new ButtonEdit(((HttpServletRequest) pageContext.getRequest()));
-        button.setPath(this.getPath());
-        button.setParagraph(this.getParagraph());
-        button.setNodeCollectionName(this.getNodeCollectionName());
-        button.setNodeName(this.getNodeName());
-        button.setDefaultOnclick((HttpServletRequest) this.pageContext.getRequest());
-        if (this.getLabel() != null) {
-            button.setLabel(this.getLabel());
-        }
-        if (this.small) {
-            button.setSmall(true);
-        }
-        button.drawHtml(out);
     }
 
     /**
