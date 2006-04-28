@@ -34,6 +34,8 @@ import java.io.FileOutputStream;
 import java.util.Collection;
 import java.util.Iterator;
 
+import openwfe.org.ServiceException;
+
 
 /**
  * Module "templating" main class.
@@ -242,6 +244,19 @@ public class Engine extends AbstractAdminModule {
          * log.info("--------------repository----------:\r\n" + printJCRNode(rn, true) + "\r\n---------------"); } catch
          * (Exception e) { e.printStackTrace(); return; }
          */
+    }
+
+    public void destroy() {
+        if (OWFEEngine.getEngine().isRunning()) {
+            log.info("Workflow engine is running, trying to stop...");
+            try {
+                OWFEEngine.getEngine().stop();
+                log.info("Workflow engine successfully stopped");
+            } catch (ServiceException se) {
+                log.error("Failed to stop Open WFE engine");
+                log.error(se.getMessage(), se);
+            }
+        }
     }
 
 }

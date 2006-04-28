@@ -25,6 +25,7 @@ import java.util.Map;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
+import javax.servlet.ServletContextEvent;
 
 import org.apache.commons.collections.OrderedMap;
 import org.apache.commons.collections.OrderedMapIterator;
@@ -161,6 +162,15 @@ public final class ModuleLoader {
                     ModuleRegistration.getInstance().setRestartNeeded(true);
                 }
             }
+            final Module m = module; 
+            // add destroy method as a shutdown task
+            ShutdownManager.addShutdownTask(new ShutdownManager.ShutdownTask() {
+                public void execute(ServletContextEvent sce) {
+                    m.destroy();
+                }
+            });
+
+
             
         }
         catch (Exception e) {
