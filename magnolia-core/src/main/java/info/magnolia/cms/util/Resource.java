@@ -216,9 +216,14 @@ public final class Resource {
      * @return boolean , true if preview is enabled
      */
     public static boolean showPreview(HttpServletRequest req) {
-        HttpSession httpsession = req.getSession(false);
-        if (httpsession != null) {
-            return BooleanUtils.toBoolean((Boolean) httpsession.getAttribute(MGNL_PREVIEW_ATTRIBUTE));
+        // first check if its set in request scope
+        if (req.getParameter(MGNL_PREVIEW_ATTRIBUTE) != null) {
+            return BooleanUtils.toBoolean(req.getParameter(MGNL_PREVIEW_ATTRIBUTE));
+        } else {
+            HttpSession httpsession = req.getSession(false);
+            if (httpsession != null) {
+                return BooleanUtils.toBoolean((Boolean) httpsession.getAttribute(MGNL_PREVIEW_ATTRIBUTE));
+            }
         }
         return false;
     }

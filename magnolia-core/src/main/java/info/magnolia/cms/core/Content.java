@@ -38,7 +38,7 @@ import java.util.*;
 
 /**
  * @author Sameer Charles
- * @version $Revision$ ($Author$)
+ * @version $Revision:2719 $ ($Author:scharles $)
  */
 public class Content extends ContentHandler implements Cloneable {
 
@@ -670,7 +670,8 @@ public class Content extends ContentHandler implements Cloneable {
         while (nodeIterator.hasNext()) {
             Node subNode = (Node) nodeIterator.next();
             try {
-                if (contentType == null || subNode.isNodeType(contentType)) {
+                if (contentType == null
+                        || subNode.getProperty(ItemType.JCR_PRIMARY_TYPE).getString().equalsIgnoreCase(contentType)) {
                     children.add(new Content(subNode, this.accessManager));
                 }
             }
@@ -1057,13 +1058,23 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
+     * get the current base version of this node
+     * @return base ContentVersion
+     * @throws UnsupportedRepositoryOperationException
+     * @throws RepositoryException
+     * */
+    public ContentVersion getBaseVersion() throws UnsupportedRepositoryOperationException, RepositoryException {
+        return new ContentVersion(VersionManager.getInstance().getBaseVersion(this), this);
+    }
+
+    /**
      * get content view over the jcr version object
      * @param version
      * @return version object wrapped in ContentVersion
      * @see ContentVersion
      */
     public ContentVersion getVersionedContent(Version version) throws RepositoryException {
-        return new ContentVersion(version);
+        return new ContentVersion(version, this);
     }
 
     /**
@@ -1073,7 +1084,7 @@ public class Content extends ContentHandler implements Cloneable {
      * @see ContentVersion
      */
     public ContentVersion getVersionedContent(String versionName) throws RepositoryException {
-        return new ContentVersion(VersionManager.getInstance().getVersion(this, versionName));
+        return new ContentVersion(VersionManager.getInstance().getVersion(this, versionName), this);
     }
 
     /**

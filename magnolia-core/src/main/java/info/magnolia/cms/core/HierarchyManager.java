@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 /**
  * User: sameercharles Date: Sept 23, 2004 Time: 1:42:48 PM
  * @author Sameer Charles
- * $Id$
+ * $Id:HierarchyManager.java 2719 2006-04-27 14:38:44Z scharles $
  */
 public class HierarchyManager {
 
@@ -387,14 +387,13 @@ public class HierarchyManager {
      * Checks if the requested resource is a page (hierarchy Node).
      * @param path of the requested content
      * @return boolean true is the requested content is a Hierarchy Node
+     * todo remove this method, instead use (getContent(PATH) is NodeType)
      */
     public boolean isPage(String path) throws AccessDeniedException {
         Access.isGranted(this.accessManager, path, Permission.READ);
 
         String nodePath = getNodePath(path);
-        if (StringUtils.isEmpty(nodePath)) {
-            return false;
-        }
+        if (StringUtils.isEmpty(nodePath)) return false;
 
         try {
             Node n = this.startPage.getNode(nodePath);

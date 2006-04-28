@@ -53,7 +53,7 @@ public class VersionManager {
      *  property name for collection rule
      *
      * */
-    protected static final String PROPERTY_RULE = "mgnl:Rule";
+    protected static final String PROPERTY_RULE = "Rule";
 
     /**
      * Logger.
@@ -167,7 +167,6 @@ public class VersionManager {
         if (versionedNode.hasMetaData()) {
             versionedNode.getMetaData().setProperty(MetaData.VERSION_USER, MgnlContext.getUser().getName());
             versionedNode.getMetaData().setProperty(MetaData.NAME, node.getName());
-            versionedNode.getMetaData().setProperty(MetaData.PATH_ON_VERSION, node.getHandle());
         }
         versionedNode.save();
         // add version
@@ -180,7 +179,7 @@ public class VersionManager {
      * get node from version store
      * @param node
      * */
-    private synchronized Content getVersionedNode(Content node) throws RepositoryException {
+    protected synchronized Content getVersionedNode(Content node) throws RepositoryException {
         List permissions = this.getAccessManegerPermissions();
         this.impersonateAccessManager(null);
         try {
@@ -232,6 +231,21 @@ public class VersionManager {
     }
 
     /**
+     * Returns the current base version of given node
+     * @throws UnsupportedRepositoryOperationException
+     * @throws RepositoryException
+     * */
+    public Version getBaseVersion(Content node)
+            throws UnsupportedOperationException, RepositoryException {
+        Content versionedNode = this.getVersionedNode(node).getBaseVersion();
+        if (versionedNode != null) {
+            return versionedNode.getJCRNode().getBaseVersion();
+        } else {
+            throw new RepositoryException("Node "+node.getHandle()+" was never versioned");
+        }
+    }
+
+    /**
      * get all versions
      *
      * @param node
@@ -266,15 +280,11 @@ public class VersionManager {
         Content versionedNode = this.getVersionedNode(node);
         versionedNode.getJCRNode().restore(version, removeExisting);
         versionedNode.getJCRNode().checkout();
-        ByteArrayInputStream inStream = null;
         List permissions = this.getAccessManegerPermissions();
         this.impersonateAccessManager(null);
         try {
             // if restored, update original node with the restored node and its subtree
-            String ruleString = versionedNode.getNodeData(PROPERTY_RULE).getString();
-            inStream = new ByteArrayInputStream(ruleString.getBytes());
-            ObjectInput objectInput = new ObjectInputStream(inStream);
-            Rule rule = (Rule) objectInput.readObject();
+            Rule rule = this.getUsedFilter(versionedNode);
             try {
                 synchronized(ExclusiveWrite.getInstance()) {
                     CopyUtil.getInstance().copyFromVersion(versionedNode, node, new RuleBasedContentFilter(rule));
@@ -293,6 +303,32 @@ public class VersionManager {
             throw e;
         } finally {
             this.revertAccessManager(permissions);
+        }
+    }
+
+    /**
+     * get Rule used for this version
+     * @param versionedNode
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws RepositoryException
+     * */
+    protected Rule getUsedFilter(Content versionedNode)
+            throws IOException, ClassNotFoundException, RepositoryException {
+        // if restored, update original node with the restored node and its subtree
+        ByteArrayInputStream inStream = null;
+        try {
+            String ruleString = versionedNode.getNodeData(PROPERTY_RULE).getString();
+            inStream = new ByteArrayInputStream(ruleString.getBytes());
+            ObjectInput objectInput = new ObjectInputStream(inStream);
+            return (Rule) objectInput.readObject();
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+            throw e;
+        } catch (ClassNotFoundException e) {
+            log.error(e.getMessage(), e);
+            throw e;
+        } finally {
             IOUtils.closeQuietly(inStream);
         }
     }

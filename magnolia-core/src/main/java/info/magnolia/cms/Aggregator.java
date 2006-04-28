@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
  * object. its also a responsibilty of this class to place the aggregated object to the proper place in this context its
  * a HttpServletRequest which will hold this Content object for further processing.
  * @author Sameer Charles
- * @version 2.0
+ * $Id$
  */
 public class Aggregator {
 
@@ -54,6 +54,8 @@ public class Aggregator {
     public static final String HIERARCHY_MANAGER = "hierarchyManager"; //$NON-NLS-1$
 
     public static final String TEMPLATE = "mgnl_Template"; //$NON-NLS-1$
+
+    private static final String VERSION_NUMBER = "mgnlVersion"; //$NON-NLS-1$
 
     /**
      * Logger.
@@ -84,6 +86,17 @@ public class Aggregator {
 
         if (hierarchyManager.isPage(uri)) {
             requestedPage = hierarchyManager.getContent(uri); // ATOM
+
+            // check if its a request for a versioned page
+            if (request.getParameter(VERSION_NUMBER) != null) {
+                // get versioned state
+                try {
+                    requestedPage = requestedPage.getVersionedContent(request.getParameter(VERSION_NUMBER));
+                } catch (RepositoryException re) {
+                    log.debug(re.getMessage(), re);
+                    log.error("Unable to get versioned state, rendering current state of "+uri);
+                }
+            }
 
             String templateName = requestedPage.getMetaData().getTemplate();
 

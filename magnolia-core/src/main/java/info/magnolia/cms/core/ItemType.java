@@ -17,7 +17,7 @@ import java.io.Serializable;
 
 /**
  * @author Sameer Charles
- * @version $Revision$ ($Author$)
+ * @version $Revision:2719 $ ($Author:scharles $)
  */
 public final class ItemType implements Serializable {
 
@@ -91,6 +91,16 @@ public final class ItemType implements Serializable {
      * jcr:frozenNode
      */
     public static final String JCR_FROZENNODE = "jcr:frozenNode";
+
+    /**
+     * jcr:frozenPrimaryType
+     */
+    public static final String JCR_FROZEN_PRIMARY_TYPE = "jcr:frozenPrimaryType";
+
+    /**
+     * jcr:primaryType
+     */
+    public static final String JCR_PRIMARY_TYPE = "jcr:primaryType";
 
     /**
      * jcr:data

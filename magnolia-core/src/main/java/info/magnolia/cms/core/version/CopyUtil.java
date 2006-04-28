@@ -120,8 +120,6 @@ public class CopyUtil {
             MetaData metaData = destination.getMetaData();
             if (metaData.hasProperty(MetaData.VERSION_USER))
                 metaData.removeProperty(MetaData.VERSION_USER);
-            if (metaData.hasProperty(MetaData.PATH_ON_VERSION))
-                metaData.removeProperty(MetaData.PATH_ON_VERSION);
             if (metaData.hasProperty(MetaData.NAME))
                 metaData.removeProperty(MetaData.NAME);
         }
