@@ -16,6 +16,7 @@ import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.config.ParagraphManager;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.NodeDataUtil;
@@ -64,7 +65,7 @@ public class DialogHandlerManager extends ObservedManager {
      * @param node
      */
     protected void onRegister(Content node) {
-        List dialogs = ContentUtil.collectAllChildren(node);
+        List dialogs = ContentUtil.collectAllChildren(node, ItemType.CONTENT);
         for (Iterator iter = dialogs.iterator(); iter.hasNext();) {
             Content dialog = (Content) iter.next();
             // if this paragraph is used from a dialog register it under the name of the paragraph
@@ -75,7 +76,7 @@ public class DialogHandlerManager extends ObservedManager {
                 dialog,
                 "class", "info.magnolia.module.admininterface.dialogs.ParagraphEditDialog"); //$NON-NLS-1$
             try {
-                // there are paragraphs dialgos without a name!
+                // there are paragraphs dialogs without a name!
                 if (StringUtils.isNotEmpty(name)) {
                     registerDialogHandler(name, Class.forName(className), dialog);
                 }
@@ -118,7 +119,7 @@ public class DialogHandlerManager extends ObservedManager {
     }
 
     protected void registerDialogHandler(String name, Class dialogHandler, Content configNode) {
-        log.info("Registering dialog handler [" + name + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+        log.info("Registering dialog handler [{}]", name); //$NON-NLS-1$ 
         // remember the uuid for a reload
         dialogHandlers.put(name, new Object[]{dialogHandler, configNode});
     }
