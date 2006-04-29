@@ -86,7 +86,7 @@
         </childNodeDefinition>
         <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="true">
             <requiredPrimaryTypes>
-                <requiredPrimaryType>nt:hierarchyNode</requiredPrimaryType>
+                <requiredPrimaryType>nt:base</requiredPrimaryType>
             </requiredPrimaryTypes>
         </childNodeDefinition>
         <propertyDefinition name="*" requiredType="undefined" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
