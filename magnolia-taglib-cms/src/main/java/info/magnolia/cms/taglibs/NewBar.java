@@ -12,16 +12,18 @@
  */
 package info.magnolia.cms.taglibs;
 
+import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.gui.inline.BarNew;
 import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.TagSupport;
-import java.io.IOException;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -49,50 +51,60 @@ public class NewBar extends TagSupport {
     private String newLabel;
 
     /**
-     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
+     * Show only in admin instance.
      */
-    public int doStartTag() {
-        return EVAL_BODY_INCLUDE;
+    private boolean adminOnly;
+
+    /**
+     * Set the new label.
+     * @param label
+     */
+    public void setNewLabel(String label) {
+        this.newLabel = label;
     }
 
     /**
-     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
+     * Setter for <code>adminOnly</code>.
+     * @param adminOnly The adminOnly to set.
      */
-    public int doEndTag() {
-        /*
-         * if (!ServerInfo.isAdmin() || Resource.showPreview(this.request)) return EVAL_PAGE; if
-         * (!Resource.getActivePage(this.request).isGranted(Permission.WRITE_PROPERTY)) return EVAL_PAGE;
-         */
-        try {
-            this.display();
-        }
-        catch (Exception e) {
-            if (log.isDebugEnabled())
-                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
-        }
-        return EVAL_PAGE;
+    public void setAdminOnly(boolean adminOnly) {
+        this.adminOnly = adminOnly;
     }
 
     /**
-     * <p/>
-     * set working container list
-     * </p>
-     *
-     * @param name , comtainer list name
+     * Set working container list.
+     * @param name comtainer list name
      */
     public void setContentNodeCollectionName(String name) {
         this.contentNodeCollectionName = name;
     }
 
-    public String getContentNodeCollectionName() {
-        return this.contentNodeCollectionName;
+    /**
+     * @param list , comma seperated list of all allowed paragraphs
+     * @deprecated Set the tapes which defines all paragraps available in this contentNode collection
+     */
+    public void setParFiles(String list) {
+        this.paragraph = list;
     }
 
     /**
-     * <p/>
-     * get the content path (Page or Node)
-     * </p>
-     *
+     * Comma separeted list of paragraphs.
+     * @param list , comma seperated list of all allowed paragraphs
+     */
+    public void setParagraph(String list) {
+        this.paragraph = list;
+    }
+
+    /**
+     * @return String , label for the new bar
+     */
+    private String getNewLabel() {
+        String defStr = MessagesManager.getMessages().get(DEFAULT_NEW_LABEL);
+        return StringUtils.defaultString(this.newLabel, defStr);
+    }
+
+    /**
+     * Get the content path (Page or Node).
      * @return String path
      */
     private String getPath() {
@@ -106,76 +118,46 @@ public class NewBar extends TagSupport {
     }
 
     /**
-     * @param list , comma seperated list of all allowed paragraphs
-     * @deprecated <p/>
-     *             set the tapes which defines all paragraps available in this contentNode collection
-     *             </p>
+     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
-    public void setParFiles(String list) {
-        this.paragraph = list;
+    public int doStartTag() {
+        return EVAL_BODY_INCLUDE;
     }
 
     /**
-     * <p/>
-     * comma separeted list of paragraphs
-     * </p>
-     *
-     * @param list , comma seperated list of all allowed paragraphs
+     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
-    public void setParagraph(String list) {
-        this.paragraph = list;
-    }
+    public int doEndTag() {
 
-    /**
-     * @return String paragraph (type of par)
-     */
-    private String getParagraph() {
-        return this.paragraph;
-    }
+        if (!adminOnly || Server.isAdmin()) {
+            HttpServletRequest request = (HttpServletRequest) this.pageContext.getRequest();
 
-    /**
-     * <p/>
-     * set the new label
-     * </p>
-     *
-     * @param label
-     */
-    public void setNewLabel(String label) {
-        this.newLabel = label;
-    }
-
-    /**
-     * @return String , label for the new bar
-     */
-    private String getNewLabel() {
-        String defStr = MessagesManager.getMessages().get(DEFAULT_NEW_LABEL);
-        return StringUtils.defaultString(this.newLabel, defStr);
-    }
-
-    /**
-     * <p/>
-     * displays new bar
-     * </p>
-     *
-     * @throws java.io.IOException
-     */
-    private void display() throws IOException {
-        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-        BarNew bar = new BarNew(request);
-        bar.setPath(this.getPath());
-        bar.setParagraph(this.getParagraph());
-        bar.setNodeCollectionName(this.getContentNodeCollectionName());
-        bar.setNodeName("mgnlNew"); //$NON-NLS-1$
-        bar.setDefaultButtons();
-        if (this.getNewLabel() != null) {
-            if (StringUtils.isEmpty(this.getNewLabel())) {
-                bar.setButtonNew(null);
-            } else {
-                bar.getButtonNew().setLabel(this.getNewLabel());
+            if (Server.isAdmin() && Resource.getActivePage(request).isGranted(Permission.SET)) {
+                try {
+                    BarNew bar = new BarNew(request);
+                    bar.setPath(this.getPath());
+                    bar.setParagraph(this.paragraph);
+                    bar.setNodeCollectionName(this.contentNodeCollectionName);
+                    bar.setNodeName("mgnlNew"); //$NON-NLS-1$
+                    bar.setDefaultButtons();
+                    if (this.getNewLabel() != null) {
+                        if (StringUtils.isEmpty(this.getNewLabel())) {
+                            bar.setButtonNew(null);
+                        }
+                        else {
+                            bar.getButtonNew().setLabel(this.getNewLabel());
+                        }
+                    }
+                    bar.placeDefaultButtons();
+                    bar.drawHtml(pageContext.getOut());
+                }
+                catch (Exception e) {
+                    if (log.isDebugEnabled())
+                        log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+                }
             }
         }
-        bar.placeDefaultButtons();
-        bar.drawHtml(pageContext.getOut());
+        return EVAL_PAGE;
     }
 
     /**

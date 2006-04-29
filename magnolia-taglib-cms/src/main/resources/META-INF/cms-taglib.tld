@@ -132,6 +132,13 @@
       <rtexprvalue>true</rtexprvalue>
       <description>text of the button, defaults to "New"</description>
     </attribute>
+    <attribute>
+      <name>adminOnly</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description>Show only in admin instance, default to false.</description>
+    </attribute>
     <example>
       <![CDATA[
 <cms:newBar
