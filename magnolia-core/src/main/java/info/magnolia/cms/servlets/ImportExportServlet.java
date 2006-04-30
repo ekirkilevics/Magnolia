@@ -383,7 +383,7 @@ public class ImportExportServlet extends ContextSensitiveServlet {
             // root node
             pathName = StringUtils.EMPTY;
         }
-        response.setHeader("content-disposition", "attachment; filename=" + repository + pathName + DataTransporter.XML + ext); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        response.setHeader("content-disposition", "attachment; filename=" + repository + pathName + ext); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         OutputStream baseOutputStream = response.getOutputStream();
         DataTransporter.executeExport(baseOutputStream, keepVersionHistory, format, session, basepath, repository, ext);
     }
