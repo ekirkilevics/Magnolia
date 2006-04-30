@@ -59,6 +59,9 @@ public class Template implements Serializable {
     public Template(Content c) {
 
         parameters = nodeDataCollectionToStringMap(c.getNodeDataCollection());
+        if (getName() == null) {
+            parameters.put("name", c.getName());
+        }
 
         this.visible = c.getNodeData("visible").getBoolean(); //$NON-NLS-1$
 
