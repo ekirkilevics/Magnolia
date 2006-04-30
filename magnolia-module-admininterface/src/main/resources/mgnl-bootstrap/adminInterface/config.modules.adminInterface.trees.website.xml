@@ -20,10 +20,10 @@
     <sv:value>true</sv:value>
   </sv:property>
   <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.module.owfe.tree.CommandBasedWebsiteTree</sv:value>
+    <sv:value>info.magnolia.module.admininterface.trees.WebsiteTreeHandler</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:created" sv:type="Date">
-    <sv:value>2006-04-26T13:04:12.805+02:00</sv:value>
+    <sv:value>2006-04-30T10:06:49.344+02:00</sv:value>
   </sv:property>
   <sv:property sv:name="repository" sv:type="String">
     <sv:value>website</sv:value>
@@ -36,7 +36,7 @@
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>526216eb-46a8-47ef-adb7-0f8043407bbc</sv:value>
+      <sv:value>a6ec3b68-ee1e-4cc9-af5d-1e7d47e03992</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
       <sv:value>true</sv:value>
@@ -48,7 +48,7 @@
       <sv:value>2005-05-06T16:18:38.686+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2006-04-26T22:12:47.175+02:00</sv:value>
+      <sv:value>2006-04-30T10:19:12.943+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:activated" sv:type="Boolean">
       <sv:value>false</sv:value>
@@ -57,7 +57,7 @@
       <sv:value>MetaData</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-04-26T13:04:12.805+02:00</sv:value>
+      <sv:value>2006-04-30T10:06:49.344+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastaction" sv:type="Date">
       <sv:value>2006-02-13T22:31:36.466+08:00</sv:value>
