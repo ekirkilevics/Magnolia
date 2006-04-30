@@ -35,6 +35,8 @@ public final class Paragraph {
 
     private String dialogPath;
 
+    private String dialog;
+
     private String templateType;
 
     private String description;
@@ -87,21 +89,6 @@ public final class Paragraph {
         return this.description;
     }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
-    public String toString() {
-        return new ToStringBuilder(this)
-        //
-            .append("name", this.name) //$NON-NLS-1$
-            .append("templateType", this.templateType) //$NON-NLS-1$
-            .append("description", this.description) //$NON-NLS-1$
-            .append("dialogPath", this.dialogPath) //$NON-NLS-1$
-            .append("title", this.title) //$NON-NLS-1$
-            .append("templatePath", this.templatePath) //$NON-NLS-1$
-            .toString();
-    }
-
     void setDescription(String description) {
         this.description = description;
     }
@@ -125,4 +112,37 @@ public final class Paragraph {
     void setTitle(String title) {
         this.title = title;
     }
+
+    /**
+     * Getter for <code>dialog</code>.
+     * @return Returns the dialog.
+     */
+    public String getDialog() {
+        return this.dialog;
+    }
+
+    /**
+     * Setter for <code>dialog</code>.
+     * @param dialog The dialog to set.
+     */
+    public void setDialog(String dialog) {
+        this.dialog = dialog;
+    }
+
+    /**
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        return new ToStringBuilder(this)
+        //
+            .append("name", this.name) //$NON-NLS-1$
+            .append("templateType", this.templateType) //$NON-NLS-1$
+            .append("description", this.description) //$NON-NLS-1$
+            .append("dialog", this.dialog) //$NON-NLS-1$
+            .append("dialogPath", this.dialogPath) //$NON-NLS-1$
+            .append("title", this.title) //$NON-NLS-1$
+            .append("templatePath", this.templatePath) //$NON-NLS-1$
+            .toString();
+    }
+
 }

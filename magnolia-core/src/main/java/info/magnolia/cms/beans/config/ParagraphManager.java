@@ -105,14 +105,23 @@ public class ParagraphManager extends ObservedManager {
         }
 
         pi.setName(name);
+
+        // by default just use the dialog with the same name of the paragraph
+        String dialog = c.getNodeData("dialog").getString();//$NON-NLS-1$
+        if (StringUtils.isEmpty(dialog)) {
+            dialog = c.getName();
+        }
+        pi.setDialog(dialog);
+
         pi.setTemplatePath(c.getNodeData("templatePath").getString()); //$NON-NLS-1$
         pi.setDialogPath(c.getNodeData("dialogPath").getString()); //$NON-NLS-1$
         pi.setTemplateType(c.getNodeData("type").getString()); //$NON-NLS-1$
         pi.setTitle(c.getNodeData("title").getString()); //$NON-NLS-1$
         pi.setDescription(c.getNodeData("description").getString()); //$NON-NLS-1$
         if (Paragraph.log.isDebugEnabled()) {
-            Paragraph.log.debug("Registering paragraph [" + pi.getName() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+            Paragraph.log.debug("Registering paragraph [{}]", pi.getName()); //$NON-NLS-1$ //$NON-NLS-2$
         }
+
         paragraphs.put(pi.getName(), pi);
         log.info("paragraph added [{}]", pi.getName());
         return pi;

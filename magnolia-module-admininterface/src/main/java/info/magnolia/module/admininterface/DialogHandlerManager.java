@@ -92,11 +92,21 @@ public class DialogHandlerManager extends ObservedManager {
      * @param dialog
      */
     private void registerAsParagraphDialog(String basePath, Content dialog) {
+
         String dialogPath = StringUtils.removeStart(dialog.getHandle(), basePath + "/");
+        String dialogName = dialog.getNodeData("name").getString();
+        if (StringUtils.isEmpty(dialogName)) {
+            dialogName = dialog.getName();
+        }
+
         Map paragraphs = ParagraphManager.getInstance().getParagraphs();
         for (Iterator iter = paragraphs.entrySet().iterator(); iter.hasNext();) {
             Paragraph paragraph = (Paragraph) ((Entry) iter.next()).getValue();
-            if (paragraph.getDialogPath().equals(dialogPath)) {
+            String paragraphDialogPath = paragraph.getDialogPath();
+            String paragraphDialogName = paragraph.getDialog();
+
+            if (StringUtils.equals(paragraphDialogPath, dialogPath)
+                || StringUtils.equals(paragraphDialogName, dialogName)) {
                 Class handler = ParagraphEditDialog.class;
 
                 String className = dialog.getNodeData("class").getString(); //$NON-NLS-1$
@@ -105,13 +115,14 @@ public class DialogHandlerManager extends ObservedManager {
                         handler = Class.forName(className);
                     }
                     catch (ClassNotFoundException e) {
-                        log.error("registering paragraph: class [" + className + "] not found", e); //$NON-NLS-1$ //$NON-NLS-2$
+                        log.error("Registering paragraph: class [" + className + "] not found", e); //$NON-NLS-1$ //$NON-NLS-2$
                     }
                 }
 
                 registerDialogHandler(paragraph.getName(), handler, dialog);
             }
         }
+
     }
 
     protected void onClear() {
