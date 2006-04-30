@@ -21,6 +21,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,7 +98,13 @@ public class ParagraphManager extends ObservedManager {
      */
     protected Paragraph addParagraphToCache(Content c) {
         Paragraph pi = new Paragraph();
-        pi.setName(c.getNodeData("name").getString()); //$NON-NLS-1$
+
+        String name = c.getNodeData("name").getString();//$NON-NLS-1$
+        if (StringUtils.isEmpty(name)) {
+            name = c.getName();
+        }
+
+        pi.setName(name);
         pi.setTemplatePath(c.getNodeData("templatePath").getString()); //$NON-NLS-1$
         pi.setDialogPath(c.getNodeData("dialogPath").getString()); //$NON-NLS-1$
         pi.setTemplateType(c.getNodeData("type").getString()); //$NON-NLS-1$
@@ -107,7 +114,7 @@ public class ParagraphManager extends ObservedManager {
             Paragraph.log.debug("Registering paragraph [" + pi.getName() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         paragraphs.put(pi.getName(), pi);
-        log.info("paragraph added [" + pi.getName() + "]");
+        log.info("paragraph added [{}]", pi.getName());
         return pi;
     }
 
