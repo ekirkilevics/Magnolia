@@ -158,7 +158,8 @@ public class EntryServlet extends ContextSensitiveServlet {
                         res.sendError(HttpServletResponse.SC_NOT_FOUND);
                     }
                     else {
-                        log.info("Unable to redirect to 404 page, response is already committed"); //$NON-NLS-1$
+                        log.info("Unable to redirect to 404 page, response is already committed. URI was {}", //$NON-NLS-1$
+                            req.getRequestURI());
                     }
                 }
             }

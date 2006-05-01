@@ -165,10 +165,18 @@ public class Include extends BodyTagSupport {
                 Paragraph paragraph = ParagraphManager.getInstance().getInfo(paragraphName);
 
                 if (paragraph == null) {
-                    log.error("Paragraph [" + paragraphName + "] not found for page [" + content.getHandle() + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    log.error("Paragraph {} not found for page {}", //$NON-NLS-1$
+                        paragraphName,
+                        content.getHandle());
                 }
                 else {
                     jspPage = paragraph.getTemplatePath();
+                }
+
+                if (jspPage == null) {
+                    log.error("Unable to render paragraph {} in page {}: templatePath not set.", //$NON-NLS-1$
+                        paragraphName,
+                        content.getHandle());
                 }
             }
             if (jspPage != null) {
@@ -182,11 +190,13 @@ public class Include extends BodyTagSupport {
         catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+
         // finally {
         // commented out because the node should be present after the tag
         // following tags are else not able to get the current node
         // Resource.removeLocalContentNode((HttpServletRequest) pageContext.getRequest());
         // }
+
         this.removeAttributes();
         return EVAL_PAGE;
     }

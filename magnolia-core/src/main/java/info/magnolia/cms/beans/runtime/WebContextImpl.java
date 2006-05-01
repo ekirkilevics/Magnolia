@@ -179,9 +179,17 @@ public class WebContextImpl extends ContextImpl implements WebContext {
                 break;
             case MgnlContext.SESSION_SCOPE:
 
-                // @todo IMPORTANT remove use of http session
-                HttpSession session = request.getSession();
-                session.setAttribute(name, value);
+                HttpSession httpsession = request.getSession(false);
+                if (httpsession == null) {
+                    log
+                        .warn(
+                            "Session initialized in oder to setting attribute '{}' to '{}'. You should avoid using session when possible!",
+                            name,
+                            value);
+                    httpsession = request.getSession(true);
+                }
+
+                httpsession.setAttribute(name, value);
                 break;
             case MgnlContext.APPLICATION_SCOPE:
                 MgnlContext.getSystemContext().setAttribute(name, value, MgnlContext.APPLICATION_SCOPE);
@@ -189,7 +197,7 @@ public class WebContextImpl extends ContextImpl implements WebContext {
             default:
                 this.request.setAttribute(name, value);
                 if (log.isDebugEnabled()) {
-                    log.debug("Undefined scope, setting attribute [ " + name + " ] in request scope");
+                    log.debug("Undefined scope, setting attribute [{}] in request scope", name);
                 }
         }
     }
@@ -204,7 +212,11 @@ public class WebContextImpl extends ContextImpl implements WebContext {
             case MgnlContext.REQUEST_SCOPE:
                 return this.request.getAttribute(name);
             case MgnlContext.SESSION_SCOPE:
-                return this.request.getAttribute(name);
+                HttpSession httpsession = request.getSession(false);
+                if (httpsession == null) {
+                    return null;
+                }
+                return httpsession.getAttribute(name);
             case MgnlContext.APPLICATION_SCOPE:
                 return MgnlContext.getSystemContext().getAttribute(name, MgnlContext.APPLICATION_SCOPE);
             default:
