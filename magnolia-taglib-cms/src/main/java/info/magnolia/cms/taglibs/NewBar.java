@@ -13,10 +13,14 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.inline.BarNew;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.TagSupport;
@@ -30,7 +34,7 @@ import org.slf4j.LoggerFactory;
  * @author Sameer Charles
  * @version $Revision$ ($Author$)
  */
-public class NewBar extends TagSupport {
+public class NewBar extends TagSupport implements BarTag {
 
     /**
      * Stable serialVersionUID.
@@ -54,6 +58,16 @@ public class NewBar extends TagSupport {
      * Show only in admin instance.
      */
     private boolean adminOnly;
+
+    /**
+     * Addition buttons (left).
+     */
+    private List buttonLeft;
+
+    /**
+     * Addition buttons (right).
+     */
+    private List buttonRight;
 
     /**
      * Set the new label.
@@ -93,6 +107,26 @@ public class NewBar extends TagSupport {
      */
     public void setParagraph(String list) {
         this.paragraph = list;
+    }
+
+    /**
+     * @see info.magnolia.cms.taglibs.BarTag#addButtonLeft(info.magnolia.cms.gui.control.Button)
+     */
+    public void addButtonLeft(Button button) {
+        if (buttonLeft == null) {
+            buttonLeft = new ArrayList();
+        }
+        buttonLeft.add(button);
+    }
+
+    /**
+     * @see info.magnolia.cms.taglibs.BarTag#addButtonRight(info.magnolia.cms.gui.control.Button)
+     */
+    public void addButtonRight(Button button) {
+        if (buttonRight == null) {
+            buttonRight = new ArrayList();
+        }
+        buttonRight.add(button);
     }
 
     /**
@@ -148,6 +182,14 @@ public class NewBar extends TagSupport {
                             bar.getButtonNew().setLabel(this.getNewLabel());
                         }
                     }
+
+                    if (buttonRight != null) {
+                        bar.getButtonsRight().addAll(buttonRight);
+                    }
+                    if (buttonLeft != null) {
+                        bar.getButtonsLeft().addAll(buttonLeft);
+                    }
+
                     bar.placeDefaultButtons();
                     bar.drawHtml(pageContext.getOut());
                 }
@@ -168,5 +210,7 @@ public class NewBar extends TagSupport {
         this.contentNodeCollectionName = null;
         this.paragraph = null;
         this.newLabel = null;
+        this.buttonLeft = null;
+        this.buttonRight = null;
     }
 }

@@ -64,42 +64,9 @@
       <c:import url="/templates/samples/templates/inc/head.jsp" />
     </head>
     <body>
-      <!-- main bar of form template -->
-      <jsp:scriptlet>
-        <![CDATA[
-    Content currentPage=Resource.getActivePage(request);
-
-    BarMain bar=new BarMain(request);
-
-    //path is needed for the links of the buttons
-    bar.setPath(currentPage.getHandle());
-
-    //"paragraph" specifies the paragraph evoked by the "Properties" button
-    bar.setParagraph("samplesPageProperties");
-
-    // initialize the default buttons (preview, site admin, properties)
-    // note: buttons are not placed through init (see below)
-    bar.setDefaultButtons();
-
-    // to overwrite single properties of the default buttons, use getButtonXXX() methods:
-    bar.getButtonProperties().setLabel("Page properties");
-
-
-    //add customized buttons to the main bar
-    Button fProps=new Button();
-    fProps.setLabel("Form properties");
-    fProps.setOnclick("mgnlOpenDialog('"+Resource.getActivePage(request).getHandle()+"','','','samplesFormProperties','"+ContentRepository.WEBSITE+"')");
-    bar.setButtonsRight(fProps);
-
-
-    // places the preview and the site admin button to the very left and the properties button to the very right
-    bar.placeDefaultButtons();
-
-
-    //draw the main bar
-    bar.drawHtml(out);
-]]>
-      </jsp:scriptlet>
+      <cms:mainBar paragraph="samplesPageProperties" label="Page Properties">
+        <cms:button label="Form properties" dialogName="samplesFormProperties" position="right" />
+      </cms:mainBar>
       <div id="contentDivMainColumn">
         <jsp:scriptlet>
           <![CDATA[
@@ -114,7 +81,28 @@
         <form name="samplesForm" action="${pageContext.request.contextPath}${actpage.handle}.html" method="post"
           onsubmit="return (checkMandatories(this.name,'${alertText}'));">
           <input type="hidden" name="sendMail" value="true" />
-          <c:import url="/templates/samples/templates/inc/columnMain.jsp" />
+          <!-- content title -->
+          <cms:out nodeDataName="title" var="title" />
+          <c:if test="%{empty(title)}">
+            <cms:out nodeDataName="contentTitle" var="title" />
+          </c:if>
+          <h1>${title}</h1>
+          <cms:contentNodeIterator contentNodeCollectionName="mainColumnParagraphs">
+            <cms:out nodeDataName="lineAbove" var="lineAbove" />
+            <div style="clear:both;">
+              <cms:editBar adminOnly="true" />
+              <!-- line -->
+              <c:if test="${lineAbove=='true'}">
+                <hr />
+              </c:if>
+              <cms:includeTemplate />
+            </div>
+            <!-- spacer -->
+            <cms:out nodeDataName="spacer" var="spacer" />
+            <div style="clear:both;" class="spacer${spacer}">
+              <!--  -->
+            </div>
+          </cms:contentNodeIterator>
           <!-- new bar -->
           <cms:adminOnly>
             <div style="clear:both;">

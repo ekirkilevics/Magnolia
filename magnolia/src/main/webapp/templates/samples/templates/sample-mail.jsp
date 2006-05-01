@@ -14,32 +14,9 @@
       <c:import url="/templates/samples/templates/inc/head.jsp" />
     </head>
     <body>
-      <jsp:scriptlet>
-        <![CDATA[
-
-        if (request.getParameter("mail") == null) {
-            Content currentPage = Resource.getActivePage(request);
-
-            BarMain bar = new BarMain(request);
-
-            //path is needed for the links of the buttons
-            bar.setPath(currentPage.getHandle());
-
-            //"paragraph" specifies the paragraph evoked by the "Properties" button
-            bar.setParagraph("samplesPageProperties");
-
-            // initialize the default buttons (preview, site admin, properties)
-            // note: buttons are not placed through init (see below)
-            bar.setDefaultButtons();
-
-
-            bar.placeDefaultButtons();
-
-            //draw the main bar
-            bar.drawHtml(out);
-        }
-        ]]>
-      </jsp:scriptlet>
+      <c:if test="${empty(param.mail)}">
+        <cms:mainBar paragraph="samplesPageProperties" label="Page Properties" />
+      </c:if>
       <br />
       <br />
       <jsp:scriptlet>

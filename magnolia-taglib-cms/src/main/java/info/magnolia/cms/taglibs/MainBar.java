@@ -13,9 +13,13 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.inline.BarMain;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.TagSupport;
@@ -30,7 +34,7 @@ import org.slf4j.LoggerFactory;
  * @author Sameer Charles
  * @version $Revision$ ($Author$)
  */
-public class MainBar extends TagSupport {
+public class MainBar extends TagSupport implements BarTag {
 
     /**
      * Stable serialVersionUID.
@@ -47,10 +51,78 @@ public class MainBar extends TagSupport {
     private boolean adminButtonVisible;
 
     /**
+     * Label for the properties button.
+     */
+    private String label;
+
+    /**
+     * Addition buttons (left).
+     */
+    private List buttonLeft;
+
+    /**
+     * Addition buttons (right).
+     */
+    private List buttonRight;
+
+    /**
+     * Setter for <code>label</code>.
+     * @param label The label to set.
+     */
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    /**
+     * Set current content type, could be any developer defined name.
+     * @deprecated
+     * @param type paragraph type
+     */
+    public void setParFile(String type) {
+        this.setParagraph(type);
+    }
+
+    /**
+     * Set paragarph type.
+     * @param s paragraph type
+     */
+    public void setParagraph(String s) {
+        this.paragraph = s;
+    }
+
+    public void setAdminButtonVisible(boolean adminButtonVisible) {
+        this.adminButtonVisible = adminButtonVisible;
+    }
+
+    /**
+     * @see info.magnolia.cms.taglibs.BarTag#addButtonLeft(info.magnolia.cms.gui.control.Button)
+     */
+    public void addButtonLeft(Button button) {
+        if (buttonLeft == null) {
+            buttonLeft = new ArrayList();
+        }
+        buttonLeft.add(button);
+    }
+
+    /**
+     * @see info.magnolia.cms.taglibs.BarTag#addButtonRight(info.magnolia.cms.gui.control.Button)
+     */
+    public void addButtonRight(Button button) {
+        if (buttonRight == null) {
+            buttonRight = new ArrayList();
+        }
+        buttonRight.add(button);
+    }
+
+    /**
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
     public int doStartTag() {
-        return EVAL_BODY_INCLUDE;
+
+        if (Server.isAdmin()) {
+            return EVAL_BODY_INCLUDE;
+        }
+        return SKIP_BODY;
     }
 
     /**
@@ -63,8 +135,20 @@ public class MainBar extends TagSupport {
             try {
                 BarMain bar = new BarMain(request);
                 bar.setPath(this.getPath());
-                bar.setParagraph(this.getParagraph());
+                bar.setParagraph(this.paragraph);
                 bar.setDefaultButtons();
+
+                if (label != null) {
+                    bar.getButtonProperties().setLabel(label);
+                }
+
+                if (buttonRight != null) {
+                    bar.getButtonsRight().addAll(buttonRight);
+                }
+                if (buttonLeft != null) {
+                    bar.getButtonsLeft().addAll(buttonLeft);
+                }
+
                 bar.placeDefaultButtons();
                 bar.drawHtml(pageContext.getOut());
             }
@@ -76,9 +160,7 @@ public class MainBar extends TagSupport {
     }
 
     /**
-     * <p>
-     * get the content path (Page or Node)
-     * </p>
+     * Get the content path (Page or Node)
      * @return String path
      */
     private String getPath() {
@@ -92,49 +174,15 @@ public class MainBar extends TagSupport {
     }
 
     /**
-     * <p>
-     * set current content type, could be any developer defined name
-     * </p>
-     * /**
-     * @deprecated
-     * @param type , paragraph type
-     */
-    public void setParFile(String type) {
-        this.setParagraph(type);
-    }
-
-    /**
-     * <p>
-     * set paragarph type
-     * </p>
-     * /**
-     * @param s , pargarph type
-     */
-    public void setParagraph(String s) {
-        this.paragraph = s;
-    }
-
-    /**
-     * @return pargraph type
-     */
-    private String getParagraph() {
-        return this.paragraph;
-    }
-
-    public boolean isAdminButtonVisible() {
-        return this.adminButtonVisible;
-    }
-
-    public void setAdminButtonVisible(boolean adminButtonVisible) {
-        this.adminButtonVisible = adminButtonVisible;
-    }
-
-    /**
      * @see javax.servlet.jsp.tagext.TagSupport#release()
      */
     public void release() {
         super.release();
         this.paragraph = null;
         this.adminButtonVisible = false;
+        this.buttonLeft = null;
+        this.buttonRight = null;
+        this.label = null;
     }
+
 }
