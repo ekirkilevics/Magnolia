@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Deprecated!
  * <p>
- * This calss is doing the same thing as javax.servlet.jsp.jastl.fmt.LocalSupport. LocalSupport is using the PageContext
+ * This class is doing the same thing as javax.servlet.jsp.jastl.fmt.LocalSupport. LocalSupport is using the PageContext
  * which is not avaiable in Servlets, but the most classes do know the request-object and can deliver it to this class.
  * With this class you get the string stricly under the same rules as JSTL does. The most of the code is the same as in
  * the jstl classes. If you are able to pass a PageContext you will use javax.servlet.jsp.jastl.fmt.LocalSupport.
@@ -85,31 +85,31 @@ public class ContextMessages extends Messages {
 
     /**
      * Get the bundle and the local from the context
-     * @param req current request
+     * @param request current request
      */
-    protected ContextMessages(HttpServletRequest req) {
-        loc = getLocalizationContext(req);
+    protected ContextMessages(HttpServletRequest request) {
+        loc = getLocalizationContext(request);
     }
 
     /**
      * Provide a special basename (not info.magnolia.module.admininterface.messages)
-     * @param req the current request
+     * @param request the current request
      * @param basename the name of the bundle
      */
-    protected ContextMessages(HttpServletRequest req, String basename) {
+    protected ContextMessages(HttpServletRequest request, String basename) {
         this.basename = basename;
-        loc = getLocalizationContext(req, basename);
+        loc = getLocalizationContext(request, basename);
     }
 
     /**
      * Do not use the current local (do not use the context)
-     * @param req the current request
+     * @param request the current request
      * @param basename the name of the bundle
      * @param locale use this local to get the strings
      */
-    protected ContextMessages(HttpServletRequest req, String basename, Locale locale) {
+    protected ContextMessages(HttpServletRequest request, String basename, Locale locale) {
         this.basename = basename;
-        loc = getLocalizationContext(req, basename, locale);
+        loc = getLocalizationContext(request, basename, locale);
     }
 
     /**
@@ -138,22 +138,22 @@ public class ContextMessages extends Messages {
 
     /**
      * Finds the current locale (request, session, appication)
-     * @param req Request
+     * @param request Request
      * @return Returns the current locale
      */
-    public static Locale getCurrentLocale(HttpServletRequest req) {
-        return getLocalizationContext(req).getLocale();
+    public static Locale getCurrentLocale(HttpServletRequest request) {
+        return getLocalizationContext(request).getLocale();
     }
 
     /**
      * Gets the default I18N localization context.
-     * @param req Request in which to look up the default I18N localization context
+     * @param request Request in which to look up the default I18N localization context
      * @return found context
      */
-    private static LocalizationContext getLocalizationContext(HttpServletRequest req) {
+    private static LocalizationContext getLocalizationContext(HttpServletRequest request) {
         LocalizationContext locCtxt = null;
 
-        Object obj = find(req, Config.FMT_LOCALIZATION_CONTEXT);
+        Object obj = find(request, Config.FMT_LOCALIZATION_CONTEXT);
         if (obj == null) {
             return null;
         }
@@ -163,7 +163,7 @@ public class ContextMessages extends Messages {
         }
         else {
             // localization context is a bundle basename
-            locCtxt = getLocalizationContext(req, (String) obj);
+            locCtxt = getLocalizationContext(request, (String) obj);
         }
 
         return locCtxt;
@@ -171,12 +171,12 @@ public class ContextMessages extends Messages {
 
     /**
      * Get the LocalizationContext with a defined basename
-     * @param req the request to start the lookup
+     * @param request the request to start the lookup
      * @param basename the name of the bundle
      * @return found context
      */
-    private static LocalizationContext getLocalizationContext(HttpServletRequest req, String basename) {
-        return getLocalizationContext(req, basename, null);
+    private static LocalizationContext getLocalizationContext(HttpServletRequest request, String basename) {
+        return getLocalizationContext(request, basename, null);
     }
 
     /**
@@ -191,13 +191,13 @@ public class ContextMessages extends Messages {
      * If no match was found in the previous step, check if a match exists between the fallback locale (given by the
      * <tt>javax.servlet.jsp.jstl.fmt.fallbackLocale</tt> configuration setting) and the available locales, for the
      * given base name.
-     * @param req Request in which the resource bundle with the given base name is requested
+     * @param request Request in which the resource bundle with the given base name is requested
      * @param basename Resource bundle base name
      * @param locale (added by magnolia team)
      * @return Localization context containing the resource bundle with the given base name and the locale that led to
      * the resource bundle match, or the empty localization context if no resource bundle match was found
      */
-    private static LocalizationContext getLocalizationContext(HttpServletRequest req, String basename, Locale locale) {
+    private static LocalizationContext getLocalizationContext(HttpServletRequest request, String basename, Locale locale) {
         LocalizationContext locCtxt = null;
         ResourceBundle bundle = null;
 
@@ -212,7 +212,7 @@ public class ContextMessages extends Messages {
             pref = locale;
         }
         else {
-            pref = getLocale(req, Config.FMT_LOCALE);
+            pref = getLocale(request, Config.FMT_LOCALE);
         }
 
         if (pref != null) {
@@ -224,12 +224,12 @@ public class ContextMessages extends Messages {
         }
         else {
             // Preferred locales are browser-based
-            locCtxt = findMatch(req, basename);
+            locCtxt = findMatch(request, basename);
         }
 
         if (locCtxt == null) {
             // No match found with preferred locales, try using fallback locale
-            pref = getLocale(req, Config.FMT_FALLBACK_LOCALE);
+            pref = getLocale(request, Config.FMT_FALLBACK_LOCALE);
             if (pref != null) {
                 bundle = findMatch(basename, pref);
                 if (bundle != null) {
@@ -265,16 +265,16 @@ public class ContextMessages extends Messages {
      * <p>
      * Determines the client's preferred locales from the request, and compares each of the locales (in order of
      * preference) against the available locales in order to determine the best matching locale.
-     * @param req the current request
+     * @param request the current request
      * @param basename the resource bundle's base name
      * @return the localization context containing the resource bundle with the given base name and best matching
      * locale, or <tt> null </tt> if no resource bundle match was found
      */
-    private static LocalizationContext findMatch(HttpServletRequest req, String basename) {
+    private static LocalizationContext findMatch(HttpServletRequest request, String basename) {
         LocalizationContext locCtxt = null;
 
         // Determine locale from client's browser settings.
-        for (Enumeration en = req.getLocales(); en.hasMoreElements();) {
+        for (Enumeration en = request.getLocales(); en.hasMoreElements();) {
             /*
              * If client request doesn't provide an Accept-Language header, the returned locale Enumeration contains the
              * runtime's default locale, so it always contains at least one element.
@@ -354,15 +354,15 @@ public class ContextMessages extends Messages {
      * The named scoped attribute is searched in the page, request, session (if valid), and application scope(s) (in
      * this order). If no such attribute exists in any of the scopes, the locale is taken from the named context
      * configuration parameter.
-     * @param req the request to start the lookup
+     * @param request the request to start the lookup
      * @param name the name of the scoped attribute or context configuration parameter
      * @return the locale specified by the named scoped attribute or context configuration parameter, or <tt> null </tt>
      * if no scoped attribute or configuration parameter with the given name exists
      */
-    private static Locale getLocale(HttpServletRequest req, String name) {
+    private static Locale getLocale(HttpServletRequest request, String name) {
         Locale loc = null;
 
-        Object obj = find(req, name);
+        Object obj = find(request, name);
         if (obj != null) {
             if (obj instanceof Locale) {
                 loc = (Locale) obj;
@@ -441,29 +441,28 @@ public class ContextMessages extends Messages {
      * For each of the JSP scopes (page, request, session, application), get the value of the configuration variable
      * identified by <tt>name</tt> using method <tt>get()</tt>. Return as soon as a non-null value is found. If no
      * value is found, get the value of the context initialization parameter identified by <tt>name</tt>.
-     * @param req The request to start from
+     * @param request The request to start from
      * @param name Context initialization parameter name of the configuration setting
      * @return The <tt>java.lang.Object</tt> associated with the configuration setting identified by <tt>name</tt>,
      * or null if it is not defined.
      */
-    private static Object find(HttpServletRequest req, String name) {
-        Object ret = get(req, name, PageContext.REQUEST_SCOPE);
-        if (ret == null) {
-            if (req.getSession(false) != null) {
-                // check session only if a session is present
-                ret = get(req, name, PageContext.SESSION_SCOPE);
-            }
-            if (ret == null) {
-                ret = get(req, name, PageContext.APPLICATION_SCOPE);
-                if (ret == null) {
+    private static Object find(HttpServletRequest request, String name) {
+        Object localization = get(request, name, PageContext.REQUEST_SCOPE);
 
-                    // @todo IMPORTANT remove use of http session
-                    HttpSession httpsession = req.getSession(true);
-                    ret = httpsession.getServletContext().getInitParameter(name);
+        if (localization == null) {
+            HttpSession httpSession = request.getSession(false);
+            if (httpSession != null) {
+                // check session only if a session is present
+                localization = get(request, name, PageContext.SESSION_SCOPE);
+            }
+            if (localization == null) {
+                localization = get(request, name, PageContext.APPLICATION_SCOPE);
+                if (localization == null) {
+                    localization = MessagesManager.getContext().getInitParameter(name);
                 }
             }
         }
-        return ret;
+        return localization;
     }
 
     /**
@@ -477,17 +476,17 @@ public class ContextMessages extends Messages {
      * @return The <tt>java.lang.Object</tt> associated with the configuration variable, or null if it is not defined.
      */
     private static Object get(HttpServletRequest request, String name, int scope) {
+        HttpSession httpSession = request.getSession(false);
         switch (scope) {
             case PageContext.REQUEST_SCOPE:
                 return request.getAttribute(name + REQUEST_SCOPE_SUFFIX);
             case PageContext.SESSION_SCOPE:
-
-                // @todo IMPORTANT remove use of http session
-                HttpSession httpsession = request.getSession();
-                return get(httpsession, name);
+                if (httpSession == null) {
+                    return null;
+                }
+                return get(httpSession, name);
             case PageContext.APPLICATION_SCOPE:
-                // @todo IMPORTANT remove use of http session
-                return request.getSession().getServletContext().getAttribute(name + APPLICATION_SCOPE_SUFFIX);
+                return MessagesManager.getContext().getAttribute(name + APPLICATION_SCOPE_SUFFIX);
             default:
                 throw new IllegalArgumentException("unknown scope"); //$NON-NLS-1$
         }
@@ -515,4 +514,5 @@ public class ContextMessages extends Messages {
         }
         return ret;
     }
+
 }

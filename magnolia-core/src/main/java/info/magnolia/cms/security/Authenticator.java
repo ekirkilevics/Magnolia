@@ -41,16 +41,6 @@ public final class Authenticator {
     static final String ATTRIBUTE_USER_ID = "mgnlUserId";
 
     /**
-     * Session attribute holding the magnolia user password.
-     */
-    static final String ATTRIBUTE_PSWD = "mgnlUserPSWD";
-
-    /**
-     * Session attribute holding the magnolia user node from the jcr repository.
-     */
-    static final String ATTRIBUTE_USER = "mgnlUser";
-
-    /**
      * session attribute holding authenticated JAAS subject
      */
     static final String ATTRIBUTE_JAAS_SUBJECT = "mgnlJAASSubject";
@@ -74,44 +64,51 @@ public final class Authenticator {
 
     /**
      * Authenticate authorization request using JAAS login module as configured
-     * @param req as received by the servlet engine
+     * @param request as received by the servlet engine
      * @return boolean
      */
-    public static boolean authenticate(HttpServletRequest req) {
-        String credentials = req.getHeader("Authorization");
+    public static boolean authenticate(HttpServletRequest request) {
+        String credentials = request.getHeader("Authorization");
+
+        String userid;
+        String pswd;
+
         if (StringUtils.isEmpty(credentials) || credentials.length() <= 6) {
             // check for form based login request
-            if (StringUtils.isNotEmpty(req.getParameter(PARAMETER_USER_ID))) {
-                setFormAuthProperties(req);
+            if (StringUtils.isNotEmpty(request.getParameter(PARAMETER_USER_ID))) {
+                userid = request.getParameter(PARAMETER_USER_ID);
+                pswd = StringUtils.defaultString(request.getParameter(PARAMETER_PSWD));
             }
             else {
                 return false;
             }
         }
         else {
-            setBasicAuthProperties(credentials, req);
+            credentials = getDecodedCredentials(credentials.substring(6).trim());
+            userid = StringUtils.substringBefore(credentials, ":");
+            pswd = StringUtils.substringAfter(credentials, ":");
         }
+
         Subject subject;
         // first check if user has been authenticated by some other service or container itself
-        if (req.getUserPrincipal() == null) {
+        if (request.getUserPrincipal() == null) {
             // JAAS authentication
-            CredentialsCallbackHandler callbackHandler = new CredentialsCallbackHandler(
-                getUserId(req),
-                getPassword(req));
+            CredentialsCallbackHandler callbackHandler = new CredentialsCallbackHandler(userid, pswd.toCharArray());
             try {
                 LoginContext loginContext = new LoginContext("magnolia", callbackHandler);
                 loginContext.login();
                 subject = loginContext.getSubject();
 
-                // @todo IMPORTANT remove use of http session
-                HttpSession httpsession = req.getSession(true);
+                // ok, we NEED a session here since the user has been authenticated
+                log.info("Creating a new session for user {}", userid);
+                HttpSession httpsession = request.getSession(true);
                 httpsession.setAttribute(ATTRIBUTE_JAAS_SUBJECT, subject);
             }
             catch (LoginException le) {
                 if (log.isDebugEnabled())
                     log.debug("Exception caught", le);
 
-                HttpSession httpsession = req.getSession(false);
+                HttpSession httpsession = request.getSession(false);
                 if (httpsession != null) {
                     httpsession.invalidate();
                 }
@@ -120,20 +117,23 @@ public final class Authenticator {
         }
         else {
             // user already authenticated via JAAS, try to load roles for it via configured authorization module
-            String userName = req.getUserPrincipal().getName();
-            CredentialsCallbackHandler callbackHandler = new CredentialsCallbackHandler(userName, getPassword(req));
+            String userName = request.getUserPrincipal().getName();
+
+            CredentialsCallbackHandler callbackHandler = new CredentialsCallbackHandler(userName, pswd.toCharArray());
+
             try {
                 LoginContext loginContext = new LoginContext("magnolia_authorization", callbackHandler);
                 loginContext.login();
                 subject = loginContext.getSubject();
-                // @todo IMPORTANT remove use of http session
-                HttpSession httpsession = req.getSession(true);
+                // ok, we NEED a session here since the user has been authenticated
+                log.info("Creating a new session for user {}", userName);
+                HttpSession httpsession = request.getSession(true);
                 httpsession.setAttribute(ATTRIBUTE_JAAS_SUBJECT, subject);
             }
             catch (LoginException le) {
                 if (log.isDebugEnabled())
                     log.debug("Exception caught", le);
-                HttpSession httpsession = req.getSession(false);
+                HttpSession httpsession = request.getSession(false);
                 if (httpsession != null) {
                     httpsession.invalidate();
                 }
@@ -144,53 +144,11 @@ public final class Authenticator {
     }
 
     /**
-     * set basic authentication properties
-     * @param credentials
-     * @param request
-     */
-    private static void setBasicAuthProperties(String credentials, HttpServletRequest request) {
-        credentials = getDecodedCredentials(credentials.substring(6).trim());
-        Authenticator.setUserId(StringUtils.substringBefore(credentials, ":"), request);
-        Authenticator.setPassword(StringUtils.substringAfter(credentials, ":"), request);
-    }
-
-    /**
-     * set form authentication properties
-     * @param request
-     */
-    private static void setFormAuthProperties(HttpServletRequest request) {
-        Authenticator.setUserId(request.getParameter(PARAMETER_USER_ID), request);
-        String pswd = request.getParameter(PARAMETER_PSWD);
-        if (pswd == null) {
-            pswd = "";
-        }
-        Authenticator.setPassword(pswd, request);
-    }
-
-    /**
      * @param credentials to be decoded
      * @return String decoded credentials <b>name:password </b>
      */
     private static String getDecodedCredentials(String credentials) {
         return (new String(Base64.decodeBase64(credentials.getBytes())));
-    }
-
-    /**
-     * @param userName
-     * @param request current HttpServletRequest
-     */
-    private static void setUserId(String userName, HttpServletRequest request) {
-        // @todo IMPORTANT remove use of http session
-        request.getSession(true).setAttribute(ATTRIBUTE_USER_ID, userName);
-    }
-
-    /**
-     * @param request current HttpServletRequest
-     * @param pswd
-     */
-    private static void setPassword(String pswd, HttpServletRequest request) {
-        // @todo IMPORTANT remove use of http session
-        request.getSession(true).setAttribute(ATTRIBUTE_PSWD, pswd);
     }
 
     /**
@@ -209,9 +167,10 @@ public final class Authenticator {
             String credentials = request.getHeader("Authorization");
             if (credentials != null) {
                 try {
-                    credentials = getDecodedCredentials(credentials.substring(6).trim());
-                    Authenticator.setUserId(credentials, request);
-                    userId = (String) httpsession.getAttribute(ATTRIBUTE_USER_ID);
+                    userId = getDecodedCredentials(credentials.substring(6).trim());
+                    if (httpsession != null) {
+                        httpsession.setAttribute(ATTRIBUTE_USER_ID, userId);
+                    }
                 }
                 catch (Exception e) {
                     log.debug(e.getMessage(), e);
@@ -220,21 +179,6 @@ public final class Authenticator {
         }
 
         return userId;
-    }
-
-    /**
-     * @param request current HttpServletRequest
-     * @return char[] , decoded current user password
-     */
-    public static char[] getPassword(HttpServletRequest request) {
-
-        HttpSession httpsession = request.getSession(false);
-        String pswd = null;
-        if (httpsession != null) {
-            pswd = (String) httpsession.getAttribute(ATTRIBUTE_PSWD);
-        }
-
-        return StringUtils.defaultString(pswd).toCharArray();
     }
 
     /**

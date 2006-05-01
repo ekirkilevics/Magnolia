@@ -18,12 +18,13 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
-import org.apache.commons.collections.Transformer;
-import org.apache.commons.collections.map.LRUMap;
-import org.apache.commons.collections.map.LazyMap;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.observation.Event;
@@ -35,13 +36,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.jstl.core.Config;
-import java.util.*;
+
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections.map.LRUMap;
+import org.apache.commons.collections.map.LazyMap;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
  * From this class you get the i18n messages. You should pass a a request, but if you can't the getMessages method will
  * handle it properly. The get() methods are easy to use.
- *
  * @author philipp
  */
 public final class MessagesManager {
@@ -104,7 +110,6 @@ public final class MessagesManager {
 
     /**
      * Called through the initialization process (startup of the container)
-     *
      * @param context servlet context
      */
     public static void init(ServletContext context) {
@@ -177,8 +182,8 @@ public final class MessagesManager {
             }
             catch (javax.jcr.PathNotFoundException e) {
                 availableLanguagesContentNode = configNode.createContent(
-                        AVAILABLE_LOCALES_CONFIG_NAME,
-                        ItemType.CONTENTNODE);
+                    AVAILABLE_LOCALES_CONFIG_NAME,
+                    ItemType.CONTENTNODE);
 
                 availableLanguage = availableLanguagesContentNode.createNodeData(MessagesManager.FALLBACK_LOCALE);
                 availableLanguage.setValue(MessagesManager.FALLBACK_LOCALE);
@@ -220,9 +225,9 @@ public final class MessagesManager {
 
         try {
             ObservationManager observationManager = ContentRepository
-                    .getHierarchyManager(ContentRepository.CONFIG)
-                    .getWorkspace()
-                    .getObservationManager();
+                .getHierarchyManager(ContentRepository.CONFIG)
+                .getWorkspace()
+                .getObservationManager();
 
             observationManager.addEventListener(new EventListener() {
 
@@ -231,10 +236,10 @@ public final class MessagesManager {
                     reload();
                 }
             }, Event.NODE_ADDED
-                    | Event.NODE_REMOVED
-                    | Event.PROPERTY_ADDED
-                    | Event.PROPERTY_CHANGED
-                    | Event.PROPERTY_REMOVED, "/server/" + I18N_CONFIG_NAME, true, null, null, false); //$NON-NLS-1$
+                | Event.NODE_REMOVED
+                | Event.PROPERTY_ADDED
+                | Event.PROPERTY_CHANGED
+                | Event.PROPERTY_REMOVED, "/server/" + I18N_CONFIG_NAME, true, null, null, false); //$NON-NLS-1$
         }
         catch (RepositoryException e) {
             log.error("Unable to add event listeners for i18n", e); //$NON-NLS-1$
@@ -249,15 +254,14 @@ public final class MessagesManager {
     }
 
     /**
-     * Deprectated! Trys to make a new ContextMessages object. if not possible it creates a new Messages object.
-     *
-     * @param req uses the request to find the configuration
+     * Deprecated! Trys to make a new ContextMessages object. if not possible it creates a new Messages object.
+     * @param request uses the request to find the configuration
      * @return Messages
      * @deprecated
      */
-    public static Messages getMessages(HttpServletRequest req) {
-        if (req != null) {
-            return new ContextMessages(req);
+    public static Messages getMessages(HttpServletRequest request) {
+        if (request != null) {
+            return new ContextMessages(request);
         }
         if (log.isDebugEnabled())
             log.debug("using i18n-messages without a request!"); //$NON-NLS-1$
@@ -270,15 +274,14 @@ public final class MessagesManager {
 
     /**
      * Deprectated! Provide a basename
-     *
-     * @param req      request
+     * @param request request
      * @param basename basename
      * @return Messages object to get the messages from
      * @deprecated
      */
-    public static Messages getMessages(HttpServletRequest req, String basename) {
-        if (req != null) {
-            return new ContextMessages(req, basename);
+    public static Messages getMessages(HttpServletRequest request, String basename) {
+        if (request != null) {
+            return new ContextMessages(request, basename);
         }
         if (log.isDebugEnabled())
             log.debug("using i18n-messages without a request!"); //$NON-NLS-1$
@@ -291,16 +294,15 @@ public final class MessagesManager {
 
     /**
      * Deprectated! Provide a special locale
-     *
-     * @param req      request
+     * @param request request
      * @param basename basename
-     * @param locale   locale
+     * @param locale locale
      * @return Messages object to get the messages from
      * @deprecated
      */
-    public static Messages getMessages(HttpServletRequest req, String basename, Locale locale) {
-        if (req != null) {
-            return new ContextMessages(req, basename, locale);
+    public static Messages getMessages(HttpServletRequest request, String basename, Locale locale) {
+        if (request != null) {
+            return new ContextMessages(request, basename, locale);
         }
         if (log.isDebugEnabled())
             log.debug("using i18n-messages without a request!"); //$NON-NLS-1$
@@ -314,7 +316,6 @@ public final class MessagesManager {
 
     /**
      * Deprectated! Trys to make a new ContextMessages object. if not possible it creates a new Messages object.
-     *
      * @param pc the page context to start the lookup
      * @return Messages
      * @deprecated
@@ -331,15 +332,14 @@ public final class MessagesManager {
 
     /**
      * Deprectated! Get a message.
-     *
-     * @param req request
+     * @param request request
      * @param key key to find
      * @return message
      * @deprecated
      */
 
-    public static String get(HttpServletRequest req, String key) {
-        return getMessages(req).get(key);
+    public static String get(HttpServletRequest request, String key) {
+        return getMessages(request).get(key);
     }
 
     public static String get(String key) {
@@ -348,8 +348,7 @@ public final class MessagesManager {
 
     /**
      * Get a message with parameters inside: the value {0} must be a number
-     *
-     * @param key  key to find
+     * @param key key to find
      * @param args replacement strings
      * @return message
      */
@@ -359,20 +358,19 @@ public final class MessagesManager {
     }
 
     /**
-     * @param req
+     * @param request
      * @param key
      * @param args
      * @return
      * @deprecated
      */
-    public static String get(HttpServletRequest req, String key, Object[] args) {
-        return getMessages(req).get(key, args);
+    public static String get(HttpServletRequest request, String key, Object[] args) {
+        return getMessages(request).get(key, args);
     }
 
     /**
      * Use a default string.
-     *
-     * @param key        key to find
+     * @param key key to find
      * @param defaultMsg default message
      * @return message
      */
@@ -382,21 +380,20 @@ public final class MessagesManager {
     }
 
     /**
-     * @param req
+     * @param request
      * @param key
      * @param defaultMsg
      * @return
      * @deprecated
      */
-    public static String getWithDefault(HttpServletRequest req, String key, String defaultMsg) {
-        return getMessages(req).getWithDefault(key, defaultMsg);
+    public static String getWithDefault(HttpServletRequest request, String key, String defaultMsg) {
+        return getMessages(request).getWithDefault(key, defaultMsg);
     }
 
     /**
      * Get a message with parameters inside: the value {0} must be a number. Use a default message.
-     *
-     * @param key        key to find
-     * @param args       replacement strings
+     * @param key key to find
+     * @param args replacement strings
      * @param defaultMsg default message
      * @return message
      */
@@ -405,15 +402,15 @@ public final class MessagesManager {
     }
 
     /**
-     * @param req
+     * @param request
      * @param key
      * @param args
      * @param defaultMsg
      * @return
      * @deprecated
      */
-    public static String getWithDefault(HttpServletRequest req, String key, Object[] args, String defaultMsg) {
-        return getMessages(req).getWithDefault(key, args, defaultMsg);
+    public static String getWithDefault(HttpServletRequest request, String key, Object[] args, String defaultMsg) {
+        return getMessages(request).getWithDefault(key, args, defaultMsg);
     }
 
     /**
@@ -425,11 +422,10 @@ public final class MessagesManager {
 
     /**
      * Deprectated! Use MgnlContext
-     *
      * @return Returns the current locale for the current user
      * @deprecated
      */
-    public static Locale getCurrentLocale(HttpServletRequest req) {
+    public static Locale getCurrentLocale(HttpServletRequest request) {
         try {
             return MgnlContext.getLocale();
         }
@@ -456,9 +452,8 @@ public final class MessagesManager {
 
     /**
      * Set the user language in the session
-     *
      * @param language lagnguage to ste
-     * @param session  current session
+     * @param session current session
      * @deprecated use MgnlContext instead
      */
     public static void setUserLanguage(String language, HttpSession session) {
@@ -474,8 +469,15 @@ public final class MessagesManager {
     }
 
     /**
+     * Getter for <code>context</code>.
+     * @return Returns the context.
+     */
+    public static ServletContext getContext() {
+        return context;
+    }
+
+    /**
      * Used as the key in the LRUMap
-     *
      * @author Philipp Bracher
      * @version $Revision$ ($Author$)
      */
