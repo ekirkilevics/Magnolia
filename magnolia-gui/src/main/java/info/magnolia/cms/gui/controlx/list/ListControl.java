@@ -80,6 +80,13 @@ public class ListControl extends AbstractControl {
     }
     
     /**
+     * @see info.magnolia.cms.gui.controlx.list.ListControl#addColumn(info.magnolia.cms.gui.controlx.list.ListColumn)
+     */
+    public void addColumn(ListColumn column) {
+        this.addChild(column);
+    }
+    
+    /**
      * Layzy bound iterator.
      * @return Returns the iterator.
      */
