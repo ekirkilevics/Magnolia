@@ -71,12 +71,7 @@ public class ListModelIteratorImpl implements ListModelIterator {
     private void prefetchNext() {
         this.next = null;
         while (this.next == null && this.pos < this.list.size()) {
-            try {
-                this.next = (Content) this.list.get(pos);
-            } catch (ClassCastException e) {
-                // invalid object, remove it and try again
-                this.list.remove(pos); // will try again
-            }
+            this.next = this.list.get(pos);
         }
     }
 
