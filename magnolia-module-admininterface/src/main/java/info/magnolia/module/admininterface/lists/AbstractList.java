@@ -54,7 +54,7 @@ public abstract class AbstractList extends TemplatedMVCHandler {
      * @param request
      * @param response
      */
-    protected AbstractList(String name, HttpServletRequest request, HttpServletResponse response) {
+    public AbstractList(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
     }
     
@@ -71,6 +71,7 @@ public abstract class AbstractList extends TemplatedMVCHandler {
     public String show() {
         String view = super.show();
         ListControl list = this.getList();
+        initList(list);
         configureList(list);
         return view;
     }
@@ -78,7 +79,12 @@ public abstract class AbstractList extends TemplatedMVCHandler {
     /**
      * @param list
      */
-    protected void configureList(ListControl list) {
+    public abstract void configureList(ListControl list);
+    
+    /**
+     * @param list
+     */
+    public void initList(ListControl list) {
         list.setName("list");
         list.setRenderKit(this.getRenderKit());
         list.setContextMenu(this.getContextMenu());
@@ -93,7 +99,7 @@ public abstract class AbstractList extends TemplatedMVCHandler {
     /**
      * Returns the model used by this list
      */
-    protected abstract ListModel getModel();
+    public abstract ListModel getModel();
 
     /**
      * @param list The list to set.
