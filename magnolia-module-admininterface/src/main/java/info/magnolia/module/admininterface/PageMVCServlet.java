@@ -68,12 +68,6 @@ public class PageMVCServlet extends MVCServlet {
             catch (InvalidDialogPageHandlerException e) {
                 log.error("no page found: [" + pageName + "]"); //$NON-NLS-1$
             }
-            try{
-                handler.init();
-            }
-            catch (Exception e) {
-                log.error("can't init page [" + pageName + "]", e); //$NON-NLS-1$
-            }
         }
         else {
             log.error("no dialogpage name passed"); //$NON-NLS-1$
