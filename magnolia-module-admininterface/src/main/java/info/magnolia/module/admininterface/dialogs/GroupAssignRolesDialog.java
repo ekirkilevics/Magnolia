@@ -197,17 +197,6 @@ public class GroupAssignRolesDialog extends ConfiguredDialog{
             }
 
             hm.save();
-//            try{
-//            File outputFile = new File("d:\\export.xml");
-//				FileOutputStream out = new FileOutputStream(outputFile);
-//				hm.getWorkspace().getSession().exportSystemView("/", out,
-//						false, false);
-//			}
-//            catch(Exception e)
-//            {
-//            	log.error(e);
-//            }
-
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
