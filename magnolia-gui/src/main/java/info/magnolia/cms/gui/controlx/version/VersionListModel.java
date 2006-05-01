@@ -58,24 +58,10 @@ public class VersionListModel extends AbstractListModel {
     }
 
     /**
-     * @return Iterator over found records
-     * @see info.magnolia.cms.gui.controlx.list.ListModelIterator
-     */
-    public ListModelIterator iterator() {
-        try {
-            return new ListModelIteratorImpl((List) this.doSort(this.getAllVersions()), this.getGroupBy());
-        } catch (RepositoryException re) {
-            log.error("Failed to get ListModelIterator, returning blank Iterator");
-            log.error(re.getMessage(), re);
-        }
-        return new ListModelIteratorImpl(new ArrayList(), this.getGroupBy());
-    }
-
-    /**
      * get all versions
      * @return all versions in a collection
      * */
-    private Collection getAllVersions() throws RepositoryException {
+    protected Collection getResult() throws RepositoryException {
         VersionIterator iterator = this.content.getVersionHistory().getAllVersions();
         Collection allVersions = new ArrayList();
         while (iterator.hasNext()) {
@@ -84,6 +70,4 @@ public class VersionListModel extends AbstractListModel {
         }
         return allVersions;
     }
-
-
 }
