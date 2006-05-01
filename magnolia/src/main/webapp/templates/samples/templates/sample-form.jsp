@@ -1,6 +1,7 @@
 <jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:cms="urn:jsptld:cms-taglib"
   xmlns:cmsu="urn:jsptld:cms-util-taglib" xmlns:c="urn:jsptld:http://java.sun.com/jsp/jstl/core"
   xmlns:fmt="urn:jsptld:http://java.sun.com/jsp/jstl/fmt">
+  <jsp:directive.page contentType="text/html; charset=UTF-8" session="false" />
   <jsp:directive.page import="info.magnolia.cms.beans.config.Server" />
   <jsp:directive.page import="info.magnolia.cms.core.Content" />
   <jsp:directive.page import="info.magnolia.cms.mail.MailConstants" />
@@ -54,7 +55,6 @@
         }
   ]]>
   </jsp:scriptlet>
-  <jsp:directive.page contentType="text/html; charset=utf-8" />
   <jsp:text>
     <![CDATA[<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> ]]>

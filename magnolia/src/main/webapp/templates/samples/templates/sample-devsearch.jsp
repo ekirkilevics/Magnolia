@@ -1,6 +1,6 @@
 <jsp:root version="2.0" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:cms="urn:jsptld:cms-taglib"
   xmlns:cmsu="urn:jsptld:cms-util-taglib" xmlns:c="urn:jsptld:http://java.sun.com/jsp/jstl/core">
-  <jsp:directive.page contentType="text/html; charset=utf-8" />
+  <jsp:directive.page contentType="text/html; charset=UTF-8" session="false" />
   <jsp:directive.page import="info.magnolia.cms.core.search.Query" />
   <jsp:directive.page import="info.magnolia.cms.core.search.QueryResult" />
   <jsp:directive.page import="info.magnolia.cms.beans.runtime.MgnlContext" />
@@ -16,7 +16,6 @@
     <body>
       <cms:mainBar paragraph="samplesPageProperties" />
       <div id="contentDivMainColumn">
-        <c:import url="/templates/samples/templates/inc/columnMain.jsp" />
         <c:choose>
           <c:when test="${!empty(param.sql)}">
             <c:set var="formvalue" value="${param.sql}" />
