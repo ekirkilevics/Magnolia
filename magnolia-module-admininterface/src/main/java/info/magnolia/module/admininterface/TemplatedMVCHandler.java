@@ -21,9 +21,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
-
-
 /**
  * A default page (hander) using a freemarker template to render. The default templat name is following the class name.
  * You can overwrite the getTemplateName() method wich can return a template per view.
@@ -47,7 +44,7 @@ public class TemplatedMVCHandler extends PageMVCHandler {
      * @return the template name (including path)
      */
     protected String getTemplateName(String viewName) {
-        return "/" + StringUtils.replace(this.getClass().getName(), ".", "/") + ".html";
+        return FreeMarkerUtil.createTemplateName(this.getClass(), "html");
     }
 
     /**
