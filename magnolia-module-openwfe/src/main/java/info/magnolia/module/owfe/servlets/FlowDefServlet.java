@@ -213,22 +213,7 @@ public class FlowDefServlet extends javax.servlet.http.HttpServlet implements
 			}
 
 		}
-		// test
-		String test = request.getParameter("test");
-		if (test != null && test.equalsIgnoreCase("yes")) {
-			try {
-				String p = request.getParameter("testp");
-				if (p == null)
-					p = "";
-
-				new OWFEBean().doTest(p);
-			} catch (Exception e) {
-				sb.append("test failed<p>");
-				e.printStackTrace(writer);
-			}
-		}
 		writer.write(sb.toString());
-
 	}
 
 	/*
