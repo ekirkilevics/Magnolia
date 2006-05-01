@@ -61,18 +61,15 @@ public class DMSModule extends AbstractAdminModule {
     
     public void onRegister(int registerState) {
         try {
-            HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
             HierarchyManager hmRoles = ContentRepository.getHierarchyManager(ContentRepository.USER_ROLES);
             HierarchyManager hmUsers = ContentRepository.getHierarchyManager(ContentRepository.USERS);
 
-            ModuleUtil.registerProperties(hm, "info.magnolia.module.dms.config");
             ContentUtil.createPath(hmRoles, DMSConfig.ROLE, ItemType.CONTENT);
             ContentUtil.createPath(hmRoles, DMSConfig.LICENSE_ROLE, ItemType.CONTENT);
             ModuleUtil.registerProperties(hmRoles, "info.magnolia.module.dms.roles");
             ContentUtil.createPath(hmUsers, DMSConfig.USER, ItemType.CONTENT);
             ModuleUtil.registerProperties(hmUsers, "info.magnolia.module.dms.users");
 
-            hm.save();
             hmUsers.save();
             hmRoles.save();
 
