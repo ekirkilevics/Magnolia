@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sv:node sv:name="controls" xmlns:jcr="http://www.jcp.org/jcr/1.0"
+  xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
+  xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:rep="internal"
+  xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:fn="http://www.w3.org/2004/10/xpath-functions"
+  xmlns:sv="http://www.jcp.org/jcr/sv/1.0"
+  xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0" xmlns="">
+  <sv:property sv:name="jcr:primaryType" sv:type="Name">
+    <sv:value>mgnl:content</sv:value>
+  </sv:property>
+  <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+    <sv:value>mix:versionable</sv:value>
+  </sv:property>
+  <sv:property sv:name="jcr:uuid" sv:type="String">
+    <sv:value>f5db1c5b-ef46-4b7c-b2de-f7705eb51286</sv:value>
+  </sv:property>
+  <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+    <sv:value>true</sv:value>
+  </sv:property>
+  <sv:property sv:name="jcr:created" sv:type="Date">
+    <sv:value>2006-04-28T17:28:24.163+02:00</sv:value>
+  </sv:property>
+  <sv:node sv:name="MetaData">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:metaData</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>a6d821dd-1cca-4f93-a2c6-e32cee4cf512</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-04-28T17:28:24.164+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+      <sv:value>2006-03-22T15:23:37.109+01:00</sv:value>
+    </sv:property>
+  </sv:node>
+  <sv:node sv:name="dmsFile">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>bf8ed18e-fb25-4ce8-9363-0039bff7bcdd</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="class" sv:type="String">
+      <sv:value>info.magnolia.module.dms.gui.DMSDialogFileControl</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-04-28T17:28:24.169+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="name" sv:type="String">
+      <sv:value>dmsFile</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>6c4943e6-3886-494b-96f7-4bebbea43f46</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-04-28T17:28:24.170+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+        <sv:value>2006-03-22T15:23:37.112+01:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="dmsStaticLink">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>db550145-7792-4162-9ddc-c675b985df22</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="class" sv:type="String">
+      <sv:value>info.magnolia.module.dms.gui.DMSDialogSaticLinkControl</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-04-28T17:28:24.183+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="name" sv:type="String">
+      <sv:value>dmsStaticLink</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>769bda33-19a7-4b0e-b9c8-cb9831b38812</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-04-28T17:28:24.183+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+        <sv:value>2006-03-22T15:23:37.121+01:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="dmsStaticDate">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>429b4549-c917-40ec-9572-e7da3b846511</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="class" sv:type="String">
+      <sv:value>info.magnolia.module.dms.gui.DMSDialogStaticDate</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-04-28T17:28:24.190+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="name" sv:type="String">
+      <sv:value>dmsStaticDate</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>07cf6b28-8288-49a2-8e82-0b8cc8457a27</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-04-28T17:28:24.191+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+        <sv:value>2006-03-22T15:23:37.128+01:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+</sv:node>

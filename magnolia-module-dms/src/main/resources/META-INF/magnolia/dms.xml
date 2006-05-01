@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module SYSTEM "module.dtd">
+<module>
+	<name>dms</name>
+	<class>info.magnolia.module.dms.DMSModule</class>
+	<version>3.0</version>
+    <dependencies>
+        <dependency>
+            <name>adminInterface</name>
+            <version>3.0</version>
+        </dependency>
+    </dependencies>
+    <bootstrap-files>
+        <bootstrap-file>config.modules.adminInterface.config.menu.dms.xml</bootstrap-file>
+    </bootstrap-files>
+    <servlets>
+        <servlet>
+            <name>DMSDownloadServlet</name>
+            <class>info.magnolia.module.dms.DMSDownloadServlet</class>
+            <comment>DMS download servlet</comment>
+            <mappings>
+                <mapping>/dms/*</mapping>
+                <mapping>/dms-static/*</mapping>
+            </mappings>
+        </servlet>
+    </servlets>
+    <repositories>
+        <repository>
+            <name>dms</name>
+        </repository>
+    </repositories>
+</module>

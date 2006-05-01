@@ -1,0 +1,264 @@
+/**
+ *
+ * Magnolia and its source-code is licensed under the LGPL.
+ * You may copy, adapt, and redistribute this file for commercial or non-commercial use.
+ * When copying, adapting, or redistributing this document in keeping with the guidelines above,
+ * you are required to provide proper attribution to obinary.
+ * If you reproduce or distribute the document without making any substantive modifications to its content,
+ * please use the following attribution line:
+ *
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ *
+ */
+package info.magnolia.module.dms;
+
+import info.magnolia.cms.beans.config.Subscriber;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MetaData;
+import info.magnolia.cms.gui.control.ContextMenuItem;
+import info.magnolia.cms.gui.control.Tree;
+import info.magnolia.cms.gui.control.TreeColumn;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.module.admininterface.AdminTreeConfiguration;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+
+
+/**
+ * Configures the DMS trees menu
+ * @author Philipp Bracher
+ * @version $Revision$ ($Author$)
+ */
+public class DMSAdminTreeConfig implements AdminTreeConfiguration {
+
+    /**
+     * @see info.magnolia.module.admininterface.AdminTreeConfiguration#prepareTree(info.magnolia.cms.gui.control.Tree,
+     * boolean, javax.servlet.http.HttpServletRequest)
+     */
+    public void prepareTree(Tree tree, boolean browseMode, HttpServletRequest request) {
+        tree.setIconPage("/.resources/icons/16/folder.gif");
+        tree.setIconContentNode("/.resources/fileIcons/general.gif");
+
+        tree.addItemType(ItemType.CONTENT.getSystemName());
+        tree.addItemType(ItemType.CONTENTNODE.getSystemName());
+
+        tree.setIconOndblclick("mgnl.dms.DMS.showDialogInTree(" + tree.getJavascriptTree() + ")");
+
+        TreeColumn colTitle = new TreeColumn(tree.getJavascriptTree(), request);
+        colTitle.setWidth(1);
+        colTitle.setHtmlEdit();
+        colTitle.setName("title");
+        // column0.setIsLabel(true);
+        colTitle.setWidth(3);
+        colTitle.setTitle("Title");
+
+        TreeColumn colURL = new TreeColumn(tree.getJavascriptTree(), request);
+        colURL.setIsLabel(true);
+        colURL.setHtmlEdit();
+        colURL.setWidth(3);
+        colURL.setTitle("URL");
+
+        TreeColumn colType = new TreeColumn(tree.getJavascriptTree(), request);
+        colType.setName("type");
+        colType.setHtmlEdit("");
+        colType.setWidth(1);
+        colType.setTitle("Type");
+
+        TreeColumn colDate = new TreeColumn(tree.getJavascriptTree(), request);
+        colDate.setName(MetaData.LAST_MODIFIED);
+        colDate.setIsMeta(true);
+        colDate.setDateFormat(DMSConfig.getDateFormat());
+        colDate.setWidth(1);
+        colDate.setTitle("Date");
+
+        TreeColumn columnIcons = new TreeColumn(tree.getJavascriptTree(), request);
+        columnIcons.setCssClass(StringUtils.EMPTY);
+        columnIcons.setWidth(1);
+        columnIcons.setIsIcons(true);
+        columnIcons.setIconsActivation(true);
+        columnIcons.setIconsPermission(true);
+
+        tree.addColumn(colTitle);
+        tree.addColumn(colURL);
+        tree.addColumn(colType);
+        tree.addColumn(colDate);
+        tree.addColumn(columnIcons);
+    }
+
+    /**
+     * @see info.magnolia.module.admininterface.AdminTreeConfiguration#prepareContextMenu(info.magnolia.cms.gui.control.Tree,
+     * boolean, javax.servlet.http.HttpServletRequest)
+     */
+    public void prepareContextMenu(Tree tree, boolean browseMode, HttpServletRequest request) {
+        Messages msgs = MessagesManager.getMessages();
+
+        ContextMenuItem menuNewFolder = new ContextMenuItem();
+
+        menuNewFolder.setLabel(msgs.get("tree.config.menu.newFolder"));
+        menuNewFolder.setIcon(request.getContextPath() + "/.resources/icons/16/folder_add.gif");
+        menuNewFolder.setOnclick(tree.getJavascriptTree() + ".createNode('" + ItemType.CONTENT.getSystemName() + "');");
+        menuNewFolder.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotNodeData("
+            + tree.getJavascriptTree()
+            + ")");
+        menuNewFolder.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotContentNode("
+            + tree.getJavascriptTree()
+            + ")");
+
+        ContextMenuItem menuNewDocument = new ContextMenuItem();
+        menuNewDocument.setLabel("New document");
+        menuNewDocument.setIcon(request.getContextPath() + "/.resources/icons/16/document_add.gif");
+        menuNewDocument.setOnclick("mgnl.dms.DMS.createNew(" + tree.getJavascriptTree() + ".selectedNode.id);");
+        menuNewDocument.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotContentNode("
+            + tree.getJavascriptTree()
+            + ")");
+
+        ContextMenuItem menuDownloadDocument = new ContextMenuItem();
+        menuDownloadDocument.setLabel("Download document");
+        menuDownloadDocument.setIcon(request.getContextPath() + "/.resources/icons/16/document_plain.gif");
+        menuDownloadDocument.setOnclick("mgnl.dms.DMS.downloadFile(" + tree.getJavascriptTree() + ".selectedNode.id);");
+        menuDownloadDocument.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotContent("
+            + tree.getJavascriptTree()
+            + ")");
+
+        ContextMenuItem menuUploadZip = new ContextMenuItem();
+        menuUploadZip.setLabel("Upload zip");
+        menuUploadZip.setIcon(request.getContextPath() + "/.resources/icons/16/document_add.gif");
+        menuUploadZip.setOnclick("mgnl.dms.DMS.uploadZip(" + tree.getJavascriptTree() + ".selectedNode.id);");
+        menuUploadZip.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotContentNode("
+            + tree.getJavascriptTree()
+            + ")");
+
+        ContextMenuItem menuEditDocument = new ContextMenuItem();
+        menuEditDocument.setLabel("Edit document");
+        menuEditDocument.setIcon(request.getContextPath() + "/.resources/icons/16/document_edit.gif");
+        menuEditDocument.setOnclick("mgnlTreeMenuOpenDialog("
+            + tree.getJavascriptTree()
+            + ",'.magnolia/dialogs/documentedit.html');");
+        menuEditDocument.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotContent("
+            + tree.getJavascriptTree()
+            + ")");
+
+        ContextMenuItem menuVersions = new ContextMenuItem();
+        menuVersions.setLabel("Versions");
+        menuVersions.setIcon(request.getContextPath() + "/.resources/icons/16/exchange.gif");
+        menuVersions.setOnclick("mgnl.dms.DMS.showVersions(" + tree.getJavascriptTree() + ".selectedNode.id);");
+        menuVersions.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotContent("
+            + tree.getJavascriptTree()
+            + ")");
+
+        ContextMenuItem menuDelete = new ContextMenuItem();
+        menuDelete.setLabel(msgs.get("tree.config.menu.delete"));
+        menuDelete.setIcon(request.getContextPath() + "/.resources/icons/16/delete2.gif");
+        menuDelete.setOnclick(tree.getJavascriptTree() + ".deleteNode();");
+        menuDelete.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
+            + tree.getJavascriptTree()
+            + ")");
+
+        ContextMenuItem menuCopy = new ContextMenuItem();
+        menuCopy.setLabel(msgs.get("tree.config.menu.copy"));
+        menuCopy.setIcon(request.getContextPath() + "/.resources/icons/16/copy.gif");
+        menuCopy.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
+            + tree.getJavascriptTree()
+            + ")");
+        menuCopy.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotNodeData("
+            + tree.getJavascriptTree()
+            + ")");
+        menuCopy.setOnclick(tree.getJavascriptTree() + ".copyNode();");
+
+        ContextMenuItem menuCut = new ContextMenuItem();
+        menuCut.setLabel(msgs.get("tree.config.menu.move"));
+        menuCut.setIcon(request.getContextPath() + "/.resources/icons/16/up_down.gif");
+        menuCut
+            .addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" + tree.getJavascriptTree() + ")");
+        menuCut.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotNodeData("
+            + tree.getJavascriptTree()
+            + ")");
+        menuCut.setOnclick(tree.getJavascriptTree() + ".cutNode();");
+
+        ContextMenuItem menuActivateExcl = new ContextMenuItem();
+        menuActivateExcl.setLabel("Activate this"); //$NON-NLS-1$
+        menuActivateExcl.setIcon(request.getContextPath() + "/.resources/icons/16/arrow_right_green.gif"); //$NON-NLS-1$
+        menuActivateExcl.setOnclick(tree.getJavascriptTree() + ".activateNode(" + Tree.ACTION_ACTIVATE + ",false);"); //$NON-NLS-1$ //$NON-NLS-2$
+        menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
+            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+        menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotNodeData(" //$NON-NLS-1$
+            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+
+        ContextMenuItem menuActivateIncl = new ContextMenuItem();
+        menuActivateIncl.setLabel("Activate incl. content"); //$NON-NLS-1$
+        menuActivateIncl.setIcon(request.getContextPath() + "/.resources/icons/16/arrow_right_green.gif"); //$NON-NLS-1$
+        menuActivateIncl.setOnclick(tree.getJavascriptTree() + ".activateNode(" + Tree.ACTION_ACTIVATE + ",true);"); //$NON-NLS-1$ //$NON-NLS-2$
+        menuActivateIncl.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
+            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+        menuActivateIncl.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotNodeData(" //$NON-NLS-1$
+            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+        menuActivateIncl.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotContentNode(" //$NON-NLS-1$
+            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+
+        ContextMenuItem menuDeActivate = new ContextMenuItem();
+        menuDeActivate.setLabel(msgs.get("tree.config.menu.deactivate")); //$NON-NLS-1$
+        menuDeActivate.setIcon(request.getContextPath() + "/.resources/icons/16/arrow_left_red.gif"); //$NON-NLS-1$
+        menuDeActivate.setOnclick(tree.getJavascriptTree() + ".deActivateNode(" + Tree.ACTION_DEACTIVATE + ");"); //$NON-NLS-1$ //$NON-NLS-2$
+        menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
+            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+        menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotNodeData(" //$NON-NLS-1$
+            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+
+        if (!Subscriber.isSubscribersEnabled()) {
+            menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
+            menuActivateIncl.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
+            menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
+        }
+
+        ContextMenuItem menuExport = new ContextMenuItem();
+        menuExport.setLabel(msgs.get("tree.menu.export")); //$NON-NLS-1$
+        menuExport.setIcon(request.getContextPath() + "/.resources/icons/16/export.gif"); //$NON-NLS-1$
+        // keep versions
+        menuExport.setOnclick(tree.getJavascriptTree() + ".exportNode(true);"); //$NON-NLS-1$
+
+        ContextMenuItem menuImport = new ContextMenuItem();
+        menuImport.setLabel(msgs.get("tree.menu.import")); //$NON-NLS-1$
+        menuImport.setIcon(request.getContextPath() + "/.resources/icons/16/import1.gif"); //$NON-NLS-1$
+        menuImport.setOnclick(tree.getJavascriptTree() + ".importNode(this);"); //$NON-NLS-1$
+
+        ContextMenuItem menuRefresh = new ContextMenuItem();
+        menuRefresh.setLabel(msgs.get("tree.menu.refresh"));
+        menuRefresh.setIcon(request.getContextPath() + "/.resources/icons/16/refresh.gif");
+        menuRefresh.setOnclick(tree.getJavascriptTree() + ".refresh();");
+
+        tree.addMenuItem(menuNewFolder);
+        tree.addMenuItem(menuNewDocument);
+        tree.addMenuItem(menuEditDocument);
+        tree.addMenuItem(menuDownloadDocument);
+        tree.addMenuItem(null); // line
+        tree.addMenuItem(menuDelete);
+        tree.addMenuItem(null); // line
+        tree.addMenuItem(menuCut);
+        tree.addMenuItem(menuCopy);
+        tree.addMenuItem(null); // line
+        tree.addMenuItem(menuVersions);
+        tree.addSeparator();
+        tree.addMenuItem(menuActivateExcl);
+        tree.addMenuItem(menuActivateIncl);
+        tree.addMenuItem(menuDeActivate);
+        tree.addMenuItem(null); // line
+        tree.addMenuItem(menuUploadZip);
+        tree.addMenuItem(menuImport);
+        tree.addMenuItem(menuExport);
+        tree.addMenuItem(null); // line
+        tree.addMenuItem(menuRefresh);
+    }
+
+    /**
+     * @see info.magnolia.module.admininterface.AdminTreeConfiguration#prepareFunctionBar(info.magnolia.cms.gui.control.Tree,
+     * boolean, javax.servlet.http.HttpServletRequest)
+     */
+    public void prepareFunctionBar(Tree tree, boolean browseMode, HttpServletRequest request) {
+        tree.getFunctionBar().setSearchable(true);
+        tree.getFunctionBar().setOnSearch("mgnl.dms.DMS.simpleSearch()");
+    }
+
+}
