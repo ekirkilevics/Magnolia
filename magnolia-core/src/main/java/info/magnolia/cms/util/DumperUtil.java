@@ -14,10 +14,12 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Iterator;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -25,6 +27,7 @@ import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.Value;
 
 import org.slf4j.Logger;
@@ -145,6 +148,36 @@ public class DumperUtil {
      */
     public static void dump(Node n, PrintWriter out) throws RepositoryException {
         dump(n, 1, out);
+    }
+
+    public static void dumpChanges(HierarchyManager hm) {
+        PrintWriter writer = new PrintWriter(System.out);
+        try {
+            dumpChanges(hm.getWorkspace().getSession(), writer);
+        }
+        catch (Exception e) {
+            log.error("can't dump", e);
+        }
+        writer.flush();
+    }
+
+    public static void dumpChanges(Session session, PrintWriter out) throws RepositoryException {
+        if (session.hasPendingChanges()) {
+            dumpChanges(session.getRootNode(), out);
+        }
+    }
+
+    private static void dumpChanges(Node node, PrintWriter out) throws RepositoryException {
+        if (node.isModified()) {
+            out.println(node.getPath() + " is modified");
+        }
+        else if (node.isNew()) {
+            out.println(node.getPath() + " is new");
+        }
+        for (Iterator iter = node.getNodes(); iter.hasNext();) {
+            Node child = (Node) iter.next();
+            dumpChanges(child, out);
+        }
     }
 
 }
