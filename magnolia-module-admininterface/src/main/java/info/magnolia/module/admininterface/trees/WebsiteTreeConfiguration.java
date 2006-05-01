@@ -177,6 +177,20 @@ public class WebsiteTreeConfiguration implements AdminTreeConfiguration {
         menuCopy.setOnclick(tree.getJavascriptTree() + ".copyNode();"); //$NON-NLS-1$
         menuCopy.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
             + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+        
+        ContextMenuItem menuRestore = new ContextMenuItem("restore");
+        menuRestore.setLabel(msgs.get("versions.restore")); //$NON-NLS-1$
+        menuRestore.setIcon(request.getContextPath() + "/.resources/icons/16/undo.gif"); //$NON-NLS-1$
+        menuRestore.setOnclick("mgnl.admininterface.WebsiteTree.restore(" + tree.getJavascriptTree() + ");"); //$NON-NLS-1$ //$NON-NLS-2$
+        menuRestore.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
+            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+
+        ContextMenuItem menuVersions = new ContextMenuItem("versions");
+        menuVersions.setLabel(msgs.get("versions")); //$NON-NLS-1$
+        menuVersions.setIcon(request.getContextPath() + "/.resources/icons/16/exchange.gif"); //$NON-NLS-1$
+        menuVersions.setOnclick("mgnl.admininterface.WebsiteTree.showVersions(" + tree.getJavascriptTree() + ");"); //$NON-NLS-1$ //$NON-NLS-2$
+        menuVersions.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
+            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
 
         ContextMenuItem menuActivateExcl = new ContextMenuItem("activate");
         menuActivateExcl.setLabel(msgs.get("tree.web.menu.activate")); //$NON-NLS-1$
@@ -250,6 +264,10 @@ public class WebsiteTreeConfiguration implements AdminTreeConfiguration {
             tree.addMenuItem(menuCopy);
 
             tree.addSeparator();
+            tree.addMenuItem(menuRestore);
+            tree.addMenuItem(menuVersions);
+
+            tree.addSeparator();
             tree.addMenuItem(menuActivateExcl);
             tree.addMenuItem(menuActivateIncl);
             tree.addMenuItem(menuDeActivate);
@@ -295,12 +313,15 @@ public class WebsiteTreeConfiguration implements AdminTreeConfiguration {
         }
         // null is separator :)
         tree.addFunctionBarItem(null);
-
+        
         ContextMenuItem menuRefresh = new ContextMenuItem("refresh");
         menuRefresh.setLabel(msgs.get("tree.menu.refresh")); //$NON-NLS-1$
         menuRefresh.setIcon(request.getContextPath() + "/.resources/icons/16/refresh.gif"); //$NON-NLS-1$
         menuRefresh.setOnclick(tree.getJavascriptTree() + ".refresh();"); //$NON-NLS-1$
         tree.addFunctionBarItem(new FunctionBarItem(menuRefresh));
-     }
+
+        tree.getFunctionBar().setSearchable(true);
+        tree.getFunctionBar().setOnSearch("mgnl.admininterface.WebsiteTree.search()");
+    }
 
 }
