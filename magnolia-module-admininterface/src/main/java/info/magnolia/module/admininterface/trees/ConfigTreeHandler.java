@@ -49,7 +49,7 @@ public class ConfigTreeHandler extends AdminTreeMVCHandler {
      * Do not active sub CONTENTNODES automatically
      */
     public String activate() {
-        boolean recursive = (request.getParameter("recursive") != null); //$NON-NLS-1$
+        boolean recursive = (this.getRequest().getParameter("recursive") != null); //$NON-NLS-1$
         // do not activate nodes of type CONTENTNODE if recursive is false
         try {
             this.getTree().activateNode(this.getPathSelected(), recursive, false);
