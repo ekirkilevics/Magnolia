@@ -12,10 +12,19 @@
  */
 package info.magnolia.module.admininterface.trees;
 
+import info.magnolia.cms.beans.runtime.MgnlContext;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 
+import javax.jcr.version.Version;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -24,6 +33,11 @@ import javax.servlet.http.HttpServletResponse;
  * @version $Id$
  */
 public class WebsiteTreeHandler extends AdminTreeMVCHandler {
+    
+    /**
+     * Logger
+     */
+    private static Logger log = LoggerFactory.getLogger(WebsiteTreeHandler.class);
 
     /**
      * @param name
@@ -33,6 +47,24 @@ public class WebsiteTreeHandler extends AdminTreeMVCHandler {
     public WebsiteTreeHandler(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
         this.setConfiguration(new WebsiteTreeConfiguration());
+    }
+    
+    public String restore(){
+        log.info("restore:" + this.getPathSelected());
+        try{
+            HierarchyManager hm = MgnlContext.getHierarchyManager(this.getRepository());
+            Content node = hm.getContent(this.getPathSelected());
+            Version latest = node.getJCRNode().getBaseVersion();
+            node.addVersion();
+            node.restore(latest, true);
+            AlertUtil.setMessage(MessagesManager.get("versions.restore.latest.success"));
+        }
+        catch(Exception e){
+            log.error("can't restore version", e);
+            AlertUtil.setMessage(MessagesManager.get("versions.restore.exception", new String[]{e.getMessage()}));
+        }
+        
+        return AdminTreeMVCHandler.VIEW_TREE;
     }
 
 }
