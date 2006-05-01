@@ -13,64 +13,91 @@
 package info.magnolia.cms.gui.controlx.list;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
+import javax.jcr.RepositoryException;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.controlx.list.util.ValueProvider;
 
 
 /**
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public abstract class AbstractListModel implements ListModel {
-
+    
+    private static Logger log = LoggerFactory.getLogger(AbstractListModel.class);
 
     /**
      * sort or group by order
-     * */
+     */
     public static final String DESCENDING = "DESC";
 
     /**
      * sort or group by order
-     * */
+     */
     public static final String ASCENDING = "ASC";
 
     /**
      * sort by field name
-     * */
+     */
     protected String sortBy;
 
     /**
      * sort by order
-     * */
+     */
     protected String sortByOrder;
 
     /**
      * group by field name
-     * */
+     */
     protected String groupBy;
 
     /**
      * group by order
-     * */
+     */
     protected String groupByOrder;
 
     /**
      * this must be implemented by implementing classes
      * @return Iterator over found records
      * @see ListModelIterator
-     * */
-    public abstract ListModelIterator iterator();
+     */
+    public ListModelIterator iterator(){
+        try {
+            return createIterator(getResult());
+        } catch (Exception re) {
+            log.error("can't create the list model iterator, will return an empty list", re);
+            return new ListModelIteratorImpl(new ArrayList(), this.getGroupBy());
+        }
+    }
+    
+    /**
+     * @return the collection of the items passed to the iterator
+     */
+    protected abstract Collection getResult() throws Exception;
+    
+    /**
+     * Create the iterator
+     * @param items
+     * @return
+     */
+    protected ListModelIterator createIterator(Collection items) {
+        return new ListModelIteratorImpl((List)this.doSort(items), this.getGroupBy());
+    }
+
 
     /**
      * set sort by field
      * @param name
-     * */
+     */
     public void setSortBy(String name) {
         this.sortBy = name;
     }
@@ -79,7 +106,7 @@ public abstract class AbstractListModel implements ListModel {
      * set sort by field and order ('ASCENDING' | 'DESCENDING')
      * @param name
      * @param order
-     * */
+     */
     public void setSortBy(String name, String order) {
         this.sortBy = name;
         this.sortByOrder = order;
@@ -88,7 +115,7 @@ public abstract class AbstractListModel implements ListModel {
     /**
      * set group by field
      * @param name
-     * */
+     */
     public void setGroupBy(String name) {
         this.groupBy = name;
     }
@@ -97,7 +124,7 @@ public abstract class AbstractListModel implements ListModel {
      * set group by field and order ('ASCENDING' | 'DESCENDING')
      * @param name
      * @param order
-     * */
+     */
     public void setGroupBy(String name, String order) {
         this.groupBy = name;
         this.groupByOrder = order;
@@ -106,7 +133,7 @@ public abstract class AbstractListModel implements ListModel {
     /**
      * get sort on field name
      * @return String field name
-     * */
+     */
     public String getSortBy() {
         return this.sortBy;
     }
@@ -114,7 +141,7 @@ public abstract class AbstractListModel implements ListModel {
     /**
      * get sort by ordering
      * @return order ('ASCENDING' | 'DESCENDING')
-     * */
+     */
     public String getSortByOrder() {
         return this.sortByOrder;
     }
@@ -122,7 +149,7 @@ public abstract class AbstractListModel implements ListModel {
     /**
      * get group on field name
      * @return String field name
-     * */
+     */
     public String getGroupBy() {
         return this.groupBy;
     }
@@ -130,7 +157,7 @@ public abstract class AbstractListModel implements ListModel {
     /**
      * get group by ordering
      * @return order ('ASCENDING' | 'DESCENDING')
-     * */
+     */
     public String getGroupByOrder() {
         return this.groupByOrder;
     }
@@ -139,7 +166,7 @@ public abstract class AbstractListModel implements ListModel {
      * sort
      * @param collection
      * @return sorted collection
-     * */
+     */
     protected Collection doSort(Collection collection) {
         if (StringUtils.isNotEmpty(this.getGroupBy())) {
             ListComparator comparator = new ListComparator();
@@ -162,10 +189,11 @@ public abstract class AbstractListModel implements ListModel {
         }
         return collection;
     }
+    
 
     /**
      * Does simple or sub ordering
-     * */
+     */
     protected class ListComparator implements Comparator {
 
         private String preSort;
@@ -193,7 +221,7 @@ public abstract class AbstractListModel implements ListModel {
          * group by
          * @param object to be compared
          * @param object1 to be compared
-         * */
+         */
         private int sort(Object object, Object object1) {
             Comparable firstKey = (Comparable) this.valueProvider.getValue(this.sortBy, object);
             Comparable secondKey = (Comparable) this.valueProvider.getValue(this.sortBy, object1);
@@ -207,7 +235,7 @@ public abstract class AbstractListModel implements ListModel {
          * sub sort
          * @param object to be compared
          * @param object1 to be compared
-         * */
+         */
         private int subSort(Object object, Object object1) {
             String firstKey = (String) this.valueProvider.getValue(this.preSort, object);
             String secondKey = (String) this.valueProvider.getValue(this.preSort, object1);
