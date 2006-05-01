@@ -6,8 +6,8 @@
 
 <script>
 	function ${this.name}Resize(){
-		var thisHeight = MgnlDHTMLUtil.getHeight($('${this.name}ListDiv'));
-		var thisWidth = MgnlDHTMLUtil.getWidth($('${this.name}ListDiv'));
+		var thisHeight = MgnlDHTMLUtil.getHeight($('mgnlListDiv'));
+		var thisWidth = MgnlDHTMLUtil.getWidth($('mgnlListDiv'));
 		<#if this.groupableFields?has_content || this.sortableFields?has_content>
 			var sortWidth = MgnlDHTMLUtil.getWidth($('${this.name}SortGroupDiv'));
 			$('${this.name}SortGroupDiv').style.left = thisWidth - sortWidth + "px";		
@@ -22,7 +22,7 @@
 	
 	function ${this.name}Init(){
 		${this.name} = new mgnl.controls.List('${this.name}');	
-		${this.name}Resize
+		${this.name}Resize();
 	}
 
 	MgnlDHTMLUtil.addOnLoad(${this.name}Init);
