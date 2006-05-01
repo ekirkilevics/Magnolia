@@ -231,17 +231,18 @@ public class BarMain extends Bar {
     public void drawHtml(JspWriter out) throws IOException {
         if (Server.isAdmin()) {
 
-            // check if links have already been added.
-            if (this.getRequest().getAttribute(Sources.REQUEST_LINKS_DRAWN) == null) {
-                this.drawHtmlLinks(out);
-                this.getRequest().setAttribute(Sources.REQUEST_LINKS_DRAWN, Boolean.TRUE);
-            }
-
-            int top = this.getTop();
-            int left = this.getLeft();
-
             boolean isGranted = Resource.getActivePage(this.getRequest()).isGranted(Permission.SET);
             if (isGranted) {
+
+                // check if links have already been added.
+                if (this.getRequest().getAttribute(Sources.REQUEST_LINKS_DRAWN) == null) {
+                    this.drawHtmlLinks(out);
+                    this.getRequest().setAttribute(Sources.REQUEST_LINKS_DRAWN, Boolean.TRUE);
+                }
+
+                int top = this.getTop();
+                int left = this.getLeft();
+
                 if (!Resource.showPreview(this.getRequest())) {
                     // is edit mode
                     this.setSmall(false);
