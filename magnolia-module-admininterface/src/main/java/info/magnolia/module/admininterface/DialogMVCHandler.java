@@ -115,11 +115,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
     public DialogMVCHandler(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
 
-        this.request = request;
-        this.response = response;
-
         form = Resource.getPostedForm(request);
-
         params = new RequestFormUtil(request, form);
 
         path = params.getParameter("mgnlPath"); //$NON-NLS-1$
@@ -128,8 +124,9 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         richE = params.getParameter("mgnlRichE"); //$NON-NLS-1$
         richEPaste = params.getParameter("mgnlRichEPaste"); //$NON-NLS-1$
         repository = params.getParameter("mgnlRepository", getRepository()); //$NON-NLS-1$
-
-        hm = MgnlContext.getHierarchyManager(repository);
+        if(StringUtils.isNotEmpty(repository)){
+            hm = MgnlContext.getHierarchyManager(repository);
+        }
         msgs = MessagesManager.getMessages();
     }
 
@@ -176,7 +173,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
      * @throws RepositoryException
      */
     protected DialogDialog createDialog(Content configNode, Content storageNode) throws RepositoryException {
-        return DialogFactory.getDialogDialogInstance(request, response, storageNode, configNode);
+        return DialogFactory.getDialogDialogInstance(this.getRequest(), this.getResponse(), storageNode, configNode);
     }
 
     /**
@@ -232,7 +229,8 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
      * parameter
      */
     public Content getStorageNode() {
-        if (storageNode == null) {
+        // hm is null if this dialog is not used to show content
+        if (storageNode == null && hm != null) {
             try {
                 Content parentContent = hm.getContent(path);
                 if (StringUtils.isEmpty(nodeName)) {
@@ -273,12 +271,12 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
      * @see info.magnolia.cms.servlets.MVCServletHandler#renderHtml(java.lang.String)
      */
     public void renderHtml(String view) throws IOException {
-        PrintWriter out = response.getWriter();
+        PrintWriter out = this.getResponse().getWriter();
 
         // after saving
         if (VIEW_CLOSE_WINDOW.equals(view)) {
             out.println("<html>"); //$NON-NLS-1$
-            out.println(new Sources(request.getContextPath()).getHtmlJs());
+            out.println(new Sources(this.getRequest().getContextPath()).getHtmlJs());
             out.println("<script type=\"text/javascript\">"); //$NON-NLS-1$
             out.println("mgnlDialogReloadOpener();"); //$NON-NLS-1$
             out.println("window.close();"); //$NON-NLS-1$
@@ -306,7 +304,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         String[] toRemove = form.getParameterValues(DialogSuper.SESSION_ATTRIBUTENAME_DIALOGOBJECT_REMOVE);
         if (toRemove != null) {
             for (int i = 0; i < toRemove.length; i++) {
-                HttpSession httpsession = request.getSession(false);
+                HttpSession httpsession = this.getRequest().getSession(false);
                 if (httpsession != null) {
                     httpsession.removeAttribute(toRemove[i]);
                 }
