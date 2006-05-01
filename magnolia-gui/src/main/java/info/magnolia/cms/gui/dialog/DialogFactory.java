@@ -80,7 +80,7 @@ public final class DialogFactory {
         Class dialogClass = (Class) controls.get(controlType);
 
         if (dialogClass == null) {
-            throw new IllegalArgumentException("Unknown dialog type: \"" + controlType + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+            throw new IllegalArgumentException("Unknown control type: \"" + controlType + "\""); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         DialogInterface dialog;
