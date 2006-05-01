@@ -67,7 +67,17 @@ public class FreeMarkerUtil {
      * @return the resuling string
      */
     public static String process(Object thisObj) {
-        return process(thisObj.getClass(), thisObj, "html");
+        return process(thisObj.getClass(), thisObj);
+    }
+
+    /**
+     * Default extension is html
+     * @param klass
+     * @param thisObj
+     * @return
+     */
+    public static String process(Class klass, Object thisObj) {
+        return process(klass, thisObj, "html");
     }
 
     /**
@@ -91,8 +101,7 @@ public class FreeMarkerUtil {
      * @return
      */
     public static String process(Class klass, Map data, String ext) {
-        String name = "/" + StringUtils.replace(klass.getName(), ".", "/") + "." + ext;
-        return process(name, data);
+        return process(createTemplateName(klass, ext), data);
     }
 
     /**
@@ -115,6 +124,10 @@ public class FreeMarkerUtil {
             e.printStackTrace(new PrintWriter(writer));
             log.error("exception in template", e);
         }
+    }
+
+    public static String createTemplateName(Class klass, String ext) {
+        return "/" + StringUtils.replace(klass.getName(), ".", "/") + "." + ext;
     }
 
 }
