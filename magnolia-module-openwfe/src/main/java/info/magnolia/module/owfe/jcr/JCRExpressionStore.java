@@ -23,15 +23,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+
 /**
  * the expresion store using JCR
  * @author jackie
- *
  */
 public class JCRExpressionStore extends AbstractExpressionStore {
 
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger
-            .getLogger(JCRExpressionStore.class.getName());
+    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(JCRExpressionStore.class
+        .getName());
 
     //
     // CONSTANTS & co
@@ -48,14 +48,12 @@ public class JCRExpressionStore extends AbstractExpressionStore {
     //
     // CONSTRUCTORS
 
-    public void init(final String serviceName,
-                     final ApplicationContext context, final java.util.Map serviceParams)
-            throws ServiceException {
+    public void init(final String serviceName, final ApplicationContext context, final java.util.Map serviceParams)
+        throws ServiceException {
         super.init(serviceName, context, serviceParams);
         hm = ContentRepository.getHierarchyManager(REPO_OWFE, WORKSPACEID);
         if (hm == null)
-            throw new ServiceException(
-                    "Can't get HierarchyManager Object for workitems repository");
+            throw new ServiceException("Can't get HierarchyManager Object for workitems repository");
 
     }
 
@@ -69,7 +67,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
     }
 
     // interface
-    
+
     /**
      * stroe one expresion
      */
@@ -80,7 +78,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
             // Content ct = root.createContent("expression",
             // ItemType.EXPRESSION);
             String id = fe.getId().toParseableString();
-            log.info("store expresion: expression id = " + id);
+            log.debug("store expresion: expression id = " + id);
             String nid = convertId(id);
             Content ct = root.createContent(nid, ItemType.EXPRESSION);
 
@@ -100,14 +98,15 @@ public class JCRExpressionStore extends AbstractExpressionStore {
             ct.createNodeData("value", vf.createValue(s));
             hm.save();
 
-        } catch (Exception e) {
-            log.error("store exception faled,", e);
+        }
+        catch (Exception e) {
+            log.error("store exception failed,", e);
         }
 
     }
 
     /**
-     * remove one expresion 
+     * remove one expresion
      */
     public synchronized void unstoreExpression(FlowExpression fe) throws PoolException {
         try {
@@ -118,7 +117,8 @@ public class JCRExpressionStore extends AbstractExpressionStore {
                 hm.save();
             }
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("unstore exception faled,", e);
         }
 
@@ -126,7 +126,6 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 
     /**
      * Find expression by id
-     *
      * @param fei flow expression id
      * @return
      * @throws Exception
@@ -136,20 +135,21 @@ public class JCRExpressionStore extends AbstractExpressionStore {
         String s_fei = fei.toParseableString();
 
         Content root = hm.getRoot();
-        log.info("load expresion, expression id = " + s_fei);
+        log.debug("load expresion, expression id = " + s_fei);
         ret = root.getContent(convertId(s_fei));
         if (ret == null) { // if not found the id directly
             Collection c = root.getChildren(ItemType.EXPRESSION);
             Iterator it = c.iterator();
             while (it.hasNext()) {
                 Content ct = (Content) it.next();
-                //String name = ct.getName();
+                // String name = ct.getName();
                 String sid = ct.getNodeData("ID").getString();
                 FlowExpressionId id = null;
                 // compare the expression id
                 try {
                     id = FlowExpressionId.fromParseableString(sid);
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     log.error("parse expresion id failed", e);
                     ct.delete();
                     hm.save();
@@ -161,9 +161,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
                     ret = ct;
                     break;
                 }
-
             }
-
         }
         return ret;
     }
@@ -171,8 +169,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
     /**
      * load expreson by id
      */
-    public FlowExpression loadExpression(FlowExpressionId fei)
-            throws PoolException {
+    public FlowExpression loadExpression(FlowExpressionId fei) throws PoolException {
         FlowExpression ret_fe = null;
         String s_fei = "";
         try {
@@ -186,13 +183,11 @@ public class JCRExpressionStore extends AbstractExpressionStore {
                 return ret_fe;
             }
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("load exception faled,", e);
         }
-        throw new PoolException("can not get this expression (id=" + s_fei
-                + ")");
-        // return null;
-
+        throw new PoolException("can not get this expression (id=" + s_fei + ")");
     }
 
     /**
@@ -224,7 +219,8 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 
             return ret.iterator();
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("exception:" + e);
             return ret.iterator();
         }
@@ -239,26 +235,11 @@ public class JCRExpressionStore extends AbstractExpressionStore {
             Collection c = root.getChildren(ItemType.EXPRESSION);
             // @fix it
             return c.size();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("exception:" + e);
             return 0;
         }
-
-    }
-
-    /**
-     * some testing code
-     * @param s
-     * @return
-     * @throws Exception
-     */
-    public boolean doTest(String s) throws Exception {
-        Content root = hm.getRoot();
-        log.info("store expresion: expression id = " + s);
-        root.createContent(s, ItemType.EXPRESSION);
-        hm.save();
-
-        return true;
 
     }
 
