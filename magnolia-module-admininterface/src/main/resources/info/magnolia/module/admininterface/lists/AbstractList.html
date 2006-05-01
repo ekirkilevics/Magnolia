@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+    <head>
+        <script type="text/javascript" src="${contextPath}/admintemplates/js/admincentral.jsp"></script>
+        <script type="text/javascript" src="${contextPath}/admintemplates/js/dialogs.jsp"></script>
+        <script type="text/javascript" src="${contextPath}/.resources/js-libs/json/json.js"></script>
+        <link rel="stylesheet" type="text/css" href="${contextPath}/.resources/admin-css/admin-all.css">
+        <link rel="stylesheet" type="text/css" href="${contextPath}/.resources/pro-css/search.css">
+    
+        <script type="text/javascript">
+
+            
+            function mgnlListResize(){
+                // set the size of the list div
+                var height = MgnlDHTMLUtil.getWindowSize().h;
+                var functionBar = $('mgnlFunctionBarDiv');
+                if(functionBar){
+                    $('mgnlListDiv').style.height = height - MgnlDHTMLUtil.getHeight(functionBar) + "px";
+                }
+                else{
+                    $('mgnlListDiv').style.height = height + "px";
+                }
+            }
+            MgnlDHTMLUtil.addOnLoad(mgnlListResize);
+            MgnlDHTMLUtil.addOnResize(mgnlListResize);
+        </script>
+    </head>
+
+    <body style="padding: 0px;margin: 0px">
+        <form name="mgnlForm">
+            <input type="hidden" id="command" name="command" value="show"/>
+
+            <!--  used by subclasses mainly to add additional hiddenfields or js -->
+            ${this.onRender()}
+            
+            <div id="mgnlListDiv" style="height: 500px">
+                ${this.list.render()}
+            </div>
+
+            <#if this.functionBar?exists>
+                ${this.functionBar.html}
+            </#if>
+            
+            <#if message?exists>
+                <script>MgnlDHTMLUtil.addOnLoad(function(){alert("${message}")});</script>
+            </#if>
+
+        </form>
+    </body>
+</html>
