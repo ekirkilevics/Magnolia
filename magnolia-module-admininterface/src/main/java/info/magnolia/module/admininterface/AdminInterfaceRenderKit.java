@@ -16,7 +16,7 @@ import info.magnolia.cms.gui.controlx.impl.RenderKitImpl;
 import info.magnolia.cms.gui.controlx.list.ListColumn;
 import info.magnolia.cms.gui.controlx.list.ListColumnRenderer;
 import info.magnolia.cms.gui.controlx.list.ListControl;
-import info.magnolia.module.admininterface.controlx.list.AdminListControlRenderer;
+import info.magnolia.module.admininterface.lists.AdminListControlRenderer;
 
 
 /**
