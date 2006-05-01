@@ -31,8 +31,6 @@ public class OWFEBean implements WorkflowAPI {
     JCRWorkItemAPI storage = null;
 
     public OWFEBean() throws Exception {
-        // for testing purpose
-        MgnlContext.setInstance(MgnlContext.getSystemContext());
         storage = new JCRWorkItemAPI();
     }
 
@@ -95,60 +93,34 @@ public class OWFEBean implements WorkflowAPI {
         return getWorkItems(getUsername(request));
     }
 
-    // /**
-    // * get the work item by index for
-    // * @param request
-    // * @param i
-    // * @return
-    // * @throws Exception
-    // */
-    // public WorkItem getWorkItem(HttpServletRequest request, int i)
-    // throws Exception {
-    // return (WorkItem) getWorkItems(getUsername(request)).get(i);
-    // }
-
     /**
      * remove one work item by id
      */
     public void removeWorkItem(InFlowWorkItem wi) throws Exception {
-        // HierarchyManager hm = OWFEEngine.getOWFEHierarchyManager("Store");
-        // try {
-        // Content ct = storage.getWorkItemById(wi.getLastExpressionId());
-        // if (ct != null) {
-        // ct.delete();
-        // hm.save();
-        // if (log.isDebugEnabled())
-        // log.debug("work item removed");
-        // }
-        //
-        // } catch (Exception e) {
-        // log.error("exception:" + e);
-        // }
         storage.removeWorkItem(wi.getId());
     }
 
     /**
      * approve activiation
      */
-    public void approveActivation(String expressionId, HttpServletRequest request) throws Exception {
-
+    public void approveActivation(String expressionId) throws Exception {
         // get workitem
-        InFlowWorkItem if_wi = storage.retrieveWorkItem("", FlowExpressionId.fromParseableString(expressionId));
-        if (if_wi == null)
-            throw new Exception("cant not get the work iem by this expression id (" + expressionId + ")");
+        InFlowWorkItem wi = storage.retrieveWorkItem("", FlowExpressionId.fromParseableString(expressionId));
+        if (wi == null)
+            throw new Exception("can't get the work iem by this expression id (" + expressionId + ")");
 
-        if_wi.touch();
-        // if_wi.setAttribute("OK", new StringAttribute("true"));
+        wi.touch();
+
         try {
-        	if_wi.getAttributes().puts("OK", "true");
-            OWFEEngine.getEngine().reply(if_wi);
+            wi.getAttributes().puts("OK", "true");
+            OWFEEngine.getEngine().reply(wi);
         }
         catch (Exception e) {
             log.error("reply to engine failed", e);
 
         }
         finally {
-            removeWorkItem(if_wi);
+            removeWorkItem(wi);
         }
 
         log.info("approve ok");
@@ -158,29 +130,38 @@ public class OWFEBean implements WorkflowAPI {
     /**
      * reject the activation request, the work item will be removed
      */
-    public void rejectActivation(String expressionId) throws Exception {
+    public void rejectActivation(String expressionId, String comment) throws Exception {
 
-        InFlowWorkItem if_wi = storage.retrieveWorkItem("", FlowExpressionId.fromParseableString(expressionId));
-        if (if_wi == null)
+        InFlowWorkItem wi = storage.retrieveWorkItem("", FlowExpressionId.fromParseableString(expressionId));
+        if (wi == null)
             throw new Exception("cant not get the work iem by this expression id (" + expressionId + ")");
-        if_wi.touch();
-        // if_wi.setAttribute("OK", new StringAttribute("false"));
+        wi.touch();
 
         try {
-        	if_wi.getAttributes().puts("OK", "false");
-            OWFEEngine.getEngine().reply(if_wi);
+            wi.getAttributes().puts("OK", "false");
+            wi.getAttributes().puts("comment", comment);
+            OWFEEngine.getEngine().reply(wi);
         }
         catch (Exception e) {
             log.error("Error while accessing the workflow engine", e);
         }
         finally {
-            removeWorkItem(if_wi);
+            removeWorkItem(wi);
         }
 
         if (log.isDebugEnabled())
             log.debug("work item removed.");
 
         log.info("reject ok");
+    }
+
+    public void cancel(String expressionId) {
+        try {
+            storage.removeWorkItem(FlowExpressionId.fromParseableString(expressionId));
+        }
+        catch (Exception e) {
+            log.info("can't cancel", e);
+        }
     }
 
     /**
@@ -250,15 +231,6 @@ public class OWFEBean implements WorkflowAPI {
             log.error("assign work item to user " + userName + " failed.)", e);
         }
 
-    }
-
-    /**
-     * for testing purpose
-     * @param s
-     * @throws Exception
-     */
-    public void doTest(String s) throws Exception {
-        OWFEEngine.getEngine().getExpStore().doTest(s);
     }
 
     /**

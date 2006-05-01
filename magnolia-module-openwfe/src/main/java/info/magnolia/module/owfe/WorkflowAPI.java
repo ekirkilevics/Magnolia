@@ -73,8 +73,7 @@ interface WorkflowAPI {
      * @param request
      * @throws Exception
      */
-    public void approveActivation(String expressionId,
-                                  HttpServletRequest request) throws Exception;
+    public void approveActivation(String expressionId) throws Exception;
 
     /**
      * reject activation
@@ -82,7 +81,7 @@ interface WorkflowAPI {
      * @param expressionId
      * @throws Exception
      */
-    public void rejectActivation(String expressionId) throws Exception;
+    public void rejectActivation(String expressionId, String comment) throws Exception;
 
     /**
      * update the attributes of the work item
