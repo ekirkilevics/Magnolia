@@ -41,10 +41,20 @@ public class AlertUtil {
      * @param msg
      * @param request
      */
+
     public static void setMessage(String msg) {
         if (!isMessageSet()) {
             MgnlContext.setAttribute(MESSAGE_ATTRIBUTE, msg);
         }
+    }
+
+    /**
+     * create a message containing the exception message
+     * @param msg
+     * @param e
+     */
+    public static void setMessage(String msg, Exception e) {
+        setMessage(msg + " : " + getExceptionMessage(e));
     }
 
     /**
