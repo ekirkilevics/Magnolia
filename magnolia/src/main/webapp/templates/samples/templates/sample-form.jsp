@@ -151,7 +151,15 @@
           </div>
         </cms:adminOnly>
       </div>
-      <c:import url="/templates/samples/templates/inc/headerImage.jsp" />
+      <div style="position:absolute;left:0px;top:0px;">
+        <cms:out var="headerImage" nodeDataName="headerImage" inherit="true" />
+        <cms:out var="headerImageAlt" nodeDataName="headerImageAlt" inherit="true" />
+        <c:if test="${empty(headerImage)}">
+          <c:set var="headerImage" value="/docroot/samples/imgs/header.jpg" />
+          <c:set var="headerImageAlt" value="Magnolia - for content management" />
+        </c:if>
+        <img src="${pageContext.request.contextPath}${headerImage}" alt="${headerImageAlt}" />
+      </div>
       <cmsu:simpleNavigation />
     </body>
   </html>
