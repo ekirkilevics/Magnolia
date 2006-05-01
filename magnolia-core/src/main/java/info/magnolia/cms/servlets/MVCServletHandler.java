@@ -46,7 +46,12 @@ public interface MVCServletHandler {
     void renderHtml(String view) throws IOException;
 
     /**
-     * @return
+     * The name of the handler
      */
     String getName();
+
+    /**
+     * Called after instantiating
+     */
+    void init() throws Exception;
 }

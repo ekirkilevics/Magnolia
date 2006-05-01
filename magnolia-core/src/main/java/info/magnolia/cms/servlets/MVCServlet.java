@@ -99,23 +99,17 @@ public abstract class MVCServlet extends ContextSensitiveServlet {
             log.error("no handler found"); //$NON-NLS-1$
             return;
         }
-
-        if (log.isDebugEnabled()) {
-            log.debug("handler: {}", handler.getName()); //$NON-NLS-1$
+        
+        try{
+            handler.init();
+        }
+        catch (Exception e) {
+            log.error("can't initialize handler [{}]", handler.getName(), e); //$NON-NLS-1$
         }
 
         String command = handler.getCommand();
-        if (log.isDebugEnabled()) {
-            log.debug("calling command: {}", command); //$NON-NLS-1$
-        }
-
         String view = handler.execute(command);
-        if (log.isDebugEnabled()) {
-            log.debug("calling view: {}", view); //$NON-NLS-1$
-        }
-
         handler.renderHtml(view);
-
     }
 
     /**

@@ -18,6 +18,7 @@ import java.lang.reflect.Method;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,11 +43,22 @@ public abstract class MVCServletHandlerImpl implements MVCServletHandler {
 
     private String name;
 
+    private String command;
+
     protected MVCServletHandlerImpl(String name, HttpServletRequest request, HttpServletResponse response) {
-        super();
         this.name = name;
-        this.request = request;
-        this.response = response;
+        this.setRequest(request);
+        this.setResponse(response);
+        init();
+    }
+
+    public void init() {
+        try {
+            BeanUtils.populate(this, getRequest().getParameterMap());
+        }
+        catch (Exception e) {
+            log.error("can't set properties on the handler", e);
+        }
     }
 
     /**
@@ -80,4 +92,45 @@ public abstract class MVCServletHandlerImpl implements MVCServletHandler {
         return view;
     }
 
+    /**
+     * @param request The request to set.
+     */
+    public void setRequest(HttpServletRequest request) {
+        this.request = request;
+    }
+
+    /**
+     * @return Returns the request.
+     */
+    public HttpServletRequest getRequest() {
+        return request;
+    }
+
+    /**
+     * @param response The response to set.
+     */
+    public void setResponse(HttpServletResponse response) {
+        this.response = response;
+    }
+
+    /**
+     * @return Returns the response.
+     */
+    public HttpServletResponse getResponse() {
+        return response;
+    }
+
+    /**
+     * @return Returns the command.
+     */
+    public String getCommand() {
+        return this.command;
+    }
+
+    /**
+     * @param command The command to set.
+     */
+    public void setCommand(String command) {
+        this.command = command;
+    }
 }
