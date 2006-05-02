@@ -12,7 +12,6 @@
  */
 package info.magnolia.module.owfe.tree;
 
-import freemarker.template.SimpleDate;
 import info.magnolia.cms.beans.commands.CommandsMap;
 import info.magnolia.cms.beans.commands.MgnlCommand;
 import info.magnolia.cms.beans.config.ContentRepository;
@@ -26,7 +25,6 @@ import info.magnolia.module.owfe.MgnlConstants;
 import info.magnolia.module.owfe.commands.ParametersSetterHelper;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -60,7 +58,7 @@ public abstract class CommandBasedTreeHandler extends AdminTreeMVCHandler {
 	 */
 	public String execute(String command) {
 		// get command from command map in JCR repository
-		MgnlCommand tc = (MgnlCommand) CommandsMap.getCommand(
+		MgnlCommand tc = CommandsMap.getCommand(
 				MgnlConstants.WEBSITE_REPOSITORY, command);
 		if (tc == null) { // not found, do in the old ways
 			if (log.isDebugEnabled())
@@ -108,7 +106,7 @@ public abstract class CommandBasedTreeHandler extends AdminTreeMVCHandler {
 		// add start date and end date
 		HierarchyManager hm = ContentRepository
 				.getHierarchyManager(ContentRepository.WEBSITE);
-		Content ct = null;
+		Content ct;
 		try {
 			ct = hm.getContent(pathSelected);
 

@@ -25,11 +25,11 @@ public class OWFEEngine{
 	public static final String REPO_OWFE = "owfe"; 
 	
 	OWFEEngine() throws Exception
-	{	
+	{
 		wfEngine = new JCRPersistedEngine();
 		log.debug("create worklist...");
 
-		//JCRWorkList wl_pl = new JCRWorkList("project-leader");	
+		//JCRWorkList wl_pl = new JCRWorkList("project-leader");
 		//OWFEEngine.getEngine().registerParticipant(wl_pl);
 		OWFEEngine.getEngine().registerParticipant(
 				new MgnlParticipant("user-.*"));
@@ -38,12 +38,11 @@ public class OWFEEngine{
 		OWFEEngine.getEngine().registerParticipant(
 				new MgnlParticipant("role-.*"));
 		OWFEEngine.getEngine().registerParticipant(
-				new MgnlParticipant("command-.*"));		
+				new MgnlParticipant("command-.*"));
 	}
-		
+
 	/**
 	 * return the global work flow engine
-	 * @return
 	 */
 	static public JCRPersistedEngine getEngine(){
 		return wfEngine;		
@@ -51,7 +50,6 @@ public class OWFEEngine{
 	
 	/**
 	 * return repository for owfe
-	 * @return
 	 */
 	static public Repository getOWFERepository() {
 		Repository repo = ContentRepository.getRepository(REPO_OWFE);
@@ -62,10 +60,9 @@ public class OWFEEngine{
 	/**
 	 * get hierarchy mananger for owfe repository
 	 * @param workspace
-	 * @return
 	 */
 	public static HierarchyManager getOWFEHierarchyManager(String workspace) {
-		HierarchyManager hm = null;
+		HierarchyManager hm;
 		if (workspace != null)
 		 hm = ContentRepository
 				.getHierarchyManager(REPO_OWFE, workspace);

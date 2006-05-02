@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
  * Handles the tree rendering for the "website" repository.
  *
  * @author Fabrizio Giustina
- * @version $Id: WebsiteTreeHandler.java 1610 2006-01-30 23:54:23Z svk $
+ * @version $Id$
  */
 public class CommandBasedWebsiteTree extends CommandBasedTreeHandler {
 

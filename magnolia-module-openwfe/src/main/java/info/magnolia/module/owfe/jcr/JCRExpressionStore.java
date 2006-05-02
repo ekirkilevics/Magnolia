@@ -60,7 +60,6 @@ public class JCRExpressionStore extends AbstractExpressionStore {
     /**
      * convert the id to a valid node name
      * @param id
-     * @return
      */
     private String convertId(String id) {
         return StringUtils.replace(StringUtils.replace(id, "|", ""), ":", ".");
@@ -131,7 +130,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
      * @throws Exception
      */
     private Content findExpression(FlowExpressionId fei) throws Exception {
-        Content ret = null;
+        Content ret;
         String s_fei = fei.toParseableString();
 
         Content root = hm.getRoot();
@@ -144,7 +143,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
                 Content ct = (Content) it.next();
                 // String name = ct.getName();
                 String sid = ct.getNodeData("ID").getString();
-                FlowExpressionId id = null;
+                FlowExpressionId id;
                 // compare the expression id
                 try {
                     id = FlowExpressionId.fromParseableString(sid);
@@ -170,7 +169,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
      * load expreson by id
      */
     public FlowExpression loadExpression(FlowExpressionId fei) throws PoolException {
-        FlowExpression ret_fe = null;
+        FlowExpression ret_fe;
         String s_fei = "";
         try {
             Content ret = findExpression(fei);

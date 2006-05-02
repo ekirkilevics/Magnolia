@@ -60,18 +60,26 @@ public class OWFEBean implements WorkflowAPI {
         Collection groups = user.getGroups();
         Collection roles = user.getRoles();
         StringBuffer queryString = new StringBuffer();
-        queryString.append("//*[(@assignTo=\""
-            + userName
-            + "\") or (@participant=\"user-"
-            + userName
-            + "\" and not(@assignTo))");
+        queryString.append("//*[(@assignTo=\"");
+        queryString.append(userName);
+        queryString.append("\") or (@participant=\"user-");
+        queryString.append(userName);
+        queryString.append("\" and not(@assignTo))");
         for (Iterator iter = groups.iterator(); iter.hasNext();) {
             Object group = iter.next();
-            queryString.append(" or (@participant=\"group-" + group + "\" and @assignTo!=\"" + userName + "\") ");
+            queryString.append(" or (@participant=\"group-");
+            queryString.append(group);
+            queryString.append("\" and @assignTo!=\"");
+            queryString.append(userName);
+            queryString.append("\") ");
         }
         for (Iterator iter = roles.iterator(); iter.hasNext();) {
             Object role = iter.next();
-            queryString.append(" or (@participant=\"role-" + role + "\" and @assignTo!=\"" + userName + "\") ");
+            queryString.append(" or (@participant=\"role-");
+            queryString.append(role);
+            queryString.append("\" and @assignTo!=\"");
+            queryString.append(userName);
+            queryString.append("\") ");
         }
 
         queryString.append("]");
@@ -243,7 +251,9 @@ public class OWFEBean implements WorkflowAPI {
         }
 
         StringBuffer queryString = new StringBuffer();
-        queryString.append("//*[@participant=\"group-" + GroupName + "\"]");
+        queryString.append("//*[@participant=\"group-");
+        queryString.append(GroupName);
+        queryString.append("\"]");
 
         log.info("xpath query string = " + queryString);
         return storage.doQuery(queryString.toString());
@@ -260,7 +270,9 @@ public class OWFEBean implements WorkflowAPI {
         }
 
         StringBuffer queryString = new StringBuffer();
-        queryString.append("//*[@participant=\"group-" + roleName + "\"]");
+        queryString.append("//*[@participant=\"group-");
+        queryString.append(roleName);
+        queryString.append("\"]");
 
         log.info("xpath query string = " + queryString);
         return storage.doQuery(queryString.toString());

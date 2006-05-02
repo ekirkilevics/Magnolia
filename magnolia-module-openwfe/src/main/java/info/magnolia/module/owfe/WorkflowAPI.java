@@ -70,7 +70,6 @@ interface WorkflowAPI {
      * approve acitvation
      *
      * @param expressionId
-     * @param request
      * @throws Exception
      */
     public void approveActivation(String expressionId) throws Exception;

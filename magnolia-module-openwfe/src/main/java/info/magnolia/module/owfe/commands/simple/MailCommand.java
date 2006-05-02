@@ -4,7 +4,6 @@ import info.magnolia.cms.beans.commands.MgnlCommand;
 import info.magnolia.cms.mail.MgnlMailFactory;
 import info.magnolia.cms.mail.handlers.MgnlMailHandler;
 import info.magnolia.cms.mail.templates.MgnlEmail;
-import info.magnolia.cms.mail.templates.impl.SimpleEmail;
 import info.magnolia.module.owfe.MgnlConstants;
 import org.apache.commons.chain.Context;
 import org.slf4j.Logger;

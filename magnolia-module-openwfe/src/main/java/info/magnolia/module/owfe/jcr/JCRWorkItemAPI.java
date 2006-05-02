@@ -144,7 +144,6 @@ public class JCRWorkItemAPI {
 	/**
 	 * retrieve a work item by participant name
 	 * @param participant	the full participant name (for example, user-superuser)
-	 * @return
 	 */
 	public Content getWorkItemByParticipant(String participant) {
 		String queryString = "//*[@participant=\"" + participant + "\"]";
@@ -160,7 +159,6 @@ public class JCRWorkItemAPI {
 	 * get work item by id
 	 * 
 	 * @param fei
-	 * @return
 	 */
 	public Content getWorkItemById(FlowExpressionId fei) {
 		String path = createPathFromId(fei);
@@ -168,8 +166,7 @@ public class JCRWorkItemAPI {
 		log.debug("path = " + path);
 		
 		try {
-			Content c = hm.getContent(path, false, ItemType.WORKITEM);			
-			return c;			
+            return hm.getContent(path, false, ItemType.WORKITEM);
 		} catch (Exception e) {
 			log.error("get work item by id failed, path = " + path, e);
 		}		
@@ -185,7 +182,7 @@ public class JCRWorkItemAPI {
     RepositoryException {
 		String path = createPathFromId(fei);
 		log.debug("path = " + path);
-		Content c = null;
+		Content c;
 		try {
 			c = hm.getContent(path, false, ItemType.WORKITEM);							
 		} catch (PathNotFoundException e) {
@@ -199,7 +196,6 @@ public class JCRWorkItemAPI {
 	 * check if the content contains the right work Item  with same id
 	 * @param ct JCR content
 	 * @param eid	id of work item
-	 * @return
 	 */
 	public boolean checkContentWithEID(Content ct, FlowExpressionId eid) {
 		String cid = ct.getNodeData("ID").getString();
@@ -212,7 +208,6 @@ public class JCRWorkItemAPI {
 	/**
 	 * convert the name to valid path
 	 * @param id
-	 * @return
 	 */
 	private String convertPath(String id) {
 		return StringUtils.replace(StringUtils.replace(id, "|", ""), ":", ".");
@@ -221,10 +216,9 @@ public class JCRWorkItemAPI {
 	/**
 	 * create the jcr node path for work Item by its id
 	 * @param eid
-	 * @return
 	 */
 	private String createPathFromId(FlowExpressionId eid) {
-		String ret = "";
+		String ret;
 		// FlowExpressionId eid = wi.getId();
 		String wlInstId = eid.getWorkflowInstanceId();
 		int groupNumber = Integer.valueOf(wlInstId.substring(wlInstId.length()-3)).intValue()%100;
@@ -254,8 +248,6 @@ public class JCRWorkItemAPI {
 					removeWorkItem(wi.getId());
 			}
 			
-			Content root = hm.getRoot();
-
 			// crete path from work item id
 			String path = createPathFromId(wi.getId());
 			log.info("workitem id = " + path);
@@ -268,8 +260,8 @@ public class JCRWorkItemAPI {
 			newc.createNodeData("ID", vf.createValue(sId));
 			log.info("ID=" + sId);
 			newc.createNodeData("participant", vf.createValue(wi
-					.getParticipantName().toString()));
-			log.info("participant = " + wi.getParticipantName().toString());
+                    .getParticipantName()));
+			log.info("participant = " + wi.getParticipantName());
 			StringAttribute assignTo = (StringAttribute) wi
 					.getAttribute("assignTo");
 			if (assignTo != null) {

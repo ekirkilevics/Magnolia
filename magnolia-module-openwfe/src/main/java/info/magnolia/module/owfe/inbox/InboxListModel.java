@@ -15,10 +15,8 @@ package info.magnolia.module.owfe.inbox;
 import java.util.Collection;
 import java.util.List;
 
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.gui.controlx.list.AbstractListModel;
 import info.magnolia.cms.gui.controlx.list.ListModelIterator;
-import info.magnolia.cms.gui.controlx.list.ListModelIteratorImpl;
 import info.magnolia.module.owfe.OWFEBean;
 
 

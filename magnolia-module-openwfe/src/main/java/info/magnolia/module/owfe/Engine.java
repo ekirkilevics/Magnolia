@@ -236,8 +236,7 @@ public class Engine extends AbstractAdminModule {
             log.info("----------------");
         }
         catch (Exception e) {
-            e.printStackTrace();
-            return;
+            log.error(e.getMessage(), e);
         }
 
         /*

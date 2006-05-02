@@ -17,9 +17,9 @@ import java.util.HashMap;
  */
 public class FlowDeactivationCommand extends AbstractFlowCommand {
 
-    private final static String FLOWNAME = "webDetactivation";
+    protected static final String FLOWNAME = "webDetactivation";
 
-    private static final String WEB_SCHEDULED_ACTIVATION = "webScheduledActivation";
+    protected static final String WEB_SCHEDULED_ACTIVATION = "webScheduledActivation";
 
     static final String[] parameters = {MgnlConstants.P_PATH};
 
