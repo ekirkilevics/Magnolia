@@ -43,6 +43,7 @@ public class JCRPersistedEngine extends PersistedEngine {
             throws
             ServiceException {
         super(engineName, cached);
+        super.setDaemon(true);
 
         // create expression store and add it to context
         final java.util.Map esParams = new java.util.HashMap(1);
