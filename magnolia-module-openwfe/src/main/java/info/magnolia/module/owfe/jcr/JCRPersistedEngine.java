@@ -4,6 +4,8 @@ import openwfe.org.ServiceException;
 import openwfe.org.embed.impl.engine.FsPersistedEngine;
 import openwfe.org.embed.impl.engine.PersistedEngine;
 import openwfe.org.engine.Definitions;
+import openwfe.org.engine.impl.expool.SimpleExpressionPool;
+import openwfe.org.engine.expool.ExpressionPool;
 import openwfe.org.engine.participants.Participant;
 import openwfe.org.engine.participants.ParticipantMap;
 
@@ -66,6 +68,10 @@ public class JCRPersistedEngine extends PersistedEngine {
 
     public JCRExpressionStore getExpStore() {
         return eStore;
+    }
+
+    public ExpressionPool getExpressionPool() {
+        return super.getExpressionPool();
     }
 
 }
