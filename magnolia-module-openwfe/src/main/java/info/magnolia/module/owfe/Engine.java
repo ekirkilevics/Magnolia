@@ -35,6 +35,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import openwfe.org.ServiceException;
+import openwfe.org.engine.impl.expool.SimpleExpressionPool;
 
 
 /**
@@ -250,6 +251,8 @@ public class Engine extends AbstractAdminModule {
         if (OWFEEngine.getEngine().isRunning()) {
             log.info("Workflow engine is running, trying to stop...");
             try {
+                // before try to stop purge and scheduling tasks
+                ((SimpleExpressionPool)OWFEEngine.getEngine().getExpressionPool()).stop();
                 OWFEEngine.getEngine().stop();
                 log.info("Workflow engine successfully stopped");
             } catch (ServiceException se) {
