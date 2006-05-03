@@ -24,7 +24,6 @@ public class FunctionBarItem extends ContextMenuItem {
     private boolean active = false;
 
     public FunctionBarItem() {
-        // TODO Auto-generated constructor stub
         this.active = false;
     }
 
