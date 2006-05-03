@@ -15,6 +15,10 @@ package info.magnolia.module.admininterface.lists;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.gui.control.ContextMenu;
+import info.magnolia.cms.gui.control.ContextMenuItem;
+import info.magnolia.cms.gui.control.FunctionBar;
+import info.magnolia.cms.gui.control.FunctionBarItem;
 import info.magnolia.cms.gui.controlx.list.ListColumn;
 import info.magnolia.cms.gui.controlx.list.ListControl;
 import info.magnolia.cms.gui.controlx.list.ListModel;
@@ -81,36 +85,54 @@ public abstract class VersionsList extends AbstractList {
     }
     
     public void configureList(ListControl list) {
+        // set onselect
+        list.setRenderer(new AdminListControlRenderer() {
+            public String onSelect(ListControl list, Integer index) {
+                String js =  super.onSelect(list, index);
+                js += "mgnlVersionsList.currentVersionLabel = '" + list.getIteratorValue("versionLabel") + "';";
+                return js;
+            }
+
+            public String onDblClick(ListControl list, Integer index) {
+                return "mgnlVersionsList.showItem()";
+            }
+        });
+        
         list.addGroupableField("userName");
         list.addSortableField("created");
         list.addColumn(new ListColumn("name","Name","150", true));
         list.addColumn(new ListColumn("created","Date","100", true));
         list.addColumn(new ListColumn("userName","User","100", true));
-        
-        ListColumn functionsColumn = new ListColumn(){
-            {
-                setName("versionLabel");
-                setColumnName("versionLabel");
-                setLabel(" ");
-            }
-            
-            public String render() {
-                String versionLabel = (String) this.getValue();
-                return "<a href=\"javascript:" + getOnShowScript(versionLabel) +"\">show</a>" +
-                " <a href=\"javascript:mgnl.admininterface.Versions.restore('" + versionLabel + "');\">restore</a>";
-                
-            }
-        };
-        
-        list.addColumn(functionsColumn);
-        
     }
     
     /**
      * The script executed on a show link
      */
-    protected abstract String getOnShowScript(String versionLabel);
+    public abstract String getOnShowFunction();
+    
+    protected void configureContextMenu(ContextMenu menu) {
+        ContextMenuItem show = new ContextMenuItem("show");
+        show.setLabel(MessagesManager.get("versions.show"));
+        show.setOnclick("mgnlVersionsList.showItem()");
+        show.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/note_view.gif");
 
+        ContextMenuItem restore = new ContextMenuItem("restore");
+        restore.setLabel(MessagesManager.get("versions.restore"));
+        restore.setOnclick("mgnlVersionsList.restore()");
+        restore.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/undo.gif");
+
+        menu.addMenuItem(show);
+        menu.addMenuItem(restore);
+    }
+
+    /**
+     * @see info.magnolia.module.admininterface.lists.AbstractList#configureFunctionBar(info.magnolia.cms.gui.control.FunctionBar)
+     */
+    protected void configureFunctionBar(FunctionBar bar) {
+        bar.addMenuItem(new FunctionBarItem(this.getContextMenu().getMenuItemByName("show")));
+        bar.addMenuItem(new FunctionBarItem(this.getContextMenu().getMenuItemByName("restore")));
+    }
+    
     /**
      * @return
      * @throws PathNotFoundException
