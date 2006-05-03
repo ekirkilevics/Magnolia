@@ -40,10 +40,9 @@ public class WebsiteVersionsList extends VersionsList {
      * @param versionLabel
      * @return the url used in the link
      */
-    protected String getOnShowScript(String versionLabel) {
-        String url = MgnlContext.getContextPath() + path + ".html";
-        url += "?mgnlVersion=" + versionLabel;
-        return "open('" + url + "', '');";
+    public String getOnShowFunction() {
+        String url = MgnlContext.getContextPath() + path + ".html?mgnlVersion=";
+        return "function(versionLabel){open('" + url + "'+versionLabel, '');}";
     }
     
 
