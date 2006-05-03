@@ -4,7 +4,6 @@ import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.ie.filters.DebugFilter;
 import info.magnolia.cms.core.ie.filters.ImportXmlRootFilter;
 import info.magnolia.cms.core.ie.filters.MagnoliaV2Filter;
 import info.magnolia.cms.core.ie.filters.VersionFilter;
