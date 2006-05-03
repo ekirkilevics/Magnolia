@@ -114,9 +114,7 @@ public class DMSSearchList extends AbstractSimpleSearchList {
     /**
      * The very basic context menu used in the list.
      */
-    public ContextMenu getContextMenu() {
-        ContextMenu cm = new ContextMenu("contextMenu");
-
+    public void configureContextMenu(ContextMenu menu) {
         ContextMenuItem menuEditDocument = new ContextMenuItem();
         menuEditDocument.setLabel("Edit document");
         menuEditDocument.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/document_edit.gif");
@@ -134,11 +132,10 @@ public class DMSSearchList extends AbstractSimpleSearchList {
         menuVersions.setOnclick("mgnl.dms.DMS.showVersions(mgnl.dms.DMS.selectedPath);");
         menuVersions.addJavascriptCondition("mgnl.dms.DMS.selectedIsNotFolderCondition");
 
-        cm.addMenuItem(menuEditDocument);
-        cm.addMenuItem(showInTree);
-        cm.addMenuItem(null); // line
-        cm.addMenuItem(menuVersions);
-        return cm;
+        menu.addMenuItem(menuEditDocument);
+        menu.addMenuItem(showInTree);
+        menu.addMenuItem(null); // line
+        menu.addMenuItem(menuVersions);
     }
 
 }
