@@ -36,10 +36,10 @@ public class DMSVersionsList extends VersionsList {
     }
 
     /**
-     * @see info.magnolia.module.admininterface.lists.VersionsList#getOnShowScript(java.lang.String)
+     * @see info.magnolia.module.admininterface.lists.VersionsList#getOnShowFunction(java.lang.String)
      */
-    protected String getOnShowScript(String versionLabel) {
-        return "mgnl.dms.DMS.showVersion('" + path + "', '" + versionLabel + "');";
+    public String getOnShowFunction() {
+        return "function(versionLabel){mgnl.dms.DMS.showVersion('" + path + "', versionLabel);}";
     }
 
 }
