@@ -14,6 +14,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @deprecated This class should NOT exist. All the mothods should be moved to the Group or User interface.
+ */
 public class JCRUserUtil {
 	HierarchyManager hm = ContentRepository
 	.getHierarchyManager(ContentRepository.USERS);
