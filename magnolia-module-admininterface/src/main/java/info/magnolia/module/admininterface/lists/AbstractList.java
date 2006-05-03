@@ -48,6 +48,8 @@ public abstract class AbstractList extends TemplatedMVCHandler {
      * The function bar shown at the bottom
      */
     private FunctionBar functionBar;
+    
+    private ContextMenu contextMenu;
 
     /**
      * @param name
@@ -119,7 +121,17 @@ public abstract class AbstractList extends TemplatedMVCHandler {
     }
 
     public ContextMenu getContextMenu() {
-        return null;
+        if(this.contextMenu == null){
+            this.contextMenu = new ContextMenu("contextMenu");
+            configureContextMenu(this.contextMenu);
+        }
+        return this.contextMenu;
+    }
+
+    /**
+     * Override to configure the menu 
+     */
+    protected void configureContextMenu(ContextMenu menu) {
     }
 
     /**
@@ -133,7 +145,17 @@ public abstract class AbstractList extends TemplatedMVCHandler {
      * @return Returns the functionBar.
      */
     public FunctionBar getFunctionBar() {
+        if(this.functionBar == null){
+            this.functionBar = new FunctionBar("functionBar");
+            configureFunctionBar(this.functionBar);
+        }
         return this.functionBar;
+    }
+
+    /**
+     * Override to configure the bar
+     */
+    protected void configureFunctionBar(FunctionBar bar) {
     }
 
     /**
