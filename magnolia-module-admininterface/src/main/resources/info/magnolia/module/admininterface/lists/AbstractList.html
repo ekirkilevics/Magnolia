@@ -37,8 +37,11 @@
                 ${this.list.render()}
             </div>
 
-            <#if this.functionBar?exists>
+            <#if this.functionBar.menuItems?has_content>
                 ${this.functionBar.html}
+                <script>
+                    ${this.functionBar.javascript}
+                </script>
             </#if>
             
             <#if message?exists>
