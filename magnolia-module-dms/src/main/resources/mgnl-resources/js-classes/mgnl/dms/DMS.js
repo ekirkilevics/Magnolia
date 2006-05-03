@@ -46,7 +46,7 @@ classDef("mgnl.dms.DMS", {
 	},
 
 	showVersions: function(path){
-        mgnl.admininterface.Versions.showVersions('dms', path);
+        mgnl.admininterface.VersionsList.show('dms', path);
 	},
 
 	restoreVersion: function(path, name){
