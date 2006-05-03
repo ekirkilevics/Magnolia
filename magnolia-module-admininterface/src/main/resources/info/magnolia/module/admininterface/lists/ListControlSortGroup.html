@@ -3,8 +3,8 @@
 	<#list this.groupableFields as field>
 		<a href="javascript:group('${field}','${renderer.nextGroupByOrder(this, field)}');">${this.getColumnLabel(field)}</a><br/>
 	</#list>
+    <p/>
 </#if>
-<p/>
 <#if this.sortableFields?has_content>
 	Sort by:<br/>
 	<#list this.sortableFields as field>
