@@ -371,12 +371,7 @@ public class JCRWorkItemAPI {
         // storage.exportToFile("d:\\owfe_root.xml", null);
         Query q;
         try {
-            // there is no query manager for config repo, so remove code
-            MgnlContext.setInstance(MgnlContext.getSystemContext()); // for
-            // testing
-            // purpose
-
-            q = MgnlContext.getQueryManager("owfe", "Store").createQuery(queryString, "xpath"); //$NON-NLS-1$
+            q = MgnlContext.getSystemContext().getQueryManager("owfe", "Store").createQuery(queryString, "xpath"); //$NON-NLS-1$
 
             QueryResult result = q.execute();
             if (result == null) {
