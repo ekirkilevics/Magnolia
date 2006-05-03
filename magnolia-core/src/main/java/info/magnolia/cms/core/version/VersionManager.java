@@ -56,6 +56,11 @@ public class VersionManager {
     protected static final String PROPERTY_RULE = "Rule";
 
     /**
+     * jcr root version
+     * */
+    protected static final String ROOT_VERSION = "jcr:rootVersion";
+
+    /**
      * Logger.
      */
     private static Logger log = LoggerFactory.getLogger(VersionManager.class);
@@ -323,10 +328,8 @@ public class VersionManager {
             ObjectInput objectInput = new ObjectInputStream(inStream);
             return (Rule) objectInput.readObject();
         } catch (IOException e) {
-            log.error(e.getMessage(), e);
             throw e;
         } catch (ClassNotFoundException e) {
-            log.error(e.getMessage(), e);
             throw e;
         } finally {
             IOUtils.closeQuietly(inStream);

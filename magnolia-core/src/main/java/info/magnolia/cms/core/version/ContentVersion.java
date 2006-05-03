@@ -35,6 +35,7 @@ import javax.jcr.version.VersionIterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -84,10 +85,14 @@ public class ContentVersion extends Content {
     private void init() throws RepositoryException {
         this.setNode(this.state.getNode(ItemType.JCR_FROZENNODE));
         try {
-            this.rule = VersionManager.getInstance().getUsedFilter(this);
+            if (!StringUtils.equalsIgnoreCase(this.state.getName(), VersionManager.ROOT_VERSION)) {
+                this.rule = VersionManager.getInstance().getUsedFilter(this);
+            }
         } catch (Exception e) {
-            log.error("failed to get filter used for creating this version, use open filter");
             log.error(e.getMessage(), e);
+        }
+        if (this.rule == null) {
+            log.info("failed to get filter used for creating this version, use open filter");
             this.rule = new Rule();
         }
     }
@@ -550,9 +555,7 @@ public class ContentVersion extends Content {
      * @return true is the current user has specified access on this node.
      */
     public boolean isGranted(long permissions) {
-        if ((permissions & Permission.READ) == permissions)
-            return true;
-        return false;
+        return (permissions & Permission.READ) == permissions;
     }
 
     /**
