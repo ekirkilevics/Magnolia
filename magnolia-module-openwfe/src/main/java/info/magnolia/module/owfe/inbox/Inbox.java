@@ -12,17 +12,28 @@
  */
 package info.magnolia.module.owfe.inbox;
 
+import java.util.Iterator;
+
 import info.magnolia.cms.beans.runtime.MgnlContext;
+import info.magnolia.cms.gui.control.ContextMenu;
+import info.magnolia.cms.gui.control.ContextMenuItem;
+import info.magnolia.cms.gui.control.FunctionBar;
+import info.magnolia.cms.gui.control.FunctionBarItem;
 import info.magnolia.cms.gui.controlx.list.ListColumn;
 import info.magnolia.cms.gui.controlx.list.ListControl;
 import info.magnolia.cms.gui.controlx.list.ListModel;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.FreeMarkerUtil;
 import info.magnolia.module.admininterface.lists.AbstractList;
+import info.magnolia.module.admininterface.lists.AdminListControlRenderer;
 import info.magnolia.module.owfe.OWFEBean;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import openwfe.org.engine.workitem.InFlowWorkItem;
+import openwfe.org.engine.workitem.StringMapAttribute;
 
 
 /**
@@ -63,57 +74,94 @@ public class Inbox extends AbstractList {
     }
 
     /**
-     * @see com.obinary.magnolia.professional.lists.AbstractAdvancedSearchList#configureList(info.magnolia.cms.gui.controlx.list.ListControl)
+     * Sets the select js code and defines the columns
      */
     public void configureList(ListControl list) {
 
+        // define the select action
+        list.setRenderer(new AdminListControlRenderer() {
+
+            public String onSelect(ListControl list, Integer index) {
+                String js =  super.onSelect(list, index);
+                js += "mgnl.owfe.Inbox.currentId = '" + list.getIteratorValue("id") + "';";
+                return js;
+            }
+        });
+        
         list.addSortableField("lastModified");
         list.addColumn(new ListColumn("pathSelected", "Page", "150", true));
         list.addColumn(new ListColumn("lastModified", "Date", "150", true));
         list.addColumn(new ListColumn("comment", "Comment", "150", true));
-        // uncomment for debugging
 
-        /*
-         * list.addColumn(new ListColumn(){ { setName("attributes"); setLabel("Attributes"); } public Object getValue() {
-         * String str =""; InFlowWorkItem item = (InFlowWorkItem)this.getListControl().getIteratorValueObject();
-         * StringMapAttribute attributes = item.getAttributes(); for (Iterator iter = attributes.alphaStringIterator();
-         * iter.hasNext();) { String key = (String) iter.next(); str += key + "=" + attributes.sget(key) + "<br/>"; }
-         * return str; } });
-         */
+        if (this.isDebug()) {
 
-        ListColumn functionsColumn = new ListColumn() {
+            list.addColumn(new ListColumn() {
 
-            {
-                setName("id");
-                setColumnName("id");
-                setLabel(" ");
-            }
+                {
+                    setName("attributes");
+                    setLabel("Attributes");
+                }
 
-            public String render() {
-                String id = (String) this.getValue();
-
-                return "<a href=\"javascript:mgnl.owfe.Inbox.proceed('"
-                    + id
-                    + "');\">proceed</a> "
-                    + "<a href=\"javascript:mgnl.owfe.Inbox.reject('"
-                    + id
-                    + "');\">reject</a> "
-                    + "<a href=\"javascript:mgnl.owfe.Inbox.cancel('"
-                    + id
-                    + "');\">cancel</a> ";
-            }
-        };
-
-        list.addColumn(functionsColumn);
+                public Object getValue() {
+                    String str = "";
+                    InFlowWorkItem item = (InFlowWorkItem) this.getListControl().getIteratorValueObject();
+                    StringMapAttribute attributes = item.getAttributes();
+                    for (Iterator iter = attributes.alphaStringIterator(); iter.hasNext();) {
+                        String key = (String) iter.next();
+                        str += key + "=" + attributes.sget(key) + "<br/>";
+                    }
+                    return str;
+                }
+            });
+        }
     }
 
     /**
-     * @see com.obinary.magnolia.professional.lists.AbstractAdvancedSearchList#onRender()
+     * @see info.magnolia.module.admininterface.lists.AbstractList#getContextMenu()
+     */
+    public void configureContextMenu(ContextMenu menu) {
+        ContextMenuItem proceed = new ContextMenuItem("proceed");
+        proceed.setLabel(MessagesManager.get("inbox.proceed"));
+        proceed.setOnclick("mgnl.owfe.Inbox.proceed();");
+        proceed.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/navigate_right2_green.gif");
+
+        ContextMenuItem reject = new ContextMenuItem("reject");
+        reject.setLabel(MessagesManager.get("inbox.reject"));
+        reject.setOnclick("mgnl.owfe.Inbox.reject();");
+        reject.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/navigate_left2_red.gif");
+
+        ContextMenuItem cancel = new ContextMenuItem("cancel");
+        cancel.setLabel(MessagesManager.get("buttons.cancel"));
+        cancel.setOnclick("mgnl.owfe.Inbox.cancel();");
+        cancel.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/delete2.gif");
+
+        menu.addMenuItem(proceed);
+        menu.addMenuItem(reject);
+        menu.addMenuItem(null);
+        menu.addMenuItem(cancel);
+    }
+
+    /**
+     * Same as the context menu
+     */
+    public void configureFunctionBar(FunctionBar bar) {
+        ContextMenu menu = this.getContextMenu();
+        bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("proceed")));
+        bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("reject")));
+        bar.addMenuItem(null);
+        bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("cancel")));
+    }
+
+    /**
+     * Add some inbox specific stuff: mainly hidden fields.
      */
     public String onRender() {
         return FreeMarkerUtil.process(this);
     }
 
+    /**
+     * Proceed the item
+     */
     public String proceed() {
         try {
             new OWFEBean().approveActivation(this.getFlowItemId());
@@ -124,6 +172,9 @@ public class Inbox extends AbstractList {
         return this.show();
     }
 
+    /**
+     * Reject the item (adds a comment)
+     */
     public String reject() {
         try {
             new OWFEBean().rejectActivation(this.getFlowItemId(), this.getComment());
@@ -134,6 +185,9 @@ public class Inbox extends AbstractList {
         return this.show();
     }
 
+    /**
+     * Stop the workflow.
+     */
     public String cancel() {
         try {
             new OWFEBean().cancel(this.getFlowItemId());
