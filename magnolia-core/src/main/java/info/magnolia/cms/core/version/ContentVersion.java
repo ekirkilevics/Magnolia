@@ -287,9 +287,7 @@ public class ContentVersion extends Content {
      * @return Collection of content nodes
      */
     public Collection getChildren(String contentType) {
-        System.out.println("Here...");
         if (this.rule.isAllowed(contentType)) {
-            System.out.println("isAllowed - "+contentType);
             return super.getChildren(contentType);
         }
         return this.base.getChildren(contentType);
