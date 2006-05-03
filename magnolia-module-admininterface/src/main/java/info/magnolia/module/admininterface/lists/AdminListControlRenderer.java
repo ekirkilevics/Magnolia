@@ -14,8 +14,6 @@ package info.magnolia.module.admininterface.lists;
 
 import info.magnolia.cms.gui.controlx.list.ListControl;
 import info.magnolia.cms.gui.controlx.list.ListControlRenderer;
-import info.magnolia.module.admininterface.AdminInterfaceRenderKit;
-
 
 /**
  * Show the context menu if existing.
@@ -29,7 +27,7 @@ public class AdminListControlRenderer extends ListControlRenderer {
      */
     public AdminListControlRenderer() {
         super();
-        setTemplateName(AdminInterfaceRenderKit.DEFAULT_TEMPLATE_PATH + "/list/ListControl.html");
+        setTemplateName("info/magnolia/module/admininterface/lists/ListControl.html");
     }
 
     /**

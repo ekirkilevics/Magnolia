@@ -26,8 +26,6 @@ import info.magnolia.module.admininterface.lists.AdminListControlRenderer;
  *
  */
 public class AdminInterfaceRenderKit extends RenderKitImpl {
-    public static String DEFAULT_TEMPLATE_PATH = "/info/magnolia/module/admininterface/controlx";
-
     /**
      * Register the default renderers used in the admin interface 
      */
