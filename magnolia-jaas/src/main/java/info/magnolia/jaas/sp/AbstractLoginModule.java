@@ -10,7 +10,8 @@ import javax.security.auth.spi.LoginModule;
 
 /**
  * Date: Aug 10, 2005 Time: 5:47:36 PM
- * @author Sameer Charles $Id :$
+ * @author Sameer Charles
+ * $Id$
  */
 public abstract class AbstractLoginModule implements LoginModule {
 
@@ -40,6 +41,7 @@ public abstract class AbstractLoginModule implements LoginModule {
     public abstract boolean commit() throws LoginException;
 
     public boolean abort() throws LoginException {
+        System.out.println("Aborting!!!!!");
         return this.release();
     }
 
