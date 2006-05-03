@@ -1,3 +1,15 @@
+/**
+ *
+ * Magnolia and its source-code is licensed under the LGPL.
+ * You may copy, adapt, and redistribute this file for commercial or non-commercial use.
+ * When copying, adapting, or redistributing this document in keeping with the guidelines above,
+ * you are required to provide proper attribution to obinary.
+ * If you reproduce or distribute the document without making any substantive modifications to its content,
+ * please use the following attribution line:
+ *
+ * Copyright 2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ *
+ */
 package info.magnolia.module.owfe.jcr;
 
 import info.magnolia.cms.beans.config.ContentRepository;
@@ -6,13 +18,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.module.owfe.servlets.FlowDefServlet;
-import org.apache.log4j.Logger;
-import org.jdom.Document;
-import org.jdom.Element;
 
-import javax.jcr.Value;
-import javax.jcr.ValueFactory;
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.StringReader;
@@ -21,23 +27,32 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.jcr.Value;
+import javax.jcr.ValueFactory;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.log4j.Logger;
+import org.jdom.Document;
+import org.jdom.Element;
+
+
 /**
  * a class to wrapper the manipulation of flow definition in JCR repository
  * @author jackie
- *
  */
 public class JCRFlowDefinition {
+
     /**
      * Logger
      */
     private static Logger log = Logger.getLogger(FlowDefServlet.class);
 
     private final static String ROOT_PATH_FOR_FLOW = "/modules/workflow/config/flows/";
+
     private final static String FLOW_VALUE = "value";
 
     /**
      * find one flow node by flow name
-     *
      * @param name
      * @return Content node in JCR store for specified flow definition
      */
@@ -90,7 +105,8 @@ public class JCRFlowDefinition {
                     return ct;
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("Error while finding flow definition:" + e, e);
         }
         return null;
@@ -98,7 +114,6 @@ public class JCRFlowDefinition {
 
     /**
      * get flow definition as string of xml
-     *
      * @param flowName
      * @return the string defining the flow in xml format
      */
@@ -111,7 +126,6 @@ public class JCRFlowDefinition {
 
     /**
      * get all flows' url
-     *
      * @param request
      * @return a list of string representing the URL of each workflow
      */
@@ -133,7 +147,8 @@ public class JCRFlowDefinition {
                 if (name != null)
                     list.add(url_base + "?name=" + name);
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("error", e);
         }
         return list;
@@ -141,22 +156,20 @@ public class JCRFlowDefinition {
 
     /**
      * export all flows to xml
-     *
      * @param xmlFileName
      */
     public void exportAll(String xmlFileName) {
         if (xmlFileName == null || xmlFileName.length() == 0)
             return;
         try {
-            HierarchyManager hm = ContentRepository
-                    .getHierarchyManager(ContentRepository.CONFIG);
+            HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
             File outputFile = new File(xmlFileName);
             FileOutputStream out = new FileOutputStream(outputFile);
-            hm.getWorkspace().getSession().exportSystemView("/", out, false,
-                    false);
+            hm.getWorkspace().getSession().exportSystemView("/", out, false, false);
 
             log.info("exorpt flow def ok");
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("exorpt flow failed", e);
 
         }
@@ -164,7 +177,6 @@ public class JCRFlowDefinition {
 
     /**
      * add one flow definition to JCR store
-     *
      * @param flowDef
      * @return
      * @throws Exception
@@ -184,10 +196,9 @@ public class JCRFlowDefinition {
             Content root = hm.getContent(ROOT_PATH_FOR_FLOW);
 
             /*
-             check if the node already exist, and if it does update the value of the
-             the NodeData FLOW_VALUE with the new flow.
-             This is to allow duplication of flow node.
-            */
+             * check if the node already exist, and if it does update the value of the the NodeData FLOW_VALUE with the
+             * new flow. This is to allow duplication of flow node.
+             */
             boolean exist = hm.isExist(root.getHandle() + "/" + name);
             Content c;
             if (exist)
@@ -204,11 +215,11 @@ public class JCRFlowDefinition {
 
             hm.save();
             log.info("add ok");
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("add flow failed", e);
         }
         return null;
     }
-
 
 }

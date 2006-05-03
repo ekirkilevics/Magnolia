@@ -12,10 +12,6 @@
  */
 package info.magnolia.module.owfe.commands.simple;
 
-import java.util.HashMap;
-
-import org.apache.commons.chain.Context;
-
 import info.magnolia.cms.beans.commands.MgnlCommand;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.MgnlContext;
@@ -23,13 +19,17 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.module.owfe.MgnlConstants;
 
+import java.util.HashMap;
+
+import org.apache.commons.chain.Context;
+
 
 /**
  * Creates a version for the passed path in the website repository.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
-public class VersionCommand extends MgnlCommand{
+public class VersionCommand extends MgnlCommand {
 
     /**
      * @see info.magnolia.cms.beans.commands.MgnlCommand#getExpectedParameters()
@@ -43,11 +43,11 @@ public class VersionCommand extends MgnlCommand{
      */
     public boolean exec(HashMap param, Context ctx) {
         String path = (String) param.get(MgnlConstants.P_PATH);
-        try{
+        try {
             Content node = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE).getContent(path);
             node.addVersion();
         }
-        catch(Exception e){
+        catch (Exception e) {
             AlertUtil.setMessage("can't version: " + e.getMessage());
             return false;
         }

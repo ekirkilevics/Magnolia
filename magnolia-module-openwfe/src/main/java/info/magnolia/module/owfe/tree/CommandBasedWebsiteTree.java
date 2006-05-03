@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * Handles the tree rendering for the "website" repository.
- *
  * @author Fabrizio Giustina
  * @version $Id$
  */
@@ -36,5 +35,4 @@ public class CommandBasedWebsiteTree extends CommandBasedTreeHandler {
         this.setConfiguration(new WebsiteTreeConfiguration());
     }
 
-
- }
+}

@@ -1,3 +1,15 @@
+/**
+ *
+ * Magnolia and its source-code is licensed under the LGPL.
+ * You may copy, adapt, and redistribute this file for commercial or non-commercial use.
+ * When copying, adapting, or redistributing this document in keeping with the guidelines above,
+ * you are required to provide proper attribution to obinary.
+ * If you reproduce or distribute the document without making any substantive modifications to its content,
+ * please use the following attribution line:
+ *
+ * Copyright 2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ *
+ */
 package info.magnolia.module.owfe.commands.flow;
 
 import info.magnolia.cms.beans.commands.MgnlCommand;
@@ -5,19 +17,14 @@ import info.magnolia.module.owfe.MgnlConstants;
 import info.magnolia.module.owfe.OWFEEngine;
 import info.magnolia.module.owfe.jcr.JCRFlowDefinition;
 import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
-import openwfe.org.engine.workitem.LaunchItem;
-import openwfe.org.engine.workitem.StringAttribute;
-import org.apache.commons.chain.Context;
 
 import java.util.HashMap;
 
-/**
- * Created by IntelliJ IDEA.
- * User: niko
- * Date: Mar 22, 2006
- * Time: 1:11:29 PM
- * To change this template use File | Settings | File Templates.
- */
+import openwfe.org.engine.workitem.LaunchItem;
+import openwfe.org.engine.workitem.StringAttribute;
+
+import org.apache.commons.chain.Context;
+
 public abstract class AbstractFlowCommand extends MgnlCommand {
 
     public boolean exec(HashMap params, Context ctx) {

@@ -24,23 +24,23 @@ import info.magnolia.module.owfe.OWFEBean;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 /**
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class Inbox extends AbstractList {
-    
+
     /**
      * The id of the workitem on which we called the command
      */
     private String flowItemId;
-    
+
     /**
      * The comment the user entered by proceeding or rejecting
      */
     private String comment;
-    
+
     /**
      * Show all the values of the workitem if true
      */
@@ -54,7 +54,7 @@ public class Inbox extends AbstractList {
     public Inbox(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
     }
-    
+
     /**
      * @see info.magnolia.module.admininterface.lists.AbstractList#getModel()
      */
@@ -66,89 +66,84 @@ public class Inbox extends AbstractList {
      * @see com.obinary.magnolia.professional.lists.AbstractAdvancedSearchList#configureList(info.magnolia.cms.gui.controlx.list.ListControl)
      */
     public void configureList(ListControl list) {
-        
+
         list.addSortableField("lastModified");
-        list.addColumn(new ListColumn("pathSelected","Page","150", true));
-        list.addColumn(new ListColumn("lastModified","Date","150", true));
-        list.addColumn(new ListColumn("comment","Comment","150", true));
+        list.addColumn(new ListColumn("pathSelected", "Page", "150", true));
+        list.addColumn(new ListColumn("lastModified", "Date", "150", true));
+        list.addColumn(new ListColumn("comment", "Comment", "150", true));
         // uncomment for debugging
 
         /*
-        list.addColumn(new ListColumn(){
-            {
-                setName("attributes");
-                setLabel("Attributes");
-            }
-            public Object getValue() {
-                String str ="";
-                InFlowWorkItem item = (InFlowWorkItem)this.getListControl().getIteratorValueObject();
-                StringMapAttribute attributes = item.getAttributes();
-                
-                for (Iterator iter = attributes.alphaStringIterator(); iter.hasNext();) {
-                    String key = (String) iter.next();
-                    str += key + "=" + attributes.sget(key) + "<br/>";
-                }
-                return str;
-            }
-        });
-        */
-        
-        ListColumn functionsColumn = new ListColumn(){
+         * list.addColumn(new ListColumn(){ { setName("attributes"); setLabel("Attributes"); } public Object getValue() {
+         * String str =""; InFlowWorkItem item = (InFlowWorkItem)this.getListControl().getIteratorValueObject();
+         * StringMapAttribute attributes = item.getAttributes(); for (Iterator iter = attributes.alphaStringIterator();
+         * iter.hasNext();) { String key = (String) iter.next(); str += key + "=" + attributes.sget(key) + "<br/>"; }
+         * return str; } });
+         */
+
+        ListColumn functionsColumn = new ListColumn() {
+
             {
                 setName("id");
                 setColumnName("id");
                 setLabel(" ");
             }
-            
+
             public String render() {
                 String id = (String) this.getValue();
-                
-                return "<a href=\"javascript:mgnl.owfe.Inbox.proceed('" + id + "');\">proceed</a> " +
-                "<a href=\"javascript:mgnl.owfe.Inbox.reject('" + id + "');\">reject</a> " +
-                "<a href=\"javascript:mgnl.owfe.Inbox.cancel('" + id + "');\">cancel</a> ";
+
+                return "<a href=\"javascript:mgnl.owfe.Inbox.proceed('"
+                    + id
+                    + "');\">proceed</a> "
+                    + "<a href=\"javascript:mgnl.owfe.Inbox.reject('"
+                    + id
+                    + "');\">reject</a> "
+                    + "<a href=\"javascript:mgnl.owfe.Inbox.cancel('"
+                    + id
+                    + "');\">cancel</a> ";
             }
         };
-        
+
         list.addColumn(functionsColumn);
     }
-    
+
     /**
      * @see com.obinary.magnolia.professional.lists.AbstractAdvancedSearchList#onRender()
      */
     public String onRender() {
         return FreeMarkerUtil.process(this);
     }
-    
-    public String proceed(){
-        try{
+
+    public String proceed() {
+        try {
             new OWFEBean().approveActivation(this.getFlowItemId());
         }
-        catch(Exception e){
+        catch (Exception e) {
             AlertUtil.setMessage("can't proceed:", e);
         }
         return this.show();
     }
 
-    public String reject(){
-        try{
+    public String reject() {
+        try {
             new OWFEBean().rejectActivation(this.getFlowItemId(), this.getComment());
         }
-        catch(Exception e){
+        catch (Exception e) {
             AlertUtil.setMessage("can't reject:", e);
         }
         return this.show();
     }
 
-    public String cancel(){
-        try{
+    public String cancel() {
+        try {
             new OWFEBean().cancel(this.getFlowItemId());
         }
-        catch(Exception e){
+        catch (Exception e) {
             AlertUtil.setMessage("can't cancel:", e);
         }
         return this.show();
     }
-    
+
     /**
      * @return Returns the flowItemId.
      */
@@ -156,7 +151,6 @@ public class Inbox extends AbstractList {
         return this.flowItemId;
     }
 
-    
     /**
      * @param flowItemId The flowItemId to set.
      */
@@ -164,7 +158,6 @@ public class Inbox extends AbstractList {
         this.flowItemId = flowItemId;
     }
 
-    
     /**
      * @return Returns the comment.
      */
@@ -172,7 +165,6 @@ public class Inbox extends AbstractList {
         return this.comment;
     }
 
-    
     /**
      * @param comment The comment to set.
      */
@@ -180,7 +172,6 @@ public class Inbox extends AbstractList {
         this.comment = comment;
     }
 
-    
     /**
      * @return Returns the debug.
      */
@@ -188,7 +179,6 @@ public class Inbox extends AbstractList {
         return this.debug;
     }
 
-    
     /**
      * @param debug The debug to set.
      */

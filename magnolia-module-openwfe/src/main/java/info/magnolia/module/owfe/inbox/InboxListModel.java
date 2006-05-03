@@ -7,26 +7,25 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.module.owfe.inbox;
-
-import java.util.Collection;
-import java.util.List;
 
 import info.magnolia.cms.gui.controlx.list.AbstractListModel;
 import info.magnolia.cms.gui.controlx.list.ListModelIterator;
 import info.magnolia.module.owfe.OWFEBean;
 
+import java.util.Collection;
+import java.util.List;
+
 
 /**
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class InboxListModel extends AbstractListModel {
-    
+
     private String userName;
 
     /**
@@ -43,15 +42,14 @@ public class InboxListModel extends AbstractListModel {
     protected Collection getResult() throws Exception {
         return (new OWFEBean()).getUserInbox(userName);
     }
-    
+
     /**
      * @see info.magnolia.cms.gui.controlx.list.AbstractListModel#createIterator(java.util.Collection)
      */
     protected ListModelIterator createIterator(Collection items) {
-        return new InboxListModelIterator((List)items, this.getGroupBy());
+        return new InboxListModelIterator((List) items, this.getGroupBy());
     }
 
-    
     /**
      * @return Returns the userName.
      */
@@ -59,7 +57,6 @@ public class InboxListModel extends AbstractListModel {
         return this.userName;
     }
 
-    
     /**
      * @param userName The userName to set.
      */

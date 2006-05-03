@@ -1,3 +1,15 @@
+/**
+ *
+ * Magnolia and its source-code is licensed under the LGPL.
+ * You may copy, adapt, and redistribute this file for commercial or non-commercial use.
+ * When copying, adapting, or redistributing this document in keeping with the guidelines above,
+ * you are required to provide proper attribution to obinary.
+ * If you reproduce or distribute the document without making any substantive modifications to its content,
+ * please use the following attribution line:
+ *
+ * Copyright 2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ *
+ */
 package info.magnolia.module.owfe;
 
 import info.magnolia.cms.beans.commands.CommandsMap;
@@ -9,13 +21,17 @@ import info.magnolia.module.owfe.jcr.JCRWorkItemAPI;
 import openwfe.org.embed.impl.engine.AbstractEmbeddedParticipant;
 import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.engine.workitem.WorkItem;
+
 import org.apache.log4j.Logger;
 
+
 public class MgnlParticipant extends AbstractEmbeddedParticipant {
+
     /**
      * Logger
      */
     private static Logger log = Logger.getLogger(AbstractEmbeddedParticipant.class);
+
     JCRWorkItemAPI storage = null;
 
     public MgnlParticipant() throws Exception {
@@ -32,7 +48,8 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
             log.debug("storage = " + storage);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see openwfe.org.embed.engine.EmbeddedParticipant#consume(openwfe.org.engine.workitem.WorkItem)
      */
     public void consume(WorkItem wi) throws Exception {
@@ -53,11 +70,10 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
             if (log.isDebugEnabled())
                 log.debug("command name is " + parName);
 
-
             try {
                 MgnlCommand c = CommandsMap.getCommandFromFullName(parName);
                 if (c != null) {
-                   log.info("Command has been found through the magnolia catalog:" + c.getClass().getName());
+                    log.info("Command has been found through the magnolia catalog:" + c.getClass().getName());
 
                     // set parameters in the context
                     Context context = MgnlContext.getInstance();
@@ -68,10 +84,12 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
 
                     // execute
                     c.execute(context);
-                    
-                    OWFEEngine.getEngine().reply((InFlowWorkItem)wi);
 
-                } else // not found, do in the old ways
+                    OWFEEngine.getEngine().reply((InFlowWorkItem) wi);
+
+                }
+                else
+                    // not found, do in the old ways
                     log.error("No command has been found through the magnolia catalog for name:" + parName);
 
                 log.info("consume command " + parName + " end.");
@@ -79,7 +97,8 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
             catch (Exception e) {
                 log.error("consume command failed", e);
             }
-        } else {
+        }
+        else {
             if (log.isDebugEnabled())
                 log.debug("storage = " + storage);
             storage.storeWorkItem("", (InFlowWorkItem) wi);
@@ -89,6 +108,5 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
             log.debug("leave consume()..");
 
     }
-
 
 }

@@ -12,10 +12,11 @@
  */
 package info.magnolia.module.owfe.inbox;
 
+import info.magnolia.cms.gui.controlx.list.ListModelIteratorImpl;
+
 import java.util.List;
 
 import openwfe.org.engine.workitem.InFlowItem;
-import info.magnolia.cms.gui.controlx.list.ListModelIteratorImpl;
 
 
 /**
@@ -40,7 +41,7 @@ public class InboxListModelIterator extends ListModelIteratorImpl {
         if (item.containsAttribute(name)) {
             return item.getAttribute(name);
         }
-        else if(name.equalsIgnoreCase("id")){
+        else if (name.equalsIgnoreCase("id")) {
             return item.getId().toParseableString();
         }
         else {

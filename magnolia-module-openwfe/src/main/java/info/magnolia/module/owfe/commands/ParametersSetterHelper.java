@@ -14,13 +14,16 @@ package info.magnolia.module.owfe.commands;
 
 import info.magnolia.cms.beans.commands.MgnlCommand;
 import info.magnolia.module.owfe.MgnlConstants;
-import openwfe.org.engine.workitem.Attribute;
-import openwfe.org.engine.workitem.WorkItem;
-import org.apache.commons.chain.Context;
-import org.apache.log4j.Logger;
+
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
+
+import openwfe.org.engine.workitem.Attribute;
+import openwfe.org.engine.workitem.WorkItem;
+
+import org.apache.commons.chain.Context;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -43,7 +46,7 @@ public class ParametersSetterHelper {
 
         WorkItem workItem = (WorkItem) context.get(MgnlConstants.INFLOW_PARAM);
         if (workItem != null) {
-        	log.debug("finf in flow params");
+            log.debug("finf in flow params");
             for (int i = 0; i < expected.length; i++) {
                 Attribute attr = workItem.getAttribute(expected[i]);
                 if (attr != null) {
@@ -52,13 +55,13 @@ public class ParametersSetterHelper {
                 }
 
                 else {
-                    //log.error("cannot find parameter " + expected[i] + " for command " + command);
+                    // log.error("cannot find parameter " + expected[i] + " for command " + command);
                     log.warn("cannot find parameter " + expected[i] + " for command " + command);
                 }
             }
         }
         else {
-        	log.debug("finf in tree params");
+            log.debug("finf in tree params");
             HttpServletRequest request = (HttpServletRequest) context.get(MgnlConstants.P_REQUEST);
             for (int i = 0; i < expected.length; i++) {
                 params.put(expected[i], request.getParameter(expected[i]));
@@ -73,7 +76,7 @@ public class ParametersSetterHelper {
             // check
             for (int i = 0; i < expected.length; i++) {
                 if (params.get(expected[i]) == null)
-                  log.warn("cannot find parameter " + expected[i] + " for command " + command);
+                    log.warn("cannot find parameter " + expected[i] + " for command " + command);
             }
 
         }
