@@ -20,14 +20,14 @@
     <sv:value>true</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:created" sv:type="Date">
-    <sv:value>2006-04-28T15:00:27.926+02:00</sv:value>
+    <sv:value>2006-05-03T08:30:45.168+02:00</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>0f34bf07-bc96-4ede-a61f-6479672b1eee</sv:value>
+      <sv:value>7d938deb-9274-420b-a6a7-e1eb33080556</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
       <sv:value>true</sv:value>
@@ -47,11 +47,11 @@
     <sv:property sv:name="mgnl:name" sv:type="String">
       <sv:value>untitled</sv:value>
     </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-05-03T08:30:45.169+02:00</sv:value>
+    </sv:property>
     <sv:property sv:name="mgnl:lastaction" sv:type="Date">
       <sv:value>2006-04-28T15:00:37.736+02:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-04-28T15:00:27.927+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:activatorid" sv:type="String">
       <sv:value>superuser</sv:value>
@@ -70,8 +70,14 @@
     <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
       <sv:value>true</sv:value>
     </sv:property>
+    <sv:property sv:name="width" sv:type="String">
+      <sv:value>600</sv:value>
+    </sv:property>
     <sv:property sv:name="saveOnclick" sv:type="String">
-      <sv:value>opener.mgnl.owfe.Inbox.afterSaveComment($('comment').value)</sv:value>
+      <sv:value>opener.mgnl.owfe.Inbox.afterSaveComment($('comment').value);window.close();</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-05-03T08:30:45.184+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="name" sv:type="String">
       <sv:value>inboxComment</sv:value>
@@ -79,18 +85,12 @@
     <sv:property sv:name="height" sv:type="String">
       <sv:value>400</sv:value>
     </sv:property>
-    <sv:property sv:name="width" sv:type="String">
-      <sv:value>600</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-04-27T18:21:42.661+02:00</sv:value>
-    </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>6d60aca9-8562-4139-91b8-8cf93a64efa1</sv:value>
+        <sv:value>c8759735-8225-4d44-9726-eb04f5c9f30a</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
         <sv:value>true</sv:value>
@@ -102,13 +102,13 @@
         <sv:value>2006-03-16T16:46:25.976+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2006-04-28T15:22:32.415+02:00</sv:value>
+        <sv:value>2006-05-03T14:22:46.854+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:activated" sv:type="Boolean">
         <sv:value>false</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-04-27T18:21:42.661+02:00</sv:value>
+        <sv:value>2006-05-03T08:30:45.184+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastaction" sv:type="Date">
         <sv:value>2006-04-28T15:03:21.021+02:00</sv:value>
@@ -134,7 +134,7 @@
         <sv:value>inbox.comment</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-04-27T18:21:42.666+02:00</sv:value>
+        <sv:value>2006-05-03T08:30:45.228+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="controlType" sv:type="String">
         <sv:value>tab</sv:value>
@@ -144,7 +144,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>3eeed357-2a8a-4b2a-b946-945454a1fb6a</sv:value>
+          <sv:value>31676f00-46aa-44a9-a828-234a9fe75cc1</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
           <sv:value>true</sv:value>
@@ -162,7 +162,7 @@
           <sv:value>false</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:created" sv:type="Date">
-          <sv:value>2006-04-27T18:21:42.666+02:00</sv:value>
+          <sv:value>2006-05-03T08:30:45.229+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastaction" sv:type="Date">
           <sv:value>2006-04-28T15:03:28.423+02:00</sv:value>
@@ -197,7 +197,7 @@
           <sv:value>comment</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:created" sv:type="Date">
-          <sv:value>2006-04-27T18:21:42.709+02:00</sv:value>
+          <sv:value>2006-05-03T08:30:45.239+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="controlType" sv:type="String">
           <sv:value>edit</sv:value>
@@ -207,7 +207,7 @@
             <sv:value>mgnl:metaData</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
-            <sv:value>0190b16d-f3ca-4a95-8835-986d2414b783</sv:value>
+            <sv:value>b26b3745-e1e3-4214-8a86-be25224ec3d9</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
             <sv:value>true</sv:value>
@@ -225,7 +225,7 @@
             <sv:value>false</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:created" sv:type="Date">
-            <sv:value>2006-04-27T18:21:42.710+02:00</sv:value>
+            <sv:value>2006-05-03T08:30:45.240+02:00</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:lastaction" sv:type="Date">
             <sv:value>2006-04-28T15:07:09.706+02:00</sv:value>
