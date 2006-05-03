@@ -44,7 +44,6 @@ public class FunctionBar extends ContextMenu {
      */
     public FunctionBar(String menuName) {
         super(menuName);
-        // TODO Auto-generated constructor stub
         this.javascriptName = "mgnlFunctionBar";
     }
 
