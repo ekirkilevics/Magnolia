@@ -481,7 +481,7 @@ public class HierarchyManager {
      */
     public Content getContentByUUID(String uuid) throws ItemNotFoundException, RepositoryException,
         AccessDeniedException {
-        return (new Content(this.startPage.getSession().getNodeByUUID(uuid), this.accessManager));
+        return new Content(this.startPage.getSession().getNodeByUUID(uuid), this.accessManager);
     }
 
     /**
@@ -502,10 +502,7 @@ public class HierarchyManager {
         AccessDeniedException {
         Access.isGranted(this.accessManager, source, Permission.REMOVE);
         Access.isGranted(this.accessManager, destination, Permission.WRITE);
-
-        // maem: rather use session because of caching bug. see http://issues.apache.org/jira/browse/JCR-155
-        this.workSpace.getSession().move(source, destination);
-        this.workSpace.getSession().save();
+        this.workSpace.move(source, destination);
     }
 
     /**
@@ -520,12 +517,6 @@ public class HierarchyManager {
         Access.isGranted(this.accessManager, source, Permission.READ);
         Access.isGranted(this.accessManager, destination, Permission.WRITE);
         this.workSpace.copy(source, destination);
-
-        if (this.workSpace.getSession().hasPendingChanges()) {
-            this.workSpace.getSession().refresh(false);
-            if (log.isDebugEnabled())
-                log.debug("copy: the session has pending changes but should not. will refresh");
-        }
     }
 
     /**
