@@ -40,7 +40,7 @@ public class MultipartRequestFilter implements Filter {
     /**
      * Max file upload size.
      */
-    private static final int MAX_FILE_SIZE = 200000000; // 200MB
+    private static final int MAX_FILE_SIZE = 2000000000; // 2GB
 
     /**
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
@@ -57,7 +57,7 @@ public class MultipartRequestFilter implements Filter {
     }
 
     /**
-     * @see javax.servlet.Filter#doFilter(ServletRequest, ServletResponse, .FilterChain)
+     * @see javax.servlet.Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
      */
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain) throws IOException,
         ServletException {
@@ -71,7 +71,7 @@ public class MultipartRequestFilter implements Filter {
         else if (type2 == null && type1 != null) {
             type = type1;
         }
-        else if (type1 != null && type2 != null) {
+        else if (type1 != null) {
             type = (type1.length() > type2.length() ? type1 : type2);
         }
         if ((type != null) && type.toLowerCase().startsWith("multipart/form-data")) { //$NON-NLS-1$
