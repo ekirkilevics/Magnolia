@@ -11,7 +11,7 @@
  *
  */
 
-importClass("mgnl.admininterface.Versions");
+importClass("mgnl.admininterface.VersionsList");
 
 classDef("mgnl.admininterface.WebsiteTree", {
 
@@ -20,7 +20,7 @@ classDef("mgnl.admininterface.WebsiteTree", {
     },
 
     showVersions: function(tree){
-        mgnl.admininterface.Versions.showVersions('website', tree.selectedNode.path);
+        mgnl.admininterface.VersionsList.show('website', tree.selectedNode.path);
     },
     
     search: function(){
