@@ -12,20 +12,28 @@
  */
  
 classDef("mgnl.owfe.Inbox", {
+
+    /**
+     * The currently selected id.
+     */
+    currentId: null,
     
     proceed: function(id){
+        id = id==null ? this.currentId : id;
         $('flowItemId').value = id;
         $('command').value = "proceed";
         this.openCommentDialog();
     },
     
     reject: function(id){
+        id = id==null ? this.currentId : id;
         $('flowItemId').value = id;
         $('command').value = "reject";
         this.openCommentDialog();
     },
 
     cancel: function(id){
+        id = id==null ? this.currentId : id;
         $('flowItemId').value = id;
         $('command').value = "cancel";
         document.mgnlForm.submit();
