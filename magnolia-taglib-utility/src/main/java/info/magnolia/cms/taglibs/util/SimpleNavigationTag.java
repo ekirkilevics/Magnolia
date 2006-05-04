@@ -305,29 +305,28 @@ public class SimpleNavigationTag extends TagSupport {
                 title = child.getName();
             }
 
-            boolean showChildren;
+            boolean showChildren = false;
             boolean self = false;
 
             if (!expandAll.equalsIgnoreCase(EXPAND_NONE)) {
                 showChildren = true;
             }
-            else {
 
-                if (activePage.getHandle().equals(child.getHandle())) {
-                    // self
-                    showChildren = true;
-                    self = true;
-                    cssClasses.add(CSS_LI_ACTIVE); //$NON-NLS-1$
-                }
-                else {
-                    showChildren = (child.getLevel() <= activePage.getAncestors().size() && activePage.getAncestor(
-                        child.getLevel()).getHandle().equals(child.getHandle()));
-                }
+            if (activePage.getHandle().equals(child.getHandle())) {
+                // self
+                showChildren = true;
+                self = true;
+                cssClasses.add(CSS_LI_ACTIVE); //$NON-NLS-1$
+            }
+            else if (!showChildren) {
+                showChildren = (child.getLevel() <= activePage.getAncestors().size() && activePage.getAncestor(
+                    child.getLevel()).getHandle().equals(child.getHandle()));
+            }
 
-                if (!showChildren) {
-                    showChildren = child.getNodeData(
-                        StringUtils.defaultString(this.openMenu, DEFAULT_OPENMENU_NODEDATA)).getBoolean();
-                }
+            if (!showChildren) {
+                showChildren = child
+                    .getNodeData(StringUtils.defaultString(this.openMenu, DEFAULT_OPENMENU_NODEDATA))
+                    .getBoolean();
             }
 
             if (endLevel > 0) {
