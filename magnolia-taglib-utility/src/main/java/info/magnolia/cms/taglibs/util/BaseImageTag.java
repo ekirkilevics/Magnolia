@@ -161,11 +161,10 @@ public abstract class BaseImageTag extends SimpleTagSupport {
 
     /**
      * Replace any special characters that are not letters or numbers with a replacement string. The two exceptions are
-     * '-' and '_', which are allowed. The replacement strings are the character 'u', followed by an int value, obtained
-     * from Character.codePointAt(). (This means that in some rare situations, the user may enter 'u33' as text, and get
-     * an exclamation mark instead.)
+     * '-' and '_', which are allowed.
      */
     public String convertToSimpleString(String string) {
+
         final StringBuffer result = new StringBuffer();
 
         final StringCharacterIterator iterator = new StringCharacterIterator(string);
@@ -180,7 +179,8 @@ public abstract class BaseImageTag extends SimpleTagSupport {
                 && (charType != Character.DECIMAL_DIGIT_NUMBER)
                 && (charType != Character.CONNECTOR_PUNCTUATION)
                 && (charType != Character.DASH_PUNCTUATION)) {
-                result.append("u" + Character.codePointAt(new char[]{character}, 0));
+                result.append("u" + (int) character);
+
             }
             else {
                 // the char is not a special one
