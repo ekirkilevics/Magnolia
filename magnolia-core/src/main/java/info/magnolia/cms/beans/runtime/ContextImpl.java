@@ -19,13 +19,6 @@ import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.User;
-import info.magnolia.cms.security.CredentialsCallbackHandler;
-import info.magnolia.cms.security.Security;
-
-import javax.jcr.SimpleCredentials;
-import javax.security.auth.login.LoginContext;
-import javax.security.auth.login.LoginException;
-import javax.security.auth.Subject;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -56,21 +49,6 @@ public abstract class ContextImpl extends HashMap implements Context {
     public void setUser(User user) {
         this.user = user;
         setLocale(new Locale(user.getLanguage()));
-    }
-
-    /**
-     * Set user instance for this context
-     *
-     * @param credentials
-     * @throws LoginException if fails to login to JCR
-     */
-    public void login(SimpleCredentials credentials) throws LoginException {
-        CredentialsCallbackHandler callbackHandler
-                = new CredentialsCallbackHandler(credentials.getUserID(), credentials.getPassword());
-        LoginContext loginContext = new LoginContext("magnolia", callbackHandler);
-        loginContext.login();
-        Subject subject = loginContext.getSubject();
-        this.setUser(Security.getUserManager().getUser(subject));
     }
 
     /**
