@@ -83,8 +83,8 @@ public class MgnlRole implements Role {
     public void removePermission(String repository, String path, long permission) {
         try {
             Content aclNode = getAclNode(repository);
-            Collection childs = aclNode.getChildren();
-            for (Iterator iter = childs.iterator(); iter.hasNext();) {
+            Collection children = aclNode.getChildren();
+            for (Iterator iter = children.iterator(); iter.hasNext();) {
                 Content child = (Content) iter.next();
                 if (child.getNodeData("path").getString().equals("path")) {
                     if (permission == MgnlRole.PERMISSION_ANY
@@ -127,8 +127,8 @@ public class MgnlRole implements Role {
      * @param permission
      */
     private boolean existsPermission(Content aclNode, String path, long permission) {
-        Collection childs = aclNode.getChildren();
-        for (Iterator iter = childs.iterator(); iter.hasNext();) {
+        Collection children = aclNode.getChildren();
+        for (Iterator iter = children.iterator(); iter.hasNext();) {
             Content child = (Content) iter.next();
             if (child.getNodeData("path").getString().equals(path)) {
                 if (permission == MgnlRole.PERMISSION_ANY
