@@ -20,20 +20,20 @@
     <sv:value>true</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:created" sv:type="Date">
-    <sv:value>2006-05-04T10:46:26.727+02:00</sv:value>
+    <sv:value>2006-05-04T11:57:32.704+02:00</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>f93a5aa5-cbd9-479f-8baf-8ae1067242a4</sv:value>
+      <sv:value>c7fc1195-19a6-445e-aa1f-b2d211105bc9</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-05-04T10:46:26.727+02:00</sv:value>
+      <sv:value>2006-05-04T11:57:32.704+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:creationdate" sv:type="Date">
       <sv:value>2006-04-12T14:18:13.707+02:00</sv:value>
@@ -62,14 +62,14 @@
       <sv:value>menu.website</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-05-04T10:46:26.731+02:00</sv:value>
+      <sv:value>2006-05-04T11:57:32.708+02:00</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>d8d7d5f9-7fd3-4cf3-b3c9-d8dcc9323d9b</sv:value>
+        <sv:value>f51242a2-ea0f-4591-a90b-e3262a1be109</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:Data" sv:type="String">
         <sv:value>MetaData</sv:value>
@@ -81,7 +81,7 @@
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-05-04T10:46:26.731+02:00</sv:value>
+        <sv:value>2006-05-04T11:57:32.709+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
         <sv:value>1000000000000010</sv:value>
@@ -114,14 +114,14 @@
       <sv:value>menu.security</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-05-04T10:46:26.736+02:00</sv:value>
+      <sv:value>2006-05-04T11:57:32.713+02:00</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>b1babbe0-9748-4b9c-991a-573b9cca0418</sv:value>
+        <sv:value>1340d9c0-700f-4151-8376-2e9049fd0a11</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
         <sv:value>true</sv:value>
@@ -139,7 +139,7 @@
         <sv:value>false</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-05-04T10:46:26.736+02:00</sv:value>
+        <sv:value>2006-05-04T11:57:32.714+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastaction" sv:type="Date">
         <sv:value>2006-02-15T09:01:56.223+01:00</sv:value>
@@ -174,14 +174,14 @@
         <sv:value>menu.users</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-05-04T10:46:26.740+02:00</sv:value>
+        <sv:value>2006-05-04T11:57:32.763+02:00</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>318cae3a-1cb1-4739-a50b-774f115bdc0f</sv:value>
+          <sv:value>f8158d2a-cf92-4477-8f14-d3f80b3d28c5</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
           <sv:value>true</sv:value>
@@ -202,7 +202,7 @@
           <sv:value>MetaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:created" sv:type="Date">
-          <sv:value>2006-05-04T10:46:26.740+02:00</sv:value>
+          <sv:value>2006-05-04T11:57:32.763+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastaction" sv:type="Date">
           <sv:value>2006-02-15T09:02:06.232+01:00</sv:value>
@@ -238,14 +238,14 @@
         <sv:value>menu.roles</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-05-04T10:46:26.745+02:00</sv:value>
+        <sv:value>2006-05-04T11:57:32.767+02:00</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>1357d814-17f9-43e4-83d6-bd778087abb1</sv:value>
+          <sv:value>b1e01d30-2e75-4923-9023-74d71dd7189e</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
           <sv:value>true</sv:value>
@@ -266,7 +266,7 @@
           <sv:value>MetaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:created" sv:type="Date">
-          <sv:value>2006-05-04T10:46:26.745+02:00</sv:value>
+          <sv:value>2006-05-04T11:57:32.767+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastaction" sv:type="Date">
           <sv:value>2006-02-15T09:05:01.277+01:00</sv:value>
@@ -302,14 +302,14 @@
         <sv:value>menu.groups</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-05-04T10:46:26.758+02:00</sv:value>
+        <sv:value>2006-05-04T11:57:32.771+02:00</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>d7512360-331a-453d-b346-70b04ee19a30</sv:value>
+          <sv:value>b8ca5b15-e2a0-4e83-834a-1fc402a7aff2</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
           <sv:value>true</sv:value>
@@ -318,7 +318,7 @@
           <sv:value>superuser</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:created" sv:type="Date">
-          <sv:value>2006-05-04T10:46:26.758+02:00</sv:value>
+          <sv:value>2006-05-04T11:57:32.771+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
           <sv:value>2006-04-19T16:10:25.841+02:00</sv:value>
@@ -349,14 +349,14 @@
       <sv:value>menu.config</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-05-04T10:46:26.762+02:00</sv:value>
+      <sv:value>2006-05-04T11:57:32.775+02:00</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>b10fc985-a12b-4610-9d59-b7057254547c</sv:value>
+        <sv:value>6690ddfa-cbaf-4c7d-b7be-be521318ccbe</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:Data" sv:type="String">
         <sv:value>MetaData</sv:value>
@@ -368,7 +368,7 @@
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-05-04T10:46:26.762+02:00</sv:value>
+        <sv:value>2006-05-04T11:57:32.775+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
         <sv:value>1000000000000050</sv:value>
@@ -400,18 +400,18 @@
     <sv:property sv:name="onclick" sv:type="String">
       <sv:value/>
     </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-05-04T11:57:32.779+02:00</sv:value>
+    </sv:property>
     <sv:property sv:name="label" sv:type="String">
       <sv:value>menu.tools</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-05-04T10:46:56.413+02:00</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>06f5ccc1-caaa-4997-9c0a-f7d70219aa69</sv:value>
+        <sv:value>a576aaf3-fead-4927-a378-f2acc7626f9c</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
         <sv:value>true</sv:value>
@@ -432,7 +432,7 @@
         <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-05-04T10:46:56.413+02:00</sv:value>
+        <sv:value>2006-05-04T11:57:32.779+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastaction" sv:type="Date">
         <sv:value>2006-05-04T11:12:19.720+02:00</sv:value>
@@ -444,60 +444,133 @@
         <sv:value>1000000000000060</sv:value>
       </sv:property>
     </sv:node>
-  </sv:node>
-  <sv:node sv:name="about">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-      <sv:value>mix:versionable</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>593b2859-1167-4cc6-b415-a07cfb28e95d</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
-    <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/.resources/icons/24/about.gif</sv:value>
-    </sv:property>
-    <sv:property sv:name="onclick" sv:type="String">
-      <sv:value>MgnlAdminCentral.showContent('/.magnolia/adminCentral/about.html');</sv:value>
-    </sv:property>
-    <sv:property sv:name="label" sv:type="String">
-      <sv:value>menu.about</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-05-04T10:46:26.766+02:00</sv:value>
-    </sv:property>
-    <sv:node sv:name="MetaData">
+    <sv:node sv:name="import">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:metaData</sv:value>
+        <sv:value>mgnl:contentNode</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+        <sv:value>mix:versionable</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>c44cef3d-3b0c-42ea-a704-6add35583f68</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:Data" sv:type="String">
-        <sv:value>MetaData</sv:value>
+        <sv:value>87522c9a-ef10-4a5a-938f-349b394147db</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
         <sv:value>true</sv:value>
       </sv:property>
-      <sv:property sv:name="mgnl:authorid" sv:type="String">
-        <sv:value>superuser</sv:value>
+      <sv:property sv:name="icon" sv:type="String">
+        <sv:value/>
+      </sv:property>
+      <sv:property sv:name="onclick" sv:type="String">
+        <sv:value>MgnlAdminCentral.showContent('/.magnolia/mgnl-import');</sv:value>
+      </sv:property>
+      <sv:property sv:name="label" sv:type="String">
+        <sv:value>menu.tools.import</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-05-04T10:46:26.766+02:00</sv:value>
+        <sv:value>2006-05-04T11:58:10.027+02:00</sv:value>
       </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1000000000000060</sv:value>
+      <sv:node sv:name="MetaData">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>a466d59b-6c70-4233-a34c-f649c48d1378</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:authorid" sv:type="String">
+          <sv:value>superuser</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+          <sv:value>2005-05-16T20:46:43.549+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+          <sv:value>2006-05-04T12:02:47.206+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+          <sv:value>false</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:Data" sv:type="String">
+          <sv:value>MetaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-05-04T11:58:10.027+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+          <sv:value>2006-05-04T12:02:10.817+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:activatorid" sv:type="String">
+          <sv:value>superuser</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
+          <sv:value>1000000000000060</sv:value>
+        </sv:property>
+      </sv:node>
+    </sv:node>
+    <sv:node sv:name="export">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
-      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-        <sv:value>2005-05-16T20:46:43.549+02:00</sv:value>
+      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+        <sv:value>mix:versionable</sv:value>
       </sv:property>
-      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2006-02-14T17:59:52.330+01:00</sv:value>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>f9555efd-bc86-481f-9586-eedda9392421</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="icon" sv:type="String">
+        <sv:value/>
+      </sv:property>
+      <sv:property sv:name="onclick" sv:type="String">
+        <sv:value>MgnlAdminCentral.showContent('/.magnolia/mgnl-export');</sv:value>
+      </sv:property>
+      <sv:property sv:name="label" sv:type="String">
+        <sv:value>menu.tools.export</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-05-04T11:58:14.728+02:00</sv:value>
+      </sv:property>
+      <sv:node sv:name="MetaData">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>b8928f8b-3e67-4314-a416-e72a20f90134</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:authorid" sv:type="String">
+          <sv:value>superuser</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+          <sv:value>2005-05-16T20:46:43.549+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+          <sv:value>2006-05-04T12:03:01.212+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+          <sv:value>false</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:Data" sv:type="String">
+          <sv:value>MetaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-05-04T11:58:14.728+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+          <sv:value>2006-05-04T12:02:14.434+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:activatorid" sv:type="String">
+          <sv:value>superuser</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
+          <sv:value>1000000000000060</sv:value>
+        </sv:property>
+      </sv:node>
     </sv:node>
   </sv:node>
 </sv:node>
