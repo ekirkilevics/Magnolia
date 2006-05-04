@@ -14,29 +14,29 @@
     <sv:value>mix:versionable</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:uuid" sv:type="String">
-    <sv:value>3bd68bfa-8fc9-4c92-8a04-45a25ac720a5</sv:value>
+    <sv:value>87522c9a-ef10-4a5a-938f-349b394147db</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
     <sv:value>true</sv:value>
   </sv:property>
   <sv:property sv:name="icon" sv:type="String">
-    <sv:value>/.resources/icons/24/bpn.gif</sv:value>
+    <sv:value/>
   </sv:property>
   <sv:property sv:name="onclick" sv:type="String">
     <sv:value>MgnlAdminCentral.showContent('/.magnolia/flows');</sv:value>
   </sv:property>
-  <sv:property sv:name="label" sv:type="String">
-    <sv:value>Flows</sv:value>
-  </sv:property>
   <sv:property sv:name="jcr:created" sv:type="Date">
-    <sv:value>2006-05-01T19:03:06.386+02:00</sv:value>
+    <sv:value>2006-05-04T10:46:56.413+02:00</sv:value>
+  </sv:property>
+  <sv:property sv:name="label" sv:type="String">
+    <sv:value>menu.tools.flows</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>80f6a61c-7ad6-4e5f-a327-2b904b0138e0</sv:value>
+      <sv:value>b62a1984-f2b8-4c77-accc-e4c86b898b25</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
       <sv:value>true</sv:value>
@@ -48,7 +48,7 @@
       <sv:value>2005-05-16T20:46:43.549+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2006-05-01T21:29:04.970+02:00</sv:value>
+      <sv:value>2006-05-04T11:31:03.459+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:activated" sv:type="Boolean">
       <sv:value>false</sv:value>
@@ -56,11 +56,11 @@
     <sv:property sv:name="mgnl:Data" sv:type="String">
       <sv:value>MetaData</sv:value>
     </sv:property>
-    <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-      <sv:value>2006-05-01T21:27:05.288+02:00</sv:value>
-    </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-05-01T19:03:06.386+02:00</sv:value>
+      <sv:value>2006-05-04T10:46:56.413+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+      <sv:value>2006-05-04T11:31:03.439+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:activatorid" sv:type="String">
       <sv:value>superuser</sv:value>
