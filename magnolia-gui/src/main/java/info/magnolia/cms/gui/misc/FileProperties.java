@@ -40,6 +40,12 @@ public class FileProperties {
 
     public static final String PROPERTY_FILENAME = "fileName"; //$NON-NLS-1$
 
+    public static final String PROPERTY_ICON = "icon"; //$NON-NLS-1$
+
+    public static final String PROPERTY_WIDTH = "width"; //$NON-NLS-1$
+
+    public static final String PROPERTY_HEIGHT = "height"; //$NON-NLS-1$
+
     public static final String EXTENSION = "extension"; // Pdf //$NON-NLS-1$
 
     public static final String EXTENSION_LOWER_CASE = "extensionLowerCase"; // pdf //$NON-NLS-1$
