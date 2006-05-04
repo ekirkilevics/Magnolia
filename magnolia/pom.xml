@@ -99,7 +99,7 @@
       <artifactId>jackrabbit-index-filters</artifactId>
     </dependency>
     <!-- uncomment this to use berkeleydb -->
-    <!-- 
+    <!--
       <dependency>
       <groupId>org.apache.jackrabbit</groupId>
       <artifactId>jackrabbit-bdb</artifactId>

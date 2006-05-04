@@ -1,416 +1,515 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <!DOCTYPE taglib
         PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
-	"http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+    "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
 <taglib>
-    <tlib-version>2.1</tlib-version>
-    <jsp-version>1.2</jsp-version>
-    <short-name>cmsu</short-name>
-    <uri>cms-util-taglib</uri>
-    <description>CMS Utility Tag Library</description>
-    <tag>
-        <name>strToObj</name>
-        <tag-class>info.magnolia.cms.taglibs.util.StrToObj</tag-class>
-        <body-content>JSP</body-content>
-        <description>converts a string to an object using split.</description>
-        <attribute>
-            <name>var</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>name of the pageContext variable where the obj is put to</description>
-        </attribute>
-        <attribute>
-            <name>delims</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>delimiters characters; default: /n</description>
-        </attribute>
-    </tag>
-    <tag>
-        <name>aHref</name>
-        <tag-class>info.magnolia.cms.taglibs.util.AHref</tag-class>
-        <body-content>JSP</body-content>
-        <description>
-            checks if the atom contains a non-empty String value and builds a link if true or tries to find the first
-            page with a specific template Name, starting from a specific page.
-        </description>
-        <attribute>
-            <name>nodeDataName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description></description>
-        </attribute>
-        <attribute>
-            <name>atomName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>@deprecated use nodeDataName</description>
-        </attribute>
-        <attribute>
-            <name>preHref</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>href part that is added before the nodeData content</description>
-        </attribute>
-        <attribute>
-            <name>postHref</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>href part that is added after the nodeData content</description>
-        </attribute>
-        <attribute>
-            <name>templateName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>template name to search for</description>
-        </attribute>
-        <attribute>
-            <name>level</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>int</type>
-            <description>level from where to start the template search</description>
-        </attribute>
-        <example>
-            <![CDATA[
+  <tlib-version>2.1</tlib-version>
+  <jsp-version>1.2</jsp-version>
+  <short-name>cmsu</short-name>
+  <uri>cms-util-taglib</uri>
+  <description>CMS Utility Tag Library</description>
+  <tag>
+    <name>strToObj</name>
+    <tag-class>info.magnolia.cms.taglibs.util.StrToObj</tag-class>
+    <body-content>JSP</body-content>
+    <description>converts a string to an object using split.</description>
+    <attribute>
+      <name>var</name>
+      <required>true</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>name of the pageContext variable where the obj is put to</description>
+    </attribute>
+    <attribute>
+      <name>delims</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>delimiters characters; default: /n</description>
+    </attribute>
+  </tag>
+  <tag>
+    <name>aHref</name>
+    <tag-class>info.magnolia.cms.taglibs.util.AHref</tag-class>
+    <body-content>JSP</body-content>
+    <description>
+      checks if the atom contains a non-empty String value and builds a link if true or tries to find the first page
+      with a specific template Name, starting from a specific page.
+    </description>
+    <attribute>
+      <name>nodeDataName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description></description>
+    </attribute>
+    <attribute>
+      <name>atomName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>@deprecated use nodeDataName</description>
+    </attribute>
+    <attribute>
+      <name>preHref</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>href part that is added before the nodeData content</description>
+    </attribute>
+    <attribute>
+      <name>postHref</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>href part that is added after the nodeData content</description>
+    </attribute>
+    <attribute>
+      <name>templateName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>template name to search for</description>
+    </attribute>
+    <attribute>
+      <name>level</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>int</type>
+      <description>level from where to start the template search</description>
+    </attribute>
+    <example>
+      <![CDATA[
 <cmsu:aHref ... />
 ]]>
-        </example>
-    </tag>
-    <tag>
-        <name>aAttribute</name>
-        <tag-class>info.magnolia.cms.taglibs.util.AAttribute</tag-class>
-        <body-content>EMPTY</body-content>
-        <description>adds an attribute to the aHref tag (child as aHref)</description>
-        <attribute>
-            <name>name</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>the name of the attribute</description>
-        </attribute>
-        <attribute>
-            <name>value</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>the value of the attribute</description>
-        </attribute>
-    </tag>
-    <tag>
-        <name>date</name>
-        <tag-class>info.magnolia.cms.taglibs.util.Date</tag-class>
-        <body-content>EMPTY</body-content>
-        <description>@deprecated see cms-taglib:out.</description>
-        <attribute>
-            <name>nodeDataName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>@deprecated where the date comes from</description>
-        </attribute>
-        <attribute>
-            <name>atomName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>@deprecated</description>
-        </attribute>
-        <attribute>
-            <name>actpage</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>boolean</type>
-            <description>@deprecated if "true" atom is taken from the currently active page</description>
-        </attribute>
-        <attribute>
-            <name>pattern</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>@deprecated (see java.text.SimpleDateFormat) - defaults "yyyy.MM.dd - HH:mm:ss"</description>
-        </attribute>
-        <attribute>
-            <name>language</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>@deprecated Locale string (see java.util.Locale)</description>
-        </attribute>
-    </tag>
-    <tag>
-        <name>breadcrumb</name>
-        <tag-class>info.magnolia.cms.taglibs.util.Breadcrumb</tag-class>
-        <body-content>EMPTY</body-content>
-        <description>displays a breadcrumb</description>
-        <attribute>
-            <name>startLevel</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>
-                at which level to start. Often you will want to omit top levels, e.g. if you split your site into
-                multiple languages
-            </description>
-        </attribute>
-        <attribute>
-            <name>delimiter</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>displayed between the page names, e.g. ">"</description>
-        </attribute>
-        <attribute>
-            <name>excludeCurrent</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>boolean</type>
-            <description>exclude the current (active) page from the breadcrumb. Defaults to false</description>
-        </attribute>
-        <attribute>
-            <name>link</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>boolean</type>
-            <description>Create links to pages. Defaults to true</description>
-        </attribute>
-    </tag>
-    <tag>
-        <name>fileSrc</name>
-        <tag-class>info.magnolia.cms.taglibs.util.FileSrc</tag-class>
-        <body-content>EMPTY</body-content>
-        <description>@deprecated see cms:out. Returns informations as path, name or size of a file</description>
-        <attribute>
-            <name>nodeDataName</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>@deprecated</description>
-        </attribute>
-        <attribute>
-            <name>contentNodeName</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>
-                @deprecated if left empty, local contentNode is used as set by contentNodeIterator, otherwise the global
-                contentNode is used
-            </description>
-        </attribute>
-        <attribute>
-            <name>fileNameOnly</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>@deprecated if "true", the file name without the path will be generated</description>
-        </attribute>
-    </tag>
-    <tag>
-        <name>xmp</name>
-        <tag-class>info.magnolia.cms.taglibs.util.Xmp</tag-class>
-        <body-content>JSP</body-content>
-        <description>Simulates the xmp tag, escaping content. This is useful for displaying code examples.</description>
-    </tag>
-    <tag>
-        <name>newlines</name>
-        <tag-class>info.magnolia.cms.taglibs.util.ConvertNewLineTag</tag-class>
-        <body-content>JSP</body-content>
-        <description>
-            <![CDATA[Converts text in the body of the tag adding &lt;br /> tags at new lines or wrapping lines in paragraphs.]]>
-        </description>
-        <attribute>
-            <name>para</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>boolean</type>
-            <description>
-                <![CDATA[If true each line will be wrapped in a &lt;p> tag. Default to false (use br's).]]>
-            </description>
-        </attribute>
-    </tag>
-    <tag>
-        <name>simpleNavigation</name>
-        <tag-class>info.magnolia.cms.taglibs.util.SimpleNavigationTag</tag-class>
-        <body-content>EMPTY</body-content>
-        <description>
-            Draws a simple, css based, navigation menu. The menu layout can then be customized using css, and the
-            default menu should be enough for most uses.
-        </description>
-        <attribute>
-            <name>expandAll</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>Sitemap mode. Can be assigned the "show" value. Only showable
-                pages will be displayed. Any other value will result in displaying all
-                pages
-            </description>
-        </attribute>
-        <attribute>
-            <name>startLevel</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>int</type>
-            <description>The start level for navigation, defaults to 0.</description>
-        </attribute>
-        <attribute>
-            <name>endLevel</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>int</type>
-            <description>The end level for navigation, defaults to 0.</description>
-        </attribute>
-        <attribute>
-            <name>style</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-			<description>The css class to be applied to the first ul.</description>
-        </attribute>
-        <attribute>
-            <name>hideInNav</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>
-                Name for the "hide in nav" nodeData. If a page contains a boolean property with this name and it is set
-                to true, the page is not shown in navigation. Defaults to "hideInNav"
-            </description>
-        </attribute>
-        <attribute>
-            <name>openMenu</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>
-                Name for the "open menu" nodeData. If a page contains a boolean property with this name and it is set to
-                true, subpages are always shown also if the page is not selected. Defaults to "openMenu"
-            </description>
-        </attribute>
-        <example>
-            <![CDATA[
-			<cmsu:simpleNavigation startLevel="3" style="mystyle"/>
-			Will output the following:
-			<ul class="level3 mystyle">
-				<li><a href="...">page 1 name </a></li>
-				<li><a href="...">page 2 name </a></li>
-				<li class="trail"><a href="...">page 3 name </a>
-					<ul class="level3">
-						<li><a href="...">subpage 1 name </a></li>
-						<li><a href="...">subpage 2 name </a></li>
-						<li><strong><a href="...">selected page name </a></strong></li>
-					</ul>
-				</li>
-				<li><a href="...">page 4 name </a></li>
-			</ul>
-			]]>
-        </example>
-    </tag>
-    <tag>
-        <name>simpleSearch</name>
-        <tag-class>info.magnolia.cms.taglibs.util.SimpleSearchTag</tag-class>
-        <body-content>EMPTY</body-content>
-        <description>
-            A simple tag which allows searching in all the site content with a "natural language" query. It simply
-            strips all the reserved chars from input string, build an xpath query and feed Magnolia QueryManager. By
-            defaults search terms are ANDed, but it also supports using the AND or OR keywords in the query string.
-            Search is not case sensitive and it's performed on any non-binary property.
-        </description>
-        <attribute>
-            <name>query</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>Query to execute (e.g. "magnolia AND cms OR info")</description>
-        </attribute>
-        <attribute>
-            <name>var</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>
-                A collection of Content nodes (pages) will be added to the pagecontext with this name.
-            </description>
-        </attribute>
-        <attribute>
-            <name>startLevel</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>int</type>
-            <description>
-                The start level for search, defaults to 0. Can be used to limitthe search only to the current website
-                tree
-            </description>
-        </attribute>
-        <attribute>
-            <name>scope</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>
-                Scope for the variable. Can be "page" (default), "request", "session", "application"
-            </description>
-        </attribute>
-        <example>
-            <![CDATA[
+    </example>
+  </tag>
+  <tag>
+    <name>aAttribute</name>
+    <tag-class>info.magnolia.cms.taglibs.util.AAttribute</tag-class>
+    <body-content>EMPTY</body-content>
+    <description>adds an attribute to the aHref tag (child as aHref)</description>
+    <attribute>
+      <name>name</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>the name of the attribute</description>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>the value of the attribute</description>
+    </attribute>
+  </tag>
+  <tag>
+    <name>date</name>
+    <tag-class>info.magnolia.cms.taglibs.util.Date</tag-class>
+    <body-content>EMPTY</body-content>
+    <description>@deprecated see cms-taglib:out.</description>
+    <attribute>
+      <name>nodeDataName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>@deprecated where the date comes from</description>
+    </attribute>
+    <attribute>
+      <name>atomName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>@deprecated</description>
+    </attribute>
+    <attribute>
+      <name>actpage</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description>@deprecated if "true" atom is taken from the currently active page</description>
+    </attribute>
+    <attribute>
+      <name>pattern</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>@deprecated (see java.text.SimpleDateFormat) - defaults "yyyy.MM.dd - HH:mm:ss"</description>
+    </attribute>
+    <attribute>
+      <name>language</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>@deprecated Locale string (see java.util.Locale)</description>
+    </attribute>
+  </tag>
+  <tag>
+    <name>breadcrumb</name>
+    <tag-class>info.magnolia.cms.taglibs.util.Breadcrumb</tag-class>
+    <body-content>EMPTY</body-content>
+    <description>displays a breadcrumb</description>
+    <attribute>
+      <name>startLevel</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        at which level to start. Often you will want to omit top levels, e.g. if you split your site into multiple
+        languages
+      </description>
+    </attribute>
+    <attribute>
+      <name>delimiter</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>displayed between the page names, e.g. ">"</description>
+    </attribute>
+    <attribute>
+      <name>excludeCurrent</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description>exclude the current (active) page from the breadcrumb. Defaults to false</description>
+    </attribute>
+    <attribute>
+      <name>link</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description>Create links to pages. Defaults to true</description>
+    </attribute>
+  </tag>
+  <tag>
+    <name>fileSrc</name>
+    <tag-class>info.magnolia.cms.taglibs.util.FileSrc</tag-class>
+    <body-content>EMPTY</body-content>
+    <description>@deprecated see cms:out. Returns informations as path, name or size of a file</description>
+    <attribute>
+      <name>nodeDataName</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>@deprecated</description>
+    </attribute>
+    <attribute>
+      <name>contentNodeName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        @deprecated if left empty, local contentNode is used as set by contentNodeIterator, otherwise the global
+        contentNode is used
+      </description>
+    </attribute>
+    <attribute>
+      <name>fileNameOnly</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>@deprecated if "true", the file name without the path will be generated</description>
+    </attribute>
+  </tag>
+  <tag>
+    <name>xmp</name>
+    <tag-class>info.magnolia.cms.taglibs.util.Xmp</tag-class>
+    <body-content>JSP</body-content>
+    <description>Simulates the xmp tag, escaping content. This is useful for displaying code examples.</description>
+  </tag>
+  <tag>
+    <name>newlines</name>
+    <tag-class>info.magnolia.cms.taglibs.util.ConvertNewLineTag</tag-class>
+    <body-content>JSP</body-content>
+    <description>
+      <![CDATA[Converts text in the body of the tag adding &lt;br /> tags at new lines or wrapping lines in paragraphs.]]>
+    </description>
+    <attribute>
+      <name>para</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description>
+        <![CDATA[If true each line will be wrapped in a &lt;p> tag. Default to false (use br's).]]>
+      </description>
+    </attribute>
+  </tag>
+  <tag>
+    <name>simpleNavigation</name>
+    <tag-class>info.magnolia.cms.taglibs.util.SimpleNavigationTag</tag-class>
+    <body-content>EMPTY</body-content>
+    <description>
+      Draws a simple, css based, navigation menu. The menu layout can then be customized using css, and the default menu
+      should be enough for most uses.
+    </description>
+    <attribute>
+      <name>expandAll</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        Sitemap mode. Can be assigned the "show" value. Only showable pages will be displayed. Any other value will
+        result in displaying all pages
+      </description>
+    </attribute>
+    <attribute>
+      <name>startLevel</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>int</type>
+      <description>The start level for navigation, defaults to 0.</description>
+    </attribute>
+    <attribute>
+      <name>endLevel</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>int</type>
+      <description>The end level for navigation, defaults to 0.</description>
+    </attribute>
+    <attribute>
+      <name>style</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>The css class to be applied to the first ul.</description>
+    </attribute>
+    <attribute>
+      <name>hideInNav</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        Name for the "hide in nav" nodeData. If a page contains a boolean property with this name and it is set to true,
+        the page is not shown in navigation. Defaults to "hideInNav"
+      </description>
+    </attribute>
+    <attribute>
+      <name>openMenu</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        Name for the "open menu" nodeData. If a page contains a boolean property with this name and it is set to true,
+        subpages are always shown also if the page is not selected. Defaults to "openMenu"
+      </description>
+    </attribute>
+    <example>
+      <![CDATA[
+            <cmsu:simpleNavigation startLevel="3" style="mystyle"/>
+            Will output the following:
+            <ul class="level3 mystyle">
+                <li><a href="...">page 1 name </a></li>
+                <li><a href="...">page 2 name </a></li>
+                <li class="trail"><a href="...">page 3 name </a>
+                    <ul class="level3">
+                        <li><a href="...">subpage 1 name </a></li>
+                        <li><a href="...">subpage 2 name </a></li>
+                        <li><strong><a href="...">selected page name </a></strong></li>
+                    </ul>
+                </li>
+                <li><a href="...">page 4 name </a></li>
+            </ul>
+            ]]>
+    </example>
+  </tag>
+  <tag>
+    <name>simpleSearch</name>
+    <tag-class>info.magnolia.cms.taglibs.util.SimpleSearchTag</tag-class>
+    <body-content>EMPTY</body-content>
+    <description>
+      A simple tag which allows searching in all the site content with a "natural language" query. It simply strips all
+      the reserved chars from input string, build an xpath query and feed Magnolia QueryManager. By defaults search
+      terms are ANDed, but it also supports using the AND or OR keywords in the query string. Search is not case
+      sensitive and it's performed on any non-binary property.
+    </description>
+    <attribute>
+      <name>query</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Query to execute (e.g. "magnolia AND cms OR info")</description>
+    </attribute>
+    <attribute>
+      <name>var</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>A collection of Content nodes (pages) will be added to the pagecontext with this name.</description>
+    </attribute>
+    <attribute>
+      <name>startLevel</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>int</type>
+      <description>
+        The start level for search, defaults to 0. Can be used to limitthe search only to the current website tree
+      </description>
+    </attribute>
+    <attribute>
+      <name>scope</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Scope for the variable. Can be "page" (default), "request", "session", "application"</description>
+    </attribute>
+    <example>
+      <![CDATA[
 <cmsu:simplesearch query="${param.search}" var="results" />
 <c:forEach items="${results}" var="page">
-	<a href="${pageContext.request.contextPath}${page.handle}.html">${page.title}</a>
+    <a href="${pageContext.request.contextPath}${page.handle}.html">${page.title}</a>
 </c:forEach>
 ]]>
-        </example>
-    </tag>
-    <tag>
-        <name>searchResultSnippet</name>
-        <tag-class>info.magnolia.cms.taglibs.util.SearchResultSnippetTag</tag-class>
-        <body-content>EMPTY</body-content>
-        <description>
-            Output a set of snippets taken from any paragraph in the given page mathing any of the search term.
-        </description>
-        <attribute>
-            <name>query</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>Search query</description>
-        </attribute>
-        <attribute>
-            <name>page</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>info.magnolia.cms.core.Content</type>
-            <description>
-                A Content node of type mgnl:content (a magnolia page), typically returned by the simpleSearch Tag
-            </description>
-        </attribute>
-        <attribute>
-            <name>chars</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>int</type>
-            <description>Number of characters to include in search snippets. Default is 100.</description>
-        </attribute>
-        <attribute>
-            <name>maxSnippets</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>int</type>
-            <description>Maximum number of snippets to print out.</description>
-        </attribute>
-        <example>
-            <![CDATA[
+    </example>
+  </tag>
+  <tag>
+    <name>searchResultSnippet</name>
+    <tag-class>info.magnolia.cms.taglibs.util.SearchResultSnippetTag</tag-class>
+    <body-content>EMPTY</body-content>
+    <description>
+      Output a set of snippets taken from any paragraph in the given page mathing any of the search term.
+    </description>
+    <attribute>
+      <name>query</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Search query</description>
+    </attribute>
+    <attribute>
+      <name>page</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>info.magnolia.cms.core.Content</type>
+      <description>
+        A Content node of type mgnl:content (a magnolia page), typically returned by the simpleSearch Tag
+      </description>
+    </attribute>
+    <attribute>
+      <name>chars</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>int</type>
+      <description>Number of characters to include in search snippets. Default is 100.</description>
+    </attribute>
+    <attribute>
+      <name>maxSnippets</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>int</type>
+      <description>Maximum number of snippets to print out.</description>
+    </attribute>
+    <example>
+      <![CDATA[
 <cmsu:simplesearch query="${param.search}" var="results" />
 <c:forEach items="${results}" var="page">
-	<cmsu:searchResultSnippet query="${param.search}" page="${page}" />
+    <cmsu:searchResultSnippet query="${param.search}" page="${page}" />
 </c:forEach>
 ]]>
-        </example>
-    </tag>
-    <tag>
-        <name>redirect</name>
-        <tag-class>info.magnolia.cms.taglibs.util.RedirectTag</tag-class>
-        <body-content>empty</body-content>
-        <description>
-            Redirects to the first child page. If the server is an authoring instance or magnolia and the preview mode
-            is not active the tag will simply add to the pagecontext a variable named from the var attribute containing
-            the path of the child page.
-        </description>
-        <attribute>
-            <name>var</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>
-                name for the variable which will contain the URL of the page this tag will redirect to
-            </description>
-        </attribute>
-        <example>
-            <![CDATA[
+    </example>
+  </tag>
+  <tag>
+    <name>redirect</name>
+    <tag-class>info.magnolia.cms.taglibs.util.RedirectTag</tag-class>
+    <body-content>empty</body-content>
+    <description>
+      Redirects to the first child page. If the server is an authoring instance or magnolia and the preview mode is not
+      active the tag will simply add to the pagecontext a variable named from the var attribute containing the path of
+      the child page.
+    </description>
+    <attribute>
+      <name>var</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>name for the variable which will contain the URL of the page this tag will redirect to</description>
+    </attribute>
+    <example>
+      <![CDATA[
 <cmsu:redirect var="destpage" />
 
 This page has no content and it will redirect to
 <a href="${pageContext.request.contextPath}${destpage}">${destpage}</a> in a public instance.
 ]]>
-        </example>
-    </tag>
+    </example>
+  </tag>
+  <tag>
+    <name>txt2img</name>
+    <tag-class>info.magnolia.cms.taglibs.util.TextToImageTag</tag-class>
+    <body-content>EMPTY</body-content>
+    <description>Convert the text to images.</description>
+    <attribute>
+      <name>parentContentNodeName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>The name of the parent of the new contentNode.</description>
+    </attribute>
+    <attribute>
+      <name>imageContentNodeName</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>The name of the new contentNode to create, under which all image nodes will be saved.</description>
+    </attribute>
+    <attribute>
+      <name>text</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>The text to be converted.</description>
+    </attribute>
+    <attribute>
+      <name>textFontFace</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>The font face of the text, e.g. 'Helvetica'. Default is 'Helvetica'</description>
+    </attribute>
+    <attribute>
+      <name>textFontSize</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>int</type>
+      <description>The size of the text, in points, e.g. 12. Default is '12'</description>
+    </attribute>
+    <attribute>
+      <name>textFontColor</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>The color of the text in hexadecimal format, e.g. 'ff0044'. Default is '000000' (black)</description>
+    </attribute>
+    <attribute>
+      <name>textBackColor</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        The color of the background in hexadecimal format, e.g. 'ff0044'. Default is 'ffffff' (white)
+      </description>
+    </attribute>
+    <attribute>
+      <name>textSplit</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        The method used to split the text into sub-strings: 'none', 'words', or 'characters'. Default is 'none'
+      </description>
+    </attribute>
+    <attribute>
+      <name>divCSS</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        The CSS class that will be applied to the div that contains these text images. If the attribute is not set
+        (default) no div will be written.
+      </description>
+    </attribute>
+  </tag>
+  <tag>
+    <name>scaleImage</name>
+    <tag-class>info.magnolia.cms.taglib.util.ScaleImageTag</tag-class>
+    <body-content>EMPTY</body-content>
+    <description>Creates a scaled copy of an image.</description>
+    <attribute>
+      <name>parentContentNodeName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>The name of the content node that contains the image to be copied and scaled.</description>
+    </attribute>
+    <attribute>
+      <name>parentNodeDataName</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>The name of the data node that cotains the image data to be copied and scaled.</description>
+    </attribute>
+    <attribute>
+      <name>imageContentNodeName</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>The name of the new contentNode that will contain the scaled version of the image.</description>
+    </attribute>
+    <attribute>
+      <name>maxWidth</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>int</type>
+      <description>The maximum width of the image in pixels.</description>
+    </attribute>
+    <attribute>
+      <name>maxHeight</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>int</type>
+      <description>The maximum height of the image in pixels.</description>
+    </attribute>
+  </tag>
 </taglib>
