@@ -12,6 +12,7 @@
  */
 package info.magnolia.cms.module;
 
+import info.magnolia.cms.beans.config.ConfigurationException;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
@@ -405,16 +406,13 @@ public final class ModuleUtil {
         }
     }
 
-    public static void registerRepository(String name) {
-        try {
-            File source = Path.getRepositoriesConfigFile();
-            if (!source.exists()) {
-                throw new FileNotFoundException("Failed to locate magnolia repositories config file at " //$NON-NLS-1$
-                    + source.getAbsolutePath());
-            }
-            SAXBuilder builder = new SAXBuilder();
-            Document doc = builder.build(source);
+    public static void registerRepository(String name) throws RegisterException {
+        registerRepository(name, null);
+    }
 
+    public static void registerRepository(String name, String nodeTypeFile) throws RegisterException {
+        try {
+            Document doc = getRepositoryDefinitionDocument();
             // check if there
             Element node = (Element) XPath.selectSingleNode(doc, "/JCR/Repository[@name='" + name + "']");
             if (node == null) {
@@ -460,6 +458,12 @@ public final class ModuleUtil {
                     providerURL));
                 node.addContent(new Element("param").setAttribute("name", "bindName").setAttribute("value", bindName));
 
+                if (StringUtils.isNotEmpty(nodeTypeFile)) {
+                    node.addContent(new Element("param").setAttribute("name", "customNodeTypes").setAttribute(
+                        "value",
+                        nodeTypeFile));
+                }
+
                 // add a workspace
                 node.addContent(new Element("workspace").setAttribute("name", name));
 
@@ -473,11 +477,84 @@ public final class ModuleUtil {
 
                 // save it
                 XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
-                outputter.output(doc, new FileWriter(source));
+                outputter.output(doc, new FileWriter(getRepositoryDefinitionFile()));
             }
         }
         catch (Exception e) {
             log.error("can't register repository", e);
+            throw new RegisterException("can't register repository", e);
+        }
+    }
+
+    /**
+     * Read the dom for the repositories.xml
+     */
+    public static Document getRepositoryDefinitionDocument() throws JDOMException, IOException {
+        File source = getRepositoryDefinitionFile();
+        SAXBuilder builder = new SAXBuilder();
+        return builder.build(source);
+    }
+
+    /**
+     * @return
+     * @throws FileNotFoundException
+     */
+    public static File getRepositoryDefinitionFile() throws FileNotFoundException {
+        File source = Path.getRepositoriesConfigFile();
+        if (!source.exists()) {
+            throw new FileNotFoundException("Failed to locate magnolia repositories config file at " //$NON-NLS-1$
+                + source.getAbsolutePath());
+        }
+        return source;
+    }
+
+    /**
+     * @param repository
+     * @param workspace
+     * @throws RegisterException 
+     * @throws IOException
+     * @throws JDOMException
+     */
+    public static void registerWorkspace(String repository, String workspace) throws RegisterException {
+        try {
+            Document doc = getRepositoryDefinitionDocument();
+            // check if there
+            Element repositoryNode = (Element) XPath.selectSingleNode(doc, "/JCR/Repository[@name='"
+                + repository
+                + "']");
+            if (repositoryNode == null) {
+                throw new ConfigurationException("before registering a workspace ["
+                    + workspace
+                    + "] you need to register the repository ["
+                    + repository
+                    + "]");
+            }
+
+            // check if existing
+            Element workspaceNode = (Element) XPath.selectSingleNode(doc, "/JCR/Repository[@name='"
+                + repository
+                + "']/workspace[@name='"
+                + workspace
+                + "']");
+            if (workspaceNode == null) {
+                workspaceNode = new Element("workspace");
+                workspaceNode.setAttribute("name", workspace);
+                repositoryNode.addContent(workspaceNode);
+            }
+
+            // make the mapping
+            Element mappingNode = new Element("Map");
+            mappingNode.setAttribute("name", workspace).setAttribute("repositoryName", repository);
+            // add it
+            doc.getRootElement().getChild("RepositoryMapping").addContent(mappingNode);
+
+            // save it
+            XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
+            outputter.output(doc, new FileWriter(getRepositoryDefinitionFile()));
+        }
+        catch (Exception e) {
+            log.error("can't register workspace [" + workspace + "]", e);
+            throw new RegisterException("can't register workspace [" + workspace + "]", e);
         }
     }
 }

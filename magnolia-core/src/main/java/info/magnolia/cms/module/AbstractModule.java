@@ -195,12 +195,19 @@ public abstract class AbstractModule implements Module {
     /**
      * Register the repositories defined in the descriptor.
      * @param def
+     * @throws RegisterException 
+     * @throws IOException 
+     * @throws ConfigurationExceptionJDOMException 
      */
-    protected void registerRepositories(ModuleDefinition def) {
+    protected void registerRepositories(ModuleDefinition def) throws RegisterException {
         // register repositories
         for (Iterator iter = def.getRepositories().iterator(); iter.hasNext();) {
             RepositoryDefinition repDef = (RepositoryDefinition) iter.next();
-            ModuleUtil.registerRepository(repDef.getName());
+            ModuleUtil.registerRepository(repDef.getName(), repDef.getNodeTypeFile());
+            for (Iterator iterator = repDef.getWorkspaces().iterator(); iterator.hasNext();) {
+                String workspace = (String) iterator.next();
+                ModuleUtil.registerWorkspace(repDef.getName(), workspace);
+            }
             this.setRestartNeeded(true);
         }
     }

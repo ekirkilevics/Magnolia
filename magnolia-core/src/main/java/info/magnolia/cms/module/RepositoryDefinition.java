@@ -12,6 +12,9 @@
  */
 package info.magnolia.cms.module;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
@@ -21,12 +24,17 @@ public class RepositoryDefinition {
     /**
      * The name of the repository to register
      */
-    String name;
+    private String name;
 
     /**
      * The file containing the nodeTypes
      */
-    String nodeTypeFile;
+    private String nodeTypeFile;
+    
+    /**
+     * workspaces
+     */
+    private List workspaces = new ArrayList();
 
     /**
      * @return Returns the name.
@@ -54,6 +62,22 @@ public class RepositoryDefinition {
      */
     public void setNodeTypeFile(String nodeTypeFile) {
         this.nodeTypeFile = nodeTypeFile;
+    }
+
+    
+    /**
+     * @return Returns the workspaces.
+     */
+    public List getWorkspaces() {
+        return this.workspaces;
+    }
+    
+    /**
+     * Add a workspace to this repository
+     * @param workspace
+     */
+    public void addWorkspace(String workspace){
+        this.workspaces.add(workspace);
     }
 
 }
