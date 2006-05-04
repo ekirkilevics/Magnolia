@@ -1,101 +1,97 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd ">
+<?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>info.magnolia</groupId>
   <artifactId>magnolia-root</artifactId>
-  <name>magnolia-root</name>
   <packaging>pom</packaging>
-  <version>3.0-SNAPSHOT</version>
-  <organization>
-    <name>Obinary Ltd</name>
-    <url>http://www.obinary.com</url>
-  </organization>
-  <inceptionYear>1993</inceptionYear>
-  <description>
-    Magnolia is a free enterprise class content management system developed by obinary based on the standard API for
-    java content repositories (JCR).
-  </description>
+  <name>magnolia-root</name>
+  <version>3.0-m2</version>
+  <description>Magnolia is a free enterprise class content management system developed by obinary based on the standard API for
+    java content repositories (JCR).</description>
   <url>http://magnolia.sourceforge.net</url>
   <issueManagement>
     <system>Jira</system>
     <url>http://jira.magnolia.info/browse/MAGNOLIA</url>
   </issueManagement>
-  <distributionManagement>
-    <site>
-      <id>magnolia</id>
-      <name>magnolia</name>
-      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/22</url>
-    </site>
-    <downloadUrl>http://prdownloads.sourceforge.net/magnolia</downloadUrl>
-    <repository>
-      <id>magnolia</id>
-      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/m2repo</url>
-    </repository>
-  </distributionManagement>
-  <scm>
-    <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk</connection>
-    <developerConnection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk</developerConnection>
-    <url>http://svn.magnolia.info/view</url>
-  </scm>
+  <ciManagement>
+    <notifiers>
+      <notifier>
+        <address>dev-list@magnolia.info</address>
+      </notifier>
+    </notifiers>
+  </ciManagement>
+  <inceptionYear>1993</inceptionYear>
   <developers>
     <developer>
-      <name>Boris Kraft</name>
       <id>bkraft</id>
+      <name>Boris Kraft</name>
       <email>boris.kraft(at)obinary.com</email>
       <organization>obinary</organization>
       <timezone>+1</timezone>
     </developer>
     <developer>
-      <name>Pascal Mangold</name>
       <id>pmangold</id>
+      <name>Pascal Mangold</name>
       <email>pascal.mangold(at)obinary.com</email>
       <organization>obinary</organization>
       <timezone>+1</timezone>
     </developer>
     <developer>
-      <name>Sameer Charles</name>
       <id>scharles</id>
+      <name>Sameer Charles</name>
       <email>sameer.charles(at)obinary.com</email>
       <organization>obinary</organization>
       <timezone>+1</timezone>
     </developer>
     <developer>
-      <name>Vinzenz Wyser</name>
       <id>vwyser</id>
+      <name>Vinzenz Wyser</name>
       <email>vinzenz.wyser(at)obinary.com</email>
       <organization>obinary</organization>
       <timezone>+1</timezone>
     </developer>
     <developer>
-      <name>Fabrizio Giustina</name>
       <id>fgiust</id>
+      <name>Fabrizio Giustina</name>
       <email>fgiust(at)users.sourceforge.net</email>
       <organization>openmind</organization>
       <timezone>+1</timezone>
     </developer>
     <developer>
-      <name>Philipp Bracher</name>
       <id>philipp</id>
+      <name>Philipp Bracher</name>
       <email>philipp.bracher(at)obinary.com</email>
       <organization>obinary</organization>
       <timezone>+1</timezone>
     </developer>
   </developers>
-  <ciManagement>
-    <notifiers>
-      <notifier>
-        <address>dev-list@magnolia.info</address>
-        <type>mail</type>
-      </notifier>
-    </notifiers>
-  </ciManagement>
+  <scm>
+    <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/tags/magnolia-3.0-m2</connection>
+    <developerConnection>scm:svn:http://svn.magnolia.info/svn/magnolia/tags/magnolia-3.0-m2</developerConnection>
+    <url>http://svn.magnolia.info/view/tags/magnolia-3.0-m2</url>
+  </scm>
+  <organization>
+    <name>Obinary Ltd</name>
+    <url>http://www.obinary.com</url>
+  </organization>
+  <modules>
+    <module>magnolia-project</module>
+  </modules>
   <repositories>
     <repository>
       <id>magnolia</id>
       <url>http://magnolia.sourceforge.net/m2repo</url>
     </repository>
   </repositories>
-  <modules>
-    <module>magnolia-project</module>
-  </modules>
+  <distributionManagement>
+    <repository>
+      <id>magnolia</id>
+      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/m2repo</url>
+    </repository>
+    <site>
+      <id>magnolia</id>
+      <name>magnolia</name>
+      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/22</url>
+    </site>
+    <downloadUrl>http://prdownloads.sourceforge.net/magnolia</downloadUrl>
+  </distributionManagement>
 </project>

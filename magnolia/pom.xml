@@ -1,94 +1,103 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd ">
-  <modelVersion>4.0.0</modelVersion>
+<?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
-    <version>3.0-SNAPSHOT</version>
+    <version>3.0-m2</version>
     <relativePath>../magnolia-project/pom.xml</relativePath>
   </parent>
+  <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia</artifactId>
-  <name>magnolia</name>
   <packaging>war</packaging>
-  <version>3.0-SNAPSHOT</version>
+  <name>magnolia</name>
+  <version>3.0-m2</version>
   <dependencies>
     <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-core</artifactId>
-      <version>3.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-jaas</artifactId>
-      <version>3.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-exchange-simple</artifactId>
-      <version>3.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-gui</artifactId>
-      <version>3.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-module-admininterface</artifactId>
-      <version>3.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-module-cache</artifactId>
-      <version>3.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-module-openwfe</artifactId>
-      <version>3.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-module-dms</artifactId>
-      <version>3.0-SNAPSHOT</version>
+      <groupId>org.apache.derby</groupId>
+      <artifactId>derby</artifactId>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-templating</artifactId>
-      <version>3.0-SNAPSHOT</version>
+      <version>3.0-m2</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-taglib-cms</artifactId>
-      <version>3.0-SNAPSHOT</version>
+      <artifactId>magnolia-core</artifactId>
+      <version>3.0-m2</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jsp-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-module-admininterface</artifactId>
+      <version>3.0-m2</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-taglib-utility</artifactId>
-      <version>3.0-SNAPSHOT</version>
+      <version>3.0-m2</version>
+    </dependency>
+    <dependency>
+      <groupId>net.sourceforge.openutils</groupId>
+      <artifactId>openutils-log4j</artifactId>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-editor-fckeditor</artifactId>
-      <version>3.0-SNAPSHOT</version>
+      <artifactId>magnolia-module-openwfe</artifactId>
+      <version>3.0-m2</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-editor-kupu</artifactId>
-      <version>3.0-SNAPSHOT</version>
+      <artifactId>magnolia-taglib-cms</artifactId>
+      <version>3.0-m2</version>
     </dependency>
-    <!-- temporary solution for pro version -->
-    <!--
-      <dependency>
-      <groupId>com.obinary</groupId>
-      <artifactId>magnolia-module-professional</artifactId>
-      <version>3.0-SNAPSHOT</version>
-      </dependency>
-    -->
+    <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-module-cache</artifactId>
+      <version>3.0-m2</version>
+    </dependency>
     <dependency>
       <groupId>commons-chain</groupId>
       <artifactId>commons-chain</artifactId>
       <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-exchange-simple</artifactId>
+      <version>3.0-m2</version>
+    </dependency>
+    <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-gui</artifactId>
+      <version>3.0-m2</version>
+    </dependency>
+    <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-jaas</artifactId>
+      <version>3.0-m2</version>
+    </dependency>
+    <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-editor-fckeditor</artifactId>
+      <version>3.0-m2</version>
+    </dependency>
+    <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-module-dms</artifactId>
+      <version>3.0-m2</version>
+    </dependency>
+    <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-editor-kupu</artifactId>
+      <version>3.0-m2</version>
     </dependency>
     <dependency>
       <groupId>org.apache.jackrabbit</groupId>
@@ -97,31 +106,6 @@
     <dependency>
       <groupId>org.apache.jackrabbit</groupId>
       <artifactId>jackrabbit-index-filters</artifactId>
-    </dependency>
-    <!-- uncomment this to use berkeleydb -->
-    <!--
-      <dependency>
-      <groupId>org.apache.jackrabbit</groupId>
-      <artifactId>jackrabbit-bdb</artifactId>
-      </dependency>
-    -->
-    <dependency>
-      <groupId>org.apache.derby</groupId>
-      <artifactId>derby</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>net.sourceforge.openutils</groupId>
-      <artifactId>openutils-log4j</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>jsp-api</artifactId>
-      <scope>provided</scope>
     </dependency>
   </dependencies>
   <reporting>
