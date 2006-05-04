@@ -26,8 +26,11 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import javax.jcr.PathNotFoundException;
+import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.version.Version;
@@ -274,15 +277,18 @@ public class Document {
     public void setFile(String label, String extension, InputStream stream, long size) throws RepositoryException,
         AccessDeniedException, PathNotFoundException {
         // write file
-        node.createNodeData("document").setValue(stream);
+        this.fileNode = node.createNodeData(PROPERTY_FILEDATA, PropertyType.BINARY);
+        this.fileNode.setValue(stream);
 
         // set properties
-        // create subnode if not yet there
-
-        fileNode.setAttribute(FileProperties.PROPERTY_EXTENSION, extension);
-        fileNode.setAttribute(FileProperties.PROPERTY_FILENAME, label);
-        fileNode.setAttribute(FileProperties.PROPERTY_SIZE, Long.toString(size));
-        fileNode.setAttribute(FileProperties.PROPERTY_CONTENTTYPE, MIMEMapping.getMIMEType(extension));
+        this.fileNode.setAttribute(FileProperties.PROPERTY_EXTENSION, extension);
+        this.fileNode.setAttribute(FileProperties.PROPERTY_FILENAME, label);
+        this.fileNode.setAttribute(FileProperties.PROPERTY_SIZE, Long.toString(size));
+        this.fileNode.setAttribute(FileProperties.PROPERTY_CONTENTTYPE, MIMEMapping.getMIMEType(extension));
+        
+        // set time flag
+        Calendar value = new GregorianCalendar(TimeZone.getDefault());
+        this.fileNode.setAttribute(FileProperties.PROPERTY_LASTMODIFIES, value);
 
         this.updateMetaData();
     }
