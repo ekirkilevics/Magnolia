@@ -106,7 +106,6 @@ public class EntryServlet extends ContextSensitiveServlet {
 
         if (ModuleRegistration.getInstance().isRestartNeeded()) {
             req.getRequestDispatcher("/admintemplates/adminCentral/restart.jsp").forward(req, res);
-            System.out.println("UPS");
         }
 
         try {
