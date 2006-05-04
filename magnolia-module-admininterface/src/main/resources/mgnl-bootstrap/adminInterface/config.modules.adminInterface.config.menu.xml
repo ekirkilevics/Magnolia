@@ -452,7 +452,7 @@
         <sv:value>mix:versionable</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>87522c9a-ef10-4a5a-938f-349b394147db</sv:value>
+        <sv:value>87522c9a-ef10-4a5a-938f-343b394147db</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
         <sv:value>true</sv:value>
@@ -516,7 +516,7 @@
         <sv:value>mix:versionable</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>f9555efd-bc86-481f-9586-eedda9392421</sv:value>
+        <sv:value>f9555efd-bc86-481f-9586-eedda5392421</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
         <sv:value>true</sv:value>
