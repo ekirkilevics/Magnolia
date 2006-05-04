@@ -19,8 +19,8 @@
 
 <c:if test="${zipUpload.success}">
     <script>
+        window.close();
         opener.mgnl.dms.DMS.showInTree('${zipUpload.path}');
-        top.window.close();
     </script>
 </c:if>
 
