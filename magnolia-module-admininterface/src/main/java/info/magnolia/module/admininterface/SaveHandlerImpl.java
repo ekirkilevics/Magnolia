@@ -513,13 +513,10 @@ public class SaveHandlerImpl implements SaveHandler {
                     log.debug("Exception caught: " + re.getMessage(), re); //$NON-NLS-1$
             }
         } else {
-
             String fileName = getForm().getParameter(name + "_" + FileProperties.PROPERTY_FILENAME);
             String template = getForm().getParameter(name + "_" + FileProperties.PROPERTY_TEMPLATE);
 
-            if (doc != null) {
-                SaveHandlerImpl.saveDocument(node, doc, name, fileName, template);
-            }
+            SaveHandlerImpl.saveDocument(node, doc, name, fileName, template);
         }
     }
 
@@ -828,9 +825,8 @@ public class SaveHandlerImpl implements SaveHandler {
     public static void saveDocument(Content node, Document doc, String name, String fileName, String template)
             throws PathNotFoundException, RepositoryException, AccessDeniedException {
 
-        NodeData data = null;
+        NodeData data = node.getNodeData(name);
         if (doc != null) {
-            data = node.getNodeData(name);
             if (!data.isExist()) {
                 data = node.createNodeData(name, PropertyType.BINARY);
                 if (log.isDebugEnabled()) {
