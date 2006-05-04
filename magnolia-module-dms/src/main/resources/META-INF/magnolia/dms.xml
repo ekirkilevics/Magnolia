@@ -26,7 +26,10 @@
     </servlets>
     <repositories>
         <repository>
-            <name>dms</name>
+            <name>magnolia</name>
+			<workspaces>
+				<workspace>dms</workspace>
+			</workspaces>
         </repository>
     </repositories>
 </module>
