@@ -157,6 +157,10 @@ public class MainBar extends TagSupport implements BarTag {
                 log.warn("Exception caught during display: " + e.getMessage(), e); //$NON-NLS-1$
             }
         }
+
+        this.buttonLeft = null;
+        this.buttonRight = null;
+
         return EVAL_PAGE;
     }
 
@@ -181,8 +185,6 @@ public class MainBar extends TagSupport implements BarTag {
         super.release();
         this.paragraph = null;
         this.adminButtonVisible = true;
-        this.buttonLeft = null;
-        this.buttonRight = null;
         this.label = null;
     }
 
