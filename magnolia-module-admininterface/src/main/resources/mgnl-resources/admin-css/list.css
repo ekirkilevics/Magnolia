@@ -46,6 +46,11 @@
 	position: absolute;
 }
 
+.mgnlListInnerContentDiv {
+    position:absolute;
+    border-left: thin solid #999;
+}
+
 .mgnlListSortGroupDiv {
 	position: absolute;
 	left: 800px;
