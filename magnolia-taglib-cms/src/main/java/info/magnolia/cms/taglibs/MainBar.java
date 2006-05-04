@@ -136,6 +136,7 @@ public class MainBar extends TagSupport implements BarTag {
                 BarMain bar = new BarMain(request);
                 bar.setPath(this.getPath());
                 bar.setParagraph(this.paragraph);
+                bar.setAdminButtonVisible(this.adminButtonVisible);
                 bar.setDefaultButtons();
 
                 if (label != null) {
