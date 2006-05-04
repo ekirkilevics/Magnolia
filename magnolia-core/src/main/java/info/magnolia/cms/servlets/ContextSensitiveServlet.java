@@ -60,9 +60,7 @@ public abstract class ContextSensitiveServlet extends HttpServlet {
      */
     protected void initializeContext(HttpServletRequest request) {
         if (!MgnlContext.hasInstance()) {
-            WebContext ctx = (WebContext) FactoryUtil.getInstance(WebContext.class);
-            ctx.init(request);
-            MgnlContext.setInstance(ctx);
+            MgnlContext.initAsWebContext(request);
         } else {
             // this will happen if a virtual uri mapping is pointing again to a virtual uri
             if (log.isDebugEnabled())

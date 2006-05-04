@@ -23,6 +23,8 @@ import info.magnolia.cms.util.FactoryUtil;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -328,5 +330,15 @@ public class MgnlContext {
      */
     public static Context getSystemContext() {
         return systemContext;
+    }
+
+    /**
+     * Sets this context as a web context.
+     * @param request
+     */
+    public static void initAsWebContext(HttpServletRequest request) {
+        WebContext ctx = (WebContext) FactoryUtil.getInstance(WebContext.class);
+        ctx.init(request);
+        setInstance(ctx);
     }
 }
