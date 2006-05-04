@@ -12,13 +12,15 @@
  */
 package info.magnolia.cms.module;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.ClasspathResourcesUtil;
+
 import java.io.IOException;
 import java.util.Iterator;
 
 import org.jdom.JDOMException;
-
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.ClasspathResourcesUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -50,6 +52,11 @@ public abstract class AbstractModule implements Module {
     private boolean initialized = false;
 
     /**
+     * Logger.
+     */
+    private static Logger log = LoggerFactory.getLogger(AbstractModule.class);
+
+    /**
      * Calles onRegister if not yet installed after it loaded the bootstrapfiles of this module
      */
     public final void register(ModuleDefinition def, Content moduleNode, int registerState) throws RegisterException {
@@ -77,9 +84,10 @@ public abstract class AbstractModule implements Module {
             }
         }
     }
-    
+
     /**
-     * @see info.magnolia.cms.module.Module#unregister(info.magnolia.cms.module.ModuleDefinition, info.magnolia.cms.core.Content)
+     * @see info.magnolia.cms.module.Module#unregister(info.magnolia.cms.module.ModuleDefinition,
+     * info.magnolia.cms.core.Content)
      */
     public void unregister(ModuleDefinition def, Content moduleNode) {
         // TODO implement the unrigister
@@ -92,10 +100,10 @@ public abstract class AbstractModule implements Module {
      * Template pattern. Implement to performe some module specific stuff
      * @param registerState
      */
-    protected void onRegister(int registerState) throws RegisterException{
-        
+    protected void onRegister(int registerState) throws RegisterException {
+
     }
-    
+
     /**
      * Template pattern. Implement to perform some module specific stuff.
      */
@@ -183,11 +191,11 @@ public abstract class AbstractModule implements Module {
         String[] moduleFiles = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
 
             public boolean accept(String name) {
-                return name.startsWith("/mgnl-files/templates/" + moduleName)
-                    || name.startsWith("/mgnl-files/docroot/" + moduleName)
-                    || name.startsWith("/mgnl-files/admintemplates/" + moduleName);
-            };
+                return name.startsWith("/mgnl-files/");
+            }
         });
+
+        log.info("installing files for module {}", moduleName);
 
         ModuleUtil.installFiles(moduleFiles, "/mgnl-files/");
     }
@@ -195,9 +203,9 @@ public abstract class AbstractModule implements Module {
     /**
      * Register the repositories defined in the descriptor.
      * @param def
-     * @throws RegisterException 
-     * @throws IOException 
-     * @throws ConfigurationExceptionJDOMException 
+     * @throws RegisterException
+     * @throws IOException
+     * @throws ConfigurationExceptionJDOMException
      */
     protected void registerRepositories(ModuleDefinition def) throws RegisterException {
         // register repositories
