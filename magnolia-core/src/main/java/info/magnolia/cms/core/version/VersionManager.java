@@ -170,7 +170,10 @@ public class VersionManager {
             throw new RepositoryException("Unable to add serialized Rule to the versioned content");
         }
         if (versionedNode.hasMetaData()) {
-            versionedNode.getMetaData().setProperty(MetaData.VERSION_USER, MgnlContext.getUser().getName());
+            // temp fix, MgnlContext should always have user either logged-in or anonymous
+            String userName = "";
+            if (MgnlContext.getUser() != null) userName = MgnlContext.getUser().getName();
+            versionedNode.getMetaData().setProperty(MetaData.VERSION_USER, userName);
             versionedNode.getMetaData().setProperty(MetaData.NAME, node.getName());
         }
         versionedNode.save();
