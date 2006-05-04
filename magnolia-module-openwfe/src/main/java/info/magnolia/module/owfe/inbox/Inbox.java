@@ -146,8 +146,8 @@ public class Inbox extends AbstractList {
      */
     public void configureFunctionBar(FunctionBar bar) {
         ContextMenu menu = this.getContextMenu();
-        bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("proceed")));
         bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("reject")));
+        bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("proceed")));
         bar.addMenuItem(null);
         bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("cancel")));
     }
