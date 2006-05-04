@@ -36,7 +36,7 @@ public class TemplateTreeColumnHtmlRenderer implements TreeColumnHtmlRenderer {
         String templateName = content.getMetaData().getTemplate();
         String strKey = this.findTemplateKey(templateName);
         // TODO enable an individual message bundle for the templates
-        return TemplateMessagesUtil.getMessages().get(strKey);
+        return TemplateMessagesUtil.getMessages().getWithDefault(strKey, strKey);
     }
 
     private String findTemplateKey(String templateName) {

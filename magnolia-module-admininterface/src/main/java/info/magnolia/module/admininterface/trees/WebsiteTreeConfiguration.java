@@ -102,7 +102,7 @@ public class WebsiteTreeConfiguration implements AdminTreeConfiguration {
         while (templates.hasNext()) {
             Template template = (Template) templates.next();
             String title = template.getTitle();
-            title = templateMsgs.get(title);
+            title = templateMsgs.getWithDefault(title, title);
             title = Messages.javaScriptString(title);
             templateSelect.setOptions(title, template.getName());
         }
@@ -177,7 +177,7 @@ public class WebsiteTreeConfiguration implements AdminTreeConfiguration {
         menuCopy.setOnclick(tree.getJavascriptTree() + ".copyNode();"); //$NON-NLS-1$
         menuCopy.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
             + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
-        
+
         ContextMenuItem menuRestore = new ContextMenuItem("restore");
         menuRestore.setLabel(msgs.get("versions.restore")); //$NON-NLS-1$
         menuRestore.setIcon(request.getContextPath() + "/.resources/icons/16/undo.gif"); //$NON-NLS-1$
@@ -313,7 +313,7 @@ public class WebsiteTreeConfiguration implements AdminTreeConfiguration {
         }
         // null is separator :)
         tree.addFunctionBarItem(null);
-        
+
         ContextMenuItem menuRefresh = new ContextMenuItem("refresh");
         menuRefresh.setLabel(msgs.get("tree.menu.refresh")); //$NON-NLS-1$
         menuRefresh.setIcon(request.getContextPath() + "/.resources/icons/16/refresh.gif"); //$NON-NLS-1$
