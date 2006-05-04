@@ -291,7 +291,8 @@ public final class SessionAccessControl {
         }
         if (jcrSession == null) {
 
-            SimpleCredentials sc = new SimpleCredentials(UserManager.SYSTEM_USER, UserManager.SYSTEM_PSWD.toCharArray());
+            SimpleCredentials sc =
+                    new SimpleCredentials(ContentRepository.REPOSITORY_USER, ContentRepository.REPOSITORY_PSWD.toCharArray());
 
             jcrSession = ContentRepository.getRepository(repositoryID).login(sc, workspaceID);
 

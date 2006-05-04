@@ -19,8 +19,13 @@ import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.User;
+import info.magnolia.cms.security.Security;
+
 import java.util.HashMap;
 import java.util.Locale;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -32,9 +37,14 @@ import java.util.Locale;
 public abstract class ContextImpl extends HashMap implements Context {
 
     /**
+     * Logger
+     */
+    private static Logger log = LoggerFactory.getLogger(ContextImpl.class);
+
+    /**
      * user attached to this context
      */
-    private User user;
+    protected User user;
 
     /**
      * The locale for this context
@@ -52,12 +62,16 @@ public abstract class ContextImpl extends HashMap implements Context {
     }
 
     /**
-     * Get exiting logged in user instance
+     * Get user as initialized
      *
      * @return User
      * @see info.magnolia.cms.security.User
      */
     public User getUser() {
+        if (this.user == null) {
+            log.debug("JAAS Subject is null, returning Anonymous user");
+            this.user = Security.getUserManager().getAnonymousUser();
+        }
         return this.user;
     }
 

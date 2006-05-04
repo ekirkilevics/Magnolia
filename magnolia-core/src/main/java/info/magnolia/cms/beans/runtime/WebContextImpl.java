@@ -16,10 +16,7 @@ import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
-import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.security.Authenticator;
-import info.magnolia.cms.security.Security;
-import info.magnolia.cms.security.User;
+import info.magnolia.cms.security.*;
 
 import java.util.Locale;
 import java.util.Map;
@@ -61,7 +58,7 @@ public class WebContextImpl extends ContextImpl implements WebContext {
     }
 
     /**
-     * @see info.magnolia.cms.beans.runtime.WebContext#inti(javax.servlet.http.HttpServletRequest)
+     * @see info.magnolia.cms.beans.runtime.WebContext#init(javax.servlet.http.HttpServletRequest)
      */
     public void init(HttpServletRequest request) {
         this.request = request;
@@ -72,12 +69,15 @@ public class WebContextImpl extends ContextImpl implements WebContext {
      * @see info.magnolia.cms.beans.runtime.ContextImpl#getUser()
      */
     public User getUser() {
-        User user = super.getUser();
-        if (user == null) {
-            user = Security.getUserManager().getUser(Authenticator.getSubject(request));
-            this.setUser(user);
+        if (this.user == null) {
+            if (Authenticator.getSubject(request) == null) {
+                log.debug("JAAS Subject is null, returning Anonymous user");
+                this.user = Security.getUserManager().getUser(UserManager.ANONYMOUS_USER);
+            } else {
+                this.user = Security.getUserManager().getUser(Authenticator.getSubject(request));
+            }
         }
-        return user;
+        return this.user;
     }
 
     /**

@@ -12,8 +12,6 @@
  */
 package info.magnolia.cms.security;
 
-import info.magnolia.cms.core.SystemProperty;
-
 import java.util.Collection;
 
 import javax.security.auth.Subject;
@@ -29,12 +27,17 @@ public interface UserManager {
     /**
      * Magnolia system user.
      */
-    public static final String SYSTEM_USER = SystemProperty.getProperty("magnolia.connection.jcr.userId");
+    public static final String SYSTEM_USER = "superuser";
 
     /**
      * Magnolia system default password
      */
-    public static final String SYSTEM_PSWD = SystemProperty.getProperty("magnolia.connection.jcr.password");
+    public static final String SYSTEM_PSWD = "superuser";
+
+    /**
+     * Anonymous user
+     * */
+    public static final String ANONYMOUS_USER = "anonymous";
 
     /**
      * Find a specific user. Not all implementations will support this method.
@@ -45,10 +48,15 @@ public interface UserManager {
 
     /**
      * Get system user, this user must always exist in magnolia repository.
-     * this will be used to login to the repository and for all system level operations
      * @return system user
      * */
     public User getSystemUser();
+
+    /**
+     * Get Anonymous user, this user must always exist in magnolia repository.
+     * @return anonymous user
+     * */
+    public User getAnonymousUser();
 
     /**
      * Get all users.

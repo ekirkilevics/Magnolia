@@ -16,9 +16,14 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessManager;
+import info.magnolia.cms.security.User;
+import info.magnolia.cms.security.Security;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -27,6 +32,11 @@ import java.util.Map;
  * @version $Revision$ ($Author$)
  */
 public class SystemContextImpl extends ContextImpl implements SystemContext {
+
+    /**
+     * Logger
+     */
+    private static Logger log = LoggerFactory.getLogger(SystemContextImpl.class);
 
     /**
      * Stable serialVersionUID.
@@ -65,6 +75,20 @@ public class SystemContextImpl extends ContextImpl implements SystemContext {
 
     public void setAttribute(String name, Object value, int scope) {
         getScope(scope).put(name, value);
+    }
+
+    /**
+     * Get System user
+     *
+     * @return User
+     * @see info.magnolia.cms.security.User
+     */
+    public User getUser() {
+        if (this.user == null) {
+            log.debug("JAAS Subject is null, returning Anonymous user");
+            this.user = Security.getUserManager().getSystemUser();
+        }
+        return this.user;
     }
 
     protected Map getScope(int scope) {

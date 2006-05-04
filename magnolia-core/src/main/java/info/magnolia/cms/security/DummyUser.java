@@ -21,11 +21,6 @@ public class DummyUser implements User {
     private static Logger log = LoggerFactory.getLogger(DummyUser.class);
 
     /**
-     * Dummy user name
-     */
-    private static final String USER_NAME = "Anonymous";
-
-    /**
      * Default language
      */
     private static final String DEFAULT_LANGUAGE = "en";
@@ -52,7 +47,6 @@ public class DummyUser implements User {
      * @param roleName
      */
     public void removeRole(String roleName) throws UnsupportedOperationException {
-
         log.debug("User [ Anonymous ] has no roles");
     }
 
@@ -61,7 +55,6 @@ public class DummyUser implements User {
      * @param roleName the name of the role
      */
     public void addRole(String roleName) throws UnsupportedOperationException {
-
         log.debug("No roles can be attached to user [ Anonymous ]");
     }
 
@@ -104,7 +97,7 @@ public class DummyUser implements User {
      * @return name string
      */
     public String getName() {
-        return USER_NAME;
+        return UserManager.ANONYMOUS_USER;
     }
 
     public String getPassword() {

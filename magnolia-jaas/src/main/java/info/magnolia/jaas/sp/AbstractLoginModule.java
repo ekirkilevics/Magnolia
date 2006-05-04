@@ -41,7 +41,6 @@ public abstract class AbstractLoginModule implements LoginModule {
     public abstract boolean commit() throws LoginException;
 
     public boolean abort() throws LoginException {
-        System.out.println("Aborting!!!!!");
         return this.release();
     }
 

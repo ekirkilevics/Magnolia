@@ -65,7 +65,6 @@ public class MgnlUserManager implements UserManager {
 
     /**
      * Get system user, this user must always exist in magnolia repository.
-     * this will be used to login to the repository and for all system level operations
      *
      * @return system user
      */
@@ -74,9 +73,24 @@ public class MgnlUserManager implements UserManager {
             return new MgnlUser(getHierarchyManager().getContent(UserManager.SYSTEM_USER));
         }
         catch (Exception e) {
-            log.error("can't find System user", e);
+            log.error("failed to get System user", e);
             log.info("Try to create new system user with default password");
             return this.createUser(UserManager.SYSTEM_USER, UserManager.SYSTEM_PSWD);
+        }
+    }
+
+    /**
+     * Get Anonymous user, this user must always exist in magnolia repository.
+     * @return anonymous user
+     * */
+    public User getAnonymousUser() {
+        try {
+            return new MgnlUser(getHierarchyManager().getContent(UserManager.ANONYMOUS_USER));
+        }
+        catch (Exception e) {
+            log.error("failed to get Anonymous user", e);
+            log.info("Try to create new system user with default password");
+            return this.createUser(UserManager.ANONYMOUS_USER, "");
         }
     }
 

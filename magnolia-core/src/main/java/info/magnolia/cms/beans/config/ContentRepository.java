@@ -12,10 +12,7 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.Path;
+import info.magnolia.cms.core.*;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.SearchFactory;
 import info.magnolia.cms.security.*;
@@ -105,6 +102,16 @@ public final class ContentRepository {
     private static final String ATTRIBUTE_VALUE = "value"; //$NON-NLS-1$
 
     private static final String ATTRIBUTE_REPOSITORY_NAME = "repositoryName"; //$NON-NLS-1$
+
+    /**
+     * repository user.
+     */
+    public static final String REPOSITORY_USER = SystemProperty.getProperty("magnolia.connection.jcr.userId");
+
+    /**
+     * repository default password
+     */
+    public static final String REPOSITORY_PSWD = SystemProperty.getProperty("magnolia.connection.jcr.password");
 
     /**
      * All available repositories store.
@@ -223,7 +230,6 @@ public final class ContentRepository {
         loadRepositoryNameMap(root);
         Collection repositoryElements = root.getChildren(ContentRepository.ELEMENT_REPOSITORY);
         Iterator children = repositoryElements.iterator();
-        int repositoryIndex = 0;
         while (children.hasNext()) {
             Element element = (Element) children.next();
             String name = element.getAttributeValue(ATTRIBUTE_NAME);
@@ -261,7 +267,6 @@ public final class ContentRepository {
             catch (Exception e) {
                 log.error("System : Failed to load JCR \"" + map.getName() + "\" " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
             }
-            repositoryIndex++;
         }
     }
 
@@ -316,12 +321,12 @@ public final class ContentRepository {
     private static void loadHierarchyManager(Repository repository, String wspID, RepositoryMapping map,
         Provider provider) {
         try {
-            SimpleCredentials sc = new SimpleCredentials(UserManager.SYSTEM_USER, UserManager.SYSTEM_PSWD.toCharArray());
+            SimpleCredentials sc = new SimpleCredentials(REPOSITORY_USER, REPOSITORY_PSWD.toCharArray());
             Session session = repository.login(sc, wspID);
             provider.registerNamespace(NAMESPACE_PREFIX, NAMESPACE_URI, session.getWorkspace());
             provider.registerNodeTypes(session.getWorkspace());
             AccessManagerImpl accessManager = getAccessManager();
-            HierarchyManager hierarchyManager = new HierarchyManager(UserManager.SYSTEM_USER);
+            HierarchyManager hierarchyManager = new HierarchyManager(REPOSITORY_USER);
             hierarchyManager.init(session.getRootNode());
             hierarchyManager.setAccessManager(accessManager);
             ContentRepository.hierarchyManagers.put(map.getName() + "_" + wspID, hierarchyManager); //$NON-NLS-1$
