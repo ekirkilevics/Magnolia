@@ -4,7 +4,7 @@
   <artifactId>magnolia-project</artifactId>
   <packaging>pom</packaging>
   <name>magnolia-project</name>
-  <version>3.0-m2</version>
+  <version>3.0-b1-SNAPSHOT</version>
   <description>Magnolia is a free enterprise class content management system developed by obinary based on the standard API for
     java content repositories (JCR).</description>
   <url>http://magnolia.sourceforge.net</url>
@@ -79,9 +79,9 @@
     </developer>
   </developers>
   <scm>
-    <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/tags/magnolia-3.0-m2</connection>
-    <developerConnection>scm:svn:http://svn.magnolia.info/svn/magnolia/tags/magnolia-3.0-m2</developerConnection>
-    <url>http://svn.magnolia.info/view/tags/magnolia-3.0-m2</url>
+    <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk/magnolia-project</connection>
+    <developerConnection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk/magnolia-project</developerConnection>
+    <url>http://svn.magnolia.info/view</url>
   </scm>
   <organization>
     <name>Obinary Ltd</name>
