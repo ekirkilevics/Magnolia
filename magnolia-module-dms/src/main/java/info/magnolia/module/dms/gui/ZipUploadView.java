@@ -13,6 +13,9 @@
 package info.magnolia.module.dms.gui;
 
 import info.magnolia.cms.beans.runtime.Document;
+import info.magnolia.cms.beans.runtime.MgnlContext;
+import info.magnolia.cms.beans.runtime.WebContext;
+import info.magnolia.cms.beans.runtime.WebContextImpl;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -27,6 +30,7 @@ import info.magnolia.cms.gui.dialog.DialogTab;
 import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.SessionAccessControl;
+import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.RequestFormUtil;
 
 import java.io.File;
@@ -87,6 +91,7 @@ public class ZipUploadView {
      */
     public void process(HttpServletRequest request) {
         this.request = request;
+        MgnlContext.initAsWebContext(request);
         this.form = new RequestFormUtil(request);
         this.setPath(form.getParameter("path"));
         this.setEncoding(form.getParameter("encoding"));
