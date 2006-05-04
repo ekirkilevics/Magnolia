@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import javax.jcr.PathNotFoundException;
 import javax.jcr.ValueFactory;
 
 import openwfe.org.ApplicationContext;
@@ -37,6 +38,8 @@ import openwfe.org.xml.XmlUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -45,23 +48,15 @@ import org.jdom.Element;
  */
 public class JCRExpressionStore extends AbstractExpressionStore {
 
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(JCRExpressionStore.class
-        .getName());
+    private static Logger log = LoggerFactory.getLogger(JCRExpressionStore.class.getName());
 
-    //
-    // CONSTANTS & co
     public final static String REPO_OWFE = "owfe";
 
     public final static String WORKSPACEID = "Expressions";
 
     public final static String WORKITEM_NODENAME = "expression";
 
-    //
-    // FIELDS
-    HierarchyManager hm = null;
-
-    //
-    // CONSTRUCTORS
+    HierarchyManager hm;
 
     public void init(final String serviceName, final ApplicationContext context, final java.util.Map serviceParams)
         throws ServiceException {
@@ -80,8 +75,6 @@ public class JCRExpressionStore extends AbstractExpressionStore {
         return StringUtils.replace(StringUtils.replace(id, "|", ""), ":", ".");
     }
 
-    // interface
-
     /**
      * stroe one expresion
      */
@@ -89,8 +82,6 @@ public class JCRExpressionStore extends AbstractExpressionStore {
         try {
             Content root = hm.getRoot();
 
-            // Content ct = root.createContent("expression",
-            // ItemType.EXPRESSION);
             String id = fe.getId().toParseableString();
             log.debug("store expresion: expression id = " + id);
             String nid = convertId(id);
@@ -198,6 +189,9 @@ public class JCRExpressionStore extends AbstractExpressionStore {
             }
 
         }
+        catch (PathNotFoundException e) {
+            log.error("Path not found while loading expression : {}", e.getMessage());
+        }
         catch (Exception e) {
             log.error("load exception faled,", e);
         }
@@ -235,7 +229,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 
         }
         catch (Exception e) {
-            log.error("exception:" + e);
+            log.error("exception:" + e.getMessage(), e);
             return ret.iterator();
         }
     }
