@@ -18,6 +18,8 @@
 		</#if>
 		
 		$('${this.name}ContentDiv').style.height = thisHeight + "px";
+		$('${this.name}InnerContentDiv').style.height = thisHeight + "px";
+
 	}
 	
 	function ${this.name}Init(){
@@ -70,7 +72,7 @@
 		</div>
 	</#if>
 	
-	<div id="${this.name}ContentDiv" class="mgnlListContentDiv">
+	<div id="${this.name}ContentDiv" class="mgnlListContentDiv mgnlBgLight">
 		<#include "ListControlContent.html"/>
 	</div>
 </div>
