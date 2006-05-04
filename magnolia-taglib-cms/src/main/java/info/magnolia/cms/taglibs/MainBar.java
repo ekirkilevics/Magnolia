@@ -48,7 +48,7 @@ public class MainBar extends TagSupport implements BarTag {
 
     private String paragraph;
 
-    private boolean adminButtonVisible;
+    private boolean adminButtonVisible = true;
 
     /**
      * Label for the properties button.
@@ -180,7 +180,7 @@ public class MainBar extends TagSupport implements BarTag {
     public void release() {
         super.release();
         this.paragraph = null;
-        this.adminButtonVisible = false;
+        this.adminButtonVisible = true;
         this.buttonLeft = null;
         this.buttonRight = null;
         this.label = null;
