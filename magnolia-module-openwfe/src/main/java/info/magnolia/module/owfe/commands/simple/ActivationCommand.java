@@ -77,7 +77,7 @@ public class ActivationCommand extends MgnlCommand {
     private void doActivate(User user, String path, boolean recursive) throws Exception {
         Rule rule = new Rule();
         rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
-        rule.addAllowType(ItemType.NT_FILE);
+        rule.addAllowType(ItemType.NT_METADATA);
         if (recursive) {
             rule.addAllowType(ItemType.CONTENT.getSystemName());
         }
