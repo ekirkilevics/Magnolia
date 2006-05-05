@@ -17,7 +17,6 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.exchange.Syndicator;
-import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.module.owfe.MgnlConstants;
@@ -58,7 +57,7 @@ public class ActivationCommand extends MgnlCommand {
         log.info("user = " + ((info.magnolia.cms.beans.runtime.Context) ctx).getUser());
 
         try {
-            doActivate(((info.magnolia.cms.beans.runtime.Context) ctx).getUser(), path, recursive);
+            doActivate(path, recursive);
         }
         catch (Exception e) {
             log.error("cannot do activate", e);
@@ -74,10 +73,11 @@ public class ActivationCommand extends MgnlCommand {
      * @param recursive activet recursively or no
      * @throws Exception
      */
-    private void doActivate(User user, String path, boolean recursive) throws Exception {
+    private void doActivate(String path, boolean recursive) throws Exception {
         Rule rule = new Rule();
         rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
         rule.addAllowType(ItemType.NT_METADATA);
+        rule.addAllowType(ItemType.NT_RESOURCE);
         if (recursive) {
             rule.addAllowType(ItemType.CONTENT.getSystemName());
         }
