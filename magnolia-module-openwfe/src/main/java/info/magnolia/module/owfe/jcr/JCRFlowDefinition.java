@@ -59,39 +59,9 @@ public class JCRFlowDefinition {
     public Content findFlowDef(String name) {
         if (name == null)
             return null;
-        // HierarchyManager hm = OWFEEngine.getOWFEHierarchyManager("flowdef");
         HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
 
         try {
-
-            //
-            // String queryString = "//*[@name=\'name\']/*/*";
-            // Query q = null;
-            // try {
-            // // there is no query manager for config repo, so remove code
-            // q = MgnlContext.getQueryManager(ContentRepository.CONFIG)
-            // .createQuery(queryString, "xpath"); //$NON-NLS-1$
-            //
-            // QueryResult result = q.execute();
-            // if (result == null)
-            // return null;
-            // Iterator it = result.getContent().iterator();
-            // while (it.hasNext()) {
-            // Content ct = (Content) it.next();
-            // String title = ct.getTitle();
-            // log.info("title=" + title);
-            // String sname = ct.getName();
-            // log.info("name=" + sname);
-            // if (name != null && name.equals(name)) {
-            // return ct;
-            // }
-            // }
-            // } catch (Exception e) {
-            // log.error("query flow failed", e);
-            // return null;
-            // }
-
-            // Content root = hm.getRoot();
             Content root = hm.getContent(ROOT_PATH_FOR_FLOW);
             Collection c = root.getChildren(ItemType.CONTENT);
             Iterator it = c.iterator();
