@@ -50,7 +50,7 @@ public class FlowDefServlet extends javax.servlet.http.HttpServlet implements ja
      */
     private static Logger log = LoggerFactory.getLogger(FlowDefServlet.class);
 
-    static final String DEFAULT_FLOW = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><process-definition xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://www.openwfe.org/flowdef_r1.5.0.xsd\" name=\"webActivation\" revision=\"1.0\"><description language=\"default\">worflow for web activation process.</description><sequence><participant ref=\"command-SendMail\" /><set field=\"mailTo\" value=\"user-superuser\" /><participant ref=\"user-superuser\" /><participant ref=\"command-activate\" /></sequence></process-definition>";
+    static final String DEFAULT_FLOW = "<!-- the name of the definition will get used as the upload name-->";
 
     /**
      * @see javax.servlet.http.HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
