@@ -159,8 +159,10 @@ public class ClasspathResourcesUtil {
             }
             for (Enumeration em = jar.entries(); em.hasMoreElements();) {
                 JarEntry entry = (JarEntry) em.nextElement();
-                if (filter.accept("/" + entry.getName())) {
-                    resources.add("/" + entry.getName());
+                if(!entry.isDirectory()){
+                    if (filter.accept("/" + entry.getName())) {
+                        resources.add("/" + entry.getName());
+                    }
                 }
             }
         } else {
