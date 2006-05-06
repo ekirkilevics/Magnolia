@@ -10,14 +10,9 @@
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-
 importClass("mgnl.admininterface.VersionsList");
 
 classDef("mgnl.admininterface.WebsiteTree", {
-
-    restore: function(tree){
-        window.location = contextPath + "/.magnolia/trees/website.html?command=restore&pathSelected=" + tree.selectedNode.path;
-    },
 
     showVersions: function(tree){
         mgnl.admininterface.VersionsList.show('website', tree.selectedNode.path);
