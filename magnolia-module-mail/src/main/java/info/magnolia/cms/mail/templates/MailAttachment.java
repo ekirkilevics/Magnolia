@@ -26,30 +26,23 @@ public class MailAttachment {
 
     URL url;
 
-    public MailAttachment(File file, String _name, String _description, String _disposition) {
+    public MailAttachment(File file, String name, String description, String disposition) {
         this.setPath(file.getAbsolutePath());
+        this.name = name;
+        this.description = description;
+        this.disposition = disposition;
+    }
+
+    public MailAttachment(URL url, String _name, String _description, String _disposition) {
+        this.url = url;
         this.name = _name;
         this.description = _description;
         this.disposition = _disposition;
     }
 
-    public MailAttachment(URL _url, String _name, String _description, String _disposition) {
+    public MailAttachment(URL _url, String name) {
         this.url = _url;
-        this.name = _name;
-        this.description = _description;
-        this.disposition = _disposition;
-    }
-
-    public MailAttachment(File file, String _name) {
-        this.setPath(file.getAbsolutePath());
-        this.name = _name;
-        this.disposition = ATTACHMENT_INLINE;
-        this.description = StringUtils.EMPTY;
-    }
-
-    public MailAttachment(URL _url, String _name) {
-        this.url = _url;
-        this.name = _name;
+        this.name = name;
         this.disposition = ATTACHMENT_INLINE;
         this.description = StringUtils.EMPTY;
     }

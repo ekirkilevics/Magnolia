@@ -94,7 +94,7 @@ public class MgnlMailServlet extends ContextSensitiveServlet {
 
             MailAttachment attachment = null;
             if (doc != null) {
-                attachment = new MailAttachment(doc.getFile(), ATT_ID);
+                attachment = new MailAttachment(doc.getFile().toURL(), ATT_ID);
             }
 
             String type = request.getParameter(TYPE);

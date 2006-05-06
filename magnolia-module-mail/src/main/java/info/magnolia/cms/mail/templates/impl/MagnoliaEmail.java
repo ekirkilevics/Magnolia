@@ -130,7 +130,7 @@ public class MagnoliaEmail extends FreemarkerEmail {
                 if (log.isDebugEnabled()) {
                     log.debug("Url is:" + url);
                 }
-                this.addAttachment(new MailAttachment(getAttachmentFile(url), String.valueOf(this.cid)));
+                this.addAttachment(new MailAttachment(getAttachmentFile(url).toURL(), String.valueOf(this.cid)));
             }
             else if (name.equalsIgnoreCase(LINK)) {
                 // stream the css and put the content into a <style> tag

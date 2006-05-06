@@ -3,7 +3,6 @@ package info.magnolia.cms.mail;
 import info.magnolia.cms.mail.templates.MailAttachment;
 
 import java.io.File;
-import java.net.HttpURLConnection;
 import java.net.URL;
 
 import org.slf4j.Logger;
@@ -16,7 +15,7 @@ public class AttachmentMailTest extends AbstractMailTest {
 
     public void testAttachmentFile() throws Exception {
         String file = TEST_FILE;
-        MailAttachment att = new MailAttachment(new File(file), "att");
+        MailAttachment att = new MailAttachment(new File(file).toURL(), "att");
         URL url = att.getURL();
         log.info(url.toString());
         File f = att.getFile();
@@ -25,13 +24,4 @@ public class AttachmentMailTest extends AbstractMailTest {
         assertEquals(f.getAbsolutePath(), file);
     }
 
-    public void testAttachmentUrl() throws Exception {
-        String urlString = TEST_URL;
-        MailAttachment att = new MailAttachment(new URL(urlString), "att");
-        URL url = att.getURL();
-        log.info(url.toString());
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        int len = con.getContentLength();
-        assertTrue(len > 0);
-    }
 }
