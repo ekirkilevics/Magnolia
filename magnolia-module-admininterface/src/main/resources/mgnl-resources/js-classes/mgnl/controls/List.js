@@ -7,7 +7,7 @@ classDef("mgnl.controls.List", function(name){
         row:{
             selected: 'mgnlListRowSelected',
             hover: 'mgnlListRowHover',
-            normal: 'mgnlListRow',
+            normal: 'mgnlListRow'
         }
     };
     
