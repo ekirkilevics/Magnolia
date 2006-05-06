@@ -23,12 +23,9 @@
     <sv:value>info.magnolia.module.admininterface.trees.GroupsTreeHandler</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:created" sv:type="Date">
-    <sv:value>2006-04-26T12:45:15.350+02:00</sv:value>
+    <sv:value>2006-05-06T13:06:29.113+02:00</sv:value>
   </sv:property>
   <sv:property sv:name="repository" sv:type="String">
-    <sv:value>groups</sv:value>
-  </sv:property>
-  <sv:property sv:name="name" sv:type="String">
     <sv:value>groups</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
@@ -36,7 +33,7 @@
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>ab3619ad-f57d-404d-9f3b-85ee06ce8990</sv:value>
+      <sv:value>fe5df815-9c2f-4ee0-bb33-4cb6a93aea62</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
       <sv:value>true</sv:value>
@@ -45,7 +42,7 @@
       <sv:value>superuser</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-04-26T12:45:15.350+02:00</sv:value>
+      <sv:value>2006-05-06T13:06:29.113+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
       <sv:value>2006-04-26T22:13:28.595+02:00</sv:value>

@@ -12,14 +12,8 @@
  */
 package info.magnolia.module.admininterface.trees;
 
-import info.magnolia.cms.beans.runtime.MgnlContext;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 
-import javax.jcr.version.Version;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -33,7 +27,7 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  */
 public class WebsiteTreeHandler extends AdminTreeMVCHandler {
-    
+
     /**
      * Logger
      */

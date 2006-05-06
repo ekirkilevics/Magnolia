@@ -41,7 +41,7 @@ public class DMSTreeControl extends Tree {
      * @param request
      */
     public DMSTreeControl(String repository, HttpServletRequest request, HttpServletResponse response) {
-        super(repository, request);
+        super(repository, repository, request);
         this.response = response;
     }
 

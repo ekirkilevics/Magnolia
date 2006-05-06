@@ -23,12 +23,9 @@
     <sv:value>info.magnolia.module.admininterface.trees.ConfigTreeHandler</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:created" sv:type="Date">
-    <sv:value>2006-04-26T12:45:15.350+02:00</sv:value>
+    <sv:value>2006-05-06T13:06:28.842+02:00</sv:value>
   </sv:property>
   <sv:property sv:name="repository" sv:type="String">
-    <sv:value>config</sv:value>
-  </sv:property>
-  <sv:property sv:name="name" sv:type="String">
     <sv:value>config</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
@@ -36,7 +33,7 @@
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>121f6ec6-887b-4623-a11f-d7402aefd5f6</sv:value>
+      <sv:value>0eaf1755-f1dd-4329-a85b-26ffcb9fc43a</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:Data" sv:type="String">
       <sv:value>MetaData</sv:value>
@@ -48,7 +45,7 @@
       <sv:value>superuser</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-04-26T12:45:15.350+02:00</sv:value>
+      <sv:value>2006-05-06T13:06:28.842+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
       <sv:value>1115389249338000</sv:value>
