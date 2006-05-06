@@ -13,13 +13,18 @@
 
 package info.magnolia.cms.i18n;
 
-import java.lang.reflect.Field;
+import info.magnolia.cms.util.ClasspathResourcesUtil;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.MissingResourceException;
+import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -189,7 +194,28 @@ public class Messages {
      */
     public ResourceBundle getBundle() {
         if (bundle == null) {
-            bundle = ResourceBundle.getBundle(getBasename(), getLocale());
+                try {
+                    InputStream stream = ClasspathResourcesUtil.getStream("/" + StringUtils.replace(basename, ".", "/") + "_" + getLocale().getLanguage() + "_" + getLocale().getCountry() + ".properties", false);
+                    if(stream == null){
+                        stream = ClasspathResourcesUtil.getStream("/" + StringUtils.replace(basename, ".", "/") + "_" + getLocale().getLanguage() + ".properties", false);
+                    }
+                    if(stream == null){
+                        stream = ClasspathResourcesUtil.getStream("/" + StringUtils.replace(basename, ".", "/") + "_" + MessagesManager.getDefaultLocale().getLanguage() + ".properties", false);
+                    }
+                    if(stream == null){
+                        stream = ClasspathResourcesUtil.getStream("/" + StringUtils.replace(basename, ".", "/") + ".properties", false);
+                    }
+                    
+                    if(stream != null){
+                        bundle = new PropertyResourceBundle(stream);
+                    }
+                    else{
+                        bundle = ResourceBundle.getBundle(getBasename(), getLocale());
+                    }
+                }
+                catch (IOException e) {
+                    log.error("can't load messages for " + basename );
+                }
         }
         return bundle;
     }
@@ -208,22 +234,7 @@ public class Messages {
     }
 
     public void reload() throws Exception {
-        try {
-            ResourceBundle bund = this.getBundle();
-            Class klass = bund.getClass().getSuperclass();
-            Field field;
-            field = klass.getDeclaredField("cacheList"); //$NON-NLS-1$
-            field.setAccessible(true);
-            sun.misc.SoftCache cache = (sun.misc.SoftCache) field.get(null);
-            cache.clear();
-            if (log.isInfoEnabled()) {
-                log.info("Cleaning messages for locale:" + bund.getLocale() + "..."); //$NON-NLS-1$ //$NON-NLS-2$
-            }
-        }
-        catch (Exception e) {
-            log.error("Error while cleaning messages ..."); //$NON-NLS-1$
-            throw e;
-        }
+        this.bundle = null;
     }
 
 }
