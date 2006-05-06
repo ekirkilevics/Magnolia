@@ -78,6 +78,11 @@ public class TreeHandlerManager extends ObservedManager {
         for (Iterator iter = trees.iterator(); iter.hasNext();) {
             Content tree = (Content) iter.next();
             String name = tree.getNodeData("name").getString(); //$NON-NLS-1$
+
+            if (name == null) {
+                name = tree.getName();
+            }
+
             String repository = tree.getNodeData("repository").getString(); //$NON-NLS-1$
             String className = tree.getNodeData("class").getString(); //$NON-NLS-1$
 
