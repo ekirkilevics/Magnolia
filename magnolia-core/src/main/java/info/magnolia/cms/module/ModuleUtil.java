@@ -24,7 +24,6 @@ import info.magnolia.cms.core.ie.DataTransporter;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.repository.Provider;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -47,9 +46,7 @@ import java.util.Map;
 
 import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.PathNotFoundException;
-import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
-import javax.jcr.Workspace;
 
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.io.IOUtils;
@@ -520,27 +517,19 @@ public final class ModuleUtil {
      * @throws JDOMException
      */
     public static void registerWorkspace(String repository, String workspace) throws RegisterException {
-
-        Repository repositoryImpl = ContentRepository.getRepository(repository);
-
-        if (repositoryImpl == null) {
-            throw new RegisterException("Before registering a workspace ["
-                + workspace
-                + "] you need to register the repository ["
-                + repository
-                + "]");
-        }
-        
-Workspace workspaceImpl = null;
-
-if (workspaceImpl == null)
-{
-    Provider provider = ContentRepository.getRepositoryProvider(repository);
-    provider.r
-}
-       
-
         try {
+            Document doc = getRepositoryDefinitionDocument();
+            // check if there
+            Element repositoryNode = (Element) XPath.selectSingleNode(doc, "/JCR/Repository[@name='"
+                + repository
+                + "']");
+            if (repositoryNode == null) {
+                throw new ConfigurationException("before registering a workspace ["
+                    + workspace
+                    + "] you need to register the repository ["
+                    + repository
+                    + "]");
+            }
 
             // check if existing
             Element workspaceNode = (Element) XPath.selectSingleNode(doc, "/JCR/Repository[@name='"
@@ -554,7 +543,6 @@ if (workspaceImpl == null)
                 repositoryNode.addContent(workspaceNode);
             }
 
-            
             // make the mapping
             Element mappingNode = new Element("Map");
             mappingNode.setAttribute("name", workspace).setAttribute("repositoryName", repository);
