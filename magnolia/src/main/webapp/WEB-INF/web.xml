@@ -134,10 +134,6 @@
         <servlet-class>info.magnolia.module.admininterface.pages.FileThumbnailDialogPage</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>CacheServlet</servlet-name>
-        <servlet-class>info.magnolia.cms.cache.CacheGeneratorServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>log4j</servlet-name>
         <servlet-class>it.openutils.log4j.Log4jConfigurationServlet</servlet-class>
     </servlet>
@@ -231,16 +227,6 @@
     <servlet-mapping>
         <servlet-name>fileThumbnail</servlet-name>
         <url-pattern>/admintemplates/dialogs/fileThumbnail.jsp</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>CacheServlet</servlet-name>
-        <url-pattern>/.magnolia/cash-all/*</url-pattern>
-        <!-- old typo -->
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>CacheServlet</servlet-name>
-        <url-pattern>/.magnolia/cache-all/*</url-pattern>
-        <!--  good one -->
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>log4j</servlet-name>
