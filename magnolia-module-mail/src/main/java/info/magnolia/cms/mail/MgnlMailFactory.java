@@ -70,11 +70,6 @@ public class MgnlMailFactory {
     /**
      * @deprecated should be registered suring module initialization!
      */
-    protected static final String SERVER_MAIL = "/modules/mail/config/smtp";
-
-    /**
-     * @deprecated should be registered suring module initialization!
-     */
     protected static final String MAIL_TEMPLATES_PATH = "/modules/mail/config/templates";
 
     private static Logger log = LoggerFactory.getLogger(MgnlMailFactory.class);
@@ -86,20 +81,8 @@ public class MgnlMailFactory {
     private static Class mailHandlerClass;
 
     private MgnlMailFactory() {
-        try {
-            mailHandlerClass = info.magnolia.cms.mail.handlers.MgnlMailHandler.class;
-        }
-        catch (Exception e) {
-            log.error("Could not init MgnlMailFactory", e);
-        }
-        try {
-            this.mailParameters = new Hashtable();
-            initMailParameter();
-        }
-        catch (Exception e) {
-            log.error("Could not init parameters", e);
-            // should go for the moment
-        }
+        mailHandlerClass = info.magnolia.cms.mail.handlers.MgnlMailHandler.class;
+        this.mailParameters = new Hashtable();
     }
 
     public static MgnlMailFactory getInstance() {
@@ -241,55 +224,39 @@ public class MgnlMailFactory {
                 }
             };
         }
-        props.put("mail.smtp.sendpartial", this.mailParameters.get(SMTP_SEND_PARTIAL));
+        props.put("mail.smtp.sendpartial", StringUtils.defaultString((String) this.mailParameters
+            .get(SMTP_SEND_PARTIAL)));
         return Session.getInstance(props, auth);
     }
 
-    void initMailParameter() throws Exception {
-        HierarchyManager hm = null;
-        Content node = null;
-        try {
-            hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
-            node = hm.getContent(SERVER_MAIL);
-        }
-        catch (Exception e) {
-            log.info("Cannot access repository configuration");
-        }
+    void initMailParameter(Content node) {
 
-        initParam(hm, node, SMTP_SERVER, SMTP_DEFAULT_HOST);
-        initParam(hm, node, SMTP_PORT, SMTP_DEFAULT_PORT);
-        initParam(hm, node, SMTP_USER, StringUtils.EMPTY);
-        initParam(hm, node, SMTP_PASSWORD, StringUtils.EMPTY);
-        initParam(hm, node, SMTP_AUTH, StringUtils.EMPTY);
-        initParam(hm, node, SMTP_SEND_PARTIAL, StringUtils.EMPTY);
+        initParam(node, SMTP_SERVER, SMTP_DEFAULT_HOST);
+        initParam(node, SMTP_PORT, SMTP_DEFAULT_PORT);
+        initParam(node, SMTP_USER, StringUtils.EMPTY);
+        initParam(node, SMTP_PASSWORD, StringUtils.EMPTY);
+        initParam(node, SMTP_AUTH, StringUtils.EMPTY);
+        initParam(node, SMTP_SEND_PARTIAL, StringUtils.EMPTY);
     }
 
     /**
      * Method to init a stmp parameter
      */
-    void initParam(HierarchyManager hm, Content configNode, String param, String defaultValue) {
-        try {
-            if (hm != null && hm.isExist(SERVER_MAIL + "/" + param)) {
-                NodeData nd = configNode.getNodeData(param);
-                String value = nd.getValue().getString();
-                if (!value.equalsIgnoreCase(StringUtils.EMPTY)) {
-                    log.info("Init param[" + param + "] with value:[" + value + "]");
-                    this.mailParameters.put(param, value);
-                }
-                else {
-                    log.info("Init param[" + param + "] with value:[" + defaultValue + " ] (default)");
-                    this.mailParameters.put(param, defaultValue);
-                }
-            }
-            else {
-                log.info("No path for param[" + param + "]. Using default:[" + defaultValue + "]");
-                this.mailParameters.put(param, defaultValue);
-            }
+    protected void initParam(Content configNode, String paramName, String defaultValue) {
+
+        String value = configNode.getNodeData(paramName).getString();
+        if (!StringUtils.isEmpty(value)) {
+            log.info("Init param[{}] with value:[{}]", paramName, value);
+            initParam(paramName, value);
         }
-        catch (Exception e) {
-            log.error("Failed to load value for param[" + param + "]. Using default:[" + defaultValue + "]", e);
-            this.mailParameters.put(param, defaultValue);
+        else {
+            log.info("Init param[{}] with value:[{}] (default)", paramName, defaultValue);
+            initParam(paramName, defaultValue);
         }
+    }
+
+    protected void initParam(String paramName, String paramValue) {
+        this.mailParameters.put(paramName, paramValue);
     }
 
     /**

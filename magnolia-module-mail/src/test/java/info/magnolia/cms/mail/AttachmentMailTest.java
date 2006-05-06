@@ -1,15 +1,17 @@
 package info.magnolia.cms.mail;
 
 import info.magnolia.cms.mail.templates.MailAttachment;
-import junit.framework.TestCase;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class AttachmentMailTest extends TestCase implements TestConstants {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
+public class AttachmentMailTest extends AbstractMailTest {
+
     Logger log = LoggerFactory.getLogger(AttachmentMailTest.class);
 
     public void testAttachmentFile() throws Exception {

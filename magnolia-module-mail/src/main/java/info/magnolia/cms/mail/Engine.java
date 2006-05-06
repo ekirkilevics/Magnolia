@@ -1,29 +1,36 @@
 package info.magnolia.cms.mail;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.module.AbstractModule;
 import info.magnolia.cms.module.InitializationException;
-import info.magnolia.cms.module.InvalidConfigException;
-import info.magnolia.cms.module.RegisterException;
-import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.module.admininterface.AbstractAdminModule;
+
+import javax.jcr.RepositoryException;
 
 
 /**
- * Date: Mar 30, 2006 Time: 5:37:54 PM
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */
-public class Engine extends AbstractModule {
+public class Engine extends AbstractAdminModule {
 
-    protected void onRegister(int i) throws RegisterException {
+    private static final String SERVER_MAIL_CONFIG = "smtp";
 
-    }
+    /**
+     * @see info.magnolia.module.admininterface.AbstractAdminModule#onInit()
+     */
+    public void onInit() throws InitializationException {
+        Content config = getConfigNode();
 
-    public void init(Content content) throws InvalidConfigException, InitializationException {
-        Content node;
-        // register uri mappings
-        node = ContentUtil.getCaseInsensitive(this.moduleNode, "config");
-        if (node != null) {
-            // MailConfigurationManager.getInstance().register(node);
+        try {
+            Content smtpNode = config.getContent(SERVER_MAIL_CONFIG);
+            MgnlMailFactory.getInstance().initMailParameter(smtpNode);
         }
+        catch (RepositoryException e) {
+            log
+                .error(
+                    "Missing configuration for {}{}, module is not properly initialized",
+                    config.getHandle(),
+                    "/smtp");
+        }
+
     }
 }

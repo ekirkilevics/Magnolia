@@ -7,33 +7,28 @@ package info.magnolia.cms.mail;
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */
 
-import info.magnolia.cms.mail.handlers.SimpleMailHandler;
 import info.magnolia.cms.mail.templates.MgnlEmail;
-import junit.framework.TestCase;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Iterator;
+
+import com.dumbster.smtp.SmtpMessage;
 
 
-public class MgnlMailFactoryTest extends TestCase implements TestConstants {
-
-    Logger log = LoggerFactory.getLogger(MgnlMailFactoryTest.class);
-
-    MgnlMailFactory factory = MgnlMailFactory.getInstance();
-
-    SimpleMailHandler handler = new SimpleMailHandler();
-
-    public void testResourcePath() throws Exception {
-        log.info(TestUtil.getResourceRootFolder().getAbsolutePath());
-    }
+public class MgnlMailFactoryTest extends AbstractMailTest {
 
     public void testSimpleMail() throws Exception {
         MgnlEmail email = factory.getEmailFromType(MailConstants.MAIL_TEMPLATE_TEXT);
+        String subject = "Test simple";
         email.setText("Hello bonjour");
-        email.setSubject("Test simple");
+        email.setSubject(subject);
         email.setToList(TEST_RECIPIENT);
         email.setFrom(TEST_SENDER);
         handler.prepareAndSendMail(email);
+
+        assertTrue(server.getReceivedEmailSize() == 1);
+        Iterator emailIter = server.getReceivedEmail();
+        SmtpMessage message = (SmtpMessage) emailIter.next();
+        assertTrue(message.getHeaderValue("Subject").equals(subject));
     }
 
 }
