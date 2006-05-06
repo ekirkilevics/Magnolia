@@ -1,0 +1,28 @@
+<hmtl>
+	<head></head>
+	<body>
+		<hr/>
+		Redeploy the files in the classpath (modules jars, ..) <br/>
+		<form>
+			<input type="hidden" name="command" value="redeploy">
+			<input type="submit" value="redeploy">
+		</form>
+		<hr/>
+		Start the redeploy deamon<br/>
+		<form>
+			<input type="hidden" name="command" value="startDeamon">
+			Interval (seconds): <input type="text" name="seconds" value="5"><br/>
+			<input type="submit" value="start">
+		</form>	
+		<hr/>
+		Reload i18n properties files<br/>
+		<form>
+			<input type="hidden" name="command" value="reloadI18nMessages">
+			<input type="submit" value="reload">
+		</form>	
+		<#if message?exists>
+			Satus: ${message}
+		</#if>
+				
+	</body>
+</hmtl>
