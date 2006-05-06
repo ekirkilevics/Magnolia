@@ -12,10 +12,17 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.core.*;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.Path;
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.SearchFactory;
-import info.magnolia.cms.security.*;
+import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.security.AccessManagerImpl;
+import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.security.PermissionImpl;
 import info.magnolia.cms.util.UrlPattern;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
@@ -295,14 +302,14 @@ public final class ContentRepository {
      */
     public static void loadRepository(RepositoryMapping map) throws RepositoryNotInitializedException,
         InstantiationException, IllegalAccessException, ClassNotFoundException {
-        log.info("System : loading JCR - " + map.getName()); //$NON-NLS-1$
+        log.info("System : loading JCR {}", map.getName()); //$NON-NLS-1$
         Provider handlerClass = (Provider) Class.forName(map.getProvider()).newInstance();
         handlerClass.init(map);
         Repository repository = handlerClass.getUnderlineRepository();
         ContentRepository.repositories.put(map.getName(), repository);
         ContentRepository.repositoryProviders.put(map.getName(), handlerClass);
         if (map.isLoadOnStartup()) {
-            /* load hierarchy managers for each workspace */
+            // load hierarchy managers for each workspace
             Iterator workspaces = map.getWorkspaces().iterator();
             while (workspaces.hasNext()) {
                 String wspID = (String) workspaces.next();
@@ -339,11 +346,11 @@ public final class ContentRepository {
             }
             catch (RepositoryException e) {
                 // probably no search manager is configured for this workspace
-                log.info("QueryManager not initialized for repository " + map.getName() + ": " + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+                log.info("QueryManager not initialized for repository {}: {}", map.getName(), e.getMessage()); //$NON-NLS-1$
             }
         }
         catch (RepositoryException re) {
-            log.error("System : Failed to initialize hierarchy manager for JCR - " + map.getName()); //$NON-NLS-1$
+            log.error("System : Failed to initialize hierarchy manager for JCR {}", map.getName()); //$NON-NLS-1$
             log.error(re.getMessage(), re);
         }
     }
@@ -437,6 +444,13 @@ public final class ContentRepository {
      */
     public static Repository getRepository(String repositoryID) {
         return (Repository) ContentRepository.repositories.get(getMappedRepositoryName(repositoryID));
+    }
+
+    /**
+     * Returns repository provider specified by the <code>repositoryID</code> as configured in repository config.
+     */
+    public static Provider getRepositoryProvider(String repositoryID) {
+        return (Provider) ContentRepository.repositoryProviders.get(getMappedRepositoryName(repositoryID));
     }
 
     /**
