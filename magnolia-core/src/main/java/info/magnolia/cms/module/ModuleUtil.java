@@ -561,7 +561,7 @@ public final class ModuleUtil {
         // Provider provider = ContentRepository.getRepositoryProvider(repositoryName);
         // provider.registerWorkspace(repositoryName);
 
-        boolean restartNeeded = false;
+        boolean changed = false;
 
         try {
             Document doc = getRepositoryDefinitionDocument();
@@ -587,24 +587,32 @@ public final class ModuleUtil {
                 workspaceNode = new Element("workspace");
                 workspaceNode.setAttribute("name", workspaceName);
                 repositoryNode.addContent(workspaceNode);
-                restartNeeded = true;
+                changed = true;
             }
 
             // make the mapping
-            Element mappingNode = new Element("Map");
-            mappingNode.setAttribute("name", workspaceName).setAttribute("repositoryName", repositoryName);
-            // add it
-            doc.getRootElement().getChild("RepositoryMapping").addContent(mappingNode);
+            Element mappingNode = (Element) XPath.selectSingleNode(doc, "/JCR/RepositoryMapping/Map[@name='"
+                + workspaceName
+                + "']");
+            if (mappingNode == null) {
+                mappingNode = new Element("Map");
+                mappingNode.setAttribute("name", workspaceName).setAttribute("repositoryName", repositoryName);
+                // add it
+                doc.getRootElement().getChild("RepositoryMapping").addContent(mappingNode);
+                changed = true;
+            }
 
             // save it
-            XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
-            outputter.output(doc, new FileWriter(getRepositoryDefinitionFile()));
+            if (changed) {
+                XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
+                outputter.output(doc, new FileWriter(getRepositoryDefinitionFile()));
+            }
         }
         catch (Exception e) {
             log.error("can't register workspace [" + workspaceName + "]", e);
             throw new RegisterException("can't register workspace [" + workspaceName + "]", e);
         }
 
-        return restartNeeded;
+        return changed;
     }
 }
