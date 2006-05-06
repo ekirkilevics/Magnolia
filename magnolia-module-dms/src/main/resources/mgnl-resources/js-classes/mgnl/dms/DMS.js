@@ -85,5 +85,5 @@ classDef("mgnl.dms.DMS", {
 	 
 	uploadZip: function(path){
 		mgnlOpenWindow(".magnolia/dms/uploadzip.html?path=" + path);
-	},
+	}
 });
