@@ -43,7 +43,7 @@ import java.util.jar.JarFile;
  */
 public class ClasspathResourcesUtil {
 
-    private static boolean nocache = BooleanUtils.toBoolean(SystemProperty.getProperty("magnolia.develop"));
+    private static boolean cache = !BooleanUtils.toBoolean(SystemProperty.getProperty("magnolia.develop"));
 
     /**
      * logger
@@ -172,24 +172,32 @@ public class ClasspathResourcesUtil {
 
     }
 
+    public static InputStream getStream(String name) throws IOException {
+        return getStream(name, !cache);
+    }
+    
     /**
-     * Checks last modified and returns the new content if changed.
+     * Checks last modified and returns the new content if changed and the cache flag is not set to true.
      *
      * @param name
      * @return the input stream
      * @throws IOException
      */
-    public static InputStream getStream(String name) throws IOException {
-        if (nocache) {
+    public static InputStream getStream(String name, boolean cache) throws IOException {
+        if (cache) {
+            return ClasspathResourcesUtil.class.getResourceAsStream(name);
+        }
+        else{
             // TODO use the last modified attribute
             URL url = ClasspathResourcesUtil.class.getResource(name);
             if (url != null) {
                 return url.openStream();
             }
-            if (log.isDebugEnabled())
-                log.debug("Can't find {}", name);
         }
-        return ClasspathResourcesUtil.class.getResourceAsStream(name);
+        if (log.isDebugEnabled()){
+            log.debug("Can't find {}", name);
+        }
+        return null;
     }
 
 }
