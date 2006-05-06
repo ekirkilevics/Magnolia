@@ -18,6 +18,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.util.ObservationUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,10 +28,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
-import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
-import javax.jcr.observation.ObservationManager;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -127,9 +126,14 @@ public final class MessagesManager {
 
         load();
         registerEventListener();
+    }
 
+    /**
+     * @return
+     */
+    private static void intiLRUMap() {
         // create the LRUMap
-        Map map = new LRUMap(10);
+        Map map = new LRUMap(20);
         map = LazyMap.decorate(map, new Transformer() {
 
             public Object transform(Object input) {
@@ -137,8 +141,8 @@ public final class MessagesManager {
                 return new Messages(id.basename, id.locale);
             }
         });
-        // must be synchronized
         messages = Collections.synchronizedMap(map);
+        ;
     }
 
     /**
@@ -149,6 +153,8 @@ public final class MessagesManager {
         // reading the configuration from the repository
         HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
         try {
+            intiLRUMap();
+
             log.info("Config : loading i18n configuration - " + I18N_CONFIG_NAME); //$NON-NLS-1$
 
             Content serverNode = hm.getContent("/server"); //$NON-NLS-1$
@@ -222,34 +228,29 @@ public final class MessagesManager {
     private static void registerEventListener() {
 
         log.info("Registering event listener for i18n"); //$NON-NLS-1$
-
-        try {
-            ObservationManager observationManager = ContentRepository
-                .getHierarchyManager(ContentRepository.CONFIG)
-                .getWorkspace()
-                .getObservationManager();
-
-            observationManager.addEventListener(new EventListener() {
+        ObservationUtil.registerChangeListener(
+            ContentRepository.CONFIG,
+            "/server/" + I18N_CONFIG_NAME,
+            new EventListener() {
 
                 public void onEvent(EventIterator iterator) {
                     // reload everything
                     reload();
                 }
-            }, Event.NODE_ADDED
-                | Event.NODE_REMOVED
-                | Event.PROPERTY_ADDED
-                | Event.PROPERTY_CHANGED
-                | Event.PROPERTY_REMOVED, "/server/" + I18N_CONFIG_NAME, true, null, null, false); //$NON-NLS-1$
-        }
-        catch (RepositoryException e) {
-            log.error("Unable to add event listeners for i18n", e); //$NON-NLS-1$
-        }
+            });
     }
 
     /**
      * Reload i18n configuration.
+     * @throws Exception 
      */
-    public static void reload() {
+    public static void reload(){
+        try{
+            reloadBundles();
+        }
+        catch(Exception e){
+            log.error("can't reload i18n messages", e);
+        }
         load();
     }
 
@@ -462,7 +463,7 @@ public final class MessagesManager {
 
     public static void reloadBundles() throws Exception {
         // reload all present
-        for (Iterator iter = messages.entrySet().iterator(); iter.hasNext();) {
+        for (Iterator iter = messages.values().iterator(); iter.hasNext();) {
             Messages msgs = (Messages) iter.next();
             msgs.reload();
         }
@@ -494,6 +495,13 @@ public final class MessagesManager {
         public MessagesID(String basename, Locale locale) {
             this.basename = basename;
             this.locale = locale;
+        }
+        
+        /**
+         * @see java.lang.Object#hashCode()
+         */
+        public int hashCode() {
+            return basename.hashCode();
         }
 
         public boolean equals(Object id) {
