@@ -15,6 +15,7 @@ package info.magnolia.cms.module;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 
@@ -74,7 +75,7 @@ public abstract class AbstractModule implements Module {
 
                 registerRepositories(def);
 
-                installFiles(moduleName);
+                installFiles(moduleName, def.getModuleRoot());
 
                 // let the module do it's stuff
                 onRegister(registerState);
@@ -185,11 +186,12 @@ public abstract class AbstractModule implements Module {
     }
 
     /**
-     * Copy the files from /mgnl-files/templates /mgnl-files/docroot and /mgnl-files/admintemplates to the filesystem.
+     * Copy the files from /mgnl-files/* to the filesystem.
      * @param moduleName
+     * @param moduleRoot module root dir or jar file.
      * @throws Exception
      */
-    protected void installFiles(final String moduleName) throws Exception {
+    protected void installFiles(final String moduleName, File moduleRoot) throws Exception {
         // copy the content of mgnl-files to the webapp
         String[] moduleFiles = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
 

@@ -14,6 +14,7 @@ package info.magnolia.cms.module;
 
 import info.magnolia.cms.beans.config.ModuleRegistration;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -67,6 +68,11 @@ public class ModuleDefinition {
      * The className of the engine
      */
     private String className;
+
+    /**
+     * The root directory or jar file for the module.
+     */
+    private File moduleRoot;
 
     /**
      * Empty constructor used by betwixt
@@ -227,5 +233,21 @@ public class ModuleDefinition {
      */
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
+    }
+
+    /**
+     * Getter for <code>moduleRoot</code>.
+     * @return Returns the moduleRoot.
+     */
+    public File getModuleRoot() {
+        return this.moduleRoot;
+    }
+
+    /**
+     * Setter for <code>moduleRoot</code>.
+     * @param moduleRoot The moduleRoot to set.
+     */
+    public void setModuleRoot(File moduleRoot) {
+        this.moduleRoot = moduleRoot;
     }
 }

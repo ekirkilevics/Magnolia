@@ -58,11 +58,11 @@ public class FactoryUtil {
         return DiscoverSingleton.find(interf, props);
     }
 
-    public static void setDefaultImplemenation(Class interf, String impl) {
+    public static void setDefaultImplementation(Class interf, String impl) {
         props.setProperty(interf.getName(), impl);
     }
 
-    public static void setImplemenation(Class interf, String impl) {
+    public static void setImplementation(Class interf, String impl) {
         props.setProperty(interf.getName(), impl);
     }
 }

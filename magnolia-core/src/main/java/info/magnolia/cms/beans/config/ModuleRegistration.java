@@ -13,15 +13,37 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.module.*;
+import info.magnolia.cms.module.DependencyDefinition;
+import info.magnolia.cms.module.Module;
+import info.magnolia.cms.module.ModuleDefinition;
+import info.magnolia.cms.module.ModuleUtil;
+import info.magnolia.cms.module.RegisterException;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.NodeDataUtil;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.jcr.PathNotFoundException;
+
 import org.apache.commons.betwixt.io.BeanReader;
 import org.apache.commons.collections.MapIterator;
 import org.apache.commons.collections.OrderedMap;
 import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.jdom.DocType;
 import org.jdom.Document;
 import org.jdom.JDOMException;
@@ -29,15 +51,6 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.jcr.PathNotFoundException;
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.net.URL;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 /**
@@ -51,8 +64,9 @@ public class ModuleRegistration {
     /**
      * The instance of the registration
      */
-    private static ModuleRegistration instance = (ModuleRegistration) FactoryUtil
-        .getSingleton(ModuleRegistration.class);
+    private static ModuleRegistration instance = new ModuleRegistration();
+
+    // (ModuleRegistration) FactoryUtil .getSingleton(ModuleRegistration.class);
 
     /**
      * @return Returns the instance.
@@ -99,6 +113,37 @@ public class ModuleRegistration {
         registerModules();
     }
 
+    protected File getModuleRoot(String magnoliaModuleXml) {
+        URL xmlUrl = getClass().getResource(magnoliaModuleXml);
+
+        String xmlString = xmlUrl.getFile();
+        String protocol = xmlUrl.getProtocol();
+
+        File moduleRoot = null;
+
+        if ("jar".equals(protocol)) {
+            xmlString = StringUtils.substringBefore(xmlString, ".jar!") + ".jar";
+            try {
+                moduleRoot = new File(new URI(xmlString));
+            }
+            catch (URISyntaxException e) {
+                // should never happen
+                log.error(e.getMessage(), e);
+            }
+        }
+        else {
+            try {
+                File xmlFile = new File(xmlUrl.toURI());
+                moduleRoot = xmlFile.getParentFile().getParentFile();
+            }
+            catch (URISyntaxException e) {
+                // should never happen
+                log.error(e.getMessage(), e);
+            }
+        }
+        return moduleRoot;
+    }
+
     /**
      * Read the xml files and make the objects
      */
@@ -121,10 +166,13 @@ public class ModuleRegistration {
             for (int j = 0; j < defResources.length; j++) {
                 String name = defResources[j];
 
-                log.info("parsing module file {}", name);
+                File moduleRoot = getModuleRoot(name);
+
+                log.info("Parsing module file {} for module @ {}", name, moduleRoot.getAbsolutePath());
 
                 try {
                     ModuleDefinition def = (ModuleDefinition) beanReader.parse(new StringReader(getXML(name)));
+                    def.setModuleRoot(moduleRoot);
                     this.moduleDefinitions.put(def.getName(), def);
                 }
                 catch (Exception e) {
@@ -307,11 +355,11 @@ public class ModuleRegistration {
         }
 
         catch (Exception e) {
-            log.error("can't register module [" //$NON-NLS-1$ 
+            log.error("can't register module [" //$NON-NLS-1$
                 + def.getName()
-                + "] due to a " //$NON-NLS-1$ 
+                + "] due to a " //$NON-NLS-1$
                 + e.getClass().getName()
-                + " exception: " //$NON-NLS-1$ 
+                + " exception: " //$NON-NLS-1$
                 + e.getMessage(), e);
         }
     }
