@@ -25,11 +25,12 @@ import openwfe.org.engine.workitem.StringAttribute;
 
 import org.apache.commons.chain.Context;
 
+
 public abstract class AbstractFlowCommand extends MgnlCommand {
 
     public boolean exec(HashMap params, Context ctx) {
-       // if (log.isDebugEnabled())
-            log.debug("- Flow command -" + this.getClass().toString() + "- Start");
+
+        log.debug("- Flow command -" + this.getClass().toString() + "- Start");
         try {
             // Get the references
             LaunchItem li = new LaunchItem();
@@ -48,13 +49,14 @@ public abstract class AbstractFlowCommand extends MgnlCommand {
             // Launch the item
             engine.launch(li, true);
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("Launching failed", e);
         }
 
         // End execution
-        //if (log.isDebugEnabled())
-            log.debug("- Flow command -" + this.getClass().toString() + "- End");
+
+        log.debug("- Flow command -" + this.getClass().toString() + "- End");
         return true;
     }
 

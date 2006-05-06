@@ -31,13 +31,6 @@ interface WorkflowAPI {
      * @return
      * @throws Exception
      */
-    // public List getWorkItems(String userName) throws Exception;
-    /**
-     * get all work items for the user
-     * @param userName
-     * @return
-     * @throws Exception
-     */
     public List getUserInbox(String userName) throws Exception;
 
     /**

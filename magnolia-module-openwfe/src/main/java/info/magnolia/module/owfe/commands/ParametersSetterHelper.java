@@ -23,7 +23,8 @@ import openwfe.org.engine.workitem.Attribute;
 import openwfe.org.engine.workitem.WorkItem;
 
 import org.apache.commons.chain.Context;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -36,11 +37,10 @@ public class ParametersSetterHelper {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(ParametersSetterHelper.class);
+    private static Logger log = LoggerFactory.getLogger(ParametersSetterHelper.class);
 
     public HashMap translateParam(MgnlCommand command, Context context) throws Exception {
         String[] expected = command.getExpectedParameters();
-        // String[] accepted = command.getAcceptedParameters();
 
         HashMap params = new HashMap();
 
@@ -75,8 +75,9 @@ public class ParametersSetterHelper {
 
             // check
             for (int i = 0; i < expected.length; i++) {
-                if (params.get(expected[i]) == null)
+                if (params.get(expected[i]) == null) {
                     log.warn("cannot find parameter " + expected[i] + " for command " + command);
+                }
             }
 
         }

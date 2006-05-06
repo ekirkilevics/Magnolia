@@ -44,20 +44,20 @@ public class MailCommand extends MgnlCommand {
     }
 
     public boolean exec(HashMap params, Context ctx) {
-        if (log.isDebugEnabled())
+        if (log.isDebugEnabled()) {
             log.debug("starting sending mail");
+        }
 
         try {
             String mailTo = (String) params.get(MgnlConstants.P_MAILTO);
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("mail receiver list: " + mailTo);
+            }
             String mailTemplate = (String) params.get(MgnlConstants.P_MAILTEMPLATE);
             log.info("mail template: " + mailTemplate);
 
             MgnlMailFactory factory = MgnlMailFactory.getInstance();
             MgnlMailHandler handler = factory.getEmailHandler();
-            // MgnlEmail email = factory.getEmail(MgnlConstants.WORKFLOW_EMAIL_TEMPLATE);
-            // MgnlEmail email = new SimpleEmail(factory.getSession());
 
             HashMap map = new HashMap();
             MgnlEmail email = factory.getEmailFromTemplate(mailTemplate, map);

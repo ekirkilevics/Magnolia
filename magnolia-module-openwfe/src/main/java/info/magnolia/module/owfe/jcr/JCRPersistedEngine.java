@@ -20,6 +20,9 @@ import openwfe.org.engine.expool.ExpressionPool;
 import openwfe.org.engine.participants.Participant;
 import openwfe.org.engine.participants.ParticipantMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * Implement openwfe.org.embed.engine.Engine to use JCRWorkItemStore and JCRExpressionStore
@@ -29,8 +32,7 @@ public class JCRPersistedEngine extends PersistedEngine {
 
     private JCRExpressionStore eStore = null;
 
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(FsPersistedEngine.class
-        .getName());
+    private final static Logger log = LoggerFactory.getLogger(FsPersistedEngine.class.getName());
 
     public JCRPersistedEngine() throws ServiceException {
         this("owfe", true);
@@ -56,21 +58,16 @@ public class JCRPersistedEngine extends PersistedEngine {
         // create expression store and add it to context
         final java.util.Map esParams = new java.util.HashMap(1);
 
-        eStore = new JCRExpressionStore();
+        this.eStore = new JCRExpressionStore();
 
-        eStore.init(Definitions.S_EXPRESSION_STORE, getContext(), esParams);
+        this.eStore.init(Definitions.S_EXPRESSION_STORE, getContext(), esParams);
 
-        getContext().add(eStore);
-
-        //
-        // expression pool
-
-        // is initted in parent class PersistedEngine
+        getContext().add(this.eStore);
 
     }
 
     public JCRExpressionStore getExpStore() {
-        return eStore;
+        return this.eStore;
     }
 
     public ExpressionPool getExpressionPool() {

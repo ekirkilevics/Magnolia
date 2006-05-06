@@ -61,9 +61,10 @@ public class JCRExpressionStore extends AbstractExpressionStore {
     public void init(final String serviceName, final ApplicationContext context, final java.util.Map serviceParams)
         throws ServiceException {
         super.init(serviceName, context, serviceParams);
-        hm = ContentRepository.getHierarchyManager(REPO_OWFE, WORKSPACEID);
-        if (hm == null)
+        this.hm = ContentRepository.getHierarchyManager(REPO_OWFE, WORKSPACEID);
+        if (this.hm == null) {
             throw new ServiceException("Can't get HierarchyManager Object for workitems repository");
+        }
 
     }
 
@@ -80,7 +81,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
      */
     public synchronized void storeExpression(FlowExpression fe) throws PoolException {
         try {
-            Content root = hm.getRoot();
+            Content root = this.hm.getRoot();
 
             String id = fe.getId().toParseableString();
             log.debug("store expresion: expression id = " + id);
@@ -90,8 +91,9 @@ public class JCRExpressionStore extends AbstractExpressionStore {
             // set expressionId as attribte id
             ValueFactory vf = ct.getJCRNode().getSession().getValueFactory();
             String value = fe.getId().toParseableString();
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("id_value=" + value);
+            }
             ct.createNodeData("ID", vf.createValue(value));
 
             // convert to xml string
@@ -101,7 +103,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 
             // store it as attribute value
             ct.createNodeData("value", vf.createValue(s));
-            hm.save();
+            this.hm.save();
 
         }
         catch (Exception e) {
@@ -119,7 +121,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
             Content ret = findExpression(fe.getId());
             if (ret != null) {
                 ret.delete();
-                hm.save();
+                this.hm.save();
             }
 
         }
@@ -139,7 +141,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
         Content ret;
         String s_fei = fei.toParseableString();
 
-        Content root = hm.getRoot();
+        Content root = this.hm.getRoot();
         log.debug("load expresion, expression id = " + s_fei);
         ret = root.getContent(convertId(s_fei));
         if (ret == null) { // if not found the id directly
@@ -157,7 +159,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
                 catch (Exception e) {
                     log.error("parse expresion id failed", e);
                     ct.delete();
-                    hm.save();
+                    this.hm.save();
                     continue;
                 }
 
@@ -204,7 +206,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
     public Iterator contentIterator(Class assignClass) {
         ArrayList ret = new ArrayList();
         try {
-            Content root = hm.getRoot();
+            Content root = this.hm.getRoot();
             Collection c = root.getChildren(ItemType.EXPRESSION);
 
             Iterator it = c.iterator();
@@ -217,9 +219,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
                 Document doc = builder.build(s);
                 FlowExpression fe = (FlowExpression) XmlCoder.decode(doc);
                 if (!ExpoolUtils.isAssignableFromClass(fe, assignClass)) {
-                    // log.debug
-                    // ("contentIterator() not
-                    // assignClass.getName());
+
                     continue;
                 }
                 ret.add(fe);
@@ -239,7 +239,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
      */
     public int size() {
         try {
-            Content root = hm.getRoot();
+            Content root = this.hm.getRoot();
             Collection c = root.getChildren(ItemType.EXPRESSION);
             // @fix it
             return c.size();

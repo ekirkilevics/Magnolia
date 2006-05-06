@@ -32,7 +32,8 @@ import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -44,7 +45,7 @@ import org.apache.log4j.Logger;
 
 public abstract class CommandBasedTreeHandler extends AdminTreeMVCHandler {
 
-    private static Logger log = Logger.getLogger(info.magnolia.module.owfe.tree.CommandBasedTreeHandler.class);
+    private static Logger log = LoggerFactory.getLogger(info.magnolia.module.owfe.tree.CommandBasedTreeHandler.class);
 
     public CommandBasedTreeHandler(String name, HttpServletRequest vrequest, HttpServletResponse vresponse) {
         super(name, vrequest, vresponse);
@@ -57,25 +58,27 @@ public abstract class CommandBasedTreeHandler extends AdminTreeMVCHandler {
         // get command from command map in JCR repository
         MgnlCommand tc = CommandsMap.getCommand(MgnlConstants.WEBSITE_REPOSITORY, command);
         if (tc == null) { // not found, do in the old ways
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("can not find command named " + command + " in tree command map");
+            }
             return super.execute(command);
         }
-        if (log.isDebugEnabled())
+        if (log.isDebugEnabled()) {
             log.debug("find command for " + command + ": " + tc);
+        }
 
         // set parameters
         HashMap params = new HashMap();
 
         // set some general parameters
-        params.put(MgnlConstants.P_REQUEST, request);
-        params.put(MgnlConstants.P_TREE, tree);
-        params.put(MgnlConstants.P_PATH, pathSelected);
+        params.put(MgnlConstants.P_REQUEST, this.request);
+        params.put(MgnlConstants.P_TREE, this.tree);
+        params.put(MgnlConstants.P_PATH, this.pathSelected);
 
         populateParams(command, params);
 
         Context context = (MgnlContext.hasInstance()) ? MgnlContext.getInstance() : new WebContextImpl();
-        context.put(MgnlConstants.P_REQUEST, request);
+        context.put(MgnlConstants.P_REQUEST, this.request);
         context.put(MgnlConstants.INTREE_PARAM, params);
 
         try {
@@ -101,7 +104,7 @@ public abstract class CommandBasedTreeHandler extends AdminTreeMVCHandler {
         HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.WEBSITE);
         Content ct;
         try {
-            ct = hm.getContent(pathSelected);
+            ct = hm.getContent(this.pathSelected);
 
             Calendar cd = null;
             String date;
@@ -111,7 +114,7 @@ public abstract class CommandBasedTreeHandler extends AdminTreeMVCHandler {
                 cd = ct.getMetaData().getStartTime();
             }
             catch (Exception e) {
-                log.warn("cannot get start time for node " + pathSelected, e);
+                log.warn("cannot get start time for node " + this.pathSelected, e);
             }
             // if (cd == null)
             // cd = Calendar.getInstance();
@@ -128,7 +131,7 @@ public abstract class CommandBasedTreeHandler extends AdminTreeMVCHandler {
                 cd = ct.getMetaData().getEndTime();
             }
             catch (Exception e) {
-                log.warn("cannot get end time for node " + pathSelected, e);
+                log.warn("cannot get end time for node " + this.pathSelected, e);
             }
 
             if (cd != null) {
@@ -139,13 +142,14 @@ public abstract class CommandBasedTreeHandler extends AdminTreeMVCHandler {
         }
         catch (Exception e) {
             log.warn("can not get start/end date for path "
-                + pathSelected
+                + this.pathSelected
                 + ", please use sevlet FlowDef to set start/end date for node.", e);
         }
 
         String recursive = "false";
-        if (request.getParameter("recursive") != null)
+        if (this.request.getParameter("recursive") != null) {
             recursive = "true";
+        }
         params.put(MgnlConstants.P_RECURSIVE, recursive);
     }
 

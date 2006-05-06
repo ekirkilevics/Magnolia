@@ -20,10 +20,8 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.QueryResult;
-import info.magnolia.cms.module.ModuleUtil;
 import info.magnolia.cms.module.RegisterException;
 import info.magnolia.module.admininterface.AbstractAdminModule;
-import info.magnolia.module.owfe.servlets.FlowDefServlet;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -37,7 +35,8 @@ import javax.jcr.Repository;
 import openwfe.org.ServiceException;
 import openwfe.org.engine.impl.expool.SimpleExpressionPool;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -51,7 +50,7 @@ public class Engine extends AbstractAdminModule {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(Engine.class);
+    private static Logger log = LoggerFactory.getLogger(Engine.class);
 
     /**
      * @see info.magnolia.module.admininterface.AbstractAdminModule#onRegister(int)

@@ -18,7 +18,8 @@ import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
 
 import javax.jcr.Repository;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -30,7 +31,7 @@ public class OWFEEngine {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(OWFEEngine.class);
+    private static Logger log = LoggerFactory.getLogger(OWFEEngine.class);
 
     static JCRPersistedEngine wfEngine;
 
@@ -41,8 +42,6 @@ public class OWFEEngine {
         wfEngine = new JCRPersistedEngine();
         log.debug("create worklist...");
 
-        // JCRWorkList wl_pl = new JCRWorkList("project-leader");
-        // OWFEEngine.getEngine().registerParticipant(wl_pl);
         OWFEEngine.getEngine().registerParticipant(new MgnlParticipant("user-.*"));
         OWFEEngine.getEngine().registerParticipant(new MgnlParticipant("group-.*"));
         OWFEEngine.getEngine().registerParticipant(new MgnlParticipant("role-.*"));
@@ -71,10 +70,12 @@ public class OWFEEngine {
      */
     public static HierarchyManager getOWFEHierarchyManager(String workspace) {
         HierarchyManager hm;
-        if (workspace != null)
+        if (workspace != null) {
             hm = ContentRepository.getHierarchyManager(REPO_OWFE, workspace);
-        else
+        }
+        else {
             hm = ContentRepository.getHierarchyManager(REPO_OWFE);
+        }
         // log.info("get HierarchyManager for " + REPO_OWFE + "=" + hm);
         return hm;
     }

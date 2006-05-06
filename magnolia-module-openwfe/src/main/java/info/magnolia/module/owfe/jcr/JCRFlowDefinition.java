@@ -31,9 +31,10 @@ import javax.jcr.Value;
 import javax.jcr.ValueFactory;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -45,7 +46,7 @@ public class JCRFlowDefinition {
     /**
      * Logger
      */
-    private static Logger log = Logger.getLogger(FlowDefServlet.class);
+    private static Logger log = LoggerFactory.getLogger(FlowDefServlet.class);
 
     private final static String ROOT_PATH_FOR_FLOW = "/modules/workflow/config/flows/";
 
@@ -57,8 +58,9 @@ public class JCRFlowDefinition {
      * @return Content node in JCR store for specified flow definition
      */
     public Content findFlowDef(String name) {
-        if (name == null)
+        if (name == null) {
             return null;
+        }
         HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
 
         try {
@@ -67,10 +69,8 @@ public class JCRFlowDefinition {
             Iterator it = c.iterator();
             while (it.hasNext()) {
                 Content ct = (Content) it.next();
-                // String title = ct.getTitle();
-                // log.info("title="+title);
+
                 String sname = ct.getName();
-                // log.info("name="+sname);
                 if (sname.equals(name)) {
                     return ct;
                 }
@@ -89,8 +89,9 @@ public class JCRFlowDefinition {
      */
     public String getflowDefAsString(String flowName) {
         Content node = findFlowDef(flowName);
-        if (node == null)
+        if (node == null) {
             return null;
+        }
         return node.getNodeData("value").getString();
     }
 
@@ -102,8 +103,9 @@ public class JCRFlowDefinition {
     public List getFlows(HttpServletRequest request) {
 
         String url_base = "http://";
-        if (request.isSecure())
+        if (request.isSecure()) {
             url_base = "https://";
+        }
         url_base += request.getServerName() + ":" + request.getServerPort() + request.getRequestURI();
         ArrayList list = new ArrayList();
         log.info(url_base);
@@ -114,8 +116,9 @@ public class JCRFlowDefinition {
             Iterator it = c.iterator();
             while (it.hasNext()) {
                 String name = ((Content) (it.next())).getName();
-                if (name != null)
+                if (name != null) {
                     list.add(url_base + "?name=" + name);
+                }
             }
         }
         catch (Exception e) {
@@ -129,8 +132,9 @@ public class JCRFlowDefinition {
      * @param xmlFileName
      */
     public void exportAll(String xmlFileName) {
-        if (xmlFileName == null || xmlFileName.length() == 0)
+        if (xmlFileName == null || xmlFileName.length() == 0) {
             return;
+        }
         try {
             HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
             File outputFile = new File(xmlFileName);
@@ -152,8 +156,9 @@ public class JCRFlowDefinition {
      * @throws Exception
      */
     public List addFlow(String flowDef) throws Exception {
-        if (flowDef == null)
+        if (flowDef == null) {
             return null;
+        }
         String name;
         // jdom
         final org.jdom.input.SAXBuilder builder = new org.jdom.input.SAXBuilder();
@@ -165,23 +170,26 @@ public class JCRFlowDefinition {
             HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
             Content root = hm.getContent(ROOT_PATH_FOR_FLOW);
 
-            /*
-             * check if the node already exist, and if it does update the value of the the NodeData FLOW_VALUE with the
-             * new flow. This is to allow duplication of flow node.
-             */
+            // check if the node already exist, and if it does update the value of the the NodeData FLOW_VALUE with the
+            // new flow. This is to allow duplication of flow node.
+
             boolean exist = hm.isExist(root.getHandle() + "/" + name);
             Content c;
-            if (exist)
+            if (exist) {
                 c = hm.getContent(root.getHandle() + "/" + name);
-            else
+            }
+            else {
                 c = root.createContent(name, ItemType.CONTENT);
+            }
 
             ValueFactory vf = c.getJCRNode().getSession().getValueFactory();
             Value value = vf.createValue(flowDef);
-            if (!exist)
+            if (!exist) {
                 c.createNodeData(FLOW_VALUE, value);
-            else
+            }
+            else {
                 ((NodeData) c.getNodeDataCollection(FLOW_VALUE).iterator().next()).setValue(value);
+            }
 
             hm.save();
             log.info("add ok");

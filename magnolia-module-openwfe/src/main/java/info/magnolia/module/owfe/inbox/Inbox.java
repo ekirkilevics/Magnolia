@@ -12,8 +12,6 @@
  */
 package info.magnolia.module.owfe.inbox;
 
-import java.util.Iterator;
-
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.gui.control.ContextMenu;
 import info.magnolia.cms.gui.control.ContextMenuItem;
@@ -28,6 +26,8 @@ import info.magnolia.cms.util.FreeMarkerUtil;
 import info.magnolia.module.admininterface.lists.AbstractList;
 import info.magnolia.module.admininterface.lists.AdminListControlRenderer;
 import info.magnolia.module.owfe.OWFEBean;
+
+import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -82,12 +82,12 @@ public class Inbox extends AbstractList {
         list.setRenderer(new AdminListControlRenderer() {
 
             public String onSelect(ListControl list, Integer index) {
-                String js =  super.onSelect(list, index);
+                String js = super.onSelect(list, index);
                 js += "mgnl.owfe.Inbox.currentId = '" + list.getIteratorValue("id") + "';";
                 return js;
             }
         });
-        
+
         list.addSortableField("lastModified");
         list.addColumn(new ListColumn("pathSelected", "Page", "150", true));
         list.addColumn(new ListColumn("lastModified", "Date", "150", true));

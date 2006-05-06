@@ -196,10 +196,12 @@ public class FlowDefServlet extends javax.servlet.http.HttpServlet implements ja
                 String path = request.getParameter("path");
 
                 HierarchyManager hm = null;
-                if (ws == null || ws.length() == 0)
+                if (ws == null || ws.length() == 0) {
                     ContentRepository.getHierarchyManager(repo);
-                else
+                }
+                else {
                     ContentRepository.getHierarchyManager(repo, ws);
+                }
                 try {
                     new OWFEBean().LaunchFlow(hm, path, launchFlowName);
                 }

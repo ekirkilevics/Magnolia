@@ -40,7 +40,7 @@ public class InboxListModel extends AbstractListModel {
      * @see info.magnolia.cms.gui.controlx.list.AbstractListModel#getResult()
      */
     protected Collection getResult() throws Exception {
-        return (new OWFEBean()).getUserInbox(userName);
+        return (new OWFEBean()).getUserInbox(this.userName);
     }
 
     /**

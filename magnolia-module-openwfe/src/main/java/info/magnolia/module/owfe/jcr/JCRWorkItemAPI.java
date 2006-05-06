@@ -42,41 +42,28 @@ import openwfe.org.xml.XmlUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class JCRWorkItemAPI {
 
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger
-        .getLogger(JCRWorkItemAPI.class.getName());
+    private final static Logger log = LoggerFactory.getLogger(JCRWorkItemAPI.class.getName());
 
-    //
-    // CONSTANTS & co
     public final static String REPO_OWFE = "owfe";
 
     public final static String WORKSPACEID = "Store";
 
     public final static String WORKITEM_NODENAME = "workItem";
 
-    //
-    // FIELDS
-    // Repository repository = null;
-    HierarchyManager hm = null;
+    HierarchyManager hm;
 
-    //
-    // CONSTRUCTORS
     public JCRWorkItemAPI() throws Exception {
-        hm = ContentRepository.getHierarchyManager(REPO_OWFE, WORKSPACEID);
-        if (hm == null) {
+        this.hm = ContentRepository.getHierarchyManager(REPO_OWFE, WORKSPACEID);
+        if (this.hm == null) {
             throw new Exception("Can't get HierarchyManager Object for workitems repository");
         }
-
-        //
-        // done
-
     }
-
-    //
-    // METHODS
 
     /**
      * remove one workItem by its ID
@@ -86,9 +73,10 @@ public class JCRWorkItemAPI {
             Content ct = getWorkItemById(fei);
             if (ct != null) {
                 ct.delete();
-                hm.save();
-                if (log.isDebugEnabled())
+                this.hm.save();
+                if (log.isDebugEnabled()) {
                     log.debug("work item removed");
+                }
             }
 
         }
@@ -109,14 +97,12 @@ public class JCRWorkItemAPI {
             log.debug("starting retrieve work item. this = " + this);
             log.debug("retrieve work item for ID = " + fei.toParseableString());
         }
-        // String fileName = determineFileName(storeName, fei, false);
-        //
-        // fileName = Utils.getCanonicalPath
-        // (getContext().getApplicationDirectory(), fileName);
+
         Content ct = getWorkItemById(fei);
 
-        if (ct == null)
+        if (ct == null) {
             throw new StoreException("cannot find workitem " + fei);
+        }
 
         try {
             return loadWorkItem(ct);
@@ -135,8 +121,9 @@ public class JCRWorkItemAPI {
     public static InFlowWorkItem loadWorkItem(Content ct) throws Exception {
         InFlowWorkItem wi;
         InputStream s = ct.getNodeData("value").getStream();
-        if (log.isDebugEnabled())
+        if (log.isDebugEnabled()) {
             log.debug("retrieve work item: value = " + s.toString());
+        }
         final org.jdom.input.SAXBuilder builder = new org.jdom.input.SAXBuilder();
         Document doc = builder.build(s);
         wi = (InFlowWorkItem) XmlCoder.decode(doc);
@@ -145,8 +132,9 @@ public class JCRWorkItemAPI {
         while (itt.hasNext()) {
             Object o = itt.next();
             String name1 = (String) o;
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug(name1 + "=" + wi.getAttribute(name1).toString());
+            }
         }
         return wi;
     }
@@ -159,10 +147,11 @@ public class JCRWorkItemAPI {
         String queryString = "//*[@participant=\"" + participant + "\"]";
         log.info("xpath query string = " + queryString);
         List list = doQuery(queryString);
-        if (list != null && list.size() > 0)
+        if (list != null && list.size() > 0) {
             return (Content) list.get(0);
-        else
-            return null;
+        }
+
+        return null;
     }
 
     /**
@@ -175,7 +164,7 @@ public class JCRWorkItemAPI {
         log.debug("path = " + path);
 
         try {
-            return hm.getContent(path, false, ItemType.WORKITEM);
+            return this.hm.getContent(path, false, ItemType.WORKITEM);
         }
         catch (Exception e) {
             log.error("get work item by id failed, path = " + path, e);
@@ -193,7 +182,7 @@ public class JCRWorkItemAPI {
         log.debug("path = " + path);
         Content c;
         try {
-            c = hm.getContent(path, false, ItemType.WORKITEM);
+            c = this.hm.getContent(path, false, ItemType.WORKITEM);
         }
         catch (PathNotFoundException e) {
             return false;
@@ -209,8 +198,9 @@ public class JCRWorkItemAPI {
      */
     public boolean checkContentWithEID(Content ct, FlowExpressionId eid) {
         String cid = ct.getNodeData("ID").getString();
-        if (log.isDebugEnabled())
+        if (log.isDebugEnabled()) {
             log.debug("checkContentWithEID: ID = " + cid);
+        }
         FlowExpressionId id = FlowExpressionId.fromParseableString(cid);
         return id.equals(eid);
     }
@@ -259,15 +249,16 @@ public class JCRWorkItemAPI {
             // delete it if already exist
             if (hasWorkItem(wi.getId())) {
                 Content ct = getWorkItemById(wi.getId());
-                if (ct != null)
+                if (ct != null) {
                     removeWorkItem(wi.getId());
+                }
             }
 
             // crete path from work item id
             String path = createPathFromId(wi.getId());
             log.info("workitem id = " + path);
 
-            Content newc = ContentUtil.createPath(hm, path, ItemType.WORKITEM);
+            Content newc = ContentUtil.createPath(this.hm, path, ItemType.WORKITEM);
 
             ValueFactory vf = newc.getJCRNode().getSession().getValueFactory();
             String sId = wi.getLastExpressionId().toParseableString();
@@ -279,8 +270,9 @@ public class JCRWorkItemAPI {
             StringAttribute assignTo = (StringAttribute) wi.getAttribute("assignTo");
             if (assignTo != null) {
                 String s = assignTo.toString();
-                if (s.length() > 0)
+                if (s.length() > 0) {
                     newc.createNodeData("assignTo", vf.createValue(s));
+                }
                 log.info("assignTo=" + s);
             }
 
@@ -289,18 +281,10 @@ public class JCRWorkItemAPI {
             final org.jdom.Document doc = new org.jdom.Document(encoded);
             String s = XmlUtils.toString(doc, null);
             newc.createNodeData("value", vf.createValue(s));
-            if (log.isDebugEnabled())
-                log.debug("store work item: value=" + s);
-            /*
-             * // store all attributes StringMapAttribute sma = wi.getAttributes(); Iterator it =
-             * sma.alphaStringIterator(); while (it.hasNext()) { StringAttribute sa = (StringAttribute) it.next();
-             * Attribute value = (Attribute) sma.get(sa); newc.createNodeData(sa.toString(), vf.createValue(value
-             * .toString())); }
-             */
-            hm.save();
 
-            // for testing
-            // exportToFile("d:\\wi.xml", "/");
+            log.debug("store work item: value=" + s);
+
+            this.hm.save();
 
             log.info("store work item ok. ");
         }
@@ -317,8 +301,9 @@ public class JCRWorkItemAPI {
      * @param path
      */
     public void exportToFile(String fileName, String path) {
-        if (path == null || path.length() == 0)
+        if (path == null || path.length() == 0) {
             path = "/";
+        }
         int i = fileName.lastIndexOf(".");
         String pre = fileName;
         String ext = "";
@@ -330,10 +315,10 @@ public class JCRWorkItemAPI {
 
         try {
             FileOutputStream out_sv = new FileOutputStream(pre + "_sv" + "." + ext);
-            hm.getWorkspace().getSession().exportSystemView(path, out_sv, false, false);
+            this.hm.getWorkspace().getSession().exportSystemView(path, out_sv, false, false);
 
             FileOutputStream out_dv = new FileOutputStream(pre + "_dv" + "." + ext);
-            hm.getWorkspace().getSession().exportDocumentView(path, out_dv, false, false);
+            this.hm.getWorkspace().getSession().exportDocumentView(path, out_dv, false, false);
 
         }
         catch (Exception e) {
@@ -347,13 +332,14 @@ public class JCRWorkItemAPI {
      */
     public void exportToConsole(String path) {
 
-        if (path == null || path.length() == 0)
+        if (path == null || path.length() == 0) {
             path = "/";
+        }
         try {
 
-            hm.getWorkspace().getSession().exportSystemView(path, System.out, false, false);
+            this.hm.getWorkspace().getSession().exportSystemView(path, System.out, false, false);
 
-            hm.getWorkspace().getSession().exportDocumentView(path, System.out, false, false);
+            this.hm.getWorkspace().getSession().exportDocumentView(path, System.out, false, false);
 
         }
         catch (Exception e) {
@@ -378,10 +364,7 @@ public class JCRWorkItemAPI {
                 log.info("query result is null");
                 return null;
             }
-            // log.info("result size of mgnl:content = " +
-            // result.getContent().size());
-            // log.info("result size of workitem = " +
-            // result.getContent("workItem").size());
+
             Iterator it = result.getContent("workItem").iterator();
             while (it.hasNext()) {
                 Content ct = (Content) it.next();
@@ -389,9 +372,7 @@ public class JCRWorkItemAPI {
                 log.info("title=" + title);
                 String sname = ct.getName();
                 log.info("name=" + sname);
-                // storage.exportToConsole(ct.getJCRNode().getPath());
-                // storage.exportToFile("d:\\owfe_ct.xml",
-                // ct.getJCRNode().getPath());
+
                 InFlowWorkItem wi = loadWorkItem(ct);
                 if (wi == null) {
                     log.error("can not load found workitem");
@@ -410,7 +391,5 @@ public class JCRWorkItemAPI {
         return list;
 
     }
-    //
-    // STATIC METHODS
 
 }

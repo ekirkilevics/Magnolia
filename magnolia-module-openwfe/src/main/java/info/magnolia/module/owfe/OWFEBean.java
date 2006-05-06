@@ -31,6 +31,9 @@ import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.engine.workitem.LaunchItem;
 import openwfe.org.engine.workitem.StringAttribute;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * the class implements all the interface of work flow API
@@ -38,12 +41,12 @@ import openwfe.org.engine.workitem.StringAttribute;
  */
 public class OWFEBean implements WorkflowAPI {
 
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(OWFEBean.class.getName());
+    private final static Logger log = LoggerFactory.getLogger(OWFEBean.class.getName());
 
     JCRWorkItemAPI storage = null;
 
     public OWFEBean() throws Exception {
-        storage = new JCRWorkItemAPI();
+        this.storage = new JCRWorkItemAPI();
     }
 
     /**
@@ -96,7 +99,7 @@ public class OWFEBean implements WorkflowAPI {
 
         queryString.append("]");
         log.info("xpath query string = " + queryString);
-        return storage.doQuery(queryString.toString());
+        return this.storage.doQuery(queryString.toString());
     }
 
     /**
@@ -117,7 +120,7 @@ public class OWFEBean implements WorkflowAPI {
      * remove one work item by id
      */
     public void removeWorkItem(InFlowWorkItem wi) throws Exception {
-        storage.removeWorkItem(wi.getId());
+        this.storage.removeWorkItem(wi.getId());
     }
 
     /**
@@ -125,9 +128,10 @@ public class OWFEBean implements WorkflowAPI {
      */
     public void approveActivation(String expressionId) throws Exception {
         // get workitem
-        InFlowWorkItem wi = storage.retrieveWorkItem("", FlowExpressionId.fromParseableString(expressionId));
-        if (wi == null)
+        InFlowWorkItem wi = this.storage.retrieveWorkItem("", FlowExpressionId.fromParseableString(expressionId));
+        if (wi == null) {
             throw new Exception("can't get the work iem by this expression id (" + expressionId + ")");
+        }
 
         wi.touch();
 
@@ -152,9 +156,10 @@ public class OWFEBean implements WorkflowAPI {
      */
     public void rejectActivation(String expressionId, String comment) throws Exception {
 
-        InFlowWorkItem wi = storage.retrieveWorkItem("", FlowExpressionId.fromParseableString(expressionId));
-        if (wi == null)
+        InFlowWorkItem wi = this.storage.retrieveWorkItem("", FlowExpressionId.fromParseableString(expressionId));
+        if (wi == null) {
             throw new Exception("cant not get the work iem by this expression id (" + expressionId + ")");
+        }
         wi.touch();
 
         try {
@@ -169,15 +174,16 @@ public class OWFEBean implements WorkflowAPI {
             removeWorkItem(wi);
         }
 
-        if (log.isDebugEnabled())
+        if (log.isDebugEnabled()) {
             log.debug("work item removed.");
+        }
 
         log.info("reject ok");
     }
 
     public void cancel(String expressionId) {
         try {
-            storage.removeWorkItem(FlowExpressionId.fromParseableString(expressionId));
+            this.storage.removeWorkItem(FlowExpressionId.fromParseableString(expressionId));
         }
         catch (Exception e) {
             log.info("can't cancel", e);
@@ -189,13 +195,14 @@ public class OWFEBean implements WorkflowAPI {
      */
     public void updateWorkItem(String expressionId, String[] names, String values[]) throws Exception {
 
-        InFlowWorkItem ifwi = storage.retrieveWorkItem("", FlowExpressionId.fromParseableString(expressionId));
-        if (ifwi == null)
+        InFlowWorkItem ifwi = this.storage.retrieveWorkItem("", FlowExpressionId.fromParseableString(expressionId));
+        if (ifwi == null) {
             throw new Exception("cant not get the work iem by this expression id (" + expressionId + ")");
+        }
         for (int i = 0; i < names.length; i++) {
             ifwi.setAttribute(names[i], new StringAttribute(values[i]));
         }
-        storage.storeWorkItem("", ifwi);
+        this.storage.storeWorkItem("", ifwi);
     }
 
     /**
@@ -220,7 +227,7 @@ public class OWFEBean implements WorkflowAPI {
 
         InFlowWorkItem if_wi = null;
         try {
-            if_wi = storage.retrieveWorkItem("", eid);
+            if_wi = this.storage.retrieveWorkItem("", eid);
         }
         catch (Exception e) {
             log.error("retrieve work item failed", e);
@@ -245,7 +252,7 @@ public class OWFEBean implements WorkflowAPI {
 
         try {
             wi.addAttribute("assignTo", new StringAttribute(userName));
-            storage.storeWorkItem("", wi);
+            this.storage.storeWorkItem("", wi);
         }
         catch (Exception e) {
             log.error("assign work item to user " + userName + " failed.)", e);
@@ -268,7 +275,7 @@ public class OWFEBean implements WorkflowAPI {
         queryString.append("\"]");
 
         log.info("xpath query string = " + queryString);
-        return storage.doQuery(queryString.toString());
+        return this.storage.doQuery(queryString.toString());
 
     }
 
@@ -287,7 +294,7 @@ public class OWFEBean implements WorkflowAPI {
         queryString.append("\"]");
 
         log.info("xpath query string = " + queryString);
-        return storage.doQuery(queryString.toString());
+        return this.storage.doQuery(queryString.toString());
     }
 
     /**
@@ -302,8 +309,9 @@ public class OWFEBean implements WorkflowAPI {
      */
     public void LaunchFlow(HierarchyManager hm, String path, String flowName) throws Exception {
         log.debug("- Lauch flow -" + this.getClass().toString() + "- Start");
-        if (flowName == null || flowName.length() == 0)
+        if (flowName == null || flowName.length() == 0) {
             throw new IllegalArgumentException("flowName is null or empty string");
+        }
         try {
             // Get the references
             LaunchItem li = new LaunchItem();
@@ -316,10 +324,12 @@ public class OWFEBean implements WorkflowAPI {
             JCRPersistedEngine engine = OWFEEngine.getEngine();
 
             // start activation
-            if (hm != null)
+            if (hm != null) {
                 li.addAttribute(MgnlConstants.P_HM, AttributeUtils.java2owfe(hm));
-            if (path != null)
+            }
+            if (path != null) {
                 li.addAttribute(MgnlConstants.P_PATH, new StringAttribute(path));
+            }
 
             // Launch the item
             engine.launch(li, true);
@@ -329,9 +339,7 @@ public class OWFEBean implements WorkflowAPI {
             log.error("Launching flow " + flowName + " failed", e);
         }
 
-        // End execution
-        // if (log.isDebugEnabled())
-        log.debug("- Lauch flow -" + this.getClass().toString() + "- End");
+        log.debug("- Lauch flow -{}- End", this.getClass().getName());
 
     }
 
