@@ -69,7 +69,7 @@ public class TreeHandlerManager extends ObservedManager {
     }
 
     protected void registerTreeHandler(String name, String repository, Class treeHandler) {
-        log.info("Registering tree handler [" + name + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+        log.info("Registering tree handler {}", name); //$NON-NLS-1$ //$NON-NLS-2$
         treeHandlers.put(name, new TreeHandlerConfig(treeHandler, repository));
     }
 
@@ -79,7 +79,7 @@ public class TreeHandlerManager extends ObservedManager {
             Content tree = (Content) iter.next();
             String name = tree.getNodeData("name").getString(); //$NON-NLS-1$
 
-            if (name == null) {
+            if (StringUtils.isEmpty(name)) {
                 name = tree.getName();
             }
 
