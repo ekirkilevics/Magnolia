@@ -22,6 +22,7 @@ import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.core.ie.DataTransporter;
 import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.cms.util.ContentUtil;
 
 import java.io.File;
@@ -221,7 +222,7 @@ public final class ModuleUtil {
         for (int j = 0; j < names.length; j++) {
             String name = names[j];
 
-            InputStream resourceStream = ModuleUtil.class.getResourceAsStream(name);
+            InputStream resourceStream = ClasspathResourcesUtil.getStream(name, false);
 
             File targetFile = new File(Path.getAbsoluteFileSystemPath(StringUtils.removeStart(name, prefix)));
 
