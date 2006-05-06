@@ -44,6 +44,7 @@ import javax.servlet.ServletContextEvent;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.jackrabbit.core.WorkspaceImpl;
@@ -235,10 +236,27 @@ public class ProviderImpl implements Provider {
     /**
      * @see info.magnolia.repository.Provider#registerNodeTypes(javax.jcr.Workspace)
      */
-    public void registerNodeTypes(Workspace workspace) throws RepositoryException {
+    public void registerNodeTypes() throws RepositoryException {
+        registerNodeTypes(null);
+    }
+
+    /**
+     * @see info.magnolia.repository.Provider#registerNodeTypes(java.lang.String)
+     */
+    public void registerNodeTypes(String configuration) throws RepositoryException {
 
         log.info("Registering node types");
-        InputStream xml = getNodeTypeDefinition(workspace.getName());
+
+        // check if workspace already exists
+        SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
+        Session jcrSession = this.repository.login(credentials);
+        Workspace workspace = jcrSession.getWorkspace();
+
+        if (configuration == null) {
+            configuration = (String) this.repositoryMapping.getParameters().get(CUSTOM_NODETYPES);
+        }
+
+        InputStream xml = getNodeTypeDefinition(configuration);
 
         // should never happen
         if (xml == null) {
@@ -288,21 +306,21 @@ public class ProviderImpl implements Provider {
     /**
      * @return
      */
-    private InputStream getNodeTypeDefinition(String workspaceName) {
-        String customNodeTypes = (String) this.repositoryMapping.getParameters().get(CUSTOM_NODETYPES);
+    private InputStream getNodeTypeDefinition(String configuration) {
+
         InputStream xml;
 
-        if (StringUtils.isNotEmpty(customNodeTypes)) {
+        if (StringUtils.isNotEmpty(configuration)) {
 
             // 1: try to load the configured file from the classpath
-            xml = getClass().getResourceAsStream(customNodeTypes);
+            xml = getClass().getResourceAsStream(configuration);
             if (xml != null) {
-                log.info("Custom node types registered using {}", customNodeTypes);
+                log.info("Custom node types registered using {}", configuration);
                 return xml;
             }
 
             // 2: try to load it from the file system
-            File nodeTypeDefinition = new File(Path.getAbsoluteFileSystemPath(customNodeTypes));
+            File nodeTypeDefinition = new File(Path.getAbsoluteFileSystemPath(configuration));
             if (nodeTypeDefinition.exists()) {
                 try {
                     xml = new FileInputStream(nodeTypeDefinition);
@@ -317,7 +335,10 @@ public class ProviderImpl implements Provider {
             }
 
             // 3: defaults to standard nodetypes
-            log.error("Unable to find node type definition: {} for workspace {}", customNodeTypes, workspaceName);
+            log.error(
+                "Unable to find node type definition: {} for repository {}",
+                configuration,
+                this.repositoryMapping.getName());
         }
 
         // initialize default magnolia nodetypes
@@ -351,26 +372,30 @@ public class ProviderImpl implements Provider {
      * checks if all workspaces are present according to the repository mapping, creates any missing workspace
      */
     private void validateWorkspaces() throws RepositoryException {
-        // check if all workspaces are present
+        Iterator configuredNames = repositoryMapping.getWorkspaces().iterator();
+        while (configuredNames.hasNext()) {
+            registerWorkspace((String) configuredNames.next());
+        }
+    }
+
+    /**
+     * @see info.magnolia.repository.Provider#registerWorkspace(java.lang.String)
+     */
+    public boolean registerWorkspace(String workspaceName) throws RepositoryException {
+
+        // check if workspace already exists
         SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
         Session jcrSession = this.repository.login(credentials);
         WorkspaceImpl defaultWorkspace = (WorkspaceImpl) jcrSession.getWorkspace();
         String[] workspaceNames = defaultWorkspace.getAccessibleWorkspaceNames();
-        Iterator configuredNames = repositoryMapping.getWorkspaces().iterator();
-        while (configuredNames.hasNext()) {
-            String name = (String) configuredNames.next();
-            // check if its available
-            boolean available = false;
-            for (int index = 0; index < workspaceNames.length; index++) {
-                if (name.equalsIgnoreCase(workspaceNames[index])) {
-                    available = true;
-                }
-            }
-            if (!available) {
-                // create an empty workspace
-                defaultWorkspace.createWorkspace(name);
-            }
+
+        boolean alreadyExists = ArrayUtils.contains(workspaceNames, workspaceName);
+        if (!alreadyExists) {
+            defaultWorkspace.createWorkspace(workspaceName);
         }
+        jcrSession.logout();
+
+        return !alreadyExists;
     }
 
 }

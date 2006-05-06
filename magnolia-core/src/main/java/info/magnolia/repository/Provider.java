@@ -57,8 +57,22 @@ public interface Provider {
 
     /**
      * Node type registration is entirely dependent on the implementation. Refer JSR-170 specifications.
-     * @param workspace session workspace instance
      * @throws RepositoryException
      */
-    void registerNodeTypes(Workspace workspace) throws RepositoryException;
+    void registerNodeTypes() throws RepositoryException;
+
+    /**
+     * Node type registration is entirely dependent on the implementation. Refer JSR-170 specifications.
+     * @throws RepositoryException
+     */
+    void registerNodeTypes(String configuration) throws RepositoryException;
+
+    /**
+     * Register a new workspace in the current repository
+     * @param workspaceName workspace name
+     * @return <code>true</code> true if the workspace is registered now of <code>false</code> if it was already
+     * registered
+     * @throws RepositoryException if any exception occours during registration
+     */
+    boolean registerWorkspace(String workspaceName) throws RepositoryException;
 }

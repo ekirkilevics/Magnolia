@@ -77,7 +77,6 @@
         <Map name="usergroups" repositoryName="magnolia"/>
         <Map name="mgnlSystem" repositoryName="magnolia"/> <!-- System internal data -->
         <Map name="mgnlVersion" repositoryName="magnolia"/> <!-- magnolia version workspace -->
-        <Map name="owfe" repositoryName="owfe"/>
     </RepositoryMapping>
 
     <!-- magnolia default repository -->
@@ -98,16 +97,4 @@
         <workspace name="mgnlSystem" />
         <workspace name="mgnlVersion" />
     </Repository>
-    <!-- workflow module -->
-    <Repository name="owfe" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
-        <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-derby-search.xml" />
-        <param name="repositoryHome" value="repositories/owfe" />
-        <param name="customNodeTypes" value="/mgnl-nodetypes/owfe-nodetypes.xml" />
-        <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory" />
-        <param name="providerURL" value="localhost" />
-        <param name="bindName" value="owfeAuthor" />
-        <workspace name="owfe" />
-        <workspace name="Store" />
-        <workspace name="Expressions" />
-   </Repository>
 </JCR>

@@ -331,7 +331,7 @@ public final class ContentRepository {
             SimpleCredentials sc = new SimpleCredentials(REPOSITORY_USER, REPOSITORY_PSWD.toCharArray());
             Session session = repository.login(sc, wspID);
             provider.registerNamespace(NAMESPACE_PREFIX, NAMESPACE_URI, session.getWorkspace());
-            provider.registerNodeTypes(session.getWorkspace());
+            provider.registerNodeTypes();
             AccessManagerImpl accessManager = getAccessManager();
             HierarchyManager hierarchyManager = new HierarchyManager(REPOSITORY_USER);
             hierarchyManager.init(session.getRootNode());

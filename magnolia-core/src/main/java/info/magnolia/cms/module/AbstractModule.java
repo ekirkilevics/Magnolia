@@ -157,7 +157,10 @@ public abstract class AbstractModule implements Module {
      * @return
      */
     public String getName() {
-        return definition.getName();
+        if (definition != null) {
+            return definition.getName();
+        }
+        return null;
     }
 
     /**
@@ -208,14 +211,20 @@ public abstract class AbstractModule implements Module {
      * @throws ConfigurationExceptionJDOMException
      */
     protected void registerRepositories(ModuleDefinition def) throws RegisterException {
+        boolean restartNeeded = false;
+
         // register repositories
         for (Iterator iter = def.getRepositories().iterator(); iter.hasNext();) {
             RepositoryDefinition repDef = (RepositoryDefinition) iter.next();
-            ModuleUtil.registerRepository(repDef.getName(), repDef.getNodeTypeFile());
+
+            restartNeeded = restartNeeded || ModuleUtil.registerRepository(repDef.getName(), repDef.getNodeTypeFile());
             for (Iterator iterator = repDef.getWorkspaces().iterator(); iterator.hasNext();) {
                 String workspace = (String) iterator.next();
-                ModuleUtil.registerWorkspace(repDef.getName(), workspace);
+                restartNeeded = restartNeeded || ModuleUtil.registerWorkspace(repDef.getName(), workspace);
             }
+        }
+
+        if (restartNeeded) {
             this.setRestartNeeded(true);
         }
     }
@@ -227,10 +236,15 @@ public abstract class AbstractModule implements Module {
      * @throws IOException
      */
     protected void registerServlets(ModuleDefinition def) throws JDOMException, IOException {
+        boolean restartNeeded = false;
+
         // register servlets
         for (Iterator iter = def.getServlets().iterator(); iter.hasNext();) {
             ServletDefinition servlet = (ServletDefinition) iter.next();
-            ModuleUtil.registerServlet(servlet);
+            restartNeeded = restartNeeded || ModuleUtil.registerServlet(servlet);
+        }
+
+        if (restartNeeded) {
             this.setRestartNeeded(true);
         }
     }
@@ -251,6 +265,13 @@ public abstract class AbstractModule implements Module {
         });
 
         ModuleUtil.bootstrap(moduleBootstrap);
+    }
+
+    /**
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        return getClass().getName() + " (" + getName() + " module)";
     }
 
 }

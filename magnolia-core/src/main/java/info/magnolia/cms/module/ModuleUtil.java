@@ -24,6 +24,7 @@ import info.magnolia.cms.core.ie.DataTransporter;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.repository.Provider;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -284,15 +285,14 @@ public final class ModuleUtil {
      * @throws JDOMException
      * @throws IOException
      */
-    public static void registerServlet(ServletDefinition servlet) throws JDOMException, IOException {
+    public static boolean registerServlet(ServletDefinition servlet) throws JDOMException, IOException {
         String[] urlPatterns = (String[]) servlet.getMappings().toArray(new String[servlet.getMappings().size()]);
         Hashtable params = new Hashtable();
         for (Iterator iter = servlet.getParams().iterator(); iter.hasNext();) {
             ServletParameterDefinition param = (ServletParameterDefinition) iter.next();
             params.put(param.getName(), param.getValue());
         }
-        registerServlet(servlet.getName(), servlet.getClassName(), urlPatterns, servlet.getComment(), params);
-
+        return registerServlet(servlet.getName(), servlet.getClassName(), urlPatterns, servlet.getComment(), params);
     }
 
     /**
@@ -304,9 +304,9 @@ public final class ModuleUtil {
      * @throws JDOMException
      * @throws IOException
      */
-    public static void registerServlet(String name, String className, String[] urlPatterns, String comment)
+    public static boolean registerServlet(String name, String className, String[] urlPatterns, String comment)
         throws JDOMException, IOException {
-        registerServlet(name, className, urlPatterns, comment, null);
+        return registerServlet(name, className, urlPatterns, comment, null);
     }
 
     /**
@@ -319,8 +319,11 @@ public final class ModuleUtil {
      * @throws JDOMException
      * @throws IOException
      */
-    public static void registerServlet(String name, String className, String[] urlPatterns, String comment,
+    public static boolean registerServlet(String name, String className, String[] urlPatterns, String comment,
         Hashtable initParams) throws JDOMException, IOException {
+
+        boolean changed = false;
+
         // get the web.xml
         File source = new File(Path.getAppRootDir() + "/WEB-INF/web.xml");
         if (!source.exists()) {
@@ -331,7 +334,6 @@ public final class ModuleUtil {
         Document doc = builder.build(source);
 
         // check if there already registered
-
         XPath xpath = XPath.newInstance("/webxml:web-app/webxml:servlet[webxml:servlet-name='" + name + "']");
         // must add the namespace and use it: there is no default namespace elsewise
         xpath.addNamespace("webxml", doc.getRootElement().getNamespace().getURI());
@@ -363,20 +365,24 @@ public final class ModuleUtil {
             }
 
             doc.getRootElement().addContent(node);
+            changed = true;
         }
         else {
-            log.info("servlet " + name + " allready registered");
+            log.info("servlet {} already registered", name);
         }
         for (int i = 0; i < urlPatterns.length; i++) {
             String urlPattern = urlPatterns[i];
-            registerServletMapping(doc, name, urlPattern, comment);
+            changed = changed || registerServletMapping(doc, name, urlPattern, comment);
         }
 
-        XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
-        outputter.output(doc, new FileWriter(source));
+        if (changed) {
+            XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
+            outputter.output(doc, new FileWriter(source));
+        }
+        return changed;
     }
 
-    public static void registerServletMapping(Document doc, String name, String urlPattern, String comment)
+    public static boolean registerServletMapping(Document doc, String name, String urlPattern, String comment)
         throws JDOMException {
         XPath xpath = XPath.newInstance("/webxml:web-app/webxml:servlet-mapping[webxml:servlet-name='"
             + name
@@ -401,17 +407,26 @@ public final class ModuleUtil {
             node.addContent(new Element("servlet-name", ns).addContent(name));
             node.addContent(new Element("url-pattern", ns).addContent(urlPattern));
             doc.getRootElement().addContent(node);
+            return true;
+
         }
-        else {
-            log.info("servlet mapping [{}] for servlet [{}] allready registered", urlPattern, name);
-        }
+
+        log.info("servlet mapping [{}] for servlet [{}] allready registered", urlPattern, name);
+        return false;
     }
 
-    public static void registerRepository(String name) throws RegisterException {
-        registerRepository(name, null);
+    public static boolean registerRepository(String name) throws RegisterException {
+        return registerRepository(name, null);
     }
 
-    public static void registerRepository(String repositoryName, String nodeTypeFile) throws RegisterException {
+    /**
+     * Register a repository
+     * @param repositoryName
+     * @param nodeTypeFile
+     * @return <code>true</code> if a repository is registered or <code>false</code> if it was already existing
+     * @throws RegisterException
+     */
+    public static boolean registerRepository(String repositoryName, String nodeTypeFile) throws RegisterException {
         try {
             Document doc = getRepositoryDefinitionDocument();
             // check if there
@@ -479,12 +494,37 @@ public final class ModuleUtil {
                 // save it
                 XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
                 outputter.output(doc, new FileWriter(getRepositoryDefinitionFile()));
+
+                return true;
             }
         }
         catch (Exception e) {
             log.error("can't register repository", e);
             throw new RegisterException("can't register repository", e);
         }
+
+        return false;
+    }
+
+    public static void registerNodetypes(String repositoryName, String customNodetypes) throws RegisterException {
+        Provider provider = ContentRepository.getRepositoryProvider(repositoryName);
+
+        if (provider == null) {
+            throw new RegisterException("before registering nodetypes you need to register the repository ["
+                + repositoryName
+                + "]");
+        }
+
+        try {
+            provider.registerNodeTypes(customNodetypes);
+        }
+        catch (RepositoryException e) {
+            throw new RegisterException("Error registering nodetypes for repository ["
+                + repositoryName
+                + "]: "
+                + e.getMessage(), e);
+        }
+
     }
 
     /**
@@ -516,7 +556,12 @@ public final class ModuleUtil {
      * @throws IOException
      * @throws JDOMException
      */
-    public static void registerWorkspace(String repositoryName, String workspaceName) throws RegisterException {
+    public static boolean registerWorkspace(String repositoryName, String workspaceName) throws RegisterException {
+
+        // Provider provider = ContentRepository.getRepositoryProvider(repositoryName);
+        // provider.registerWorkspace(repositoryName);
+
+        boolean restartNeeded = false;
 
         try {
             Document doc = getRepositoryDefinitionDocument();
@@ -542,6 +587,7 @@ public final class ModuleUtil {
                 workspaceNode = new Element("workspace");
                 workspaceNode.setAttribute("name", workspaceName);
                 repositoryNode.addContent(workspaceNode);
+                restartNeeded = true;
             }
 
             // make the mapping
@@ -558,5 +604,7 @@ public final class ModuleUtil {
             log.error("can't register workspace [" + workspaceName + "]", e);
             throw new RegisterException("can't register workspace [" + workspaceName + "]", e);
         }
+
+        return restartNeeded;
     }
 }

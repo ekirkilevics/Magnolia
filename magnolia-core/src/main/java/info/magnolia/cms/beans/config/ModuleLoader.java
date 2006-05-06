@@ -62,7 +62,6 @@ public final class ModuleLoader {
      */
     private Map modules = new HashMap();
 
-
     /**
      * Don't instantiate.
      */
@@ -162,16 +161,19 @@ public final class ModuleLoader {
                     ModuleRegistration.getInstance().setRestartNeeded(true);
                 }
             }
-            final Module m = module; 
+            final Module m = module;
             // add destroy method as a shutdown task
             ShutdownManager.addShutdownTask(new ShutdownManager.ShutdownTask() {
+
                 public void execute(ServletContextEvent sce) {
                     m.destroy();
                 }
+
+                public String toString() {
+                    return getClass().getName() + " " + m;
+                }
             });
 
-
-            
         }
         catch (Exception e) {
             log.error("can't initialize module " + moduleNode.getHandle(), e); //$NON-NLS-1$
@@ -203,11 +205,11 @@ public final class ModuleLoader {
     public Module getModuleInstance(String name) {
         return (Module) this.modules.get(name);
     }
-    
+
     /**
      * @return the map containing the modules
      */
-    public Map getModuleInstances(){
+    public Map getModuleInstances() {
         return this.modules;
     }
 
