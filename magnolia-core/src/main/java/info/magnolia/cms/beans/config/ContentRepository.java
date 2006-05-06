@@ -144,7 +144,7 @@ public final class ContentRepository {
     /**
      * holds all repository names as configured in repositories.xml
      */
-    private static Map repositoryNameMap;
+    private static Map repositoryNameMap = new Hashtable();
 
     /**
      * Utility class, don't instantiate.
@@ -284,10 +284,9 @@ public final class ContentRepository {
     private static void loadRepositoryNameMap(Element root) {
         Element repositoryMapping = root.getChild(ContentRepository.ELEMENT_REPOSITORYMAPPING);
         Iterator children = repositoryMapping.getChildren().iterator();
-        ContentRepository.repositoryNameMap = new Hashtable();
         while (children.hasNext()) {
             Element nameMap = (Element) children.next();
-            ContentRepository.repositoryNameMap.put(nameMap.getAttributeValue(ATTRIBUTE_NAME), nameMap
+            addMappedRepositoryName(nameMap.getAttributeValue(ATTRIBUTE_NAME), nameMap
                 .getAttributeValue(ATTRIBUTE_REPOSITORY_NAME));
         }
     }
@@ -401,8 +400,18 @@ public final class ContentRepository {
      * @param name
      * @return mapped name as in repositories.xml RepositoryMapping element
      */
-    private static String getMappedRepositoryName(String name) {
+    public static String getMappedRepositoryName(String name) {
         return (String) ContentRepository.repositoryNameMap.get(name);
+    }
+
+    /**
+     * Add a mapped repository name
+     * @param name
+     * @param repositoryName
+     * @return mapped name as in repositories.xml RepositoryMapping element
+     */
+    public static void addMappedRepositoryName(String name, String repositoryName) {
+        ContentRepository.repositoryNameMap.put(name, repositoryName);
     }
 
     /**

@@ -558,8 +558,24 @@ public final class ModuleUtil {
      */
     public static boolean registerWorkspace(String repositoryName, String workspaceName) throws RegisterException {
 
-        // Provider provider = ContentRepository.getRepositoryProvider(repositoryName);
-        // provider.registerWorkspace(repositoryName);
+        Provider provider = ContentRepository.getRepositoryProvider(repositoryName);
+
+        if (provider == null) {
+            throw new RegisterException("before registering a workspace ["
+                + workspaceName
+                + "] you need to register the repository ["
+                + repositoryName
+                + "]");
+        }
+
+        try {
+            // immediate registration
+            provider.registerWorkspace(repositoryName);
+            ContentRepository.addMappedRepositoryName(workspaceName, repositoryName);
+        }
+        catch (RepositoryException e) {
+            throw new RegisterException("can't register workspace [" + workspaceName + "]", e);
+        }
 
         boolean changed = false;
 
@@ -609,7 +625,7 @@ public final class ModuleUtil {
             }
         }
         catch (Exception e) {
-            log.error("can't register workspace [" + workspaceName + "]", e);
+            log.error("Can't register workspace [" + workspaceName + "]", e);
             throw new RegisterException("can't register workspace [" + workspaceName + "]", e);
         }
 
