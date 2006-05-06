@@ -512,4 +512,52 @@ This page has no content and it will redirect to
       <description>The maximum height of the image in pixels.</description>
     </attribute>
   </tag>
+  <tag>
+    <name>simpleMail</name>
+    <tag-class>info.magnolia.cms.taglibs.util.SimpleMailTag</tag-class>
+    <body-content>empty</body-content>
+    <description>Sends a simple mail generated with all the fields found in nodeCollectionName.</description>
+    <attribute>
+      <name>nodeCollectionName</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Collection (paragraphs) that holds the configured form fields.</description>
+    </attribute>
+    <attribute>
+      <name>to</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Mail "to" field</description>
+    </attribute>
+    <attribute>
+      <name>cc</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Mail "cc" field</description>
+    </attribute>
+    <attribute>
+      <name>bcc</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Mail "bcc" field</description>
+    </attribute>
+    <attribute>
+      <name>from</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Mail "from" field</description>
+    </attribute>
+    <attribute>
+      <name>subject</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Mail "subject" field</description>
+    </attribute>
+    <attribute>
+      <name>redirect</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Page to redirect to after a successfull submission</description>
+    </attribute>
+  </tag>
 </taglib>

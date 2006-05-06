@@ -1,9 +1,6 @@
 <jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:cms="urn:jsptld:cms-taglib"
   xmlns:cmsu="urn:jsptld:cms-util-taglib" xmlns:c="urn:jsptld:http://java.sun.com/jsp/jstl/core">
   <jsp:directive.page contentType="text/html; charset=UTF-8" session="false" />
-  <jsp:directive.page import="info.magnolia.cms.util.Resource" />
-  <jsp:directive.page import="info.magnolia.cms.core.Content" />
-  <jsp:directive.page import="info.magnolia.cms.gui.inline.BarMain" />
   <jsp:text>
     <![CDATA[
         <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -19,18 +16,10 @@
       </c:if>
       <br />
       <br />
-      <jsp:scriptlet>
-        <![CDATA[
-        // prepare page title
-        String title = Resource.getActivePage(request).getNodeData("title").getString();
-        if (title == null) {
-          title = Resource.getActivePage(request).getNodeData("contentTitle").getString();
-        }
-        title = title.toUpperCase();
-        // make it accessable for jstl
-        pageContext.setAttribute("title", title);
-        ]]>
-      </jsp:scriptlet>
+      <cms:out nodeDataName="title" var="title" />
+      <c:if test="${empty(title)}">
+        <cms:out nodeDataName="contentTitle" var="title" />
+      </c:if>
       <cms:contentNodeIterator contentNodeCollectionName="mainColumnParagraphs">
         <cms:out nodeDataName="lineAbove" var="lineAbove" />
         <div style="clear:both;">

@@ -29,7 +29,7 @@
         <sv:value>2006-03-31T13:46:25.974+09:00</sv:value>
     </sv:property>
     <sv:property sv:name="smtpServer" sv:type="String">
-        <sv:value>64.143.71.112</sv:value>
+        <sv:value>localhost</sv:value>
     </sv:property>
     <sv:property sv:name="smtpPassword" sv:type="String">
         <sv:value/>

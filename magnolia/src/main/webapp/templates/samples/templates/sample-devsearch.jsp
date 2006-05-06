@@ -44,9 +44,13 @@
           <h2>${param.sql}</h2>
           <c:catch var="exc">
             <jsp:scriptlet>
-              String sql = request.getParameter("sql"); String language = request.getParameter("language"); Query q =
-              MgnlContext.getQueryManager(ContentRepository.WEBSITE).createQuery(sql, language); QueryResult result =
-              q.execute(); pageContext.setAttribute("result", result.getContent("mgnl:content").iterator());
+              <![CDATA[
+              String sql = request.getParameter("sql");
+              String language = request.getParameter("language");
+              Query q = MgnlContext.getQueryManager(ContentRepository.WEBSITE).createQuery(sql, language);
+              QueryResult result = q.execute();
+              pageContext.setAttribute("result", result.getContent("mgnl:content").iterator());
+              ]]>
             </jsp:scriptlet>
             <h3>Resulting objects of NodeType (mgnl:content)</h3>
             <c:forEach var="node" items="${result}">
