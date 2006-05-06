@@ -173,7 +173,7 @@ public class ClasspathResourcesUtil {
     }
 
     public static InputStream getStream(String name) throws IOException {
-        return getStream(name, !cache);
+        return getStream(name, cache);
     }
     
     /**
