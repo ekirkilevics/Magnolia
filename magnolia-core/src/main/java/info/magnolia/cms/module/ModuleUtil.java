@@ -372,7 +372,7 @@ public final class ModuleUtil {
         }
         for (int i = 0; i < urlPatterns.length; i++) {
             String urlPattern = urlPatterns[i];
-            changed = changed || registerServletMapping(doc, name, urlPattern, comment);
+            changed = changed | registerServletMapping(doc, name, urlPattern, comment);
         }
 
         if (changed) {
