@@ -135,7 +135,7 @@ public class PropertyInitializer implements ServletContextListener {
     /**
      * Environment-specific properties.
      */
-    private Properties envProperties = new Properties();
+    protected Properties envProperties = new Properties();
 
     /**
      * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
@@ -148,12 +148,12 @@ public class PropertyInitializer implements ServletContextListener {
      * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
      */
     public void contextInitialized(ServletContextEvent sce) {
-        ServletContext context = sce.getServletContext();
+        final ServletContext context = sce.getServletContext();
 
         String propertiesLocationString = context.getInitParameter(MAGNOLIA_INITIALIZATION_FILE);
 
         if (log.isDebugEnabled()) {
-            log.debug(MAGNOLIA_INITIALIZATION_FILE + " value in web.xml is :[" + propertiesLocationString + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+            log.debug("{} value in web.xml is :[{}]", MAGNOLIA_INITIALIZATION_FILE, propertiesLocationString); //$NON-NLS-1$
         }
         if (StringUtils.isEmpty(propertiesLocationString)) {
             propertiesLocationString = DEFAULT_INITIALIZATION_PARAMETER;
@@ -174,7 +174,7 @@ public class PropertyInitializer implements ServletContextListener {
         String webapp = StringUtils.substringAfterLast(rootPath, "/"); //$NON-NLS-1$
 
         if (log.isDebugEnabled()) {
-            log.debug("rootPath is [" + rootPath + "], webapp is [" + webapp + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            log.debug("rootPath is {}, webapp is {}", rootPath, webapp); //$NON-NLS-1$ 
         }
 
         for (int j = 0; j < propertiesLocation.length; j++) {
@@ -186,8 +186,8 @@ public class PropertyInitializer implements ServletContextListener {
 
             if (!initFile.exists() || initFile.isDirectory()) {
                 if (log.isDebugEnabled()) {
-                    log.debug(MessageFormat.format("Configuration file not found with path [{0}]", //$NON-NLS-1$
-                        new Object[]{initFile.getAbsolutePath()}));
+                    log.debug("Configuration file not found with path [{}]", //$NON-NLS-1$
+                        initFile.getAbsolutePath());
                 }
                 continue;
             }
@@ -197,21 +197,20 @@ public class PropertyInitializer implements ServletContextListener {
                 fileStream = new FileInputStream(initFile);
             }
             catch (FileNotFoundException e1) {
-
-                log.error(MessageFormat.format("Configuration file not found with path [{0}]", //$NON-NLS-1$
-                    new Object[]{initFile.getAbsolutePath()}));
+                log.debug("Configuration file not found with path [{}]", //$NON-NLS-1$
+                    initFile.getAbsolutePath());
                 return;
             }
 
             try {
                 envProperties.load(fileStream);
 
-                log.info(MessageFormat.format("Loading configuration at {0}", new Object[]{initFile //$NON-NLS-1$
-                    .getAbsolutePath()}));
+                log.info("Loading configuration at {}", initFile.getAbsolutePath());//$NON-NLS-1$
 
                 Log4jConfigurer.initLogging(context, envProperties);
 
                 new ConfigLoader(context, envProperties);
+
             }
             catch (Exception e) {
                 log.error(e.getMessage(), e);
