@@ -1,3 +1,15 @@
+/**
+ *
+ * Magnolia and its source-code is licensed under the LGPL.
+ * You may copy, adapt, and redistribute this file for commercial or non-commercial use.
+ * When copying, adapting, or redistributing this document in keeping with the guidelines above,
+ * you are required to provide proper attribution to obinary.
+ * If you reproduce or distribute the document without making any substantive modifications to its content,
+ * please use the following attribution line:
+ *
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ *
+ */
 package info.magnolia.jackrabbit;
 
 import info.magnolia.cms.beans.config.ShutdownManager;
@@ -31,6 +43,7 @@ import javax.naming.NamingException;
 import javax.servlet.ServletContextEvent;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.jackrabbit.core.WorkspaceImpl;
@@ -63,7 +76,7 @@ public class ProviderImpl implements Provider {
 
     private static final String BIND_NAME_KEY = "bindName"; //$NON-NLS-1$
 
-    private static final String MGNL_NODETYPES = "mgnl_nodetypes.xml"; //$NON-NLS-1$
+    private static final String MGNL_NODETYPES = "/mgnl-nodetypes/magnolia-nodetypes.xml"; //$NON-NLS-1$
 
     private static final String CUSTOM_NODETYPES = "customNodeTypes"; //$NON-NLS-1$
 
@@ -225,24 +238,11 @@ public class ProviderImpl implements Provider {
     public void registerNodeTypes(Workspace workspace) throws RepositoryException {
 
         log.info("Registering node types");
-        InputStream xml;
-        String customNodeTypes = (String) this.repositoryMapping.getParameters().get(CUSTOM_NODETYPES);
-        if (StringUtils.isEmpty(customNodeTypes)) {
+        InputStream xml = getNodeTypeDefinition(workspace.getName());
 
-            log.debug("No custom node type definition found, registering default magnolia node types");
-            xml = getClass().getClassLoader().getResourceAsStream(MGNL_NODETYPES);
-        }
-        else {
-            File nodeTypeDefinition = new File(Path.getAbsoluteFileSystemPath(customNodeTypes));
-            try {
-                xml = new FileInputStream(nodeTypeDefinition);
-                log.info("Custom node types registered using {}", customNodeTypes);
-            }
-            catch (FileNotFoundException e) {
-                log.error("Unable to find node type definition: {}", customNodeTypes);
-                // initialize default magnolia nodetypes
-                xml = getClass().getClassLoader().getResourceAsStream(MGNL_NODETYPES);
-            }
+        // should never happen
+        if (xml == null) {
+            throw new MissingNodetypesException();
         }
 
         NodeTypeDef[] types;
@@ -254,6 +254,9 @@ public class ProviderImpl implements Provider {
         }
         catch (IOException e) {
             throw new RepositoryException(e.getMessage(), e);
+        }
+        finally {
+            IOUtils.closeQuietly(xml);
         }
 
         NodeTypeManager ntMgr = workspace.getNodeTypeManager();
@@ -280,6 +283,47 @@ public class ProviderImpl implements Provider {
             }
 
         }
+    }
+
+    /**
+     * @return
+     */
+    private InputStream getNodeTypeDefinition(String workspaceName) {
+        String customNodeTypes = (String) this.repositoryMapping.getParameters().get(CUSTOM_NODETYPES);
+        InputStream xml;
+
+        if (StringUtils.isNotEmpty(customNodeTypes)) {
+
+            // 1: try to load the configured file from the classpath
+            xml = getClass().getResourceAsStream(customNodeTypes);
+            if (xml != null) {
+                log.info("Custom node types registered using {}", customNodeTypes);
+                return xml;
+            }
+
+            // 2: try to load it from the file system
+            File nodeTypeDefinition = new File(Path.getAbsoluteFileSystemPath(customNodeTypes));
+            if (nodeTypeDefinition.exists()) {
+                try {
+                    xml = new FileInputStream(nodeTypeDefinition);
+                    if (xml != null) {
+                        return xml;
+                    }
+                }
+                catch (FileNotFoundException e) {
+                    // should never happen
+                    log.error("File not found: {}", xml);
+                }
+            }
+
+            // 3: defaults to standard nodetypes
+            log.error("Unable to find node type definition: {} for workspace {}", customNodeTypes, workspaceName);
+        }
+
+        // initialize default magnolia nodetypes
+        xml = getClass().getResourceAsStream(MGNL_NODETYPES);
+
+        return xml;
     }
 
     /**
