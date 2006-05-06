@@ -411,11 +411,11 @@ public final class ModuleUtil {
         registerRepository(name, null);
     }
 
-    public static void registerRepository(String name, String nodeTypeFile) throws RegisterException {
+    public static void registerRepository(String repositoryName, String nodeTypeFile) throws RegisterException {
         try {
             Document doc = getRepositoryDefinitionDocument();
             // check if there
-            Element node = (Element) XPath.selectSingleNode(doc, "/JCR/Repository[@name='" + name + "']");
+            Element node = (Element) XPath.selectSingleNode(doc, "/JCR/Repository[@name='" + repositoryName + "']");
             if (node == null) {
                 // create
                 node = new Element("Repository");
@@ -428,7 +428,7 @@ public final class ModuleUtil {
                 String repositoryHome = ((Element) XPath.selectSingleNode(
                     doc,
                     "/JCR/Repository[@name='magnolia']/param[@name='repositoryHome']")).getAttributeValue("value");
-                repositoryHome = StringUtils.substringBeforeLast(repositoryHome, "/") + "/" + name;
+                repositoryHome = StringUtils.substringBeforeLast(repositoryHome, "/") + "/" + repositoryName;
                 String contextFactoryClass = ((Element) XPath.selectSingleNode(
                     doc,
                     "/JCR/Repository[@name='magnolia']/param[@name='contextFactoryClass']")).getAttributeValue("value");
@@ -438,10 +438,10 @@ public final class ModuleUtil {
                 String bindName = ((Element) XPath.selectSingleNode(
                     doc,
                     "/JCR/Repository[@name='magnolia']/param[@name='bindName']")).getAttributeValue("value");
-                bindName = StringUtils.replace(bindName, "magnolia", name);
+                bindName = StringUtils.replace(bindName, "magnolia", repositoryName);
 
-                node.setAttribute("name", name);
-                node.setAttribute("id", name);
+                node.setAttribute("name", repositoryName);
+                node.setAttribute("id", repositoryName);
                 node.setAttribute("loadOnStartup", "true");
                 node.setAttribute("provider", provider);
 
@@ -466,13 +466,13 @@ public final class ModuleUtil {
                 }
 
                 // add a workspace
-                node.addContent(new Element("workspace").setAttribute("name", name));
+                node.addContent(new Element("workspace").setAttribute("name", repositoryName));
 
                 doc.getRootElement().addContent(node);
 
                 // make the mapping
                 node = new Element("Map");
-                node.setAttribute("name", name).setAttribute("repositoryName", name);
+                node.setAttribute("name", repositoryName).setAttribute("repositoryName", repositoryName);
                 // add it
                 doc.getRootElement().getChild("RepositoryMapping").addContent(node);
 
@@ -510,42 +510,43 @@ public final class ModuleUtil {
     }
 
     /**
-     * @param repository
-     * @param workspace
+     * @param repositoryName
+     * @param workspaceName
      * @throws RegisterException
      * @throws IOException
      * @throws JDOMException
      */
-    public static void registerWorkspace(String repository, String workspace) throws RegisterException {
+    public static void registerWorkspace(String repositoryName, String workspaceName) throws RegisterException {
+
         try {
             Document doc = getRepositoryDefinitionDocument();
             // check if there
             Element repositoryNode = (Element) XPath.selectSingleNode(doc, "/JCR/Repository[@name='"
-                + repository
+                + repositoryName
                 + "']");
             if (repositoryNode == null) {
                 throw new ConfigurationException("before registering a workspace ["
-                    + workspace
+                    + workspaceName
                     + "] you need to register the repository ["
-                    + repository
+                    + repositoryName
                     + "]");
             }
 
             // check if existing
             Element workspaceNode = (Element) XPath.selectSingleNode(doc, "/JCR/Repository[@name='"
-                + repository
+                + repositoryName
                 + "']/workspace[@name='"
-                + workspace
+                + workspaceName
                 + "']");
             if (workspaceNode == null) {
                 workspaceNode = new Element("workspace");
-                workspaceNode.setAttribute("name", workspace);
+                workspaceNode.setAttribute("name", workspaceName);
                 repositoryNode.addContent(workspaceNode);
             }
 
             // make the mapping
             Element mappingNode = new Element("Map");
-            mappingNode.setAttribute("name", workspace).setAttribute("repositoryName", repository);
+            mappingNode.setAttribute("name", workspaceName).setAttribute("repositoryName", repositoryName);
             // add it
             doc.getRootElement().getChild("RepositoryMapping").addContent(mappingNode);
 
@@ -554,8 +555,8 @@ public final class ModuleUtil {
             outputter.output(doc, new FileWriter(getRepositoryDefinitionFile()));
         }
         catch (Exception e) {
-            log.error("can't register workspace [" + workspace + "]", e);
-            throw new RegisterException("can't register workspace [" + workspace + "]", e);
+            log.error("can't register workspace [" + workspaceName + "]", e);
+            throw new RegisterException("can't register workspace [" + workspaceName + "]", e);
         }
     }
 }
