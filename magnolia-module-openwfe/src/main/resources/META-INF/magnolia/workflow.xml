@@ -1,24 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module>
-    <name>workflow</name>
-    <displayName>Workflow</displayName>
-    <description>Workflow using OpenWFE</description>
-    <class>info.magnolia.module.owfe.Engine</class>
-    <version>3.0</version>
-    <dependencies>
-        <dependency>
-            <name>adminInterface</name>
-            <version>3.0</version>
-        </dependency>
-    </dependencies>
-    <servlets>
-        <servlet>
-            <class>info.magnolia.module.owfe.servlets.FlowDefServlet</class>
-            <mappings>
-                <mapping>/.magnolia/flows</mapping>
-            </mappings>
-            <name>FlowsDefinitions</name>
-            <comment>Servlet to see flow definition.</comment>
-        </servlet>
-    </servlets>
+  <name>workflow</name>
+  <displayName>Workflow</displayName>
+  <description>Workflow using OpenWFE</description>
+  <class>info.magnolia.module.owfe.Engine</class>
+  <version>3.0</version>
+  <dependencies>
+    <dependency>
+      <name>adminInterface</name>
+      <version>3.0</version>
+    </dependency>
+  </dependencies>
+  <servlets>
+    <servlet>
+      <class>info.magnolia.module.owfe.servlets.FlowDefServlet</class>
+      <mappings>
+        <mapping>/.magnolia/flows</mapping>
+      </mappings>
+      <name>FlowsDefinitions</name>
+      <comment>Servlet to see flow definition.</comment>
+    </servlet>
+  </servlets>
+  <repositories>
+    <repository>
+      <name>magnolia</name>
+      <nodeTypeFile>/mgnl-nodetypes/owfe-nodetypes.xml</nodeTypeFile>
+      <workspaces>
+        <workspace>owfe</workspace>
+      </workspaces>
+    </repository>
+  </repositories>
 </module>
