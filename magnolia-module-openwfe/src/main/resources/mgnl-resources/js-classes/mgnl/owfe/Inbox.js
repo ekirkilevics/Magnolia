@@ -46,7 +46,7 @@ classDef("mgnl.owfe.Inbox", {
 
     openCommentDialog: function(){
         mgnlOpenDialog('','','','inboxComment','');
-    },
+    }
     
 });
  
