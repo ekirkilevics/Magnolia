@@ -178,13 +178,6 @@ public class WebsiteTreeConfiguration implements AdminTreeConfiguration {
         menuCopy.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
             + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
 
-        ContextMenuItem menuRestore = new ContextMenuItem("restore");
-        menuRestore.setLabel(msgs.get("versions.restore")); //$NON-NLS-1$
-        menuRestore.setIcon(request.getContextPath() + "/.resources/icons/16/undo.gif"); //$NON-NLS-1$
-        menuRestore.setOnclick("mgnl.admininterface.WebsiteTree.restore(" + tree.getJavascriptTree() + ");"); //$NON-NLS-1$ //$NON-NLS-2$
-        menuRestore.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
-            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
-
         ContextMenuItem menuVersions = new ContextMenuItem("versions");
         menuVersions.setLabel(msgs.get("versions")); //$NON-NLS-1$
         menuVersions.setIcon(request.getContextPath() + "/.resources/icons/16/exchange.gif"); //$NON-NLS-1$
@@ -264,7 +257,6 @@ public class WebsiteTreeConfiguration implements AdminTreeConfiguration {
             tree.addMenuItem(menuCopy);
 
             tree.addSeparator();
-            tree.addMenuItem(menuRestore);
             tree.addMenuItem(menuVersions);
 
             tree.addSeparator();

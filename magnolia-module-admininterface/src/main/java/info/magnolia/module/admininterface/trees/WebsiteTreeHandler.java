@@ -48,23 +48,5 @@ public class WebsiteTreeHandler extends AdminTreeMVCHandler {
         super(name, request, response);
         this.setConfiguration(new WebsiteTreeConfiguration());
     }
-    
-    public String restore(){
-        log.info("restore:" + this.getPathSelected());
-        try{
-            HierarchyManager hm = MgnlContext.getHierarchyManager(this.getRepository());
-            Content node = hm.getContent(this.getPathSelected());
-            Version latest = node.getJCRNode().getBaseVersion();
-            node.addVersion();
-            node.restore(latest, true);
-            AlertUtil.setMessage(MessagesManager.get("versions.restore.latest.success"));
-        }
-        catch(Exception e){
-            log.error("can't restore version", e);
-            AlertUtil.setMessage(MessagesManager.get("versions.restore.exception", new String[]{e.getMessage()}));
-        }
-        
-        return AdminTreeMVCHandler.VIEW_TREE;
-    }
 
 }
