@@ -134,10 +134,6 @@
         <servlet-class>info.magnolia.module.admininterface.pages.FileThumbnailDialogPage</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>ReloadI18nServlet</servlet-name>
-        <servlet-class>info.magnolia.cms.servlets.ReloadI18nServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>CacheServlet</servlet-name>
         <servlet-class>info.magnolia.cms.cache.CacheGeneratorServlet</servlet-class>
     </servlet>
@@ -235,10 +231,6 @@
     <servlet-mapping>
         <servlet-name>fileThumbnail</servlet-name>
         <url-pattern>/admintemplates/dialogs/fileThumbnail.jsp</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ReloadI18nServlet</servlet-name>
-        <url-pattern>/.magnolia/reload-i18n/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>CacheServlet</servlet-name>
