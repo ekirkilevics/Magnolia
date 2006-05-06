@@ -36,7 +36,7 @@ public class HtmlMailTest extends AbstractMailTest {
 
     public void testHtmlMailWithImageFile() throws Exception {
         MgnlEmail email = factory.getEmailFromType(MailConstants.MAIL_TEMPLATE_HTML);
-        email.addAttachment(new MailAttachment(new File(TEST_FILE).toURL(), "att"));
+        email.addAttachment(new MailAttachment(new File(getResourcePath(TEST_FILE_JPG)).toURL(), "att"));
         email.setBody("<h1>Helloniko</h1><img src=\"cid:att\"/>", null);
         String subject = "test html email";
         email.setSubject(subject);
@@ -54,8 +54,8 @@ public class HtmlMailTest extends AbstractMailTest {
     public void testHtmlMailWithTwoEmbeddedContent() throws Exception {
         MgnlEmail email = factory.getEmailFromType(MailConstants.MAIL_TEMPLATE_HTML);
         ArrayList attach = new ArrayList();
-        attach.add(new MailAttachment(new File(TEST_FILE).toURL(), "att1"));
-        attach.add(new MailAttachment(new File(TEST_FILE_PDF).toURL(), "att2"));
+        attach.add(new MailAttachment(new File(getResourcePath(TEST_FILE_JPG)).toURL(), "att1"));
+        attach.add(new MailAttachment(new File(getResourcePath(TEST_FILE_PDF)).toURL(), "att2"));
         HashMap param = new HashMap(1);
         param.put(HtmlEmail.MAIL_ATTACHMENT, attach);
         String subject = "test html email";
@@ -77,7 +77,7 @@ public class HtmlMailTest extends AbstractMailTest {
         String subject = "test html email";
         email.setSubject(subject);
         email.setBody("<h1>Helloniko in pdf</h1>", new HashMap(0));
-        email.addAttachment(new MailAttachment(new File(TEST_FILE_PDF).toURL(), "att1"));
+        email.addAttachment(new MailAttachment(new File(getResourcePath(TEST_FILE_PDF)).toURL(), "att1"));
         email.setToList(TEST_RECIPIENT);
         email.setFrom(TEST_SENDER);
 

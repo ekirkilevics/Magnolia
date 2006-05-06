@@ -1,6 +1,9 @@
 package info.magnolia.cms.mail;
 
 import info.magnolia.cms.mail.handlers.SimpleMailHandler;
+
+import java.io.File;
+
 import junit.framework.TestCase;
 
 import org.slf4j.Logger;
@@ -13,18 +16,34 @@ import com.dumbster.smtp.SimpleSmtpServer;
  * @author fgiust
  * @version $Revision$ ($Author$)
  */
-public abstract class AbstractMailTest extends TestCase implements TestConstants {
+public abstract class AbstractMailTest extends TestCase {
 
     /**
      * Logger
      */
     protected Logger log = LoggerFactory.getLogger(getClass());
 
+    public final static String TEST_RECIPIENT = "niko@macnica.com";
+
+    public final static String TEST_SENDER = "niko@magnolia.com";
+
+    public static final String TEST_FILE_JPG = "magnolia.jpg";
+
+    public static final String TEST_FILE_PDF = "magnolia.pdf";
+
     protected MgnlMailFactory factory;
 
     protected SimpleMailHandler handler;
 
     protected SimpleSmtpServer server;
+
+    public File getResourceFile(String filename) {
+        return new File(getClass().getResource("/" + filename).getFile());
+    }
+
+    public String getResourcePath(String filename) {
+        return getResourceFile(filename).getAbsolutePath();
+    }
 
     /**
      * @see junit.framework.TestCase#setUp()

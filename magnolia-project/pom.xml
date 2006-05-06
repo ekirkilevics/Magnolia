@@ -1,12 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>info.magnolia</groupId>
   <artifactId>magnolia-project</artifactId>
   <packaging>pom</packaging>
   <name>magnolia-project</name>
   <version>3.0-b1-SNAPSHOT</version>
-  <description>Magnolia is a free enterprise class content management system developed by obinary based on the standard API for
-    java content repositories (JCR).</description>
+  <description>
+    Magnolia is a free enterprise class content management system developed by obinary based on the standard API for
+    java content repositories (JCR).
+  </description>
   <url>http://magnolia.sourceforge.net</url>
   <issueManagement>
     <system>Jira</system>
@@ -88,24 +92,6 @@
     <url>http://www.obinary.com</url>
   </organization>
   <build>
-    <sourceDirectory>src/main/java</sourceDirectory>
-    <testSourceDirectory>src/test/java</testSourceDirectory>
-    <resources>
-      <resource>
-        <directory>src/main/java</directory>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
-      </resource>
-      <resource>
-        <directory>src/main/resources</directory>
-      </resource>
-    </resources>
-    <testResources>
-      <testResource>
-        <directory>src/test/resources</directory>
-      </testResource>
-    </testResources>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -114,12 +100,14 @@
           <target>1.4</target>
         </configuration>
       </plugin>
-      <plugin>
+      <!-- 
+        <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <testFailureIgnore>true</testFailureIgnore>
+        <testFailureIgnore>true</testFailureIgnore>
         </configuration>
-      </plugin>
+        </plugin>
+      -->
       <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
         <executions>

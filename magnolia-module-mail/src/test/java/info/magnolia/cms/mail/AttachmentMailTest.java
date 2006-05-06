@@ -14,7 +14,7 @@ public class AttachmentMailTest extends AbstractMailTest {
     Logger log = LoggerFactory.getLogger(AttachmentMailTest.class);
 
     public void testAttachmentFile() throws Exception {
-        String file = TEST_FILE;
+        String file = getResourcePath(TEST_FILE_PDF);
         MailAttachment att = new MailAttachment(new File(file).toURL(), "att");
         URL url = att.getURL();
         log.info(url.toString());
