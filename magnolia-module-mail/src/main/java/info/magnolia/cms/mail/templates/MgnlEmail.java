@@ -1,10 +1,13 @@
 package info.magnolia.cms.mail.templates;
 
-import info.magnolia.cms.mail.MailConstants;
 import info.magnolia.cms.mail.MailException;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.mail.Address;
@@ -13,29 +16,38 @@ import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
- * Date: Mar 30, 2006
- * Time: 1:01:37 PM
- *
+ * Date: Mar 30, 2006 Time: 1:01:37 PM
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */
 public abstract class MgnlEmail extends MimeMessage {
 
+    protected static final String CONTENT_TYPE = "Content-Type";
+
+    protected static final String TEXT_PLAIN_UTF = "text/plain; charset=UTF-8";
+
+    protected static final String TEXT_HTML_UTF = "text/html; charset=UTF-8";
+
+    protected static final String CHARSET_HEADER_STRING = "charset=";
+
     public static Logger log = LoggerFactory.getLogger(MgnlEmail.class);
+
     public static final MimetypesFileTypeMap map = new MimetypesFileTypeMap();
+
     private String template;
+
     private HashMap parameters;
+
     private boolean bodyNotSetFlag; // used for threads
 
     public boolean isBodyNotSetFlag() {
-        return bodyNotSetFlag;
+        return this.bodyNotSetFlag;
     }
 
     public void setBodyNotSetFlag(boolean _bodyNotSetFlag) {
@@ -53,11 +65,11 @@ public abstract class MgnlEmail extends MimeMessage {
     }
 
     public HashMap getParameters() {
-        return parameters;
+        return this.parameters;
     }
 
     public String getTemplate() {
-        return template;
+        return this.template;
     }
 
     public void setParameters(HashMap _parameters) {
@@ -65,8 +77,9 @@ public abstract class MgnlEmail extends MimeMessage {
     }
 
     public void setBody() throws Exception {
-        if (template != null)
-            this.setBody(template, parameters);
+        if (this.template != null) {
+            this.setBody(this.template, this.parameters);
+        }
     }
 
     /**
@@ -83,12 +96,14 @@ public abstract class MgnlEmail extends MimeMessage {
 
     public void setCharsetHeader(String charset) throws MailException {
         try {
-            StringBuffer contentType = new StringBuffer(this.getHeader(MailConstants.CONTENT_TYPE, MailConstants.TEXT_PLAIN_UTF));
+            StringBuffer contentType = new StringBuffer(this.getHeader(CONTENT_TYPE, TEXT_PLAIN_UTF));
             int index = contentType.lastIndexOf(";");
-            if (index != -1)
+            if (index != -1) {
                 contentType.substring(0, index);
-            contentType.append(MailConstants.CHARSET_HEADER_STRING).append(charset);
-        } catch (Exception e) {
+            }
+            contentType.append(CHARSET_HEADER_STRING).append(charset);
+        }
+        catch (Exception e) {
             throw new MailException("Content type is not set. Set the content type before setting the charset");
         }
     }
@@ -106,8 +121,9 @@ public abstract class MgnlEmail extends MimeMessage {
     }
 
     private void setListByString(String to, Message.RecipientType type) throws Exception {
-        if (to == null || to.equals(StringUtils.EMPTY))
+        if (to == null || to.equals(StringUtils.EMPTY)) {
             return;
+        }
         String[] toObj = to.split("\n");
         Address[] ato = new Address[toObj.length];
         for (int i = 0; i < toObj.length; i++) {
@@ -116,12 +132,13 @@ public abstract class MgnlEmail extends MimeMessage {
         this.setRecipients(type, ato);
     }
 
-
     public void setAttachments(ArrayList list) throws MailException {
-        if (list == null)
+        if (list == null) {
             return;
-        if (log.isDebugEnabled())
+        }
+        if (log.isDebugEnabled()) {
             log.debug("Set attachments [" + list.size() + "] for mail: [" + this.getClass().getName() + "]");
+        }
         for (int i = 0; i < list.size(); i++) {
             addAttachment((MailAttachment) list.get(i));
         }

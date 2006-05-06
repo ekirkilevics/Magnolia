@@ -7,10 +7,9 @@ import info.magnolia.cms.module.InvalidConfigException;
 import info.magnolia.cms.module.RegisterException;
 import info.magnolia.cms.util.ContentUtil;
 
+
 /**
- * Date: Mar 30, 2006
- * Time: 5:37:54 PM
- *
+ * Date: Mar 30, 2006 Time: 5:37:54 PM
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */
 public class Engine extends AbstractModule {
@@ -22,9 +21,9 @@ public class Engine extends AbstractModule {
     public void init(Content content) throws InvalidConfigException, InitializationException {
         Content node;
         // register uri mappings
-        node = ContentUtil.getCaseInsensitive(moduleNode, "config");
+        node = ContentUtil.getCaseInsensitive(this.moduleNode, "config");
         if (node != null) {
-            //MailConfigurationManager.getInstance().register(node);
+            // MailConfigurationManager.getInstance().register(node);
         }
     }
 }

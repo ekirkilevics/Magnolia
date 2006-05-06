@@ -1,46 +1,48 @@
 package info.magnolia.cms.mail.templates.impl;
 
-import info.magnolia.cms.mail.MailConstants;
 import info.magnolia.cms.mail.MailException;
 import info.magnolia.cms.mail.templates.MailAttachment;
 import info.magnolia.cms.mail.templates.MgnlMultipartEmail;
 
-import javax.mail.BodyPart;
-import javax.mail.Session;
-import javax.mail.internet.MimeBodyPart;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.mail.BodyPart;
+import javax.mail.Session;
+import javax.mail.internet.MimeBodyPart;
+
+
 /**
- * Date: Mar 30, 2006
- * Time: 2:12:53 PM
- *
+ * Date: Mar 30, 2006 Time: 2:12:53 PM
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */
 public class HtmlEmail extends MgnlMultipartEmail {
 
+    public static final String MAIL_ATTACHMENT = "attachment";
+
     public HtmlEmail(Session _session) throws Exception {
         super(_session);
-        this.setHeader(MailConstants.CONTENT_TYPE, MailConstants.TEXT_HTML_UTF);
+        this.setHeader(CONTENT_TYPE, TEXT_HTML_UTF);
     }
 
     public void setBody(String body, HashMap parameters) throws Exception {
         // check if multipart
         if (!isMultipart()) { // it is not a multipart yet, just set the text for content
-            this.setContent(body, MailConstants.TEXT_HTML_UTF);
-        } else { // some attachment are already in this mail. Init the body part to set the main text
+            this.setContent(body, TEXT_HTML_UTF);
+        }
+        else { // some attachment are already in this mail. Init the body part to set the main text
             // Create your new message part
             BodyPart messageBodyPart = new MimeBodyPart();
             // Set the _content of the body part
-            messageBodyPart.setContent(body, MailConstants.TEXT_HTML_UTF);
+            messageBodyPart.setContent(body, TEXT_HTML_UTF);
             // Add body part to multipart
-            multipart.addBodyPart(messageBodyPart, 0);
-            this.setContent(multipart);
+            this.multipart.addBodyPart(messageBodyPart, 0);
+            this.setContent(this.multipart);
         }
 
         // process the attachments
-        if (parameters != null && parameters.containsKey(MailConstants.MAIL_ATTACHMENT)) {
-            ArrayList attachment = (ArrayList) parameters.get(MailConstants.MAIL_ATTACHMENT);
+        if (parameters != null && parameters.containsKey(MAIL_ATTACHMENT)) {
+            ArrayList attachment = (ArrayList) parameters.get(MAIL_ATTACHMENT);
             setAttachments(attachment);
         }
     }
@@ -50,9 +52,9 @@ public class HtmlEmail extends MgnlMultipartEmail {
             Object o = this.getContent();
             if (o instanceof String) {
                 BodyPart messageBodyPart = new MimeBodyPart();
-                messageBodyPart.setContent(o, MailConstants.TEXT_HTML_UTF);
-                multipart.addBodyPart(messageBodyPart, 0);
-                this.setContent(multipart);
+                messageBodyPart.setContent(o, TEXT_HTML_UTF);
+                this.multipart.addBodyPart(messageBodyPart, 0);
+                this.setContent(this.multipart);
             }
         }
         catch (Exception e) {

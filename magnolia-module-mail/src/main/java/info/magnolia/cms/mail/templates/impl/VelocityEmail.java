@@ -1,19 +1,19 @@
 package info.magnolia.cms.mail.templates.impl;
 
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
-
-import javax.mail.Session;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.HashMap;
 
+import javax.mail.Session;
+
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
+
+
 /**
- * Date: Mar 30, 2006
- * Time: 1:13:33 PM
- *
+ * Date: Mar 30, 2006 Time: 1:13:33 PM
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */
 public class VelocityEmail extends HtmlEmail {
@@ -21,7 +21,8 @@ public class VelocityEmail extends HtmlEmail {
     static {
         try {
             Velocity.init();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error(e.getMessage(), e);
         }
     }

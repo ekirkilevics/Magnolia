@@ -4,10 +4,9 @@ import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.FactoryUtil;
 
+
 /**
- * Date: Mar 31, 2006
- * Time: 4:10:31 PM
- *
+ * Date: Mar 31, 2006 Time: 4:10:31 PM
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */
 public class MailManager extends ObservedManager {

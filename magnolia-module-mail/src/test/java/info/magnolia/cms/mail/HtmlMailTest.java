@@ -10,6 +10,7 @@ package info.magnolia.cms.mail;
 import info.magnolia.cms.mail.handlers.SimpleMailHandler;
 import info.magnolia.cms.mail.templates.MailAttachment;
 import info.magnolia.cms.mail.templates.MgnlEmail;
+import info.magnolia.cms.mail.templates.impl.HtmlEmail;
 
 import java.io.File;
 import java.net.URL;
@@ -48,8 +49,8 @@ public class HtmlMailTest extends TestCase implements TestConstants {
         handler = new SimpleMailHandler();
         factory = MgnlMailFactory.getInstance();
         Map parameters = factory.getMailParameters();
-        parameters.put(MailConstants.SMTP_SERVER, "localhost");
-        parameters.put(MailConstants.SMTP_PORT, new Integer(1025));
+        parameters.put(MgnlMailFactory.SMTP_SERVER, "localhost");
+        parameters.put(MgnlMailFactory.SMTP_PORT, new Integer(1025));
 
         server = SimpleSmtpServer.start(1025);
     }
@@ -124,7 +125,7 @@ public class HtmlMailTest extends TestCase implements TestConstants {
         attach.add(new MailAttachment(new File(TEST_FILE), "att1"));
         attach.add(new MailAttachment(new URL(TEST_URL_IMAGE), "att2"));
         HashMap param = new HashMap(1);
-        param.put(MailConstants.MAIL_ATTACHMENT, attach);
+        param.put(HtmlEmail.MAIL_ATTACHMENT, attach);
         String subject = getTestMailSubject();
         email.setSubject(subject);
         email.setBody("<h1>Helloniko</h1><img src=\"cid:att1\"/><img src=\"cid:att2\"/>", param);

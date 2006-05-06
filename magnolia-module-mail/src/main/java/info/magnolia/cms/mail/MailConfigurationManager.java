@@ -2,13 +2,13 @@ package info.magnolia.cms.mail;
 
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
- * Date: Apr 4, 2006
- * Time: 8:32:42 PM
- *
+ * Date: Apr 4, 2006 Time: 8:32:42 PM
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */
 public class MailConfigurationManager extends ObservedManager {
@@ -21,7 +21,8 @@ public class MailConfigurationManager extends ObservedManager {
     /**
      * The current implementation of the ParagraphManager. Defeined in magnolia.properties.
      */
-    private static MailConfigurationManager instance;//= (MailConfigurationManager) FactoryUtil.getSingleton(MailConfigurationManager.class);
+    private static MailConfigurationManager instance;// = (MailConfigurationManager)
+                                                        // FactoryUtil.getSingleton(MailConfigurationManager.class);
 
     /**
      * Instantiated by the system.
