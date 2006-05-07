@@ -16,12 +16,12 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.i18n.MessagesManager;
+
+import javax.jcr.RepositoryException;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
 
 
 /**
@@ -107,20 +107,7 @@ public class File extends ControlSuper {
     }
 
     public String getFileName() {
-        String fileName = StringUtils.EMPTY;
-        try {
-            fileName = getPropertyString(FileProperties.PROPERTY_FILENAME);
-        }
-        catch (PathNotFoundException e) {
-            if (log.isDebugEnabled()) {
-                log.debug("Data not found: " + e.getMessage()); //$NON-NLS-1$
-            }
-        }
-        catch (RepositoryException e) {
-            if (log.isDebugEnabled())
-                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
-        }
-        return fileName;
+        return getPropertyString(FileProperties.PROPERTY_FILENAME);
     }
 
     public void setNodeDataTemplate(String s) {
@@ -128,39 +115,11 @@ public class File extends ControlSuper {
     }
 
     public String getNodeDataTemplate() {
-        String template = this.nodeDataTemplate;
-        if (template == null) {
-            try {
-                template = getPropertyString(FileProperties.PROPERTY_TEMPLATE);
-            }
-            catch (PathNotFoundException e) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Data not found: " + e.getMessage()); //$NON-NLS-1$
-                }
-            }
-            catch (RepositoryException e) {
-                if (log.isDebugEnabled())
-                    log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
-            }
-        }
-        return template;
+        return getPropertyString(FileProperties.PROPERTY_TEMPLATE);
     }
 
     public String getExtension() {
-        String ext = StringUtils.EMPTY;
-        try {
-            ext = getPropertyString(FileProperties.PROPERTY_EXTENSION);
-        }
-        catch (PathNotFoundException e) {
-            if (log.isDebugEnabled()) {
-                log.debug("Data not found: " + e.getMessage()); //$NON-NLS-1$
-            }
-        }
-        catch (RepositoryException e) {
-            if (log.isDebugEnabled())
-                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
-        }
-        return ext;
+        return getPropertyString(FileProperties.PROPERTY_EXTENSION);
     }
 
     public String getHtmlFileName() {
@@ -202,12 +161,11 @@ public class File extends ControlSuper {
 
     /**
      * Read a property from content node, check nulls.
-     *
      * @param propertyName node data name
      * @return property string, "" if not found
      * @throws RepositoryException
      */
-    protected String getPropertyString(String propertyName) throws RepositoryException {
+    protected String getPropertyString(String propertyName) {
         if (this.getWebsiteNode() != null) {
             NodeData nodeData = getPropertyNode();
             if (nodeData != null) {
@@ -218,7 +176,7 @@ public class File extends ControlSuper {
         return StringUtils.EMPTY;
     }
 
-    protected NodeData getPropertyNode() throws RepositoryException {
+    protected NodeData getPropertyNode() {
         return this.getWebsiteNode().getNodeData(this.getName());
     }
 }
