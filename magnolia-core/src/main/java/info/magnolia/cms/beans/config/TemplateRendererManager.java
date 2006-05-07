@@ -45,6 +45,10 @@ public class TemplateRendererManager extends ObservedManager {
             String type = tr.getNodeData("type").getString();
             String rendererClass = tr.getNodeData("renderer").getString();
 
+            if (StringUtils.isEmpty(type)) {
+                type = tr.getName();
+            }
+
             if (StringUtils.isBlank(type) || StringUtils.isBlank(rendererClass)) {
                 log.warn("Can't register template render at {}, type=\"{}\" renderer=\"{}\"", new Object[]{
                     tr.getHandle(),
