@@ -194,7 +194,9 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
         Iterator children = ContentUtil.collectAllChildren(templateRoot, itemTypes).iterator();
         while (children.hasNext()) {
             Content exported = (Content) children.next();
-            exportNode(repository, session, exported);
+            if (!exported.getNodeDataCollection().isEmpty()) { // ignore "directories"
+                exportNode(repository, session, exported);
+            }
         }
     }
 

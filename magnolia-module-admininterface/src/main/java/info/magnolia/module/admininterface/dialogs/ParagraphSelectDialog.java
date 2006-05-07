@@ -98,9 +98,15 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
                 StringBuffer label = new StringBuffer();
                 // TODO enable an invidual message bundle for each paragraph
                 label.append("<strong>" //$NON-NLS-1$
-                    + TemplateMessagesUtil.getMessages().get(paragraphInfo.getTitle())
+                    + TemplateMessagesUtil.getMessages().getWithDefault(
+                        paragraphInfo.getTitle(),
+                        paragraphInfo.getTitle())
                     + "</strong><br />"); //$NON-NLS-1$
-                label.append(TemplateMessagesUtil.getMessages().get(paragraphInfo.getDescription()));
+
+                String description = paragraphInfo.getDescription();
+                if (StringUtils.isNotEmpty(description)) {
+                    label.append(TemplateMessagesUtil.getMessages().getWithDefault(description, description));
+                }
                 label.append("<br /><br />"); //$NON-NLS-1$
                 button.setLabel(label.toString());
                 button.setOnclick("document.mgnlFormMain.submit();"); //$NON-NLS-1$
