@@ -560,4 +560,83 @@ This page has no content and it will redirect to
       <description>Page to redirect to after a successfull submission</description>
     </attribute>
   </tag>
+  <tag>
+    <name>img</name>
+    <tag-class>info.magnolia.cms.taglibs.util.ImgTag</tag-class>
+    <body-content>EMPTY</body-content>
+    <description>
+      Writes an html img tag for the image at "nodeDataName". Also supports writing object tags for flash movies
+      (detected by the "swf" extension.
+    </description>
+    <attribute>
+      <name>nodeDataName</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>the name of the nodeData containing the image path</description>
+    </attribute>
+    <attribute>
+      <name>contentNodeName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>See cms:out</description>
+    </attribute>
+    <attribute>
+      <name>contentNodeCollectionName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>See cms:out</description>
+    </attribute>
+    <attribute>
+      <name>inherit</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description>Inherit the value from parent pages, if not set in the current one.</description>
+    </attribute>
+    <attribute>
+      <name>altNodeDataName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description>
+        Name of the node data holding the alt text for the image. If not set the default is nodeDataName + "Alt". The
+        same value is added to the "title" attribute, if not null.
+      </description>
+    </attribute>
+    <attribute>
+      <name>class</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description>html pass through attribute</description>
+    </attribute>
+    <attribute>
+      <name>style</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description>html pass through attribute</description>
+    </attribute>
+    <attribute>
+      <name>id</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description>html pass through attribute</description>
+    </attribute>
+    <attribute>
+      <name>width</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description>html pass through attribute</description>
+    </attribute>
+    <attribute>
+      <name>height</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description>html pass through attribute</description>
+    </attribute>
+  </tag>
 </taglib>

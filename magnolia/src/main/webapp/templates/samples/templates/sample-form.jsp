@@ -73,7 +73,8 @@
               </p>
             </cms:ifNotEmpty>
             <a href="http://www.magnolia.info">
-              <img src="${pageContext.request.contextPath}/docroot/samples/imgs/poweredSmall.gif" />
+              <img src="${pageContext.request.contextPath}/docroot/samples/imgs/poweredSmall.gif"
+                alt="Powered by Magnolia" />
             </a>
           </div>
         </form>
@@ -92,13 +93,7 @@
         </cms:adminOnly>
       </div>
       <div style="position:absolute;left:0px;top:0px;">
-        <cms:out var="headerImage" nodeDataName="headerImage" inherit="true" />
-        <cms:out var="headerImageAlt" nodeDataName="headerImageAlt" inherit="true" />
-        <c:if test="${empty(headerImage)}">
-          <c:set var="headerImage" value="/docroot/samples/imgs/header.jpg" />
-          <c:set var="headerImageAlt" value="Magnolia - for content management" />
-        </c:if>
-        <img src="${pageContext.request.contextPath}${headerImage}" alt="${headerImageAlt}" />
+        <cmsu:img nodeDataName="headerImage" inherit="true" />
       </div>
       <cmsu:simpleNavigation />
     </body>
