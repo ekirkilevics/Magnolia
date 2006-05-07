@@ -444,22 +444,33 @@ public final class ContentRepository {
      * access on the specified repository.
      */
     public static HierarchyManager getHierarchyManager(String repositoryID, String workspaceID) {
-        return (HierarchyManager) ContentRepository.hierarchyManagers.get(getMappedRepositoryName(repositoryID)
-            + "_" + workspaceID); //$NON-NLS-1$
+        String mappedRepositoryName = getMappedRepositoryName(repositoryID);
+        if (mappedRepositoryName == null) {
+            return null;
+        }
+        return (HierarchyManager) ContentRepository.hierarchyManagers.get(mappedRepositoryName + '_' + workspaceID);
     }
 
     /**
      * Returns repository specified by the <code>repositoryID</code> as configured in repository config.
      */
     public static Repository getRepository(String repositoryID) {
-        return (Repository) ContentRepository.repositories.get(getMappedRepositoryName(repositoryID));
+        String mappedRepositoryName = getMappedRepositoryName(repositoryID);
+        if (mappedRepositoryName == null) {
+            return null;
+        }
+        return (Repository) ContentRepository.repositories.get(mappedRepositoryName);
     }
 
     /**
      * Returns repository provider specified by the <code>repositoryID</code> as configured in repository config.
      */
     public static Provider getRepositoryProvider(String repositoryID) {
-        return (Provider) ContentRepository.repositoryProviders.get(getMappedRepositoryName(repositoryID));
+        String mappedRepositoryName = getMappedRepositoryName(repositoryID);
+        if (mappedRepositoryName == null) {
+            return null;
+        }
+        return (Provider) ContentRepository.repositoryProviders.get(mappedRepositoryName);
     }
 
     /**
