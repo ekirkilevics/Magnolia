@@ -14,6 +14,7 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 
 import java.util.Collection;
 import java.util.Hashtable;
@@ -70,7 +71,7 @@ public final class MIMEMapping {
         try {
             log.info("Config : loading MIMEMapping"); //$NON-NLS-1$
             Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(START_PAGE);
-            Collection mimeList = startPage.getContent("MIMEMapping").getChildren(); //$NON-NLS-1$
+            Collection mimeList = startPage.getContent("MIMEMapping").getChildren(ItemType.CONTENTNODE); //$NON-NLS-1$
             MIMEMapping.cacheContent(mimeList);
             log.info("Config : MIMEMapping loaded"); //$NON-NLS-1$
         }
