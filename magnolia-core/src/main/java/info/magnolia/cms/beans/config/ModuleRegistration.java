@@ -134,7 +134,7 @@ public class ModuleRegistration {
         else {
             try {
                 File xmlFile = new File(xmlUrl.toURI());
-                moduleRoot = xmlFile.getParentFile().getParentFile();
+                moduleRoot = xmlFile.getParentFile().getParentFile().getParentFile();
             }
             catch (URISyntaxException e) {
                 // should never happen
