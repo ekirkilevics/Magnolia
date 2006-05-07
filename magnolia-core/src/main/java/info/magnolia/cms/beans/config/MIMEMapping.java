@@ -123,9 +123,14 @@ public final class MIMEMapping {
         while (iterator.hasNext()) {
             Content c = (Content) iterator.next();
             try {
-                MIMEMapping.cachedContent.put(c.getNodeData("extension").getString(), c //$NON-NLS-1$
-                    .getNodeData("mime-type") //$NON-NLS-1$
-                    .getString());
+                String extension = c.getNodeData("extension").getString();//$NON-NLS-1$
+                String mime = c.getNodeData("mime-type").getString();//$NON-NLS-1$
+
+                if (StringUtils.isEmpty(extension)) {
+                    extension = c.getName();
+                }
+
+                MIMEMapping.cachedContent.put(extension, mime);
             }
             catch (Exception e) {
                 log.error("Failed to cache MIMEMapping"); //$NON-NLS-1$
