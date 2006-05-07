@@ -29,15 +29,15 @@ import org.slf4j.LoggerFactory;
  */
 public final class ControlsManager extends ObservedManager {
 
-	/**
-	 * Logger
-	 */
-	private static Logger log = LoggerFactory.getLogger(ControlsManager.class); 
-	
-	/**
-	 * The current implementation of the ParagraphManager. Defeined in magnolia.properties.
-	 */
-	private static ControlsManager instance = (ControlsManager) FactoryUtil.getSingleton(ControlsManager.class); 
+    /**
+     * Logger
+     */
+    private static Logger log = LoggerFactory.getLogger(ControlsManager.class);
+
+    /**
+     * The current implementation of the ParagraphManager. Defeined in magnolia.properties.
+     */
+    private static ControlsManager instance = (ControlsManager) FactoryUtil.getSingleton(ControlsManager.class);
 
     /**
      * Node data name for control class.
@@ -61,21 +61,19 @@ public final class ControlsManager extends ObservedManager {
             Content controlNode = (Content) iterator.next();
 
             if (log.isDebugEnabled()) {
-                log.debug("Initializing control [" + controlNode + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+                log.debug("Initializing control [{}]", controlNode); //$NON-NLS-1$ //$NON-NLS-2$
             }
 
             String classNodeData = controlNode.getNodeData(DATA_CONTROL_CLASS).getString();
             String nameNodeData = controlNode.getNodeData(DATA_CONTROL_NAME).getString();
 
-            if (StringUtils.isEmpty(classNodeData) || StringUtils.isEmpty(nameNodeData)) {
-                log.warn("Config : Can't add custom control with name [" //$NON-NLS-1$
-                    + nameNodeData
-                    + "] and class [" //$NON-NLS-1$
-                    + classNodeData
-                    + "] specified in node [" //$NON-NLS-1$
-                    + controlNode.getName()
-                    + "]"); //$NON-NLS-1$
+            if (StringUtils.isEmpty(nameNodeData)) {
+                nameNodeData = controlNode.getName();
+            }
 
+            if (StringUtils.isEmpty(classNodeData) || StringUtils.isEmpty(nameNodeData)) {
+                log.warn("Config : Can't add custom control with name [{}] and class [{}] specified in node [{}]", //$NON-NLS-1$
+                    new Object[]{nameNodeData, classNodeData, controlNode.getName()});
                 continue;
             }
             Class controlClass = null;
@@ -84,14 +82,13 @@ public final class ControlsManager extends ObservedManager {
                 controlClass = Class.forName(classNodeData);
             }
             catch (ClassNotFoundException e) {
-                log.error("Config : Failed to load dialog control with class [" + classNodeData, e); //$NON-NLS-1$
+                log.error("Config : Failed to load dialog control with class [" + classNodeData + "]", e); //$NON-NLS-1$
                 continue;
             }
 
             if (!DialogInterface.class.isAssignableFrom(controlClass)) {
-                log.error("Config : Invalid class specified for control [" //$NON-NLS-1$
-                    + nameNodeData
-                    + "]: does not implement DialogInterface"); //$NON-NLS-1$
+                log.error("Config : Invalid class specified for control [{}]: does not implement DialogInterface", //$NON-NLS-1$
+                    nameNodeData);
                 continue;
             }
 
@@ -100,14 +97,14 @@ public final class ControlsManager extends ObservedManager {
         }
     }
 
-	/**
-	 * @return Returns the instance.
-	 */
-	public static ControlsManager getInstance() {
-		return instance;
-	}
+    /**
+     * @return Returns the instance.
+     */
+    public static ControlsManager getInstance() {
+        return instance;
+    }
 
-	protected void onClear() {
-	}
+    protected void onClear() {
+    }
 
 }
