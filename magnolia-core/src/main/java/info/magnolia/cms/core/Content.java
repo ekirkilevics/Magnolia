@@ -13,18 +13,31 @@
 package info.magnolia.cms.core;
 
 import info.magnolia.cms.beans.runtime.MgnlContext;
+import info.magnolia.cms.core.version.ContentVersion;
+import info.magnolia.cms.core.version.VersionManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.core.version.ContentVersion;
-import info.magnolia.cms.core.version.VersionManager;
 import info.magnolia.cms.util.Rule;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.jcr.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.TreeSet;
+
+import javax.jcr.Item;
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.Property;
+import javax.jcr.PropertyIterator;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
+import javax.jcr.UnsupportedRepositoryOperationException;
+import javax.jcr.Value;
+import javax.jcr.Workspace;
 import javax.jcr.lock.Lock;
 import javax.jcr.lock.LockException;
 import javax.jcr.nodetype.NodeType;
@@ -33,7 +46,10 @@ import javax.jcr.version.VersionException;
 import javax.jcr.version.VersionHistory;
 import javax.jcr.version.VersionIterator;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -619,7 +635,7 @@ public class Content extends ContentHandler implements Cloneable {
      * @return Collection of content nodes
      */
     public Collection getChildren(ItemType contentType) {
-        return this.getChildren(contentType.getSystemName());
+        return this.getChildren(contentType != null ? contentType.getSystemName() : (String) null);
     }
 
     /**
@@ -671,7 +687,7 @@ public class Content extends ContentHandler implements Cloneable {
             Node subNode = (Node) nodeIterator.next();
             try {
                 if (contentType == null
-                        || subNode.getProperty(ItemType.JCR_PRIMARY_TYPE).getString().equalsIgnoreCase(contentType)) {
+                    || subNode.getProperty(ItemType.JCR_PRIMARY_TYPE).getString().equalsIgnoreCase(contentType)) {
                     children.add(new Content(subNode, this.accessManager));
                 }
             }
@@ -947,7 +963,7 @@ public class Content extends ContentHandler implements Cloneable {
         UnsupportedRepositoryOperationException, RepositoryException {
         Access.isGranted(this.getAccessManager(), this.getHandle(), Permission.WRITE);
         Version version = this.getVersionHistory().getVersion(versionName);
-        this.restore(version,  removeExisting);
+        this.restore(version, removeExisting);
     }
 
     /**
@@ -1062,7 +1078,7 @@ public class Content extends ContentHandler implements Cloneable {
      * @return base ContentVersion
      * @throws UnsupportedRepositoryOperationException
      * @throws RepositoryException
-     * */
+     */
     public ContentVersion getBaseVersion() throws UnsupportedRepositoryOperationException, RepositoryException {
         return new ContentVersion(VersionManager.getInstance().getBaseVersion(this), this);
     }
@@ -1315,7 +1331,7 @@ public class Content extends ContentHandler implements Cloneable {
     /**
      * get workspace to which this node attached to
      * @throws RepositoryException if unable to get this node session
-     * */
+     */
     public Workspace getWorkspace() throws RepositoryException {
         return this.node.getSession().getWorkspace();
     }
@@ -1323,11 +1339,12 @@ public class Content extends ContentHandler implements Cloneable {
     /**
      * checks if this node has a sub node with name MetaData
      * @return true if MetaData exists
-     * */
+     */
     public boolean hasMetaData() {
         try {
             return this.node.hasNode("MetaData");
-        } catch (RepositoryException re) {
+        }
+        catch (RepositoryException re) {
             log.debug(re.getMessage(), re);
         }
         return false;
