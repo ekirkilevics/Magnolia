@@ -560,21 +560,15 @@ public final class ModuleUtil {
 
         Provider provider = ContentRepository.getRepositoryProvider(repositoryName);
 
-        if (provider == null) {
-            throw new RegisterException("before registering a workspace ["
-                + workspaceName
-                + "] you need to register the repository ["
-                + repositoryName
-                + "]");
-        }
-
-        try {
-            // immediate registration
-            provider.registerWorkspace(repositoryName);
-            ContentRepository.addMappedRepositoryName(workspaceName, repositoryName);
-        }
-        catch (RepositoryException e) {
-            throw new RegisterException("can't register workspace [" + workspaceName + "]", e);
+        if (provider != null) {
+            try {
+                // immediate registration
+                provider.registerWorkspace(repositoryName);
+                ContentRepository.addMappedRepositoryName(workspaceName, repositoryName);
+            }
+            catch (RepositoryException e) {
+                throw new RegisterException("Can't register workspace [" + workspaceName + "]", e);
+            }
         }
 
         boolean changed = false;
