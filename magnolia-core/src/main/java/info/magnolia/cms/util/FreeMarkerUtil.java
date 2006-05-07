@@ -47,6 +47,7 @@ public class FreeMarkerUtil {
         cfg = new Configuration();
         cfg.setObjectWrapper(ObjectWrapper.DEFAULT_WRAPPER);
         cfg.setClassForTemplateLoading(FreeMarkerUtil.class, "/");
+        cfg.setTagSyntax(Configuration.AUTO_DETECT_TAG_SYNTAX);
     }
 
     /**
