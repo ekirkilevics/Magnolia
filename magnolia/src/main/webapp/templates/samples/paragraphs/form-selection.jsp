@@ -20,11 +20,13 @@
         </select>
       </c:when>
       <c:otherwise>
-        <c:forTokens items="${par.values}" var="option" delims="${newline}">
-          <input name="${contentObj.name}" type="${par.type}" class="${par.type}" value="${option}" />
-          ${option}
-          <br />
-        </c:forTokens>
+        <div class="optiongroup">
+          <c:forTokens items="${par.values}" var="option" delims="${newline}">
+            <input name="${contentObj.name}" type="${par.type}" class="${par.type}" value="${option}" />
+            ${option}
+            <br />
+          </c:forTokens>
+        </div>
       </c:otherwise>
     </c:choose>
   </div>

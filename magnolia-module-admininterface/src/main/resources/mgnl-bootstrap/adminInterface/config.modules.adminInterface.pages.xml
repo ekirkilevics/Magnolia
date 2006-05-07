@@ -20,14 +20,14 @@
     <sv:value>true</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:created" sv:type="Date">
-    <sv:value>2006-05-05T15:41:49.689+02:00</sv:value>
+    <sv:value>2006-05-06T16:44:50.572+02:00</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>85fda35c-d411-45ad-8e99-8d36bfee1735</sv:value>
+      <sv:value>6690e3be-eaef-4d25-aa26-dc56d3004b01</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
       <sv:value>true</sv:value>
@@ -51,7 +51,7 @@
       <sv:value>MetaData</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-05-05T15:41:49.690+02:00</sv:value>
+      <sv:value>2006-05-06T16:44:50.572+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastaction" sv:type="Date">
       <sv:value>2006-03-12T17:20:36.420+01:00</sv:value>
@@ -80,17 +80,14 @@
       <sv:value>info.magnolia.module.admininterface.pages.RichEditorIFrameDialogPage</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-05-05T15:41:49.700+02:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="name" sv:type="String">
-      <sv:value>richEIFrame</sv:value>
+      <sv:value>2006-05-06T16:44:50.572+02:00</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>0e247726-7f1a-4766-be7d-d95d0d92221d</sv:value>
+        <sv:value>b0656129-9cdc-4b46-ade6-d105ccb17986</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
         <sv:value>true</sv:value>
@@ -111,7 +108,7 @@
         <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-05-05T15:41:49.701+02:00</sv:value>
+        <sv:value>2006-05-06T16:44:50.572+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastaction" sv:type="Date">
         <sv:value>2006-03-12T17:20:36.427+01:00</sv:value>
@@ -141,17 +138,14 @@
       <sv:value>info.magnolia.module.admininterface.pages.LinkBrowserDialogPage</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-05-05T15:41:49.716+02:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="name" sv:type="String">
-      <sv:value>linkBrowser</sv:value>
+      <sv:value>2006-05-06T16:44:50.572+02:00</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>4c60a4dc-4af1-4e5e-8dfe-bb7864ad5ef1</sv:value>
+        <sv:value>33a538f2-1bb4-4193-a5ec-50df90c9b499</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
         <sv:value>true</sv:value>
@@ -172,7 +166,7 @@
         <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-05-05T15:41:49.717+02:00</sv:value>
+        <sv:value>2006-05-06T16:44:50.572+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastaction" sv:type="Date">
         <sv:value>2006-03-12T17:20:36.432+01:00</sv:value>
@@ -202,17 +196,14 @@
       <sv:value>info.magnolia.module.admininterface.pages.WebDavIFrameDialogPage</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-05-05T15:41:49.724+02:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="name" sv:type="String">
-      <sv:value>webDAVIFrame</sv:value>
+      <sv:value>2006-05-06T16:44:50.582+02:00</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>17a0c3df-ebd1-4e21-ac85-e13f246c9ffa</sv:value>
+        <sv:value>c2c59d16-6c75-4492-9eac-71bc239b4838</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
         <sv:value>true</sv:value>
@@ -233,7 +224,7 @@
         <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-05-05T15:41:49.725+02:00</sv:value>
+        <sv:value>2006-05-06T16:44:50.582+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastaction" sv:type="Date">
         <sv:value>2006-03-12T17:20:36.436+01:00</sv:value>
@@ -263,17 +254,14 @@
       <sv:value>info.magnolia.module.admininterface.pages.UserRolesEditIncludeAclDialogPage</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-05-05T15:41:49.743+02:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="name" sv:type="String">
-      <sv:value>userRolesEditAclInclude</sv:value>
+      <sv:value>2006-05-06T16:44:50.582+02:00</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>20cad203-61cf-44a8-9f28-1aec670e347f</sv:value>
+        <sv:value>8028572c-aee3-458d-b9e0-c4bcfed97e19</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
         <sv:value>true</sv:value>
@@ -294,7 +282,7 @@
         <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-05-05T15:41:49.743+02:00</sv:value>
+        <sv:value>2006-05-06T16:44:50.582+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastaction" sv:type="Date">
         <sv:value>2006-03-12T17:20:36.440+01:00</sv:value>
@@ -324,17 +312,14 @@
       <sv:value>info.magnolia.module.admininterface.pages.UserEditIncludeRolesDialogPage</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-05-05T15:41:49.752+02:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="name" sv:type="String">
-      <sv:value>usersEditRolesInclude</sv:value>
+      <sv:value>2006-05-06T16:44:50.582+02:00</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>7a078a85-27b9-4ac0-a8f9-4a8256f3f012</sv:value>
+        <sv:value>b6e486db-5bc7-407f-9c6e-8e9bef06a2c4</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
         <sv:value>true</sv:value>
@@ -355,7 +340,7 @@
         <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-05-05T15:41:49.753+02:00</sv:value>
+        <sv:value>2006-05-06T16:44:50.582+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastaction" sv:type="Date">
         <sv:value>2006-03-12T17:20:36.444+01:00</sv:value>
@@ -385,17 +370,14 @@
       <sv:value>info.magnolia.module.admininterface.pages.GroupEditRolesIncludeDialogPage</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-05-05T15:41:49.765+02:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="name" sv:type="String">
-      <sv:value>groupEditRolesInclude</sv:value>
+      <sv:value>2006-05-06T16:44:50.582+02:00</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>5ca1ec9a-a79f-422f-a4a2-02c1b8740e15</sv:value>
+        <sv:value>e6fc246c-ce7f-4161-a9f2-77743d47d0ff</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
         <sv:value>true</sv:value>
@@ -404,7 +386,7 @@
         <sv:value>2006-03-12T17:20:36.452+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-05-05T15:41:49.765+02:00</sv:value>
+        <sv:value>2006-05-06T16:44:50.582+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:activatorid" sv:type="String">
         <sv:value>superuser</sv:value>
@@ -431,17 +413,14 @@
       <sv:value>info.magnolia.module.admininterface.pages.GroupEditUsersIncludeDialogPage</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-05-05T15:41:49.771+02:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="name" sv:type="String">
-      <sv:value>groupEditUsersInclude</sv:value>
+      <sv:value>2006-05-06T16:44:50.582+02:00</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>2577e308-ecab-4268-b3f8-ef96cb67e148</sv:value>
+        <sv:value>20513ff0-04a9-47d6-b16b-c2860e0a0220</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
         <sv:value>true</sv:value>
@@ -450,7 +429,7 @@
         <sv:value>2006-03-12T17:20:36.455+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-05-05T15:41:49.773+02:00</sv:value>
+        <sv:value>2006-05-06T16:44:50.582+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:activatorid" sv:type="String">
         <sv:value>superuser</sv:value>
@@ -477,17 +456,14 @@
       <sv:value>info.magnolia.module.admininterface.pages.UserAddToGroupsIncludeDialogPage</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-05-05T15:41:49.783+02:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="name" sv:type="String">
-      <sv:value>userAddToGroupsInclude</sv:value>
+      <sv:value>2006-05-06T16:44:50.582+02:00</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>9f50fa88-9c3e-4aca-9e5e-3fec57575a22</sv:value>
+        <sv:value>93e2957f-a6d9-459a-abbc-812a0d200bba</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
         <sv:value>true</sv:value>
@@ -499,7 +475,7 @@
         <sv:value>2006-03-28T11:17:07.007+08:00</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-05-05T15:41:49.784+02:00</sv:value>
+        <sv:value>2006-05-06T16:44:50.582+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:activatorid" sv:type="String">
         <sv:value>superuser</sv:value>
@@ -529,17 +505,14 @@
       <sv:value>info.magnolia.module.admininterface.lists.WebsiteVersionsList</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-05-05T15:41:49.811+02:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="name" sv:type="String">
-      <sv:value>websiteVersionsList</sv:value>
+      <sv:value>2006-05-06T16:44:50.592+02:00</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>8790298c-248a-45cd-b526-ce29ffca7558</sv:value>
+        <sv:value>663c7f93-46bd-4050-a0f3-e3cc4729a317</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
         <sv:value>true</sv:value>
@@ -560,7 +533,7 @@
         <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-05-05T15:41:49.812+02:00</sv:value>
+        <sv:value>2006-05-06T16:44:50.592+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastaction" sv:type="Date">
         <sv:value>2006-04-27T17:58:15.423+02:00</sv:value>
@@ -590,17 +563,14 @@
       <sv:value>info.magnolia.module.admininterface.lists.WebsiteSearchList</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-05-05T15:41:49.825+02:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="name" sv:type="String">
-      <sv:value>websiteSearchList</sv:value>
+      <sv:value>2006-05-06T16:44:50.592+02:00</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>4c0b2a0e-341c-4444-b84f-7186d92f9997</sv:value>
+        <sv:value>c8156a74-e90e-4f5f-a987-31c2557decfc</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
         <sv:value>true</sv:value>
@@ -621,7 +591,7 @@
         <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-05-05T15:41:49.826+02:00</sv:value>
+        <sv:value>2006-05-06T16:44:50.592+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastaction" sv:type="Date">
         <sv:value>2006-04-27T17:58:45.624+02:00</sv:value>
@@ -651,17 +621,14 @@
       <sv:value>info.magnolia.module.admininterface.pages.DeploymentUtilsPage</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-05-05T15:41:49.825+02:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="name" sv:type="String">
-      <sv:value>deploymentUtils</sv:value>
+      <sv:value>2006-05-06T16:44:50.592+02:00</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>4fd61dfc-d808-4c73-9b04-0a550901a617</sv:value>
+        <sv:value>46810ec2-c537-4097-9c11-53ddc0f1be78</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
         <sv:value>true</sv:value>
@@ -682,10 +649,68 @@
         <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-05-05T15:41:49.826+02:00</sv:value>
+        <sv:value>2006-05-06T16:44:50.592+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastaction" sv:type="Date">
         <sv:value>2006-05-05T17:31:27.962+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activatorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
+        <sv:value>1121430371206000</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="developmentUtils">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>6bbaee73-45e7-48fd-94fe-1752382e54cd</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="class" sv:type="String">
+      <sv:value>info.magnolia.module.admininterface.pages.DevelopmentUtilsPage</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-05-06T16:44:50.592+02:00</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>483203b9-a42a-4302-b178-aa96b4dd35ab</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+        <sv:value>2005-07-15T14:26:11.205+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2006-05-07T10:04:33.011+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+        <sv:value>false</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-05-06T16:44:50.592+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+        <sv:value>2006-05-07T10:04:20.253+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:activatorid" sv:type="String">
         <sv:value>superuser</sv:value>

@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<hmtl>
+  <head>
+    <title>Deployment utils</title>
+  </head>
+  <body>
+    <h3>Backup configuration</h3>
+    <form>
+      <input type="hidden" name="command" value="backup" />
+      <div class="formelement">
+        <label for="templates">Templates</label>
+        <input type="checkbox" name="templates" checked="checked" />
+      </div>
+      <div class="formelement">
+        <label for="paragraphs">Paragraphs</label>
+        <input type="checkbox" name="paragraphs" checked="checked" />
+      </div>
+      <div class="formelement">
+        <label for="dialogs">Dialogs</label>
+        <input type="checkbox" name="dialogs" checked="checked" />
+      </div>
+      <div class="website">
+        <label for="website">Website</label>
+        <input type="checkbox" name="website" checked="checked" />
+      </div>
+      <div class="formelement">
+        <label for="rootdir">Root dir, relative to webapp</label>
+        <input type="text" name="rootdir" value="WEB-INF/bootstrap/common" />
+      </div>
+      <input type="submit" value="backup" />
+    </form>
+  </body>
+</hmtl>

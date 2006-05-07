@@ -108,6 +108,17 @@ public class ContentUtil {
     }
 
     /**
+     * Get all children of a particular type
+     * @param node
+     * @param type
+     * @return
+     */
+    public static List collectAllChildren(Content node, ItemType[] types) {
+        List nodes = new ArrayList();
+        return collectAllChildren(nodes, node, types);
+    }
+
+    /**
      * Get all subnodes recursively and add them to the nodes collection.
      * @param nodes
      * @param node
@@ -129,22 +140,23 @@ public class ContentUtil {
     }
 
     public static Content createPath(HierarchyManager hm, String path) throws AccessDeniedException,
-            PathNotFoundException, RepositoryException {
+        PathNotFoundException, RepositoryException {
         return ContentUtil.createPath(hm, path, ItemType.CONTENTNODE);
     }
 
     public static Content createPath(HierarchyManager hm, String path, ItemType type) throws AccessDeniedException,
-            PathNotFoundException, RepositoryException {
+        PathNotFoundException, RepositoryException {
         // remove leading /
         path = StringUtils.removeStart(path, "/");
-    
+
         String[] names = path.split("/"); //$NON-NLS-1$
         Content node = hm.getRoot();
         for (int i = 0; i < names.length; i++) {
             String name = names[i];
             if (node.hasContent(name)) {
                 node = node.getContent(name);
-            } else {
+            }
+            else {
                 node = node.createContent(name, type);
             }
         }
