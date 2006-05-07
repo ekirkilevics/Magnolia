@@ -26,6 +26,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,8 +60,7 @@ public class PageHandlerManager extends ObservedManager {
      * @param response
      * @returnn an instance of the handlers
      */
-    public PageMVCHandler getPageHandler(String name, HttpServletRequest request,
-        HttpServletResponse response) {
+    public PageMVCHandler getPageHandler(String name, HttpServletRequest request, HttpServletResponse response) {
 
         Class dialogPageHandlerClass = (Class) dialogPageHandlers.get(name);
         if (dialogPageHandlerClass == null) {
@@ -75,13 +75,13 @@ public class PageHandlerManager extends ObservedManager {
             return (PageMVCHandler) constructor.newInstance(new Object[]{name, request, response});
         }
         catch (Exception e) {
-            log.error("can't instantiate page ["+name+"]",  e);
+            log.error("can't instantiate page [" + name + "]", e);
             throw new InvalidDialogPageHandlerException(name, e);
         }
     }
 
     protected void registerPageHandler(String name, Class dialogPageHandler) {
-        log.info("Registering page handler [" + name + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+        log.info("Registering page handler [{}]", name); //$NON-NLS-1$ 
         dialogPageHandlers.put(name, dialogPageHandler);
     }
 
@@ -97,6 +97,10 @@ public class PageHandlerManager extends ObservedManager {
             for (Iterator iter = pages.iterator(); iter.hasNext();) {
                 Content page = (Content) iter.next();
                 String name = page.getNodeData("name").getString(); //$NON-NLS-1$
+                if (StringUtils.isEmpty(name)) {
+                    name = page.getName();
+                }
+
                 String className = page.getNodeData("class").getString(); //$NON-NLS-1$
                 try {
                     registerPageHandler(name, Class.forName(className));
