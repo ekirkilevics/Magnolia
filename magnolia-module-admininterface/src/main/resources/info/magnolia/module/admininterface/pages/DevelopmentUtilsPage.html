@@ -2,10 +2,25 @@
 <hmtl>
   <head>
     <title>Deployment utils</title>
+    <style type="text/css">
+    <![CDATA[
+    .formelement {
+    height: 18px;
+    }
+    .formelement label{
+    width: 200px;
+    float: left;
+    }
+    .formelement input{
+    width: 200px;
+    float: left;
+    }
+    ]]>
+    </style>
   </head>
   <body>
     <h3>Backup configuration</h3>
-    <form>
+    <form action="">
       <input type="hidden" name="command" value="backup" />
       <div class="formelement">
         <label for="templates">Templates</label>
@@ -29,5 +44,35 @@
       </div>
       <input type="submit" value="backup" />
     </form>
+    <h3>Backup subnodes to separate files</h3>
+    <form action="">
+      <input type="hidden" name="command" value="backupChildren" />
+      <div class="formelement">
+        <label for="repository">Repository</label>
+        <select name="repository">
+          [#list this.repositories as item]
+          <option>${item}</option>
+          [/#list]
+        </select>
+      </div>
+      <div class="formelement">
+        <label for="parentpath">
+          Parent path
+          <small>(all the children will be saved)</small>
+        </label>
+        <input type="text" name="parentpath" />
+      </div>
+      <div class="formelement">
+        <label for="rootdir">Root dir, relative to webapp</label>
+        <input type="text" name="rootdir" value="WEB-INF/bootstrap/common" />
+      </div>
+      <input type="submit" value="backupChildren" />
+    </form>
+    [#if message?exists]
+    <hr />
+    <pre>
+      ${message}
+    </pre>
+    [/#if]
   </body>
 </hmtl>

@@ -12,6 +12,7 @@
  */
 package info.magnolia.module.admininterface;
 
+import freemarker.template.Configuration;
 import info.magnolia.cms.util.FreeMarkerUtil;
 
 import java.io.IOException;
@@ -20,6 +21,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 
 /**
  * A default page (hander) using a freemarker template to render. The default templat name is following the class name.
@@ -53,6 +55,7 @@ public class TemplatedMVCHandler extends PageMVCHandler {
     public void renderHtml(String view) throws IOException {
         Map data = new HashMap();
         data.put("this", this);
+
         FreeMarkerUtil.process(this.getTemplateName(view), data, getResponse().getWriter());
     }
 

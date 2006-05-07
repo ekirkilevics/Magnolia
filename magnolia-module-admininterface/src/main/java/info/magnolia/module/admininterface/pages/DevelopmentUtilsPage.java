@@ -18,6 +18,7 @@ import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.ie.DataTransporter;
 import info.magnolia.cms.security.AccessDeniedException;
@@ -59,6 +60,10 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
     private boolean website;
 
     private String rootdir;
+
+    private String parentpath;
+
+    private String repository;
 
     /**
      * Logger.
@@ -114,6 +119,26 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
         this.website = website;
     }
 
+    /**
+     * Setter for <code>parentpath</code>.
+     * @param parentpath The parentpath to set.
+     */
+    public void setParentpath(String parentpath) {
+        this.parentpath = parentpath;
+    }
+
+    /**
+     * Setter for <code>repository</code>.
+     * @param repository The repository to set.
+     */
+    public void setRepository(String repository) {
+        this.repository = repository;
+    }
+
+    public Iterator getRepositories() {
+        return ContentRepository.getAllRepositoryNames();
+    }
+
     public String backup() {
 
         Iterator modules = ModuleLoader.getInstance().getModuleInstances().keySet().iterator();
@@ -130,17 +155,17 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
             try {
                 Content moduleroot = hm.getContent("/modules/" + moduleName);
                 if (templates) {
-                    backupChildren(ContentRepository.CONFIG, session, moduleroot, "templates", new ItemType[]{
+                    exportChildren(ContentRepository.CONFIG, session, moduleroot, "templates", new ItemType[]{
                         ItemType.CONTENT,
                         ItemType.CONTENTNODE});
                 }
                 if (paragraphs) {
-                    backupChildren(ContentRepository.CONFIG, session, moduleroot, "paragraphs", new ItemType[]{
+                    exportChildren(ContentRepository.CONFIG, session, moduleroot, "paragraphs", new ItemType[]{
                         ItemType.CONTENT,
                         ItemType.CONTENTNODE});
                 }
                 if (dialogs) {
-                    backupChildren(
+                    exportChildren(
                         ContentRepository.CONFIG,
                         session,
                         moduleroot,
@@ -177,6 +202,30 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
         return this.show();
     }
 
+    public String backupChildren() {
+        HierarchyManager hm = MgnlContext.getHierarchyManager(this.repository);
+        try {
+            Content parentNode = hm.getContent(parentpath);
+            Iterator children = parentNode.getChildren(ItemType.CONTENT).iterator();
+            while (children.hasNext()) {
+                Content exported = (Content) children.next();
+                exportNode(repository, hm.getWorkspace().getSession(), exported);
+            }
+            children = parentNode.getChildren(ItemType.CONTENTNODE).iterator();
+            while (children.hasNext()) {
+                Content exported = (Content) children.next();
+
+                exportNode(repository, hm.getWorkspace().getSession(), exported);
+            }
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+            AlertUtil.setMessage("Error while processing actionS", e);
+        }
+
+        return this.show();
+    }
+
     /**
      * @param session
      * @param moduleroot
@@ -186,7 +235,7 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    private void backupChildren(String repository, Session session, Content moduleroot, String path,
+    private void exportChildren(String repository, Session session, Content moduleroot, String path,
         ItemType[] itemTypes) throws PathNotFoundException, RepositoryException, AccessDeniedException,
         FileNotFoundException, IOException {
         Content templateRoot = moduleroot.getContent(path);

@@ -24,9 +24,11 @@
       <input type="hidden" name="command" value="reloadI18nMessages" />
       <input type="submit" value="reload" />
     </form>
+    [#if message?exists]
     <hr />
     <pre>
       ${message}
     </pre>
+    [/#if]
   </body>
 </hmtl>
