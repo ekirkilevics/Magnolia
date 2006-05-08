@@ -133,7 +133,7 @@ public class ModuleRegistration {
         }
         else {
             try {
-                File xmlFile = new File(xmlUrl.toURI());
+                File xmlFile = new File(new URI(xmlUrl.toString()));
                 moduleRoot = xmlFile.getParentFile().getParentFile().getParentFile();
             }
             catch (URISyntaxException e) {
