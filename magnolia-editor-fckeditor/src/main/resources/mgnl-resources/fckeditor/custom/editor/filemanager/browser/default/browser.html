@@ -1,40 +1,40 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-	<HEAD>
-		<script language="javascript" type="text/javascript">
-	    		function showTree(){
-	    			var frame = window.frames[0];
-	    			var pathSelected = opener.document.getElementById("txtUrl").value;
-				pathSelected = pathSelected.replace(".html","");
-				
-				var src = getContextPath() + "/.magnolia/dialogpages/linkBrowser.html?repository=website";
-				if (pathSelected) src+="&pathSelected="+pathSelected;
-				frame.location=src;
-				
-				// set the callback
-				top.mgnlCallBackCommand = {
-					callback: function(value){
-						opener.SetUrl(value + ".html");
-					}
-				};
-	    		}
-	    		
-	    		function resize(){
-	    			window.resizeTo(400,450);
-	    			window.focus();
-	    		}
-	    		
-	    		function getContextPath(){
-	    			var query = window.location.search;
-	    			var re = new RegExp('[?&]contextPath=([^&]*)');
-	    			return re.exec(query)[1];
-	    		}
-	    </script>
-	    
-		
-	</HEAD>
+    <HEAD>
+        <script language="javascript" type="text/javascript">
+                function showTree(){
+                    var frame = window.frames[0];
+                    var pathSelected = opener.document.getElementById("txtUrl").value;
+                pathSelected = pathSelected.replace(".html","");
 
-	<FRAMESET rows="1" cols="1" onload="resize();showTree();" border="0" framespacing="0" frameborder="no" >
-		<FRAME id="frmTree" name="frmTree" src="" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" >
-	</FRAMESET>
+                var src = getContextPath() + "/.magnolia/pages/linkBrowser.html?repository=website";
+                if (pathSelected) src+="&pathSelected="+pathSelected;
+                frame.location=src;
+
+                // set the callback
+                top.mgnlCallBackCommand = {
+                    callback: function(value){
+                        opener.SetUrl(value + ".html");
+                    }
+                };
+                }
+
+                function resize(){
+                    window.resizeTo(400,450);
+                    window.focus();
+                }
+
+                function getContextPath(){
+                    var query = window.location.search;
+                    var re = new RegExp('[?&]contextPath=([^&]*)');
+                    return re.exec(query)[1];
+                }
+        </script>
+
+
+    </HEAD>
+
+    <FRAMESET rows="1" cols="1" onload="resize();showTree();" border="0" framespacing="0" frameborder="no" >
+        <FRAME id="frmTree" name="frmTree" src="" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" >
+    </FRAMESET>
 </html>
