@@ -100,7 +100,7 @@
           <target>1.4</target>
         </configuration>
       </plugin>
-      <!-- 
+      <!--
         <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
@@ -243,6 +243,11 @@
         <groupId>jdom</groupId>
         <artifactId>jdom</artifactId>
         <version>1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>jaxen</groupId>
+        <artifactId>jaxen</artifactId>
+        <version>1.0-FCS</version>
       </dependency>
       <dependency>
         <groupId>javax.servlet</groupId>
