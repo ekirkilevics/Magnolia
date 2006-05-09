@@ -30,10 +30,10 @@ public class ModuleRegistrationTest extends TestCase {
     }
 
     public void testGetModuleRootJar() {
-        File moduleRoot = new ModuleRegistration().getModuleRoot("/org/apache/commons/collections/Buffer.class");
+        File moduleRoot = new ModuleRegistration().getModuleRoot("/junit/framework/TestCase.class");
 
-        assertNotNull(moduleRoot);
-        assertTrue(moduleRoot.exists());
+        assertNotNull("Unable to find jar containing [/junit/framework/TestCase.class]", moduleRoot);
+        assertTrue("Jar " + moduleRoot.getAbsolutePath() + " does not exist", moduleRoot.exists());
 
     }
 
