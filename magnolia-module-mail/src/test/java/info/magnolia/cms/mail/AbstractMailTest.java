@@ -53,9 +53,9 @@ public abstract class AbstractMailTest extends TestCase {
         handler = new SimpleMailHandler();
         factory = MgnlMailFactory.getInstance();
         factory.initParam(MgnlMailFactory.SMTP_SERVER, "localhost");
-        factory.initParam(MgnlMailFactory.SMTP_PORT, "1025");
+        factory.initParam(MgnlMailFactory.SMTP_PORT, "26");
 
-        server = SimpleSmtpServer.start(1025);
+        server = SimpleSmtpServer.start(26);
     }
 
     /**
