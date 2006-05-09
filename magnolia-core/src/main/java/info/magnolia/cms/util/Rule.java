@@ -31,7 +31,7 @@ public class Rule implements Serializable {
     /**
      * generated Stable serialVersionUID.
      */
-    private static final long serialVersionUID = 43115354810497L;
+    private static final long serialVersionUID = 43115354810431L;
 
     /**
      * list of node types allowed
