@@ -94,6 +94,13 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
         for (int i = 0; i < pars.length; i++) {
             try {
                 Paragraph paragraphInfo = ParagraphManager.getInstance().getInfo(pars[i]);
+
+                // prevent NPEs
+                if (paragraphInfo == null)
+                {
+                    log.error("Unable to load paragraph {}", pars[i]);
+                    continue;
+                }
                 Button button = new Button(c1.getName(), paragraphInfo.getName());
                 StringBuffer label = new StringBuffer();
                 // TODO enable an invidual message bundle for each paragraph

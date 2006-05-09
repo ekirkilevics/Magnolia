@@ -146,6 +146,12 @@ public class SaveHandlerImpl implements SaveHandler {
             try {
                 // get the node to save
                 Content page = this.getPageNode(hm);
+
+                if (page==null) {
+                    // an error should have been logged in getPageNode() avoid NPEs!
+                    return;
+                }
+
                 Content node = this.getSaveNode(hm, page);
 
                 // this value can get used later on to find this node
@@ -164,7 +170,7 @@ public class SaveHandlerImpl implements SaveHandler {
                     processSaveInfo(node, saveInfo);
                 }
                 if (log.isDebugEnabled()) {
-                    log.debug("Saving - " + path); //$NON-NLS-1$
+                    log.debug("Saving {}", path); //$NON-NLS-1$
                 }
                 hm.save();
             }
@@ -741,13 +747,14 @@ public class SaveHandlerImpl implements SaveHandler {
     protected Content getPageNode(HierarchyManager hm) throws RepositoryException, AccessDeniedException,
             PathNotFoundException {
         Content page = null;
+        String path = this.getPath();
         try {
-            page = hm.getContent(this.getPath());
+            page = hm.getContent(path);
         }
         catch (RepositoryException e) {
             if (this.isCreate()) {
-                String parentPath = StringUtils.substringBeforeLast(this.getPath(), "/"); //$NON-NLS-1$
-                String label = StringUtils.substringAfterLast(this.getPath(), "/"); //$NON-NLS-1$
+                String parentPath = StringUtils.substringBeforeLast(path, "/"); //$NON-NLS-1$
+                String label = StringUtils.substringAfterLast(path, "/"); //$NON-NLS-1$
                 if (StringUtils.isEmpty(parentPath)) {
                     page = hm.getRoot();
                 } else {
@@ -755,7 +762,7 @@ public class SaveHandlerImpl implements SaveHandler {
                 }
                 page = page.createContent(label, this.getCreationItemType());
             } else {
-                log.error("tried to save a not existing node. use create = true to force creation"); //$NON-NLS-1$
+                log.error("Tried to save a not existing node with path {}. use create = true to force creation", path); //$NON-NLS-1$
             }
         }
         return page;
