@@ -51,7 +51,7 @@ public class DocumentDialog extends ConfiguredDialog {
     private boolean create;
 
     private String version;
-    
+
     /**
      * @param name
      * @param request
@@ -62,7 +62,7 @@ public class DocumentDialog extends ConfiguredDialog {
         super(name, request, response, configNode);
         this.version = request.getParameter("mgnlVersion");
     }
-    
+
     /**
      * Add the comment popup to the dialog
      */
@@ -71,7 +71,7 @@ public class DocumentDialog extends ConfiguredDialog {
         Document doc = new Document(storageNode, version);
         // set this document for some of the subcontrols
         Document.setCurrent(request, doc);
-        
+
         // execute the js init code
         DialogDialog dialog = new DialogDialog(){
             protected void drawHtmlPreSubsHead(Writer out) throws IOException {
@@ -81,9 +81,9 @@ public class DocumentDialog extends ConfiguredDialog {
                 out.write("</script>");
             };
         };
-        
+
         dialog.init(request, response, storageNode, configNode);
-        
+
         dialog.addSub(new DialogSuper(){
             public void drawHtml(Writer out) throws IOException {
                 String str = "";
@@ -96,11 +96,11 @@ public class DocumentDialog extends ConfiguredDialog {
                 out.write(str);
             }
         });
-        
+
         if(StringUtils.isNotEmpty(this.version)){
             dialog.setConfig("cancelLabel", "Close");
         }
-        
+
         return dialog;
     }
 
@@ -113,19 +113,20 @@ public class DocumentDialog extends ConfiguredDialog {
 
         if(this.create){
             // get the new name of the node
-            String name = form.getDocument("document").getFileName();
+            info.magnolia.cms.beans.runtime.Document documentMaybeNull = form.getDocument("document");
+            String name = documentMaybeNull != null ? documentMaybeNull.getFileName() : "file";
             String path = PathUtil.getFolder(handler.getPath());
 
             name = Path.getValidatedLabel(name);
             if (name.matches("^-*$")) {
                 name = "file";
             }
-            
+
             name = Path.getUniqueLabel(hm, path, name);
             handler.setPath(PathUtil.createPath(path, name));
             handler.setCreate(true);
             handler.setCreationItemType(ItemType.CONTENTNODE);
-            
+
             this.path = PathUtil.createPath(path, name);
         }
     }
@@ -139,7 +140,7 @@ public class DocumentDialog extends ConfiguredDialog {
         Content node = this.getStorageNode();
 
         Document doc = new Document(node);
-        
+
         try {
             // update the extension if changed
             if(!form.getParameter("document_" + FileProperties.PROPERTY_EXTENSION).equals(doc.getFileExtension())){
@@ -178,7 +179,7 @@ public class DocumentDialog extends ConfiguredDialog {
             out.println("window.close();");
             out.println("</script></html>");
         }
-        
+
         // show the created dialog
         else {
             super.renderHtml(view);
