@@ -31,6 +31,8 @@ public abstract class AbstractMailTest extends TestCase {
 
     public static final String TEST_FILE_PDF = "magnolia.pdf";
 
+    public static int SMTP_PORT = 25025;
+
     protected MgnlMailFactory factory;
 
     protected SimpleMailHandler handler;
@@ -53,9 +55,9 @@ public abstract class AbstractMailTest extends TestCase {
         handler = new SimpleMailHandler();
         factory = MgnlMailFactory.getInstance();
         factory.initParam(MgnlMailFactory.SMTP_SERVER, "localhost");
-        factory.initParam(MgnlMailFactory.SMTP_PORT, "26");
+        factory.initParam(MgnlMailFactory.SMTP_PORT, Integer.toString(SMTP_PORT));
 
-        server = SimpleSmtpServer.start(26);
+        server = SimpleSmtpServer.start(SMTP_PORT);
     }
 
     /**
