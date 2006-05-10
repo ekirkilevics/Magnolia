@@ -194,28 +194,44 @@ public class Messages {
      */
     public ResourceBundle getBundle() {
         if (bundle == null) {
-                try {
-                    InputStream stream = ClasspathResourcesUtil.getStream("/" + StringUtils.replace(basename, ".", "/") + "_" + getLocale().getLanguage() + "_" + getLocale().getCountry() + ".properties", false);
-                    if(stream == null){
-                        stream = ClasspathResourcesUtil.getStream("/" + StringUtils.replace(basename, ".", "/") + "_" + getLocale().getLanguage() + ".properties", false);
-                    }
-                    if(stream == null){
-                        stream = ClasspathResourcesUtil.getStream("/" + StringUtils.replace(basename, ".", "/") + "_" + MessagesManager.getDefaultLocale().getLanguage() + ".properties", false);
-                    }
-                    if(stream == null){
-                        stream = ClasspathResourcesUtil.getStream("/" + StringUtils.replace(basename, ".", "/") + ".properties", false);
-                    }
-                    
-                    if(stream != null){
-                        bundle = new PropertyResourceBundle(stream);
-                    }
-                    else{
-                        bundle = ResourceBundle.getBundle(getBasename(), getLocale());
-                    }
+            try {
+                InputStream stream = ClasspathResourcesUtil.getStream("/"
+                    + StringUtils.replace(basename, ".", "/")
+                    + "_"
+                    + getLocale().getLanguage()
+                    + "_"
+                    + getLocale().getCountry()
+                    + ".properties", false);
+                if (stream == null) {
+                    stream = ClasspathResourcesUtil.getStream("/"
+                        + StringUtils.replace(basename, ".", "/")
+                        + "_"
+                        + getLocale().getLanguage()
+                        + ".properties", false);
                 }
-                catch (IOException e) {
-                    log.error("can't load messages for " + basename );
+                if (stream == null) {
+                    stream = ClasspathResourcesUtil.getStream("/"
+                        + StringUtils.replace(basename, ".", "/")
+                        + "_"
+                        + MessagesManager.getDefaultLocale().getLanguage()
+                        + ".properties", false);
                 }
+                if (stream == null) {
+                    stream = ClasspathResourcesUtil.getStream("/"
+                        + StringUtils.replace(basename, ".", "/")
+                        + ".properties", false);
+                }
+
+                if (stream != null) {
+                    bundle = new PropertyResourceBundle(stream);
+                }
+                else {
+                    bundle = ResourceBundle.getBundle(getBasename(), getLocale());
+                }
+            }
+            catch (IOException e) {
+                log.error("can't load messages for " + basename);
+            }
         }
         return bundle;
     }
@@ -229,12 +245,39 @@ public class Messages {
         return fallBackMessages;
     }
 
+    /**
+     * This sets the passed messages as the fallback messages. If there are already fallback messages, the passed messages are appended at the end of the chain.
+     * @param messages
+     * @return
+     */
+    public Messages chainMessages(Messages messages) {
+        // never create cyclic chains
+        if(this.equals(messages)){
+            return this;
+        }
+        if (this.hasFallBackMessages()) {
+            Messages fallback = this.getFallBackMessages();
+            fallback.chainMessages(messages);
+        }
+        else {
+            this.setFallBackMessages(messages);
+        }
+        return messages;
+    }
+
     public boolean hasFallBackMessages() {
         return this.fallBackMessages != null;
     }
 
     public void reload() throws Exception {
         this.bundle = null;
+    }
+    
+    /**
+     * True if the basename and the locale are the same
+     */
+    public boolean equals(Object arg0) {
+        return StringUtils.equals(((Messages) arg0).basename, this.basename) && this.locale.equals(((Messages)arg0).locale);
     }
 
 }
