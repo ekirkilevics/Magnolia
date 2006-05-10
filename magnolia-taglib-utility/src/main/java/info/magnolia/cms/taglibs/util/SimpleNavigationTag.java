@@ -214,10 +214,12 @@ public class SimpleNavigationTag extends TagSupport {
      * expandAll is set to <code>EXPAND_ALL</code>
      */
     public void setExpandAll(String expandAll) {
-        if (expandAll.equalsIgnoreCase(EXPAND_SHOW))
+        if (expandAll.equalsIgnoreCase(EXPAND_SHOW)) {
             this.expandAll = expandAll;
-        else
+        }
+        else {
             this.expandAll = EXPAND_ALL;
+        }
     }
 
     /**
@@ -250,8 +252,11 @@ public class SimpleNavigationTag extends TagSupport {
      */
     public void release() {
         this.startLevel = 0;
+        this.endLevel = 0;
         this.hideInNav = null;
         this.openMenu = null;
+        this.style = null;
+        this.expandAll = EXPAND_NONE;
         super.release();
     }
 
