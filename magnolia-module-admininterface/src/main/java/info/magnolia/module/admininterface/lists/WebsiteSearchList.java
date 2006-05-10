@@ -3,6 +3,8 @@ package info.magnolia.module.admininterface.lists;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
+
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.gui.control.ContextMenu;
@@ -16,6 +18,9 @@ import info.magnolia.cms.gui.controlx.search.RepositorySearchListModel;
 import info.magnolia.cms.gui.controlx.search.SearchConfig;
 import info.magnolia.cms.gui.controlx.search.SearchConfigImpl;
 import info.magnolia.cms.gui.controlx.search.SearchControlDefinition;
+import info.magnolia.cms.gui.query.SearchQuery;
+import info.magnolia.cms.gui.query.SearchQueryExpression;
+import info.magnolia.cms.gui.query.StringSearchQueryParameter;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 
@@ -100,13 +105,23 @@ public class WebsiteSearchList extends AbstractSimpleSearchList {
     }
 
     /**
-     * The configuration used for the search form.
+     * Here we create a all over query
+     */
+    public SearchQuery getQuery() {
+        SearchQuery query = new SearchQuery();
+        if(StringUtils.isNotEmpty(this.getSearchStr())){
+            SearchQueryExpression exp = new StringSearchQueryParameter("*", this.getSearchStr(),StringSearchQueryParameter.CONTAINS);
+            query.setRootExpression(exp);
+        }
+        return query;
+    }
+    
+    /**
+     * Not used in this context
      */
     public SearchConfig getSearchConfig() {
-        SearchConfig searchConfig = new SearchConfigImpl();
-        searchConfig.addControlDefinition(new SearchControlDefinition("title", "Title"));
-        searchConfig.addControlDefinition(new SearchControlDefinition("mgnl:authorid", "User"));
-        return searchConfig;
+        return null;
     }
+
 
 }
