@@ -12,11 +12,11 @@
  */
 package info.magnolia.cms.util;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.io.Serializable;
+import java.util.Iterator;
 
+import org.apache.commons.collections.IteratorUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 
 
@@ -31,12 +31,12 @@ public class Rule implements Serializable {
     /**
      * generated Stable serialVersionUID.
      */
-    private static final long serialVersionUID = 43115354810431L;
+    private static final long serialVersionUID = 222L;
 
     /**
      * list of node types allowed
      */
-    private List allowedTypes = new ArrayList();
+    private String[] allowedTypes = new String[0];
 
     /**
      * reverse rule
@@ -54,8 +54,8 @@ public class Rule implements Serializable {
      * @param allowedTypes
      */
     public Rule(String[] allowedTypes) {
-        for (int index = 0; index < allowedTypes.length; index++) {
-            this.addAllowType(allowedTypes[index]);
+        for (int j = 0; j < allowedTypes.length; j++) {
+            this.addAllowType(allowedTypes[j]);
         }
     }
 
@@ -66,8 +66,8 @@ public class Rule implements Serializable {
      */
     public Rule(String allowedTypes, String separator) {
         String[] types = StringUtils.split(allowedTypes, separator);
-        for (int index = 0; index < types.length; index++) {
-            this.addAllowType(types[index]);
+        for (int j = 0; j < types.length; j++) {
+            this.addAllowType(types[j]);
         }
     }
 
@@ -77,7 +77,7 @@ public class Rule implements Serializable {
      */
     public void addAllowType(String nodeType) {
         if (nodeType != null) {
-            this.allowedTypes.add(nodeType);
+            ArrayUtils.add(allowedTypes, nodeType);
         }
     }
 
@@ -87,7 +87,12 @@ public class Rule implements Serializable {
      */
     public void removeAllowType(String nodeType) {
         if (nodeType != null) {
-            this.allowedTypes.remove(nodeType);
+            for (int j = 0; j < allowedTypes.length; j++) {
+                if (nodeType.equals(allowedTypes[j])) {
+                    ArrayUtils.remove(allowedTypes, j);
+                    break;
+                }
+            }
         }
     }
 
@@ -97,13 +102,13 @@ public class Rule implements Serializable {
      * @return true if given nodeType is allowed
      */
     public boolean isAllowed(String nodeType) {
+        boolean allowed = ArrayUtils.contains(allowedTypes, nodeType);
         if (this.reverse) {
-            return !this.allowedTypes.contains(nodeType);
+            return !allowed;
         }
-        else if (this.allowedTypes.contains(nodeType)) {
-            return true;
-        }
-        return false;
+
+        return allowed;
+
     }
 
     /**
@@ -112,7 +117,7 @@ public class Rule implements Serializable {
      */
     public String toString() {
         StringBuffer buffer = new StringBuffer();
-        Iterator typeIterator = this.allowedTypes.iterator();
+        Iterator typeIterator = IteratorUtils.arrayIterator(allowedTypes);
         while (typeIterator.hasNext()) {
             buffer.append((String) typeIterator.next());
             buffer.append(",");
