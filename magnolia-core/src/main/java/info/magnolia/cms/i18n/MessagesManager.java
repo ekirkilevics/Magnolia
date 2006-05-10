@@ -129,7 +129,7 @@ public final class MessagesManager {
     }
 
     /**
-     * @return
+     * The lazzy LRU Map creates messages objects with a fault back to the default locale.
      */
     private static void intiLRUMap() {
         // create the LRUMap
@@ -138,11 +138,15 @@ public final class MessagesManager {
 
             public Object transform(Object input) {
                 MessagesID id = (MessagesID) input;
-                return new Messages(id.basename, id.locale);
+                Messages msgs = new Messages(id.basename, id.locale);
+                if(!id.locale.equals(MessagesManager.getDefaultLocale())){
+                    Messages fallBack = new Messages(id.basename, MessagesManager.getDefaultLocale());
+                    msgs.setFallBackMessages(fallBack);
+                }
+                return msgs;
             }
         });
         messages = Collections.synchronizedMap(map);
-        ;
     }
 
     /**
