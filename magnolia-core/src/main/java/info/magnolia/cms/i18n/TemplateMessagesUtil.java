@@ -48,8 +48,8 @@ public final class TemplateMessagesUtil {
     public static Messages getMessages() {
         Messages messages = MessagesManager.getMessages(TemplateMessagesUtil.CUSTOM_BASENAME);
         messages
-            .setFallBackMessages(MessagesManager.getMessages(TemplateMessagesUtil.DEFAULT_BASENAME))
-            .setFallBackMessages(MessagesManager.getMessages());
+            .chainMessages(MessagesManager.getMessages(TemplateMessagesUtil.DEFAULT_BASENAME))
+            .chainMessages(MessagesManager.getMessages());
         return messages;
     }
 
