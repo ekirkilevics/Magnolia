@@ -37,7 +37,12 @@ public class FunctionBar extends ContextMenu {
     /**
      * Javascript called if Enter is pressed in the field
      */
-    private String onSearch = "alert('set onSearch')";
+    private String onSearchFunction = "function(val){alert(val)}";
+    
+    /**
+     * String already present in the search field
+     */
+    private String searchStr = "";
 
     /**
      * @param menuName the name of this menu (used in js)
@@ -104,17 +109,33 @@ public class FunctionBar extends ContextMenu {
 
     
     /**
-     * @return Returns the onSearch.
+     * @return Returns the onSearchFunction.
      */
-    public String getOnSearch() {
-        return this.onSearch;
+    public String getOnSearchFunction() {
+        return this.onSearchFunction;
     }
 
     
     /**
-     * @param onSearch The onSearch to set.
+     * @param onSearchFunction The onSearchFunction to set.
      */
-    public void setOnSearch(String onSearch) {
-        this.onSearch = onSearch;
+    public void setOnSearchFunction(String onSearch) {
+        this.onSearchFunction = onSearch;
+    }
+
+    
+    /**
+     * @return Returns the searchStr.
+     */
+    public String getSearchStr() {
+        return this.searchStr;
+    }
+
+    
+    /**
+     * @param searchStr The searchStr to set.
+     */
+    public void setSearchStr(String searchStr) {
+        this.searchStr = searchStr;
     }
 }
