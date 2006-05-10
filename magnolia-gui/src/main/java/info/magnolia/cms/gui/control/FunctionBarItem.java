@@ -23,7 +23,8 @@ public class FunctionBarItem extends ContextMenuItem {
 
     private boolean active = false;
 
-    public FunctionBarItem() {
+    public FunctionBarItem(String name) {
+        super(name);
         this.active = false;
     }
 
