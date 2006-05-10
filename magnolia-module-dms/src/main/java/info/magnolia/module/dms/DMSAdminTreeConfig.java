@@ -15,7 +15,10 @@ package info.magnolia.module.dms;
 import info.magnolia.cms.beans.config.Subscriber;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
+import info.magnolia.cms.gui.control.ContextMenu;
 import info.magnolia.cms.gui.control.ContextMenuItem;
+import info.magnolia.cms.gui.control.FunctionBar;
+import info.magnolia.cms.gui.control.FunctionBarItem;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.i18n.Messages;
@@ -95,7 +98,7 @@ public class DMSAdminTreeConfig implements AdminTreeConfiguration {
     public void prepareContextMenu(Tree tree, boolean browseMode, HttpServletRequest request) {
         Messages msgs = MessagesManager.getMessages();
 
-        ContextMenuItem menuNewFolder = new ContextMenuItem();
+        ContextMenuItem menuNewFolder = new ContextMenuItem("newFolder");
 
         menuNewFolder.setLabel(msgs.get("tree.config.menu.newFolder"));
         menuNewFolder.setIcon(request.getContextPath() + "/.resources/icons/16/folder_add.gif");
@@ -107,7 +110,7 @@ public class DMSAdminTreeConfig implements AdminTreeConfiguration {
             + tree.getJavascriptTree()
             + ")");
 
-        ContextMenuItem menuNewDocument = new ContextMenuItem();
+        ContextMenuItem menuNewDocument = new ContextMenuItem("newDocument");
         menuNewDocument.setLabel("New document");
         menuNewDocument.setIcon(request.getContextPath() + "/.resources/icons/16/document_add.gif");
         menuNewDocument.setOnclick("mgnl.dms.DMS.createNew(" + tree.getJavascriptTree() + ".selectedNode.id);");
@@ -115,7 +118,7 @@ public class DMSAdminTreeConfig implements AdminTreeConfiguration {
             + tree.getJavascriptTree()
             + ")");
 
-        ContextMenuItem menuDownloadDocument = new ContextMenuItem();
+        ContextMenuItem menuDownloadDocument = new ContextMenuItem("download");
         menuDownloadDocument.setLabel("Download document");
         menuDownloadDocument.setIcon(request.getContextPath() + "/.resources/icons/16/document_plain.gif");
         menuDownloadDocument.setOnclick("mgnl.dms.DMS.downloadFile(" + tree.getJavascriptTree() + ".selectedNode.id);");
@@ -123,15 +126,15 @@ public class DMSAdminTreeConfig implements AdminTreeConfiguration {
             + tree.getJavascriptTree()
             + ")");
 
-        ContextMenuItem menuUploadZip = new ContextMenuItem();
+        ContextMenuItem menuUploadZip = new ContextMenuItem("zipUplaod");
         menuUploadZip.setLabel("Upload zip");
-        menuUploadZip.setIcon(request.getContextPath() + "/.resources/icons/16/document_add.gif");
+        menuUploadZip.setIcon(request.getContextPath() + "/.resources/icons/16/package.gif");
         menuUploadZip.setOnclick("mgnl.dms.DMS.uploadZip(" + tree.getJavascriptTree() + ".selectedNode.id);");
         menuUploadZip.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotContentNode("
             + tree.getJavascriptTree()
             + ")");
 
-        ContextMenuItem menuEditDocument = new ContextMenuItem();
+        ContextMenuItem menuEditDocument = new ContextMenuItem("edit");
         menuEditDocument.setLabel("Edit document");
         menuEditDocument.setIcon(request.getContextPath() + "/.resources/icons/16/document_edit.gif");
         menuEditDocument.setOnclick("mgnlTreeMenuOpenDialog("
@@ -141,15 +144,15 @@ public class DMSAdminTreeConfig implements AdminTreeConfiguration {
             + tree.getJavascriptTree()
             + ")");
 
-        ContextMenuItem menuVersions = new ContextMenuItem();
+        ContextMenuItem menuVersions = new ContextMenuItem("versions");
         menuVersions.setLabel("Versions");
-        menuVersions.setIcon(request.getContextPath() + "/.resources/icons/16/exchange.gif");
+        menuVersions.setIcon(request.getContextPath() + "/.resources/icons/16/elements1.gif");
         menuVersions.setOnclick("mgnl.dms.DMS.showVersions(" + tree.getJavascriptTree() + ".selectedNode.id);");
         menuVersions.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotContent("
             + tree.getJavascriptTree()
             + ")");
 
-        ContextMenuItem menuDelete = new ContextMenuItem();
+        ContextMenuItem menuDelete = new ContextMenuItem("delete");
         menuDelete.setLabel(msgs.get("tree.config.menu.delete"));
         menuDelete.setIcon(request.getContextPath() + "/.resources/icons/16/delete2.gif");
         menuDelete.setOnclick(tree.getJavascriptTree() + ".deleteNode();");
@@ -157,7 +160,7 @@ public class DMSAdminTreeConfig implements AdminTreeConfiguration {
             + tree.getJavascriptTree()
             + ")");
 
-        ContextMenuItem menuCopy = new ContextMenuItem();
+        ContextMenuItem menuCopy = new ContextMenuItem("copy");
         menuCopy.setLabel(msgs.get("tree.config.menu.copy"));
         menuCopy.setIcon(request.getContextPath() + "/.resources/icons/16/copy.gif");
         menuCopy.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
@@ -168,7 +171,7 @@ public class DMSAdminTreeConfig implements AdminTreeConfiguration {
             + ")");
         menuCopy.setOnclick(tree.getJavascriptTree() + ".copyNode();");
 
-        ContextMenuItem menuCut = new ContextMenuItem();
+        ContextMenuItem menuCut = new ContextMenuItem("move");
         menuCut.setLabel(msgs.get("tree.config.menu.move"));
         menuCut.setIcon(request.getContextPath() + "/.resources/icons/16/up_down.gif");
         menuCut
@@ -178,7 +181,7 @@ public class DMSAdminTreeConfig implements AdminTreeConfiguration {
             + ")");
         menuCut.setOnclick(tree.getJavascriptTree() + ".cutNode();");
 
-        ContextMenuItem menuActivateExcl = new ContextMenuItem();
+        ContextMenuItem menuActivateExcl = new ContextMenuItem("activate");
         menuActivateExcl.setLabel("Activate this"); //$NON-NLS-1$
         menuActivateExcl.setIcon(request.getContextPath() + "/.resources/icons/16/arrow_right_green.gif"); //$NON-NLS-1$
         menuActivateExcl.setOnclick(tree.getJavascriptTree() + ".activateNode(" + Tree.ACTION_ACTIVATE + ",false);"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -187,7 +190,7 @@ public class DMSAdminTreeConfig implements AdminTreeConfiguration {
         menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotNodeData(" //$NON-NLS-1$
             + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
 
-        ContextMenuItem menuActivateIncl = new ContextMenuItem();
+        ContextMenuItem menuActivateIncl = new ContextMenuItem("activateIncl");
         menuActivateIncl.setLabel("Activate incl. content"); //$NON-NLS-1$
         menuActivateIncl.setIcon(request.getContextPath() + "/.resources/icons/16/arrow_right_green.gif"); //$NON-NLS-1$
         menuActivateIncl.setOnclick(tree.getJavascriptTree() + ".activateNode(" + Tree.ACTION_ACTIVATE + ",true);"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -198,7 +201,7 @@ public class DMSAdminTreeConfig implements AdminTreeConfiguration {
         menuActivateIncl.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotContentNode(" //$NON-NLS-1$
             + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
 
-        ContextMenuItem menuDeActivate = new ContextMenuItem();
+        ContextMenuItem menuDeActivate = new ContextMenuItem("deactivate");
         menuDeActivate.setLabel(msgs.get("tree.config.menu.deactivate")); //$NON-NLS-1$
         menuDeActivate.setIcon(request.getContextPath() + "/.resources/icons/16/arrow_left_red.gif"); //$NON-NLS-1$
         menuDeActivate.setOnclick(tree.getJavascriptTree() + ".deActivateNode(" + Tree.ACTION_DEACTIVATE + ");"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -215,13 +218,13 @@ public class DMSAdminTreeConfig implements AdminTreeConfiguration {
 
         ContextMenuItem menuExport = new ContextMenuItem();
         menuExport.setLabel(msgs.get("tree.menu.export")); //$NON-NLS-1$
-        menuExport.setIcon(request.getContextPath() + "/.resources/icons/16/export.gif"); //$NON-NLS-1$
+        menuExport.setIcon(request.getContextPath() + "/.resources/icons/16/export1.gif"); //$NON-NLS-1$
         // keep versions
         menuExport.setOnclick(tree.getJavascriptTree() + ".exportNode(true);"); //$NON-NLS-1$
 
         ContextMenuItem menuImport = new ContextMenuItem();
         menuImport.setLabel(msgs.get("tree.menu.import")); //$NON-NLS-1$
-        menuImport.setIcon(request.getContextPath() + "/.resources/icons/16/import1.gif"); //$NON-NLS-1$
+        menuImport.setIcon(request.getContextPath() + "/.resources/icons/16/import2.gif"); //$NON-NLS-1$
         menuImport.setOnclick(tree.getJavascriptTree() + ".importNode(this);"); //$NON-NLS-1$
 
         ContextMenuItem menuRefresh = new ContextMenuItem();
@@ -257,8 +260,19 @@ public class DMSAdminTreeConfig implements AdminTreeConfiguration {
      * boolean, javax.servlet.http.HttpServletRequest)
      */
     public void prepareFunctionBar(Tree tree, boolean browseMode, HttpServletRequest request) {
-        tree.getFunctionBar().setSearchable(true);
-        tree.getFunctionBar().setOnSearch("mgnl.dms.DMS.simpleSearch()");
+        FunctionBar bar = tree.getFunctionBar();
+        ContextMenu menu = tree.getMenu();
+        bar.setSearchable(true);
+        bar.setOnSearchFunction("mgnl.dms.DMS.simpleSearch");
+        
+        bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("newFolder")));
+        bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("newDocument")));
+        bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("edit")));
+        bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("delete")));
+        bar.addMenuItem(null);
+        bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("activate")));
+        bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("deactivate")));
+
     }
 
 }
