@@ -17,14 +17,19 @@ import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.ContextMenu;
 import info.magnolia.cms.gui.control.ContextMenuItem;
+import info.magnolia.cms.gui.control.FunctionBar;
+import info.magnolia.cms.gui.control.FunctionBarItem;
 import info.magnolia.cms.gui.controlx.list.ListColumn;
 import info.magnolia.cms.gui.controlx.list.ListControl;
 import info.magnolia.cms.gui.controlx.list.ListModel;
 import info.magnolia.cms.gui.controlx.search.DialogBasedSearchConfig;
 import info.magnolia.cms.gui.controlx.search.SearchConfig;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.module.admininterface.lists.AbstractSimpleSearchList;
 import info.magnolia.module.admininterface.lists.AdminListControlRenderer;
 import info.magnolia.module.dms.DMSModule;
+import info.magnolia.module.dms.beans.Document;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,6 +46,8 @@ import org.slf4j.LoggerFactory;
 public class DMSSearchList extends AbstractSimpleSearchList {
     
     private static Logger log = LoggerFactory.getLogger(DMSSearchList.class);
+    
+    protected Messages msgs = MessagesManager.getMessages("info.magnolia.module.dms.messages");
 
     /**
      * @param name
@@ -74,8 +81,25 @@ public class DMSSearchList extends AbstractSimpleSearchList {
     public void configureList(ListControl list) {
 
         // all this should be read from the dialog
-        list.addColumn(new IconListColumn());
-        list.addColumn(new ListColumn("name", "Name", "200", true));
+        list.addColumn(new ListColumn(){
+            {
+                setName("name");
+                setColumnName("name");
+                setLabel("Name");
+                setWidth("200");        
+            }
+            
+            public String getIcon() {
+                Document doc = new Document((Content) this.getListControl().getIteratorValueObject());
+                return doc.getMimeTypeIcon();
+            }
+
+            public String render() {
+                return "<span style=\"vertical-align: middle\"><img src=\"" + MgnlContext.getContextPath() + this.getIcon() + "\"/></span>" + this.getValue();
+            }
+            
+        });
+        
         list.addColumn(new ListColumn("type", "Type", "200", true));
         list.addColumn(new ListColumn("title", "Title", "200", true));
         list.addColumn(new ListColumn("modificationDate", "Date", "200", true));
@@ -88,9 +112,9 @@ public class DMSSearchList extends AbstractSimpleSearchList {
         list.setRenderer(new AdminListControlRenderer() {
 
             public String onSelect(ListControl list, Integer index) {
-                String str = super.onSelect(list, index);
-                str += "mgnl.dms.DMS.selectedPath = '" + ((Content)list.getIteratorValueObject()).getHandle() + "';";
+                String str = "mgnl.dms.DMS.selectedPath = '" + ((Content)list.getIteratorValueObject()).getHandle() + "';";
                 str += "mgnl.dms.DMS.selectedIsFolder = false;";
+                str += super.onSelect(list, index);
                 return str;
             }
         });
@@ -115,27 +139,46 @@ public class DMSSearchList extends AbstractSimpleSearchList {
      * The very basic context menu used in the list.
      */
     public void configureContextMenu(ContextMenu menu) {
-        ContextMenuItem menuEditDocument = new ContextMenuItem();
-        menuEditDocument.setLabel("Edit document");
+        
+        ContextMenuItem menuEditDocument = new ContextMenuItem("edit");
+        menuEditDocument.setLabel(msgs.get("dms.menu.edit"));
         menuEditDocument.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/document_edit.gif");
         menuEditDocument.setOnclick("mgnl.dms.DMS.show(mgnl.dms.DMS.selectedPath);");
         menuEditDocument.addJavascriptCondition("mgnl.dms.DMS.selectedIsNotFolderCondition");
+        menuEditDocument.addJavascriptCondition("{test: function(){return mgnl.dms.DMS.selectedPath != ''}}");
 
-        ContextMenuItem showInTree = new ContextMenuItem();
-        showInTree.setLabel("Show in tree");
-        showInTree.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/document_edit.gif");
+        ContextMenuItem showInTree = new ContextMenuItem("navigate");
+        showInTree.setLabel(msgs.get("dms.menu.navigate"));
+        showInTree.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/compass.gif");
         showInTree.setOnclick("mgnl.dms.DMS.showInTree(mgnl.dms.DMS.selectedPath);");
+        showInTree.addJavascriptCondition("{test: function(){return mgnl.dms.DMS.selectedPath != ''}}");
 
-        ContextMenuItem menuVersions = new ContextMenuItem();
-        menuVersions.setLabel("Versions");
-        menuVersions.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/exchange.gif");
+        ContextMenuItem menuVersions = new ContextMenuItem("versions");
+        menuVersions.setLabel(msgs.get("dms.menu.versions"));
+        menuVersions.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/elements1.gif");
         menuVersions.setOnclick("mgnl.dms.DMS.showVersions(mgnl.dms.DMS.selectedPath);");
         menuVersions.addJavascriptCondition("mgnl.dms.DMS.selectedIsNotFolderCondition");
+        menuVersions.addJavascriptCondition("{test: function(){return mgnl.dms.DMS.selectedPath != ''}}");
 
         menu.addMenuItem(menuEditDocument);
         menu.addMenuItem(showInTree);
         menu.addMenuItem(null); // line
         menu.addMenuItem(menuVersions);
+    }
+    
+    /**
+     * @see info.magnolia.module.admininterface.lists.AbstractList#configureFunctionBar(info.magnolia.cms.gui.control.FunctionBar)
+     */
+    protected void configureFunctionBar(FunctionBar bar) {
+        ContextMenu menu = this.getContextMenu();
+        bar.setSearchable(true);
+        bar.setSearchStr(this.getSearchStr());
+        
+        bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("edit")));
+        bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("navigate")));
+        bar.addMenuItem(null);
+        bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("versions")));
+        
     }
 
 }
