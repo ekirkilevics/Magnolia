@@ -11,7 +11,7 @@
                     ${functionBar.javascriptName}.addNode ("${item.name}", ${item.active?string}, "${item.icon?default('')}", "${item.inactiveIcon?default('')}", "${item.onclick}");
                     // conditions to acitvate this item
                     <#list item.javascriptConditions as cond>
-                        ${functionBar.javascriptName}.getNode ("${item.name}").addCondition ("${cond}");
+                        ${functionBar.javascriptName}.getNode ("${item.name}").addCondition(${cond});
                     </#list>
                 </#if>
             </#list>
