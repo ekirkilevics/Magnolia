@@ -78,9 +78,8 @@ classDef("mgnl.dms.DMS", {
 		top.mgnlAdminCentralSwitchExtractTree('dms');
 	},
 	
-	simpleSearch: function(){
-		var query = document.getElementById('mgnlFunctionBarSearchField').value;
-		document.location = contextPath + '/.magnolia/pages/dmsSearchList.html?searchStr=' +query;
+	simpleSearch: function(val){
+		document.location = contextPath + '/.magnolia/pages/dmsSearchList.html?searchStr=' +val;
 	},
 	 
 	uploadZip: function(path){
