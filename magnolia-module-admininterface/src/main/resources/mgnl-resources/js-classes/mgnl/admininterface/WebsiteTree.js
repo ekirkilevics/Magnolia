@@ -18,9 +18,8 @@ classDef("mgnl.admininterface.WebsiteTree", {
         mgnl.admininterface.VersionsList.show('website', tree.selectedNode.path);
     },
     
-    search: function(){
-        var str = document.getElementById('mgnlFunctionBarSearchField').value;
-        document.location = contextPath +"/.magnolia/pages/websiteSearchList?searchStr=" + str;
+    search: function(value){
+        document.location = contextPath +"/.magnolia/pages/websiteSearchList?searchStr=" + value;
     }
             
 });
