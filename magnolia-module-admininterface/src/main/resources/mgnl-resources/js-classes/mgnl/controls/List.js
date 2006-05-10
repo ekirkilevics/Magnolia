@@ -15,7 +15,12 @@ classDef("mgnl.controls.List", function(name){
         this.unselect();
         this.selected = id;
         var row = $(this.name + 'Row' + this.selected);
-        row.className= this.css.row.selected;
+        row.className = this.css.row.selected;
+        
+        // refresh function bar if any
+        if(window["mgnlFunctionBar"]){
+            window["mgnlFunctionBar"].refresh();
+        }
     }
     
     this.unselect = function(){
