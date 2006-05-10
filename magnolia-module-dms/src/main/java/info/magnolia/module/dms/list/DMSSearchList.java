@@ -12,7 +12,6 @@
  */
 package info.magnolia.module.dms.list;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.ContextMenu;
@@ -22,8 +21,10 @@ import info.magnolia.cms.gui.control.FunctionBarItem;
 import info.magnolia.cms.gui.controlx.list.ListColumn;
 import info.magnolia.cms.gui.controlx.list.ListControl;
 import info.magnolia.cms.gui.controlx.list.ListModel;
-import info.magnolia.cms.gui.controlx.search.DialogBasedSearchConfig;
 import info.magnolia.cms.gui.controlx.search.SearchConfig;
+import info.magnolia.cms.gui.query.SearchQuery;
+import info.magnolia.cms.gui.query.SearchQueryExpression;
+import info.magnolia.cms.gui.query.StringSearchQueryParameter;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.module.admininterface.lists.AbstractSimpleSearchList;
@@ -34,6 +35,7 @@ import info.magnolia.module.dms.beans.Document;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -121,18 +123,22 @@ public class DMSSearchList extends AbstractSimpleSearchList {
     }
 
     /**
-     * @see com.obinary.magnolia.professional.lists.AbstractAdvancedSearchList#getSearchConfig()
+     * Simple search only
+     */
+    public SearchQuery getQuery() {
+        SearchQuery query = new SearchQuery();
+        if(StringUtils.isNotEmpty(this.getSearchStr())){
+            SearchQueryExpression exp = new StringSearchQueryParameter("*", this.getSearchStr(),StringSearchQueryParameter.CONTAINS);
+            query.setRootExpression(exp);
+        }
+        return query;
+    }
+    
+    /**
+     * Used for the advanced search only
      */
     public SearchConfig getSearchConfig() {
-        String dialogPath = DMSModule.getInstance().getBaseDialog();
-        try{
-            Content dialogNode = MgnlContext.getHierarchyManager(ContentRepository.CONFIG).getContent(dialogPath);
-            return new DialogBasedSearchConfig(dialogNode);
-        }
-        catch(Exception e){
-            log.error("can't configure the dms search", e);
-            return null;
-        }
+        return null;
     }
     
     /**
@@ -173,6 +179,7 @@ public class DMSSearchList extends AbstractSimpleSearchList {
         ContextMenu menu = this.getContextMenu();
         bar.setSearchable(true);
         bar.setSearchStr(this.getSearchStr());
+        bar.setOnSearchFunction("mgnl.dms.DMS.simpleSearch");
         
         bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("edit")));
         bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("navigate")));
