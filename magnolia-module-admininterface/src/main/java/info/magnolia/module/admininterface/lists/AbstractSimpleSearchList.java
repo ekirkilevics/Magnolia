@@ -20,6 +20,7 @@ import info.magnolia.cms.gui.controlx.search.SearchConfig;
 import info.magnolia.cms.gui.controlx.search.SearchableListModel;
 import info.magnolia.cms.gui.controlx.search.SimpleSearchUtil;
 import info.magnolia.cms.gui.query.SearchQuery;
+import info.magnolia.cms.util.FreeMarkerUtil;
 
 
 /**
@@ -39,6 +40,15 @@ public abstract class AbstractSimpleSearchList extends AbstractList {
     }
 
     private String searchStr = "";
+    
+    /**
+     * @see info.magnolia.module.admininterface.lists.AbstractList#onRender()
+     */
+    public String onRender() {
+        String str = super.onRender();
+        str += FreeMarkerUtil.process(AbstractSimpleSearchList.class, this);
+        return str;
+    }
 
     /**
      * @return Returns the searchStr.
