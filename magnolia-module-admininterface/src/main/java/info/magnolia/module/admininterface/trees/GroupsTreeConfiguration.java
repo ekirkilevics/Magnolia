@@ -21,6 +21,8 @@ import info.magnolia.cms.gui.control.ContextMenuItem;
 import info.magnolia.cms.gui.control.FunctionBarItem;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.control.TreeColumn;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.module.admininterface.AdminTreeConfiguration;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,9 +41,11 @@ public class GroupsTreeConfiguration implements AdminTreeConfiguration {
      * boolean, javax.servlet.http.HttpServletRequest)
      */
     public void prepareTree(Tree tree, boolean browseMode, HttpServletRequest request) {
+        Messages msgs = MessagesManager.getMessages();
+        
         tree.setDrawShifter(false);
 
-        tree.setIconPage(Tree.ICONDOCROOT + "hat_white.gif"); //$NON-NLS-1$
+        tree.setIconPage(Tree.ICONDOCROOT + "group.gif"); //$NON-NLS-1$
         if (Server.isAdmin()) {
             tree.setIconOndblclick("mgnlTreeMenuOpenDialog(" //$NON-NLS-1$
                 + tree.getJavascriptTree() + ",'.magnolia/dialogs/roleedit.html');"); //$NON-NLS-1$
@@ -54,14 +58,14 @@ public class GroupsTreeConfiguration implements AdminTreeConfiguration {
             column0.setHtmlEdit();
         }
         column0.setWidth(2);
-        column0.setTitle("group name"); //$NON-NLS-1$
+        column0.setTitle(msgs.get("tree.groups.name")); //$NON-NLS-1$
         TreeColumn column1 = new TreeColumn(tree.getJavascriptTree(), request);
         column1.setName("title"); //$NON-NLS-1$
         if (Server.isAdmin()) {
             column1.setHtmlEdit();
         }
         column1.setWidth(2);
-        column1.setTitle("Full Name"); //$NON-NLS-1$
+        column1.setTitle(msgs.get("tree.groups.fullname")); //$NON-NLS-1$
         TreeColumn columnIcons = new TreeColumn(tree.getJavascriptTree(), request);
         columnIcons.setCssClass(StringUtils.EMPTY);
         columnIcons.setWidth(1);
@@ -72,7 +76,7 @@ public class GroupsTreeConfiguration implements AdminTreeConfiguration {
         // column2.setName(MetaData.SEQUENCE_POS);
         column2.setIsMeta(true);
         column2.setDateFormat("yyyy-MM-dd, HH:mm"); //$NON-NLS-1$
-        column2.setTitle("date"); //$NON-NLS-1$
+        column2.setTitle(msgs.get("tree.groups.date")); //$NON-NLS-1$
         column2.setWidth(2);
 
         tree.addColumn(column0);
@@ -90,23 +94,24 @@ public class GroupsTreeConfiguration implements AdminTreeConfiguration {
      * boolean, javax.servlet.http.HttpServletRequest)
      */
     public void prepareContextMenu(Tree tree, boolean browseMode, HttpServletRequest request) {
-
-        ContextMenuItem menuNewPage = new ContextMenuItem("new");
-        menuNewPage.setLabel("new"); //$NON-NLS-1$
-        menuNewPage.setIcon(request.getContextPath() + "/.resources/icons/16/hat_white_add.gif"); //$NON-NLS-1$
-        menuNewPage.setOnclick(tree.getJavascriptTree() + ".createRootNode('" //$NON-NLS-1$
-            + ItemType.CONTENT.getSystemName() + "');"); //$NON-NLS-1$
-
+        Messages msgs = MessagesManager.getMessages();
+        
         ContextMenuItem menuOpen = new ContextMenuItem("edit");
-        menuOpen.setLabel("edit"); //$NON-NLS-1$
-        menuOpen.setIcon(request.getContextPath() + "/.resources/icons/16/hat_white.gif"); //$NON-NLS-1$
+        menuOpen.setLabel(msgs.get("tree.groups.menu.edit")); //$NON-NLS-1$
+        menuOpen.setIcon(request.getContextPath() + "/.resources/icons/16/group.gif"); //$NON-NLS-1$
         menuOpen.setOnclick("mgnlTreeMenuOpenDialog(" //$NON-NLS-1$
             + tree.getJavascriptTree() + ",'.magnolia/dialogs/groupedit.html');"); //$NON-NLS-1$
         menuOpen.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
             + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
 
+        ContextMenuItem menuNewPage = new ContextMenuItem("new");
+        menuNewPage.setLabel(msgs.get("tree.groups.menu.new")); //$NON-NLS-1$
+        menuNewPage.setIcon(request.getContextPath() + "/.resources/icons/16/group_add.gif"); //$NON-NLS-1$
+        menuNewPage.setOnclick(tree.getJavascriptTree() + ".createRootNode('" //$NON-NLS-1$
+            + ItemType.CONTENT.getSystemName() + "');"); //$NON-NLS-1$
+        
         ContextMenuItem menuAssignRoles = new ContextMenuItem("assign");
-        menuAssignRoles.setLabel("Assign roles"); //$NON-NLS-1$
+        menuAssignRoles.setLabel(msgs.get("tree.groups.menu.roles")); //$NON-NLS-1$
         menuAssignRoles.setIcon(request.getContextPath() + "/.resources/icons/16/hat_white.gif"); //$NON-NLS-1$
         menuAssignRoles.setOnclick("mgnlTreeMenuOpenDialog(" //$NON-NLS-1$
             + tree.getJavascriptTree() + ",'.magnolia/dialogs/groupassignroles.html');"); //$NON-NLS-1$
@@ -114,32 +119,35 @@ public class GroupsTreeConfiguration implements AdminTreeConfiguration {
             + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
 
         ContextMenuItem menuDelete = new ContextMenuItem("delete");
-        menuDelete.setLabel("delete"); //$NON-NLS-1$
+        menuDelete.setLabel(msgs.get("tree.groups.menu.delete")); //$NON-NLS-1$
         menuDelete.setIcon(request.getContextPath() + "/.resources/icons/16/delete2.gif"); //$NON-NLS-1$
         menuDelete.setOnclick(tree.getJavascriptTree() + ".deleteNode();"); //$NON-NLS-1$
         menuDelete.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
             + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+        
         ContextMenuItem menuMove = new ContextMenuItem("move");
-        menuMove.setLabel("move"); //$NON-NLS-1$
+        menuMove.setLabel(msgs.get("tree.groups.menu.move")); //$NON-NLS-1$
         menuMove.setIcon(request.getContextPath() + "/.resources/icons/16/up_down.gif"); //$NON-NLS-1$
         menuMove.setOnclick(tree.getJavascriptTree() + ".cutNode();"); //$NON-NLS-1$
         menuMove.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
             + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+        
         ContextMenuItem menuCopy = new ContextMenuItem("copy");
-        menuCopy.setLabel("copy"); //$NON-NLS-1$
+        menuCopy.setLabel(msgs.get("tree.groups.menu.copy")); //$NON-NLS-1$
         menuCopy.setIcon(request.getContextPath() + "/.resources/icons/16/copy.gif"); //$NON-NLS-1$
         menuCopy.setOnclick(tree.getJavascriptTree() + ".copyNode();"); //$NON-NLS-1$
         menuCopy.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
             + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
 
         ContextMenuItem menuActivateExcl = new ContextMenuItem("activate");
-        menuActivateExcl.setLabel("activate"); //$NON-NLS-1$
+        menuActivateExcl.setLabel(msgs.get("tree.groups.menu.activate")); //$NON-NLS-1$
         menuActivateExcl.setIcon(request.getContextPath() + "/.resources/icons/16/arrow_right_green.gif"); //$NON-NLS-1$
         menuActivateExcl.setOnclick(tree.getJavascriptTree() + ".activateNode(" + Tree.ACTION_ACTIVATE + ",false);"); //$NON-NLS-1$ //$NON-NLS-2$
         menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
             + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+        
         ContextMenuItem menuDeActivate = new ContextMenuItem("deactivate");
-        menuDeActivate.setLabel("deactivate"); //$NON-NLS-1$
+        menuDeActivate.setLabel(msgs.get("tree.groups.menu.deactivate")); //$NON-NLS-1$
         menuDeActivate.setIcon(request.getContextPath() + "/.resources/icons/16/arrow_left_red.gif"); //$NON-NLS-1$
         menuDeActivate.setOnclick(tree.getJavascriptTree() + ".deActivateNode(" + Tree.ACTION_DEACTIVATE + ");"); //$NON-NLS-1$ //$NON-NLS-2$
         menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
@@ -156,8 +164,8 @@ public class GroupsTreeConfiguration implements AdminTreeConfiguration {
         }
 
         if (!browseMode) {
-            tree.addMenuItem(menuNewPage);
             tree.addMenuItem(menuOpen);
+            tree.addMenuItem(menuNewPage);
             tree.addMenuItem(menuAssignRoles);
 
             tree.addMenuItem(null); // line
@@ -169,7 +177,7 @@ public class GroupsTreeConfiguration implements AdminTreeConfiguration {
         }
         else {
             ContextMenuItem menuRefresh = new ContextMenuItem("refresh");
-            menuRefresh.setLabel("refresh"); //$NON-NLS-1$
+            menuRefresh.setLabel(msgs.get("tree.menu.refresh")); //$NON-NLS-1$
             menuRefresh.setIcon(request.getContextPath() + "/.resources/icons/16/refresh.gif"); //$NON-NLS-1$
             menuRefresh.setOnclick(tree.getJavascriptTree() + ".refresh();"); //$NON-NLS-1$
             tree.addMenuItem(menuRefresh);

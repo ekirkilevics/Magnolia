@@ -180,7 +180,7 @@ public class WebsiteTreeConfiguration implements AdminTreeConfiguration {
 
         ContextMenuItem menuVersions = new ContextMenuItem("versions");
         menuVersions.setLabel(msgs.get("versions")); //$NON-NLS-1$
-        menuVersions.setIcon(request.getContextPath() + "/.resources/icons/16/exchange.gif"); //$NON-NLS-1$
+        menuVersions.setIcon(request.getContextPath() + "/.resources/icons/16/elements1.gif"); //$NON-NLS-1$
         menuVersions.setOnclick("mgnl.admininterface.WebsiteTree.showVersions(" + tree.getJavascriptTree() + ");"); //$NON-NLS-1$ //$NON-NLS-2$
         menuVersions.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
             + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
@@ -215,12 +215,12 @@ public class WebsiteTreeConfiguration implements AdminTreeConfiguration {
 
         ContextMenuItem menuExport = new ContextMenuItem("export");
         menuExport.setLabel(msgs.get("tree.menu.export")); //$NON-NLS-1$
-        menuExport.setIcon(request.getContextPath() + "/.resources/icons/16/export.gif"); //$NON-NLS-1$
+        menuExport.setIcon(request.getContextPath() + "/.resources/icons/16/export1.gif"); //$NON-NLS-1$
         menuExport.setOnclick(tree.getJavascriptTree() + ".exportNode();"); //$NON-NLS-1$
 
         ContextMenuItem menuImport = new ContextMenuItem("import");
         menuImport.setLabel(msgs.get("tree.menu.import")); //$NON-NLS-1$
-        menuImport.setIcon(request.getContextPath() + "/.resources/icons/16/import1.gif"); //$NON-NLS-1$
+        menuImport.setIcon(request.getContextPath() + "/.resources/icons/16/import2.gif"); //$NON-NLS-1$
         menuImport.setOnclick(tree.getJavascriptTree() + ".importNode(this);"); //$NON-NLS-1$
 
         // those menuitems are not active on public side
@@ -313,7 +313,7 @@ public class WebsiteTreeConfiguration implements AdminTreeConfiguration {
         tree.addFunctionBarItem(new FunctionBarItem(menuRefresh));
 
         tree.getFunctionBar().setSearchable(true);
-        tree.getFunctionBar().setOnSearch("mgnl.admininterface.WebsiteTree.search()");
+        tree.getFunctionBar().setOnSearchFunction("mgnl.admininterface.WebsiteTree.search");
     }
 
 }
