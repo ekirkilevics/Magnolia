@@ -15,6 +15,8 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.cms.util.ObservationUtil;
 
 import java.util.Collection;
 import java.util.Hashtable;
@@ -22,10 +24,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
-import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
-import javax.jcr.observation.ObservationManager;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -47,6 +47,15 @@ public final class MIMEMapping {
     private static final String START_PAGE = "server"; //$NON-NLS-1$
 
     private static Map cachedContent = new Hashtable();
+    
+    /**
+     * Used to keep the configuration in memory
+     */
+    private static class MIMEMappingItem{
+        private String ext;
+        private String mime;
+        private String icon;
+    }
 
     /**
      * Utility class, don't instantiate.
@@ -93,27 +102,13 @@ public final class MIMEMapping {
 
         log.info("Registering event listener for MIMEMapping"); //$NON-NLS-1$
 
-        try {
-            ObservationManager observationManager = ContentRepository
-                .getHierarchyManager(ContentRepository.CONFIG)
-                .getWorkspace()
-                .getObservationManager();
-
-            observationManager.addEventListener(new EventListener() {
-
+        ObservationUtil.registerChangeListener(ContentRepository.CONFIG, "/" + START_PAGE + "/" + "MIMEMapping", new EventListener() {
                 public void onEvent(EventIterator iterator) {
                     // reload everything
                     reload();
                 }
-            }, Event.NODE_ADDED
-                | Event.NODE_REMOVED
-                | Event.PROPERTY_ADDED
-                | Event.PROPERTY_CHANGED
-                | Event.PROPERTY_REMOVED, "/" + START_PAGE + "/" + "MIMEMapping", true, null, null, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        }
-        catch (RepositoryException e) {
-            log.error("Unable to add event listeners for MIMEMapping", e); //$NON-NLS-1$
-        }
+            }
+        );
     }
 
     /**
@@ -124,14 +119,12 @@ public final class MIMEMapping {
         while (iterator.hasNext()) {
             Content c = (Content) iterator.next();
             try {
-                String extension = c.getNodeData("extension").getString();//$NON-NLS-1$
-                String mime = c.getNodeData("mime-type").getString();//$NON-NLS-1$
+                MIMEMappingItem item = new MIMEMappingItem();
+                item.ext = NodeDataUtil.getString(c, "extension", c.getName());//$NON-NLS-1$
+                item.mime = c.getNodeData("mime-type").getString();//$NON-NLS-1$
+                item.icon = NodeDataUtil.getString(c, "icon", "general.png");
 
-                if (StringUtils.isEmpty(extension)) {
-                    extension = c.getName();
-                }
-
-                MIMEMapping.cachedContent.put(extension, mime);
+                MIMEMapping.cachedContent.put(item.ext, item);
             }
             catch (Exception e) {
                 log.error("Failed to cache MIMEMapping"); //$NON-NLS-1$
@@ -148,7 +141,7 @@ public final class MIMEMapping {
         if (StringUtils.isEmpty(key)) {
             return StringUtils.EMPTY;
         }
-        return (String) MIMEMapping.cachedContent.get(key.toLowerCase());
+        return ((MIMEMappingItem) MIMEMapping.cachedContent.get(key.toLowerCase())).mime;
     }
 
     /**
@@ -166,7 +159,7 @@ public final class MIMEMapping {
                 extension = Server.getDefaultExtension();
             }
         }
-        String mimeType = (String) MIMEMapping.cachedContent.get(extension.toLowerCase());
+        String mimeType = getMIMEType(extension) ;
 
         if (mimeType == null && StringUtils.isNotEmpty(extension)) {
             log.info("Cannot find MIME type for extension \"" + extension + "\""); //$NON-NLS-1$ //$NON-NLS-2$
@@ -189,5 +182,16 @@ public final class MIMEMapping {
             }
         }
         return StringUtils.EMPTY;
+    }
+    
+    /**
+     * Returns the icon used for rendering this type
+     * @param extension
+     * @return the icon name
+     */
+    public static String getMIMETypeIcon(String extension){
+        String icon =((MIMEMappingItem) MIMEMapping.cachedContent.get(extension.toLowerCase())).icon;
+        icon = StringUtils.defaultIfEmpty(icon, "general.png");
+        return icon;
     }
 }
