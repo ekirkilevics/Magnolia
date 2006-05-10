@@ -444,7 +444,7 @@ public abstract class DialogSuper implements DialogInterface {
             if (StringUtils.isNotEmpty(basename)) {
                 // extend the chain with this bundle
                 Messages myMessages = MessagesManager.getMessages(basename);
-                myMessages.setFallBackMessages(messages);
+                myMessages.chainMessages(messages);
                 messages = myMessages;
             }
         }
