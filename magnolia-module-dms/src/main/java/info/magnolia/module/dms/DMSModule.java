@@ -23,7 +23,6 @@ import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.UserManager;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.module.admininterface.AbstractAdminModule;
-import info.magnolia.module.dms.util.DMSMIMEMapping;
 
 import org.apache.log4j.Logger;
 
@@ -88,9 +87,6 @@ public class DMSModule extends AbstractAdminModule {
 
     protected void onInit() throws InitializationException {
         instance = this;
-        
-        // init the mime-type mapping
-        DMSMIMEMapping.init();
     }
 
     /**

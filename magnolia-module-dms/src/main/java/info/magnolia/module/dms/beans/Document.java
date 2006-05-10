@@ -20,7 +20,6 @@ import info.magnolia.cms.gui.dialog.DialogFile;
 import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
-import info.magnolia.module.dms.util.DMSMIMEMapping;
 
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -128,9 +127,7 @@ public class Document {
     }
 
     public static String getMimeTypeIcon(String ext) {
-        String key = ext.toLowerCase();
-        String iconPath;
-        return DMSMIMEMapping.getMIMETypeIcon(ext);
+        return MIMEMapping.getMIMETypeIcon(ext);
     }
 
     public String getVersion() {
