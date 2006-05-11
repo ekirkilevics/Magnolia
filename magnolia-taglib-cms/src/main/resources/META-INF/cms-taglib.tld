@@ -785,4 +785,43 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <description>Where to add this button. Can be left or right. Default is left</description>
     </attribute>
   </tag>
+  <tag>
+    <name>query</name>
+    <tag-class>info.magnolia.cms.taglibs.QueryTag</tag-class>
+    <body-content>EMPTY</body-content>
+    <display-name>query</display-name>
+    <description>Execute a query on a magnolia repository.</description>
+    <attribute>
+      <name>var</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        The result for this query (Collection of content objects) will be added to the pageContext with this name.
+      </description>
+    </attribute>
+    <attribute>
+      <name>query</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>the query</description>
+    </attribute>
+    <attribute>
+      <name>type</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Query type: "sql" or "xpath". Defaults to xpath.</description>
+    </attribute>
+    <attribute>
+      <name>repository</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>The repository to execute this query on. Defaults to "website"</description>
+    </attribute>
+    <attribute>
+      <name>nodeType</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Nodetype for nodes to return. Defaults to "mgnl:content"</description>
+    </attribute>
+  </tag>
 </taglib>
