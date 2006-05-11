@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sv:node sv:name="dms" xmlns:jcr="http://www.jcp.org/jcr/1.0"
+  xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
+  xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:rep="internal"
+  xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:fn="http://www.w3.org/2004/10/xpath-functions"
+  xmlns:sv="http://www.jcp.org/jcr/sv/1.0"
+  xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0" xmlns="">
+  <sv:property sv:name="jcr:primaryType" sv:type="Name">
+    <sv:value>mgnl:contentNode</sv:value>
+  </sv:property>
+  <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+    <sv:value>mix:versionable</sv:value>
+  </sv:property>
+  <sv:property sv:name="jcr:uuid" sv:type="String">
+    <sv:value>c32b4126-0343-40c8-a316-cb6bb7c709cd</sv:value>
+  </sv:property>
+  <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+    <sv:value>true</sv:value>
+  </sv:property>
+  <sv:property sv:name="type" sv:type="String">
+    <sv:value>jsp</sv:value>
+  </sv:property>
+  <sv:property sv:name="i18nBasename" sv:type="String">
+    <sv:value>info.magnolia.module.dms.messages</sv:value>
+  </sv:property>
+  <sv:property sv:name="dialog" sv:type="String">
+    <sv:value>dmsParagraph</sv:value>
+  </sv:property>
+  <sv:property sv:name="description" sv:type="String">
+    <sv:value>dms.paragraph.description</sv:value>
+  </sv:property>
+  <sv:property sv:name="jcr:created" sv:type="Date">
+    <sv:value>2006-05-10T18:24:18.154+02:00</sv:value>
+  </sv:property>
+  <sv:property sv:name="templatePath" sv:type="String">
+    <sv:value>/templates/dms/paragraphs/dms.jsp</sv:value>
+  </sv:property>
+  <sv:property sv:name="title" sv:type="String">
+    <sv:value>dms.paragraph.title</sv:value>
+  </sv:property>
+  <sv:node sv:name="MetaData">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:metaData</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>688ec487-a807-40ac-8880-5d9501eff03d</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:authorid" sv:type="String">
+      <sv:value>superuser</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:creationdate" sv:type="String">
+      <sv:value>2004-11-03T09:03:29.016+01:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+      <sv:value>2006-05-11T09:28:55.906+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+      <sv:value>false</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:Data" sv:type="String">
+      <sv:value>MetaData</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-05-10T18:24:18.154+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+      <sv:value>2006-05-10T18:29:51.724+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:activatorid" sv:type="String">
+      <sv:value>superuser</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
+      <sv:value>1127811053522000</sv:value>
+    </sv:property>
+  </sv:node>
+</sv:node>
