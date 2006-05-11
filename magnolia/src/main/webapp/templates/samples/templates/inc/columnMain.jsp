@@ -26,7 +26,7 @@
   <cms:adminOnly>
     <div style="clear:both;">
       <cms:newBar contentNodeCollectionName="mainColumnParagraphs"
-        paragraph="samplesTextImage,samplesEditor,samplesDownload,samplesLink,samplesTable" />
+        paragraph="samplesTextImage,samplesEditor,samplesDownload,samplesLink,samplesTable,dms" />
     </div>
   </cms:adminOnly>
 </jsp:root>
