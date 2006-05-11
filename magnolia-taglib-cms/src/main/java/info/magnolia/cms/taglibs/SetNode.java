@@ -26,7 +26,11 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
+
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -236,24 +240,21 @@ public class SetNode extends TagSupport {
          * @see java.util.Map#size()
          */
         public int size() {
-            // not implemented, only get() is needed
-            return 0;
+            return this.wrappedNode.getNodeDataCollection().size();
         }
 
         /**
          * @see java.util.Map#isEmpty()
          */
         public boolean isEmpty() {
-            // not implemented, only get() is needed
-            return false;
+            return this.wrappedNode.getNodeDataCollection().isEmpty();
         }
 
         /**
          * @see java.util.Map#containsKey(java.lang.Object)
          */
         public boolean containsKey(Object key) {
-            // not implemented, only get() is needed
-            return false;
+            return this.wrappedNode.getNodeData((String) key).isExist();
         }
 
         /**
@@ -322,24 +323,55 @@ public class SetNode extends TagSupport {
          * @see java.util.Map#keySet()
          */
         public Set keySet() {
-            // not implemented, only get() is needed
-            return null;
+            Collection nodeDataCollection = this.wrappedNode.getNodeDataCollection();
+            Set keys = new HashSet();
+            for (Iterator iter = nodeDataCollection.iterator(); iter.hasNext();) {
+                keys.add(((NodeData) iter.next()).getName());
+            }
+
+            return keys;
         }
 
         /**
          * @see java.util.Map#values()
          */
         public Collection values() {
-            // not implemented, only get() is needed
-            return null;
+            Collection nodeDataCollection = this.wrappedNode.getNodeDataCollection();
+            Collection values = new ArrayList();
+            for (Iterator iter = nodeDataCollection.iterator(); iter.hasNext();) {
+                values.add(((NodeData) iter.next()).getString());
+            }
+
+            return values;
         }
 
         /**
          * @see java.util.Map#entrySet()
          */
         public Set entrySet() {
-            // not implemented, only get() is needed
-            return null;
+            Collection nodeDataCollection = this.wrappedNode.getNodeDataCollection();
+            Set keys = new HashSet();
+            for (Iterator iter = nodeDataCollection.iterator(); iter.hasNext();) {
+                NodeData nd = (NodeData) iter.next();
+                final String key = nd.getName();
+                final String value = nd.getString();
+                keys.add(new Map.Entry() {
+
+                    public Object getKey() {
+                        return key;
+                    }
+
+                    public Object getValue() {
+                        return value;
+                    }
+
+                    public Object setValue(Object value) {
+                        return value;
+                    }
+                });
+            }
+
+            return keys;
         }
     }
 
