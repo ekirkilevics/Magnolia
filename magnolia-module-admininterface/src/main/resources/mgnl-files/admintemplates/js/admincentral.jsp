@@ -23,6 +23,7 @@
     <jsp:directive.page import="info.magnolia.cms.core.SystemProperty"/>
     <jsp:directive.page import="org.apache.commons.lang.BooleanUtils"/>
     <jsp:directive.page import="info.magnolia.cms.i18n.MessagesManager"/>
+<jsp:directive.page import="info.magnolia.cms.i18n.MessagesUtil"/>
 
 
     <jsp:declaration>
@@ -82,8 +83,7 @@ var contextPath = '<jsp:expression>request.getContextPath()</jsp:expression>';
     ]]>
 </jsp:scriptlet>
 
-
-<jsp:expression>MessagesManager.getMessages().generateJavaScript()</jsp:expression>
+<jsp:expression>MessagesUtil.generateJavaScript(MessagesManager.getMessages())</jsp:expression>
 
 <jsp:include flush="true" page="${request.contextPath}/.resources/js-libs/*.js" />
 
