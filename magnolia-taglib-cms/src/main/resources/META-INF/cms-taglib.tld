@@ -435,21 +435,21 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>int</type>
-      <description>number; defines the starting point of the loop (0 based)</description>
+      <description>Zero-based index of first item to process, inclusive.</description>
     </attribute>
     <attribute>
       <name>end</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>int</type>
-      <description>number; defines after which contentNode the loop breaks (0 based)</description>
+      <description>Zero-based index of last item to process, inclusive.</description>
     </attribute>
     <attribute>
       <name>step</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>int</type>
-      <description></description>
+      <description>Process every stepth element (e.g 2 = every second element).</description>
     </attribute>
     <attribute>
       <name>varStatus</name>
