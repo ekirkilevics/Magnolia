@@ -257,12 +257,12 @@ public class Messages {
         }
         if (this.hasFallBackMessages()) {
             Messages fallback = this.getFallBackMessages();
-            fallback.chainMessages(messages);
+            return fallback.chainMessages(messages);
         }
         else {
             this.setFallBackMessages(messages);
+            return messages;
         }
-        return messages;
     }
 
     public boolean hasFallBackMessages() {
