@@ -23,7 +23,7 @@ classDef("mgnl.dms.DMS", {
     selectedIsNotFolderCondition:{test: function() {return !mgnl.dms.DMS.selectedIsFolder}},
     
     show : function(path){
-        mgnlOpenWindow(".magnolia/dialogs/documentedit.html?mgnlPath=" + path + "&mgnlRepository=dms"); 
+        mgnlOpenWindow(".magnolia/dialogs/dmsEdit.html?mgnlPath=" + path + "&mgnlRepository=dms"); 
     },
 
     createNew: function(path){
@@ -35,13 +35,13 @@ classDef("mgnl.dms.DMS", {
         // this indicates to create this node
         path +=  "mgnlNew";
     
-        mgnlOpenWindow(".magnolia/dialogs/documentedit.html?mgnlPath=" + path  + "&mgnlRepository=dms"); 
+        mgnlOpenWindow(".magnolia/dialogs/dmsEdit.html?mgnlPath=" + path  + "&mgnlRepository=dms"); 
     },
 
     // check if it is a folder
     showDialogInTree: function(tree){
        if(tree.selectedNode.itemType=="mgnl:contentNode"){
-            mgnlTreeMenuOpenDialog(tree,'.magnolia/dialogs/documentedit.html');
+            mgnlTreeMenuOpenDialog(tree,'.magnolia/dialogs/dmsEdit.html');
        }
     },
 
@@ -54,7 +54,7 @@ classDef("mgnl.dms.DMS", {
     },
 
     showVersion: function(path, name){
-        mgnlOpenWindow(".magnolia/dialogs/documentedit.html?mgnlPath=" + path + "&mgnlRepository=dms&mgnlVersion=" + name);
+        mgnlOpenWindow(".magnolia/dialogs/dmsEdit.html?mgnlPath=" + path + "&mgnlRepository=dms&mgnlVersion=" + name);
     },
 
     downloadFile: function(path){
