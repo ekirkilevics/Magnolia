@@ -55,7 +55,7 @@ public class DMSModule extends AbstractAdminModule {
      */
     public DMSModule() {
         setRepository("dms");
-        setBaseDialog("/modules/dms/dialogs/documentedit");
+        setBaseDialog("/modules/dms/dialogs/dmsEdit");
     }
     
     public void onRegister(int registerState) {
