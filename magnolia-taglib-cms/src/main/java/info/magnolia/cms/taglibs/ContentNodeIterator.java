@@ -19,6 +19,7 @@ import info.magnolia.cms.util.Resource;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 
 import javax.jcr.PathNotFoundException;
@@ -81,6 +82,11 @@ public class ContentNodeIterator extends TagSupport {
      */
     private String varStatus;
 
+    /**
+     * Tag attribute.
+     */
+    private Collection items;
+
     protected int size;
 
     protected int index;
@@ -126,6 +132,14 @@ public class ContentNodeIterator extends TagSupport {
     }
 
     /**
+     * Setter for <code>items</code>.
+     * @param items The items to set.
+     */
+    public void setItems(Collection items) {
+        this.items = items;
+    }
+
+    /**
      * @return end index
      */
     private int getEnd() {
@@ -140,33 +154,10 @@ public class ContentNodeIterator extends TagSupport {
      */
     public int doStartTag() {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-        Content page = Resource.getCurrentActivePage(request);
 
+        Collection children;
         try {
-            Collection children = page.getContent(this.contentNodeCollectionName).getChildren(ItemType.CONTENTNODE);
-            this.size = children.size();
-            if (this.size == 0) {
-                return SKIP_BODY;
-            }
-            pageContext.setAttribute(ContentNodeIterator.SIZE, new Integer(this.getEnd()), PageContext.REQUEST_SCOPE);
-            pageContext.setAttribute(
-                ContentNodeIterator.CURRENT_INDEX,
-                new Integer(this.index),
-                PageContext.REQUEST_SCOPE);
-            pageContext.setAttribute(
-                ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME,
-                this.contentNodeCollectionName,
-                PageContext.REQUEST_SCOPE);
-            this.contentNodeIterator = children.iterator();
-            Resource.setLocalContentNodeCollectionName(request, this.contentNodeCollectionName);
-            for (; this.begin > -1; --this.begin) {
-                Resource.setLocalContentNode(request, (Content) this.contentNodeIterator.next());
-            }
-
-            if (StringUtils.isNotEmpty(varStatus)) {
-                pageContext.setAttribute(varStatus, getLoopStatus());
-            }
-
+            children = getCollection(request);
         }
         catch (PathNotFoundException e) {
             // ok, this is normal
@@ -178,8 +169,51 @@ public class ContentNodeIterator extends TagSupport {
         }
         catch (RepositoryException e) {
             log.error(e.getMessage(), e);
+            return SKIP_BODY;
+        }
+
+        this.size = children.size();
+        if (this.size == 0) {
+            return SKIP_BODY;
+        }
+
+        pageContext.setAttribute(ContentNodeIterator.SIZE, new Integer(this.getEnd()), PageContext.REQUEST_SCOPE);
+        pageContext.setAttribute(ContentNodeIterator.CURRENT_INDEX, new Integer(this.index), PageContext.REQUEST_SCOPE);
+        pageContext.setAttribute(
+            ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME,
+            this.contentNodeCollectionName,
+            PageContext.REQUEST_SCOPE);
+        this.contentNodeIterator = children.iterator();
+        Resource.setLocalContentNodeCollectionName(request, this.contentNodeCollectionName);
+        for (; this.begin > -1; --this.begin) {
+            Resource.setLocalContentNode(request, (Content) this.contentNodeIterator.next());
+        }
+
+        if (StringUtils.isNotEmpty(varStatus)) {
+            pageContext.setAttribute(varStatus, getLoopStatus());
         }
         return EVAL_BODY_INCLUDE;
+    }
+
+    /**
+     * @param request
+     * @return
+     * @throws PathNotFoundException
+     * @throws RepositoryException
+     * @throws AccessDeniedException
+     */
+    private Collection getCollection(HttpServletRequest request) throws PathNotFoundException, RepositoryException,
+        AccessDeniedException {
+
+        if (this.items != null) {
+            return this.items;
+        }
+        else if (StringUtils.isNotEmpty(this.contentNodeCollectionName)) {
+            Content page = Resource.getCurrentActivePage(request);
+            return page.getContent(this.contentNodeCollectionName).getChildren(ItemType.CONTENTNODE);
+        }
+
+        return Collections.EMPTY_LIST;
     }
 
     protected LoopTagStatus getLoopStatus() {
@@ -290,6 +324,7 @@ public class ContentNodeIterator extends TagSupport {
         this.index = 0;
         this.varStatus = null;
         this.status = null;
+        this.items = null;
         super.release();
     }
 

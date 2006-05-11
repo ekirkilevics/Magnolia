@@ -421,13 +421,24 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
     <description>iterate over contentNode collection</description>
     <attribute>
       <name>contentNodeCollectionName</name>
-      <required>true</required>
+      <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description>
         contentNodeIterator is used whenever you want to loop over content, typically paragraphs. A parameter
         contentNodeCollectionName will contain the name of the contentNode you are looping over.
         contentNodeCollectionName is created by providing a newBar with the corresponding name. This will result in
         elements being created within that contentNode, and thus allow you to loop over these.
+      </description>
+    </attribute>
+    <attribute>
+      <name>items</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.util.Collection</type>
+      <description>
+        if this attribute is set, the tag will iterate on the collection directly passed here instead of fetching the
+        collection named by contentNodeCollectionName. This collection must contains info.magnolia.cms.core.Content
+        items.
       </description>
     </attribute>
     <attribute>
@@ -730,6 +741,16 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description>Name of the collection holding the content node, e.g. "mainColumnParagraphs"</description>
+    </attribute>
+    <attribute>
+      <name>content</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>info.magnolia.cms.core.Content</type>
+      <description>
+        Use the node directly passed using this attribute, instead of fetching a node using
+        contentNodeName/contentNodeCollectionName
+      </description>
     </attribute>
     <attribute>
       <name>var</name>

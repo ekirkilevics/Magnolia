@@ -17,15 +17,6 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.util.LinkUtil;
 import info.magnolia.cms.util.Resource;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.tagext.TagSupport;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,6 +24,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
+import javax.jcr.PropertyType;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.PageContext;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -51,7 +49,7 @@ import java.util.Set;
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
-public class SetNode extends TagSupport {
+public class SetNode extends BaseContentTag {
 
     /**
      * Logger.
@@ -62,16 +60,6 @@ public class SetNode extends TagSupport {
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
-
-    /**
-     * Tag attribute. Name of the content node which will be saved in pagecontext.
-     */
-    private String contentNodeName;
-
-    /**
-     * Tag attribute. Name of the collection holding the content node.
-     */
-    private String contentNodeCollectionName;
 
     /**
      * Tag attribute. Variable name: the content node will be added to the pagecontext with this name.
@@ -85,20 +73,9 @@ public class SetNode extends TagSupport {
     private int scope = PageContext.PAGE_SCOPE;
 
     /**
-     * set the content node name name, e.g. "01"
-     * @param name content node name
+     * Directly set this content node instead of fetching the active node from page or paragraph collection.
      */
-    public void setContentNodeName(String name) {
-        this.contentNodeName = name;
-    }
-
-    /**
-     * set the name of the collection holding the content node, e.g. "mainColumnParagraphs"
-     * @param name content node collection name
-     */
-    public void setContentNodeCollectionName(String name) {
-        this.contentNodeCollectionName = name;
-    }
+    private Content content;
 
     /**
      * Setter fot the <code>var</code> tag attribute.
@@ -106,6 +83,14 @@ public class SetNode extends TagSupport {
      */
     public void setVar(String var) {
         this.var = var;
+    }
+
+    /**
+     * Setter for <code>content</code>.
+     * @param content The content to set.
+     */
+    public void setContent(Content content) {
+        this.content = content;
     }
 
     /**
@@ -136,55 +121,15 @@ public class SetNode extends TagSupport {
     public int doEndTag() {
 
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-        Content local = Resource.getLocalContentNode(request);
-        Content actpage = Resource.getCurrentActivePage(request);
+        Content currentPage = Resource.getCurrentActivePage(request);
 
         // Evaluated content node.
-        Content contentNode = null;
-
-        if (StringUtils.isNotEmpty(contentNodeName)) {
-            // contentNodeName is defined
-            try {
-                if (StringUtils.isEmpty(contentNodeCollectionName)) {
-                    // e.g. <cms:setNode contentNodeName="footer"/>
-                    contentNode = actpage.getContent(contentNodeName);
-                }
-                else {
-                    // e.g. <cms:setNode contentNodeName="01" contentNodeCollectionName="mainPars"/>
-                    // e.g. <cms:setNode contentNodeName="footer" contentNodeCollectionName=""/>
-                    contentNode = actpage.getContent(contentNodeCollectionName).getContent(contentNodeName);
-                }
-            }
-            catch (RepositoryException re) {
-                if (log.isDebugEnabled())
-                    log.debug(re.getMessage());
-            }
+        Content contentNode;
+        if (content != null) {
+            contentNode = content;
         }
         else {
-            if (local == null) {
-                // outside collection iterator
-                if (StringUtils.isEmpty(contentNodeCollectionName)) {
-                    // e.g. <cms:setNode contentNodeName=""/>
-                    // e.g. <cms:setNode contentNodeCollectionName=""/>
-                    contentNode = actpage;
-                }
-                // else:
-                // ERROR: no content node assignable because contentNodeName is empty
-                // e.g. <cms:setNode contentNodeCollectionName="mainPars"/>
-            }
-            else {
-                // inside collection iterator
-                if (contentNodeName == null && contentNodeCollectionName == null) {
-                    // e.g. <cms:setNode />
-                    contentNode = local;
-                }
-                else if ((contentNodeName != null && StringUtils.isEmpty(contentNodeName))
-                    || (contentNodeCollectionName != null && StringUtils.isEmpty(contentNodeCollectionName))) {
-                    // empty collection name -> use actpage
-                    // e.g. <cms:setNode contentNodeCollectionName=""/>
-                    contentNode = actpage;
-                }
-            }
+            contentNode = resolveNode(currentPage);
         }
 
         // set attribute
@@ -203,11 +148,10 @@ public class SetNode extends TagSupport {
      * @see javax.servlet.jsp.tagext.Tag#release()
      */
     public void release() {
-        this.contentNodeCollectionName = null;
-        this.contentNodeName = null;
-        this.var = null;
-        this.scope = PageContext.PAGE_SCOPE;
         super.release();
+        this.var = null;
+        this.content = null;
+        this.scope = PageContext.PAGE_SCOPE;
     }
 
     /**
