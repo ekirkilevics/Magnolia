@@ -118,6 +118,7 @@ public class ParagraphManager extends ObservedManager {
         pi.setTemplateType(c.getNodeData("type").getString()); //$NON-NLS-1$
         pi.setTitle(c.getNodeData("title").getString()); //$NON-NLS-1$
         pi.setDescription(c.getNodeData("description").getString()); //$NON-NLS-1$
+        pi.setI18nBasename(c.getNodeData("i18nBasename").getString()); //$NON-NLS-1$
         if (Paragraph.log.isDebugEnabled()) {
             Paragraph.log.debug("Registering paragraph [{}]", pi.getName()); //$NON-NLS-1$ //$NON-NLS-2$
         }
