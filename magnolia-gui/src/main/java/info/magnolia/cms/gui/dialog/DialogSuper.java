@@ -16,7 +16,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.Messages;
-import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.cms.i18n.TemplateMessagesUtil;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -425,7 +425,7 @@ public abstract class DialogSuper implements DialogInterface {
     }
 
     /**
-     * Get the Messages object for this dialog/control. It checks first if there was a bundle defined
+     * Get the AbstractMessagesImpl object for this dialog/control. It checks first if there was a bundle defined
      * <code>i18nBasename</code>, then it tries to find the parent with the first definition.
      * @return
      */
@@ -443,9 +443,7 @@ public abstract class DialogSuper implements DialogInterface {
             String basename = this.getConfigValue(I18N_BASENAME_PROPERTY);
             if (StringUtils.isNotEmpty(basename)) {
                 // extend the chain with this bundle
-                Messages myMessages = MessagesManager.getMessages(basename);
-                myMessages.chainMessages(messages);
-                messages = myMessages;
+                messages = MessagesUtil.chain(messages, basename);
             }
         }
         return messages;
