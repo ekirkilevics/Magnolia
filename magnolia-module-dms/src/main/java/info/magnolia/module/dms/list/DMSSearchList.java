@@ -26,7 +26,7 @@ import info.magnolia.cms.gui.query.SearchQuery;
 import info.magnolia.cms.gui.query.SearchQueryExpression;
 import info.magnolia.cms.gui.query.StringSearchQueryParameter;
 import info.magnolia.cms.i18n.Messages;
-import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.module.admininterface.lists.AbstractSimpleSearchList;
 import info.magnolia.module.admininterface.lists.AdminListControlRenderer;
 import info.magnolia.module.dms.DMSModule;
@@ -49,7 +49,7 @@ public class DMSSearchList extends AbstractSimpleSearchList {
     
     private static Logger log = LoggerFactory.getLogger(DMSSearchList.class);
     
-    protected Messages msgs;
+    protected Messages msgs = MessagesUtil.chainWithDefault("info.magnolia.module.dms.messages");
 
     /**
      * @param name
@@ -58,8 +58,6 @@ public class DMSSearchList extends AbstractSimpleSearchList {
      */
     public DMSSearchList(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
-        msgs = MessagesManager.getMessages("info.magnolia.module.dms.messages");
-        msgs.chainMessages(MessagesManager.getMessages());
     }
 
     /**
