@@ -24,6 +24,8 @@ import info.magnolia.cms.gui.dialog.DialogFactory;
 import info.magnolia.cms.gui.dialog.DialogHidden;
 import info.magnolia.cms.gui.dialog.DialogStatic;
 import info.magnolia.cms.gui.dialog.DialogTab;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.TemplateMessagesUtil;
 import info.magnolia.module.admininterface.DialogMVCHandler;
 
@@ -103,16 +105,21 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
                 }
                 Button button = new Button(c1.getName(), paragraphInfo.getName());
                 StringBuffer label = new StringBuffer();
-                // TODO enable an invidual message bundle for each paragraph
+                
+                Messages msgs = TemplateMessagesUtil.getMessages();
+                if (StringUtils.isNotEmpty(paragraphInfo.getI18nBasename())){
+                    msgs = MessagesManager.getMessages(paragraphInfo.getI18nBasename());
+                }
+                
                 label.append("<strong>" //$NON-NLS-1$
-                    + TemplateMessagesUtil.getMessages().getWithDefault(
+                    + msgs.getWithDefault(
                         paragraphInfo.getTitle(),
                         paragraphInfo.getTitle())
                     + "</strong><br />"); //$NON-NLS-1$
 
                 String description = paragraphInfo.getDescription();
                 if (StringUtils.isNotEmpty(description)) {
-                    label.append(TemplateMessagesUtil.getMessages().getWithDefault(description, description));
+                    label.append(msgs.getWithDefault(description, description));
                 }
                 label.append("<br /><br />"); //$NON-NLS-1$
                 button.setLabel(label.toString());
