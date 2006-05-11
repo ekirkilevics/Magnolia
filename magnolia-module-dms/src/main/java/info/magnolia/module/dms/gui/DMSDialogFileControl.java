@@ -21,6 +21,7 @@ import info.magnolia.cms.gui.dialog.DialogFile;
 import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.gui.misc.Spacer;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.module.dms.beans.Document;
 
 import java.io.IOException;
@@ -136,7 +137,7 @@ public class DMSDialogFileControl extends DialogFile {
 
     public String getHtmlRemove(String additionalOnclick) {
         Button control1 = new Button();
-        control1.setLabel("Upload a new version"); //$NON-NLS-1$
+        control1.setLabel(MessagesManager.getMessages("info.magnolia.module.dms.messages").get("dms.edit.uploadNewVersion")); //$NON-NLS-1$
         control1.setCssClass("mgnlControlButtonSmall"); //$NON-NLS-1$
         control1.setOnclick(additionalOnclick + "mgnlControlFileRemove('" + this.getName() + "')"); //$NON-NLS-1$ //$NON-NLS-2$
         return control1.getHtml();

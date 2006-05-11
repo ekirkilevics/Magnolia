@@ -49,7 +49,7 @@ public class DMSSearchList extends AbstractSimpleSearchList {
     
     private static Logger log = LoggerFactory.getLogger(DMSSearchList.class);
     
-    protected Messages msgs = MessagesManager.getMessages("info.magnolia.module.dms.messages");
+    protected Messages msgs;
 
     /**
      * @param name
@@ -58,6 +58,8 @@ public class DMSSearchList extends AbstractSimpleSearchList {
      */
     public DMSSearchList(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
+        msgs = MessagesManager.getMessages("info.magnolia.module.dms.messages");
+        msgs.chainMessages(MessagesManager.getMessages());
     }
 
     /**
@@ -87,7 +89,7 @@ public class DMSSearchList extends AbstractSimpleSearchList {
             {
                 setName("name");
                 setColumnName("name");
-                setLabel("Name");
+                setLabel(msgs.get("dms.list.url"));
                 setWidth("200");        
             }
             
@@ -102,9 +104,9 @@ public class DMSSearchList extends AbstractSimpleSearchList {
             
         });
         
-        list.addColumn(new ListColumn("type", "Type", "200", true));
-        list.addColumn(new ListColumn("title", "Title", "200", true));
-        list.addColumn(new ListColumn("modificationDate", "Date", "200", true));
+        list.addColumn(new ListColumn("type", msgs.get("dms.list.type"), "200", true));
+        list.addColumn(new ListColumn("title", msgs.get("dms.list.title"), "200", true));
+        list.addColumn(new ListColumn("modificationDate", msgs.get("dms.list.date"), "200", true));
 
         list.addSortableField("name");
         list.addSortableField("modificationDate");
