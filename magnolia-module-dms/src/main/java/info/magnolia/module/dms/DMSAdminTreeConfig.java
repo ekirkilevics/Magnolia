@@ -36,6 +36,17 @@ import org.apache.commons.lang.StringUtils;
  * @version $Revision$ ($Author$)
  */
 public class DMSAdminTreeConfig implements AdminTreeConfiguration {
+    
+    protected Messages msgs;
+    
+    /**
+     * Set the messages properly 
+     */
+    public DMSAdminTreeConfig() {
+        msgs = MessagesManager.getMessages("info.magnolia.module.dms.messages");
+        msgs.chainMessages(MessagesManager.getMessages());
+    }
+
 
     /**
      * @see info.magnolia.module.admininterface.AdminTreeConfiguration#prepareTree(info.magnolia.cms.gui.control.Tree,
@@ -56,26 +67,26 @@ public class DMSAdminTreeConfig implements AdminTreeConfiguration {
         colTitle.setName("title");
         // column0.setIsLabel(true);
         colTitle.setWidth(3);
-        colTitle.setTitle("Title");
+        colTitle.setTitle(msgs.get("dms.list.title"));
 
         TreeColumn colURL = new TreeColumn(tree.getJavascriptTree(), request);
         colURL.setIsLabel(true);
         colURL.setHtmlEdit();
         colURL.setWidth(3);
-        colURL.setTitle("URL");
+        colURL.setTitle(msgs.get("dms.list.url"));
 
         TreeColumn colType = new TreeColumn(tree.getJavascriptTree(), request);
         colType.setName("type");
         colType.setHtmlEdit("");
         colType.setWidth(1);
-        colType.setTitle("Type");
+        colType.setTitle(msgs.get("dms.list.type"));
 
         TreeColumn colDate = new TreeColumn(tree.getJavascriptTree(), request);
         colDate.setName(MetaData.LAST_MODIFIED);
         colDate.setIsMeta(true);
         colDate.setDateFormat(DMSConfig.getDateFormat());
         colDate.setWidth(1);
-        colDate.setTitle("Date");
+        colDate.setTitle(msgs.get("dms.list.date"));
 
         TreeColumn columnIcons = new TreeColumn(tree.getJavascriptTree(), request);
         columnIcons.setCssClass(StringUtils.EMPTY);
@@ -96,8 +107,6 @@ public class DMSAdminTreeConfig implements AdminTreeConfiguration {
      * boolean, javax.servlet.http.HttpServletRequest)
      */
     public void prepareContextMenu(Tree tree, boolean browseMode, HttpServletRequest request) {
-        Messages msgs = MessagesManager.getMessages();
-
         ContextMenuItem menuNewFolder = new ContextMenuItem("newFolder");
 
         menuNewFolder.setLabel(msgs.get("tree.config.menu.newFolder"));
@@ -135,17 +144,17 @@ public class DMSAdminTreeConfig implements AdminTreeConfiguration {
             + ")");
 
         ContextMenuItem menuEditDocument = new ContextMenuItem("edit");
-        menuEditDocument.setLabel("Edit document");
+        menuEditDocument.setLabel(msgs.get("dms.menu.edit"));
         menuEditDocument.setIcon(request.getContextPath() + "/.resources/icons/16/document_edit.gif");
         menuEditDocument.setOnclick("mgnlTreeMenuOpenDialog("
             + tree.getJavascriptTree()
-            + ",'.magnolia/dialogs/documentedit.html');");
+            + ",'.magnolia/dialogs/dmsEdit.html');");
         menuEditDocument.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotContent("
             + tree.getJavascriptTree()
             + ")");
 
         ContextMenuItem menuVersions = new ContextMenuItem("versions");
-        menuVersions.setLabel("Versions");
+        menuVersions.setLabel(msgs.get("dms.menu.versions"));
         menuVersions.setIcon(request.getContextPath() + "/.resources/icons/16/elements1.gif");
         menuVersions.setOnclick("mgnl.dms.DMS.showVersions(" + tree.getJavascriptTree() + ".selectedNode.id);");
         menuVersions.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotContent("
@@ -182,7 +191,7 @@ public class DMSAdminTreeConfig implements AdminTreeConfiguration {
         menuCut.setOnclick(tree.getJavascriptTree() + ".cutNode();");
 
         ContextMenuItem menuActivateExcl = new ContextMenuItem("activate");
-        menuActivateExcl.setLabel("Activate this"); //$NON-NLS-1$
+        menuActivateExcl.setLabel(msgs.get("tree.config.menu.activate")); //$NON-NLS-1$
         menuActivateExcl.setIcon(request.getContextPath() + "/.resources/icons/16/arrow_right_green.gif"); //$NON-NLS-1$
         menuActivateExcl.setOnclick(tree.getJavascriptTree() + ".activateNode(" + Tree.ACTION_ACTIVATE + ",false);"); //$NON-NLS-1$ //$NON-NLS-2$
         menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
@@ -191,7 +200,7 @@ public class DMSAdminTreeConfig implements AdminTreeConfiguration {
             + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
 
         ContextMenuItem menuActivateIncl = new ContextMenuItem("activateIncl");
-        menuActivateIncl.setLabel("Activate incl. content"); //$NON-NLS-1$
+        menuActivateIncl.setLabel(msgs.get("tree.config.menu.activateInclSubs")); //$NON-NLS-1$
         menuActivateIncl.setIcon(request.getContextPath() + "/.resources/icons/16/arrow_right_green.gif"); //$NON-NLS-1$
         menuActivateIncl.setOnclick(tree.getJavascriptTree() + ".activateNode(" + Tree.ACTION_ACTIVATE + ",true);"); //$NON-NLS-1$ //$NON-NLS-2$
         menuActivateIncl.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
