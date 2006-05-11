@@ -95,6 +95,8 @@ public class ContentNodeIterator extends TagSupport {
 
     private LoopTagStatus status;
 
+    private Object current;
+
     /**
      * @param name content node name on which this tag will iterate
      */
@@ -186,7 +188,8 @@ public class ContentNodeIterator extends TagSupport {
         this.contentNodeIterator = children.iterator();
         Resource.setLocalContentNodeCollectionName(request, this.contentNodeCollectionName);
         for (; this.begin > -1; --this.begin) {
-            Resource.setLocalContentNode(request, (Content) this.contentNodeIterator.next());
+            current = this.contentNodeIterator.next();
+            Resource.setLocalContentNode(request, (Content) current);
         }
 
         if (StringUtils.isNotEmpty(varStatus)) {
@@ -226,7 +229,7 @@ public class ContentNodeIterator extends TagSupport {
             private static final long serialVersionUID = 222L;
 
             public Object getCurrent() {
-                return (this.getCurrent());
+                return current;
             }
 
             public int getIndex() {
@@ -281,7 +284,8 @@ public class ContentNodeIterator extends TagSupport {
             }
 
             for (int i = 0; i < this.step; i++) {
-                Resource.setLocalContentNode(request, (Content) this.contentNodeIterator.next());
+                current = this.contentNodeIterator.next();
+                Resource.setLocalContentNode(request, (Content) current);
             }
             return EVAL_BODY_AGAIN;
         }
@@ -303,6 +307,7 @@ public class ContentNodeIterator extends TagSupport {
         this.step = 1;
         this.size = 0;
         this.index = 0;
+        this.current = null;
 
         if (varStatus != null) {
             pageContext.removeAttribute(varStatus, PageContext.PAGE_SCOPE);
