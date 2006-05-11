@@ -12,9 +12,6 @@
  */
 package info.magnolia.cms.i18n;
 
-import javax.servlet.http.HttpServletRequest;
-
-
 /**
  * This class helps to get the messages used in templates (paragraphs, dialogs, ..). First it make a lookup in
  * messages_templating_custom and then in messages_templating..<br>
@@ -46,43 +43,6 @@ public final class TemplateMessagesUtil {
      * @return
      */
     public static Messages getMessages() {
-        Messages messages = MessagesManager.getMessages(TemplateMessagesUtil.CUSTOM_BASENAME);
-        messages
-            .chainMessages(MessagesManager.getMessages(TemplateMessagesUtil.DEFAULT_BASENAME))
-            .chainMessages(MessagesManager.getMessages());
-        return messages;
+        return MessagesUtil.chain(new String[]{TemplateMessagesUtil.CUSTOM_BASENAME, TemplateMessagesUtil.DEFAULT_BASENAME});
     }
-
-    /**
-     * Get the message.
-     * @param request request
-     * @param key key
-     * @return message
-     * @deprecated
-     */
-    public static String get(HttpServletRequest request, String key) {
-        String msg = MessagesManager.getMessages(request, DEFAULT_BASENAME).getWithDefault(key, key);
-        if (!msg.equals(key)) {
-            return msg;
-        }
-        return MessagesManager.getMessages(request, CUSTOM_BASENAME).getWithDefault(key, key);
-
-    }
-
-    /**
-     * Get the message with replacement strings. Use the {nr} syntax
-     * @param request request
-     * @param key key
-     * @param args replacement strings
-     * @return message
-     * @deprecated
-     */
-    public static String get(HttpServletRequest request, String key, Object[] args) {
-        String msg = MessagesManager.getMessages(request, DEFAULT_BASENAME).getWithDefault(key, args, key);
-        if (!msg.equals(key)) {
-            return msg;
-        }
-        return MessagesManager.getMessages(request, CUSTOM_BASENAME).getWithDefault(key, args, key);
-    }
-
 }

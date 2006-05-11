@@ -23,6 +23,7 @@ import info.magnolia.cms.util.ObservationUtil;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
@@ -64,7 +65,7 @@ public final class MessagesManager {
     /**
      * Logger.
      */
-    protected static Logger log = LoggerFactory.getLogger(Messages.class);
+    protected static Logger log = LoggerFactory.getLogger(AbstractMessagesImpl.class);
 
     /**
      * The node name where the configuration for i18n is stored
@@ -132,17 +133,14 @@ public final class MessagesManager {
      * The lazzy LRU Map creates messages objects with a fault back to the default locale.
      */
     private static void intiLRUMap() {
-        // create the LRUMap
-        Map map = new LRUMap(20);
+        // FIXME use LRU
+        //Map map = new LRUMap(20);
+        Map map = new HashMap();
         map = LazyMap.decorate(map, new Transformer() {
 
             public Object transform(Object input) {
                 MessagesID id = (MessagesID) input;
-                Messages msgs = new Messages(id.basename, id.locale);
-                if(!id.locale.equals(MessagesManager.getDefaultLocale())){
-                    Messages fallBack = new Messages(id.basename, MessagesManager.getDefaultLocale());
-                    msgs.setFallBackMessages(fallBack);
-                }
+                Messages msgs = new DefaultMessagesImpl(id.basename, id.locale);
                 return msgs;
             }
         });
@@ -258,93 +256,16 @@ public final class MessagesManager {
         load();
     }
 
-    /**
-     * Deprecated! Trys to make a new ContextMessages object. if not possible it creates a new Messages object.
-     * @param request uses the request to find the configuration
-     * @return Messages
-     * @deprecated
-     */
-    public static Messages getMessages(HttpServletRequest request) {
-        if (request != null) {
-            return new ContextMessages(request);
-        }
-        if (log.isDebugEnabled())
-            log.debug("using i18n-messages without a request!"); //$NON-NLS-1$
-        return new Messages(MessagesManager.DEFAULT_BASENAME, applicationLocale);
-    }
-
     public static Messages getMessages() {
         return getMessages(MessagesManager.DEFAULT_BASENAME, MgnlContext.getLocale());
-    }
-
-    /**
-     * Deprectated! Provide a basename
-     * @param request request
-     * @param basename basename
-     * @return Messages object to get the messages from
-     * @deprecated
-     */
-    public static Messages getMessages(HttpServletRequest request, String basename) {
-        if (request != null) {
-            return new ContextMessages(request, basename);
-        }
-        if (log.isDebugEnabled())
-            log.debug("using i18n-messages without a request!"); //$NON-NLS-1$
-        return new Messages(basename, applicationLocale);
     }
 
     public static Messages getMessages(String basename) {
         return getMessages(basename, MgnlContext.getLocale());
     }
 
-    /**
-     * Deprectated! Provide a special locale
-     * @param request request
-     * @param basename basename
-     * @param locale locale
-     * @return Messages object to get the messages from
-     * @deprecated
-     */
-    public static Messages getMessages(HttpServletRequest request, String basename, Locale locale) {
-        if (request != null) {
-            return new ContextMessages(request, basename, locale);
-        }
-        if (log.isDebugEnabled())
-            log.debug("using i18n-messages without a request!"); //$NON-NLS-1$
-        return new Messages(basename, locale);
-
-    }
-
     public static Messages getMessages(String basename, Locale locale) {
         return (Messages) messages.get(new MessagesID(basename, locale));
-    }
-
-    /**
-     * Deprectated! Trys to make a new ContextMessages object. if not possible it creates a new Messages object.
-     * @param pc the page context to start the lookup
-     * @return Messages
-     * @deprecated
-     */
-    public static Messages getMessages(PageContext pc) {
-        if (pc != null && pc.getRequest() instanceof HttpServletRequest) {
-            return new ContextMessages((HttpServletRequest) pc.getRequest());
-        }
-        if (log.isDebugEnabled())
-            log.debug("using i18n-messages without a request inside a control!"); //$NON-NLS-1$
-        return new Messages(MessagesManager.DEFAULT_BASENAME, applicationLocale);
-
-    }
-
-    /**
-     * Deprectated! Get a message.
-     * @param request request
-     * @param key key to find
-     * @return message
-     * @deprecated
-     */
-
-    public static String get(HttpServletRequest request, String key) {
-        return getMessages(request).get(key);
     }
 
     public static String get(String key) {
@@ -363,17 +284,6 @@ public final class MessagesManager {
     }
 
     /**
-     * @param request
-     * @param key
-     * @param args
-     * @return
-     * @deprecated
-     */
-    public static String get(HttpServletRequest request, String key, Object[] args) {
-        return getMessages(request).get(key, args);
-    }
-
-    /**
      * Use a default string.
      * @param key key to find
      * @param defaultMsg default message
@@ -385,17 +295,6 @@ public final class MessagesManager {
     }
 
     /**
-     * @param request
-     * @param key
-     * @param defaultMsg
-     * @return
-     * @deprecated
-     */
-    public static String getWithDefault(HttpServletRequest request, String key, String defaultMsg) {
-        return getMessages(request).getWithDefault(key, defaultMsg);
-    }
-
-    /**
      * Get a message with parameters inside: the value {0} must be a number. Use a default message.
      * @param key key to find
      * @param args replacement strings
@@ -404,18 +303,6 @@ public final class MessagesManager {
      */
     public static String getWithDefault(String key, Object[] args, String defaultMsg) {
         return MgnlContext.getMessages().getWithDefault(key, args, defaultMsg);
-    }
-
-    /**
-     * @param request
-     * @param key
-     * @param args
-     * @param defaultMsg
-     * @return
-     * @deprecated
-     */
-    public static String getWithDefault(HttpServletRequest request, String key, Object[] args, String defaultMsg) {
-        return getMessages(request).getWithDefault(key, args, defaultMsg);
     }
 
     /**
