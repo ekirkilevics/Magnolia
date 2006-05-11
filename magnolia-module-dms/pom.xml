@@ -23,7 +23,6 @@
     <dependency>
       <groupId>metaparadigm</groupId>
       <artifactId>json-rpc</artifactId>
-      <version>0.9</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>

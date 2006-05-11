@@ -64,19 +64,8 @@
       <artifactId>slf4j-log4j12</artifactId>
     </dependency>
     <dependency>
-      <groupId>oro</groupId>
-      <artifactId>oro</artifactId>
-      <version>2.0.6</version>
-    </dependency>
-    <dependency>
-      <groupId>logkit</groupId>
-      <artifactId>logkit</artifactId>
-      <version>1.0.1</version>
-    </dependency>
-    <dependency>
       <groupId>commons-fileupload</groupId>
       <artifactId>commons-fileupload</artifactId>
-      <version>1.1</version>
     </dependency>
     <dependency>
       <groupId>jdom</groupId>
@@ -85,13 +74,14 @@
     <dependency>
       <groupId>velocity</groupId>
       <artifactId>velocity</artifactId>
-      <version>1.4</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>velocity-dep</artifactId>
-          <groupId>velocity</groupId>
-        </exclusion>
-      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>oro</groupId>
+      <artifactId>oro</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>logkit</groupId>
+      <artifactId>logkit</artifactId>
     </dependency>
     <dependency>
       <groupId>commons-discovery</groupId>
@@ -100,7 +90,6 @@
     <dependency>
       <groupId>commons-httpclient</groupId>
       <artifactId>commons-httpclient</artifactId>
-      <version>3.0</version>
     </dependency>
   </dependencies>
   <distributionManagement>
