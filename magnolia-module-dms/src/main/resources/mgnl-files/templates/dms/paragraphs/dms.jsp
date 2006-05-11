@@ -1,6 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 
-<%@ page import="info.magnolia.cms.security.SessionAccessControl"%>
 <%@ page import="info.magnolia.cms.core.Content"%>
 <%@ page import="java.util.Iterator" %>
 <%@ page import="java.util.List" %>
@@ -79,6 +78,6 @@
 
 <table>
 <c:forEach items="${foundDocuments}" var="doc">
-	<tr><td><a href="javascript:mgnl.dms.DMS.downloadFile('${doc[4]}')">${doc[0]}</a></td><td><a href="javascript:mgnl.dms.DMS.downloadFile('${doc[4]}')">${doc[1]}</a></td><td>${doc[2]}</td><td>${doc[3]}<td></tr>
+	<tr><td><a href="${pageContext.request.contextPath}/dms${doc[4]}">${doc[0]}</a></td><td><a href="${pageContext.request.contextPath}/dms${doc[4]}">${doc[1]}</a></td><td>${doc[2]}</td><td>${doc[3]}<td></tr>
 </c:forEach>
 </table>
