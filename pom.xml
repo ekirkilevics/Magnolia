@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?><project>
   <modelVersion>4.0.0</modelVersion>
   <groupId>info.magnolia</groupId>
   <artifactId>magnolia-root</artifactId>
   <packaging>pom</packaging>
   <name>magnolia-root</name>
-  <version>3.0-b1-SNAPSHOT</version>
+  <version>3.0-b1</version>
   <description>Magnolia is a free enterprise class content management system developed by obinary based on the standard API for
     java content repositories (JCR).</description>
   <url>http://magnolia.sourceforge.net</url>
@@ -65,8 +65,8 @@
     </developer>
   </developers>
   <scm>
-    <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk</connection>
-    <developerConnection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk</developerConnection>
+    <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/tags/magnolia-3.0-b1</connection>
+    <developerConnection>scm:svn:http://svn.magnolia.info/svn/magnolia/tags/magnolia-3.0-b1</developerConnection>
     <url>http://svn.magnolia.info/view</url>
   </scm>
   <organization>
