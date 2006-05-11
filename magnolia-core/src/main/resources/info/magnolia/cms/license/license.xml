@@ -17,8 +17,8 @@
     <!ELEMENT VersionPageHandle (#PCDATA)>]>
 <License>
     <Meta>
-        <VersionNumber>${magnolia.version}</VersionNumber>
-        <BuildNumber>$Revision$</BuildNumber>
+        <VersionNumber>3.0-b1</VersionNumber>
+        <BuildNumber>11. Mai 2006</BuildNumber>
         <Provider>obinary ltd</Provider>
         <ProviderAddress>
             <![CDATA[
