@@ -218,11 +218,12 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 
                 Document doc = builder.build(s);
                 FlowExpression fe = (FlowExpression) XmlCoder.decode(doc);
-                if (!ExpoolUtils.isAssignableFromClass(fe, assignClass)) {
-
-                    continue;
-                }
+                
                 fe.setApplicationContext(getContext());
+                
+                if (!ExpoolUtils.isAssignableFromClass(fe, assignClass))
+					continue;
+
                 ret.add(fe);
             }
 
