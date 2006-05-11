@@ -28,6 +28,7 @@ import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.cms.i18n.TemplateMessagesUtil;
 import info.magnolia.module.admininterface.AdminTreeConfiguration;
 
@@ -103,7 +104,7 @@ public class WebsiteTreeConfiguration implements AdminTreeConfiguration {
             Template template = (Template) templates.next();
             String title = template.getTitle();
             title = templateMsgs.getWithDefault(title, title);
-            title = Messages.javaScriptString(title);
+            title = MessagesUtil.javaScriptString(title);
             templateSelect.setOptions(title, template.getName());
         }
         if (Server.isAdmin()) {

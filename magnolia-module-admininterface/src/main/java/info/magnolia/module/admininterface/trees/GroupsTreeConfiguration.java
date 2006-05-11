@@ -189,7 +189,7 @@ public class GroupsTreeConfiguration implements AdminTreeConfiguration {
      * boolean, javax.servlet.http.HttpServletRequest)
      */
     public void prepareFunctionBar(Tree tree, boolean browseMode, HttpServletRequest request) {
-        // Messages msgs = MessagesManager.getMessages();
+        // AbstractMessagesImpl msgs = MessagesManager.getMessages();
         ContextMenu cm = tree.getMenu();
         ContextMenuItem cmItem = cm.getMenuItemByName("edit");
         if (cmItem != null) {

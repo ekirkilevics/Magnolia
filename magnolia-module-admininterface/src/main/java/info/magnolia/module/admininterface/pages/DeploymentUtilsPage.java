@@ -104,7 +104,7 @@ public class DeploymentUtilsPage extends TemplatedMVCHandler {
     public String reloadI18nMessages(){
         try {
             MessagesManager.reload();
-            AlertUtil.setMessage("Messages reloaded!");
+            AlertUtil.setMessage("AbstractMessagesImpl reloaded!");
         }
         catch (Exception e) {
             e.printStackTrace();

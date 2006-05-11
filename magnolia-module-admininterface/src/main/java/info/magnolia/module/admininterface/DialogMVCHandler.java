@@ -21,6 +21,7 @@ import info.magnolia.cms.gui.dialog.DialogDialog;
 import info.magnolia.cms.gui.dialog.DialogFactory;
 import info.magnolia.cms.gui.dialog.DialogSuper;
 import info.magnolia.cms.gui.misc.Sources;
+import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.servlets.MVCServletHandlerImpl;
 import info.magnolia.cms.util.FactoryUtil;
@@ -99,7 +100,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
 
     protected DialogDialog dialog;
 
-    protected info.magnolia.cms.i18n.Messages msgs;
+    protected Messages msgs;
 
     protected RequestFormUtil params;
 
