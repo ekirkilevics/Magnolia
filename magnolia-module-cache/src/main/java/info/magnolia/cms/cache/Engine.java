@@ -38,12 +38,14 @@ public class Engine extends AbstractModule {
      * @see info.magnolia.cms.module.Module#destroy()
      */
     public void destroy() {
-        this.cacheManager.stop();
-    }
+		if (this.cacheManager.isRunning()) {
+			this.cacheManager.stop();
+		}
+	}
 
     /**
-     * @see info.magnolia.cms.module.AbstractModule#onRegister(int)
-     */
+	 * @see info.magnolia.cms.module.AbstractModule#onRegister(int)
+	 */
     protected void onRegister(int registerState) throws RegisterException {
         // set the cache inactive if this is an admin instance (default)
         try{

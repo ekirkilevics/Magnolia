@@ -22,6 +22,7 @@ import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.QueryResult;
 import info.magnolia.cms.module.RegisterException;
 import info.magnolia.module.admininterface.AbstractAdminModule;
+import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -184,12 +185,13 @@ public class Engine extends AbstractAdminModule {
     }
 
     public void destroy() {
-        if (OWFEEngine.getEngine().isRunning()) {
+        JCRPersistedEngine engine = OWFEEngine.getEngine();
+		if (engine!=null && engine.isRunning()) {
             log.info("Workflow engine is running, trying to stop...");
             try {
                 // before try to stop purge and scheduling tasks
-                ((SimpleExpressionPool) OWFEEngine.getEngine().getExpressionPool()).stop();
-                OWFEEngine.getEngine().stop();
+                ((SimpleExpressionPool) engine.getExpressionPool()).stop();
+                engine.stop();
                 log.info("Workflow engine successfully stopped");
             }
             catch (ServiceException se) {
