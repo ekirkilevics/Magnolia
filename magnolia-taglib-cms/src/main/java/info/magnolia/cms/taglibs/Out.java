@@ -97,12 +97,6 @@ public class Out extends BaseContentTag {
     }
 
     /**
-     * @deprecated does nothing
-     */
-    public void setActpage(String set) {
-    }
-
-    /**
      * <p/> set which information of a file to retrieve
      * </p>
      * <p/> does only apply for nodeDatas of type=Binary

@@ -14,16 +14,23 @@ package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.Iterator;
+
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.jstl.core.LoopTagStatus;
 import javax.servlet.jsp.tagext.TagSupport;
-import java.util.Collection;
-import java.util.Iterator;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -49,27 +56,38 @@ public class ContentNodeIterator extends TagSupport {
      */
     private static Logger log = LoggerFactory.getLogger(ContentNodeIterator.class);
 
+    /**
+     * Tag attribute.
+     */
     private String contentNodeCollectionName;
 
-    private int beginIndex;
+    /**
+     * Tag attribute.
+     */
+    protected int begin;
 
-    private int endIndex;
+    /**
+     * Tag attribute.
+     */
+    protected int end;
 
-    private int step = 1;
+    /**
+     * Tag attribute.
+     */
+    protected int step = 1;
 
-    private int size;
+    /**
+     * Tag attribute.
+     */
+    private String varStatus;
 
-    private int currentIndex;
+    protected int size;
+
+    protected int index;
 
     private Iterator contentNodeIterator;
 
-    /**
-     * @param name container list name on which this tag will iterate
-     * @deprecated
-     */
-    public void setContainerListName(String name) {
-        this.setContentNodeCollectionName(name);
-    }
+    private LoopTagStatus status;
 
     /**
      * @param name content node name on which this tag will iterate
@@ -82,31 +100,39 @@ public class ContentNodeIterator extends TagSupport {
      * @param index index to begin with
      */
     public void setBegin(String index) {
-        this.beginIndex = (new Integer(index)).intValue();
+        this.begin = (new Integer(index)).intValue();
     }
 
     /**
      * @param index index to end at
      */
-    public void setEnd(String index) {
-        this.endIndex = (new Integer(index)).intValue();
+    public void setEnd(int index) {
+        this.end = index;
     }
 
     /**
      * @param step to jump to
      */
-    public void setStep(String step) {
-        this.step = (new Integer(step)).intValue();
+    public void setStep(int step) {
+        this.step = step;
+    }
+
+    /**
+     * Setter for <code>varStatus</code>.
+     * @param varStatus The varStatus to set.
+     */
+    public void setVarStatus(String varStatus) {
+        this.varStatus = varStatus;
     }
 
     /**
      * @return end index
      */
     private int getEnd() {
-        if (this.endIndex == 0) {
+        if (this.end == 0) {
             return this.size;
         }
-        return this.endIndex;
+        return this.end;
     }
 
     /**
@@ -115,34 +141,93 @@ public class ContentNodeIterator extends TagSupport {
     public int doStartTag() {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         Content page = Resource.getCurrentActivePage(request);
+
         try {
-            Collection children = page.getContent(this.contentNodeCollectionName).getChildren(
-                    ItemType.CONTENTNODE);
+            Collection children = page.getContent(this.contentNodeCollectionName).getChildren(ItemType.CONTENTNODE);
             this.size = children.size();
             if (this.size == 0) {
                 return SKIP_BODY;
             }
             pageContext.setAttribute(ContentNodeIterator.SIZE, new Integer(this.getEnd()), PageContext.REQUEST_SCOPE);
             pageContext.setAttribute(
-                    ContentNodeIterator.CURRENT_INDEX,
-                    new Integer(this.currentIndex),
-                    PageContext.REQUEST_SCOPE);
+                ContentNodeIterator.CURRENT_INDEX,
+                new Integer(this.index),
+                PageContext.REQUEST_SCOPE);
             pageContext.setAttribute(
-                    ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME,
-                    this.contentNodeCollectionName,
-                    PageContext.REQUEST_SCOPE);
+                ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME,
+                this.contentNodeCollectionName,
+                PageContext.REQUEST_SCOPE);
             this.contentNodeIterator = children.iterator();
             Resource.setLocalContentNodeCollectionName(request, this.contentNodeCollectionName);
-            for (; this.beginIndex > -1; --this.beginIndex) {
+            for (; this.begin > -1; --this.begin) {
                 Resource.setLocalContentNode(request, (Content) this.contentNodeIterator.next());
             }
+
+            if (StringUtils.isNotEmpty(varStatus)) {
+                pageContext.setAttribute(varStatus, getLoopStatus());
+            }
+
         }
-        catch (RepositoryException re) {
-            if (log.isDebugEnabled())
-                log.debug(re.getMessage());
+        catch (PathNotFoundException e) {
+            // ok, this is normal
             return SKIP_BODY;
         }
+        catch (AccessDeniedException e) {
+            log.debug(e.getMessage());
+            return SKIP_BODY;
+        }
+        catch (RepositoryException e) {
+            log.error(e.getMessage(), e);
+        }
         return EVAL_BODY_INCLUDE;
+    }
+
+    protected LoopTagStatus getLoopStatus() {
+
+        class Status implements LoopTagStatus, Serializable {
+
+            /**
+             * Stable serialVersionUID.
+             */
+            private static final long serialVersionUID = 222L;
+
+            public Object getCurrent() {
+                return (this.getCurrent());
+            }
+
+            public int getIndex() {
+                return index;
+            }
+
+            public int getCount() {
+                return size;
+            }
+
+            public boolean isFirst() {
+                return (index == 0);
+            }
+
+            public boolean isLast() {
+                return (index == (size - 1));
+            }
+
+            public Integer getBegin() {
+                return new Integer(begin);
+            }
+
+            public Integer getEnd() {
+                return end != 0 ? new Integer(end) : null;
+            }
+
+            public Integer getStep() {
+                return new Integer(size);
+            }
+        }
+        if (status == null) {
+            status = new Status();
+        }
+
+        return status;
     }
 
     /**
@@ -150,12 +235,17 @@ public class ContentNodeIterator extends TagSupport {
      */
     public int doAfterBody() {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-        if (this.contentNodeIterator.hasNext() && (this.currentIndex < this.getEnd())) {
-            this.currentIndex++;
+        if (this.contentNodeIterator.hasNext() && (this.index < this.getEnd())) {
+            this.index++;
             pageContext.setAttribute(
-                    ContentNodeIterator.CURRENT_INDEX,
-                    new Integer(this.currentIndex),
-                    PageContext.REQUEST_SCOPE);
+                ContentNodeIterator.CURRENT_INDEX,
+                new Integer(this.index),
+                PageContext.REQUEST_SCOPE);
+
+            if (StringUtils.isNotEmpty(varStatus)) {
+                pageContext.setAttribute(varStatus, getLoopStatus());
+            }
+
             for (int i = 0; i < this.step; i++) {
                 Resource.setLocalContentNode(request, (Content) this.contentNodeIterator.next());
             }
@@ -174,11 +264,16 @@ public class ContentNodeIterator extends TagSupport {
         pageContext.removeAttribute(ContentNodeIterator.CURRENT_INDEX);
         pageContext.removeAttribute(ContentNodeIterator.SIZE);
         pageContext.removeAttribute(ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME);
-        this.beginIndex = 0;
-        this.endIndex = 0;
+        this.begin = 0;
+        this.end = 0;
         this.step = 1;
         this.size = 0;
-        this.currentIndex = 0;
+        this.index = 0;
+
+        if (varStatus != null) {
+            pageContext.removeAttribute(varStatus, PageContext.PAGE_SCOPE);
+        }
+
         return EVAL_PAGE;
     }
 
@@ -188,11 +283,13 @@ public class ContentNodeIterator extends TagSupport {
     public void release() {
         this.contentNodeCollectionName = null;
         this.contentNodeIterator = null;
-        this.beginIndex = 0;
-        this.endIndex = 0;
+        this.begin = 0;
+        this.end = 0;
         this.step = 1;
         this.size = 0;
-        this.currentIndex = 0;
+        this.index = 0;
+        this.varStatus = null;
+        this.status = null;
         super.release();
     }
 

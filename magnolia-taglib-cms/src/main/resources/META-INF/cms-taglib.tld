@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE taglib
         PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
     "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
@@ -226,9 +226,9 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <rtexprvalue>true</rtexprvalue>
       <description>
         # Inside a "contentNodeIterator" * if not set, the current content node is taken. * if set empty
-        (contentNodeName=""), the top level content is taken (equals to Magnolia 1.x actpage="true"). * if specified,
-        the named content node is taken. # Outside a "contentNodeIterator" * if not set or empty: the top level content
-        is taken * if specified, the named content node is taken
+        (contentNodeName=""), the top level content is taken. * if specified, the named content node is taken. # Outside
+        a "contentNodeIterator" * if not set or empty: the top level content is taken * if specified, the named content
+        node is taken
       </description>
     </attribute>
     <attribute>
@@ -236,12 +236,6 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description></description>
-    </attribute>
-    <attribute>
-      <name>actpage</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description>@deprecated no meaning anymore; inside a loop, set contentNodeName="" to use "actpage"</description>
     </attribute>
     <attribute>
       <name>fileProperty</name>
@@ -440,19 +434,32 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <name>begin</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
+      <type>int</type>
       <description>number; defines the starting point of the loop (0 based)</description>
     </attribute>
     <attribute>
       <name>end</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
+      <type>int</type>
       <description>number; defines after which contentNode the loop breaks (0 based)</description>
     </attribute>
     <attribute>
       <name>step</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
+      <type>int</type>
       <description></description>
+    </attribute>
+    <attribute>
+      <name>varStatus</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        Name of variable to hold the loop status with the following properties: index – position of the current item;
+        count – number of times through the loop (starting with 1); first – boolean indicator if this is the first
+        iteration; last – boolean indicator if this is the last iteration
+      </description>
     </attribute>
     <example>
       <![CDATA[
