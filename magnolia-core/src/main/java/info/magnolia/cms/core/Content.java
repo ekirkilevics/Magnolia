@@ -1351,6 +1351,21 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(getClass().getName());
+        buffer.append("[");
+        if (this.node != null) {
+            buffer.append(getHandle());
+        }
+        buffer.append("]");
+
+        return buffer.toString();
+    }
+
+    /**
      * Implement this interface to be used as node filter by getChildren()
      */
     public interface ContentFilter {
