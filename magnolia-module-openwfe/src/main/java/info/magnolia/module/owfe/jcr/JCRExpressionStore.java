@@ -13,6 +13,7 @@
 package info.magnolia.module.owfe.jcr;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -222,6 +223,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 
                     continue;
                 }
+                fe.setApplicationContext(getContext());
                 ret.add(fe);
             }
 
