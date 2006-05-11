@@ -40,6 +40,8 @@ public final class Paragraph {
     private String templateType;
 
     private String description;
+    
+    private String i18nBasename;
 
     /**
      * constructor
@@ -143,6 +145,22 @@ public final class Paragraph {
             .append("title", this.title) //$NON-NLS-1$
             .append("templatePath", this.templatePath) //$NON-NLS-1$
             .toString();
+    }
+
+    
+    /**
+     * @return Returns the i18nBasename.
+     */
+    public String getI18nBasename() {
+        return this.i18nBasename;
+    }
+
+    
+    /**
+     * @param basename The i18nBasename to set.
+     */
+    public void setI18nBasename(String basename) {
+        this.i18nBasename = basename;
     }
 
 }
