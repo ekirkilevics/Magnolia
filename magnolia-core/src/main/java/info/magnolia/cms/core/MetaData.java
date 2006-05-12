@@ -26,7 +26,6 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
@@ -63,12 +62,6 @@ public class MetaData {
     public static final String ACTIVATED = "activated"; //$NON-NLS-1$
 
     public static final String SEQUENCE_POS = "sequenceposition"; //$NON-NLS-1$
-    
-
-    /**
-     * @deprecated all meta data properties should be under one single MetaData node
-     */
-    public static final String ACTIVATION_INFO = ".activationInfo"; //$NON-NLS-1$
 
     public static final String DEFAULT_META_NODE = "MetaData"; //$NON-NLS-1$
 
@@ -92,16 +85,6 @@ public class MetaData {
      * @param workingNode current <code>Node</code> on which <code>MetaData</code> is requested
      */
     MetaData(Node workingNode, AccessManager manager) {
-        this(workingNode, DEFAULT_META_NODE, manager);
-    }
-
-    /**
-     * constructor
-     *
-     * @param workingNode current <code>Node</code> on which <code>MetaData</code> is requested
-     * @param nodeName    under which this data is saved
-     */
-    MetaData(Node workingNode, String nodeName, AccessManager manager) {
         this.setMetaNode(workingNode, DEFAULT_META_NODE);
         this.setAccessManager(manager);
     }
@@ -239,72 +222,6 @@ public class MetaData {
      */
     public Calendar getCreationDate() {
         return this.getDateProperty(this.getInternalPropertyName(CREATION_DATE));
-    }
-
-    /**
-     * Part of metadata, adds sequence number of the current node
-     *
-     * @deprecated use JCR ordering
-     */
-    public void setSequencePosition(long seqPos) throws AccessDeniedException {
-        if (this.node == null) {
-            return;
-        }
-
-        allowUpdate();
-        long newPos = (seqPos == 0) ? new Date().getTime() * SEQUENCE_POS_COEFFICIENT : seqPos;
-
-        try {
-            this.node.getProperty(this.getInternalPropertyName(SEQUENCE_POS)).setValue(newPos);
-        }
-        catch (PathNotFoundException ee) {
-            try {
-                this.node.setProperty(this.getInternalPropertyName(SEQUENCE_POS), newPos);
-            }
-            catch (RepositoryException e) {
-                // ignore?
-            }
-        }
-        catch (RepositoryException re) {
-            // ignore?
-        }
-    }
-
-    /**
-     * Part of metadata, adds sequence number of the current node
-     *
-     * @deprecated use JCR ordering
-     */
-    public void setSequencePosition() throws AccessDeniedException {
-        setSequencePosition(0);
-    }
-
-    /**
-     * Part of metadata, get sequence position of the current node
-     *
-     * @return long
-     * @deprecated use JCR ordering
-     */
-    public long getSequencePosition() {
-        try {
-            return this.node.getProperty(this.getInternalPropertyName(SEQUENCE_POS)).getLong();
-        }
-        catch (PathNotFoundException ee) {
-            Calendar cd = getCreationDate();
-            if (cd != null) {
-                return cd.getTimeInMillis() * SEQUENCE_POS_COEFFICIENT;
-            }
-        }
-        catch (RepositoryException e) {
-            log.error(e.getMessage(), e);
-        }
-        catch (NullPointerException e) {
-            if (log.isDebugEnabled()) {
-                log.debug("MetaData has not been created or this node does not support MetaData"); //$NON-NLS-1$
-                log.debug("cannot get property - " + SEQUENCE_POS); //$NON-NLS-1$
-            }
-        }
-        return 0;
     }
 
     /**
@@ -778,7 +695,6 @@ public class MetaData {
                 .append("template", this.getTemplate()) //$NON-NLS-1$
                 .append("authorId", this.getAuthorId()) //$NON-NLS-1$
                 .append("label", this.getLabel()) //$NON-NLS-1$
-                .append("sequencePosition", this.getSequencePosition()) //$NON-NLS-1$
                 .append("activatorId", this.getActivatorId()) //$NON-NLS-1$
                 .append("isActivated", this.getIsActivated()) //$NON-NLS-1$
                 .append("creationDate", this.getCreationDate()) //$NON-NLS-1$

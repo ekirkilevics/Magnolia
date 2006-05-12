@@ -323,14 +323,6 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
-     * get meta data of the current node
-     * @return MetaData meta information of the context under the content <code>Node</code>
-     */
-    public MetaData getMetaData(String context) {
-        return new MetaData(this.node, context, this.accessManager);
-    }
-
-    /**
      * get top level NodeData
      * @return NodeData requested <code>NodeData</code> object
      */
