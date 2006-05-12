@@ -2,13 +2,13 @@
   <parent>
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
-    <version>3.0-b1</version>
+    <version>3.0-rc1-SNAPSHOT</version>
     <relativePath>../magnolia-project/pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-module-cache</artifactId>
   <name>magnolia-module-cache</name>
-  <version>3.0-b1</version>
+  <version>3.0-rc1-SNAPSHOT</version>
   <dependencies>
     <dependency>
       <groupId>commons-lang</groupId>
