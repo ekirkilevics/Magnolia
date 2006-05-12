@@ -162,10 +162,11 @@ public class ClasspathSpool extends HttpServlet {
             IOUtils.closeQuietly(in);
         }
 
-        if (in == null && !response.isCommitted()) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
+        if (in == null) {
+			if (!response.isCommitted())
+				response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			return;
+		}
 
         try {
             ServletOutputStream out = response.getOutputStream();
