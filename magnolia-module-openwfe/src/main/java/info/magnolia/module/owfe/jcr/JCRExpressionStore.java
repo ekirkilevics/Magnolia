@@ -178,7 +178,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
      */
     public FlowExpression loadExpression(FlowExpressionId fei) throws PoolException {
         FlowExpression ret_fe;
-        String s_fei = "";
+        String s_fei = StringUtils.EMPTY;
         try {
             Content ret = findExpression(fei);
             if (ret != null) {
@@ -191,12 +191,11 @@ public class JCRExpressionStore extends AbstractExpressionStore {
             }
 
         }
-        catch (PathNotFoundException e) {
-            log.error("Path not found while loading expression : {}", e.getMessage());
-        }
         catch (Exception e) {
-            log.error("load exception faled,", e);
+          // ignore. The expression cannot be found. This is reported to the calling method
         }
+        
+        // no expression found. Throw an exception ?
         throw new PoolException("can not get this expression (id=" + s_fei + ")");
     }
 
