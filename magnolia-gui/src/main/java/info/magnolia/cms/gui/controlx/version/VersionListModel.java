@@ -14,19 +14,15 @@ package info.magnolia.cms.gui.controlx.version;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.controlx.list.AbstractListModel;
-import info.magnolia.cms.gui.controlx.list.ListModelIterator;
-import info.magnolia.cms.gui.controlx.list.ListModelIteratorImpl;
 import info.magnolia.cms.gui.query.SearchQuery;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.version.Version;
 import javax.jcr.version.VersionIterator;
-
-import org.apache.log4j.Logger;
+import javax.jcr.version.VersionHistory;
 
 
 /**
@@ -34,11 +30,6 @@ import org.apache.log4j.Logger;
  * $Id:VersionListModel.java 2544 2006-04-04 12:47:32Z philipp $
  */
 public class VersionListModel extends AbstractListModel {
-
-    /**
-     * Logger
-     * */
-    private static final Logger log = Logger.getLogger(VersionListModel.class);
 
     /**
      * versioned node
@@ -62,8 +53,15 @@ public class VersionListModel extends AbstractListModel {
      * @return all versions in a collection
      * */
     protected Collection getResult() throws RepositoryException {
-        VersionIterator iterator = this.content.getVersionHistory().getAllVersions();
         Collection allVersions = new ArrayList();
+        VersionHistory versionHistory = this.content.getVersionHistory();
+        if (versionHistory == null) {
+            return allVersions;
+        }
+        VersionIterator iterator = versionHistory.getAllVersions();
+        // skip root version, its safe here since this list is only meant for presentation
+        // and there is always a root version
+        iterator.nextVersion();
         while (iterator.hasNext()) {
             Version version = iterator.nextVersion();
             allVersions.add(this.content.getVersionedContent(version));
