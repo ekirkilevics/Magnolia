@@ -427,10 +427,10 @@ public class NodeData extends ContentHandler {
      */
     public void setValue(InputStream value) throws RepositoryException, AccessDeniedException {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
-        if (this.property == null && this.node != null) {
+        if (this.node != null) {
             this.property = this.node.setProperty(ItemType.JCR_DATA, value);
         } else {
-            this.property.setValue(value);
+            log.error("This is not a valid Binary type, Binary NodeData must be created with PropertyType.BINARY");
         }
     }
 
