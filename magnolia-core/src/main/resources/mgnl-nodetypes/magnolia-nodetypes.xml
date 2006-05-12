@@ -116,15 +116,15 @@
     <!--
     magnolia system node type
     -->
-    <nodeType name="mgnl:system" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
+    <nodeType name="mgnl:reserve" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
         <supertypes>
             <supertype>nt:hierarchyNode</supertype>
         </supertypes>
-        <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="VERSION" protected="false" sameNameSiblings="true">
+        <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="true">
             <requiredPrimaryTypes>
-                <requiredPrimaryType>nt:hierarchyNode</requiredPrimaryType>
+                <requiredPrimaryType>nt:base</requiredPrimaryType>
             </requiredPrimaryTypes>
         </childNodeDefinition>
-        <propertyDefinition name="*" requiredType="undefined" autoCreated="false" mandatory="false" onParentVersion="IGNORE" protected="false" multiple="true"/>
+        <propertyDefinition name="*" requiredType="undefined" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
     </nodeType>
 </nodeTypes>

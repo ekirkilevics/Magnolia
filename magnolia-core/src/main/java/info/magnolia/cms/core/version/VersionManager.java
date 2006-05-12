@@ -17,14 +17,13 @@ import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.beans.runtime.MgnlContext;
+import info.magnolia.cms.beans.config.VersionConfig;
 
 import javax.jcr.version.Version;
 import javax.jcr.version.VersionHistory;
 import javax.jcr.version.VersionIterator;
 import javax.jcr.version.VersionException;
-import javax.jcr.UnsupportedRepositoryOperationException;
-import javax.jcr.RepositoryException;
-import javax.jcr.PathNotFoundException;
+import javax.jcr.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +33,10 @@ import java.io.*;
 import java.util.List;
 
 /**
+ * Singleton class which should be used for any operation related to versioning
+ * VersionManager synchronizes all operations like add version, restore version and remove version
+ * but it does not synchronize between operations
+ *
  * @author Sameer Charles
  * $Id$
  */
@@ -48,6 +51,11 @@ public class VersionManager {
      * version workspace system path
      * */
     protected static final String TMP_REFERENCED_NODES = "mgnl:tmpReferencedNodes";
+
+    /**
+     * version system node, holds this node version specific data
+     * */
+    private static final String SYSTEM_NODE = "mgnl:versionMetaData";
 
     /**
      *  property name for collection rule
@@ -88,9 +96,20 @@ public class VersionManager {
      * */
     private void createInitialStructure() throws RepositoryException {
         HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(VERSION_WORKSPACE);
-        if (!hm.isExist("/"+VersionManager.TMP_REFERENCED_NODES)) {
+        try {
+            Content tmp = hm.getContent("/"+VersionManager.TMP_REFERENCED_NODES);
+            // remove nodes if they are no longer referenced within this workspace
+            NodeIterator children = tmp.getJCRNode().getNodes();
+            while (children.hasNext()) {
+                Node child = children.nextNode();
+                if (child.getReferences().getSize() < 1) {
+                    child.remove();
+                }
+            }
+        } catch (PathNotFoundException e) {
             hm.createContent("",VersionManager.TMP_REFERENCED_NODES, ItemType.SYSTEM.getSystemName());
         }
+        hm.save();
     }
 
     /**
@@ -108,7 +127,8 @@ public class VersionManager {
      * @throws UnsupportedOperationException if repository implementation does not support Versions API
      * @throws javax.jcr.RepositoryException if any repository error occurs
      */
-    public synchronized Version addVersion(Content node) throws UnsupportedRepositoryOperationException, RepositoryException {
+    public synchronized Version addVersion(Content node)
+            throws UnsupportedRepositoryOperationException, RepositoryException {
         Rule rule = new Rule(new String[] {node.getNodeType().getName()});
         rule.reverse();
         return this.addVersion(node, rule);
@@ -124,7 +144,7 @@ public class VersionManager {
      */
     public synchronized Version addVersion(Content node, Rule rule)
             throws UnsupportedRepositoryOperationException, RepositoryException {
-        List permissions = this.getAccessManegerPermissions();
+        List permissions = this.getAccessManagerPermissions();
         this.impersonateAccessManager(null);
         try {
             return this.createVersion(node, rule);
@@ -150,8 +170,14 @@ public class VersionManager {
      */
     private Version createVersion(Content node, Rule rule)
             throws UnsupportedRepositoryOperationException, RepositoryException {
+        if (VersionConfig.getMaxVersionIndex() < 1) {
+            log.debug("Ignore create version, MaxVersionIndex < 1");
+            log.debug("Returning root version of the source node");
+            return node.getJCRNode().getVersionHistory().getRootVersion();
+        }
         CopyUtil.getInstance().copyToversion(node, new RuleBasedContentFilter(rule));
         Content versionedNode = this.getVersionedNode(node);
+        Content systemInfo = this.getSystemNode(versionedNode);
         // add serialized rule which was used to create this version
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
@@ -160,26 +186,38 @@ public class VersionManager {
             objectOut.flush();
             objectOut.close();
             NodeData nodeData;
-            // PROPERTY_RULE is not a part of MetaData to allow versioning of node types which does support MetaData
-            if (!versionedNode.hasNodeData(PROPERTY_RULE))
-                nodeData = versionedNode.createNodeData(PROPERTY_RULE);
+            // PROPERTY_RULE is not a part of MetaData to allow versioning of node types which does NOT support MetaData
+            if (!systemInfo.hasNodeData(PROPERTY_RULE))
+                nodeData = systemInfo.createNodeData(PROPERTY_RULE);
             else
-                nodeData = versionedNode.getNodeData(PROPERTY_RULE);
+                nodeData = systemInfo.getNodeData(PROPERTY_RULE);
             nodeData.setValue(out.toString());
         } catch (IOException e) {
             throw new RepositoryException("Unable to add serialized Rule to the versioned content");
         }
-        if (versionedNode.hasMetaData()) {
-            // temp fix, MgnlContext should always have user either logged-in or anonymous
-            String userName = "";
-            if (MgnlContext.getUser() != null) userName = MgnlContext.getUser().getName();
-            versionedNode.getMetaData().setProperty(MetaData.VERSION_USER, userName);
-            versionedNode.getMetaData().setProperty(MetaData.NAME, node.getName());
-        }
+        // temp fix, MgnlContext should always have user either logged-in or anonymous
+        String userName = "";
+        if (MgnlContext.getUser() != null) userName = MgnlContext.getUser().getName();
+        // add all system properties for this version
+        if (!systemInfo.hasNodeData(ContentVersion.VERSION_USER))
+            systemInfo.createNodeData(ContentVersion.VERSION_USER).setValue(userName);
+        else
+            systemInfo.getNodeData(ContentVersion.VERSION_USER).setValue(userName);
+        if (!systemInfo.hasNodeData(ContentVersion.NAME))
+            systemInfo.createNodeData(ContentVersion.NAME).setValue(node.getName());
+        else
+            systemInfo.getNodeData(ContentVersion.NAME).setValue(node.getName());
+
         versionedNode.save();
         // add version
         Version newVersion = versionedNode.getJCRNode().checkin();
         versionedNode.getJCRNode().checkout();
+        try {
+            this.setMaxVersionHistory(versionedNode);
+        } catch (RepositoryException re) {
+            log.error("Failed to limit version history to the maximum configured", re);
+            log.error("New version has already been created");
+        }
         return newVersion;
     }
 
@@ -188,17 +226,43 @@ public class VersionManager {
      * @param node
      * */
     protected synchronized Content getVersionedNode(Content node) throws RepositoryException {
-        List permissions = this.getAccessManegerPermissions();
+        return getVersionedNode(node.getUUID());
+    }
+
+    /***
+     * get node from version store
+     * @param uuid
+     * */
+    protected synchronized Content getVersionedNode(String uuid) throws RepositoryException {
+        List permissions = this.getAccessManagerPermissions();
         this.impersonateAccessManager(null);
         try {
-            return getHierarchyManager().getContent(node.getUUID());
-            //return MgnlContext.getHierarchyManager(VERSION_WORKSPACE).getContentByUUID(node.getUUID());
+            return getHierarchyManager().getContent(uuid);
         } catch (PathNotFoundException e) {
             return null;
         } catch (RepositoryException re) {
             throw re;
         } finally {
             this.revertAccessManager(permissions);
+        }
+    }
+
+    /**
+     * set version history to max version possible
+     * @param node
+     * @throws RepositoryException if failed to get VersionHistory or fail to remove
+     * */
+    private void setMaxVersionHistory(Content node) throws RepositoryException {
+        VersionHistory history = node.getJCRNode().getVersionHistory();
+        VersionIterator versions = history.getAllVersions();
+        long indexToRemove = (versions.getSize()-1) - VersionConfig.getMaxVersionIndex();
+        if (indexToRemove > 0) {
+            // skip root version
+            versions.nextVersion();
+            // remove the version after rootVersion
+            for (; indexToRemove > 0; indexToRemove--) {
+                history.removeVersion(versions.nextVersion().getName());
+            }
         }
     }
 
@@ -288,7 +352,7 @@ public class VersionManager {
         Content versionedNode = this.getVersionedNode(node);
         versionedNode.getJCRNode().restore(version, removeExisting);
         versionedNode.getJCRNode().checkout();
-        List permissions = this.getAccessManegerPermissions();
+        List permissions = this.getAccessManagerPermissions();
         this.impersonateAccessManager(null);
         try {
             // if restored, update original node with the restored node and its subtree
@@ -315,6 +379,16 @@ public class VersionManager {
     }
 
     /**
+     * Removes all versions of the node associated with given UUID
+     * @param uuid
+     * @throws RepositoryException if fails to remove versioned node from the version store
+     * */
+    public synchronized void removeVersionHistory(String uuid) throws RepositoryException {
+        this.getVersionedNode(uuid).delete();
+        getHierarchyManager().save();
+    }
+
+    /**
      * get Rule used for this version
      * @param versionedNode
      * @throws IOException
@@ -326,7 +400,7 @@ public class VersionManager {
         // if restored, update original node with the restored node and its subtree
         ByteArrayInputStream inStream = null;
         try {
-            String ruleString = versionedNode.getNodeData(PROPERTY_RULE).getString();
+            String ruleString = this.getSystemNode(versionedNode).getNodeData(PROPERTY_RULE).getString();
             inStream = new ByteArrayInputStream(ruleString.getBytes());
             ObjectInput objectInput = new ObjectInputStream(inStream);
             return (Rule) objectInput.readObject();
@@ -336,6 +410,19 @@ public class VersionManager {
             throw e;
         } finally {
             IOUtils.closeQuietly(inStream);
+        }
+    }
+
+    /**
+     * get magnolia system node created under the given node
+     * @param node
+     * @throws RepositoryException if failed to create system node
+     * */
+    protected synchronized Content getSystemNode(Content node) throws RepositoryException {
+        try {
+            return node.getContent(SYSTEM_NODE);
+        } catch (PathNotFoundException e) {
+            return node.createContent(SYSTEM_NODE, ItemType.SYSTEM);
         }
     }
 
@@ -358,7 +445,7 @@ public class VersionManager {
     /**
      * get access manager permission list
      * */
-    private List getAccessManegerPermissions() {
+    private List getAccessManagerPermissions() {
         return this.getHierarchyManager().getAccessManager().getPermissionList();
     }
 

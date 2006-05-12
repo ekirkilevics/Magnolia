@@ -47,7 +47,7 @@ import java.util.zip.GZIPOutputStream;
 
 /**
  * @author Sameer Charles
- * @version $Revision: 1633 $ ($Author: scharles $)
+ * $Id$
  */
 public class SimpleSyndicator implements Syndicator {
 
@@ -198,7 +198,39 @@ public class SimpleSyndicator implements Syndicator {
         this.path = path;
         ActivationContent activationContent = null;
         try {
-            activationContent = this.collect();
+            HierarchyManager hm = MgnlContext.getHierarchyManager(this.repositoryName, this.workspaceName);
+            activationContent = this.collect(hm.getContent(path));
+            this.activate(activationContent);
+            this.updateActivationDetails();
+        }
+        catch (Exception e) {
+            log.error("Activation failed for path:" + ((path != null) ? path : "[null]"), e);
+            throw new ExchangeException(e);
+        }
+        finally {
+            if (log.isDebugEnabled())
+                log.debug("Cleaning temporary files");
+            cleanTemporaryStore(activationContent);
+        }
+    }
+
+    /**
+     * <p/>
+     * this will activate specifies page (sub pages) to all configured subscribers
+     * </p>
+     *
+     * @param parent  parent under which this page will be activated
+     * @param content to be activated
+     * @throws javax.jcr.RepositoryException
+     * @throws info.magnolia.cms.exchange.ExchangeException
+     *
+     */
+    public void activate(String parent, Content content) throws ExchangeException, RepositoryException {
+        this.parent = parent;
+        this.path = content.getHandle();
+        ActivationContent activationContent = null;
+        try {
+            activationContent = this.collect(content);
             this.activate(activationContent);
             this.updateActivationDetails();
         }
@@ -230,7 +262,40 @@ public class SimpleSyndicator implements Syndicator {
         this.path = path;
         ActivationContent activationContent = null;
         try {
-            activationContent = this.collect();
+            HierarchyManager hm = MgnlContext.getHierarchyManager(this.repositoryName, this.workspaceName);
+            activationContent = this.collect(hm.getContent(path));
+            this.activate(subscriber, activationContent);
+            this.updateActivationDetails();
+        }
+        catch (Exception e) {
+            throw new ExchangeException(e);
+        }
+        finally {
+            if (log.isDebugEnabled())
+                log.debug("Cleaning temporary files");
+            cleanTemporaryStore(activationContent);
+        }
+    }
+
+    /**
+     * <p/>
+     * this will activate specifies page (sub pages) to the specified subscribers
+     * </p>
+     *
+     * @param subscriber
+     * @param parent     parent under which this page will be activated
+     * @param content    to be activated
+     * @throws javax.jcr.RepositoryException
+     * @throws info.magnolia.cms.exchange.ExchangeException
+     *
+     */
+    public void activate(Subscriber subscriber, String parent, Content content)
+            throws ExchangeException, RepositoryException {
+        this.parent = parent;
+        this.path = content.getHandle();
+        ActivationContent activationContent = null;
+        try {
+            activationContent = this.collect(content);
             this.activate(subscriber, activationContent);
             this.updateActivationDetails();
         }
@@ -449,8 +514,7 @@ public class SimpleSyndicator implements Syndicator {
      * @return activation handle
      */
     private String getActivationURL(Subscriber subscriberInfo) {
-        String handle = subscriberInfo.getURL() + DEFAULT_HANDLER;
-        return handle;
+        return subscriberInfo.getURL() + DEFAULT_HANDLER;
     }
 
     /**
@@ -520,9 +584,8 @@ public class SimpleSyndicator implements Syndicator {
      *
      * @throws Exception
      */
-    private ActivationContent collect() throws Exception {
+    private ActivationContent collect(Content node) throws Exception {
         ActivationContent activationContent = new ActivationContent();
-        HierarchyManager hm = MgnlContext.getHierarchyManager(this.repositoryName, this.workspaceName);
         // add global properties true for this path/hierarchy
         activationContent.addProperty(PARENT_PATH, this.parent);
         activationContent.addProperty(WORKSPACE_NAME, this.workspaceName);
@@ -537,8 +600,8 @@ public class SimpleSyndicator implements Syndicator {
         document.setRootElement(root);
         this.addResources(
                 root,
-                hm.getWorkspace().getSession(),
-                hm.getContent(path),
+                node.getWorkspace().getSession(),
+                node,
                 this.contentFilter,
                 activationContent);
         File resourceFile = File.createTempFile("resources", "", Path.getTempDirectory());

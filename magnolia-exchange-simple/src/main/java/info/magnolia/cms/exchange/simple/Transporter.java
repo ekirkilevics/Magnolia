@@ -28,7 +28,7 @@ import java.util.Iterator;
  * Class responsible to transport activation content
  *
  * @author Sameer Charles
- * @version $Revision: 1633 $ ($Author: scharles $)
+ * $Id$
  */
 public class Transporter {
 

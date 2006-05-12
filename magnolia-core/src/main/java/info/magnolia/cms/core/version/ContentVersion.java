@@ -14,7 +14,6 @@ package info.magnolia.cms.core.version;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
@@ -23,8 +22,6 @@ import info.magnolia.cms.util.Rule;
 
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Comparator;
-import java.util.ArrayList;
 
 import javax.jcr.*;
 import javax.jcr.lock.Lock;
@@ -48,6 +45,16 @@ public class ContentVersion extends Content {
      * Logger.
      */
     private static Logger log = LoggerFactory.getLogger(ContentVersion.class);
+
+    /**
+     * user who created this version
+     * */
+    public static final String VERSION_USER = "versionUser"; //$NON-NLS-1$
+
+    /**
+     * name of the base node
+     * */
+    public static final String NAME = "name";
 
     /**
      * version node (nt:version)
@@ -128,14 +135,24 @@ public class ContentVersion extends Content {
      * The original name of the node.
      */
     public String getName() {
-        return this.getMetaData().getStringProperty(MetaData.NAME);
+        try {
+            return VersionManager.getInstance().getSystemNode(this).getNodeData(NAME).getString();
+        } catch (RepositoryException re) {
+            log.error("Failed to retrieve name from version system node", re);
+            return "";
+        }
     }
 
     /**
      * The name of the user who created this version
      */
     public String getUserName() {
-        return this.getMetaData().getStringProperty(MetaData.VERSION_USER);
+        try {
+            return VersionManager.getInstance().getSystemNode(this).getNodeData(VERSION_USER).getString();
+        } catch (RepositoryException re) {
+            log.error("Failed to retrieve user from version system node", re);
+            return "";
+        }
     }
 
     /**
@@ -719,30 +736,6 @@ public class ContentVersion extends Content {
      */
     public AccessManager getAccessManager() {
         return this.base.getAccessManager();
-    }
-
-    /**
-     * Get a collection containing child nodes which satisfies the given filter
-     *
-     * @param filter
-     * @return Collection of content objects
-     */
-    public Collection getChildren(ContentFilter filter) {
-        log.error("Not implemented on ContentVersion");
-        return new ArrayList();
-    }
-
-    /**
-     * Get a collection containing child nodes which satisfies the given filter. The returned collection is ordered
-     * according to the passed in criteria.
-     *
-     * @param filter        filter for the child nodes
-     * @param orderCriteria ordering for the selected child nodes; if <tt>null</tt> than no particular order of the
-     *                      child nodes
-     * @return Collection of content objects
-     */
-    public Collection getChildren(ContentFilter filter, Comparator orderCriteria) {
-        return this.getChildren(filter);
     }
 
 }

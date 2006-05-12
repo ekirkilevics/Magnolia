@@ -62,7 +62,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Sameer Charles
- * @version $Revision$ ($Author$)
+ * $Id$
  */
 public class SimpleExchangeServlet extends HttpServlet {
 
@@ -172,7 +172,7 @@ public class SimpleExchangeServlet extends HttpServlet {
             IOUtils.closeQuietly(documentInputStream);
             Element topContentElement = jdomDocument.getRootElement().getChild(
                 SimpleSyndicator.RESOURCE_MAPPING_FILE_ELEMENT);
-            String newPath = "";
+            String newPath;
             if (parentPath.equals("/"))
                 newPath = parentPath
                     + topContentElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_NAME_ATTRIBUTE);

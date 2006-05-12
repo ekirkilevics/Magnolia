@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * This class holds all content needed to be activated
  * @author Sameer Charles
- * @version $Revision: 1633 $ ($Author: scharles $)
+ * $Id$
  */
 public class ActivationContent {
 

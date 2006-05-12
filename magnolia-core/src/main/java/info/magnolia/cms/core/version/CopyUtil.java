@@ -21,8 +21,6 @@ import info.magnolia.cms.beans.runtime.MgnlContext;
 import javax.jcr.*;
 import javax.jcr.nodetype.ConstraintViolationException;
 import java.util.Iterator;
-import java.util.List;
-import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException;
 import java.io.FileOutputStream;
@@ -31,6 +29,7 @@ import java.io.FileInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Sameer Charles
@@ -84,21 +83,12 @@ public class CopyUtil {
             root.save();
         }
         // copy all child nodes
-        List uuidList = new ArrayList();
         Iterator children = source.getChildren(filter).iterator();
         while (children.hasNext()) {
             Content child = (Content) children.next();
-            this.safeCopy(child, root);
-            uuidList.add(child.getUUID());
+            this.clone(child, root, filter, true);
         }
-        // remove any old nodes
-        children = root.getChildren(filter).iterator();
-        while (children.hasNext()) {
-            Content child = (Content) children.next();
-            if (!uuidList.contains(child.getUUID()) && !child.getJCRNode().getDefinition().isAutoCreated()) {
-                child.delete();
-            }
-        }
+        this.removeNonExistingChildNodes(source, root, filter);
     }
 
     /**
@@ -113,8 +103,8 @@ public class CopyUtil {
         this.removeProperties(destination);
         this.updateProperties(source, destination);
         // copy all nodes from version store
-        List uuidList = new ArrayList();
-        this.copyAllChildNodes(source, destination, filter, uuidList);
+        this.copyAllChildNodes(source, destination, filter);
+        /*
         // remove properties created on version
         if (destination.hasMetaData()) {
             MetaData metaData = destination.getMetaData();
@@ -123,22 +113,40 @@ public class CopyUtil {
             if (metaData.hasProperty(MetaData.NAME))
                 metaData.removeProperty(MetaData.NAME);
         }
+        */
         // remove all non existing nodes
-        this.removeNonExistingChildNodes(destination, filter, uuidList);
+        this.removeNonExistingChildNodes(source, destination, filter);
     }
 
     /**
      * recursively removes all child nodes from node using specified filter
-     * @param node
+     * @param source
+     * @param destination
      * @param filter
      * */
-    private void removeNonExistingChildNodes(Content node, Content.ContentFilter filter, List uuidList)
+    private void removeNonExistingChildNodes(Content source, Content destination ,Content.ContentFilter filter)
             throws RepositoryException {
-        Iterator children = node.getChildren(filter).iterator();
+        // collect all uuids from the source node hierarchy using the given filter
+        Iterator children = destination.getChildren(filter).iterator();
         while (children.hasNext()) {
             Content child = (Content) children.next();
-            if (!uuidList.contains(child.getUUID()) && !child.getJCRNode().getDefinition().isAutoCreated())
+            // check if this child exist in source, if not remove it
+            if (child.getJCRNode().getDefinition().isAutoCreated()) continue;
+            try {
+                source.getJCRNode().getSession().getNodeByUUID(child.getUUID());
+                // if exist its ok, recursively remove all sub nodes
+                this.removeNonExistingChildNodes(source, child, filter);
+            } catch (ItemNotFoundException e) {
+                PropertyIterator referencedProperties = child.getJCRNode().getReferences();
+                if (referencedProperties.getSize() > 0) {
+                    // remove all referenced properties, its safe since source workspace cannot have these
+                    // properties if node with this UUID does not exist
+                    while (referencedProperties.hasNext()) {
+                        referencedProperties.nextProperty().remove();
+                    }
+                }
                 child.delete();
+            }
         }
     }
 
@@ -147,29 +155,46 @@ public class CopyUtil {
      * @param node1
      * @param node2
      * @param filter
-     * @param uuidList of UUID of copied nodes
      * */
-    private void copyAllChildNodes(Content node1, Content node2, Content.ContentFilter filter, List uuidList)
+    private void copyAllChildNodes(Content node1, Content node2, Content.ContentFilter filter)
             throws RepositoryException {
         Iterator children = node1.getChildren(filter).iterator();
         while (children.hasNext()) {
             Content child = (Content) children.next();
-            this.safeCopy(child, node2);
-            uuidList.add(child.getUUID());
+            this.clone(child, node2, filter, false);
         }
     }
 
     /**
-     * clone all properties of this node and add referenced property
+     * clone
      * @param node
      * @param parent
+     * @param filter
+     * @param removeExisting
      * */
-    private void safeCopy(Content node, Content parent) throws RepositoryException {
-        if (node.getJCRNode().getDefinition().isAutoCreated()) {
-            Content destination = parent.getContent(node.getName());
-            this.removeProperties(destination);
-            this.updateProperties(node, destination);
-        } else {
+    private void clone(Content node, Content parent, Content.ContentFilter filter, boolean removeExisting)
+            throws RepositoryException {
+        try {
+            // it seems to be a bug in jackrabbit - cloning does not work if the node with the same uuid
+            // exist, "removeExisting" has no effect
+            // if node exist with the same UUID, simply update non propected properties
+            Content existingNode =
+                    getHierarchyManager(parent.getWorkspace().getName()).getContentByUUID(node.getUUID());
+            if (removeExisting) {
+                System.out.println("removing existing node : "+existingNode.getHandle());
+                existingNode.delete();
+                parent.save();
+                this.clone(node, parent);
+                return;
+            }
+            this.removeProperties(existingNode);
+            this.updateProperties(node, existingNode);
+            Iterator children = node.getChildren(filter).iterator();
+            while (children.hasNext()) {
+                this.clone((Content)children.next(), existingNode, filter, removeExisting);
+            }
+        } catch (ItemNotFoundException e) {
+            // its safe to clone if UUID does not exist in this workspace
             this.clone(node, parent);
         }
     }
@@ -180,17 +205,16 @@ public class CopyUtil {
      * @param parent
      * */
     private void clone(Content node, Content parent) throws RepositoryException {
-        try {
-            parent.getWorkspace().getSession().getNodeByUUID(node.getUUID()).remove();
-            // todo , it seems to be a bug in jackrabbit - cloning does not work if the node with the same uuid
-            // exist, "removeExisting" has no effect
-            parent.getJCRNode().save();
-        } catch (ItemNotFoundException e) {
-            // its safe to clone if UUID does not exist in this workspace
-        }
-        parent.getWorkspace().
+        if (node.getJCRNode().getDefinition().isAutoCreated()) {
+            Content destination = parent.getContent(node.getName());
+            this.removeProperties(destination);
+            this.updateProperties(node, destination);
+        } else {
+            parent.getWorkspace().
                 clone(node.getWorkspace().getName(), node.getHandle(), parent.getHandle()+"/"+node.getName(), true);
+        }
     }
+
 
     /**
      * remove all properties under the given node
@@ -233,47 +257,12 @@ public class CopyUtil {
     }
 
     /**
-     * remove nodes from bottom -> top
-     * this methods makes sure that nodes which are referenced from anywhere in a workspace are preserved
-     * before nodes are imported, otherwise we could end up with nodes which could never be versioned
-     * @param node to be removed or preserved in tmp workspace
-     * */
-    private void depthFirstRemoval(Node node) throws RepositoryException {
-        if (node.hasNodes()) {
-            NodeIterator nodeIterator = node.getNodes();
-            while (nodeIterator.hasNext()) {
-                this.depthFirstRemoval(nodeIterator.nextNode());
-            }
-        }
-        long references = 0;
-        try {
-            references = node.getReferences().getSize();
-        } catch (RepositoryException re) {
-            // this could happen if the node is non referenceable
-            log.error(re.getMessage());
-            log.debug(re.getMessage(), re);
-        }
-        if (references > 0) {
-            node.getSession().move(node.getPath(), VersionManager.TMP_REFERENCED_NODES+"/"+node.getName());
-        } else {
-            try {
-                node.remove();
-            } catch (RepositoryException re) {
-                // if cant be removed for some reason it will be removed on node import with the same uuid
-                re.printStackTrace();
-                log.debug(re.getMessage(), re);
-                node.getSession().move(node.getPath(), VersionManager.TMP_REFERENCED_NODES+"/"+node.getName());
-            }
-        }
-    }
-
-
-    /**
      * merge all non reserved properties
      * @param source
      * @param destination
      * */
-    private void updateProperties(Content source, Content destination) throws RepositoryException {
+    private void updateProperties(Content source, Content destination)
+            throws RepositoryException {
         Node sourceNode = source.getJCRNode();
         Node destinationNode = destination.getJCRNode();
         PropertyIterator properties = sourceNode.getProperties();
@@ -282,12 +271,32 @@ public class CopyUtil {
             // exclude system property Rule and Version specific properties which were created on version
             if (property.getName().equalsIgnoreCase(VersionManager.PROPERTY_RULE)) continue;
             try {
+                if (property.getDefinition().isProtected()) continue;
+                if (property.getType() == PropertyType.REFERENCE) {
+                    // first check for the referenced node existence
+                    try {
+                        getHierarchyManager(destination.getWorkspace().getName())
+                                .getContentByUUID(property.getString());
+                    } catch (ItemNotFoundException e) {
+                        if (!StringUtils.equalsIgnoreCase(
+                                destination.getWorkspace().getName(),
+                                VersionManager.VERSION_WORKSPACE)) throw e;
+                        // get referenced node under temporary store
+                        // use jcr import, there is no other way to get a node without sub hierarchy
+                        Content referencedNode = getHierarchyManager(source.getWorkspace().getName())
+                                .getContentByUUID(property.getString());
+                        try {
+                            this.importNode(getTemporaryPath(), referencedNode);
+                        } catch (IOException ioe) {
+                            log.error("Failed to import referenced node", ioe);
+                        }
+                    }
+                }
                 if (property.getDefinition().isMultiple()) {
                     destinationNode.setProperty(property.getName(), property.getValues());
                 } else {
                     destinationNode.setProperty(property.getName(), property.getValue());
                 }
-                destinationNode.setProperty(property.getName(), property.getValue());
             } catch (ConstraintViolationException e) {
                 if (log.isDebugEnabled()) {
                     log.debug("Property "+property.getName()+" is a reserved property");
@@ -301,6 +310,21 @@ public class CopyUtil {
      * */
     private HierarchyManager getHierarchyManager() {
         return MgnlContext.getHierarchyManager(VersionManager.VERSION_WORKSPACE);
+    }
+
+    /**
+     * get hierarchy manager of the specified workspace
+     * @param workspaceId
+     * */
+    private HierarchyManager getHierarchyManager(String workspaceId) {
+        return MgnlContext.getHierarchyManager(workspaceId);
+    }
+
+    /**
+     * get temporary node
+     * */
+    private Content getTemporaryPath() throws RepositoryException {
+        return getHierarchyManager().getContent("/"+VersionManager.TMP_REFERENCED_NODES);
     }
 }
 

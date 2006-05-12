@@ -473,19 +473,25 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
-     * Create NodeData with the given value and type.
+     * Set NodeData value.
      * @param name to be created
      * @param value to be set initially
-     * @param type propertyType
      * @return NodeData requested <code>NodeData</code> object
      * @throws PathNotFoundException
      * @throws RepositoryException if an error occurs
      * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
      * operation
      */
-    public NodeData createNodeData(String name, Value value, int type) throws PathNotFoundException,
-        RepositoryException, AccessDeniedException {
-        return createNodeData(name, value);
+    public NodeData setNodeData(String name, Value value) throws PathNotFoundException, RepositoryException,
+        AccessDeniedException {
+        NodeData nodeData;
+        try {
+            nodeData = new NodeData(this.node, name, this.accessManager);
+            nodeData.setValue(value);
+        } catch (PathNotFoundException e) {
+            nodeData = new NodeData(this.node, name, value, this.accessManager);
+        }
+        return nodeData;
     }
 
     /**

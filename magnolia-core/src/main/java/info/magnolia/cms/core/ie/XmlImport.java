@@ -140,8 +140,7 @@ public class XmlImport implements ImportHandler {
 
     private Content addContent(Content content, Element element) {
         try {
-            Content newContent = content.getContent(element.getAttributeValue(A_NAME));
-            return newContent;
+            return content.getContent(element.getAttributeValue(A_NAME));
         }
         catch (PathNotFoundException e) {
             try {
@@ -179,8 +178,8 @@ public class XmlImport implements ImportHandler {
         if (!nodeData.isExist()) {
             try {
                 if (type == PropertyType.REFERENCE) {
-                    Value refValue = content.getJCRNode().getSession().getValueFactory().createValue(value);
-                    nodeData = content.createNodeData(element.getAttributeValue(A_NAME), refValue, type);
+                    Value refValue = content.getJCRNode().getSession().getValueFactory().createValue(value, type);
+                    nodeData = content.createNodeData(element.getAttributeValue(A_NAME), refValue);
                 }
                 nodeData = content.createNodeData(element.getAttributeValue(A_NAME));
                 if (log.isDebugEnabled()) {

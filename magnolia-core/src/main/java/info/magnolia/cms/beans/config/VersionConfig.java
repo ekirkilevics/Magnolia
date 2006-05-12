@@ -52,13 +52,14 @@ public class VersionConfig {
 
     /**
      * boolean governing if versioning is actively used
+     * NOT USED FOR THE TIME BEING
      */
     private static boolean isActive;
 
     /**
      * maximum number of version index
      */
-    private static long maxVersions = 0;
+    private static long maxVersions = 5; // default is 5 which could be overwritten through config
 
     /**
      * Initialize bean

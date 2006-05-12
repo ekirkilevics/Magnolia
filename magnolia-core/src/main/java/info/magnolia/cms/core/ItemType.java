@@ -131,7 +131,7 @@ public final class ItemType implements Serializable {
     /**
      * "mgnl:contentNode"
      */
-    public static final ItemType SYSTEM = new ItemType("mgnl:system"); //$NON-NLS-1$
+    public static final ItemType SYSTEM = new ItemType("mgnl:reserve"); //$NON-NLS-1$
 
     /**
      * "jcr:content"

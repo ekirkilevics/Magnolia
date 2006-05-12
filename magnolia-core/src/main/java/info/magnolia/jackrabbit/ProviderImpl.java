@@ -141,6 +141,7 @@ public class ProviderImpl implements Provider {
         }
         String contextFactoryClass = (String) params.get(CONTEXT_FACTORY_CLASS_KEY);
         String providerURL = (String) params.get(PROVIDER_URL_KEY);
+        boolean addShutdownTask = false;
         final String bindName = (String) params.get(BIND_NAME_KEY);
         final Hashtable env = new Hashtable();
         env.put(Context.INITIAL_CONTEXT_FACTORY, contextFactoryClass);
@@ -160,6 +161,7 @@ public class ProviderImpl implements Provider {
                 }
                 RegistryHelper.registerRepository(ctx, bindName, configFile, repositoryHome, true);
                 this.repository = (Repository) ctx.lookup(bindName);
+                addShutdownTask = true;
             }
             this.validateWorkspaces();
         }
@@ -176,30 +178,31 @@ public class ProviderImpl implements Provider {
             throw new RepositoryNotInitializedException(e);
         }
 
-        ShutdownManager.addShutdownTask(new ShutdownManager.ShutdownTask() {
+        if (addShutdownTask) {
+            ShutdownManager.addShutdownTask(new ShutdownManager.ShutdownTask() {
 
-            public void execute(ServletContextEvent sce) {
-                log.info("Shutting down repository bound to '{}'", bindName);
+                public void execute(ServletContextEvent sce) {
+                    log.info("Shutting down repository bound to '{}'", bindName);
 
-                try {
-                    Context ctx = new InitialContext(env);
-                    RegistryHelper.unregisterRepository(ctx, bindName);
+                    try {
+                        Context ctx = new InitialContext(env);
+                        RegistryHelper.unregisterRepository(ctx, bindName);
+                    }
+                    catch (NamingException ne) {
+                        log.warn(MessageFormat.format("Unable to shutdown repository {0}: {1} {2}", new Object[]{
+                            bindName,
+                            ne.getClass().getName(),
+                            ne.getMessage()}), ne);
+                    }
+                    catch (Throwable e) {
+                        log.warn(MessageFormat.format("Failed to shutdown repository {0}: {1} {2}", new Object[]{
+                            bindName,
+                            e.getClass().getName(),
+                            e.getMessage()}), e);
+                    }
                 }
-                catch (NamingException ne) {
-                    log.warn(MessageFormat.format("Unable to shutdown repository {0}: {1} {2}", new Object[]{
-                        bindName,
-                        ne.getClass().getName(),
-                        ne.getMessage()}), ne);
-                }
-                catch (Throwable e) {
-                    log.warn(MessageFormat.format("Failed to shutdown repository {0}: {1} {2}", new Object[]{
-                        bindName,
-                        e.getClass().getName(),
-                        e.getMessage()}), e);
-                }
-            }
-        });
-
+            });
+        }
     }
 
     /**
@@ -234,7 +237,7 @@ public class ProviderImpl implements Provider {
     }
 
     /**
-     * @see info.magnolia.repository.Provider#registerNodeTypes(javax.jcr.Workspace)
+     * @see info.magnolia.repository.Provider#registerNodeTypes(String)
      */
     public void registerNodeTypes() throws RepositoryException {
         registerNodeTypes(null);
@@ -304,7 +307,8 @@ public class ProviderImpl implements Provider {
     }
 
     /**
-     * @return
+     * @param configuration
+     * @return InputStream of node type definition file
      */
     private InputStream getNodeTypeDefinition(String configuration) {
 
@@ -323,10 +327,7 @@ public class ProviderImpl implements Provider {
             File nodeTypeDefinition = new File(Path.getAbsoluteFileSystemPath(configuration));
             if (nodeTypeDefinition.exists()) {
                 try {
-                    xml = new FileInputStream(nodeTypeDefinition);
-                    if (xml != null) {
-                        return xml;
-                    }
+                    return new FileInputStream(nodeTypeDefinition);
                 }
                 catch (FileNotFoundException e) {
                     // should never happen
