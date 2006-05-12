@@ -15,7 +15,6 @@ package info.magnolia.cms.core.version;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 
 import javax.jcr.*;
@@ -181,7 +180,6 @@ public class CopyUtil {
             Content existingNode =
                     getHierarchyManager(parent.getWorkspace().getName()).getContentByUUID(node.getUUID());
             if (removeExisting) {
-                System.out.println("removing existing node : "+existingNode.getHandle());
                 existingNode.delete();
                 parent.save();
                 this.clone(node, parent);

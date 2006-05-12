@@ -66,7 +66,7 @@ public class VersionManager {
     /**
      * jcr root version
      * */
-    protected static final String ROOT_VERSION = "jcr:rootVersion";
+    public static final String ROOT_VERSION = "jcr:rootVersion";
 
     /**
      * Logger.
@@ -129,7 +129,8 @@ public class VersionManager {
      */
     public synchronized Version addVersion(Content node)
             throws UnsupportedRepositoryOperationException, RepositoryException {
-        Rule rule = new Rule(new String[] {node.getNodeType().getName()});
+        //Rule rule = new Rule(new String[] {node.getNodeType().getName(), ItemType.SYSTEM.getSystemName()});
+        Rule rule = new Rule(node.getNodeType().getName()+","+ItemType.SYSTEM.getSystemName(), ",");
         rule.reverse();
         return this.addVersion(node, rule);
     }
@@ -279,6 +280,7 @@ public class VersionManager {
         Content versionedNode = this.getVersionedNode(node);
         if (versionedNode == null) {
             // node does not exist in version store so no version history
+            log.info("No VersionHistory found for this node");
             return null;
         }
         return versionedNode.getJCRNode().getVersionHistory();
