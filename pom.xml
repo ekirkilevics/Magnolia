@@ -1,18 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <pluginRepositories>
-  <pluginRepository>
-    <id>snapshots</id>
-    <url>http://svn.apache.org/maven-snapshot-repository</url>
-  </pluginRepository>
-    </pluginRepositories>
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.0-beta-4-SNAPSHOT</version>
-            </plugin>
-        </plugins>
-    </build>
   <modelVersion>4.0.0</modelVersion>
   <groupId>info.magnolia</groupId>
   <artifactId>magnolia-root</artifactId>
