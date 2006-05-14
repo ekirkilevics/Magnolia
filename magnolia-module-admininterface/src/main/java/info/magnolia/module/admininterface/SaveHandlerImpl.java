@@ -16,7 +16,11 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.beans.runtime.MultipartForm;
-import info.magnolia.cms.core.*;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.core.Path;
 import info.magnolia.cms.gui.control.ControlSuper;
 import info.magnolia.cms.gui.control.File;
 import info.magnolia.cms.gui.fckeditor.FCKEditorTmpFiles;
@@ -26,29 +30,39 @@ import info.magnolia.cms.security.Digester;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.util.LinkUtil;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.jcr.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
+import javax.jcr.Value;
+import javax.jcr.ValueFactory;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.NestableRuntimeException;
+import org.devlib.schmidt.imageinfo.ImageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * This class handels the saving in the dialogs. It uses the mgnlSaveInfo parameters sendend from the browser to store
  * the data in the node.The structure of the parameter is the following: <br>
- * <code>name, type, valueType, isRichEditValue, encoding</code>
- * <p/>
- * To find the consts see ControlSuper <table>
+ * <code>name, type, valueType, isRichEditValue, encoding</code> <p/> To find the consts see ControlSuper <table>
  * <tr>
  * <td>name</td>
  * <td>the name of the field</td>
@@ -70,7 +84,6 @@ import java.util.regex.Pattern;
  * <td>base64, unix, none</td>
  * </tr>
  * </table>
- *
  * @author Vinzenz Wyser
  * @version 2.0
  */
@@ -126,8 +139,7 @@ public class SaveHandlerImpl implements SaveHandler {
 
     /**
      * Initialize the SaveHandlerImpl control.
-     *
-     * @param form    the form generated from the request due to handle multipart forms
+     * @param form the form generated from the request due to handle multipart forms
      * @param request request
      */
     public void init(MultipartForm form) {
@@ -139,7 +151,8 @@ public class SaveHandlerImpl implements SaveHandler {
      */
     public void save() {
         synchronized (ExclusiveWrite.getInstance()) {
-            String[] saveInfos = getForm().getParameterValues("mgnlSaveInfo"); // name,type,propertyOrNode //$NON-NLS-1$
+            String[] saveInfos = getForm().getParameterValues("mgnlSaveInfo"); // name,type,propertyOrNode
+            // //$NON-NLS-1$
             String path = this.getPath();
 
             HierarchyManager hm = MgnlContext.getHierarchyManager(this.getRepository());
@@ -147,7 +160,7 @@ public class SaveHandlerImpl implements SaveHandler {
                 // get the node to save
                 Content page = this.getPageNode(hm);
 
-                if (page==null) {
+                if (page == null) {
                     // an error should have been logged in getPageNode() avoid NPEs!
                     return;
                 }
@@ -182,15 +195,14 @@ public class SaveHandlerImpl implements SaveHandler {
 
     /**
      * This method cears about one mgnlSaveInfo. It adds the value to the node
-     *
-     * @param node     node to add data
+     * @param node node to add data
      * @param saveInfo <code>name, type, valueType, isRichEditValue, encoding</code>
      * @throws PathNotFoundException exception
-     * @throws RepositoryException   exception
+     * @throws RepositoryException exception
      * @throws AccessDeniedException no access
      */
     protected void processSaveInfo(Content node, String saveInfo) throws PathNotFoundException, RepositoryException,
-            AccessDeniedException {
+        AccessDeniedException {
 
         String name;
         int type = PropertyType.STRING;
@@ -213,18 +225,22 @@ public class SaveHandlerImpl implements SaveHandler {
             if (info.length >= 5) {
                 encoding = Integer.valueOf(info[4]).intValue();
             }
-        } else {
+        }
+        else {
             name = saveInfo;
         }
         if (type == PropertyType.BINARY) {
             processBinary(node, name);
-        } else {
+        }
+        else {
             values = getForm().getParameterValues(name);
             if (valueType == ControlSuper.VALUETYPE_MULTIPLE) {
                 processMultiple(node, name, type, values);
-            } else if (isRichEditValue != ControlSuper.RICHEDIT_NONE) {
+            }
+            else if (isRichEditValue != ControlSuper.RICHEDIT_NONE) {
                 processRichEdit(node, name, type, isRichEditValue, encoding, values);
-            } else {
+            }
+            else {
                 processCommon(node, name, type, valueType, encoding, values);
             }
         }
@@ -232,7 +248,6 @@ public class SaveHandlerImpl implements SaveHandler {
 
     /**
      * Parse the value returned by a rich text editor and update the links and linebreaks.
-     *
      * @param node
      * @param name
      * @param type
@@ -244,7 +259,7 @@ public class SaveHandlerImpl implements SaveHandler {
      * @throws AccessDeniedException
      */
     protected void processRichEdit(Content node, String name, int type, int isRichEditValue, int encoding,
-                                   String[] values) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        String[] values) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         String valueStr = StringUtils.EMPTY;
         if (values != null) {
             valueStr = values[0]; // values is null when the expected field would not exis, e.g no
@@ -263,7 +278,6 @@ public class SaveHandlerImpl implements SaveHandler {
      * Clean up the linebreaks and
      * <p>, <br>
      * tags returned by the rich text editors
-     *
      * @param valueStr
      * @return the cleaned string
      */
@@ -290,9 +304,8 @@ public class SaveHandlerImpl implements SaveHandler {
     /**
      * Update the links in a string returned by a rich text editor. If there are links to temporary files created due
      * the fckeditor upload mechanism those filese are written to the node.
-     *
-     * @param node     node saving to. used to save the files and fileinfod to
-     * @param name     the name of the field. used to make a subnode for the files
+     * @param node node saving to. used to save the files and fileinfod to
+     * @param name the name of the field. used to make a subnode for the files
      * @param valueStr the value containing the links
      * @return the cleaned value
      * @throws AccessDeniedException
@@ -300,7 +313,7 @@ public class SaveHandlerImpl implements SaveHandler {
      * @throws PathNotFoundException
      */
     private String updateLinks(Content node, String name, String valueStr) throws AccessDeniedException,
-            RepositoryException, PathNotFoundException {
+        RepositoryException, PathNotFoundException {
 
         // process the images and uploaded files
         HierarchyManager hm = MgnlContext.getHierarchyManager(this.getRepository());
@@ -360,19 +373,18 @@ public class SaveHandlerImpl implements SaveHandler {
 
     /**
      * Process a common value
-     *
-     * @param node      node where the data must be stored
-     * @param name      name of the field
-     * @param type      type
+     * @param node node where the data must be stored
+     * @param name name of the field
+     * @param type type
      * @param valueType internal value type (according to ControlSuper)
-     * @param encoding  must we encode (base64)
-     * @param values    all values belonging to this field
+     * @param encoding must we encode (base64)
+     * @param values all values belonging to this field
      * @throws PathNotFoundException exception
-     * @throws RepositoryException   exception
+     * @throws RepositoryException exception
      * @throws AccessDeniedException exception
      */
     protected void processCommon(Content node, String name, int type, int valueType, int encoding, String[] values)
-            throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        throws PathNotFoundException, RepositoryException, AccessDeniedException {
         String valueStr = StringUtils.EMPTY;
         if (values != null) {
             valueStr = values[0]; // values is null when the expected field would not exis, e.g no
@@ -383,7 +395,6 @@ public class SaveHandlerImpl implements SaveHandler {
 
     /**
      * Process a string. This method will encode it
-     *
      * @param node
      * @param name
      * @param type
@@ -395,7 +406,7 @@ public class SaveHandlerImpl implements SaveHandler {
      * @throws AccessDeniedException
      */
     protected void processString(Content node, String name, int type, int encoding, String[] values, String valueStr)
-            throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        throws PathNotFoundException, RepositoryException, AccessDeniedException {
         // actualy encoding does only work for control password
         boolean remove = false;
         boolean write = false;
@@ -404,22 +415,26 @@ public class SaveHandlerImpl implements SaveHandler {
                 valueStr = new String(Base64.encodeBase64(valueStr.getBytes()));
                 write = true;
             }
-        } else if (encoding == ControlSuper.ENCODING_UNIX) {
+        }
+        else if (encoding == ControlSuper.ENCODING_UNIX) {
             if (StringUtils.isNotEmpty(valueStr)) {
                 valueStr = Digester.getSHA1Hex(valueStr);
                 write = true;
             }
-        } else {
+        }
+        else {
             // no encoding
             if (values == null || StringUtils.isEmpty(valueStr)) {
                 remove = true;
-            } else {
+            }
+            else {
                 write = true;
             }
         }
         if (remove) {
             processRemoveCommon(node, name);
-        } else if (write) {
+        }
+        else if (write) {
             processWriteCommon(node, name, valueStr, type);
         }
     }
@@ -437,15 +452,14 @@ public class SaveHandlerImpl implements SaveHandler {
 
     /**
      * Writes a property value.
-     *
-     * @param node     the node
-     * @param name     the property name to be written
+     * @param node the node
+     * @param name the property name to be written
      * @param valueStr the value of the property
      * @throws AccessDeniedException thrown if the write access is not granted
-     * @throws RepositoryException   thrown if other repository exception is thrown
+     * @throws RepositoryException thrown if other repository exception is thrown
      */
     protected void processWriteCommon(Content node, String name, String valueStr, int type)
-            throws AccessDeniedException, RepositoryException {
+        throws AccessDeniedException, RepositoryException {
         Value value = this.getValue(valueStr, type);
 
         NodeData data = node.getNodeData(name);
@@ -453,7 +467,8 @@ public class SaveHandlerImpl implements SaveHandler {
         if (null != value) {
             if (data.isExist()) {
                 data.setValue(value);
-            } else {
+            }
+            else {
                 node.createNodeData(name, value);
             }
         }
@@ -461,7 +476,6 @@ public class SaveHandlerImpl implements SaveHandler {
 
     /**
      * Process a multiple value field
-     *
      * @param node
      * @param name
      * @param type
@@ -471,7 +485,7 @@ public class SaveHandlerImpl implements SaveHandler {
      * @throws AccessDeniedException
      */
     protected void processMultiple(Content node, String name, int type, String[] values) throws RepositoryException,
-            PathNotFoundException, AccessDeniedException {
+        PathNotFoundException, AccessDeniedException {
         // remove entire content node and (re-)write each
         try {
             node.delete(name);
@@ -500,7 +514,6 @@ public class SaveHandlerImpl implements SaveHandler {
 
     /**
      * Process binary data. File- or imageupload.
-     *
      * @param node
      * @param name
      * @throws PathNotFoundException
@@ -508,7 +521,7 @@ public class SaveHandlerImpl implements SaveHandler {
      * @throws AccessDeniedException
      */
     protected void processBinary(Content node, String name) throws PathNotFoundException, RepositoryException,
-            AccessDeniedException {
+        AccessDeniedException {
         Document doc = getForm().getDocument(name);
         if (doc == null && getForm().getParameter(name + "_" + File.REMOVE) != null) { //$NON-NLS-1$
             try {
@@ -518,7 +531,8 @@ public class SaveHandlerImpl implements SaveHandler {
                 if (log.isDebugEnabled())
                     log.debug("Exception caught: " + re.getMessage(), re); //$NON-NLS-1$
             }
-        } else {
+        }
+        else {
             String fileName = getForm().getParameter(name + "_" + FileProperties.PROPERTY_FILENAME);
             String template = getForm().getParameter(name + "_" + FileProperties.PROPERTY_TEMPLATE);
 
@@ -528,7 +542,6 @@ public class SaveHandlerImpl implements SaveHandler {
 
     /**
      * Get a string value
-     *
      * @param s
      * @return the value
      */
@@ -538,7 +551,6 @@ public class SaveHandlerImpl implements SaveHandler {
 
     /**
      * Get the long value
-     *
      * @param l
      * @return the value
      */
@@ -556,9 +568,8 @@ public class SaveHandlerImpl implements SaveHandler {
 
     /**
      * Get the value for saving in jcr
-     *
      * @param valueStr string representation of the value
-     * @param type     type of the value
+     * @param type type of the value
      * @return the value
      */
     public Value getValue(String valueStr, int type) {
@@ -576,23 +587,27 @@ public class SaveHandlerImpl implements SaveHandler {
         Value value = null;
         if (type == PropertyType.STRING) {
             value = valueFactory.createValue(valueStr);
-        } else if (type == PropertyType.BOOLEAN) {
+        }
+        else if (type == PropertyType.BOOLEAN) {
             value = valueFactory.createValue(BooleanUtils.toBoolean(valueStr));
-        } else if (type == PropertyType.DOUBLE) {
+        }
+        else if (type == PropertyType.DOUBLE) {
             try {
                 value = valueFactory.createValue(Double.parseDouble(valueStr));
             }
             catch (NumberFormatException e) {
                 value = valueFactory.createValue(0d);
             }
-        } else if (type == PropertyType.LONG) {
+        }
+        else if (type == PropertyType.LONG) {
             try {
                 value = valueFactory.createValue(Long.parseLong(valueStr));
             }
             catch (NumberFormatException e) {
                 value = valueFactory.createValue(0L);
             }
-        } else if (type == PropertyType.DATE) {
+        }
+        else if (type == PropertyType.DATE) {
             try {
                 Calendar date = new GregorianCalendar();
                 try {
@@ -628,7 +643,8 @@ public class SaveHandlerImpl implements SaveHandler {
                 if (log.isDebugEnabled())
                     log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
             }
-        } else if (type == PropertyType.REFERENCE) {
+        }
+        else if (type == PropertyType.REFERENCE) {
             try {
                 Node referencedNode = hm.getWorkspace().getSession().getNodeByUUID(valueStr);
 
@@ -710,7 +726,6 @@ public class SaveHandlerImpl implements SaveHandler {
 
     /**
      * set the from
-     *
      * @param form containing the sended values
      */
     protected void setForm(MultipartForm form) {
@@ -719,7 +734,6 @@ public class SaveHandlerImpl implements SaveHandler {
 
     /**
      * set the name of the repository saving to
-     *
      * @param repository the name of the repository
      */
     public void setRepository(String repository) {
@@ -728,7 +742,6 @@ public class SaveHandlerImpl implements SaveHandler {
 
     /**
      * get the name of thre repository saving to
-     *
      * @return name
      */
     public String getRepository() {
@@ -737,7 +750,6 @@ public class SaveHandlerImpl implements SaveHandler {
 
     /**
      * Returns the page. The page is created if not yet existing depending on the property create
-     *
      * @param hm
      * @return the node
      * @throws RepositoryException
@@ -745,7 +757,7 @@ public class SaveHandlerImpl implements SaveHandler {
      * @throws PathNotFoundException
      */
     protected Content getPageNode(HierarchyManager hm) throws RepositoryException, AccessDeniedException,
-            PathNotFoundException {
+        PathNotFoundException {
         Content page = null;
         String path = this.getPath();
         try {
@@ -757,11 +769,13 @@ public class SaveHandlerImpl implements SaveHandler {
                 String label = StringUtils.substringAfterLast(path, "/"); //$NON-NLS-1$
                 if (StringUtils.isEmpty(parentPath)) {
                     page = hm.getRoot();
-                } else {
+                }
+                else {
                     page = hm.getContent(parentPath);
                 }
                 page = page.createContent(label, this.getCreationItemType());
-            } else {
+            }
+            else {
                 log.error("Tried to save a not existing node with path {}. use create = true to force creation", path); //$NON-NLS-1$
             }
         }
@@ -770,16 +784,15 @@ public class SaveHandlerImpl implements SaveHandler {
 
     /**
      * Gets or creates the node saving to.
-     *
      * @param hm
      * @param rootNode the node containing the saving node. If both the nodeCollectionName and the nodeName are empty
-     *                 this is the returned node.
+     * this is the returned node.
      * @return the node to which the content is saved
      * @throws AccessDeniedException
      * @throws RepositoryException
      */
     protected Content getSaveNode(HierarchyManager hm, Content rootNode) throws AccessDeniedException,
-            RepositoryException {
+        RepositoryException {
         Content node = null;
 
         // get or create nodeCollection
@@ -795,7 +808,8 @@ public class SaveHandlerImpl implements SaveHandler {
                     log.debug("Create - " + nodeCollection.getHandle()); //$NON-NLS-1$
                 }
             }
-        } else {
+        }
+        else {
             nodeCollection = rootNode;
         }
 
@@ -811,7 +825,8 @@ public class SaveHandlerImpl implements SaveHandler {
                 }
                 node = nodeCollection.createContent(this.getNodeName(), ItemType.CONTENTNODE);
             }
-        } else {
+        }
+        else {
             node = nodeCollection;
         }
         return node;
@@ -820,9 +835,8 @@ public class SaveHandlerImpl implements SaveHandler {
     /**
      * Saves a uploaded file in the magnolia way. It creates a subnode name_properties where all the information like
      * the mime type is stored.
-     *
-     * @param node     the node under which the data is stored
-     * @param name     the name of the nodedata to store the data into
+     * @param node the node under which the data is stored
+     * @param name the name of the nodedata to store the data into
      * @param fileName If empty the original filename is used
      * @param template can be empty
      * @throws PathNotFoundException
@@ -830,7 +844,7 @@ public class SaveHandlerImpl implements SaveHandler {
      * @throws AccessDeniedException
      */
     public static void saveDocument(Content node, Document doc, String name, String fileName, String template)
-            throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        throws PathNotFoundException, RepositoryException, AccessDeniedException {
 
         NodeData data = node.getNodeData(name);
         if (doc != null) {
@@ -861,6 +875,26 @@ public class SaveHandlerImpl implements SaveHandler {
                 data.setAttribute(FileProperties.PROPERTY_EXTENSION, doc.getExtension());
 
                 data.setAttribute(FileProperties.PROPERTY_TEMPLATE, template);
+
+                InputStream raf = null;
+                try {
+                    ImageInfo ii = new ImageInfo();
+                    raf = new FileInputStream(doc.getFile());
+                    ii.setInput(raf);
+                    if (ii.check()) {
+                        data.setAttribute(FileProperties.PROPERTY_WIDTH, Long.toString(ii.getWidth()));
+                        data.setAttribute(FileProperties.PROPERTY_HEIGHT, Long.toString(ii.getHeight()));
+                        // data.setAttribute(FileProperties.x, Long.toString(ii.getBitsPerPixel()));
+                    }
+                }
+                catch (FileNotFoundException e) {
+                    log.error("FileNotFoundException caught when parsing {}, image data will not be available", doc
+                        .getFile()
+                        .getAbsolutePath());
+                }
+                finally {
+                    IOUtils.closeQuietly(raf);
+                }
 
                 doc.delete();
             }

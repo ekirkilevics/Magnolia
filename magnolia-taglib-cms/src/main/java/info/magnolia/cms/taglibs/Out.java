@@ -97,23 +97,29 @@ public class Out extends BaseContentTag {
     }
 
     /**
-     * <p/> set which information of a file to retrieve
+     * <p>
+     * set which information of a file to retrieve
      * </p>
-     * <p/> does only apply for nodeDatas of type=Binary
+     * <p>
+     * does only apply for nodeDatas of type=Binary
      * </p>
-     * <p/> supported values (sample value):
+     * <p>
+     * supported values (sample value):
+     * </p>
      * <ul>
-     * <li><b>path (default): </b> path inlcuding the filename (/dev/mainColumnParagraphs/0/image/Alien.png)
-     * <li><b>name </b>: name and extension (Alien.png)
-     * <li><b>extension: </b> extension as is (Png)
-     * <li><b>extensionLowerCase: </b> extension lower case (png)
-     * <li><b>extensionUpperCase: </b> extension upper case (PNG)
-     * <li><b>nameWithoutExtension: </b> (Alien)
-     * <li><b>handle: </b> /dev/mainColumnParagraphs/0/image
-     * <li><b>pathWithoutName: </b> (/dev/mainColumnParagraphs/0/image.png)
-     * <li><b>size: </b> size in bytes (2827)
-     * <li><b>sizeString: </b> size in bytes, KB or MB - max. 3 digits before comma - with unit (2.7 KB)
-     * <li><b>contentType: </b> (image/png)
+     * <li><b>path (default): </b> path inlcuding the filename (/dev/mainColumnParagraphs/0/image/Alien.png)</li>
+     * <li><b>name </b>: name and extension (Alien.png)</li>
+     * <li><b>extension: </b> extension as is (Png)</li>
+     * <li><b>extensionLowerCase: </b> extension lower case (png)</li>
+     * <li><b>extensionUpperCase: </b> extension upper case (PNG)</li>
+     * <li><b>nameWithoutExtension: </b> (Alien)</li>
+     * <li><b>handle: </b> /dev/mainColumnParagraphs/0/image</li>
+     * <li><b>pathWithoutName: </b> (/dev/mainColumnParagraphs/0/image.png)</li>
+     * <li><b>size: </b> size in bytes (2827)</li>
+     * <li><b>sizeString: </b> size in bytes, KB or MB - max. 3 digits before comma - with unit (2.7 KB)</li>
+     * <li><b>contentType: </b> (image/png)</li>
+     * <li><b>width: </b>image width in pixels (images only)</li>
+     * <li><b>height: </b>image height in pixels (images only)</li>
      * </ul>
      * </p>
      * @param property

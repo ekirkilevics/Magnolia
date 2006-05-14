@@ -27,6 +27,8 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * @author Vinzenz Wyser
@@ -65,6 +67,8 @@ public class DialogFile extends DialogBox {
         this.getImageExtensions().add("jpeg"); //$NON-NLS-1$
         this.getImageExtensions().add("gif"); //$NON-NLS-1$
         this.getImageExtensions().add("png"); //$NON-NLS-1$
+        this.getImageExtensions().add("bpm"); //$NON-NLS-1$
+        this.getImageExtensions().add("swf"); //$NON-NLS-1$
     }
 
     /**
@@ -81,10 +85,8 @@ public class DialogFile extends DialogBox {
         this.drawHtmlPre(out);
 
         String width = this.getConfigValue("width", "100%"); //$NON-NLS-1$ //$NON-NLS-2$
-        boolean showImage = false;
-        if (this.getImageExtensions().contains(control.getExtension().toLowerCase())) {
-            showImage = true;
-        }
+        boolean showImage = this.getImageExtensions().contains(control.getExtension().toLowerCase());
+
         String htmlControlBrowse = control.getHtmlBrowse();
         StringBuffer htmlControlFileName = new StringBuffer();
         htmlControlFileName.append("<span class=\"" //$NON-NLS-1$
@@ -112,19 +114,66 @@ public class DialogFile extends DialogBox {
         }
         else {
             if (showImage) {
-                out.write("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"" + width + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
+
+                out.write("\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"" + width + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
                 out.write("<tr><td class=\"" + CssConstants.CSSCLASS_FILEIMAGE + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
-                // todo: image thumbnail template
-                // out.write("<img src=\""+ this.getRequest().getContextPath()
-                // +THUMB_PATH+"?src="+control.getHandle()+"\"
-                // class=\""+CSSCLASS_FILEIMAGE+"\">");
-                // tmp workaround: resize in html ...
-                out.write("<img width=\"150\" src=\"" //$NON-NLS-1$
-                    + this.getRequest().getContextPath()
-                    + control.getHandle()
-                    + "\" class=\"" //$NON-NLS-1$
-                    + CssConstants.CSSCLASS_FILEIMAGE
-                    + "\">"); //$NON-NLS-1$
+
+                if ("swf".equals(control.getExtension().toLowerCase())) {
+
+                    // flash movie
+                    out.write("<object type=\"application/x-shockwave-flash\" data=\"");
+                    out.write(this.getRequest().getContextPath());
+                    out.write(control.getHandle());
+                    out.write("\" title=\"");
+                    out.write(control.getFileName());
+                    out.write("\" ");
+                    out.write("width=\"150\" ");
+                    out.write("height=\"100\" ");
+                    out.write(">");
+
+                    out.write("<param name=\"movie\" value=\"");
+                    out.write(this.getRequest().getContextPath());
+                    out.write(control.getHandle());
+                    out.write("\"/>");
+
+                    out.write("</object>\n");
+
+                }
+                else {
+                    // standard image
+
+                    // todo: image thumbnail template
+                    // out.write("<img src=\""+ this.getRequest().getContextPath()
+                    // +THUMB_PATH+"?src="+control.getHandle()+"\"
+                    // class=\""+CSSCLASS_FILEIMAGE+"\">");
+                    // tmp workaround: resize in html ...
+
+                    out.write("<img width=\"150\" src=\""); //$NON-NLS-1$
+                    out.write(this.getRequest().getContextPath());
+                    out.write(control.getHandle());
+                    out.write("\" class=\""); //$NON-NLS-1$
+                    out.write(CssConstants.CSSCLASS_FILEIMAGE);
+                    out.write("\" alt=\""); //$NON-NLS-1$
+                    out.write(control.getFileName());
+                    out.write("\" title=\""); //$NON-NLS-1$
+                    out.write(control.getFileName());
+                    out.write("\">\n"); //$NON-NLS-1$
+
+                    String imgwidth = control.getImageWidth();
+                    if (StringUtils.isNotEmpty(imgwidth)) {
+                        out.write("<em>"); //$NON-NLS-1$
+
+                        out.write("width: "); //$NON-NLS-1$
+                        out.write(imgwidth);
+
+                        out.write(" height: "); //$NON-NLS-1$
+                        out.write(control.getImageHeight());
+
+                        out.write("</em>\n"); //$NON-NLS-1$
+                    }
+
+                }
+
                 out.write("</td><td>"); //$NON-NLS-1$
             }
             out.write(htmlControlFileName.toString());
@@ -146,12 +195,12 @@ public class DialogFile extends DialogBox {
             if (showImage) {
                 out.write("</td></tr></table>"); //$NON-NLS-1$
             }
-            out.write("</div>"); //$NON-NLS-1$
+            out.write("</div>\n"); //$NON-NLS-1$
             out.write("<div style=\"position:absolute;top:-500;left:-500;visibility:hidden;\"><textarea id=\"" //$NON-NLS-1$
                 + this.getName()
                 + "_contentEmpty\">" //$NON-NLS-1$
                 + htmlContentEmpty
-                + "</textarea></div>"); //$NON-NLS-1$
+                + "</textarea></div>\n"); //$NON-NLS-1$
         }
         control.setSaveInfo(true);
         out.write(control.getHtmlSaveInfo());

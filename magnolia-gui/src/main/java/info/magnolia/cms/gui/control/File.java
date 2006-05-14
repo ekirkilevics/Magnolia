@@ -110,6 +110,14 @@ public class File extends ControlSuper {
         return getPropertyString(FileProperties.PROPERTY_FILENAME);
     }
 
+    public String getImageWidth() {
+        return getPropertyString(FileProperties.PROPERTY_WIDTH);
+    }
+
+    public String getImageHeight() {
+        return getPropertyString(FileProperties.PROPERTY_HEIGHT);
+    }
+
     public void setNodeDataTemplate(String s) {
         this.nodeDataTemplate = s;
     }

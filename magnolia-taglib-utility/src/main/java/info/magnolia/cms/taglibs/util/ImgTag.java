@@ -134,6 +134,22 @@ public class ImgTag extends BaseContentTag {
 
         JspWriter out = pageContext.getOut();
 
+        // don't modify the original map, remember tag pooling
+        Map attributes = new HashMap(htmlAttributes);
+        attributes.put("title", alt);
+
+        if (!attributes.containsKey("width") && !attributes.containsKey("height")) {
+            String width = props.getProperty(FileProperties.PROPERTY_WIDTH);
+            if (StringUtils.isNotEmpty(width)) {
+                attributes.put("width", width);
+            }
+
+            String height = props.getProperty(FileProperties.PROPERTY_HEIGHT);
+            if (StringUtils.isNotEmpty(height)) {
+                attributes.put("height", height);
+            }
+        }
+
         try {
             if (StringUtils.lowerCase(imgSrc).endsWith(".swf")) {
                 // handle flash movies
@@ -141,10 +157,8 @@ public class ImgTag extends BaseContentTag {
                 out.write("<object type=\"application/x-shockwave-flash\" data=\"");
                 out.write(request.getContextPath());
                 out.write(imgSrc);
-                out.write("\" title=\"");
-                out.write(alt);
                 out.write("\" ");
-                writeAttributes(out);
+                writeAttributes(out, attributes);
                 out.write(">");
 
                 out.write("<param name=\"movie\" value=\"");
@@ -155,19 +169,15 @@ public class ImgTag extends BaseContentTag {
 
             }
             else {
+
+                attributes.put("alt", alt);
+
                 out.write("<img src=\"");
                 out.write(request.getContextPath());
                 out.write(imgSrc);
-                out.write("\" alt=\"");
-                out.write(alt);
                 out.write("\" ");
-                if (StringUtils.isNotEmpty(alt)) {
-                    out.write("title=\"");
-                    out.write(alt);
-                    out.write("\" ");
-                }
 
-                writeAttributes(out);
+                writeAttributes(out, attributes);
                 out.write("/>");
             }
         }
@@ -183,10 +193,10 @@ public class ImgTag extends BaseContentTag {
      * @param out
      * @throws IOException
      */
-    private void writeAttributes(JspWriter out) throws IOException {
-        for (Iterator iter = htmlAttributes.keySet().iterator(); iter.hasNext();) {
+    private void writeAttributes(JspWriter out, Map attributes) throws IOException {
+        for (Iterator iter = attributes.keySet().iterator(); iter.hasNext();) {
             String name = (String) iter.next();
-            String value = (String) htmlAttributes.get(name);
+            String value = (String) attributes.get(name);
             out.write(name);
             out.write("=\"");
             out.write(value);

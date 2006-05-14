@@ -21,7 +21,7 @@
   </repositories>
   <dependencies>
     <dependency>
-      <groupId>metaparadigm</groupId>
+      <groupId>com.metaparadigm</groupId>
       <artifactId>json-rpc</artifactId>
     </dependency>
     <dependency>
