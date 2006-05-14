@@ -45,6 +45,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1190,7 +1191,7 @@ public class Tree extends ControlSuper {
                             str = util.getTypeName(d.getType());
                         }
                         else if (tc.getIsNodeDataValue()) {
-                            str = util.getValueString();
+                            str = StringEscapeUtils.escapeXml(util.getValueString());
                         }
                         if (StringUtils.isEmpty(str)) {
                             str = TreeColumn.EMPTY;

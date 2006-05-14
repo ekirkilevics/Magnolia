@@ -74,7 +74,7 @@
 
         this.colors=new Object();
         this.colors.nodeHighlight="#EDF2FA";
-        
+
         this.colors.nodeSelected="#D1E1ED";
 
         this.strings=new Object();
@@ -222,13 +222,13 @@
                 left=lastLeft+this.columnMinimumWidth;
                 resizeAll=true;
             }
-            
+
             // clac the width of this column
             var w=left-lastLeft;
             this.columns[i].width=w;
             lastLeft=left;
 
-            // if the last column is smaller than the the minimal width 
+            // if the last column is smaller than the the minimal width
             if (i==this.columns.length-2) {
                 var w=parseInt(this.divMain.style.width)-left;
                 if (w<this.columnMinimumWidth) {
@@ -238,10 +238,10 @@
                 this.columns[i+1].width=w;
             }
         }
-        
-        if (resizeAll) 
+
+        if (resizeAll)
             this.resize();
-        else 
+        else
             this.resize(this.columnResizerNumber);
     }
 
@@ -283,29 +283,29 @@
     mgnlTree.prototype.resize = function(columnNumber){
         //no columnNumber passed: resize all columns (@ resizing window)
         //columnNumber passed: resize only this column and re-clip the one before (@ resizing column)
-    
+
         if (this.divMain){
             var sizeObj=mgnlGetWindowSize();
-    
+
             //resize tree div
             var agent=navigator.userAgent.toLowerCase();
             //todo: to be tested!
-            if (agent.indexOf("msie")!=-1) 
+            if (agent.indexOf("msie")!=-1)
                     this.divMain.style.width=sizeObj.w;
-            else 
+            else
                 this.divMain.style.width=sizeObj.w-this.paddingLeft-this.paddingRight-2;
-    
+
             if(this.browseMode)
                 this.divMain.style.height=sizeObj.h - 50;
             else
                 this.divMain.style.height=sizeObj.h - 68;
-                
+
             //resize columns
             var quotient=sizeObj.w/this.getColumnsWidth();
             var sizeObjX=sizeObj;
-    
+
             //todo: move to init (tree or column?)!!!
-    
+
             //rules property differs in browsers
             var rulesKey;
             if (document.all){
@@ -315,17 +315,17 @@
                 rulesKey="cssRules";
             }
             mgnlDebug("mgnlTree.resize: running with rules: " + rulesKey, "tree");
-    
+
             // for each stylesheet included
             var treeColumnClasses=new Object();
 
             //to do: define break point!
             for (var elem0 = document.styleSheets.length-1; elem0>=0; elem0--) {
                 mgnlDebug("mgnlTree.resize: styleSheets[elem0].href = " + document.styleSheets[elem0].href, "tree");
-    
+
                 var rules=document.styleSheets[elem0][rulesKey];
                 mgnlDebug("mgnlTree.resize: rules", "tree", rules);
-    
+
                 //for (var elem1 in rule) //does not work in firebird 0.8, safari 1.2
                 for (var elem1=0; elem1<rules.length; elem1++){
 
@@ -336,9 +336,9 @@
                     }
                 }
             }
-    
+
             mgnlDebug("mgnlTree.resize: treeColumnClasses", "tree", treeColumnClasses);
-    
+
             var left=0;
             for (var elem in this.columns){
                 // in safari is it lowercase
@@ -354,7 +354,7 @@
                         cssClassObj.style.clip="rect(0 " + (columnWidth-8) + " 100 0)";
                     }
                     this.columns[elem].width=columnWidth;
-                    
+
                 }
 
                 //place the column resizer
@@ -362,13 +362,13 @@
                 var columnResizerLine=document.getElementById(this.name+"ColumnLine"+elem);
 
                 if (columnResizer){
-                    if (!columnNumber || elem==columnNumber){   
+                    if (!columnNumber || elem==columnNumber){
                         columnResizer.style.left=left-this.columnResizerGifWidthHalf-1;
                      }
                 }
 
                 if (columnResizerLine){
-                    if (!columnNumber || elem==columnNumber){   
+                    if (!columnNumber || elem==columnNumber){
                         columnResizerLine.style.left=left;
                         columnResizerLine.style.height=this.divMain.style.height;
                      }
@@ -596,7 +596,7 @@
              }
             else{
                 // confirm deactivation
-                
+
                 var text=mgnlMessages.get('tree.movenode.confirm.text.js', null, [this.selectedNode.id]);
                 var title=mgnlMessages.get('tree.movenode.confirm.title.js');
 
@@ -607,11 +607,11 @@
                         lineDiv.style.backgroundImage="";
                     }
                     this.moveReset();
-    
+
                     this.selectedNode=this.getNode(id);
                     var parentPath=this.selectedNode.id.substring(0,this.selectedNode.id.lastIndexOf("/"));
                     if (parentPath=="") parentPath="/";
-    
+
                     var pathToReload;
                     if (this.clipboardMethod==0){
                         //paste after cut
@@ -629,7 +629,7 @@
                         if (pasteType==2){
                             //Tree.PASTETYPE_SUB: reload selected
                             pathToReload=this.selectedNode.id;
-    
+
                             var shifter=document.getElementById(this.selectedNode.shifterId);
                             if (shifter){
                                 var src=shifter.src;
@@ -643,16 +643,16 @@
                             pathToReload=parentPath;
                         }
                     }
-    
+
                     var nodeToReload=this.getNode(pathToReload);
-    
+
                     var params=new Object();
                     params.forceReload=true;
                     params.treeAction=this.clipboardMethod;
                     params.pathClipboard=this.clipboardNode.id;
                     params.pathSelected=this.selectedNode.id;
                     params.pasteType=pasteType;
-    
+
                     nodeToReload.expand(params);
                 }
             }
@@ -760,6 +760,9 @@
         if (htmlEdit!="")
             {
             var value=span.innerHTML;
+            value = value.replace(/&lt;/g,"<");
+            value = value.replace(/&gt;/g,">");
+            value = value.replace(/&amp;/g,"&");
 
             if (value.toLowerCase().indexOf("<input")!=0 && value.toLowerCase().indexOf("<select")!=0)
             //else: already in edit mode!
@@ -805,7 +808,7 @@
                 control.focus();
 
                 this.lastEditedHtmlObject=span;
-                this.lastEditedOriginalValue=value;
+                this.lastEditedOriginalValue=span.innerHTML;
                 this.lastEditedName=column.name;
                 this.lastEditedIsMeta=column.isMeta;
                 this.lastEditedIsLabel=column.isLabel;
@@ -950,7 +953,11 @@
         if (html=="") html=tree.strings.empty;
 
         html = mgnlAlertCallbackMessage(html);
-        
+
+        html = html.replace(/&/g,"&amp;");
+        html = html.replace(/</g,"&lt;");
+        html = html.replace(/>/g,"&gt;");
+
         document.getElementById(lastEditedHtmlObjectId).innerHTML=html;
 
         if (isLabel)
@@ -1232,7 +1239,7 @@ callback
 
         var div=document.getElementById(treeName+"_"+id+"_DivSub");
         var tree=eval(treeName);
-        
+
         if (div) div.innerHTML=html;
 
         if (id==tree.path){
@@ -1247,7 +1254,7 @@ callback
 
         var selectPath=params.pathSelected;
         var selectNodePattern='<input type="hidden" id="mgnlSelectNode" value="';
-        
+
         if (html.indexOf(selectNodePattern)==0)
             {
             mgnlDebug('mgnlTreeDrawNodesCallback', "tree");
