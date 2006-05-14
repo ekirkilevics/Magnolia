@@ -194,6 +194,12 @@ public class FileProperties {
             }
             value = sizeStr + " " + unit; //$NON-NLS-1$
         }
+        else if (property.equals(PROPERTY_WIDTH)) {
+            value = props.getAttribute(PROPERTY_WIDTH);
+        }
+        else if (property.equals(PROPERTY_HEIGHT)) {
+            value = props.getAttribute(PROPERTY_HEIGHT);
+        }
         else { // property.equals(PATH|null|""|any other value)
             value = this.getContent().getHandle() + "/" + this.getNodeDataName() + "/" + fullName; //$NON-NLS-1$ //$NON-NLS-2$
         }

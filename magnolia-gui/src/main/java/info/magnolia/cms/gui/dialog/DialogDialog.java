@@ -132,32 +132,33 @@ public class DialogDialog extends DialogSuper {
         out.write("<html>"); //$NON-NLS-1$
         out.write("<head>"); //$NON-NLS-1$
         this.drawHtmlPreSubsHead(out);
-        out.write("</head>"); //$NON-NLS-1$
-        out.write("<body class=\"mgnlDialogBody\" onload=\"mgnlDialogInit();\">"); //$NON-NLS-1$
+        out.write("</head>\n"); //$NON-NLS-1$
+        out.write("<body class=\"mgnlDialogBody\" onload=\"mgnlDialogInit();\">\n"); //$NON-NLS-1$
         this.drawHtmlPreSubsForm(out);
         this.drawHtmlPreSubsTabSet(out);
     }
 
     protected void drawHtmlPreSubsHead(Writer out) throws IOException {
-        out.write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>"); // kupu //$NON-NLS-1$
+        out.write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>\n"); // kupu
+        // //$NON-NLS-1$
         out.write("<title>" //$NON-NLS-1$
             + this.getConfigValue("label", MessagesManager.get("dialog.editTitle")) //$NON-NLS-1$ //$NON-NLS-2$
-            + "</title>"); //$NON-NLS-1$
+            + "</title>\n"); //$NON-NLS-1$
         out.write(new Sources(this.getRequest().getContextPath()).getHtmlJs());
         out.write(new Sources(this.getRequest().getContextPath()).getHtmlCss());
         out.write(getHtmlKupuEditor(this.getRequest().getContextPath()));
-        out.write("<script type=\"text/javascript\">"); //$NON-NLS-1$
-        out.write("var mgnlRichEditors=new Array();"); // will be extended at each richEdit control //$NON-NLS-1$
-        out.write("var kupu = null;"); //$NON-NLS-1$
-        out.write("var kupuui = null;"); //$NON-NLS-1$
+        out.write("<script type=\"text/javascript\">\n"); //$NON-NLS-1$
+        out.write("var mgnlRichEditors=new Array();\n"); // will be extended at each richEdit control //$NON-NLS-1$
+        out.write("var kupu = null;\n"); //$NON-NLS-1$
+        out.write("var kupuui = null;\n"); //$NON-NLS-1$
 
-        out.write("window.onresize = eventHandlerOnResize;"); //$NON-NLS-1$
+        out.write("window.onresize = eventHandlerOnResize;\n"); //$NON-NLS-1$
         out.write("window.resizeTo(" //$NON-NLS-1$
             + this.getConfigValue("width", DIALOGSIZE_NORMAL_WIDTH) //$NON-NLS-1$
             + "," //$NON-NLS-1$
             + this.getConfigValue("height", DIALOGSIZE_NORMAL_HEIGHT) //$NON-NLS-1$
-            + ");"); //$NON-NLS-1$
-        out.write("</script>"); //$NON-NLS-1$
+            + ");\n"); //$NON-NLS-1$
+        out.write("</script>\n"); //$NON-NLS-1$
 
         this.drawJavascriptSources(out);
         this.drawCssSources(out);
@@ -167,38 +168,38 @@ public class DialogDialog extends DialogSuper {
         StringBuffer html = new StringBuffer();
         html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\""); //$NON-NLS-1$
         html.append(contextPath);
-        html.append("/.resources/kupu/kupustyles.css\" />"); //$NON-NLS-1$
+        html.append("/.resources/kupu/kupustyles.css\" />\n"); //$NON-NLS-1$
         html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\""); //$NON-NLS-1$
         html.append(contextPath);
-        html.append("/.resources/kupu/kupucustom.css\" />"); //$NON-NLS-1$
+        html.append("/.resources/kupu/kupucustom.css\" />\n"); //$NON-NLS-1$
         html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
         html.append(contextPath);
-        html.append("/.resources/kupu/sarissa.js\"> </script>"); //$NON-NLS-1$
+        html.append("/.resources/kupu/sarissa.js\"> </script>\n"); //$NON-NLS-1$
         html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
         html.append(contextPath);
-        html.append("/.resources/kupu/kupuhelpers.js\"> </script>"); //$NON-NLS-1$
+        html.append("/.resources/kupu/kupuhelpers.js\"> </script>\n"); //$NON-NLS-1$
         html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
         html.append(contextPath);
-        html.append("/.resources/kupu/kupueditor.js\"> </script>"); //$NON-NLS-1$
+        html.append("/.resources/kupu/kupueditor.js\"> </script>\n"); //$NON-NLS-1$
         html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
         html.append(contextPath);
-        html.append("/.resources/kupu/kupubasetools.js\"> </script>"); //$NON-NLS-1$
+        html.append("/.resources/kupu/kupubasetools.js\"> </script>\n"); //$NON-NLS-1$
         html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
         html.append(contextPath);
-        html.append("/.resources/kupu/kupuloggers.js\"> </script>"); //$NON-NLS-1$
+        html.append("/.resources/kupu/kupuloggers.js\"> </script>\n"); //$NON-NLS-1$
         html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
         html.append(contextPath);
-        html.append("/.resources/kupu/kupucontentfilters.js\"> </script>"); //$NON-NLS-1$
+        html.append("/.resources/kupu/kupucontentfilters.js\"> </script>\n"); //$NON-NLS-1$
         html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
         html.append(contextPath);
-        html.append("/.resources/kupu/kupuinit.js\"> </script>"); //$NON-NLS-1$
+        html.append("/.resources/kupu/kupuinit.js\"> </script>\n"); //$NON-NLS-1$
         return html.toString();
     }
 
     protected void drawHtmlPreSubsForm(Writer out) throws IOException {
         out.write("<form action=\"" //$NON-NLS-1$
             + this.getAction()
-            + "\" name=\"mgnlFormMain\" method=\"post\" enctype=\"multipart/form-data\">"); //$NON-NLS-1$
+            + "\" name=\"mgnlFormMain\" method=\"post\" enctype=\"multipart/form-data\">\n"); //$NON-NLS-1$
         out.write(new Hidden("mgnlDialog", this.getConfigValue("dialog"), false).getHtml()); //$NON-NLS-1$ //$NON-NLS-2$
         out.write(new Hidden("mgnlRepository", this.getConfigValue("repository"), false).getHtml()); //$NON-NLS-1$ //$NON-NLS-2$
         out.write(new Hidden("mgnlPath", this.getConfigValue("path"), false).getHtml()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -218,7 +219,7 @@ public class DialogDialog extends DialogSuper {
         out.write("mgnlControlSets['" + id + "']=new Object();"); //$NON-NLS-1$ //$NON-NLS-2$
         out.write("mgnlControlSets['" + id + "'].items=new Array();"); //$NON-NLS-1$ //$NON-NLS-2$
         out.write("mgnlControlSets['" + id + "'].resize=true;"); //$NON-NLS-1$ //$NON-NLS-2$
-        out.write("</script>"); //$NON-NLS-1$
+        out.write("</script>\n"); //$NON-NLS-1$
     }
 
     public void drawHtmlPostSubs(Writer out) throws IOException {
@@ -231,7 +232,7 @@ public class DialogDialog extends DialogSuper {
     protected void drawHtmlPostSubsTabSet(Writer out) throws IOException {
         // TabSet stuff
         String id = this.getId();
-        out.write("<div class=\"" + CssConstants.CSSCLASS_TABSETBUTTONBAR + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
+        out.write("<div class=\"" + CssConstants.CSSCLASS_TABSETBUTTONBAR + "\">\n"); //$NON-NLS-1$ //$NON-NLS-2$
         out.write("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\"><tr><td  class=\"" //$NON-NLS-1$
             + CssConstants.CSSCLASS_TABSETBUTTONBAR
             + "\">"); //$NON-NLS-1$
@@ -244,18 +245,18 @@ public class DialogDialog extends DialogSuper {
             control.setButtonType(ControlSuper.BUTTONTYPE_PUSHBUTTON);
             out.write(control.getHtml());
         }
-        out.write("</td></tr></table></div>"); //$NON-NLS-1$
+        out.write("</td></tr></table>\n</div>\n"); //$NON-NLS-1$
         out.write("<script type=\"text/javascript\">"); //$NON-NLS-1$
         out.write("mgnlDialogResizeTabs('" + id + "');"); //$NON-NLS-1$ //$NON-NLS-2$
         out.write("mgnlDialogShiftTab('" + id + "',false,0)"); //$NON-NLS-1$ //$NON-NLS-2$
-        out.write("</script>"); //$NON-NLS-1$
+        out.write("</script>\n"); //$NON-NLS-1$
         // end TabSet stuff
     }
 
     protected void drawHtmlPostSubsButtons(Writer out) throws IOException {
         Messages msgs = MessagesManager.getMessages();
 
-        out.write("<div class=\"" + CssConstants.CSSCLASS_TABSETSAVEBAR + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
+        out.write("<div class=\"" + CssConstants.CSSCLASS_TABSETSAVEBAR + "\">\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
         Button save = new Button();
         save.setOnclick(this.getConfigValue("saveOnclick", "mgnlDialogFormSubmit();")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -266,6 +267,6 @@ public class DialogDialog extends DialogSuper {
         cancel.setLabel(this.getConfigValue("cancelLabel", msgs.get("buttons.cancel"))); //$NON-NLS-1$ //$NON-NLS-2$
         out.write(cancel.getHtml());
 
-        out.write("</div>"); //$NON-NLS-1$
+        out.write("</div>\n"); //$NON-NLS-1$
     }
 }

@@ -157,11 +157,11 @@ public class DialogFile extends DialogBox {
                     out.write(control.getFileName());
                     out.write("\" title=\""); //$NON-NLS-1$
                     out.write(control.getFileName());
-                    out.write("\">\n"); //$NON-NLS-1$
+                    out.write("\" />\n"); //$NON-NLS-1$
 
                     String imgwidth = control.getImageWidth();
                     if (StringUtils.isNotEmpty(imgwidth)) {
-                        out.write("<em>"); //$NON-NLS-1$
+                        out.write("<em style='white-space:nowrap'>"); //$NON-NLS-1$
 
                         out.write("width: "); //$NON-NLS-1$
                         out.write(imgwidth);
@@ -196,11 +196,14 @@ public class DialogFile extends DialogBox {
                 out.write("</td></tr></table>"); //$NON-NLS-1$
             }
             out.write("</div>\n"); //$NON-NLS-1$
-            out.write("<div style=\"position:absolute;top:-500;left:-500;visibility:hidden;\"><textarea id=\"" //$NON-NLS-1$
-                + this.getName()
-                + "_contentEmpty\">" //$NON-NLS-1$
-                + htmlContentEmpty
-                + "</textarea></div>\n"); //$NON-NLS-1$
+            out.write("<div style=\"position:absolute;top:-500px;left:-500px;visibility:hidden;\">\n<textarea id=\""); //$NON-NLS-1$
+            out.write(this.getName());
+            out.write("_contentEmpty\">");//$NON-NLS-1$
+            out.write(htmlContentEmpty);
+
+            // @todo should be escaped, but we need to test it
+            // out.write(StringEscapeUtils.escapeXml(htmlContentEmpty));
+            out.write("</textarea>\n</div>\n"); //$NON-NLS-1$
         }
         control.setSaveInfo(true);
         out.write(control.getHtmlSaveInfo());
