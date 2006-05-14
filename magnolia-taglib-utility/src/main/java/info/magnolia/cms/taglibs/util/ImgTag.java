@@ -128,6 +128,10 @@ public class ImgTag extends BaseContentTag {
 
         String alt = contentNode.getNodeData(altNodeDataNameDef).getString();
 
+        if (StringUtils.isEmpty(alt)) {
+            alt = props.getProperty(FileProperties.NAME_WITHOUT_EXTENSION);
+        }
+
         JspWriter out = pageContext.getOut();
 
         try {
@@ -146,7 +150,7 @@ public class ImgTag extends BaseContentTag {
                 out.write("<param name=\"movie\" value=\"");
                 out.write(request.getContextPath());
                 out.write(imgSrc);
-                out.write("/>");
+                out.write("\"/>");
                 out.write("</object>");
 
             }
