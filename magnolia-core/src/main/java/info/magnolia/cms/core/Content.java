@@ -1102,6 +1102,16 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
+     * removes all versions of this node and associated version graph
+     * @throws AccessDeniedException If not allowed to do write operations on this node
+     * @throws RepositoryException if unable to remove versions from version store
+     * */
+    public void removeVersionHistory() throws AccessDeniedException, RepositoryException {
+        Access.isGranted(this.accessManager, Path.getAbsolutePath(node.getPath()), Permission.WRITE);
+        VersionManager.getInstance().removeVersionHistory(this.node.getUUID());
+    }
+
+    /**
      * Persists all changes to the repository if validation succeds
      * @throws RepositoryException if an error occurs
      */

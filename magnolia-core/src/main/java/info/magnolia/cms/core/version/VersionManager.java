@@ -50,7 +50,7 @@ public class VersionManager {
     /**
      * version workspace system path
      * */
-    protected static final String TMP_REFERENCED_NODES = "mgnl:tmpReferencedNodes";
+    public static final String TMP_REFERENCED_NODES = "mgnl:tmpReferencedNodes";
 
     /**
      * version system node, holds this node version specific data
@@ -386,7 +386,15 @@ public class VersionManager {
      * @throws RepositoryException if fails to remove versioned node from the version store
      * */
     public synchronized void removeVersionHistory(String uuid) throws RepositoryException {
-        this.getVersionedNode(uuid).delete();
+        List permissions = this.getAccessManagerPermissions();
+        this.impersonateAccessManager(null);
+        try {
+            this.getVersionedNode(uuid).delete();
+        } catch (RepositoryException re) {
+            throw re;
+        } finally {
+            this.revertAccessManager(permissions);
+        }
         getHierarchyManager().save();
     }
 
