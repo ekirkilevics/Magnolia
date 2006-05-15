@@ -107,8 +107,10 @@ public final class LinkUtil {
 
             // can't find the uuid
             if (StringUtils.isEmpty(absolutePath)) {
-                log.error("Was not able to get the page by jcr:uuid nor by mgnl:uuid. Will use the saved path");
                 absolutePath = matcher.group(2);
+                log.error(
+                    "Was not able to get the page by jcr:uuid nor by mgnl:uuid. Will use the saved path {}",
+                    absolutePath);
             }
             matcher.appendReplacement(res, absolutePath + ".html"); //$NON-NLS-1$
         }
@@ -136,9 +138,9 @@ public final class LinkUtil {
             // can't find the uuid
             if (StringUtils.isEmpty(absolutePath)) {
                 absolutePath = matcher.group(2);
-                log.error("Was not able to get the page by jcr:uuid nor by mgnl:uuid. Will use the saved path ["
-                    + absolutePath
-                    + "]");
+                log.warn(
+                    "Was not able to get the page by jcr:uuid nor by mgnl:uuid. Will use the saved path {}",
+                    absolutePath);
             }
 
             // to relative path
@@ -174,10 +176,9 @@ public final class LinkUtil {
                 content = getContentByMgnlUUID(qmanager, uuid);
             }
             else {
-                log
-                    .info("SearchManager not configured for website repositoy, unable to generate absolute path for UUID ["
-                        + uuid
-                        + "]");
+                log.info(
+                    "SearchManager not configured for website repositoy, unable to generate absolute path for UUID {}",
+                    uuid);
             }
         }
 
