@@ -13,7 +13,7 @@
     <site>
       <id>magnolia</id>
       <name>magnolia</name>
-      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/22/magnolia-editor-fckeditor</url>
+      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/30/magnolia-editor-fckeditor</url>
     </site>
   </distributionManagement>
 </project>

@@ -102,7 +102,7 @@
     <site>
       <id>magnolia</id>
       <name>magnolia</name>
-      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/22/magnolia-module-openwfe</url>
+      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/30/magnolia-module-openwfe</url>
     </site>
   </distributionManagement>
 </project>

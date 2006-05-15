@@ -107,6 +107,11 @@
       <groupId>org.apache.jackrabbit</groupId>
       <artifactId>jackrabbit-index-filters</artifactId>
     </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <reporting>
     <plugins>
@@ -124,7 +129,7 @@
     <site>
       <id>magnolia</id>
       <name>magnolia</name>
-      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/22/magnolia</url>
+      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/30/magnolia</url>
     </site>
   </distributionManagement>
 </project>

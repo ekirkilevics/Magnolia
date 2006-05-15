@@ -51,7 +51,7 @@
     <site>
       <id>magnolia</id>
       <name>magnolia</name>
-      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/22/magnolia-module-cache</url>
+      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/30/magnolia-module-cache</url>
     </site>
   </distributionManagement>
 </project>

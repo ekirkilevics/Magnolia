@@ -50,7 +50,7 @@
     <site>
       <id>magnolia</id>
       <name>magnolia</name>
-      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/22/magnolia-exchange-simple</url>
+      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/30/magnolia-exchange-simple</url>
     </site>
   </distributionManagement>
 </project>
