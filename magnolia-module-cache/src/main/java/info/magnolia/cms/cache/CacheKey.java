@@ -20,6 +20,23 @@ public class CacheKey implements Serializable {
 
     private String key;
 
+    /**
+     * Used for special subclasses not meant to be used in general
+     */
+    public CacheKey() {
+    }
+
+    /**
+     * Contstuctor used if the key is already known
+     */
+    public CacheKey(String key) {
+        this.key = key;
+    }
+
+    /**
+     * The constructor used by default
+     * @param request the request from which we get the path
+     */
     public CacheKey(HttpServletRequest request) {
         key = Path.getURI(request);
     }
