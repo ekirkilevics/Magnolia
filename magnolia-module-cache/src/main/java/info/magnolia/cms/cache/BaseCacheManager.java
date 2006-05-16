@@ -91,10 +91,10 @@ public abstract class BaseCacheManager implements CacheManager {
     }
 
     /**
-     * @throws NullPointerException if called before init(Content)
+     * Return true only if it has been inited AND the config is active 
      */
     public boolean isEnabled() {
-        return this.config.isActive();
+        return this.initialized && this.config.isActive();
     }
 
     public final boolean isInitialized() {
