@@ -8,13 +8,13 @@
       <label for="${contentObj.name}">
         ${par.title}
         <c:if test="${par.mandatory}">*
-            <input type="hidden" name="mgnlMandatory" value="${contentObj.name}" />
+            <input type="hidden" name="mgnlMandatory" value="field_${contentObj.name}" />
         </c:if>
       </label>
     </c:if>
     <c:choose>
       <c:when test="${par.type eq 'select'}">
-        <select name="${contentObj.name}">
+        <select name="field_${contentObj.name}">
           <c:forTokens items="${par.values}" var="option" delims="${newline}">
             <option value="${option}">${option}</option>
           </c:forTokens>
@@ -23,7 +23,7 @@
       <c:otherwise>
         <div class="optiongroup">
           <c:forTokens items="${par.values}" var="option" delims="${newline}">
-            <input name="${contentObj.name}" type="${par.type}" class="${par.type}" value="${option}" />
+            <input name="field_${contentObj.name}" type="${par.type}" class="${par.type}" value="${option}" />
             ${option}
             <br />
           </c:forTokens>

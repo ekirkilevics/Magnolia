@@ -7,17 +7,17 @@
       <label for="${contentObj.name}">
         ${par.title}
         <c:if test="${par.mandatory}">*
-            <input type="hidden" name="mgnlMandatory" value="${contentObj.name}" />
+            <input type="hidden" name="mgnlMandatory" value="field_${contentObj.name}" />
         </c:if>
       </label>
     </c:if>
     <c:choose>
       <c:when test="${par.rows eq 1}">
-        <input type="text" name="${contentObj.name}" class="text" />
+        <input type="text" name="field_${contentObj.name}" class="text" />
         <br />
       </c:when>
       <c:otherwise>
-        <textarea name="${contentObj.name}" rows="${par.rows}"><!--  --></textarea>
+        <textarea name="field_${contentObj.name}" rows="${par.rows}"><!--  --></textarea>
       </c:otherwise>
     </c:choose>
   </div>
