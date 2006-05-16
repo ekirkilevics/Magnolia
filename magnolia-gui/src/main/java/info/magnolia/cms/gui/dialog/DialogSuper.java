@@ -85,7 +85,7 @@ public abstract class DialogSuper implements DialogInterface {
      */
     private String id = "mgnlControl"; //$NON-NLS-1$
 
-    private String value;
+    protected String value;
 
     /**
      * multiple values, e.g. checkbox.

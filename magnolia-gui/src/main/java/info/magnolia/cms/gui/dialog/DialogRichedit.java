@@ -15,27 +15,33 @@ package info.magnolia.cms.gui.dialog;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.gui.control.*;
+import info.magnolia.cms.gui.control.Button;
+import info.magnolia.cms.gui.control.ControlSuper;
+import info.magnolia.cms.gui.control.Edit;
+import info.magnolia.cms.gui.control.Select;
+import info.magnolia.cms.gui.control.SelectOption;
 import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.gui.misc.Spacer;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.LinkUtil;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.jcr.PathNotFoundException;
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.jcr.PathNotFoundException;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -81,6 +87,33 @@ public class DialogRichedit extends DialogBox {
         return this.richEPaste;
     }
 
+    /**
+     * <p>Returns the value associated with this control.  These areas are looked 
+     *   at in sucession: the local value field, the website repository, 
+     *   the config repository nodedata named 'defaultValue'.  Failing all those,
+     *   an empty string is returned.</p>
+     *
+     * <p>This method overrides it's conterpart in DialogSuper with the ability
+     *   to read the 'defaultValue' nodeData in the config repository.  i18n 
+     *   functions are supported as with other controls.</p>
+     *
+     * @return A string representing the value of this control.
+     */
+    public String getValue() {
+        if (this.value != null) {
+            return this.value;
+        }
+        else if (this.getWebsiteNode() != null) {
+            return this.getWebsiteNode().getNodeData(this.getName()).getString();
+        }
+        else if (StringUtils.isNotEmpty(getConfigValue("defaultValue"))) {
+            return this.getMessage(this.getConfigValue("defaultValue"));
+        }
+        else {
+            return StringUtils.EMPTY;
+        }
+    }
+    
     public void setOptionsToolboxStyleCssClasses(Content configNode) {
         List options = this.setOptionsToolbox(configNode, "optionsToolboxStyleCssClasses"); //$NON-NLS-1$
         this.setOptionsToolboxStyleCssClasses(options);
