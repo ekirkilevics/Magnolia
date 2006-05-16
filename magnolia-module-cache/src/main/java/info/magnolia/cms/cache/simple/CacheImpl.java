@@ -58,23 +58,26 @@ public class CacheImpl implements Cache {
             if (!file.exists()) {
                 file.getParentFile().mkdirs();
                 file.createNewFile();
-                out = new FileOutputStream(file);
-                out.write(entry.getOut());
-                out.flush();
-                out.close();
             }
+            
+            // write anyway
+            out = new FileOutputStream(file);
+            out.write(entry.getOut());
+            out.flush();
+            out.close();
 
             if (canCompress) {
                 File gzipFile = getFile(key, true);
                 if (!gzipFile.exists()) {
                     gzipFile.getParentFile().mkdirs();
                     gzipFile.createNewFile();
-                    out = new FileOutputStream(gzipFile);
-                    GZIPOutputStream gzipOut = new GZIPOutputStream(out);
-                    gzipOut.write(entry.getOut());
-                    gzipOut.flush();
-                    gzipOut.close();
                 }
+                // write anyway
+                out = new FileOutputStream(gzipFile);
+                GZIPOutputStream gzipOut = new GZIPOutputStream(out);
+                gzipOut.write(entry.getOut());
+                gzipOut.flush();
+                gzipOut.close();
 
                 compressedSize = (new Long(gzipFile.length())).intValue();
             }
@@ -89,12 +92,13 @@ public class CacheImpl implements Cache {
         }
     }
 
-    public void flushAll() {
+    public void flush() {
         try {
-            flushResource(Path.getCacheDirectoryPath());
-
             File cacheDir = Path.getCacheDirectory();
-
+            if (cacheDir.exists() && cacheDir.isDirectory()) {
+                cacheDir.delete();
+            }
+            
             // this will create cache start directory again
             if (cacheDir.exists() && cacheDir.isDirectory()) {
                 // FileUtils.deleteDirectory(cacheDir);
@@ -136,7 +140,7 @@ public class CacheImpl implements Cache {
     }
 
     public void stop() {
-        flushAll();
+        flush();
     }
 
     /**
@@ -227,8 +231,8 @@ public class CacheImpl implements Cache {
                         log.debug("Flushing {}", children[i].getPath()); // $NON-NLS-1$
                     }
 
-                    String path = StringUtils.substringAfter(children[i].getPath(), Path.getCacheDirectoryPath());
-                    removeFromCachedURIList(path);
+                    String key = StringUtils.substringAfter(children[i].getPath(), Path.getCacheDirectoryPath());
+                    removeFromCachedURIList(new CacheKey(key));
                     children[i].delete();
                 }
             }
@@ -239,8 +243,8 @@ public class CacheImpl implements Cache {
      * Empties the cache for the specified resource. Currenty it expects the entire path, including cache location.
      * @param uri request URI
      */
-    private void flushResource(String uri) {
-        File file = new File(uri);
+     public void remove(CacheKey key) {
+        File file = this.getFile(key, false);
         try {
             if (file.isDirectory()) {
                 emptyDirectory(file);
@@ -248,23 +252,23 @@ public class CacheImpl implements Cache {
             }
             else {
                 if (log.isDebugEnabled()) {
-                    log.debug("Flushing {}", uri); // $NON-NLS-1$
+                    log.debug("Flushing {}", file.getPath()); // $NON-NLS-1$
                 }
 
                 file.delete();
-                removeFromCachedURIList(uri);
+                removeFromCachedURIList(key);
             }
         }
         catch (Exception e) {
-            log.error("Failed to flush [" + uri + "]: " + e.getMessage(), e); // $NON-NLS-1$ //$NON-NLS-2$
+            log.error("Failed to flush [" + file.getPath() + "]: " + e.getMessage(), e); // $NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
     /**
      * @return size as on disk
      */
-    private int getCompressedSize(CacheKey request) {
-        CachedItem item = (CachedItem) this.cachedURIList.get(request);
+    private int getCompressedSize(CacheKey key) {
+        CachedItem item = (CachedItem) this.cachedURIList.get(key);
         if (item == null) {
             return -1;
         }
@@ -288,20 +292,20 @@ public class CacheImpl implements Cache {
     /**
      * @return size as on disk
      */
-    private int getSize(CacheKey request) {
-        CacheableEntry entry = (CacheableEntry) this.cachedURIList.get(request);
-        if (entry == null) {
+    private int getSize(CacheKey key) {
+        CachedItem item = (CachedItem) this.cachedURIList.get(key);
+        if (item == null) {
             return -1;
         }
 
-        return entry.getSize();
+        return item.size;
     }
 
     /**
      * @param uri request URI
      */
-    private void removeFromCachedURIList(String uri) {
-        this.cachedURIList.remove(uri);
+    private void removeFromCachedURIList(CacheKey key) {
+        this.cachedURIList.remove(key);
     }
 
     private static class CachedItem {
