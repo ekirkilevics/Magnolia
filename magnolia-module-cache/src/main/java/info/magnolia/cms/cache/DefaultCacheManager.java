@@ -67,7 +67,7 @@ public class DefaultCacheManager extends BaseCacheManager {
     }
 
     protected void doFlushAll() {
-        this.cache.flushAll();
+        this.cache.flush();
     }
 
     protected long doGetCreationTime(CacheKey request) {
