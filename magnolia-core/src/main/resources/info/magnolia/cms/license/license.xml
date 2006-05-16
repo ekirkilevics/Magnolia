@@ -17,8 +17,8 @@
     <!ELEMENT VersionPageHandle (#PCDATA)>]>
 <License>
     <Meta>
-        <VersionNumber>3.0-b1</VersionNumber>
-        <BuildNumber>12. Mai 2006</BuildNumber>
+        <VersionNumber>3.0-rc1-SNAPSHOT</VersionNumber>
+        <BuildNumber>${magnolia.releaseDate}</BuildNumber>
         <Provider>obinary ltd</Provider>
         <ProviderAddress>
             <![CDATA[
