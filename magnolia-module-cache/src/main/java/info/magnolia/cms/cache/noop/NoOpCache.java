@@ -27,7 +27,7 @@ public class NoOpCache implements Cache {
     /**
      * Does nothing.
      */
-    public void flushAll() {
+    public void flush() {
         return;
     }
 
@@ -90,6 +90,13 @@ public class NoOpCache implements Cache {
      */
     public boolean streamFromCache(CacheKey key, HttpServletResponse response, boolean canCompress) {
         return false;
+    }
+
+    /**
+     * @see info.magnolia.cms.cache.Cache#flushEntry(info.magnolia.cms.cache.CacheKey)
+     */
+    public void remove(CacheKey key) {
+
     }
 
 }
