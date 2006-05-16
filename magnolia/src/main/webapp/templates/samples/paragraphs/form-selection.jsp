@@ -7,8 +7,9 @@
     <c:if test="${!empty(par.title)}">
       <label for="${contentObj.name}">
         ${par.title}
-        <c:if test="${par.mandatory}">*</c:if>
-        <input type="hidden" name="mgnlMandatory" value="${contentObj.name}" />
+        <c:if test="${par.mandatory}">*
+            <input type="hidden" name="mgnlMandatory" value="${contentObj.name}" />
+        </c:if>
       </label>
     </c:if>
     <c:choose>
