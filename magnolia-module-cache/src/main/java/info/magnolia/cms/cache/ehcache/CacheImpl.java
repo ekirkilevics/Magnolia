@@ -43,7 +43,7 @@ public class CacheImpl implements info.magnolia.cms.cache.Cache {
         this.ehcache.put(new Element(key, out));
     }
 
-    public void flushAll() {
+    public void flush() {
         try {
             this.ehcache.removeAll();
         }
@@ -51,6 +51,14 @@ public class CacheImpl implements info.magnolia.cms.cache.Cache {
             throw new RuntimeException(e);
         }
     }
+    
+    /**
+     * Remove the entry
+     */
+    public void remove(CacheKey key) {
+        this.ehcache.remove(key);
+    }
+    
 
     public long getCreationTime(CacheKey key) {
         try {
