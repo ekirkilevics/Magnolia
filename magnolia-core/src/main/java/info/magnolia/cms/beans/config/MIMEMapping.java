@@ -138,10 +138,15 @@ public final class MIMEMapping {
      * @return MIME type
      */
     public static String getMIMEType(String key) {
-        if (StringUtils.isEmpty(key)) {
-            return StringUtils.EMPTY;
-        }
-        return ((MIMEMappingItem) MIMEMapping.cachedContent.get(key.toLowerCase())).mime;
+    	if (StringUtils.isEmpty(key)) {
+    		return StringUtils.EMPTY;
+    	}
+    	// check that the cached content contains the key first to avoid NPE when accessing 'mime'
+    	String loweredKey = key.toLowerCase();
+    	if(MIMEMapping.cachedContent.containsKey(loweredKey))
+    		return ((MIMEMappingItem) MIMEMapping.cachedContent.get(loweredKey)).mime;
+    	else // this is expected by the caller getMIMEType(HttpServletRequest)
+    		return null;
     }
 
     /**
