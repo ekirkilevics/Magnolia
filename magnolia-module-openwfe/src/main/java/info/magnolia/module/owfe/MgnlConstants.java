@@ -73,5 +73,15 @@ public final class MgnlConstants {
     final static public String WORKFLOW_EMAIL_FROM_FIELD = "MagnoliaWorkflow";
 
     final static public String WORKFLOW_EMAIL_SUBJECT_FIELD = "Workflow Request";
+    
+    public static final String REPO_OWFE = "magnolia";
 
+    public final static String EXPRESSION_WORKSPACE = "Expressions";
+
+    public final static String EXPRESSION_NODENAME = "expression";
+    
+    public final static String STORE_WORKSPACE = "Store";
+
+    public final static String WORKITEM_NODENAME = "workItem";
+    
 }

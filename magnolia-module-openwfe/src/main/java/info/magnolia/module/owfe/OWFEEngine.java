@@ -35,9 +35,6 @@ public class OWFEEngine {
 
     static JCRPersistedEngine wfEngine;
 
-    // repository id
-    public static final String REPO_OWFE = "owfe";
-
     OWFEEngine() throws Exception {
         wfEngine = new JCRPersistedEngine();
         log.debug("create worklist...");
@@ -59,8 +56,8 @@ public class OWFEEngine {
      * return repository for owfe
      */
     static public Repository getOWFERepository() {
-        Repository repo = ContentRepository.getRepository(REPO_OWFE);
-        log.info("get repository for " + REPO_OWFE + "=" + repo);
+        Repository repo = ContentRepository.getRepository(MgnlConstants.REPO_OWFE);
+        log.info("get repository for " + MgnlConstants.REPO_OWFE + "=" + repo);
         return repo;
     }
 
@@ -71,10 +68,10 @@ public class OWFEEngine {
     public static HierarchyManager getOWFEHierarchyManager(String workspace) {
         HierarchyManager hm;
         if (workspace != null) {
-            hm = ContentRepository.getHierarchyManager(REPO_OWFE, workspace);
+            hm = ContentRepository.getHierarchyManager(MgnlConstants.REPO_OWFE, workspace);
         }
         else {
-            hm = ContentRepository.getHierarchyManager(REPO_OWFE);
+            hm = ContentRepository.getHierarchyManager(MgnlConstants.REPO_OWFE);
         }
         // log.info("get HierarchyManager for " + REPO_OWFE + "=" + hm);
         return hm;

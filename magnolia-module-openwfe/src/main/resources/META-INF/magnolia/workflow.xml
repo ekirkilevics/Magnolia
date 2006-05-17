@@ -23,7 +23,7 @@
   </servlets>
   <repositories>
     <repository>
-      <name>owfe</name>
+      <name>magnolia</name>
       <nodeTypeFile>/mgnl-nodetypes/owfe-nodetypes.xml</nodeTypeFile>
       <workspaces>
         <workspace>owfe</workspace>

@@ -21,6 +21,7 @@ import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryResult;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.module.owfe.MgnlConstants;
 
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -50,16 +51,10 @@ public class JCRWorkItemAPI {
 
     private final static Logger log = LoggerFactory.getLogger(JCRWorkItemAPI.class.getName());
 
-    public final static String REPO_OWFE = "owfe";
-
-    public final static String WORKSPACEID = "Store";
-
-    public final static String WORKITEM_NODENAME = "workItem";
-
     HierarchyManager hm;
 
     public JCRWorkItemAPI() throws Exception {
-        this.hm = ContentRepository.getHierarchyManager(REPO_OWFE, WORKSPACEID);
+        this.hm = ContentRepository.getHierarchyManager(MgnlConstants.STORE_WORKSPACE);
         if (this.hm == null) {
             throw new Exception("Can't get HierarchyManager Object for workitems repository");
         }

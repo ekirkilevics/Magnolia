@@ -13,16 +13,17 @@
 package info.magnolia.module.owfe.jcr;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.module.owfe.MgnlConstants;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import javax.jcr.PathNotFoundException;
 import javax.jcr.ValueFactory;
 
 import openwfe.org.ApplicationContext;
@@ -50,22 +51,19 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 
     private static Logger log = LoggerFactory.getLogger(JCRExpressionStore.class.getName());
 
-    public final static String REPO_OWFE = "owfe";
-
-    public final static String WORKSPACEID = "Expressions";
-
-    public final static String WORKITEM_NODENAME = "expression";
-
     HierarchyManager hm;
 
     public void init(final String serviceName, final ApplicationContext context, final java.util.Map serviceParams)
         throws ServiceException {
         super.init(serviceName, context, serviceParams);
-        this.hm = ContentRepository.getHierarchyManager(REPO_OWFE, WORKSPACEID);
-        if (this.hm == null) {
-            throw new ServiceException("Can't get HierarchyManager Object for workitems repository");
-        }
-
+        Iterator iter = ContentRepository.getAllRepositoryNames();
+        while(iter.hasNext())
+        	log.info("-->"+iter.next());
+        this.hm = ContentRepository.getHierarchyManager(MgnlConstants.EXPRESSION_WORKSPACE);
+		if (this.hm == null) {
+			throw new ServiceException("Can't access HierarchyManager for workitems");
+		} else 
+			log.info("xx->ContentRepository worked");
     }
 
     /**
