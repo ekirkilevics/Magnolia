@@ -70,15 +70,25 @@ public class CopyUtil {
         // first check if the node already exist
         Content root;
         try {
-            root = this.getHierarchyManager().getContent(source.getUUID());
+            root = this.getHierarchyManager().getContentByUUID(source.getUUID());
+            if (root.getParent().getName().equalsIgnoreCase(VersionManager.TMP_REFERENCED_NODES)) {
+                root.getJCRNode().getSession().move(root.getHandle(), "/"+root.getName());
+                //this.getHierarchyManager().moveTo(root.getHandle(), "/"+root.getName());
+            }
             this.removeProperties(root);
             // copy root properties
             this.updateProperties(source, root);
-        } catch (PathNotFoundException e) {
+            root.save();
+        } catch (ItemNotFoundException e) {
             // create root for this versionable node
-            root = this.getHierarchyManager().createContent("", source.getUUID(), source.getNodeType().getName());
+            try {
+                this.importNode(this.getHierarchyManager().getRoot(), source);
+            } catch (IOException ioe) {
+                throw new RepositoryException("Failed to import node in magnolia version store : "+ioe.getMessage());
+            }
+            root = this.getHierarchyManager().getContentByUUID(source.getUUID());
             // copy root properties
-            this.updateProperties(source, root);
+            //this.updateProperties(source, root);
             root.save();
         }
         // copy all child nodes
@@ -103,16 +113,6 @@ public class CopyUtil {
         this.updateProperties(source, destination);
         // copy all nodes from version store
         this.copyAllChildNodes(source, destination, filter);
-        /*
-        // remove properties created on version
-        if (destination.hasMetaData()) {
-            MetaData metaData = destination.getMetaData();
-            if (metaData.hasProperty(MetaData.VERSION_USER))
-                metaData.removeProperty(MetaData.VERSION_USER);
-            if (metaData.hasProperty(MetaData.NAME))
-                metaData.removeProperty(MetaData.NAME);
-        }
-        */
         // remove all non existing nodes
         this.removeNonExistingChildNodes(source, destination, filter);
     }
@@ -252,6 +252,7 @@ public class CopyUtil {
                 ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
         IOUtils.closeQuietly(inStream);
         file.delete();
+        this.removeProperties(parent.getContent(node.getName()));
     }
 
     /**
@@ -285,6 +286,7 @@ public class CopyUtil {
                                 .getContentByUUID(property.getString());
                         try {
                             this.importNode(getTemporaryPath(), referencedNode);
+                            getTemporaryPath().save();
                         } catch (IOException ioe) {
                             log.error("Failed to import referenced node", ioe);
                         }

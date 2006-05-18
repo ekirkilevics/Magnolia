@@ -238,8 +238,8 @@ public class VersionManager {
         List permissions = this.getAccessManagerPermissions();
         this.impersonateAccessManager(null);
         try {
-            return getHierarchyManager().getContent(uuid);
-        } catch (PathNotFoundException e) {
+            return getHierarchyManager().getContentByUUID(uuid);
+        } catch (ItemNotFoundException e) {
             return null;
         } catch (RepositoryException re) {
             throw re;
@@ -389,7 +389,23 @@ public class VersionManager {
         List permissions = this.getAccessManagerPermissions();
         this.impersonateAccessManager(null);
         try {
-            this.getVersionedNode(uuid).delete();
+            Content node = this.getVersionedNode(uuid);
+            if (node != null) {
+                if (node.getJCRNode().getReferences().getSize() > 0) {
+                    // remove all versions leaving the main node since it has been still referenced
+                    VersionHistory history = node.getVersionHistory();
+                    VersionIterator versions = node.getAllVersions();
+                    if (versions != null) {
+                        // skip root version
+                        versions.nextVersion();
+                        while (versions.hasNext()) {
+                            history.removeVersion(versions.nextVersion().getName());
+                        }
+                    }
+                } else {
+                    node.delete();
+                }
+            }
         } catch (RepositoryException re) {
             throw re;
         } finally {
