@@ -198,7 +198,7 @@ public class WebsiteTreeConfiguration implements AdminTreeConfiguration {
 
         ContextMenuItem menuActivateIncl = new ContextMenuItem("activateInclSubs");
         menuActivateIncl.setLabel(msgs.get("tree.web.menu.activateInclSubs")); //$NON-NLS-1$
-        menuActivateIncl.setIcon(request.getContextPath() + "/.resources/icons/16/arrow_right_green.gif"); //$NON-NLS-1$
+        menuActivateIncl.setIcon(request.getContextPath() + "/.resources/icons/16/arrow_right_green_double.gif"); //$NON-NLS-1$
         menuActivateIncl.setOnclick(tree.getJavascriptTree() + ".activateNode(" + Tree.ACTION_ACTIVATE + ",true);"); //$NON-NLS-1$ //$NON-NLS-2$
         menuActivateIncl.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
             + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
