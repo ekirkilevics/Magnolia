@@ -195,8 +195,9 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 
             Iterator it = c.iterator();
             while (it.hasNext()) {
+            	try {
                 Content ct = (Content) it.next();
-
+                
                 InputStream s = ct.getNodeData(MgnlConstants.NODEDATA_VALUE).getStream();
                 final org.jdom.input.SAXBuilder builder = new org.jdom.input.SAXBuilder();
 
@@ -209,6 +210,11 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 					continue;
 
                 ret.add(fe);
+                
+                } 
+            	catch(Exception e) {
+            		// ignore and skip to next item
+            	}
             }
 
             return ret.iterator();

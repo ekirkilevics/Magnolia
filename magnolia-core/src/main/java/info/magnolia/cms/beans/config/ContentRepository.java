@@ -481,9 +481,7 @@ public final class ContentRepository {
         if (name != null && ContentRepository.repositoryMapping.containsKey(name)) {
             return (RepositoryMapping) ContentRepository.repositoryMapping.get(getMappedRepositoryName(repositoryID));
         }
-
-        Exception e = new Exception();
-        log.warn("no mapping for the repository [{}]", repositoryID,e);
+        log.warn("no mapping for the repository [{}]", repositoryID);
         return null;
     }
 

@@ -49,7 +49,8 @@ public class MailCommand extends MgnlCommand {
         }
 
         try {
-            String mailTo = (String) params.get(MgnlConstants.P_MAILTO);
+            String mailTo = (String) params.get(MgnlConstants.P_MAILTO);;
+            params.put("user",mailTo);
             if (log.isDebugEnabled()) {
                 log.debug("mail receiver list: " + mailTo);
             }
@@ -59,8 +60,7 @@ public class MailCommand extends MgnlCommand {
             MgnlMailFactory factory = MgnlMailFactory.getInstance();
             MgnlMailHandler handler = factory.getEmailHandler();
 
-            HashMap map = new HashMap();
-            MgnlEmail email = factory.getEmailFromTemplate(mailTemplate, map);
+            MgnlEmail email = factory.getEmailFromTemplate(mailTemplate, params);
             email.setFrom(MgnlConstants.WORKFLOW_EMAIL_FROM_FIELD);
             email.setSubject(MgnlConstants.WORKFLOW_EMAIL_SUBJECT_FIELD);
             email.setParameters(params);

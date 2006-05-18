@@ -70,7 +70,7 @@ public final class MgnlConstants {
 
     final static public String WORKFLOW_EMAIL_TEMPLATE = "workflowEmail";
 
-    final static public String WORKFLOW_EMAIL_FROM_FIELD = "MagnoliaWorkflow";
+    final static public String WORKFLOW_EMAIL_FROM_FIELD = "workflow@magnolia.info";
 
     final static public String WORKFLOW_EMAIL_SUBJECT_FIELD = "Workflow Request";
     

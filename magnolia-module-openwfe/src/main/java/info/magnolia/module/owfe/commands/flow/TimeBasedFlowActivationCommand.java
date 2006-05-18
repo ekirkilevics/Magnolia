@@ -43,8 +43,6 @@ public class TimeBasedFlowActivationCommand extends AbstractFlowCommand {
         MgnlConstants.P_END_DATE,
         MgnlConstants.P_PATH};
 
-    static final String XSLT = "<xsl:stylesheet version = '1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform' ><xsl:param name=\"p_startDate\" select=\"no\"/><xsl:param name=\"p_endDate\" select=\"no\"/><!-- Identity transformation --><xsl:template match=\"/ | @*|node()\">  <xsl:copy>    <xsl:apply-templates select=\"@*|node()\" />  </xsl:copy> </xsl:template>  <!--  <xsl:template match=\"set[@field='mailTo']\">  <xsl:copy>    <xsl:attribute name=\"a\">aaa</xsl:attribute>    <xsl:attribute name=\"util\"><xsl:value-of select=\"$p_startDate\"/></xsl:attribute>  </xsl:copy> </xsl:template> -->  <xsl:template match=\"sleep[@util='${startDate}']\">  <xsl:copy>    <xsl:attribute name=\"util\"><xsl:value-of select=\"$p_startDate\"/></xsl:attribute>  </xsl:copy> </xsl:template>  <xsl:template match=\"sleep[@util='${endDate}']\">  <xsl:copy>    <xsl:attribute name=\"util\"><xsl:value-of select=\"$p_endDate\"/></xsl:attribute>  </xsl:copy> </xsl:template>  </xsl:stylesheet> ";
-
     /**
      * List of the parameters that this command needs to run
      * @return a list of string describing the parameters needed. The parameters should have a mapping in this class.
