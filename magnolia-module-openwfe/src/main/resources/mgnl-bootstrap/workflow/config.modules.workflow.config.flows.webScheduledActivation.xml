@@ -21,41 +21,67 @@
     <sv:value>true</sv:value>
   </sv:property>
   <sv:property sv:name="value" sv:type="String">
-    <sv:value>&lt;?xml version="1.0" encoding="UTF-8" ?&gt; &#xd;
+    <sv:value>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#xd;
 &lt;process-definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.openwfe.org/flowdef_r1.5.0.xsd" name="webScheduledActivation" revision="1.0"&gt;&#xd;
   &lt;description language="default"&gt;worflow for web activation process.&lt;/description&gt; &#xd;
 &lt;sequence&gt;&#xd;
-  &lt;set field="OK" value="false"/&gt;&#xd;
-  &lt;set field="mailTo" value="user-superuser" /&gt; &#xd;
-  &lt;set field="mailTemplate" value="testMagnolia" /&gt;&#xd;
-  &lt;participant ref="command-sendMail" /&gt; &#xd;
-  &lt;participant ref="user-superuser" /&gt; &#xd;
-  &lt;sleep until="${f:startDate}" /&gt; &#xd;
-  &lt;if&gt;&#xd;
-  &lt;equals field-value="OK" other-value="true"/&gt;&#xd;
-                            &lt;!-- then --&gt;&#xd;
-  &lt;participant ref="command-activate" /&gt; &#xd;
-                            &lt;!-- else --&gt;&#xd;
-                         &#xd;
-                        &lt;/if&gt;&#xd;
- &#xd;
-  &#xd;
-  &lt;sleep until="${f:endDate}" /&gt;   &#xd;
- &lt;participant ref="command-deactivate" /&gt; &#xd;
-                           &#xd;
- &#xd;
-  &lt;/sequence&gt;&#xd;
-  &lt;/process-definition&gt;</sv:value>
+&lt;log message="~~~~~~~~~~~~~~~flow starts, start date is '${f:startDate}', end date is '${f:endDate}'"/&gt;&#xd;
+&lt;set field="OK" value="false"/&gt;&#xd;
+&lt;set field="mailTo" value="user-superuser"/&gt;&#xd;
+&lt;set field="mailTemplate" value="testMagnolia"/&gt;&#xd;
+&lt;!--&#xd;
+&lt;set field="startDate" value=""/&gt;&#xd;
+&lt;set field="endDate" value=""/&gt;&#xd;
+--&gt;&#xd;
+&lt;log message="~~~~~~~~~~~~~~~going to send mail"/&gt;&#xd;
+&lt;participant ref="command-sendMail"/&gt;&#xd;
+&lt;log message="~~~~~~~~~~~~~~~going to inbox"/&gt;&#xd;
+&lt;participant ref="user-superuser"/&gt;&#xd;
+&lt;log message="~~~~~~~~~~~~~~~sleep before activation"/&gt;&#xd;
+&lt;if&gt;&#xd;
+	&lt;defined field-value="startDate"/&gt;&#xd;
+	&lt;sleep until="${f:startDate}"/&gt;&#xd;
+&lt;/if&gt;&#xd;
+&#xd;
+&lt;log message="~~~~~~~~~~~~~~~going to activate"/&gt;&#xd;
+&#xd;
+&lt;!-- activate --&gt;&#xd;
+&lt;if&gt;&#xd;
+	&lt;equals field-value="OK" other-value="true"/&gt;&#xd;
+	&lt;!-- then --&gt;&#xd;
+	&lt;participant ref="command-activate"/&gt;&#xd;
+	&lt;!-- else --&gt;&#xd;
+&lt;/if&gt;&#xd;
+&lt;log message="~~~~~~~~~~~~~~~going to deactivate"/&gt;&#xd;
+&lt;!-- deactivate --&gt;&#xd;
+&lt;if&gt;&#xd;
+	&lt;defined field-value="endDate"/&gt;&#xd;
+	&lt;sequence&gt;&#xd;
+	&lt;log message="~~~~~~~~~~~~~~~sleep before deactivate"/&gt;&#xd;
+		&lt;sleep until="${f:endDate}"/&gt;&#xd;
+		&lt;participant ref="command-deactivate"/&gt;&#xd;
+	&lt;/sequence&gt;&#xd;
+&lt;/if&gt;&#xd;
+&lt;log level="debug" engine-log="yes" message="~~~~~~~~~~~~~~~flow end, start date is '${f:startDate}', end date is '${f:endDate}'"/&gt;&#xd;
+&lt;/sequence&gt;&#xd;
+&#xd;
+&lt;/process-definition&gt;</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:created" sv:type="Date">
-    <sv:value>2006-04-19T18:22:15.351+08:00</sv:value>
+    <sv:value>2006-05-18T18:09:32.746+09:00</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>70c04569-ebf2-41a6-af8c-5f3766cc3235</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-04-19T18:22:15.351+08:00</sv:value>
+      <sv:value>2006-05-18T18:09:32.746+09:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:creationdate" sv:type="Date">
       <sv:value>2006-03-27T11:44:27.360+08:00</sv:value>
