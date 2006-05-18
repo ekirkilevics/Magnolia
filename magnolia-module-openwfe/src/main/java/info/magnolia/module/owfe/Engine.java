@@ -57,7 +57,7 @@ public class Engine extends AbstractAdminModule {
     public void destroy() {
         JCRPersistedEngine engine = OWFEEngine.getEngine();
 		if (engine!=null && engine.isRunning()) {
-            log.info("Stopiing workflow engine..");
+            log.info("Stopping workflow engine..");
             try {
                 // before try to stop purge and scheduling tasks
                 ((SimpleExpressionPool) engine.getExpressionPool()).stop();

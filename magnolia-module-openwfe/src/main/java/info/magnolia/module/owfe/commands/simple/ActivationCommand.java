@@ -51,9 +51,7 @@ public class ActivationCommand extends MgnlCommand {
 
         recursive = Boolean.valueOf((String) params.get(MgnlConstants.P_RECURSIVE)).booleanValue();
         log.info("recursive = " + recursive);
-
-        // for tesing
-        log.info("user = " + ((info.magnolia.cms.beans.runtime.Context) ctx).getUser());
+        log.info("user = " + ((info.magnolia.cms.beans.runtime.Context) ctx).getUser().getName());
 
         try {
             doActivate(path, recursive);

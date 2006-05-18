@@ -66,7 +66,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
      * @param id
      */
     private String convertId(String id) {
-        return StringUtils.replace(StringUtils.replace(id, "|", ""), ":", ".");
+        return StringUtils.replace(StringUtils.replace(id, MgnlConstants.BAR,StringUtils.EMPTY), MgnlConstants.COLON,MgnlConstants.DOT);
     }
 
     /**
@@ -77,17 +77,16 @@ public class JCRExpressionStore extends AbstractExpressionStore {
             Content root = this.hm.getRoot();
 
             String id = fe.getId().toParseableString();
-            log.debug("store expresion: expression id = " + id);
+            if(log.isDebugEnabled()) log.debug("store expresion: expression id = " + id);
             String nid = convertId(id);
             Content ct = root.createContent(nid, ItemType.EXPRESSION);
 
             // set expressionId as attribte id
             ValueFactory vf = ct.getJCRNode().getSession().getValueFactory();
             String value = fe.getId().toParseableString();
-            if (log.isDebugEnabled()) {
-                log.debug("id_value=" + value);
-            }
-            ct.createNodeData("ID", vf.createValue(value));
+            if (log.isDebugEnabled()) log.debug("id_value=" + value);
+            
+            ct.createNodeData(MgnlConstants.NODEDATA_ID, vf.createValue(value));
 
             // convert to xml string
             Element encoded = XmlCoder.encode(fe);
@@ -95,7 +94,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
             String s = XmlUtils.toString(doc, null);
 
             // store it as attribute value
-            ct.createNodeData("value", vf.createValue(s));
+            ct.createNodeData(MgnlConstants.NODEDATA_VALUE, vf.createValue(s));
             this.hm.save();
 
         }
@@ -110,13 +109,11 @@ public class JCRExpressionStore extends AbstractExpressionStore {
      */
     public synchronized void unstoreExpression(FlowExpression fe) throws PoolException {
         try {
-            // get root
             Content ret = findExpression(fe.getId());
             if (ret != null) {
                 ret.delete();
-                this.hm.save();
+                hm.save();
             }
-
         }
         catch (Exception e) {
             log.error("unstore exception faled,", e);
@@ -135,15 +132,14 @@ public class JCRExpressionStore extends AbstractExpressionStore {
         String s_fei = fei.toParseableString();
 
         Content root = this.hm.getRoot();
-        log.debug("load expresion, expression id = " + s_fei);
+        if(log.isDebugEnabled()) log.debug("load expresion, expression id = " + s_fei);
         ret = root.getContent(convertId(s_fei));
         if (ret == null) { // if not found the id directly
             Collection c = root.getChildren(ItemType.EXPRESSION);
             Iterator it = c.iterator();
             while (it.hasNext()) {
                 Content ct = (Content) it.next();
-                // String name = ct.getName();
-                String sid = ct.getNodeData("ID").getString();
+                String sid = ct.getNodeData(MgnlConstants.NODEDATA_ID).getString();
                 FlowExpressionId id;
                 // compare the expression id
                 try {
@@ -170,17 +166,13 @@ public class JCRExpressionStore extends AbstractExpressionStore {
      * load expreson by id
      */
     public FlowExpression loadExpression(FlowExpressionId fei) throws PoolException {
-        FlowExpression ret_fe;
-        String s_fei = StringUtils.EMPTY;
         try {
             Content ret = findExpression(fei);
             if (ret != null) {
-                InputStream s = ret.getNodeData("value").getStream();
+                InputStream s = ret.getNodeData(MgnlConstants.NODEDATA_VALUE).getStream();
                 final org.jdom.input.SAXBuilder builder = new org.jdom.input.SAXBuilder();
-
                 Document doc = builder.build(s);
-                ret_fe = (FlowExpression) XmlCoder.decode(doc);
-                return ret_fe;
+                return (FlowExpression) XmlCoder.decode(doc);
             }
 
         }
@@ -189,7 +181,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
         }
         
         // no expression found. Throw an exception ?
-        throw new PoolException("can not get this expression (id=" + s_fei + ")");
+        throw new PoolException("can not get this expression (id=" + fei.asStringId() + ")");
     }
 
     /**
@@ -205,7 +197,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
             while (it.hasNext()) {
                 Content ct = (Content) it.next();
 
-                InputStream s = ct.getNodeData("value").getStream();
+                InputStream s = ct.getNodeData(MgnlConstants.NODEDATA_VALUE).getStream();
                 final org.jdom.input.SAXBuilder builder = new org.jdom.input.SAXBuilder();
 
                 Document doc = builder.build(s);
@@ -223,7 +215,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 
         }
         catch (Exception e) {
-            log.error("exception:" + e.getMessage(), e);
+            log.error("Read access to expression store failed:" + e.getMessage(), e);
             return ret.iterator();
         }
     }

@@ -89,5 +89,27 @@ public final class MgnlConstants {
 	public static final String ATT_ASSIGN_TO = "assignTo";
 
 	public static final String ATT_OK = "OK";
+
+	public static final String ATT_COMMENT = "comment";
+
+	public static final String BAR = "|";
+
+	public static final String COLON = ":";
+
+	public static final String DOT = ".";
+
+	public static final String SLASH = "/";
+
+	public static final String NODEDATA_PARTICIPANT = "participant";
+
+	public static final String NODEDATA_ID = "ID";
+
+	public static final String NODEDATA_VALUE = "value";
+
+	public final static String ROOT_PATH_FOR_FLOW = "/modules/workflow/config/flows/";
+
+	public final static String FLOW_VALUE = "value";
+
+	public static final String ENGINE_NAME = "owfe";
     
 }

@@ -49,21 +49,7 @@ import org.slf4j.LoggerFactory;
 
 public class JCRWorkItemAPI {
 
-    private static final String BAR = "|";
-
-	private static final String COLON = ":";
-
-	private static final String DOT = ".";
-
-	private static final String SLASH = "/";
-
-	private static final String NODEDATA_PARTICIPANT = "participant";
-
-	public static final String NODEDATA_ID = "ID";
-
-	public static final String NODEDATA_VALUE = "value";
-
-	private final static Logger log = LoggerFactory.getLogger(JCRWorkItemAPI.class.getName());
+    public final static Logger log = LoggerFactory.getLogger(JCRWorkItemAPI.class.getName());
 
     HierarchyManager hm;
 
@@ -131,7 +117,7 @@ public class JCRWorkItemAPI {
      */
     public static InFlowWorkItem loadWorkItem(Content ct) throws Exception {
         InFlowWorkItem wi;
-        InputStream s = ct.getNodeData(JCRWorkItemAPI.NODEDATA_VALUE).getStream();
+        InputStream s = ct.getNodeData(MgnlConstants.NODEDATA_VALUE).getStream();
         if (log.isDebugEnabled()) {
             log.debug("retrieve work item: value = " + s.toString());
         }
@@ -205,7 +191,7 @@ public class JCRWorkItemAPI {
      * @param eid id of work item
      */
     public boolean checkContentWithEID(Content ct, FlowExpressionId eid) {
-        String cid = ct.getNodeData(JCRWorkItemAPI.NODEDATA_ID).getString();
+        String cid = ct.getNodeData(MgnlConstants.NODEDATA_ID).getString();
         if (log.isDebugEnabled()) {
             log.debug("checkContentWithEID: ID = " + cid);
         }
@@ -217,28 +203,28 @@ public class JCRWorkItemAPI {
      * convert the name to valid path
      * @param id
      */
-    private final String convertPath(String id) {
-        return StringUtils.replace(StringUtils.replace(id, BAR, StringUtils.EMPTY), COLON, DOT);
+    public final String convertPath(String id) {
+        return StringUtils.replace(StringUtils.replace(id, MgnlConstants.BAR, StringUtils.EMPTY), MgnlConstants.COLON, MgnlConstants.DOT);
     }
 
     /**
      * create the jcr node path for work Item by its id
      * @param eid
      */
-    private String createPathFromId(FlowExpressionId eid) {
+    public String createPathFromId(FlowExpressionId eid) {
 		String wlInstId = eid.getWorkflowInstanceId();
 		int groupNumber = Integer.valueOf(
 				wlInstId.substring(wlInstId.length() - 3)).intValue() % 100;
 		StringBuffer buffer = new StringBuffer(eid.getWorkflowDefinitionName());
-		buffer.append(SLASH);
+		buffer.append(MgnlConstants.SLASH);
 		buffer.append(eid.getWorkflowDefinitionRevision());
-		buffer.append(SLASH);
+		buffer.append(MgnlConstants.SLASH);
 		buffer.append(groupNumber);
-		buffer.append(SLASH);
+		buffer.append(MgnlConstants.SLASH);
 		buffer.append(eid.getWorkflowInstanceId());
-		buffer.append(SLASH);
+		buffer.append(MgnlConstants.SLASH);
 		buffer.append(eid.getExpressionName());
-		buffer.append(SLASH);
+		buffer.append(MgnlConstants.SLASH);
 		buffer.append(eid.getExpressionId());
 
 		return convertPath(buffer.toString());
@@ -272,8 +258,8 @@ public class JCRWorkItemAPI {
             ValueFactory vf = newc.getJCRNode().getSession().getValueFactory();
             String sId = wi.getLastExpressionId().toParseableString();
 
-            newc.createNodeData(JCRWorkItemAPI.NODEDATA_ID, vf.createValue(sId));
-            newc.createNodeData(JCRWorkItemAPI.NODEDATA_PARTICIPANT, vf.createValue(wi.getParticipantName()));
+            newc.createNodeData(MgnlConstants.NODEDATA_ID, vf.createValue(sId));
+            newc.createNodeData(MgnlConstants.NODEDATA_PARTICIPANT, vf.createValue(wi.getParticipantName()));
             
             if(log.isDebugEnabled()){
             	log.debug("ID=" + sId);
@@ -293,7 +279,7 @@ public class JCRWorkItemAPI {
             Element encoded = XmlCoder.encode(wi);
             final org.jdom.Document doc = new org.jdom.Document(encoded);
             String s = XmlUtils.toString(doc, null);
-            newc.createNodeData(JCRWorkItemAPI.NODEDATA_VALUE, vf.createValue(s));
+            newc.createNodeData(MgnlConstants.NODEDATA_VALUE, vf.createValue(s));
 
             if(log.isDebugEnabled()) log.debug("store work item: value=" + s);
 

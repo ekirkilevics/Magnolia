@@ -26,7 +26,6 @@
       <name>magnolia</name>
       <nodeTypeFile>/mgnl-nodetypes/owfe-nodetypes.xml</nodeTypeFile>
       <workspaces>
-        <workspace>owfe</workspace>
         <workspace>Store</workspace>
         <workspace>Expressions</workspace>
       </workspaces>

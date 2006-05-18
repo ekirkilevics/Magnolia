@@ -42,10 +42,7 @@ import org.slf4j.LoggerFactory;
  */
 public class OWFEBean implements WorkflowAPI {
 
-	private static final String ATT_COMMENT = "comment";
-
-	private final static Logger log = LoggerFactory.getLogger(OWFEBean.class
-			.getName());
+	private final static Logger log = LoggerFactory.getLogger(OWFEBean.class.getName());
 
 	JCRWorkItemAPI storage = null;
 
@@ -78,6 +75,7 @@ public class OWFEBean implements WorkflowAPI {
 		}
 
 		long start = System.currentTimeMillis();
+		
 		MgnlUser user = (MgnlUser) MgnlContext.getUser();
 		Collection groups = user.getGroups();
 		Collection roles = user.getRoles();
@@ -140,19 +138,15 @@ public class OWFEBean implements WorkflowAPI {
 	 */
 	public void approveActivation(String expressionId) throws Exception {
 		// get workitem
-		InFlowWorkItem wi = this.storage.retrieveWorkItem("", FlowExpressionId
-				.fromParseableString(expressionId));
+		InFlowWorkItem wi = this.storage.retrieveWorkItem(StringUtils.EMPTY, FlowExpressionId.fromParseableString(expressionId));
 		if (wi == null) {
-			throw new Exception(
-					"can't get the work iem by this expression id ("
-							+ expressionId + ")");
+			throw new Exception("can't get the work iem by this expression id ("+ expressionId + ")");
 		}
 
 		wi.touch();
 
 		try {
-			wi.getAttributes().puts(MgnlConstants.ATT_OK,
-					MgnlCoreConstants.TRUE);
+			wi.getAttributes().puts(MgnlConstants.ATT_OK,MgnlCoreConstants.TRUE);
 			OWFEEngine.getEngine().reply(wi);
 		} catch (Exception e) {
 			log.error("reply to engine failed", e);
@@ -170,19 +164,15 @@ public class OWFEBean implements WorkflowAPI {
 	public void rejectActivation(String expressionId, String comment)
 			throws Exception {
 
-		InFlowWorkItem wi = this.storage.retrieveWorkItem("", FlowExpressionId
-				.fromParseableString(expressionId));
+		InFlowWorkItem wi = this.storage.retrieveWorkItem(StringUtils.EMPTY, FlowExpressionId.fromParseableString(expressionId));
 		if (wi == null) {
-			throw new Exception(
-					"cant not get the work iem by this expression id ("
-							+ expressionId + ")");
+			throw new Exception("cant not get the work iem by this expression id ("+ expressionId + ")");
 		}
 		wi.touch();
 
 		try {
-			wi.getAttributes().puts(MgnlConstants.ATT_OK,
-					MgnlCoreConstants.FALSE);
-			wi.getAttributes().puts(ATT_COMMENT, comment);
+			wi.getAttributes().puts(MgnlConstants.ATT_OK,MgnlCoreConstants.FALSE);
+			wi.getAttributes().puts(MgnlConstants.ATT_COMMENT, comment);
 			OWFEEngine.getEngine().reply(wi);
 		} catch (Exception e) {
 			log.error("Error while accessing the workflow engine", e);
@@ -199,8 +189,7 @@ public class OWFEBean implements WorkflowAPI {
 
 	public void cancel(String expressionId) {
 		try {
-			this.storage.removeWorkItem(FlowExpressionId
-					.fromParseableString(expressionId));
+			this.storage.removeWorkItem(FlowExpressionId.fromParseableString(expressionId));
 		} catch (Exception e) {
 			log.info("can't cancel", e);
 		}
@@ -212,12 +201,10 @@ public class OWFEBean implements WorkflowAPI {
 	public void updateWorkItem(String expressionId, String[] names,
 			String values[]) throws Exception {
 
-		InFlowWorkItem ifwi = this.storage.retrieveWorkItem("",
+		InFlowWorkItem ifwi = this.storage.retrieveWorkItem(StringUtils.EMPTY,
 				FlowExpressionId.fromParseableString(expressionId));
 		if (ifwi == null) {
-			throw new Exception(
-					"cant not get the work iem by this expression id ("
-							+ expressionId + ")");
+			throw new Exception("cant not get the work iem by this expression id ("+ expressionId + ")");
 		}
 		for (int i = 0; i < names.length; i++) {
 			ifwi.setAttribute(names[i], new StringAttribute(values[i]));
@@ -231,8 +218,7 @@ public class OWFEBean implements WorkflowAPI {
 	 */
 	public void assignWorkItemToUser(String expressionId, String userName) {
 		if (expressionId == null || expressionId.length() == 0) {
-			log.error("can not assign work item, invalid express id "
-					+ expressionId);
+			log.error("can not assign work item, invalid express id "+ expressionId);
 			return;
 		}
 
@@ -241,26 +227,20 @@ public class OWFEBean implements WorkflowAPI {
 			return;
 		}
 
-		FlowExpressionId eid = FlowExpressionId
-				.fromParseableString(expressionId);
+		FlowExpressionId eid = FlowExpressionId.fromParseableString(expressionId);
 		if (eid == null) {
-			log
-					.error("can not assign work item, can not parse invalid express id "
-							+ expressionId);
+			log.error("can not assign work item, can not parse invalid express id "+ expressionId);
 			return;
 		}
 
 		InFlowWorkItem if_wi = null;
 		try {
-			if_wi = this.storage.retrieveWorkItem("", eid);
+			if_wi = this.storage.retrieveWorkItem(StringUtils.EMPTY, eid);
 		} catch (Exception e) {
 			log.error("retrieve work item failed", e);
 		}
 		if (if_wi == null) {
-
-			log
-					.error("can not assign work item, can not retrieve work tiem by  express id "
-							+ expressionId);
+			log.error("can not assign work item, can not retrieve work tiem by  express id "+ expressionId);
 			return;
 		}
 		assignWorkItemToUser(if_wi, userName);
@@ -278,8 +258,7 @@ public class OWFEBean implements WorkflowAPI {
 		}
 
 		try {
-			wi.addAttribute(MgnlConstants.ATT_ASSIGN_TO, new StringAttribute(
-					userName));
+			wi.addAttribute(MgnlConstants.ATT_ASSIGN_TO, new StringAttribute(userName));
 			this.storage.storeWorkItem(StringUtils.EMPTY, wi);
 		} catch (Exception e) {
 			log.error("assign work item to user " + userName + " failed.)", e);
@@ -339,36 +318,27 @@ public class OWFEBean implements WorkflowAPI {
 	public void LaunchFlow(HierarchyManager hm, String path, String flowName)
 			throws Exception {
 		if (log.isDebugEnabled())
-			log
-					.debug("- Lauch flow -" + this.getClass().toString()
-							+ "- Start");
+			log.debug("- Lauch flow -" + this.getClass().toString()+ "- Start");
 		if (flowName == null || flowName.length() == 0) {
-			throw new IllegalArgumentException(
-					"flowName is null or empty string");
+			throw new IllegalArgumentException("flowName is null or empty string");
 		}
 		try {
 			// Get the references
 			LaunchItem li = new LaunchItem();
-			li.addAttribute(MgnlConstants.P_ACTION, new StringAttribute(this
-					.getClass().getName()));
-			li
-					.setWorkflowDefinitionUrl(MgnlConstants.P_WORKFLOW_DEFINITION_URL);
+			li.addAttribute(MgnlConstants.P_ACTION, new StringAttribute(this.getClass().getName()));
+			li.setWorkflowDefinitionUrl(MgnlConstants.P_WORKFLOW_DEFINITION_URL);
 
 			// Retrieve and add the flow definition to the LaunchItem
-			String flowDef = new JCRFlowDefinition()
-					.getflowDefAsString(flowName);
+			String flowDef = new JCRFlowDefinition().getflowDefAsString(flowName);
 			li.getAttributes().puts(MgnlConstants.P_DEFINITION, flowDef);
 			JCRPersistedEngine engine = OWFEEngine.getEngine();
 
 			// start activation
 			if (hm != null) {
-				li.addAttribute(MgnlConstants.P_HM, AttributeUtils
-						.java2owfe(hm));
+				li.addAttribute(MgnlConstants.P_HM, AttributeUtils.java2owfe(hm));
 			}
 			if (path != null) {
-				li
-						.addAttribute(MgnlConstants.P_PATH,
-								new StringAttribute(path));
+				li.addAttribute(MgnlConstants.P_PATH,new StringAttribute(path));
 			}
 
 			// Launch the item

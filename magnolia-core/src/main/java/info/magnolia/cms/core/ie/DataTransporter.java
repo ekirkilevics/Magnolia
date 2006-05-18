@@ -140,7 +140,8 @@ public class DataTransporter {
         HierarchyManager hr = MgnlContext.getHierarchyManager(repository);
         Workspace ws = hr.getWorkspace();
 
-        log.info("Importing content into repository: [{}] from File: [{}] into path: {}", //$NON-NLS-1$
+        if(log.isDebugEnabled())
+        log.debug("Importing content into repository: [{}] from File: [{}] into path: {}", //$NON-NLS-1$
             new Object[]{repository, fileName, basepath});
 
         if (!hr.isExist(basepath) && createBasepathIfNotExist) {

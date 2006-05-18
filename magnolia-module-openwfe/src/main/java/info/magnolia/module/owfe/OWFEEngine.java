@@ -12,10 +12,7 @@
  */
 package info.magnolia.module.owfe;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
-
-import javax.jcr.Repository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +33,7 @@ public class OWFEEngine {
 
     OWFEEngine() throws Exception {
         wfEngine = new JCRPersistedEngine();
-        log.debug("create worklist...");
+        if(log.isDebugEnabled()) log.debug("create worklist...");
 
         OWFEEngine.getEngine().registerParticipant(new MgnlParticipant("user-.*"));
         OWFEEngine.getEngine().registerParticipant(new MgnlParticipant("group-.*"));
@@ -49,15 +46,6 @@ public class OWFEEngine {
      */
     static public JCRPersistedEngine getEngine() {
         return wfEngine;
-    }
-
-    /**
-     * return repository for owfe
-     */
-    static public Repository getOWFERepository() {
-        Repository repo = ContentRepository.getRepository(MgnlConstants.WORKSPACE_ENGINE);
-        log.info("get repository for " + MgnlConstants.REPO_OWFE + "=" + repo);
-        return repo;
     }
 
 }

@@ -32,10 +32,11 @@ public class ShutdownManager implements ServletContextListener {
 
     /**
      * Adds a new <code>ShutdownTask</code>.
+     * Most recently added task will be executed first
      * @param task ShutdownTask implementation
      */
     public static void addShutdownTask(ShutdownTask task) {
-        tasks.add(task);
+        tasks.add(0,task);
     }
 
     /**
@@ -51,10 +52,9 @@ public class ShutdownManager implements ServletContextListener {
     public void contextDestroyed(ServletContextEvent sce) {
 
         log.info("Executing shutdown tasks");
-
+        
         for (Iterator iter = tasks.iterator(); iter.hasNext();) {
             ShutdownTask task = (ShutdownTask) iter.next();
-
             try {
                 task.execute(sce);
             }

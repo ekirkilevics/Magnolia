@@ -166,6 +166,7 @@ public final class ModuleLoader {
             ShutdownManager.addShutdownTask(new ShutdownManager.ShutdownTask() {
 
                 public void execute(ServletContextEvent sce) {
+                	log.info("Shutting down module: "+m.getName());
                     m.destroy();
                 }
 
