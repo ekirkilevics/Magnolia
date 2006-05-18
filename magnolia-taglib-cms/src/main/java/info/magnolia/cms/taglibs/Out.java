@@ -114,6 +114,7 @@ public class Out extends BaseContentTag {
      * <li><b>extensionUpperCase: </b> extension upper case (PNG)</li>
      * <li><b>nameWithoutExtension: </b> (Alien)</li>
      * <li><b>handle: </b> /dev/mainColumnParagraphs/0/image</li>
+     * <li><b>icon: </b>the default icon for the type of document</li>
      * <li><b>pathWithoutName: </b> (/dev/mainColumnParagraphs/0/image.png)</li>
      * <li><b>size: </b> size in bytes (2827)</li>
      * <li><b>sizeString: </b> size in bytes, KB or MB - max. 3 digits before comma - with unit (2.7 KB)</li>
