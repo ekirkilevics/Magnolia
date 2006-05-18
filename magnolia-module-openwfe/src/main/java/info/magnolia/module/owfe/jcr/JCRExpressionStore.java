@@ -74,12 +74,14 @@ public class JCRExpressionStore extends AbstractExpressionStore {
      */
     public synchronized void storeExpression(FlowExpression fe) throws PoolException {
         try {
+        	synchronized(hm) {
+        	
             Content root = this.hm.getRoot();
 
             String id = fe.getId().toParseableString();
-            if(log.isDebugEnabled()) log.debug("store expresion: expression id = " + id);
             String nid = convertId(id);
             Content ct = root.createContent(nid, ItemType.EXPRESSION);
+            if(log.isDebugEnabled()) log.debug("store expresion: expression id = " + id+ " uuid:"+ct.getUUID());
 
             // set expressionId as attribte id
             ValueFactory vf = ct.getJCRNode().getSession().getValueFactory();
@@ -96,7 +98,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
             // store it as attribute value
             ct.createNodeData(MgnlConstants.NODEDATA_VALUE, vf.createValue(s));
             this.hm.save();
-
+        	}
         }
         catch (Exception e) {
             log.error("store exception failed,", e);
@@ -109,14 +111,17 @@ public class JCRExpressionStore extends AbstractExpressionStore {
      */
     public synchronized void unstoreExpression(FlowExpression fe) throws PoolException {
         try {
+        	log.info("Deleting expression"+fe.toString());
             Content ret = findExpression(fe.getId());
             if (ret != null) {
-                ret.delete();
-                hm.save();
+                synchronized(hm){
+                	ret.delete();
+                	hm.save();
+                }
             }
         }
         catch (Exception e) {
-            log.error("unstore exception faled,", e);
+            log.error("unstore exception failed,", e);
         }
 
     }
@@ -172,7 +177,9 @@ public class JCRExpressionStore extends AbstractExpressionStore {
                 InputStream s = ret.getNodeData(MgnlConstants.NODEDATA_VALUE).getStream();
                 final org.jdom.input.SAXBuilder builder = new org.jdom.input.SAXBuilder();
                 Document doc = builder.build(s);
-                return (FlowExpression) XmlCoder.decode(doc);
+                final FlowExpression decode = (FlowExpression) XmlCoder.decode(doc);
+				decode.setApplicationContext(getContext());
+                return decode;
             }
 
         }
@@ -187,7 +194,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
     /**
      * return a iterator of content
      */
-    public Iterator contentIterator(Class assignClass) {
+    public synchronized Iterator contentIterator(Class assignClass) {
         ArrayList ret = new ArrayList();
         try {
             Content root = this.hm.getRoot();
@@ -212,7 +219,8 @@ public class JCRExpressionStore extends AbstractExpressionStore {
                 ret.add(fe);
                 
                 } 
-            	catch(Exception e) {
+            	catch(RuntimeException e) {
+            		e.printStackTrace();
             		// ignore and skip to next item
             	}
             }
