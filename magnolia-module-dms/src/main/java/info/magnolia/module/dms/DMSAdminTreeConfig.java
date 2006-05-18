@@ -118,22 +118,6 @@ public class DMSAdminTreeConfig implements AdminTreeConfiguration {
             + tree.getJavascriptTree()
             + ")");
 
-        ContextMenuItem menuDownloadDocument = new ContextMenuItem("download");
-        menuDownloadDocument.setLabel(msgs.get("dms.menu.download"));
-        menuDownloadDocument.setIcon(request.getContextPath() + "/.resources/icons/16/document_plain.gif");
-        menuDownloadDocument.setOnclick("mgnl.dms.DMS.downloadFile(" + tree.getJavascriptTree() + ".selectedNode.id);");
-        menuDownloadDocument.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotContent("
-            + tree.getJavascriptTree()
-            + ")");
-
-        ContextMenuItem menuUploadZip = new ContextMenuItem("zipUplaod");
-        menuUploadZip.setLabel(msgs.get("dms.menu.uploadZip"));
-        menuUploadZip.setIcon(request.getContextPath() + "/.resources/icons/16/package.gif");
-        menuUploadZip.setOnclick("mgnl.dms.DMS.uploadZip(" + tree.getJavascriptTree() + ".selectedNode.id);");
-        menuUploadZip.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotContentNode("
-            + tree.getJavascriptTree()
-            + ")");
-
         ContextMenuItem menuEditDocument = new ContextMenuItem("edit");
         menuEditDocument.setLabel(msgs.get("dms.menu.edit"));
         menuEditDocument.setIcon(request.getContextPath() + "/.resources/icons/16/document_edit.gif");
@@ -141,6 +125,26 @@ public class DMSAdminTreeConfig implements AdminTreeConfiguration {
             + tree.getJavascriptTree()
             + ",'.magnolia/dialogs/dmsEdit.html');");
         menuEditDocument.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotContent("
+            + tree.getJavascriptTree()
+            + ")");
+        menuEditDocument.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
+            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+
+        ContextMenuItem menuDownloadDocument = new ContextMenuItem("download");
+        menuDownloadDocument.setLabel(msgs.get("dms.menu.download"));
+        menuDownloadDocument.setIcon(request.getContextPath() + "/.resources/icons/16/document_download.gif");
+        menuDownloadDocument.setOnclick("mgnl.dms.DMS.downloadFile(" + tree.getJavascriptTree() + ".selectedNode.id);");
+        menuDownloadDocument.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotContent("
+            + tree.getJavascriptTree()
+            + ")");
+        menuDownloadDocument.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
+            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+
+        ContextMenuItem menuUploadZip = new ContextMenuItem("zipUplaod");
+        menuUploadZip.setLabel(msgs.get("dms.menu.uploadZip"));
+        menuUploadZip.setIcon(request.getContextPath() + "/.resources/icons/16/package.gif");
+        menuUploadZip.setOnclick("mgnl.dms.DMS.uploadZip(" + tree.getJavascriptTree() + ".selectedNode.id);");
+        menuUploadZip.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotContentNode("
             + tree.getJavascriptTree()
             + ")");
 
@@ -192,7 +196,7 @@ public class DMSAdminTreeConfig implements AdminTreeConfiguration {
 
         ContextMenuItem menuActivateIncl = new ContextMenuItem("activateIncl");
         menuActivateIncl.setLabel(msgs.get("tree.config.menu.activateInclSubs")); //$NON-NLS-1$
-        menuActivateIncl.setIcon(request.getContextPath() + "/.resources/icons/16/arrow_right_green.gif"); //$NON-NLS-1$
+        menuActivateIncl.setIcon(request.getContextPath() + "/.resources/icons/16/arrow_right_green_double.gif"); //$NON-NLS-1$
         menuActivateIncl.setOnclick(tree.getJavascriptTree() + ".activateNode(" + Tree.ACTION_ACTIVATE + ",true);"); //$NON-NLS-1$ //$NON-NLS-2$
         menuActivateIncl.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
             + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
@@ -235,6 +239,7 @@ public class DMSAdminTreeConfig implements AdminTreeConfiguration {
         tree.addMenuItem(menuNewFolder);
         tree.addMenuItem(menuNewDocument);
         tree.addMenuItem(menuEditDocument);
+        tree.addMenuItem(null); // line
         tree.addMenuItem(menuDownloadDocument);
         tree.addMenuItem(null); // line
         tree.addMenuItem(menuDelete);
@@ -268,6 +273,7 @@ public class DMSAdminTreeConfig implements AdminTreeConfiguration {
         bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("newFolder")));
         bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("newDocument")));
         bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("edit")));
+        bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("download")));
         bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("delete")));
         bar.addMenuItem(null);
         bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("activate")));
