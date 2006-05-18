@@ -116,14 +116,7 @@ public class Document {
      * depends on mime/type
      */
     public String getMimeTypeIcon() {
-        String icon = "";
-        try {
-            icon = getMimeTypeIcon(getFileExtension());
-        }
-        catch (Exception e) {
-            icon = DialogFile.ICONS_PATH + "general.gif";
-        }
-        return icon;
+        return getMimeTypeIcon(getFileExtension());
     }
 
     public static String getMimeTypeIcon(String ext) {
