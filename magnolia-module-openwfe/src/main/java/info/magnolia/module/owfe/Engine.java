@@ -47,26 +47,21 @@ public class Engine extends AbstractAdminModule {
      * @see info.magnolia.module.admininterface.AbstractAdminModule#onInit()
      */
     protected void onInit() {
-
         try {
 			new OWFEEngine();
-			if (log.isDebugEnabled())
-				log.debug("create owfe engine ok.");
 		} catch (Exception e) {
-			log.error("An exception arised when creating the workflow engine",
-					e);
+			log.error("An exception arised when creating the workflow engine",e);
 		}
 	}
 
     public void destroy() {
         JCRPersistedEngine engine = OWFEEngine.getEngine();
 		if (engine!=null && engine.isRunning()) {
-            log.info("Workflow engine is running, trying to stop...");
+            log.info("Stopiing workflow engine..");
             try {
                 // before try to stop purge and scheduling tasks
                 ((SimpleExpressionPool) engine.getExpressionPool()).stop();
                 engine.stop();
-                log.info("Workflow engine successfully stopped");
             }
             catch (ServiceException se) {
                 log.error("Failed to stop Open WFE engine");

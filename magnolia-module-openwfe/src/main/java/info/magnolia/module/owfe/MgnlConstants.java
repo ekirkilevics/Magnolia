@@ -76,12 +76,18 @@ public final class MgnlConstants {
     
     public static final String REPO_OWFE = "magnolia";
 
-    public final static String EXPRESSION_WORKSPACE = "Expressions";
+    public final static String WORKSPACE_EXPRESSION = "Expressions";
 
-    public final static String EXPRESSION_NODENAME = "expression";
+    public final static String NODENAME_EXPRESSION = "expression";
     
-    public final static String STORE_WORKSPACE = "Store";
+    public final static String WORKSPACE_STORE = "Store";
 
-    public final static String WORKITEM_NODENAME = "workItem";
+    public final static String WORKSPACE_ENGINE = "Engine";
+    
+    public final static String NODENAME_WORKITEM = "workItem";
+
+	public static final String ATT_ASSIGN_TO = "assignTo";
+
+	public static final String ATT_OK = "OK";
     
 }

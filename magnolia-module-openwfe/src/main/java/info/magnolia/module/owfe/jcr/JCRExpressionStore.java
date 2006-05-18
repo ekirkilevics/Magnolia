@@ -13,7 +13,6 @@
 package info.magnolia.module.owfe.jcr;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -56,14 +55,10 @@ public class JCRExpressionStore extends AbstractExpressionStore {
     public void init(final String serviceName, final ApplicationContext context, final java.util.Map serviceParams)
         throws ServiceException {
         super.init(serviceName, context, serviceParams);
-        Iterator iter = ContentRepository.getAllRepositoryNames();
-        while(iter.hasNext())
-        	log.info("-->"+iter.next());
-        this.hm = ContentRepository.getHierarchyManager(MgnlConstants.EXPRESSION_WORKSPACE);
+        this.hm = ContentRepository.getHierarchyManager(MgnlConstants.WORKSPACE_EXPRESSION);
 		if (this.hm == null) {
 			throw new ServiceException("Can't access HierarchyManager for workitems");
-		} else 
-			log.info("xx->ContentRepository worked");
+		} 
     }
 
     /**

@@ -13,7 +13,6 @@
 package info.magnolia.module.owfe;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
 
 import javax.jcr.Repository;
@@ -56,25 +55,9 @@ public class OWFEEngine {
      * return repository for owfe
      */
     static public Repository getOWFERepository() {
-        Repository repo = ContentRepository.getRepository(MgnlConstants.REPO_OWFE);
+        Repository repo = ContentRepository.getRepository(MgnlConstants.WORKSPACE_ENGINE);
         log.info("get repository for " + MgnlConstants.REPO_OWFE + "=" + repo);
         return repo;
-    }
-
-    /**
-     * get hierarchy mananger for owfe repository
-     * @param workspace
-     */
-    public static HierarchyManager getOWFEHierarchyManager(String workspace) {
-        HierarchyManager hm;
-        if (workspace != null) {
-            hm = ContentRepository.getHierarchyManager(MgnlConstants.REPO_OWFE, workspace);
-        }
-        else {
-            hm = ContentRepository.getHierarchyManager(MgnlConstants.REPO_OWFE);
-        }
-        // log.info("get HierarchyManager for " + REPO_OWFE + "=" + hm);
-        return hm;
     }
 
 }

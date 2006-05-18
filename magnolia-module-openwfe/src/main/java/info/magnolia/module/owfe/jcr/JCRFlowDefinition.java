@@ -192,7 +192,7 @@ public class JCRFlowDefinition {
             }
 
             hm.save();
-            log.info("add ok");
+            log.info("new flow added");
         }
         catch (Exception e) {
             log.error("add flow failed", e);
