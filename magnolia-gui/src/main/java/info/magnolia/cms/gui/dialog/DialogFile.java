@@ -12,6 +12,7 @@
  */
 package info.magnolia.cms.gui.dialog;
 
+import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.File;
 import info.magnolia.cms.gui.misc.CssConstants;
@@ -51,7 +52,6 @@ public class DialogFile extends DialogBox {
         throws RepositoryException {
         super.init(request, response, websiteNode, configNode);
         initImageExtensions();
-        initIconExtensions();
     }
 
     public List getImageExtensions() {
@@ -178,7 +178,7 @@ public class DialogFile extends DialogBox {
             }
             out.write(htmlControlFileName.toString());
             if (!showImage) {
-                String iconPath = this.getIconPath(control.getExtension());
+                String iconPath = MIMEMapping.getMIMETypeIcon(control.getExtension());
 
                 out.write(Spacer.getHtml(0, 0));
                 out.write("<a href=" + this.getRequest().getContextPath() + control.getPath() + " target=\"_blank\">"); //$NON-NLS-1$ //$NON-NLS-2$

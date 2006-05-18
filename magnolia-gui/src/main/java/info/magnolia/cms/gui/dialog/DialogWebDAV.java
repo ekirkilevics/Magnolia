@@ -12,6 +12,7 @@
  */
 package info.magnolia.cms.gui.dialog;
 
+import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.Hidden;
@@ -50,6 +51,10 @@ public class DialogWebDAV extends DialogBox {
     private static final int ICONS_WIDTH = 23;
 
     public static final String NULLGIF = "/admindocroot/0.gif"; //$NON-NLS-1$
+    
+    public static final String ICONS_GENERAL = "general.png"; //$NON-NLS-1$
+
+    public static final String ICONS_FOLDER = "folder.png"; //$NON-NLS-1$
 
     /**
      * Logger.
@@ -87,7 +92,6 @@ public class DialogWebDAV extends DialogBox {
     public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
             throws RepositoryException {
         super.init(request, response, websiteNode, configNode);
-        initIconExtensions();
         setConfigValues();
     }
 
@@ -241,11 +245,11 @@ public class DialogWebDAV extends DialogBox {
                 valueTmp = this.getValue().substring(0, this.getValue().length() - 1);
                 isDirectory = true;
                 this.setSubDirectory(this.getValue());
-                showIcon = ICONS_PATH + ICONS_FOLDER;
+                showIcon = MIMEMapping.ICONS_PATH + ICONS_FOLDER;
             } else {
                 // value is file
                 valueTmp = this.getValue();
-                showIcon = this.getIconPath(this.getValue());
+                showIcon = MIMEMapping.getMIMETypeIcon(this.getValue());
             }
             if (valueTmp.indexOf("/") != -1) { //$NON-NLS-1$
                 showName = valueTmp.substring(valueTmp.lastIndexOf("/") + 1); //$NON-NLS-1$
@@ -298,7 +302,7 @@ public class DialogWebDAV extends DialogBox {
         out.write("</tr><tr height=\"4\"><td></td></tr><tr>"); //$NON-NLS-1$
         out.write("<td><img src=\"" //$NON-NLS-1$
                 + this.getRequest().getContextPath()
-                + ICONS_PATH
+                + MIMEMapping.ICONS_PATH
                 + ICONS_FOLDER
                 + "\"></td>"); //$NON-NLS-1$
         out.write("<td id=\"" + this.getName() + "_showPath\">" + showPath + "</td>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -555,9 +559,9 @@ public class DialogWebDAV extends DialogBox {
             i++;
             String iconPath;
             if (displayType.equals("folder")) { //$NON-NLS-1$
-                iconPath = ICONS_PATH + ICONS_FOLDER;
+                iconPath = MIMEMapping.ICONS_PATH + ICONS_FOLDER;
             } else {
-                iconPath = this.getIconPath(name);
+                iconPath = MIMEMapping.getMIMETypeIcon(name);
             }
             out.write("<td>"); //$NON-NLS-1$
             out.write("<img src=\"" //$NON-NLS-1$
