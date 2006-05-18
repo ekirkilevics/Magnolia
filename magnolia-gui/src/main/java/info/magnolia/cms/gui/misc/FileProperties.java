@@ -12,6 +12,7 @@
  */
 package info.magnolia.cms.gui.misc;
 
+import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 
@@ -57,6 +58,8 @@ public class FileProperties {
     public static final String NAME_WITHOUT_EXTENSION = "nameWithoutExtension"; // report2004 //$NON-NLS-1$
 
     public static final String CONTENT_TYPE = "jcr:mimeType"; // application/pdf //$NON-NLS-1$
+
+    public static final String ICON = "icon"; // the icon for this type
 
     public static final String TEMPLATE = "template"; // ((according to dialog)) //$NON-NLS-1$
 
@@ -154,6 +157,9 @@ public class FileProperties {
         }
         else if (property.equals(PATH_WITHOUT_NAME)) {
             value = this.getContent().getHandle() + "/" + this.getNodeDataName() + fullExt; //$NON-NLS-1$
+        }
+        else if (property.equals(ICON)) {
+            value = MIMEMapping.getMIMETypeIcon(ext);
         }
         else if (property.equals(SIZE_BYTES)) {
             value = props.getAttribute(PROPERTY_SIZE);
