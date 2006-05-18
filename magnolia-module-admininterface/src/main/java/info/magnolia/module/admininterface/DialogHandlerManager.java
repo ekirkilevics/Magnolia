@@ -44,7 +44,13 @@ import org.slf4j.LoggerFactory;
  */
 public class DialogHandlerManager extends ObservedManager {
 
-    /**
+    private static final String PARAGRAPH_EDIT_DIALOG = "info.magnolia.module.admininterface.dialogs.ParagraphEditDialog";
+
+	private static final String CLASS = "class";
+
+	private static final String ND_NAME = "name";
+
+	/**
      * Logger
      */
     private Logger log = LoggerFactory.getLogger(DialogHandlerManager.class);
@@ -71,10 +77,10 @@ public class DialogHandlerManager extends ObservedManager {
             // if this paragraph is used from a dialog register it under the name of the paragraph
             registerAsParagraphDialog(node.getHandle(), dialog);
 
-            String name = dialog.getNodeData("name").getString(); //$NON-NLS-1$
+            String name = dialog.getNodeData(ND_NAME).getString(); //$NON-NLS-1$
             String className = NodeDataUtil.getString(
                 dialog,
-                "class", "info.magnolia.module.admininterface.dialogs.ParagraphEditDialog"); //$NON-NLS-1$
+                CLASS, PARAGRAPH_EDIT_DIALOG); //$NON-NLS-1$
             try {
                 // there are paragraphs dialogs without a name!
                 if (StringUtils.isNotEmpty(name)) {
@@ -94,7 +100,7 @@ public class DialogHandlerManager extends ObservedManager {
     private void registerAsParagraphDialog(String basePath, Content dialog) {
 
         String dialogPath = StringUtils.removeStart(dialog.getHandle(), basePath + "/");
-        String dialogName = dialog.getNodeData("name").getString();
+        String dialogName = dialog.getNodeData(ND_NAME).getString();
         if (StringUtils.isEmpty(dialogName)) {
             dialogName = dialog.getName();
         }
@@ -109,7 +115,7 @@ public class DialogHandlerManager extends ObservedManager {
                 || StringUtils.equals(paragraphDialogName, dialogName)) {
                 Class handler = ParagraphEditDialog.class;
 
-                String className = dialog.getNodeData("class").getString(); //$NON-NLS-1$
+                String className = dialog.getNodeData(CLASS).getString(); //$NON-NLS-1$
                 if (StringUtils.isNotEmpty(className)) {
                     try {
                         handler = Class.forName(className);
@@ -130,8 +136,9 @@ public class DialogHandlerManager extends ObservedManager {
     }
 
     protected void registerDialogHandler(String name, Class dialogHandler, Content configNode) {
-        log.info("Registering dialog handler [{}]", name); //$NON-NLS-1$ 
-        // remember the uuid for a reload
+    	if (log.isDebugEnabled())
+			log.debug("Registering dialog handler [{}]", name); //$NON-NLS-1$ 
+		// remember the uuid for a reload
         dialogHandlers.put(name, new Object[]{dialogHandler, configNode});
     }
 

@@ -482,7 +482,8 @@ public final class ContentRepository {
             return (RepositoryMapping) ContentRepository.repositoryMapping.get(getMappedRepositoryName(repositoryID));
         }
 
-        log.warn("no mapping for the repository [{}]", repositoryID);
+        Exception e = new Exception();
+        log.warn("no mapping for the repository [{}]", repositoryID,e);
         return null;
     }
 

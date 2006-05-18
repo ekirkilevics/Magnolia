@@ -22,8 +22,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -32,10 +30,21 @@ import org.slf4j.LoggerFactory;
  */
 public class ParagraphManager extends ObservedManager {
 
-    /**
-     * Logger
-     */
-    private static Logger log = LoggerFactory.getLogger(ParagraphManager.class);
+    private static final String ND_I18N_BASENAME = "i18nBasename";
+
+	private static final String ND_DESCRIPTION = "description";
+
+	private static final String ND_TITLE = "title";
+
+	private static final String ND_TYPE = "type";
+
+	private static final String ND_DIALOG_PATH = "dialogPath";
+
+	private static final String ND_TEMPLATE_PATH = "templatePath";
+
+	private static final String ND_DIALOG = "dialog";
+
+	private static final String ND_NAME = "name";
 
     /**
      * The current implementation of the ParagraphManager. Defeined in magnolia.properties.
@@ -99,7 +108,7 @@ public class ParagraphManager extends ObservedManager {
     protected Paragraph addParagraphToCache(Content c) {
         Paragraph pi = new Paragraph();
 
-        String name = c.getNodeData("name").getString();//$NON-NLS-1$
+        String name = c.getNodeData(ND_NAME).getString();//$NON-NLS-1$
         if (StringUtils.isEmpty(name)) {
             name = c.getName();
         }
@@ -107,24 +116,23 @@ public class ParagraphManager extends ObservedManager {
         pi.setName(name);
 
         // by default just use the dialog with the same name of the paragraph
-        String dialog = c.getNodeData("dialog").getString();//$NON-NLS-1$
+        String dialog = c.getNodeData(ND_DIALOG).getString();//$NON-NLS-1$
         if (StringUtils.isEmpty(dialog)) {
             dialog = c.getName();
         }
         pi.setDialog(dialog);
 
-        pi.setTemplatePath(c.getNodeData("templatePath").getString()); //$NON-NLS-1$
-        pi.setDialogPath(c.getNodeData("dialogPath").getString()); //$NON-NLS-1$
-        pi.setTemplateType(c.getNodeData("type").getString()); //$NON-NLS-1$
-        pi.setTitle(c.getNodeData("title").getString()); //$NON-NLS-1$
-        pi.setDescription(c.getNodeData("description").getString()); //$NON-NLS-1$
-        pi.setI18nBasename(c.getNodeData("i18nBasename").getString()); //$NON-NLS-1$
+        pi.setTemplatePath(c.getNodeData(ND_TEMPLATE_PATH).getString()); //$NON-NLS-1$
+        pi.setDialogPath(c.getNodeData(ND_DIALOG_PATH).getString()); //$NON-NLS-1$
+        pi.setTemplateType(c.getNodeData(ND_TYPE).getString()); //$NON-NLS-1$
+        pi.setTitle(c.getNodeData(ND_TITLE).getString()); //$NON-NLS-1$
+        pi.setDescription(c.getNodeData(ND_DESCRIPTION).getString()); //$NON-NLS-1$
+        pi.setI18nBasename(c.getNodeData(ND_I18N_BASENAME).getString()); //$NON-NLS-1$
         if (Paragraph.log.isDebugEnabled()) {
             Paragraph.log.debug("Registering paragraph [{}]", pi.getName()); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         paragraphs.put(pi.getName(), pi);
-        log.info("paragraph added [{}]", pi.getName());
         return pi;
     }
 

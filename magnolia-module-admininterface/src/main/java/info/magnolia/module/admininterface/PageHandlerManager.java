@@ -37,7 +37,11 @@ import org.slf4j.LoggerFactory;
  */
 public class PageHandlerManager extends ObservedManager {
 
-    /**
+    private static final String ND_CLASS = "class";
+
+	private static final String ND_NAME = "name";
+
+	/**
      * Logger
      */
     private static Logger log = LoggerFactory.getLogger(PageHandlerManager.class);
@@ -81,8 +85,9 @@ public class PageHandlerManager extends ObservedManager {
     }
 
     protected void registerPageHandler(String name, Class dialogPageHandler) {
-        log.info("Registering page handler [{}]", name); //$NON-NLS-1$ 
-        dialogPageHandlers.put(name, dialogPageHandler);
+    	if (log.isDebugEnabled())
+			log.debug("Registering page handler [{}]", name); //$NON-NLS-1$ 
+		dialogPageHandlers.put(name, dialogPageHandler);
     }
 
     /**
@@ -96,12 +101,12 @@ public class PageHandlerManager extends ObservedManager {
             pages.addAll(defNode.getChildren(ItemType.CONTENTNODE.getSystemName()));
             for (Iterator iter = pages.iterator(); iter.hasNext();) {
                 Content page = (Content) iter.next();
-                String name = page.getNodeData("name").getString(); //$NON-NLS-1$
+                String name = page.getNodeData(ND_NAME).getString(); //$NON-NLS-1$
                 if (StringUtils.isEmpty(name)) {
                     name = page.getName();
                 }
 
-                String className = page.getNodeData("class").getString(); //$NON-NLS-1$
+                String className = page.getNodeData(ND_CLASS).getString(); //$NON-NLS-1$
                 try {
                     registerPageHandler(name, Class.forName(className));
                 }

@@ -21,7 +21,13 @@ import org.slf4j.LoggerFactory;
 
 public class TreeHandlerManager extends ObservedManager {
 
-    /**
+    private static final String ND_CLASS = "class";
+
+	private static final String ND_REPOSITORY = "repository";
+
+	private static final String ND_NAME = "name";
+
+	/**
      * Logger
      */
     private static Logger log = LoggerFactory.getLogger(TreeHandlerManager.class);
@@ -77,14 +83,14 @@ public class TreeHandlerManager extends ObservedManager {
         Collection trees = defNode.getChildren(ItemType.CONTENTNODE.getSystemName());
         for (Iterator iter = trees.iterator(); iter.hasNext();) {
             Content tree = (Content) iter.next();
-            String name = tree.getNodeData("name").getString(); //$NON-NLS-1$
+            String name = tree.getNodeData(ND_NAME).getString(); //$NON-NLS-1$
 
             if (StringUtils.isEmpty(name)) {
                 name = tree.getName();
             }
 
-            String repository = tree.getNodeData("repository").getString(); //$NON-NLS-1$
-            String className = tree.getNodeData("class").getString(); //$NON-NLS-1$
+            String repository = tree.getNodeData(ND_REPOSITORY).getString(); //$NON-NLS-1$
+            String className = tree.getNodeData(ND_CLASS).getString(); //$NON-NLS-1$
 
             if (StringUtils.isEmpty(repository)) {
                 repository = name;

@@ -20,7 +20,11 @@ import org.apache.commons.lang.StringUtils;
  */
 public class TemplateRendererManager extends ObservedManager {
 
-    private Map renderers = new HashMap();
+    private static final String ND_RENDERER = "renderer";
+
+	private static final String ND_TYPE = "type";
+
+	private Map renderers = new HashMap();
 
     /**
      * The current implementation of the TemplateManager. Defined in magnolia.properties.
@@ -42,8 +46,8 @@ public class TemplateRendererManager extends ObservedManager {
         Collection list = node.getChildren(ItemType.CONTENTNODE);
         for (Iterator iter = list.iterator(); iter.hasNext();) {
             Content tr = (Content) iter.next();
-            String type = tr.getNodeData("type").getString();
-            String rendererClass = tr.getNodeData("renderer").getString();
+            String type = tr.getNodeData(ND_TYPE).getString();
+            String rendererClass = tr.getNodeData(ND_RENDERER).getString();
 
             if (StringUtils.isEmpty(type)) {
                 type = tr.getName();
@@ -71,8 +75,9 @@ public class TemplateRendererManager extends ObservedManager {
                 continue;
             }
 
-            log.info("Registering template render [{}] for type {}", rendererClass, type);
-            registerTemplateRenderer(type, renderer);
+            if (log.isDebugEnabled())
+				log.debug("Registering template render [{}] for type {}",rendererClass, type);
+			registerTemplateRenderer(type, renderer);
         }
 
     }

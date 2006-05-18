@@ -223,8 +223,9 @@ public class ProviderImpl implements Provider {
             workspace.getNamespaceRegistry().getURI(namespacePrefix);
         }
         catch (NamespaceException e) {
-            log.info(e.getMessage());
-            log.info("registering prefix [{}] with uri {}", namespacePrefix, uri); //$NON-NLS-1$
+        	if (log.isDebugEnabled())
+				log.debug(e.getMessage());
+			log.info("registering prefix [{}] with uri {}", namespacePrefix, uri); //$NON-NLS-1$
             workspace.getNamespaceRegistry().registerNamespace(namespacePrefix, uri);
         }
     }
@@ -247,8 +248,6 @@ public class ProviderImpl implements Provider {
      * @see info.magnolia.repository.Provider#registerNodeTypes(java.lang.String)
      */
     public void registerNodeTypes(String configuration) throws RepositoryException {
-
-        log.info("Registering node types");
 
         // check if workspace already exists
         SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());

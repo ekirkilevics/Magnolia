@@ -170,7 +170,8 @@ public final class ModuleUtil {
             try {
                 if (hm.isExist(fullPath)) {
                     hm.delete(fullPath);
-                    log.warn("already existing node [{}] deleted", fullPath);
+                    if(log.isDebugEnabled())
+                     log.debug("already existing node [{}] deleted", fullPath);
                 }
 
                 // if the parent path not exists just create it
