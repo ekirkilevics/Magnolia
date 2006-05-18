@@ -311,7 +311,7 @@ public class MgnlMailFactory {
             }
         }
         catch (Exception e) {
-            log.error("can not get user email info.", e);
+            log.error("can not get user email info.");
         }
         return userName;
     }

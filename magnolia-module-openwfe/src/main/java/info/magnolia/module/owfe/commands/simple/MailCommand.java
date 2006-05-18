@@ -70,7 +70,7 @@ public class MailCommand extends MgnlCommand {
             log.info("send mail successfully to:" + mailTo);
         }
         catch (Exception e) {
-            log.error("Could not send email", e);
+            log.error("Could not send email:"+e.getMessage());
         }
 
         return true;
