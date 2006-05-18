@@ -57,6 +57,8 @@ public final class MIMEMapping {
         private String icon;
     }
 
+    public static final String ICONS_PATH = "/.resources/file-icons/"; //$NON-NLS-1$
+
     /**
      * Utility class, don't instantiate.
      */
@@ -195,8 +197,12 @@ public final class MIMEMapping {
      * @return the icon name
      */
     public static String getMIMETypeIcon(String extension){
-        String icon =((MIMEMappingItem) MIMEMapping.cachedContent.get(extension.toLowerCase())).icon;
-        icon = StringUtils.defaultIfEmpty(icon, "general.png");
-        return icon;
+        MIMEMappingItem item = (MIMEMappingItem) MIMEMapping.cachedContent.get(extension.toLowerCase());
+        if(item != null){
+            return  StringUtils.defaultIfEmpty(item.icon, "/.resources/file-icons/general.png");
+        }
+        else{
+            return "/.resources/file-icons/general.png";
+        }
     }
 }
