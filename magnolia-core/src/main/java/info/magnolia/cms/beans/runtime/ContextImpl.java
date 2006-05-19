@@ -50,6 +50,27 @@ public abstract class ContextImpl extends HashMap implements Context {
      * The locale for this context
      */
     private Locale locale;
+    
+    /**
+     * FIXME: we need a better solution
+     */
+    public Object get(Object key) {
+        Object obj = super.get(key);
+        if(obj != null){
+            return obj;
+        }
+        return this.getAttribute(key.toString(), MgnlContext.REQUEST_SCOPE);
+    }
+
+    /**
+     * FIXME: we need a better solution
+     */
+    public Object put(Object key, Object value) {
+        this.setAttribute(key.toString(), value, MgnlContext.REQUEST_SCOPE);
+        return super.put(key, value);
+    }
+
+    
 
     /**
      * Set user instance for this context
