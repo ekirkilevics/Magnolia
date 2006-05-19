@@ -13,17 +13,27 @@
 
 package info.magnolia.module.admininterface;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.beans.config.Subscriber;
+import info.magnolia.cms.beans.runtime.Context;
+import info.magnolia.cms.beans.runtime.MgnlContext;
+import info.magnolia.cms.beans.runtime.WebContextImpl;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.servlets.MVCServletHandlerImpl;
+import info.magnolia.cms.servlets.CommandBasedMVCServletHandler;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.ExclusiveWrite;
+import info.magnolia.commands.ContextAttributes;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
@@ -41,7 +51,7 @@ import org.slf4j.LoggerFactory;
  * @author Fabrizio Giustina
  */
 
-public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
+public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
 
     /**
      * this are the used actions
@@ -182,6 +192,80 @@ public abstract class AdminTreeMVCHandler extends MVCServletHandlerImpl {
         }
 
         return COMMAND_SHOW_TREE;
+    }
+    
+    /**
+     * TODO: this is a temporary solution 
+     */
+    protected Context getCommandContext(String commandName) {
+        // use the current one
+        // FIXME: perhaps we should wrapp it instead of useing directly
+        Context context = MgnlContext.getInstance();
+        
+        // set some general parameters
+        context.put(ContextAttributes.P_TREE, this.tree);
+        context.put(ContextAttributes.P_PATH, this.pathSelected);
+
+        populateContext(context);
+
+        return context;
+    }
+
+    /**
+     * TODO: this is a temporary solution
+     */
+    private void populateContext(Context context) {
+        // add start date and end date
+        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.WEBSITE);
+        Content ct;
+        try {
+            ct = hm.getContent(this.pathSelected);
+
+            Calendar cd = null;
+            String date;
+
+            // get start time
+            try {
+                cd = ct.getMetaData().getStartTime();
+            }
+            catch (Exception e) {
+                log.warn("cannot get start time for node " + this.pathSelected, e);
+            }
+            // if (cd == null)
+            // cd = Calendar.getInstance();
+            SimpleDateFormat sdf = null;
+            if (cd != null) {
+                sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ");
+                date = sdf.format(new Date(cd.getTimeInMillis()));
+                log.debug("start date = " + date);
+                context.put("startDate", date);
+            }
+
+            // get end time
+            try {
+                cd = ct.getMetaData().getEndTime();
+            }
+            catch (Exception e) {
+                log.warn("cannot get end time for node " + this.pathSelected, e);
+            }
+
+            if (cd != null) {
+                date = sdf.format(new Date(cd.getTimeInMillis()));
+                log.debug("end date = " + date);
+                context.put("endDate", date);
+            }
+        }
+        catch (Exception e) {
+            log.warn("can not get start/end date for path "
+                + this.pathSelected
+                + ", please use sevlet FlowDef to set start/end date for node.", e);
+        }
+
+        String recursive = "false";
+        if (this.request.getParameter("recursive") != null) {
+            recursive = "true";
+        }
+        context.put(ContextAttributes.P_RECURSIVE, recursive);
     }
 
     /**
