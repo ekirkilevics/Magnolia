@@ -251,7 +251,8 @@ public class JCRWorkItemAPI {
 
             // crete path from work item id
             String path = createPathFromId(wi.getId());
-            log.info("storing workitem with id = " + path);
+            if(log.isDebugEnabled())
+            	log.debug("storing workitem with path = " + path);
 
             Content newc = ContentUtil.createPath(this.hm, path, ItemType.WORKITEM);
 

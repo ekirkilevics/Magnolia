@@ -54,6 +54,7 @@ public abstract class MgnlCommand implements Command {
     }
 
     public boolean execute(Context context) {
+        log.info("Executing "+this.getClass().getName());
         HashMap params = (HashMap) context.get(PARAMS);
         return exec(params, context);
     }

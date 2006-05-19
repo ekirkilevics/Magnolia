@@ -47,7 +47,8 @@ public class MgnlRepositoryCatalog extends MgnlBaseCatalog {
 
                 NodeData impl = actionNode.getNodeData(CLASS_NODE_DATA);
                 if (impl != null && impl.getString() != null && !(impl.getString().equals(""))) {
-                    log.info("This is a simple action" + actionName);
+                    if (log.isDebugEnabled())
+                        log.debug("This is a simple action" + actionName);
                     // this is a simple command
                     className = impl.getString();
                     Class klass = Class.forName(className);
@@ -59,14 +60,16 @@ public class MgnlRepositoryCatalog extends MgnlBaseCatalog {
                     }
                     // continue with next action
                 } else {
-                    log.info("This is a chain");
+                    if (log.isDebugEnabled())
+                        log.debug("This is a chain");
                     // this is a chain
                     Chain chain = new MgnlChain();
 
                     // consider any command as a chain, makes things easier
                     // we iterate through each subnode and consider this as a command in the chain
                     Collection childrens = actionNode.getChildren(ItemType.CONTENTNODE);
-                    log.info("Found " + childrens.size() + " children for action " + actionName);
+                    if (log.isDebugEnabled())
+                        log.debug("Found " + childrens.size() + " children for action " + actionName);
                     Iterator iterNode = childrens.iterator();
 
                     Exception e = null;
@@ -74,7 +77,8 @@ public class MgnlRepositoryCatalog extends MgnlBaseCatalog {
                         try {
                             Content commandNode = (Content) iterNode.next();
                             className = commandNode.getNodeData(CLASS_NODE_DATA).getString();
-                            log.info("Found class " + className + " for action " + actionName);
+                            if (log.isDebugEnabled())
+                                log.debug("Found class " + className + " for action " + actionName);
                             Class klass = Class.forName(className);
                             MgnlCommand command = (MgnlCommand) klass.newInstance();
                             chain.addCommand(command);

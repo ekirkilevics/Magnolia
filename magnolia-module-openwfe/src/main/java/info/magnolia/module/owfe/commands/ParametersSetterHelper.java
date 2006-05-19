@@ -46,12 +46,12 @@ public class ParametersSetterHelper {
 
         WorkItem workItem = (WorkItem) context.get(MgnlConstants.INFLOW_PARAM);
         if (workItem != null) {
-            log.debug("finf in flow params");
             for (int i = 0; i < expected.length; i++) {
                 Attribute attr = workItem.getAttribute(expected[i]);
                 if (attr != null) {
                     params.put(expected[i], attr.toString());
-                    log.info("parameter[" + i + "] added:" + expected[i] + "=" + attr.toString());
+                    if (log.isDebugEnabled())
+                        log.debug("parameter[" + i + "] added:" + expected[i] + "=" + attr.toString());
                 }
 
                 else {
@@ -61,7 +61,6 @@ public class ParametersSetterHelper {
             }
         }
         else {
-            log.debug("finf in tree params");
             HttpServletRequest request = (HttpServletRequest) context.get(MgnlConstants.P_REQUEST);
             for (int i = 0; i < expected.length; i++) {
                 params.put(expected[i], request.getParameter(expected[i]));
@@ -70,7 +69,8 @@ public class ParametersSetterHelper {
             HashMap map = (HashMap) context.get(MgnlConstants.INTREE_PARAM);
             for (int i = 0; i < expected.length; i++) {
                 params.put(expected[i], map.get(expected[i]));
-                log.info("translate: " + expected[i] + "=" + map.get(expected[i]));
+                if (log.isDebugEnabled())
+                    log.debug("translate: " + expected[i] + "=" + map.get(expected[i]));
             }
 
             // check
