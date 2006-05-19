@@ -13,11 +13,8 @@
 package info.magnolia.module.owfe.commands.flow;
 
 import info.magnolia.cms.util.AlertUtil;
-import info.magnolia.module.owfe.MgnlConstants;
-import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
-
-import java.util.HashMap;
-
+import info.magnolia.commands.ContextAttributes;
+import info.magnolia.module.owfe.util.WorkItemUtil;
 import openwfe.org.engine.workitem.LaunchItem;
 import openwfe.org.engine.workitem.StringAttribute;
 
@@ -35,7 +32,7 @@ public class FlowDeactivationCommand extends AbstractFlowCommand {
 
     protected static final String WEB_SCHEDULED_ACTIVATION = "webScheduledActivation";
 
-    static final String[] parameters = {MgnlConstants.P_PATH};
+    static final String[] parameters = {ContextAttributes.P_PATH};
 
     /**
      * List of the parameters that this command needs to run
@@ -49,14 +46,14 @@ public class FlowDeactivationCommand extends AbstractFlowCommand {
         return FLOWNAME;
     }
 
-    public void preLaunchFlow(Context context, HashMap params, JCRPersistedEngine engine, LaunchItem li) {
+    public void prepareLaunchItem(Context context, LaunchItem li) {
         try {
             // Retrieve parameters
-            String pathSelected = (String) params.get(MgnlConstants.P_PATH);
+            String pathSelected = (String) context.get(ContextAttributes.P_PATH);
 
             // Parameters for the flow item
-            li.addAttribute(MgnlConstants.P_PATH, new StringAttribute(pathSelected));
-            li.addAttribute(MgnlConstants.P_OK, MgnlConstants.ATT_FALSE);
+            li.addAttribute(ContextAttributes.P_PATH, new StringAttribute(pathSelected));
+            li.addAttribute(ContextAttributes.P_OK, WorkItemUtil.ATT_FALSE);
 
         }
         catch (Exception e) {

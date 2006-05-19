@@ -12,39 +12,37 @@
  */
 package info.magnolia.module.owfe.commands.flow;
 
-import info.magnolia.cms.beans.commands.MgnlCommand;
-import info.magnolia.module.owfe.MgnlConstants;
+import info.magnolia.commands.ContextAttributes;
+import info.magnolia.commands.MgnlCommand;
 import info.magnolia.module.owfe.OWFEEngine;
 import info.magnolia.module.owfe.jcr.JCRFlowDefinition;
 import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
-
-import java.util.HashMap;
-
+import openwfe.org.engine.workitem.AttributeUtils;
 import openwfe.org.engine.workitem.LaunchItem;
 import openwfe.org.engine.workitem.StringAttribute;
+import openwfe.org.engine.workitem.StringMapAttribute;
 
 import org.apache.commons.chain.Context;
 
 
 public abstract class AbstractFlowCommand extends MgnlCommand {
 
-    public boolean exec(HashMap params, Context ctx) {
+    public boolean execute(Context ctx) {
 
         log.debug("- Flow command -" + this.getClass().toString() + "- Start");
         try {
             // Get the references
             LaunchItem li = new LaunchItem();
-            li.addAttribute(MgnlConstants.P_ACTION, new StringAttribute(this.getClass().getName()));
-            li.setWorkflowDefinitionUrl(MgnlConstants.P_WORKFLOW_DEFINITION_URL);
+            
+            prepareLaunchItem(ctx, li);
+            
+            li.addAttribute(ContextAttributes.P_ACTION, new StringAttribute(this.getClass().getName()));
+            li.setWorkflowDefinitionUrl(ContextAttributes.P_WORKFLOW_DEFINITION_URL);
 
             // Retrieve and add the flow definition to the LaunchItem
             String flowDef = new JCRFlowDefinition().getflowDefAsString(getFlowName());
-            li.getAttributes().puts(MgnlConstants.P_DEFINITION, flowDef);
+            li.getAttributes().puts(ContextAttributes.P_DEFINITION, flowDef);
             JCRPersistedEngine engine = OWFEEngine.getEngine();
-
-            // start activation
-            log.info("Params for command:" + getClass() + ":" + params);
-            preLaunchFlow(ctx, params, engine, li);
 
             // Launch the item
             engine.launch(li, true);
@@ -60,7 +58,15 @@ public abstract class AbstractFlowCommand extends MgnlCommand {
         return true;
     }
 
-    public abstract void preLaunchFlow(Context context, HashMap params, JCRPersistedEngine engine, LaunchItem launchItem);
+    /**
+     * FIXME: don't be that rough
+     * @param context
+     * @param launchItem
+     */
+    public void prepareLaunchItem(Context context, LaunchItem launchItem){
+        StringMapAttribute attrs = AttributeUtils.java2attributes(context);
+        launchItem.setAttributes(attrs);
+    }
 
     public abstract String getFlowName();
 }

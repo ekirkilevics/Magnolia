@@ -12,16 +12,7 @@
  */
 package info.magnolia.module.owfe.commands.flow;
 
-import info.magnolia.cms.util.AlertUtil;
-import info.magnolia.module.owfe.MgnlConstants;
-import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
-
-import java.util.HashMap;
-
-import openwfe.org.engine.workitem.LaunchItem;
-import openwfe.org.engine.workitem.StringAttribute;
-
-import org.apache.commons.chain.Context;
+import info.magnolia.commands.ContextAttributes;
 
 
 /**
@@ -33,7 +24,7 @@ public class FlowActivationCommand extends AbstractFlowCommand {
 
     private static final String WEB_ACTIVATION = "webActivation";
 
-    static final String[] parameters = {MgnlConstants.P_RECURSIVE, MgnlConstants.P_PATH};
+    static final String[] parameters = {ContextAttributes.P_RECURSIVE, ContextAttributes.P_PATH};
 
     /**
      * List of the parameters that this command needs to run
@@ -47,22 +38,24 @@ public class FlowActivationCommand extends AbstractFlowCommand {
         return WEB_ACTIVATION;
     }
 
-    public void preLaunchFlow(Context context, HashMap params, JCRPersistedEngine engine, LaunchItem li) {
+    // FIXME: remove
+    /*
+    public void prepareLaunchItem(Context context, LaunchItem li) {
         try {
             // Retrieve parameters
-            String pathSelected = (String) params.get(MgnlConstants.P_PATH);
-            String recursive = (String) params.get(MgnlConstants.P_RECURSIVE);
+            String pathSelected = (String) context.get(ContextAttributes.P_PATH);
+            String recursive = (String) context.get(ContextAttributes.P_RECURSIVE);
             boolean brecursive = (recursive != null) && Boolean.valueOf(recursive).booleanValue();
 
             // Parameters for the flow item
-            li.addAttribute(MgnlConstants.P_RECURSIVE, brecursive ? MgnlConstants.ATT_TRUE : MgnlConstants.ATT_FALSE);
-            li.addAttribute(MgnlConstants.P_PATH, new StringAttribute(pathSelected));
-            li.addAttribute(MgnlConstants.P_OK, MgnlConstants.ATT_FALSE);
+            li.addAttribute(ContextAttributes.P_RECURSIVE, brecursive ? WorkItemUtil.ATT_TRUE : WorkItemUtil.ATT_FALSE);
+            li.addAttribute(ContextAttributes.P_PATH, new StringAttribute(pathSelected));
+            li.addAttribute(ContextAttributes.P_OK, WorkItemUtil.ATT_FALSE);
         }
         catch (Exception e) {
             log.error("can't launch activate flow", e);
             AlertUtil.setMessage(AlertUtil.getExceptionMessage(e));
         }
     }
-
+    */
 }

@@ -12,17 +12,8 @@
  */
 package info.magnolia.module.owfe.commands.flow;
 
-import info.magnolia.cms.util.AlertUtil;
-import info.magnolia.module.owfe.MgnlConstants;
-import info.magnolia.module.owfe.jcr.JCRFlowDefinition;
-import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
+import info.magnolia.commands.ContextAttributes;
 
-import java.util.HashMap;
-
-import openwfe.org.engine.workitem.LaunchItem;
-import openwfe.org.engine.workitem.StringAttribute;
-
-import org.apache.commons.chain.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,10 +29,10 @@ public class TimeBasedFlowActivationCommand extends AbstractFlowCommand {
     private static Logger log = LoggerFactory.getLogger(TimeBasedFlowActivationCommand.class);
 
     static final String[] parameters = {
-        MgnlConstants.P_RECURSIVE,
-        MgnlConstants.P_START_DATE,
-        MgnlConstants.P_END_DATE,
-        MgnlConstants.P_PATH};
+        ContextAttributes.P_RECURSIVE,
+        ContextAttributes.P_START_DATE,
+        ContextAttributes.P_END_DATE,
+        ContextAttributes.P_PATH};
 
     /**
      * List of the parameters that this command needs to run
@@ -55,44 +46,46 @@ public class TimeBasedFlowActivationCommand extends AbstractFlowCommand {
         return WEB_SCHEDULED_ACTIVATION;
     }
 
-    public void preLaunchFlow(Context context, HashMap params, JCRPersistedEngine engine, LaunchItem li) {
+    //FIXME remove as much as possible
+    /*
 
+    public void prepareLaunchItem(Context context, LaunchItem li) {
         try {
 
             // Retrieve parameters from caller
-            String pathSelected = (String) params.get(MgnlConstants.P_PATH);
+            String pathSelected = (String) context.get(ContextAttributes.P_PATH);
             String startDate = null;
             String endDate = null;
-            String s = (String) params.get(MgnlConstants.P_START_DATE);
+            String s = (String) context.get(ContextAttributes.P_START_DATE);
             if (s != null) {
-                startDate = params.get(MgnlConstants.P_START_DATE).toString();
+                startDate = context.get(ContextAttributes.P_START_DATE).toString();
             }
 
-            s = (String) params.get(MgnlConstants.P_END_DATE);
+            s = (String) context.get(ContextAttributes.P_END_DATE);
             if (s != null) {
-                endDate = params.get(MgnlConstants.P_END_DATE).toString();
+                endDate = context.get(ContextAttributes.P_END_DATE).toString();
             }
 
             // set parameters for lanuching the flow
-            li.setWorkflowDefinitionUrl(MgnlConstants.P_WORKFLOW_DEFINITION_URL);
-            li.addAttribute(MgnlConstants.P_PATH, new StringAttribute(pathSelected));
-            li.addAttribute(MgnlConstants.P_OK, MgnlConstants.ATT_FALSE);
-            li.addAttribute(MgnlConstants.P_RECURSIVE, new StringAttribute((params.get(MgnlConstants.P_RECURSIVE))
+            li.setWorkflowDefinitionUrl(ContextAttributes.P_WORKFLOW_DEFINITION_URL);
+            li.addAttribute(ContextAttributes.P_PATH, new StringAttribute(pathSelected));
+            li.addAttribute(ContextAttributes.P_OK, WorkItemUtil.ATT_FALSE);
+            li.addAttribute(ContextAttributes.P_RECURSIVE, new StringAttribute((context.get(ContextAttributes.P_RECURSIVE))
                 .toString()));
 
             if (startDate != null) {
-                li.getAttributes().puts(MgnlConstants.P_START_DATE, startDate);
+                li.getAttributes().puts(ContextAttributes.P_START_DATE, startDate);
             }
             if (endDate != null) {
-                li.getAttributes().puts(MgnlConstants.P_END_DATE, endDate);
+                li.getAttributes().puts(ContextAttributes.P_END_DATE, endDate);
             }
 
             // Retrieve and add the flow definition to the LaunchItem
             String flowDef = new JCRFlowDefinition()
-                .getflowDefAsString(MgnlConstants.P_DEFAULT_SCHEDULEDACTIVATION_FLOW);
+                .getflowDefAsString(ContextAttributes.P_DEFAULT_SCHEDULEDACTIVATION_FLOW);
 
             // log.info(flowDef);
-            li.getAttributes().puts(MgnlConstants.P_DEFINITION, flowDef);
+            li.getAttributes().puts(ContextAttributes.P_DEFINITION, flowDef);
 
         }
         catch (Exception e) {
@@ -100,5 +93,6 @@ public class TimeBasedFlowActivationCommand extends AbstractFlowCommand {
             AlertUtil.setMessage(AlertUtil.getExceptionMessage(e));
         }
     }
+    */
 
 }
