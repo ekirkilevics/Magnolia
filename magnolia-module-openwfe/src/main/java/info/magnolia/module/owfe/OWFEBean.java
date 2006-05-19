@@ -16,6 +16,7 @@ import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.util.MgnlCoreConstants;
+import info.magnolia.commands.ContextAttributes;
 import info.magnolia.module.owfe.jcr.JCRFlowDefinition;
 import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
 import info.magnolia.module.owfe.jcr.JCRWorkItemAPI;
@@ -146,7 +147,7 @@ public class OWFEBean implements WorkflowAPI {
 		wi.touch();
 
 		try {
-			wi.getAttributes().puts(MgnlConstants.ATT_OK,MgnlCoreConstants.TRUE);
+			wi.getAttributes().puts(ContextAttributes.ATT_OK,MgnlCoreConstants.TRUE);
 			OWFEEngine.getEngine().reply(wi);
 		} catch (Exception e) {
 			log.error("reply to engine failed", e);
@@ -171,8 +172,8 @@ public class OWFEBean implements WorkflowAPI {
 		wi.touch();
 
 		try {
-			wi.getAttributes().puts(MgnlConstants.ATT_OK,MgnlCoreConstants.FALSE);
-			wi.getAttributes().puts(MgnlConstants.ATT_COMMENT, comment);
+			wi.getAttributes().puts(ContextAttributes.ATT_OK,MgnlCoreConstants.FALSE);
+			wi.getAttributes().puts(ContextAttributes.ATT_COMMENT, comment);
 			OWFEEngine.getEngine().reply(wi);
 		} catch (Exception e) {
 			log.error("Error while accessing the workflow engine", e);
@@ -325,20 +326,20 @@ public class OWFEBean implements WorkflowAPI {
 		try {
 			// Get the references
 			LaunchItem li = new LaunchItem();
-			li.addAttribute(MgnlConstants.P_ACTION, new StringAttribute(this.getClass().getName()));
-			li.setWorkflowDefinitionUrl(MgnlConstants.P_WORKFLOW_DEFINITION_URL);
+			li.addAttribute(ContextAttributes.P_ACTION, new StringAttribute(this.getClass().getName()));
+			li.setWorkflowDefinitionUrl(ContextAttributes.P_WORKFLOW_DEFINITION_URL);
 
 			// Retrieve and add the flow definition to the LaunchItem
 			String flowDef = new JCRFlowDefinition().getflowDefAsString(flowName);
-			li.getAttributes().puts(MgnlConstants.P_DEFINITION, flowDef);
+			li.getAttributes().puts(ContextAttributes.P_DEFINITION, flowDef);
 			JCRPersistedEngine engine = OWFEEngine.getEngine();
 
 			// start activation
 			if (hm != null) {
-				li.addAttribute(MgnlConstants.P_HM, AttributeUtils.java2owfe(hm));
+				li.addAttribute(ContextAttributes.P_HM, AttributeUtils.java2owfe(hm));
 			}
 			if (path != null) {
-				li.addAttribute(MgnlConstants.P_PATH,new StringAttribute(path));
+				li.addAttribute(ContextAttributes.P_PATH,new StringAttribute(path));
 			}
 
 			// Launch the item
