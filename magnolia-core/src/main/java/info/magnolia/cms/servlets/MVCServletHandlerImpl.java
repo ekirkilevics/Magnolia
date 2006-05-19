@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Default implementation of a MVCHandler. Calls the command through reflection.
+ * Default implementation of a MVCHandler. Calls the command (method) through reflection.
  * @author Philipp Bracher
  * @version $Id$
  */
