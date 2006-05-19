@@ -12,11 +12,10 @@
  */
 package info.magnolia.module.owfe;
 
-import info.magnolia.cms.beans.commands.CommandsMap;
-import info.magnolia.cms.beans.commands.MgnlCommand;
 import info.magnolia.cms.beans.runtime.Context;
 import info.magnolia.cms.beans.runtime.MgnlContext;
-import info.magnolia.module.owfe.commands.ParametersSetterHelper;
+import info.magnolia.commands.CommandsMap;
+import info.magnolia.commands.MgnlCommand;
 import info.magnolia.module.owfe.jcr.JCRWorkItemAPI;
 import openwfe.org.embed.impl.engine.AbstractEmbeddedParticipant;
 import openwfe.org.engine.workitem.InFlowWorkItem;
@@ -82,10 +81,8 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
 
                     // set parameters in the context
                     Context context = MgnlContext.getInstance();
-                    context.put(MgnlConstants.INFLOW_PARAM, wi);
-
-                    // translate parameter
-                    new ParametersSetterHelper().translateParam(c, context);
+                    
+                    context = new WorkItemContext(context, wi);
 
                     // execute
                     c.execute(context);
