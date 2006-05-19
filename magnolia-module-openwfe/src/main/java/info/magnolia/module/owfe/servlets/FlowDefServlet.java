@@ -242,7 +242,6 @@ public class FlowDefServlet extends javax.servlet.http.HttpServlet implements ja
         Content ct;
         try {
             ct = hm.getContent(pathSelected);
-            // params.put(MgnlConstants.P_PATH, pathSelected);
             Calendar start_c = Calendar.getInstance();
             Calendar stop_c = Calendar.getInstance();
             start_c.setTime(new Date(Timestamp.valueOf(start).getTime()));
