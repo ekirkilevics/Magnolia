@@ -1,6 +1,5 @@
 package info.magnolia.commands;
 
-import info.magnolia.cms.beans.commands.MgnlCommand;
 import info.magnolia.cms.beans.runtime.Context;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
