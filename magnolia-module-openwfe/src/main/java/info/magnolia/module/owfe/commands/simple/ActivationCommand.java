@@ -12,16 +12,14 @@
  */
 package info.magnolia.module.owfe.commands.simple;
 
-import info.magnolia.cms.beans.commands.MgnlCommand;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.Rule;
-import info.magnolia.module.owfe.MgnlConstants;
-
-import java.util.HashMap;
+import info.magnolia.commands.ContextAttributes;
+import info.magnolia.commands.MgnlCommand;
 
 import org.apache.commons.chain.Context;
 import org.apache.commons.lang.StringUtils;
@@ -33,7 +31,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class ActivationCommand extends MgnlCommand {
 
-    static final String[] parameters = {MgnlConstants.P_RECURSIVE, MgnlConstants.P_PATH};
+    static final String[] parameters = {ContextAttributes.P_RECURSIVE, ContextAttributes.P_PATH};
 
     /**
      * List of the parameters that this command needs to run
@@ -43,13 +41,13 @@ public class ActivationCommand extends MgnlCommand {
         return parameters;
     }
 
-    public boolean exec(HashMap params, Context ctx) {
+    public boolean execute(Context ctx) {
 
         String path;
         boolean recursive;
-        path = (String) params.get(MgnlConstants.P_PATH);
+        path = (String) ctx.get(ContextAttributes.P_PATH);
 
-        recursive = Boolean.valueOf((String) params.get(MgnlConstants.P_RECURSIVE)).booleanValue();
+        recursive = Boolean.valueOf((String) ctx.get(ContextAttributes.P_RECURSIVE)).booleanValue();
         if (log.isDebugEnabled()) {
             log.debug("recursive = " + recursive);
             log.debug("user = " + ((info.magnolia.cms.beans.runtime.Context) ctx).getUser().getName());
@@ -82,8 +80,8 @@ public class ActivationCommand extends MgnlCommand {
         }
 
         Syndicator syndicator = (Syndicator) FactoryUtil.getInstance(Syndicator.class);
-        syndicator.init(MgnlContext.getUser(), MgnlConstants.WEBSITE_REPOSITORY, ContentRepository
-            .getDefaultWorkspace(MgnlConstants.WEBSITE_REPOSITORY), rule);
+        syndicator.init(MgnlContext.getUser(), ContentRepository.WEBSITE, ContentRepository
+            .getDefaultWorkspace(ContentRepository.WEBSITE), rule);
 
         String parentPath = StringUtils.substringBeforeLast(path, "/");
         if (StringUtils.isEmpty(parentPath)) {

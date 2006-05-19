@@ -12,13 +12,12 @@
  */
 package info.magnolia.module.owfe.commands.simple;
 
-import info.magnolia.cms.beans.commands.MgnlCommand;
 import info.magnolia.cms.mail.MgnlMailFactory;
 import info.magnolia.cms.mail.handlers.MgnlMailHandler;
 import info.magnolia.cms.mail.templates.MgnlEmail;
+import info.magnolia.commands.ContextAttributes;
+import info.magnolia.commands.MgnlCommand;
 import info.magnolia.module.owfe.MgnlConstants;
-
-import java.util.HashMap;
 
 import org.apache.commons.chain.Context;
 import org.slf4j.Logger;
@@ -33,7 +32,7 @@ public class MailCommand extends MgnlCommand {
 
     static Logger logt = LoggerFactory.getLogger(MailCommand.class);
 
-    static final String[] parameters = {MgnlConstants.P_MAILTO, MgnlConstants.P_MAILTEMPLATE, MgnlConstants.P_PATH};
+    static final String[] parameters = {ContextAttributes.P_MAILTO, ContextAttributes.P_MAILTEMPLATE, ContextAttributes.P_PATH};
 
     /**
      * List of the parameters that this command needs to run
@@ -43,27 +42,29 @@ public class MailCommand extends MgnlCommand {
         return parameters;
     }
 
-    public boolean exec(HashMap params, Context ctx) {
+    public boolean execute(Context ctx) {
         if (log.isDebugEnabled()) {
             log.debug("starting sending mail");
         }
 
         try {
-            String mailTo = (String) params.get(MgnlConstants.P_MAILTO);;
-            params.put("user",mailTo);
+            String mailTo = (String) ctx.get(ContextAttributes.P_MAILTO);;
+            ctx.put("user",mailTo);
             if (log.isDebugEnabled()) {
                 log.debug("mail receiver list: " + mailTo);
             }
-            String mailTemplate = (String) params.get(MgnlConstants.P_MAILTEMPLATE);
+            String mailTemplate = (String) ctx.get(ContextAttributes.P_MAILTEMPLATE);
             log.info("mail template: " + mailTemplate);
 
             MgnlMailFactory factory = MgnlMailFactory.getInstance();
             MgnlMailHandler handler = factory.getEmailHandler();
-
-            MgnlEmail email = factory.getEmailFromTemplate(mailTemplate, params);
+            // FIXME
+            // MgnlEmail email = factory.getEmailFromTemplate(mailTemplate, ctx);
+            MgnlEmail email= null;
             email.setFrom(MgnlConstants.WORKFLOW_EMAIL_FROM_FIELD);
             email.setSubject(MgnlConstants.WORKFLOW_EMAIL_SUBJECT_FIELD);
-            email.setParameters(params);
+            // FIXME
+            //email.setParameters(params);
             email.setToList(factory.convertEmailList(mailTo));
             handler.prepareAndSendMail(email);
 

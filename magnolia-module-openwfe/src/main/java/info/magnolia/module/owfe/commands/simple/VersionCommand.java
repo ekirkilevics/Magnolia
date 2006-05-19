@@ -12,14 +12,12 @@
  */
 package info.magnolia.module.owfe.commands.simple;
 
-import info.magnolia.cms.beans.commands.MgnlCommand;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.AlertUtil;
-import info.magnolia.module.owfe.MgnlConstants;
-
-import java.util.HashMap;
+import info.magnolia.commands.ContextAttributes;
+import info.magnolia.commands.MgnlCommand;
 
 import org.apache.commons.chain.Context;
 
@@ -32,17 +30,17 @@ import org.apache.commons.chain.Context;
 public class VersionCommand extends MgnlCommand {
 
     /**
-     * @see info.magnolia.cms.beans.commands.MgnlCommand#getExpectedParameters()
+     * @see info.magnolia.commands.MgnlCommand#getExpectedParameters()
      */
     public String[] getExpectedParameters() {
-        return new String[]{MgnlConstants.P_PATH};
+        return new String[]{ContextAttributes.P_PATH};
     }
 
     /**
-     * @see info.magnolia.cms.beans.commands.MgnlCommand#exec(java.util.HashMap, org.apache.commons.chain.Context)
+     * @see info.magnolia.commands.MgnlCommand#exec(java.util.HashMap, org.apache.commons.chain.Context)
      */
-    public boolean exec(HashMap param, Context ctx) {
-        String path = (String) param.get(MgnlConstants.P_PATH);
+    public boolean execute(Context ctx) {
+        String path = (String) ctx.get(ContextAttributes.P_PATH);
         try {
             Content node = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE).getContent(path);
             node.addVersion();

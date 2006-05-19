@@ -12,16 +12,14 @@
  */
 package info.magnolia.module.owfe.commands.simple;
 
-import info.magnolia.cms.beans.commands.MgnlCommand;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.Rule;
-import info.magnolia.module.owfe.MgnlConstants;
-
-import java.util.HashMap;
+import info.magnolia.commands.ContextAttributes;
+import info.magnolia.commands.MgnlCommand;
 
 import org.apache.commons.chain.Context;
 
@@ -32,7 +30,7 @@ import org.apache.commons.chain.Context;
  */
 public class DeactivationCommand extends MgnlCommand {
 
-    final static String[] expected = {MgnlConstants.P_PATH};
+    final static String[] expected = {ContextAttributes.P_PATH};
 
     /**
      * List of the parameters that this command needs to run
@@ -42,11 +40,11 @@ public class DeactivationCommand extends MgnlCommand {
         return expected;
     }
 
-    public boolean exec(HashMap params, Context Ctx) {
+    public boolean execute(Context ctx) {
         String path;
-        path = (String) params.get(MgnlConstants.P_PATH);
+        path = (String) ctx.get(ContextAttributes.P_PATH);
         try {
-            doDeactivate(((info.magnolia.cms.beans.runtime.Context) Ctx).getUser(), path);
+            doDeactivate(((info.magnolia.cms.beans.runtime.Context) ctx).getUser(), path);
         }
         catch (Exception e) {
             log.error("cannot do deactivate", e);
@@ -60,8 +58,8 @@ public class DeactivationCommand extends MgnlCommand {
         rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
         rule.addAllowType(ItemType.NT_FILE);
         Syndicator syndicator = (Syndicator) FactoryUtil.getInstance(Syndicator.class);
-        syndicator.init(user, MgnlConstants.WEBSITE_REPOSITORY, ContentRepository
-            .getDefaultWorkspace(MgnlConstants.WEBSITE_REPOSITORY), rule);
+        syndicator.init(user, ContentRepository.WEBSITE, ContentRepository
+            .getDefaultWorkspace(ContentRepository.WEBSITE), rule);
         syndicator.deActivate(path);
     }
 

@@ -12,10 +12,11 @@
  */
 package info.magnolia.module.owfe.commands.simple;
 
-import info.magnolia.cms.beans.commands.MgnlCommand;
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
-import info.magnolia.module.owfe.MgnlConstants;
+import info.magnolia.commands.ContextAttributes;
+import info.magnolia.commands.MgnlCommand;
 
 import java.util.HashMap;
 
@@ -31,7 +32,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class DeleteCommand extends MgnlCommand {
 
-    static final String[] expectedParameters = {MgnlConstants.P_PATH};
+    static final String[] expectedParameters = {ContextAttributes.P_PATH};
 
     /**
      * List of the parameters that this command needs to run
@@ -41,8 +42,8 @@ public class DeleteCommand extends MgnlCommand {
         return expectedParameters;
     }
 
-    public boolean exec(HashMap params, Context ctx) {
-        String path = (String) params.get(MgnlConstants.P_PATH);
+    public boolean execute(Context ctx) {
+        String path = (String) ctx.get(ContextAttributes.P_PATH);
         try {
             deleteNode(ctx, path);
         }
@@ -54,7 +55,7 @@ public class DeleteCommand extends MgnlCommand {
     }
 
     private void deleteNode(Context context, String parentPath, String label) throws RepositoryException {
-        Content parentNode = MgnlContext.getHierarchyManager(MgnlConstants.WEBSITE_REPOSITORY).getContent(parentPath);
+        Content parentNode = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE).getContent(parentPath);
         String path;
         if (!parentPath.equals("/")) {
             path = parentPath + "/" + label;
@@ -62,7 +63,7 @@ public class DeleteCommand extends MgnlCommand {
         else {
             path = "/" + label;
         }
-        ((HashMap) context.get(PARAMS)).put(MgnlConstants.P_PATH, path);
+        ((HashMap) context.get(PARAMS)).put(ContextAttributes.P_PATH, path);
         new DeactivationCommand().execute(context);
         parentNode.delete(label);
         parentNode.save();
