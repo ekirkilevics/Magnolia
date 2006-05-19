@@ -111,5 +111,7 @@ public final class MgnlConstants {
 	public final static String FLOW_VALUE = "value";
 
 	public static final String ENGINE_NAME = "owfe";
+
+    public static final String STORE_ITERATOR_QUERY = "select * from "+NODENAME_EXPRESSION;
     
 }

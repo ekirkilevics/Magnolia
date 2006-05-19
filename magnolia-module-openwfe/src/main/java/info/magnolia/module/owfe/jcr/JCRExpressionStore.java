@@ -13,15 +13,17 @@
 package info.magnolia.module.owfe.jcr;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.search.Query;
+import info.magnolia.cms.core.search.QueryManager;
+import info.magnolia.cms.core.search.QueryResult;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.module.owfe.MgnlConstants;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 
 import javax.jcr.ValueFactory;
@@ -179,41 +181,13 @@ public class JCRExpressionStore extends AbstractExpressionStore {
      * return a iterator of content
      */
     public synchronized Iterator contentIterator(Class assignClass) {
-        ArrayList ret = new ArrayList();
         try {
-            Content root = this.hm.getRoot();
-            Collection c = root.getChildren(ItemType.EXPRESSION);
-
-            Iterator it = c.iterator();
-            while (it.hasNext()) {
-                try {
-                    Content ct = (Content) it.next();
-
-                    InputStream s = ct.getNodeData(MgnlConstants.NODEDATA_VALUE).getStream();
-                    final org.jdom.input.SAXBuilder builder = new org.jdom.input.SAXBuilder();
-
-                    Document doc = builder.build(s);
-                    FlowExpression fe = (FlowExpression) XmlCoder.decode(doc);
-
-                    fe.setApplicationContext(getContext());
-
-                    if (!ExpoolUtils.isAssignableFromClass(fe, assignClass))
-                        continue;
-
-                    ret.add(fe);
-
-                } catch (RuntimeException e) {
-                    e.printStackTrace();
-                    // ignore and skip to next item
-                }
-            }
-
-            return ret.iterator();
-
+            return new StoreIterator(assignClass);
         } catch (Exception e) {
-            log.error("Read access to expression store failed:" + e.getMessage(), e);
-            return ret.iterator();
+            log.error("Could not get a content iterator");
+            return null;
         }
+
     }
 
     /**
@@ -221,15 +195,90 @@ public class JCRExpressionStore extends AbstractExpressionStore {
      */
     public int size() {
         try {
-            Content root = this.hm.getRoot();
-            Collection c = root.getChildren(ItemType.EXPRESSION);
-            // @fix it
-            return c.size();
+            QueryManager qm = MgnlContext.getSystemContext().getQueryManager(MgnlConstants.WORKSPACE_EXPRESSION);
+            Query query = qm.createQuery(MgnlConstants.STORE_ITERATOR_QUERY, Query.SQL);
+            QueryResult qr = query.execute();
+            return qr.getContent().size();
         } catch (Exception e) {
-            log.error("exception:" + e);
-            return 0;
+            log.error("Error while getting the size of the expression store:" + e.getMessage());
+            return -1;
+        }
+    }
+
+    /**
+     * 'lightweight' storeIterator. The previous version were stuffing all the
+     * expression within a collection and returning an iterator on it.
+     * <p>
+     * The remainaing question is : what's behind Magnolia's Content.iterator()
+     * method ?
+     */
+    protected final class StoreIterator implements Iterator {
+        //
+        // FIELDS
+
+        private Class assignClass;
+
+        private Iterator rootIterator = null;
+
+        private FlowExpression next = null;
+
+        //
+        // CONSTRUCTORS
+
+        public StoreIterator(final Class assignClass) throws Exception {
+            this.assignClass = assignClass;
+            QueryManager qm = MgnlContext.getSystemContext().getQueryManager(MgnlConstants.WORKSPACE_EXPRESSION);
+            Query query = qm.createQuery(MgnlConstants.STORE_ITERATOR_QUERY, Query.SQL);
+            if (log.isDebugEnabled())
+                log.debug("xx-->query executed:" + query.getStatement());
+            QueryResult qr = query.execute();
+            this.rootIterator = qr.getContent().iterator();
+            this.next = fetchNext();
         }
 
+        //
+        // METHODS
+
+        public boolean hasNext() {
+            return (this.next != null);
+        }
+
+        public FlowExpression fetchNext() {
+
+            if (!this.rootIterator.hasNext())
+                return null;
+
+            final Content content = (Content) this.rootIterator.next();
+            try {
+
+                final FlowExpression fe = deserializeExpressionAsXml(content);
+
+                if (!ExpoolUtils.isAssignableFromClass(fe, this.assignClass)) {
+                    return fetchNext();
+                }
+
+                return fe;
+
+            } catch (Exception e) {
+                return null;
+            }
+        }
+
+        public Object next() throws java.util.NoSuchElementException {
+
+            final FlowExpression current = this.next;
+
+            if (current == null)
+                throw new java.util.NoSuchElementException();
+
+            this.next = fetchNext();
+
+            return current;
+        }
+
+        public void remove() {
+            // not necessary
+        }
     }
 
 }
