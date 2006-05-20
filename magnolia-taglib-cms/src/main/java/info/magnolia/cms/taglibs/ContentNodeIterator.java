@@ -41,10 +41,21 @@ import org.slf4j.LoggerFactory;
  */
 public class ContentNodeIterator extends TagSupport {
 
+    /**
+     * @deprecated
+     */
     public static final String CONTENT_NODE_COLLECTION_NAME = "contentNodeCollectionName"; //$NON-NLS-1$
 
+    /**
+     * @deprecated use the <code>varStatus</code> tag attribute to get a reference to a
+     * <code>javax.servlet.jsp.jstl.core.LoopTagStatus</code> instance.
+     */
     protected static final String CURRENT_INDEX = "currentIndex"; //$NON-NLS-1$
 
+    /**
+     * @deprecated use the <code>varStatus</code> tag attribute to get a reference to a
+     * <code>javax.servlet.jsp.jstl.core.LoopTagStatus</code> instance.
+     */
     protected static final String SIZE = "size"; //$NON-NLS-1$
 
     /**
@@ -70,7 +81,7 @@ public class ContentNodeIterator extends TagSupport {
     /**
      * Tag attribute.
      */
-    protected int end;
+    protected Integer end;
 
     /**
      * Tag attribute.
@@ -91,11 +102,11 @@ public class ContentNodeIterator extends TagSupport {
 
     protected int index;
 
+    protected Object current;
+
     private Iterator contentNodeIterator;
 
     private LoopTagStatus status;
-
-    private Object current;
 
     /**
      * @param name content node name on which this tag will iterate
@@ -114,7 +125,7 @@ public class ContentNodeIterator extends TagSupport {
     /**
      * @param index index to end at
      */
-    public void setEnd(int index) {
+    public void setEnd(Integer index) {
         this.end = index;
     }
 
@@ -139,63 +150,6 @@ public class ContentNodeIterator extends TagSupport {
      */
     public void setItems(Collection items) {
         this.items = items;
-    }
-
-    /**
-     * @return end index
-     */
-    private int getEnd() {
-        if (this.end == 0) {
-            return this.size;
-        }
-        return this.end;
-    }
-
-    /**
-     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
-     */
-    public int doStartTag() {
-        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-
-        Collection children;
-        try {
-            children = getCollection(request);
-        }
-        catch (PathNotFoundException e) {
-            // ok, this is normal
-            return SKIP_BODY;
-        }
-        catch (AccessDeniedException e) {
-            log.debug(e.getMessage());
-            return SKIP_BODY;
-        }
-        catch (RepositoryException e) {
-            log.error(e.getMessage(), e);
-            return SKIP_BODY;
-        }
-
-        this.size = children.size();
-        if (this.size == 0) {
-            return SKIP_BODY;
-        }
-
-        pageContext.setAttribute(ContentNodeIterator.SIZE, new Integer(this.getEnd()), PageContext.REQUEST_SCOPE);
-        pageContext.setAttribute(ContentNodeIterator.CURRENT_INDEX, new Integer(this.index), PageContext.REQUEST_SCOPE);
-        pageContext.setAttribute(
-            ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME,
-            this.contentNodeCollectionName,
-            PageContext.REQUEST_SCOPE);
-        this.contentNodeIterator = children.iterator();
-        Resource.setLocalContentNodeCollectionName(request, this.contentNodeCollectionName);
-        for (; this.begin > -1; --this.begin) {
-            current = this.contentNodeIterator.next();
-            Resource.setLocalContentNode(request, (Content) current);
-        }
-
-        if (StringUtils.isNotEmpty(varStatus)) {
-            pageContext.setAttribute(varStatus, getLoopStatus());
-        }
-        return EVAL_BODY_INCLUDE;
     }
 
     /**
@@ -253,7 +207,7 @@ public class ContentNodeIterator extends TagSupport {
             }
 
             public Integer getEnd() {
-                return end != 0 ? new Integer(end) : null;
+                return end;
             }
 
             public Integer getStep() {
@@ -268,12 +222,64 @@ public class ContentNodeIterator extends TagSupport {
     }
 
     /**
+     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
+     */
+    public int doStartTag() {
+        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+
+        Collection children;
+        try {
+            children = getCollection(request);
+        }
+        catch (PathNotFoundException e) {
+            // ok, this is normal
+            return SKIP_BODY;
+        }
+        catch (AccessDeniedException e) {
+            log.debug(e.getMessage());
+            return SKIP_BODY;
+        }
+        catch (RepositoryException e) {
+            log.error(e.getMessage(), e);
+            return SKIP_BODY;
+        }
+
+        this.size = children.size();
+
+        pageContext.setAttribute(ContentNodeIterator.SIZE, new Integer(size), PageContext.REQUEST_SCOPE);
+
+        pageContext.setAttribute(ContentNodeIterator.CURRENT_INDEX, new Integer(this.index), PageContext.REQUEST_SCOPE);
+
+        pageContext.setAttribute(
+            ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME,
+            this.contentNodeCollectionName,
+            PageContext.REQUEST_SCOPE);
+
+        Resource.setLocalContentNodeCollectionName(request, this.contentNodeCollectionName);
+
+        this.contentNodeIterator = children.iterator();
+
+        return doIteration() ? EVAL_BODY_INCLUDE : SKIP_BODY;
+    }
+
+    /**
      * @return int
      */
     public int doAfterBody() {
+        return doIteration() ? EVAL_BODY_AGAIN : SKIP_BODY;
+    }
+
+    /**
+     * @return
+     */
+    private boolean doIteration() {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-        if (this.contentNodeIterator.hasNext() && (this.index < this.getEnd())) {
-            this.index++;
+        if (this.contentNodeIterator.hasNext()) {
+
+            if (this.end != null && this.index > this.end.intValue()) {
+                return false;
+            }
+
             pageContext.setAttribute(
                 ContentNodeIterator.CURRENT_INDEX,
                 new Integer(this.index),
@@ -283,28 +289,32 @@ public class ContentNodeIterator extends TagSupport {
                 pageContext.setAttribute(varStatus, getLoopStatus());
             }
 
-            for (int i = 0; i < this.step; i++) {
+            for (int j = 0; j < this.step; j++) {
                 current = this.contentNodeIterator.next();
                 Resource.setLocalContentNode(request, (Content) current);
             }
-            return EVAL_BODY_AGAIN;
+
+            this.index++;
+
+            return true;
         }
-        return SKIP_BODY;
+        return false;
     }
 
     /**
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag() {
+
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+
         Resource.removeLocalContentNode(request);
         Resource.removeLocalContentNodeCollectionName(request);
+
         pageContext.removeAttribute(ContentNodeIterator.CURRENT_INDEX);
         pageContext.removeAttribute(ContentNodeIterator.SIZE);
         pageContext.removeAttribute(ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME);
-        this.begin = 0;
-        this.end = 0;
-        this.step = 1;
+
         this.size = 0;
         this.index = 0;
         this.current = null;
@@ -323,7 +333,7 @@ public class ContentNodeIterator extends TagSupport {
         this.contentNodeCollectionName = null;
         this.contentNodeIterator = null;
         this.begin = 0;
-        this.end = 0;
+        this.end = null;
         this.step = 1;
         this.size = 0;
         this.index = 0;

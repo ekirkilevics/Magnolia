@@ -452,7 +452,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <name>end</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <type>int</type>
+      <type>java.lang.Integer</type>
       <description>Zero-based index of last item to process, inclusive.</description>
     </attribute>
     <attribute>
