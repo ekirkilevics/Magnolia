@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sv:node sv:name="secureURIList" xmlns:jcr="http://www.jcp.org/jcr/1.0"
+<sv:node sv:name="admininterface" xmlns:jcr="http://www.jcp.org/jcr/1.0"
   xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
   xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:rep="internal"
   xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
@@ -14,35 +14,47 @@
     <sv:value>mix:versionable</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:uuid" sv:type="String">
-    <sv:value>ba05c952-1803-4949-a955-1a57b2efac63</sv:value>
+    <sv:value>5f9d4e03-74ed-4f2a-8c9d-5bef0fce035a</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
     <sv:value>true</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:created" sv:type="Date">
-    <sv:value>2006-03-02T15:24:59.294+01:00</sv:value>
+    <sv:value>2006-05-20T23:04:53.362+02:00</sv:value>
+  </sv:property>
+  <sv:property sv:name="URI" sv:type="String">
+    <sv:value>/.magnolia*</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
-    <sv:property sv:name="mgnl:Data" sv:type="String">
-      <sv:value>MetaData</sv:value>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>ac6d13b9-eb82-45f1-adcc-6c5e284587c7</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:authorid" sv:type="String">
       <sv:value>superuser</sv:value>
     </sv:property>
+    <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+      <sv:value>2006-05-20T23:04:53.372+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+      <sv:value>2006-05-20T23:05:55.081+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+      <sv:value>false</sv:value>
+    </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-02T15:24:59.295+01:00</sv:value>
+      <sv:value>2006-05-20T23:04:53.362+02:00</sv:value>
     </sv:property>
-    <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
-      <sv:value>1099406052596000</sv:value>
+    <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+      <sv:value>2006-05-20T23:05:29.634+02:00</sv:value>
     </sv:property>
-    <sv:property sv:name="mgnl:creationdate" sv:type="String">
-      <sv:value>2004-11-02T15:34:12.575+01:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="mgnl:lastmodified" sv:type="String">
-      <sv:value>2004-11-02T15:34:12.591+01:00</sv:value>
+    <sv:property sv:name="mgnl:activatorid" sv:type="String">
+      <sv:value>superuser</sv:value>
     </sv:property>
   </sv:node>
 </sv:node>
