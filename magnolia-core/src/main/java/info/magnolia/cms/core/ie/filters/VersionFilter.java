@@ -1,5 +1,6 @@
 package info.magnolia.cms.core.ie.filters;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -23,6 +24,15 @@ public class VersionFilter extends XMLFilterImpl {
     public VersionFilter(XMLReader parent) {
         super(parent);
     }
+
+    public static String[] FILTERED_PROPERTIES = new String[]{//
+    "jcr:predecessors", // version
+        "jcr:baseVersion", // version
+        "jcr:versionHistory", // version
+        "jcr:isCheckedOut", // useless
+        "jcr:created", // useless
+        "mgnl:sequenceposition" // old
+    };
 
     /**
      * @see org.xml.sax.helpers.XMLFilterImpl#endElement(String, String, String)
@@ -58,9 +68,7 @@ public class VersionFilter extends XMLFilterImpl {
         }
         if ("sv:property".equals(qName)) { //$NON-NLS-1$
             String attName = atts.getValue("sv:name"); //$NON-NLS-1$
-            if (attName != null
-                && ("jcr:predecessors".equals(attName) || "jcr:baseVersion".equals(attName) || "jcr:versionHistory" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                .equals(attName))) {
+            if (attName != null && ArrayUtils.contains(FILTERED_PROPERTIES, attName)) {
                 inVersionElement++;
                 return;
             }
