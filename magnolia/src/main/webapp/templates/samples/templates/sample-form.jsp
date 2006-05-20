@@ -28,7 +28,7 @@
           <c:out escapeXml="true" value="${pageProperties.mandatoryAlert}" />
         </c:set>
         <c:if test="${empty(alertText)}">
-          <c:set var="alertText">Please fill in all fields marked with an asterisk.</c:set>
+          <c:out escapeXml="true" value="${fn:replace(pageProperties.mandatoryAlert, '\'', '\\\'')}" />
         </c:if>
         <form name="samplesForm" action="${pageContext.request.contextPath}${actpage.handle}.html" method="post"
           onsubmit="return (checkMandatories(this.name,'${alertText}'));">
