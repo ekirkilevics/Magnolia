@@ -13,22 +13,25 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.SecureURI;
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
+
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 import javax.jcr.observation.ObservationManager;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Map;
+
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -71,7 +74,6 @@ public final class Server {
 
     /**
      * Load the server configuration.
-     *
      * @throws ConfigurationException
      */
     public static void load() throws ConfigurationException {
@@ -93,18 +95,35 @@ public final class Server {
         }
     }
 
-    private static void cacheMailSettings() throws RepositoryException, AccessDeniedException {
-        Content mailContent = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(CONFIG_PAGE + "/mail");
+    private static void cacheMailSettings() {
+
+        Content mailContent;
+        try {
+            mailContent = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(
+                CONFIG_PAGE + "/mail");
+        }
+        catch (PathNotFoundException e) {
+            log.debug("Mail settings not initialized, configuration not found");
+            return;
+        }
+        catch (RepositoryException e) {
+            log.error("Mail settings not initialized, an error occurred", e);
+            return;
+        }
+
         Iterator iter = mailContent.getNodeDataCollection().iterator();
         while (iter.hasNext()) {
             NodeData data = (NodeData) iter.next();
             addPossiblyNullKeyToMap(data.getName(), data.getString(), cachedMailSettings, false);
         }
 
-        if (log.isDebugEnabled())
-            for (int i = 0; i < MAIL_SETTINGS.length; i++)
-                if (cachedMailSettings.containsKey(MAIL_SETTINGS[i]))
-                    log.debug("Mail setting:" + MAIL_SETTINGS[i] + "=[" + cachedMailSettings.get(MAIL_SETTINGS[i]));
+        if (log.isDebugEnabled()) {
+            for (int i = 0; i < MAIL_SETTINGS.length; i++) {
+                if (cachedMailSettings.containsKey(MAIL_SETTINGS[i])) {
+                    log.debug("Mail setting:{}={}", MAIL_SETTINGS[i], cachedMailSettings.get(MAIL_SETTINGS[i]));
+                }
+            }
+        }
     }
 
     private static void addPossiblyNullKeyToMap(String key, String value, Map map, boolean putKeyIfNull) {
@@ -112,14 +131,14 @@ public final class Server {
             map.put(key, value);
         }
         catch (Exception e) {
-            if (putKeyIfNull)
+            if (putKeyIfNull) {
                 map.put(key, StringUtils.EMPTY);
+            }
         }
     }
 
     /**
      * Reload the server configuration: simply calls load().
-     *
      * @throws ConfigurationException
      */
     public static void reload() throws ConfigurationException {
@@ -176,7 +195,7 @@ public final class Server {
         if (node == null) {
             return;
         }
-        Iterator childIterator = node.getChildren().iterator();
+        Iterator childIterator = node.getChildren(ItemType.CONTENTNODE).iterator();
         while (childIterator.hasNext()) {
             Content sub = (Content) childIterator.next();
             String uri = sub.getNodeData("URI").getString(); //$NON-NLS-1$
@@ -196,9 +215,9 @@ public final class Server {
         // server properties, only on the root server node
         try {
             ObservationManager observationManager = ContentRepository
-                    .getHierarchyManager(ContentRepository.CONFIG)
-                    .getWorkspace()
-                    .getObservationManager();
+                .getHierarchyManager(ContentRepository.CONFIG)
+                .getWorkspace()
+                .getObservationManager();
 
             observationManager.addEventListener(new EventListener() {
 
@@ -212,10 +231,10 @@ public final class Server {
                     }
                 }
             }, Event.PROPERTY_ADDED | Event.PROPERTY_CHANGED | Event.PROPERTY_REMOVED, "/" + CONFIG_PAGE, //$NON-NLS-1$
-                    false,
-                    null,
-                    null,
-                    false);
+                false,
+                null,
+                null,
+                false);
         }
         catch (RepositoryException e) {
             log.error("Unable to add event listeners for server", e); //$NON-NLS-1$
@@ -224,9 +243,9 @@ public final class Server {
         // secure URI list
         try {
             ObservationManager observationManager = ContentRepository
-                    .getHierarchyManager(ContentRepository.CONFIG)
-                    .getWorkspace()
-                    .getObservationManager();
+                .getHierarchyManager(ContentRepository.CONFIG)
+                .getWorkspace()
+                .getObservationManager();
 
             observationManager.addEventListener(new EventListener() {
 
@@ -240,10 +259,10 @@ public final class Server {
                     }
                 }
             }, Event.NODE_ADDED
-                    | Event.NODE_REMOVED
-                    | Event.PROPERTY_ADDED
-                    | Event.PROPERTY_CHANGED
-                    | Event.PROPERTY_REMOVED, "/" + CONFIG_PAGE + "/secureURIList", true, null, null, false); //$NON-NLS-1$ //$NON-NLS-2$
+                | Event.NODE_REMOVED
+                | Event.PROPERTY_ADDED
+                | Event.PROPERTY_CHANGED
+                | Event.PROPERTY_REMOVED, "/" + CONFIG_PAGE + "/secureURIList", true, null, null, false); //$NON-NLS-1$ //$NON-NLS-2$
         }
         catch (RepositoryException e) {
             log.error("Unable to add event listeners for server", e); //$NON-NLS-1$
@@ -255,7 +274,7 @@ public final class Server {
         if (node == null) {
             return;
         }
-        Iterator childIterator = node.getChildren().iterator();
+        Iterator childIterator = node.getChildren(ItemType.CONTENTNODE).iterator();
         while (childIterator.hasNext()) {
             Content sub = (Content) childIterator.next();
             String uri = sub.getNodeData("URI").getString(); //$NON-NLS-1$
