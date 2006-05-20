@@ -466,11 +466,16 @@ public final class ContentRepository {
      * Returns repository provider specified by the <code>repositoryID</code> as configured in repository config.
      */
     public static Provider getRepositoryProvider(String repositoryID) {
-        String mappedRepositoryName = getMappedRepositoryName(repositoryID);
-        if (mappedRepositoryName == null) {
-            return null;
+
+        Provider provider = (Provider) ContentRepository.repositoryProviders.get(repositoryID);
+
+        if (provider == null) {
+            String mappedRepositoryName = getMappedRepositoryName(repositoryID);
+            if (mappedRepositoryName != null) {
+                provider = (Provider) ContentRepository.repositoryProviders.get(mappedRepositoryName);
+            }
         }
-        return (Provider) ContentRepository.repositoryProviders.get(mappedRepositoryName);
+        return provider;
     }
 
     /**

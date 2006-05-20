@@ -220,7 +220,12 @@ public abstract class AbstractModule implements Module {
             RepositoryDefinition repDef = (RepositoryDefinition) iter.next();
             String repository = repDef.getName();
 
-            restartNeeded = restartNeeded | ModuleUtil.registerRepository(repository, repDef.getNodeTypeFile());
+            String nodetypeFile = repDef.getNodeTypeFile();
+            boolean repositoryAdded = ModuleUtil.registerRepository(repository, nodetypeFile);
+            if (repositoryAdded) {
+                restartNeeded = true;
+            }
+
             for (Iterator iterator = repDef.getWorkspaces().iterator(); iterator.hasNext();) {
                 String workspace = (String) iterator.next();
 

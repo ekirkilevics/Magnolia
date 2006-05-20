@@ -170,8 +170,8 @@ public final class ModuleUtil {
             try {
                 if (hm.isExist(fullPath)) {
                     hm.delete(fullPath);
-                    if(log.isDebugEnabled())
-                     log.debug("already existing node [{}] deleted", fullPath);
+                    if (log.isDebugEnabled())
+                        log.debug("already existing node [{}] deleted", fullPath);
                 }
 
                 // if the parent path not exists just create it
@@ -428,9 +428,21 @@ public final class ModuleUtil {
      * @throws RegisterException
      */
     public static boolean registerRepository(String repositoryName, String nodeTypeFile) throws RegisterException {
+
+        Document doc;
         try {
-            Document doc = getRepositoryDefinitionDocument();
-            // check if there
+            doc = getRepositoryDefinitionDocument();
+        }
+        catch (JDOMException e) {
+            throw new RegisterException("Failed to read magnolia repositories config file", e);
+        }
+        catch (IOException e) {
+            throw new RegisterException("Failed to read magnolia repositories config file", e);
+        }
+
+        // check if there
+
+        try {
             Element node = (Element) XPath.selectSingleNode(doc, "/JCR/Repository[@name='" + repositoryName + "']");
             if (node == null) {
                 // create
@@ -498,8 +510,17 @@ public final class ModuleUtil {
 
                 return true;
             }
+            else if (nodeTypeFile != null) {
+                // this never requires a restart
+                ModuleUtil.registerNodetypes(repositoryName, nodeTypeFile);
+                return false;
+            }
         }
-        catch (Exception e) {
+        catch (IOException e) {
+            log.error("Can't register repository. Unable to write modified file.", e);
+            throw new RegisterException("Can't register repository. Unable to write modified file.", e);
+        }
+        catch (JDOMException e) {
             log.error("can't register repository", e);
             throw new RegisterException("can't register repository", e);
         }
@@ -507,7 +528,7 @@ public final class ModuleUtil {
         return false;
     }
 
-    public static void registerNodetypes(String repositoryName, String customNodetypes) throws RegisterException {
+    public static boolean registerNodetypes(String repositoryName, String customNodetypes) throws RegisterException {
         Provider provider = ContentRepository.getRepositoryProvider(repositoryName);
 
         if (provider == null) {
@@ -525,6 +546,9 @@ public final class ModuleUtil {
                 + "]: "
                 + e.getMessage(), e);
         }
+
+        // this never requires a restart
+        return false;
 
     }
 

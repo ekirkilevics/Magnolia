@@ -86,6 +86,9 @@ public class DataTransporter {
     public static synchronized void executeImport(String basepath, String repository, File xmlfile,
         boolean keepVersionHistory, int importMode, boolean saveAfterImport, boolean createBasepathIfNotExist)
         throws IOException {
+
+        log.info("Loading file {}", xmlfile.getAbsolutePath()); //$NON-NLS-1$
+
         String fileName = xmlfile.getName();
         InputStream in = getInputStreamForFile(fileName, xmlfile);
         executeImport(
@@ -114,10 +117,11 @@ public class DataTransporter {
 
     public static void executeBootstrapImport(File xmlfile, String repository) throws IOException {
         String filenameWithoutExt = StringUtils.substringBeforeLast(xmlfile.getName(), DOT);
-        if (filenameWithoutExt.endsWith(XML))
+        if (filenameWithoutExt.endsWith(XML)) {
             // if file ends in .xml.gz or .xml.zip
             // need to keep the .xml to be able to view it after decompression
             filenameWithoutExt = StringUtils.substringBeforeLast(xmlfile.getName(), DOT);
+        }
         String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(filenameWithoutExt, DOT), DOT);
         pathName = SLASH + StringUtils.replace(pathName, DOT, SLASH);
         DataTransporter.executeImport(pathName, repository, xmlfile, false, bootstrapImportMode, true, true);
@@ -140,9 +144,9 @@ public class DataTransporter {
         HierarchyManager hr = MgnlContext.getHierarchyManager(repository);
         Workspace ws = hr.getWorkspace();
 
-        if(log.isDebugEnabled())
-        log.debug("Importing content into repository: [{}] from File: [{}] into path: {}", //$NON-NLS-1$
-            new Object[]{repository, fileName, basepath});
+        if (log.isDebugEnabled())
+            log.debug("Importing content into repository: [{}] from File: [{}] into path: {}", //$NON-NLS-1$
+                new Object[]{repository, fileName, basepath});
 
         if (!hr.isExist(basepath) && createBasepathIfNotExist) {
             try {
@@ -162,7 +166,7 @@ public class DataTransporter {
             }
             else {
                 ContentHandler handler = session.getImportContentHandler(basepath, importMode);
-                // 
+                //
                 XMLReader filteredReader = new ImportXmlRootFilter(new VersionFilter(new MagnoliaV2Filter(
                     XMLReaderFactory.createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName()))));
                 filteredReader.setContentHandler(handler);

@@ -13,19 +13,23 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.ie.DataTransporter;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
  * Bootstrapper: loads content from xml when a magnolia is started with an uninitialized repository.
- *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
@@ -48,7 +52,6 @@ public final class Bootstrapper {
      * web.xml. Loops over all the repositories and try to load any xml file found in a subdirectory with the same name
      * of the repository. For example the <code>config</code> repository will be initialized using all the
      * <code>*.xml</code> files found in <code>"magnolia.bootstrap.dir</code><strong>/config</strong> directory.
-     *
      * @param bootdirs bootstrap dir
      */
     protected static void bootstrapRepositories(String[] bootdirs) {
@@ -56,8 +59,9 @@ public final class Bootstrapper {
         if (log.isInfoEnabled()) {
             log.info("-----------------------------------------------------------------"); //$NON-NLS-1$
             log.info("Trying to initialize repositories from:");
-            for (int i = 0; i < bootdirs.length; i++)
+            for (int i = 0; i < bootdirs.length; i++) {
                 log.info(bootdirs[i]);
+            }
             log.info("-----------------------------------------------------------------"); //$NON-NLS-1$
         }
 
@@ -89,7 +93,9 @@ public final class Bootstrapper {
                 File[] files = xmldir.listFiles(new FilenameFilter() {
 
                     public boolean accept(File dir, String name) {
-                        return name.endsWith(DataTransporter.XML) || name.endsWith(DataTransporter.ZIP) || name.endsWith(DataTransporter.GZ); //$NON-NLS-1$
+                        return name.endsWith(DataTransporter.XML)
+                            || name.endsWith(DataTransporter.ZIP)
+                            || name.endsWith(DataTransporter.GZ); //$NON-NLS-1$
                     }
                 });
 
@@ -103,8 +109,8 @@ public final class Bootstrapper {
             }
 
             log
-                    .info(
-                            "Trying to import content from {} files into repository [" + repository + "]", Integer.toString(xmlfileset.size())); //$NON-NLS-1$
+                .info(
+                    "Trying to import content from {} files into repository [{}]", Integer.toString(xmlfileset.size()), repository); //$NON-NLS-1$
 
             File[] files = (File[]) xmlfileset.toArray(new File[xmlfileset.size()]);
             Arrays.sort(files, new Comparator() {
@@ -119,6 +125,7 @@ public final class Bootstrapper {
 
             try {
                 for (int k = 0; k < files.length; k++) {
+
                     File xmlfile = files[k];
                     DataTransporter.executeBootstrapImport(xmlfile, repository);
                 }
@@ -131,10 +138,10 @@ public final class Bootstrapper {
                 int maxMem = (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024);
                 int needed = Math.max(256, maxMem + 128);
                 log
-                        .error(
-                                "Unable to complete bootstrapping: out of memory.\n" //$NON-NLS-1$
-                                        + "{} MB were not enough, try to increase the amount of memory available by adding the -Xmx{}m parameter to the server startup script.\n" //$NON-NLS-1$
-                                        + "You will need to completely remove the magnolia webapp before trying again", Integer.toString(maxMem), Integer.toString(needed)); //$NON-NLS-1$
+                    .error(
+                        "Unable to complete bootstrapping: out of memory.\n" //$NON-NLS-1$
+                            + "{} MB were not enough, try to increase the amount of memory available by adding the -Xmx{}m parameter to the server startup script.\n" //$NON-NLS-1$
+                            + "You will need to completely remove the magnolia webapp before trying again", Integer.toString(maxMem), Integer.toString(needed)); //$NON-NLS-1$
                 break;
             }
 
@@ -142,6 +149,5 @@ public final class Bootstrapper {
 
         }
     }
-
 
 }
