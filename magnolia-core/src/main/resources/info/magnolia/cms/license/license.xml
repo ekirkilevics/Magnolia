@@ -17,9 +17,9 @@
     <!ELEMENT VersionPageHandle (#PCDATA)>]>
 <License>
     <Meta>
-        <VersionNumber>3.0-rc1-SNAPSHOT</VersionNumber>
+        <VersionNumber>${pom.version}</VersionNumber>
         <BuildNumber>${magnolia.releaseDate}</BuildNumber>
-        <Provider>obinary ltd</Provider>
+        <Provider>${pom.organization.name}</Provider>
         <ProviderAddress>
             <![CDATA[
 Magnolia organization llc
