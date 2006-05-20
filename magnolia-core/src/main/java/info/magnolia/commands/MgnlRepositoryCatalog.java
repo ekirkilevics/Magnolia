@@ -13,93 +13,110 @@ import org.apache.commons.lang.StringUtils;
 import java.util.Collection;
 import java.util.Iterator;
 
+import javax.jcr.RepositoryException;
+
+
 /**
- * Date: Mar 27, 2006
- * Time: 10:58:22 AM
- *
+ * Date: Mar 27, 2006 Time: 10:58:22 AM
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */
 public class MgnlRepositoryCatalog extends MgnlBaseCatalog {
 
     static final String REPO_PATH = "/modules/workflow/config/commands";
-    static final String CLASS_NODE_DATA = "impl";
 
+    static final String CLASS_NODE_DATA = "impl";
 
     public void initCatalog(String name) {
         String path;
-        if (name == null || name.length() == 0)
+        if (name == null || name.length() == 0) {
             path = REPO_PATH;
-        else
+        }
+        else {
             path = REPO_PATH + "/" + name;
+        }
 
+        Context context = MgnlContext.getSystemContext();
+        HierarchyManager hm = context.getHierarchyManager("config");
+        Content content;
         try {
-            Context context = MgnlContext.getSystemContext();
-            HierarchyManager hm = context.getHierarchyManager("config");
-            Content content = hm.getContent(path);
-            Iterator iter = content.getChildren(ItemType.CONTENTNODE).iterator();
-            // loop over the command names one by one
-            while (iter.hasNext()) {
-                // get the action node and name
-                Content actionNode = (Content) iter.next();
-                String actionName = actionNode.getName();
+            content = hm.getContent(path);
+        }
+        catch (RepositoryException e) {
+            log.error(e.getMessage(), e);
+            return;
+        }
 
-                String className = StringUtils.EMPTY;
+        Iterator iter = content.getChildren(ItemType.CONTENTNODE).iterator();
+        // loop over the command names one by one
+        while (iter.hasNext()) {
+            // get the action node and name
+            Content actionNode = (Content) iter.next();
+            String actionName = actionNode.getName();
 
-                NodeData impl = actionNode.getNodeData(CLASS_NODE_DATA);
-                if (impl != null && impl.getString() != null && !(impl.getString().equals(""))) {
-                    if (log.isDebugEnabled())
-                        log.debug("This is a simple action" + actionName);
-                    // this is a simple command
-                    className = impl.getString();
+            String className = StringUtils.EMPTY;
+
+            NodeData impl = actionNode.getNodeData(CLASS_NODE_DATA);
+            if (impl != null && impl.getString() != null && !(impl.getString().equals(""))) {
+
+                log.debug("This is a simple action: {}", actionName);
+
+                // this is a simple command
+                className = impl.getString();
+
+                Command command;
+                try {
                     Class klass = Class.forName(className);
+                    command = (Command) klass.newInstance();
+                }
+                catch (Exception e) {
+                    log.error("Could not load action:" + actionName, e);
+                    continue;
+                }
+
+                this.addCommand(actionName, command);
+
+                // continue with next action
+            }
+            else {
+
+                log.debug("This is a chain");
+
+                Chain chain = new MgnlChain();
+
+                // consider any command as a chain, makes things easier
+                // we iterate through each subnode and consider this as a command in the chain
+                Collection childrens = actionNode.getChildren(ItemType.CONTENTNODE);
+
+                log.debug("Found {}  children for action {}", Integer.toString(childrens.size()), actionName);
+                Iterator iterNode = childrens.iterator();
+
+                Exception e = null;
+                while (iterNode.hasNext()) {
                     try {
-                        this.addCommand(actionName, (Command) klass.newInstance());
-                    }
-                    catch (Exception e) {
-                        log.error("Could not load action:" + actionName, e);
-                    }
-                    // continue with next action
-                } else {
-                    if (log.isDebugEnabled())
-                        log.debug("This is a chain");
-                    // this is a chain
-                    Chain chain = new MgnlChain();
+                        Content commandNode = (Content) iterNode.next();
+                        className = commandNode.getNodeData(CLASS_NODE_DATA).getString();
 
-                    // consider any command as a chain, makes things easier
-                    // we iterate through each subnode and consider this as a command in the chain
-                    Collection childrens = actionNode.getChildren(ItemType.CONTENTNODE);
-                    if (log.isDebugEnabled())
-                        log.debug("Found " + childrens.size() + " children for action " + actionName);
-                    Iterator iterNode = childrens.iterator();
-
-                    Exception e = null;
-                    while (iterNode.hasNext()) {
-                        try {
-                            Content commandNode = (Content) iterNode.next();
-                            className = commandNode.getNodeData(CLASS_NODE_DATA).getString();
-                            if (log.isDebugEnabled())
-                                log.debug("Found class " + className + " for action " + actionName);
-                            Class klass = Class.forName(className);
-                            MgnlCommand command = (MgnlCommand) klass.newInstance();
-                            chain.addCommand(command);
-                        }
-                        catch (Exception te) {
-                            e = te;
-                            break;
-                        }
+                        log.debug("Found class {} for action {}", className, actionName);
+                        Class klass = Class.forName(className);
+                        MgnlCommand command = (MgnlCommand) klass.newInstance();
+                        chain.addCommand(command);
                     }
+                    catch (Exception te) {
+                        e = te;
+                        break;
+                    }
+                }
 
-                    // add the command only if no error was reported
-                    if (e != null)
-                        log.error("Could not load commands for action:" + actionName, e);
-                    else   // add the chain to the catalog linked with the actionName
-                        this.addCommand(actionName, chain);
+                // add the command only if no error was reported
+                if (e != null) {
+                    log.error("Could not load commands for action:" + actionName, e);
+                }
+                else {
+                    // add the chain to the catalog linked with the actionName
+                    this.addCommand(actionName, chain);
                 }
             }
         }
-        catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
-        }
+
     }
 }
