@@ -12,28 +12,14 @@
   <version>3.0-rc1-SNAPSHOT</version>
   <dependencies>
     <dependency>
-      <groupId>org.apache.derby</groupId>
-      <artifactId>derby</artifactId>
-    </dependency>
-    <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-templating</artifactId>
       <version>3.0-rc1-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
       <version>3.0-rc1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>jsp-api</artifactId>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
@@ -44,10 +30,6 @@
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-taglib-utility</artifactId>
       <version>3.0-rc1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>net.sourceforge.openutils</groupId>
-      <artifactId>openutils-log4j</artifactId>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
@@ -63,11 +45,6 @@
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-cache</artifactId>
       <version>3.0-rc1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-chain</groupId>
-      <artifactId>commons-chain</artifactId>
-      <version>1.0</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
@@ -100,12 +77,35 @@
       <version>3.0-rc1-SNAPSHOT</version>
     </dependency>
     <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-module-mail</artifactId>
+      <version>3.0-rc1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
       <groupId>org.apache.jackrabbit</groupId>
       <artifactId>jackrabbit-core</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.jackrabbit</groupId>
       <artifactId>jackrabbit-index-filters</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.derby</groupId>
+      <artifactId>derby</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>net.sourceforge.openutils</groupId>
+      <artifactId>openutils-log4j</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jsp-api</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

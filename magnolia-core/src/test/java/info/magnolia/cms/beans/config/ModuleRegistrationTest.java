@@ -3,6 +3,7 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.util.FactoryUtil;
 
 import java.io.File;
+import java.net.URL;
 
 import junit.framework.TestCase;
 
@@ -30,19 +31,33 @@ public class ModuleRegistrationTest extends TestCase {
     }
 
     public void testGetModuleRootJar() {
-        File moduleRoot = new ModuleRegistration().getModuleRoot("/junit/framework/TestCase.class");
+        URL xmlUrl = getClass().getResource("/testjar.jar");
+        File moduleRoot = new ModuleRegistration().getModuleRoot(xmlUrl);
 
-        assertNotNull("Unable to find jar containing [/junit/framework/TestCase.class]", moduleRoot);
+        assertNotNull("Unable to find jar", moduleRoot);
         assertTrue("Jar " + moduleRoot.getAbsolutePath() + " does not exist", moduleRoot.exists());
+    }
 
+    public void testGetModuleRootJarWIthDot() {
+        URL xmlUrl = getClass().getResource("/.space test/testjar.jar");
+        File moduleRoot = new ModuleRegistration().getModuleRoot(xmlUrl);
+
+        assertNotNull("Unable to find jar", moduleRoot);
+        assertTrue("Jar " + moduleRoot.getAbsolutePath() + " does not exist", moduleRoot.exists());
     }
 
     public void testGetModuleRootDirectory() {
-        File moduleRoot = new ModuleRegistration().getModuleRoot("/mgnl-nodetypes/magnolia-nodetypes.xml");
+        File moduleRoot = new ModuleRegistration().getModuleRoot("/testresource.txt");
 
         assertNotNull(moduleRoot);
         assertTrue(moduleRoot.exists());
+    }
 
+    public void testGetModuleRootDirectoryWithDot() {
+        File moduleRoot = new ModuleRegistration().getModuleRoot("/.space test/testresource.txt");
+
+        assertNotNull(moduleRoot);
+        assertTrue(moduleRoot.exists());
     }
 
 }

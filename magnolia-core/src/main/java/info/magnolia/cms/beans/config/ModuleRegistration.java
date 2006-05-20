@@ -116,6 +116,14 @@ public class ModuleRegistration {
     protected File getModuleRoot(String magnoliaModuleXml) {
         URL xmlUrl = getClass().getResource(magnoliaModuleXml);
 
+        return getModuleRoot(xmlUrl);
+    }
+
+    /**
+     * @param xmlUrl
+     * @return
+     */
+    protected File getModuleRoot(URL xmlUrl) {
         String xmlString = xmlUrl.getFile();
         String protocol = xmlUrl.getProtocol();
 
