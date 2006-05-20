@@ -20,14 +20,14 @@
     <sv:value>true</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:created" sv:type="Date">
-    <sv:value>2006-05-06T16:44:15.922+02:00</sv:value>
+    <sv:value>2006-05-20T23:16:14.732+02:00</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>c675d95d-a5e4-48cd-a260-2623a4bf6619</sv:value>
+      <sv:value>d9b9f93c-4606-4a64-a5de-cc6915ebdcd1</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
       <sv:value>true</sv:value>
@@ -51,7 +51,7 @@
       <sv:value>MetaData</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-05-06T16:44:15.922+02:00</sv:value>
+      <sv:value>2006-05-20T23:16:14.732+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastaction" sv:type="Date">
       <sv:value>2006-05-01T21:47:41.706+02:00</sv:value>
@@ -80,7 +80,7 @@
       <sv:value>dialog.mainColumn.editor.tabContent.label</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-05-06T16:44:15.922+02:00</sv:value>
+      <sv:value>2006-05-20T23:16:14.762+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="controlType" sv:type="String">
       <sv:value>tab</sv:value>
@@ -90,7 +90,7 @@
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>f21ff5c7-197a-45a9-9b3f-281386cd7f94</sv:value>
+        <sv:value>aa96ac63-b82f-4d6e-a608-44204d8daf90</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
         <sv:value>true</sv:value>
@@ -111,7 +111,7 @@
         <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-05-06T16:44:15.922+02:00</sv:value>
+        <sv:value>2006-05-20T23:16:14.762+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastaction" sv:type="Date">
         <sv:value>2006-05-01T21:47:41.706+02:00</sv:value>
@@ -140,13 +140,13 @@
         <sv:value>true</sv:value>
       </sv:property>
       <sv:property sv:name="styles" sv:type="String">
-        <sv:value>/admindocroot/fckeditor/custom/styles/magnoliaStandard.xml</sv:value>
-      </sv:property>
-      <sv:property sv:name="lists" sv:type="String">
-        <sv:value>true</sv:value>
+        <sv:value>/.resources/fckeditor/custom/styles/magnoliaStandard.xml</sv:value>
       </sv:property>
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialog.mainColumn.editor.tabContent.content.label</sv:value>
+      </sv:property>
+      <sv:property sv:name="lists" sv:type="String">
+        <sv:value>true</sv:value>
       </sv:property>
       <sv:property sv:name="fonts" sv:type="String">
         <sv:value>Verdana;Courier New</sv:value>
@@ -176,7 +176,7 @@
         <sv:value>300px</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-05-06T16:44:15.932+02:00</sv:value>
+        <sv:value>2006-05-20T23:16:14.772+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="alignment" sv:type="String">
         <sv:value>true</sv:value>
@@ -195,7 +195,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>4d953684-aae2-416b-963b-4856cb3ab810</sv:value>
+          <sv:value>d63eed96-4193-4929-95e8-58f9764425c1</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
           <sv:value>true</sv:value>
@@ -207,7 +207,7 @@
           <sv:value>2004-11-02T15:34:28.220+01:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2005-12-09T14:48:43.878+01:00</sv:value>
+          <sv:value>2006-05-20T23:47:24.070+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:activated" sv:type="Boolean">
           <sv:value>false</sv:value>
@@ -216,7 +216,7 @@
           <sv:value>MetaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:created" sv:type="Date">
-          <sv:value>2006-05-06T16:44:15.932+02:00</sv:value>
+          <sv:value>2006-05-20T23:16:14.772+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastaction" sv:type="Date">
           <sv:value>2006-05-01T21:47:41.706+02:00</sv:value>
@@ -247,7 +247,7 @@
       <sv:value>dialog.mainColumn.textImage.tabProps.label</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-05-06T16:44:15.932+02:00</sv:value>
+      <sv:value>2006-05-20T23:16:14.782+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="controlType" sv:type="String">
       <sv:value>tab</sv:value>
@@ -257,7 +257,7 @@
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>65befe96-7492-46cd-bfd2-422b442a82ce</sv:value>
+        <sv:value>0b763443-590e-4cde-8305-bcd3d60d99ee</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
         <sv:value>true</sv:value>
@@ -278,7 +278,7 @@
         <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-05-06T16:44:15.932+02:00</sv:value>
+        <sv:value>2006-05-20T23:16:14.782+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastaction" sv:type="Date">
         <sv:value>2006-05-01T21:47:41.706+02:00</sv:value>
@@ -322,7 +322,7 @@
         <sv:value/>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-05-06T16:44:15.932+02:00</sv:value>
+        <sv:value>2006-05-20T23:16:14.792+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="controlType" sv:type="String">
         <sv:value>checkboxSwitch</sv:value>
@@ -332,7 +332,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>b0c483d3-ad96-4d11-8817-cd81dda5fa59</sv:value>
+          <sv:value>1671154e-45bc-44cd-9483-19a7ca4e2c00</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
           <sv:value>true</sv:value>
@@ -353,7 +353,7 @@
           <sv:value>MetaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:created" sv:type="Date">
-          <sv:value>2006-05-06T16:44:15.932+02:00</sv:value>
+          <sv:value>2006-05-20T23:16:14.792+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastaction" sv:type="Date">
           <sv:value>2006-05-01T21:47:41.706+02:00</sv:value>
@@ -392,7 +392,7 @@
         <sv:value>dialog.mainColumn.textImage.tabProps.spacer.description</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-05-06T16:44:15.932+02:00</sv:value>
+        <sv:value>2006-05-20T23:16:14.802+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="controlType" sv:type="String">
         <sv:value>select</sv:value>
@@ -402,7 +402,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>9c336164-2ba3-487d-a105-7d16b851ec80</sv:value>
+          <sv:value>9680fe2f-bc5c-4dad-9130-4a2e0d56b97f</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
           <sv:value>true</sv:value>
@@ -423,7 +423,7 @@
           <sv:value>MetaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:created" sv:type="Date">
-          <sv:value>2006-05-06T16:44:15.932+02:00</sv:value>
+          <sv:value>2006-05-20T23:16:14.802+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastaction" sv:type="Date">
           <sv:value>2006-05-01T21:47:41.706+02:00</sv:value>
@@ -449,14 +449,14 @@
           <sv:value>true</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:created" sv:type="Date">
-          <sv:value>2006-05-06T16:44:15.942+02:00</sv:value>
+          <sv:value>2006-05-20T23:16:14.822+02:00</sv:value>
         </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
             <sv:value>mgnl:metaData</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
-            <sv:value>e496e054-29f4-4bdc-a6be-41079aada72f</sv:value>
+            <sv:value>f2324d2c-cd00-4d8e-bdfb-68fc3a2d9621</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
             <sv:value>true</sv:value>
@@ -477,7 +477,7 @@
             <sv:value>MetaData</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:created" sv:type="Date">
-            <sv:value>2006-05-06T16:44:15.942+02:00</sv:value>
+            <sv:value>2006-05-20T23:16:14.822+02:00</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:lastaction" sv:type="Date">
             <sv:value>2006-05-01T21:47:41.706+02:00</sv:value>
@@ -502,21 +502,21 @@
           <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
             <sv:value>true</sv:value>
           </sv:property>
-          <sv:property sv:name="label" sv:type="String">
-            <sv:value>dialog.mainColumn.textImage.tabProps.spacer.option.no</sv:value>
-          </sv:property>
           <sv:property sv:name="value" sv:type="String">
             <sv:value>0</sv:value>
           </sv:property>
+          <sv:property sv:name="label" sv:type="String">
+            <sv:value>dialog.mainColumn.textImage.tabProps.spacer.option.no</sv:value>
+          </sv:property>
           <sv:property sv:name="jcr:created" sv:type="Date">
-            <sv:value>2006-05-06T16:44:15.942+02:00</sv:value>
+            <sv:value>2006-05-20T23:16:14.822+02:00</sv:value>
           </sv:property>
           <sv:node sv:name="MetaData">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
               <sv:value>mgnl:metaData</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:uuid" sv:type="String">
-              <sv:value>252afde3-4908-4f56-9953-42ec8688d314</sv:value>
+              <sv:value>8c212ec5-ff21-4f82-a522-22458f7ef472</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
               <sv:value>true</sv:value>
@@ -537,7 +537,7 @@
               <sv:value>MetaData</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:created" sv:type="Date">
-              <sv:value>2006-05-06T16:44:15.942+02:00</sv:value>
+              <sv:value>2006-05-20T23:16:14.822+02:00</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:lastaction" sv:type="Date">
               <sv:value>2006-05-01T21:47:41.716+02:00</sv:value>
@@ -563,21 +563,21 @@
           <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
             <sv:value>true</sv:value>
           </sv:property>
-          <sv:property sv:name="label" sv:type="String">
-            <sv:value>dialog.mainColumn.textImage.tabProps.spacer.option.single</sv:value>
-          </sv:property>
           <sv:property sv:name="value" sv:type="String">
             <sv:value>1</sv:value>
           </sv:property>
+          <sv:property sv:name="label" sv:type="String">
+            <sv:value>dialog.mainColumn.textImage.tabProps.spacer.option.single</sv:value>
+          </sv:property>
           <sv:property sv:name="jcr:created" sv:type="Date">
-            <sv:value>2006-05-06T16:44:15.942+02:00</sv:value>
+            <sv:value>2006-05-20T23:16:14.832+02:00</sv:value>
           </sv:property>
           <sv:node sv:name="MetaData">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
               <sv:value>mgnl:metaData</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:uuid" sv:type="String">
-              <sv:value>b06d3a5f-dc76-4077-9117-31dba78a5ef9</sv:value>
+              <sv:value>36dd8feb-b987-42dd-bcb9-1240f392339e</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
               <sv:value>true</sv:value>
@@ -598,7 +598,7 @@
               <sv:value>MetaData</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:created" sv:type="Date">
-              <sv:value>2006-05-06T16:44:15.942+02:00</sv:value>
+              <sv:value>2006-05-20T23:16:14.832+02:00</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:lastaction" sv:type="Date">
               <sv:value>2006-05-01T21:47:41.716+02:00</sv:value>
@@ -624,14 +624,14 @@
           <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
             <sv:value>true</sv:value>
           </sv:property>
-          <sv:property sv:name="label" sv:type="String">
-            <sv:value>dialog.mainColumn.textImage.tabProps.spacer.option.doulbe</sv:value>
-          </sv:property>
           <sv:property sv:name="value" sv:type="String">
             <sv:value>2</sv:value>
           </sv:property>
+          <sv:property sv:name="label" sv:type="String">
+            <sv:value>dialog.mainColumn.textImage.tabProps.spacer.option.doulbe</sv:value>
+          </sv:property>
           <sv:property sv:name="jcr:created" sv:type="Date">
-            <sv:value>2006-05-06T16:44:15.942+02:00</sv:value>
+            <sv:value>2006-05-20T23:16:14.832+02:00</sv:value>
           </sv:property>
           <sv:property sv:name="selected" sv:type="String">
             <sv:value>true</sv:value>
@@ -641,7 +641,7 @@
               <sv:value>mgnl:metaData</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:uuid" sv:type="String">
-              <sv:value>a1b48e6c-6166-4ab3-b1b1-8c3972f9e4e8</sv:value>
+              <sv:value>e4adf3e3-e49e-46fe-a655-649d39ac4566</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
               <sv:value>true</sv:value>
@@ -662,7 +662,7 @@
               <sv:value>MetaData</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:created" sv:type="Date">
-              <sv:value>2006-05-06T16:44:15.942+02:00</sv:value>
+              <sv:value>2006-05-20T23:16:14.832+02:00</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:lastaction" sv:type="Date">
               <sv:value>2006-05-01T21:47:41.716+02:00</sv:value>
