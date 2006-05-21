@@ -17,9 +17,6 @@
   <sv:property sv:name="jcr:uuid" sv:type="String">
     <sv:value>85f84d06-b1c2-42cd-b72e-3bb22aa210c2</sv:value>
   </sv:property>
-  <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-    <sv:value>true</sv:value>
-  </sv:property>
   <sv:property sv:name="type" sv:type="String">
     <sv:value>jsp</sv:value>
   </sv:property>
@@ -28,9 +25,6 @@
   </sv:property>
   <sv:property sv:name="description" sv:type="String">
     <sv:value>paragraph.devShowRichEdit.description</sv:value>
-  </sv:property>
-  <sv:property sv:name="jcr:created" sv:type="Date">
-    <sv:value>2006-05-06T16:44:31.534+02:00</sv:value>
   </sv:property>
   <sv:property sv:name="templatePath" sv:type="String">
     <sv:value>/templates/samples/paragraphs/richEdit.jsp</sv:value>
@@ -43,10 +37,7 @@
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>7d327ad9-5cd1-40e9-b4a1-3862bb10557d</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
+      <sv:value>8e9a42d4-ff08-4ee1-a6f9-57aa77c48fe8</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:authorid" sv:type="String">
       <sv:value>superuser</sv:value>
@@ -63,17 +54,11 @@
     <sv:property sv:name="mgnl:Data" sv:type="String">
       <sv:value>MetaData</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-05-06T16:44:31.534+02:00</sv:value>
-    </sv:property>
     <sv:property sv:name="mgnl:lastaction" sv:type="Date">
       <sv:value>2006-05-01T21:40:39.779+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:activatorid" sv:type="String">
       <sv:value>superuser</sv:value>
-    </sv:property>
-    <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-      <sv:value>1127811030068500</sv:value>
     </sv:property>
   </sv:node>
 </sv:node>

@@ -16,9 +16,6 @@
   <sv:property sv:name="jcr:uuid" sv:type="String">
     <sv:value>1e6d5a7e-1a15-4f5e-ba4f-042e2a50288a</sv:value>
   </sv:property>
-  <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-    <sv:value>true</sv:value>
-  </sv:property>
   <sv:property sv:name="type" sv:type="String">
     <sv:value>jsp</sv:value>
   </sv:property>
@@ -27,9 +24,6 @@
   </sv:property>
   <sv:property sv:name="description" sv:type="String">
     <sv:value>paragraph.table.description</sv:value>
-  </sv:property>
-  <sv:property sv:name="jcr:created" sv:type="Date">
-    <sv:value>2006-05-06T16:44:31.524+02:00</sv:value>
   </sv:property>
   <sv:property sv:name="templatePath" sv:type="String">
     <sv:value>/templates/samples/paragraphs/table.jsp</sv:value>
@@ -42,10 +36,7 @@
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>987e471d-b41e-42ed-8082-dd2a8a6ab5d4</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
+      <sv:value>429ce863-d023-465a-9c3a-4d739b8a8edc</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:authorid" sv:type="String">
       <sv:value>superuser</sv:value>
@@ -62,17 +53,11 @@
     <sv:property sv:name="mgnl:Data" sv:type="String">
       <sv:value>MetaData</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-05-06T16:44:31.524+02:00</sv:value>
-    </sv:property>
     <sv:property sv:name="mgnl:lastaction" sv:type="Date">
       <sv:value>2006-05-01T21:41:51.643+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:activatorid" sv:type="String">
       <sv:value>superuser</sv:value>
-    </sv:property>
-    <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-      <sv:value>1127811057287000</sv:value>
     </sv:property>
   </sv:node>
 </sv:node>

@@ -16,9 +16,6 @@
   <sv:property sv:name="jcr:uuid" sv:type="String">
     <sv:value>4fc7d943-9044-405d-8f8c-cdb78f64c984</sv:value>
   </sv:property>
-  <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-    <sv:value>true</sv:value>
-  </sv:property>
   <sv:property sv:name="type" sv:type="String">
     <sv:value>jsp</sv:value>
   </sv:property>
@@ -27,9 +24,6 @@
   </sv:property>
   <sv:property sv:name="visible" sv:type="String">
     <sv:value>true</sv:value>
-  </sv:property>
-  <sv:property sv:name="jcr:created" sv:type="Date">
-    <sv:value>2006-05-06T16:45:09.419+02:00</sv:value>
   </sv:property>
   <sv:property sv:name="path" sv:type="String">
     <sv:value>/templates/samples/templates/sample-mail.jsp</sv:value>
@@ -42,10 +36,7 @@
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>d0180849-6c17-4179-b49d-a92e596b6903</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
+      <sv:value>e8b0cc23-c4df-4579-95d8-f4e87bff307c</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:authorid" sv:type="String">
       <sv:value>superuser</sv:value>
@@ -62,17 +53,11 @@
     <sv:property sv:name="mgnl:Data" sv:type="String">
       <sv:value>MetaData</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-05-06T16:45:09.419+02:00</sv:value>
-    </sv:property>
     <sv:property sv:name="mgnl:lastaction" sv:type="Date">
       <sv:value>2006-04-06T23:30:52.293+09:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:activatorid" sv:type="String">
       <sv:value>superuser</sv:value>
-    </sv:property>
-    <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-      <sv:value>1121345953489000</sv:value>
     </sv:property>
   </sv:node>
 </sv:node>
