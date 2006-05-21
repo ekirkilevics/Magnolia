@@ -18,7 +18,6 @@ import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.ie.DataTransporter;
 import info.magnolia.cms.security.AccessDeniedException;
@@ -58,6 +57,12 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
     private boolean dialogs;
 
     private boolean website;
+
+    private boolean users;
+
+    private boolean groups;
+
+    private boolean roles;
 
     private String rootdir;
 
@@ -128,6 +133,30 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
     }
 
     /**
+     * Setter for <code>groups</code>.
+     * @param groups The groups to set.
+     */
+    public void setGroups(boolean groups) {
+        this.groups = groups;
+    }
+
+    /**
+     * Setter for <code>roles</code>.
+     * @param roles The roles to set.
+     */
+    public void setRoles(boolean roles) {
+        this.roles = roles;
+    }
+
+    /**
+     * Setter for <code>users</code>.
+     * @param users The users to set.
+     */
+    public void setUsers(boolean users) {
+        this.users = users;
+    }
+
+    /**
      * Setter for <code>repository</code>.
      * @param repository The repository to set.
      */
@@ -182,24 +211,42 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
         }
 
         if (website) {
-            try {
-                HierarchyManager hmWeb = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
-                Content wesiteRoot = hmWeb.getRoot();
+            extractWorkspaceRoots(ContentRepository.WEBSITE);
+        }
 
-                Iterator children = wesiteRoot.getChildren(ItemType.CONTENT).iterator();
-                while (children.hasNext()) {
-                    Content exported = (Content) children.next();
-                    exportNode(ContentRepository.WEBSITE, hmWeb.getWorkspace().getSession(), exported);
-                }
-            }
-            catch (Exception e) {
-                log.error(e.getMessage(), e);
-                AlertUtil.setMessage("Error while processing website repository", e);
-            }
+        if (users) {
+            extractWorkspaceRoots(ContentRepository.USERS);
+        }
 
+        if (groups) {
+            extractWorkspaceRoots(ContentRepository.USER_GROUPS);
+        }
+
+        if (roles) {
+            extractWorkspaceRoots(ContentRepository.USER_ROLES);
         }
 
         return this.show();
+    }
+
+    /**
+     * @param repositoryName
+     */
+    private void extractWorkspaceRoots(String repositoryName) {
+        try {
+            HierarchyManager hm = MgnlContext.getHierarchyManager(repositoryName);
+            Content wesiteRoot = hm.getRoot();
+
+            Iterator children = wesiteRoot.getChildren(ItemType.CONTENT).iterator();
+            while (children.hasNext()) {
+                Content exported = (Content) children.next();
+                exportNode(repositoryName, hm.getWorkspace().getSession(), exported);
+            }
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+            AlertUtil.setMessage("Error while processing " + repositoryName + " repository", e);
+        }
     }
 
     public String backupChildren() {

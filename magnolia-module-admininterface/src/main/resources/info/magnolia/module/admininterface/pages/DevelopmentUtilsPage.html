@@ -2,23 +2,10 @@
 <hmtl>
   <head>
     <title>Deployment utils</title>
-    <style type="text/css">
-    <![CDATA[
-    .formelement {
-    height: 18px;
-    }
-    .formelement label{
-    width: 200px;
-    float: left;
-    }
-    .formelement input{
-    width: 200px;
-    float: left;
-    }
-    ]]>
-    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="${this.request.contextPath}/.resources/admin-css/admin-all.css" type="text/css" rel="stylesheet" />
   </head>
-  <body>
+  <body id="mgnl">
     <h3>Backup configuration</h3>
     <form action="">
       <input type="hidden" name="command" value="backup" />
@@ -34,15 +21,27 @@
         <label for="dialogs">Dialogs</label>
         <input type="checkbox" name="dialogs" checked="checked" />
       </div>
-      <div class="website">
+      <div class="formelement">
         <label for="website">Website</label>
         <input type="checkbox" name="website" checked="checked" />
+      </div>
+      <div class="formelement">
+        <label for="users">Users</label>
+        <input type="checkbox" name="users" />
+      </div>
+      <div class="formelement">
+        <label for="groups">Groups</label>
+        <input type="checkbox" name="groups" />
+      </div>
+      <div class="formelement">
+        <label for="roles">Roles</label>
+        <input type="checkbox" name="roles" />
       </div>
       <div class="formelement">
         <label for="rootdir">Root dir, relative to webapp</label>
         <input type="text" name="rootdir" value="WEB-INF/bootstrap/common" />
       </div>
-      <input type="submit" value="backup" />
+      <input type="submit" value="backup" class="mgnlControlButton" />
     </form>
     <h3>Backup subnodes to separate files</h3>
     <form action="">
@@ -66,13 +65,11 @@
         <label for="rootdir">Root dir, relative to webapp</label>
         <input type="text" name="rootdir" value="WEB-INF/bootstrap/common" />
       </div>
-      <input type="submit" value="backupChildren" />
+      <input type="submit" value="backupChildren" class="mgnlControlButton" />
     </form>
     [#if message?exists]
     <hr />
-    <pre>
-      ${message}
-    </pre>
+    <pre>${message}</pre>
     [/#if]
   </body>
 </hmtl>

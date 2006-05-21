@@ -1,0 +1,14 @@
+#mgnl .formelement {
+    height: 18px;
+}
+
+#mgnl .formelement label {
+    width: 200px;
+    float: left;
+    clear: left;
+}
+
+#mgnl .formelement input {
+    width: 200px;
+    clear: right;
+}
