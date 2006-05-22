@@ -86,9 +86,6 @@ public class DataTransporter {
     public static synchronized void executeImport(String basepath, String repository, File xmlfile,
         boolean keepVersionHistory, int importMode, boolean saveAfterImport, boolean createBasepathIfNotExist)
         throws IOException {
-
-        log.info("Loading file {}", xmlfile.getAbsolutePath()); //$NON-NLS-1$
-
         String fileName = xmlfile.getName();
         InputStream in = getInputStreamForFile(fileName, xmlfile);
         executeImport(
