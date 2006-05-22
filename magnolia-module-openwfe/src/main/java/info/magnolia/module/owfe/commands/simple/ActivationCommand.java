@@ -57,7 +57,7 @@ public class ActivationCommand extends MgnlCommand {
             doActivate(path, recursive);
         }
         catch (Exception e) {
-            log.error("cannot do activate", e);
+            log.error("cannot do activate:"+ e.getMessage());
             return false;
         }
         log.info("exec successfully.");
