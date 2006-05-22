@@ -16,17 +16,11 @@
   <sv:property sv:name="jcr:uuid" sv:type="String">
     <sv:value>e821eed5-d745-4f86-827d-903d4809d63d</sv:value>
   </sv:property>
-  <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-    <sv:value>true</sv:value>
-  </sv:property>
   <sv:property sv:name="icon" sv:type="String">
     <sv:value>/.resources/icons/24/folders.gif</sv:value>
   </sv:property>
   <sv:property sv:name="onclick" sv:type="String">
     <sv:value>MgnlAdminCentral.showTree('dms')</sv:value>
-  </sv:property>
-  <sv:property sv:name="jcr:created" sv:type="Date">
-    <sv:value>2006-05-01T18:55:13.646+02:00</sv:value>
   </sv:property>
   <sv:property sv:name="label" sv:type="String">
     <sv:value>menu.dms</sv:value>
@@ -36,10 +30,7 @@
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>5bf49949-7a1c-494b-b1d6-54cdba290fbb</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
+      <sv:value>97d9dbc4-2eac-4837-b5b3-03abe12a5876</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:authorid" sv:type="String">
       <sv:value>superuser</sv:value>
@@ -56,17 +47,11 @@
     <sv:property sv:name="mgnl:Data" sv:type="String">
       <sv:value>MetaData</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-05-01T18:55:13.646+02:00</sv:value>
-    </sv:property>
     <sv:property sv:name="mgnl:lastaction" sv:type="Date">
       <sv:value>2006-04-19T14:42:15.402+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:activatorid" sv:type="String">
       <sv:value>superuser</sv:value>
-    </sv:property>
-    <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-      <sv:value>1000000000000010</sv:value>
     </sv:property>
   </sv:node>
 </sv:node>

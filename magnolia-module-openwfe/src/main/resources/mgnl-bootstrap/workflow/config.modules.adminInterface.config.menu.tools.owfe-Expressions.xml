@@ -17,27 +17,18 @@
   <sv:property sv:name="jcr:uuid" sv:type="String">
     <sv:value>791d9e36-9ac5-48e3-b93b-ffb91e2cde20</sv:value>
   </sv:property>
-  <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-    <sv:value>true</sv:value>
-  </sv:property>
   <sv:property sv:name="onclick" sv:type="String">
     <sv:value>MgnlAdminCentral.showTree('owfe-expressions')</sv:value>
   </sv:property>
   <sv:property sv:name="label" sv:type="String">
     <sv:value>owfe jcr (expr)</sv:value>
   </sv:property>
-  <sv:property sv:name="jcr:created" sv:type="Date">
-    <sv:value>2006-05-06T13:06:27.791+02:00</sv:value>
-  </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>b08df3e3-b3a0-403b-a9a2-1ca1fe7d37f6</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
+      <sv:value>88a39301-8f85-4d62-8de8-1f71f7a207c5</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:authorid" sv:type="String">
       <sv:value>superuser</sv:value>
@@ -57,14 +48,8 @@
     <sv:property sv:name="mgnl:lastaction" sv:type="Date">
       <sv:value>2006-05-06T16:14:31.576+02:00</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-05-06T13:06:27.791+02:00</sv:value>
-    </sv:property>
     <sv:property sv:name="mgnl:activatorid" sv:type="String">
       <sv:value>superuser</sv:value>
-    </sv:property>
-    <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-      <sv:value>1000000000000050</sv:value>
     </sv:property>
   </sv:node>
 </sv:node>
