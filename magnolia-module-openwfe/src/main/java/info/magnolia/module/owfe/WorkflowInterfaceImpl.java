@@ -25,8 +25,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import openwfe.org.engine.expressions.FlowExpressionId;
 import openwfe.org.engine.workitem.AttributeUtils;
 import openwfe.org.engine.workitem.InFlowWorkItem;
@@ -45,21 +43,10 @@ public class WorkflowInterfaceImpl implements WorkflowInterface {
 
 	private final static Logger log = LoggerFactory.getLogger(WorkflowInterfaceImpl.class.getName());
 
-	JCRWorkItemAPI storage = null;
+	private JCRWorkItemAPI storage = null;
 
 	public WorkflowInterfaceImpl() throws Exception {
 		this.storage = new JCRWorkItemAPI();
-	}
-
-	/**
-	 * get user name from request
-	 * 
-	 * @param request
-	 * @return get the user name from the request
-	 */
-	public String getUsername(HttpServletRequest request) {
-
-		return MgnlContext.getUser().getName();
 	}
 
 	/**
@@ -113,18 +100,11 @@ public class WorkflowInterfaceImpl implements WorkflowInterface {
 		return doQuery;
 	}
 
-	/**
-	 * get number of work items for current user
-	 */
-	public int getWorkItemsNumber(HttpServletRequest request) throws Exception {
-		return getWorkItems(getUsername(request)).size();
-	}
-
-	/**
+    /**
 	 * return a list of work item for current user
 	 */
-	public List getWorkItems(HttpServletRequest request) throws Exception {
-		return getWorkItems(getUsername(request));
+	public List getWorkItems() throws Exception {
+		return getWorkItems(MgnlContext.getUser().getName());
 	}
 
 	/**

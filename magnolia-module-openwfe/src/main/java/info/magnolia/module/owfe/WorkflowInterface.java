@@ -16,9 +16,6 @@ import info.magnolia.cms.core.HierarchyManager;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
-
 /**
  * the interface for work flow in magnolia
  * @author jackie
@@ -35,35 +32,24 @@ interface WorkflowInterface {
 
     /**
      * get all work items for the user
-     * @param GroupName
-     * @return
-     * @throws Exception
-     */
-    public List getGroupInbox(String GroupName) throws Exception;
-
-    /**
-     * get all work items for the user
      * @param groupName
      * @return
      * @throws Exception
      */
-    public List getRoleInbox(String groupName) throws Exception;
+    public List getGroupInbox(String groupName) throws Exception;
 
     /**
-     * get the number of work items in user's inbox
-     * @param request
+     * get all work items for the role
+     * @param roleName
      * @return
      * @throws Exception
      */
-    public int getWorkItemsNumber(HttpServletRequest request) throws Exception;
+    public List getRoleInbox(String roleName) throws Exception;
 
     /**
-     * get work itemby the index in the lis return by getWorkItems(String userName)
-     * @param request
-     * @param request
+     * get work items of the current user
      */
-    // public WorkItem getWorkItem(HttpServletRequest request, int i) throws Exception;
-    public List getWorkItems(HttpServletRequest request) throws Exception;
+    public List getWorkItems() throws Exception;
 
     /**
      * approve acitvation
