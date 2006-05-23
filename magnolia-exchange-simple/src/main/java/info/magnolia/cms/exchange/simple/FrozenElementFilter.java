@@ -12,11 +12,11 @@
  */
 package info.magnolia.cms.exchange.simple;
 
-import org.xml.sax.helpers.XMLFilterImpl;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.XMLReader;
 import org.xml.sax.SAXException;
 import org.xml.sax.Attributes;
+import info.magnolia.cms.core.ie.filters.VersionFilter;
 
 /**
  * this filter converts frozen nodes to mimic actual state of a node, this is only meant
@@ -25,7 +25,7 @@ import org.xml.sax.Attributes;
  * @see info.magnolia.cms.core.ie.filters.VersionFilter
  * $Id$
  */
-class FrozenElementFilter extends XMLFilterImpl {
+class FrozenElementFilter extends VersionFilter {
 
 
     /**
@@ -37,11 +37,6 @@ class FrozenElementFilter extends XMLFilterImpl {
      * original node name
      * */
     private String nodeName;
-
-    /**
-     * package private
-     * */
-    protected FrozenElementFilter()  {}
 
     /**
      * Instantiates a new version filter.
@@ -77,7 +72,7 @@ class FrozenElementFilter extends XMLFilterImpl {
             super.characters(ch, start, length);
         }
     }
-
+    
     /**
      * @see org.xml.sax.helpers.XMLFilterImpl#startElement(String, String, String, org.xml.sax.Attributes)
      */
@@ -95,6 +90,9 @@ class FrozenElementFilter extends XMLFilterImpl {
                         || "jcr:primaryType".equals(attName)
                         || "jcr:uuid".equals(attName)
                         || "jcr:mixinTypes".equals(attName)
+                        || "jcr:isCheckedOut".equals(attName)
+                        || "jcr:created".equals(attName)
+                        || "mgnl:sequenceposition".equals(attName)
                         || "jcr:versionHistory" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                     .equals(attName)) {
                     inVersionElement++;
