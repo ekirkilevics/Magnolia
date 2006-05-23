@@ -14,7 +14,7 @@ package info.magnolia.module.owfe.inbox;
 
 import info.magnolia.cms.gui.controlx.list.AbstractListModel;
 import info.magnolia.cms.gui.controlx.list.ListModelIterator;
-import info.magnolia.module.owfe.WorkflowInterfaceImpl;
+import info.magnolia.module.owfe.WorkflowUtil;
 
 import java.util.Collection;
 import java.util.List;
@@ -40,7 +40,7 @@ public class InboxListModel extends AbstractListModel {
      * @see info.magnolia.cms.gui.controlx.list.AbstractListModel#getResult()
      */
     protected Collection getResult() throws Exception {
-        return (new WorkflowInterfaceImpl()).getUserInbox(this.userName);
+        return WorkflowUtil.getUserInbox(this.userName);
     }
 
     /**

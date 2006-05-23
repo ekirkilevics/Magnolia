@@ -15,7 +15,7 @@ package info.magnolia.module.owfe.servlets;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.module.owfe.WorkflowInterfaceImpl;
+import info.magnolia.module.owfe.WorkflowUtil;
 import info.magnolia.module.owfe.jcr.JCRFlowDefinition;
 import info.magnolia.module.owfe.jcr.JCRWorkItemAPI;
 
@@ -191,19 +191,11 @@ public class FlowDefServlet extends javax.servlet.http.HttpServlet implements ja
             }
             else if (method.equalsIgnoreCase("launchFlow")) {
                 String repo = request.getParameter("repository");
-                String ws = request.getParameter("workspace");
                 String launchFlowName = request.getParameter("flowName");
                 String path = request.getParameter("path");
 
-                HierarchyManager hm = null;
-                if (ws == null || ws.length() == 0) {
-                    ContentRepository.getHierarchyManager(repo);
-                }
-                else {
-                    ContentRepository.getHierarchyManager(repo, ws);
-                }
                 try {
-                    new WorkflowInterfaceImpl().launchFlow(hm, path, launchFlowName);
+                    WorkflowUtil.launchFlow(repo, path, launchFlowName);
                 }
                 catch (Exception e) {
                     log.error("launch flow failed", e);

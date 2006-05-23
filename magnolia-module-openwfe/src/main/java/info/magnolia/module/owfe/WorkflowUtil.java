@@ -13,7 +13,6 @@
 package info.magnolia.module.owfe;
 
 import info.magnolia.cms.beans.runtime.MgnlContext;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.util.MgnlCoreConstants;
 import info.magnolia.commands.ContextAttributes;
@@ -26,7 +25,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import openwfe.org.engine.expressions.FlowExpressionId;
-import openwfe.org.engine.workitem.AttributeUtils;
 import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.engine.workitem.LaunchItem;
 import openwfe.org.engine.workitem.StringAttribute;
@@ -39,14 +37,28 @@ import org.slf4j.LoggerFactory;
  * the class implements all the interface of work flow API
  * @author jackie
  */
-public class WorkflowInterfaceImpl implements WorkflowInterface {
+public class WorkflowUtil {
 
-	private final static Logger log = LoggerFactory.getLogger(WorkflowInterfaceImpl.class.getName());
+	private final static Logger log = LoggerFactory.getLogger(WorkflowUtil.class.getName());
 
-	private JCRWorkItemAPI storage = null;
+    /**
+     * Where the work items are stored
+     */
+	private static JCRWorkItemAPI storage;
+    
+    static{
+        try {
+            storage = new JCRWorkItemAPI();
+        }
+        catch (Exception e) {
+            log.error("can't initialize the workflow util", e);
+        }
+    }
 
-	public WorkflowInterfaceImpl() throws Exception {
-		this.storage = new JCRWorkItemAPI();
+    /**
+     * Util: don't instantiate
+     */
+	private WorkflowUtil() {
 	}
 
 	/**
@@ -56,7 +68,7 @@ public class WorkflowInterfaceImpl implements WorkflowInterface {
 	 * @return
 	 * @throws Exception
 	 */
-	public List getWorkItems(String userName) throws Exception {
+	public static List getWorkItems(String userName) throws Exception {
 		if (log.isDebugEnabled()) {
 			log.debug("enter getWorkItems");
 			log.debug("user name = " + userName);
@@ -94,32 +106,25 @@ public class WorkflowInterfaceImpl implements WorkflowInterface {
 		if (log.isDebugEnabled())
 			log.info("xpath query string = " + queryString);
 		
-		final List doQuery = this.storage.doQuery(queryString.toString());
+		final List doQuery = storage.doQuery(queryString.toString());
 		long end = System.currentTimeMillis();
 		log.info("Retrieving workitems done. (Took " + (end - start) + " ms)");
 		return doQuery;
 	}
 
-    /**
-	 * return a list of work item for current user
-	 */
-	public List getWorkItems() throws Exception {
-		return getWorkItems(MgnlContext.getUser().getName());
-	}
-
 	/**
 	 * remove one work item by id
 	 */
-	public void removeWorkItem(InFlowWorkItem wi) throws Exception {
-		this.storage.removeWorkItem(wi.getId());
+	private static void removeWorkItem(InFlowWorkItem wi) throws Exception {
+		storage.removeWorkItem(wi.getId());
 	}
 
 	/**
 	 * approve activiation
 	 */
-	public void approveActivation(String expressionId) throws Exception {
+	public static void approveActivation(String expressionId) throws Exception {
 		// get workitem
-		InFlowWorkItem wi = this.storage.retrieveWorkItem(StringUtils.EMPTY, FlowExpressionId.fromParseableString(expressionId));
+		InFlowWorkItem wi = storage.retrieveWorkItem(StringUtils.EMPTY, FlowExpressionId.fromParseableString(expressionId));
 		if (wi == null) {
 			throw new Exception("can't get the work iem by this expression id ("+ expressionId + ")");
 		}
@@ -142,10 +147,10 @@ public class WorkflowInterfaceImpl implements WorkflowInterface {
 	/**
 	 * reject the activation request, the work item will be removed
 	 */
-	public void rejectActivation(String expressionId, String comment)
+	public static void rejectActivation(String expressionId, String comment)
 			throws Exception {
 
-		InFlowWorkItem wi = this.storage.retrieveWorkItem(StringUtils.EMPTY, FlowExpressionId.fromParseableString(expressionId));
+		InFlowWorkItem wi = storage.retrieveWorkItem(StringUtils.EMPTY, FlowExpressionId.fromParseableString(expressionId));
 		if (wi == null) {
 			throw new Exception("cant not get the work iem by this expression id ("+ expressionId + ")");
 		}
@@ -168,36 +173,19 @@ public class WorkflowInterfaceImpl implements WorkflowInterface {
 		log.info("reject ok");
 	}
 
-	public void cancel(String expressionId) {
+	public static void cancel(String expressionId) {
 		try {
-			this.storage.removeWorkItem(FlowExpressionId.fromParseableString(expressionId));
+			storage.removeWorkItem(FlowExpressionId.fromParseableString(expressionId));
 		} catch (Exception e) {
 			log.info("can't cancel", e);
 		}
 	}
 
 	/**
-	 * update the attributes of the work item
-	 */
-	public void updateWorkItem(String expressionId, String[] names,
-			String values[]) throws Exception {
-
-		InFlowWorkItem ifwi = this.storage.retrieveWorkItem(StringUtils.EMPTY,
-				FlowExpressionId.fromParseableString(expressionId));
-		if (ifwi == null) {
-			throw new Exception("cant not get the work iem by this expression id ("+ expressionId + ")");
-		}
-		for (int i = 0; i < names.length; i++) {
-			ifwi.setAttribute(names[i], new StringAttribute(values[i]));
-		}
-		this.storage.storeWorkItem("", ifwi);
-	}
-
-	/**
 	 * assign work item to a user, if userName = "", then assignment for the
 	 * workItem will be deleted
 	 */
-	public void assignWorkItemToUser(String expressionId, String userName) {
+	public static void assignWorkItemToUser(String expressionId, String userName) {
 		if (expressionId == null || expressionId.length() == 0) {
 			log.error("can not assign work item, invalid express id "+ expressionId);
 			return;
@@ -216,7 +204,7 @@ public class WorkflowInterfaceImpl implements WorkflowInterface {
 
 		InFlowWorkItem if_wi = null;
 		try {
-			if_wi = this.storage.retrieveWorkItem(StringUtils.EMPTY, eid);
+			if_wi = storage.retrieveWorkItem(StringUtils.EMPTY, eid);
 		} catch (Exception e) {
 			log.error("retrieve work item failed", e);
 		}
@@ -232,7 +220,7 @@ public class WorkflowInterfaceImpl implements WorkflowInterface {
 	 * assign work item to a user, if userName = "", then assignment for the
 	 * workItem will be deleted
 	 */
-	public void assignWorkItemToUser(InFlowWorkItem wi, String userName) {
+	public static void assignWorkItemToUser(InFlowWorkItem wi, String userName) {
 		if (userName == null) {
 			log.info("User name was null");
 			return;
@@ -240,7 +228,7 @@ public class WorkflowInterfaceImpl implements WorkflowInterface {
 
 		try {
 			wi.addAttribute(WorkflowConstants.ATT_ASSIGN_TO, new StringAttribute(userName));
-			this.storage.storeWorkItem(StringUtils.EMPTY, wi);
+			storage.storeWorkItem(StringUtils.EMPTY, wi);
 		} catch (Exception e) {
 			log.error("assign work item to user " + userName + " failed.)", e);
 		}
@@ -250,7 +238,7 @@ public class WorkflowInterfaceImpl implements WorkflowInterface {
 	/**
 	 * return a list of workItem for one group
 	 */
-	public List getGroupInbox(String GroupName) throws Exception {
+	public static List getGroupInbox(String GroupName) throws Exception {
 		if (log.isDebugEnabled()) {
 			log.debug("enter getGroupInbox");
 			log.debug("GroupName = " + GroupName);
@@ -263,14 +251,14 @@ public class WorkflowInterfaceImpl implements WorkflowInterface {
 
 		if (log.isDebugEnabled())
 			log.debug("xpath query string = " + queryString);
-		return this.storage.doQuery(queryString.toString());
+		return storage.doQuery(queryString.toString());
 
 	}
 
 	/**
 	 * return a list of workItem for one role
 	 */
-	public List getRoleInbox(String roleName) throws Exception {
+	public static List getRoleInbox(String roleName) throws Exception {
 		if (log.isDebugEnabled()) {
 			log.debug("enter getGroupInbox");
 			log.debug("roleName = " + roleName);
@@ -283,30 +271,27 @@ public class WorkflowInterfaceImpl implements WorkflowInterface {
 
 		if (log.isDebugEnabled())
 			log.debug("xpath query string = " + queryString);
-		return this.storage.doQuery(queryString.toString());
+		return storage.doQuery(queryString.toString());
 	}
 
 	/**
 	 * return a list of workItem for one usre
 	 */
-	public List getUserInbox(String userName) throws Exception {
-		return this.getWorkItems(userName);
+	public static List getUserInbox(String userName) throws Exception {
+		return getWorkItems(userName);
 	}
 
 	/**
 	 * Simply launch a flow
 	 */
-	public void launchFlow(HierarchyManager hm, String path, String flowName)
+	public static void launchFlow(String repository, String path, String flowName)
 			throws Exception {
-		if (log.isDebugEnabled())
-			log.debug("- Lauch flow -" + this.getClass().toString()+ "- Start");
 		if (flowName == null || flowName.length() == 0) {
 			throw new IllegalArgumentException("flowName is null or empty string");
 		}
 		try {
 			// Get the references
 			LaunchItem li = new LaunchItem();
-			li.addAttribute(ContextAttributes.P_ACTION, new StringAttribute(this.getClass().getName()));
 			li.setWorkflowDefinitionUrl(ContextAttributes.P_WORKFLOW_DEFINITION_URL);
 
 			// Retrieve and add the flow definition to the LaunchItem
@@ -315,8 +300,8 @@ public class WorkflowInterfaceImpl implements WorkflowInterface {
 			JCRPersistedEngine engine = WorkflowModule.getEngine();
 
 			// start activation
-			if (hm != null) {
-				li.addAttribute(ContextAttributes.P_HM, AttributeUtils.java2owfe(hm));
+			if (repository != null) {
+				li.addAttribute(ContextAttributes.P_REPOSITORY, new StringAttribute(repository));
 			}
 			if (path != null) {
 				li.addAttribute(ContextAttributes.P_PATH,new StringAttribute(path));
@@ -328,10 +313,6 @@ public class WorkflowInterfaceImpl implements WorkflowInterface {
 		} catch (Exception e) {
 			log.error("Launching flow " + flowName + " failed", e);
 		}
-
-		if (log.isDebugEnabled())
-			log.debug("- Lauch flow -{}- End", this.getClass().getName());
-
 	}
 
 }
