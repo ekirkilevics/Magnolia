@@ -42,7 +42,7 @@ public class ObservationUtil {
      * @param listener event listener
      */
     public static void registerChangeListener(String repository, String observationPath, EventListener listener) {
-        log.info("Registering event listener for path [" + observationPath + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+        log.debug("Registering event listener for path [{}]", observationPath); //$NON-NLS-1$ 
     
         try {
     
