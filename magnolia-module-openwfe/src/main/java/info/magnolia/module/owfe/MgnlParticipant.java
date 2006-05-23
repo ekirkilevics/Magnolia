@@ -14,18 +14,21 @@ package info.magnolia.module.owfe;
 
 import info.magnolia.cms.beans.runtime.Context;
 import info.magnolia.cms.beans.runtime.MgnlContext;
-import info.magnolia.commands.CommandsMap;
-import info.magnolia.commands.MgnlCommand;
+import info.magnolia.commands.CommandsManager;
 import info.magnolia.module.owfe.jcr.JCRWorkItemAPI;
 import openwfe.org.embed.impl.engine.AbstractEmbeddedParticipant;
 import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.engine.workitem.WorkItem;
 
+import org.apache.commons.chain.Command;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 public class MgnlParticipant extends AbstractEmbeddedParticipant {
+
+    private static final String PREFIX_COMMAND = "command-";
 
     /**
      * Logger
@@ -67,7 +70,7 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
         if (log.isDebugEnabled()) {
             log.debug("participant name = " + parName);
         }
-        if (parName.startsWith(MgnlCommand.PREFIX_COMMAND)) // handle commands
+        if (parName.startsWith(PREFIX_COMMAND)) // handle commands
         {
             log.info("consume command " + parName + "...");
             if (log.isDebugEnabled()) {
@@ -75,7 +78,8 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
             }
 
             try {
-                MgnlCommand c = CommandsMap.getCommandFromFullName(parName);
+                String name =  StringUtils.removeStart(parName, PREFIX_COMMAND);
+                Command c = CommandsManager.getInstance().getCommand(name);
                 if (c != null) {
                     log.info("Command has been found through the magnolia catalog:" + c.getClass().getName());
 
