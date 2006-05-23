@@ -13,6 +13,7 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -87,7 +88,7 @@ public final class Subscriber {
         try {
             log.info("Config : loading Subscribers"); //$NON-NLS-1$
             Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(START_PAGE);
-            Collection children = startPage.getContent("SubscriberConfig").getChildren(); //$NON-NLS-1$
+            Collection children = startPage.getContent("SubscriberConfig").getChildren(ItemType.CONTENTNODE); //$NON-NLS-1$
             if (children != null) {
                 Subscriber.cacheContent(children);
             }
