@@ -14,12 +14,12 @@ package info.magnolia.cms.servlets;
 
 import info.magnolia.cms.beans.runtime.Context;
 import info.magnolia.cms.beans.runtime.MgnlContext;
-import info.magnolia.commands.CommandsMap;
-import info.magnolia.commands.MgnlCommand;
+import info.magnolia.commands.CommandsManager;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.chain.Command;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +57,7 @@ public abstract class CommandBasedMVCServletHandler extends MVCServletHandlerImp
      */
     public String execute(String commandName) {
         // get command from command map in JCR repository
-        MgnlCommand command = findCommand(commandName);
+        Command command = findCommand(commandName);
         if (command == null) { // not found, do in the old ways
             if (log.isDebugEnabled()) {
                 log.debug("can not find command named " + commandName + " in tree command map");
@@ -98,9 +98,8 @@ public abstract class CommandBasedMVCServletHandler extends MVCServletHandlerImp
      * @param commandName
      * @return the callable command object
      */
-    protected MgnlCommand findCommand(String commandName) {
-        MgnlCommand command = CommandsMap.getCommand(this.getCatalogueName(), commandName);
-        return command;
+    protected Command findCommand(String commandName) {
+        return CommandsManager.getInstance().getCommand(this.getCatalogueName(), commandName);
     }
 
     /**

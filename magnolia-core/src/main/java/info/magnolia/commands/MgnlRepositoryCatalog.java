@@ -1,51 +1,34 @@
 package info.magnolia.commands;
 
-import info.magnolia.cms.beans.runtime.Context;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import org.apache.commons.chain.Chain;
 import org.apache.commons.chain.Command;
+import org.apache.commons.chain.impl.CatalogBase;
+import org.apache.commons.chain.impl.ChainBase;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Iterator;
-
-import javax.jcr.RepositoryException;
-
 
 /**
  * Date: Mar 27, 2006 Time: 10:58:22 AM
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */
-public class MgnlRepositoryCatalog extends MgnlBaseCatalog {
+public class MgnlRepositoryCatalog extends CatalogBase {
 
-    static final String REPO_PATH = "/modules/workflow/config/commands";
-
+    private static Logger log = LoggerFactory.getLogger(MgnlRepositoryCatalog.class); 
+    
     static final String CLASS_NODE_DATA = "impl";
 
-    public void initCatalog(String name) {
-        String path;
-        if (name == null || name.length() == 0) {
-            path = REPO_PATH;
-        }
-        else {
-            path = REPO_PATH + "/" + name;
-        }
-
-        Context context = MgnlContext.getSystemContext();
-        HierarchyManager hm = context.getHierarchyManager("config");
-        Content content;
-        try {
-            content = hm.getContent(path);
-        }
-        catch (RepositoryException e) {
-            log.error(e.getMessage(), e);
-            return;
-        }
-
+    
+    /**
+     * Initialize this catalog based on the configuration found in the repository
+     */
+    public MgnlRepositoryCatalog(Content content) {
         Iterator iter = content.getChildren(ItemType.CONTENTNODE).iterator();
         // loop over the command names one by one
         while (iter.hasNext()) {
@@ -78,10 +61,9 @@ public class MgnlRepositoryCatalog extends MgnlBaseCatalog {
                 // continue with next action
             }
             else {
-
                 log.debug("This is a chain");
 
-                Chain chain = new MgnlChain();
+                Chain chain = new ChainBase();
 
                 // consider any command as a chain, makes things easier
                 // we iterate through each subnode and consider this as a command in the chain
@@ -98,7 +80,7 @@ public class MgnlRepositoryCatalog extends MgnlBaseCatalog {
 
                         log.debug("Found class {} for action {}", className, actionName);
                         Class klass = Class.forName(className);
-                        MgnlCommand command = (MgnlCommand) klass.newInstance();
+                        Command command = (Command)klass.newInstance();
                         chain.addCommand(command);
                     }
                     catch (Exception te) {
