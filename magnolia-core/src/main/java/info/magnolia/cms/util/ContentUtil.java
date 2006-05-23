@@ -12,9 +12,11 @@
  */
 package info.magnolia.cms.util;
 
+import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.Content.ContentFilter;
 import info.magnolia.cms.security.AccessDeniedException;
 
 import java.util.ArrayList;
@@ -33,6 +35,30 @@ import org.apache.commons.lang.StringUtils;
  * @author philipp
  */
 public class ContentUtil {
+    
+    /**
+     * Content filter accepting everything
+     */
+    private static ContentFilter allwaysTrueContentFilter = new ContentFilter(){
+        public boolean accept(Content content) {
+            return true;
+        }
+    };
+    
+    /**
+     * Retruns a Content object of the named repository.
+     * @param repository
+     * @param path
+     * @return null if not found
+     */
+    public static Content getContent(String repository, String path) {
+        try {
+            return MgnlContext.getHierarchyManager(repository).getContent(path);
+        }
+        catch (RepositoryException e) {
+            return null;
+        }
+    }
 
     /**
      * If the node doesn't exist just create it.
@@ -96,6 +122,44 @@ public class ContentUtil {
         return collectAllChildren(nodes, node, new ItemType[]{ItemType.CONTENT, ItemType.CONTENTNODE});
     }
 
+    /**
+     * Get all children using a filter
+     * @param node
+     * @param filter
+     * @return list of all found nodes
+     */
+    public static List collectAllChildren(Content node, ContentFilter filter) {
+        List nodes = new ArrayList();
+        return collectAllChildren(nodes, node, filter);
+    }
+    
+    /**
+     * Get the children using a filter
+     * @param nodes collection of already found nodes
+     * @param node
+     * @param filter the filter to use
+     * @return
+     */
+    private static List collectAllChildren(List nodes, Content node, ContentFilter filter) {
+        // get filtered sub nodes first
+        Collection children = node.getChildren(filter);
+        for (Iterator iter = children.iterator(); iter.hasNext();) {
+            Content child = (Content) iter.next();
+            nodes.add(child);
+        }
+        
+        // get all children to find recursively
+        Collection allChildren = node.getChildren(allwaysTrueContentFilter);
+        
+        // recursion
+        for (Iterator iter = allChildren.iterator(); iter.hasNext();) {
+            Content child = (Content) iter.next();
+            collectAllChildren(nodes, child, filter);
+        }
+        
+        return nodes;
+    }
+    
     /**
      * Get all children of a particular type
      * @param node
@@ -162,4 +226,6 @@ public class ContentUtil {
         }
         return node;
     }
+
+
 }
