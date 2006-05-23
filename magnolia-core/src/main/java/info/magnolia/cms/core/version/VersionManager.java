@@ -130,7 +130,7 @@ public class VersionManager {
     public synchronized Version addVersion(Content node)
             throws UnsupportedRepositoryOperationException, RepositoryException {
         //Rule rule = new Rule(new String[] {node.getNodeType().getName(), ItemType.SYSTEM.getSystemName()});
-        Rule rule = new Rule(node.getNodeType().getName()+","+ItemType.SYSTEM.getSystemName(), ",");
+        Rule rule = new Rule(node.getNodeTypeName()+","+ItemType.SYSTEM.getSystemName(), ",");
         rule.reverse();
         return this.addVersion(node, rule);
     }
@@ -219,6 +219,7 @@ public class VersionManager {
             log.error("Failed to limit version history to the maximum configured", re);
             log.error("New version has already been created");
         }
+
         return newVersion;
     }
 
@@ -391,18 +392,17 @@ public class VersionManager {
         try {
             Content node = this.getVersionedNode(uuid);
             if (node != null) {
-                if (node.getJCRNode().getReferences().getSize() > 0) {
-                    // remove all versions leaving the main node since it has been still referenced
-                    VersionHistory history = node.getVersionHistory();
-                    VersionIterator versions = node.getAllVersions();
-                    if (versions != null) {
-                        // skip root version
-                        versions.nextVersion();
-                        while (versions.hasNext()) {
-                            history.removeVersion(versions.nextVersion().getName());
-                        }
+                VersionHistory history = node.getVersionHistory();
+                VersionIterator versions = node.getAllVersions();
+                if (versions != null) {
+                    // skip root version
+                    versions.nextVersion();
+                    while (versions.hasNext()) {
+                        history.removeVersion(versions.nextVersion().getName());
                     }
-                } else {
+                }
+                if (node.getJCRNode().getReferences().getSize() < 1) {
+                    // remove node from the version store only if its not referenced 
                     node.delete();
                 }
             }

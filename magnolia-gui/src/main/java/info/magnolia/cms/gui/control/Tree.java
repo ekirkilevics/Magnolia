@@ -744,7 +744,7 @@ public class Tree extends ControlSuper {
             Content current = getHierarchyManager().getContent(this.getPath());
             Content parent = current.getParent();
             String placedBefore = null;
-            for (Iterator iter = parent.getChildren(current.getNodeType().getName()).iterator(); iter.hasNext();) {
+            for (Iterator iter = parent.getChildren(current.getNodeTypeName()).iterator(); iter.hasNext();) {
                 Content child = (Content) iter.next();
                 if (child.getHandle().equals(this.getPath())) {
                     if (iter.hasNext()) {

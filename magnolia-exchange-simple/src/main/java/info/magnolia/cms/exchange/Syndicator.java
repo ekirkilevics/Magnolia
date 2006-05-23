@@ -48,7 +48,7 @@ public interface Syndicator {
 
     /**
      * <p>
-     * this will activate specifies page (sub pages) to all configured subscribers
+     * this will activate specified node to all configured subscribers
      * </p>
      * @param parent parent under which this page will be activated
      * @param content to be activated
@@ -72,7 +72,7 @@ public interface Syndicator {
 
     /**
      * <p>
-     * this will activate specifies page (sub pages) to the specified subscribers
+     * this will activate specifies node to the specified subscribers
      * </p>
      * @param subscriber
      * @param parent parent under which this page will be activated

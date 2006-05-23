@@ -73,7 +73,6 @@ public class CopyUtil {
             root = this.getHierarchyManager().getContentByUUID(source.getUUID());
             if (root.getParent().getName().equalsIgnoreCase(VersionManager.TMP_REFERENCED_NODES)) {
                 root.getJCRNode().getSession().move(root.getHandle(), "/"+root.getName());
-                //this.getHierarchyManager().moveTo(root.getHandle(), "/"+root.getName());
             }
             this.removeProperties(root);
             // copy root properties
@@ -222,6 +221,9 @@ public class CopyUtil {
         PropertyIterator properties = node.getJCRNode().getProperties();
         while (properties.hasNext()) {
             Property property = properties.nextProperty();
+            if (property.getDefinition().isProtected() || property.getDefinition().isMandatory()) {
+                continue;
+            }
             try {
                 property.remove();
             } catch (ConstraintViolationException e) {

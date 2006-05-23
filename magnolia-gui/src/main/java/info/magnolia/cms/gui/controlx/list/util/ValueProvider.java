@@ -61,7 +61,7 @@ public class ValueProvider {
      * get value - first check for property in this object - then look for the getter for this name - else search in
      * MetaData
      * @param name
-     * @param node
+     * @param obj
      */
     public Object getValue(String name, Object obj) {
         Object value = null;
@@ -128,7 +128,7 @@ public class ValueProvider {
      */
     public String getType(Content node) {
         try {
-            return node.getNodeType().getName();
+            return node.getNodeTypeName();
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);

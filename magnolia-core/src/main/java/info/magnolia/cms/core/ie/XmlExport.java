@@ -127,7 +127,7 @@ public class XmlExport implements ExportHandler {
         Element elt = new Element(E_CONTENT);
         elt.setAttribute(A_NAME, content.getName());
         try {
-            elt.setAttribute(A_TYPE, content.getNodeType().getName());
+            elt.setAttribute(A_TYPE, content.getNodeTypeName());
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
@@ -181,7 +181,7 @@ public class XmlExport implements ExportHandler {
 
     private void exportValue(final org.jdom.Element pElt, final Property property) {
 
-        String sContent = null;
+        String sContent;
 
         try {
             if (property.getType() == PropertyType.BINARY) {
@@ -200,7 +200,7 @@ public class XmlExport implements ExportHandler {
                         IOUtils.closeQuietly(is);
                     }
                     catch (Exception e) {
-                        System.out.println(e);
+                        log.error("Failed to read input stream",e);
                     }
 
                     sContent = new String(Base64.encodeBase64(stringBuffer.toString().getBytes()));

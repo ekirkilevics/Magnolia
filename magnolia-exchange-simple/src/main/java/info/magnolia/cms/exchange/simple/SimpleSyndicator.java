@@ -13,8 +13,11 @@
 package info.magnolia.cms.exchange.simple;
 
 import info.magnolia.cms.beans.config.Subscriber;
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.*;
+import info.magnolia.cms.core.ie.DataTransporter;
+import info.magnolia.cms.core.ie.filters.VersionFilter;
 import info.magnolia.cms.exchange.ActivationContent;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Syndicator;
@@ -30,6 +33,9 @@ import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.XMLReader;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -90,6 +96,11 @@ public class SimpleSyndicator implements Syndicator {
      * resource file, name attribute
      */
     public static final String RESOURCE_MAPPING_NAME_ATTRIBUTE = "name";
+
+    /**
+     * resource file, name attribute
+     */
+    public static final String RESOURCE_MAPPING_UUID_ATTRIBUTE = "contentUUID";
 
     /**
      * resource file, resourceId attribute
@@ -624,23 +635,38 @@ public class SimpleSyndicator implements Syndicator {
      * @throws RepositoryException
      */
     private void addResources(Element resourceElement, Session session, Content content, Content.ContentFilter filter,
-                              ActivationContent activationContent) throws IOException, RepositoryException {
+                              ActivationContent activationContent)
+            throws IOException, RepositoryException, SAXException, Exception {
 
         File file = File.createTempFile("exchange" + content.getName(), "", Path.getTempDirectory());
         GZIPOutputStream gzipOutputStream = new GZIPOutputStream(new FileOutputStream(file));
+
+        XMLReader elementfilter;
+        if (content.getWorkspace().getName().equalsIgnoreCase(ContentRepository.VERSION_STORE)) {
+            elementfilter = new FrozenElementFilter(XMLReaderFactory
+                .createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName()));
+            ((FrozenElementFilter)elementfilter).setNodeName(content.getName());
+        } else {
+            // use default filter
+            elementfilter = new VersionFilter(XMLReaderFactory
+                .createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName()));
+        }
 
         /**
          * nt:file node type has mandatory sub nodes
          */
         if (content.isNodeType(ItemType.NT_FILE)) {
-            session.exportSystemView(content.getHandle(), gzipOutputStream, false, false);
+            DataTransporter.parseAndFormat
+                    (gzipOutputStream, elementfilter, "", content.getHandle(), true, false, session);
         } else {
-            session.exportSystemView(content.getHandle(), gzipOutputStream, false, true);
+            DataTransporter.parseAndFormat
+                    (gzipOutputStream, elementfilter, "", content.getJCRNode().getPath(), true, true, session);
         }
         IOUtils.closeQuietly(gzipOutputStream);
         // add file entry in mapping.xml
         Element element = new Element(RESOURCE_MAPPING_FILE_ELEMENT);
         element.setAttribute(RESOURCE_MAPPING_NAME_ATTRIBUTE, content.getName());
+        element.setAttribute(RESOURCE_MAPPING_UUID_ATTRIBUTE, content.getUUID());
         element.setAttribute(RESOURCE_MAPPING_ID_ATTRIBUTE, file.getName());
         resourceElement.addContent(element);
         // add this file element as resource in activation content
@@ -652,5 +678,6 @@ public class SimpleSyndicator implements Syndicator {
             this.addResources(element, session, child, filter, activationContent);
         }
     }
+
 
 }

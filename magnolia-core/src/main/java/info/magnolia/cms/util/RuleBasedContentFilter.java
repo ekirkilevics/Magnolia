@@ -51,17 +51,14 @@ public class RuleBasedContentFilter implements Content.ContentFilter {
     public boolean accept(Content content) {
         String nodeType = "";
         try {
-            nodeType = content.getNodeType().getName();
+            nodeType = content.getNodeTypeName();
         }
         catch (RepositoryException re) {
             if (log.isDebugEnabled()) {
                 log.debug("failed to retrieve node type : " + re.getMessage(), re);
             }
         }
-        if (this.rule.isAllowed(nodeType)) {
-            return true;
-        }
-        return false;
+        return this.rule.isAllowed(nodeType);
     }
 
 }

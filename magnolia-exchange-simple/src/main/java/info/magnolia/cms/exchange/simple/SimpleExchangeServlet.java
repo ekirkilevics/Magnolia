@@ -39,12 +39,7 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.zip.GZIPInputStream;
 
-import javax.jcr.ImportUUIDBehavior;
-import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.Property;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
+import javax.jcr.*;
 import javax.jcr.lock.LockException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -172,26 +167,17 @@ public class SimpleExchangeServlet extends HttpServlet {
             IOUtils.closeQuietly(documentInputStream);
             Element topContentElement = jdomDocument.getRootElement().getChild(
                 SimpleSyndicator.RESOURCE_MAPPING_FILE_ELEMENT);
-            String newPath;
-            if (parentPath.equals("/"))
-                newPath = parentPath
-                    + topContentElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_NAME_ATTRIBUTE);
-            else
-                newPath = parentPath
-                    + "/"
-                    + topContentElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_NAME_ATTRIBUTE);
-            // lock this hierarchy
-            if (hm.isExist(newPath)) {
+            try {
+                String uuid = topContentElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_UUID_ATTRIBUTE);
+                Content content = hm.getContentByUUID(uuid);
                 String ruleString = request.getHeader(SimpleSyndicator.CONTENT_FILTER_RULE);
                 Rule rule = new Rule(ruleString, ",");
                 RuleBasedContentFilter filter = new RuleBasedContentFilter(rule);
-                Content content = hm.getContent(newPath);
                 // remove all child nodes
                 this.removeChildren(content, filter);
                 // import all child nodes
                 this.importOnExisting(topContentElement, data, hm, content);
-            }
-            else {
+            } catch (ItemNotFoundException e) {
                 importFresh(topContentElement, data, hm, parentPath);
             }
         }
@@ -264,7 +250,7 @@ public class SimpleExchangeServlet extends HttpServlet {
     private synchronized void importFresh(Element topContentElement, MultipartForm data,
         HierarchyManager hierarchyManager, String parentPath) throws ExchangeException, RepositoryException {
         try {
-            importResource(data, topContentElement, hierarchyManager.getWorkspace().getSession(), parentPath);
+            importResource(data, topContentElement, hierarchyManager, parentPath);
             hierarchyManager.save();
         }
         catch (Exception e) {
@@ -293,7 +279,7 @@ public class SimpleExchangeServlet extends HttpServlet {
         try {
             while (fileListIterator.hasNext()) {
                 Element fileElement = (Element) fileListIterator.next();
-                importResource(data, fileElement, hierarchyManager.getWorkspace().getSession(), existingContent
+                importResource(data, fileElement, hierarchyManager, existingContent
                     .getHandle());
             }
             // use temporary transient store to extract top level node and copy properties
@@ -305,9 +291,11 @@ public class SimpleExchangeServlet extends HttpServlet {
                 inputStream,
                 ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
             IOUtils.closeQuietly(inputStream);
-            Content tmpContent = hierarchyManager.getContent(transientStore
-                + "/"
-                + topContentElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_NAME_ATTRIBUTE));
+            StringBuffer newPath = new StringBuffer();
+            newPath.append(transientStore);
+            newPath.append("/");
+            newPath.append(topContentElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_NAME_ATTRIBUTE));
+            Content tmpContent = hierarchyManager.getContent(newPath.toString());
             copyProperties(tmpContent, existingContent);
             hierarchyManager.delete(transientStore);
             hierarchyManager.save();
@@ -323,18 +311,19 @@ public class SimpleExchangeServlet extends HttpServlet {
      * import documents
      * @param data as sent
      * @param resourceElement parent file element
-     * @param jcrSession
+     * @param hm
      * @param parentPath
      * @throws Exception
      */
-    private synchronized void importResource(MultipartForm data, Element resourceElement, Session jcrSession,
+    private synchronized void importResource(MultipartForm data, Element resourceElement, HierarchyManager hm,
         String parentPath) throws Exception {
 
         String name = resourceElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_NAME_ATTRIBUTE);
         String fileName = resourceElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_ID_ATTRIBUTE);
         // do actual import
         GZIPInputStream inputStream = new GZIPInputStream(data.getDocument(fileName).getStream());
-        jcrSession.importXML(parentPath, inputStream, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
+        hm.getWorkspace().getSession()
+                .importXML(parentPath, inputStream, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
         IOUtils.closeQuietly(inputStream);
         Iterator fileListIterator = resourceElement
             .getChildren(SimpleSyndicator.RESOURCE_MAPPING_FILE_ELEMENT)
@@ -346,7 +335,7 @@ public class SimpleExchangeServlet extends HttpServlet {
         parentPath += ("/" + name);
         while (fileListIterator.hasNext()) {
             Element fileElement = (Element) fileListIterator.next();
-            importResource(data, fileElement, jcrSession, parentPath);
+            importResource(data, fileElement, hm, parentPath);
         }
     }
 

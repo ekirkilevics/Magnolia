@@ -91,13 +91,23 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
     public void setACL() {
         this.setACL(this.user);
         Iterator groupsIterator = this.getGroupNodes().iterator();
+        HierarchyManager groupsHierarchy = ContentRepository
+                .getHierarchyManager(ContentRepository.USER_GROUPS);
         while (groupsIterator.hasNext()) {
-            this.setACL((Content) groupsIterator.next());
+            String groupPath = ((Content) groupsIterator.next()).getNodeData("path").getString();
+            try {
+                this.setACL(groupsHierarchy.getContent(groupPath));
+            } catch (PathNotFoundException e) {
+                if (log.isDebugEnabled())
+                    log.debug("Group node on path "+groupPath+" does not exist");
+            } catch (RepositoryException re) {
+                log.error("Failed to get group node "+groupPath, re);
+            }
         }
     }
 
     /**
-     * get all group nodes
+     * get all groups
      * @return collection of group nodes
      */
     private Collection getGroupNodes() {
@@ -187,6 +197,8 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
              * set list of role names, info.magnolia.jaas.principal.RoleList
              */
             this.subject.getPrincipals().add(roleList);
+        } catch (PathNotFoundException e) {
+            log.debug(e.getMessage(),e);
         } catch (RepositoryException re) {
             log.error(re.getMessage(), re);
         } catch (Exception e) {

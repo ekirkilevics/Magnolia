@@ -584,7 +584,7 @@ public class Content extends ContentHandler implements Cloneable {
         String type = null;
 
         try {
-            type = this.getNodeType().getName();
+            type = this.getNodeTypeName();
         }
         catch (RepositoryException re) {
             log.error(re.getMessage());
@@ -685,7 +685,7 @@ public class Content extends ContentHandler implements Cloneable {
             Node subNode = (Node) nodeIterator.next();
             try {
                 if (contentType == null
-                    || subNode.getProperty(ItemType.JCR_PRIMARY_TYPE).getString().equalsIgnoreCase(contentType)) {
+                    || this.isNodeType(subNode, contentType)) {
                     children.add(new Content(subNode, this.accessManager));
                 }
             }
@@ -772,7 +772,7 @@ public class Content extends ContentHandler implements Cloneable {
         while (nodeIterator.hasNext()) {
             Node subNode = (Node) nodeIterator.next();
             try {
-                if (subNode.isNodeType(ItemType.NT_RESOURCE)) {
+                if (this.isNodeType(subNode, ItemType.NT_RESOURCE)) {
                     children.add(new NodeData(subNode, this.accessManager));
                 }
             }
@@ -923,7 +923,23 @@ public class Content extends ContentHandler implements Cloneable {
      */
     public boolean isNodeType(String type) {
         try {
-            return this.node.isNodeType(type);
+            return this.getNodeTypeName().equalsIgnoreCase(type);
+        }
+        catch (RepositoryException re) {
+            log.error(re.getMessage());
+            log.debug(re.getMessage(), re);
+        }
+        return false;
+    }
+
+    /**
+     * private Helper method to evaluate primary node type of the given node
+     * @param node
+     * @param type
+     */
+    private boolean isNodeType(Node node, String type) {
+        try {
+            return node.getProperty(ItemType.JCR_PRIMARY_TYPE).getString().equalsIgnoreCase(type);
         }
         catch (RepositoryException re) {
             log.error(re.getMessage());
@@ -941,12 +957,20 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
+     * returns primary node type name of the associated Node of this object
+     * @throws RepositoryException if an error occurs
+     */
+    public String getNodeTypeName() throws RepositoryException {
+        return this.node.getProperty(ItemType.JCR_PRIMARY_TYPE).getString();
+    }
+
+    /**
      * Get the magnolia ItemType.
      * @return the type
      * @throws RepositoryException
      */
     public ItemType getItemType() throws RepositoryException {
-        return new ItemType(getNodeType().getName());
+        return new ItemType(getNodeTypeName());
     }
 
     /**

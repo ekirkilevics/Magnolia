@@ -24,6 +24,7 @@ import java.util.Calendar;
 import java.util.Collection;
 
 import javax.jcr.*;
+import javax.jcr.nodetype.NodeType;
 import javax.jcr.lock.Lock;
 import javax.jcr.lock.LockException;
 import javax.jcr.version.Version;
@@ -288,7 +289,7 @@ public class ContentVersion extends Content {
      */
     public Collection getChildren() {
         try {
-            if (this.rule.isAllowed(this.base.getNodeType().getName())) {
+            if (this.rule.isAllowed(this.base.getNodeTypeName())) {
                 return super.getChildren();
             }
         } catch (RepositoryException re) {
@@ -422,6 +423,16 @@ public class ContentVersion extends Content {
      */
     public int getIndex() throws RepositoryException {
         return this.base.getIndex();
+    }
+
+    /**
+     * returns primary node type definition of the associated Node of this object
+     * @throws RepositoryException if an error occurs
+     */
+    public NodeType getNodeType() throws RepositoryException {
+        log.warn("This is a Version node, it will always return NT_FROZEN as node type.");
+        log.warn("Use getNodeTypeName to retrieve base node primary type");
+        return super.getNodeType();
     }
 
     /**

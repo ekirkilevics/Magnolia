@@ -233,7 +233,7 @@ public class DataTransporter {
                     session.exportSystemView(basepath, outputStream, false, false);
                 }
                 else {
-                    parseAndFormat(outputStream, null, repository, basepath, format, session);
+                    parseAndFormat(outputStream, null, repository, basepath, format, false, session);
                 }
             }
             else {
@@ -241,7 +241,7 @@ public class DataTransporter {
                 // file
                 XMLReader reader = new VersionFilter(XMLReaderFactory
                     .createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName()));
-                parseAndFormat(outputStream, reader, repository, basepath, format, session);
+                parseAndFormat(outputStream, reader, repository, basepath, format, false, session);
             }
         }
         catch (Exception e) {
@@ -265,11 +265,12 @@ public class DataTransporter {
      * @param repository the repository to export
      * @param basepath the basepath in the repository
      * @param format should we format the xml
+     * @param noRecurse true if only the given node (excluding hierarchy) needs to be migrated
      * @param session the session to use to export the data from the repository
      * @throws Exception if anything goes wrong ...
      */
     public static void parseAndFormat(OutputStream stream, XMLReader reader, String repository, String basepath,
-        boolean format, Session session) throws Exception {
+        boolean format, boolean noRecurse, Session session) throws Exception {
 
         if (reader == null)
             reader = XMLReaderFactory.createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName());
@@ -279,7 +280,7 @@ public class DataTransporter {
         OutputStream fileStream = new FileOutputStream(tempFile);
 
         try {
-            session.exportSystemView(basepath, fileStream, false, false);
+            session.exportSystemView(basepath, fileStream, false, noRecurse);
         }
         finally {
             IOUtils.closeQuietly(fileStream);
