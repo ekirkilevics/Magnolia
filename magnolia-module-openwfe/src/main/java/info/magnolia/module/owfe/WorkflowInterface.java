@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
  * the interface for work flow in magnolia
  * @author jackie
  */
-interface WorkflowAPI {
+interface WorkflowInterface {
 
     /**
      * get all work items for the user
@@ -99,6 +99,6 @@ interface WorkflowAPI {
      * @param flowName name of flow
      * @throws Exception
      */
-    public void LaunchFlow(HierarchyManager hm, String path, String flowName) throws Exception;
+    public void launchFlow(HierarchyManager hm, String path, String flowName) throws Exception;
 
 }

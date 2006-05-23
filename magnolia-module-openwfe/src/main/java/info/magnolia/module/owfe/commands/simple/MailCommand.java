@@ -17,7 +17,7 @@ import info.magnolia.cms.mail.handlers.MgnlMailHandler;
 import info.magnolia.cms.mail.templates.MgnlEmail;
 import info.magnolia.commands.ContextAttributes;
 import info.magnolia.commands.MgnlCommand;
-import info.magnolia.module.owfe.MgnlConstants;
+import info.magnolia.module.owfe.WorkflowConstants;
 
 import org.apache.commons.chain.Context;
 import org.slf4j.Logger;
@@ -61,8 +61,8 @@ public class MailCommand extends MgnlCommand {
             // FIXME
             // MgnlEmail email = factory.getEmailFromTemplate(mailTemplate, ctx);
             MgnlEmail email= null;
-            email.setFrom(MgnlConstants.WORKFLOW_EMAIL_FROM_FIELD);
-            email.setSubject(MgnlConstants.WORKFLOW_EMAIL_SUBJECT_FIELD);
+            email.setFrom(WorkflowConstants.WORKFLOW_EMAIL_FROM_FIELD);
+            email.setSubject(WorkflowConstants.WORKFLOW_EMAIL_SUBJECT_FIELD);
             // FIXME
             //email.setParameters(params);
             email.setToList(factory.convertEmailList(mailTo));

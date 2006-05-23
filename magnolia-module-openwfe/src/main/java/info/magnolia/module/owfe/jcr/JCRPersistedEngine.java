@@ -12,7 +12,7 @@
  */
 package info.magnolia.module.owfe.jcr;
 
-import info.magnolia.module.owfe.MgnlConstants;
+import info.magnolia.module.owfe.WorkflowConstants;
 import openwfe.org.ServiceException;
 import openwfe.org.embed.impl.engine.FsPersistedEngine;
 import openwfe.org.embed.impl.engine.PersistedEngine;
@@ -36,7 +36,7 @@ public class JCRPersistedEngine extends PersistedEngine {
     private final static Logger log = LoggerFactory.getLogger(FsPersistedEngine.class.getName());
 
     public JCRPersistedEngine() throws ServiceException {
-        this(MgnlConstants.ENGINE_NAME, true);
+        this(WorkflowConstants.ENGINE_NAME, true);
 
     }
 

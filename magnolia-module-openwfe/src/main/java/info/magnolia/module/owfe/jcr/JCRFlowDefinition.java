@@ -17,7 +17,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.module.owfe.MgnlConstants;
+import info.magnolia.module.owfe.WorkflowConstants;
 import info.magnolia.module.owfe.servlets.FlowDefServlet;
 
 import java.io.File;
@@ -61,7 +61,7 @@ public class JCRFlowDefinition {
         HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
 
         try {
-            Content root = hm.getContent(MgnlConstants.ROOT_PATH_FOR_FLOW);
+            Content root = hm.getContent(WorkflowConstants.ROOT_PATH_FOR_FLOW);
             Collection c = root.getChildren(ItemType.CONTENT);
             Iterator it = c.iterator();
             while (it.hasNext()) {
@@ -108,7 +108,7 @@ public class JCRFlowDefinition {
         log.info(url_base);
         try {
             HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
-            Content root = hm.getContent(MgnlConstants.ROOT_PATH_FOR_FLOW);
+            Content root = hm.getContent(WorkflowConstants.ROOT_PATH_FOR_FLOW);
             Collection c = root.getChildren(ItemType.CONTENT);
             Iterator it = c.iterator();
             while (it.hasNext()) {
@@ -165,7 +165,7 @@ public class JCRFlowDefinition {
 
         try {
             HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
-            Content root = hm.getContent(MgnlConstants.ROOT_PATH_FOR_FLOW);
+            Content root = hm.getContent(WorkflowConstants.ROOT_PATH_FOR_FLOW);
 
             // check if the node already exist, and if it does update the value of the the NodeData FLOW_VALUE with the
             // new flow. This is to allow duplication of flow node.
@@ -182,10 +182,10 @@ public class JCRFlowDefinition {
             ValueFactory vf = c.getJCRNode().getSession().getValueFactory();
             Value value = vf.createValue(flowDef);
             if (!exist) {
-                c.createNodeData(MgnlConstants.FLOW_VALUE, value);
+                c.createNodeData(WorkflowConstants.FLOW_VALUE, value);
             }
             else {
-                ((NodeData) c.getNodeDataCollection(MgnlConstants.FLOW_VALUE).iterator().next()).setValue(value);
+                ((NodeData) c.getNodeDataCollection(WorkflowConstants.FLOW_VALUE).iterator().next()).setValue(value);
             }
 
             hm.save();

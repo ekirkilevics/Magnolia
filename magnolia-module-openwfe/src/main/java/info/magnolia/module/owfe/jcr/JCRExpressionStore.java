@@ -21,7 +21,7 @@ import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.QueryResult;
 import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.module.owfe.MgnlConstants;
+import info.magnolia.module.owfe.WorkflowConstants;
 
 import java.io.InputStream;
 import java.util.Iterator;
@@ -59,7 +59,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
     public void init(final String serviceName, final ApplicationContext context, final java.util.Map serviceParams)
             throws ServiceException {
         super.init(serviceName, context, serviceParams);
-        this.hm = ContentRepository.getHierarchyManager(MgnlConstants.WORKSPACE_EXPRESSION);
+        this.hm = ContentRepository.getHierarchyManager(WorkflowConstants.WORKSPACE_EXPRESSION);
         if (this.hm == null) {
             throw new ServiceException("Can't access HierarchyManager for workitems");
         }
@@ -78,7 +78,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
                 // set expressionId as attribte id
                 ValueFactory vf = ct.getJCRNode().getSession().getValueFactory();
                 String value = fe.getId().toParseableString();
-                ct.createNodeData(MgnlConstants.NODEDATA_ID, vf.createValue(value));
+                ct.createNodeData(WorkflowConstants.NODEDATA_ID, vf.createValue(value));
 
                 if (log.isDebugEnabled())
                     log.debug("id_value=" + value);
@@ -95,7 +95,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
         final org.jdom.Document doc = new org.jdom.Document(encoded);
         String s = XmlUtils.toString(doc, null);
         ValueFactory vf = c.getJCRNode().getSession().getValueFactory();
-        c.createNodeData(MgnlConstants.NODEDATA_VALUE, vf.createValue(s));
+        c.createNodeData(WorkflowConstants.NODEDATA_VALUE, vf.createValue(s));
     }
 
     /**
@@ -120,17 +120,17 @@ public class JCRExpressionStore extends AbstractExpressionStore {
         final StringBuffer buffer = new StringBuffer();
         final String engineId = fei.getEngineId();
 
-        buffer.append(MgnlConstants.SLASH);
+        buffer.append(WorkflowConstants.SLASH);
         buffer.append(engineId);
         // engine storage
         if (engineId.equals(ENGINE_ID))
             return buffer.toString();
 
-        buffer.append(MgnlConstants.SLASH);
+        buffer.append(WorkflowConstants.SLASH);
         buffer.append(fei.getWorkflowDefinitionName());
-        buffer.append(MgnlConstants.SLASH);
+        buffer.append(WorkflowConstants.SLASH);
         buffer.append(fei.getWorkflowInstanceId());
-        buffer.append(MgnlConstants.SLASH);
+        buffer.append(WorkflowConstants.SLASH);
         buffer.append(fei.getExpressionId());
         return buffer.toString();
     }
@@ -170,7 +170,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
     }
 
     private FlowExpression deserializeExpressionAsXml(Content ret) throws Exception {
-        InputStream s = ret.getNodeData(MgnlConstants.NODEDATA_VALUE).getStream();
+        InputStream s = ret.getNodeData(WorkflowConstants.NODEDATA_VALUE).getStream();
         final org.jdom.input.SAXBuilder builder = new org.jdom.input.SAXBuilder();
         Document doc = builder.build(s);
         final FlowExpression decode = (FlowExpression) XmlCoder.decode(doc);
@@ -195,8 +195,8 @@ public class JCRExpressionStore extends AbstractExpressionStore {
      */
     public int size() {
         try {
-            QueryManager qm = MgnlContext.getSystemContext().getQueryManager(MgnlConstants.WORKSPACE_EXPRESSION);
-            Query query = qm.createQuery(MgnlConstants.STORE_ITERATOR_QUERY, Query.SQL);
+            QueryManager qm = MgnlContext.getSystemContext().getQueryManager(WorkflowConstants.WORKSPACE_EXPRESSION);
+            Query query = qm.createQuery(WorkflowConstants.STORE_ITERATOR_QUERY, Query.SQL);
             QueryResult qr = query.execute();
             return qr.getContent().size();
         } catch (Exception e) {
@@ -227,8 +227,8 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 
         public StoreIterator(final Class assignClass) throws Exception {
             this.assignClass = assignClass;
-            QueryManager qm = MgnlContext.getSystemContext().getQueryManager(MgnlConstants.WORKSPACE_EXPRESSION);
-            Query query = qm.createQuery(MgnlConstants.STORE_ITERATOR_QUERY, Query.SQL);
+            QueryManager qm = MgnlContext.getSystemContext().getQueryManager(WorkflowConstants.WORKSPACE_EXPRESSION);
+            Query query = qm.createQuery(WorkflowConstants.STORE_ITERATOR_QUERY, Query.SQL);
             if (log.isDebugEnabled())
                 log.debug("xx-->query executed:" + query.getStatement());
             QueryResult qr = query.execute();

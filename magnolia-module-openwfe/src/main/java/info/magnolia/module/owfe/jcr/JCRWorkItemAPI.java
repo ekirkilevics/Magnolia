@@ -22,7 +22,7 @@ import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.QueryResult;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.module.owfe.MgnlConstants;
+import info.magnolia.module.owfe.WorkflowConstants;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ public class JCRWorkItemAPI {
     HierarchyManager hm;
 
     public JCRWorkItemAPI() throws Exception {
-        this.hm = ContentRepository.getHierarchyManager(MgnlConstants.WORKSPACE_STORE);
+        this.hm = ContentRepository.getHierarchyManager(WorkflowConstants.WORKSPACE_STORE);
         if (this.hm == null) {
         	Exception e = new Exception("Can't get HierarchyManager Object for workitems repository");
             log.error(e.getMessage(),e);
@@ -117,7 +117,7 @@ public class JCRWorkItemAPI {
      */
     public static InFlowWorkItem loadWorkItem(Content ct) throws Exception {
         InFlowWorkItem wi;
-        InputStream s = ct.getNodeData(MgnlConstants.NODEDATA_VALUE).getStream();
+        InputStream s = ct.getNodeData(WorkflowConstants.NODEDATA_VALUE).getStream();
         if (log.isDebugEnabled()) {
             log.debug("retrieve work item: value = " + s.toString());
         }
@@ -191,7 +191,7 @@ public class JCRWorkItemAPI {
      * @param eid id of work item
      */
     public boolean checkContentWithEID(Content ct, FlowExpressionId eid) {
-        String cid = ct.getNodeData(MgnlConstants.NODEDATA_ID).getString();
+        String cid = ct.getNodeData(WorkflowConstants.NODEDATA_ID).getString();
         if (log.isDebugEnabled()) {
             log.debug("checkContentWithEID: ID = " + cid);
         }
@@ -204,7 +204,7 @@ public class JCRWorkItemAPI {
      * @param id
      */
     public final String convertPath(String id) {
-        return StringUtils.replace(StringUtils.replace(id, MgnlConstants.BAR, StringUtils.EMPTY), MgnlConstants.COLON, MgnlConstants.DOT);
+        return StringUtils.replace(StringUtils.replace(id, WorkflowConstants.BAR, StringUtils.EMPTY), WorkflowConstants.COLON, WorkflowConstants.DOT);
     }
 
     /**
@@ -216,15 +216,15 @@ public class JCRWorkItemAPI {
 		int groupNumber = Integer.valueOf(
 				wlInstId.substring(wlInstId.length() - 3)).intValue() % 100;
 		StringBuffer buffer = new StringBuffer(eid.getWorkflowDefinitionName());
-		buffer.append(MgnlConstants.SLASH);
+		buffer.append(WorkflowConstants.SLASH);
 		buffer.append(eid.getWorkflowDefinitionRevision());
-		buffer.append(MgnlConstants.SLASH);
+		buffer.append(WorkflowConstants.SLASH);
 		buffer.append(groupNumber);
-		buffer.append(MgnlConstants.SLASH);
+		buffer.append(WorkflowConstants.SLASH);
 		buffer.append(eid.getWorkflowInstanceId());
-		buffer.append(MgnlConstants.SLASH);
+		buffer.append(WorkflowConstants.SLASH);
 		buffer.append(eid.getExpressionName());
-		buffer.append(MgnlConstants.SLASH);
+		buffer.append(WorkflowConstants.SLASH);
 		buffer.append(eid.getExpressionId());
 
 		return convertPath(buffer.toString());
@@ -259,19 +259,19 @@ public class JCRWorkItemAPI {
             ValueFactory vf = newc.getJCRNode().getSession().getValueFactory();
             String sId = wi.getLastExpressionId().toParseableString();
 
-            newc.createNodeData(MgnlConstants.NODEDATA_ID, vf.createValue(sId));
-            newc.createNodeData(MgnlConstants.NODEDATA_PARTICIPANT, vf.createValue(wi.getParticipantName()));
+            newc.createNodeData(WorkflowConstants.NODEDATA_ID, vf.createValue(sId));
+            newc.createNodeData(WorkflowConstants.NODEDATA_PARTICIPANT, vf.createValue(wi.getParticipantName()));
             
             if(log.isDebugEnabled()){
             	log.debug("ID=" + sId);
                 log.debug("participant = " + wi.getParticipantName());
             }
             
-            StringAttribute assignTo = (StringAttribute) wi.getAttribute(MgnlConstants.ATT_ASSIGN_TO);
+            StringAttribute assignTo = (StringAttribute) wi.getAttribute(WorkflowConstants.ATT_ASSIGN_TO);
             if (assignTo != null) {
                 String s = assignTo.toString();
                 if (s.length() > 0) {
-                    newc.createNodeData(MgnlConstants.ATT_ASSIGN_TO, vf.createValue(s));
+                    newc.createNodeData(WorkflowConstants.ATT_ASSIGN_TO, vf.createValue(s));
                 }
                 if(log.isDebugEnabled()) log.debug("assignTo=" + s);
             }
@@ -280,7 +280,7 @@ public class JCRWorkItemAPI {
             Element encoded = XmlCoder.encode(wi);
             final org.jdom.Document doc = new org.jdom.Document(encoded);
             String s = XmlUtils.toString(doc, null);
-            newc.createNodeData(MgnlConstants.NODEDATA_VALUE, vf.createValue(s));
+            newc.createNodeData(WorkflowConstants.NODEDATA_VALUE, vf.createValue(s));
 
             if(log.isDebugEnabled()) log.debug("store work item: value=" + s);
 
@@ -303,7 +303,7 @@ public class JCRWorkItemAPI {
         if(log.isDebugEnabled())
         log.debug("xpath query string: " + queryString);
         try {
-			final QueryManager queryManager = MgnlContext.getSystemContext().getQueryManager(MgnlConstants.WORKSPACE_STORE);
+			final QueryManager queryManager = MgnlContext.getSystemContext().getQueryManager(WorkflowConstants.WORKSPACE_STORE);
 			final Query q = queryManager.createQuery(queryString, Query.XPATH); //$NON-NLS-1$
 
 			QueryResult result = q.execute();
@@ -312,7 +312,7 @@ public class JCRWorkItemAPI {
 				return null;
 			}
 
-			Iterator it = result.getContent(MgnlConstants.NODENAME_WORKITEM).iterator();
+			Iterator it = result.getContent(WorkflowConstants.NODENAME_WORKITEM).iterator();
 			while (it.hasNext()) {
 				Content ct = (Content) it.next();
 				String title = ct.getTitle();

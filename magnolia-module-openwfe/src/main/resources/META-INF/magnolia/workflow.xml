@@ -3,7 +3,7 @@
   <name>workflow</name>
   <displayName>Workflow</displayName>
   <description>Workflow using OpenWFE</description>
-  <class>info.magnolia.module.owfe.Engine</class>
+  <class>info.magnolia.module.owfe.WorkflowModule</class>
   <version>3.0</version>
   <dependencies>
     <dependency>

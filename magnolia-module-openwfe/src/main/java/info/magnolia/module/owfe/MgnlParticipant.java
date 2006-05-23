@@ -87,7 +87,7 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
                     // execute
                     c.execute(context);
 
-                    OWFEEngine.getEngine().reply((InFlowWorkItem) wi);
+                    WorkflowModule.getEngine().reply((InFlowWorkItem) wi);
 
                 }
                 else {

@@ -25,7 +25,7 @@ import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.FreeMarkerUtil;
 import info.magnolia.module.admininterface.lists.AbstractList;
 import info.magnolia.module.admininterface.lists.AdminListControlRenderer;
-import info.magnolia.module.owfe.OWFEBean;
+import info.magnolia.module.owfe.WorkflowInterfaceImpl;
 
 import java.util.Iterator;
 
@@ -164,7 +164,7 @@ public class Inbox extends AbstractList {
      */
     public String proceed() {
         try {
-            new OWFEBean().approveActivation(this.getFlowItemId());
+            new WorkflowInterfaceImpl().approveActivation(this.getFlowItemId());
         }
         catch (Exception e) {
             AlertUtil.setMessage("can't proceed:", e);
@@ -177,7 +177,7 @@ public class Inbox extends AbstractList {
      */
     public String reject() {
         try {
-            new OWFEBean().rejectActivation(this.getFlowItemId(), this.getComment());
+            new WorkflowInterfaceImpl().rejectActivation(this.getFlowItemId(), this.getComment());
         }
         catch (Exception e) {
             AlertUtil.setMessage("can't reject:", e);
@@ -190,7 +190,7 @@ public class Inbox extends AbstractList {
      */
     public String cancel() {
         try {
-            new OWFEBean().cancel(this.getFlowItemId());
+            new WorkflowInterfaceImpl().cancel(this.getFlowItemId());
         }
         catch (Exception e) {
             AlertUtil.setMessage("can't cancel:", e);

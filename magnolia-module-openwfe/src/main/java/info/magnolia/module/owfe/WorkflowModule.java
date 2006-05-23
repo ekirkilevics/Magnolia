@@ -29,13 +29,18 @@ import org.slf4j.LoggerFactory;
  * @author Nicolas Modrzyk
  * @version 3.0
  */
-public class Engine extends AbstractAdminModule {
+public class WorkflowModule extends AbstractAdminModule {
 
     /**
      * Logger.
      */
-    private static Logger log = LoggerFactory.getLogger(Engine.class);
+    private static Logger log = LoggerFactory.getLogger(WorkflowModule.class);
 
+    /**
+     * The current used engine
+     */
+    private static JCRPersistedEngine wfEngine;
+    
     /**
      * @see info.magnolia.module.admininterface.AbstractAdminModule#onRegister(int)
      */
@@ -48,14 +53,21 @@ public class Engine extends AbstractAdminModule {
      */
     protected void onInit() {
         try {
-			new OWFEEngine();
+            
+            if(log.isDebugEnabled()) log.debug("create worklist...");
+            wfEngine = new JCRPersistedEngine();
+            
+            wfEngine.registerParticipant(new MgnlParticipant("user-.*"));
+            wfEngine.registerParticipant(new MgnlParticipant("group-.*"));
+            wfEngine.registerParticipant(new MgnlParticipant("role-.*"));
+            wfEngine.registerParticipant(new MgnlParticipant("command-.*"));
 		} catch (Exception e) {
 			log.error("An exception arised when creating the workflow engine",e);
 		}
 	}
 
     public void destroy() {
-        JCRPersistedEngine engine = OWFEEngine.getEngine();
+        JCRPersistedEngine engine = getEngine();
 		if (engine!=null && engine.isRunning()) {
             log.info("Stopping workflow engine..");
             try {
@@ -68,6 +80,13 @@ public class Engine extends AbstractAdminModule {
                 log.error(se.getMessage(), se);
             }
         }
+    }
+
+    /**
+     * return the global work flow engine
+     */
+    static public JCRPersistedEngine getEngine() {
+        return wfEngine;
     }
 
 }

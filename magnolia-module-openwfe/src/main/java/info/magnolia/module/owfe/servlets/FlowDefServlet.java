@@ -15,7 +15,7 @@ package info.magnolia.module.owfe.servlets;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.module.owfe.OWFEBean;
+import info.magnolia.module.owfe.WorkflowInterfaceImpl;
 import info.magnolia.module.owfe.jcr.JCRFlowDefinition;
 import info.magnolia.module.owfe.jcr.JCRWorkItemAPI;
 
@@ -203,7 +203,7 @@ public class FlowDefServlet extends javax.servlet.http.HttpServlet implements ja
                     ContentRepository.getHierarchyManager(repo, ws);
                 }
                 try {
-                    new OWFEBean().LaunchFlow(hm, path, launchFlowName);
+                    new WorkflowInterfaceImpl().launchFlow(hm, path, launchFlowName);
                 }
                 catch (Exception e) {
                     log.error("launch flow failed", e);

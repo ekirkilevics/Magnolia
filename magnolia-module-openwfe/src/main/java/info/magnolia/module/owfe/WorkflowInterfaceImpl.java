@@ -41,13 +41,13 @@ import org.slf4j.LoggerFactory;
  * the class implements all the interface of work flow API
  * @author jackie
  */
-public class OWFEBean implements WorkflowAPI {
+public class WorkflowInterfaceImpl implements WorkflowInterface {
 
-	private final static Logger log = LoggerFactory.getLogger(OWFEBean.class.getName());
+	private final static Logger log = LoggerFactory.getLogger(WorkflowInterfaceImpl.class.getName());
 
 	JCRWorkItemAPI storage = null;
 
-	public OWFEBean() throws Exception {
+	public WorkflowInterfaceImpl() throws Exception {
 		this.storage = new JCRWorkItemAPI();
 	}
 
@@ -148,7 +148,7 @@ public class OWFEBean implements WorkflowAPI {
 
 		try {
 			wi.getAttributes().puts(ContextAttributes.ATT_OK,MgnlCoreConstants.TRUE);
-			OWFEEngine.getEngine().reply(wi);
+			WorkflowModule.getEngine().reply(wi);
 		} catch (Exception e) {
 			log.error("reply to engine failed", e);
 
@@ -174,7 +174,7 @@ public class OWFEBean implements WorkflowAPI {
 		try {
 			wi.getAttributes().puts(ContextAttributes.ATT_OK,MgnlCoreConstants.FALSE);
 			wi.getAttributes().puts(ContextAttributes.ATT_COMMENT, comment);
-			OWFEEngine.getEngine().reply(wi);
+			WorkflowModule.getEngine().reply(wi);
 		} catch (Exception e) {
 			log.error("Error while accessing the workflow engine", e);
 		} finally {
@@ -259,7 +259,7 @@ public class OWFEBean implements WorkflowAPI {
 		}
 
 		try {
-			wi.addAttribute(MgnlConstants.ATT_ASSIGN_TO, new StringAttribute(userName));
+			wi.addAttribute(WorkflowConstants.ATT_ASSIGN_TO, new StringAttribute(userName));
 			this.storage.storeWorkItem(StringUtils.EMPTY, wi);
 		} catch (Exception e) {
 			log.error("assign work item to user " + userName + " failed.)", e);
@@ -316,7 +316,7 @@ public class OWFEBean implements WorkflowAPI {
 	/**
 	 * Simply launch a flow
 	 */
-	public void LaunchFlow(HierarchyManager hm, String path, String flowName)
+	public void launchFlow(HierarchyManager hm, String path, String flowName)
 			throws Exception {
 		if (log.isDebugEnabled())
 			log.debug("- Lauch flow -" + this.getClass().toString()+ "- Start");
@@ -332,7 +332,7 @@ public class OWFEBean implements WorkflowAPI {
 			// Retrieve and add the flow definition to the LaunchItem
 			String flowDef = new JCRFlowDefinition().getflowDefAsString(flowName);
 			li.getAttributes().puts(ContextAttributes.P_DEFINITION, flowDef);
-			JCRPersistedEngine engine = OWFEEngine.getEngine();
+			JCRPersistedEngine engine = WorkflowModule.getEngine();
 
 			// start activation
 			if (hm != null) {

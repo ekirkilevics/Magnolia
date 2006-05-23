@@ -18,7 +18,7 @@ package info.magnolia.module.owfe;
  * Date: Mar 28, 2006 Time: 5:34:32 PM
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */
-public final class MgnlConstants {
+public final class WorkflowConstants {
 
     final static public String WEBSITE_REPOSITORY = "website";
 
@@ -36,7 +36,7 @@ public final class MgnlConstants {
     
     public final static String WORKSPACE_STORE = "Store";
 
-    public final static String WORKSPACE_ENGINE = "Engine";
+    public final static String WORKSPACE_ENGINE = "WorkflowModule";
     
     public final static String NODENAME_WORKITEM = "workItem";
 
