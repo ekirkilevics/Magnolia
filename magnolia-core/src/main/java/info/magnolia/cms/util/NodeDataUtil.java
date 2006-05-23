@@ -97,6 +97,37 @@ public class NodeDataUtil {
         }
         return StringUtils.EMPTY;
     }
+    
+    /**
+     * Returns the value as an Object.
+     *
+     * @return Object
+     */
+    public static Object getValue(NodeData nd) {
+        try {
+            switch (nd.getType()) {
+                case (PropertyType.STRING):
+                    return nd.getString();
+                case (PropertyType.DOUBLE):
+                    return new Double(nd.getDouble());
+                case (PropertyType.LONG):
+                    return new Long(nd.getLong());
+                case (PropertyType.BOOLEAN):
+                    return new Boolean(nd.getBoolean());
+                case (PropertyType.DATE):
+                    return nd.getDate().getTime();
+                case (PropertyType.BINARY):
+                    return null;
+                default:
+                    return null;
+            }
+        }
+        catch (Exception e) {
+            if (log.isDebugEnabled())
+                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+        }
+        return null;
+    }
 
     public String getTypeName(int type) {
 

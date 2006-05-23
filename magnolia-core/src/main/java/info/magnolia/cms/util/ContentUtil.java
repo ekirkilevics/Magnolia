@@ -16,18 +16,25 @@ import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Content.ContentFilter;
 import info.magnolia.cms.security.AccessDeniedException;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -35,6 +42,8 @@ import org.apache.commons.lang.StringUtils;
  * @author philipp
  */
 public class ContentUtil {
+	
+	private static Logger log = LoggerFactory.getLogger(ContentUtil.class);
     
     /**
      * Content filter accepting everything
@@ -226,6 +235,27 @@ public class ContentUtil {
         }
         return node;
     }
-
-
+    
+    public static Map toMap(Content node){
+    	Map map = new HashMap();
+    	for (Iterator iter = node.getNodeDataCollection().iterator(); iter.hasNext();) {
+			NodeData nd = (NodeData) iter.next();
+			Object val = NodeDataUtil.getValue(nd);
+			if(val!= null){
+				map.put(nd.getName(), val);
+			}
+		}
+    	return map;
+    }
+    
+    public static Object setProperties(Object bean, Content node){
+    	try {
+			BeanUtils.populate(bean, toMap(node));
+		} catch (IllegalAccessException e) {
+			log.error("can't set properties", e);
+		} catch (InvocationTargetException e) {
+			log.error("can't set properties", e);
+		}
+    	return bean;
+    }
 }
