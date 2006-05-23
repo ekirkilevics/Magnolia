@@ -81,7 +81,7 @@ public abstract class ObservedManager {
             onRegister(node);
         }
         catch (Exception e) {
-            Paragraph.log.warn("Was not able to register [" + node.getHandle() + "]", e);
+            log.warn("Was not able to register [" + node.getHandle() + "]", e);
         }
     }
 
