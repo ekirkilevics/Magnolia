@@ -22,6 +22,8 @@ public final class ContextAttributes {
 
     final static public String P_RESULT = "__RESULT__";
 
+    final static public String P_REPOSITORY = "repository";
+    
     final static public String P_PATH = "pathSelected";
 
     final static public String P_RECURSIVE = "recursive";
@@ -42,8 +44,6 @@ public final class ContextAttributes {
 
     final static public String P_TREE = "tree";
 
-    final static public String P_HM = "hm";
-
     final static public String P_MAILTEMPLATE = "mailTemplate";
 
     final static public String P_DEFAULT_ACTIVATION_FLOW = "webActivation";
@@ -55,5 +55,7 @@ public final class ContextAttributes {
 	public static final String ATT_OK = "OK";
 
 	public static final String ATT_COMMENT = "comment";
+
+
     
 }
