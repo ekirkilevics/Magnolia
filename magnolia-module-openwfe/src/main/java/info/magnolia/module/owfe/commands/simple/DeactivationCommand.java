@@ -19,26 +19,20 @@ import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.commands.ContextAttributes;
-import info.magnolia.commands.MgnlCommand;
 
+import org.apache.commons.chain.Command;
 import org.apache.commons.chain.Context;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
  * the deactivation command which do real deactivation
  * @author jackie
  */
-public class DeactivationCommand extends MgnlCommand {
-
-    final static String[] expected = {ContextAttributes.P_PATH};
-
-    /**
-     * List of the parameters that this command needs to run
-     * @return a list of string describing the parameters needed. The parameters should have a mapping in this class.
-     */
-    public String[] getExpectedParameters() {
-        return expected;
-    }
+public class DeactivationCommand implements Command {
+    
+    private static Logger log = LoggerFactory.getLogger(DeactivationCommand.class);
 
     public boolean execute(Context ctx) {
         String path;
@@ -48,9 +42,9 @@ public class DeactivationCommand extends MgnlCommand {
         }
         catch (Exception e) {
             log.error("cannot do deactivate", e);
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     private void doDeactivate(User user, String path) throws Exception {

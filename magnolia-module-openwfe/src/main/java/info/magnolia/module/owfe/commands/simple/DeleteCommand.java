@@ -16,32 +16,24 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.commands.ContextAttributes;
-import info.magnolia.commands.MgnlCommand;
-
-import java.util.HashMap;
 
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.chain.Command;
 import org.apache.commons.chain.Context;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
  * the command to delete one node
  * @author jackie
  */
-public class DeleteCommand extends MgnlCommand {
+public class DeleteCommand implements Command {
 
-    static final String[] expectedParameters = {ContextAttributes.P_PATH};
-
-    /**
-     * List of the parameters that this command needs to run
-     * @return a list of string describing the parameters needed. The parameters should have a mapping in this class.
-     */
-    public String[] getExpectedParameters() {
-        return expectedParameters;
-    }
-
+    private static Logger log = LoggerFactory.getLogger(DeleteCommand.class);
+    
     public boolean execute(Context ctx) {
         String path = (String) ctx.get(ContextAttributes.P_PATH);
         try {
@@ -49,9 +41,9 @@ public class DeleteCommand extends MgnlCommand {
         }
         catch (Exception e) {
             log.error("cannot do delete", e);
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     private void deleteNode(Context context, String parentPath, String label) throws RepositoryException {
@@ -63,7 +55,7 @@ public class DeleteCommand extends MgnlCommand {
         else {
             path = "/" + label;
         }
-        ((HashMap) context.get(PARAMS)).put(ContextAttributes.P_PATH, path);
+        context.put(ContextAttributes.P_PATH, path);
         new DeactivationCommand().execute(context);
         parentNode.delete(label);
         parentNode.save();

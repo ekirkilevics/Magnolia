@@ -17,9 +17,11 @@ import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.commands.ContextAttributes;
-import info.magnolia.commands.MgnlCommand;
 
+import org.apache.commons.chain.Command;
 import org.apache.commons.chain.Context;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -27,15 +29,10 @@ import org.apache.commons.chain.Context;
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
-public class VersionCommand extends MgnlCommand {
+public class VersionCommand implements Command {
 
-    /**
-     * @see info.magnolia.commands.MgnlCommand#getExpectedParameters()
-     */
-    public String[] getExpectedParameters() {
-        return new String[]{ContextAttributes.P_PATH};
-    }
-
+    private static Logger log = LoggerFactory.getLogger(VersionCommand.class);
+    
     /**
      * @see info.magnolia.commands.MgnlCommand#exec(java.util.HashMap, org.apache.commons.chain.Context)
      */
@@ -46,10 +43,11 @@ public class VersionCommand extends MgnlCommand {
             node.addVersion();
         }
         catch (Exception e) {
+            log.error("can't version", e);
             AlertUtil.setMessage("can't version: " + e.getMessage());
-            return false;
+            return true; // end execution
         }
-        return true;
+        return false;
     }
 
 }

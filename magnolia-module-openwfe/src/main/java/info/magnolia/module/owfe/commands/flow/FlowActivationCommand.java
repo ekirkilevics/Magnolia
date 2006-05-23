@@ -12,9 +12,6 @@
  */
 package info.magnolia.module.owfe.commands.flow;
 
-import info.magnolia.commands.ContextAttributes;
-
-
 /**
  * The activation command which will launch a flow
  * @author jackie
@@ -23,16 +20,6 @@ import info.magnolia.commands.ContextAttributes;
 public class FlowActivationCommand extends AbstractFlowCommand {
 
     private static final String WEB_ACTIVATION = "webActivation";
-
-    static final String[] parameters = {ContextAttributes.P_RECURSIVE, ContextAttributes.P_PATH};
-
-    /**
-     * List of the parameters that this command needs to run
-     * @return a list of string describing the parameters needed. The parameters should have a mapping in this class.
-     */
-    public String[] getExpectedParameters() {
-        return parameters;
-    }
 
     public String getFlowName() {
         return WEB_ACTIVATION;

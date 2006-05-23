@@ -19,6 +19,8 @@ import openwfe.org.engine.workitem.LaunchItem;
 import openwfe.org.engine.workitem.StringAttribute;
 
 import org.apache.commons.chain.Context;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -30,18 +32,8 @@ public class FlowDeactivationCommand extends AbstractFlowCommand {
 
     protected static final String FLOWNAME = "webDetactivation";
 
-    protected static final String WEB_SCHEDULED_ACTIVATION = "webScheduledActivation";
-
-    static final String[] parameters = {ContextAttributes.P_PATH};
-
-    /**
-     * List of the parameters that this command needs to run
-     * @return a list of string describing the parameters needed. The parameters should have a mapping in this class.
-     */
-    public String[] getExpectedParameters() {
-        return parameters;
-    }
-
+    private static Logger log = LoggerFactory.getLogger(FlowDeactivationCommand.class);
+    
     public String getFlowName() {
         return FLOWNAME;
     }

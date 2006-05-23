@@ -16,9 +16,9 @@ import info.magnolia.cms.mail.MgnlMailFactory;
 import info.magnolia.cms.mail.handlers.MgnlMailHandler;
 import info.magnolia.cms.mail.templates.MgnlEmail;
 import info.magnolia.commands.ContextAttributes;
-import info.magnolia.commands.MgnlCommand;
 import info.magnolia.module.owfe.WorkflowConstants;
 
+import org.apache.commons.chain.Command;
 import org.apache.commons.chain.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,19 +28,9 @@ import org.slf4j.LoggerFactory;
  * the command for sending mail
  * @author jackie
  */
-public class MailCommand extends MgnlCommand {
+public class MailCommand implements Command {
 
-    static Logger logt = LoggerFactory.getLogger(MailCommand.class);
-
-    static final String[] parameters = {ContextAttributes.P_MAILTO, ContextAttributes.P_MAILTEMPLATE, ContextAttributes.P_PATH};
-
-    /**
-     * List of the parameters that this command needs to run
-     * @return a list of string describing the parameters needed. The parameters should have a mapping in this class.
-     */
-    public String[] getExpectedParameters() {
-        return parameters;
-    }
+    static Logger log = LoggerFactory.getLogger(MailCommand.class);
 
     public boolean execute(Context ctx) {
         if (log.isDebugEnabled()) {
@@ -74,7 +64,7 @@ public class MailCommand extends MgnlCommand {
             log.error("Could not send email:"+e.getMessage());
         }
 
-        return true;
+        return false;
     }
 
 }

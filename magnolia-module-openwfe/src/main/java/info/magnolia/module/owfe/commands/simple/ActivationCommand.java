@@ -19,27 +19,21 @@ import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.commands.ContextAttributes;
-import info.magnolia.commands.MgnlCommand;
 
+import org.apache.commons.chain.Command;
 import org.apache.commons.chain.Context;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
  * the activation command which do real activation
  * @author jackie
  */
-public class ActivationCommand extends MgnlCommand {
-
-    static final String[] parameters = {ContextAttributes.P_RECURSIVE, ContextAttributes.P_PATH};
-
-    /**
-     * List of the parameters that this command needs to run
-     * @return a list of string describing the parameters needed. The parameters should have a mapping in this class.
-     */
-    public String[] getExpectedParameters() {
-        return parameters;
-    }
+public class ActivationCommand implements Command {
+    
+    private static Logger log = LoggerFactory.getLogger(ActivationCommand.class);
 
     public boolean execute(Context ctx) {
 
@@ -58,10 +52,10 @@ public class ActivationCommand extends MgnlCommand {
         }
         catch (Exception e) {
             log.error("cannot do activate:"+ e.getMessage());
-            return false;
+            return true;
         }
         log.info("exec successfully.");
-        return true;
+        return false;
     }
 
     /**

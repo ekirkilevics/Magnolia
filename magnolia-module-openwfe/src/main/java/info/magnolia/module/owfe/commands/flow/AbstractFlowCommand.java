@@ -13,7 +13,6 @@
 package info.magnolia.module.owfe.commands.flow;
 
 import info.magnolia.commands.ContextAttributes;
-import info.magnolia.commands.MgnlCommand;
 import info.magnolia.module.owfe.WorkflowModule;
 import info.magnolia.module.owfe.jcr.JCRFlowDefinition;
 import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
@@ -22,11 +21,16 @@ import openwfe.org.engine.workitem.LaunchItem;
 import openwfe.org.engine.workitem.StringAttribute;
 import openwfe.org.engine.workitem.StringMapAttribute;
 
+import org.apache.commons.chain.Command;
 import org.apache.commons.chain.Context;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
-public abstract class AbstractFlowCommand extends MgnlCommand {
+public abstract class AbstractFlowCommand implements Command {
 
+    private static Logger log = LoggerFactory.getLogger(AbstractFlowCommand.class);
+    
     public boolean execute(Context ctx) {
 
         log.debug("- Flow command -" + this.getClass().toString() + "- Start");
@@ -50,12 +54,13 @@ public abstract class AbstractFlowCommand extends MgnlCommand {
         }
         catch (Exception e) {
             log.error("Launching failed", e);
+            return true;
         }
 
         // End execution
 
         log.debug("- Flow command -" + this.getClass().toString() + "- End");
-        return true;
+        return false;
     }
 
     /**
