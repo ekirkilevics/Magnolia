@@ -4,6 +4,7 @@ import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.commands.CommandsManager;
 
 import java.lang.reflect.Constructor;
 import java.util.Collection;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -101,6 +103,17 @@ public class TreeHandlerManager extends ObservedManager {
             }
             catch (ClassNotFoundException e) {
                 log.error("Can't register tree handler [{}]: class [{}] not found", name, className);
+            }
+            
+            // register commands if defined
+            try {
+                if(tree.hasContent("commands")){
+                    Content commands = tree.getContent("commands");
+                    CommandsManager.getInstance().register(commands);
+                }
+            }
+            catch (RepositoryException e) {
+                log.error("can't register commands catalog for tree handler {}", name, e);
             }
         }
     }
