@@ -12,7 +12,14 @@
  */
 package info.magnolia.module.owfe;
 
+import java.util.Iterator;
+
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.module.RegisterException;
+import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.commands.CommandsManager;
 import info.magnolia.module.admininterface.AbstractAdminModule;
 import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
 import openwfe.org.ServiceException;
@@ -30,6 +37,11 @@ import org.slf4j.LoggerFactory;
  * @version 3.0
  */
 public class WorkflowModule extends AbstractAdminModule {
+    
+    /**
+     * 
+     */
+    public static final String COMMANDS_CATALOG_PATH = "/modules/workflow/config/commands";
 
     /**
      * Logger.
@@ -49,11 +61,31 @@ public class WorkflowModule extends AbstractAdminModule {
     }
 
     /**
-     * @see info.magnolia.module.admininterface.AbstractAdminModule#onInit()
+     * register commands and start OWFE engine
      */
     protected void onInit() {
+        registerCommands();
+        startEngine();
+	}
+
+    /**
+     * Register in the workflow module configured commands
+     */
+    private void registerCommands() {
+        Content node = ContentUtil.getContent(ContentRepository.CONFIG, COMMANDS_CATALOG_PATH);
+        if(node != null){
+            for (Iterator iter = node.getChildren(ItemType.CONTENT).iterator(); iter.hasNext();) {
+                Content catalog = (Content) iter.next();
+                CommandsManager.getInstance().register(catalog);
+            }
+        }
+    }
+
+    /**
+     * 
+     */
+    private void startEngine() {
         try {
-            
             if(log.isDebugEnabled()) log.debug("create worklist...");
             wfEngine = new JCRPersistedEngine();
             
@@ -64,7 +96,7 @@ public class WorkflowModule extends AbstractAdminModule {
 		} catch (Exception e) {
 			log.error("An exception arised when creating the workflow engine",e);
 		}
-	}
+    }
 
     public void destroy() {
         JCRPersistedEngine engine = getEngine();
