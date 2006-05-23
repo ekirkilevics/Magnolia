@@ -12,8 +12,6 @@
  */
 package info.magnolia.module.owfe.commands.flow;
 
-import info.magnolia.commands.ContextAttributes;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,15 +20,16 @@ import org.slf4j.LoggerFactory;
  * The activation command which will launch a flow to do scheduled activation by "sleep" functionality of owfe
  * @author jackie
  */
-public class TimeBasedFlowActivationCommand extends AbstractFlowCommand {
+public class TimeBasedFlowActivationCommand extends FlowCommand {
 
     private static final String WEB_SCHEDULED_ACTIVATION = "webScheduledActivation";
 
     private static Logger log = LoggerFactory.getLogger(TimeBasedFlowActivationCommand.class);
 
-    public String getFlowName() {
-        return WEB_SCHEDULED_ACTIVATION;
-    }
+    public TimeBasedFlowActivationCommand() {
+    	// set default value
+		setWorkflowName(WEB_SCHEDULED_ACTIVATION);
+	}
 
     //FIXME remove as much as possible
     /*

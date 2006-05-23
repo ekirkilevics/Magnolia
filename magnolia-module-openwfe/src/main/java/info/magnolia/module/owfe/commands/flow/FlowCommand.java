@@ -27,13 +27,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public abstract class AbstractFlowCommand implements Command {
+public class FlowCommand implements Command {
+	/**
+	 * The name of the workflow to start
+	 */
+	private String workflowName; 
 
-    private static Logger log = LoggerFactory.getLogger(AbstractFlowCommand.class);
+    private static Logger log = LoggerFactory.getLogger(FlowCommand.class);
     
     public boolean execute(Context ctx) {
 
-        log.debug("- Flow command -" + this.getClass().toString() + "- Start");
         try {
             // Get the references
             LaunchItem li = new LaunchItem();
@@ -44,7 +47,7 @@ public abstract class AbstractFlowCommand implements Command {
             li.setWorkflowDefinitionUrl(ContextAttributes.P_WORKFLOW_DEFINITION_URL);
 
             // Retrieve and add the flow definition to the LaunchItem
-            String flowDef = new JCRFlowDefinition().getflowDefAsString(getFlowName());
+            String flowDef = new JCRFlowDefinition().getflowDefAsString(getWorkflowName());
             li.getAttributes().puts(ContextAttributes.P_DEFINITION, flowDef);
             JCRPersistedEngine engine = WorkflowModule.getEngine();
 
@@ -56,10 +59,6 @@ public abstract class AbstractFlowCommand implements Command {
             log.error("Launching failed", e);
             return true;
         }
-
-        // End execution
-
-        log.debug("- Flow command -" + this.getClass().toString() + "- End");
         return false;
     }
 
@@ -73,5 +72,11 @@ public abstract class AbstractFlowCommand implements Command {
         launchItem.setAttributes(attrs);
     }
 
-    public abstract String getFlowName();
+	public String getWorkflowName() {
+		return workflowName;
+	}
+
+	public void setWorkflowName(String flowName) {
+		this.workflowName = flowName;
+	}
 }
