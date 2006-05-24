@@ -13,14 +13,10 @@
 
 package info.magnolia.module.admininterface;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.beans.config.Subscriber;
 import info.magnolia.cms.beans.runtime.Context;
 import info.magnolia.cms.beans.runtime.MgnlContext;
-import info.magnolia.cms.beans.runtime.WebContextImpl;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.misc.Sources;
@@ -31,9 +27,6 @@ import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.commands.ContextAttributes;
 
 import java.io.IOException;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
@@ -198,23 +191,27 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
      * TODO: this is a temporary solution 
      */
     protected Context getCommandContext(String commandName) {
-        // use the current one
-        // FIXME: perhaps we should wrapp it instead of useing directly
         Context context = MgnlContext.getInstance();
         
-        // set some general parameters
-        context.put(ContextAttributes.P_TREE, this.tree);
+        // set general parameters (repository, path, 
+        context.put(ContextAttributes.P_REPOSITORY, this.getRepository());
         context.put(ContextAttributes.P_PATH, this.pathSelected);
-
-        populateContext(context);
 
         return context;
     }
+    
+    /**
+     * Show the tree after execution of the command
+     */
+    protected String getViewNameAfterExecution(String commandName, Context ctx) {
+        return VIEW_TREE;
+    }
 
     /**
-     * TODO: this is a temporary solution
+     * FIXME: romve it: make sure the recursive attribute is passed through the system
      */
-    private void populateContext(Context context) {
+    /*
+    protected void populateContext(String commandName, Context context) {
         // add start date and end date
         HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.WEBSITE);
         Content ct;
@@ -253,7 +250,7 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
                 date = sdf.format(new Date(cd.getTimeInMillis()));
                 log.debug("end date = " + date);
                 context.put("endDate", date);
-            }
+            }   
         }
         catch (Exception e) {
             log.warn("can not get start/end date for path "
@@ -268,6 +265,8 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
         context.put(ContextAttributes.P_RECURSIVE, recursive);
     }
 
+    */
+    
     /**
      * Show the tree
      */

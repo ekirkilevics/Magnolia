@@ -89,7 +89,7 @@ public abstract class CommandBasedMVCServletHandler extends MVCServletHandlerImp
      * @param ctx
      * @return the view name returned by this execution
      */
-    private String getViewNameAfterExecution(String commandName, Context ctx) {
+    protected String getViewNameAfterExecution(String commandName, Context ctx) {
         return commandName;
     }
 
