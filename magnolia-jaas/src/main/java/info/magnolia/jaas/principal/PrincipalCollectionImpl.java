@@ -1,6 +1,6 @@
 package info.magnolia.jaas.principal;
 
-import info.magnolia.cms.security.PrincipalCollection;
+import info.magnolia.cms.security.auth.PrincipalCollection;
 
 import java.security.Principal;
 import java.util.ArrayList;

@@ -10,7 +10,7 @@
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.security;
+package info.magnolia.cms.security.auth;
 
 import java.io.IOException;
 
@@ -26,27 +26,38 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Date: May 30, 2005 Time: 4:45:21 PM
+ * Plain text callback handler
  * @author Sameer Charles
- * @version $Revision$ ($Author$)
+ * @version $Id$
  */
 public class CredentialsCallbackHandler implements CallbackHandler {
 
     /**
      * Logger
      */
-    private static Logger log = LoggerFactory.getLogger(CredentialsCallbackHandler.class);
+    protected static Logger log = LoggerFactory.getLogger(CredentialsCallbackHandler.class);
 
-    private String name;
+    /**
+     * user id
+     * */
+    protected String name;
 
-    private char[] pswd;
+    /**
+     * password
+     * */
+    protected char[] pswd;
 
     /**
      * default constructor required by java security framework
      */
     public CredentialsCallbackHandler() {
+        // do not instanciate with this constructor
     }
 
+    /**
+     * @param name
+     * @param pswd
+     * */
     public CredentialsCallbackHandler(String name, char[] pswd) {
         this.name = name;
         this.pswd = pswd;

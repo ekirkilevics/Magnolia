@@ -20,6 +20,8 @@ import javax.security.auth.Subject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import info.magnolia.cms.security.auth.Entity;
+import info.magnolia.cms.security.auth.RoleList;
 
 
 /**

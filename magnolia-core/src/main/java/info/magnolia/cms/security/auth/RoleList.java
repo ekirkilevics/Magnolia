@@ -10,40 +10,46 @@
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.security;
+package info.magnolia.cms.security.auth;
 
 import java.io.Serializable;
 import java.security.Principal;
+import java.util.Collection;
 
 
 /**
  * @author Sameer Charles
  * @version $Revision: $ ($Author: $)
  */
-public interface Entity extends Principal, Serializable {
+public interface RoleList extends Principal, Serializable {
 
     /**
-     * default properties
+     * Get name given to this principal
+     * @return name
      */
-    public static final String FULL_NAME = "fullName";
-
-    public static final String NAME = "name";
-
-    public static final String EMAIL = "email";
-
-    public static final String LANGUAGE = "language";
-
-    public static final String LOCALE = "locale";
-
-    public static final String ADDRESS_LINE = "address";
-
-    public static final String PASSWORD = "password";
-
     public String getName();
 
+    /**
+     * Set principal name
+     * @param name
+     */
     public void setName(String name);
 
-    public void addProperty(String key, Object value);
+    /**
+     * Add a role name to the list
+     * @param roleName
+     */
+    public void addRole(String roleName);
 
-    public Object getProperty(String key);
+    /**
+     * Gets list of roles as string
+     * @return roles
+     */
+    public Collection getList();
+
+    /**
+     * Checks if the role name exist in this list
+     */
+    public boolean hasRole(String name);
+
 }

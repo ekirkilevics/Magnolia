@@ -12,7 +12,7 @@
  */
 package info.magnolia.jaas.principal;
 
-import info.magnolia.cms.security.Entity;
+import info.magnolia.cms.security.auth.Entity;
 
 import java.util.Hashtable;
 import java.util.Map;

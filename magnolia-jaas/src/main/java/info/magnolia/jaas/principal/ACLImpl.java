@@ -12,7 +12,7 @@
  */
 package info.magnolia.jaas.principal;
 
-import info.magnolia.cms.security.ACL;
+import info.magnolia.cms.security.auth.ACL;
 
 import java.util.ArrayList;
 import java.util.List;

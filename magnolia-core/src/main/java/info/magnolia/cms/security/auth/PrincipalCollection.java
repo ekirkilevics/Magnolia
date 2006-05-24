@@ -10,7 +10,7 @@
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.security;
+package info.magnolia.cms.security.auth;
 
 import java.io.Serializable;
 import java.security.Principal;

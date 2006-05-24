@@ -12,7 +12,7 @@
  */
 package info.magnolia.jaas.principal;
 
-import info.magnolia.cms.security.RoleList;
+import info.magnolia.cms.security.auth.RoleList;
 
 import java.util.ArrayList;
 import java.util.Collection;

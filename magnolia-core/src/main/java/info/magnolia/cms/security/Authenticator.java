@@ -22,6 +22,9 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import info.magnolia.cms.security.auth.CredentialsCallbackHandler;
+import info.magnolia.cms.security.auth.MD5CallbackHandler;
+import info.magnolia.cms.security.auth.Base64CallbackHandler;
 
 
 /**
@@ -69,77 +72,52 @@ public final class Authenticator {
      */
     public static boolean authenticate(HttpServletRequest request) {
         String credentials = request.getHeader("Authorization");
-
         String userid;
         String pswd;
+        CredentialsCallbackHandler callbackHandler;
+        String loginModuleToInitialize = "magnolia"; // default login module
 
         if (StringUtils.isEmpty(credentials) || credentials.length() <= 6) {
             // check for form based login request
             if (StringUtils.isNotEmpty(request.getParameter(PARAMETER_USER_ID))) {
                 userid = request.getParameter(PARAMETER_USER_ID);
                 pswd = StringUtils.defaultString(request.getParameter(PARAMETER_PSWD));
+                callbackHandler = new MD5CallbackHandler(userid, pswd.toCharArray());
             }
             else {
+                // invalid auth request
                 return false;
             }
         }
         else {
-            credentials = getDecodedCredentials(credentials.substring(6).trim());
-            userid = StringUtils.substringBefore(credentials, ":");
-            pswd = StringUtils.substringAfter(credentials, ":");
+            // its a basic authentication request
+            callbackHandler = new Base64CallbackHandler(credentials);
+        }
+        // select login module to use
+        if (request.getUserPrincipal() != null) {
+            loginModuleToInitialize = "magnolia_authorization";
         }
 
         Subject subject;
-        // first check if user has been authenticated by some other service or container itself
-        if (request.getUserPrincipal() == null) {
-            // JAAS authentication
-            CredentialsCallbackHandler callbackHandler = new CredentialsCallbackHandler(userid, pswd.toCharArray());
-            try {
-                LoginContext loginContext = new LoginContext("magnolia", callbackHandler);
-                loginContext.login();
-                subject = loginContext.getSubject();
-
-                // ok, we NEED a session here since the user has been authenticated
-                log.info("Creating a new session for user {}", userid);
-                HttpSession httpsession = request.getSession(true);
-                httpsession.setAttribute(ATTRIBUTE_JAAS_SUBJECT, subject);
-            }
-            catch (LoginException le) {
-                if (log.isDebugEnabled())
-                    log.debug("Exception caught", le);
-
-                HttpSession httpsession = request.getSession(false);
-                if (httpsession != null) {
-                    httpsession.invalidate();
-                }
-                return false;
-            }
+        try {
+            LoginContext loginContext = new LoginContext(loginModuleToInitialize, callbackHandler);
+            loginContext.login();
+            subject = loginContext.getSubject();
+            // ok, we NEED a session here since the user has been authenticated
+            HttpSession httpsession = request.getSession(true);
+            httpsession.setAttribute(ATTRIBUTE_JAAS_SUBJECT, subject);
         }
-        else {
-            // user already authenticated via JAAS, try to load roles for it via configured authorization module
-            String userName = request.getUserPrincipal().getName();
+        catch (LoginException le) {
+            if (log.isDebugEnabled())
+                log.debug("Exception caught", le);
 
-            CredentialsCallbackHandler callbackHandler = new CredentialsCallbackHandler(userName, pswd.toCharArray());
-
-            try {
-                LoginContext loginContext = new LoginContext("magnolia_authorization", callbackHandler);
-                loginContext.login();
-                subject = loginContext.getSubject();
-                // ok, we NEED a session here since the user has been authenticated
-                log.info("Creating a new session for user {}", userName);
-                HttpSession httpsession = request.getSession(true);
-                httpsession.setAttribute(ATTRIBUTE_JAAS_SUBJECT, subject);
+            HttpSession httpsession = request.getSession(false);
+            if (httpsession != null) {
+                httpsession.invalidate();
             }
-            catch (LoginException le) {
-                if (log.isDebugEnabled())
-                    log.debug("Exception caught", le);
-                HttpSession httpsession = request.getSession(false);
-                if (httpsession != null) {
-                    httpsession.invalidate();
-                }
-                return false;
-            }
+            return false;
         }
+
         return true;
     }
 

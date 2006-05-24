@@ -17,7 +17,7 @@ import info.magnolia.jaas.principal.EntityImpl;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.security.*;
+import info.magnolia.cms.security.auth.Entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.codec.binary.Base64;
@@ -114,6 +114,14 @@ public class JCRAuthenticationModule extends AbstractLoginModule {
             this.user = hm.getContent(this.name);
             String fromRepository = this.user.getNodeData("pswd").getString()
                     .trim();
+
+            // if callback handler instance of MD5
+            // - encode repository password to MD5
+            // if callback handler instance of Base64
+            // - encode given password to Base64
+            // todo
+
+
             String encodedPassword = new String(Base64
                     .encodeBase64((new String(this.pswd)).getBytes()));
             return fromRepository.equalsIgnoreCase(encodedPassword);
