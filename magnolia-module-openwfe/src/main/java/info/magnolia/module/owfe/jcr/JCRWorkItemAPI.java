@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.ValueFactory;
 
@@ -159,7 +158,7 @@ public class JCRWorkItemAPI {
     public Content getWorkItemById(FlowExpressionId fei) {
         String path = createPathFromId(fei);
         try {
-            return this.hm.getContent(path, false, ItemType.WORKITEM);
+            return this.hm.getContent(path);
         }
         catch (Exception e) {
             log.error("get work item by id failed, path = " + path, e);
@@ -174,15 +173,10 @@ public class JCRWorkItemAPI {
      */
     public boolean hasWorkItem(FlowExpressionId fei) throws AccessDeniedException, RepositoryException {
         String path = createPathFromId(fei);
-        Content c;
-        try {
-            c = this.hm.getContent(path, false, ItemType.WORKITEM);
+        if (StringUtils.isNotEmpty(path) && StringUtils.indexOf(path, "/") != 0) {
+            path  = "/" + path;
         }
-        catch (PathNotFoundException e) {
-            return false;
-        }
-
-        return (c != null);
+        return this.hm.isExist(path);
     }
 
     /**
@@ -243,13 +237,11 @@ public class JCRWorkItemAPI {
 
             // delete it if already exist
             if (hasWorkItem(wi.getId())) {
-                Content ct = getWorkItemById(wi.getId());
-                if (ct != null) {
-                    removeWorkItem(wi.getId());
-                }
+                // do not use removeWorkItem() since it persist changes immedietely
+                this.hm.delete(createPathFromId(wi.getId()));
             }
 
-            // crete path from work item id
+            // create path from work item id
             String path = createPathFromId(wi.getId());
             if(log.isDebugEnabled())
             	log.debug("storing workitem with path = " + path);
