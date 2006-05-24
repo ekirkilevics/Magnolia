@@ -12,6 +12,19 @@
  */
 package info.magnolia.module.owfe.commands.flow;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+import javax.jcr.RepositoryException;
+
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.commands.ContextAttributes;
+import info.magnolia.context.Context;
+import openwfe.org.engine.workitem.LaunchItem;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,57 +40,61 @@ public class TimeBasedFlowActivationCommand extends FlowCommand {
     private static Logger log = LoggerFactory.getLogger(TimeBasedFlowActivationCommand.class);
 
     public TimeBasedFlowActivationCommand() {
-    	// set default value
-		setWorkflowName(WEB_SCHEDULED_ACTIVATION);
-	}
+        // set default value
+        setWorkflowName(WEB_SCHEDULED_ACTIVATION);
+    }
 
-    //FIXME remove as much as possible
-    /*
+    /**
+     * Set the start and end date for this page
+     */
+    public void prepareLaunchItem(Context context, LaunchItem launchItem) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ");
+        
+        // add start date and end date
+        String repository = (String) context.get(ContextAttributes.P_REPOSITORY);
+        String path = (String) context.get(ContextAttributes.P_PATH);
 
-    public void prepareLaunchItem(Context context, LaunchItem li) {
+        HierarchyManager hm = ContentRepository.getHierarchyManager(repository);
+
+        Content node = null;
         try {
+            node = hm.getContent(path);
+        }
+        catch (RepositoryException e) {
+            log.error("can't find node for path [" + path + "]", e);
+            return;
+        }
 
-            // Retrieve parameters from caller
-            String pathSelected = (String) context.get(ContextAttributes.P_PATH);
-            String startDate = null;
-            String endDate = null;
-            String s = (String) context.get(ContextAttributes.P_START_DATE);
-            if (s != null) {
-                startDate = context.get(ContextAttributes.P_START_DATE).toString();
-            }
+        Calendar cd = null;
+        String date;
 
-            s = (String) context.get(ContextAttributes.P_END_DATE);
-            if (s != null) {
-                endDate = context.get(ContextAttributes.P_END_DATE).toString();
-            }
-
-            // set parameters for lanuching the flow
-            li.setWorkflowDefinitionUrl(ContextAttributes.P_WORKFLOW_DEFINITION_URL);
-            li.addAttribute(ContextAttributes.P_PATH, new StringAttribute(pathSelected));
-            li.addAttribute(ContextAttributes.P_OK, WorkItemUtil.ATT_FALSE);
-            li.addAttribute(ContextAttributes.P_RECURSIVE, new StringAttribute((context.get(ContextAttributes.P_RECURSIVE))
-                .toString()));
-
-            if (startDate != null) {
-                li.getAttributes().puts(ContextAttributes.P_START_DATE, startDate);
-            }
-            if (endDate != null) {
-                li.getAttributes().puts(ContextAttributes.P_END_DATE, endDate);
-            }
-
-            // Retrieve and add the flow definition to the LaunchItem
-            String flowDef = new JCRFlowDefinition()
-                .getflowDefAsString(ContextAttributes.P_DEFAULT_SCHEDULEDACTIVATION_FLOW);
-
-            // log.info(flowDef);
-            li.getAttributes().puts(ContextAttributes.P_DEFINITION, flowDef);
-
+        // get start time
+        try {
+            cd = node.getMetaData().getStartTime();
         }
         catch (Exception e) {
-            log.error("can't launch flow", e);
-            AlertUtil.setMessage(AlertUtil.getExceptionMessage(e));
+            log.warn("cannot get start time for node " + path, e);
+        }
+        
+        if (cd != null) {
+            date = sdf.format(new Date(cd.getTimeInMillis()));
+            log.debug("start date = " + date);
+            launchItem.getAttributes().puts(ContextAttributes.P_START_DATE, date);
+        }
+
+        // get end time
+        try {
+            cd = node.getMetaData().getEndTime();
+        }
+        catch (Exception e) {
+            log.warn("cannot get end time for node " + path, e);
+        }
+
+        if (cd != null) {
+            date = sdf.format(new Date(cd.getTimeInMillis()));
+            log.debug("end date = " + date);
+            launchItem.getAttributes().puts(ContextAttributes.P_END_DATE, date);
         }
     }
-    */
 
 }

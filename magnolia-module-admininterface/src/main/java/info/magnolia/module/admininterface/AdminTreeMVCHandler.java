@@ -193,7 +193,7 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
     protected Context getCommandContext(String commandName) {
         Context context = MgnlContext.getInstance();
         
-        // set general parameters (repository, path, 
+        // set general parameters (repository, path, ..)
         context.put(ContextAttributes.P_REPOSITORY, this.getRepository());
         context.put(ContextAttributes.P_PATH, this.pathSelected);
 
@@ -201,72 +201,12 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
     }
     
     /**
-     * Show the tree after execution of the command
+     * Show the tree after execution of a command
      */
     protected String getViewNameAfterExecution(String commandName, Context ctx) {
         return VIEW_TREE;
     }
 
-    /**
-     * FIXME: romve it: make sure the recursive attribute is passed through the system
-     */
-    /*
-    protected void populateContext(String commandName, Context context) {
-        // add start date and end date
-        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.WEBSITE);
-        Content ct;
-        try {
-            ct = hm.getContent(this.pathSelected);
-
-            Calendar cd = null;
-            String date;
-
-            // get start time
-            try {
-                cd = ct.getMetaData().getStartTime();
-            }
-            catch (Exception e) {
-                log.warn("cannot get start time for node " + this.pathSelected, e);
-            }
-            // if (cd == null)
-            // cd = Calendar.getInstance();
-            SimpleDateFormat sdf = null;
-            if (cd != null) {
-                sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ");
-                date = sdf.format(new Date(cd.getTimeInMillis()));
-                log.debug("start date = " + date);
-                context.put("startDate", date);
-            }
-
-            // get end time
-            try {
-                cd = ct.getMetaData().getEndTime();
-            }
-            catch (Exception e) {
-                log.warn("cannot get end time for node " + this.pathSelected, e);
-            }
-
-            if (cd != null) {
-                date = sdf.format(new Date(cd.getTimeInMillis()));
-                log.debug("end date = " + date);
-                context.put("endDate", date);
-            }   
-        }
-        catch (Exception e) {
-            log.warn("can not get start/end date for path "
-                + this.pathSelected
-                + ", please use sevlet FlowDef to set start/end date for node.", e);
-        }
-
-        String recursive = "false";
-        if (this.request.getParameter("recursive") != null) {
-            recursive = "true";
-        }
-        context.put(ContextAttributes.P_RECURSIVE, recursive);
-    }
-
-    */
-    
     /**
      * Show the tree
      */
