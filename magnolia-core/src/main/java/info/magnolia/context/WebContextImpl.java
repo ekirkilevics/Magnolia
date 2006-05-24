@@ -167,11 +167,18 @@ public class WebContextImpl extends AbstractContext implements WebContext {
     }
 
     /**
-     * Get parameter value as string
+     * Get parameter values as strings
      * @return parameter values
      */
     public Map getParameters() {
-        return this.request.getParameterMap();
+        //getParameterMap() is returning multiple values!
+        Map map = new HashMap();
+        Enumeration paramEnum = this.request.getParameterNames();
+        while(paramEnum.hasMoreElements()){
+            String name = (String) paramEnum.nextElement();
+            map.put(name, this.request.getParameter(name));
+        }
+        return map;
     }
 
     /**
@@ -218,7 +225,11 @@ public class WebContextImpl extends AbstractContext implements WebContext {
     public Object getAttribute(String name, int scope) {
         switch (scope) {
             case MgnlContext.REQUEST_SCOPE:
-                return this.request.getAttribute(name);
+                Object obj = this.request.getAttribute(name);
+                if(obj == null){
+                    obj = this.getParameter(name);
+                }
+                return obj;
             case MgnlContext.SESSION_SCOPE:
                 HttpSession httpsession = request.getSession(false);
                 if (httpsession == null) {
@@ -264,6 +275,9 @@ public class WebContextImpl extends AbstractContext implements WebContext {
         Enumeration keysEnum;
         switch (scope) {
             case MgnlContext.REQUEST_SCOPE:
+                // add parameters
+                map.putAll(this.getParameters());
+                // attributes have higher priority
                 keysEnum = this.request.getAttributeNames();
                 while(keysEnum.hasMoreElements()){
                     String key = (String) keysEnum.nextElement();
