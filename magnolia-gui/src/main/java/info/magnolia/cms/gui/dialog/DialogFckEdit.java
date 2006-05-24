@@ -12,10 +12,10 @@
  */
 package info.magnolia.cms.gui.dialog;
 
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.ControlSuper;
 import info.magnolia.cms.util.LinkUtil;
+import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
 import java.io.Writer;

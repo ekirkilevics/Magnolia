@@ -12,13 +12,13 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.license.LicenseFileExtractor;
 import info.magnolia.cms.module.Module;
 import info.magnolia.cms.security.SecureURI;
+import info.magnolia.context.MgnlContext;
 
 import java.util.Iterator;
 import java.util.Map;

@@ -17,7 +17,6 @@ import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.config.Subscriber;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.config.TemplateManager;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.gui.control.ContextMenu;
@@ -30,6 +29,7 @@ import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.cms.i18n.TemplateMessagesUtil;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.AdminTreeConfiguration;
 
 import java.util.Iterator;

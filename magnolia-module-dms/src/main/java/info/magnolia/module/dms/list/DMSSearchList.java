@@ -12,7 +12,6 @@
  */
 package info.magnolia.module.dms.list;
 
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.ContextMenu;
 import info.magnolia.cms.gui.control.ContextMenuItem;
@@ -27,6 +26,7 @@ import info.magnolia.cms.gui.query.SearchQueryExpression;
 import info.magnolia.cms.gui.query.StringSearchQueryParameter;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesUtil;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.lists.AbstractSimpleSearchList;
 import info.magnolia.module.admininterface.lists.AdminListControlRenderer;
 import info.magnolia.module.dms.DMSModule;

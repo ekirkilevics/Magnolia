@@ -10,9 +10,11 @@
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.beans.runtime;
+package info.magnolia.context;
 
 import info.magnolia.cms.Aggregator;
+import info.magnolia.cms.beans.runtime.File;
+import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
@@ -64,7 +66,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
     }
 
     /**
-     * @see info.magnolia.cms.beans.runtime.WebContext#init(javax.servlet.http.HttpServletRequest)
+     * @see info.magnolia.context.WebContext#init(javax.servlet.http.HttpServletRequest)
      */
     public void init(HttpServletRequest request) {
         this.request = request;
@@ -72,7 +74,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
 
     /**
      * Create the subject on demand
-     * @see info.magnolia.cms.beans.runtime.AbstractContext#getUser()
+     * @see info.magnolia.context.AbstractContext#getUser()
      */
     public User getUser() {
         if (this.user == null) {

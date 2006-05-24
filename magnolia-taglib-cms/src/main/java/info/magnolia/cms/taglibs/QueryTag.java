@@ -13,10 +13,10 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryResult;
+import info.magnolia.context.MgnlContext;
 
 import java.util.Collection;
 

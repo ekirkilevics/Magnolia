@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.gui.control.ContextMenu;
 import info.magnolia.cms.gui.control.ContextMenuItem;
 import info.magnolia.cms.gui.control.FunctionBar;
@@ -23,6 +22,7 @@ import info.magnolia.cms.gui.query.SearchQueryExpression;
 import info.magnolia.cms.gui.query.StringSearchQueryParameter;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.context.MgnlContext;
 
 
 public class WebsiteSearchList extends AbstractSimpleSearchList {

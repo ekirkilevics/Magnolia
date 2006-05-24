@@ -13,9 +13,6 @@
 package info.magnolia.module.dms.gui;
 
 import info.magnolia.cms.beans.runtime.Document;
-import info.magnolia.cms.beans.runtime.MgnlContext;
-import info.magnolia.cms.beans.runtime.WebContext;
-import info.magnolia.cms.beans.runtime.WebContextImpl;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -32,6 +29,9 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.SessionAccessControl;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.RequestFormUtil;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
+import info.magnolia.context.WebContextImpl;
 
 import java.io.File;
 import java.io.FileOutputStream;

@@ -38,7 +38,7 @@ public class DeactivationCommand implements Command {
         String path;
         path = (String) ctx.get(ContextAttributes.P_PATH);
         try {
-            doDeactivate(((info.magnolia.cms.beans.runtime.Context) ctx).getUser(), path);
+            doDeactivate(((info.magnolia.context.Context) ctx).getUser(), path);
         }
         catch (Exception e) {
             log.error("cannot do deactivate", e);

@@ -12,7 +12,6 @@
  */
 package info.magnolia.module.owfe.inbox;
 
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.gui.control.ContextMenu;
 import info.magnolia.cms.gui.control.ContextMenuItem;
 import info.magnolia.cms.gui.control.FunctionBar;
@@ -23,6 +22,7 @@ import info.magnolia.cms.gui.controlx.list.ListModel;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.FreeMarkerUtil;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.lists.AbstractList;
 import info.magnolia.module.admininterface.lists.AdminListControlRenderer;
 import info.magnolia.module.owfe.WorkflowUtil;

@@ -2,7 +2,6 @@ package info.magnolia.cms.servlets;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.Document;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ie.DataTransporter;
@@ -10,6 +9,8 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
+import info.magnolia.context.MgnlContext;
+
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;

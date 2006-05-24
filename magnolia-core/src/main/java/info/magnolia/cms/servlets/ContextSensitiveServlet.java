@@ -12,9 +12,10 @@
  */
 package info.magnolia.cms.servlets;
 
-import info.magnolia.cms.beans.runtime.MgnlContext;
-import info.magnolia.cms.beans.runtime.WebContext;
 import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -13,9 +13,9 @@
 package info.magnolia.module.admininterface.dialogs;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.DialogMVCHandler;
 
 import java.lang.reflect.Constructor;

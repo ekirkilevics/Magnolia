@@ -19,11 +19,11 @@ import info.magnolia.cms.beans.config.ModuleRegistration;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.config.TemplateRendererManager;
 import info.magnolia.cms.beans.config.VirtualURIManager;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.beans.runtime.TemplateRenderer;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
 

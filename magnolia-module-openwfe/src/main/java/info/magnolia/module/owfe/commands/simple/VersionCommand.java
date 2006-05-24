@@ -13,10 +13,10 @@
 package info.magnolia.module.owfe.commands.simple;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.commands.ContextAttributes;
+import info.magnolia.context.MgnlContext;
 
 import org.apache.commons.chain.Command;
 import org.apache.commons.chain.Context;

@@ -14,7 +14,6 @@ package info.magnolia.module.admininterface;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.Document;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -30,6 +29,7 @@ import info.magnolia.cms.security.Digester;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.util.LinkUtil;
+import info.magnolia.context.MgnlContext;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

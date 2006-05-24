@@ -13,9 +13,9 @@
 package info.magnolia.cms.security;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
+import info.magnolia.context.MgnlContext;
 
 import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
@@ -97,7 +97,7 @@ public final class SessionAccessControl {
      * @see SessionAccessControl#DEFAULT_REPOSITORY
      * @param request
      * @deprecated use MgnlContext.getHierarchyManager
-     * @see info.magnolia.cms.beans.runtime.MgnlContext
+     * @see info.magnolia.context.MgnlContext
      */
     public static HierarchyManager getHierarchyManager(HttpServletRequest request) {
         return MgnlContext.getInstance().getHierarchyManager(DEFAULT_REPOSITORY);
@@ -109,7 +109,7 @@ public final class SessionAccessControl {
      * @param request
      * @param repositoryID
      * @deprecated use MgnlContext.getHierarchyManager
-     * @see info.magnolia.cms.beans.runtime.MgnlContext
+     * @see info.magnolia.context.MgnlContext
      */
     public static HierarchyManager getHierarchyManager(HttpServletRequest request, String repositoryID) {
         return MgnlContext.getInstance().getHierarchyManager(repositoryID);
@@ -121,7 +121,7 @@ public final class SessionAccessControl {
      * @param request
      * @param repositoryID
      * @deprecated use MgnlContext.getHierarchyManager
-     * @see info.magnolia.cms.beans.runtime.MgnlContext
+     * @see info.magnolia.context.MgnlContext
      */
     public static HierarchyManager getHierarchyManager(HttpServletRequest request, String repositoryID,
         String workspaceID) {
@@ -132,7 +132,7 @@ public final class SessionAccessControl {
      * gets AccessManager for the current user session for the default repository and workspace
      * @param request
      * @deprecated use MgnlContext.getAccessManager()
-     * @see info.magnolia.cms.beans.runtime.MgnlContext
+     * @see info.magnolia.context.MgnlContext
      */
     public static AccessManager getAccessManager(HttpServletRequest request) {
         return MgnlContext.getInstance().getAccessManager(DEFAULT_REPOSITORY);
@@ -143,7 +143,7 @@ public final class SessionAccessControl {
      * @param request
      * @param repositoryID
      * @deprecated use MgnlContext.getAccessManager()
-     * @see info.magnolia.cms.beans.runtime.MgnlContext
+     * @see info.magnolia.context.MgnlContext
      */
     public static AccessManager getAccessManager(HttpServletRequest request, String repositoryID) {
         return MgnlContext.getInstance().getAccessManager(repositoryID);
@@ -155,7 +155,7 @@ public final class SessionAccessControl {
      * @param repositoryID
      * @param workspaceID
      * @deprecated use MgnlContext.getAccessManager()
-     * @see info.magnolia.cms.beans.runtime.MgnlContext
+     * @see info.magnolia.context.MgnlContext
      */
     public static AccessManager getAccessManager(HttpServletRequest request, String repositoryID, String workspaceID) {
         return MgnlContext.getInstance().getAccessManager(repositoryID, workspaceID);
@@ -165,7 +165,7 @@ public final class SessionAccessControl {
      * Gets access controlled query manager
      * @param request
      * @deprecated MgnlContext.getQueryManager()
-     * @see info.magnolia.cms.beans.runtime.MgnlContext
+     * @see info.magnolia.context.MgnlContext
      */
     public static QueryManager getQueryManager(HttpServletRequest request) throws RepositoryException {
         return MgnlContext.getInstance().getQueryManager(DEFAULT_REPOSITORY);
@@ -176,7 +176,7 @@ public final class SessionAccessControl {
      * @param request
      * @param repositoryID
      * @deprecated MgnlContext.getQueryManager()
-     * @see info.magnolia.cms.beans.runtime.MgnlContext
+     * @see info.magnolia.context.MgnlContext
      */
     public static QueryManager getQueryManager(HttpServletRequest request, String repositoryID)
         throws RepositoryException {
@@ -189,7 +189,7 @@ public final class SessionAccessControl {
      * @param repositoryID
      * @param workspaceID
      * @deprecated MgnlContext.getQueryManager()
-     * @see info.magnolia.cms.beans.runtime.MgnlContext
+     * @see info.magnolia.context.MgnlContext
      */
     public static QueryManager getQueryManager(HttpServletRequest request, String repositoryID, String workspaceID)
         throws RepositoryException {

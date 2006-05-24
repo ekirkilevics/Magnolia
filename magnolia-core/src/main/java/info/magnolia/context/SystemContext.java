@@ -10,7 +10,7 @@
  * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.beans.runtime;
+package info.magnolia.context;
 
 /**
  * This context is a systemwide context with full access. Since no new method is added this is simple an interface to

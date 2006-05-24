@@ -14,7 +14,6 @@ package info.magnolia.cms.exchange.simple;
 
 import info.magnolia.cms.beans.config.Subscriber;
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.*;
 import info.magnolia.cms.core.ie.DataTransporter;
 import info.magnolia.cms.core.ie.filters.VersionFilter;
@@ -25,6 +24,8 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
+import info.magnolia.context.MgnlContext;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;

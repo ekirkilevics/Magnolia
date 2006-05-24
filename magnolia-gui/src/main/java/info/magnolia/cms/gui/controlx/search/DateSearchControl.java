@@ -7,10 +7,10 @@ import java.util.Date;
 
 import org.apache.commons.lang.time.FastDateFormat;
 
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.gui.query.DateSearchQueryParameter;
 import info.magnolia.cms.gui.query.SearchQueryExpression;
 import info.magnolia.cms.util.AlertUtil;
+import info.magnolia.context.MgnlContext;
 
 /**
  * Special Date Search Control

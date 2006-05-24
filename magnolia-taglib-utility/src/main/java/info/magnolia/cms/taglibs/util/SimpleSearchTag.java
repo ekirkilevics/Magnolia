@@ -13,11 +13,12 @@
 package info.magnolia.cms.taglibs.util;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryResult;
 import info.magnolia.cms.util.Resource;
+import info.magnolia.context.MgnlContext;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;

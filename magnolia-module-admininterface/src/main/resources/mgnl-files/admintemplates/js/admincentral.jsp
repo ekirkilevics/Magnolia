@@ -4,9 +4,9 @@
     <jsp:directive.page import="info.magnolia.cms.util.Resource"/>
     <jsp:directive.page import="org.apache.commons.io.IOUtils"/>
     <jsp:directive.page import="java.io.InputStream"/>
-    <jsp:directive.page import="info.magnolia.cms.beans.runtime.MgnlContext"/>
+    <jsp:directive.page import="info.magnolia.context.MgnlContext"/>
     <jsp:directive.page import="info.magnolia.cms.util.FactoryUtil"/>
-    <jsp:directive.page import="info.magnolia.cms.beans.runtime.WebContext"/>
+    <jsp:directive.page import="info.magnolia.context.WebContext"/>
     <jsp:directive.page import="info.magnolia.cms.util.ClasspathResourcesUtil" />
     <jsp:directive.page import="org.apache.commons.io.IOUtils" />
     <jsp:directive.page import="java.util.Iterator" />

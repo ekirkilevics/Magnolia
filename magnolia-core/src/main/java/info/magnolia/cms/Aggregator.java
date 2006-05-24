@@ -16,11 +16,11 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.cms.beans.runtime.File;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
+import info.magnolia.context.MgnlContext;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;

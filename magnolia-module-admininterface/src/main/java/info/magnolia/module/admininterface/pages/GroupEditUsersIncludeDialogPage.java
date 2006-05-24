@@ -1,7 +1,6 @@
 package info.magnolia.module.admininterface.pages;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.gui.control.Button;
@@ -10,6 +9,7 @@ import info.magnolia.cms.gui.dialog.DialogSuper;
 import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.SimplePageMVCHandler;
 
 import java.io.IOException;

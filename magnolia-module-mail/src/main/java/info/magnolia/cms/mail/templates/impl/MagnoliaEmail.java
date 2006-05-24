@@ -1,10 +1,10 @@
 package info.magnolia.cms.mail.templates.impl;
 
 import freemarker.template.Template;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.mail.templates.MailAttachment;
 import info.magnolia.cms.security.User;
+import info.magnolia.context.MgnlContext;
 
 import java.io.BufferedInputStream;
 import java.io.File;

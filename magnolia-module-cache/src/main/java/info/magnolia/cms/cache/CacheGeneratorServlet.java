@@ -2,10 +2,10 @@ package info.magnolia.cms.cache;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.Server;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
 import java.io.PrintWriter;

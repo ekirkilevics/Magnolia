@@ -15,7 +15,7 @@ package info.magnolia.module.admininterface.lists;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import info.magnolia.cms.beans.runtime.MgnlContext;
+import info.magnolia.context.MgnlContext;
 
 
 /**

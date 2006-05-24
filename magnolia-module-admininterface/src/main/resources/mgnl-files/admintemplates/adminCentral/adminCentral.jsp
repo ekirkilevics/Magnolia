@@ -4,7 +4,7 @@
 <jsp:directive.page contentType="text/html; charset=UTF-8"/>
 
 <jsp:directive.page import="info.magnolia.cms.beans.config.Server"/>
-<jsp:directive.page import="info.magnolia.cms.beans.runtime.MgnlContext"/>
+<jsp:directive.page import="info.magnolia.context.MgnlContext"/>
 <jsp:directive.page import="info.magnolia.cms.security.Authenticator"/>
 <jsp:directive.page import="info.magnolia.cms.security.User"/>
 <jsp:directive.page import="info.magnolia.module.admininterface.Navigation"/>

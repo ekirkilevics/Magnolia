@@ -12,9 +12,9 @@
  */
 package info.magnolia.cms.servlets;
 
-import info.magnolia.cms.beans.runtime.Context;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.commands.CommandsManager;
+import info.magnolia.context.Context;
+import info.magnolia.context.MgnlContext;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

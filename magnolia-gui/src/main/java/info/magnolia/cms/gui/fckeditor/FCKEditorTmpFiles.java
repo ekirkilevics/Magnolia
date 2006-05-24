@@ -13,7 +13,7 @@
 package info.magnolia.cms.gui.fckeditor;
 
 import info.magnolia.cms.beans.runtime.Document;
-import info.magnolia.cms.beans.runtime.MgnlContext;
+import info.magnolia.context.MgnlContext;
 
 import java.util.HashMap;
 import java.util.Map;

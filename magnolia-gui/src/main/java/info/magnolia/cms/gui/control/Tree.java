@@ -15,7 +15,6 @@ package info.magnolia.cms.gui.control;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.config.TemplateManager;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -30,6 +29,7 @@ import info.magnolia.cms.util.FreeMarkerUtil;
 import info.magnolia.cms.util.MetaDataUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.Rule;
+import info.magnolia.context.MgnlContext;
 
 import java.util.ArrayList;
 import java.util.Collections;

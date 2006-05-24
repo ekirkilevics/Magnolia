@@ -3,7 +3,7 @@
   <jsp:directive.page contentType="text/html; charset=UTF-8" session="false" />
   <jsp:directive.page import="info.magnolia.cms.core.search.Query" />
   <jsp:directive.page import="info.magnolia.cms.core.search.QueryResult" />
-  <jsp:directive.page import="info.magnolia.cms.beans.runtime.MgnlContext" />
+  <jsp:directive.page import="info.magnolia.context.MgnlContext" />
   <jsp:directive.page import="info.magnolia.cms.beans.config.ContentRepository" />
   <jsp:text>
     <![CDATA[<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"

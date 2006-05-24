@@ -15,9 +15,7 @@ package info.magnolia.cms.exchange.simple;
 import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.Document;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.beans.runtime.MultipartForm;
-import info.magnolia.cms.beans.runtime.WebContext;
 import info.magnolia.cms.cache.CacheManager;
 import info.magnolia.cms.cache.CacheManagerFactory;
 import info.magnolia.cms.core.Content;
@@ -33,6 +31,8 @@ import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
 
 import java.io.IOException;
 import java.io.InputStream;

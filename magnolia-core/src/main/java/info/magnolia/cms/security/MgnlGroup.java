@@ -18,8 +18,8 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.context.MgnlContext;
 
 import javax.jcr.RepositoryException;
 import java.util.Iterator;

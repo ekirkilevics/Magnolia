@@ -10,8 +10,10 @@
  * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.beans.runtime;
+package info.magnolia.context;
 
+import info.magnolia.cms.beans.runtime.File;
+import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 
 import java.util.Map;

@@ -11,8 +11,8 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.ie.DataTransporter;
+import info.magnolia.context.MgnlContext;
 
 import java.io.File;
 import java.io.FilenameFilter;

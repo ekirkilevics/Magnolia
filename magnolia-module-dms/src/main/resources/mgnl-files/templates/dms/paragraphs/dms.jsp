@@ -9,7 +9,7 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="info.magnolia.cms.util.Resource" %>
 <%@ page import="info.magnolia.module.dms.beans.Document" %>
-<%@ page import="info.magnolia.cms.beans.runtime.MgnlContext" %>
+<%@ page import="info.magnolia.context.MgnlContext" %>
 <%@ page import="org.apache.commons.lang.StringUtils" %>
 <%@ page import="info.magnolia.cms.core.ItemType" %>
 

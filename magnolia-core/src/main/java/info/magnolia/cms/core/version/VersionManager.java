@@ -16,8 +16,8 @@ import info.magnolia.cms.core.*;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
 import info.magnolia.cms.util.ExclusiveWrite;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.beans.config.VersionConfig;
+import info.magnolia.context.MgnlContext;
 
 import javax.jcr.version.Version;
 import javax.jcr.version.VersionHistory;

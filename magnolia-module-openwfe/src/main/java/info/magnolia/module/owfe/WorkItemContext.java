@@ -12,9 +12,10 @@
  */
 package info.magnolia.module.owfe;
 
-import info.magnolia.cms.beans.runtime.Context;
-import info.magnolia.cms.beans.runtime.ContextDecorator;
-import info.magnolia.cms.beans.runtime.MgnlContext;
+import info.magnolia.context.Context;
+import info.magnolia.context.ContextDecorator;
+import info.magnolia.context.MgnlContext;
+
 import java.util.Map;
 
 import openwfe.org.engine.workitem.Attribute;

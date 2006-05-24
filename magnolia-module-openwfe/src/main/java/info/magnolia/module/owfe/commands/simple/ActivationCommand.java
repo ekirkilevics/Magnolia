@@ -13,12 +13,12 @@
 package info.magnolia.module.owfe.commands.simple;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.commands.ContextAttributes;
+import info.magnolia.context.MgnlContext;
 
 import org.apache.commons.chain.Command;
 import org.apache.commons.chain.Context;
@@ -44,7 +44,7 @@ public class ActivationCommand implements Command {
         recursive = Boolean.valueOf((String) ctx.get(ContextAttributes.P_RECURSIVE)).booleanValue();
         if (log.isDebugEnabled()) {
             log.debug("recursive = " + recursive);
-            log.debug("user = " + ((info.magnolia.cms.beans.runtime.Context) ctx).getUser().getName());
+            log.debug("user = " + ((info.magnolia.context.Context) ctx).getUser().getName());
         }
         
         try {

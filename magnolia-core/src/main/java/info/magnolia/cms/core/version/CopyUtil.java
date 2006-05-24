@@ -15,7 +15,7 @@ package info.magnolia.cms.core.version;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.beans.runtime.MgnlContext;
+import info.magnolia.context.MgnlContext;
 
 import javax.jcr.*;
 import javax.jcr.nodetype.ConstraintViolationException;

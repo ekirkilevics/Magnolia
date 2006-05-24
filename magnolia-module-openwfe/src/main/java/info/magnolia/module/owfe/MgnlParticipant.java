@@ -12,9 +12,9 @@
  */
 package info.magnolia.module.owfe;
 
-import info.magnolia.cms.beans.runtime.Context;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.commands.CommandsManager;
+import info.magnolia.context.Context;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.owfe.jcr.JCRWorkItemAPI;
 import openwfe.org.embed.impl.engine.AbstractEmbeddedParticipant;
 import openwfe.org.engine.workitem.InFlowWorkItem;

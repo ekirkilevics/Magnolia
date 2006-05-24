@@ -12,10 +12,10 @@
  */
 package info.magnolia.module.owfe;
 
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.util.MgnlCoreConstants;
 import info.magnolia.commands.ContextAttributes;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.owfe.jcr.JCRFlowDefinition;
 import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
 import info.magnolia.module.owfe.jcr.JCRWorkItemAPI;

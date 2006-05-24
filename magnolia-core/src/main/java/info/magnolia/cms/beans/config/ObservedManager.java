@@ -12,10 +12,10 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.ObservationUtil;
+import info.magnolia.context.MgnlContext;
 
 import java.util.HashSet;
 import java.util.Iterator;

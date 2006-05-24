@@ -14,7 +14,6 @@ package info.magnolia.cms.module;
 
 import info.magnolia.cms.beans.config.ConfigurationException;
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -24,6 +23,7 @@ import info.magnolia.cms.core.ie.DataTransporter;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.repository.Provider;
 
 import java.io.File;

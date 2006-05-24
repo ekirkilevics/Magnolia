@@ -12,7 +12,7 @@
  */
 package info.magnolia.cms.util;
 
-import info.magnolia.cms.beans.runtime.MgnlContext;
+import info.magnolia.context.MgnlContext;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

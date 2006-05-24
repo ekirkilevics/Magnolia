@@ -16,10 +16,10 @@ import java.util.Calendar;
 import java.util.Date;
 import org.apache.commons.lang.time.FastDateFormat;
 
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.gui.controlx.Control;
 import info.magnolia.cms.gui.controlx.Renderer;
 import info.magnolia.cms.util.DateUtil;
+import info.magnolia.context.MgnlContext;
 
 /**
  * Renders a column in a list.

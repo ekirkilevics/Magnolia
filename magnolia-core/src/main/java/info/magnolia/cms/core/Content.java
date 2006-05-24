@@ -12,7 +12,6 @@
  */
 package info.magnolia.cms.core;
 
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.version.ContentVersion;
 import info.magnolia.cms.core.version.VersionManager;
 import info.magnolia.cms.security.AccessDeniedException;
@@ -20,6 +19,7 @@ import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Rule;
+import info.magnolia.context.MgnlContext;
 
 import java.util.ArrayList;
 import java.util.Collection;

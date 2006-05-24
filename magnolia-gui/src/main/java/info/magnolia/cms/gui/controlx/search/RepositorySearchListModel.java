@@ -12,10 +12,10 @@
  */
 package info.magnolia.cms.gui.controlx.search;
 
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryResult;
 import info.magnolia.cms.gui.query.SearchQuery;
+import info.magnolia.context.MgnlContext;
 
 import java.util.Collection;
 

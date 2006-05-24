@@ -13,7 +13,6 @@
 package info.magnolia.module.owfe.jcr;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -21,6 +20,7 @@ import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.QueryResult;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.owfe.WorkflowConstants;
 
 import java.io.InputStream;

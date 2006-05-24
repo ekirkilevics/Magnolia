@@ -15,8 +15,6 @@ package info.magnolia.module.admininterface;
 
 import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.beans.config.Subscriber;
-import info.magnolia.cms.beans.runtime.Context;
-import info.magnolia.cms.beans.runtime.MgnlContext;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.misc.Sources;
@@ -25,6 +23,8 @@ import info.magnolia.cms.servlets.CommandBasedMVCServletHandler;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.commands.ContextAttributes;
+import info.magnolia.context.Context;
+import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
 
