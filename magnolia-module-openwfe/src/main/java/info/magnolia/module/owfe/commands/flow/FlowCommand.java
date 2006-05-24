@@ -12,7 +12,14 @@
  */
 package info.magnolia.module.owfe.commands.flow;
 
+import java.io.Serializable;
+import java.util.Iterator;
+import java.util.Map;
+
 import info.magnolia.commands.ContextAttributes;
+import info.magnolia.commands.MgnlCommand;
+import info.magnolia.context.Context;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.owfe.WorkflowModule;
 import info.magnolia.module.owfe.jcr.JCRFlowDefinition;
 import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
@@ -21,13 +28,11 @@ import openwfe.org.engine.workitem.LaunchItem;
 import openwfe.org.engine.workitem.StringAttribute;
 import openwfe.org.engine.workitem.StringMapAttribute;
 
-import org.apache.commons.chain.Command;
-import org.apache.commons.chain.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class FlowCommand implements Command {
+public class FlowCommand extends MgnlCommand {
 	/**
 	 * The name of the workflow to start
 	 */
@@ -63,12 +68,21 @@ public class FlowCommand implements Command {
     }
 
     /**
-     * FIXME: don't be that rough
+     * The default implementation puts all the contexts attributes which are in the request scope into the work item.
      * @param context
      * @param launchItem
      */
     public void prepareLaunchItem(Context context, LaunchItem launchItem){
-        StringMapAttribute attrs = AttributeUtils.java2attributes(context);
+        Map map = context.getAttributes(MgnlContext.REQUEST_SCOPE);
+        // remove not serializable objects
+        for (Iterator iter = map.keySet().iterator(); iter.hasNext();) {
+            String key = (String) iter.next();
+            Object val = map.get(key);
+            if(!(val instanceof Serializable)){
+                map.remove(key);
+            }
+        }
+        StringMapAttribute attrs = AttributeUtils.java2attributes(map);
         launchItem.setAttributes(attrs);
     }
 
