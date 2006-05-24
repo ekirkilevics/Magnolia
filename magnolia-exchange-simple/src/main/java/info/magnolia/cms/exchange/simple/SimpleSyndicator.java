@@ -205,24 +205,8 @@ public class SimpleSyndicator implements Syndicator {
      * @throws ExchangeException
      */
     public synchronized void activate(String parent, String path) throws ExchangeException, RepositoryException {
-        this.parent = parent;
-        this.path = path;
-        ActivationContent activationContent = null;
-        try {
-            HierarchyManager hm = MgnlContext.getHierarchyManager(this.repositoryName, this.workspaceName);
-            activationContent = this.collect(hm.getContent(path));
-            this.activate(activationContent);
-            this.updateActivationDetails();
-        }
-        catch (Exception e) {
-            log.error("Activation failed for path:" + ((path != null) ? path : "[null]"), e);
-            throw new ExchangeException(e);
-        }
-        finally {
-            if (log.isDebugEnabled())
-                log.debug("Cleaning temporary files");
-            cleanTemporaryStore(activationContent);
-        }
+        HierarchyManager hm = MgnlContext.getHierarchyManager(this.repositoryName, this.workspaceName);
+        this.activate(parent, hm.getContent(path));
     }
 
     /**
@@ -270,23 +254,8 @@ public class SimpleSyndicator implements Syndicator {
      */
     public synchronized void activate(Subscriber subscriber, String parent, String path) throws ExchangeException,
             RepositoryException {
-        this.parent = parent;
-        this.path = path;
-        ActivationContent activationContent = null;
-        try {
-            HierarchyManager hm = MgnlContext.getHierarchyManager(this.repositoryName, this.workspaceName);
-            activationContent = this.collect(hm.getContent(path));
-            this.activate(subscriber, activationContent);
-            this.updateActivationDetails();
-        }
-        catch (Exception e) {
-            throw new ExchangeException(e);
-        }
-        finally {
-            if (log.isDebugEnabled())
-                log.debug("Cleaning temporary files");
-            cleanTemporaryStore(activationContent);
-        }
+        HierarchyManager hm = MgnlContext.getHierarchyManager(this.repositoryName, this.workspaceName);
+        this.activate(subscriber, parent, hm.getContent(path));
     }
 
     /**
