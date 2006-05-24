@@ -21,9 +21,9 @@ import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.Security;
 
-import java.util.HashMap;
 import java.util.Locale;
 
+import org.apache.commons.chain.impl.ContextBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
-public abstract class ContextImpl extends HashMap implements Context {
+public abstract class ContextImpl extends ContextBase implements Context {
 
     /**
      * Logger
