@@ -16,8 +16,14 @@ import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
-import info.magnolia.cms.security.*;
+import info.magnolia.cms.security.AccessManager;
+import info.magnolia.cms.security.Authenticator;
+import info.magnolia.cms.security.Security;
+import info.magnolia.cms.security.User;
+import info.magnolia.cms.security.UserManager;
 
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -34,7 +40,7 @@ import org.slf4j.LoggerFactory;
  * @author Sameer Charles
  * @version $Revision $ ($Author $)
  */
-public class WebContextImpl extends ContextImpl implements WebContext {
+public class WebContextImpl extends AbstractContext implements WebContext {
 
     /**
      * Stable serialVersionUID.
@@ -66,7 +72,7 @@ public class WebContextImpl extends ContextImpl implements WebContext {
 
     /**
      * Create the subject on demand
-     * @see info.magnolia.cms.beans.runtime.ContextImpl#getUser()
+     * @see info.magnolia.cms.beans.runtime.AbstractContext#getUser()
      */
     public User getUser() {
         if (this.user == null) {
@@ -224,6 +230,66 @@ public class WebContextImpl extends ContextImpl implements WebContext {
                 return null;
         }
     }
+    
+
+    /**
+     * Remove an attribute.
+     */
+    public void removeAttribute(String name, int scope) {
+        switch (scope) {
+            case MgnlContext.REQUEST_SCOPE:
+                this.request.removeAttribute(name);
+                break;
+            case MgnlContext.SESSION_SCOPE:
+                HttpSession httpsession = request.getSession(false);
+                if (httpsession != null) {
+                    httpsession.removeAttribute(name);
+                }
+                break;
+            case MgnlContext.APPLICATION_SCOPE:
+                MgnlContext.getSystemContext().removeAttribute(name, MgnlContext.APPLICATION_SCOPE);
+                break;
+            default:
+                log.error("no illegal scope passed");
+        }
+    }
+    
+    /**
+     * Get a map represenation of the scope
+     */
+    public final Map getAttributes(int scope){
+        Map map = new HashMap();
+        Enumeration keysEnum;
+        switch (scope) {
+            case MgnlContext.REQUEST_SCOPE:
+                keysEnum = this.request.getAttributeNames();
+                while(keysEnum.hasMoreElements()){
+                    String key = (String) keysEnum.nextElement();
+                    Object value = getAttribute(key, scope);
+                    map.put(key, value);
+                }
+                return map;
+            case MgnlContext.SESSION_SCOPE:
+                HttpSession httpsession = request.getSession(false);
+                if (httpsession == null) {
+                    return null;
+                }
+                keysEnum = httpsession.getAttributeNames();
+                while(keysEnum.hasMoreElements()){
+                    String key = (String) keysEnum.nextElement();
+                    Object value = getAttribute(key, scope);
+                    map.put(key, value);
+                }
+                return map;
+            case MgnlContext.APPLICATION_SCOPE:
+                return MgnlContext.getSystemContext().getAttributes(MgnlContext.APPLICATION_SCOPE);
+            default:
+                log.error("no illegal scope passed");
+                return null;
+        }
+
+    }
+    
 
     /**
      * Avoid the call to this method where ever possible.
@@ -236,5 +302,4 @@ public class WebContextImpl extends ContextImpl implements WebContext {
     public String getContextPath() {
         return this.request.getContextPath();
     }
-
 }

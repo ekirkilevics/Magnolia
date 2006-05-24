@@ -16,22 +16,19 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.Security;
-
-import java.util.HashMap;
-import java.util.Map;
+import info.magnolia.cms.security.User;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 /**
- * This is the system context using the not secured HierarchyManagers.
+ * This is the system context using the not secured HierarchyManagers. The context uses only one scope.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
-public class SystemContextImpl extends ContextImpl implements SystemContext {
+public class SystemContextImpl extends AbstractMapBasedContext implements SystemContext {
 
     /**
      * Logger
@@ -44,17 +41,9 @@ public class SystemContextImpl extends ContextImpl implements SystemContext {
     private static final long serialVersionUID = 222L;
 
     /**
-     * To get and set the attributes for this context
-     */
-    protected Map scopes = new HashMap();
-
-    /**
      * DON'T CREATE AN OBJECT. The SystemContext is set by magnolia system itself. Init the scopes
      */
     public SystemContextImpl() {
-        scopes.put(new Integer(MgnlContext.REQUEST_SCOPE), new HashMap());
-        scopes.put(new Integer(MgnlContext.SESSION_SCOPE), new HashMap());
-        scopes.put(new Integer(MgnlContext.APPLICATION_SCOPE), new HashMap());
     }
 
     public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
@@ -69,12 +58,18 @@ public class SystemContextImpl extends ContextImpl implements SystemContext {
         return this.getHierarchyManager(repositoryId, workspaceId).getQueryManager();
     }
 
-    public void setAttribute(String name, Object value) {
-        this.setAttribute(name, value, MgnlContext.REQUEST_SCOPE);
+    public void setAttribute(String name, Object value, int scope) {
+        if(scope == MgnlContext.REQUEST_SCOPE || scope == MgnlContext.SESSION_SCOPE){
+            log.warn("you should not set an attribute in the system context in request or session scope. You are setting {}={}", name, value);
+        }
+        super.setAttribute(name, value, scope);
     }
 
-    public void setAttribute(String name, Object value, int scope) {
-        getScope(scope).put(name, value);
+    public void removeAttribute(String name, Object value, int scope) {
+        if(scope == MgnlContext.REQUEST_SCOPE || scope == MgnlContext.SESSION_SCOPE){
+            log.warn("you should not manipulate an attribute in the system context in request or session scope. You are setting {}={}", name, value);
+        }
+        super.removeAttribute(name, scope);
     }
 
     /**
@@ -89,13 +84,5 @@ public class SystemContextImpl extends ContextImpl implements SystemContext {
             this.user = Security.getUserManager().getSystemUser();
         }
         return this.user;
-    }
-
-    protected Map getScope(int scope) {
-        return (Map) scopes.get(new Integer(scope));
-    }
-
-    public Object getAttribute(String name, int scope) {
-        return getScope(scope).get(name);
     }
 }

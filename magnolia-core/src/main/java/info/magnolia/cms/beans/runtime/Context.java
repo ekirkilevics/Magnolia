@@ -19,6 +19,7 @@ import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.User;
 
 import java.util.Locale;
+import java.util.Map;
 
 
 /**
@@ -125,7 +126,34 @@ public interface Context extends org.apache.commons.chain.Context {
      * @return attribute value
      */
     public Object getAttribute(String name, int scope);
+    
+    /**
+     * Get attribute value without passing a scope. the scopes are searched from bottom up (request, session, application)
+     * @param name to which value is associated to
+     * @return attribute value
+     */
+    public Object getAttribute(String name);
+    
+    /**
+     * Get a map of a attributes set in the scope
+     * @param scope
+     * @return the map
+     */
+    public Map getAttributes(int scope);
 
+    /**
+     * Remove an attribute
+     * @param name
+     * @param scope
+     */
+    public void removeAttribute(String name, int scope);
+
+    /**
+     * Get an over all map
+     * @return the map
+     */
+    public Map getAttributes();
+    
     /**
      * Get the default messages. It uses the locale set on this context
      *

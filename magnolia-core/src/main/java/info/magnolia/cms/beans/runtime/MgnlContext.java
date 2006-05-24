@@ -270,15 +270,7 @@ public class MgnlContext {
      * @return attribute value
      */
     public static Object getAttribute(String name) {
-        Context ctx = getInstance();
-        Object value = ctx.getAttribute(name, REQUEST_SCOPE);
-        if (null == value) {
-            value = ctx.getAttribute(name, SESSION_SCOPE);
-        }
-        if (null == value) {
-            value = ctx.getAttribute(name, APPLICATION_SCOPE);
-        }
-        return value;
+        return getInstance().getAttribute(name);
     }
 
     /**
