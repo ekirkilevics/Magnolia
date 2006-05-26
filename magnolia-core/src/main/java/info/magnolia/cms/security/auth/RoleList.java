@@ -19,7 +19,7 @@ import java.util.Collection;
 
 /**
  * @author Sameer Charles
- * @version $Revision: $ ($Author: $)
+ * $Id$
  */
 public interface RoleList extends Principal, Serializable {
 

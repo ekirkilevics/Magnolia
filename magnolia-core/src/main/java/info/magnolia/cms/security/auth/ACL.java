@@ -19,7 +19,7 @@ import java.util.List;
 
 /**
  * @author Sameer Charles
- * @version $Revision: $ ($Author: $)
+ * $Id$
  */
 public interface ACL extends Principal, Serializable {
 
