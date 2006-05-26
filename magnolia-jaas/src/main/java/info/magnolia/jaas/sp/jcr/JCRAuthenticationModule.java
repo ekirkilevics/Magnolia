@@ -18,6 +18,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.security.auth.Entity;
+import info.magnolia.cms.security.Digester;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.codec.binary.Base64;
@@ -112,19 +113,10 @@ public class JCRAuthenticationModule extends AbstractLoginModule {
                 .getHierarchyManager(ContentRepository.USERS);
         try {
             this.user = hm.getContent(this.name);
-            String fromRepository = this.user.getNodeData("pswd").getString()
-                    .trim();
-
-            // if callback handler instance of MD5
-            // - encode repository password to MD5
-            // if callback handler instance of Base64
-            // - encode given password to Base64
-            // todo
-
-
-            String encodedPassword = new String(Base64
-                    .encodeBase64((new String(this.pswd)).getBytes()));
-            return fromRepository.equalsIgnoreCase(encodedPassword);
+            String serverPassword = this.user.getNodeData("pswd").getString().trim();
+            // plain text server password
+            serverPassword = Digester.getMD5Hex(new String(Base64.decodeBase64(serverPassword.getBytes())));
+            return serverPassword.equalsIgnoreCase(new String(this.pswd));
         } catch (PathNotFoundException pe) {
             log.info("Unable to locate user [" + this.name
                     + "], authentication failed");

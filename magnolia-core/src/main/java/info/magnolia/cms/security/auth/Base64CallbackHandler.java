@@ -14,6 +14,7 @@ package info.magnolia.cms.security.auth;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
+import info.magnolia.cms.security.Digester;
 
 /**
  * Base 64 callback handler supporting Basic authentication
@@ -33,9 +34,10 @@ public class Base64CallbackHandler extends CredentialsCallbackHandler {
      * @param credentials Base64 encoded string
      * */
     public Base64CallbackHandler(String credentials) {
-        credentials = getDecodedCredentials(credentials);
+        credentials = getDecodedCredentials(credentials.substring(6).trim());
         this.name = StringUtils.substringBefore(credentials, ":");
-        this.pswd = StringUtils.substringAfter(credentials, ":").toCharArray();
+        // get MD5 Hex string, returned password array is alway MD5 hex
+        this.pswd = Digester.getMD5Hex(StringUtils.substringAfter(credentials, ":")).toCharArray();
     }
 
     /**

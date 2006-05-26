@@ -31,11 +31,11 @@
         <![CDATA[
             function submit() {
                 // crypt
-                //input = document.loginForm.password.value;
-                //hash = hex_md5( input );
-                //document.loginForm.passwordMD5.value = hash;
+                input = document.loginForm.plainPassword.value;
+                hash = hex_md5( input );
+                document.loginForm.mgnlUserPSWD.value = hash;
                 // BLANK OUT PASSWORD
-                ///document.loginForm.password.value = "";
+                document.loginForm.plainPassword.value = "";
                 // SUBMIT FORM
                 return true;
             }
@@ -77,11 +77,11 @@
     <input id="username" name="mgnlUserId" /><br />
 
     <label for="pasword">Password</label> <input id="pasword"
-        name="mgnlUserPSWD" type="password" /><br />
+        name="plainPassword" type="password" /><br />
 
     <label for="submitButton"><!--  --></label> <input id="submitButton"
         type="submit" value="login" class="button" /><br />
-    <input name="passwordMD5" type="hidden" /></form>
+    <input name="mgnlUserPSWD" type="hidden" /></form>
     </div>
     </div>
 
