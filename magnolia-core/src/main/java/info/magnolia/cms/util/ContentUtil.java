@@ -255,7 +255,7 @@ public class ContentUtil {
     }
 
     /**
-     * Takes a nodes data and and sets the beans properties which follow the naming of the nodes properties.
+     * Takes a nodes data and and sets the beans properties which follow the naming of the nodes nodedatas.
      * @param bean the bean you like to populate
      * @param node the node containing the data
      * @return the bean
@@ -272,4 +272,20 @@ public class ContentUtil {
         }
         return bean;
     }
+    
+    /**
+     * Takes a nodes data and and sets the beans properties which follow the naming of the nodes nodedatas.
+     * @param bean the bean you like to populate
+     * @param repository
+     * @param path
+     * @return the bean
+     */
+    public static Object setProperties(Object bean, String repository, String path) {
+        Content node = getContent(repository, path);
+        if(node != null){
+            setProperties(bean, node);
+        }
+        return bean;
+    }
+    
 }
