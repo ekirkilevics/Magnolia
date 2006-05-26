@@ -40,7 +40,7 @@ import java.util.List;
  * @author Sameer Charles
  * $Id$
  */
-public class VersionManager {
+public final class VersionManager {
 
     /**
      * version data base

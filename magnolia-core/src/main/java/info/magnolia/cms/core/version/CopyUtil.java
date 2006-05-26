@@ -35,7 +35,7 @@ import org.apache.commons.lang.StringUtils;
  * $Id$
  * Utility class to copy nodes using specified Roles to the magnolia specific version store
  */
-public class CopyUtil {
+public final class CopyUtil {
 
     /**
      * Logger.
@@ -45,7 +45,7 @@ public class CopyUtil {
     /**
      * singleton instance
      * */
-    private static CopyUtil thisInstance = new CopyUtil();
+    private static final CopyUtil thisInstance = new CopyUtil();
 
     /**
      * private class
