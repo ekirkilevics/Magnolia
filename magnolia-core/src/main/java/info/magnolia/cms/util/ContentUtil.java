@@ -42,18 +42,19 @@ import org.slf4j.LoggerFactory;
  * @author philipp
  */
 public class ContentUtil {
-	
-	private static Logger log = LoggerFactory.getLogger(ContentUtil.class);
-    
+
+    private static Logger log = LoggerFactory.getLogger(ContentUtil.class);
+
     /**
      * Content filter accepting everything
      */
-    private static ContentFilter allwaysTrueContentFilter = new ContentFilter(){
+    private static ContentFilter allwaysTrueContentFilter = new ContentFilter() {
+
         public boolean accept(Content content) {
             return true;
         }
     };
-    
+
     /**
      * Retruns a Content object of the named repository.
      * @param repository
@@ -141,7 +142,7 @@ public class ContentUtil {
         List nodes = new ArrayList();
         return collectAllChildren(nodes, node, filter);
     }
-    
+
     /**
      * Get the children using a filter
      * @param nodes collection of already found nodes
@@ -156,19 +157,19 @@ public class ContentUtil {
             Content child = (Content) iter.next();
             nodes.add(child);
         }
-        
+
         // get all children to find recursively
         Collection allChildren = node.getChildren(allwaysTrueContentFilter);
-        
+
         // recursion
         for (Iterator iter = allChildren.iterator(); iter.hasNext();) {
             Content child = (Content) iter.next();
             collectAllChildren(nodes, child, filter);
         }
-        
+
         return nodes;
     }
-    
+
     /**
      * Get all children of a particular type
      * @param node
@@ -235,27 +236,40 @@ public class ContentUtil {
         }
         return node;
     }
-    
-    public static Map toMap(Content node){
-    	Map map = new HashMap();
-    	for (Iterator iter = node.getNodeDataCollection().iterator(); iter.hasNext();) {
-			NodeData nd = (NodeData) iter.next();
-			Object val = NodeDataUtil.getValue(nd);
-			if(val!= null){
-				map.put(nd.getName(), val);
-			}
-		}
-    	return map;
+
+    /**
+     * Transforms the nodes data into a map containting the names and values.
+     * @param node
+     * @return a flat map
+     */
+    public static Map toMap(Content node) {
+        Map map = new HashMap();
+        for (Iterator iter = node.getNodeDataCollection().iterator(); iter.hasNext();) {
+            NodeData nd = (NodeData) iter.next();
+            Object val = NodeDataUtil.getValue(nd);
+            if (val != null) {
+                map.put(nd.getName(), val);
+            }
+        }
+        return map;
     }
-    
-    public static Object setProperties(Object bean, Content node){
-    	try {
-			BeanUtils.populate(bean, toMap(node));
-		} catch (IllegalAccessException e) {
-			log.error("can't set properties", e);
-		} catch (InvocationTargetException e) {
-			log.error("can't set properties", e);
-		}
-    	return bean;
+
+    /**
+     * Takes a nodes data and and sets the beans properties which follow the naming of the nodes properties.
+     * @param bean the bean you like to populate
+     * @param node the node containing the data
+     * @return the bean
+     */
+    public static Object setProperties(Object bean, Content node) {
+        try {
+            BeanUtils.populate(bean, toMap(node));
+        }
+        catch (IllegalAccessException e) {
+            log.error("can't set properties", e);
+        }
+        catch (InvocationTargetException e) {
+            log.error("can't set properties", e);
+        }
+        return bean;
     }
 }
