@@ -23,7 +23,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Sameer Charles
- * @version $Revision: $ ($Author: $)
+ * $Id$
  */
 public class RoleListImpl implements RoleList {
 

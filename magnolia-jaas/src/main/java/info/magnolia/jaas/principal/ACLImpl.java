@@ -23,7 +23,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * This class represents access control list as a principal
  * @author Sameer Charles
- * @version $Revision$ ($Author$)
+ * $Id$
  */
 public class ACLImpl implements ACL {
 

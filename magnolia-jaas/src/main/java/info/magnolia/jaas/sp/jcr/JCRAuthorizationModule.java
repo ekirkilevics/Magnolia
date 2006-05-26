@@ -42,7 +42,7 @@ import java.util.ArrayList;
 /**
  * This is a default login module for magnolia, it uses initialized repository as defined by the provider interface
  * @author Sameer Charles
- * @version $Revision$ ($Author$)
+ * $Id$
  */
 public class JCRAuthorizationModule extends JCRAuthenticationModule {
 

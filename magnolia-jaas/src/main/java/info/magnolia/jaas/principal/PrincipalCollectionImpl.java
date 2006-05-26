@@ -13,7 +13,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * Date: Jun 29, 2005
  * @author Sameer Charles
- * @version $Revision$ ($Author$)
+ * $Id$
  */
 public class PrincipalCollectionImpl implements PrincipalCollection {
 
@@ -95,10 +95,7 @@ public class PrincipalCollectionImpl implements PrincipalCollection {
      * @return true if the collection contains the principal by the specified name
      */
     public boolean contains(String name) {
-        if (this.get(name) == null) {
-            return false;
-        }
-        return true;
+        return this.get(name) != null;
     }
 
     /**
