@@ -12,44 +12,10 @@
  */
 package info.magnolia.cms.security.auth;
 
-import java.io.Serializable;
-import java.security.Principal;
-import java.util.Collection;
-
-
 /**
  * @author Sameer Charles
  * $Id$
  */
-public interface RoleList extends Principal, Serializable {
-
-    /**
-     * Get name given to this principal
-     * @return name
-     */
-    public String getName();
-
-    /**
-     * Set principal name
-     * @param name
-     */
-    public void setName(String name);
-
-    /**
-     * Add a role name to the list
-     * @param roleName
-     */
-    public void addRole(String roleName);
-
-    /**
-     * Gets list of roles as string
-     * @return roles
-     */
-    public Collection getList();
-
-    /**
-     * Checks if the role name exist in this list
-     */
-    public boolean hasRole(String name);
+public interface RoleList extends GroupList {
 
 }

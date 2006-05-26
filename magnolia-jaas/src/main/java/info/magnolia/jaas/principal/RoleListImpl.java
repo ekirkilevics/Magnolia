@@ -14,90 +14,20 @@ package info.magnolia.jaas.principal;
 
 import info.magnolia.cms.security.auth.RoleList;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-
-import org.apache.commons.lang.StringUtils;
-
 
 /**
  * @author Sameer Charles
  * $Id$
  */
-public class RoleListImpl implements RoleList {
-
-    /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
+public class RoleListImpl extends GroupListImpl implements RoleList {
 
     /**
      * default name for this principal
      */
-    private static final String DEFAULT_NAME = "roles";
-
-    /**
-     * properties
-     */
-    private String name;
-
-    /**
-     * list of names
-     */
-    private Collection roles;
+    protected static final String DEFAULT_NAME = "roles";
 
     public RoleListImpl() {
-        this.roles = new ArrayList();
-    }
-
-    /**
-     * Get name given to this principal
-     * @return name
-     */
-    public String getName() {
-        if (StringUtils.isEmpty(this.name)) {
-            return DEFAULT_NAME;
-        }
-        return this.name;
-    }
-
-    /**
-     * Set principal name
-     * @param name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * Add a role name to the list
-     * @param roleName
-     */
-    public void addRole(String roleName) {
-        this.roles.add(roleName);
-    }
-
-    /**
-     * Gets list of roles as string
-     * @return roles
-     */
-    public Collection getList() {
-        return this.roles;
-    }
-
-    /**
-     * Checks if the role name exist in this list
-     */
-    public boolean hasRole(String name) {
-        Iterator listIterator = this.roles.iterator();
-        while (listIterator.hasNext()) {
-            String roleName = (String) listIterator.next();
-            if (StringUtils.equalsIgnoreCase(name, roleName)) {
-                return true;
-            }
-        }
-        return false;
+        super();
     }
 
 }

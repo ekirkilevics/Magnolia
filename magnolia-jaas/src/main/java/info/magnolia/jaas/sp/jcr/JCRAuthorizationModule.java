@@ -18,6 +18,8 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.auth.PrincipalCollection;
 import info.magnolia.cms.security.auth.ACL;
+import info.magnolia.cms.security.auth.GroupList;
+import info.magnolia.cms.security.auth.RoleList;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
 import info.magnolia.cms.util.UrlPattern;
@@ -25,6 +27,7 @@ import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.jaas.principal.RoleListImpl;
 import info.magnolia.jaas.principal.PrincipalCollectionImpl;
 import info.magnolia.jaas.principal.ACLImpl;
+import info.magnolia.jaas.principal.GroupListImpl;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
@@ -89,14 +92,19 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
      * set access control list from the user, roles and groups
      */
     public void setACL() {
-        this.setACL(this.user);
+        RoleList roleList = new RoleListImpl();
+        PrincipalCollection principalList = new PrincipalCollectionImpl();
+        this.setACL(this.user, principalList, roleList);
         Iterator groupsIterator = this.getGroupNodes().iterator();
         HierarchyManager groupsHierarchy = ContentRepository
                 .getHierarchyManager(ContentRepository.USER_GROUPS);
+        GroupList groupList = new GroupListImpl();
         while (groupsIterator.hasNext()) {
             String groupPath = ((Content) groupsIterator.next()).getNodeData("path").getString();
             try {
-                this.setACL(groupsHierarchy.getContent(groupPath));
+                Content groupNode = groupsHierarchy.getContent(groupPath);
+                groupList.add(groupNode.getName());
+                this.setACL(groupNode, principalList, roleList);
             } catch (PathNotFoundException e) {
                 if (log.isDebugEnabled())
                     log.debug("Group node on path "+groupPath+" does not exist");
@@ -104,6 +112,18 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
                 log.error("Failed to get group node "+groupPath, re);
             }
         }
+        /**
+         * set list of group names, info.magnolia.jaas.principal.GroupList
+         */
+        this.subject.getPrincipals().add(groupList);
+        /**
+         * set principal list, a set of info.magnolia.jaas.principal.ACL
+         */
+        this.subject.getPrincipals().add(principalList);
+        /**
+         * set list of role names, info.magnolia.jaas.principal.RoleList
+         */
+        this.subject.getPrincipals().add(roleList);
     }
 
     /**
@@ -126,19 +146,17 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
      * set access control list from a list of roles under the provided content object
      * @param aclNode under which roles and ACL are defined
      * */
-    private void setACL(Content aclNode) {
+    private void setACL(Content aclNode, PrincipalCollection principalList, RoleList roleList) {
         HierarchyManager rolesHierarchy = ContentRepository
                 .getHierarchyManager(ContentRepository.USER_ROLES);
         try {
             Content rolesNode = aclNode.getContent("roles");
             Iterator children = rolesNode.getChildren().iterator();
-            RoleListImpl roleList = new RoleListImpl();
-            PrincipalCollection principalList = new PrincipalCollectionImpl();
             while (children.hasNext()) {
                 Content child = (Content) children.next();
                 String rolePath = child.getNodeData("path").getString();
-                roleList.addRole(rolePath);
                 Content role = rolesHierarchy.getContent(rolePath);
+                roleList.add(role.getName());
                 Iterator it = role.getChildren(
                         ItemType.CONTENTNODE.getSystemName(), "acl*")
                         .iterator();
@@ -189,14 +207,6 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
                     }
                 }
             }
-            /**
-             * set principal list, a set of info.magnolia.jaas.principal.ACL
-             */
-            this.subject.getPrincipals().add(principalList);
-            /**
-             * set list of role names, info.magnolia.jaas.principal.RoleList
-             */
-            this.subject.getPrincipals().add(roleList);
         } catch (PathNotFoundException e) {
             log.debug(e.getMessage(),e);
         } catch (RepositoryException re) {

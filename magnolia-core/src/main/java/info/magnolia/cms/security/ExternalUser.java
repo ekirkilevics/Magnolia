@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import info.magnolia.cms.security.auth.Entity;
 import info.magnolia.cms.security.auth.RoleList;
+import info.magnolia.cms.security.auth.GroupList;
 
 
 /**
@@ -45,6 +46,11 @@ public class ExternalUser implements User {
     private RoleList roleList;
 
     /**
+     * user groups
+     */
+    private GroupList groupList;
+
+    /**
      * @param subject as created by login module
      */
     protected ExternalUser(Subject subject) {
@@ -54,6 +60,9 @@ public class ExternalUser implements User {
         principalSet = subject.getPrincipals(RoleList.class);
         Iterator roleListIterator = principalSet.iterator();
         this.roleList = (RoleList) roleListIterator.next();
+        principalSet = subject.getPrincipals(GroupList.class);
+        Iterator groupListIterator = principalSet.iterator();
+        this.groupList = (GroupList) groupListIterator.next();
     }
 
     /*
@@ -61,7 +70,7 @@ public class ExternalUser implements User {
      * @see info.magnolia.cms.security.UserInterface#hasRole(java.lang.String)
      */
     public boolean hasRole(String roleName) {
-        return this.roleList.hasRole(roleName);
+        return this.roleList.has(roleName);
     }
 
     /*
@@ -86,7 +95,7 @@ public class ExternalUser implements User {
      * @return true if in group
      */
     public boolean inGroup(String groupName) {
-        return this.roleList.hasRole(groupName);
+        return this.groupList.has(groupName);
     }
 
     /**
@@ -134,8 +143,7 @@ public class ExternalUser implements User {
      * @see info.magnolia.cms.security.User#getGroups()
      */
     public Collection getGroups() {
-        // @todo Auto-generated method stub
-        return null;
+        return this.groupList.getList();
     }
 
     /**
