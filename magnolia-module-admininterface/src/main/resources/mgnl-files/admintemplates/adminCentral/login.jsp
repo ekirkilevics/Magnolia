@@ -1,96 +1,42 @@
-<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
-    xmlns:c="urn:jsptld:http://java.sun.com/jsp/jstl/core"
-    xmlns:cms="urn:jsptld:cms-taglib"
-    xmlns:fmt="urn:jsptld:http://java.sun.com/jsp/jstl/fmt">
-    <jsp:directive.page contentType="text/html; charset=UTF-8"/>
-    <jsp:text>
-        <![CDATA[<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:c="urn:jsptld:http://java.sun.com/jsp/jstl/core"
+  xmlns:cms="urn:jsptld:cms-taglib" xmlns:fmt="urn:jsptld:http://java.sun.com/jsp/jstl/fmt">
+  <jsp:directive.page contentType="text/html; charset=UTF-8" />
+  <jsp:text>
+    <![CDATA[<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> ]]>
-    </jsp:text>
-    <jsp:scriptlet>
-        String contextPath = request.getContextPath();
-        if (contextPath.equals("/")) {
-            contextPath = "";
-        }
-        pageContext.setAttribute("referer",contextPath + info.magnolia.cms.core.Path.getURI(request));
-    </jsp:scriptlet>
-
-
-    <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  </jsp:text>
+  <jsp:scriptlet>
+    String contextPath = request.getContextPath(); if (contextPath.equals("/")) { contextPath = ""; }
+    pageContext.setAttribute("referer",contextPath + info.magnolia.cms.core.Path.getURI(request));
+  </jsp:scriptlet>
+  <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
     <head>
-    <title>Magnolia Login Form</title>
-    <link rel="STYLESHEET" type="text/css"
-        href="${pageContext.request.contextPath}/.resources/loginForm/login.css" />
-    <link rel="shortcut icon"
-        href="${pageContext.request.contextPath}/.resources/loginForm/favicon.ico"
+      <title>Magnolia Login Form</title>
+      <link rel="STYLESHEET" type="text/css" href="${pageContext.request.contextPath}/.resources/loginForm/login.css" />
+      <link rel="shortcut icon" href="${pageContext.request.contextPath}/.resources/loginForm/favicon.ico"
         type="image/x-icon" />
-    <script
-        src="${pageContext.request.contextPath}/.resources/loginForm/md5.js"
-        type="text/javascript"><!--  --></script>
-    <script type="text/javascript">
-        <![CDATA[
-            function submit() {
-                // crypt
-                input = document.loginForm.plainPassword.value;
-                hash = hex_md5( input );
-                document.loginForm.mgnlUserPSWD.value = hash;
-                // BLANK OUT PASSWORD
-                document.loginForm.plainPassword.value = "";
-                // SUBMIT FORM
-                return true;
-            }
-
-            // methods copied from magnolia admin central (here not accessible)
-            function mgnlIsKeyEnter(event){
-                if (window.event && window.event.keyCode == 13)
-                    return true;
-                else if
-                    (navigator.appName=="Netscape" && event.which==13) return true;
-                else
-                    return false;
-            }
-
-            document.onkeypress = function(e){
-                if(mgnlIsKeyEnter(e)){
-                    submit();
-                }
-            }
-
-            onload = function(){
-                document.loginForm.username.focus();
-            }
-        ]]>
-    </script>
     </head>
     <body>
-
-    <div id="frame">
-    <div id="logo"><img
-        src="${pageContext.request.contextPath}/.resources/loginForm/logo.gif"
-        width="271" height="51" title="magnolia Content Management Suite"
-        alt="magnolia Content Management Suite" /></div>
-
-    <div id="form">
-    <div class="form">
-    <form name="loginForm" action="${referer}" method="post"
-        onsubmit="return submit()"><label for="username">Username</label>
-    <input id="username" name="mgnlUserId" /><br />
-
-    <label for="pasword">Password</label> <input id="pasword"
-        name="plainPassword" type="password" /><br />
-
-    <label for="submitButton"><!--  --></label> <input id="submitButton"
-        type="submit" value="login" class="button" /><br />
-    <input name="mgnlUserPSWD" type="hidden" /></form>
-    </div>
-    </div>
-
-    <div id="copyright">&amp;copy; Copyright 2000-2006 obinary ag,
-    Basel, Switzerland - All rights reserved.</div>
-
-    </div>
-
+      <div id="frame">
+        <div id="logo">
+          <img src="${pageContext.request.contextPath}/.resources/loginForm/logo.gif" width="271" height="51"
+            title="magnolia Content Management Suite" alt="magnolia Content Management Suite" />
+        </div>
+        <div id="form">
+          <div class="form">
+            <form name="loginForm" action="${referer}" method="post">
+              <label for="username">Username</label>
+              <input id="username" name="mgnlUserId" />
+              <label for="mgnlUserPSWD">Password</label>
+              <input id="mgnlUserPSWD" name="mgnlUserPSWD" type="password" />
+              <br />
+              <label for="submitButton"><!--  --></label>
+              <input id="submitButton" type="submit" value="login" class="button" />
+            </form>
+          </div>
+        </div>
+        <div id="copyright">&amp;copy; Copyright 2000-2006 obinary ag, Basel, Switzerland - All rights reserved.</div>
+      </div>
     </body>
-    </html>
+  </html>
 </jsp:root>
-

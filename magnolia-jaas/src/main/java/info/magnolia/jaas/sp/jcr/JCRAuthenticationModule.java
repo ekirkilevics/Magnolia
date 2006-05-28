@@ -12,29 +12,31 @@
  */
 package info.magnolia.jaas.sp.jcr;
 
-import info.magnolia.jaas.sp.AbstractLoginModule;
-import info.magnolia.jaas.principal.EntityImpl;
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.security.auth.Entity;
 import info.magnolia.cms.security.Digester;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.commons.codec.binary.Base64;
+import info.magnolia.cms.security.auth.Entity;
+import info.magnolia.jaas.principal.EntityImpl;
+import info.magnolia.jaas.sp.AbstractLoginModule;
 
-import javax.security.auth.login.LoginException;
+import java.io.IOException;
+
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import java.io.IOException;
+import javax.security.auth.login.LoginException;
+
+import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public class JCRAuthenticationModule extends AbstractLoginModule {
 
@@ -56,8 +58,7 @@ public class JCRAuthenticationModule extends AbstractLoginModule {
      */
     public boolean login() throws LoginException {
         if (this.callbackHandler == null) {
-            throw new LoginException(
-                    "Error: no CallbackHandler available for JCRModule");
+            throw new LoginException("Error: no CallbackHandler available for JCRModule");
         }
 
         Callback[] callbacks = new Callback[2];
@@ -70,20 +71,21 @@ public class JCRAuthenticationModule extends AbstractLoginModule {
             this.name = ((NameCallback) callbacks[0]).getName();
             this.pswd = ((PasswordCallback) callbacks[1]).getPassword();
             this.success = this.isValidUser();
-        } catch (IOException ioe) {
+        }
+        catch (IOException ioe) {
             if (log.isDebugEnabled()) {
                 log.debug("Exception caught", ioe);
             }
             throw new LoginException(ioe.toString());
-        } catch (UnsupportedCallbackException ce) {
+        }
+        catch (UnsupportedCallbackException ce) {
             if (log.isDebugEnabled()) {
                 log.debug(ce.getMessage(), ce);
             }
-            throw new LoginException(ce.getCallback().toString()
-                    + " not available");
+            throw new LoginException(ce.getCallback().toString() + " not available");
         }
         if (!this.success) {
-            throw new LoginException("failed to authenticate "+this.name);
+            throw new LoginException("failed to authenticate " + this.name);
         }
 
         return this.success;
@@ -94,7 +96,7 @@ public class JCRAuthenticationModule extends AbstractLoginModule {
      */
     public boolean commit() throws LoginException {
         if (!this.success) {
-            throw new LoginException("failed to authenticate "+this.name);
+            throw new LoginException("failed to authenticate " + this.name);
         }
         this.setEntity();
         return true;
@@ -109,25 +111,28 @@ public class JCRAuthenticationModule extends AbstractLoginModule {
 
     /**
      * checks is the credentials exist in the repository
-     *
      * @return boolean
      */
     public boolean isValidUser() {
-        HierarchyManager hm = ContentRepository
-                .getHierarchyManager(ContentRepository.USERS);
+        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USERS);
         try {
             this.user = hm.getContent(this.name);
             String serverPassword = this.user.getNodeData("pswd").getString().trim();
             // plain text server password
             serverPassword = Digester.getMD5Hex(new String(Base64.decodeBase64(serverPassword.getBytes())));
-            return serverPassword.equalsIgnoreCase(new String(this.pswd));
-        } catch (PathNotFoundException pe) {
-            log.info("Unable to locate user [" + this.name
-                    + "], authentication failed");
-        } catch (RepositoryException re) {
-            log.error("Unable to locate user [" + this.name
-                    + "], authentication failed due to a "
-                    + re.getClass().getName(), re);
+
+            String passwordHash = Digester.getMD5Hex(new String(this.pswd));
+
+            return serverPassword.equalsIgnoreCase(passwordHash);
+        }
+        catch (PathNotFoundException pe) {
+            log.info("Unable to locate user [{}], authentication failed", this.name);
+        }
+        catch (RepositoryException re) {
+            log.error("Unable to locate user ["
+                + this.name
+                + "], authentication failed due to a "
+                + re.getClass().getName(), re);
         }
         return false;
     }

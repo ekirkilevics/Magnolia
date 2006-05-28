@@ -39,12 +39,12 @@ public class CredentialsCallbackHandler implements CallbackHandler {
 
     /**
      * user id
-     * */
+     */
     protected String name;
 
     /**
      * password
-     * */
+     */
     protected char[] pswd;
 
     /**
@@ -57,7 +57,7 @@ public class CredentialsCallbackHandler implements CallbackHandler {
     /**
      * @param name
      * @param pswd
-     * */
+     */
     public CredentialsCallbackHandler(String name, char[] pswd) {
         this.name = name;
         this.pswd = pswd;
@@ -88,8 +88,9 @@ public class CredentialsCallbackHandler implements CallbackHandler {
                         break;
                     default:
                         if (log.isDebugEnabled()) {
-                            log.debug("Unsupported message type : " + outputCallback.getMessageType());
-                            log.debug("Message : " + outputCallback.getMessage());
+                            log.debug("Unsupported message type : {}", Integer
+                                .toString(outputCallback.getMessageType()));
+                            log.debug("Message : {}", outputCallback.getMessage());
                         }
                 }
             }

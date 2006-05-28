@@ -44,8 +44,7 @@ import java.util.ArrayList;
 
 /**
  * This is a default login module for magnolia, it uses initialized repository as defined by the provider interface
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public class JCRAuthorizationModule extends JCRAuthenticationModule {
 
@@ -65,7 +64,7 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
             return true;
         }
         catch (PathNotFoundException pe) {
-            log.info("Unable to locate user [" + this.name + "], authentication failed");
+            log.info("Unable to locate user [{}], authentication failed", this.name);
         }
         catch (RepositoryException re) {
             log.error("Unable to locate user ["
@@ -81,7 +80,7 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
      */
     public boolean commit() throws LoginException {
         if (!this.success) {
-            throw new LoginException("failed to authenticate "+this.name);
+            throw new LoginException("failed to authenticate " + this.name);
         }
         this.setEntity();
         this.setACL();
@@ -96,8 +95,7 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
         PrincipalCollection principalList = new PrincipalCollectionImpl();
         this.setACL(this.user, principalList, roleList);
         Iterator groupsIterator = this.getGroupNodes().iterator();
-        HierarchyManager groupsHierarchy = ContentRepository
-                .getHierarchyManager(ContentRepository.USER_GROUPS);
+        HierarchyManager groupsHierarchy = ContentRepository.getHierarchyManager(ContentRepository.USER_GROUPS);
         GroupList groupList = new GroupListImpl();
         while (groupsIterator.hasNext()) {
             String groupPath = ((Content) groupsIterator.next()).getNodeData("path").getString();
@@ -105,12 +103,14 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
                 Content groupNode = groupsHierarchy.getContent(groupPath);
                 groupList.add(groupNode.getName());
                 this.setACL(groupNode, principalList, roleList);
-            } catch (PathNotFoundException e) {
+            }
+            catch (PathNotFoundException e) {
                 if (log.isDebugEnabled()) {
-                    log.debug("Group node on path "+groupPath+" does not exist");
+                    log.debug("Group node on path " + groupPath + " does not exist");
                 }
-            } catch (RepositoryException re) {
-                log.error("Failed to get group node "+groupPath, re);
+            }
+            catch (RepositoryException re) {
+                log.error("Failed to get group node " + groupPath, re);
             }
         }
         /**
@@ -135,7 +135,8 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
         try {
             Content groups = this.user.getContent("groups");
             return groups.getChildren(ItemType.CONTENTNODE);
-        } catch (RepositoryException re) {
+        }
+        catch (RepositoryException re) {
             if (log.isDebugEnabled()) {
                 log.debug(this.user.getName() + "do not belong to any group");
             }
@@ -147,10 +148,9 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
     /**
      * set access control list from a list of roles under the provided content object
      * @param aclNode under which roles and ACL are defined
-     * */
+     */
     private void setACL(Content aclNode, PrincipalCollection principalList, RoleList roleList) {
-        HierarchyManager rolesHierarchy = ContentRepository
-                .getHierarchyManager(ContentRepository.USER_ROLES);
+        HierarchyManager rolesHierarchy = ContentRepository.getHierarchyManager(ContentRepository.USER_ROLES);
         try {
             Content rolesNode = aclNode.getContent("roles");
             Iterator children = rolesNode.getChildren().iterator();
@@ -159,25 +159,21 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
                 String rolePath = child.getNodeData("path").getString();
                 Content role = rolesHierarchy.getContent(rolePath);
                 roleList.add(role.getName());
-                Iterator it = role.getChildren(
-                        ItemType.CONTENTNODE.getSystemName(), "acl*")
-                        .iterator();
+                Iterator it = role.getChildren(ItemType.CONTENTNODE.getSystemName(), "acl*").iterator();
                 while (it.hasNext()) {
                     Content aclEntry = (Content) it.next();
-                    String name = StringUtils.substringAfter(
-                            aclEntry.getName(), "acl_");
+                    String name = StringUtils.substringAfter(aclEntry.getName(), "acl_");
                     ACL acl;
                     String repositoryName;
                     String workspaceName;
                     if (!StringUtils.contains(name, "_")) {
-                        workspaceName = ContentRepository
-                                .getDefaultWorkspace(StringUtils
-                                        .substringBefore(name, "_"));
+                        workspaceName = ContentRepository.getDefaultWorkspace(StringUtils.substringBefore(name, "_"));
                         repositoryName = name;
                         name += ("_" + workspaceName); // default workspace
                         // must be added to the
                         // name
-                    } else {
+                    }
+                    else {
                         String[] tokens = StringUtils.split(name, "_");
                         repositoryName = tokens[0];
                         workspaceName = tokens[1];
@@ -187,7 +183,8 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
                     if (!principalList.contains(name)) {
                         acl = new ACLImpl();
                         principalList.add(acl);
-                    } else {
+                    }
+                    else {
                         acl = (ACL) principalList.get(name);
                     }
                     acl.setName(name);
@@ -195,25 +192,26 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
                     acl.setWorkspace(workspaceName);
 
                     // add acl
-                    Iterator permissionIterator = aclEntry.getChildren()
-                            .iterator();
+                    Iterator permissionIterator = aclEntry.getChildren().iterator();
                     while (permissionIterator.hasNext()) {
                         Content map = (Content) permissionIterator.next();
                         String path = map.getNodeData("path").getString();
                         UrlPattern p = new SimpleUrlPattern(path);
                         Permission permission = new PermissionImpl();
                         permission.setPattern(p);
-                        permission.setPermissions(map
-                                .getNodeData("permissions").getLong());
+                        permission.setPermissions(map.getNodeData("permissions").getLong());
                         acl.addPermission(permission);
                     }
                 }
             }
-        } catch (PathNotFoundException e) {
-            log.debug(e.getMessage(),e);
-        } catch (RepositoryException re) {
+        }
+        catch (PathNotFoundException e) {
+            log.debug(e.getMessage(), e);
+        }
+        catch (RepositoryException re) {
             log.error(re.getMessage(), re);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error(e.getMessage(), e);
         }
 
