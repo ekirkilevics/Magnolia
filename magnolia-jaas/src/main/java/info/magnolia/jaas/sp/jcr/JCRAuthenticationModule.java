@@ -55,9 +55,10 @@ public class JCRAuthenticationModule extends AbstractLoginModule {
      * Authenticate against magnolia/jcr user repository
      */
     public boolean login() throws LoginException {
-        if (this.callbackHandler == null)
+        if (this.callbackHandler == null) {
             throw new LoginException(
                     "Error: no CallbackHandler available for JCRModule");
+        }
 
         Callback[] callbacks = new Callback[2];
         callbacks[0] = new NameCallback("name");
@@ -70,17 +71,20 @@ public class JCRAuthenticationModule extends AbstractLoginModule {
             this.pswd = ((PasswordCallback) callbacks[1]).getPassword();
             this.success = this.isValidUser();
         } catch (IOException ioe) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("Exception caught", ioe);
+            }
             throw new LoginException(ioe.toString());
         } catch (UnsupportedCallbackException ce) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug(ce.getMessage(), ce);
+            }
             throw new LoginException(ce.getCallback().toString()
                     + " not available");
         }
-        if (!this.success)
+        if (!this.success) {
             throw new LoginException("failed to authenticate "+this.name);
+        }
 
         return this.success;
     }

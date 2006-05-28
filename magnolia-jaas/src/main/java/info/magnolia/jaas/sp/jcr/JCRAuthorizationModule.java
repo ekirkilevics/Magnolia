@@ -106,8 +106,9 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
                 groupList.add(groupNode.getName());
                 this.setACL(groupNode, principalList, roleList);
             } catch (PathNotFoundException e) {
-                if (log.isDebugEnabled())
+                if (log.isDebugEnabled()) {
                     log.debug("Group node on path "+groupPath+" does not exist");
+                }
             } catch (RepositoryException re) {
                 log.error("Failed to get group node "+groupPath, re);
             }
@@ -132,11 +133,12 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
      */
     private Collection getGroupNodes() {
         try {
-            Content groups = user.getContent("groups");
+            Content groups = this.user.getContent("groups");
             return groups.getChildren(ItemType.CONTENTNODE);
         } catch (RepositoryException re) {
-            if (log.isDebugEnabled())
-                log.debug(user.getName() + "do not belong to any group");
+            if (log.isDebugEnabled()) {
+                log.debug(this.user.getName() + "do not belong to any group");
+            }
             log.debug(re.getMessage());
         }
         return new ArrayList();

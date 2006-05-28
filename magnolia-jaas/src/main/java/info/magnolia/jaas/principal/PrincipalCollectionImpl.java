@@ -12,8 +12,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * Date: Jun 29, 2005
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public class PrincipalCollectionImpl implements PrincipalCollection {
 

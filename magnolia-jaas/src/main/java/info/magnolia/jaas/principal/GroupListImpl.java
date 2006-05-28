@@ -12,17 +12,17 @@
  */
 package info.magnolia.jaas.principal;
 
-import org.apache.commons.lang.StringUtils;
-
-import java.util.Collection;
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import info.magnolia.cms.security.auth.GroupList;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+
+import org.apache.commons.lang.StringUtils;
+
+
 /**
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public class GroupListImpl implements GroupList {
 

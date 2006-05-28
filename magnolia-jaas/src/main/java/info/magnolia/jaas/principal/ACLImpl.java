@@ -22,8 +22,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * This class represents access control list as a principal
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public class ACLImpl implements ACL {
 
@@ -75,7 +74,7 @@ public class ACLImpl implements ACL {
      * @return repository ID
      */
     public String getRepository() {
-        return repository;
+        return this.repository;
     }
 
     /**
@@ -91,7 +90,7 @@ public class ACLImpl implements ACL {
      * @return workspace ID
      */
     public String getWorkspace() {
-        return workspace;
+        return this.workspace;
     }
 
     /**
