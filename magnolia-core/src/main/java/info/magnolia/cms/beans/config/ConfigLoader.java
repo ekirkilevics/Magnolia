@@ -20,12 +20,16 @@ import info.magnolia.cms.module.Module;
 import info.magnolia.cms.security.SecureURI;
 import info.magnolia.context.MgnlContext;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.ServletContext;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +41,11 @@ import org.slf4j.LoggerFactory;
  * @version 1.1
  */
 public class ConfigLoader {
+
+    /**
+     * 
+     */
+    private static final String MGNL_BEANS_PROPERTIES = "/mgnl-beans.properties";
 
     /**
      * Logger.
@@ -65,9 +74,36 @@ public class ConfigLoader {
         String rootDir = context.getRealPath(StringUtils.EMPTY);
 
         if (log.isInfoEnabled()) {
-            log.info("Assuming paths relative to " + rootDir); //$NON-NLS-1$
+            log.info("Assuming paths relative to {}", rootDir); //$NON-NLS-1$
         }
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, rootDir);
+
+        // load mgnl-beans.properties first
+        InputStream mgnlbeansStream = getClass().getResourceAsStream(MGNL_BEANS_PROPERTIES);
+        if (mgnlbeansStream != null) {
+            Properties mgnlbeans = new Properties();
+            try {
+                mgnlbeans.load(mgnlbeansStream);
+            }
+            catch (IOException e) {
+                log.error("Unable to load {} due to an IOException: {}", MGNL_BEANS_PROPERTIES, e.getMessage());
+            }
+            finally {
+                IOUtils.closeQuietly(mgnlbeansStream);
+            }
+
+            for (Iterator iter = mgnlbeans.keySet().iterator(); iter.hasNext();) {
+                String key = (String) iter.next();
+                SystemProperty.setProperty(key, mgnlbeans.getProperty(key));
+            }
+
+        }
+        else {
+            log
+                .warn(
+                    "{} not found in the classpath. Check that all the needed implementation classes are defined in your custom magnolia.properties file.",
+                    MGNL_BEANS_PROPERTIES);
+        }
 
         Iterator it = config.entrySet().iterator();
         while (it.hasNext()) {
@@ -79,7 +115,8 @@ public class ConfigLoader {
             try {
                 System.setProperty("java.security.auth.login.config", Path //$NON-NLS-1$
                     .getAbsoluteFileSystemPath("WEB-INF/config/jaas.config")); //$NON-NLS-1$
-            } catch (SecurityException se) {
+            }
+            catch (SecurityException se) {
                 log.error("Failed to set java.security.auth.login.config, check application server settings"); //$NON-NLS-1$
                 log.error(se.getMessage(), se);
                 log.info("Aborting startup");
@@ -90,7 +127,8 @@ public class ConfigLoader {
             if (log.isInfoEnabled()) {
                 log.info("JAAS config file set by parent container or some other application"); //$NON-NLS-1$
                 log.info("Config in use " + System.getProperty("java.security.auth.login.config")); //$NON-NLS-1$ //$NON-NLS-2$
-                log.info("Please make sure JAAS config has all necessary modules (refer config/jaas.config) configured"); //$NON-NLS-1$
+                log
+                    .info("Please make sure JAAS config has all necessary modules (refer config/jaas.config) configured"); //$NON-NLS-1$
             }
         }
 
@@ -163,18 +201,18 @@ public class ConfigLoader {
             Subscriber.init();
             MIMEMapping.init();
             VersionConfig.init();
-            
+
             // finished
             setConfigured(true);
             log.info("Configuration loaded!"); //$NON-NLS-1$
 
-            if(ModuleRegistration.getInstance().isRestartNeeded()){
+            if (ModuleRegistration.getInstance().isRestartNeeded()) {
                 printSystemRestartInfo();
             }
 
         }
         catch (ConfigurationException e) {
-            log.error("An error occurred during initialization",e); //$NON-NLS-1$
+            log.error("An error occurred during initialization", e); //$NON-NLS-1$
             enterListeningMode();
         }
 
@@ -196,24 +234,24 @@ public class ConfigLoader {
             + license.get(LicenseFileExtractor.PRIVIDER_EMAIL)
             + ")"); //$NON-NLS-1$
     }
-    
+
     /**
      * Print the list of modules needing a restart of the container.
      */
     private void printSystemRestartInfo() {
-        ModuleLoader loader = ModuleLoader.getInstance();    
+        ModuleLoader loader = ModuleLoader.getInstance();
         System.out.println("-----------------------------------------------------"); //$NON-NLS-1$
         System.out.println("One or more modules need a restart of the container:"); //$NON-NLS-1$
         for (Iterator iter = loader.getModuleInstances().keySet().iterator(); iter.hasNext();) {
             String moduleName = (String) iter.next();
             Module module = loader.getModuleInstance(moduleName);
-            if(module.isRestartNeeded()){
-                System.out.println(" - " +module.getName() +" ("+ module.getModuleDefinition().getVersion() + ")");
+            if (module.isRestartNeeded()) {
+                System.out.println(" - " + module.getName() + " (" + module.getModuleDefinition().getVersion() + ")");
             }
         }
         System.out.println("-----------------------------------------------------"); //$NON-NLS-1$
     }
-    
+
     /**
      * Returns true is magnolia is running with all basic configuration.
      * @return <code>true</code> if Magnolia is configured
