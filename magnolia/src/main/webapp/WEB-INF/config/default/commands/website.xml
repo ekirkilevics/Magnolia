@@ -1,5 +1,0 @@
-<?xml version="1.0" ?>
-<chains>
-    <command name="activate" className="info.magnolia.module.owfe.commands.flow.FlowActivationCommand"/>
-    <command name="deactivate" className="info.magnolia.module.owfe.commands.simple.DeactivationCommand"/>
-</chains>
