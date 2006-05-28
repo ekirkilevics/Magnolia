@@ -16,10 +16,14 @@ import info.magnolia.cms.security.auth.RoleList;
 
 
 /**
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public class RoleListImpl extends GroupListImpl implements RoleList {
+
+    /**
+     * Stable serialVersionUID.
+     */
+    private static final long serialVersionUID = 222L;
 
     /**
      * default name for this principal
