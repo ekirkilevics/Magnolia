@@ -7,7 +7,6 @@ var contextPath = '<%= request.getContextPath() %>';
 <%
     String[] includes = {
         "dialogs/dialogs.js",
-        "dialogs/acl.js",
         "dialogs/calendar.js"
     };
 
