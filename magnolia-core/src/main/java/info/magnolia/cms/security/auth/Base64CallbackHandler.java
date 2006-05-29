@@ -14,7 +14,6 @@ package info.magnolia.cms.security.auth;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
-import info.magnolia.cms.security.Digester;
 
 /**
  * Base 64 callback handler supporting Basic authentication
