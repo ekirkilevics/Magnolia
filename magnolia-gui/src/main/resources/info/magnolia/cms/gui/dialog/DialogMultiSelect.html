@@ -1,0 +1,43 @@
+<script src="${contextPath}/.resources/js-libs/trimpath/template-1.0.38.js">
+</script>
+
+${this.saveInfo}
+
+<div id="${this.name}Div" class="aclDynamicTable">
+    <input type="hidden" name="${this.hiddenFieldName}" id="${this.hiddenFieldName}" value="" />
+    <table id="${this.name}Table" cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tr>
+            <td></td>
+        </tr>
+    </table>
+    ${this.addButton}
+</div>
+
+<!--  used as a template for rendering the inner rows of the table-->
+<textarea id="${this.name}InnerHtml" style="display: none;">
+    ${this.innerHtml}
+</textarea>
+
+<script type="text/javascript">
+    var ${this.name}Template = TrimPath.parseDOMTemplate("${this.name}InnerHtml");
+    
+    function ${this.name}RenderObject(cell, prefix, index, obj){
+        cell.innerHTML = ${this.name}Template.process({
+            index: index,
+            prefix:prefix,
+            obj:obj});
+    }
+
+    // init the table
+    ${this.name}DynamicTable = new MgnlDynamicTable(
+        '${this.name}Table',
+        $('${this.hiddenFieldName}'), 
+        ${this.newObjectFunction}, 
+        ${this.getObjectFunction}, 
+        ${this.name}RenderObject,
+        null, // no validation
+        ${this.getJSON()}
+    );
+    
+    ${this.name}DynamicTable.render();
+</script>
