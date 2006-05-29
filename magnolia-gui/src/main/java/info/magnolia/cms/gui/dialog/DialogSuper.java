@@ -18,6 +18,8 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.cms.i18n.TemplateMessagesUtil;
+import info.magnolia.cms.util.RequestFormUtil;
+
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -162,15 +164,24 @@ public abstract class DialogSuper implements DialogInterface {
     }
 
     public String getValue() {
-        if (this.value != null) {
-            return this.value;
+        if (this.value == null) {
+            if (this.getWebsiteNode() != null) {
+                this.value = this.getWebsiteNode().getNodeData(this.getName()).getString();
+            }
+            RequestFormUtil params = new RequestFormUtil(request);
+            if(params.getParameter(this.getName()) != null){
+                this.value = params.getParameter(this.getName());
+            }
+            
+            if (this.value == null && StringUtils.isNotEmpty(getConfigValue("defaultValue"))) {
+                return this.getMessage(this.getConfigValue("defaultValue"));
+            }
+
+            if(this.value == null){
+                this.value = StringUtils.EMPTY;
+            }
         }
-        else if (this.getWebsiteNode() != null) {
-            return this.getWebsiteNode().getNodeData(this.getName()).getString();
-        }
-        else {
-            return StringUtils.EMPTY;
-        }
+        return this.value;
     }
 
     public void setSaveInfo(boolean b) {
@@ -285,6 +296,7 @@ public abstract class DialogSuper implements DialogInterface {
      * @return the found control or null
      */
     public DialogSuper getSub(String name) {
+        DialogSuper found;
         for (Iterator iter = subs.iterator(); iter.hasNext();) {
             Object control = iter.next();
 
@@ -292,6 +304,10 @@ public abstract class DialogSuper implements DialogInterface {
             if (control instanceof DialogSuper) {
                 if (StringUtils.equals(((DialogSuper) control).getName(), name)) {
                     return (DialogSuper) control;
+                }
+                found = ((DialogSuper)control).getSub(name);
+                if(found != null){
+                    return found;
                 }
             }
         }
@@ -326,23 +342,35 @@ public abstract class DialogSuper implements DialogInterface {
     }
 
     public List getValues() {
-        if (this.getWebsiteNode() == null) {
-            return this.values;
-        }
-
-        try {
-            Iterator it = this.getWebsiteNode().getContent(this.getName()).getNodeDataCollection().iterator();
-            List l = new ArrayList();
-            while (it.hasNext()) {
-                NodeData data = (NodeData) it.next();
-                l.add(data.getString());
+        if (this.values == null) {
+            this.values = new ArrayList();
+            if (this.getWebsiteNode() != null) {
+                try {
+                    Iterator it = this.getWebsiteNode().getContent(this.getName()).getNodeDataCollection().iterator();
+                    while (it.hasNext()) {
+                        NodeData data = (NodeData) it.next();
+                        this.values.add(data.getString());
+                    }
+                }
+                catch (RepositoryException re) {
+                    log.error("can't set values", re);
+                }
             }
-            return l;
-        }
-        catch (RepositoryException re) {
-            return this.values;
+            
+            if(request != null){
+                RequestFormUtil params = new RequestFormUtil(request);
+                String[] values = params.getParameterValues(this.getName());
+                if(values != null && values.length > 0){
+                    this.values.clear();
+                    for (int i = 0; i < values.length; i++) {
+                        String value = values[i];
+                        this.values.add(value);
+                    }
+                }
+            }
         }
 
+        return this.values;
     }
 
     /**
@@ -467,5 +495,43 @@ public abstract class DialogSuper implements DialogInterface {
     public String getMessage(String key, Object[] args) {
         return this.getMessages().getWithDefault(key, args, key);
     }
+    
+    /**
+     * If the validation fails the code will set a message in the context using the AlertUtil.
+     * @return true if valid
+     */
+    public boolean validate(){
+        if(this.isRequired()){
+            if(StringUtils.isEmpty(this.getValue()) && this.getValues().size() == 0){
+                return false;
+            }
+        }
+        for (Iterator iter = this.getSubs().iterator(); iter.hasNext();) {
+            DialogInterface sub = (DialogInterface) iter.next();
+            if(sub instanceof DialogSuper){
+                if(!((DialogSuper)sub).validate()){
+                    return false;
+                }
+            }
+            
+        }
+        return true;
+    }
+
+    /**
+     * True if a value is required. Set it in the configuration
+     * @return
+     */
+    public boolean isRequired() {
+        if(BooleanUtils.toBoolean(this.getConfigValue("required"))){
+            return true;
+        }
+        return false;
+    }
+    
+    public void setRequired(boolean required) {
+        this.setConfig("required", BooleanUtils.toStringTrueFalse(required));
+    }
+    
 
 }

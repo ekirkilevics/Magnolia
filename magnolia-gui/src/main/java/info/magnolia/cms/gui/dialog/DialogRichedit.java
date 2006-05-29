@@ -87,33 +87,6 @@ public class DialogRichedit extends DialogBox {
         return this.richEPaste;
     }
 
-    /**
-     * <p>Returns the value associated with this control.  These areas are looked 
-     *   at in sucession: the local value field, the website repository, 
-     *   the config repository nodedata named 'defaultValue'.  Failing all those,
-     *   an empty string is returned.</p>
-     *
-     * <p>This method overrides it's conterpart in DialogSuper with the ability
-     *   to read the 'defaultValue' nodeData in the config repository.  i18n 
-     *   functions are supported as with other controls.</p>
-     *
-     * @return A string representing the value of this control.
-     */
-    public String getValue() {
-        if (this.value != null) {
-            return this.value;
-        }
-        else if (this.getWebsiteNode() != null) {
-            return this.getWebsiteNode().getNodeData(this.getName()).getString();
-        }
-        else if (StringUtils.isNotEmpty(getConfigValue("defaultValue"))) {
-            return this.getMessage(this.getConfigValue("defaultValue"));
-        }
-        else {
-            return StringUtils.EMPTY;
-        }
-    }
-    
     public void setOptionsToolboxStyleCssClasses(Content configNode) {
         List options = this.setOptionsToolbox(configNode, "optionsToolboxStyleCssClasses"); //$NON-NLS-1$
         this.setOptionsToolboxStyleCssClasses(options);

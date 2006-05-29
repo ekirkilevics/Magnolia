@@ -20,6 +20,7 @@ import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.util.AlertUtil;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -132,8 +133,14 @@ public class DialogDialog extends DialogSuper {
         out.write("<html>"); //$NON-NLS-1$
         out.write("<head>"); //$NON-NLS-1$
         this.drawHtmlPreSubsHead(out);
+        // alert if a message was set
+        if(AlertUtil.isMessageSet()){
+            out.write("<script>mgnl.util.DHTMLUtil.addOnLoad(function(){alert('" + AlertUtil.getMessage() + "');})</script>");
+        }
+        out.write("<script>mgnl.util.DHTMLUtil.addOnLoad(mgnlDialogInit);</script>");
+
         out.write("</head>\n"); //$NON-NLS-1$
-        out.write("<body class=\"mgnlDialogBody\" onload=\"mgnlDialogInit();\">\n"); //$NON-NLS-1$
+        out.write("<body class=\"mgnlDialogBody\">\n"); //$NON-NLS-1$
         this.drawHtmlPreSubsForm(out);
         this.drawHtmlPreSubsTabSet(out);
     }
@@ -142,7 +149,7 @@ public class DialogDialog extends DialogSuper {
         out.write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>\n"); // kupu
         // //$NON-NLS-1$
         out.write("<title>" //$NON-NLS-1$
-            + this.getConfigValue("label", MessagesManager.get("dialog.editTitle")) //$NON-NLS-1$ //$NON-NLS-2$
+            + this.getMessage(this.getConfigValue("label", MessagesManager.get("dialog.editTitle"))) //$NON-NLS-1$ //$NON-NLS-2$
             + "</title>\n"); //$NON-NLS-1$
         out.write(new Sources(this.getRequest().getContextPath()).getHtmlJs());
         out.write(new Sources(this.getRequest().getContextPath()).getHtmlCss());

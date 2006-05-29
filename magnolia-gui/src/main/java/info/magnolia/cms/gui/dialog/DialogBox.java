@@ -65,6 +65,9 @@ public class DialogBox extends DialogSuper {
             out.write("<td width=\"1%\" class=\"" + CssConstants.CSSCLASS_BOXLABEL + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
             // write the label
             out.write(this.getMessage(this.getLabel()));
+            if(this.isRequired()){
+                out.write( "(*)");
+            }
             if (StringUtils.isNotEmpty(this.getConfigValue("labelDescription"))) { //$NON-NLS-1$
                 String desc = this.getConfigValue("labelDescription"); //$NON-NLS-1$
                 desc = this.getMessage(desc);

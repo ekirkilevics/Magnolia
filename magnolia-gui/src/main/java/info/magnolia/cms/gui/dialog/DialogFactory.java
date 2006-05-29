@@ -69,108 +69,78 @@ public final class DialogFactory {
 
     /**
      * Load and initialize a dialog.
-     * @param websiteNode current website node
+     * @param storageNode current website node
      * @param configNode configuration node for the dialog. The type of the dialog is read from the "controlType"
      * nodeData
      * @throws RepositoryException for errors during initialization of dialog with repository data
      */
     public static DialogInterface loadDialog(HttpServletRequest request, HttpServletResponse response,
-        Content websiteNode, Content configNode) throws RepositoryException {
+        Content storageNode, Content configNode) throws RepositoryException {
         String controlType = configNode.getNodeData("controlType").getString(); //$NON-NLS-1$
 
-        Class dialogClass = (Class) controls.get(controlType);
-
-        if (dialogClass == null) {
-            throw new IllegalArgumentException("Unknown control type: \"" + controlType + "\""); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-
-        DialogInterface dialog;
-        try {
-            dialog = (DialogInterface) dialogClass.newInstance();
-        }
-        catch (InstantiationException e) {
-            // should never happen
-            throw new NestableRuntimeException("Unable to instantiate " //$NON-NLS-1$
-                + dialogClass
-                + " due to: InstantiationException - " //$NON-NLS-1$
-                + e.getMessage());
-        }
-        catch (IllegalAccessException e) {
-            // should never happen
-            throw new NestableRuntimeException("Unable to instantiate " //$NON-NLS-1$
-                + dialogClass
-                + " due to: IllegalAccessException - " //$NON-NLS-1$
-                + e.getMessage());
-        }
-
-        // initialize dialog
-        if (log.isDebugEnabled()) {
-            log.debug("Calling init on " + dialogClass.getName()); //$NON-NLS-1$
-        }
-        dialog.init(request, response, websiteNode, configNode);
-        return dialog;
+        return getDialogControlInstanceByName(request,response,storageNode, configNode, controlType);
     }
 
     public static DialogDialog getDialogDialogInstance(HttpServletRequest request, HttpServletResponse response,
-        Content websiteNode, Content configNode) throws RepositoryException {
+        Content storageNode, Content configNode) throws RepositoryException {
         DialogDialog dialog = new DialogDialog();
-        dialog.init(request, response, websiteNode, configNode);
+        dialog.init(request, response, storageNode, configNode);
         return dialog;
     }
 
     public static DialogStatic getDialogStaticInstance(HttpServletRequest request, HttpServletResponse response,
-        Content websiteNode, Content configNode) throws RepositoryException {
+        Content storageNode, Content configNode) throws RepositoryException {
         DialogStatic dialog = new DialogStatic();
-        dialog.init(request, response, websiteNode, configNode);
+        dialog.init(request, response, storageNode, configNode);
         return dialog;
     }
 
     public static DialogHidden getDialogHiddenInstance(HttpServletRequest request, HttpServletResponse response,
-        Content websiteNode, Content configNode) throws RepositoryException {
+        Content storageNode, Content configNode) throws RepositoryException {
         DialogHidden dialog = new DialogHidden();
-        dialog.init(request, response, websiteNode, configNode);
+        dialog.init(request, response, storageNode, configNode);
         return dialog;
     }
 
     public static DialogEdit getDialogEditInstance(HttpServletRequest request, HttpServletResponse response,
-        Content websiteNode, Content configNode) throws RepositoryException {
+        Content storageNode, Content configNode) throws RepositoryException {
         DialogEdit dialog = new DialogEdit();
-        dialog.init(request, response, websiteNode, configNode);
+        dialog.init(request, response, storageNode, configNode);
         return dialog;
     }
 
     public static DialogButton getDialogButtonInstance(HttpServletRequest request, HttpServletResponse response,
-        Content websiteNode, Content configNode) throws RepositoryException {
+        Content storageNode, Content configNode) throws RepositoryException {
         DialogButton dialog = new DialogButton();
-        dialog.init(request, response, websiteNode, configNode);
+        dialog.init(request, response, storageNode, configNode);
         return dialog;
     }
 
     public static DialogPassword getDialogPasswordInstance(HttpServletRequest request, HttpServletResponse response,
-        Content websiteNode, Content configNode) throws RepositoryException {
+        Content storageNode, Content configNode) throws RepositoryException {
         DialogPassword dialog = new DialogPassword();
-        dialog.init(request, response, websiteNode, configNode);
+        dialog.init(request, response, storageNode, configNode);
         return dialog;
     }
 
     public static DialogButtonSet getDialogButtonSetInstance(HttpServletRequest request, HttpServletResponse response,
-        Content websiteNode, Content configNode) throws RepositoryException {
+        Content storageNode, Content configNode) throws RepositoryException {
         DialogButtonSet dialog = new DialogButtonSet();
-        dialog.init(request, response, websiteNode, configNode);
+        dialog.init(request, response, storageNode, configNode);
         return dialog;
     }
 
     public static DialogInclude getDialogIncludeInstance(HttpServletRequest request, HttpServletResponse response,
-        Content websiteNode, Content configNode) throws RepositoryException {
+        Content storageNode, Content configNode) throws RepositoryException {
         DialogInclude dialog = new DialogInclude();
-        dialog.init(request, response, websiteNode, configNode);
+        dialog.init(request, response, storageNode, configNode);
         return dialog;
     }
 
     public static DialogSelect getDialogSelectInstance(HttpServletRequest request, HttpServletResponse response,
-        Content websiteNode, Content configNode) throws RepositoryException {
+        Content storageNode, Content configNode) throws RepositoryException {
         DialogSelect dialog = new DialogSelect();
-        dialog.init(request, response, websiteNode, configNode);
+        dialog.init(request, response, storageNode, configNode);
         return dialog;
     }
 
@@ -179,25 +149,30 @@ public final class DialogFactory {
      * configuration.
      * @param request
      * @param response
-     * @param websiteNode the node holding the data (can be null)
+     * @param storageNode the node holding the data (can be null)
      * @param configNode the node holding the configuration (can be null)
      * @param controlType the name of the control
      * @return the conrol
      * @throws RepositoryException
      */
     public static DialogInterface getDialogControlInstanceByName(HttpServletRequest request,
-        HttpServletResponse response, Content websiteNode, Content configNode, String controlType)
+        HttpServletResponse response, Content storageNode, Content configNode, String controlType)
         throws RepositoryException {
 
         Class dialogClass = (Class) controls.get(controlType);
 
         if (dialogClass == null) {
-            throw new IllegalArgumentException("Unknown dialog type: \"" + controlType + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+            try {
+                dialogClass = Class.forName(controlType);
+            }
+            catch (ClassNotFoundException e) {
+                throw new IllegalArgumentException("Unknown control type: \"" + controlType + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+            }
         }
 
-        DialogInterface dialog = null;
+        DialogInterface control = null;
         try {
-            dialog = (DialogInterface) dialogClass.newInstance();
+            control = (DialogInterface) dialogClass.newInstance();
         }
         catch (Exception e) {
             // should never happen
@@ -207,7 +182,7 @@ public final class DialogFactory {
                 + e.getMessage());
         }
 
-        dialog.init(request, response, websiteNode, configNode);
-        return dialog;
+        control.init(request, response, storageNode, configNode);
+        return control;
     }
 }
