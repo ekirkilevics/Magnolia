@@ -16,30 +16,18 @@
   <sv:property sv:name="jcr:uuid" sv:type="String">
     <sv:value>120c5c93-45da-4844-91e1-ac841874fb5e</sv:value>
   </sv:property>
-  <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-    <sv:value>true</sv:value>
-  </sv:property>
-  <sv:property sv:name="jcr:created" sv:type="Date">
-    <sv:value>2006-03-10T21:27:02.686+01:00</sv:value>
-  </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
-    <sv:property sv:name="mgnl:Data" sv:type="String">
-      <sv:value>MetaData</sv:value>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>750d2d19-fc87-4979-8329-233df2f6b0bd</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:authorid" sv:type="String">
       <sv:value>superuser</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-10T21:27:02.686+01:00</sv:value>
-    </sv:property>
     <sv:property sv:name="mgnl:title" sv:type="String">
       <sv:value/>
-    </sv:property>
-    <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-      <sv:value>1118242676663000</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:creationdate" sv:type="String">
       <sv:value>2005-04-30T14:46:43.261+02:00</sv:value>
@@ -49,6 +37,9 @@
     </sv:property>
     <sv:property sv:name="mgnl:activated" sv:type="Boolean">
       <sv:value>false</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:Data" sv:type="String">
+      <sv:value>MetaData</sv:value>
     </sv:property>
   </sv:node>
   <sv:node sv:name="fckEdit">
@@ -61,14 +52,8 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>8f9248cd-62f7-482d-a96a-cffe7250eafb</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
     <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.cms.gui.dialog.DialogFckEdit</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-10T21:27:02.692+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="name" sv:type="String">
       <sv:value>fckEdit</sv:value>
@@ -77,17 +62,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>7103fb58-04e3-4307-ae99-e79d0de6222f</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:Data" sv:type="String">
         <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-10T21:27:02.692+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1118238417638500</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
@@ -107,14 +89,8 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>2adc0f6d-0139-4e0d-b679-2458e7488c0b</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
     <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.cms.gui.dialog.DialogEdit</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-10T21:27:02.699+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="name" sv:type="String">
       <sv:value>edit</sv:value>
@@ -123,17 +99,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>ea22aeb1-1558-42d4-80c2-8e4a69d4648f</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:Data" sv:type="String">
         <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-10T21:27:02.700+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1118238410862000</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
@@ -153,14 +126,8 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>b74bc6b8-da69-4e43-b888-e1a167a71017</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
     <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.cms.gui.dialog.DialogRichedit</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-10T21:27:02.705+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="name" sv:type="String">
       <sv:value>richEdit</sv:value>
@@ -169,17 +136,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>fc5ab0ce-c1c1-4ada-a663-68e4b99ceef3</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:Data" sv:type="String">
         <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-10T21:27:02.705+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1118238415022000</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
@@ -199,14 +163,8 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>3e093873-55c5-4d03-b552-535e9ad9c59f</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
     <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.cms.gui.dialog.DialogTab</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-10T21:27:02.711+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="name" sv:type="String">
       <sv:value>tab</sv:value>
@@ -215,17 +173,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>42d4e5ab-2849-4464-ac92-fc571dd6aa6c</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:Data" sv:type="String">
         <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-10T21:27:02.711+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1118238420255000</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
@@ -245,14 +200,8 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>c6e0cd17-db5a-4a09-b7d6-6d6628414a03</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
     <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.cms.gui.dialog.DialogButtonSet</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-10T21:27:02.717+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="name" sv:type="String">
       <sv:value>buttonSet</sv:value>
@@ -261,17 +210,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>30e6676d-89b9-49d5-8b51-d0fbdbe3ee18</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:Data" sv:type="String">
         <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-10T21:27:02.717+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1118238424824000</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
@@ -291,14 +237,8 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>5842af39-d30d-46a1-8457-be42b93396c6</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
     <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.cms.gui.dialog.DialogButton</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-10T21:27:02.722+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="name" sv:type="String">
       <sv:value>button</sv:value>
@@ -307,17 +247,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>c07e2fbd-1bf9-4465-a56f-d6d04eccb7f8</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:Data" sv:type="String">
         <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-10T21:27:02.722+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1118238440202000</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
@@ -337,14 +274,8 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>fb41e41b-a595-4001-a65e-5de5f4fa052e</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
     <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.cms.gui.dialog.DialogStatic</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-10T21:27:02.727+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="name" sv:type="String">
       <sv:value>static</sv:value>
@@ -353,17 +284,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>50e00b4c-1dbb-4881-8e5b-8e901e0b69c3</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:Data" sv:type="String">
         <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-10T21:27:02.727+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1118238444597000</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
@@ -383,14 +311,8 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>b8977702-b97d-4158-a4b4-e04483d463a2</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
     <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.cms.gui.dialog.DialogFile</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-10T21:27:02.733+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="name" sv:type="String">
       <sv:value>file</sv:value>
@@ -399,17 +321,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>cad9ac91-2cbf-4ab0-8e8e-e634b1d26947</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:Data" sv:type="String">
         <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-10T21:27:02.734+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1118238449615000</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
@@ -429,14 +348,8 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>969f98bc-7825-4232-866a-4d580cf2f162</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
     <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.cms.gui.dialog.DialogLink</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-10T21:27:02.738+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="name" sv:type="String">
       <sv:value>link</sv:value>
@@ -445,17 +358,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>05dd55ba-d431-4215-a4a3-102be070d04a</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:Data" sv:type="String">
         <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-10T21:27:02.738+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1118242846171000</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
@@ -475,14 +385,8 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>9e59bde7-49c0-4796-94d3-09f437797404</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
     <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.cms.gui.dialog.DialogDate</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-10T21:27:02.743+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="name" sv:type="String">
       <sv:value>date</sv:value>
@@ -491,17 +395,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>6a97413a-6802-4391-8e5b-d138edca120c</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:Data" sv:type="String">
         <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-10T21:27:02.743+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1118242852821000</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
@@ -521,14 +422,8 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>d769c46b-9555-4d6d-9685-cf07ae833b3d</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
     <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.cms.gui.dialog.DialogButtonSet</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-10T21:27:02.754+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="name" sv:type="String">
       <sv:value>radio</sv:value>
@@ -537,17 +432,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>daf01305-1542-4882-8710-b793b524ae05</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:Data" sv:type="String">
         <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-10T21:27:02.755+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1118242857060000</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
@@ -567,14 +459,8 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>4a1817b0-c3c0-4dac-945d-9dbd181f2d7e</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
     <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.cms.gui.dialog.DialogButtonSet</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-10T21:27:02.759+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="name" sv:type="String">
       <sv:value>checkbox</sv:value>
@@ -583,17 +469,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>cf943255-35e0-4cd0-915b-45d721a72798</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:Data" sv:type="String">
         <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-10T21:27:02.759+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1118242861641000</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
@@ -613,14 +496,8 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>ff50cb09-3bb1-4dc7-9679-a9f91c4dcfd8</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
     <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.cms.gui.dialog.DialogButtonSet</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-10T21:27:02.788+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="name" sv:type="String">
       <sv:value>checkboxSwitch</sv:value>
@@ -629,17 +506,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>c069ba11-e057-43ab-b4f9-cc82e259ea8d</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:Data" sv:type="String">
         <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-10T21:27:02.788+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1118242866079000</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
@@ -659,14 +533,8 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>fda3c5e2-65aa-45e5-a43d-53bb630352b2</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
     <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.cms.gui.dialog.DialogSelect</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-10T21:27:02.795+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="name" sv:type="String">
       <sv:value>select</sv:value>
@@ -675,17 +543,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>ca9a4aac-c922-4281-8522-93cd5c849ed3</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:Data" sv:type="String">
         <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-10T21:27:02.795+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1118242871051000</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
@@ -705,14 +570,8 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>4d45db19-aa03-4c5b-8650-15df952b99c3</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
     <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.cms.gui.dialog.DialogPassword</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-10T21:27:02.803+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="name" sv:type="String">
       <sv:value>password</sv:value>
@@ -721,17 +580,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>8c174418-4605-44ea-abe7-5bd0e2a9e138</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:Data" sv:type="String">
         <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-10T21:27:02.804+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1118242876635000</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
@@ -751,14 +607,8 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>f60cf41b-71e8-4eeb-859e-77c15aa346e6</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
     <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.cms.gui.dialog.DialogInclude</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-10T21:27:02.817+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="name" sv:type="String">
       <sv:value>include</sv:value>
@@ -767,17 +617,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>52aea6bd-b087-480d-9f55-9fe224950508</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:Data" sv:type="String">
         <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-10T21:27:02.817+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1118243089710000</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
@@ -797,14 +644,8 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>01772c36-2258-4e4a-a755-0143593cc42e</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
     <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.cms.gui.dialog.DialogWebDAV</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-10T21:27:02.823+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="name" sv:type="String">
       <sv:value>webDAV</sv:value>
@@ -813,17 +654,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>7424a3e0-ed30-422a-b25b-e93fe526f0e2</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:Data" sv:type="String">
         <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-10T21:27:02.823+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-        <sv:value>1118243095255000</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
@@ -843,14 +681,8 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>76a3f7a0-2626-4666-b5e9-2aad3cbc4dd3</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-      <sv:value>true</sv:value>
-    </sv:property>
     <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.cms.gui.dialog.DialogHidden</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-03-10T21:27:02.838+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="name" sv:type="String">
       <sv:value>hidden</sv:value>
@@ -859,11 +691,57 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
-      <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-10T21:27:02.840+01:00</sv:value>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>00f18b66-4a56-4508-94c2-6083f0db9cae</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="Date">
         <sv:value>2006-02-03T16:47:23.154+01:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="multiselect">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>093026c3-9e83-450b-ae02-c439df9f13c7</sv:value>
+    </sv:property>
+    <sv:property sv:name="class" sv:type="String">
+      <sv:value>info.magnolia.cms.gui.dialog.DialogMultiSelect</sv:value>
+    </sv:property>
+    <sv:property sv:name="name" sv:type="String">
+      <sv:value>multiselect</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>971f4642-fe64-442b-bf6e-ef648ae36d8d</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="String">
+        <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2006-05-28T11:06:30.917+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+        <sv:value>false</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+        <sv:value>2006-05-28T11:05:59.224+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activatorid" sv:type="String">
+        <sv:value>superuser</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
