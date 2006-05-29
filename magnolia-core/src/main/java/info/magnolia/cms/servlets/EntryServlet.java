@@ -169,9 +169,11 @@ public class EntryServlet extends ContextSensitiveServlet {
         }
         catch (RepositoryException e) {
             log.error(e.getMessage(), e);
+            throw new ServletException(e.getMessage(), e);
         }
         catch (RuntimeException e) {
             log.error(e.getMessage(), e);
+            throw new ServletException(e.getMessage(), e);
         }
     }
 
