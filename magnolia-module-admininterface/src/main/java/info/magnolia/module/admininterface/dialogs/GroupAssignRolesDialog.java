@@ -131,7 +131,7 @@ public class GroupAssignRolesDialog extends ConfiguredDialog{
         save.setPath(path);
     }
     
-    protected void onPostSave(SaveHandler saveControl) {
+    protected boolean onPostSave(SaveHandler saveControl) {
         Content group = this.getStorageNode();
 
         // ######################
@@ -201,8 +201,6 @@ public class GroupAssignRolesDialog extends ConfiguredDialog{
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
         }
+        return true;
     }
-
-
-
 }

@@ -130,7 +130,7 @@ public class GroupEditDialog extends ConfiguredDialog {
     /* (non-Javadoc)
      * @see info.magnolia.module.admininterface.DialogMVCHandler#onPostSave(info.magnolia.module.admininterface.SaveHandler)
      */
-    protected void onPostSave(SaveHandler saveControl) {
+    protected boolean onPostSave(SaveHandler saveControl) {
         Content group = this.getStorageNode();
 
         // ######################
@@ -190,5 +190,6 @@ public class GroupEditDialog extends ConfiguredDialog {
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
         }
+        return true;
     }
 }

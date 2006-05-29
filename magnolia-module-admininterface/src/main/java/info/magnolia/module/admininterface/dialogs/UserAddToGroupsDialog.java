@@ -120,7 +120,7 @@ public class UserAddToGroupsDialog extends ConfiguredDialog {
     /* (non-Javadoc)
      * @see info.magnolia.module.admininterface.DialogMVCHandler#onPostSave(info.magnolia.module.admininterface.SaveHandler)
      */
-    protected void onPostSave(SaveHandler saveControl) {
+    protected boolean onPostSave(SaveHandler saveControl) {
         Content user = this.getStorageNode();
 
         // ######################
@@ -153,6 +153,7 @@ public class UserAddToGroupsDialog extends ConfiguredDialog {
         catch (Exception re) {
             log.error(re.getMessage(), re);
         }
+        return true;
     }
 
 }

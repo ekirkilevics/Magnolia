@@ -119,7 +119,7 @@ public class UserRolesEditDialog extends ConfiguredDialog {
         save.setPath(path);
     }
 
-    protected void onPostSave(SaveHandler saveControl) {
+    protected boolean onPostSave(SaveHandler saveControl) {
         Content role = this.getStorageNode();
 
         // for each repository
@@ -209,6 +209,7 @@ public class UserRolesEditDialog extends ConfiguredDialog {
                 log.error(re.getMessage(), re);
             }
         }
+        return true;
     }
 
 }
