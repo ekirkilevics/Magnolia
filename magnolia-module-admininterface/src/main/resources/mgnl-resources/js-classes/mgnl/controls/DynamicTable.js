@@ -150,7 +150,7 @@ MgnlDynamicTable.prototype.getObjects = function(){
         var row = table.rows[i];
         // check if this is realy a row with content
         if (row && row.cells[0] && row.cells[0].innerHTML!=""){
-                objects[objectCount] = this.getObject(this.tableName + i);
+                objects[objectCount] = this.getObject(this.tableName + i, i);
                 objectCount++;
         }
     }
@@ -203,7 +203,7 @@ MgnlDynamicTable.prototype.persist = function (){
         // persist all
         for(i=0; i < this.objects.length; i++){
             if(i >0)
-                str += "; ";
+                str += ";";
             str += this.persistObject(this.objects[i]) ;
         }
     }
@@ -212,12 +212,25 @@ MgnlDynamicTable.prototype.persist = function (){
 
 MgnlDynamicTable.prototype.persistObject = function (object){
     var str = "";
+    var simple = this.objectSize(object) == 1;
     for(key in object){
         if(str.length > 0)
-            str += ", ";
-        str += key + ":" + object[key];
+            str += ";";
+        if(simple){
+            str += object[key];
+        }
+        else{
+            str += key + ":" + object[key];
+        }
         first = false;
     }
-
     return str;
+}
+
+MgnlDynamicTable.prototype.objectSize = function (object){
+    var size=0;
+    for(key in object){
+        size++;
+    }
+    return size;
 }
