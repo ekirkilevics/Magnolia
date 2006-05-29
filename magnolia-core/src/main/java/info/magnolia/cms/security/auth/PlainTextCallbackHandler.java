@@ -13,16 +13,16 @@
 package info.magnolia.cms.security.auth;
 
 /**
- * MD5 callback handler supporting Form based authentocation authentication
+ * Plain text callback handler supporting Form based authentication
  * @author Sameer Charles
  * $Id$
  */
-public class MD5CallbackHandler extends CredentialsCallbackHandler {
+public class PlainTextCallbackHandler extends CredentialsCallbackHandler {
 
     /**
      * default
      * */
-    public MD5CallbackHandler() {
+    public PlainTextCallbackHandler() {
         // do not instanciate with this constructor
     }
 
@@ -30,7 +30,7 @@ public class MD5CallbackHandler extends CredentialsCallbackHandler {
      * @param name
      * @param pswd
      * */
-    public MD5CallbackHandler(String name, char[] pswd) {
+    public PlainTextCallbackHandler(String name, char[] pswd) {
         super(name, pswd);
     }
 

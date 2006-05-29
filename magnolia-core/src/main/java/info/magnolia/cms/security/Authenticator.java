@@ -23,8 +23,8 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import info.magnolia.cms.security.auth.CredentialsCallbackHandler;
-import info.magnolia.cms.security.auth.MD5CallbackHandler;
 import info.magnolia.cms.security.auth.Base64CallbackHandler;
+import info.magnolia.cms.security.auth.PlainTextCallbackHandler;
 
 
 /**
@@ -82,7 +82,7 @@ public final class Authenticator {
             if (StringUtils.isNotEmpty(request.getParameter(PARAMETER_USER_ID))) {
                 userid = request.getParameter(PARAMETER_USER_ID);
                 pswd = StringUtils.defaultString(request.getParameter(PARAMETER_PSWD));
-                callbackHandler = new MD5CallbackHandler(userid, pswd.toCharArray());
+                callbackHandler = new PlainTextCallbackHandler(userid, pswd.toCharArray());
             }
             else {
                 // invalid auth request

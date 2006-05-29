@@ -15,7 +15,6 @@ package info.magnolia.jaas.sp.jcr;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.security.Digester;
 import info.magnolia.cms.security.auth.Entity;
 import info.magnolia.jaas.principal.EntityImpl;
 import info.magnolia.jaas.sp.AbstractLoginModule;
@@ -119,11 +118,8 @@ public class JCRAuthenticationModule extends AbstractLoginModule {
             this.user = hm.getContent(this.name);
             String serverPassword = this.user.getNodeData("pswd").getString().trim();
             // plain text server password
-            serverPassword = Digester.getMD5Hex(new String(Base64.decodeBase64(serverPassword.getBytes())));
-
-            String passwordHash = Digester.getMD5Hex(new String(this.pswd));
-
-            return serverPassword.equalsIgnoreCase(passwordHash);
+            serverPassword = new String(Base64.decodeBase64(serverPassword.getBytes()));
+            return serverPassword.equalsIgnoreCase(new String(this.pswd));
         }
         catch (PathNotFoundException pe) {
             log.info("Unable to locate user [{}], authentication failed", this.name);
