@@ -56,7 +56,7 @@ public class ContentUtil {
     };
 
     /**
-     * Retruns a Content object of the named repository.
+     * Retruns a Content object of the named repository or null if not existing.
      * @param repository
      * @param path
      * @return null if not found
