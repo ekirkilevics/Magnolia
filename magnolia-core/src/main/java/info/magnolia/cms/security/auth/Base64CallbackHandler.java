@@ -36,8 +36,7 @@ public class Base64CallbackHandler extends CredentialsCallbackHandler {
     public Base64CallbackHandler(String credentials) {
         credentials = getDecodedCredentials(credentials.substring(6).trim());
         this.name = StringUtils.substringBefore(credentials, ":");
-        // get MD5 Hex string, returned password array is alway MD5 hex
-        this.pswd = Digester.getMD5Hex(StringUtils.substringAfter(credentials, ":")).toCharArray();
+        this.pswd = StringUtils.substringAfter(credentials, ":").toCharArray();
     }
 
     /**
