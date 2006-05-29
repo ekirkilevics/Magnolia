@@ -26,6 +26,7 @@ import info.magnolia.cms.gui.fckeditor.FCKEditorTmpFiles;
 import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Digester;
+import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.util.LinkUtil;
@@ -149,7 +150,7 @@ public class SaveHandlerImpl implements SaveHandler {
     /**
      * @see info.magnolia.module.admininterface.SaveHandler#save()
      */
-    public void save() {
+    public boolean save() {
         synchronized (ExclusiveWrite.getInstance()) {
             String[] saveInfos = getForm().getParameterValues("mgnlSaveInfo"); // name,type,propertyOrNode
             // //$NON-NLS-1$
@@ -162,7 +163,7 @@ public class SaveHandlerImpl implements SaveHandler {
 
                 if (page == null) {
                     // an error should have been logged in getPageNode() avoid NPEs!
-                    return;
+                    return false;
                 }
 
                 Content node = this.getSaveNode(hm, page);
@@ -189,8 +190,10 @@ public class SaveHandlerImpl implements SaveHandler {
             }
             catch (RepositoryException re) {
                 log.error(re.getMessage(), re);
+                return false;
             }
         }
+        return true;
     }
 
     /**

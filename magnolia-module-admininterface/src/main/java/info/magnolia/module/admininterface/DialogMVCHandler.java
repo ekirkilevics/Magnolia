@@ -24,6 +24,7 @@ import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.servlets.MVCServletHandlerImpl;
 import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.RequestFormUtil;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
@@ -98,7 +99,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
 
     protected HierarchyManager hm;
 
-    protected DialogDialog dialog;
+    private DialogDialog dialog;
 
     protected Messages msgs;
 
@@ -106,7 +107,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
 
     protected Content storageNode;
 
-    private SaveHandler save;
+    private SaveHandler saveHandler;
 
     /**
      * Initialize the used parameters: path, nodeCollectionName, nodeName, ..
@@ -125,7 +126,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         richE = params.getParameter("mgnlRichE"); //$NON-NLS-1$
         richEPaste = params.getParameter("mgnlRichEPaste"); //$NON-NLS-1$
         repository = params.getParameter("mgnlRepository", getRepository()); //$NON-NLS-1$
-        if(StringUtils.isNotEmpty(repository)){
+        if (StringUtils.isNotEmpty(repository)) {
             hm = MgnlContext.getHierarchyManager(repository);
         }
         msgs = MessagesManager.getMessages();
@@ -146,25 +147,17 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
      * @return
      */
     public String showDialog() {
-        Content configNode = getConfigNode();
-        Content storageNode = getStorageNode();
-
-        try {
-            dialog = createDialog(configNode, storageNode);
-
-            dialog.setConfig("dialog", getName()); //$NON-NLS-1$
-            dialog.setConfig("path", path); //$NON-NLS-1$
-            dialog.setConfig("nodeCollection", nodeCollectionName); //$NON-NLS-1$
-            dialog.setConfig("node", nodeName); //$NON-NLS-1$
-            dialog.setConfig("richE", richE); //$NON-NLS-1$
-            dialog.setConfig("richEPaste", richEPaste); //$NON-NLS-1$
-            dialog.setConfig("repository", repository); //$NON-NLS-1$
-        }
-        catch (RepositoryException e) {
-            log.error("can't instantiate dialog", e); //$NON-NLS-1$
-        }
-
         return VIEW_SHOW_DIALOG;
+    }
+
+    private void configureDialog(DialogDialog dialog) {
+        dialog.setConfig("dialog", getName()); //$NON-NLS-1$
+        dialog.setConfig("path", path); //$NON-NLS-1$
+        dialog.setConfig("nodeCollection", nodeCollectionName); //$NON-NLS-1$
+        dialog.setConfig("node", nodeName); //$NON-NLS-1$
+        dialog.setConfig("richE", richE); //$NON-NLS-1$
+        dialog.setConfig("richEPaste", richEPaste); //$NON-NLS-1$
+        dialog.setConfig("repository", repository); //$NON-NLS-1$
     }
 
     /**
@@ -182,12 +175,45 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
      * @return close view name
      */
     public String save() {
-        SaveHandler control = getSaveHandler();
-        onPreSave(control);
-        onSave(control);
-        onPostSave(control);
+        if(!validate()){
+            return onValidationFailed();
+        }
+        SaveHandler saveHandler = getSaveHandler();
+        if (!onPreSave(saveHandler)) {
+            return onSaveFailed();
+        }
+        if (!onSave(saveHandler)) {
+            return onSaveFailed();
+        }
+        if (!onPostSave(saveHandler)) {
+            return onSaveFailed();
+        }
         removeSessionAttributes();
         return VIEW_CLOSE_WINDOW;
+    }
+
+    private String onValidationFailed() {
+        return showDialog();
+    }
+
+    protected boolean validate() {
+        if(!this.getDialog().validate()){
+            return false;
+        }
+        SaveHandler saveHandler = this.getSaveHandler();
+        if(saveHandler instanceof ValidatingSaveHandler){
+            if(!((ValidatingSaveHandler)saveHandler).validate()){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Called if the save failed.
+     */
+    protected String onSaveFailed() {
+        return showDialog();
     }
 
     /**
@@ -195,34 +221,73 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
      * @return the handler
      */
     protected SaveHandler getSaveHandler() {
-        if (this.save == null) {
-            this.save = (SaveHandler) FactoryUtil.getInstance(SaveHandler.class);
-            configureSaveHandler(this.save);
+        if (this.saveHandler == null) {
+            createSaveHandler();
+
+            configureSaveHandler(this.saveHandler);
         }
-        return this.save;
+        return this.saveHandler;
+    }
+
+    /**
+     * If there is the property saveHandler defined in the config it instantiates the configured save handler. Else it
+     * instantiates the default save handler
+     */
+    protected void createSaveHandler() {
+        Content configNode = this.getConfigNode();
+        if (configNode != null) {
+            String className = NodeDataUtil.getString(configNode, "saveHandler");
+            if (StringUtils.isNotEmpty(className)) {
+                try {
+                    Class saveHandlerClass = Class.forName(className);
+                    try {
+                        this.saveHandler = (SaveHandler) saveHandlerClass.newInstance();
+                    }
+                    catch (InstantiationException e) {
+                        log.error("can't create save handler", e);
+                    }
+                    catch (IllegalAccessException e) {
+                        log.error("can't create save handler", e);
+                    }
+                }
+                catch (ClassNotFoundException e) {
+                    log.error("can't create save handler", e);
+                }
+            }
+        }
+
+        if (this.saveHandler == null) {
+            this.saveHandler = (SaveHandler) FactoryUtil.getInstance(SaveHandler.class);
+        }
     }
 
     /**
      * Configure the save control
      */
-    protected void configureSaveHandler(SaveHandler save) {
-        save.init(form);
+    protected void configureSaveHandler(SaveHandler saveHandler) {
+        saveHandler.init(form);
 
-        save.setPath(form.getParameter("mgnlPath")); //$NON-NLS-1$
-        save.setNodeCollectionName(form.getParameter("mgnlNodeCollection")); //$NON-NLS-1$
-        save.setNodeName(form.getParameter("mgnlNode")); //$NON-NLS-1$
-        save.setParagraph(form.getParameter("mgnlParagraph")); //$NON-NLS-1$
-        save.setRepository(form.getParameter("mgnlRepository")); //$NON-NLS-1$
+        saveHandler.setPath(form.getParameter("mgnlPath")); //$NON-NLS-1$
+        saveHandler.setNodeCollectionName(form.getParameter("mgnlNodeCollection")); //$NON-NLS-1$
+        saveHandler.setNodeName(form.getParameter("mgnlNode")); //$NON-NLS-1$
+        saveHandler.setParagraph(form.getParameter("mgnlParagraph")); //$NON-NLS-1$
+        saveHandler.setRepository(form.getParameter("mgnlRepository")); //$NON-NLS-1$
+
+        if (this.saveHandler instanceof DialogAwareSaveHandler) {
+            ((DialogAwareSaveHandler) saveHandler).setDialog(this.getDialog());
+        }
     }
 
-    protected void onPreSave(SaveHandler control) {
+    protected boolean onPreSave(SaveHandler control) {
+        return true;
     }
 
-    protected void onSave(SaveHandler control) {
-        control.save();
+    protected boolean onSave(SaveHandler control) {
+        return control.save();
     }
 
-    protected void onPostSave(SaveHandler control) {
+    protected boolean onPostSave(SaveHandler control) {
+        return true;
     }
 
     /**
@@ -286,7 +351,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         // show the created dialog
         else if (view == VIEW_SHOW_DIALOG) {
             try {
-                dialog.drawHtml(out);
+                getDialog().drawHtml(out);
             }
             catch (IOException e) {
                 log.error("Exception caught", e);
@@ -311,5 +376,28 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
                 }
             }
         }
+    }
+
+    /**
+     * @param dialog The dialog to set.
+     */
+    protected void setDialog(DialogDialog dialog) {
+        this.dialog = dialog;
+    }
+
+    /**
+     * @return Returns the dialog.
+     */
+    protected DialogDialog getDialog() {
+        if (this.dialog == null) {
+            try {
+                this.dialog = createDialog(this.getConfigNode(), this.getStorageNode());
+            }
+            catch (RepositoryException e) {
+                log.error("can't create dialog", e);
+            }
+            configureDialog(this.dialog);
+        }
+        return this.dialog;
     }
 }

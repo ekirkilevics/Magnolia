@@ -29,9 +29,9 @@ public interface SaveHandler {
     public void init(MultipartForm form);
     
     /**
-     * Save the data passed by init.
+     * Save the data passed by init. Returns true if the save method succeeded
      */
-    public abstract void save();
+    public abstract boolean save();
 
     /**
      * True if a not existing path should get created during the save process
