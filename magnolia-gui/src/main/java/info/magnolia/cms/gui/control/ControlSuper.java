@@ -117,20 +117,20 @@ public class ControlSuper implements ControlInterface {
 
     private HttpServletRequest request;
 
-    ControlSuper() {
+    public ControlSuper() {
     }
 
-    ControlSuper(String name, String value) {
+    public ControlSuper(String name, String value) {
         this.setName(name);
         this.setValue(value);
     }
 
-    ControlSuper(String name, List values) {
+    public ControlSuper(String name, List values) {
         this.setName(name);
         this.setValues(values);
     }
 
-    ControlSuper(String name, Content websiteNode) {
+    public ControlSuper(String name, Content websiteNode) {
         this.setName(name);
         this.setWebsiteNode(websiteNode);
     }
