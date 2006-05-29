@@ -172,7 +172,10 @@ public class RequestFormUtil {
      * @see info.magnolia.cms.beans.runtime.MultipartForm#getParameterValues(java.lang.String)
      */
     public String[] getParameterValues(String name) {
-        return form.getParameterValues(name);
+        if (this.form != null) {
+            return this.form.getParameterValues(name);
+        }
+        return request.getParameterValues(name);
     }
 
     /*
