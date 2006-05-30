@@ -312,7 +312,7 @@ public final class VersionManager {
      * */
     public Version getBaseVersion(Content node)
             throws UnsupportedOperationException, RepositoryException {
-        Content versionedNode = this.getVersionedNode(node).getBaseVersion();
+        Content versionedNode = this.getVersionedNode(node);
         if (versionedNode != null) {
             return versionedNode.getJCRNode().getBaseVersion();
         } else {
