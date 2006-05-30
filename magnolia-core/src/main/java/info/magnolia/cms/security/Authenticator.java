@@ -85,17 +85,20 @@ public final class Authenticator {
                 callbackHandler = new PlainTextCallbackHandler(userid, pswd.toCharArray());
             }
             else {
-                // invalid auth request
-                return false;
+                // select login module to use if user is authenticated against the container
+                if (request.getUserPrincipal() != null) {
+                    loginModuleToInitialize = "magnolia_authorization";
+                    callbackHandler
+                            = new PlainTextCallbackHandler(request.getUserPrincipal().getName(), "".toCharArray());
+                } else {
+                    // invalid auth request
+                    return false;
+                }
             }
         }
         else {
             // its a basic authentication request
             callbackHandler = new Base64CallbackHandler(credentials);
-        }
-        // select login module to use
-        if (request.getUserPrincipal() != null) {
-            loginModuleToInitialize = "magnolia_authorization";
         }
 
         Subject subject;
