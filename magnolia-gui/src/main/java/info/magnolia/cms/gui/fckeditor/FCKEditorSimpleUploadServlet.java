@@ -34,6 +34,7 @@ package info.magnolia.cms.gui.fckeditor;
 
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.servlets.ContextSensitiveServlet;
 import info.magnolia.cms.util.RequestFormUtil;
 
 import java.io.File;
@@ -60,7 +61,7 @@ import org.slf4j.LoggerFactory;
  * @author Philipp Bracher
  */
 
-public class FCKEditorSimpleUploadServlet extends HttpServlet {
+public class FCKEditorSimpleUploadServlet extends ContextSensitiveServlet {
 
     private static final long serialVersionUID = -8512828615271068088L;
 
