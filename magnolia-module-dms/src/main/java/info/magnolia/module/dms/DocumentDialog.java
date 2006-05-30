@@ -107,7 +107,7 @@ public class DocumentDialog extends ConfiguredDialog {
     /**
      * Overriden to force creation if the node does not exist
      */
-    protected void onPreSave(SaveHandler handler) {
+    protected boolean onPreSave(SaveHandler handler) {
         // check if this is a creation
         this.create = handler.getPath().endsWith("/mgnlNew");
 
@@ -129,13 +129,14 @@ public class DocumentDialog extends ConfiguredDialog {
 
             this.path = PathUtil.createPath(path, name);
         }
+        return true;
     }
 
     /*
      * (non-Javadoc)
      * @see info.magnolia.module.admininterface.DialogMVCHandler#onPostSave(info.magnolia.cms.gui.control.Save)
      */
-    protected void onPostSave(SaveHandler handler) {
+    protected boolean onPostSave(SaveHandler handler) {
         super.onPostSave(handler);
         Content node = this.getStorageNode();
 
@@ -162,6 +163,7 @@ public class DocumentDialog extends ConfiguredDialog {
         catch (Exception e) {
             log.error("faild to add a version to " + node.getHandle(), e);
         }
+        return true;
     }
 
     /**
