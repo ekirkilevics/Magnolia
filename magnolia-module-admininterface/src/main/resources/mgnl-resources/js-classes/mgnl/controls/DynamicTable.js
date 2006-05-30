@@ -215,7 +215,7 @@ MgnlDynamicTable.prototype.persistObject = function (object){
     var simple = this.objectSize(object) == 1;
     for(key in object){
         if(str.length > 0)
-            str += ";";
+            str += ",";
         if(simple){
             str += object[key];
         }
