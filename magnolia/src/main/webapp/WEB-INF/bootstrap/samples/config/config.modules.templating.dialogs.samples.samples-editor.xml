@@ -21,7 +21,7 @@
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>d9b9f93c-4606-4a64-a5de-cc6915ebdcd1</sv:value>
+      <sv:value>8272b323-8818-42b3-bd7a-b5a2bc523cf3</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:authorid" sv:type="String">
       <sv:value>superuser</sv:value>
@@ -47,9 +47,6 @@
     <sv:property sv:name="mgnl:activatorid" sv:type="String">
       <sv:value>superuser</sv:value>
     </sv:property>
-    <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
-      <sv:value>1134133966791000</sv:value>
-    </sv:property>
   </sv:node>
   <sv:node sv:name="tabContent">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -72,7 +69,7 @@
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>aa96ac63-b82f-4d6e-a608-44204d8daf90</sv:value>
+        <sv:value>f8d1cddd-6804-4f2f-8d09-893dc09a49a9</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
@@ -95,9 +92,6 @@
       <sv:property sv:name="mgnl:activatorid" sv:type="String">
         <sv:value>superuser</sv:value>
       </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
-        <sv:value>1099406062623000</sv:value>
-      </sv:property>
     </sv:node>
     <sv:node sv:name="content">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -118,11 +112,11 @@
       <sv:property sv:name="styles" sv:type="String">
         <sv:value>/.resources/fckeditor/custom/styles/magnoliaStandard.xml</sv:value>
       </sv:property>
-      <sv:property sv:name="label" sv:type="String">
-        <sv:value>dialog.mainColumn.editor.tabContent.content.label</sv:value>
-      </sv:property>
       <sv:property sv:name="lists" sv:type="String">
         <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="label" sv:type="String">
+        <sv:value>dialog.mainColumn.editor.tabContent.content.label</sv:value>
       </sv:property>
       <sv:property sv:name="fonts" sv:type="String">
         <sv:value>Verdana;Courier New</sv:value>
@@ -131,7 +125,7 @@
         <sv:value>content</sv:value>
       </sv:property>
       <sv:property sv:name="css" sv:type="String">
-        <sv:value>/admindocroot/fckeditor/custom/css/magnoliaStandard.css</sv:value>
+        <sv:value>/.resources/fckeditor/custom/css/magnoliaStandard.css</sv:value>
       </sv:property>
       <sv:property sv:name="tables" sv:type="String">
         <sv:value>true</sv:value>
@@ -140,7 +134,7 @@
         <sv:value>dialog.mainColumn.editor.tabContent.content.description</sv:value>
       </sv:property>
       <sv:property sv:name="jsConfgFile" sv:type="String">
-        <sv:value>/admindocroot/fckeditor/custom/config/magnoliaStandard.js</sv:value>
+        <sv:value>/.resources/fckeditor/custom/config/magnoliaStandard.js</sv:value>
       </sv:property>
       <sv:property sv:name="type" sv:type="String">
         <sv:value>String</sv:value>
@@ -158,14 +152,14 @@
         <sv:value>fckEdit</sv:value>
       </sv:property>
       <sv:property sv:name="jsInitFile" sv:type="String">
-        <sv:value>/admindocroot/fckeditor/custom/init/magnoliaStandard.js</sv:value>
+        <sv:value>/.resources/fckeditor/custom/init/magnoliaStandard.js</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>d63eed96-4193-4929-95e8-58f9764425c1</sv:value>
+          <sv:value>46ca7a8b-a92a-49bd-aacc-b8231ee0ec96</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -174,7 +168,7 @@
           <sv:value>2004-11-02T15:34:28.220+01:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2006-05-20T23:47:24.070+02:00</sv:value>
+          <sv:value>2006-05-30T10:13:57.313+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:activated" sv:type="Boolean">
           <sv:value>false</sv:value>
@@ -187,9 +181,6 @@
         </sv:property>
         <sv:property sv:name="mgnl:activatorid" sv:type="String">
           <sv:value>superuser</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
-          <sv:value>1099406068238000</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
@@ -215,7 +206,7 @@
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>0b763443-590e-4cde-8305-bcd3d60d99ee</sv:value>
+        <sv:value>6c727630-b8b6-4da4-8cbb-69e070a47a38</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
@@ -237,9 +228,6 @@
       </sv:property>
       <sv:property sv:name="mgnl:activatorid" sv:type="String">
         <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
-        <sv:value>1099468745407000</sv:value>
       </sv:property>
     </sv:node>
     <sv:node sv:name="lineAbove">
@@ -278,7 +266,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>1671154e-45bc-44cd-9483-19a7ca4e2c00</sv:value>
+          <sv:value>334a0514-c35a-4df8-8e97-e31de74f0529</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -300,9 +288,6 @@
         </sv:property>
         <sv:property sv:name="mgnl:activatorid" sv:type="String">
           <sv:value>superuser</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
-          <sv:value>1099468089649000</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
@@ -336,7 +321,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>9680fe2f-bc5c-4dad-9130-4a2e0d56b97f</sv:value>
+          <sv:value>71168870-b130-4641-91f3-50d95bfd3349</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -359,9 +344,6 @@
         <sv:property sv:name="mgnl:activatorid" sv:type="String">
           <sv:value>superuser</sv:value>
         </sv:property>
-        <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
-          <sv:value>1099468091016500</sv:value>
-        </sv:property>
       </sv:node>
       <sv:node sv:name="options">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -378,7 +360,7 @@
             <sv:value>mgnl:metaData</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
-            <sv:value>f2324d2c-cd00-4d8e-bdfb-68fc3a2d9621</sv:value>
+            <sv:value>8bbdba72-5136-465b-9fc4-a409a373b168</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:authorid" sv:type="String">
             <sv:value>superuser</sv:value>
@@ -401,9 +383,6 @@
           <sv:property sv:name="mgnl:activatorid" sv:type="String">
             <sv:value>superuser</sv:value>
           </sv:property>
-          <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
-            <sv:value>1099468324507000</sv:value>
-          </sv:property>
         </sv:node>
         <sv:node sv:name="no">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -415,18 +394,18 @@
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>afe476a2-8365-4818-a405-45198a033d78</sv:value>
           </sv:property>
-          <sv:property sv:name="value" sv:type="String">
-            <sv:value>0</sv:value>
-          </sv:property>
           <sv:property sv:name="label" sv:type="String">
             <sv:value>dialog.mainColumn.textImage.tabProps.spacer.option.no</sv:value>
+          </sv:property>
+          <sv:property sv:name="value" sv:type="String">
+            <sv:value>0</sv:value>
           </sv:property>
           <sv:node sv:name="MetaData">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
               <sv:value>mgnl:metaData</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:uuid" sv:type="String">
-              <sv:value>8c212ec5-ff21-4f82-a522-22458f7ef472</sv:value>
+              <sv:value>3ce865c3-d5d8-4ce5-9300-3d2326e0809b</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:authorid" sv:type="String">
               <sv:value>superuser</sv:value>
@@ -449,9 +428,6 @@
             <sv:property sv:name="mgnl:activatorid" sv:type="String">
               <sv:value>superuser</sv:value>
             </sv:property>
-            <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
-              <sv:value>1099468401676000</sv:value>
-            </sv:property>
           </sv:node>
         </sv:node>
         <sv:node sv:name="single">
@@ -464,18 +440,18 @@
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>df548bb5-bc00-4f52-9437-0510fbd7b012</sv:value>
           </sv:property>
-          <sv:property sv:name="value" sv:type="String">
-            <sv:value>1</sv:value>
-          </sv:property>
           <sv:property sv:name="label" sv:type="String">
             <sv:value>dialog.mainColumn.textImage.tabProps.spacer.option.single</sv:value>
+          </sv:property>
+          <sv:property sv:name="value" sv:type="String">
+            <sv:value>1</sv:value>
           </sv:property>
           <sv:node sv:name="MetaData">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
               <sv:value>mgnl:metaData</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:uuid" sv:type="String">
-              <sv:value>36dd8feb-b987-42dd-bcb9-1240f392339e</sv:value>
+              <sv:value>936a8354-8143-458e-b7d8-6bd9b2264b33</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:authorid" sv:type="String">
               <sv:value>superuser</sv:value>
@@ -498,9 +474,6 @@
             <sv:property sv:name="mgnl:activatorid" sv:type="String">
               <sv:value>superuser</sv:value>
             </sv:property>
-            <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
-              <sv:value>1099468456359000</sv:value>
-            </sv:property>
           </sv:node>
         </sv:node>
         <sv:node sv:name="double">
@@ -513,11 +486,11 @@
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>d4aae939-1f1a-418d-80b2-2ccad5f06773</sv:value>
           </sv:property>
-          <sv:property sv:name="value" sv:type="String">
-            <sv:value>2</sv:value>
-          </sv:property>
           <sv:property sv:name="label" sv:type="String">
             <sv:value>dialog.mainColumn.textImage.tabProps.spacer.option.doulbe</sv:value>
+          </sv:property>
+          <sv:property sv:name="value" sv:type="String">
+            <sv:value>2</sv:value>
           </sv:property>
           <sv:property sv:name="selected" sv:type="String">
             <sv:value>true</sv:value>
@@ -527,7 +500,7 @@
               <sv:value>mgnl:metaData</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:uuid" sv:type="String">
-              <sv:value>e4adf3e3-e49e-46fe-a655-649d39ac4566</sv:value>
+              <sv:value>42b9516c-9e65-4a5e-ad74-87358bda9042</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:authorid" sv:type="String">
               <sv:value>superuser</sv:value>
@@ -549,9 +522,6 @@
             </sv:property>
             <sv:property sv:name="mgnl:activatorid" sv:type="String">
               <sv:value>superuser</sv:value>
-            </sv:property>
-            <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
-              <sv:value>1099468460329000</sv:value>
             </sv:property>
           </sv:node>
         </sv:node>
