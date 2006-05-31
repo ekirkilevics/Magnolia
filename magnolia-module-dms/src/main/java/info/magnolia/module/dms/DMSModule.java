@@ -59,30 +59,6 @@ public class DMSModule extends AbstractAdminModule {
     }
     
     public void onRegister(int registerState) {
-        try {
-            HierarchyManager hmRoles = ContentRepository.getHierarchyManager(ContentRepository.USER_ROLES);
-            HierarchyManager hmUsers = ContentRepository.getHierarchyManager(ContentRepository.USERS);
-
-            ContentUtil.createPath(hmRoles, DMSConfig.ROLE, ItemType.CONTENT);
-            ContentUtil.createPath(hmRoles, DMSConfig.LICENSE_ROLE, ItemType.CONTENT);
-            ModuleUtil.registerProperties(hmRoles, "info.magnolia.module.dms.roles");
-            ContentUtil.createPath(hmUsers, DMSConfig.USER, ItemType.CONTENT);
-            ModuleUtil.registerProperties(hmUsers, "info.magnolia.module.dms.users");
-
-            hmUsers.save();
-            hmRoles.save();
-
-            // grant superuser
-            log.info("Update security");
-            configureUsers();
-
-            // provide the files
-            log.info("Install files");
-
-        }
-        catch (Exception e) {
-            log.error("Can't register dms module", e);
-        }
     }
 
     protected void onInit() throws InitializationException {
@@ -96,14 +72,6 @@ public class DMSModule extends AbstractAdminModule {
         return instance;
     }
 
-    protected void configureUsers() {
-        UserManager userManager = Security.getUserManager();
-        RoleManager roleManager = Security.getRoleManager();
-        userManager.getUser("superuser").addRole(DMSConfig.LICENSE_ROLE);
-        roleManager.getRole("superuser").addPermission(DMSConfig.REPOSITORY, "/*", Permission.ALL);
-    }
-
-    
     /**
      * @return Returns the repository.
      */
