@@ -18,6 +18,7 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.cms.i18n.TemplateMessagesUtil;
+import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.RequestFormUtil;
 
 import org.apache.commons.lang.BooleanUtils;
@@ -92,7 +93,7 @@ public abstract class DialogSuper implements DialogInterface {
     /**
      * multiple values, e.g. checkbox.
      */
-    private List values = new ArrayList();
+    private List values;
 
     private DialogSuper parent;
 
@@ -503,6 +504,8 @@ public abstract class DialogSuper implements DialogInterface {
     public boolean validate(){
         if(this.isRequired()){
             if(StringUtils.isEmpty(this.getValue()) && this.getValues().size() == 0){
+                String name = this.getMessage(this.getLabel());
+                AlertUtil.setMessage(this.getMessage("dialogs.validation.required", new Object[]{name}));
                 return false;
             }
         }
