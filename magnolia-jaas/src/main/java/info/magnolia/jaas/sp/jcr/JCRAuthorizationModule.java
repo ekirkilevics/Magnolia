@@ -16,6 +16,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.auth.PrincipalCollection;
 import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.cms.security.auth.GroupList;
@@ -94,11 +95,11 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
         RoleList roleList = new RoleListImpl();
         PrincipalCollection principalList = new PrincipalCollectionImpl();
         this.setACL(this.user, principalList, roleList);
-        Iterator groupsIterator = this.getGroupNodes().iterator();
+        Iterator groupsIterator = this.getGroups().iterator();
         HierarchyManager groupsHierarchy = ContentRepository.getHierarchyManager(ContentRepository.USER_GROUPS);
         GroupList groupList = new GroupListImpl();
         while (groupsIterator.hasNext()) {
-            String groupPath = ((Content) groupsIterator.next()).getNodeData("path").getString();
+            String groupPath = ((NodeData) groupsIterator.next()).getString();
             try {
                 Content groupNode = groupsHierarchy.getContent(groupPath);
                 groupList.add(groupNode.getName());
@@ -129,12 +130,11 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
 
     /**
      * get all groups
-     * @return collection of group nodes
+     * @return collection of groups <code>NodeData</code>
      */
-    private Collection getGroupNodes() {
+    private Collection getGroups() {
         try {
-            Content groups = this.user.getContent("groups");
-            return groups.getChildren(ItemType.CONTENTNODE);
+            return this.user.getContent("groups").getNodeDataCollection();
         }
         catch (RepositoryException re) {
             if (log.isDebugEnabled()) {
@@ -153,10 +153,9 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
         HierarchyManager rolesHierarchy = ContentRepository.getHierarchyManager(ContentRepository.USER_ROLES);
         try {
             Content rolesNode = aclNode.getContent("roles");
-            Iterator children = rolesNode.getChildren().iterator();
+            Iterator children = rolesNode.getNodeDataCollection().iterator();
             while (children.hasNext()) {
-                Content child = (Content) children.next();
-                String rolePath = child.getNodeData("path").getString();
+                String rolePath = ((NodeData) children.next()).getString();
                 Content role = rolesHierarchy.getContent(rolePath);
                 roleList.add(role.getName());
                 Iterator it = role.getChildren(ItemType.CONTENTNODE.getSystemName(), "acl*").iterator();
