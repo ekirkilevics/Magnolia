@@ -172,7 +172,7 @@ public class DMSAdminTree extends AdminTreeMVCHandler {
         Content parentNode;
         try {
             parentNode = hm.getContent(this.getPath());
-            Collection childs = parentNode.getChildren(createItemType, Content.SORT_BY_SEQUENCE);
+            Collection childs = parentNode.getChildren(createItemType);
 
             // set title where not present
             for (Iterator iter = childs.iterator(); iter.hasNext();) {
