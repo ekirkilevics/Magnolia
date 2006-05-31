@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sv:node sv:name="logout" xmlns:jcr="http://www.jcp.org/jcr/1.0"
+<sv:node sv:name="websiteVersionsList"
+  xmlns:jcr="http://www.jcp.org/jcr/1.0"
   xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
   xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:rep="internal"
   xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
@@ -14,17 +15,17 @@
     <sv:value>mix:versionable</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:uuid" sv:type="String">
-    <sv:value>17f1ae5e-6053-41aa-8a10-de06152a9d0f</sv:value>
+    <sv:value>def36be7-a6b8-42d8-90a4-7587cecec929</sv:value>
   </sv:property>
   <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.module.admininterface.pages.LogoutPage</sv:value>
+    <sv:value>info.magnolia.module.admininterface.lists.WebsiteVersionsList</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>717c92ba-0043-4268-9911-145afdeccd22</sv:value>
+      <sv:value>c9a07fe4-5382-4093-b3f3-13278f24595d</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:authorid" sv:type="String">
       <sv:value>superuser</sv:value>
@@ -33,7 +34,7 @@
       <sv:value>2005-07-15T14:26:11.205+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2006-05-29T23:33:44.993+02:00</sv:value>
+      <sv:value>2006-04-27T18:10:29.315+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:activated" sv:type="Boolean">
       <sv:value>false</sv:value>
@@ -42,7 +43,7 @@
       <sv:value>MetaData</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-      <sv:value>2006-05-29T23:33:32.856+02:00</sv:value>
+      <sv:value>2006-04-27T17:58:15.423+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:activatorid" sv:type="String">
       <sv:value>superuser</sv:value>
