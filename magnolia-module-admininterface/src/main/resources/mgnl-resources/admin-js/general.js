@@ -265,7 +265,9 @@ function mgnlOpenTreeBrowser(pathSelected, pathOpen, repository, width, height, 
     window.mgnlCallBackCommand = callBackCommand;
 }
 
-function mgnlOpenTreeBrowserWithControl(control,pathSelected,pathOpen,repository,extension,width,height,addcontext){
+function mgnlOpenTreeBrowserWithControl(control,repository,pathSelected,pathOpen,extension,width,height,addcontext){
+    pathSelected = pathSelected?pathSelected:control.value;
+    pathOpen = pathOpen?pathOpen:control.value;
     mgnlDebug("mgnlOpenTreeBrowserWithControl","dialog");
     var callBackCommand = new MgnlTreeBrowserWithControlCallBackCommand(control,extension,addcontext);
     mgnlOpenTreeBrowser(pathSelected, pathOpen, repository, width, height, callBackCommand)

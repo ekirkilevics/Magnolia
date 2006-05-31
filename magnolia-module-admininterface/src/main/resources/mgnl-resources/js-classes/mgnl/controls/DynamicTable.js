@@ -209,7 +209,7 @@ MgnlDynamicTable.prototype.persist = function (){
     }
     this.hiddenField.value = str;
 }
-
+ 
 MgnlDynamicTable.prototype.persistObject = function (object){
     var str = "";
     var simple = this.objectSize(object) == 1;

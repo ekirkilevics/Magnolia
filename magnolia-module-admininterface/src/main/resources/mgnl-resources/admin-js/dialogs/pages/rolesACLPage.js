@@ -16,7 +16,7 @@ function aclGetPermissionObject(prefix){
 function aclGetNewPermissionObject(){
     var object =  new Object;
     object.accessRight="";
-    object.accessType="";
+    object.accessType="3"; // all: this & subs
     object.path = "";
     return object;
 }
@@ -50,5 +50,5 @@ function aclFormSubmit(){
 
 function aclChoose(prefix, repository){
     var control = document.getElementById(prefix + 'Path');
-    mgnlOpenTreeBrowserWithControl(control, control.value,'',repository);
+    mgnlOpenTreeBrowserWithControl(control,repository);
 }
