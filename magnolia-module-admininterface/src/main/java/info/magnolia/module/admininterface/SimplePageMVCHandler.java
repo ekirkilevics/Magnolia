@@ -45,7 +45,8 @@ public abstract class SimplePageMVCHandler extends PageMVCHandler {
                 render(getRequest(), getResponse());
             }
             catch (Exception e) {
-                getResponse().getWriter().print(e);
+                log.error("Exception during rendering the page",e);
+                e.printStackTrace(getResponse().getWriter());
             }
         }
     }
