@@ -87,6 +87,16 @@ public class MessagesUtil {
     }
 
     /**
+     * @param messages
+     * @param basename
+     * @return
+     */
+    public static Messages chain(String basename, Messages msgs2) {
+        Messages msgs1 = MessagesManager.getMessages(basename);
+        return chain(msgs1, msgs2);
+    }
+    
+    /**
      * @param string
      * @return
      */
