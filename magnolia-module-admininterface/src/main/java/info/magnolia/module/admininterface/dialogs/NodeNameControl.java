@@ -24,7 +24,7 @@ import info.magnolia.cms.gui.dialog.DialogStatic;
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
-public class UserNameControl extends DialogStatic {
+public class NodeNameControl extends DialogStatic {
 
     /**
      * Use a bold label
@@ -36,11 +36,11 @@ public class UserNameControl extends DialogStatic {
     /**
      * Set the nodes name as value
      */
-    public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
+    public void init(HttpServletRequest request, HttpServletResponse response, Content storageNode, Content configNode)
         throws RepositoryException {
-        super.init(request, response, websiteNode, configNode);
-        if (websiteNode != null) {
-            this.setValue(websiteNode.getName());
+        super.init(request, response, storageNode, configNode);
+        if (storageNode != null) {
+            this.setValue(storageNode.getName());
         }
     }
 }

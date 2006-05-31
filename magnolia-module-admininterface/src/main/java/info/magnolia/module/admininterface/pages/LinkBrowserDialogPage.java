@@ -49,7 +49,7 @@ public class LinkBrowserDialogPage extends SimplePageMVCHandler {
         html.append(new Sources(request.getContextPath()).getHtmlJs());
         html.append(new Sources(request.getContextPath()).getHtmlCss());
         html.append("</head>"); //$NON-NLS-1$
-        html.append("<body class=\"mgnlBgDark\" onload=\"mgnlDialogLinkBrowserResize();\">"); //$NON-NLS-1$
+        html.append("<body class=\"mgnlBgDark\" onload=\"mgnlDialogLinkBrowserResize();window.focus();\">"); //$NON-NLS-1$
 
         StringBuffer src = getIFrameSrc(request, repository, path, pathOpen, pathSelected);
 

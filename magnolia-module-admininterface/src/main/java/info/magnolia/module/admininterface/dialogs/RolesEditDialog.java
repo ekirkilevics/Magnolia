@@ -4,14 +4,9 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.gui.dialog.DialogBox;
 import info.magnolia.cms.gui.dialog.DialogDialog;
-import info.magnolia.cms.gui.dialog.DialogEdit;
-import info.magnolia.cms.gui.dialog.DialogFactory;
-import info.magnolia.cms.gui.dialog.DialogInclude;
-import info.magnolia.cms.gui.dialog.DialogStatic;
-import info.magnolia.cms.gui.dialog.DialogTab;
 import info.magnolia.module.admininterface.SaveHandler;
+import info.magnolia.module.admininterface.pages.RolesACLPage;
 
 import java.util.Iterator;
 
@@ -28,7 +23,7 @@ import org.slf4j.LoggerFactory;
  * @author Fabrizio Giustina
  * @version $Id$
  */
-public class UserRolesEditDialog extends ConfiguredDialog {
+public class RolesEditDialog extends ConfiguredDialog {
 
     protected static Logger log = LoggerFactory.getLogger("roles dialog"); //$NON-NLS-1$
 
@@ -43,7 +38,7 @@ public class UserRolesEditDialog extends ConfiguredDialog {
      * @param response
      * @param configNode
      */
-    public UserRolesEditDialog(String name, HttpServletRequest request, HttpServletResponse response, Content configNode) {
+    public RolesEditDialog(String name, HttpServletRequest request, HttpServletResponse response, Content configNode) {
         super(name, request, response, configNode);
     }
 
@@ -66,48 +61,9 @@ public class UserRolesEditDialog extends ConfiguredDialog {
 
         dialog.setJavascriptSources(request.getContextPath() + "/.resources/admin-js/dialogs/DynamicTable.js"); //$NON-NLS-1$
         dialog.setJavascriptSources(request.getContextPath()
-            + "/.resources/admin-js/dialogs/pages/userRolesEditDialogPage.js"); //$NON-NLS-1$
+            + "/.resources/admin-js/dialogs/pages/rolesACLPage.js"); //$NON-NLS-1$
         dialog.setCssSources(request.getContextPath()
-            + "/.resources/admin-css/dialogs/pages/userRolesEditDialogPage.css"); //$NON-NLS-1$
-        dialog.setConfig("height", 600); //$NON-NLS-1$
-
-        dialog.setLabel(msgs.get("roles.edit.edit")); //$NON-NLS-1$
-
-        DialogTab tab0 = dialog.addTab(msgs.get("roles.edit.properties")); //$NON-NLS-1$
-
-        DialogTab tab1 = dialog.addTab(msgs.get("roles.edit.accessControlList")); //$NON-NLS-1$
-
-        DialogStatic spacer = DialogFactory.getDialogStaticInstance(request, response, null, null);
-        spacer.setConfig("line", false); //$NON-NLS-1$
-
-        DialogStatic name = DialogFactory.getDialogStaticInstance(request, response, null, null);
-        // name.setConfig("line",false);
-        name.setLabel("<strong>" + msgs.get("roles.edit.rolename") + "</strong>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        name.setValue("<strong>" + storageNode.getName() + "</strong>"); //$NON-NLS-1$ //$NON-NLS-2$
-        tab0.addSub(name);
-
-        tab0.addSub(spacer);
-
-        DialogEdit title = DialogFactory.getDialogEditInstance(request, response, storageNode, null);
-        title.setName("title"); //$NON-NLS-1$
-        title.setLabel(msgs.get("roles.edit.fullname")); //$NON-NLS-1$
-        tab0.addSub(title);
-
-        tab0.addSub(spacer);
-
-        DialogEdit desc = DialogFactory.getDialogEditInstance(request, response, storageNode, null);
-        desc.setName("description"); //$NON-NLS-1$
-        desc.setLabel(msgs.get("roles.edit.description")); //$NON-NLS-1$
-        desc.setConfig("rows", 6); //$NON-NLS-1$
-        tab0.addSub(desc);
-
-        DialogInclude acl = DialogFactory.getDialogIncludeInstance(request, response, storageNode, null);
-        acl.setBoxType(DialogBox.BOXTYPE_1COL);
-        acl.setName("aclRolesRepository"); //$NON-NLS-1$
-        acl.setConfig("file", "/.magnolia/pages/userRolesEditAclInclude.html"); //$NON-NLS-1$ //$NON-NLS-2$
-        tab1.addSub(acl);
-
-        dialog.setConfig("saveOnclick", "aclFormSubmit();"); //$NON-NLS-1$ //$NON-NLS-2$
+            + "/.resources/admin-css/dialogs/pages/rolesEditPage.css"); //$NON-NLS-1$
         return dialog;
     }
 
@@ -146,7 +102,7 @@ public class UserRolesEditDialog extends ConfiguredDialog {
                     for (int i = 0; i < aclEntries.length; i++) {
                         String path = StringUtils.EMPTY;
                         long accessRight = 0;
-                        String accessType = StringUtils.EMPTY;
+                        int accessType = 0;
 
                         String[] aclValuePairs = aclEntries[i].split(","); //$NON-NLS-1$
                         for (int j = 0; j < aclValuePairs.length; j++) {
@@ -161,7 +117,7 @@ public class UserRolesEditDialog extends ConfiguredDialog {
                                 path = aclValue;
                             }
                             else if (aclName.equals("accessType")) { //$NON-NLS-1$
-                                accessType = aclValue;
+                                accessType = Integer.valueOf(aclValue).intValue();
                             }
                             else if (aclName.equals("accessRight")) { //$NON-NLS-1$
                                 try {
@@ -175,12 +131,11 @@ public class UserRolesEditDialog extends ConfiguredDialog {
 
                         if (StringUtils.isNotEmpty(path)) {
                             if (path.equals("/")) { //$NON-NLS-1$
-                                // needs only one entry: "/*"
-                                accessType = "sub"; //$NON-NLS-1$
+                                accessType = RolesACLPage.TYPE_SUBS; //$NON-NLS-1$
                                 path = StringUtils.EMPTY;
                             }
 
-                            if (accessType.equals("self")) { //$NON-NLS-1$
+                            if((accessType & RolesACLPage.TYPE_THIS) != 0){
                                 try {
                                     String newLabel = Path.getUniqueLabel(hm, acl.getHandle(), "0"); //$NON-NLS-1$
                                     Content r = acl.createContent(newLabel, ItemType.CONTENTNODE);
@@ -191,14 +146,17 @@ public class UserRolesEditDialog extends ConfiguredDialog {
                                     log.error(e.getMessage(), e);
                                 }
                             }
-                            try {
-                                String newLabel = Path.getUniqueLabel(hm, acl.getHandle(), "0"); //$NON-NLS-1$
-                                Content r = acl.createContent(newLabel, ItemType.CONTENTNODE);
-                                r.createNodeData("path").setValue(path + "/*"); //$NON-NLS-1$ //$NON-NLS-2$
-                                r.createNodeData("permissions").setValue(accessRight); //$NON-NLS-1$
-                            }
-                            catch (Exception e) {
-                                log.error(e.getMessage(), e);
+                            
+                            if((accessType & RolesACLPage.TYPE_SUBS) != 0){
+                                try {
+                                    String newLabel = Path.getUniqueLabel(hm, acl.getHandle(), "0"); //$NON-NLS-1$
+                                    Content r = acl.createContent(newLabel, ItemType.CONTENTNODE);
+                                    r.createNodeData("path").setValue(path + "/*"); //$NON-NLS-1$ //$NON-NLS-2$
+                                    r.createNodeData("permissions").setValue(accessRight); //$NON-NLS-1$
+                                }
+                                catch (Exception e) {
+                                    log.error(e.getMessage(), e);
+                                }
                             }
                         }
                     }

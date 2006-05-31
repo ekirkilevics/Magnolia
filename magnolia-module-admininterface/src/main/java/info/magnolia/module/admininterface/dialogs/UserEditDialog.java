@@ -3,17 +3,10 @@ package info.magnolia.module.admininterface.dialogs;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.Path;
-import info.magnolia.cms.gui.dialog.DialogDialog;
-import info.magnolia.cms.gui.dialog.DialogMultiSelect;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.util.AlertUtil;
-import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.module.admininterface.SaveHandler;
 
 import java.util.Iterator;
-import java.util.List;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
@@ -42,8 +35,6 @@ public class UserEditDialog extends ConfiguredDialog {
     private static final String NODE_ACLUSERS = "acl_users"; //$NON-NLS-1$
 
     private static final String NODE_ACLROLES = "acl_userroles"; //$NON-NLS-1$
-
-    private static final String NODE_ROLES = "roles"; //$NON-NLS-1$
 
     private static final String NODE_ACLCONFIG = "acl_config"; //$NON-NLS-1$
 
@@ -77,25 +68,6 @@ public class UserEditDialog extends ConfiguredDialog {
         save.setPath(path);
     }
     
-    protected DialogDialog createDialog(Content configNode, Content storageNode) throws RepositoryException {
-        DialogDialog dialog = super.createDialog(configNode, storageNode);
-        
-        Content node = this.getStorageNode();
-        if(node!= null){
-            DialogMultiSelect roles = (DialogMultiSelect)dialog.getSub("roles");
-            List rolesValues = roles.getValues();
-            if(node.hasContent(NODE_ROLES)){
-                Content rolesNode = node.getContent(NODE_ROLES);
-                for (Iterator iter = rolesNode.getChildren().iterator(); iter.hasNext();) {
-                    Content roleNode = (Content) iter.next();
-                    String path =  NodeDataUtil.getString(roleNode, "path");
-                    rolesValues.add(path);
-                }
-            }
-        }
-        return dialog;
-    }
-
     protected boolean onPostSave(SaveHandler saveControl) {
         Content user = this.getStorageNode();
 
@@ -129,33 +101,6 @@ public class UserEditDialog extends ConfiguredDialog {
             Content u3 = aclUsers.createContent("0", ItemType.CONTENTNODE); //$NON-NLS-1$
             u3.createNodeData("path").setValue(user.getHandle() + "/*"); //$NON-NLS-1$ //$NON-NLS-2$
             u3.createNodeData("permissions").setValue(Permission.ALL); //$NON-NLS-1$
-
-            // ######################
-            // # roles acl
-            // ######################
-            // remove existing
-            try {
-                user.delete(NODE_ROLES);
-            }
-            catch (RepositoryException re) {
-                // roles node did not exist yet
-            }
-
-            // rewrite
-            Content roles = user.createContent(NODE_ROLES, ItemType.CONTENTNODE);
-
-            String[] rolesValue = form.getParameterValues("roles"); //$NON-NLS-1$ //$NON-NLS-2$
-
-            for (int i = 0; i < rolesValue.length; i++) {
-                try {
-                    String newLabel = Path.getUniqueLabel(hm, roles.getHandle(), "0"); //$NON-NLS-1$
-                    Content r = roles.createContent(newLabel, ItemType.CONTENTNODE);
-                    r.createNodeData("path").setValue(rolesValue[i]); //$NON-NLS-1$
-                }
-                catch (Exception e) {
-                    log.error(e.getMessage(), e);
-                }
-            }
 
             hm.save();
         }
