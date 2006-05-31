@@ -14,6 +14,8 @@ package info.magnolia.module.owfe;
 
 import java.util.Iterator;
 
+import javax.jcr.RepositoryException;
+
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
@@ -57,7 +59,14 @@ public class WorkflowModule extends AbstractAdminModule {
      * @see info.magnolia.module.admininterface.AbstractAdminModule#onRegister(int)
      */
     protected void onRegister(int registerState) throws RegisterException {
-        // nothing todo
+        Content menu = ContentUtil.getContent(ContentRepository.CONFIG, "/modules/adminInterface/config/menu");
+        try {
+            menu.orderBefore("inbox", "security");
+            menu.save();
+        }
+        catch (RepositoryException e) {
+            log.warn("can't move menupoint", e);
+        }
     }
 
     /**

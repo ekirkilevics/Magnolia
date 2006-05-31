@@ -119,7 +119,7 @@ function MgnlAdminCentral(){
     this.showTree = function(name, path){
         var url = "/.magnolia/trees/" + name + ".html"; 
         if(path && path.length >0)
-            url += "?pathSelected="+path;
+            url += "?pathSelected="+path +"&pathOpen="+path;
         this.showContent(url, false, false);
     }
 

@@ -12,7 +12,10 @@
  */
 package info.magnolia.module.dms;
 
+import javax.jcr.RepositoryException;
+
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.module.InitializationException;
@@ -22,6 +25,7 @@ import info.magnolia.cms.security.RoleManager;
 import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.UserManager;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.AbstractAdminModule;
 
 import org.apache.log4j.Logger;
@@ -59,6 +63,15 @@ public class DMSModule extends AbstractAdminModule {
     }
     
     public void onRegister(int registerState) {
+        // move menu point
+        Content menu = ContentUtil.getContent(ContentRepository.CONFIG, "/modules/adminInterface/config/menu");
+        try {
+            menu.orderBefore("dms", "inbox");
+            menu.save();
+        }
+        catch (RepositoryException e) {
+            log.warn("can't move menupoint", e);
+        }
     }
 
     protected void onInit() throws InitializationException {
