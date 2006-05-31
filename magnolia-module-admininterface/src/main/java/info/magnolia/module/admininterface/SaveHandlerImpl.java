@@ -26,7 +26,6 @@ import info.magnolia.cms.gui.fckeditor.FCKEditorTmpFiles;
 import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Digester;
-import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.util.LinkUtil;
@@ -509,8 +508,10 @@ public class SaveHandlerImpl implements SaveHandler {
             }
             for (int j = 0; j < values.length; j++) {
                 String valueStr = values[j];
-                Value value = this.getValue(valueStr, type);
-                multiNode.createNodeData(Integer.toString(j)).setValue(value);
+                if(StringUtils.isNotEmpty(valueStr)) {
+                    Value value = this.getValue(valueStr, type);
+                    multiNode.createNodeData(Integer.toString(j)).setValue(value);
+                }
             }
         }
     }
