@@ -472,7 +472,7 @@ public abstract class DialogSuper implements DialogInterface {
             String basename = this.getConfigValue(I18N_BASENAME_PROPERTY);
             if (StringUtils.isNotEmpty(basename)) {
                 // extend the chain with this bundle
-                messages = MessagesUtil.chain(messages, basename);
+                messages = MessagesUtil.chain(basename, messages);
             }
         }
         return messages;
