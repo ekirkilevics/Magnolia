@@ -26,6 +26,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -352,6 +353,9 @@ public abstract class DialogSuper implements DialogInterface {
                         NodeData data = (NodeData) it.next();
                         this.values.add(data.getString());
                     }
+                }
+                catch(PathNotFoundException e){
+                    // not yet existing: OK
                 }
                 catch (RepositoryException re) {
                     log.error("can't set values", re);
