@@ -15,6 +15,8 @@ package info.magnolia.module.admininterface;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
@@ -81,7 +83,7 @@ public class Navigation {
                 str.append(MessageFormat.format(nodePattern, new Object[]{
                     jsName,
                     mp.getUUID(),
-                    NodeDataUtil.getI18NString(mp, "label"),
+                    getLabel(mp),
                     NodeDataUtil.getString(mp, "onclick"),
                     NodeDataUtil.getString(mp, "icon")}));
     
@@ -93,7 +95,7 @@ public class Navigation {
                             jsName,
                             mp.getUUID(),
                             sub.getUUID(),
-                            NodeDataUtil.getI18NString(sub, "label"),
+                            getLabel(sub),
                             NodeDataUtil.getString(sub, "onclick"),
                             NodeDataUtil.getString(sub, "icon")}));
                     }
@@ -102,6 +104,14 @@ public class Navigation {
         }
 
         return str.toString();
+    }
+
+    /**
+     * @param mp
+     * @return
+     */
+    protected Object getLabel(Content mp) {
+        return NodeDataUtil.getI18NString(mp, "label");
     }
 
     /**
