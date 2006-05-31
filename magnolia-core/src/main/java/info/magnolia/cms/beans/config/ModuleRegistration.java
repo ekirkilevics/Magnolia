@@ -223,13 +223,15 @@ public class ModuleRegistration {
 
             for (Iterator iterator = def.getDependencies().iterator(); iterator.hasNext();) {
                 DependencyDefinition dep = (DependencyDefinition) iterator.next();
-                if (!this.moduleDefinitions.containsKey(dep.getName())
-                    || !dep.getVersion().equals(this.getModuleDefinition(dep.getName()).getVersion())) {
-                    throw new MissingDependencyException("missing dependency: module ["
-                        + def.getName()
-                        + "] needs ["
-                        + dep.getName()
-                        + "]");
+                if(!dep.isOptional()){
+                    if (!this.moduleDefinitions.containsKey(dep.getName())
+                        || !dep.getVersion().equals(this.getModuleDefinition(dep.getName()).getVersion())) {
+                        throw new MissingDependencyException("missing dependency: module ["
+                            + def.getName()
+                            + "] needs ["
+                            + dep.getName()
+                            + "]");
+                    }
                 }
             }
         }
