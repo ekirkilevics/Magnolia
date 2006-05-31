@@ -15,6 +15,7 @@ package info.magnolia.module.admininterface;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 
@@ -50,7 +51,8 @@ public class Navigation {
      */
     public Navigation(String path, String jsName) {
         try {
-            this.node = MgnlContext.getHierarchyManager(ContentRepository.CONFIG).getContent(path);
+            // get it with system permission
+            this.node = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG).getContent(path);
             this.jsName = jsName;
         }
         catch (Exception e) {
@@ -74,27 +76,40 @@ public class Navigation {
         // loop over the menupoints
         for (Iterator iter = node.getChildren(ItemType.CONTENTNODE).iterator(); iter.hasNext();) {
             Content mp = (Content) iter.next();
-            str.append(MessageFormat.format(nodePattern, new Object[]{
-                jsName,
-                mp.getUUID(),
-                NodeDataUtil.getI18NString(mp, "label"),
-                NodeDataUtil.getString(mp, "onclick"),
-                NodeDataUtil.getString(mp, "icon")}));
-
-            // sub menupoints (2 level only)
-            for (Iterator iterator = mp.getChildren(ItemType.CONTENTNODE).iterator(); iterator.hasNext();) {
-                Content sub = (Content) iterator.next();
-                str.append(MessageFormat.format(subPattern, new Object[]{
+            // check permission
+            if(isMenuPointRendered(mp)){
+                str.append(MessageFormat.format(nodePattern, new Object[]{
                     jsName,
                     mp.getUUID(),
-                    sub.getUUID(),
-                    NodeDataUtil.getI18NString(sub, "label"),
-                    NodeDataUtil.getString(sub, "onclick"),
-                    NodeDataUtil.getString(sub, "icon")}));
+                    NodeDataUtil.getI18NString(mp, "label"),
+                    NodeDataUtil.getString(mp, "onclick"),
+                    NodeDataUtil.getString(mp, "icon")}));
+    
+                // sub menupoints (2 level only)
+                for (Iterator iterator = mp.getChildren(ItemType.CONTENTNODE).iterator(); iterator.hasNext();) {
+                    Content sub = (Content) iterator.next();
+                    if(isMenuPointRendered(sub)){
+                        str.append(MessageFormat.format(subPattern, new Object[]{
+                            jsName,
+                            mp.getUUID(),
+                            sub.getUUID(),
+                            NodeDataUtil.getI18NString(sub, "label"),
+                            NodeDataUtil.getString(sub, "onclick"),
+                            NodeDataUtil.getString(sub, "icon")}));
+                    }
+                }
             }
         }
 
         return str.toString();
+    }
+
+    /**
+     * @param mp
+     * @return
+     */
+    protected boolean isMenuPointRendered(Content mp) {
+        return MgnlContext.getAccessManager(ContentRepository.CONFIG).isGranted(mp.getHandle(), Permission.READ);
     }
 
     /**
@@ -108,12 +123,14 @@ public class Navigation {
     private String getFirstId(Content node) {
         for (Iterator iter = node.getChildren(ItemType.CONTENTNODE).iterator(); iter.hasNext();) {
             Content sub = (Content) iter.next();
-            if (StringUtils.isNotEmpty(NodeDataUtil.getString(sub, "onclick"))) {
-                return sub.getUUID();
-            }
-            String uuid = getFirstId(sub);
-            if (StringUtils.isNotEmpty(uuid)) {
-                return uuid;
+            if(isMenuPointRendered(sub)){
+                if (StringUtils.isNotEmpty(NodeDataUtil.getString(sub, "onclick"))) {
+                    return sub.getUUID();
+                }
+                String uuid = getFirstId(sub);
+                if (StringUtils.isNotEmpty(uuid)) {
+                    return uuid;
+                }
             }
         }
         return "";
