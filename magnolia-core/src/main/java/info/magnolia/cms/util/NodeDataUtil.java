@@ -14,7 +14,9 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
 
@@ -239,7 +241,14 @@ public class NodeDataUtil {
      */
     public static Object getI18NString(Content node, String str) {
         String key = getString(node, str);
-        return MessagesManager.getWithDefault(key, key);
+        String i18nBasename = NodeDataUtil.getString(node,"i18nBasename");
+        if(StringUtils.isNotEmpty(i18nBasename)){
+            Messages msgs = MessagesUtil.chainWithDefault(i18nBasename);
+            return msgs.getWithDefault(key, key);
+        }
+        else{
+            return MessagesManager.getWithDefault(key, key);
+        }
     }
 
     /**
