@@ -27,6 +27,11 @@ public class DependencyDefinition {
      * The version of the module
      */
     private String version;
+    
+    /**
+     * If this dependency is optional but should get loaded before this module
+     */
+    private boolean optional = false;
 
     /**
      * @return Returns the name.
@@ -54,6 +59,22 @@ public class DependencyDefinition {
      */
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    
+    /**
+     * @return Returns the optional.
+     */
+    public boolean isOptional() {
+        return this.optional;
+    }
+
+    
+    /**
+     * @param optional The optional to set.
+     */
+    public void setOptional(boolean optional) {
+        this.optional = optional;
     }
 
 }
