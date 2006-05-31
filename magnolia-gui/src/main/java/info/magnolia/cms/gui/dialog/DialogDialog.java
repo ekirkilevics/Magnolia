@@ -266,9 +266,13 @@ public class DialogDialog extends DialogSuper {
         out.write("<div class=\"" + CssConstants.CSSCLASS_TABSETSAVEBAR + "\">\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
         Button save = new Button();
-        save.setOnclick(this.getConfigValue("saveOnclick", "mgnlDialogFormSubmit();")); //$NON-NLS-1$ //$NON-NLS-2$
-        save.setLabel(this.getConfigValue("saveLabel", msgs.get("buttons.save"))); //$NON-NLS-1$ //$NON-NLS-2$
-        out.write(save.getHtml());
+        String saveOnclick = this.getConfigValue("saveOnclick", "mgnlDialogFormSubmit();");
+        String saveLabel = this.getConfigValue("saveLabel", msgs.get("buttons.save"));
+        if(StringUtils.isNotEmpty(saveOnclick) && StringUtils.isNotEmpty("saveLabel")){
+            save.setOnclick(saveOnclick); //$NON-NLS-1$ //$NON-NLS-2$
+            save.setLabel(saveLabel); //$NON-NLS-1$ //$NON-NLS-2$
+            out.write(save.getHtml());
+        }
         Button cancel = new Button();
         cancel.setOnclick(this.getConfigValue("cancelOnclick", "window.close();")); //$NON-NLS-1$ //$NON-NLS-2$
         cancel.setLabel(this.getConfigValue("cancelLabel", msgs.get("buttons.cancel"))); //$NON-NLS-1$ //$NON-NLS-2$
