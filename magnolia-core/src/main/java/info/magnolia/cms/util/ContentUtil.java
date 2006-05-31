@@ -56,7 +56,7 @@ public class ContentUtil {
     };
 
     /**
-     * Retruns a Content object of the named repository or null if not existing.
+     * Returns a Content object of the named repository or null if not existing.
      * @param repository
      * @param path
      * @return null if not found
@@ -64,6 +64,21 @@ public class ContentUtil {
     public static Content getContent(String repository, String path) {
         try {
             return MgnlContext.getHierarchyManager(repository).getContent(path);
+        }
+        catch (RepositoryException e) {
+            return null;
+        }
+    }
+    
+    /**
+     * Get the node or null if not exists
+     * @param node
+     * @param name
+     * @return the sub node
+     */
+    public static Content getContent(Content node, String name) {
+        try {
+            return node.getContent(name);
         }
         catch (RepositoryException e) {
             return null;
@@ -287,5 +302,7 @@ public class ContentUtil {
         }
         return bean;
     }
+
+
     
 }
