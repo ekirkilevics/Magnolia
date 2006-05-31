@@ -184,7 +184,9 @@ public class Tree extends ControlSuper {
      */
     public void setPathSelected(String s) {
         if (StringUtils.isNotEmpty(s)) {
-            this.setPathOpen(StringUtils.substringBeforeLast(s, "/")); //$NON-NLS-1$
+            if(StringUtils.isEmpty(this.getPathOpen())){
+                this.setPathOpen(StringUtils.substringBeforeLast(s, "/")); //$NON-NLS-1$
+            }
         }
         this.pathSelected = s;
     }
