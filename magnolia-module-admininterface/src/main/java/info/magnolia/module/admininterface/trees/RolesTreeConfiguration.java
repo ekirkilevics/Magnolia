@@ -46,10 +46,8 @@ public class RolesTreeConfiguration implements AdminTreeConfiguration {
         tree.setDrawShifter(false);
 
         tree.setIconPage(Tree.ICONDOCROOT + "hat_white.gif"); //$NON-NLS-1$
-        if (Server.isAdmin()) {
-            tree.setIconOndblclick("mgnlTreeMenuOpenDialog(" //$NON-NLS-1$
-                + tree.getJavascriptTree() + ",'.magnolia/dialogs/roleedit.html');"); //$NON-NLS-1$
-        }
+        tree.setIconOndblclick("mgnlTreeMenuOpenDialog(" //$NON-NLS-1$
+            + tree.getJavascriptTree() + ",'.magnolia/dialogs/roleedit.html');"); //$NON-NLS-1$
         tree.addItemType(ItemType.CONTENT);
 
         TreeColumn column0 = new TreeColumn(tree.getJavascriptTree(), request);
@@ -61,7 +59,7 @@ public class RolesTreeConfiguration implements AdminTreeConfiguration {
         column0.setTitle(msgs.get("tree.roles.name")); //$NON-NLS-1$
         TreeColumn column1 = new TreeColumn(tree.getJavascriptTree(), request);
         column1.setName("title"); //$NON-NLS-1$
-        if (Server.isAdmin()) {
+        if (Server.isAdmin() && !browseMode) {
             column1.setHtmlEdit();
         }
         column1.setWidth(2);
@@ -140,11 +138,6 @@ public class RolesTreeConfiguration implements AdminTreeConfiguration {
         menuDeActivate.setOnclick(tree.getJavascriptTree() + ".deActivateNode(" + Tree.ACTION_DEACTIVATE + ");"); //$NON-NLS-1$ //$NON-NLS-2$
         menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
             + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
-
-        if (!Server.isAdmin()) {
-            menuOpen.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
-            menuNewPage.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
-        }
 
         if (!Subscriber.isSubscribersEnabled()) {
             menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$

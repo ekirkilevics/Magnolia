@@ -60,22 +60,21 @@ public class WebsiteTreeConfiguration implements AdminTreeConfiguration {
         column0.setIsLabel(true);
         column0.setTitle(msgs.get("tree.web.page"));
         column0.setWidth(3);
-        if (Server.isAdmin()) {
-            column0.setHtmlEdit();
-        }
+        column0.setHtmlEdit();
+        
         TreeColumn columnIcons = new TreeColumn(tree.getJavascriptTree(), request);
         columnIcons.setCssClass(StringUtils.EMPTY);
         columnIcons.setWidth(1);
         columnIcons.setIsIcons(true);
         columnIcons.setIconsActivation(true);
         columnIcons.setIconsPermission(true);
+
         TreeColumn column1 = new TreeColumn(tree.getJavascriptTree(), request);
         column1.setName("title"); //$NON-NLS-1$
         column1.setTitle(msgs.get("tree.web.title")); //$NON-NLS-1$
         column1.setWidth(2);
-        if (Server.isAdmin()) {
-            column1.setHtmlEdit();
-        }
+        column1.setHtmlEdit();
+
         TreeColumn column2 = new TreeColumn(tree.getJavascriptTree(), request);
         column2.setName(MetaData.TEMPLATE);
         column2.setIsMeta(true);
@@ -107,9 +106,8 @@ public class WebsiteTreeConfiguration implements AdminTreeConfiguration {
             title = MessagesUtil.javaScriptString(title);
             templateSelect.setOptions(title, template.getName());
         }
-        if (Server.isAdmin()) {
-            column2.setHtmlEdit(templateSelect.getHtml());
-        }
+        column2.setHtmlEdit(templateSelect.getHtml());
+        
         // todo: key/value -> column2.addKeyValue("sampleBasic","Samples: Basic Template");
         // todo: preselection (set on createPage)
         TreeColumn column3 = new TreeColumn(tree.getJavascriptTree(), request);
@@ -223,15 +221,6 @@ public class WebsiteTreeConfiguration implements AdminTreeConfiguration {
         menuImport.setLabel(msgs.get("tree.menu.import")); //$NON-NLS-1$
         menuImport.setIcon(request.getContextPath() + "/.resources/icons/16/import2.gif"); //$NON-NLS-1$
         menuImport.setOnclick(tree.getJavascriptTree() + ".importNode(this);"); //$NON-NLS-1$
-
-        // those menuitems are not active on public side
-        if (!Server.isAdmin()) {
-            menuNewPage.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
-            menuCopy.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
-            menuMove.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
-            menuImport.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
-            menuExport.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
-        }
 
         // is there a subscriber?
         if (!Subscriber.isSubscribersEnabled()) {

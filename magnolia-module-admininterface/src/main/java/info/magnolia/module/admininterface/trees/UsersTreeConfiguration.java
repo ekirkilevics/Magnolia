@@ -46,32 +46,29 @@ public class UsersTreeConfiguration implements AdminTreeConfiguration {
         tree.setDrawShifter(false);
         // context path is already added by Tree
         tree.setIconPage(Tree.ICONDOCROOT + "pawn_glass_yellow.gif"); //$NON-NLS-1$
-        if (Server.isAdmin()) {
-            tree.setIconOndblclick("mgnlTreeMenuOpenDialog(" + tree.getJavascriptTree() //$NON-NLS-1$
-                // + ",'.magnolia/adminCentral/users/dialog.html');");
-                + ",'.magnolia/dialogs/useredit.html');"); //$NON-NLS-1$
-        }
+        tree.setIconOndblclick("mgnlTreeMenuOpenDialog(" + tree.getJavascriptTree() //$NON-NLS-1$
+            // + ",'.magnolia/adminCentral/users/dialog.html');");
+            + ",'.magnolia/dialogs/useredit.html');"); //$NON-NLS-1$
         tree.addItemType(ItemType.CONTENT);
 
         TreeColumn column0 = new TreeColumn(tree.getJavascriptTree(), request);
         column0.setIsLabel(true);
-        if (Server.isAdmin()) {
-            column0.setHtmlEdit();
-        }
+        column0.setHtmlEdit();
         column0.setTitle(msgs.get("tree.users.name")); //$NON-NLS-1$
         column0.setWidth(2);
+
         TreeColumn column1 = new TreeColumn(tree.getJavascriptTree(), request);
         column1.setName("title"); //$NON-NLS-1$
-        if (Server.isAdmin()) {
-            column1.setHtmlEdit();
-        }
+        column1.setHtmlEdit();
         column1.setTitle(msgs.get("tree.users.fullname")); //$NON-NLS-1$
         column1.setWidth(2);
+
         TreeColumn columnIcons = new TreeColumn(tree.getJavascriptTree(), request);
         columnIcons.setCssClass(StringUtils.EMPTY);
         columnIcons.setWidth(1);
         columnIcons.setIsIcons(true);
         columnIcons.setIconsActivation(true);
+        
         TreeColumn column2 = new TreeColumn(tree.getJavascriptTree(), request);
         column2.setName(MetaData.LAST_MODIFIED);
         column2.setIsMeta(true);
@@ -104,19 +101,11 @@ public class UsersTreeConfiguration implements AdminTreeConfiguration {
         menuOpen.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
             + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
 
-        ContextMenuItem menuNewPage = new ContextMenuItem("new");
-        menuNewPage.setLabel(msgs.get("tree.users.menu.new")); //$NON-NLS-1$
-        menuNewPage.setIcon(request.getContextPath() + "/.resources/icons/16/pawn_glass_yellow_add.gif"); //$NON-NLS-1$
-        menuNewPage.setOnclick(tree.getJavascriptTree() + ".createRootNode('" //$NON-NLS-1$
+        ContextMenuItem menuNew = new ContextMenuItem("new");
+        menuNew.setLabel(msgs.get("tree.users.menu.new")); //$NON-NLS-1$
+        menuNew.setIcon(request.getContextPath() + "/.resources/icons/16/pawn_glass_yellow_add.gif"); //$NON-NLS-1$
+        menuNew.setOnclick(tree.getJavascriptTree() + ".createRootNode('" //$NON-NLS-1$
             + ItemType.CONTENT.getSystemName() + "');"); //$NON-NLS-1$
-
-        ContextMenuItem menuAddToGroup = new ContextMenuItem("add");
-        menuAddToGroup.setLabel(msgs.get("tree.users.menu.groups")); //$NON-NLS-1$
-        menuAddToGroup.setIcon(request.getContextPath() + "/.resources/icons/16/group.gif"); //$NON-NLS-1$
-        menuAddToGroup.setOnclick("mgnlTreeMenuOpenDialog(" //$NON-NLS-1$
-            + tree.getJavascriptTree() + ",'.magnolia/dialogs/useraddtogroups.html');"); //$NON-NLS-1$
-        menuAddToGroup.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
-            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
 
         ContextMenuItem menuDelete = new ContextMenuItem("delete");
         menuDelete.setLabel(msgs.get("tree.users.menu.delete")); //$NON-NLS-1$
@@ -153,11 +142,6 @@ public class UsersTreeConfiguration implements AdminTreeConfiguration {
         menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
             + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
 
-        if (!Server.isAdmin()) {
-            menuOpen.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
-            menuNewPage.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
-        }
-
         if (!Subscriber.isSubscribersEnabled()) {
             menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
             menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
@@ -166,8 +150,7 @@ public class UsersTreeConfiguration implements AdminTreeConfiguration {
         if (!browseMode
             ) {
             tree.addMenuItem(menuOpen);
-            tree.addMenuItem(menuNewPage);
-            tree.addMenuItem(menuAddToGroup);
+            tree.addMenuItem(menuNew);
             tree.addMenuItem(null); // line
             tree.addMenuItem(menuDelete);
 
