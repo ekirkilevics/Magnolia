@@ -72,7 +72,12 @@ public class RequestFormUtil {
             param = from.getParameter(name);
         }
         if (param == null) {
-            param = request.getParameter(name);
+            if(request.getMethod().equals("GET")){
+                param = getURLParameterDecoded(request, name, "UTF8");
+            }
+            else{
+                param = request.getParameter(name);
+            }
         }
         return param;
 
@@ -161,12 +166,21 @@ public class RequestFormUtil {
      * @see info.magnolia.cms.beans.runtime.MultipartForm#getParameters()
      */
     public Map getParameters() {
+        return getParameters(this.request);
+    }
+
+    public static Map getParameters(HttpServletRequest request) {
+        MultipartForm form = Resource.getPostedForm(request);
         if(form == null){
-            return this.request.getParameterMap();
+            // if get use UTF8 decoding
+            if(request.getMethod() == "GET"){
+                return getURLParametersDecoded(request, "UTF8");
+            }
+            return request.getParameterMap();
         }
         return form.getParameters();
     }
-
+    
     /*
      * (non-Javadoc)
      * @see info.magnolia.cms.beans.runtime.MultipartForm#getParameterValues(java.lang.String)

@@ -12,6 +12,8 @@
  */
 package info.magnolia.cms.servlets;
 
+import info.magnolia.cms.util.RequestFormUtil;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -54,7 +56,7 @@ public abstract class MVCServletHandlerImpl implements MVCServletHandler {
 
     public void init() {
         try {
-            BeanUtils.populate(this, getRequest().getParameterMap());
+            BeanUtils.populate(this, RequestFormUtil.getParameters(this.getRequest()));
         }
         catch (Exception e) {
             log.error("can't set properties on the handler", e);
