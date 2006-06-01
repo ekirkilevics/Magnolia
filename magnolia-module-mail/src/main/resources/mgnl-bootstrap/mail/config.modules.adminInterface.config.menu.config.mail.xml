@@ -17,7 +17,7 @@
     <sv:value>1a243889-261b-4746-988b-1ee0a4e53bed</sv:value>
   </sv:property>
   <sv:property sv:name="icon" sv:type="String">
-    <sv:value>/.resources/icons/16/gears.gif</sv:value>
+    <sv:value>/.resources/icons/16/dot.gif</sv:value>
   </sv:property>
   <sv:property sv:name="onclick" sv:type="String">
     <sv:value>MgnlAdminCentral.showTree('config','/modules/mail/config/smtp/server')</sv:value>

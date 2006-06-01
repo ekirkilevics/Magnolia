@@ -17,7 +17,7 @@
     <sv:value>9dca4241-d4dc-4d49-b670-bba0afdc2435</sv:value>
   </sv:property>
   <sv:property sv:name="icon" sv:type="String">
-    <sv:value/>
+    <sv:value>/.resources/icons/16/dot.gif</sv:value>
   </sv:property>
   <sv:property sv:name="onclick" sv:type="String">
     <sv:value>MgnlAdminCentral.showContent('/.magnolia/flows?name=*');</sv:value>

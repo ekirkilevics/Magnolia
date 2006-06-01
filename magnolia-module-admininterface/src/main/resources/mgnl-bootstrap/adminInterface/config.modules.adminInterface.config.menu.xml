@@ -344,7 +344,7 @@
         <sv:value>5b1955eb-f864-46a3-b9c7-91ff06d6e65c</sv:value>
       </sv:property>
       <sv:property sv:name="icon" sv:type="String">
-        <sv:value>/.resources/icons/16/gears.gif</sv:value>
+        <sv:value>/.resources/icons/16/dot.gif</sv:value>
       </sv:property>
       <sv:property sv:name="onclick" sv:type="String">
         <sv:value>MgnlAdminCentral.showTree('config','/modules/templating/templates')</sv:value>
@@ -393,7 +393,7 @@
         <sv:value>84af45eb-a5e3-447b-b4f6-b725a884c7cb</sv:value>
       </sv:property>
       <sv:property sv:name="icon" sv:type="String">
-        <sv:value>/.resources/icons/16/gears.gif</sv:value>
+        <sv:value>/.resources/icons/16/dot.gif</sv:value>
       </sv:property>
       <sv:property sv:name="onclick" sv:type="String">
         <sv:value>MgnlAdminCentral.showTree('config','/modules/templating/paragraphs')</sv:value>
@@ -442,7 +442,7 @@
         <sv:value>ebfb2bd1-4251-48b3-af92-561f7eeffe3b</sv:value>
       </sv:property>
       <sv:property sv:name="icon" sv:type="String">
-        <sv:value>/.resources/icons/16/gears.gif</sv:value>
+        <sv:value>/.resources/icons/16/dot.gif</sv:value>
       </sv:property>
       <sv:property sv:name="onclick" sv:type="String">
         <sv:value>MgnlAdminCentral.showTree('config','/modules/templating/dialogs')</sv:value>
@@ -491,7 +491,7 @@
         <sv:value>f92d687d-9425-4303-82af-753c986dedce</sv:value>
       </sv:property>
       <sv:property sv:name="icon" sv:type="String">
-        <sv:value>/.resources/icons/16/gears.gif</sv:value>
+        <sv:value>/.resources/icons/16/dot.gif</sv:value>
       </sv:property>
       <sv:property sv:name="onclick" sv:type="String">
         <sv:value>MgnlAdminCentral.showTree('config','/subscribers/SubscriberConfig/magnoliaPublic8080/active')</sv:value>
@@ -540,7 +540,7 @@
         <sv:value>83b2633e-8a94-4387-8203-490989c54651</sv:value>
       </sv:property>
       <sv:property sv:name="icon" sv:type="String">
-        <sv:value>/.resources/icons/16/gears.gif</sv:value>
+        <sv:value>/.resources/icons/16/dot.gif</sv:value>
       </sv:property>
       <sv:property sv:name="onclick" sv:type="String">
         <sv:value>MgnlAdminCentral.showTree('config','/modules/cache/config/active')</sv:value>
@@ -589,7 +589,7 @@
         <sv:value>4f68f6f2-a5c6-4e9e-ac9f-a72ca9046c1c</sv:value>
       </sv:property>
       <sv:property sv:name="icon" sv:type="String">
-        <sv:value>/.resources/icons/16/gears.gif</sv:value>
+        <sv:value>/.resources/icons/16/dot.gif</sv:value>
       </sv:property>
       <sv:property sv:name="onclick" sv:type="String">
         <sv:value>MgnlAdminCentral.showTree('config','/modules/adminInterface/virtualURIMapping/default')</sv:value>
@@ -638,7 +638,7 @@
         <sv:value>34c7c125-5fde-4fc8-bb6b-446dca35be07</sv:value>
       </sv:property>
       <sv:property sv:name="icon" sv:type="String">
-        <sv:value>/.resources/icons/16/gears.gif</sv:value>
+        <sv:value>/.resources/icons/16/dot.gif</sv:value>
       </sv:property>
       <sv:property sv:name="onclick" sv:type="String">
         <sv:value>MgnlAdminCentral.showTree('config','/server/secureURIList')</sv:value>
@@ -687,7 +687,7 @@
         <sv:value>1087adcf-2cbe-40d2-ab8d-744a39bbf3f5</sv:value>
       </sv:property>
       <sv:property sv:name="icon" sv:type="String">
-        <sv:value>/.resources/icons/16/gears.gif</sv:value>
+        <sv:value>/.resources/icons/16/dot.gif</sv:value>
       </sv:property>
       <sv:property sv:name="onclick" sv:type="String">
         <sv:value>MgnlAdminCentral.showTree('config','/modules/adminInterface/config/menu')</sv:value>
@@ -785,7 +785,7 @@
         <sv:value>7e8eaa8f-675a-47da-a9e9-b7d8496874d7</sv:value>
       </sv:property>
       <sv:property sv:name="icon" sv:type="String">
-        <sv:value/>
+        <sv:value>/.resources/icons/16/dot.gif</sv:value>
       </sv:property>
       <sv:property sv:name="onclick" sv:type="String">
         <sv:value>MgnlAdminCentral.showTree('website-jcr');</sv:value>
@@ -834,7 +834,7 @@
         <sv:value>4cdfd0e6-1108-4c56-bba0-693e07baa5db</sv:value>
       </sv:property>
       <sv:property sv:name="icon" sv:type="String">
-        <sv:value/>
+        <sv:value>/.resources/icons/16/dot.gif</sv:value>
       </sv:property>
       <sv:property sv:name="onclick" sv:type="String">
         <sv:value>MgnlAdminCentral.showContent('/.magnolia/log4j');</sv:value>
@@ -883,7 +883,7 @@
         <sv:value>f9555efd-bc86-481f-9586-eedda5392421</sv:value>
       </sv:property>
       <sv:property sv:name="icon" sv:type="String">
-        <sv:value/>
+        <sv:value>/.resources/icons/16/dot.gif</sv:value>
       </sv:property>
       <sv:property sv:name="onclick" sv:type="String">
         <sv:value>MgnlAdminCentral.showContent('/.magnolia/mgnl-export');</sv:value>
@@ -932,7 +932,7 @@
         <sv:value>87522c9a-ef10-4a5a-938f-343b394147db</sv:value>
       </sv:property>
       <sv:property sv:name="icon" sv:type="String">
-        <sv:value/>
+        <sv:value>/.resources/icons/16/dot.gif</sv:value>
       </sv:property>
       <sv:property sv:name="onclick" sv:type="String">
         <sv:value>MgnlAdminCentral.showContent('/.magnolia/mgnl-import');</sv:value>
@@ -981,7 +981,7 @@
         <sv:value>8d980877-f031-4f39-a7ef-2a5dbcc4bb5a</sv:value>
       </sv:property>
       <sv:property sv:name="icon" sv:type="String">
-        <sv:value/>
+        <sv:value>/.resources/icons/16/dot.gif</sv:value>
       </sv:property>
       <sv:property sv:name="onclick" sv:type="String">
         <sv:value>MgnlAdminCentral.showContent('/.magnolia/pages/deploymentUtils');</sv:value>
@@ -1030,7 +1030,7 @@
         <sv:value>073d6358-dc07-43f2-a138-35b2d8e759ea</sv:value>
       </sv:property>
       <sv:property sv:name="icon" sv:type="String">
-        <sv:value/>
+        <sv:value>/.resources/icons/16/dot.gif</sv:value>
       </sv:property>
       <sv:property sv:name="onclick" sv:type="String">
         <sv:value>MgnlAdminCentral.showContent('/.magnolia/pages/developmentUtils');</sv:value>

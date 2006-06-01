@@ -17,7 +17,7 @@
     <sv:value>7ca4e53f-2f00-4b01-85b5-6c11e1fa8e15</sv:value>
   </sv:property>
   <sv:property sv:name="icon" sv:type="String">
-    <sv:value>/.resources/icons/16/gears.gif</sv:value>
+    <sv:value>/.resources/icons/16/dot.gif</sv:value>
   </sv:property>
   <sv:property sv:name="onclick" sv:type="String">
     <sv:value>MgnlAdminCentral.showTree('config','/modules/workflow/config')</sv:value>
