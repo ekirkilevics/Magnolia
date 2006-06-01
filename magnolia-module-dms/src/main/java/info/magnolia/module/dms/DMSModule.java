@@ -12,21 +12,14 @@
  */
 package info.magnolia.module.dms;
 
-import javax.jcr.RepositoryException;
-
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.module.InitializationException;
 import info.magnolia.cms.module.ModuleUtil;
-import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.security.RoleManager;
-import info.magnolia.cms.security.Security;
-import info.magnolia.cms.security.UserManager;
 import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.AbstractAdminModule;
+
+import javax.jcr.RepositoryException;
 
 import org.apache.log4j.Logger;
 
@@ -62,7 +55,19 @@ public class DMSModule extends AbstractAdminModule {
         setBaseDialog("/modules/dms/dialogs/dmsEdit");
     }
     
+    /**
+     * Make some specific configuration.
+     */
     public void onRegister(int registerState) {
+        configureMenu();
+        ModuleUtil.subscribeRepository(this.getRepository());
+        ModuleUtil.grantRepositoryToSuperuser(this.getRepository()); 
+    }
+
+    /**
+     * Order the menu
+     */
+    private void configureMenu() {
         // move menu point
         Content menu = ContentUtil.getContent(ContentRepository.CONFIG, "/modules/adminInterface/config/menu");
         try {
