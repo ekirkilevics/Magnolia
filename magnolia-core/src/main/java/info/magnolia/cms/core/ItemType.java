@@ -129,6 +129,21 @@ public final class ItemType implements Serializable {
     public static final ItemType CONTENTNODE = new ItemType("mgnl:contentNode"); //$NON-NLS-1$
 
     /**
+     * "mgnl:user"
+     */
+    public static final ItemType USER = new ItemType("mgnl:user"); //$NON-NLS-1$
+
+    /**
+     * "mgnl:role"
+     */
+    public static final ItemType ROLE = new ItemType("mgnl:role"); //$NON-NLS-1$
+
+    /**
+     * "mgnl:group"
+     */
+    public static final ItemType GROUP = new ItemType("mgnl:group"); //$NON-NLS-1$
+
+    /**
      * "mgnl:contentNode"
      */
     public static final ItemType SYSTEM = new ItemType("mgnl:reserve"); //$NON-NLS-1$

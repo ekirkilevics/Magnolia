@@ -8,7 +8,7 @@
   xmlns:sv="http://www.jcp.org/jcr/sv/1.0"
   xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0" xmlns="">
   <sv:property sv:name="jcr:primaryType" sv:type="Name">
-    <sv:value>mgnl:content</sv:value>
+    <sv:value>mgnl:role</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
     <sv:value>mix:versionable</sv:value>
@@ -21,7 +21,7 @@
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>816fb115-f582-47c1-8754-4cf94c3a69e2</sv:value>
+      <sv:value>1a97ecce-95b8-4dd8-b0f7-80434249a177</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:authorid" sv:type="String">
       <sv:value>superuser</sv:value>
@@ -57,7 +57,7 @@
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>4ad62854-803f-4229-8e1e-a9de01ec72b7</sv:value>
+        <sv:value>c5f9fede-6dd2-4957-be63-b35557839efc</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="Date">
         <sv:value>2006-02-16T10:58:37.820+09:00</sv:value>
@@ -84,7 +84,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>b79d37b8-cd40-431a-83ef-e73315ff3ba6</sv:value>
+          <sv:value>77a97d48-3ef5-4d8d-aef7-f9b85a9a0450</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:creationdate" sv:type="Date">
           <sv:value>2006-02-16T10:58:37.823+09:00</sv:value>
@@ -107,7 +107,7 @@
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>cfa6ea1a-6b3c-44ad-adcc-72a823fc2828</sv:value>
+        <sv:value>33457c28-5931-424d-919b-a48322f2b409</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="Date">
         <sv:value>2006-02-16T10:58:38.073+09:00</sv:value>
@@ -134,7 +134,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>6494f589-ccd3-441d-8242-a305e6162bb7</sv:value>
+          <sv:value>244553be-da69-4a79-a6c5-13de923f3e6b</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:creationdate" sv:type="Date">
           <sv:value>2006-02-16T10:58:38.075+09:00</sv:value>
@@ -157,7 +157,7 @@
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>ab1211ec-4b06-4ecf-987f-b92fdc19fe42</sv:value>
+        <sv:value>bfbed5f6-f92f-439e-a055-ef120cc67334</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="Date">
         <sv:value>2006-02-16T10:58:38.332+09:00</sv:value>
@@ -184,7 +184,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>0f843d01-703f-4c7d-a282-75bb26e8e6b0</sv:value>
+          <sv:value>28c7dc10-a07f-40a9-acd9-a9b32878365d</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:creationdate" sv:type="Date">
           <sv:value>2006-02-16T10:58:38.336+09:00</sv:value>
@@ -207,7 +207,7 @@
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>4127c365-7385-4519-9982-2382b2b9bd58</sv:value>
+        <sv:value>d5173ca9-3c31-43c9-b27b-c61ba0efe259</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="Date">
         <sv:value>2006-02-16T10:58:38.539+09:00</sv:value>
@@ -234,7 +234,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>930ac6aa-fe8b-4551-b901-4ccd9b751d31</sv:value>
+          <sv:value>71d949d7-d734-4359-9a1f-f8d78f70927f</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:creationdate" sv:type="Date">
           <sv:value>2006-02-16T10:58:38.541+09:00</sv:value>
@@ -257,7 +257,7 @@
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>8660d5bd-37af-41c6-ae47-4b31cfce4356</sv:value>
+        <sv:value>02b95d51-66ea-494a-917c-94d2da6b8c85</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="Date">
         <sv:value>2006-02-16T10:58:38.631+09:00</sv:value>
@@ -279,7 +279,7 @@
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>a109434f-fd1a-4325-8f2e-1bb2f206c451</sv:value>
+        <sv:value>4dab4960-5f2b-4927-8c20-3e7dee342995</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="Date">
         <sv:value>2006-02-16T10:58:38.702+09:00</sv:value>
@@ -306,7 +306,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>83678956-71a2-45f7-8b82-d542817be8ae</sv:value>
+          <sv:value>780211ec-8fd9-4027-8cc1-549cabde3d60</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:creationdate" sv:type="Date">
           <sv:value>2006-02-16T10:58:38.704+09:00</sv:value>
@@ -329,7 +329,7 @@
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>3bcdd239-b70b-4e85-a159-24763a61bd06</sv:value>
+        <sv:value>f1b94839-2907-4e02-a43f-eb7b9f73340b</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="Date">
         <sv:value>2006-05-20T23:20:04.752+02:00</sv:value>
@@ -356,7 +356,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>d720170b-fdd3-42cc-9521-395fbb518179</sv:value>
+          <sv:value>8e1cd63f-210c-4c89-b834-f79377fd728a</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:creationdate" sv:type="Date">
           <sv:value>2006-05-20T23:20:04.752+02:00</sv:value>

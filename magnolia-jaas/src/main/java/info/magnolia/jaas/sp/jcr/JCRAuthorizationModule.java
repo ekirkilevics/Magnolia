@@ -32,6 +32,7 @@ import info.magnolia.jaas.principal.GroupListImpl;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
+import javax.jcr.ItemNotFoundException;
 import javax.security.auth.login.LoginException;
 
 import org.slf4j.Logger;
@@ -155,8 +156,16 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
             Content rolesNode = aclNode.getContent("roles");
             Iterator children = rolesNode.getNodeDataCollection().iterator();
             while (children.hasNext()) {
-                String rolePath = ((NodeData) children.next()).getString();
-                Content role = rolesHierarchy.getContent(rolePath);
+                String roleUUID = ((NodeData) children.next()).getString();
+                Content role;
+                try {
+                    role = rolesHierarchy.getContentByUUID(roleUUID);
+                } catch (ItemNotFoundException e) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("Role does not exist", e);
+                    }
+                    continue;
+                }
                 roleList.add(role.getName());
                 Iterator it = role.getChildren(ItemType.CONTENTNODE.getSystemName(), "acl*").iterator();
                 while (it.hasNext()) {

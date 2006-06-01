@@ -48,7 +48,7 @@ public class RolesTreeConfiguration implements AdminTreeConfiguration {
         tree.setIconPage(Tree.ICONDOCROOT + "hat_white.gif"); //$NON-NLS-1$
         tree.setIconOndblclick("mgnlTreeMenuOpenDialog(" //$NON-NLS-1$
             + tree.getJavascriptTree() + ",'.magnolia/dialogs/roleedit.html');"); //$NON-NLS-1$
-        tree.addItemType(ItemType.CONTENT);
+        tree.addItemType(ItemType.ROLE);
 
         TreeColumn column0 = new TreeColumn(tree.getJavascriptTree(), request);
         column0.setIsLabel(true);
@@ -106,7 +106,7 @@ public class RolesTreeConfiguration implements AdminTreeConfiguration {
         menuNewPage.setLabel(msgs.get("tree.roles.menu.new")); //$NON-NLS-1$
         menuNewPage.setIcon(request.getContextPath() + "/.resources/icons/16/hat_white_add.gif"); //$NON-NLS-1$
         menuNewPage.setOnclick(tree.getJavascriptTree() + ".createRootNode('" //$NON-NLS-1$
-            + ItemType.CONTENT.getSystemName() + "');"); //$NON-NLS-1$
+            + ItemType.ROLE.getSystemName() + "');"); //$NON-NLS-1$
         ContextMenuItem menuDelete = new ContextMenuItem("delete");
         menuDelete.setLabel(msgs.get("tree.roles.menu.delete")); //$NON-NLS-1$
         menuDelete.setIcon(request.getContextPath() + "/.resources/icons/16/delete2.gif"); //$NON-NLS-1$

@@ -451,12 +451,7 @@ public class Tree extends ControlSuper {
             }
             else {
                 Content newNode;
-                if (itemType.equals(ItemType.CONTENT.getSystemName())) {
-                    newNode = parentNode.createContent(name);
-                }
-                else {
-                    newNode = parentNode.createContent(name, ItemType.CONTENTNODE);
-                }
+                newNode = parentNode.createContent(name, itemType);
                 newNode.getMetaData().setAuthorId(Authenticator.getUserId(this.getRequest()));
                 newNode.getMetaData().setCreationDate();
                 newNode.getMetaData().setModificationDate();
@@ -1296,14 +1291,13 @@ public class Tree extends ControlSuper {
      */
     protected String getIcon(Content node, NodeData nodedata, String itemType) {
         String icon = null;
-        if (itemType.equals(ItemType.CONTENT.getSystemName())) {
-            icon = this.getIconPage();
-        }
-        else if (itemType.equals(ItemType.CONTENTNODE.getSystemName())) {
+        if (itemType.equals(ItemType.CONTENTNODE.getSystemName())) {
             icon = this.getIconContentNode();
         }
         else if (itemType.equals(ITEM_TYPE_NODEDATA)) {
             icon = this.getIconNodeData();
+        } else {
+            icon = this.getIconPage();
         }
         return icon;
     }

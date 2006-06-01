@@ -127,4 +127,31 @@
         </childNodeDefinition>
         <propertyDefinition name="*" requiredType="undefined" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
     </nodeType>
+
+    <!--
+    magnolia user node type
+    -->
+    <nodeType name="mgnl:user" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
+        <supertypes>
+            <supertype>mgnl:content</supertype>
+        </supertypes>
+    </nodeType>
+    <!--
+    magnolia role node type
+    -->
+    <nodeType name="mgnl:role" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
+        <supertypes>
+            <supertype>mgnl:content</supertype>
+        </supertypes>
+    </nodeType>
+    <!--
+    magnolia group node type
+    -->
+    <nodeType name="mgnl:group" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
+        <supertypes>
+            <supertype>mgnl:content</supertype>
+        </supertypes>
+    </nodeType>
+
+
 </nodeTypes>

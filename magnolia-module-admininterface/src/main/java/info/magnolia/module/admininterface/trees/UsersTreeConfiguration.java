@@ -49,7 +49,7 @@ public class UsersTreeConfiguration implements AdminTreeConfiguration {
         tree.setIconOndblclick("mgnlTreeMenuOpenDialog(" + tree.getJavascriptTree() //$NON-NLS-1$
             // + ",'.magnolia/adminCentral/users/dialog.html');");
             + ",'.magnolia/dialogs/useredit.html');"); //$NON-NLS-1$
-        tree.addItemType(ItemType.CONTENT);
+        tree.addItemType(ItemType.USER);
 
         TreeColumn column0 = new TreeColumn(tree.getJavascriptTree(), request);
         column0.setIsLabel(true);
@@ -105,7 +105,7 @@ public class UsersTreeConfiguration implements AdminTreeConfiguration {
         menuNew.setLabel(msgs.get("tree.users.menu.new")); //$NON-NLS-1$
         menuNew.setIcon(request.getContextPath() + "/.resources/icons/16/pawn_glass_yellow_add.gif"); //$NON-NLS-1$
         menuNew.setOnclick(tree.getJavascriptTree() + ".createRootNode('" //$NON-NLS-1$
-            + ItemType.CONTENT.getSystemName() + "');"); //$NON-NLS-1$
+            + ItemType.USER.getSystemName() + "');"); //$NON-NLS-1$
 
         ContextMenuItem menuDelete = new ContextMenuItem("delete");
         menuDelete.setLabel(msgs.get("tree.users.menu.delete")); //$NON-NLS-1$
