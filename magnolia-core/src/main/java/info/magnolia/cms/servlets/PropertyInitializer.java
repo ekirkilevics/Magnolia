@@ -173,8 +173,8 @@ public class PropertyInitializer implements ServletContextListener {
         String rootPath = StringUtils.replace(context.getRealPath(StringUtils.EMPTY), "\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
         String webapp = StringUtils.substringAfterLast(rootPath, "/"); //$NON-NLS-1$
 
-        File logs = new File(webapp+"logs");
-        File tmp = new File(webapp+"tmp");
+        File logs = new File(webapp+File.separator+"logs");
+        File tmp = new File(webapp+File.separator+"tmp");
         if(!logs.exists()) {
             logs.mkdir();
             log.debug("Creating 'logs' folder");
