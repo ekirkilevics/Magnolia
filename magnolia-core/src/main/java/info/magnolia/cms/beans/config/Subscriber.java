@@ -17,12 +17,14 @@ import info.magnolia.cms.core.ItemType;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.BooleanUtils;
@@ -85,19 +87,30 @@ public final class Subscriber {
      */
     public static void init() {
         Subscriber.cachedContent.clear();
+
+        log.info("Config : loading Subscribers"); //$NON-NLS-1$
+
+        Collection children = Collections.EMPTY_LIST;
+
         try {
-            log.info("Config : loading Subscribers"); //$NON-NLS-1$
             Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(START_PAGE);
-            Collection children = startPage.getContent("SubscriberConfig").getChildren(ItemType.CONTENTNODE); //$NON-NLS-1$
-            if (children != null) {
-                Subscriber.cacheContent(children);
-            }
-            log.info("Config : Subscribers loaded"); //$NON-NLS-1$
+            Content subscriberConfig = startPage.getContent("SubscriberConfig");
+            children = subscriberConfig.getChildren(ItemType.CONTENTNODE); //$NON-NLS-1$
+        }
+        catch (PathNotFoundException re) {
+            log.info("No subscribers configured"); //$NON-NLS-1$
         }
         catch (RepositoryException re) {
             log.error("Config : Failed to load Subscribers"); //$NON-NLS-1$
             log.error(re.getMessage(), re);
         }
+
+        if (children != null) {
+            Subscriber.cacheContent(children);
+        }
+
+        log.info("Config : Subscribers loaded"); //$NON-NLS-1$
+
     }
 
     public static void reload() {
@@ -228,7 +241,7 @@ public final class Subscriber {
         if (this.context.get(name) == null) {
             return new ArrayList();
         }
-        return (ArrayList) this.context.get(name);
+        return (List) this.context.get(name);
     }
 
     /**
