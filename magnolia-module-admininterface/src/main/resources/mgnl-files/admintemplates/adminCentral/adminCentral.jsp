@@ -3,8 +3,6 @@
   <jsp:directive.page contentType="text/html; charset=UTF-8" />
   <jsp:directive.page import="info.magnolia.cms.beans.config.Server" />
   <jsp:directive.page import="info.magnolia.context.MgnlContext" />
-  <jsp:directive.page import="info.magnolia.cms.security.Authenticator" />
-  <jsp:directive.page import="info.magnolia.cms.security.User" />
   <jsp:directive.page import="info.magnolia.module.admininterface.Navigation" />
   <jsp:directive.page import="info.magnolia.cms.beans.config.ModuleRegistration" />
   <jsp:directive.page import="java.util.List" />
@@ -16,14 +14,7 @@
     <![CDATA[
     // create the menu
     Navigation navigation = new Navigation("/modules/adminInterface/config/menu", "mgnlNavigation");
-
-    // get the current username
-    User user = MgnlContext.getUser();
-    String userName = "";
-    if (user == null || (userName = user.getName()).equals("")) userName = Authenticator.getUserId(request);
-
     pageContext.setAttribute("navigation", navigation);
-    pageContext.setAttribute("username", userName);
 
         ]]>
   </jsp:scriptlet>
@@ -90,10 +81,11 @@
       </script>
     </head>
     <body class="mgnlBgDark mgnlAdminMain">
-      <c:if test="${!empty(username)}">
+      <cms:user var="mgnluser" anonymous="true" />
+      <c:if test="${!empty(mgnluser.name)}">
         <div style="position:absolute;top:3px;right:20px;text-align:right;" class="mgnlText">
           <fmt:message key="central.loggedInAs">
-            <fmt:param value="${username}" />
+            <fmt:param value="${mgnluser.name}" />
           </fmt:message>
           <br />
           <a href="${pageContext.request.contextPath}/.magnolia/pages/logout.html">

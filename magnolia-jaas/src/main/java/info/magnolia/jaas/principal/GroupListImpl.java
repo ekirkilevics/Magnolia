@@ -19,6 +19,8 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 
 
 /**
@@ -98,5 +100,14 @@ public class GroupListImpl implements GroupList {
             }
         }
         return false;
+    }
+
+    /**
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append("name", this.name).append(
+            "list",
+            this.list).toString();
     }
 }

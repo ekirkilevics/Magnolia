@@ -852,4 +852,25 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <description>Nodetype for nodes to return. Defaults to "mgnl:content"</description>
     </attribute>
   </tag>
+  <tag>
+    <name>user</name>
+    <tag-class>info.magnolia.cms.taglibs.UserTag</tag-class>
+    <body-content>EMPTY</body-content>
+    <display-name>user</display-name>
+    <description>Set the current user (info.magnolia.cms.security.User) into a pageContext variable.</description>
+    <attribute>
+      <name>var</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>The current user will be set to the pageContext variable with this name.</description>
+    </attribute>
+    <attribute>
+      <name>anonymous</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        Display anonymous users as "anonymous". Default to false (variable will not be set for anonymous users)
+      </description>
+    </attribute>
+  </tag>
 </taglib>

@@ -16,7 +16,7 @@ import java.util.Collection;
 
 
 /**
- * Represents an magnolia user.
+ * Represents a magnolia user.
  * @author philipp
  * @version $Revision:2558 $ ($Author:scharles $)
  */

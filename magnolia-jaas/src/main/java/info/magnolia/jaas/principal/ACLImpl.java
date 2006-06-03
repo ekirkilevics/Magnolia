@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 
 
 /**
@@ -123,6 +125,15 @@ public class ACLImpl implements ACL {
      */
     public List getList() {
         return this.list;
+    }
+
+    /**
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append("name", this.name).append(
+            "workspace",
+            this.workspace).append("repository", this.repository).append("list", this.list).toString();
     }
 
 }

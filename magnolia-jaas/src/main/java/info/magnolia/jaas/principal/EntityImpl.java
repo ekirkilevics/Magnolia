@@ -18,6 +18,8 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 
 
 /**
@@ -64,6 +66,13 @@ public class EntityImpl implements Entity {
 
     public Object getProperty(String key) {
         return this.properties.get(key);
+    }
+
+    /**
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append("name", this.name).toString();
     }
 
 }

@@ -14,6 +14,9 @@ package info.magnolia.jaas.principal;
 
 import info.magnolia.cms.security.auth.RoleList;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
+
 
 /**
  * @author Sameer Charles $Id$
@@ -32,6 +35,15 @@ public class RoleListImpl extends GroupListImpl implements RoleList {
 
     public RoleListImpl() {
         super();
+    }
+
+    /**
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append("name", this.name).append(
+            "list",
+            this.list).toString();
     }
 
 }
