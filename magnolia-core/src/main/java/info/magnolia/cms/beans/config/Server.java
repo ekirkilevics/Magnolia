@@ -325,14 +325,14 @@ public final class Server {
      * @return true if the instance is configured as an admin server
      */
     public static boolean isAdmin() {
-        return ((Boolean) Server.cachedContent.get("admin")).booleanValue(); //$NON-NLS-1$
+        return Boolean.TRUE.equals(Server.cachedContent.get("admin")); //$NON-NLS-1$
     }
 
     /**
      *
      */
     public static boolean isVisibleToObinary() {
-        return ((Boolean) Server.cachedContent.get("visibleToObinary")).booleanValue(); //$NON-NLS-1$
+        return Boolean.TRUE.equals(Server.cachedContent.get("visibleToObinary")); //$NON-NLS-1$
     }
 
 }
