@@ -72,10 +72,10 @@ public class RequestFormUtil {
             param = from.getParameter(name);
         }
         if (param == null) {
-            if(request.getMethod().equals("GET")){
+            if (request.getMethod().equals("GET")) {
                 param = getURLParameterDecoded(request, name, "UTF8");
             }
-            else{
+            else {
                 param = request.getParameter(name);
             }
         }
@@ -122,17 +122,20 @@ public class RequestFormUtil {
      */
     public static Map getURLParametersDecoded(HttpServletRequest request, String charset) {
         Map map = new HashMap();
-        String[] params = request.getQueryString().split("&");
-        for (int i = 0; i < params.length; i++) {
-            String name = StringUtils.substringBefore(params[i], "=");
-            String value = StringUtils.substringAfter(params[i], "=");
-            try {
-                value = URLDecoder.decode(value, charset);
+        String queryString = request.getQueryString();
+        if (queryString != null) {
+            String[] params = request.getQueryString().split("&");
+            for (int i = 0; i < params.length; i++) {
+                String name = StringUtils.substringBefore(params[i], "=");
+                String value = StringUtils.substringAfter(params[i], "=");
+                try {
+                    value = URLDecoder.decode(value, charset);
+                }
+                catch (UnsupportedEncodingException e) {
+                    // nothing: return value as is
+                }
+                map.put(name, value);
             }
-            catch (UnsupportedEncodingException e) {
-                // nothing: return value as is
-            }
-            map.put(name, value);
         }
         return map;
     }
@@ -154,10 +157,10 @@ public class RequestFormUtil {
      * @see info.magnolia.cms.beans.runtime.MultipartForm#getDocuments()
      */
     public Map getDocuments() {
-        if(form == null){
+        if (form == null) {
             return new HashMap();
         }
-        
+
         return form.getDocuments();
     }
 
@@ -171,16 +174,16 @@ public class RequestFormUtil {
 
     public static Map getParameters(HttpServletRequest request) {
         MultipartForm form = Resource.getPostedForm(request);
-        if(form == null){
+        if (form == null) {
             // if get use UTF8 decoding
-            if(request.getMethod() == "GET"){
+            if (request.getMethod() == "GET") {
                 return getURLParametersDecoded(request, "UTF8");
             }
             return request.getParameterMap();
         }
         return form.getParameters();
     }
-    
+
     /*
      * (non-Javadoc)
      * @see info.magnolia.cms.beans.runtime.MultipartForm#getParameterValues(java.lang.String)
