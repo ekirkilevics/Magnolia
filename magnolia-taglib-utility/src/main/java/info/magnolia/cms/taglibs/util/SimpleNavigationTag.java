@@ -82,17 +82,17 @@ public class SimpleNavigationTag extends TagSupport {
     /**
      * Css class added to leaf pages.
      */
-    private static final String CSS_LI_LEAF = "leaf"; //$NON-NLS-1$ 
+    private static final String CSS_LI_LEAF = "leaf"; //$NON-NLS-1$
 
     /**
      * Css class added to open trees.
      */
-    private static final String CSS_LI_CLOSED = "closed"; //$NON-NLS-1$ 
+    private static final String CSS_LI_CLOSED = "closed"; //$NON-NLS-1$
 
     /**
      * Css class added to closed trees.
      */
-    private static final String CSS_LI_OPEN = "open"; //$NON-NLS-1$ 
+    private static final String CSS_LI_OPEN = "open"; //$NON-NLS-1$
 
     /**
      * Page property: navigation title.
@@ -234,7 +234,10 @@ public class SimpleNavigationTag extends TagSupport {
         }
 
         try {
-            drawChildren(activePage.getAncestor(this.startLevel), activePage, out);
+            if (this.startLevel <= activePage.getLevel()) {
+                Content startContent = activePage.getAncestor(this.startLevel);
+                drawChildren(startContent, activePage, out);
+            }
         }
         catch (RepositoryException e) {
             log.error("RepositoryException caught while drawing navigation: " + e.getMessage(), e); //$NON-NLS-1$
