@@ -13,6 +13,7 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.inline.BarMain;
 import info.magnolia.cms.security.Permission;
@@ -131,7 +132,8 @@ public class MainBar extends TagSupport implements BarTag {
     public int doEndTag() {
 
         HttpServletRequest request = (HttpServletRequest) this.pageContext.getRequest();
-        if (Server.isAdmin() && Resource.getActivePage(request).isGranted(Permission.SET)) {
+        Content activePage = Resource.getActivePage(request);
+        if (Server.isAdmin() && activePage != null && activePage.isGranted(Permission.SET)) {
             try {
                 BarMain bar = new BarMain(request);
                 bar.setPath(this.getPath());
