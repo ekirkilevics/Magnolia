@@ -17,9 +17,11 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -27,15 +29,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.devlib.schmidt.imageinfo.ImageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,34 +54,9 @@ import org.slf4j.LoggerFactory;
 public abstract class BaseImageTag extends SimpleTagSupport {
 
     /**
-     * Name of properties node that describes an image. This gets combined with to the name of the image.
-     */
-    protected static final String PROPERTIES_CONTENTNODE_NAME = "_properties";
-
-    /**
-     * The name of the fileName nodeData in the properties node.
-     */
-    protected static final String PROPERTIES_FILENAME = "fileName";
-
-    /**
-     * The name of the size nodeData in the properties node.
-     */
-    protected static final String PROPERTIES_SIZE = "size";
-
-    /**
-     * The name of the extension nodeData in the properties node.
-     */
-    protected static final String PROPERTIES_EXTENSION = "extension";
-
-    /**
      * The value of the extension nodeData in the properties node.
      */
     protected static final String PROPERTIES_EXTENSION_VALUE = "PNG";
-
-    /**
-     * The name of the contentType nodeData in the properties node.
-     */
-    protected static final String PROPERTIES_CONTENTTYPE = "contentType";
 
     /**
      * The valye of the contentType nodeData in the properties node.
@@ -120,7 +103,6 @@ public abstract class BaseImageTag extends SimpleTagSupport {
     }
 
     /**
-     * @return
      * @throws PathNotFoundException
      * @throws RepositoryException
      * @throws AccessDeniedException
@@ -130,10 +112,11 @@ public abstract class BaseImageTag extends SimpleTagSupport {
 
         Content imageContentNode;
         Content currentActivePage = Resource.getCurrentActivePage(getRequest());
+        Content paragraph = Resource.getLocalContentNode(getRequest());
         Content parentContentNode = null;
         // set the image parent node
         if (StringUtils.isEmpty(this.parentContentNodeName)) {
-            parentContentNode = currentActivePage;
+            parentContentNode = paragraph != null ? paragraph : currentActivePage;
         }
         else {
 
@@ -149,12 +132,14 @@ public abstract class BaseImageTag extends SimpleTagSupport {
         }
         // set the node under which the images will be saved
         imageContentNode = null;
-        if (parentContentNode.hasContent(this.imageContentNodeName)) {
+        if (StringUtils.isEmpty(this.imageContentNodeName)) {
+            imageContentNode = parentContentNode;
+        }
+        else if (parentContentNode.hasContent(this.imageContentNodeName)) {
             imageContentNode = parentContentNode.getContent(this.imageContentNodeName);
         }
         else {
             imageContentNode = parentContentNode.createContent(this.imageContentNodeName, ItemType.CONTENTNODE);
-            imageContentNode.save();
         }
         return imageContentNode;
     }
@@ -229,6 +214,12 @@ public abstract class BaseImageTag extends SimpleTagSupport {
         return rgb;
     }
 
+    public Color convertHexToColor(String hex) {
+        int[] rgb = convertHexToRGB(hex);
+        Color color = new Color(rgb[0], rgb[1], rgb[2]);
+        return color;
+    }
+
     /**
      * Create a new imageNode with the image in it. The node is saved under a node that groups all image nodes, whose
      * name is set to the value of the attribute imageContentNodeName. The name of the node will be set to a name that
@@ -236,30 +227,55 @@ public abstract class BaseImageTag extends SimpleTagSupport {
      * PROPERTIES_FILENAME_VALUE. A sub-node is also created that stores the image properties.
      * @param subString The text.
      * @param textImageNode The node that will contain the text images.
-     * @return The URI pointing to the image.
      */
     protected void createImageNode(File imageFile, Content imageNode) throws PathNotFoundException,
         AccessDeniedException, RepositoryException, FileNotFoundException, IOException {
 
         // Create and save the image data
-        NodeData textImage = imageNode.createNodeData(getFilename());
-        long fileSize = imageFile.length();
+        NodeData data;
+        data = imageNode.getNodeData(getFilename());
+
+        if (!data.isExist()) {
+            data = imageNode.createNodeData(getFilename(), PropertyType.BINARY);
+        }
 
         InputStream iis = new FileInputStream(imageFile);
-        textImage.setValue(iis);
-        iis.close();
+        data.setValue(iis);
+        IOUtils.closeQuietly(iis);
+
+        data.setAttribute(FileProperties.PROPERTY_FILENAME, getFilename());
+
+        data.setAttribute(FileProperties.PROPERTY_CONTENTTYPE, PROPERTIES_CONTENTTYPE_VALUE);
+
+        Calendar value = new GregorianCalendar(TimeZone.getDefault());
+        data.setAttribute(FileProperties.PROPERTY_LASTMODIFIES, value);
+
+        data.setAttribute(FileProperties.PROPERTY_SIZE, Long.toString(imageFile.length()));
+
+        data.setAttribute(FileProperties.PROPERTY_EXTENSION, PROPERTIES_EXTENSION_VALUE);
+
+        InputStream raf = null;
+        try {
+            ImageInfo ii = new ImageInfo();
+            raf = new FileInputStream(imageFile);
+            ii.setInput(raf);
+            if (ii.check()) {
+                data.setAttribute(FileProperties.PROPERTY_WIDTH, Long.toString(ii.getWidth()));
+                data.setAttribute(FileProperties.PROPERTY_HEIGHT, Long.toString(ii.getHeight()));
+
+            }
+        }
+        catch (FileNotFoundException e) {
+            log.error("FileNotFoundException caught when parsing {}, image data will not be available", imageFile
+                .getAbsolutePath());
+        }
+        finally {
+            IOUtils.closeQuietly(raf);
+        }
+
+        // delete the temporary file
         imageFile.delete();
 
-        // Create properties node
-        Content propsNode = imageNode.createContent(getFilename() + PROPERTIES_CONTENTNODE_NAME, ItemType.CONTENTNODE);
-        NodeData size = propsNode.createNodeData(PROPERTIES_SIZE);
-        size.setValue(fileSize);
-        NodeData extension = propsNode.createNodeData(PROPERTIES_EXTENSION);
-        extension.setValue(PROPERTIES_EXTENSION_VALUE);
-        NodeData contentType = propsNode.createNodeData(PROPERTIES_CONTENTTYPE);
-        contentType.setValue(PROPERTIES_CONTENTTYPE_VALUE);
-        NodeData fileName = propsNode.createNodeData(PROPERTIES_FILENAME);
-        fileName.setValue(getFilename());
         // save the new image node
         imageNode.save();
     }
