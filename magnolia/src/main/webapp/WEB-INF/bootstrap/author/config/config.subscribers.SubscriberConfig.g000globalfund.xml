@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sv:node sv:name="magnoliaPublic8080"
+<sv:node sv:name="g000globalfund"
   xmlns:jcr="http://www.jcp.org/jcr/1.0"
   xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
   xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:rep="internal"
@@ -21,7 +21,7 @@
     <sv:value>true</sv:value>
   </sv:property>
   <sv:property sv:name="URL" sv:type="String">
-    <sv:value>http://localhost:8080/magnoliaPublic</sv:value>
+    <sv:value>http://www.g000globalfund.com</sv:value>
   </sv:property>
   <sv:property sv:name="active" sv:type="String">
     <sv:value>true</sv:value>
