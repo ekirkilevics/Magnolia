@@ -13,7 +13,10 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
@@ -42,8 +45,6 @@ public final class Listener {
 
     private static final String CONFIG_PAGE = "server"; //$NON-NLS-1$
 
-    private static Iterator ipList;
-
     private static Map cachedContent = new Hashtable();
 
     /**
@@ -65,18 +66,25 @@ public final class Listener {
      * Reads listener config from the config repository and caches its content in to the hash table.
      */
     public static void load() {
+
+        log.info("Config : loading Listener info"); //$NON-NLS-1$
+
+        Collection children = Collections.EMPTY_LIST;
+
         try {
-            log.info("Config : loading Listener info"); //$NON-NLS-1$
+
             Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(CONFIG_PAGE);
-            Listener.ipList = startPage.getContent("IPConfig").getChildren().iterator(); //$NON-NLS-1$
-            Listener.cachedContent.clear();
-            Listener.cacheContent();
-            log.info("Config : Listener info loaded"); //$NON-NLS-1$
+            Content configNode = startPage.getContent("IPConfig");
+            children = configNode.getChildren(ItemType.CONTENTNODE); //$NON-NLS-1$
         }
         catch (RepositoryException re) {
             log.error("Config : Failed to load Listener info"); //$NON-NLS-1$
             log.error(re.getMessage(), re);
         }
+
+        Listener.cachedContent.clear();
+        Listener.cacheContent(children);
+        log.info("Config : Listener info loaded"); //$NON-NLS-1$
     }
 
     public static void reload() {
@@ -117,9 +125,11 @@ public final class Listener {
     /**
      * Cache listener content from the config repository.
      */
-    private static void cacheContent() {
-        while (Listener.ipList.hasNext()) {
-            Content c = (Content) Listener.ipList.next();
+    private static void cacheContent(Collection listeners) {
+
+        Iterator ipList = listeners.iterator();
+        while (ipList.hasNext()) {
+            Content c = (Content) ipList.next();
             try {
                 Map types = new Hashtable();
                 Listener.cachedContent.put(c.getNodeData("IP").getString(), types); //$NON-NLS-1$
@@ -133,7 +143,6 @@ public final class Listener {
                 log.error("RepositoryException caught while loading listener configuration: " + re.getMessage(), re); //$NON-NLS-1$
             }
         }
-        Listener.ipList = null;
     }
 
     /**
