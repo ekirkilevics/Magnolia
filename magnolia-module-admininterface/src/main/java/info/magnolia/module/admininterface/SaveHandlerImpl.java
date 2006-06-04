@@ -854,10 +854,10 @@ public class SaveHandlerImpl implements SaveHandler {
         if (doc != null) {
             if (!data.isExist()) {
                 data = node.createNodeData(name, PropertyType.BINARY);
-                if (log.isDebugEnabled()) {
-                    log.debug("creating under - " + node.getHandle()); //$NON-NLS-1$
-                    log.debug("creating node data for binary store - " + name); //$NON-NLS-1$
-                }
+          
+                    log.debug("creating under - {}", node.getHandle()); //$NON-NLS-1$
+                    log.debug("creating node data for binary store - {}", name); //$NON-NLS-1$
+
             }
             data.setValue(doc.getStream());
             if (log.isDebugEnabled())
