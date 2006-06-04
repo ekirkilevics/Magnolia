@@ -1,230 +1,146 @@
+@import url(table.css);
+
+@import url(menu.css);
+
+@import url(editor.css);
+
 body {
-	background-color: #fff;
+    background-color: #fff;
 }
 
 div,h1,h2,td,ul,li {
-	font-family: Verdana, sans-serif;
-	color: #000;
-	font-size: 11px;
-	vertical-align: top;
-	line-height: 17px;
+    font-family: Verdana, sans-serif;
+    color: #000;
+    font-size: 11px;
+    vertical-align: top;
+    line-height: 17px;
 }
 
 h1 {
-	font-size: 13px;
-	font-weight: bolder;
-	color: #993333;
+    font-size: 13px;
+    font-weight: bolder;
+    color: #993333;
 }
 
 h2 {
-	font-size: 16px;
-	color: #666666;
-	margin-top: 10px;
-	font-weight: normal;
+    font-size: 16px;
+    color: #666666;
+    margin-top: 10px;
+    font-weight: normal;
 }
 
 h3 {
-	font-size: 13px;
-	color: #666666;
-	margin-top: 5px;
-	font-weight: normal;
+    font-size: 13px;
+    color: #666666;
+    margin-top: 5px;
+    font-weight: normal;
 }
 
 h4 {
-	font-size: 11px;
-	color: black;
-	margin-top: 3px;
-	font-weight: bold;
+    font-size: 11px;
+    color: black;
+    margin-top: 3px;
+    font-weight: bold;
 }
 
 a {
-	color: #000;
-}
-
-/* note: level-1 is wrong, should be level0 but the level returned for the page is wrong */
-ul.level-1,ul.level0 {
-	position: absolute;
-	left: 15px;
-	top: 88px;
-	margin-left: 0;
-	padding-left: 0;
-	border-top: 1px solid #999;
-	border-bottom: 1px solid #999;
-}
-
-ul.level-1,ul.level0,ul.level1 {
-	width: 175px;
-	padding: 0 0 0 0;
-	list-style-type: none;
-	list-style-position: inside;
-	margin-left: 0;
-}
-
-ul.level0 li a,ul.level-1 li a {
-	padding-bottom: 2px;
-	padding-top: 2px;
-	color: #333;
-	text-decoration: none;
-	display: block;
-}
-
-ul.level-1 li a,ul.level0 li a {
-	padding-left: 2px;
-	font-weight: bold;
-	color: #538307;
-}
-
-ul ul.level1 li a {
-	padding-left: 10px;
-	font-weight: normal;
-}
-
-ul.level0 strong a,ul.level-1 strong a {
-	color: #538307;
-	background-color: #E5F973;
-	text-decoration: none;
-}
-
-ul ul.level1 strong a {
-	font-weight: normal;
+    color: #000;
 }
 
 hr {
-	background-color: transparent;
-	font-size: 1px;
-	line-height: 1px;
-	height: 1px;
-	border: none;
-	border-top: 1px solid #999;
-	width: 100%;
+    background-color: transparent;
+    font-size: 1px;
+    line-height: 1px;
+    height: 1px;
+    border: none;
+    border-top: 1px solid #999;
+    width: 100%;
 }
 
 .contentImage_left {
-	float: left;
-	padding-right: 20px;
-	padding-bottom: 10px;
+    float: left;
+    padding-right: 20px;
+    padding-bottom: 10px;
 }
 
 .contentImage_right {
-	float: right;
-	padding-left: 5px;
-	padding-bottom: 10px;
+    float: right;
+    padding-left: 5px;
+    padding-bottom: 10px;
 }
 
 #contentDivMainColumnTotalWidth {
-	position: absolute;
-	left: 217px;
-	top: 88px;
-	width: 710px;
+    position: absolute;
+    left: 217px;
+    top: 88px;
+    width: 710px;
 }
 
 #contentDivMainColumn {
-	position: absolute;
-	left: 217px;
-	top: 88px;
-	width: 450px;
+    position: absolute;
+    left: 217px;
+    top: 88px;
+    width: 450px;
 }
 
 #contentDivRightColumn {
-	position: absolute;
-	left: 702px;
-	top: 75px;
-	width: 225px;
+    position: absolute;
+    left: 702px;
+    top: 75px;
+    width: 225px;
 }
 
 .rightColumnTitle {
-	background-color: #999;
-	color: #fff;
-	font-weight: bold;
-	padding-top: 2px;
-	padding-bottom: 3px;
-	padding-left: 2px;
-	margin-bottom: 4px;
-	margin-top: 25px;
-}
-
-td.table,td.tableHead {
-	padding-top: 2px;
-	padding-bottom: 3px;
-	padding-left: 2px;
-	padding-right: 2px;
-	margin-bottom: 4px;
-	border-style: solid;
-	border-width: 0px;
-	border-color: #aaaaaa;
-}
-
-td.tableHead {
-	background-color: #999;
-	color: #fff;
-	font-weight: bold;
-}
-
-tr.tableAlt {
-	background-color: #eee;
+    background-color: #999;
+    color: #fff;
+    font-weight: bold;
+    padding-top: 2px;
+    padding-bottom: 3px;
+    padding-left: 2px;
+    margin-bottom: 4px;
+    margin-top: 25px;
 }
 
 .devShowBox {
-	background-color: #cccccc;
-	padding: 4px;
+    background-color: #cccccc;
+    padding: 4px;
 }
 
 .code {
-	font-family: Courier New, monospace;
-	font-size: 12px;
-}
-
-textarea,input.text,select {
-	width: 100%;
-	font-family: Verdana, sans-serif;
-	font-size: 11px;
-}
-
-input.submit {
-	font-family: Verdana, sans-serif;
-	font-size: 11px;
-}
-
-input.checkbox,input.radio {
-	position: relative;
-	top: 3px;
-	margin-right: 6px;
+    font-family: Courier New, monospace;
+    font-size: 12px;
 }
 
 .searchresult {
-	padding-bottom: 10px;
-	border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ccc;
 }
 
 .searchresult p {
-	margin: 3px 0 3px 0;
+    margin: 3px 0 3px 0;
 }
 
 .searchresult h4,.searchresult a {
-	display: block;
-	margin-bottom: 2px;
-}
-
-label {
-	display: block;
+    display: block;
+    margin-bottom: 2px;
 }
 
 .spacer1 {
-	height: 10px;
+    height: 10px;
 }
 
 .spacer2 {
-	height: 20px;
+    height: 20px;
 }
 
 #footer {
-	margin-top: 10px;
-	border-top: 1px solid #999;
-	padding-top: 3px;
+    margin-top: 10px;
+    border-top: 1px solid #999;
+    padding-top: 3px;
 }
 
 #footer img {
-	float: right;
-	border: none;
-	margin-top: 5px;
+    float: right;
+    border: none;
+    margin-top: 5px;
 }

@@ -15,7 +15,6 @@
       <!--  add magnolia css and js links -->
       <cms:links />
       <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/docroot/samples/css/main.css" />
-      <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/docroot/samples/css/richEdit.css" />
       <script type="text/javascript" src="${pageContext.request.contextPath}/docroot/samples/js/form.js">
         <jsp:text><!--  --></jsp:text>
       </script>

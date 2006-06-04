@@ -11,7 +11,6 @@
     <cms:links />
 
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/docroot/samples/css/main.css" />
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/docroot/samples/css/richEdit.css" />
 
     <meta name="description" content="${pageProperties.metaDescription}" />
     <meta name="keywords" content="${pageProperties.metaKeywords}" />

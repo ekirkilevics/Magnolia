@@ -1,0 +1,20 @@
+td.table,td.tableHead {
+    padding-top: 2px;
+    padding-bottom: 3px;
+    padding-left: 2px;
+    padding-right: 2px;
+    margin-bottom: 4px;
+    border-style: solid;
+    border-width: 0px;
+    border-color: #aaaaaa;
+}
+
+td.tableHead {
+    background-color: #999;
+    color: #fff;
+    font-weight: bold;
+}
+
+tr.tableAlt {
+    background-color: #eee;
+}
