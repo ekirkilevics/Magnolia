@@ -14,6 +14,8 @@ package info.magnolia.cms.exchange.simple;
 
 import info.magnolia.cms.exchange.ActivationContent;
 import info.magnolia.cms.exchange.ExchangeException;
+
+import org.apache.commons.lang.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,9 +28,7 @@ import java.util.Iterator;
 
 /**
  * Class responsible to transport activation content
- *
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public class Transporter {
 
@@ -49,13 +49,12 @@ public class Transporter {
 
     /**
      * http form multipart form post
-     *
      * @param connection
      * @param activationContent
      * @throws ExchangeException
      */
     public static void transport(URLConnection connection, ActivationContent activationContent)
-            throws ExchangeException {
+        throws ExchangeException {
         FileInputStream fis = null;
         DataOutputStream outStream = null;
         try {
@@ -75,10 +74,10 @@ public class Transporter {
                 String fileName = (String) fileNameIterator.next();
                 fis = new FileInputStream(activationContent.getFile(fileName));
                 outStream.writeBytes("content-disposition: form-data; name=\""
-                        + fileName
-                        + "\"; filename=\""
-                        + fileName
-                        + "\"\r\n");
+                    + fileName
+                    + "\"; filename=\""
+                    + fileName
+                    + "\"\r\n");
                 outStream.writeBytes("content-type: application/octet-stream" + "\r\n\r\n");
                 while (true) {
                     synchronized (buffer) {
@@ -94,11 +93,12 @@ public class Transporter {
             }
             outStream.flush();
             outStream.close();
-            if (log.isDebugEnabled())
-                log.debug("Activation content sent as multipart/form-data");
+
+            log.debug("Activation content sent as multipart/form-data");
         }
         catch (Exception e) {
-            throw new ExchangeException("Simple exchange transport failed", e);
+            throw new ExchangeException("Simple exchange transport failed: "
+                + ClassUtils.getShortClassName(e.getClass()), e);
         }
         finally {
             if (fis != null) {
