@@ -639,4 +639,48 @@ This page has no content and it will redirect to
       <description>html pass through attribute</description>
     </attribute>
   </tag>
+  <tag>
+    <name>table</name>
+    <tag-class>info.magnolia.cms.taglibs.util.TableTag</tag-class>
+    <body-content>JSP</body-content>
+    <display-name>table</display-name>
+    <description></description>
+    <attribute>
+      <name>header</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>int</type>
+      <description>Use first row as column headers</description>
+    </attribute>
+    <attribute>
+      <name>class</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Standard html attribute</description>
+    </attribute>
+    <attribute>
+      <name>style</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Standard html attribute</description>
+    </attribute>
+    <attribute>
+      <name>id</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Standard html attribute</description>
+    </attribute>
+    <attribute>
+      <name>cellspacing</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Standard html attribute</description>
+    </attribute>
+    <attribute>
+      <name>cellpadding</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Standard html attribute</description>
+    </attribute>
+  </tag>
 </taglib>
