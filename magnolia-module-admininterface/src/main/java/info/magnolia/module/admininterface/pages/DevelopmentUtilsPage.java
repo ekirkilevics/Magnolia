@@ -18,6 +18,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.core.Content.ContentFilter;
 import info.magnolia.cms.core.ie.DataTransporter;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.AlertUtil;
@@ -63,6 +64,8 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
     private boolean groups;
 
     private boolean roles;
+
+    private boolean secure;
 
     private String rootdir;
 
@@ -168,6 +171,14 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
         return ContentRepository.getAllRepositoryNames();
     }
 
+    /**
+     * Setter for <code>secure</code>.
+     * @param secure The secure to set.
+     */
+    public void setSecure(boolean secure) {
+        this.secure = secure;
+    }
+
     public String backup() {
 
         Iterator modules = ModuleLoader.getInstance().getModuleInstances().keySet().iterator();
@@ -201,13 +212,17 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
                         "dialogs",
                         new ItemType[]{ItemType.CONTENT});
                 }
-                AlertUtil.setMessage("Backupped!");
+                AlertUtil.setMessage("Backup done!");
             }
             catch (Exception e) {
                 log.error(e.getMessage(), e);
                 AlertUtil.setMessage("Error while processing module " + moduleName, e);
             }
 
+        }
+
+        if (secure) {
+            backupChildren(ContentRepository.CONFIG, "/server/secureURIList");
         }
 
         if (website) {
@@ -237,7 +252,12 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
             HierarchyManager hm = MgnlContext.getHierarchyManager(repositoryName);
             Content wesiteRoot = hm.getRoot();
 
-            Iterator children = wesiteRoot.getChildren(ItemType.CONTENT).iterator();
+            Iterator children = wesiteRoot.getChildren(new ContentFilter() {
+
+                public boolean accept(Content content) {
+                    return true;
+                }
+            }).iterator();
             while (children.hasNext()) {
                 Content exported = (Content) children.next();
                 exportNode(repositoryName, hm.getWorkspace().getSession(), exported);
@@ -250,27 +270,33 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
     }
 
     public String backupChildren() {
-        HierarchyManager hm = MgnlContext.getHierarchyManager(this.repository);
+        backupChildren(this.repository, this.parentpath);
+        AlertUtil.setMessage("Backup done!");
+
+        return this.show();
+    }
+
+    private void backupChildren(String repository, String parentpath) {
+        HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
         try {
             Content parentNode = hm.getContent(parentpath);
-            Iterator children = parentNode.getChildren(ItemType.CONTENT).iterator();
-            while (children.hasNext()) {
-                Content exported = (Content) children.next();
-                exportNode(repository, hm.getWorkspace().getSession(), exported);
-            }
-            children = parentNode.getChildren(ItemType.CONTENTNODE).iterator();
-            while (children.hasNext()) {
-                Content exported = (Content) children.next();
+            Iterator children = parentNode.getChildren(new ContentFilter() {
 
+                public boolean accept(Content content) {
+                    return true;
+                }
+            }).iterator();
+            while (children.hasNext()) {
+                Content exported = (Content) children.next();
                 exportNode(repository, hm.getWorkspace().getSession(), exported);
             }
+
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
-            AlertUtil.setMessage("Error while processing actionS", e);
+            AlertUtil.setMessage("Error while processing actions", e);
         }
 
-        return this.show();
     }
 
     /**
