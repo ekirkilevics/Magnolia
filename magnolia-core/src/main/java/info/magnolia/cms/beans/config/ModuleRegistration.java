@@ -223,7 +223,7 @@ public class ModuleRegistration {
 
             for (Iterator iterator = def.getDependencies().iterator(); iterator.hasNext();) {
                 DependencyDefinition dep = (DependencyDefinition) iterator.next();
-                if(!dep.isOptional()){
+                if (!dep.isOptional()) {
                     if (!this.moduleDefinitions.containsKey(dep.getName())
                         || !dep.getVersion().equals(this.getModuleDefinition(dep.getName()).getVersion())) {
                         throw new MissingDependencyException("missing dependency: module ["
@@ -330,9 +330,11 @@ public class ModuleRegistration {
             }
 
             try {
+
+                long startTime = System.currentTimeMillis();
                 // do only log if the register state is not none
                 if (registerState != Module.REGISTER_STATE_NONE) {
-                    log.info("start registration of module [{}]", def.getName());
+                    log.info("start registration of module {}", def.getName());
                 }
 
                 // call register: this is always done not only during the first startup
@@ -345,6 +347,10 @@ public class ModuleRegistration {
                     moduleNode.createNodeData("version").setValue(def.getVersion()); //$NON-NLS-1$
                 }
                 modulesNode.save();
+
+                log.info("Registration of module {} completed in {} second(s)", def.getName(), Long.toString((System
+                    .currentTimeMillis() - startTime) / 1000));
+
             }
             catch (RegisterException e) {
                 switch (registerState) {
