@@ -39,6 +39,18 @@ public final class SecureURI {
         // unused
     }
 
+    public static Map listSecureURIs() {
+        Hashtable copy = new Hashtable();
+        copy.putAll(secureURIs);
+        return copy;
+    }
+
+    public static Map listUnsecureURIs() {
+        Hashtable copy = new Hashtable();
+        copy.putAll(unsecureURIs);
+        return copy;
+    }
+
     /**
      * Initialize the Secure URI list.
      */

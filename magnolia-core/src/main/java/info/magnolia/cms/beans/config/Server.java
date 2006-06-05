@@ -57,6 +57,8 @@ public final class Server {
 
     private static Map cachedMailSettings = new Hashtable();
 
+    private static long uptime = System.currentTimeMillis();
+
     /**
      * Utility class, don't instantiate.
      */
@@ -333,6 +335,14 @@ public final class Server {
      */
     public static boolean isVisibleToObinary() {
         return Boolean.TRUE.equals(Server.cachedContent.get("visibleToObinary")); //$NON-NLS-1$
+    }
+
+    /**
+     * Time in ms since the server was started
+     * @return
+     */
+    public static long getUptime() {
+        return uptime;
     }
 
 }

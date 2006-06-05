@@ -72,7 +72,7 @@ public final class VirtualURIManager extends ObservedManager {
                 int patternLength = p.getLength();
                 if (lastMatchedPatternlength < patternLength) {
                     lastMatchedPatternlength = patternLength;
-                    mappedURI = (String) cachedURImapping.get(p);
+                    mappedURI = ((String[]) cachedURImapping.get(p))[0];
                 }
             }
         }
@@ -89,7 +89,7 @@ public final class VirtualURIManager extends ObservedManager {
                 Content container = (Content) it.next();
                 NodeData fromURI = NodeDataUtil.getOrCreate(container,"fromURI"); //$NON-NLS-1$
                 UrlPattern p = new SimpleUrlPattern(fromURI.getString());
-                cachedURImapping.put(p, NodeDataUtil.getString(container,"toURI")); //$NON-NLS-1$
+                cachedURImapping.put(p, new String[]{NodeDataUtil.getString(container,"toURI"),fromURI.getString()}); //$NON-NLS-1$
             }
             log.info("Config : VirtualMap loaded - " + node.getHandle()); //$NON-NLS-1$
         }
