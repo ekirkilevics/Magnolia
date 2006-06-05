@@ -177,12 +177,12 @@ public class PropertyInitializer implements ServletContextListener {
         File tmp = new File(webapp+File.separator+"tmp");
         if(!logs.exists()) {
             logs.mkdir();
-            log.debug("Creating 'logs' folder");
+            log.debug("Creating "+logs.getAbsoluteFile()+" folder");
         }
 
         if(!tmp.exists()) {
             tmp.mkdir();
-            log.debug("Creating 'tmp' folder");
+            log.debug("Creating "+tmp.getAbsoluteFile()+" folder");
         }
 
 

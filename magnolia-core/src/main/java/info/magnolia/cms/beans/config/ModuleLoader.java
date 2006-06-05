@@ -14,6 +14,7 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.module.Module;
 import info.magnolia.cms.module.ModuleDefinition;
 import info.magnolia.cms.security.AccessDeniedException;
@@ -194,6 +195,8 @@ public final class ModuleLoader {
      */
     public Content getModulesNode() throws PathNotFoundException, RepositoryException, AccessDeniedException {
         HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
+        if(!hm.isExist("/"+MODULES_NODE))
+            hm.createContent("/",MODULES_NODE, ItemType.CONTENTNODE.getSystemName());
         Content modulesNode = hm.getContent(MODULES_NODE);
         return modulesNode;
     }
