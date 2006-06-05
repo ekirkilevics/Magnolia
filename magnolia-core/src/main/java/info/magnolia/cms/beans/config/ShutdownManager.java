@@ -61,7 +61,8 @@ public class ShutdownManager extends ObservedManager implements ServletContextLi
      * @return <code>List</code> of
      */
     public static List listShutdownTasks() {
-        List allTasks = coreTasks;
+        List allTasks = new ArrayList();
+        allTasks.addAll(coreTasks);
         allTasks.addAll(0,customTasks);
         return allTasks;
     }
