@@ -40,8 +40,6 @@ import org.slf4j.LoggerFactory;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.Iterator;
-import java.util.Collection;
-import java.util.ArrayList;
 
 
 /**
@@ -95,26 +93,9 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
     public void setACL() {
         RoleList roleList = new RoleListImpl();
         PrincipalCollection principalList = new PrincipalCollectionImpl();
-        this.setACL(this.user, principalList, roleList);
-        Iterator groupsIterator = this.getGroups().iterator();
-        HierarchyManager groupsHierarchy = ContentRepository.getHierarchyManager(ContentRepository.USER_GROUPS);
         GroupList groupList = new GroupListImpl();
-        while (groupsIterator.hasNext()) {
-            String groupPath = ((NodeData) groupsIterator.next()).getString();
-            try {
-                Content groupNode = groupsHierarchy.getContent(groupPath);
-                groupList.add(groupNode.getName());
-                this.setACL(groupNode, principalList, roleList);
-            }
-            catch (PathNotFoundException e) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Group node on path " + groupPath + " does not exist");
-                }
-            }
-            catch (RepositoryException re) {
-                log.error("Failed to get group node " + groupPath, re);
-            }
-        }
+        this.addGroups(this.user, principalList, groupList, roleList);
+        this.addRoles(this.user, principalList, roleList);
         /**
          * set list of group names, info.magnolia.jaas.principal.GroupList
          */
@@ -130,30 +111,12 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
     }
 
     /**
-     * get all groups
-     * @return collection of groups <code>NodeData</code>
-     */
-    private Collection getGroups() {
-        try {
-            return this.user.getContent("groups").getNodeDataCollection();
-        }
-        catch (RepositoryException re) {
-            if (log.isDebugEnabled()) {
-                log.debug(this.user.getName() + "do not belong to any group");
-            }
-            log.debug(re.getMessage());
-        }
-        return new ArrayList();
-    }
-
-    /**
-     * set access control list from a list of roles under the provided content object
-     * @param aclNode under which roles and ACL are defined
-     */
-    private void setACL(Content aclNode, PrincipalCollection principalList, RoleList roleList) {
+     * go through all roles and set ACL
+     * */
+    private void addRoles(Content node, PrincipalCollection principalList, RoleList roleList) {
         HierarchyManager rolesHierarchy = ContentRepository.getHierarchyManager(ContentRepository.USER_ROLES);
         try {
-            Content rolesNode = aclNode.getContent("roles");
+            Content rolesNode = node.getContent("roles");
             Iterator children = rolesNode.getNodeDataCollection().iterator();
             while (children.hasNext()) {
                 String roleUUID = ((NodeData) children.next()).getString();
@@ -167,59 +130,102 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
                     continue;
                 }
                 roleList.add(role.getName());
-                Iterator it = role.getChildren(ItemType.CONTENTNODE.getSystemName(), "acl*").iterator();
-                while (it.hasNext()) {
-                    Content aclEntry = (Content) it.next();
-                    String name = StringUtils.substringAfter(aclEntry.getName(), "acl_");
-                    ACL acl;
-                    String repositoryName;
-                    String workspaceName;
-                    if (!StringUtils.contains(name, "_")) {
-                        workspaceName = ContentRepository.getDefaultWorkspace(StringUtils.substringBefore(name, "_"));
-                        repositoryName = name;
-                        name += ("_" + workspaceName); // default workspace
-                        // must be added to the
-                        // name
-                    }
-                    else {
-                        String[] tokens = StringUtils.split(name, "_");
-                        repositoryName = tokens[0];
-                        workspaceName = tokens[1];
-                    }
-                    // get the existing acl object if created before with some
-                    // other role
-                    if (!principalList.contains(name)) {
-                        acl = new ACLImpl();
-                        principalList.add(acl);
-                    }
-                    else {
-                        acl = (ACL) principalList.get(name);
-                    }
-                    acl.setName(name);
-                    acl.setRepository(repositoryName);
-                    acl.setWorkspace(workspaceName);
+                this.setACL(role, principalList);
+            }
+        } catch (PathNotFoundException e) {
+            log.debug(e.getMessage(), e);
+        } catch (RepositoryException re) {
+            log.error(re.getMessage(), re);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+    }
 
-                    // add acl
-                    Iterator permissionIterator = aclEntry.getChildren().iterator();
-                    while (permissionIterator.hasNext()) {
-                        Content map = (Content) permissionIterator.next();
-                        String path = map.getNodeData("path").getString();
-                        UrlPattern p = new SimpleUrlPattern(path);
-                        Permission permission = new PermissionImpl();
-                        permission.setPattern(p);
-                        permission.setPermissions(map.getNodeData("permissions").getLong());
-                        acl.addPermission(permission);
+    /**
+     * go through all roles and set ACL
+     * */
+    private void addGroups(Content node, PrincipalCollection principalList, GroupList groupList, RoleList roleList) {
+        HierarchyManager rolesHierarchy = ContentRepository.getHierarchyManager(ContentRepository.USER_GROUPS);
+        try {
+            if (!node.hasContent("groups")) return;
+            Content groupNode = node.getContent("groups");
+            Iterator children = groupNode.getNodeDataCollection().iterator();
+            while (children.hasNext()) {
+                String groupUUID = ((NodeData) children.next()).getString();
+                Content group;
+                try {
+                    group = rolesHierarchy.getContentByUUID(groupUUID);
+                } catch (ItemNotFoundException e) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("Group does not exist", e);
                     }
+                    continue;
+                }
+                groupList.add(group.getName());
+                this.addRoles(group, principalList, roleList);
+                // check for any sub groups
+                this.addGroups(group, principalList, groupList, roleList);
+            }
+        } catch (PathNotFoundException e) {
+            log.debug(e.getMessage(), e);
+        } catch (RepositoryException re) {
+            log.error(re.getMessage(), re);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * set access control list from a list of roles under the provided content object
+     * @param role under which roles and ACL are defined
+     */
+    private void setACL(Content role, PrincipalCollection principalList) {
+        try {
+            Iterator it = role.getChildren(ItemType.CONTENTNODE.getSystemName(), "acl*").iterator();
+            while (it.hasNext()) {
+                Content aclEntry = (Content) it.next();
+                String name = StringUtils.substringAfter(aclEntry.getName(), "acl_");
+                ACL acl;
+                String repositoryName;
+                String workspaceName;
+                if (!StringUtils.contains(name, "_")) {
+                    workspaceName = ContentRepository.getDefaultWorkspace(StringUtils.substringBefore(name, "_"));
+                    repositoryName = name;
+                    name += ("_" + workspaceName); // default workspace
+                    // must be added to the
+                    // name
+                }
+                else {
+                    String[] tokens = StringUtils.split(name, "_");
+                    repositoryName = tokens[0];
+                    workspaceName = tokens[1];
+                }
+                // get the existing acl object if created before with some
+                // other role
+                if (!principalList.contains(name)) {
+                    acl = new ACLImpl();
+                    principalList.add(acl);
+                }
+                else {
+                    acl = (ACL) principalList.get(name);
+                }
+                acl.setName(name);
+                acl.setRepository(repositoryName);
+                acl.setWorkspace(workspaceName);
+
+                // add acl
+                Iterator permissionIterator = aclEntry.getChildren().iterator();
+                while (permissionIterator.hasNext()) {
+                    Content map = (Content) permissionIterator.next();
+                    String path = map.getNodeData("path").getString();
+                    UrlPattern p = new SimpleUrlPattern(path);
+                    Permission permission = new PermissionImpl();
+                    permission.setPattern(p);
+                    permission.setPermissions(map.getNodeData("permissions").getLong());
+                    acl.addPermission(permission);
                 }
             }
-        }
-        catch (PathNotFoundException e) {
-            log.debug(e.getMessage(), e);
-        }
-        catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
 
